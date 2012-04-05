@@ -1,0 +1,106 @@
+LIBS=-L$(CURDIR) -L$(ARB_FLINT_LIB_DIR) -L$(ARB_MPIR_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -larb -lflint -lmpir -lmpfr -lm
+LIBS2=-L$(ARB_FLINT_LIB_DIR) -L$(ARB_MPIR_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -lmpir -lmpfr -lflint -lm
+INCS=-I$(CURDIR) -I$(ARB_MPIR_INCLUDE_DIR) -I$(ARB_MPFR_INCLUDE_DIR) -I$(ARB_FLINT_INCLUDE_DIR)
+LINKLIBS=$(ARB_MPIR_LIB_DIR)/libmpir.a $(ARB_MPFR_LIB_DIR)/libmpfr.a $(ARB_FLINT_LIB_DIR)/libflint.so
+
+LD_LIBRARY_PATH:=${CURDIR}:${ARB_FLINT_LIB_DIR}:${ARB_MPFR_LIB_DIR}:${ARB_MPIR_LIB_DIR}:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+export
+
+SOURCES = $(wildcard *.c)
+
+HEADERS = $(wildcard *.h)
+
+OBJS = $(patsubst %.c, build/%.o, $(SOURCES))
+
+LOBJS = $(patsubst %.c, build/%.lo, $(SOURCES))
+
+LIB_SOURCES = $(SOURCES) $(foreach dir, $(BUILD_DIRS), $(wildcard $(dir)/*.c))
+
+LIB_OBJS = $(patsubst %.c, build/%.lo, $(LIB_SOURCES))
+
+EXMP_SOURCES = $(wildcard examples/*.c)
+
+TEST_SOURCES = $(wildcard test/*.c)
+
+PROF_SOURCES = $(wildcard profile/*.c)
+
+EXMPS = $(patsubst %.c, %, $(EXMP_SOURCES))
+
+TESTS = $(patsubst %.c, %, $(TEST_SOURCES))
+
+PROFS = $(patsubst %.c, %, $(PROF_SOURCES))
+
+all: all-dirs $(OBJS) recursive library 
+
+all-dirs:
+	$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir);)
+
+clean:
+	$(foreach dir, $(BUILD_DIRS), export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir) clean;)
+	rm -f $(OBJS) $(LOBJS) $(TESTS) $(PROFS) $(EXMPS) $(ARB_LIB) libarb.a
+	rm -rf build
+
+distclean: clean
+	rm -f Makefile
+
+dist:
+	git archive --format tar --prefix arb-0.0/ trunk > ../arb-0.0.tar; gzip ../arb-0.0.tar
+
+profile: all profiler.o
+	mkdir -p build/profile
+	$(foreach prog, $(PROFS), $(CC) -O2 -std=c99 $(INCS) $(prog).c profiler.o -o build/$(prog) $(LIBS);)
+	$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir)/profile; export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir) profile;)
+
+recursive:
+	$(foreach dir, $(BUILD_DIRS), export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir);) 
+
+examples: all $(LOBJS) library
+	mkdir -p build/examples
+	$(foreach prog, $(EXMPS), $(CC) $(CFLAGS) $(INCS) $(prog).c -o build/$(prog) $(LIBS);)
+
+check: $(ARB_LIB)
+ifndef MOD
+	mkdir -p build/test
+	$(foreach prog, $(TESTS), $(CC) $(CFLAGS) $(INCS) $(prog).c -o build/$(prog) $(LIBS);)
+	$(foreach prog, $(TESTS), build/$(prog);)
+	$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir)/test; export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir) check;)
+else
+	$(foreach dir, $(MOD), mkdir -p build/$(dir)/test; export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir) check;) 
+endif
+
+library: library-recursive $(OBJS) $(LIB_OBJS)
+	mkdir -p build
+ifdef ARB_SHARED
+	$(CC) -fPIC -shared $(LIB_OBJS) $(LIBS2) -o $(ARB_LIB) 
+endif
+ifdef ARB_STATIC
+	$(AR) rcs libarb.a $(OBJS) $(LINKLIBS)
+endif
+
+library-recursive:
+	$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir); export BUILD_DIR=../build/$(dir); $(MAKE) -C $(dir) library;) 
+
+$(ARB_LIB): library
+
+install: library
+	mkdir -p $(PREFIX)/lib
+	mkdir -p $(PREFIX)/include
+ifdef ARB_SHARED
+	cp $(ARB_LIB) $(PREFIX)/lib
+endif
+ifdef ARB_STATIC
+	cp libarb.a $(PREFIX)/lib
+endif
+	cp *.h $(PREFIX)/include
+
+.PHONY: profile library library-recursive recursive clean check check-recursive all
+
+build/%.lo: %.c
+	$(CC) -fPIC $(CFLAGS) $(INCS) -c $< -o $@
+
+build/%.o: %.c
+	$(CC) -fPIC $(CFLAGS) $(INCS) -c $< -o $@
+
+BUILD_DIRS = arb
+
