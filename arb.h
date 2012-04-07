@@ -62,10 +62,14 @@ void arb_set_ui(arb_t x, ulong c);
 
 int arb_contains_zero(const arb_t x);
 int arb_contains_ui(const arb_t x, ulong z);
+int _arb_contains_fmpq(const fmpz_t mid, const fmpz_t rad, long exp,
+    const fmpz_t num, const fmpz_t den);
 int arb_contains_fmpq(const arb_t x, const fmpq_t q);
 int arb_contains_fmpz(const arb_t x, const fmpz_t z);
 int arb_contains_mpfr(const arb_t x, const mpfr_t z);
 
+void _arb_get_rand_fmpq(fmpz_t num, flint_rand_t state, const fmpz_t den,
+    const fmpz_t mid, const fmpz_t rad, long exp);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x);
 
 void _arb_get_mpfr(mpfr_t f, const fmpz_t mid, const fmpz_t exp, mpfr_rnd_t rnd);

@@ -23,58 +23,44 @@
 
 ******************************************************************************/
 
-#include "arb.h"
+#include "arb_poly.h"
 
-int _arb_contains_fmpq(const fmpz_t mid, const fmpz_t rad, long exp,
-    const fmpz_t num, const fmpz_t den)
+int main()
 {
-    fmpz_t a, b;
-    int result;
+    long iter;
+    flint_rand_t state;
 
-    fmpz_init(a);
-    fmpz_init(b);
+    printf("set_fmpq_poly....");
+    fflush(stdout);
 
-    /* compare with left endpoint */
-    fmpz_sub(a, mid, rad);
-    fmpz_mul(a, a, den);
-    if (exp >= 0)
+    flint_randinit(state);
+
+    for (iter = 0; iter < 10000; iter++)
     {
-        fmpz_mul_2exp(a, a, exp);
-        fmpz_set(b, num);
-    }
-    else
-        fmpz_mul_2exp(b, num, -exp);
+        arb_poly_t a;
+        fmpq_poly_t x;
 
-    result = (fmpz_cmp(a, b) <= 0);
+        arb_poly_init(a, 1 + n_randint(state, 200));
+        fmpq_poly_init(x);
 
-    /* compare with right endpoint */
-    if (result != 0)
-    {
-        fmpz_add(a, mid, rad);
-        fmpz_mul(a, a, den);
-        if (exp >= 0)
-            fmpz_mul_2exp(a, a, exp);
-        result = (fmpz_cmp(a, b) >= 0);
-    }
+        arb_poly_randtest(a, state, n_randint(state, 20), 10);
+        fmpq_poly_randtest(x, state, n_randint(state, 20), 1 + n_randint(state, 200));
+        arb_poly_set_fmpq_poly(a, x);
 
-    fmpz_clear(a);
-    fmpz_clear(b);
+        if (!arb_poly_contains_fmpq_poly(a, x))
+        {
+            printf("FAIL\n\n");
+            printf("a = "); arb_poly_debug(a); printf("\n\n");
+            printf("x = "); fmpq_poly_print(x); printf("\n\n");
+            abort();
+        }
 
-    return result;
-}
-
-int
-arb_contains_fmpq(const arb_t x, const fmpq_t q)
-{
-    long exp = *arb_expref(x);
-
-    /* fixme */
-    if (COEFF_IS_MPZ(exp))
-    {
-        printf("error: arb_contains_fmpq: too large exponent\n");
-        abort();
+        arb_poly_clear(a);
+        fmpq_poly_clear(x);
     }
 
-    return _arb_contains_fmpq(arb_midref(x), arb_radref(x), exp,
-        fmpq_numref(q), fmpq_denref(q));
+    flint_randclear(state);
+    _fmpz_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
