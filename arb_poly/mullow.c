@@ -38,30 +38,21 @@ _arb_poly_mullow(fmpz * h, fmpz_t hexp, fmpz_t hrad,
     }
     else
     {
-        long terms, fbits, gbits;
-        fmpz_t t, u;
+        long terms;
+        fmpz_t t;
 
         terms = FLINT_MIN(flen, glen);
-        fbits = _fmpz_vec_max_bits(f, flen);
-        gbits = _fmpz_vec_max_bits(g, glen);
-        fbits = FLINT_ABS(fbits);
-        gbits = FLINT_ABS(gbits);
-
         fmpz_init(t);
-        fmpz_init(u);
 
         /* For a single coefficient product, we have
            (a + r)(b + s) = a*b + s*a + r*b + r*s */
-        fmpz_mul_2exp(t, frad, gbits);  /* r*b */
-        fmpz_mul_2exp(u, grad, fbits);  /* s*a */
-        fmpz_add(t, t, u);
-        fmpz_addmul(t, frad, grad);     /* r*s */
-
+        fmpz_mul(t, frad, grad);
+        _fmpz_addmul_abs(t, frad, g + _fmpz_vec_height_index(g, glen));
+        _fmpz_addmul_abs(t, grad, f + _fmpz_vec_height_index(f, flen));
         /* add up for all terms */
         fmpz_mul_ui(hrad, t, terms);
 
         fmpz_clear(t);
-        fmpz_clear(u);
     }
 
     /* Exact multiplication */
