@@ -108,8 +108,6 @@ void arb_poly_neg(arb_poly_t z, const arb_poly_t x);
 void arb_poly_mul(arb_poly_t z, const arb_poly_t x, const arb_poly_t y);
 void arb_poly_mullow(arb_poly_t z, const arb_poly_t x, const arb_poly_t y, long n);
 
-/*
 void arb_poly_inv_series(arb_poly_t z, const arb_poly_t x, long n);
-*/
 
 #endif
