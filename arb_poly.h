@@ -110,4 +110,10 @@ void arb_poly_mullow(arb_poly_t z, const arb_poly_t x, const arb_poly_t y, long 
 
 void arb_poly_inv_series(arb_poly_t z, const arb_poly_t x, long n);
 
+void arb_poly_derivative(arb_poly_t z, const arb_poly_t x);
+void arb_poly_integral(arb_poly_t z, const arb_poly_t x);
+
+void arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n);
+void arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n);
+
 #endif
