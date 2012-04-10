@@ -102,5 +102,5 @@ build/%.lo: %.c
 build/%.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(INCS) -c $< -o $@
 
-BUILD_DIRS = arb arb_poly
+BUILD_DIRS = arb arb_poly ufloat
 
