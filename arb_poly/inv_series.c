@@ -52,7 +52,7 @@ void
 arb_poly_inv_series(arb_poly_t z, const arb_poly_t x, long n)
 {
     long a[FLINT_BITS];
-    long i, m;
+    long i;
     arb_poly_t t, u;
     arb_t one, r;
     long xlen;
@@ -106,7 +106,6 @@ arb_poly_inv_series(arb_poly_t z, const arb_poly_t x, long n)
     /* Newton iteration */
     for (i--; i >= 0; i--)
     {
-        m = n;
         n = a[i];
 
         arb_poly_mullow(t, x, z, n);

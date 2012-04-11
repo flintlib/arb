@@ -23,67 +23,68 @@
 
 ******************************************************************************/
 
-#include "ufloat.h"
+#include "arb.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("addmul....");
+    printf("log....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000000; iter++)
+    for (iter = 0; iter < 100000; iter++)
     {
-        fmpz_t x, y, s, z;
-        ufloat_t u, v, w;
+        arb_t r, s;
+        fmpq_t q;
+        mpfr_t x, y;
+        long wp;
 
-        fmpz_init(x);
-        fmpz_init(y);
-        fmpz_init(s);
-        fmpz_init(z);
+        arb_init(r, 1 + n_randint(state, 600));
+        arb_init(s, 1 + n_randint(state, 600));
 
-        fmpz_randtest_not_zero(x, state, 1 + n_randint(state, 500));
-        fmpz_randtest_not_zero(y, state, 1 + n_randint(state, 500));
-        fmpz_randtest_not_zero(s, state, 1 + n_randint(state, 500));
+        wp = FLINT_MAX(arb_prec(r), arb_prec(s)) + 100;
 
-        ufloat_set_fmpz(u, x);
-        ufloat_set_fmpz(v, y);
-        ufloat_set_fmpz(w, s);
+        mpfr_init2(x, wp);
+        mpfr_init2(y, wp);
 
-        ufloat_addmul(w, u, v);
+        fmpq_init(q);
 
-        fmpz_addmul(s, x, y);
+        do {
+            arb_randtest(r, state, 10);
+        } while (arb_contains_zero(r));
 
-        ufloat_get_fmpz(z, w);
+        fmpz_abs(arb_midref(r), arb_midref(r));
+        fmpz_randtest_mod(arb_radref(r), state, arb_midref(r));
 
-        if (fmpz_cmpabs(z, s) < 0)
+        arb_get_rand_fmpq(q, state, r);
+        fmpq_get_mpfr(x, q, MPFR_RNDN);
+
+        arb_log(s, r);
+        mpfr_log(y, x, MPFR_RNDN);
+
+        if (!arb_contains_mpfr(s, y))
         {
-            printf("fail!\n");
-            printf("x = "); fmpz_print(x); printf("\n\n");
-            printf("y = "); fmpz_print(y); printf("\n\n");
-            printf("s = "); fmpz_print(s); printf("\n\n");
-            printf("z = "); fmpz_print(z); printf("\n\n");
+            printf("FAIL: containment\n\n");
+            printf("r = "); arb_debug(r); printf("\n\n");
+            printf("s = "); arb_debug(s); printf("\n\n");
             abort();
         }
 
-        if (FLINT_BIT_COUNT(w->man) != UFLOAT_PREC)
-        {
-            printf("wrong number of bits!\n");
-            abort();
-        }
+        arb_clear(r);
+        arb_clear(s);
 
-        fmpz_clear(x);
-        fmpz_clear(y);
-        fmpz_clear(s);
-        fmpz_clear(z);
+        fmpq_clear(q);
+
+        mpfr_clear(x);
+        mpfr_clear(y);
     }
 
     flint_randclear(state);
     _fmpz_cleanup();
+    mpfr_free_cache();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
-

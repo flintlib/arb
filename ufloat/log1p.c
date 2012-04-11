@@ -1,19 +1,19 @@
 /*=============================================================================
 
-    This file is part of ARB.
+    This file is part of FLINT.
 
-    ARB is free software; you can redistribute it and/or modify
+    FLINT is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    ARB is distributed in the hope that it will be useful,
+    FLINT is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with ARB; if not, write to the Free Software
+    along with FLINT; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 =============================================================================*/
@@ -23,44 +23,25 @@
 
 ******************************************************************************/
 
-#include "arb.h"
+#include "ufloat.h"
 
 void
-arb_log_ui(arb_t x, ulong n)
+ufloat_log1p(ufloat_t z, const ufloat_t x)
 {
-    mpfr_t t;
+    ufloat_t t;
 
-    if (n == 0)
+    if (x->exp >= -UFLOAT_PREC)
     {
-        printf("arb_log_ui: log(0)\n");
-        abort();
-    }
-
-    if (n == 1)
-    {
-        arb_zero(x);
-        return;
-    }
-
-    /* power of two */
-    if (n > 2 && (n & (n-1UL)) == 0UL)
-    {
-        arb_log_ui(x, 2);
-        arb_mul_si(x, x, FLINT_BIT_COUNT(n) - 1);
-        return;
-    }
-
-    mpfr_init2(t, FLINT_MAX(arb_prec(x), FLINT_BITS));
-
-    if (n == 2)
-    {
-        mpfr_const_log2(t, MPFR_RNDN);
+        t->man = 1;
+        t->exp = 0;
+        ufloat_normalise(t);
+        ufloat_add(t, t, x);
+        ufloat_log(z, t);
     }
     else
     {
-        mpfr_set_ui(t, n, MPFR_RNDN);  /* exact */
-        mpfr_log(t, t, MPFR_RNDN);
+        /* log(1+x) <= x, TODO: more accurate? */
+        z->man = x->man;
+        z->exp = x->exp;
     }
-
-    arb_set_mpfr(x, t, 1);
 }

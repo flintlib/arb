@@ -31,6 +31,7 @@
 #include "flint.h"
 #include "fmpz.h"
 #include "ulong_extras.h"
+#include "math.h"
 
 static __inline__ mp_limb_t
 n_rshift_ceil(mp_limb_t a, int k)
@@ -55,6 +56,37 @@ ufloat_struct;
 
 typedef ufloat_struct ufloat_t[1];
 
+static __inline__ void
+ufloat_print(const ufloat_t x)
+{
+    double t = ldexp(x->man, x->exp);
+
+    printf("ufloat{man=%lu, exp=%ld, %.20g}\n", x->man, x->exp, t);
+}
+
+static __inline__ void
+ufloat_normalise(ufloat_t z)
+{
+    int b = FLINT_BIT_COUNT(z->man);
+
+    if (b < UFLOAT_PREC)
+    {
+        z->man <<= (UFLOAT_PREC - b);
+        z->exp -= (UFLOAT_PREC - b);
+    }
+    else
+    {
+        int adjust;
+
+        z->man = n_rshift_ceil(z->man, (b - UFLOAT_PREC));
+        z->exp += (b - UFLOAT_PREC);
+
+        /* possible overflow to power of two */
+            adjust = z->man >> UFLOAT_PREC;
+            z->man = n_rshift_ceil(z->man, adjust);
+            z->exp += adjust;
+    }
+}
 
 static __inline__ void
 ufloat_add(ufloat_t z, const ufloat_t x, const ufloat_t y)
@@ -86,6 +118,54 @@ ufloat_add(ufloat_t z, const ufloat_t x, const ufloat_t y)
     adjust = z->man >> UFLOAT_PREC;
     z->man = n_rshift_ceil(z->man, adjust);
     z->exp += adjust;
+}
+
+/* bound |x-y| */
+static __inline__ void
+ufloat_sub(ufloat_t z, const ufloat_t x, const ufloat_t y)
+{
+    long shift;
+
+    mp_limb_t a, b;
+
+    shift = x->exp - y->exp;
+
+    if (shift == 0)
+    {
+        if (x->man >= y->man)
+            z->man = x->man - y->man;
+        else
+            z->man = y->man - x->man;
+        z->exp = x->exp;
+        ufloat_normalise(z);
+        return;
+    }
+
+    if (shift > 0)
+    {
+        z->exp = x->exp;
+        a = x->man;
+        b = y->man;
+    }
+    else
+    {
+        shift = -shift;
+        z->exp = y->exp;
+        a = y->man;
+        b = x->man;
+    }
+
+    if (shift >= UFLOAT_PREC)
+    {
+        z->man = a;
+    }
+    else
+    {
+        z->man = (a << shift) - b;
+        z->exp -= shift;
+    }
+
+    ufloat_normalise(z);
 }
 
 static __inline__ void
@@ -144,7 +224,7 @@ ufloat_randtest(ufloat_t u, flint_rand_t state, long erange)
 {
     u->man = n_randbits(state, UFLOAT_PREC);
     u->man |= (1UL << (UFLOAT_PREC - 1));
-    u->exp = n_randint(state, erange) - erange;
+    u->exp = n_randint(state, erange) - (erange / 2) + 1;
 }
 
 static __inline__ void
@@ -162,12 +242,27 @@ ufloat_set_fmpz_lower(ufloat_t u, const fmpz_t z)
 static __inline__ void
 ufloat_get_fmpz(fmpz_t z, const ufloat_t u)
 {
-    fmpz_set_ui(z, u->man);
+    _fmpz_demote(z);
+    *z = u->man;
 
     if (u->exp >= 0)
-        fmpz_mul_2exp(z, z, u->exp);
+    {
+        if (u->exp < FLINT_BITS - UFLOAT_PREC - 2)
+            *z = (u->man << u->exp);
+        else
+            fmpz_mul_2exp(z, z, u->exp);
+    }
     else
-        fmpz_cdiv_q_2exp(z, z, -(u->exp));
+    {
+        if (u->exp > -FLINT_BITS)
+            *z = n_rshift_ceil(u->man, -u->exp);
+        else
+            *z = 1;
+    }
 }
+
+void ufloat_log(ufloat_t z, const ufloat_t x);
+
+void ufloat_log1p(ufloat_t z, const ufloat_t x);
 
 #endif

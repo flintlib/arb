@@ -75,6 +75,8 @@ void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x);
 void _arb_get_mpfr(mpfr_t f, const fmpz_t mid, const fmpz_t exp, mpfr_rnd_t rnd);
 void arb_get_mpfr(mpfr_t f, const arb_t x, mpfr_rnd_t rnd);
 
+void arb_set_mpfr(arb_t y, const mpfr_t x, ulong error);
+
 static __inline__ void
 _arb_normalise(arb_t x)
 {
@@ -132,7 +134,9 @@ void arb_mul_si(arb_t y, const arb_t x, long c);
 
 void arb_sqrt_fmpz(arb_t x, const fmpz_t n);
 void arb_sqrt_ui(arb_t x, ulong n);
+
 void arb_log_ui(arb_t x, ulong n);
+void arb_log(arb_t y, const arb_t x);
 
 void arb_add_error_2exp(arb_t x, long c);
 

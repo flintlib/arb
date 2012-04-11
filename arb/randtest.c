@@ -42,4 +42,6 @@ arb_randtest(arb_t x, flint_rand_t state, long exp_bits)
         fmpz_zero(arb_expref(x));
     else
         fmpz_randtest(arb_expref(x), state, exp_bits);
+
+    fmpz_sub_ui(arb_expref(x), arb_expref(x), fmpz_bits(arb_midref(x)));
 }

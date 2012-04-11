@@ -23,6 +23,7 @@
 
 ******************************************************************************/
 
+#include <mpfr.h>
 #include "ufloat.h"
 
 int main()
@@ -30,59 +31,60 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("addmul....");
+    printf("log....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 1000000; iter++)
     {
-        fmpz_t x, y, s, z;
-        ufloat_t u, v, w;
+        mpfr_t x, y, z;
+        ufloat_t u, v;
 
-        fmpz_init(x);
-        fmpz_init(y);
-        fmpz_init(s);
-        fmpz_init(z);
+        ufloat_randtest(u, state, 100);
 
-        fmpz_randtest_not_zero(x, state, 1 + n_randint(state, 500));
-        fmpz_randtest_not_zero(y, state, 1 + n_randint(state, 500));
-        fmpz_randtest_not_zero(s, state, 1 + n_randint(state, 500));
+        mpfr_init2(x, FLINT_BITS);
+        mpfr_init2(y, FLINT_BITS);
+        mpfr_init2(z, FLINT_BITS);
 
-        ufloat_set_fmpz(u, x);
-        ufloat_set_fmpz(v, y);
-        ufloat_set_fmpz(w, s);
+        ufloat_log(v, u);
 
-        ufloat_addmul(w, u, v);
+        mpfr_set_ui(x, u->man, MPFR_RNDN);
+        if (u->exp >= 0)
+            mpfr_mul_2exp(x, x, u->exp, MPFR_RNDN);
+        else
+            mpfr_div_2exp(x, x, -(u->exp), MPFR_RNDN);
 
-        fmpz_addmul(s, x, y);
+        mpfr_set_ui(y, v->man, MPFR_RNDN);
+        if (v->exp >= 0)
+            mpfr_mul_2exp(y, y, v->exp, MPFR_RNDN);
+        else
+            mpfr_div_2exp(y, y, -(v->exp), MPFR_RNDN);
 
-        ufloat_get_fmpz(z, w);
+        mpfr_log(z, x, MPFR_RNDU);
 
-        if (fmpz_cmpabs(z, s) < 0)
-        {
-            printf("fail!\n");
-            printf("x = "); fmpz_print(x); printf("\n\n");
-            printf("y = "); fmpz_print(y); printf("\n\n");
-            printf("s = "); fmpz_print(s); printf("\n\n");
-            printf("z = "); fmpz_print(z); printf("\n\n");
-            abort();
-        }
-
-        if (FLINT_BIT_COUNT(w->man) != UFLOAT_PREC)
+        if ((FLINT_BIT_COUNT(v->man) != UFLOAT_PREC) && (v->man != 0))
         {
             printf("wrong number of bits!\n");
             abort();
         }
 
-        fmpz_clear(x);
-        fmpz_clear(y);
-        fmpz_clear(s);
-        fmpz_clear(z);
+        if (mpfr_cmp(z, y) > 0)
+        {
+            printf("fail!\n");
+            printf("x = "); mpfr_printf("%.20Rg", x); printf("\n\n");
+            printf("y = "); mpfr_printf("%.20Rg", y); printf("\n\n");
+            printf("z = "); mpfr_printf("%.20Rg", z); printf("\n\n");
+            abort();
+        }
+
+        mpfr_clear(x);
+        mpfr_clear(y);
+        mpfr_clear(z);
     }
 
     flint_randclear(state);
-    _fmpz_cleanup();
+    mpfr_free_cache();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }

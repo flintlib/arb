@@ -29,11 +29,8 @@ void
 arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
 {
     long a[FLINT_BITS];
-    long i, m;
+    long i;
     arb_poly_t t;
-    long xlen;
-
-    xlen = x->length;
 
     if (z == x)
     {
@@ -60,7 +57,6 @@ arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
     /* Newton iteration */
     for (i--; i >= 0; i--)
     {
-        m = n;
         n = a[i];
 
         arb_poly_log_series(t, z, n);
