@@ -32,6 +32,8 @@
 #include "flint.h"
 #include "fmpz.h"
 #include "fmpq.h"
+#include "ufloat.h"
+
 
 typedef struct
 {
@@ -138,7 +140,10 @@ void arb_sqrt_ui(arb_t x, ulong n);
 void arb_log_ui(arb_t x, ulong n);
 void arb_log(arb_t y, const arb_t x);
 
+void arb_exp(arb_t y, const arb_t x);
+
 void arb_add_error_2exp(arb_t x, long c);
+void _arb_rad_add_ufloat(arb_t y, const ufloat_t err);
 
 void arb_const_pi_chudnovsky(arb_t x);
 void arb_const_euler_brent_mcmillan(arb_t x);
@@ -164,6 +169,5 @@ _fmpz_mul_abs(fmpz_t f, const fmpz_t g, const fmpz_t h)
 void _fmpz_addmul_abs(fmpz_t, const fmpz_t, const fmpz_t);
 
 void _fmpz_addmul_abs_ui(fmpz_t, const fmpz_t, ulong x);
-
 
 #endif

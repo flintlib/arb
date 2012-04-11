@@ -26,45 +26,40 @@
 #include "arb.h"
 #include "ufloat.h"
 
+/* TODO: check for overflow (both mid and rad) */
+
+
 /*
-Let the input be [a-b, a+b] * 2^e. We require a > b >= 0 (otherwise the
-interval contains zero or a negative number and the logarithm is not
-defined). The error is largest at a-b, and we have
-
-log(a * 2^e) - log((a-b) * 2^e) = log(1 + b/(a-b)).
+exp((a+b)*2^r) - exp(a*2^r) = exp(a*2^r) * (exp(b*2^r)-1)
 */
-
 void
-arb_log_error(ufloat_t err, const fmpz_t mid, const fmpz_t rad)
+arb_exp_error(ufloat_t err, const fmpz_t mid, const fmpz_t rad, const fmpz_t exp)
 {
-    ufloat_t t, u;
-    fmpz_t d;
+    mpfr_t a, b;
 
-    fmpz_init(d);
-    fmpz_sub(d, mid, rad);
+    mpfr_init2(a, 32);
+    mpfr_init2(b, 32);
 
-    ufloat_set_fmpz(t, rad);
-    ufloat_set_fmpz_lower(u, d);
-    ufloat_div(t, t, u);
-    ufloat_log1p(err, t);
+    _arb_get_mpfr(a, mid, exp, MPFR_RNDU);
+    _arb_get_mpfr(b, rad, exp, MPFR_RNDU);
 
-    fmpz_clear(d);
+    mpfr_exp(a, a, MPFR_RNDU);
+    mpfr_expm1(b, b, MPFR_RNDU);
+    mpfr_mul(a, a, b, MPFR_RNDU);
+
+    ufloat_set_mpfr(err, a);
+
+    mpfr_clear(a);
+    mpfr_clear(b);
 }
 
 void
-arb_log(arb_t y, const arb_t x)
+arb_exp(arb_t y, const arb_t x)
 {
     long prec;
     mpfr_t t, u;
-    int input_approx, value_approx;
+    int input_approx;
     ufloat_t err;
-
-    if (fmpz_sgn(arb_midref(x)) <= 0 ||
-        (fmpz_cmpabs(arb_midref(x), arb_radref(x)) <= 0))
-    {
-        printf("arb_log: interval contains zero or negative numbers\n");
-        abort();
-    }
 
     prec = FLINT_MAX(2, arb_prec(y));
 
@@ -73,12 +68,11 @@ arb_log(arb_t y, const arb_t x)
     arb_get_mpfr(t, x, MPFR_RNDN);  /* exact */
 
     input_approx = !fmpz_is_zero(arb_radref(x));
-
     if (input_approx)
-        arb_log_error(err, arb_midref(x), arb_radref(x));
+        arb_exp_error(err, arb_midref(x), arb_radref(x), arb_expref(x));
 
-    value_approx = mpfr_log(u, t, MPFR_RNDN) != 0;
-    arb_set_mpfr(y, u, value_approx);
+    mpfr_exp(u, t, MPFR_RNDN);
+    arb_set_mpfr(y, u, 1);
 
     if (input_approx)
         _arb_rad_add_ufloat(y, err);

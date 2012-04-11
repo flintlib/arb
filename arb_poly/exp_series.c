@@ -30,15 +30,12 @@ arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
 {
     long a[FLINT_BITS];
     long i;
-    arb_poly_t t;
+    arb_poly_t t, v, c;
+    arb_t r;
 
-    if (z == x)
+    if (n == 0 || x->length == 0)
     {
-        arb_poly_t t;
-        arb_poly_init(t, arb_poly_prec(x));
-        arb_poly_set(t, x);
-        arb_poly_exp_series(z, t, n);
-        arb_poly_clear(t);
+        arb_poly_zero(z);
         return;
     }
 
@@ -48,23 +45,43 @@ arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
 
     arb_poly_init(t, arb_poly_prec(z));
 
-    /* first coefficient (assuming input zero, todo: general case) */
-    arb_poly_set_si(z, 1);
-    fmpz_mul_2exp(arb_poly_coeffs(z), arb_poly_coeffs(z), arb_poly_prec(z));
-    fmpz_set_si(arb_poly_expref(z), -arb_poly_prec(z));
-    fmpz_zero(arb_poly_radref(z));
+    /* remove constant term */
+    arb_poly_init(v, arb_poly_prec(x));
+    arb_poly_set(v, x);
+    fmpz_zero(arb_poly_coeffs(v));
 
-    /* Newton iteration */
+    arb_poly_init(c, arb_poly_prec(z));
+
+    /* first coefficient */
+    arb_init(r, arb_poly_prec(z));
+    fmpz_set(arb_midref(r), arb_poly_coeffs(x));
+    fmpz_set(arb_radref(r), arb_poly_radref(x));
+    fmpz_set(arb_expref(r), arb_poly_expref(x));
+
+    arb_exp(r, r);
+    _arb_poly_fit_length(c, 1);
+    fmpz_set(arb_poly_coeffs(c), arb_midref(r));
+    fmpz_set(arb_poly_radref(c), arb_radref(r));
+    fmpz_set(arb_poly_expref(c), arb_expref(r));
+    c->length = 1;
+    arb_clear(r);
+
+    arb_poly_set_si(z, 1);
+
     for (i--; i >= 0; i--)
     {
         n = a[i];
 
         arb_poly_log_series(t, z, n);
         arb_poly_neg(t, t);
-        arb_poly_add(t, t, x);
+        arb_poly_add(t, t, v);
         arb_poly_mullow(t, z, t, n);
         arb_poly_add(z, z, t);
     }
 
+    arb_poly_mul(z, z, c);
+
     arb_poly_clear(t);
+    arb_poly_clear(v);
+    arb_poly_clear(c);
 }

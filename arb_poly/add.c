@@ -25,43 +25,78 @@
 
 #include "arb_poly.h"
 
-/* z = x + y/2^shift, assumes lengths > 0, shift >= 0 */
+/* z = x*2^shift + y, assumes lengths > 0, shift >= 0
+
+TODO: handle huge shifts
+*/
 void
-_arb_poly_add_shift(fmpz * z, fmpz_t zrad,
-    const fmpz * x, long xlen, const fmpz_t xrad, 
-    const fmpz * y, long ylen, const fmpz_t yrad, long shift)
+_arb_poly_add_shift(fmpz * z, fmpz_t zrad, fmpz_t zexp,
+    const fmpz * x, long xlen, const fmpz_t xrad, const fmpz_t xexp,
+    const fmpz * y, long ylen, const fmpz_t yrad, const fmpz_t yexp, long shift)
 {
     fmpz_t t;
     long i;
 
     fmpz_init(t);
 
-    if (xlen >= ylen)
+    if (fmpz_is_zero(xrad))
     {
-        for (i = 0; i < ylen; i++)
+        if (xlen <= ylen)
         {
-            fmpz_tdiv_q_2exp(t, y + i, shift);
-            fmpz_add(z + i, x + i, t);
+            for (i = 0; i < xlen; i++)
+            {
+                fmpz_mul_2exp(t, x + i, shift);
+                fmpz_add(z + i, y + i, t);
+            }
+
+            for (i = xlen; i < ylen; i++)
+                fmpz_set(z + i, y + i);
+        }
+        else
+        {
+            for (i = 0; i < ylen; i++)
+            {
+                fmpz_mul_2exp(t, x + i, shift);
+                fmpz_add(z + i, y + i, t);
+            }
+
+            for (i = ylen; i < xlen; i++)
+                fmpz_mul_2exp(z + i, x + i, shift);
         }
 
-        for (i = ylen; i < xlen; i++)
-            fmpz_set(z + i, x + i);
+        fmpz_set(zexp, yexp);
+        fmpz_set(zrad, yrad);
     }
     else
     {
-        for (i = 0; i < xlen; i++)
+        if (xlen >= ylen)
         {
-            fmpz_tdiv_q_2exp(t, y + i, shift);
-            fmpz_add(z + i, x + i, t);
+            for (i = 0; i < ylen; i++)
+            {
+                fmpz_tdiv_q_2exp(t, y + i, shift);
+                fmpz_add(z + i, x + i, t);
+            }
+
+            for (i = ylen; i < xlen; i++)
+                fmpz_set(z + i, x + i);
+        }
+        else
+        {
+            for (i = 0; i < xlen; i++)
+            {
+                fmpz_tdiv_q_2exp(t, y + i, shift);
+                fmpz_add(z + i, x + i, t);
+            }
+
+            for (i = xlen; i < ylen; i++)
+                fmpz_tdiv_q_2exp(z + i, y + i, shift);
         }
 
-        for (i = xlen; i < ylen; i++)
-            fmpz_tdiv_q_2exp(z + i, y + i, shift);
+        fmpz_set(zexp, xexp);
+        fmpz_cdiv_q_2exp(t, yrad, shift);
+        fmpz_add(zrad, xrad, t);
+        fmpz_add_ui(zrad, zrad, 1UL);
     }
-
-    fmpz_cdiv_q_2exp(t, yrad, shift);
-    fmpz_add(zrad, xrad, t);
-    fmpz_add_ui(zrad, zrad, 1UL);
 
     fmpz_clear(t);
 }
@@ -103,9 +138,6 @@ arb_poly_add(arb_poly_t z, const arb_poly_t x, const arb_poly_t y)
     }
     else
     {
-        /* TODO: handle huge exponents */
-        /* TODO: be smart when one poly is exact */
-        /* TODO: aliasing? */
         long shift;
 
         shift = fmpz_get_si(arb_poly_expref(x)) -
@@ -113,17 +145,17 @@ arb_poly_add(arb_poly_t z, const arb_poly_t x, const arb_poly_t y)
 
         if (shift > 0)
         {
-            fmpz_set(arb_poly_expref(z), arb_poly_expref(x));
-            _arb_poly_add_shift(zp, arb_poly_radref(z),
-                xp, xlen, arb_poly_radref(x),
-                yp, ylen, arb_poly_radref(y), shift);
+            _arb_poly_add_shift(
+                zp, arb_poly_radref(z), arb_poly_expref(z),
+                xp, xlen, arb_poly_radref(x), arb_poly_expref(x),
+                yp, ylen, arb_poly_radref(y), arb_poly_expref(y), shift);
         }
         else
         {
-            fmpz_set(arb_poly_expref(z), arb_poly_expref(y));
-            _arb_poly_add_shift(zp, arb_poly_radref(z),
-                yp, ylen, arb_poly_radref(y),
-                xp, xlen, arb_poly_radref(x), -shift);
+            _arb_poly_add_shift(
+                zp, arb_poly_radref(z), arb_poly_expref(z),
+                yp, ylen, arb_poly_radref(y), arb_poly_expref(y),
+                xp, xlen, arb_poly_radref(x), arb_poly_expref(x), -shift);
         }
     }
 

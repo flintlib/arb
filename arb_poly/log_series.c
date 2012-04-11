@@ -34,6 +34,13 @@ _arb_poly_set_coeff_same_exp(arb_poly_t z, const arb_t c)
     e1 = z->exp;
     e2 = c->exp;
 
+    if (z->length < 1)
+    {
+        _arb_poly_fit_length(z, 1);
+        fmpz_set(arb_expref(z), arb_expref(c));
+        z->length = 1;
+    }
+
     fmpz_init(rad);
 
     if (e1 > e2)
@@ -68,6 +75,7 @@ arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n)
     fmpz_set(arb_midref(c), x->coeffs);
     fmpz_set(arb_radref(c), arb_poly_radref(x));
     fmpz_set(arb_expref(c), arb_poly_expref(x));
+
     arb_log(c, c);
 
     arb_poly_inv_series(t, x, n);
