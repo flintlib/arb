@@ -261,6 +261,39 @@ ufloat_get_fmpz(fmpz_t z, const ufloat_t u)
     }
 }
 
+static __inline__ void
+ufloat_set_mpfr(ufloat_t u, const mpfr_t x)
+{
+    if (mpfr_zero_p(x))
+    {
+        u->man = 0;
+        u->exp = 0;
+    }
+    else
+    {
+        mpz_t t;
+        long exp, bits;
+
+        mpz_init(t);
+        exp = mpfr_get_z_2exp(t, x);
+        mpz_abs(t, t);
+
+        bits = mpz_sizeinbase(t, 2);
+
+        if (bits > UFLOAT_PREC)
+        {
+            mpz_cdiv_q_2exp(t, t, bits - UFLOAT_PREC);
+            exp += bits - UFLOAT_PREC;
+        }
+
+        u->exp = exp;
+        u->man = mpz_get_ui(t);
+        ufloat_normalise(u);
+
+        mpz_clear(t);
+    }
+}
+
 void ufloat_log(ufloat_t z, const ufloat_t x);
 
 void ufloat_log1p(ufloat_t z, const ufloat_t x);
