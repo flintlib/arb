@@ -148,7 +148,10 @@ void _arb_rad_add_ufloat(arb_t y, const ufloat_t err);
 void arb_const_pi_chudnovsky(arb_t x);
 void arb_const_euler_brent_mcmillan(arb_t x);
 void arb_const_zeta3_bsplit(arb_t x);
+
 void arb_zeta_ui_bsplit(arb_t x, ulong s);
+void arb_zeta_ui_mpfr(arb_t x, ulong n);
+void arb_zeta_ui(arb_t x, ulong n);
 
 /* fmpz extras */
 

@@ -26,43 +26,17 @@
 #include "arb.h"
 
 void
-arb_log_ui(arb_t x, ulong n)
+arb_zeta_ui_mpfr(arb_t x, ulong n)
 {
     mpfr_t t;
 
-    if (n == 0)
-    {
-        printf("arb_log_ui: log(0)\n");
-        abort();
-    }
-
-    if (n == 1)
-    {
-        arb_zero(x);
-        return;
-    }
-
-    /* power of two */
-    if (n > 2 && (n & (n-1UL)) == 0UL)
-    {
-        arb_log_ui(x, 2);
-        arb_mul_si(x, x, FLINT_BIT_COUNT(n) - 1);
-        return;
-    }
-
     mpfr_init2(t, FLINT_MAX(arb_prec(x), FLINT_BITS));
 
-    if (n == 2)
-    {
-        mpfr_const_log2(t, MPFR_RNDN);
-    }
+    if (n == 1)
+        mpfr_const_euler(t, MPFR_RNDN);
     else
-    {
-        mpfr_set_ui(t, n, MPFR_RNDN);  /* exact */
-        mpfr_log(t, t, MPFR_RNDN);
-    }
+        mpfr_zeta_ui(t, n, MPFR_RNDN);
 
     arb_set_mpfr(x, t, 1);
-
     mpfr_clear(t);
 }

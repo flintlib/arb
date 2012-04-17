@@ -26,36 +26,38 @@
 #include "arb_poly.h"
 
 void
-arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n, int exact_const)
+_arb_poly_set_coeff_same_exp(arb_poly_t z, long i, const arb_t c)
 {
-    arb_poly_t t, u;
-    arb_t c;
+    long e1, e2, j;
+    fmpz_t rad;
 
-    arb_poly_init(t, arb_poly_prec(z));
-    arb_poly_init(u, arb_poly_prec(z));
-    arb_init(c, arb_poly_prec(z));
+    e1 = z->exp;
+    e2 = c->exp;
 
-    /* first term */
-    if (!exact_const)
+    if (z->length < i + 1)
     {
-        fmpz_set(arb_midref(c), x->coeffs);
-        fmpz_set(arb_radref(c), arb_poly_radref(x));
-        fmpz_set(arb_expref(c), arb_poly_expref(x));
-        arb_log(c, c);
+        _arb_poly_fit_length(z, i + 1);
+        for (j = z->length; j < i; j++)
+            fmpz_zero(z->coeffs + j);
+        z->length = i + 1;
     }
 
-    arb_poly_inv_series(t, x, n);
+    fmpz_init(rad);
 
-    arb_poly_derivative(u, x);
-    arb_poly_mullow(t, t, u, n - 1);
-    arb_poly_integral(z, t);
-
-    if (!exact_const)
+    if (e1 > e2)
     {
-        _arb_poly_set_coeff_same_exp(z, 0, c);
+        fmpz_tdiv_q_2exp(z->coeffs + i, arb_midref(c), e1 - e2);
+        fmpz_cdiv_q_2exp(rad, arb_radref(c), e1 - e2);
+        fmpz_add_ui(rad, rad, 1);
+    }
+    else
+    {
+        fmpz_mul_2exp(z->coeffs + i, arb_midref(c), e2 - e1);
+        fmpz_mul_2exp(rad, arb_radref(c), e2 - e1);
     }
 
-    arb_clear(c);
-    arb_poly_clear(t);
-    arb_poly_clear(u);
+    if (fmpz_cmp(arb_poly_radref(z), rad) < 0)
+        fmpz_set(arb_poly_radref(z), rad);
+
+    fmpz_clear(rad);
 }

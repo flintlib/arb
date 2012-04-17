@@ -113,7 +113,13 @@ void arb_poly_inv_series(arb_poly_t z, const arb_poly_t x, long n);
 void arb_poly_derivative(arb_poly_t z, const arb_poly_t x);
 void arb_poly_integral(arb_poly_t z, const arb_poly_t x);
 
-void arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n);
-void arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n);
+void arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n, int exact_const);
+void arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n, int exact_const);
+
+void _arb_poly_set_coeff_same_exp(arb_poly_t z, long i, const arb_t c);
+
+
+void arb_poly_gamma_log_series(arb_poly_t z, ulong n);
+
 
 #endif

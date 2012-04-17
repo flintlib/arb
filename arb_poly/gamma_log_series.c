@@ -25,37 +25,44 @@
 
 #include "arb_poly.h"
 
+/* series expansion for log(gamma(1-x)) at x = 0 */
+
 void
-arb_poly_log_series(arb_poly_t z, const arb_poly_t x, long n, int exact_const)
+arb_poly_gamma_log_series(arb_poly_t z, ulong n)
 {
-    arb_poly_t t, u;
     arb_t c;
+    long i, prec;
 
-    arb_poly_init(t, arb_poly_prec(z));
-    arb_poly_init(u, arb_poly_prec(z));
-    arb_init(c, arb_poly_prec(z));
+    prec = arb_poly_prec(z) + FLINT_BIT_COUNT(n);
 
-    /* first term */
-    if (!exact_const)
+    arb_init(c, prec);
+
+    arb_poly_zero(z);
+    _arb_poly_fit_length(z, n);
+    z->length = n;
+
+    fmpz_set_si(arb_poly_expref(z), -prec);
+
+    for (i = 0; i < n; i++)
     {
-        fmpz_set(arb_midref(c), x->coeffs);
-        fmpz_set(arb_radref(c), arb_poly_radref(x));
-        fmpz_set(arb_expref(c), arb_poly_expref(x));
-        arb_log(c, c);
-    }
+        if (i == 0)
+        {
+            arb_zero(c);
+        }
+        else if (i == 1)
+        {
+            arb_const_euler_brent_mcmillan(c);
+        }
+        else
+        {
+            /* printf("%ld of %ld\n", i, n); */
+            arb_zeta_ui(c, i);
+            fmpz_tdiv_q_ui(arb_midref(c), arb_midref(c), i);
+            fmpz_add_ui(arb_radref(c), arb_radref(c), 1);
+        }
 
-    arb_poly_inv_series(t, x, n);
-
-    arb_poly_derivative(u, x);
-    arb_poly_mullow(t, t, u, n - 1);
-    arb_poly_integral(z, t);
-
-    if (!exact_const)
-    {
-        _arb_poly_set_coeff_same_exp(z, 0, c);
+        _arb_poly_set_coeff_same_exp(z, i, c);
     }
 
     arb_clear(c);
-    arb_poly_clear(t);
-    arb_poly_clear(u);
 }

@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
+arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n, int exact_const)
 {
     long a[FLINT_BITS];
     long i;
@@ -52,19 +52,22 @@ arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
 
     arb_poly_init(c, arb_poly_prec(z));
 
-    /* first coefficient */
-    arb_init(r, arb_poly_prec(z));
-    fmpz_set(arb_midref(r), arb_poly_coeffs(x));
-    fmpz_set(arb_radref(r), arb_poly_radref(x));
-    fmpz_set(arb_expref(r), arb_poly_expref(x));
+    if (!exact_const)
+    {
+        /* first coefficient */
+        arb_init(r, arb_poly_prec(z));
+        fmpz_set(arb_midref(r), arb_poly_coeffs(x));
+        fmpz_set(arb_radref(r), arb_poly_radref(x));
+        fmpz_set(arb_expref(r), arb_poly_expref(x));
 
-    arb_exp(r, r);
-    _arb_poly_fit_length(c, 1);
-    fmpz_set(arb_poly_coeffs(c), arb_midref(r));
-    fmpz_set(arb_poly_radref(c), arb_radref(r));
-    fmpz_set(arb_poly_expref(c), arb_expref(r));
-    c->length = 1;
-    arb_clear(r);
+        arb_exp(r, r);
+        _arb_poly_fit_length(c, 1);
+        fmpz_set(arb_poly_coeffs(c), arb_midref(r));
+        fmpz_set(arb_poly_radref(c), arb_radref(r));
+        fmpz_set(arb_poly_expref(c), arb_expref(r));
+        c->length = 1;
+        arb_clear(r);
+    }
 
     arb_poly_set_si(z, 1);
 
@@ -72,14 +75,15 @@ arb_poly_exp_series(arb_poly_t z, const arb_poly_t x, long n)
     {
         n = a[i];
 
-        arb_poly_log_series(t, z, n);
+        arb_poly_log_series(t, z, n, 1);
         arb_poly_neg(t, t);
         arb_poly_add(t, t, v);
         arb_poly_mullow(t, z, t, n);
         arb_poly_add(z, z, t);
     }
 
-    arb_poly_mul(z, z, c);
+    if (!exact_const)
+        arb_poly_mul(z, z, c);
 
     arb_poly_clear(t);
     arb_poly_clear(v);
