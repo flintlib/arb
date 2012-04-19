@@ -25,11 +25,65 @@
 
 #include "arb.h"
 
+
+void _arb_div_shiftup(fmpz_t cmid, fmpz_t crad, fmpz_t cexp,
+    const fmpz_t amid, const fmpz_t arad, const fmpz_t aexp,
+    const fmpz_t bmid, const fmpz_t brad, const fmpz_t bexp,
+    long shift)
+{
+    fmpz_t t, u, v;
+
+    fmpz_init(t);
+    fmpz_init(u);
+    fmpz_init(v);
+
+    /* a/b - (a+r)/(b-s) = r/(s-b) + a*s/(b*(s-b)) */
+
+    /* t = minimize |s-b| */
+    if (fmpz_sgn(bmid) >= 0)
+    {
+        fmpz_sub(t, bmid, brad);
+    }
+    else
+    {
+        fmpz_add(t, bmid, brad);
+        fmpz_neg(t, t);
+    }
+
+    /* first terror term: r/|s-b| */
+    fmpz_mul_2exp(u, arad, shift);
+    fmpz_cdiv_q(u, u, t);
+
+    /* second error term (likely small): a*s/(b*(s-b)) */
+    fmpz_mul_2exp(v, amid, shift);
+    fmpz_mul(v, v, brad);
+    fmpz_abs(v, v);
+    fmpz_cdiv_q_2exp(v, v, fmpz_bits(bmid) - 1);   /* fast approximate division */
+    fmpz_cdiv_q_2exp(v, v, fmpz_bits(t) - 1);      /* fast approximate division */
+
+    /* add error terms */
+    fmpz_add(crad, u, v);
+
+    /* compute quotient */
+    fmpz_mul_2exp(v, amid, shift);
+    fmpz_tdiv_q(cmid, v, bmid);
+
+    /* error from main division */
+    fmpz_add_ui(crad, crad, 1UL);
+
+    /* subtract exponents */
+    fmpz_sub(cexp, aexp, bexp);
+    fmpz_sub_ui(cexp, cexp, shift);
+
+    fmpz_clear(t);
+    fmpz_clear(u);
+    fmpz_clear(v);
+}
+
 void
 arb_div(arb_t c, const arb_t a, const arb_t b)
 {
-    fmpz_t t, u, v;
-    long abits, bbits, sshift, shift;
+    long abits, bbits, shift;
 
     if (arb_contains_zero(b))
     {
@@ -41,6 +95,7 @@ arb_div(arb_t c, const arb_t a, const arb_t b)
     {
         if (fmpz_is_zero(arb_radref(a)))
         {
+            fmpz_t t;
             fmpz_init(t);
             fmpz_sub(t, arb_expref(a), arb_expref(b));
             _arb_set_fmpq(c, arb_midref(a), arb_midref(b));
@@ -52,54 +107,37 @@ arb_div(arb_t c, const arb_t a, const arb_t b)
         /* TODO: (a + r) / b = a / b + r / b */
     }
 
-    fmpz_init(t);
-    fmpz_init(u);
-    fmpz_init(v);
 
     abits = fmpz_bits(arb_midref(a));
     bbits = fmpz_bits(arb_midref(b));
-    sshift = arb_prec(c) - (abits - bbits);
-    shift = FLINT_MAX(0, sshift);
+    shift = arb_prec(c) - (abits - bbits);
 
-    /* a/b - (a+r)/(b-s) = r/(s-b) + a*s/(b*(s-b)) */
+    /* shift = FLINT_MAX(shift, 0);  more precise, but can be much slower */
 
-    /* t = minimize |s-b| */
-    if (fmpz_sgn(arb_midref(b)) >= 0)
+    if (shift >= 0)
     {
-        fmpz_sub(t, arb_midref(b), arb_radref(b));
+        _arb_div_shiftup(arb_midref(c), arb_radref(c), arb_expref(c),
+            arb_midref(a), arb_radref(a), arb_expref(a),
+            arb_midref(b), arb_radref(b), arb_expref(b), shift);
     }
     else
     {
-        fmpz_add(t, arb_midref(b), arb_radref(b));
-        fmpz_neg(t, t);
+        fmpz_t amid, arad, aexp;
+
+        fmpz_init(amid);
+        fmpz_init(arad);
+        fmpz_init(aexp);
+
+        fmpz_add_ui(aexp, arb_expref(a), -shift);
+        fmpz_tdiv_q_2exp(amid, arb_midref(a), -shift);
+        fmpz_cdiv_q_2exp(arad, arb_radref(a), -shift);
+        fmpz_add_ui(arad, arad, 1UL);
+
+        _arb_div_shiftup(arb_midref(c), arb_radref(c), arb_expref(c),
+            amid, arad, aexp, arb_midref(b), arb_radref(b), arb_expref(b), 0);
+
+        fmpz_clear(amid);
+        fmpz_clear(arad);
+        fmpz_clear(aexp);
     }
-
-    /* first terror term: r/|s-b| */
-    fmpz_mul_2exp(u, arb_radref(a), shift);
-    fmpz_cdiv_q(u, u, t);
-
-    /* second error term (likely small): a*s/(b*(s-b)) */
-    fmpz_mul_2exp(v, arb_midref(a), shift);
-    fmpz_mul(v, v, arb_radref(b));
-    fmpz_abs(v, v);
-    fmpz_cdiv_q_2exp(v, v, bbits - 1);         /* fast approximate division */
-    fmpz_cdiv_q_2exp(v, v, fmpz_bits(t) - 1);  /* fast approximate division */
-
-    /* add error terms */
-    fmpz_add(arb_radref(c), u, v);
-
-    /* compute quotient; TODO: normalise afterwards if sshift < 0 */
-    fmpz_mul_2exp(v, arb_midref(a), shift);
-    fmpz_tdiv_q(arb_midref(c), v, arb_midref(b));
-
-    /* error from main division */
-    fmpz_add_ui(arb_radref(c), arb_radref(c), 1UL);
-
-    /* subtract exponents */
-    fmpz_sub(arb_expref(c), arb_expref(a), arb_expref(b));
-    fmpz_sub_ui(arb_expref(c), arb_expref(c), shift);
-
-    fmpz_clear(t);
-    fmpz_clear(u);
-    fmpz_clear(v);
 }
