@@ -149,6 +149,9 @@ void arb_const_pi_chudnovsky(arb_t x);
 void arb_const_euler_brent_mcmillan(arb_t x);
 void arb_const_zeta3_bsplit(arb_t x);
 
+void arb_zeta_inv_ui_euler_product(arb_t z, ulong s);
+void arb_zeta_ui_euler_product(arb_t z, ulong s);
+
 void arb_zeta_ui_bsplit(arb_t x, ulong s);
 void arb_zeta_ui_mpfr(arb_t x, ulong n);
 void arb_zeta_ui(arb_t x, ulong n);

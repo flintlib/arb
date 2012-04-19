@@ -89,12 +89,7 @@ arb_zeta_ui(arb_t x, ulong n)
     /* large n */
     else if (prec > 20 && n > 0.4 * pow(prec, 0.8))
     {
-        mpfr_t t;
-        mpfr_init2(t, prec + 10);
-        _zeta_inv_euler_product(t, n, 0);
-        mpfr_si_div(t, 1, t, MPFR_RNDD);
-        arb_set_mpfr(x, t, 100);  /* XXX */
-        mpfr_clear(t);
+        arb_zeta_ui_euler_product(x, n);
     }
     /* fallback */
     else
