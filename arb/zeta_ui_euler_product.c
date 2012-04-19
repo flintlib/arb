@@ -24,7 +24,23 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "arb.h"
+
+/*
+Let P(a,b) = prod_{a <= p <= b} (1 - p^(-s)).
+Then 1/zeta(s) = P(a,M) * P(M+1,inf).
+
+According to the analysis in S. Fillebrown,
+"Faster Computation of Bernoulli Numbers", Journal of Algorithms 13,
+431-445 (1992), it holds for all s >= 6 and M >= 1 that
+(1/P(M+1,inf) - 1) <= 2 * M^(1-s) / (s/2 - 1).
+
+Writing 1/zeta(s) = P(a,M) * (1 - eps) and solving for eps gives
+
+1/(1-eps) <= 1 + 2 * M^(1-s) / (s/2 - 1), so we have
+eps <= 2 * M^(1-s) / (s/2 - 1).
+
+Since 0 < P(a,M) <= 1, this bounds the absolute error of 1/zeta(s).
+*/
 
 static __inline__ void
 arb_mul_ui(arb_t y, const arb_t x, ulong c)
@@ -68,6 +84,7 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s)
     }
 
     prec = arb_prec(z);
+    /* heuristic */
     wp = prec + FLINT_BIT_COUNT(prec) + (prec/s) + 4;
 
     arb_init(t, wp);
