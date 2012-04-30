@@ -30,8 +30,8 @@
 Evaluates y = c0 + c1*x + ... + c[len-1]*x^(len-1) where
 
 c0 are limb-size integers
-x is a fixed-point number in [0,1) with <prec> limbs
-y is a fixed-point number in [0,LIMB_MAX) with <prec>+1 limbs
+x is a fixed-point number in [0,1) with <prec> fractional limbs
+y is a fixed-point number in [0,LIMB_MAX) with <prec> fractional limbs
 
 Assumes no aliasing of x, y, coeffs.
 Assumes precisions small enough to allocate everything on the stack.
@@ -53,8 +53,10 @@ to be overwritten.
 TODO: error analysis.
 */
 
-/* theoretically optimal parameters (minimize number of multiplications,
-   and on a tie, minimize the number of multiplications in the second step) */
+/* Theoretically optimal parameters (minimize number of multiplications,
+   and on a tie, minimize the number of multiplications in the
+   outer (Horner) loop). Tends to sqrt(n). TODO: check whether
+   the theory is correct! */
 const unsigned char opt_split[] =
 {
     0, 0, 2, 3, 2, 3, 3, 4, 4, 3, 5, 4, 4, 5, 5, 5, 4,
