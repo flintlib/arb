@@ -26,6 +26,40 @@
 #include "arb.h"
 #include "arith.h"
 
+/*
+void
+arb_zeta_ui_bernoulli(arb_t x, ulong n)
+{
+    arb_t t, u;
+    fmpq_t b;
+    long prec, wp;
+
+    if (n % 2 == 1)
+    {
+        printf("arb_zeta_ui_bernoulli: n must be even\n");
+        abort();
+    }
+
+    prec = arb_prec(x);
+    wp = prec + FLINT_BIT_COUNT(n) + 2;
+
+
+    arb_init(t, wp);
+    arb_init(u, wp);
+
+    fmpq_init(b);
+    bernoulli_number(b, n);
+    arb_set_fmpq(t, b);
+    fmpq_clear(b);
+
+    arb_const_pi(u);
+
+
+    arb_clear(t);
+    arb_clear(u);
+}
+*/
+
 static void
 mpfr_zeta_ui_bernoulli(mpfr_t x, ulong n)
 {
@@ -43,9 +77,11 @@ mpfr_zeta_ui_bernoulli(mpfr_t x, ulong n)
     bernoulli_number(b, n);
 
     fmpq_get_mpfr(x, b, MPFR_RNDD);
+
     mpfr_const_pi(t, MPFR_RNDD);
     mpfr_mul_2exp(t, t, 1, MPFR_RNDD);
     mpfr_pow_ui(t, t, n, MPFR_RNDD);
+
     mpz_fac_ui(f, n);
     mpfr_div_z(t, t, f, MPFR_RNDD);
     mpfr_mul(x, x, t, MPFR_RNDD);

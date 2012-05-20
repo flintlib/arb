@@ -67,11 +67,15 @@ exp_cache_init()
 
     prec = EXP_CACHE_PREC_LIMBS * FLINT_BITS + 1;
 
-    mpfr_init2(h, prec + 16);
-    mpfr_init2(exph, prec + 16);
+    mpfr_init2(h, prec + 64);
+    mpfr_init2(exph, prec + 64);
     mpfr_set_ui_2exp(h, 1, -EXP_CACHE1_BITS, GMP_RNDN);
     mpfr_exp(exph, h, GMP_RNDN);
     mpfr_set_ui(h, 1, GMP_RNDN);
+
+
+    mpfr_mul_2exp(h, h, 64 + 16, GMP_RNDN);
+    mpfr_div_ui(h, h, 2432902008176640000UL, GMP_RNDN);
 
     for (i = 0; i < (1 << EXP_CACHE1_BITS); i++)
     {
@@ -82,6 +86,10 @@ exp_cache_init()
     mpfr_set_ui_2exp(h, 1, -EXP_CACHE1_BITS-EXP_CACHE2_BITS, GMP_RNDN);
     mpfr_exp(exph, h, GMP_RNDN);
     mpfr_set_ui(h, 1, GMP_RNDN);
+
+
+
+    mpfr_mul_2exp(h, h, 16, GMP_RNDN);
 
     for (i = 0; i < (1 << EXP_CACHE2_BITS); i++)
     {
@@ -100,7 +108,7 @@ exp_cache_init()
 static const mp_limb_t exp_coeffs[] =
 {
 #if FLINT64
-    0UL,
+    2432902008176640000UL,
     2432902008176640000UL,
     1216451004088320000UL,
     405483668029440000UL,
@@ -188,16 +196,18 @@ mpr_exp_basecase(mp_ptr y, mp_srcptr x, long limbs, mp_bitcnt_t tol_bits)
                             (EXP_CACHE1_BITS + EXP_CACHE2_BITS);
 
         mpr_polyval_1(u, t, limbs, exp_coeffs, terms);
-        mpn_divrem_1(u, 0, u, limbs + 1, exp_coeffs[1]);
-        u[limbs] = 1;
+        mpn_rshift(u, u, limbs + 1, 48);
 
         /* exp(x1+x2+t) = exp(x1)*exp(x2)*exp(t) */
-        mpn_mul_basecase(t, u, limbs + 1,
-            exp_cache_1[i1] + (EXP_CACHE_PREC_LIMBS - limbs), limbs + 1);
-        mpn_mul_basecase(u, t + limbs, limbs + 1,
-            exp_cache_2[i2] + (EXP_CACHE_PREC_LIMBS - limbs), limbs + 1);
+        mpn_mul_n(t, u,         exp_cache_1[i1] + (EXP_CACHE_PREC_LIMBS - limbs), limbs + 1);
+        mpn_mul_n(u, t + limbs, exp_cache_2[i2] + (EXP_CACHE_PREC_LIMBS - limbs), limbs + 1);
 
+        /* divide out inflation
+        mpn_rshift(u + limbs, u + limbs, limbs + 1, 48);
         mpn_copyi(y, u + limbs, limbs + 1);
+         */
+
+        mpn_rshift(y, u + limbs, limbs + 1, 48);
         return;
     }
 
