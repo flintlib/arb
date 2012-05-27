@@ -5,13 +5,16 @@
 #include "flint.h"
 #include "ulong_extras.h"
 #include "fmpz.h"
+#include "mpn_extras.h"
 #include "mpn_inlines.h"
 
 #define _MPR_BITS_TO_LIMBS(b) (((b) + FLINT_BITS - 1) / FLINT_BITS)
 
 /* Conversions / debugging ***************************************************/
-long _mpr_set_mpfr(mp_ptr y, const mpfr_t x, mp_size_t n, mpfr_rnd_t rnd);
+long _mpr_set_mpfr(mp_ptr y, const mpfr_t x, mp_size_t n);
 void _mpr_get_mpfr(mpfr_t y, mp_srcptr x, long exp, mp_size_t n, mpfr_rnd_t rnd);
+void _mpr_get_mpfr_signed(mpfr_t y, mp_srcptr x, long exp,
+    mp_size_t n, int sign, mpfr_rnd_t rnd);
 
 void _mpr_randtest(mp_ptr x, flint_rand_t state, mp_size_t n);
 
