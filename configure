@@ -6,7 +6,7 @@
 PREFIX="/usr/local"
 MPIR_DIR="/usr/local"
 MPFR_DIR="/usr/local"
-FLINT_DIR="/home/fredrik/src/flint2/flint2"
+FLINT_DIR="/home/fredrik/src/flint2"
 SHARED=1
 STATIC=1
 
