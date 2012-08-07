@@ -1,13 +1,20 @@
 #include "mpr.h"
+#include "ufloat.h"
 
 typedef struct
 {
     mp_ptr d;
-    mp_limb_t rad;
+    long exp;
     long size;
     long alloc;
-    long sign;
-    long exp;
+    int sign;
+}
+mpr_struct;
+
+typedef struct
+{
+    mpr_struct mid;
+    ufloat_struct rad;
 }
 mprb_struct;
 

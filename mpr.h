@@ -62,7 +62,10 @@ void _mpr_printr(mp_ptr x, mp_size_t n);
 int
 _mpr_muld_n(mp_ptr z, mp_srcptr x, mp_srcptr y, mp_size_t n);
 
+int _mpr_muld_using_mpfr(mp_ptr z, mp_size_t zn, mp_srcptr x, mp_size_t xn, mp_srcptr y, mp_size_t yn);
 
 /* Addition ******************************************************************/
 
 int _mpr_addd_n(mp_ptr z, mp_srcptr x, mp_srcptr y, mp_bitcnt_t shift, mp_size_t n);
+
+int _mpr_addd_using_mpfr(mp_ptr z, mp_size_t zn, mp_srcptr x, mp_size_t xn, mp_srcptr y, mp_size_t yn, long shift);

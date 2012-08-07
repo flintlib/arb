@@ -3,5 +3,5 @@
 void
 mprb_clear(mprb_t x)
 {
-    free(x->d);
+    free(x->mid.d);
 }

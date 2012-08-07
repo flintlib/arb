@@ -6,9 +6,10 @@ mprb_contains_mpfr(const mprb_t x, const mpfr_t f)
     mpfr_t a, b;
     int result;
 
-    /* 1 extra bit allows adding radius exactly */
-    mpfr_init2(a, FLINT_BITS * x->size + 1);
-    mpfr_init2(b, FLINT_BITS * x->size + 1);
+    /* XXX: this is no longer correct if the radius is larger */
+
+    mpfr_init2(a, FLINT_BITS * x->mid.size + 1000);
+    mpfr_init2(b, FLINT_BITS * x->mid.size + 1000);
 
     mprb_get_interval_mpfr(a, b, x);
 

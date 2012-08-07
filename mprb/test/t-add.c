@@ -26,11 +26,11 @@ int main()
         mprb_init(y, 1 + n_randint(state, 300));
         mprb_init(z, 1 + n_randint(state, 300));
 
-        do { mprb_randtest(x, state, -10, 10); } while (x->size == 0);
-        do { mprb_randtest(y, state, -10, 10); } while (y->size == 0);
-        do { mprb_randtest(z, state, -10, 10); } while (z->size == 0);
+        do { mprb_randtest(x, state, -10, 10); } while (x->mid.size == 0);
+        do { mprb_randtest(y, state, -10, 10); } while (y->mid.size == 0);
+        do { mprb_randtest(z, state, -10, 10); } while (z->mid.size == 0);
 
-        y->sign = x->sign;
+        y->mid.sign = x->mid.sign;
 
         mpfr_init2(t, 1000);
         mpfr_init2(u, 1000);
