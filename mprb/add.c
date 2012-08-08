@@ -54,6 +54,5 @@ mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
 
     z->mid.size = zsize;
 
-    /* rounding error */
-    ufloat_add_2exp(&z->rad, &z->rad, z->mid.exp - z->mid.size * FLINT_BITS);
+    mprb_add_rad_2exp(z, mprb_ulp_exp(z));
 }

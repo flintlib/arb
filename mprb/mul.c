@@ -6,7 +6,7 @@ mprb_mul(mprb_t z, const mprb_t x, const mprb_t y)
     ufloat_t a, b;
     mp_srcptr xptr, yptr;
     mp_ptr zptr;
-    long zsize, xsize, ysize, exp, shift;
+    long zsize, xsize, ysize, shift;
 
     xptr = x->mid.d;
     yptr = y->mid.d;
@@ -36,13 +36,12 @@ mprb_mul(mprb_t z, const mprb_t x, const mprb_t y)
         shift = _mpr_muld_using_mpfr(zptr, zsize, xptr, xsize, yptr, ysize);
 
     /* add exponents */
-    exp = x->mid.exp + y->mid.exp - shift;
+    z->mid.exp = x->mid.exp + y->mid.exp - shift;
 
     /* rounding error */
-    ufloat_add_2exp(a, a, exp - z->mid.size * FLINT_BITS);
+    ufloat_add_2exp(a, a, mprb_ulp_exp(z));
 
     z->rad = *a;
     z->mid.size = zsize;
-    z->mid.exp = exp;
     z->mid.sign = x->mid.sign ^ y->mid.sign;
 }

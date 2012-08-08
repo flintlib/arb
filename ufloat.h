@@ -116,9 +116,9 @@ ufloat_zero(ufloat_t u)
 }
 
 static __inline__ int
-ufloat_is_zero(ufloat_t u)
+ufloat_is_zero(const ufloat_t u)
 {
-    return u->man != 0UL;
+    return u->man == 0UL;
 }
 
 
@@ -242,9 +242,10 @@ ufloat_sub(ufloat_t z, const ufloat_t x, const ufloat_t y)
 }
 
 static __inline__ void
-ufloat_set_2exp(ufloat_t y, const ufloat_t x, long exp)
+ufloat_set_2exp(ufloat_t y, long exp)
 {
-
+    y->man = 1UL << (UFLOAT_PREC - 1);
+    y->exp = exp + 1;
 }
 
 static __inline__ void

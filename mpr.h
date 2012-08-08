@@ -10,6 +10,19 @@
 
 #define _MPR_BITS_TO_LIMBS(b) (((b) + FLINT_BITS - 1) / FLINT_BITS)
 
+typedef struct
+{
+    mp_ptr d;
+    long exp;
+    long size;
+    long alloc;
+    int sign;
+}
+mpr_struct;
+
+typedef mpr_struct mpr_t[1];
+
+
 /* Conversions / debugging ***************************************************/
 long _mpr_set_mpfr(mp_ptr y, const mpfr_t x, mp_size_t n);
 void _mpr_get_mpfr(mpfr_t y, mp_srcptr x, long exp, mp_size_t n, mpfr_rnd_t rnd);
