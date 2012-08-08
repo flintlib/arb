@@ -57,3 +57,14 @@ _mpr_get_ufloat(ufloat_t u, mp_srcptr d, long size, long exp)
 
 void mprb_add(mprb_t z, const mprb_t x, const mprb_t y);
 void mprb_mul(mprb_t z, const mprb_t x, const mprb_t y);
+
+/*
+static __inline__ void
+_mprb_fit_to_rad(mprb_t x)
+{
+    if (!ufloat_is_zero(&x->rad))
+    {
+        long bot_exp;
+    }
+}
+*/

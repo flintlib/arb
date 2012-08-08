@@ -26,17 +26,34 @@
 #include "ufloat.h"
 
 void
-ufloat_log1p(ufloat_t z, const ufloat_t x)
+ufloat_set_mpfr(ufloat_t u, const mpfr_t x)
 {
-    if (x->exp >= -1L)
+    if (mpfr_zero_p(x))
     {
-        ufloat_t t;
-        ufloat_add_2exp(t, x, 0);
-        ufloat_log(z, t);
+        u->man = 0;
+        u->exp = 0;
     }
     else
     {
-        /* log(1+x) <= x, todo: improve accuracy for large x */
-        ufloat_set(z, x);
+        mpz_t t;
+        long exp, bits;
+
+        mpz_init(t);
+        exp = mpfr_get_z_2exp(t, x);
+        mpz_abs(t, t);
+
+        bits = mpz_sizeinbase(t, 2);
+
+        if (bits > UFLOAT_PREC)
+        {
+            mpz_cdiv_q_2exp(t, t, bits - UFLOAT_PREC);
+            exp += bits - UFLOAT_PREC;
+        }
+
+        u->exp = exp + UFLOAT_PREC;
+        u->man = mpz_get_ui(t);
+        ufloat_normalise(u);
+
+        mpz_clear(t);
     }
 }

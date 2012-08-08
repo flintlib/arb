@@ -26,17 +26,7 @@
 #include "ufloat.h"
 
 void
-ufloat_log1p(ufloat_t z, const ufloat_t x)
+ufloat_get_mpfr(mpfr_t x, const ufloat_t u)
 {
-    if (x->exp >= -1L)
-    {
-        ufloat_t t;
-        ufloat_add_2exp(t, x, 0);
-        ufloat_log(z, t);
-    }
-    else
-    {
-        /* log(1+x) <= x, todo: improve accuracy for large x */
-        ufloat_set(z, x);
-    }
+    mpfr_set_ui_2exp(x, u->man, u->exp - UFLOAT_PREC, MPFR_RNDU);
 }

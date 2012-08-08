@@ -16,7 +16,7 @@ mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
 
     xsize = x->mid.size;
     ysize = y->mid.size;
-    zsize = z->mid.size;
+    zsize = z->mid.alloc;
 
     xexp = x->mid.exp;
     yexp = y->mid.exp;
@@ -25,16 +25,34 @@ mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
 
     z->mid.sign = x->mid.sign;
 
-    if (xexp >= yexp)
+    if (xsize == ysize && xsize == zsize)
     {
-        shift = _mpr_addd_using_mpfr(zptr, zsize, xptr, xsize, yptr, ysize, xexp - yexp);
-        z->mid.exp = x->mid.exp + shift;
+        if (xexp >= yexp)
+        {
+            shift = _mpr_addd_n(zptr, xptr, yptr, xexp - yexp, xsize);
+            z->mid.exp = x->mid.exp + shift;
+        }
+        else
+        {
+            shift = _mpr_addd_n(zptr, yptr, xptr, yexp - xexp, xsize);
+            z->mid.exp = y->mid.exp + shift;
+        }
     }
     else
     {
-        shift = _mpr_addd_using_mpfr(zptr, zsize, yptr, ysize, xptr, xsize, yexp - xexp);
-        z->mid.exp = y->mid.exp + shift;
+        if (xexp >= yexp)
+        {
+            shift = _mpr_addd_using_mpfr(zptr, zsize, xptr, xsize, yptr, ysize, xexp - yexp);
+            z->mid.exp = x->mid.exp + shift;
+        }
+        else
+        {
+            shift = _mpr_addd_using_mpfr(zptr, zsize, yptr, ysize, xptr, xsize, yexp - xexp);
+            z->mid.exp = y->mid.exp + shift;
+        }
     }
+
+    z->mid.size = zsize;
 
     /* rounding error */
     ufloat_add_2exp(&z->rad, &z->rad, z->mid.exp - z->mid.size * FLINT_BITS);

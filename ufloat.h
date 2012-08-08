@@ -115,6 +115,13 @@ ufloat_zero(ufloat_t u)
     u->exp = 0L;
 }
 
+static __inline__ int
+ufloat_is_zero(ufloat_t u)
+{
+    return u->man != 0UL;
+}
+
+
 /* TODO: add constant_p handling; overflow */
 static __inline__ void
 ufloat_set_ui_2exp(ufloat_t u, mp_limb_t a, long exp)
@@ -372,44 +379,9 @@ ufloat_equal(const ufloat_t u, const ufloat_t v)
     return u->man == v->man && u->exp == v->exp;
 }
 
-static __inline__ void
-ufloat_get_mpfr(mpfr_t x, const ufloat_t u)
-{
-    mpfr_set_ui_2exp(x, u->man, u->exp - UFLOAT_PREC, MPFR_RNDU);
-}
+void ufloat_get_mpfr(mpfr_t x, const ufloat_t u);
 
-static __inline__ void
-ufloat_set_mpfr(ufloat_t u, const mpfr_t x)
-{
-    if (mpfr_zero_p(x))
-    {
-        u->man = 0;
-        u->exp = 0;
-    }
-    else
-    {
-        mpz_t t;
-        long exp, bits;
-
-        mpz_init(t);
-        exp = mpfr_get_z_2exp(t, x);
-        mpz_abs(t, t);
-
-        bits = mpz_sizeinbase(t, 2);
-
-        if (bits > UFLOAT_PREC)
-        {
-            mpz_cdiv_q_2exp(t, t, bits - UFLOAT_PREC);
-            exp += bits - UFLOAT_PREC;
-        }
-
-        u->exp = exp + UFLOAT_PREC;
-        u->man = mpz_get_ui(t);
-        ufloat_normalise(u);
-
-        mpz_clear(t);
-    }
-}
+void ufloat_set_mpfr(ufloat_t u, const mpfr_t x);
 
 void ufloat_log(ufloat_t z, const ufloat_t x);
 
