@@ -30,21 +30,7 @@ void mprb_get_interval_mpfr(mpfr_t a, mpfr_t b, const mprb_t x);
 int mprb_contains_mpfr(const mprb_t x, const mpfr_t f);
 
 
-/* XXX: assumes nonzero! */
-static __inline__ void
-_mpr_get_ufloat(ufloat_t u, mp_srcptr d, long size, long exp)
-{
-    /* since we truncate, we need to round up */
-    u->man = (d[size - 1] >> (FLINT_BITS - UFLOAT_PREC)) + 1UL;
-    u->exp = exp;
 
-    /* adjust for carry (very unlikely!) */
-    if (u->man >= (1UL << UFLOAT_PREC))
-    {
-        u->man = (u->man >> 1) + 1UL;
-        u->exp++;
-    }
-}
 
 void mprb_get_lower_bound_ufloat(ufloat_t u, const mprb_t x);
 

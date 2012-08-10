@@ -7,8 +7,11 @@
 #include "fmpz.h"
 #include "mpn_extras.h"
 #include "mpn_inlines.h"
+#include "ufloat.h"
 
 #define _MPR_BITS_TO_LIMBS(b) (((b) + FLINT_BITS - 1) / FLINT_BITS)
+
+/* TODO: add target precision field? */
 
 typedef struct
 {
@@ -32,6 +35,29 @@ void _mpr_get_mpfr_signed(mpfr_t y, mp_srcptr x, long exp,
 void _mpr_randtest(mp_ptr x, flint_rand_t state, mp_size_t n);
 
 void _mpr_printr(mp_ptr x, mp_size_t n);
+
+
+/* XXX: assumes nonzero! */
+static __inline__ void
+_mpr_get_ufloat(ufloat_t u, mp_srcptr d, long size, long exp)
+{
+    /* since we truncate, we need to round up */
+    u->man = (d[size - 1] >> (FLINT_BITS - UFLOAT_PREC)) + 1UL;
+    u->exp = exp;
+
+    /* adjust for carry (very unlikely!) */
+    if (u->man >= (1UL << UFLOAT_PREC))
+    {
+        u->man = (u->man >> 1) + 1UL;
+        u->exp++;
+    }
+}
+
+static __inline__ void
+mpr_get_ufloat(ufloat_t u, const mpr_t x)
+{
+    _mpr_get_ufloat(u, x->d, x->size, x->exp);
+}
 
 /* Multiplication ************************************************************/
 

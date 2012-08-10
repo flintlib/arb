@@ -11,7 +11,5 @@ mprb_init(mprb_t x, long bits)
     x->mid.alloc = limbs;
     x->mid.size = limbs;
 
-    /* XXX: ufloat_zero */
-    x->rad.man = 0UL;
-    x->rad.exp = 0L; 
+    ufloat_zero(&x->rad);
 }

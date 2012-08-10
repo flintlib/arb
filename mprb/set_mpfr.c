@@ -14,13 +14,7 @@ mprb_set_mpfr(mprb_t x, const mpfr_t v)
     x->mid.size = x->mid.alloc;
 
     if (xprec >= vprec)
-    {
         ufloat_zero(&x->rad);
-    }
     else
-    {
-        /* max 1 ulp error */
-        /* XXX: ufloat_set_2exp */
-        ufloat_set_ui_2exp(&x->rad, 1UL, x->mid.exp - x->mid.size * FLINT_BITS);
-    }
+        ufloat_set_2exp(&x->rad, mprb_ulp_exp(&x));
 }
