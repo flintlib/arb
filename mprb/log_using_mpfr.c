@@ -33,9 +33,9 @@ mprb_log_using_mpfr(mprb_t y, const mprb_t x)
         abort();
     }
 
-    prec = y->mid.alloc * FLINT_BITS;
+    prec = y->bits;
 
-    mpfr_init2(t, x->mid.size * FLINT_BITS);
+    mpfr_init2(t, FLINT_ABS(x->mid.size) * FLINT_BITS);
     mpfr_init2(u, prec);
 
     mprb_get_mid_mpfr(t, x, MPFR_RNDN);  /* exact */

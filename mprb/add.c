@@ -3,6 +3,20 @@
 void
 mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
 {
+    long error;
+
+    ufloat_add(&z->rad, &x->rad, &y->rad);
+
+    error = mpr_add_using_mpfr(&z->mid, &x->mid, &y->mid, z->bits, MPFR_RNDZ);
+
+    if (error != LONG_MIN)
+        mprb_add_rad_2exp(z, error);
+}
+
+/*
+void
+mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
+{
     mp_srcptr xptr, yptr;
     mp_ptr zptr;
     long zsize, xsize, ysize, xexp, yexp, shift;
@@ -56,3 +70,4 @@ mprb_add(mprb_t z, const mprb_t x, const mprb_t y)
 
     mprb_add_rad_2exp(z, mprb_ulp_exp(z));
 }
+*/

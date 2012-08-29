@@ -5,6 +5,7 @@ typedef struct
 {
     mpr_struct mid;
     ufloat_struct rad;
+    long bits;
 }
 mprb_struct;
 
@@ -14,6 +15,9 @@ typedef const mprb_struct * mprb_srcptr;
 
 #define MPRB_SIGN_PLUS 0
 #define MPRB_SIGN_MINUS 1
+
+#define mprb_mid(_x) (&(_x)->mid)
+#define mprb_rad(_x) (&(_x)->rad)
 
 void mprb_init(mprb_t x, long bits);
 void mprb_clear(mprb_t x);
@@ -42,12 +46,13 @@ mprb_is_exact(const mprb_t x)
 
 int mprb_contains_zero(const mprb_t x);
 
-
+/*
 static __inline__ long
 mprb_ulp_exp(const mprb_t x)
 {
     return x->mid.exp - x->mid.size * FLINT_BITS;
 }
+*/
 
 void mprb_add(mprb_t z, const mprb_t x, const mprb_t y);
 void mprb_mul(mprb_t z, const mprb_t x, const mprb_t y);

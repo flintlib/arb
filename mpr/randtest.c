@@ -5,7 +5,6 @@ _mpr_randtest(mp_ptr x, flint_rand_t state, mp_size_t n)
 {
     __mpz_struct z;
     mp_limb_t t;
-    long i;
 
     _flint_rand_init_gmp(state);
 
@@ -20,8 +19,16 @@ _mpr_randtest(mp_ptr x, flint_rand_t state, mp_size_t n)
     else
         mpz_rrandomb(&z, state->gmp_state, n * FLINT_BITS);
 
-    for (i = z._mp_size; i < n; i++)
-        x[i] = 0;
-
     x[n - 1] |= (1UL << (FLINT_BITS - 1));
+}
+
+void
+mpr_randtest(mpr_t x, flint_rand_t state, long bits)
+{
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_randtest(t, state, bits);
+    mpr_set_fmpz_2exp(x, t, n_randint(state, 20) - 10);
+    fmpz_clear(t);
+    mpr_normalize(x);
 }

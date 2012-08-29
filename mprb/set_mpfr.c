@@ -4,7 +4,11 @@
 void
 mprb_set_mpfr(mprb_t x, const mpfr_t v)
 {
-    long xprec, vprec, prec;
+    mpr_set_mpfr(mprb_mid(x), v);
+    ufloat_zero(mprb_rad(x));
+
+/*
+    long xprec, vprec;
 
     xprec = x->mid.alloc;
     vprec = _MPR_BITS_TO_LIMBS(v->_mpfr_prec);
@@ -16,5 +20,6 @@ mprb_set_mpfr(mprb_t x, const mpfr_t v)
     if (xprec >= vprec)
         ufloat_zero(&x->rad);
     else
-        ufloat_set_2exp(&x->rad, mprb_ulp_exp(&x));
+        ufloat_set_2exp(&x->rad, mprb_ulp_exp(x));
+*/
 }

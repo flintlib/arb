@@ -3,13 +3,7 @@
 void
 mprb_init(mprb_t x, long bits)
 {
-    long limbs = _MPR_BITS_TO_LIMBS(bits);
-
-    x->mid.d = calloc(limbs, sizeof(mp_limb_t));
-    x->mid.exp = 0;
-    x->mid.sign = MPRB_SIGN_PLUS;
-    x->mid.alloc = limbs;
-    x->mid.size = limbs;
-
+    mpr_init(&x->mid);
     ufloat_zero(&x->rad);
+    x->bits = bits;
 }
