@@ -50,7 +50,9 @@ mprb_log_using_mpfr(mprb_t y, const mprb_t x)
 
     mprb_set_mpfr(y, u);
 
+/*
     ufloat_set_2exp(&y->rad, mprb_ulp_exp(y));
+*/
 
     if (input_approx)
         ufloat_add(&y->rad, &y->rad, err);
