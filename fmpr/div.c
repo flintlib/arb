@@ -44,13 +44,13 @@ _fmpr_div_special(fmpr_t z, const fmpr_t x, const fmpr_t y)
         fmpr_neg_inf(z);
 }
 
-void
+long
 fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {
         _fmpr_div_special(z, x, y);
-        return;
+        return FMPR_RESULT_EXACT;
     }
 
     /* division by power of two <=> shift exponents */
@@ -61,8 +61,7 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         else
             fmpz_neg(fmpr_manref(z), fmpr_manref(x));
         fmpz_sub(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y));
-        _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
-        return;
+        return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
     }
     else
     {
@@ -100,7 +99,7 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         fmpz_sub(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y));
         fmpz_sub_ui(fmpr_expref(z), fmpr_expref(z), extra);
 
-        _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
+        return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
     }
 }
 

@@ -25,25 +25,34 @@
 
 #include "fmpr.h"
 
-void _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
 {
+    /* TODO: this should perhaps raise an exception to avoid ambiguity */
     if (fmpz_is_zero(man))
     {
-        /* this should perhaps crash, to avoid ambiguity? */
         fmpz_zero(exp);
-        return;
+        return FMPR_RESULT_EXACT;
     }
     else
     {
-        long sign, bc, val, exp_shift;
+        long bc, val;
 
         bc = fmpz_bits(man);
-        sign = fmpz_sgn(man);
-        exp_shift = 0;
+        val = fmpz_val2(man);
 
-        if (bc > prec)
+        if (bc - val <= prec)
         {
-            exp_shift = bc - prec;
+            if (val != 0)
+            {
+                fmpz_tdiv_q_2exp(man, man, val);
+                fmpz_add_ui(exp, exp, val);
+            }
+
+            return FMPR_RESULT_EXACT;
+        }
+        else
+        {
+            long exp_shift = bc - prec;
 
             if (rnd == FMPR_RND_NEAR)
             {
@@ -63,20 +72,20 @@ void _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
             }
             else
             {
-                if (sign > 0)
+                if (fmpz_sgn(man) > 0)
                     fmpz_cdiv_q_2exp(man, man, exp_shift);
                 else
                     fmpz_fdiv_q_2exp(man, man, exp_shift);
             }
-        }
 
-        val = fmpz_val2(man);
-        exp_shift += val;
+            val = fmpz_val2(man);
+            exp_shift += val;
 
-        if (val != 0)
-            fmpz_tdiv_q_2exp(man, man, val);
+            if (val != 0)
+                fmpz_tdiv_q_2exp(man, man, val);
 
-        if (exp_shift != 0)
             fmpz_add_ui(exp, exp, exp_shift);
+            return val;
+        }
     }
 }

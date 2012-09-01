@@ -25,41 +25,49 @@
 
 #include "fmpr.h"
 
-static void _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+static long _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))
     {
-        fmpr_set_round(z, y, prec, rnd);
+        if (fmpr_is_zero(y))
+        {
+            fmpr_zero(z);
+            return FMPR_RESULT_EXACT;
+        }
+        else
+            return fmpr_set_round(z, y, prec, rnd);
     }
     else if (fmpr_is_zero(y))
     {
-        fmpr_set_round(z, x, prec, rnd);
+        return fmpr_set_round(z, x, prec, rnd);
     }
     else if (fmpr_is_nan(x) || fmpr_is_nan(y)
         || (fmpr_is_pos_inf(x) && fmpr_is_neg_inf(y))
         || (fmpr_is_neg_inf(x) && fmpr_is_pos_inf(y)))
     {
         fmpr_nan(z);
+        return FMPR_RESULT_EXACT;
     }
     else if (fmpr_is_special(x))
     {
         fmpr_set(z, x);
+        return FMPR_RESULT_EXACT;
     }
     else
     {
         fmpr_set(z, y);
+        return FMPR_RESULT_EXACT;
     }
 }
 
-void
+long
 fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
     long shift, xsize, ysize;
 
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {
-        _fmpr_add_special(z, x, y, prec, rnd);
-        return;
+        return _fmpr_add_special(z, x, y, prec, rnd);
     }
 
     shift = _fmpz_sub_small(fmpr_expref(x), fmpr_expref(y));
@@ -81,8 +89,7 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
             /* y does not overlap with result */
             if (ysize + prec < shift + fmpz_bits(fmpr_manref(x)))
             {
-                _fmpr_add_eps(z, x, fmpz_sgn(fmpr_manref(y)), prec, rnd);
-                return;
+                return _fmpr_add_eps(z, x, fmpz_sgn(fmpr_manref(y)), prec, rnd);
             }
         }
 
@@ -101,8 +108,7 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
             /* y does not overlap with result */
             if (xsize + prec < shift + fmpz_bits(fmpr_manref(y)))
             {
-                _fmpr_add_eps(z, y, fmpz_sgn(fmpr_manref(x)), prec, rnd);
-                return;
+                return _fmpr_add_eps(z, y, fmpz_sgn(fmpr_manref(x)), prec, rnd);
             }
         }
 
@@ -110,5 +116,5 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         fmpz_set(fmpr_expref(z), fmpr_expref(x));
     }
 
-    _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
+    return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
 }

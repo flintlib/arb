@@ -25,33 +25,15 @@
 
 #include "fmpr.h"
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)
+long
+fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
-    long bits, shift;
-    int xsign;
-
-    xsign = fmpz_sgn(fmpr_manref(x));
-
-    if ((rnd == FMPR_RND_DOWN && xsign != sign) ||
-        (rnd == FMPR_RND_UP && xsign == sign) ||
-        (rnd == FMPR_RND_FLOOR && sign < 0) ||
-        (rnd == FMPR_RND_CEIL && sign > 0))
-    {
-        bits = fmpz_bits(fmpr_manref(x));
-        shift = 1 + FLINT_MAX(0, prec - bits);
-
-        fmpz_mul_2exp(fmpr_manref(z), fmpr_manref(x), shift);
-        fmpz_sub_ui(fmpr_expref(z), fmpr_expref(x), shift);
-
-        if (sign > 0)
-            fmpz_add_ui(fmpr_manref(z), fmpr_manref(z), 1);
-        else
-            fmpz_sub_ui(fmpr_manref(z), fmpr_manref(z), 1);
-
-        return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
-    }
-    else
-    {
-        return fmpr_set_round(z, x, prec, rnd);
-    }
+    fmpr_t t;
+    long r;
+    fmpr_init(t);
+    fmpr_mul(t, x, y, LONG_MAX, FMPR_RND_DOWN);
+    r = fmpr_add(z, z, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
 }
+

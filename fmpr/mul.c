@@ -59,16 +59,16 @@ _fmpr_mul_special(fmpr_t z, const fmpr_t x, const fmpr_t y)
     fmpr_nan(z);
 }
 
-void
+long
 fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {
         _fmpr_mul_special(z, x, y);
-        return;
+        return FMPR_RESULT_EXACT;
     }
 
     fmpz_mul(fmpr_manref(z), fmpr_manref(x), fmpr_manref(y));
     fmpz_add(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y));
-    _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
+    return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
 }

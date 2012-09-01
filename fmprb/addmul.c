@@ -23,35 +23,44 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "fmprb.h"
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)
+void
+fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
-    long bits, shift;
-    int xsign;
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_mul(t, x, y, prec);
+    fmprb_add(z, z, t, prec);
+    fmprb_clear(t);
+}
 
-    xsign = fmpz_sgn(fmpr_manref(x));
+void
+fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_mul_ui(t, x, y, prec);
+    fmprb_add(z, z, t, prec);
+    fmprb_clear(t);
+}
 
-    if ((rnd == FMPR_RND_DOWN && xsign != sign) ||
-        (rnd == FMPR_RND_UP && xsign == sign) ||
-        (rnd == FMPR_RND_FLOOR && sign < 0) ||
-        (rnd == FMPR_RND_CEIL && sign > 0))
-    {
-        bits = fmpz_bits(fmpr_manref(x));
-        shift = 1 + FLINT_MAX(0, prec - bits);
+void
+fmprb_addmul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_mul_si(t, x, y, prec);
+    fmprb_add(z, z, t, prec);
+    fmprb_clear(t);
+}
 
-        fmpz_mul_2exp(fmpr_manref(z), fmpr_manref(x), shift);
-        fmpz_sub_ui(fmpr_expref(z), fmpr_expref(x), shift);
-
-        if (sign > 0)
-            fmpz_add_ui(fmpr_manref(z), fmpr_manref(z), 1);
-        else
-            fmpz_sub_ui(fmpr_manref(z), fmpr_manref(z), 1);
-
-        return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
-    }
-    else
-    {
-        return fmpr_set_round(z, x, prec, rnd);
-    }
+void
+fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_mul_fmpz(t, x, y, prec);
+    fmprb_add(z, z, t, prec);
+    fmprb_clear(t);
 }

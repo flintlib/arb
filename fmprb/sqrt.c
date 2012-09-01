@@ -23,35 +23,39 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "fmprb.h"
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)
+void
+fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)
 {
-    long bits, shift;
-    int xsign;
+    long r;
 
-    xsign = fmpz_sgn(fmpr_manref(x));
+    if (!fmprb_is_exact(x))
+        abort();
 
-    if ((rnd == FMPR_RND_DOWN && xsign != sign) ||
-        (rnd == FMPR_RND_UP && xsign == sign) ||
-        (rnd == FMPR_RND_FLOOR && sign < 0) ||
-        (rnd == FMPR_RND_CEIL && sign > 0))
-    {
-        bits = fmpz_bits(fmpr_manref(x));
-        shift = 1 + FLINT_MAX(0, prec - bits);
+    r = fmpr_sqrt(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
 
-        fmpz_mul_2exp(fmpr_manref(z), fmpr_manref(x), shift);
-        fmpz_sub_ui(fmpr_expref(z), fmpr_expref(x), shift);
+    fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
 
-        if (sign > 0)
-            fmpz_add_ui(fmpr_manref(z), fmpr_manref(z), 1);
-        else
-            fmpz_sub_ui(fmpr_manref(z), fmpr_manref(z), 1);
+    fmprb_adjust(z);
+}
 
-        return _fmpr_normalise(fmpr_manref(z), fmpr_expref(z), prec, rnd);
-    }
-    else
-    {
-        return fmpr_set_round(z, x, prec, rnd);
-    }
+void
+fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_set_ui(t, x);
+    fmprb_sqrt(z, t, prec);
+    fmprb_clear(t);
+}
+
+void
+fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_set_fmpz(t, x);
+    fmprb_sqrt(z, t, prec);
+    fmprb_clear(t);
 }
