@@ -178,8 +178,8 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)
 {
-    return fmpz_equal(fmpr_manref(x), fmpr_manref(y)) &&
-            fmpz_equal(fmpr_expref(x), fmpr_expref(y));
+    return fmpz_equal(fmpr_expref(x), fmpr_expref(y)) &&
+        fmpz_equal(fmpr_manref(x), fmpr_manref(y));
 }
 
 static __inline__ int
@@ -198,6 +198,8 @@ fmpr_sgn(const fmpr_t x)
 
     return fmpz_sgn(fmpr_manref(x));
 }
+
+int fmpr_cmp(const fmpr_t x, const fmpr_t y);
 
 
 
