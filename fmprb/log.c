@@ -26,45 +26,36 @@
 #include "fmprb.h"
 
 void
-fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_log(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
 
-    fmpr_add(fmprb_radref(z), fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-    r = fmpr_add(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+    if (!fmprb_is_exact(x))
+        abort();
 
-    fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z), fmprb_midref(z),
-        r, FMPRB_RAD_PREC, FMPR_RND_UP);
+    r = fmpr_log(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+
+    fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
 
     fmprb_adjust(z);
 }
 
 void
-fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+fmprb_log_ui(fmprb_t z, ulong x, long prec)
 {
     fmprb_t t;
     fmprb_init(t);
-    fmprb_set_ui(t, y);
-    fmprb_add(z, x, t, prec);
+    fmprb_set_ui(t, x);
+    fmprb_log(z, t, prec);
     fmprb_clear(t);
 }
 
 void
-fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)
+fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec)
 {
     fmprb_t t;
     fmprb_init(t);
-    fmprb_set_si(t, y);
-    fmprb_add(z, x, t, prec);
-    fmprb_clear(t);
-}
-
-void
-fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpz(t, y);
-    fmprb_add(z, x, t, prec);
+    fmprb_set_fmpz(t, x);
+    fmprb_log(z, t, prec);
     fmprb_clear(t);
 }

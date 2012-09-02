@@ -25,16 +25,23 @@
 
 #include "fmpr.h"
 
-long
-fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+static mpfr_rnd_t fmpr_rnd_to_mpfr(fmpr_rnd_t rnd)
 {
-    long shift, man_shift, r, bc;
-    fmpz_t rem;
+    if (rnd == FMPR_RND_NEAR) return MPFR_RNDN;
+    if (rnd == FMPR_RND_FLOOR) return MPFR_RNDD;
+    if (rnd == FMPR_RND_CEIL) return MPFR_RNDU;
+    if (rnd == FMPR_RND_DOWN) return MPFR_RNDZ;
+    if (rnd == FMPR_RND_UP) return MPFR_RNDA;
+    abort();
+}
 
+long
+fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+{
     if (fmpr_is_special(x))
     {
         if (fmpr_is_zero(x))
-            fmpr_zero(y);
+            fmpr_neg_inf(y);
         else if (fmpr_is_pos_inf(x))
             fmpr_pos_inf(y);
         else
@@ -49,46 +56,30 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
         return FMPR_RESULT_EXACT;
     }
 
-    /* special case: 4^n */
-    /* TODO: process all small exact square roots efficiently */
-    if (fmpz_is_one(fmpr_manref(x)) && fmpz_is_even(fmpr_expref(x)))
+    if (fmpr_is_one(x))
     {
-        r = fmpr_set_round(y, x, prec, rnd);
-        fmpz_tdiv_q_2exp(fmpr_expref(y), fmpr_expref(y), 1);
+        fmpr_zero(y);
+        return FMPR_RESULT_EXACT;
+    }
+
+    {
+        mpfr_t t, u;
+        long r;
+
+        mpfr_init2(t, 1 + fmpz_bits(fmpr_manref(x)));
+        mpfr_init2(u, FLINT_MAX(2, prec));
+
+        fmpr_get_mpfr(t, x, MPFR_RNDD);
+
+        mpfr_log(u, t, fmpr_rnd_to_mpfr(rnd));
+
+        fmpr_set_mpfr(y, u);
+
+        r = prec - fmpz_bits(fmpr_manref(y));
+
+        mpfr_clear(t);
+        mpfr_clear(u);
+
         return r;
     }
-
-    fmpz_set(fmpr_expref(y), fmpr_expref(x));
-
-    man_shift = 0;
-
-    bc = fmpz_bits(fmpr_manref(x));
-
-    if (fmpz_is_odd(fmpr_expref(y)))
-    {
-        fmpz_sub_ui(fmpr_expref(y), fmpr_expref(y), 1UL);
-        man_shift += 1;
-        bc += 1;
-    }
-
-    shift = FLINT_MAX(4, 2 * prec - bc + 4);
-    shift += shift & 1;
-
-    fmpz_init(rem);
-    fmpz_mul_2exp(fmpr_manref(y), fmpr_manref(x), shift + man_shift);
-    fmpz_sqrtrem(fmpr_manref(y), rem, fmpr_manref(y));
-
-    if (!fmpz_is_zero(rem) && rnd != FMPR_RND_FLOOR && rnd != FMPR_RND_DOWN)
-    {
-        fmpz_mul_2exp(fmpr_manref(y), fmpr_manref(y), 1);
-        fmpz_add_ui(fmpr_manref(y), fmpr_manref(y), 1UL);
-        shift += 2;
-    }
-
-    fmpz_clear(rem);
-
-    fmpz_sub_ui(fmpr_expref(y), fmpr_expref(y), shift);
-    fmpz_tdiv_q_2exp(fmpr_expref(y), fmpr_expref(y), 1);
-
-    return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
 }

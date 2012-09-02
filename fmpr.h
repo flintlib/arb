@@ -131,6 +131,18 @@ static __inline__ void fmpr_nan(fmpr_t x) {
 
 
 
+static __inline__ int
+fmpr_is_one(const fmpr_t x)
+{
+    return fmpz_is_one(fmpr_manref(x)) && fmpz_is_zero(fmpr_expref(x));
+}
+
+static __inline__ void
+fmpr_one(fmpr_t x)
+{
+    fmpz_one(fmpr_manref(x));
+    fmpz_zero(fmpr_expref(x));
+}
 
 /* ------------------------------------------------------------------------ */
 
@@ -350,6 +362,7 @@ long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t
 
 long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 
+long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 
 
 static __inline__ long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)

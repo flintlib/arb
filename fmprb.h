@@ -65,6 +65,13 @@ fmprb_is_exact(const fmprb_t x)
 }
 
 static __inline__ void
+fmprb_zero(fmprb_t x)
+{
+    fmpr_zero(fmprb_midref(x));
+    fmpr_zero(fmprb_radref(x));
+}
+
+static __inline__ void
 fmprb_set(fmprb_t x, const fmprb_t y)
 {
     fmpr_set(fmprb_midref(x), fmprb_midref(y));
@@ -150,7 +157,29 @@ void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
 
+void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec);
+void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec);
+
+void fmprb_log(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_log_ui(fmprb_t z, ulong x, long prec);
+void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
+
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
+void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
+void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
+
+void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
+
+static __inline__ void
+fmprb_add_error_2exp_si(fmprb_t x, long err)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    fmpz_set_ui(fmpr_manref(t), 1);
+    fmpz_set_si(fmpr_expref(t), err);
+    fmpr_add(fmprb_radref(x), fmprb_radref(x), t, FMPRB_RAD_PREC, FMPR_RND_UP);
+    fmpr_clear(t);
+}
 
 static __inline__ void
 fmprb_printd(const fmprb_t x, long digits)

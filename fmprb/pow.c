@@ -26,45 +26,41 @@
 #include "fmprb.h"
 
 void
-fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)
 {
-    long r;
+    long i;
 
-    fmpr_add(fmprb_radref(z), fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-    r = fmpr_add(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+    if (e <= 1)
+    {
+        fmprb_set_ui(y, e == 0 ? 1 : b);
+        return;
+    }
 
-    fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z), fmprb_midref(z),
-        r, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmprb_adjust(z);
+    fmprb_set_ui(y, b);
+    for (i = FLINT_BIT_COUNT(e) - 2; i >= 0; i--)
+    {
+        fmprb_mul(y, y, y, prec);
+        if (e & (1UL<<i))
+            fmprb_mul_ui(y, y, b, prec);
+    }
 }
 
 void
-fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_ui(t, y);
-    fmprb_add(z, x, t, prec);
-    fmprb_clear(t);
-}
+    long i;
 
-void
-fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_si(t, y);
-    fmprb_add(z, x, t, prec);
-    fmprb_clear(t);
-}
+    if (e <= 1)
+    {
+        fmprb_set_si(y, e == 0 ? 1 : b);
+        return;
+    }
 
-void
-fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpz(t, y);
-    fmprb_add(z, x, t, prec);
-    fmprb_clear(t);
+    fmprb_set_si(y, b);
+    for (i = FLINT_BIT_COUNT(e) - 2; i >= 0; i--)
+    {
+        fmprb_mul(y, y, y, prec);
+        if (e & (1UL<<i))
+            fmprb_mul_si(y, y, b, prec);
+    }
 }

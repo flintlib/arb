@@ -30,7 +30,8 @@ fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     long r;
 
-    fmpr_add(fmprb_radref(z), fmprb_radref(z), fmprb_radref(z), FMPRB_RAD_PREC, FMPR_RND_UP);
+    fmpr_add(fmprb_radref(z), fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
+
     r = fmpr_sub(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
 
     fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z), fmprb_midref(z),
