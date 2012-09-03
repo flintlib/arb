@@ -164,6 +164,8 @@ void fmprb_log(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_log_ui(fmprb_t z, ulong x, long prec);
 void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
+void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
+
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
