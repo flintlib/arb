@@ -179,6 +179,7 @@ void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
 void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec);
+void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);
 
 static __inline__ void
 fmprb_add_error_2exp_si(fmprb_t x, long err)
