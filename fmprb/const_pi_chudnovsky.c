@@ -42,7 +42,14 @@ chudnovsky_bsplit(fmprb_t G, fmprb_t P, fmprb_t Q, long a, long b, long wp, int 
         fmprb_mul_si(G, G, 6*b-1, FMPR_PREC_EXACT);
 
         /* p = C^3 * b^3 / 24 */
-        fmprb_set_si(P, CONST_C * CONST_C * CONST_C / 24); /* xxx: fix for 32-bit */
+#if FLINT_BITS == 64
+        fmprb_set_si(P, CONST_C * CONST_C * CONST_C / 24);
+#else
+        fmprb_set_ui(P, CONST_C / 24);
+        fmprb_mul_ui(P, P, CONST_C, FMPR_PREC_EXACT);
+        fmprb_mul_ui(P, P, CONST_C, FMPR_PREC_EXACT);
+#endif
+
         fmprb_mul_ui(P, P, b, FMPR_PREC_EXACT);
         fmprb_mul_ui(P, P, b, FMPR_PREC_EXACT);
         fmprb_mul_ui(P, P, b, FMPR_PREC_EXACT);
