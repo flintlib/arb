@@ -25,53 +25,22 @@
 
 #include "fmprb.h"
 
-void
-fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
-{
-    long i;
+/* TODO: make  threadsafe; round output */
 
-    if (y == b)
-    {
-        fmprb_t t;
-        fmprb_init(t);
-        fmprb_set(t, b);
-        fmprb_pow_ui(y, t, e, prec);
-        fmprb_clear(t);
-        return;
-    }
-
-    if (e == 0)
-    {
-        fmprb_set_ui(y, 1UL);
-        return;
-    }
-
-    fmprb_set(y, b);
-
-    for (i = FLINT_BIT_COUNT(e) - 2; i >= 0; i--)
-    {
-        fmprb_mul(y, y, y, prec);
-        if (e & (1UL<<i))
-            fmprb_mul(y, y, b, prec);
-    }
-}
+long fmprb_const_pi_cached_prec = 0;
+fmprb_t fmprb_const_pi_cache;
 
 void
-fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)
+fmprb_const_pi(fmprb_t x, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_ui(t, b);
-    fmprb_pow_ui(y, t, e, prec);
-    fmprb_clear(t);
-}
+    if (fmprb_const_pi_cached_prec < prec)
+    {
+        if (fmprb_const_pi_cached_prec == 0)
+            fmprb_init(fmprb_const_pi_cache);
 
-void
-fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_si(t, b);
-    fmprb_pow_ui(y, t, e, prec);
-    fmprb_clear(t);
+        fmprb_const_pi_chudnovsky(fmprb_const_pi_cache, prec);
+        fmprb_const_pi_cached_prec = prec;
+    }
+
+    fmprb_set(x, fmprb_const_pi_cache);
 }

@@ -734,5 +734,22 @@ fmpr_printd(const fmpr_t x, long digits)
     mpfr_clear(t);
 }
 
+static __inline__ void
+fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)
+{
+    if (e == 0 || fmpr_is_special(x))
+    {
+        fmpr_set(y, x);
+    }
+    else
+    {
+        fmpz_set(fmpr_manref(y), fmpr_manref(x));
+        if (e > 0)
+            fmpz_add_ui(fmpr_expref(y), fmpr_expref(x), e);
+        else
+            fmpz_sub_ui(fmpr_expref(y), fmpr_expref(x), -e);
+    }
+}
+
 #endif
 

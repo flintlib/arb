@@ -118,3 +118,22 @@ fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
     fmprb_div(z, x, t, prec);
     fmprb_clear(t);
 }
+
+void
+fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
+{
+    fmpr_t p, q;
+    long r;
+
+    fmpr_init(p);
+    fmpr_init(q);
+
+    fmpr_set_fmpz(p, num);
+    fmpr_set_fmpz(q, den);
+
+    r = fmpr_div(fmprb_midref(y), p, q, prec, FMPR_RND_DOWN);
+    fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
+
+    fmpr_clear(p);
+    fmpr_clear(q);
+}

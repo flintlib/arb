@@ -137,6 +137,7 @@ void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec);
 
 void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
@@ -157,6 +158,7 @@ void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
 
+void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec);
 void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec);
 void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec);
 
@@ -170,6 +172,8 @@ void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec);
 void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec);
 
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
+void fmprb_const_pi(fmprb_t x, long prec);
+
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
@@ -193,6 +197,19 @@ fmprb_printd(const fmprb_t x, long digits)
     fmpr_printd(fmprb_midref(x), digits);
     printf(" +/- ");
     fmpr_printd(fmprb_radref(x), 5);
+}
+
+static __inline__ void
+fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
+{
+    fmpr_mul_2exp_si(fmprb_midref(y), fmprb_midref(x), e);
+    fmpr_mul_2exp_si(fmprb_radref(y), fmprb_radref(x), e);
+}
+
+static __inline__ void
+fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
+{
+    fmprb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
 }
 
 #endif
