@@ -49,6 +49,6 @@ fmprb_fac_ui_bsplit(fmprb_t x, ulong a, ulong b, long prec)
 void
 fmprb_fac_ui(fmprb_t x, ulong n, long prec)
 {
-    fmprb_fac_ui_bsplit(x, ULONG_MAX, FLINT_MAX(n, 1),
+    fmprb_fac_ui_bsplit(x, 0, FLINT_MAX(n, 1),
         prec + FLINT_BIT_COUNT(n));
 }
