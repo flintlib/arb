@@ -78,7 +78,7 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         ysize = _fmpz_size(fmpr_manref(y)) * FLINT_BITS;
 
         /* x and y do not overlap */
-        if (shift > ysize)
+        if (shift > ysize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
             if (ysize + prec < shift + fmpz_bits(fmpr_manref(x)))
@@ -98,7 +98,7 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         xsize = _fmpz_size(fmpr_manref(x)) * FLINT_BITS;
 
         /* x and y do not overlap */
-        if (shift > xsize)
+        if (shift > xsize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
             if (xsize + prec < shift + fmpz_bits(fmpr_manref(y)))

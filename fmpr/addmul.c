@@ -31,7 +31,7 @@ fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     fmpr_t t;
     long r;
     fmpr_init(t);
-    fmpr_mul(t, x, y, LONG_MAX, FMPR_RND_DOWN);
+    fmpr_mul(t, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
     r = fmpr_add(z, z, t, prec, rnd);
     fmpr_clear(t);
     return r;

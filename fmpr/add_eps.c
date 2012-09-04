@@ -38,7 +38,7 @@ long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd
         (rnd == FMPR_RND_CEIL && sign > 0))
     {
         bits = fmpz_bits(fmpr_manref(x));
-        shift = 1 + FLINT_MAX(0, prec - bits);
+        shift = 2 + FLINT_MAX(0, prec - bits);
 
         fmpz_mul_2exp(fmpr_manref(z), fmpr_manref(x), shift);
         fmpz_sub_ui(fmpr_expref(z), fmpr_expref(x), shift);
@@ -52,6 +52,11 @@ long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd
     }
     else
     {
-        return fmpr_set_round(z, x, prec, rnd);
+        long ret = fmpr_set_round(z, x, prec, rnd);
+
+        if (ret == FMPR_RESULT_EXACT)
+            return prec - fmpz_bits(fmpr_manref(z));
+        else
+            return ret;
     }
 }
