@@ -219,5 +219,10 @@ fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
     fmprb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
 }
 
+int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y);
+int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y);
+int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
+int fmprb_contains_zero(const fmprb_t x);
+
 #endif
 

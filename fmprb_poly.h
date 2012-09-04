@@ -53,11 +53,22 @@ void _fmprb_poly_set_length(fmprb_poly_t poly, long len);
 
 void _fmprb_poly_normalise(fmprb_poly_t poly);
 
+/* Basic manipulation */
+
+static __inline__ void fmprb_poly_zero(fmprb_poly_t poly)
+{
+    poly->length = 0;
+}
+
 /* Conversions */
 
 void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec);
 
 void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec);
+
+/* Comparisons */
+
+int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
 
 /* IO */
 

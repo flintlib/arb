@@ -23,15 +23,37 @@
 
 ******************************************************************************/
 
-#include "fmprb_poly.h"
+#include "fmprb.h"
 
-void
-fmprb_poly_clear(fmprb_poly_t poly)
+/* TODO: handle infinities; large shift efficiently */
+
+int
+fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
 {
-    long i;
+    if (fmprb_is_exact(x))
+    {
+        return fmpr_equal(fmprb_midref(x), y);
+    }
+    else
+    {
+        fmpr_t t;
+        int result = 0;
 
-    for (i = 0; i < poly->alloc; i++)
-        fmprb_clear(poly->coeffs + i);
+        fmpr_init(t);
 
-    flint_free(poly->coeffs);
+        fmpr_add(t, fmprb_midref(x), fmprb_radref(x),
+            FMPR_PREC_EXACT, FMPR_RND_DOWN);
+
+        if (fmpr_cmp(y, t) <= 0)
+        {
+            fmpr_sub(t, fmprb_midref(x), fmprb_radref(x),
+                FMPR_PREC_EXACT, FMPR_RND_DOWN);
+
+            if (fmpr_cmp(y, t) >= 0)
+                result = 1;
+        }
+
+        fmpr_clear(t);
+        return result;
+    }
 }

@@ -23,15 +23,10 @@
 
 ******************************************************************************/
 
-#include "fmprb_poly.h"
+#include "fmprb.h"
 
-void
-fmprb_poly_clear(fmprb_poly_t poly)
+int
+fmprb_contains_zero(const fmprb_t x)
 {
-    long i;
-
-    for (i = 0; i < poly->alloc; i++)
-        fmprb_clear(poly->coeffs + i);
-
-    flint_free(poly->coeffs);
+    return fmpr_cmp(fmprb_midref(x), fmprb_radref(x)) <= 0;
 }

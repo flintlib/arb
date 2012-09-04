@@ -39,6 +39,7 @@ void _fmpr_fmpz_vec_max_norm(fmpr_t norm, const fmpz * vec, long len, long prec)
 {
     fmpr_set_fmpz(norm, vec + _fmpz_vec_height_index(vec, len));
     fmpr_set_round(norm, norm, prec, FMPR_RND_UP);
+    fmpr_abs(norm, norm);
 }
 
 /* XXX: refactor this */
@@ -119,8 +120,6 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
         fmpr_zero(error);
         return;   /* no need to clear fmpzs */
     }
-
-    printf("hull: %ld to %ld\n", *bot_exp, *top_exp);
 
     /* only take as much precision as necessary */
     shift = _fmpz_sub_small(top_exp, bot_exp);
@@ -261,6 +260,13 @@ fmprb_poly_mullow(fmprb_poly_t res, const fmprb_poly_t poly1,
     len1 = FLINT_MIN(len1, len);
     len2 = FLINT_MIN(len2, len);
     len = FLINT_MIN(len, len1 + len2 - 1);
+
+    /* TODO: should check for inf/nan */
+    if (len == 0)
+    {
+        fmprb_poly_zero(res);
+        return;
+    }
 
     fmprb_poly_fit_length(res, len);
 

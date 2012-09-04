@@ -23,15 +23,23 @@
 
 ******************************************************************************/
 
-#include "fmprb_poly.h"
+#include "fmprb.h"
 
-void
-fmprb_poly_clear(fmprb_poly_t poly)
+int
+fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y)
 {
-    long i;
-
-    for (i = 0; i < poly->alloc; i++)
-        fmprb_clear(poly->coeffs + i);
-
-    flint_free(poly->coeffs);
+    if (fmpz_is_one(fmpq_denref(y)))
+    {
+        return fmprb_contains_fmpz(x, fmpq_numref(y));
+    }
+    else
+    {
+        int ans;
+        fmprb_t t;
+        fmprb_init(t);
+        fmprb_mul_fmpz(t, x, fmpq_denref(y), FMPR_PREC_EXACT);
+        ans = fmprb_contains_fmpz(t, fmpq_numref(y));
+        fmprb_clear(t);
+        return ans;
+    }
 }

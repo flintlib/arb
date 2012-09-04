@@ -23,15 +23,16 @@
 
 ******************************************************************************/
 
-#include "fmprb_poly.h"
+#include "fmprb.h"
 
-void
-fmprb_poly_clear(fmprb_poly_t poly)
+int
+fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y)
 {
-    long i;
-
-    for (i = 0; i < poly->alloc; i++)
-        fmprb_clear(poly->coeffs + i);
-
-    flint_free(poly->coeffs);
+    int ans;
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, y);
+    ans = fmprb_contains_fmpr(x, t);
+    fmpr_clear(t);
+    return ans;
 }

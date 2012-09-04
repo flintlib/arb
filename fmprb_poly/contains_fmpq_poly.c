@@ -25,13 +25,32 @@
 
 #include "fmprb_poly.h"
 
-void
-fmprb_poly_clear(fmprb_poly_t poly)
+int
+fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)
 {
     long i;
+    fmpq_t t;
 
-    for (i = 0; i < poly->alloc; i++)
-        fmprb_clear(poly->coeffs + i);
+    if (poly2->length > poly1->length)
+        return 0;
 
-    flint_free(poly->coeffs);
+    fmpq_init(t);
+
+    for (i = 0; i < poly2->length; i++)
+    {
+        fmpq_poly_get_coeff_fmpq(t, poly2, i);
+        if (!fmprb_contains_fmpq(poly1->coeffs + i, t))
+        {
+            fmpq_clear(t);
+            return 0;
+        }
+    }
+
+    fmpq_clear(t);
+
+    for (i = poly2->length; i < poly1->length; i++)
+        if (!fmprb_contains_zero(poly1->coeffs + i))
+            return 0;
+
+    return 1;
 }
