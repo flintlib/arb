@@ -71,6 +71,12 @@ fmprb_zero(fmprb_t x)
     fmpr_zero(fmprb_radref(x));
 }
 
+static __inline__ int
+fmprb_is_zero(const fmprb_t x)
+{
+    return fmpr_is_zero(fmprb_midref(x)) && fmpr_is_zero(fmprb_radref(x));
+}
+
 static __inline__ void
 fmprb_set(fmprb_t x, const fmprb_t y)
 {
