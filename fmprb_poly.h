@@ -41,6 +41,8 @@ fmprb_poly_struct;
 typedef fmprb_poly_struct fmprb_poly_t[1];
 
 
+/* Memory management */
+
 void fmprb_poly_init(fmprb_poly_t poly);
 
 void fmprb_poly_clear(fmprb_poly_t poly);
@@ -51,13 +53,33 @@ void _fmprb_poly_set_length(fmprb_poly_t poly, long len);
 
 void _fmprb_poly_normalise(fmprb_poly_t poly);
 
+/* Conversions */
+
 void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec);
 
 void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec);
 
+/* IO */
+
 void fmprb_poly_printd(const fmprb_poly_t poly, long digits);
 
+/* Arithmetic */
+
 void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long prec);
+
+void _fmprb_poly_mullow(fmprb_struct * C,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long n, long prec);
+
+void fmprb_poly_mullow(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long len, long prec);
+
+void _fmprb_poly_mul(fmprb_struct * C,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec);
+
+void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
 
 #endif

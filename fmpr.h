@@ -751,5 +751,20 @@ fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)
     }
 }
 
+static __inline__ void
+fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)
+{
+    if (e == 0 || fmpr_is_special(x))
+    {
+        fmpr_set(y, x);
+    }
+    else
+    {
+        fmpz_set(fmpr_manref(y), fmpr_manref(x));
+        fmpz_add(fmpr_expref(y), fmpr_expref(x), e);
+    }
+}
+
+
 #endif
 
