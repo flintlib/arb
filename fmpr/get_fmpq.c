@@ -26,39 +26,31 @@
 #include "fmpr.h"
 
 void
-fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
+fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
 {
-    fmpz_randtest(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
-
-void
-fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
-
-void
-fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    switch (n_randint(state, 32))
+    if (fmpr_is_zero(x))
     {
-        case 0:
-            fmpr_zero(x);
-            break;
-        case 1:
-            fmpr_pos_inf(x);
-            break;
-        case 2:
-            fmpr_neg_inf(x);
-            break;
-        case 3:
-            fmpr_nan(x);
-            break;
-        default:
-            fmpr_randtest_not_zero(x, state, bits, exp_bits);
+        fmpq_zero(y);
+    }
+    else if (fmpr_is_special(x) || COEFF_IS_MPZ(*fmpr_expref(x)))
+    {
+        printf("exception: fmpr_get_fmpq: cannot convert to rational\n");
+        abort();
+    }
+    else
+    {
+        long exp = *fmpr_expref(x);
+
+        fmpz_set_ui(fmpq_denref(y), 1UL);
+
+        if (exp >= 0)
+        {
+            fmpz_mul_2exp(fmpq_numref(y), fmpr_manref(x), exp);
+        }
+        else
+        {
+            fmpz_set(fmpq_numref(y), fmpr_manref(x));
+            fmpz_mul_2exp(fmpq_denref(y), fmpq_denref(y), -exp);
+        }
     }
 }

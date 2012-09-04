@@ -25,40 +25,31 @@
 
 #include "fmpr.h"
 
-void
-fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
+long
+fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
 {
-    fmpz_randtest(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
-
-void
-fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
-
-void
-fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    switch (n_randint(state, 32))
+    if (fmpz_is_one(fmpq_denref(y)))
     {
-        case 0:
-            fmpr_zero(x);
-            break;
-        case 1:
-            fmpr_pos_inf(x);
-            break;
-        case 2:
-            fmpr_neg_inf(x);
-            break;
-        case 3:
-            fmpr_nan(x);
-            break;
-        default:
-            fmpr_randtest_not_zero(x, state, bits, exp_bits);
+        fmpr_set_fmpz(x, fmpq_numref(y));
+        /* XXX: combine */
+        return fmpr_set_round(x, x, prec, rnd);
+    }
+    else
+    {
+        long res;
+
+        fmpr_t t, u;
+        fmpr_init(t);
+        fmpr_init(u);
+
+        fmpr_set_fmpz(t, fmpq_numref(y));
+        fmpr_set_fmpz(u, fmpq_denref(y));
+
+        res = fmpr_div(x, t, u, prec, rnd);
+
+        fmpr_clear(t);
+        fmpr_clear(u);
+
+        return res;
     }
 }

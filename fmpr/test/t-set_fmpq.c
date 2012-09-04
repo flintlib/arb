@@ -25,40 +25,53 @@
 
 #include "fmpr.h"
 
-void
-fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    fmpz_randtest(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
 
-void
-fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
+int main()
 {
-    fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, exp_bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
+    long iter;
+    flint_rand_t state;
 
-void
-fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits)
-{
-    switch (n_randint(state, 32))
+    printf("set_fmpq....");
+    fflush(stdout);
+
+    flint_randinit(state);
+
+    /* test exact roundtrip R -> Q -> R */
+    for (iter = 0; iter < 100000; iter++)
     {
-        case 0:
-            fmpr_zero(x);
-            break;
-        case 1:
-            fmpr_pos_inf(x);
-            break;
-        case 2:
-            fmpr_neg_inf(x);
-            break;
-        case 3:
-            fmpr_nan(x);
-            break;
-        default:
-            fmpr_randtest_not_zero(x, state, bits, exp_bits);
+        long bits;
+        fmpr_t x, z;
+        fmpq_t y;
+
+        bits = 2 + n_randint(state, 200);
+
+        fmpr_init(x);
+        fmpr_init(z);
+        fmpq_init(y);
+
+        fmpr_randtest(x, state, bits, 10);
+        fmpr_randtest(z, state, bits, 10);
+
+        fmpr_get_fmpq(y, x);
+        fmpr_set_fmpq(z, y, bits, FMPR_RND_DOWN);
+
+        if (!fmpr_equal(x, z))
+        {
+            printf("FAIL\n\n");
+            printf("bits: %ld\n", bits);
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = "); fmpq_print(y); printf("\n\n");
+            printf("z = "); fmpr_print(z); printf("\n\n");
+            abort();
+        }
+
+        fmpr_clear(x);
+        fmpr_clear(z);
+        fmpq_clear(y);
     }
+
+    flint_randclear(state);
+    _fmpz_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }

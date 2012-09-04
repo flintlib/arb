@@ -206,6 +206,8 @@ int fmpr_cmp(const fmpr_t x, const fmpr_t y);
 
 void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
 
+void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
+
 void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
 
 static __inline__ int
@@ -765,6 +767,9 @@ fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)
     }
 }
 
+void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);
+
+long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
 
 #endif
 
