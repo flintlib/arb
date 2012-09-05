@@ -178,6 +178,9 @@ void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
 void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec);
 void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec);
 
+void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec);
+void fmprb_fib_ui(fmprb_t f, ulong n, long prec);
+
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_pi(fmprb_t x, long prec);
 
