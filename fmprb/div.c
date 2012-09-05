@@ -137,3 +137,13 @@ fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
     fmpr_clear(p);
     fmpr_clear(q);
 }
+
+void
+fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_set_ui(t, x);
+    fmprb_div(z, t, y, prec);
+    fmprb_clear(t);
+}

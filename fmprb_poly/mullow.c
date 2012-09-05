@@ -118,6 +118,12 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
         fmpz_zero(exp);
         _fmpz_vec_zero(coeffs, lenA);
         fmpr_zero(error);
+        for (i = 0; i < lenA; i++)
+        {
+            if (fmpr_cmp(fmprb_radref(A + i), error) > 0)
+                fmpr_set(error, fmprb_radref(A + i));
+        }
+
         return;   /* no need to clear fmpzs */
     }
 

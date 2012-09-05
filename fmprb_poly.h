@@ -93,5 +93,9 @@ void _fmprb_poly_mul(fmprb_struct * C,
 void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
 
+void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec);
+
+void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
 #endif
 

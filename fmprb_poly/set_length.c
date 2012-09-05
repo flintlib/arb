@@ -33,7 +33,7 @@ _fmprb_poly_set_length(fmprb_poly_t poly, long len)
     if (poly->length > len)
     {
         for (i = len; i < poly->length; i++)
-            fmprb_clear(poly->coeffs + i);
+            fmprb_zero(poly->coeffs + i);
     }
 
     poly->length = len;
