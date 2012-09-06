@@ -50,5 +50,5 @@ void
 fmprb_fac_ui(fmprb_t x, ulong n, long prec)
 {
     fmprb_fac_ui_bsplit(x, 0, FLINT_MAX(n, 1),
-        prec + FLINT_BIT_COUNT(n));
+        FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n)));
 }

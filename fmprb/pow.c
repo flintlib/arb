@@ -25,6 +25,8 @@
 
 #include "fmprb.h"
 
+/* TODO: add log2(e) bits to the working precision? */
+
 void
 fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
 {

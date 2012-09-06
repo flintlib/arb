@@ -56,10 +56,7 @@ void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)
         return;
     }
 
-    if (prec == FMPR_PREC_EXACT)
-        wp = prec;
-    else
-        wp = prec + 3 * fmpz_bits(n);
+    wp = FMPR_PREC_ADD(prec, 3 * fmpz_bits(n));
 
     fmprb_init(u);
     fmprb_init(t);

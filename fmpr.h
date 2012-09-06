@@ -68,6 +68,15 @@ fmpr_clear(fmpr_t x)
     fmpz_clear(fmpr_expref(x));
 }
 
+
+/* The return value encodes an error bound, or FMPR_RESULT_EXACT if exact */
+#define FMPR_RESULT_EXACT LONG_MAX
+
+/* Allow 'infinite' precision for operations where a result can be computed exactly */
+#define FMPR_PREC_EXACT LONG_MAX
+
+#define FMPR_PREC_ADD(prec,extra) ((prec) == FMPR_PREC_EXACT ? FMPR_PREC_EXACT : (prec) + (extra))
+
 /* ------------------------------------------------------------------------ */
 /* Special values */
 
@@ -145,11 +154,6 @@ fmpr_one(fmpr_t x)
 }
 
 /* ------------------------------------------------------------------------ */
-
-/* The return value encodes an error bound, or FMPR_RESULT_EXACT if exact */
-
-#define FMPR_RESULT_EXACT LONG_MAX
-#define FMPR_PREC_EXACT LONG_MAX
 
 /* TODO: version for just the val2 reduction! */
 long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd);
