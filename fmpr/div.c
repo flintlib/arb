@@ -103,3 +103,82 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
 }
 
+long
+fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_ui(t, y);
+    r = fmpr_div(z, x, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_ui(t, x);
+    r = fmpr_div(z, t, y, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_si(t, y);
+    r = fmpr_div(z, x, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_si(t, x);
+    r = fmpr_div(z, t, y, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, y);
+    r = fmpr_div(z, x, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, x);
+    r = fmpr_div(z, t, y, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t, u; long r;
+    fmpr_init(t);
+    fmpr_init(u);
+    fmpr_set_fmpz(t, x);
+    fmpr_set_fmpz(u, x);
+    r = fmpr_div(z, t, u, prec, rnd);
+    fmpr_clear(t);
+    fmpr_clear(u);
+    return r;
+}

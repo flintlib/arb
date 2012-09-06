@@ -92,3 +92,26 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
     return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
 }
+
+
+long
+fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_ui(t, x);
+    r = fmpr_sqrt(z, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}
+
+long
+fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd)
+{
+    fmpr_t t; long r;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, x);
+    r = fmpr_sqrt(z, t, prec, rnd);
+    fmpr_clear(t);
+    return r;
+}

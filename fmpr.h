@@ -299,6 +299,7 @@ fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
     }
 }
 
+/* Some fmpz helper functions */
 
 /* sets z = x + y*2^shift */
 static __inline__ void fmpz_add_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
@@ -349,271 +350,6 @@ static __inline__ long _fmpz_sub_small(const fmpz_t x, const fmpz_t y)
     }
 }
 
-
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd);
-
-long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
-
-long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
-
-
-static __inline__ long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, x);
-    r = fmpr_sqrt(z, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, x);
-    r = fmpr_sqrt(z, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-
-static __inline__ long fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_div(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, x);
-    r = fmpr_div(z, t, y, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_div(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, x);
-    r = fmpr_div(z, t, y, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_div(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, x);
-    r = fmpr_div(z, t, y, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-
-
-
-
-
-
-static __inline__ long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_add(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_sub(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_mul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_addmul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_add(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_sub(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_mul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_addmul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_addmul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_add(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_sub(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_mul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_addmul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-static __inline__ long fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-
-
-
-
-
-
-
-
 static __inline__ mp_size_t
 _fmpz_size(const fmpz_t f)
 {
@@ -626,7 +362,50 @@ _fmpz_size(const fmpz_t f)
 }
 
 
+/* Arithmetic */
 
+
+long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd);
+
+long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_addmul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+long fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
+long fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
+long fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+
+long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd);
+long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd);
+
+long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 
 static __inline__ void
 fmpr_neg(fmpr_t y, const fmpr_t x)
@@ -706,35 +485,10 @@ fmpr_add_error_result(fmpr_t err, const fmpr_t err_in,
     }
 }
 
-static __inline__ void
-fmpr_print(const fmpr_t x)
-{
-    if (fmpr_is_normal(x))
-    {
-        printf("(");
-        fmpz_print(fmpr_manref(x));
-        printf(" * 2^");
-        fmpz_print(fmpr_expref(x));
-        printf(")");
-    }
-    else
-    {
-        if (fmpr_is_zero(x)) printf("(0)");
-        else if (fmpr_is_pos_inf(x)) printf("(+inf)");
-        else if (fmpr_is_neg_inf(x)) printf("(-inf)");
-        else printf("(nan)");
-    }
-}
+void fmpr_print(const fmpr_t x);
 
-static __inline__ void
-fmpr_printd(const fmpr_t x, long digits)
-{
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", digits, t);
-    mpfr_clear(t);
-}
+void fmpr_printd(const fmpr_t x, long digits);
+
 
 static __inline__ void
 fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)

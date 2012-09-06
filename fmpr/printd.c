@@ -25,47 +25,12 @@
 
 #include "fmpr.h"
 
-long
-fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+void
+fmpr_printd(const fmpr_t x, long digits)
 {
-    fmpr_t t;
-    long r;
-    fmpr_init(t);
-    fmpr_mul(t, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
-    r = fmpr_sub(z, z, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-long
-fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-long
-fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_si(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-long
-fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; long r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, y);
-    r = fmpr_submul(z, x, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
+    mpfr_t t;
+    mpfr_init2(t, digits * 3.33 + 10);
+    fmpr_get_mpfr(t, x, MPFR_RNDN);
+    mpfr_printf("%.*Rg", digits, t);
+    mpfr_clear(t);
 }
