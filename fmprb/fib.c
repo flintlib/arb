@@ -35,7 +35,6 @@ Information Processing Letters 75 (2000) 243–246
 void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)
 {
     fmprb_t t, u;
-    fmpz_t mask, v;
     long wp, sign, i;
 
     if (fmpz_sgn(n) < 0)
