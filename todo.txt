@@ -1,0 +1,78 @@
+Urgent
+------
+
+* More test code. In particular, ball arithmetic needs test code that
+  tries to trigger corner cases. Aliasing tests are also missing.
+
+* Documentation.
+
+* Make sure that excessive shifts in add/sub are detected
+  with exact precision.
+
+* Fix code duplication, add functions to encapsulate fiddly bits of code, etc.
+
+* Fix missing/wrong error bounds currently used in the code (see TODO/XXX).
+
+* Add missing polynomial functionality (conversions, arithmetic, etc.)
+
+
+Important
+---------
+
+* Transcendental functions.
+
+* Matrices.
+
+* Add adjustment code for balls (when the mantissa is much more precise than
+  the error bound, it can be truncated). Also, try to work out consistent
+  semantics for ball arithmetic (with regard to extra working precision, etc.)
+
+* Do a low-level rewrite of the fmpr type.
+
+  The mantissa should probably be changed to an unsigned, top-aligned fraction
+  (i.e. the exponent will point to the top rather than the bottom, and
+  the top bit of the ).
+
+  This requires a separate sign field, increasing the struct size from
+  2 to 3 words, but ought to lead to simpler code and slightly less overhead.
+
+  The unsigned fraction can be stored directly in a ulong when it has
+  most 64 bits. A zero top bit can be used to tag the field as a pointer.
+  The pointer could either be to an mpz struct or directly to a limb array
+  where the first two limbs encode the allocation and used size.
+  There should probably be a recycling mechanism as for fmpz.
+
+  Required work:
+    memory allocation code
+    conversions to/from various integer types
+    rounding/normalization
+    addition
+    subtraction
+    comparison
+    multiplication
+    fix any code accessing the exponent and mantissa directly as integers
+
+  Lower priority:
+    low-level division, square root (these are not as critical for
+    performance -- it is ok to do them by converting to integers and back)
+
+    direct low-level code for addmul, mul_ui etc
+
+* Native string conversion code instead of relying on mpfr (so we can have
+  big exponents, etc.).
+
+
+Distant future
+--------------
+
+* Add functions for sloppy arithmetic (non-exact rounding). This could be
+  used to speed up some ball operations with inexact output, where we don't
+  need the best possible result, just a correct error bound.
+
+* Write functions that ignore the possibility that exponents might be
+  large, and use where appropriate (e.g. polynomial and matrix multiplication
+  where one bounds magnitudes in an initial pass).
+
+* Add generic code for hypergeometric series (etc.) and if possible, use
+  for elementary functions.
+
