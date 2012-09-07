@@ -173,6 +173,8 @@ void fmprb_log(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_log_ui(fmprb_t z, ulong x, long prec);
 void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
+void fmprb_exp(fmprb_t z, const fmprb_t x, long prec);
+
 void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
 
 void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec);

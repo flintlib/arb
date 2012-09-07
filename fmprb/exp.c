@@ -26,61 +26,36 @@
 #include "fmprb.h"
 
 void
-fmprb_log(fmprb_t z, const fmprb_t x, long prec)
+fmprb_exp(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
 
-    if (fmprb_contains_zero(x) || fmpr_sgn(fmprb_midref(x)) < 0)
-    {
-        printf("log: interval contains zero or negative numbers\n");
-        abort();
-    }
-
     if (fmprb_is_exact(x))
     {
-        r = fmpr_log(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        r = fmpr_exp(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
     else
     {
         /*
-        Let the input be [a-b, a+b]. We require a > b >= 0 (otherwise the
-        interval contains zero or a negative number and the logarithm is not
-        defined). The error is largest at a-b, and we have
-
-        log(a) - log(a-b) = log(1 + b/(a-b)).
+        exp(a+b) - exp(a) = exp(a) * (exp(b)-1)
         */
-        fmpr_t err;
-        fmpr_init(err);
-        fmpr_sub(err, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_div(err, fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_log1p(err, err, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_t t, u;
 
-        r = fmpr_log(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), err, fmprb_midref(z), r,
+        fmpr_init(t);
+        fmpr_init(u);
+
+        fmpr_exp(t, fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_expm1(u, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        r = fmpr_exp(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
             FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_clear(err);
+
+        fmpr_clear(t);
+        fmpr_clear(u);
     }
 
     fmprb_adjust(z);
-}
-
-void
-fmprb_log_ui(fmprb_t z, ulong x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_ui(t, x);
-    fmprb_log(z, t, prec);
-    fmprb_clear(t);
-}
-
-void
-fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpz(t, x);
-    fmprb_log(z, t, prec);
-    fmprb_clear(t);
 }

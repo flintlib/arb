@@ -410,6 +410,10 @@ long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd);
 long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd);
 
 long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+
+long fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+long fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 
 static __inline__ void
 fmpr_neg(fmpr_t y, const fmpr_t x)
@@ -528,6 +532,26 @@ fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)
 void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);
 
 long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
+
+#define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
+    do { \
+        mpfr_t t, u; \
+        long r; \
+        mpfr_rnd_t rrnd; \
+        if (rnd == FMPR_RND_DOWN) rrnd = MPFR_RNDZ; \
+        else if (rnd == FMPR_RND_UP) rrnd = MPFR_RNDA; \
+        else if (rnd == FMPR_RND_FLOOR) rrnd = MPFR_RNDD; \
+        else if (rnd == FMPR_RND_CEIL) rrnd = MPFR_RNDU; \
+        else rrnd = MPFR_RNDN; \
+        mpfr_init2(t, 2 + fmpz_bits(fmpr_manref(x))); \
+        mpfr_init2(u, FLINT_MAX(2, prec)); \
+        fmpr_get_mpfr(t, x, MPFR_RNDD); \
+        func(u, t, rrnd); \
+        fmpr_set_mpfr(y, u); \
+        r = prec - fmpz_bits(fmpr_manref(y)); \
+        mpfr_clear(t); \
+        mpfr_clear(u); \
+    } while (0);
 
 #endif
 
