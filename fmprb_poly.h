@@ -97,5 +97,9 @@ void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long le
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
+/* Special functions */
+
+void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
+
 #endif
 

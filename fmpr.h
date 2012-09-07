@@ -547,7 +547,6 @@ long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t t, u; \
-        long r; \
         mpfr_rnd_t rrnd; \
         if (rnd == FMPR_RND_DOWN) rrnd = MPFR_RNDZ; \
         else if (rnd == FMPR_RND_UP) rrnd = MPFR_RNDA; \
