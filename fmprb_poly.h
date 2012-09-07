@@ -97,6 +97,16 @@ void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long le
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
+/* Derivative and integral */
+
+void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec);
+
+void fmprb_poly_derivative(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
+
+void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec);
+
+void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
+
 /* Special functions */
 
 void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
