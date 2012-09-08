@@ -58,6 +58,27 @@ fmprb_clear(fmprb_t x)
     fmpr_clear(fmprb_radref(x));
 }
 
+static __inline__ fmprb_struct *
+_fmprb_vec_init(long n)
+{
+    long i;
+    fmprb_struct * v = flint_malloc(sizeof(fmprb_struct) * n);
+
+    for (i = 0; i < n; i++)
+        fmprb_init(v + i);
+
+    return v;
+}
+
+static __inline__ void
+_fmprb_vec_clear(fmprb_struct * v, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmprb_clear(v + i);
+    flint_free(v);
+}
+
 static __inline__ int
 fmprb_is_exact(const fmprb_t x)
 {
@@ -118,6 +139,18 @@ fmprb_set_fmpz(fmprb_t x, const fmpz_t y)
 {
     fmpr_set_fmpz(fmprb_midref(x), y);
     fmpr_zero(fmprb_radref(x));
+}
+
+static __inline__ int
+fmprb_is_one(const fmprb_t f)
+{
+    return fmpr_is_one(fmprb_midref(f)) && fmpr_is_zero(fmprb_radref(f));
+}
+
+static __inline__ void
+fmprb_one(fmprb_t f)
+{
+    fmprb_set_ui(f, 1UL);
 }
 
 static __inline__ void
