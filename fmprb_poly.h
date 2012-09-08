@@ -60,6 +60,14 @@ static __inline__ void fmprb_poly_zero(fmprb_poly_t poly)
     poly->length = 0;
 }
 
+static __inline__ void
+fmprb_poly_one(fmprb_poly_t poly)
+{
+    fmprb_poly_fit_length(poly, 1);
+    fmprb_one(poly->coeffs);
+    _fmprb_poly_set_length(poly, 1);
+}
+
 /* Conversions */
 
 void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec);
@@ -112,6 +120,11 @@ void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
 void _fmprb_poly_log_series(fmprb_struct * res, fmprb_struct * f, long n, long prec);
 
 void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
+
+void _fmprb_poly_exp_series_basecase(fmprb_struct * f,
+        const fmprb_struct * h, long hlen, long n, long prec);
+
+void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec);
 
 void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
 
