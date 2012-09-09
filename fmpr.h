@@ -376,6 +376,20 @@ _fmpz_size(const fmpz_t f)
         return mpz_size(COEFF_TO_PTR(d));
 }
 
+static __inline__ void
+fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
+{
+    if (e <= 1)
+    {
+        fmpz_set_ui(x, e == 0 ? 1UL : b);
+    }
+    else
+    {
+        fmpz_set_ui(x, b);
+        fmpz_pow_ui(x, x, e);
+    }
+}
+
 
 /* Arithmetic */
 

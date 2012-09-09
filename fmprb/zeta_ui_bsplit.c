@@ -210,7 +210,10 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     fmprb_mul(sum->Q2, sum->Q2, sum->C, wp);
     fmprb_div(sum->C, sum->E, sum->Q2, wp);
 
-    /* D = 1/(1 - 2^(1-s)) */
+    /* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
+    fmprb_add_error_2exp_si(sum->C, (long) (ERROR_A - ERROR_B * n + 1));
+
+    /* To get zeta(s), multiply by D = 1/(1 - 2^(1-s)) */
     {
         fmpz_t t;
         fmpz_init(t);
@@ -227,9 +230,6 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     }
 
     fmprb_mul(x, sum->C, sum->D, wp);
-
-    /* The truncation error is bounded by 3/(3+sqrt(8))^n */
-    fmprb_add_error_2exp_si(x, (long) (ERROR_A - ERROR_B * n + 1));
 
     zeta_bsplit_clear(sum);
 }

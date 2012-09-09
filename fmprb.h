@@ -179,6 +179,8 @@ void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
 void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec);
 void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);
 
+void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
+
 void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec);
@@ -225,6 +227,7 @@ void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec);
 void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);
+void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec);
 void fmprb_zeta_ui(fmprb_t x, ulong n, long prec);
 
 static __inline__ void
