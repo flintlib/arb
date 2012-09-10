@@ -35,7 +35,19 @@ zeta3_bsplit(fmprb_t P, fmprb_t Q, fmprb_t T, long a, long b, long wp, int cont)
         fmprb_ui_pow_ui(Q, 2*a + 1, 5, wp);
         fmprb_mul_ui(Q, Q, a ? 32 : 64, wp);
 
-        fmprb_set_ui(T, 205*a*a + 250*a + 77); /* xxx: fix overflow */
+        /* 205 * a^2 + 250 * a + 77 */
+        {
+            fmpz_t t;
+            fmpz_init(t);
+            fmpz_set_ui(t, a);
+            fmpz_mul_ui(t, t, 205);
+            fmpz_add_ui(t, t, 250);
+            fmpz_mul_ui(t, t, a);
+            fmpz_add_ui(t, t, 77);
+            fmprb_set_fmpz(T, t);
+            fmpz_clear(t);
+        }
+
         if (a % 2)
             fmprb_neg(T, T);
         fmprb_mul(T, T, P, wp);

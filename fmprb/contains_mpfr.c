@@ -25,22 +25,14 @@
 
 #include "fmprb.h"
 
-/* TODO: make  threadsafe; round output */
-
-long fmprb_const_pi_cached_prec = 0;
-fmprb_t fmprb_const_pi_cache;
-
-void
-fmprb_const_pi(fmprb_t x, long prec)
+int
+fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y)
 {
-    if (fmprb_const_pi_cached_prec < prec)
-    {
-        if (fmprb_const_pi_cached_prec == 0)
-            fmprb_init(fmprb_const_pi_cache);
-
-        fmprb_const_pi_chudnovsky(fmprb_const_pi_cache, prec);
-        fmprb_const_pi_cached_prec = prec;
-    }
-
-    fmprb_set_round(x, fmprb_const_pi_cache, prec);
+    int ans;
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_mpfr(t, y);
+    ans = fmprb_contains_fmpr(x, t);
+    fmpr_clear(t);
+    return ans;
 }

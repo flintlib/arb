@@ -60,7 +60,7 @@ fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
         fmprb_zeta_ui_bsplit(x, n, prec);
     }
     /* large n */
-    else if (prec > 20 && n > 0.4 * pow(prec, 0.8))
+    else if (prec > 20 && n > 6 && n > 0.4 * pow(prec, 0.8))
     {
         fmprb_zeta_ui_euler_product(x, n, prec);
     }
@@ -115,7 +115,7 @@ fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
     start_odd = start % 2;
 
     fmprb_zeta_ui_vec_even(x, start + start_odd, num_even, prec);
-    fmprb_zeta_ui_vec_odd(x + num_even, start + !start_odd, num_even, prec);
+    fmprb_zeta_ui_vec_odd(x + num_even, start + !start_odd, num_odd, prec);
 
     /* interleave */
     tmp = flint_malloc(sizeof(fmprb_struct) * num);

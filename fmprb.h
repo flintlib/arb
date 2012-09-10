@@ -105,6 +105,8 @@ fmprb_set(fmprb_t x, const fmprb_t y)
     fmpr_set(fmprb_radref(x), fmprb_radref(y));
 }
 
+void fmprb_set_round(fmprb_t z, const fmprb_t x, long prec);
+
 static __inline__ void
 fmprb_neg(fmprb_t x, const fmprb_t y)
 {
@@ -269,7 +271,42 @@ fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
 int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y);
 int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y);
 int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
+int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y);
 int fmprb_contains_zero(const fmprb_t x);
+
+static __inline__ long
+fmprb_rel_error_bits(const fmprb_t x)
+{
+    fmpz_t midmag, radmag;
+    long result;
+
+    if (fmpr_is_zero(fmprb_radref(x)))
+        return -FMPR_PREC_EXACT;
+    if (fmpr_is_special(fmprb_midref(x)) || fmpr_is_special(fmprb_radref(x)))
+        return FMPR_PREC_EXACT;
+
+    fmpz_init(midmag);
+    fmpz_init(radmag);
+
+    fmpz_add_ui(midmag, fmpr_expref(fmprb_midref(x)),
+        fmpz_bits(fmpr_manref(fmprb_midref(x))));
+    fmpz_add_ui(radmag, fmpr_expref(fmprb_radref(x)),
+        fmpz_bits(fmpr_manref(fmprb_radref(x))));
+    fmpz_add_ui(radmag, radmag, 1);
+
+    result = _fmpz_sub_small(radmag, midmag);
+
+    fmpz_clear(midmag);
+    fmpz_clear(radmag);
+
+    return result;
+}
+
+static __inline__ long
+fmprb_rel_accuracy_bits(const fmprb_t x)
+{
+    return -fmprb_rel_error_bits(x);
+}
 
 #endif
 
