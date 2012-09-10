@@ -23,44 +23,29 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "fmprb.h"
 
 void
-fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 {
-    fmpz_randtest(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, mag_bits);
-    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
+    fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
 
-void
-fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
-{
-    fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
-    fmpz_randtest(fmpr_expref(x), state, mag_bits);
-    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), bits);
-    _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
-}
-
-void
-fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
-{
-    switch (n_randint(state, 32))
+    switch (n_randint(state, 8))
     {
+        /* exact */
         case 0:
-            fmpr_zero(x);
+            fmpr_zero(fmprb_radref(x));
             break;
+        /* arbitrary radius */
         case 1:
-            fmpr_pos_inf(x);
+            fmpr_randtest(fmprb_radref(x), state, FMPRB_RAD_PREC, mag_bits);
+            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
             break;
-        case 2:
-            fmpr_neg_inf(x);
-            break;
-        case 3:
-            fmpr_nan(x);
-            break;
+        /* "typical" radius */
         default:
-            fmpr_randtest_not_zero(x, state, bits, mag_bits);
+            fmpr_randtest_not_zero(fmprb_radref(x), state, FMPRB_RAD_PREC, 4);
+            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
+            fmpz_add(fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_radref(x)),
+                fmpr_expref(fmprb_midref(x)));
     }
 }

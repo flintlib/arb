@@ -248,6 +248,14 @@ fmprb_add_error_2exp_si(fmprb_t x, long err)
 }
 
 static __inline__ void
+fmprb_print(const fmprb_t x)
+{
+    fmpr_print(fmprb_midref(x));
+    printf(" +/- ");
+    fmpr_print(fmprb_radref(x));
+}
+
+static __inline__ void
 fmprb_printd(const fmprb_t x, long digits)
 {
     fmpr_printd(fmprb_midref(x), digits);
@@ -273,6 +281,8 @@ int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y);
 int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
 int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y);
 int fmprb_contains_zero(const fmprb_t x);
+
+void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x);
 
 static __inline__ long
 fmprb_rel_error_bits(const fmprb_t x)
@@ -307,6 +317,8 @@ fmprb_rel_accuracy_bits(const fmprb_t x)
 {
     return -fmprb_rel_error_bits(x);
 }
+
+void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
 #endif
 
