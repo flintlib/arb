@@ -30,7 +30,7 @@
 void
 fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
 {
-    long i;
+    long i, wp;
 
     if (y == b)
     {
@@ -50,11 +50,13 @@ fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
 
     fmprb_set(y, b);
 
+    wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(e));
+
     for (i = FLINT_BIT_COUNT(e) - 2; i >= 0; i--)
     {
-        fmprb_mul(y, y, y, prec);
+        fmprb_mul(y, y, y, wp);
         if (e & (1UL<<i))
-            fmprb_mul(y, y, b, prec);
+            fmprb_mul(y, y, b, wp);
     }
 }
 

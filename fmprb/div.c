@@ -30,6 +30,13 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     long r;
 
+    if (fmprb_contains_zero(y))
+    {
+        fmpr_zero(fmprb_midref(z));
+        fmpr_pos_inf(fmprb_radref(z));
+        return;
+    }
+
     if (fmprb_is_exact(y))
     {
         if (fmprb_is_exact(x))
@@ -52,7 +59,7 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
     else
     {
         /* x/y - (x+a)/(y-b)  =  a/(b-y) + x*b/(y*(b-y)) */
-        /* XXX: require y > b! */
+        /* where we assume y > b */
 
         fmpr_t t, u, by;
 

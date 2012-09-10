@@ -84,9 +84,7 @@ void
 fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
 {
     long i, num_borwein;
-    ulong end, cutoff;
-
-    end = start + num * 2;
+    ulong cutoff;
 
     cutoff = 40 + 0.3 * prec;
 
