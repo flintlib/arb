@@ -558,6 +558,10 @@ void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);
 
 long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
 
+void fmpr_set_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp);
+
+void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
+
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t t, u; \
