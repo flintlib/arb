@@ -320,5 +320,7 @@ fmprb_rel_accuracy_bits(const fmprb_t x)
 
 void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
+void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
+
 #endif
 
