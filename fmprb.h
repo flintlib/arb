@@ -230,6 +230,10 @@ void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);
 void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec);
 void fmprb_zeta_ui(fmprb_t x, ulong n, long prec);
 
+void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec);
+void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
+void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
+
 static __inline__ void
 fmprb_add_error_2exp_si(fmprb_t x, long err)
 {

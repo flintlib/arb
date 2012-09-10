@@ -74,6 +74,9 @@ fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
     fmpz_t c, d, t, u;
     fmpz * zeta;
 
+    if (num < 1)
+        return;
+
     wp = prec + FLINT_BIT_COUNT(prec);
     n = wp / 2.5431066063272239453 + 1;
 

@@ -36,22 +36,12 @@ fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)
     fmprb_poly_fit_length(z, n);
     _fmprb_poly_set_length(z, n);
 
-    for (i = 0; i < n; i++)
-    {
-        if (i == 0)
-        {
-            fmprb_zero(z->coeffs + i);
-        }
-        else if (i == 1)
-        {
-            fmprb_const_euler_brent_mcmillan(z->coeffs + i, prec);
-        }
-        else
-        {
-            fmprb_zeta_ui(z->coeffs + i, i, prec);
-            fmprb_div_ui(z->coeffs + i, z->coeffs + i, i, prec);
-        }
-    }
+    if (n > 0) fmprb_zero(z->coeffs);
+    if (n > 1) fmprb_const_euler_brent_mcmillan(z->coeffs + 1, prec);
+    if (n > 2) fmprb_zeta_ui_vec(z->coeffs + 2, 2, n - 2, prec);
+
+    for (i = 2; i < n; i++)
+        fmprb_div_ui(z->coeffs + i, z->coeffs + i, i, prec);
 
     _fmprb_poly_normalise(z);
 }
