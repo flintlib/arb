@@ -29,7 +29,7 @@
 #define CONST_B 545140134UL
 #define CONST_C 640320UL
 #define CONST_D 12UL
-#define BITS_PER_TERM 47.1104131382158 /* log2(640320^3 / (2^6 * 3^3)) */
+#define BITS_PER_TERM 47.110413138215842023 /* log2(640320^3 / (2^6 * 3^3)) */
 
 void
 chudnovsky_bsplit(fmprb_t G, fmprb_t P, fmprb_t Q, long a, long b, long wp, int cont)
@@ -104,6 +104,7 @@ fmprb_const_pi_chudnovsky(fmprb_t x, long prec)
 
     wp = prec + 32;
 
+    /* the summation is done up to N inclusive */
     N = wp / BITS_PER_TERM + 1;
 
     fmprb_init(G);
@@ -121,7 +122,9 @@ fmprb_const_pi_chudnovsky(fmprb_t x, long prec)
 
     fmprb_div(x, G, Q, wp);
 
-    /* TODO: add error term */
+    /* the actual truncation error is around -BITS_PER_TERM * (N+1),
+       so this bound is safe to compute using doubles */
+    fmprb_add_error_2exp_si(x, -BITS_PER_TERM * N + 1);
 
     fmprb_clear(G);
     fmprb_clear(P);
