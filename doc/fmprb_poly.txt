@@ -1,0 +1,159 @@
+
+    Ball polynomials.
+
+*******************************************************************************
+
+    Types, macros and constants
+
+*******************************************************************************
+
+fmprb_poly_struct
+
+fmprb_poly_t
+
+
+*******************************************************************************
+
+    Memory management
+
+*******************************************************************************
+
+void fmprb_poly_init(fmprb_poly_t poly)
+
+void fmprb_poly_clear(fmprb_poly_t poly)
+
+void fmprb_poly_fit_length(fmprb_poly_t poly, long len)
+
+void _fmprb_poly_set_length(fmprb_poly_t poly, long len)
+
+void _fmprb_poly_normalise(fmprb_poly_t poly)
+
+void fmprb_poly_zero(fmprb_poly_t poly)
+
+void fmprb_poly_one(fmprb_poly_t poly)
+
+
+*******************************************************************************
+
+    Conversions
+
+*******************************************************************************
+
+
+void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec)
+
+void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec)
+
+
+*******************************************************************************
+
+    Input and output
+
+*******************************************************************************
+
+void fmprb_poly_printd(const fmprb_poly_t poly, long digits)
+
+
+*******************************************************************************
+
+    Comparisons
+
+*******************************************************************************
+
+int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)
+
+
+*******************************************************************************
+
+    Arithmetic
+
+*******************************************************************************
+
+void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long prec)
+
+void _fmprb_poly_mullow(fmprb_struct * C,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long n, long prec)
+
+    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to
+    length n. The output is not allowed to be aliased with either of the
+    inputs. We require lenA &ge; lenB > 0, n > 0, lenA + lenB - 1 &ge; n.
+
+    As currently implemented, this function puts each input polynomial on
+    a common exponent, truncates to prec bits, and multiplies exactly over
+    the integers. The output error is computed by cross-multiplying the
+    max norms.
+
+void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A,
+              const fmprb_poly_t B, long n, long prec)
+
+    Sets C to the product of A and B, truncated to length n.
+
+void _fmprb_poly_mul(fmprb_struct * C,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec)
+
+    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to
+    length n. The output is not allowed to be aliased with either of the
+    inputs. We require lenA &ge; lenB > 0, n > 0.
+    This function currently calls _fmprb_poly_mullow.
+
+void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long prec)
+
+    Sets C to the product of A and B.
+
+void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)
+
+    Sets {Qinv, len} to the power series inverse of {Q, len}. Uses Newton iteration.
+
+void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec)
+
+    Sets Qinv to the power series inverse of Q.
+
+
+*******************************************************************************
+
+    Differentiation
+
+*******************************************************************************
+
+void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)
+
+void fmprb_poly_derivative(fmprb_poly_t res, const fmprb_poly_t poly, long prec)
+
+void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)
+
+void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec)
+
+
+*******************************************************************************
+
+    Special functions
+
+*******************************************************************************
+
+void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h, long n, long prec)
+
+    Sets {f, n} to the power series logarithm of {h, n}. Uses integration.
+
+void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
+
+    Sets $f$ to the power series logarithm of $h$, truncated to length $n$.
+
+void _fmprb_poly_exp_series_basecase(fmprb_struct * f,
+        const fmprb_struct * h, long hlen, long n, long prec)
+
+    Sets {f, n} to the power series exponential of {h, hlen}. Uses a simple
+    recurrence for the coefficients, requiring $O(n^2)$ operations.
+
+void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
+
+    Sets $f$ to the power series exponential of $h$, truncated to length $n$.
+
+void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)
+
+    
+
+

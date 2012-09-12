@@ -1,0 +1,770 @@
+
+<html>
+
+<head>
+<title>Arb</title>
+
+<style>
+body { font-family: sans-serif; font-size: 90%; }
+dt { color:#348; }
+dd p { margin-top: 0.4em; }
+</style>
+
+<script type='text/x-mathjax-config'> 
+MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    MMLorHTML: { prefer: "HTML" },
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });</script> 
+<script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> 
+
+<!--
+<script type='text/javascript'> 
+  newContainer = document.createElement('span');
+  newContainer.style.setProperty("display","none","");
+  newNode = document.createElement('script');
+  newNode.type = "math/tex";
+  newNode.innerHTML = '\\newcommand{\\NN}{\\mathbb{N}}\n\\newcommand{\\ZZ}{\\mathbb{Z}}\n\\newcommand{\\QQ}{\\mathbb{Q}}\n\\newcommand{\\FF}{\\mathbb{F}}\n\\newcommand{\\KK}{\\mathbb{K}}\n\\newcommand{\\RR}{\\mathbb{R}}\n\\newcommand{\\CC}{\\mathbb{C}}\n\\newcommand{\\abs}[1]{\\left|#1\\right|}';
+  newContainer.appendChild(newNode);
+  document.body.insertBefore(newContainer,document.body.firstChild);
+</script> 
+-->
+
+</head>
+
+<body>
+
+<h1>Arb</h1>
+
+<p><i>Last updated: 2012-09-12 17:56:58</i></p>
+
+<p>Arb is an experimental C library implementing arbitrary-precision floating-point ball arithmetic, written by Fredrik Johansson &lt;<a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a>>. The git repository is <a href="https://github.com/fredrik-johansson/arb/">https://github.com/fredrik-johansson/arb/</a></p>
+
+<p>Ball arithmetic, also known as mid-rad interval arithmetic, is an extension of floating-point arithmetic in which an error bound is attached to each variable. This allows doing rigorous computations over the real numbers, while avoiding the overhead of traditional (inf-sup) interval arithmetic at high precision, and eliminating much of the need for time-consuming and bug-prone manual error analysis.</p>
+
+<p>At the moment, Arb contains:</p>
+
+<ul>
+<li>A module (fmpr) for correctly rounded arbitrary-precision floating-point arithmetic. Arb numbers have a few special features, such as arbitrary-size exponents (useful for combinatorics and asymptotics) and dynamic allocation (facilitating implementation of hybrid integer/floating-point and mixed-precision algorithms).</li>
+<li>A module (fmprb) for real ball arithmetic, where a ball is implemented as a pair of fmpr numbers.</li>
+<li>Functions for fast high-precision computation of some mathematical constants, based on ball arithmetic.</li>
+<li>A rudimentary module (fmprb_poly) for polynomials or power series over the real numbers, implemented using balls as coefficients, with fast polynomial multiplication.</li>
+</ul>
+
+<p>Planned features include: transcendental functions, more extensive polynomial functionality, matrices, and complex balls (and polynomials and matrices thereof).</p>
+
+<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. It also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes. The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
+
+<p><b>Warning</b>: as this is an early version, any part of the interface is subject to change! Also be aware that there are known and unknown bugs.</p>
+
+
+<h2>Contents</h2>
+
+<ul>
+<li>
+<a href="#fmpr--floating-point-arithmetic--">fmpr (floating-point arithmetic)</a>
+<ul>
+<li><a href="#fmpr--floating-point-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Memory-management">Memory management</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Special-values">Special values</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Assignment-and-rounding">Assignment and rounding</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Comparisons">Comparisons</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Random-number-generation">Random number generation</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Conversions">Conversions</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Input-and-output">Input and output</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmpr--floating-point-arithmetic--Special-functions">Special functions</a></li>
+</ul></li>
+<li>
+<a href="#fmprb--real-ball-arithmetic--">fmprb (real ball arithmetic)</a>
+<ul>
+<li><a href="#fmprb--real-ball-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Memory-management">Memory management</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Basic-manipulation">Basic manipulation</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Input-and-output">Input and output</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Random-number-generation">Random number generation</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Precision-and-comparisons">Precision and comparisons</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmprb--real-ball-arithmetic--Special-functions">Special functions</a></li>
+</ul></li>
+<li>
+<a href="#fmprb-poly--polynomials-of-real-balls--">fmprb_poly (polynomials of real balls)</a>
+<ul>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Memory-management">Memory management</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Conversions">Conversions</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Input-and-output">Input and output</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Comparisons">Comparisons</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Differentiation">Differentiation</a></li>
+<li><a href="#fmprb-poly--polynomials-of-real-balls--Special-functions">Special functions</a></li>
+</ul></li>
+</ul>
+<h2><a name="fmpr--floating-point-arithmetic--">fmpr (floating-point arithmetic)</a></h2>
+<p>    A variable of type <tt>fmpr_t</tt> holds an arbitrary-precision binary     floating-point number, i.e. a rational number of the form     $x \times 2^y$ where $x, y \in \mathbb{Z}$ where $x$ is odd;     or one of the special values zero, plus infinity, minus infinity,     or NaN (not-a-number).</p>
+<p>    The component $x$ is called the <i>mantissa</i>, and $y$ is called the     <i>exponent</i>. Note that this is just one among many possible     conventions: the mantissa (alternatively <i>significand</i>) is     sometimes viewed as a fraction in the interval $[1/2, 1)$, with the     exponent pointing to the position above the top bit rather than the     position of the bottom bit, and it is sometimes customary to separate     the <i>sign</i> from the mantissa.</p>
+<p>    The conventions for special values largely follow those of the     IEEE floating-point standard. At the moment, there is no support     for negative zero, unsigned infinity, or a NaN with a payload, though     some these might be added in the future.</p>
+<p>    An <tt>fmpr</tt> number is exact and has no inherent "accuracy". We     use the term <i>precision</i> to denote either the target precision of     an operation, or the bit size of a mantissa (which in general is     unrelated to the "accuracy" of the number: for example, the     floating-point value 1 has a precision of 1 bit in this sense and is     simultaneously an infinitely accurate approximation of the     integer 1 and a 2-bit accurate approximation of     $\sqrt 2 = 1.011010100\ldots_2$).</p>
+<p>    Except where otherwise noted, the output of an operation is the     floating-point number obtained by taking the inputs as exact numbers,     in principle carrying out the operation exactly, and rounding the     resulting real number to the nearest representable floating-point     number whose mantissa has at most the specified number of bits, in     the specified direction of rounding. Some operations are always     or optionally done exactly.</p>
+<a name="fmpr--floating-point-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<dl>
+<dt>fmpr_struct</dt>
+<dd>
+<p>    An <tt>fmpr_struct</tt> holds a mantissa and an exponent.     If the mantissa and exponent are sufficiently small, their values are     stored as immediate values in the <tt>fmpr_struct</tt>; large values are     represented by pointers to heap-allocated arbitrary-precision integers.     Currently, both the mantissa and exponent are implemented using     the FLINT <tt>fmpz</tt> type. Special values are currently encoded     by the mantissa being set to zero.</p>
+</dd>
+<dt>fmpr_t</dt>
+<dd>
+<p>    An <tt>fmpr_t</tt> is defined as an array of length one of type     <tt>fmpr_struct</tt>, permitting an <tt>fmpr_t</tt> to be passed by     reference.</p>
+</dd>
+<dt>fmpr_rnd_t</dt>
+<dd>
+<p>    Specifies the rounding mode for the result of an approximate operation.</p>
+</dd>
+<dt>FMPR_RND_NEAREST</dt>
+<dd>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number, rounding to an odd bit if there is a tie     between two values. Note: the code for this rounding mode is currently     not implemented.</p>
+</dd>
+<dt>FMPR_RND_DOWN</dt>
+<dd>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number in the direction towards zero.</p>
+</dd>
+<dt>FMPR_RND_UP</dt>
+<dd>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number in the direction away from zero.</p>
+</dd>
+<dt>FMPR_RND_FLOOR</dt>
+<dd>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number in the direction towards minus infinity.</p>
+</dd>
+<dt>FMPR_RND_CEIL</dt>
+<dd>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number in the direction towards plus infinity.</p>
+</dd>
+<dt>FMPR_PREC_EXACT</dt>
+<dd>
+<p>    If passed as the precision parameter to a function, indicates that no     rounding is to be performed. This must only be used when it is known     that the result of the operation can be represented exactly and fits     in memory (the typical use case is working with values small integers).     Note that, for example, adding two numbers whose exponents are far     apart can easily produce an exact result that is far too large to     store in memory.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Memory-management"><h3>Memory management</h3></a>
+<dl>
+<dt>void fmpr_init(fmpr_t x)</dt>
+<dd>
+<p>    Initializes the variable x for use. Its value is set to zero.</p>
+</dd>
+<dt>void fmpr_clear(fmpr_t x)</dt>
+<dd>
+<p>    Clears the variable x, freeing or recycling its allocated memory.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Special-values"><h3>Special values</h3></a>
+<dl>
+<dt>void fmpr_zero(fmpr_t x)</dt>
+<dt>void fmpr_one(fmpr_t x)</dt>
+<dt>void fmpr_pos_inf(fmpr_t x)</dt>
+<dt>void fmpr_neg_inf(fmpr_t x)</dt>
+<dt>void fmpr_nan_inf(fmpr_t x)</dt>
+<dd>
+<p>    Sets x respectively to 0, 1, $+\infty$, $-\infty$, NaN.</p>
+</dd>
+<dt>int fmpr_is_zero(const fmpr_t x)</dt>
+<dt>int fmpr_is_one(const fmpr_t x)</dt>
+<dt>int fmpr_is_pos_inf(const fmpr_t x)</dt>
+<dt>int fmpr_is_neg_inf(const fmpr_t x)</dt>
+<dt>int fmpr_is_nan(const fmpr_t x)</dt>
+<dd>
+<p>    Returns nonzero iff x respectively equals     0, 1, $+\infty$, $-\infty$, NaN.</p>
+</dd>
+<dt>int fmpr_is_inf(const fmpr_t x)</dt>
+<dd>
+<p>    Returns nonzero iff x equals either $+\infty$ or $-\infty$.</p>
+</dd>
+<dt>int fmpr_is_normal(const fmpr_t x)</dt>
+<dd>
+<p>    Returns nonzero iff x is a finite, nonzero floating-point value, i.e.     not one of the special values 0, $+\infty$, $-\infty$, NaN.</p>
+</dd>
+<dt>int fmpr_is_special(const fmpr_t x)</dt>
+<dd>
+<p>    Returns nonzero iff x is one of the special values     0, $+\infty$, $-\infty$, NaN, i.e. not a finite, nonzero     floating-point value.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Assignment-and-rounding"><h3>Assignment and rounding</h3></a>
+<dl>
+<dt>long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Rounds the mantissa and exponent in-place.</p>
+</dd>
+<dt>void fmpr_set(fmpr_t y, const fmpr_t x)</dt>
+<dd>
+<p>    Sets y to a copy of x.</p>
+</dd>
+<dt>long fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets y to a copy of x rounded in the direction specified by rnd to the     number of bits specified by prec.</p>
+</dd>
+<dt>void fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)</dt>
+<dd>
+<p>    Given the return value rret and output variable result from a     function performing a rounding (e.g. fmpr_set_round or fmpr_add), sets     err to a bound for the absolute error.</p>
+</dd>
+<dt>void fmpr_add_error_result(fmpr_t err, const fmpr_t err_in,     const fmpr_t result, long rret, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Like fmpr_set_error_result, but adds err_in to the error.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Comparisons"><h3>Comparisons</h3></a>
+<dl>
+<dt>int fmpr_equal(const fmpr_t x, const fmpr_t y)</dt>
+<dd>
+<p>    Returns nonzero iff x and y are exactly equal. This function does     not treat NaN specially, i.e. NaN compares as equal to itself.</p>
+</dd>
+<dt>int fmpr_cmp(const fmpr_t x, const fmpr_t y)</dt>
+<dd>
+<p>    Returns negative, zero, or positive, depending on whether x is respectively     smaller, equal, or greater compared to y. Comparison with NaN is undefined.</p>
+</dd>
+<dt>int fmpr_sgn(const fmpr_t x)</dt>
+<dd>
+<p>    Returns $-1$, $0$ or $+1$ according to the sign of x. The sign     of NaN is undefined.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
+<dl>
+<dt>void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)</dt>
+<dd>
+<p>    Generates a finite random number whose mantissa has precision at most     <tt>bits</tt> and whose exponent has at most <tt>mag_bits</tt> bits. The     values are distributed non-uniformly: special bit patterns are generated     with high probability in order to allow the test code to exercise corner     cases.</p>
+</dd>
+<dt>void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits,         long mag_bits)</dt>
+<dd>
+<p>    Identical to <tt>fmpr_randtest</tt>, except that zero is never produced     as an output.</p>
+</dd>
+<dt>void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits,         long mag_bits)</dt>
+<dd>
+<p>    Indentical to <tt>fmpr_randtest</tt>, except that the output occasionally     is set to an infinity or NaN.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Conversions"><h3>Conversions</h3></a>
+<dl>
+<dt>int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets the MPFR variable <tt>x</tt> to the value of <tt>y</tt>. If the     precision of <tt>x</tt> is too small to allow <tt>y</tt> to be represented     exactly, it is rounded in the specified MPFR rounding mode.     The return value indicates the direction of rounding,     following the standard convention of the MPFR library.</p>
+</dd>
+<dt>void fmpr_set_mpfr(fmpr_t x, const mpfr_t y)</dt>
+<dd>
+<p>    Sets <tt>x</tt> to the exact value of the MPFR variable <tt>y</tt>.</p>
+</dd>
+<dt>void fmpr_set_ui(fmpr_t x, ulong c)</dt>
+<dt>void fmpr_set_si(fmpr_t x, long c)</dt>
+<dt>void fmpr_set_fmpz(fmpr_t x, const fmpz_t c)</dt>
+<dd>
+<p>    Sets <tt>x</tt> exactly to the integer <tt>c</tt>.</p>
+</dd>
+<dt>void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);</dt>
+<dd>
+<p>    Sets y to the exact value of x. The result is undefined     if x is not a finite fraction.</p>
+</dd>
+<dt>long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);</dt>
+<dd>
+<p>    Sets x to the value of y, rounded according to prec and rnd.</p>
+</dd>
+<dt>void fmpr_set_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp);</dt>
+<dd>
+<p>    Sets x to $\mathrm{man} \times 2^{\mathrm{exp}}$.</p>
+</dd>
+<dt>void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);</dt>
+<dd>
+<p>    Sets man and exp to the unique integers such that     $x = \mathrm{man} \times 2^{\mathrm{exp}}$ and man is odd,     provided that x is a nonzero finite fraction.     If x is zero, both man and exp are set to zero. If x is infinite or NaN,     the result is undefined.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Input-and-output"><h3>Input and output</h3></a>
+<dl>
+<dt>void fmpr_print(const fmpr_t x)</dt>
+<dd>
+<p>    Prints the mantissa and exponent of x as integers, precisely showing     the internal representation.</p>
+</dd>
+<dt>void fmpr_printd(const fmpr_t x, long digits)</dt>
+<dd>
+<p>    Prints x as a decimal floating-point number, rounding to the specified     number of digits. This function is currently implemented using MPFR,     and does not support large exponents.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
+<dl>
+<dt>void fmpr_neg(fmpr_t y, const fmpr_t x)</dt>
+<dd>
+<p>    Sets y to the negation of x.</p>
+</dd>
+<dt>long fmpr_neg_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets y to the negation of x, rounding the result.</p>
+</dd>
+<dt>void fmpr_abs(fmpr_t y, const fmpr_t x)</dt>
+<dd>
+<p>    Sets y to the absolute value of x.</p>
+</dd>
+<dt>long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = x + y$, rounded according to prec and rnd. The precision     can be FMPR_PREC_EXACT to perform an exact addition, provided that the     result fits in memory.</p>
+</dd>
+<dt>long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets <tt>z</tt> to the value that results by adding an infinitesimal quantity     of the given sign to <tt>x</tt>, and rounding. The result is undefined     if <tt>x</tt> is zero.</p>
+</dd>
+<dt>long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = x - y$, rounded according to prec and rnd. The precision     can be  FMPR_PREC_EXACT to perform an exact addition, provided that the     result fits in memory.</p>
+</dd>
+<dt>long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = x \times y$, rounded according to prec and rnd. The precision     can be  FMPR_PREC_EXACT to perform an exact multiplication, provided that the     result fits in memory.</p>
+</dd>
+<dt>void fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)</dt>
+<dt>void fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)</dt>
+<dd>
+<p>    Sets y to x multiplied by $2^e$ without rounding.</p>
+</dd>
+<dt>long fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = x / y$, rounded according to prec and rnd. If $y$ is zero,     $z$ is set to NaN.</p>
+</dd>
+<dt>long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_addmul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = z + x \times y$, rounded according to prec and rnd. The     intermediate multiplication is always performed without roundoff. The     precision can be FMPR_PREC_EXACT to perform an exact addition, provided that the     result fits in memory.</p>
+</dd>
+<dt>long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z = z - x \times y$, rounded according to prec and rnd. The     intermediate multiplication is always performed without roundoff. The     precision can be FMPR_PREC_EXACT to perform an exact subtraction, provided that the     result fits in memory.</p>
+</dd>
+<dt>long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)</dt>
+<dt>long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z$ to the square root of $x$, rounded according to prec and rnd.     The result is NaN if $x$ is negative.</p>
+</dd>
+</dl>
+<a name="fmpr--floating-point-arithmetic--Special-functions"><h3>Special functions</h3></a>
+<dl>
+<dt>long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z$ to $\log(x)$, rounded according to prec and rnd.     The result is NaN if $x$ is negative.     This function is currently implemented using MPFR and does not     support large exponents.</p>
+</dd>
+<dt>long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z$ to $\log(1+x)$, rounded according to prec and rnd. This function     computes an accurate value when $x$ is small.     The result is NaN if $1+x$ is negative.     This function is currently implemented using MPFR and does not     support large exponents.</p>
+</dd>
+<dt>long fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z$ to $\exp(x)$, rounded according to prec and rnd.     This function is currently implemented using MPFR and does not     support large exponents.</p>
+</dd>
+<dt>long fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
+<dd>
+<p>    Sets $z$ to $\exp(x)-1$, rounded according to prec and rnd. This function     computes an accurate value when $x$ is small.     This function is currently implemented using MPFR and does not     support large exponents.</p>
+</dd>
+</dl>
+<h2><a name="fmprb--real-ball-arithmetic--">fmprb (real ball arithmetic)</a></h2>
+<dd>
+<p>    A ball.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<dl>
+<dt>fmprb_struct</dt>
+<dt>fmprb_t</dt>
+<dd>
+<p>    An <tt>fmprb_struct</tt> consists of a pair of <tt>fmpr_struct</tt>:s.     An <tt>fmprb_t</tt> is defined as an array of length one of type     <tt>fmprb_struct</tt>, permitting an <tt>fmprb_t</tt> to be passed by     reference.</p>
+</dd>
+<dt>FMPRB_RAD_PREC</dt>
+<dd>
+<p>    The precision used for operations on the radius. This is small     enough to fit in a single word, currently 30 bits.</p>
+</dd>
+<dt>fmprb_midref(x)</dt>
+<dd>
+<p>    Macro returning a pointer to the midpoint of x as an <tt>fmpr_t</tt>.</p>
+</dd>
+<dt>fmprb_radref(x)</dt>
+<dd>
+<p>    Macro returning a pointer to the radius of x as an <tt>fmpr_t</tt>.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Memory-management"><h3>Memory management</h3></a>
+<dl>
+<dt>void fmprb_init(fmprb_t x)</dt>
+<dd>
+<p>    Initializes the variable x for use. Its midpoint and radius are both     set to zero.</p>
+</dd>
+<dt>void fmprb_clear(fmprb_t x)</dt>
+<dd>
+<p>    Clears the variable x, freeing or recycling its allocated memory.</p>
+</dd>
+<dt>fmprb_struct * _fmprb_vec_init(long n)</dt>
+<dd>
+<p>    Returns a pointer to an array of n initialized fmprb_struct:s.</p>
+</dd>
+<dt>void _fmprb_vec_clear(fmprb_struct * v, long n)</dt>
+<dd>
+<p>    Clears an array of n initialized fmprb_struct:s.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Basic-manipulation"><h3>Basic manipulation</h3></a>
+<dl>
+<dt>int fmprb_is_exact(const fmprb_t x)</dt>
+<dd>
+<p>    Returns nonzero iff the radius of x is zero.</p>
+</dd>
+<dt>void fmprb_zero(fmprb_t x)</dt>
+<dd>
+<p>    Sets x to zero.</p>
+</dd>
+<dt>fmprb_is_zero(const fmprb_t x)</dt>
+<dd>
+<p>    Returns nonzero iff the midpoint and radius of x are both zero.</p>
+</dd>
+<dt>void fmprb_set(fmprb_t y, const fmprb_t x)</dt>
+<dd>
+<p>    Sets y to a copy of x.</p>
+</dd>
+<dt>void fmprb_set_round(fmprb_t y, const fmprb_t x, long prec)</dt>
+<dd>
+<p>    Sets y to a copy of x, rounded to prec bits.</p>
+</dd>
+<dt>fmprb_neg(fmprb_t y, const fmprb_t x)</dt>
+<dd>
+<p>    Sets y to the negation of x.</p>
+</dd>
+<dt>fmprb_abs(fmprb_t y, const fmprb_t x)</dt>
+<dd>
+<p>    Sets y to the absolute value of x. No attempt is made to improve the     interval represented by x if it contains zero.</p>
+</dd>
+<dt>void fmprb_set_si(fmprb_t x, long c)</dt>
+<dt>void fmprb_set_ui(fmprb_t x, ulong c)</dt>
+<dt>void fmprb_set_fmpz(fmprb_t x, const fmpz_t c)</dt>
+<dd>
+<p>    Sets x exactly to the integer c.</p>
+</dd>
+<dt>void fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)</dt>
+<dd>
+<p>    Sets y to the rational number x, rounded to prec bits.</p>
+</dd>
+<dt>int fmprb_is_one(const fmprb_t x)</dt>
+<dd>
+<p>    Returns nonzero iff x is exactly 1.</p>
+</dd>
+<dt>void fmprb_one(fmprb_t x)</dt>
+<dd>
+<p>    Sets x to the exact integer 1.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Input-and-output"><h3>Input and output</h3></a>
+<dl>
+<dt>void fmprb_print(const fmprb_t x)</dt>
+<dd>
+<p>    Prints the internal representation of x.</p>
+</dd>
+<dt>void fmprb_printd(const fmprb_t x, long digits)</dt>
+<dd>
+<p>    Prints x in decimal. The printed value of the radius is not adjusted     to compensate for the fact that both the binary-to-decimal conversion     of both the midpoint and the radius introduces additional error.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
+<dl>
+<dt>void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)</dt>
+<dd>
+<p>    Generates a random ball. The midpoint and radius will both be finite.</p>
+</dd>
+<dt>void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state,     const fmprb_t x, long bits)</dt>
+<dd>
+<p>    Sets q to a random rational number from the interval represented by x.     A denominator is chosen by multiplying the binary denominator of x     by a random integer up to size bits.</p>
+<p>    The outcome is undefined if the midpoint or radius of x is non-finite,     or if the exponent of the midpoint or radius is so large or small     that representing the endpoints as exact rational numbers would     cause overflows.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Precision-and-comparisons"><h3>Precision and comparisons</h3></a>
+<dl>
+<dt>void fmprb_add_error_2exp_si(fmprb_t x, long e)</dt>
+<dd>
+<p>    Adds $2^e$ to the radius of x.</p>
+</dd>
+<dt>int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)</dt>
+<dt>int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y)</dt>
+<dt>int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y)</dt>
+<dt>int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y)</dt>
+<dt>int fmprb_contains_zero(const fmprb_t x)</dt>
+<dd>
+<p>    Returns nonzero iff the given number is contained in the interval     represented by x.</p>
+</dd>
+<dt>void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)</dt>
+<dd>
+<p>    Computes the exact interval represented by x, in the form of an integer     interval multiplied by a power of two, i.e. $x = [a, b] * 2^{\mathrm{exp}}$.</p>
+<p>    The outcome is undefined if the midpoint or radius of x is non-finite,     or if the difference in magnitude between the midpoint and radius     is so large that representing the endpoints exactly would cause overflows.</p>
+</dd>
+<dt>long fmprb_rel_error_bits(const fmprb_t x)</dt>
+<dd>
+<p>    Returns the effective relative error of self measured in bits, defined as     the difference between the position of the top bit in the radius     and the top bit in the midpoint, plus one.     The result is clamped between plus/minus FMPR_PREC_EXACT.</p>
+</dd>
+<dt>long fmprb_rel_accuracy_bits(const fmprb_t x)</dt>
+<dd>
+<p>    Returns the effective relative accuracy of x measured in bits,     equal to the negative of the return value from fmprb_rel_error_bits.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
+<dl>
+<dt>void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dd>
+<p>    Sets $z = x + y$, rounded to prec bits. The precision can be     FMPR_PREC_EXACT provided that the result fits in memory.</p>
+</dd>
+<dt>void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dd>
+<p>    Sets $z = x - y$, rounded to prec bits. The precision can be     FMPR_PREC_EXACT provided that the result fits in memory.</p>
+</dd>
+<dt>void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dd>
+<p>    Sets $z = x \times y$, rounded to prec bits. The precision can be     FMPR_PREC_EXACT provided that the result fits in memory.</p>
+</dd>
+<dt>void fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)</dt>
+<dd>
+<p>    Sets $y$ to $x$ multiplied by $2^e$.</p>
+</dd>
+<dt>void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dt>void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)</dt>
+<dt>void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);</dt>
+<dd>
+<p>    Sets $z = x / y$, rounded to prec bits. If $y$ contains zero, $z$ is     set to $0 \pm +\infty$.</p>
+</dd>
+<dt>void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);</dt>
+<dd>
+<p>    Sets $y = x / (2^n - 1)$, rounded to prec bits.</p>
+</dd>
+<dt>void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_addmul_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dd>
+<p>    Sets $z = z + x \times y$, rounded to prec bits. The precision can be     FMPR_PREC_EXACT provided that the result fits in memory.</p>
+</dd>
+<dt>void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
+<dt>void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
+<dt>void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec)</dt>
+<dt>void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)</dt>
+<dd>
+<p>    Sets $z = z - x \times y$, rounded to prec bits. The precision can be     FMPR_PREC_EXACT provided that the result fits in memory.</p>
+</dd>
+<dt>void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)</dt>
+<dt>void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)</dt>
+<dt>void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec)</dt>
+<dd>
+<p>    Sets $z$ to the square root of $x$, rounded to prec bits. As currently     implemented, the input must be exact and nonnegative.</p>
+</dd>
+<dt>void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)</dt>
+<dt>void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)</dt>
+<dt>void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)</dt>
+<dt>void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)</dt>
+<dd>
+<p>    Sets $y = b^e$.</p>
+</dd>
+</dl>
+<a name="fmprb--real-ball-arithmetic--Special-functions"><h3>Special functions</h3></a>
+<dl>
+<dt>void fmprb_log(fmprb_t z, const fmprb_t x, long prec)</dt>
+<dt>void fmprb_log_ui(fmprb_t z, ulong x, long prec)</dt>
+<dt>void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec)</dt>
+<dd>
+<p>    Sets $z = \log(x)$.</p>
+</dd>
+<dt>void fmprb_exp(fmprb_t z, const fmprb_t x, long prec)</dt>
+<dd>
+<p>    Sets $z = \exp(x)$.</p>
+</dd>
+<dt>void fmprb_fac_ui(fmprb_t x, ulong n, long prec)</dt>
+<dd>
+<p>    Sets x to n factorial, computed using binary splitting. Provided that     $n$ is small enough, the exact factorial can be computed using     FMPR_PREC_EXACT.</p>
+</dd>
+<dt>void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)</dt>
+<dt>void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec)</dt>
+<dd>
+<p>    Sets x to the binomial coefficient ${n \choose k}$, computed using     binary splitting. Provided that $n$ and $k$ are small enough, an exact     binomial coefficient can be computed using FMPR_PREC_EXACT.</p>
+</dd>
+<dt>void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)</dt>
+<dt>void fmprb_fib_ui(fmprb_t f, ulong n, long prec)</dt>
+<dd>
+<p>    Sets x to the Fibonacci number $F_n$. Uses the binary squaring     algorithm described in D. Takahashi, "A fast algorithm for     computing large Fibonacci numbers",     Information Processing Letters 75 (2000) 243-246     Provided that $n$ is small enough, an exact Fibonacci number can be     computed using FMPR_PREC_EXACT.</p>
+</dd>
+<dt>void fmprb_const_pi_chudnovsky(fmprb_t x, long prec)</dt>
+<dd>
+<p>    Sets x to $\pi$, computed using the Chudnovsky algorithm.     Letting $A = 13591409$, $B =  545140134$, $C = 640320$,     we have $\pi \approx 1 / s_N$ where     $$s_N = 12 \sum_{k=0}^N \frac{(-1)^k (6k)! (A+Bk)}         {(3k)! (k!)^3 C^{3k+3/2}}$$</p>
+<p>    The implementation computes an approximation for the     algebraic number $1/s_N$ using binary splitting, bounding     the rounding error automatically.     The hypergeometric term ratio is asymptotically     $R = C^3 / (2^6 \times 3^3) \approx 1.5 \times 10^{14}$, and in fact we have     $|\pi - 1/s_N| < 1/R^N$ (with a more detailed calculation, the truncation     error could be bounded closer to $1/R^{N+1}$).</p>
+</dd>
+<dt>void fmprb_const_pi(fmprb_t x, long prec)</dt>
+<dd>
+<p>    Sets x to $\pi$. The value is cached for repeated use.</p>
+</dd>
+<dt>void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec)</dt>
+<dd>
+<p>    Sets x to Euler's constant $\gamma$, computed using the second     Bessel function formula of Brent and McMillan.     Brent and McMillan conjectured that the error depending     on the internal parameter $n$ is of order $O(e^{-8n})$. Brent has     recently proved that this bound is correct, but without determining     an explicit big-O factor.</p>
+<p>    [1] R. P. Brent and E. M. McMillan,     "Some new algorithms for high-precision computation of Euler's constant",     Mathematics of Computation 34 (1980), 305-312.</li></p>
+<p>    [2] R. P. Brent, "Ramanujan and Euler's Constant",     http://wwwmaths.anu.edu.au/~brent/pd/Euler_CARMA_10.pdf</li></p>
+<p>    [3] The MPFR team (2012), "MPFR Algorithms",         http://www.mpfr.org/algo.html</li></p>
+</dd>
+<dt>void fmprb_const_zeta3_bsplit(fmprb_t x, long prec)</dt>
+<dd>
+<p>    Sets x to Apery's constant $\zeta(3)$, computed by applying binary     splitting to a hypergeometric series.</p>
+</dd>
+<dt>void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(s)$ using the Euler product. This is fast only if s     is large compared to the precision.</p>
+<p>    Writing $P(a,b) = \prod_{a \le p \le b} (1 - p^{-s})$, we have     $1/\zeta(s) = P(a,M) P(M+1,\infty)$.</p>
+<p>    To bound the error caused by truncating     the product at $M$, we write $P(M+1,\infty) = 1 - \epsilon(s,M)$.     Since $0 < P(a,M) \le 1$, the absolute error for $\zeta(s)$ is     bounded by $\epsilon(s,M)$.</p>
+<p>    According to the analysis in [1], it holds for all $s \ge 6$ and $M \ge 1$     that $1/P(M+1,\infty) - 1 \le f(s,M) \equiv 2 M^{1-s} / (s/2 - 1)$.     Thus, we have $1/(1-\epsilon(s,M)) - 1 \le f(s,M)$, and expanding     the geometric series allows us to conclude that     $\epsilon(M) \le f(s,M)$.</p>
+<p>    [1] S. Fillebrown, "Faster Computation of Bernoulli Numbers",         Journal of Algorithms 13, 431-445 (1992)</p>
+</dd>
+<dt>void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(n)$ for even $n$ via the corresponding Bernoulli number,     which is generated using FLINT.</p>
+</dd>
+<dt>void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,         ulong step, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(s)$ for $s = \mathrm{start} + i \times \mathrm{step}$,     $0 \le i &lt; \mathrm{num}$,     writing the consecutive values to the array $z$. Uses Borwein's     approximation formula, implemented to support fast multi-evaluation (but     also works well for a single $s$).</p>
+<p>    Requires $\mathrm{start} \ge 2$. For efficiency, the largest $s$     should be at most about as     large as $\mathrm{prec}$. Arguments approaching LONG_MAX will cause     overflows.     One should therefore only use this function for s up to about prec, and     then switch to the Euler product.</p>
+<p>    The algorithm for single s is basically identical to the one used in MPFR     (see the MPFR Algorithms paper for a detailed description).     In particular, we evaluate the sum backwards to avoid storing more than one     d_k coefficient, and use integer arithmetic throughout since it     is convenient and the terms turn out to be slightly larger than 2^prec.     The only numerical error in the main loop comes from the division by k^s,     which adds less than 1 unit of error per term.     For fast multi-evaluation, we repeatedly divide by k^step.     Each division reduces the input error and adds at most 1 unit of     additional rounding error, so by induction, the error per term     is always smaller than 2 units.</p>
+<p>    References:</p>
+<p>    [1] P. Borwein, "An Efficient Algorithm for the Riemann Zeta Function",     Constructive experimental and nonlinear analysis,     CMS Conference Proc. 27 (2000), 29-34     http://www.cecm.sfu.ca/personal/pborwein/PAPERS/P155.pdf</p>
+<p>    [2] The MPFR team (2012), "MPFR Algorithms", http://www.mpfr.org/algo.html</p>
+<p>    [3] X. Gourdon and P. Sebah (2003),     "Numerical evaluation of the Riemann Zeta-function"     http://numbers.computation.free.fr/Constants/Miscellaneous/zetaevaluations.pdf</p>
+</dd>
+<dt>void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(s)$ for arbitrary $s \ge 2$ using a binary splitting     implementation of Borwein's formula. The algorithm has quasilinear     complexity with respect to the precision.</p>
+</dd>
+<dt>void fmprb_zeta_ui(fmprb_t x, ulong n, long prec)</dt>
+<dt>void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)</dt>
+<dt>void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)</dt>
+<dt>void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)</dt>
+</dl>
+<h2><a name="fmprb-poly--polynomials-of-real-balls--">fmprb_poly (polynomials of real balls)</a></h2>
+<dd>
+<p>    Ball polynomials.</p>
+</dd>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<dl>
+<dt>fmprb_poly_struct</dt>
+<dt>fmprb_poly_t</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Memory-management"><h3>Memory management</h3></a>
+<dl>
+<dt>void fmprb_poly_init(fmprb_poly_t poly)</dt>
+<dt>void fmprb_poly_clear(fmprb_poly_t poly)</dt>
+<dt>void fmprb_poly_fit_length(fmprb_poly_t poly, long len)</dt>
+<dt>void _fmprb_poly_set_length(fmprb_poly_t poly, long len)</dt>
+<dt>void _fmprb_poly_normalise(fmprb_poly_t poly)</dt>
+<dt>void fmprb_poly_zero(fmprb_poly_t poly)</dt>
+<dt>void fmprb_poly_one(fmprb_poly_t poly)</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Conversions"><h3>Conversions</h3></a>
+<dl>
+<dt>void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec)</dt>
+<dt>void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec)</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Input-and-output"><h3>Input and output</h3></a>
+<dl>
+<dt>void fmprb_poly_printd(const fmprb_poly_t poly, long digits)</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Comparisons"><h3>Comparisons</h3></a>
+<dl>
+<dt>int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Arithmetic"><h3>Arithmetic</h3></a>
+<dl>
+<dt>void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,               const fmprb_poly_t poly2, long prec)</dt>
+<dt>void _fmprb_poly_mullow(fmprb_struct * C,     const fmprb_struct * A, long lenA,     const fmprb_struct * B, long lenB, long n, long prec)</dt>
+<dd>
+<p>    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to     length n. The output is not allowed to be aliased with either of the     inputs. We require lenA &ge; lenB > 0, n > 0, lenA + lenB - 1 &ge; n.</p>
+<p>    As currently implemented, this function puts each input polynomial on     a common exponent, truncates to prec bits, and multiplies exactly over     the integers. The output error is computed by cross-multiplying the     max norms.</p>
+</dd>
+<dt>void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A,               const fmprb_poly_t B, long n, long prec)</dt>
+<dd>
+<p>    Sets C to the product of A and B, truncated to length n.</p>
+</dd>
+<dt>void _fmprb_poly_mul(fmprb_struct * C,     const fmprb_struct * A, long lenA,     const fmprb_struct * B, long lenB, long prec)</dt>
+<dd>
+<p>    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to     length n. The output is not allowed to be aliased with either of the     inputs. We require lenA &ge; lenB > 0, n > 0.     This function currently calls _fmprb_poly_mullow.</p>
+</dd>
+<dt>void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,               const fmprb_poly_t poly2, long prec)</dt>
+<dd>
+<p>    Sets C to the product of A and B.</p>
+</dd>
+<dt>void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)</dt>
+<dd>
+<p>    Sets {Qinv, len} to the power series inverse of {Q, len}. Uses Newton iteration.</p>
+</dd>
+<dt>void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec)</dt>
+<dd>
+<p>    Sets Qinv to the power series inverse of Q.</p>
+</dd>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Differentiation"><h3>Differentiation</h3></a>
+<dl>
+<dt>void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)</dt>
+<dt>void fmprb_poly_derivative(fmprb_poly_t res, const fmprb_poly_t poly, long prec)</dt>
+<dt>void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)</dt>
+<dt>void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec)</dt>
+</dl>
+<a name="fmprb-poly--polynomials-of-real-balls--Special-functions"><h3>Special functions</h3></a>
+<dl>
+<dt>void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h, long n, long prec)</dt>
+<dd>
+<p>    Sets {f, n} to the power series logarithm of {h, n}. Uses integration.</p>
+</dd>
+<dt>void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)</dt>
+<dd>
+<p>    Sets $f$ to the power series logarithm of $h$, truncated to length $n$.</p>
+</dd>
+<dt>void _fmprb_poly_exp_series_basecase(fmprb_struct * f,         const fmprb_struct * h, long hlen, long n, long prec)</dt>
+<dd>
+<p>    Sets {f, n} to the power series exponential of {h, hlen}. Uses a simple     recurrence for the coefficients, requiring $O(n^2)$ operations.</p>
+</dd>
+<dt>void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)</dt>
+<dd>
+<p>    Sets $f$ to the power series exponential of $h$, truncated to length $n$.</p>
+</dd>
+<dt>void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)</dt>
+</dl>
+
+
+
+</body>
+</html>

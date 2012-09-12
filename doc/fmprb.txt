@@ -1,0 +1,469 @@
+
+    A ball.
+
+*******************************************************************************
+
+    Types, macros and constants
+
+*******************************************************************************
+
+fmprb_struct
+
+fmprb_t
+
+    An <tt>fmprb_struct</tt> consists of a pair of <tt>fmpr_struct</tt>:s.
+    An <tt>fmprb_t</tt> is defined as an array of length one of type
+    <tt>fmprb_struct</tt>, permitting an <tt>fmprb_t</tt> to be passed by
+    reference.
+
+FMPRB_RAD_PREC
+
+    The precision used for operations on the radius. This is small
+    enough to fit in a single word, currently 30 bits.
+
+fmprb_midref(x)
+
+    Macro returning a pointer to the midpoint of x as an <tt>fmpr_t</tt>.
+
+fmprb_radref(x)
+
+    Macro returning a pointer to the radius of x as an <tt>fmpr_t</tt>.
+
+*******************************************************************************
+
+    Memory management
+
+*******************************************************************************
+
+void fmprb_init(fmprb_t x)
+
+    Initializes the variable x for use. Its midpoint and radius are both
+    set to zero.
+
+void fmprb_clear(fmprb_t x)
+
+    Clears the variable x, freeing or recycling its allocated memory.
+
+fmprb_struct * _fmprb_vec_init(long n)
+
+    Returns a pointer to an array of n initialized fmprb_struct:s.
+
+void _fmprb_vec_clear(fmprb_struct * v, long n)
+
+    Clears an array of n initialized fmprb_struct:s.
+
+*******************************************************************************
+
+    Basic manipulation
+
+*******************************************************************************
+
+int fmprb_is_exact(const fmprb_t x)
+
+    Returns nonzero iff the radius of x is zero.
+
+void fmprb_zero(fmprb_t x)
+
+    Sets x to zero.
+
+fmprb_is_zero(const fmprb_t x)
+
+    Returns nonzero iff the midpoint and radius of x are both zero.
+
+void fmprb_set(fmprb_t y, const fmprb_t x)
+
+    Sets y to a copy of x.
+
+void fmprb_set_round(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets y to a copy of x, rounded to prec bits.
+
+fmprb_neg(fmprb_t y, const fmprb_t x)
+
+    Sets y to the negation of x.
+
+fmprb_abs(fmprb_t y, const fmprb_t x)
+
+    Sets y to the absolute value of x. No attempt is made to improve the
+    interval represented by x if it contains zero.
+
+void fmprb_set_si(fmprb_t x, long c)
+
+void fmprb_set_ui(fmprb_t x, ulong c)
+
+void fmprb_set_fmpz(fmprb_t x, const fmpz_t c)
+
+    Sets x exactly to the integer c.
+
+void fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
+
+    Sets y to the rational number x, rounded to prec bits.
+
+int fmprb_is_one(const fmprb_t x)
+
+    Returns nonzero iff x is exactly 1.
+
+void fmprb_one(fmprb_t x)
+
+    Sets x to the exact integer 1.
+
+
+*******************************************************************************
+
+    Input and output
+
+*******************************************************************************
+
+void fmprb_print(const fmprb_t x)
+
+    Prints the internal representation of x.
+
+void fmprb_printd(const fmprb_t x, long digits)
+
+    Prints x in decimal. The printed value of the radius is not adjusted
+    to compensate for the fact that both the binary-to-decimal conversion
+    of both the midpoint and the radius introduces additional error.
+
+
+*******************************************************************************
+
+    Random number generation
+
+*******************************************************************************
+
+void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random ball. The midpoint and radius will both be finite.
+
+void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state,
+    const fmprb_t x, long bits)
+
+    Sets q to a random rational number from the interval represented by x.
+    A denominator is chosen by multiplying the binary denominator of x
+    by a random integer up to size bits.
+
+    The outcome is undefined if the midpoint or radius of x is non-finite,
+    or if the exponent of the midpoint or radius is so large or small
+    that representing the endpoints as exact rational numbers would
+    cause overflows.
+
+
+*******************************************************************************
+
+    Precision and comparisons
+
+*******************************************************************************
+
+void fmprb_add_error_2exp_si(fmprb_t x, long e)
+
+    Adds $2^e$ to the radius of x.
+
+int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
+
+int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y)
+
+int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y)
+
+int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y)
+
+int fmprb_contains_zero(const fmprb_t x)
+
+    Returns nonzero iff the given number is contained in the interval
+    represented by x.
+
+void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
+
+    Computes the exact interval represented by x, in the form of an integer
+    interval multiplied by a power of two, i.e. $x = [a, b] * 2^{\mathrm{exp}}$.
+
+    The outcome is undefined if the midpoint or radius of x is non-finite,
+    or if the difference in magnitude between the midpoint and radius
+    is so large that representing the endpoints exactly would cause overflows.
+
+long fmprb_rel_error_bits(const fmprb_t x)
+
+    Returns the effective relative error of self measured in bits, defined as
+    the difference between the position of the top bit in the radius
+    and the top bit in the midpoint, plus one.
+    The result is clamped between plus/minus FMPR_PREC_EXACT.
+
+long fmprb_rel_accuracy_bits(const fmprb_t x)
+
+    Returns the effective relative accuracy of x measured in bits,
+    equal to the negative of the return value from fmprb_rel_error_bits.
+
+
+*******************************************************************************
+
+    Arithmetic
+
+*******************************************************************************
+
+void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+    Sets $z = x + y$, rounded to prec bits. The precision can be
+    FMPR_PREC_EXACT provided that the result fits in memory.
+
+void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+    Sets $z = x - y$, rounded to prec bits. The precision can be
+    FMPR_PREC_EXACT provided that the result fits in memory.
+
+void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+    Sets $z = x \times y$, rounded to prec bits. The precision can be
+    FMPR_PREC_EXACT provided that the result fits in memory.
+
+void fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
+
+    Sets $y$ to $x$ multiplied by $2^e$.
+
+void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
+
+void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);
+
+    Sets $z = x / y$, rounded to prec bits. If $y$ contains zero, $z$ is
+    set to $0 \pm +\infty$.
+
+void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
+
+    Sets $y = x / (2^n - 1)$, rounded to prec bits.
+
+void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_addmul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+    Sets $z = z + x \times y$, rounded to prec bits. The precision can be
+    FMPR_PREC_EXACT provided that the result fits in memory.
+
+void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+
+void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+
+void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+    Sets $z = z - x \times y$, rounded to prec bits. The precision can be
+    FMPR_PREC_EXACT provided that the result fits in memory.
+
+void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)
+
+void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)
+
+void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec)
+
+    Sets $z$ to the square root of $x$, rounded to prec bits. As currently
+    implemented, the input must be exact and nonnegative.
+
+void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
+
+void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
+
+void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)
+
+void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
+
+    Sets $y = b^e$.
+
+
+*******************************************************************************
+
+    Special functions
+
+*******************************************************************************
+
+void fmprb_log(fmprb_t z, const fmprb_t x, long prec)
+
+void fmprb_log_ui(fmprb_t z, ulong x, long prec)
+
+void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec)
+
+    Sets $z = \log(x)$.
+
+void fmprb_exp(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets $z = \exp(x)$.
+
+void fmprb_fac_ui(fmprb_t x, ulong n, long prec)
+
+    Sets x to n factorial, computed using binary splitting. Provided that
+    $n$ is small enough, the exact factorial can be computed using
+    FMPR_PREC_EXACT.
+
+void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)
+
+void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec)
+
+    Sets x to the binomial coefficient ${n \choose k}$, computed using
+    binary splitting. Provided that $n$ and $k$ are small enough, an exact
+    binomial coefficient can be computed using FMPR_PREC_EXACT.
+
+void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)
+
+void fmprb_fib_ui(fmprb_t f, ulong n, long prec)
+
+    Sets x to the Fibonacci number $F_n$. Uses the binary squaring
+    algorithm described in D. Takahashi, "A fast algorithm for
+    computing large Fibonacci numbers",
+    Information Processing Letters 75 (2000) 243-246
+    Provided that $n$ is small enough, an exact Fibonacci number can be
+    computed using FMPR_PREC_EXACT.
+
+void fmprb_const_pi_chudnovsky(fmprb_t x, long prec)
+
+    Sets x to $\pi$, computed using the Chudnovsky algorithm.
+    Letting $A = 13591409$, $B =  545140134$, $C = 640320$,
+    we have $\pi \approx 1 / s_N$ where
+    $$s_N = 12 \sum_{k=0}^N \frac{(-1)^k (6k)! (A+Bk)}
+        {(3k)! (k!)^3 C^{3k+3/2}}$$
+
+    The implementation computes an approximation for the
+    algebraic number $1/s_N$ using binary splitting, bounding
+    the rounding error automatically.
+    The hypergeometric term ratio is asymptotically
+    $R = C^3 / (2^6 \times 3^3) \approx 1.5 \times 10^{14}$, and in fact we have
+    $|\pi - 1/s_N| < 1/R^N$ (with a more detailed calculation, the truncation
+    error could be bounded closer to $1/R^{N+1}$).
+
+void fmprb_const_pi(fmprb_t x, long prec)
+
+    Sets x to $\pi$. The value is cached for repeated use.
+
+void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec)
+
+    Sets x to Euler's constant $\gamma$, computed using the second
+    Bessel function formula of Brent and McMillan.
+    Brent and McMillan conjectured that the error depending
+    on the internal parameter $n$ is of order $O(e^{-8n})$. Brent has
+    recently proved that this bound is correct, but without determining
+    an explicit big-O factor.
+
+    [1] R. P. Brent and E. M. McMillan,
+    "Some new algorithms for high-precision computation of Euler's constant",
+    Mathematics of Computation 34 (1980), 305-312.</li>
+
+    [2] R. P. Brent, "Ramanujan and Euler's Constant",
+    http://wwwmaths.anu.edu.au/~brent/pd/Euler_CARMA_10.pdf</li>
+
+    [3] The MPFR team (2012), "MPFR Algorithms",
+        http://www.mpfr.org/algo.html</li>
+
+void fmprb_const_zeta3_bsplit(fmprb_t x, long prec)
+
+    Sets x to Apery's constant $\zeta(3)$, computed by applying binary
+    splitting to a hypergeometric series.
+
+void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
+
+    Computes $\zeta(s)$ using the Euler product. This is fast only if s
+    is large compared to the precision.
+
+    Writing $P(a,b) = \prod_{a \le p \le b} (1 - p^{-s})$, we have
+    $1/\zeta(s) = P(a,M) P(M+1,\infty)$.
+
+    To bound the error caused by truncating
+    the product at $M$, we write $P(M+1,\infty) = 1 - \epsilon(s,M)$.
+    Since $0 < P(a,M) \le 1$, the absolute error for $\zeta(s)$ is
+    bounded by $\epsilon(s,M)$.
+
+    According to the analysis in [1], it holds for all $s \ge 6$ and $M \ge 1$
+    that $1/P(M+1,\infty) - 1 \le f(s,M) \equiv 2 M^{1-s} / (s/2 - 1)$.
+    Thus, we have $1/(1-\epsilon(s,M)) - 1 \le f(s,M)$, and expanding
+    the geometric series allows us to conclude that
+    $\epsilon(M) \le f(s,M)$.
+
+    [1] S. Fillebrown, "Faster Computation of Bernoulli Numbers",
+        Journal of Algorithms 13, 431-445 (1992)
+
+void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+
+    Computes $\zeta(n)$ for even $n$ via the corresponding Bernoulli number,
+    which is generated using FLINT.
+
+void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
+        ulong step, long prec)
+
+    Computes $\zeta(s)$ for $s = \mathrm{start} + i \times \mathrm{step}$,
+    $0 \le i &lt; \mathrm{num}$,
+    writing the consecutive values to the array $z$. Uses Borwein's
+    approximation formula, implemented to support fast multi-evaluation (but
+    also works well for a single $s$).
+
+    Requires $\mathrm{start} \ge 2$. For efficiency, the largest $s$
+    should be at most about as
+    large as $\mathrm{prec}$. Arguments approaching LONG_MAX will cause
+    overflows.
+    One should therefore only use this function for s up to about prec, and
+    then switch to the Euler product.
+
+    The algorithm for single s is basically identical to the one used in MPFR
+    (see the MPFR Algorithms paper for a detailed description).
+    In particular, we evaluate the sum backwards to avoid storing more than one
+    d_k coefficient, and use integer arithmetic throughout since it
+    is convenient and the terms turn out to be slightly larger than 2^prec.
+    The only numerical error in the main loop comes from the division by k^s,
+    which adds less than 1 unit of error per term.
+    For fast multi-evaluation, we repeatedly divide by k^step.
+    Each division reduces the input error and adds at most 1 unit of
+    additional rounding error, so by induction, the error per term
+    is always smaller than 2 units.
+
+    References:
+
+    [1] P. Borwein, "An Efficient Algorithm for the Riemann Zeta Function",
+    Constructive experimental and nonlinear analysis,
+    CMS Conference Proc. 27 (2000), 29-34
+    http://www.cecm.sfu.ca/personal/pborwein/PAPERS/P155.pdf
+
+    [2] The MPFR team (2012), "MPFR Algorithms", http://www.mpfr.org/algo.html
+
+    [3] X. Gourdon and P. Sebah (2003),
+    "Numerical evaluation of the Riemann Zeta-function"
+    http://numbers.computation.free.fr/Constants/Miscellaneous/zetaevaluations.pdf
+
+void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
+
+    Computes $\zeta(s)$ for arbitrary $s \ge 2$ using a binary splitting
+    implementation of Borwein's formula. The algorithm has quasilinear
+    complexity with respect to the precision.
+
+void fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
+
+void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
+
+void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
+
+void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
+
+
