@@ -25,39 +25,57 @@
 
 #include "fmprb.h"
 
-/* TODO: add log2(e) bits to the working precision? */
-
 void
-fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
+fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 {
-    long i, wp;
+    long i, wp, bits;
+
+    if (fmpz_is_zero(e))
+    {
+        fmprb_set_ui(y, 1UL);
+        return;
+    }
+
+    if (fmpz_sgn(e) < 0)
+    {
+        fmpz_t f;
+        fmpz_init(f);
+        fmpz_neg(f, e);
+        fmprb_pow_fmpz(y, b, f, prec + 2);
+        fmprb_ui_div(y, 1UL, y, prec);
+        fmpz_clear(f);
+    }
 
     if (y == b)
     {
         fmprb_t t;
         fmprb_init(t);
         fmprb_set(t, b);
-        fmprb_pow_ui(y, t, e, prec);
+        fmprb_pow_fmpz(y, t, e, prec);
         fmprb_clear(t);
-        return;
-    }
-
-    if (e == 0)
-    {
-        fmprb_set_ui(y, 1UL);
         return;
     }
 
     fmprb_set(y, b);
 
-    wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(e));
+    bits = fmpz_bits(e);
+    wp = FMPR_PREC_ADD(prec, bits);
 
-    for (i = FLINT_BIT_COUNT(e) - 2; i >= 0; i--)
+    for (i = bits - 2; i >= 0; i--)
     {
         fmprb_mul(y, y, y, wp);
-        if (e & (1UL<<i))
+        if (fmpz_tstbit(e, i))
             fmprb_mul(y, y, b, wp);
     }
+}
+
+void
+fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
+{
+    fmpz_t f;
+    fmpz_init_set_ui(f, e);
+    fmprb_pow_fmpz(y, b, f, prec);
+    fmpz_clear(f);
 }
 
 void
@@ -78,4 +96,24 @@ fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
     fmprb_set_si(t, b);
     fmprb_pow_ui(y, t, e, prec);
     fmprb_clear(t);
+}
+
+void
+fmprb_pow_fmpq(fmprb_t y, const fmprb_t x, const fmpq_t a, long prec)
+{
+    if (fmpz_is_one(fmpq_denref(a)))
+    {
+        fmprb_pow_fmpz(y, x, fmpq_numref(a), prec);
+    }
+    else
+    {
+        long wp;
+
+        wp = prec + 10;
+
+        fmprb_log(y, x, wp);
+        fmprb_mul_fmpz(y, y, fmpq_numref(a), wp);
+        fmprb_div_fmpz(y, y, fmpq_denref(a), wp);
+        fmprb_exp(y, y, prec);
+    }
 }
