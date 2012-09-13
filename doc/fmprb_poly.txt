@@ -1,5 +1,6 @@
 
-    Ball polynomials.
+    An <tt>fmprb_poly_t</tt> represents a polynomial over the real numbers,
+    implemented as an array of coefficients of type <tt>fmprb_struct</tt>.
 
 *******************************************************************************
 
@@ -11,6 +12,12 @@ fmprb_poly_struct
 
 fmprb_poly_t
 
+    Contains a pointer to an array of coefficients, the used length,
+    and the allocated size of the array.
+
+    An <tt>fmprb_poly_t</tt> is defined as an array of length one of type
+    <tt>fmprb_poly_struct</tt>, permitting an <tt>fmprb_poly_t</tt> to
+    be passed by reference.
 
 *******************************************************************************
 

@@ -1,7 +1,7 @@
 
     A variable of type <tt>fmpr_t</tt> holds an arbitrary-precision binary
     floating-point number, i.e. a rational number of the form
-    $x \times 2^y$ where $x, y \in \mathbb{Z}$ where $x$ is odd;
+    $x \times 2^y$ where $x, y \in \mathbb{Z}$ and $x$ is odd;
     or one of the special values zero, plus infinity, minus infinity,
     or NaN (not-a-number).
 
@@ -129,7 +129,7 @@ void fmpr_pos_inf(fmpr_t x)
 
 void fmpr_neg_inf(fmpr_t x)
 
-void fmpr_nan_inf(fmpr_t x)
+void fmpr_nan(fmpr_t x)
 
     Sets x respectively to 0, 1, $+\infty$, $-\infty$, NaN.
 

@@ -13,7 +13,9 @@
 
 <p>Planned features include: transcendental functions, more extensive polynomial functionality, matrices, and complex balls (and polynomials and matrices thereof).</p>
 
-<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. It also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes. The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
+<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. Arb also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes.</p>
+
+<p>The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
 
 <p><b>Warning</b>: as this is an early version, any part of the interface is subject to change! Also be aware that there are known and unknown bugs.</p>
 

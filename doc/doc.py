@@ -7,7 +7,7 @@ intro = r"""
 <html>
 
 <head>
-<title>Arb</title>
+<title>Arb documentation</title>
 
 <style>
 body { font-family: sans-serif; font-size: 90%; }
@@ -43,7 +43,7 @@ MathJax.Hub.Config({
 
 <body>
 
-<h1>Arb</h1>
+<h1>Arb documentation</h1>
 
 <p><i>Last updated: %NOW%</i></p>
 
@@ -136,42 +136,44 @@ def write(docs, file):
                     file.write('<li><a href="#%s">%s</a></li>\n' % (section_key(title, entry[1]), entry[1]))
         file.write("</ul></li>\n");
     file.write("</ul>\n");
+    file.write("<hr />\n")
     # Write each section
-    in_list = False
     for doc, title in docs:
+        in_list = False
         file.write('<h2><a name="%s">%s</a></h2>\n' % (section_key(title, ""), title));
-        if not isinstance(doc, list):
+        if isinstance(doc, list):
+            for entry in doc:
+                if entry[0] == "H":
+                    if in_list:
+                        in_list = False
+                        file.write("</dl>\n")
+                    file.write('<a name="%s"><h3>%s</h3></a>\n' % (section_key(title, entry[1]), entry[1]))
+                if entry[0] == "DEF":
+                    if not in_list:
+                        in_list = True
+                        file.write("<dl>\n")
+                    #file.write("<dt><tt>%s</tt></dt>\n" % entry[1])
+                    file.write("<dt>%s</dt>\n" % entry[1])
+                if entry[0] == "DESCR":
+                    if in_list:
+                        file.write("<dd>\n")
+                    for para in entry[1]:
+                        file.write("<p>%s</p>\n" % para)
+                    if in_list:
+                        file.write("</dd>\n")
+            if in_list:
+                file.write("</dl>\n")
+        else:
             file.write(doc)
-            continue
-        for entry in doc:
-            if entry[0] == "H":
-                if in_list:
-                    in_list = False
-                    file.write("</dl>\n")
-                file.write('<a name="%s"><h3>%s</h3></a>\n' % (section_key(title, entry[1]), entry[1]))
-            if entry[0] == "DEF":
-                if not in_list:
-                    in_list = True
-                    file.write("<dl>\n")
-                #file.write("<dt><tt>%s</tt></dt>\n" % entry[1])
-                file.write("<dt>%s</dt>\n" % entry[1])
-            if entry[0] == "DESCR":
-                if in_list:
-                    file.write("<dd>\n")
-                for para in entry[1]:
-                    file.write("<p>%s</p>\n" % para)
-                if in_list:
-                    file.write("</dd>\n")
-        if in_list:
-            file.write("</dl>\n")
+        file.write("<hr />\n")
     file.write(outro)
 
 docs = [
   ("introduction.txt", "Introduction", False),
   ("setup.txt", "Setup", False),
-  ("fmpr.txt", "fmpr (floating-point arithmetic)", True),
-  ("fmprb.txt", "fmprb (real ball arithmetic)", True),
-  ("fmprb_poly.txt", "fmprb_poly (polynomials of real balls)", True),
+  ("fmpr.txt", "fmpr.h (floating-point arithmetic)", True),
+  ("fmprb.txt", "fmprb.h (real ball arithmetic)", True),
+  ("fmprb_poly.txt", "fmprb_poly.h (polynomials of real balls)", True),
 ]
 
 write([(parse(open(doc).read(), markup), title) for \

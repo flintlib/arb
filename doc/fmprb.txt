@@ -1,5 +1,51 @@
 
-    A ball.
+    An <tt>fmprb_t</tt> represents a ball over the real numbers,
+    that is, an interval $[m-r, m+r]$ where the midpoint $m$ and the
+    radius $r$ are (extended) real numbers and $r$ is nonnegative.
+    The result of an (approximate) operation done on <tt>fmprb_t</tt> variables
+    is a ball which contains the result of the (mathematically exact) operation
+    applied to any choice of points in the input balls.
+    In general, the output ball is not the smallest possible.
+
+    The precision parameter passed to each function roughly indicates the
+    precision to which calculations on the midpoint are carried out
+    (operations on the radius are always done using a fixed, small
+    precision.)
+
+    For arithmetic operations, the precision parameter currently simply
+    specifies the precision of the corresponding <tt>fmpr</tt> operation.
+    In the future, the arithmetic might be made faster by incorporating
+    sloppy rounding (typically equivalent to a loss of 1-2 bits of effective
+    working precision) when the result is known to be inexact (while still
+    propagating errors rigorously, of course).
+    Arithmetic operations done on exact input with exactly
+    representable output are always guaranteed to produce exact output.
+
+    For more complex operations, the precision parameter indicates a minimum
+    working precision (algorithms might allocate extra internal precision to
+    attempt to produce an output accurate to the requested number of bits,
+    especially when the required precision can be estimated easily, but this
+    is not generally required).
+
+    If the precision is increased and the inputs either are exact or are
+    computed with increased accuracy as well, the output should
+    converge proportionally, absent any bugs.
+    The general intended strategy for using ball arithmetic is to add a few
+    guard bits, and then repeat the calculation as necessary with an
+    exponentially increasing number of guard bits (Ziv's strategy) until the
+    result is exact
+    enough for one's purposes (typically the first attempt will be successful).
+    There are some caveats: in general, ball arithmetic only makes
+    sense for (Lipschitz) continuous functions, and 
+    trying to approximate functions close to singularities might result in
+    slow convergence, or failure to converge.
+
+    <b>Warning</b>: some methods for transcendental functions and constants
+    currently perform the error propagation in a non-rigorous way, due to the
+    implementation being incomplete (in some cases, a
+    rigorous error bound for the algorithm or function might not
+    be known at all).
+    This should be indicated in the documentation for each function.
 
 *******************************************************************************
 
@@ -419,11 +465,10 @@ void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
 void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
         ulong step, long prec)
 
-    Computes $\zeta(s)$ for $s = \mathrm{start} + i \times \mathrm{step}$,
-    $0 \le i &lt; \mathrm{num}$,
-    writing the consecutive values to the array $z$. Uses Borwein's
-    approximation formula, implemented to support fast multi-evaluation (but
-    also works well for a single $s$).
+    Evaluates $\zeta(s)$ at $\mathrm{num}$ consecutive integers $s$ beginning
+    with $\mathrm{start}$ and proceeding in increments of $\mathrm{step}$.
+    Uses Borwein's formula [1], implemented to support fast multi-evaluation
+    (but also works well for a single $s$).
 
     Requires $\mathrm{start} \ge 2$. For efficiency, the largest $s$
     should be at most about as
@@ -432,14 +477,15 @@ void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
     One should therefore only use this function for s up to about prec, and
     then switch to the Euler product.
 
-    The algorithm for single s is basically identical to the one used in MPFR
-    (see the MPFR Algorithms paper for a detailed description).
+    The algorithm for single $s$ is basically identical to the one used in MPFR
+    (see [2] for a detailed description).
     In particular, we evaluate the sum backwards to avoid storing more than one
-    d_k coefficient, and use integer arithmetic throughout since it
-    is convenient and the terms turn out to be slightly larger than 2^prec.
-    The only numerical error in the main loop comes from the division by k^s,
+    $d_k$ coefficient, and use integer arithmetic throughout since it
+    is convenient and the terms turn out to be slightly larger than
+    $2^\mathrm{prec}$.
+    The only numerical error in the main loop comes from the division by $k^s$,
     which adds less than 1 unit of error per term.
-    For fast multi-evaluation, we repeatedly divide by k^step.
+    For fast multi-evaluation, we repeatedly divide by $k^{\mathrm{step}}$.
     Each division reduces the input error and adds at most 1 unit of
     additional rounding error, so by induction, the error per term
     is always smaller than 2 units.

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Arb</title>
+<title>Arb documentation</title>
 
 <style>
 body { font-family: sans-serif; font-size: 90%; }
@@ -38,9 +38,9 @@ MathJax.Hub.Config({
 
 <body>
 
-<h1>Arb</h1>
+<h1>Arb documentation</h1>
 
-<p><i>Last updated: 2012-09-13 16:02:39 CET</i></p>
+<p><i>Last updated: 2012-09-13 17:39:50 CET</i></p>
 
 <h2>Contents</h2>
 
@@ -54,44 +54,45 @@ MathJax.Hub.Config({
 <ul>
 </ul></li>
 <li>
-<a href="#fmpr--floating-point-arithmetic--">fmpr (floating-point arithmetic)</a>
+<a href="#fmpr-h--floating-point-arithmetic--">fmpr.h (floating-point arithmetic)</a>
 <ul>
-<li><a href="#fmpr--floating-point-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Memory-management">Memory management</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Special-values">Special values</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Assignment-and-rounding">Assignment and rounding</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Comparisons">Comparisons</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Random-number-generation">Random number generation</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Conversions">Conversions</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Input-and-output">Input and output</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Arithmetic">Arithmetic</a></li>
-<li><a href="#fmpr--floating-point-arithmetic--Special-functions">Special functions</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Memory-management">Memory management</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Special-values">Special values</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Assignment-and-rounding">Assignment and rounding</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Comparisons">Comparisons</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Random-number-generation">Random number generation</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Conversions">Conversions</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Input-and-output">Input and output</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmpr-h--floating-point-arithmetic--Special-functions">Special functions</a></li>
 </ul></li>
 <li>
-<a href="#fmprb--real-ball-arithmetic--">fmprb (real ball arithmetic)</a>
+<a href="#fmprb-h--real-ball-arithmetic--">fmprb.h (real ball arithmetic)</a>
 <ul>
-<li><a href="#fmprb--real-ball-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Memory-management">Memory management</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Basic-manipulation">Basic manipulation</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Input-and-output">Input and output</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Random-number-generation">Random number generation</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Precision-and-comparisons">Precision and comparisons</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Arithmetic">Arithmetic</a></li>
-<li><a href="#fmprb--real-ball-arithmetic--Special-functions">Special functions</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Memory-management">Memory management</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Basic-manipulation">Basic manipulation</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Input-and-output">Input and output</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Random-number-generation">Random number generation</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Precision-and-comparisons">Precision and comparisons</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmprb-h--real-ball-arithmetic--Special-functions">Special functions</a></li>
 </ul></li>
 <li>
-<a href="#fmprb-poly--polynomials-of-real-balls--">fmprb_poly (polynomials of real balls)</a>
+<a href="#fmprb-poly-h--polynomials-of-real-balls--">fmprb_poly.h (polynomials of real balls)</a>
 <ul>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Types--macros-and-constants">Types, macros and constants</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Memory-management">Memory management</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Conversions">Conversions</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Input-and-output">Input and output</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Comparisons">Comparisons</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Arithmetic">Arithmetic</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Differentiation">Differentiation</a></li>
-<li><a href="#fmprb-poly--polynomials-of-real-balls--Special-functions">Special functions</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Types--macros-and-constants">Types, macros and constants</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Memory-management">Memory management</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Conversions">Conversions</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Input-and-output">Input and output</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Comparisons">Comparisons</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Arithmetic">Arithmetic</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Differentiation">Differentiation</a></li>
+<li><a href="#fmprb-poly-h--polynomials-of-real-balls--Special-functions">Special functions</a></li>
 </ul></li>
 </ul>
+<hr />
 <h2><a name="Introduction-">Introduction</a></h2>
 <p>Arb is an experimental C library implementing arbitrary-precision floating-point ball arithmetic, written by Fredrik Johansson &lt;<a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a>>. The git repository is <a href="https://github.com/fredrik-johansson/arb/">https://github.com/fredrik-johansson/arb/</a></p>
 
@@ -108,10 +109,13 @@ MathJax.Hub.Config({
 
 <p>Planned features include: transcendental functions, more extensive polynomial functionality, matrices, and complex balls (and polynomials and matrices thereof).</p>
 
-<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. It also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes. The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
+<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. Arb also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes.</p>
+
+<p>The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
 
 <p><b>Warning</b>: as this is an early version, any part of the interface is subject to change! Also be aware that there are known and unknown bugs.</p>
 
+<hr />
 <h2><a name="Setup-">Setup</a></h2>
 To compile, test and install Arb, do:
 
@@ -154,13 +158,14 @@ The output should be something like the following:
 3.1415926535897932384626433832795028841971693993751 +/- 4.2764e-50
 </pre>
 
-<h2><a name="fmpr--floating-point-arithmetic--">fmpr (floating-point arithmetic)</a></h2>
-<p>    A variable of type <tt>fmpr_t</tt> holds an arbitrary-precision binary     floating-point number, i.e. a rational number of the form     $x \times 2^y$ where $x, y \in \mathbb{Z}$ where $x$ is odd;     or one of the special values zero, plus infinity, minus infinity,     or NaN (not-a-number).</p>
+<hr />
+<h2><a name="fmpr-h--floating-point-arithmetic--">fmpr.h (floating-point arithmetic)</a></h2>
+<p>    A variable of type <tt>fmpr_t</tt> holds an arbitrary-precision binary     floating-point number, i.e. a rational number of the form     $x \times 2^y$ where $x, y \in \mathbb{Z}$ and $x$ is odd;     or one of the special values zero, plus infinity, minus infinity,     or NaN (not-a-number).</p>
 <p>    The component $x$ is called the <i>mantissa</i>, and $y$ is called the     <i>exponent</i>. Note that this is just one among many possible     conventions: the mantissa (alternatively <i>significand</i>) is     sometimes viewed as a fraction in the interval $[1/2, 1)$, with the     exponent pointing to the position above the top bit rather than the     position of the bottom bit, and it is sometimes customary to separate     the <i>sign</i> from the mantissa.</p>
 <p>    The conventions for special values largely follow those of the     IEEE floating-point standard. At the moment, there is no support     for negative zero, unsigned infinity, or a NaN with a payload, though     some these might be added in the future.</p>
 <p>    An <tt>fmpr</tt> number is exact and has no inherent "accuracy". We     use the term <i>precision</i> to denote either the target precision of     an operation, or the bit size of a mantissa (which in general is     unrelated to the "accuracy" of the number: for example, the     floating-point value 1 has a precision of 1 bit in this sense and is     simultaneously an infinitely accurate approximation of the     integer 1 and a 2-bit accurate approximation of     $\sqrt 2 = 1.011010100\ldots_2$).</p>
 <p>    Except where otherwise noted, the output of an operation is the     floating-point number obtained by taking the inputs as exact numbers,     in principle carrying out the operation exactly, and rounding the     resulting real number to the nearest representable floating-point     number whose mantissa has at most the specified number of bits, in     the specified direction of rounding. Some operations are always     or optionally done exactly.</p>
-<a name="fmpr--floating-point-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
 <dl>
 <dt>fmpr_struct</dt>
 <dd>
@@ -199,7 +204,7 @@ The output should be something like the following:
 <p>    If passed as the precision parameter to a function, indicates that no     rounding is to be performed. This must only be used when it is known     that the result of the operation can be represented exactly and fits     in memory (the typical use case is working with values small integers).     Note that, for example, adding two numbers whose exponents are far     apart can easily produce an exact result that is far too large to     store in memory.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Memory-management"><h3>Memory management</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Memory-management"><h3>Memory management</h3></a>
 <dl>
 <dt>void fmpr_init(fmpr_t x)</dt>
 <dd>
@@ -210,7 +215,7 @@ The output should be something like the following:
 <p>    Clears the variable x, freeing or recycling its allocated memory.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Special-values"><h3>Special values</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Special-values"><h3>Special values</h3></a>
 <dl>
 <dt>void fmpr_zero(fmpr_t x)</dt>
 <dt>void fmpr_one(fmpr_t x)</dt>
@@ -241,7 +246,7 @@ The output should be something like the following:
 <p>    Returns nonzero iff x is one of the special values     0, $+\infty$, $-\infty$, NaN, i.e. not a finite, nonzero     floating-point value.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Assignment-and-rounding"><h3>Assignment and rounding</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Assignment-and-rounding"><h3>Assignment and rounding</h3></a>
 <dl>
 <dt>long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)</dt>
 <dd>
@@ -264,7 +269,7 @@ The output should be something like the following:
 <p>    Like fmpr_set_error_result, but adds err_in to the error.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Comparisons"><h3>Comparisons</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Comparisons"><h3>Comparisons</h3></a>
 <dl>
 <dt>int fmpr_equal(const fmpr_t x, const fmpr_t y)</dt>
 <dd>
@@ -279,7 +284,7 @@ The output should be something like the following:
 <p>    Returns $-1$, $0$ or $+1$ according to the sign of x. The sign     of NaN is undefined.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
 <dl>
 <dt>void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)</dt>
 <dd>
@@ -294,7 +299,7 @@ The output should be something like the following:
 <p>    Indentical to <tt>fmpr_randtest</tt>, except that the output occasionally     is set to an infinity or NaN.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Conversions"><h3>Conversions</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Conversions"><h3>Conversions</h3></a>
 <dl>
 <dt>int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)</dt>
 <dd>
@@ -327,7 +332,7 @@ The output should be something like the following:
 <p>    Sets man and exp to the unique integers such that     $x = \mathrm{man} \times 2^{\mathrm{exp}}$ and man is odd,     provided that x is a nonzero finite fraction.     If x is zero, both man and exp are set to zero. If x is infinite or NaN,     the result is undefined.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Input-and-output"><h3>Input and output</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Input-and-output"><h3>Input and output</h3></a>
 <dl>
 <dt>void fmpr_print(const fmpr_t x)</dt>
 <dd>
@@ -338,7 +343,7 @@ The output should be something like the following:
 <p>    Prints x as a decimal floating-point number, rounding to the specified     number of digits. This function is currently implemented using MPFR,     and does not support large exponents.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
 <dl>
 <dt>void fmpr_neg(fmpr_t y, const fmpr_t x)</dt>
 <dd>
@@ -414,7 +419,7 @@ The output should be something like the following:
 <p>    Sets $z$ to the square root of $x$, rounded according to prec and rnd.     The result is NaN if $x$ is negative.</p>
 </dd>
 </dl>
-<a name="fmpr--floating-point-arithmetic--Special-functions"><h3>Special functions</h3></a>
+<a name="fmpr-h--floating-point-arithmetic--Special-functions"><h3>Special functions</h3></a>
 <dl>
 <dt>long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)</dt>
 <dd>
@@ -433,12 +438,15 @@ The output should be something like the following:
 <p>    Sets $z$ to $\exp(x)-1$, rounded according to prec and rnd. This function     computes an accurate value when $x$ is small.     This function is currently implemented using MPFR and does not     support large exponents.</p>
 </dd>
 </dl>
-<h2><a name="fmprb--real-ball-arithmetic--">fmprb (real ball arithmetic)</a></h2>
-<dd>
-<p>    A ball.</p>
-</dd>
-</dl>
-<a name="fmprb--real-ball-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<hr />
+<h2><a name="fmprb-h--real-ball-arithmetic--">fmprb.h (real ball arithmetic)</a></h2>
+<p>    An <tt>fmprb_t</tt> represents a ball over the real numbers,     that is, an interval $[m-r, m+r]$ where the midpoint $m$ and the     radius $r$ are (extended) real numbers and $r$ is nonnegative.     The result of an (approximate) operation done on <tt>fmprb_t</tt> variables     is a ball which contains the result of the (mathematically exact) operation     applied to any choice of points in the input balls.     In general, the output ball is not the smallest possible.</p>
+<p>    The precision parameter passed to each function roughly indicates the     precision to which calculations on the midpoint are carried out     (operations on the radius are always done using a fixed, small     precision.)</p>
+<p>    For arithmetic operations, the precision parameter currently simply     specifies the precision of the corresponding <tt>fmpr</tt> operation.     In the future, the arithmetic might be made faster by incorporating     sloppy rounding (typically equivalent to a loss of 1-2 bits of effective     working precision) when the result is known to be inexact (while still     propagating errors rigorously, of course).     Arithmetic operations done on exact input with exactly     representable output are always guaranteed to produce exact output.</p>
+<p>    For more complex operations, the precision parameter indicates a minimum     working precision (algorithms might allocate extra internal precision to     attempt to produce an output accurate to the requested number of bits,     especially when the required precision can be estimated easily, but this     is not generally required).</p>
+<p>    If the precision is increased and the inputs either are exact or are     computed with increased accuracy as well, the output should     converge proportionally, absent any bugs.     The general intended strategy for using ball arithmetic is to add a few     guard bits, and then repeat the calculation as necessary with an     exponentially increasing number of guard bits (Ziv's strategy) until the     result is exact     enough for one's purposes (typically the first attempt will be successful).     There are some caveats: in general, ball arithmetic only makes     sense for (Lipschitz) continuous functions, and      trying to approximate functions close to singularities might result in     slow convergence, or failure to converge.</p>
+<p>    <b>Warning</b>: some methods for transcendental functions and constants     currently perform the error propagation in a non-rigorous way, due to the     implementation being incomplete (in some cases, a     rigorous error bound for the algorithm or function might not     be known at all).     This should be indicated in the documentation for each function.</p>
+<a name="fmprb-h--real-ball-arithmetic--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
 <dl>
 <dt>fmprb_struct</dt>
 <dt>fmprb_t</dt>
@@ -458,7 +466,7 @@ The output should be something like the following:
 <p>    Macro returning a pointer to the radius of x as an <tt>fmpr_t</tt>.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Memory-management"><h3>Memory management</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Memory-management"><h3>Memory management</h3></a>
 <dl>
 <dt>void fmprb_init(fmprb_t x)</dt>
 <dd>
@@ -477,7 +485,7 @@ The output should be something like the following:
 <p>    Clears an array of n initialized fmprb_struct:s.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Basic-manipulation"><h3>Basic manipulation</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Basic-manipulation"><h3>Basic manipulation</h3></a>
 <dl>
 <dt>int fmprb_is_exact(const fmprb_t x)</dt>
 <dd>
@@ -530,7 +538,7 @@ The output should be something like the following:
 <p>    Sets x to the exact integer 1.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Input-and-output"><h3>Input and output</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Input-and-output"><h3>Input and output</h3></a>
 <dl>
 <dt>void fmprb_print(const fmprb_t x)</dt>
 <dd>
@@ -541,7 +549,7 @@ The output should be something like the following:
 <p>    Prints x in decimal. The printed value of the radius is not adjusted     to compensate for the fact that both the binary-to-decimal conversion     of both the midpoint and the radius introduces additional error.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
 <dl>
 <dt>void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)</dt>
 <dd>
@@ -553,7 +561,7 @@ The output should be something like the following:
 <p>    The outcome is undefined if the midpoint or radius of x is non-finite,     or if the exponent of the midpoint or radius is so large or small     that representing the endpoints as exact rational numbers would     cause overflows.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Precision-and-comparisons"><h3>Precision and comparisons</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Precision-and-comparisons"><h3>Precision and comparisons</h3></a>
 <dl>
 <dt>void fmprb_add_error_2exp_si(fmprb_t x, long e)</dt>
 <dd>
@@ -581,7 +589,7 @@ The output should be something like the following:
 <p>    Returns the effective relative accuracy of x measured in bits,     equal to the negative of the return value from fmprb_rel_error_bits.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Arithmetic"><h3>Arithmetic</h3></a>
 <dl>
 <dt>void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)</dt>
 <dt>void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)</dt>
@@ -649,7 +657,7 @@ The output should be something like the following:
 <p>    Sets $y = b^e$.</p>
 </dd>
 </dl>
-<a name="fmprb--real-ball-arithmetic--Special-functions"><h3>Special functions</h3></a>
+<a name="fmprb-h--real-ball-arithmetic--Special-functions"><h3>Special functions</h3></a>
 <dl>
 <dt>void fmprb_log(fmprb_t z, const fmprb_t x, long prec)</dt>
 <dt>void fmprb_log_ui(fmprb_t z, ulong x, long prec)</dt>
@@ -709,9 +717,9 @@ The output should be something like the following:
 </dd>
 <dt>void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,         ulong step, long prec)</dt>
 <dd>
-<p>    Computes $\zeta(s)$ for $s = \mathrm{start} + i \times \mathrm{step}$,     $0 \le i &lt; \mathrm{num}$,     writing the consecutive values to the array $z$. Uses Borwein's     approximation formula, implemented to support fast multi-evaluation (but     also works well for a single $s$).</p>
+<p>    Evaluates $\zeta(s)$ at $\mathrm{num}$ consecutive integers $s$ beginning     with $\mathrm{start}$ and proceeding in increments of $\mathrm{step}$.     Uses Borwein's formula [1], implemented to support fast multi-evaluation     (but also works well for a single $s$).</p>
 <p>    Requires $\mathrm{start} \ge 2$. For efficiency, the largest $s$     should be at most about as     large as $\mathrm{prec}$. Arguments approaching LONG_MAX will cause     overflows.     One should therefore only use this function for s up to about prec, and     then switch to the Euler product.</p>
-<p>    The algorithm for single s is basically identical to the one used in MPFR     (see the MPFR Algorithms paper for a detailed description).     In particular, we evaluate the sum backwards to avoid storing more than one     d_k coefficient, and use integer arithmetic throughout since it     is convenient and the terms turn out to be slightly larger than 2^prec.     The only numerical error in the main loop comes from the division by k^s,     which adds less than 1 unit of error per term.     For fast multi-evaluation, we repeatedly divide by k^step.     Each division reduces the input error and adds at most 1 unit of     additional rounding error, so by induction, the error per term     is always smaller than 2 units.</p>
+<p>    The algorithm for single $s$ is basically identical to the one used in MPFR     (see [2] for a detailed description).     In particular, we evaluate the sum backwards to avoid storing more than one     $d_k$ coefficient, and use integer arithmetic throughout since it     is convenient and the terms turn out to be slightly larger than     $2^\mathrm{prec}$.     The only numerical error in the main loop comes from the division by $k^s$,     which adds less than 1 unit of error per term.     For fast multi-evaluation, we repeatedly divide by $k^{\mathrm{step}}$.     Each division reduces the input error and adds at most 1 unit of     additional rounding error, so by induction, the error per term     is always smaller than 2 units.</p>
 <p>    References:</p>
 <p>    [1] P. Borwein, "An Efficient Algorithm for the Riemann Zeta Function",     Constructive experimental and nonlinear analysis,     CMS Conference Proc. 27 (2000), 29-34     http://www.cecm.sfu.ca/personal/pborwein/PAPERS/P155.pdf</p>
 <p>    [2] The MPFR team (2012), "MPFR Algorithms", http://www.mpfr.org/algo.html</p>
@@ -726,17 +734,19 @@ The output should be something like the following:
 <dt>void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)</dt>
 <dt>void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)</dt>
 </dl>
-<h2><a name="fmprb-poly--polynomials-of-real-balls--">fmprb_poly (polynomials of real balls)</a></h2>
-<dd>
-<p>    Ball polynomials.</p>
-</dd>
-</dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
+<hr />
+<h2><a name="fmprb-poly-h--polynomials-of-real-balls--">fmprb_poly.h (polynomials of real balls)</a></h2>
+<p>    An <tt>fmprb_poly_t</tt> represents a polynomial over the real numbers,     implemented as an array of coefficients of type <tt>fmprb_struct</tt>.</p>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Types--macros-and-constants"><h3>Types, macros and constants</h3></a>
 <dl>
 <dt>fmprb_poly_struct</dt>
 <dt>fmprb_poly_t</dt>
+<dd>
+<p>    Contains a pointer to an array of coefficients, the used length,     and the allocated size of the array.</p>
+<p>    An <tt>fmprb_poly_t</tt> is defined as an array of length one of type     <tt>fmprb_poly_struct</tt>, permitting an <tt>fmprb_poly_t</tt> to     be passed by reference.</p>
+</dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Memory-management"><h3>Memory management</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Memory-management"><h3>Memory management</h3></a>
 <dl>
 <dt>void fmprb_poly_init(fmprb_poly_t poly)</dt>
 <dd>
@@ -764,7 +774,7 @@ The output should be something like the following:
 <p>    Sets poly to the constant 0 respectively 1.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Conversions"><h3>Conversions</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Conversions"><h3>Conversions</h3></a>
 <dl>
 <dt>void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec)</dt>
 <dt>void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec)</dt>
@@ -772,14 +782,14 @@ The output should be something like the following:
 <p>    Sets poly to src.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Input-and-output"><h3>Input and output</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Input-and-output"><h3>Input and output</h3></a>
 <dl>
 <dt>void fmprb_poly_printd(const fmprb_poly_t poly, long digits)</dt>
 <dd>
 <p>    Prints the polynomial as an array of coefficients, printing each     coefficient using fmprb_printd.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Comparisons"><h3>Comparisons</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Comparisons"><h3>Comparisons</h3></a>
 <dl>
 <dt>int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1,     const fmpq_poly_t poly2)</dt>
 <dd>
@@ -790,7 +800,7 @@ The output should be something like the following:
 <p>    Returns nonzero iff A and B are equal as polynomial balls, i.e. all     coefficients have equal midpoint and radius.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Arithmetic"><h3>Arithmetic</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Arithmetic"><h3>Arithmetic</h3></a>
 <dl>
 <dt>void _fmprb_poly_add(fmprb_struct * C, const fmprb_struct * A, long lenA,     const fmprb_struct * B, long lenB, long prec)</dt>
 <dd>
@@ -826,7 +836,7 @@ The output should be something like the following:
 <p>    Sets Qinv to the power series inverse of Q.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Differentiation"><h3>Differentiation</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Differentiation"><h3>Differentiation</h3></a>
 <dl>
 <dt>void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly,     long len, long prec)</dt>
 <dd>
@@ -845,7 +855,7 @@ The output should be something like the following:
 <p>    Sets res to the integral of poly.</p>
 </dd>
 </dl>
-<a name="fmprb-poly--polynomials-of-real-balls--Special-functions"><h3>Special functions</h3></a>
+<a name="fmprb-poly-h--polynomials-of-real-balls--Special-functions"><h3>Special functions</h3></a>
 <dl>
 <dt>void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h,         long n, long prec)</dt>
 <dt>void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h,         long n, long prec)</dt>
@@ -862,6 +872,7 @@ The output should be something like the following:
 <p>    Sets $f$ to the series expansion of $\log(\Gamma(1-x))$, truncated to     length $n$.</p>
 </dd>
 </dl>
+<hr />
 
 
 
