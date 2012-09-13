@@ -1,4 +1,6 @@
 import datetime
+import time
+tz = time.tzname[0]
 now = datetime.datetime.now()
 
 intro = r"""
@@ -27,7 +29,6 @@ MathJax.Hub.Config({
   });</script> 
 <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> 
 
-<!--
 <script type='text/javascript'> 
   newContainer = document.createElement('span');
   newContainer.style.setProperty("display","none","");
@@ -37,7 +38,6 @@ MathJax.Hub.Config({
   newContainer.appendChild(newNode);
   document.body.insertBefore(newContainer,document.body.firstChild);
 </script> 
--->
 
 </head>
 
@@ -47,34 +47,18 @@ MathJax.Hub.Config({
 
 <p><i>Last updated: %NOW%</i></p>
 
-<p>Arb is an experimental C library implementing arbitrary-precision floating-point ball arithmetic, written by Fredrik Johansson &lt;<a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a>>. The git repository is <a href="https://github.com/fredrik-johansson/arb/">https://github.com/fredrik-johansson/arb/</a></p>
-
-<p>Ball arithmetic, also known as mid-rad interval arithmetic, is an extension of floating-point arithmetic in which an error bound is attached to each variable. This allows doing rigorous computations over the real numbers, while avoiding the overhead of traditional (inf-sup) interval arithmetic at high precision, and eliminating much of the need for time-consuming and bug-prone manual error analysis.</p>
-
-<p>At the moment, Arb contains:</p>
-
-<ul>
-<li>A module (fmpr) for correctly rounded arbitrary-precision floating-point arithmetic. Arb numbers have a few special features, such as arbitrary-size exponents (useful for combinatorics and asymptotics) and dynamic allocation (facilitating implementation of hybrid integer/floating-point and mixed-precision algorithms).</li>
-<li>A module (fmprb) for real ball arithmetic, where a ball is implemented as a pair of fmpr numbers.</li>
-<li>Functions for fast high-precision computation of some mathematical constants, based on ball arithmetic.</li>
-<li>A rudimentary module (fmprb_poly) for polynomials or power series over the real numbers, implemented using balls as coefficients, with fast polynomial multiplication.</li>
-</ul>
-
-<p>Planned features include: transcendental functions, more extensive polynomial functionality, matrices, and complex balls (and polynomials and matrices thereof).</p>
-
-<p>Arb uses <a href="http://mpir.org/">MPIR</a> and <a href="http://flintlib.org/">FLINT</a> for the underlying integer arithmetic. The code conventions borrow from FLINT, and the project might get merged back into FLINT when the code stabilizes in the future. It also uses <a href="http://mpfr.org">MPFR</a> for some fallback code and for testing purposes. The current version of Arb implements most of its floating-point arithmetic naively using high-level FLINT types. The speed at low precision is far from optimal, and the memory management can sometimes be wasteful. The internals will be rewritten in the future to fix the inefficiencies, which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.</p>
-
-<p><b>Warning</b>: as this is an early version, any part of the interface is subject to change! Also be aware that there are known and unknown bugs.</p>
-
-
 <h2>Contents</h2>
 
 """
 
-intro = intro.replace("%NOW%", "%i-%02i-%02i %02i:%02i:%02i" % (now.year, now.month, now.day, now.hour, now.minute, now.second))
+intro = intro.replace("%NOW%", "%i-%02i-%02i %02i:%02i:%02i %s" % (now.year, now.month, now.day, now.hour, now.minute, now.second, tz))
 
 outro = r"""
 
+
+<hr/>
+
+<p>Wishes or bug reports? Send any comments to <a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a></p>
 
 </body>
 </html>
@@ -91,7 +75,9 @@ def section_key(title, section):
         return t
     return stringify(title) + "-" + stringify(section)
 
-def parse(string):
+def parse(string, markup):
+    if not markup:
+        return string
     lines = string.splitlines()
     # Collect paragraphs
     chunks = []
@@ -144,15 +130,19 @@ def write(docs, file):
         file.write("<li>\n");
         file.write('<a href="#%s">%s</a>\n' % (section_key(title, ""), title));
         file.write("<ul>\n");
-        for entry in doc:
-            if entry[0] == "H":
-                file.write('<li><a href="#%s">%s</a></li>\n' % (section_key(title, entry[1]), entry[1]))
+        if isinstance(doc, list):
+            for entry in doc:
+                if entry[0] == "H":
+                    file.write('<li><a href="#%s">%s</a></li>\n' % (section_key(title, entry[1]), entry[1]))
         file.write("</ul></li>\n");
     file.write("</ul>\n");
     # Write each section
     in_list = False
     for doc, title in docs:
         file.write('<h2><a name="%s">%s</a></h2>\n' % (section_key(title, ""), title));
+        if not isinstance(doc, list):
+            file.write(doc)
+            continue
         for entry in doc:
             if entry[0] == "H":
                 if in_list:
@@ -177,11 +167,13 @@ def write(docs, file):
     file.write(outro)
 
 docs = [
-  ("fmpr.txt", "fmpr (floating-point arithmetic)"),
-  ("fmprb.txt", "fmprb (real ball arithmetic)"),
-  ("fmprb_poly.txt", "fmprb_poly (polynomials of real balls)"),
+  ("introduction.txt", "Introduction", False),
+  ("setup.txt", "Setup", False),
+  ("fmpr.txt", "fmpr (floating-point arithmetic)", True),
+  ("fmprb.txt", "fmprb (real ball arithmetic)", True),
+  ("fmprb_poly.txt", "fmprb_poly (polynomials of real balls)", True),
 ]
 
-write([(parse(open(doc).read()), title) for (doc, title) in docs],
-    open("doc.html", "w"))
+write([(parse(open(doc).read(), markup), title) for \
+    (doc, title, markup) in docs], open("doc.html", "w"))
 

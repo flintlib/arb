@@ -1,0 +1,41 @@
+To compile, test and install Arb, do:
+
+<pre>
+./configure &lt;options>
+make
+make check
+make install
+</pre>
+
+<p>
+Arb requires recent versions of MPIR, MPFR and FLINT.
+Currently a source checkout of FLINT from
+<a href="https://github.com/fredrik-johansson/flint2">https://github.com/fredrik-johansson/flint2</a>
+is required.
+If MPIR, MPFR or FLINT is installed elsewhere than
+in the default location /usr/local, pass the
+flag --with-mpir=... --with-mpfr=... or --with-flint=... with
+the correct path to configure (type ./configure --help to show
+more options).</p>
+
+<p>Here is a simple sample program to get started using Arb:</p>
+
+<pre>
+#include "fmprb.h"
+
+int main()
+{
+    fmprb_t x;
+    fmprb_init(x);
+    fmprb_const_pi(x, 50 * 3.33);
+    fmprb_printd(x, 50); printf("\n");
+    fmprb_clear(x);
+}
+</pre>
+
+The output should be something like the following:
+
+<pre>
+3.1415926535897932384626433832795028841971693993751 +/- 4.2764e-50
+</pre>
+
