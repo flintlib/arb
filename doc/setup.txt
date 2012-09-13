@@ -12,8 +12,8 @@ Arb requires recent versions of MPIR, MPFR and FLINT.
 Currently a source checkout of FLINT from
 <a href="https://github.com/fredrik-johansson/flint2">https://github.com/fredrik-johansson/flint2</a>
 is required.
-If MPIR, MPFR or FLINT is installed elsewhere than
-in the default location /usr/local, pass the
+If MPIR, MPFR or FLINT is installed in some other location than
+the default path /usr/local, pass the
 flag --with-mpir=... --with-mpfr=... or --with-flint=... with
 the correct path to configure (type ./configure --help to show
 more options).</p>

@@ -172,7 +172,7 @@ void fmprb_print(const fmprb_t x)
 void fmprb_printd(const fmprb_t x, long digits)
 
     Prints x in decimal. The printed value of the radius is not adjusted
-    to compensate for the fact that both the binary-to-decimal conversion
+    to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
 
 

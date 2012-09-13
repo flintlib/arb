@@ -6,7 +6,7 @@
 
 <style>
 body { font-family: sans-serif; font-size: 90%; }
-dt { color:#348; }
+dt { color:#348; font-weight: bold; }
 dd p { margin-top: 0.4em; }
 </style>
 
@@ -40,7 +40,7 @@ MathJax.Hub.Config({
 
 <h1>Arb documentation</h1>
 
-<p><i>Last updated: 2012-09-13 17:39:50 CET</i></p>
+<p><i>Last updated: 2012-09-13 18:07:04 CET</i></p>
 
 <h2>Contents</h2>
 
@@ -91,6 +91,10 @@ MathJax.Hub.Config({
 <li><a href="#fmprb-poly-h--polynomials-of-real-balls--Differentiation">Differentiation</a></li>
 <li><a href="#fmprb-poly-h--polynomials-of-real-balls--Special-functions">Special functions</a></li>
 </ul></li>
+<li>
+<a href="#Credits-">Credits</a>
+<ul>
+</ul></li>
 </ul>
 <hr />
 <h2><a name="Introduction-">Introduction</a></h2>
@@ -131,8 +135,8 @@ Arb requires recent versions of MPIR, MPFR and FLINT.
 Currently a source checkout of FLINT from
 <a href="https://github.com/fredrik-johansson/flint2">https://github.com/fredrik-johansson/flint2</a>
 is required.
-If MPIR, MPFR or FLINT is installed elsewhere than
-in the default location /usr/local, pass the
+If MPIR, MPFR or FLINT is installed in some other location than
+the default path /usr/local, pass the
 flag --with-mpir=... --with-mpfr=... or --with-flint=... with
 the correct path to configure (type ./configure --help to show
 more options).</p>
@@ -221,7 +225,7 @@ The output should be something like the following:
 <dt>void fmpr_one(fmpr_t x)</dt>
 <dt>void fmpr_pos_inf(fmpr_t x)</dt>
 <dt>void fmpr_neg_inf(fmpr_t x)</dt>
-<dt>void fmpr_nan_inf(fmpr_t x)</dt>
+<dt>void fmpr_nan(fmpr_t x)</dt>
 <dd>
 <p>    Sets x respectively to 0, 1, $+\infty$, $-\infty$, NaN.</p>
 </dd>
@@ -546,7 +550,7 @@ The output should be something like the following:
 </dd>
 <dt>void fmprb_printd(const fmprb_t x, long digits)</dt>
 <dd>
-<p>    Prints x in decimal. The printed value of the radius is not adjusted     to compensate for the fact that both the binary-to-decimal conversion     of both the midpoint and the radius introduces additional error.</p>
+<p>    Prints x in decimal. The printed value of the radius is not adjusted     to compensate for the fact that the binary-to-decimal conversion     of both the midpoint and the radius introduces additional error.</p>
 </dd>
 </dl>
 <a name="fmprb-h--real-ball-arithmetic--Random-number-generation"><h3>Random number generation</h3></a>
@@ -873,10 +877,17 @@ The output should be something like the following:
 </dd>
 </dl>
 <hr />
+<h2><a name="Credits-">Credits</a></h2>
+<p>Arb is licensed GNU General Public License version 2, or any later version.</p>
 
+<p>Fredrik's work on Arb is supported by Austrian Science Fund FWF Grant Y464-N18
+(Fast Computer Algebra for Special Functions).</p>
 
+<p>Arb includes code written by Bill Hart and Sebastian Pancratz
+for FLINT (also licensed GPL 2.0+).</p>
 
-<hr/>
+<hr />
+
 
 <p>Wishes or bug reports? Send any comments to <a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a></p>
 

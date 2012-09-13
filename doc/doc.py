@@ -11,7 +11,7 @@ intro = r"""
 
 <style>
 body { font-family: sans-serif; font-size: 90%; }
-dt { color:#348; }
+dt { color:#348; font-weight: bold; }
 dd p { margin-top: 0.4em; }
 </style>
 
@@ -54,9 +54,6 @@ MathJax.Hub.Config({
 intro = intro.replace("%NOW%", "%i-%02i-%02i %02i:%02i:%02i %s" % (now.year, now.month, now.day, now.hour, now.minute, now.second, tz))
 
 outro = r"""
-
-
-<hr/>
 
 <p>Wishes or bug reports? Send any comments to <a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a></p>
 
@@ -174,6 +171,7 @@ docs = [
   ("fmpr.txt", "fmpr.h (floating-point arithmetic)", True),
   ("fmprb.txt", "fmprb.h (real ball arithmetic)", True),
   ("fmprb_poly.txt", "fmprb_poly.h (polynomials of real balls)", True),
+  ("credits.txt", "Credits", False),
 ]
 
 write([(parse(open(doc).read(), markup), title) for \
