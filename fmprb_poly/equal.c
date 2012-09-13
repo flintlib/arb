@@ -25,54 +25,17 @@
 
 #include "fmprb_poly.h"
 
-void
-_fmprb_poly_exp_series_basecase(fmprb_struct * f,
-        const fmprb_struct * h, long hlen, long n, long prec)
+int
+fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B)
 {
-    long j, k, alen = FLINT_MIN(n, hlen);
-    fmprb_struct * a;
-    fmprb_t s;
+    long i;
 
-    fmprb_init(s);
-    a = _fmprb_vec_init(alen);
+    if (A->length != B->length)
+        return 0;
 
-    fmprb_exp(f, h, prec);
+    for (i = 0; i < A->length; i++)
+        if (!fmprb_equal(A->coeffs + i, B->coeffs + i))
+            return 0;
 
-    for (k = 1; k < alen; k++)
-        fmprb_mul_ui(a + k, h + k, k, prec);
-
-    for (k = 1; k < n; k++)
-    {
-        fmprb_zero(s);
-        for (j = 1; j < FLINT_MIN(k + 1, hlen); j++)
-            fmprb_addmul(s, a + j, f + k - j, prec);
-
-        fmprb_div_ui(f + k, s, k, prec);
-    }
-
-    fmprb_clear(s);
-    _fmprb_vec_clear(a, alen);
-}
-
-void
-fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
-{
-    long hlen = h->length;
-
-    if (n == 0)
-    {
-        fmprb_poly_zero(f);
-        return;
-    }
-
-    if (hlen == 0)
-    {
-        fmprb_poly_one(f);
-        return;
-    }
-
-    fmprb_poly_fit_length(f, n);
-    _fmprb_poly_exp_series_basecase(f->coeffs, h->coeffs, hlen, n, prec);
-    _fmprb_poly_set_length(f, n);
-    _fmprb_poly_normalise(f);
+    return 1;
 }

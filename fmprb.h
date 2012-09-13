@@ -85,6 +85,13 @@ fmprb_is_exact(const fmprb_t x)
     return fmpr_is_zero(fmprb_radref(x));
 }
 
+static __inline__ int
+fmprb_equal(const fmprb_t x, const fmprb_t y)
+{
+    return fmpr_equal(fmprb_midref(x), fmprb_midref(y)) &&
+            fmpr_equal(fmprb_radref(x), fmprb_radref(y));
+}
+
 static __inline__ void
 fmprb_zero(fmprb_t x)
 {

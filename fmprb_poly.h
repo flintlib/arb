@@ -78,6 +78,8 @@ void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long pre
 
 int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
 
+int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B);
+
 /* IO */
 
 void fmprb_poly_printd(const fmprb_poly_t poly, long digits);

@@ -51,8 +51,8 @@ int main()
         mpfr_init2(X, bits + 100);
         mpfr_init2(Z, bits);
 
-        fmpr_randtest_special(x, state, bits + n_randint(state, 100), 10);
-        fmpr_randtest_special(z, state, bits + n_randint(state, 100), 10);
+        fmpr_randtest_special(x, state, bits + n_randint(state, 100), 3);
+        fmpr_randtest_special(z, state, bits + n_randint(state, 100), 3);
 
         fmpr_get_mpfr(X, x, MPFR_RNDN);
 

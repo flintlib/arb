@@ -575,6 +575,11 @@ void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
         mpfr_init2(u, FLINT_MAX(2, prec)); \
         fmpr_get_mpfr(t, x, MPFR_RNDD); \
         func(u, t, rrnd); \
+        if (mpfr_overflow_p() || mpfr_underflow_p()) \
+        { \
+            printf("exception: mpfr overflow\n"); \
+            abort(); \
+        } \
         fmpr_set_mpfr(y, u); \
         r = prec - fmpz_bits(fmpr_manref(y)); \
         mpfr_clear(t); \

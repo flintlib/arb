@@ -28,40 +28,26 @@
 void
 _fmprb_poly_log_series(fmprb_struct * res, fmprb_struct * f, long n, long prec)
 {
-    /* log(c+f) = log(c*(1+f/c)) = log(c) + log(1+f/c) */
-    if (!fmprb_is_one(f))
-    {
-        fmprb_struct * h;
-        long i;
+    fmprb_struct * f_diff;
+    fmprb_struct * f_inv;
+    fmprb_t a;
 
-        h = _fmprb_vec_init(n);
+    f_diff = _fmprb_vec_init(n);
+    f_inv = _fmprb_vec_init(n);
+    fmprb_init(a);
 
-        fmprb_one(h);
-        for (i = 1; i < n; i++)
-            fmprb_div(h + i, f + i, f, prec);
+    fmprb_log(a, f, prec);
 
-        _fmprb_poly_log_series(res, h, n, prec);
-        fmprb_log(res, f, prec);
+    _fmprb_poly_derivative(f_diff, f, n, prec);
+    fmprb_zero(f_diff + n - 1);
+    _fmprb_poly_inv_series(f_inv, f, n, prec);
+    _fmprb_poly_mullow(res, f_diff, n - 1, f_inv, n - 1, n - 1, prec);
+    _fmprb_poly_integral(res, res, n, prec);
+    fmprb_set(res, a);
 
-        _fmprb_vec_clear(h, n);
-    }
-    else
-    {
-        fmprb_struct * f_diff;
-        fmprb_struct * f_inv;
-
-        f_diff = _fmprb_vec_init(n);
-        f_inv = _fmprb_vec_init(n);
-
-        _fmprb_poly_derivative(f_diff, f, n, prec);
-        fmprb_zero(f_diff + n - 1);
-        _fmprb_poly_inv_series(f_inv, f, n, prec);
-        _fmprb_poly_mullow(res, f_diff, n - 1, f_inv, n - 1, n - 1, prec);
-        _fmprb_poly_integral(res, res, n, prec);
-
-        _fmprb_vec_clear(f_diff, n);
-        _fmprb_vec_clear(f_inv, n);
-    }
+    fmprb_clear(a);
+    _fmprb_vec_clear(f_diff, n);
+    _fmprb_vec_clear(f_inv, n);
 }
 
 void
