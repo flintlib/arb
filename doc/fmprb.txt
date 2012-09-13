@@ -62,6 +62,11 @@ int fmprb_is_exact(const fmprb_t x)
 
     Returns nonzero iff the radius of x is zero.
 
+int fmprb_equal(const fmprb_t x, const fmprb_t y)
+
+    Returns nonzero iff x and y are equal as balls, i.e. have both the
+    same midpoint and radius.
+
 void fmprb_zero(fmprb_t x)
 
     Sets x to zero.

@@ -42,7 +42,7 @@ MathJax.Hub.Config({
 
 <h1>Arb</h1>
 
-<p><i>Last updated: 2012-09-12 17:56:58</i></p>
+<p><i>Last updated: 2012-09-13 15:03:40</i></p>
 
 <p>Arb is an experimental C library implementing arbitrary-precision floating-point ball arithmetic, written by Fredrik Johansson &lt;<a href="mailto:fredrik.johansson@gmail.com">fredrik.johansson@gmail.com</a>>. The git repository is <a href="https://github.com/fredrik-johansson/arb/">https://github.com/fredrik-johansson/arb/</a></p>
 
@@ -435,6 +435,10 @@ MathJax.Hub.Config({
 <dd>
 <p>    Returns nonzero iff the radius of x is zero.</p>
 </dd>
+<dt>int fmprb_equal(const fmprb_t x, const fmprb_t y)</dt>
+<dd>
+<p>    Returns nonzero iff x and y are equal as balls, i.e. have both the     same midpoint and radius.</p>
+</dd>
 <dt>void fmprb_zero(fmprb_t x)</dt>
 <dd>
 <p>    Sets x to zero.</p>
@@ -687,29 +691,67 @@ MathJax.Hub.Config({
 <a name="fmprb-poly--polynomials-of-real-balls--Memory-management"><h3>Memory management</h3></a>
 <dl>
 <dt>void fmprb_poly_init(fmprb_poly_t poly)</dt>
+<dd>
+<p>    Initializes the polynomial for use, setting its value to zero.</p>
+</dd>
 <dt>void fmprb_poly_clear(fmprb_poly_t poly)</dt>
+<dd>
+<p>    Clears the polynomial, deallocating all coefficients and the     coefficient array.</p>
+</dd>
 <dt>void fmprb_poly_fit_length(fmprb_poly_t poly, long len)</dt>
+<dd>
+<p>    Makes sures that the coefficient array of the polynomial contains at     least len initialized coefficients.</p>
+</dd>
 <dt>void _fmprb_poly_set_length(fmprb_poly_t poly, long len)</dt>
+<dd>
+<p>    Directly changes the length of the polynomial, without allocating or     deallocating coefficients. The value shold not exceed the allocation length.</p>
+</dd>
 <dt>void _fmprb_poly_normalise(fmprb_poly_t poly)</dt>
+<dd>
+<p>    Strips any trailing coefficients which are identical to zero.     The output</p>
+</dd>
 <dt>void fmprb_poly_zero(fmprb_poly_t poly)</dt>
 <dt>void fmprb_poly_one(fmprb_poly_t poly)</dt>
+<dd>
+<p>    Sets poly to the constant 0 respectively 1.</p>
+</dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Conversions"><h3>Conversions</h3></a>
 <dl>
 <dt>void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec)</dt>
 <dt>void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec)</dt>
+<dd>
+<p>    Sets poly to src.</p>
+</dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Input-and-output"><h3>Input and output</h3></a>
 <dl>
 <dt>void fmprb_poly_printd(const fmprb_poly_t poly, long digits)</dt>
+<dd>
+<p>    Prints the polynomial as an array of coefficients, printing each     coefficient using fmprb_printd.</p>
+</dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Comparisons"><h3>Comparisons</h3></a>
 <dl>
-<dt>int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)</dt>
+<dt>int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1,     const fmpq_poly_t poly2)</dt>
+<dd>
+<p>    Returns nonzero iff poly1 contains poly2.</p>
+</dd>
+<dt>int fmprb_poly_equal(const fmprb_t A, const fmprb_t B)</dt>
+<dd>
+<p>    Returns nonzero iff A and B are equal as polynomial balls, i.e. all     coefficients have equal midpoint and radius.</p>
+</dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Arithmetic"><h3>Arithmetic</h3></a>
 <dl>
-<dt>void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,               const fmprb_poly_t poly2, long prec)</dt>
+<dt>void _fmprb_poly_add(fmprb_struct * C, const fmprb_struct * A, long lenA,     const fmprb_struct * B, long lenB, long prec)</dt>
+<dd>
+<p>    Sets {C, max(lenA, lenB)} to the sum of {A, lenA} and {B, lenB}.     Allows aliasing of the input and output operands.</p>
+</dd>
+<dt>void fmprb_poly_add(fmprb_poly_t C, const fmprb_poly_t A,               const fmprb_poly_t B, long prec)</dt>
+<dd>
+<p>    Sets C to the sum of A and B.</p>
+</dd>
 <dt>void _fmprb_poly_mullow(fmprb_struct * C,     const fmprb_struct * A, long lenA,     const fmprb_struct * B, long lenB, long n, long prec)</dt>
 <dd>
 <p>    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to     length n. The output is not allowed to be aliased with either of the     inputs. We require lenA &ge; lenB > 0, n > 0, lenA + lenB - 1 &ge; n.</p>
@@ -723,45 +765,54 @@ MathJax.Hub.Config({
 <dd>
 <p>    Sets {C, n} to the product of {A, lenA} and {B, lenB}, truncated to     length n. The output is not allowed to be aliased with either of the     inputs. We require lenA &ge; lenB > 0, n > 0.     This function currently calls _fmprb_poly_mullow.</p>
 </dd>
-<dt>void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,               const fmprb_poly_t poly2, long prec)</dt>
+<dt>void fmprb_poly_mul(fmprb_poly_t C, const fmprb_poly_t A,               const fmprb_poly_t B, long prec)</dt>
 <dd>
 <p>    Sets C to the product of A and B.</p>
 </dd>
-<dt>void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)</dt>
+<dt>void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q,         long len, long prec)</dt>
 <dd>
-<p>    Sets {Qinv, len} to the power series inverse of {Q, len}. Uses Newton iteration.</p>
+<p>    Sets {Qinv, len} to the power series inverse of {Q, len}.     Uses Newton iteration.</p>
 </dd>
-<dt>void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec)</dt>
+<dt>void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q,         long n, long prec)</dt>
 <dd>
 <p>    Sets Qinv to the power series inverse of Q.</p>
 </dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Differentiation"><h3>Differentiation</h3></a>
 <dl>
-<dt>void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)</dt>
+<dt>void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly,     long len, long prec)</dt>
+<dd>
+<p>    Sets {res, len - 1} to the derivative of {poly, len}.     Allows aliasing of the input and output.</p>
+</dd>
 <dt>void fmprb_poly_derivative(fmprb_poly_t res, const fmprb_poly_t poly, long prec)</dt>
-<dt>void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)</dt>
+<dd>
+<p>    Sets res to the derivative of poly.</p>
+</dd>
+<dt>void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly,     long len, long prec)</dt>
+<dd>
+<p>    Sets {res, len} to the integral of {poly, len - 1}.     Allows aliasing of the input and output.</p>
+</dd>
 <dt>void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec)</dt>
+<dd>
+<p>    Sets res to the integral of poly.</p>
+</dd>
 </dl>
 <a name="fmprb-poly--polynomials-of-real-balls--Special-functions"><h3>Special functions</h3></a>
 <dl>
-<dt>void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h, long n, long prec)</dt>
+<dt>void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h,         long n, long prec)</dt>
+<dt>void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h,         long n, long prec)</dt>
 <dd>
-<p>    Sets {f, n} to the power series logarithm of {h, n}. Uses integration.</p>
-</dd>
-<dt>void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)</dt>
-<dd>
-<p>    Sets $f$ to the power series logarithm of $h$, truncated to length $n$.</p>
+<p>    Sets $f$ to the power series logarithm of $h$, truncated to length $n$.     Uses the formula $\log f = \int f' / f$, adding the logarithm of the first     term in $f$ as the constant of integration.     The underscore method does not support aliasing of the input and output     arrays.</p>
 </dd>
 <dt>void _fmprb_poly_exp_series_basecase(fmprb_struct * f,         const fmprb_struct * h, long hlen, long n, long prec)</dt>
+<dt>void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h,         long n, long prec)</dt>
 <dd>
-<p>    Sets {f, n} to the power series exponential of {h, hlen}. Uses a simple     recurrence for the coefficients, requiring $O(n^2)$ operations.</p>
+<p>    Sets $f$ to the power series exponential of $h$, truncated to length $n$.     Uses a simple recurrence for the coefficients,     requiring $O(nm)$ operations where $m$ is the length of $h$. The     underscore method supports aliasing     and allows the input to be shorter than the output.</p>
 </dd>
-<dt>void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)</dt>
+<dt>void fmprb_poly_log_gamma_series(fmprb_poly_t f, long n, long prec)</dt>
 <dd>
-<p>    Sets $f$ to the power series exponential of $h$, truncated to length $n$.</p>
+<p>    Sets $f$ to the series expansion of $\log(\Gamma(1-x))$, truncated to     length $n$.</p>
 </dd>
-<dt>void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)</dt>
 </dl>
 
 
