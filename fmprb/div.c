@@ -58,31 +58,27 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
     }
     else
     {
-        /* x/y - (x+a)/(y-b)  =  a/(b-y) + x*b/(y*(b-y)) */
-        /* where we assume y > b */
-
-        fmpr_t t, u, by;
-
+        fmpr_t t, u;
         fmpr_init(t);
         fmpr_init(u);
-        fmpr_init(by);
 
-        /* b - y */
-        fmpr_sub(by, fmprb_radref(y), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        /* numerator of error bound: |xb| + |ya|, rounded up */
+        fmpr_mul(t, fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_abs(t, t);
+        fmpr_mul(u, fmprb_midref(y), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_abs(u, u);
+        fmpr_add(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
 
-        /* y * (b - y) */
-        fmpr_mul(t, fmprb_midref(y), by, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        /* x * b */
-        fmpr_mul(u, fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-        /* x*b / (y*(b-y)) */
-        fmpr_div(u, u, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        /* denominator of error bound: |y|(|y|-b), rounded down */
+        if (fmpr_sgn(fmprb_midref(y)) > 0)
+            fmpr_sub(u, fmprb_radref(y), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        else
+            fmpr_add(u, fmprb_radref(y), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        fmpr_mul(u, u, fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
         fmpr_abs(u, u);
 
-        /* a / (b-y) */
-        fmpr_div(t, fmprb_radref(x), by, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_abs(t, t);
-
-        fmpr_add(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+        /* error bound */
+        fmpr_div(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
 
         r = fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
         fmpr_add_error_result(fmprb_radref(z), t,
@@ -90,7 +86,6 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
         fmpr_clear(t);
         fmpr_clear(u);
-        fmpr_clear(by);
     }
 
     fmprb_adjust(z);

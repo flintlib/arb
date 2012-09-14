@@ -10,8 +10,7 @@
     conventions: the mantissa (alternatively <i>significand</i>) is
     sometimes viewed as a fraction in the interval $[1/2, 1)$, with the
     exponent pointing to the position above the top bit rather than the
-    position of the bottom bit, and it is sometimes customary to separate
-    the <i>sign</i> from the mantissa.
+    position of the bottom bit, and with a separate sign.
 
     The conventions for special values largely follow those of the
     IEEE floating-point standard. At the moment, there is no support
@@ -65,7 +64,7 @@ fmpr_rnd_t
 FMPR_RND_NEAREST
 
     Specifies that the result of an operation should be rounded to the
-    nearest representable number, rounding to an odd bit if there is a tie
+    nearest representable number, rounding to an odd mantissa if there is a tie
     between two values. Note: the code for this rounding mode is currently
     not implemented.
 
@@ -207,6 +206,10 @@ int fmpr_cmp(const fmpr_t x, const fmpr_t y)
 
     Returns negative, zero, or positive, depending on whether x is respectively
     smaller, equal, or greater compared to y. Comparison with NaN is undefined.
+
+int fmpr_cmpabs(const fmpr_t x, const fmpr_t y)
+
+    Compares the absolute values of x and y.
 
 int fmpr_sgn(const fmpr_t x)
 

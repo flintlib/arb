@@ -40,7 +40,7 @@ MathJax.Hub.Config({
 
 <h1>Arb documentation</h1>
 
-<p><i>Last updated: 2012-09-13 18:07:04 CET</i></p>
+<p><i>Last updated: 2012-09-14 12:37:05 CET</i></p>
 
 <h2>Contents</h2>
 
@@ -165,7 +165,7 @@ The output should be something like the following:
 <hr />
 <h2><a name="fmpr-h--floating-point-arithmetic--">fmpr.h (floating-point arithmetic)</a></h2>
 <p>    A variable of type <tt>fmpr_t</tt> holds an arbitrary-precision binary     floating-point number, i.e. a rational number of the form     $x \times 2^y$ where $x, y \in \mathbb{Z}$ and $x$ is odd;     or one of the special values zero, plus infinity, minus infinity,     or NaN (not-a-number).</p>
-<p>    The component $x$ is called the <i>mantissa</i>, and $y$ is called the     <i>exponent</i>. Note that this is just one among many possible     conventions: the mantissa (alternatively <i>significand</i>) is     sometimes viewed as a fraction in the interval $[1/2, 1)$, with the     exponent pointing to the position above the top bit rather than the     position of the bottom bit, and it is sometimes customary to separate     the <i>sign</i> from the mantissa.</p>
+<p>    The component $x$ is called the <i>mantissa</i>, and $y$ is called the     <i>exponent</i>. Note that this is just one among many possible     conventions: the mantissa (alternatively <i>significand</i>) is     sometimes viewed as a fraction in the interval $[1/2, 1)$, with the     exponent pointing to the position above the top bit rather than the     position of the bottom bit, and with a separate sign.</p>
 <p>    The conventions for special values largely follow those of the     IEEE floating-point standard. At the moment, there is no support     for negative zero, unsigned infinity, or a NaN with a payload, though     some these might be added in the future.</p>
 <p>    An <tt>fmpr</tt> number is exact and has no inherent "accuracy". We     use the term <i>precision</i> to denote either the target precision of     an operation, or the bit size of a mantissa (which in general is     unrelated to the "accuracy" of the number: for example, the     floating-point value 1 has a precision of 1 bit in this sense and is     simultaneously an infinitely accurate approximation of the     integer 1 and a 2-bit accurate approximation of     $\sqrt 2 = 1.011010100\ldots_2$).</p>
 <p>    Except where otherwise noted, the output of an operation is the     floating-point number obtained by taking the inputs as exact numbers,     in principle carrying out the operation exactly, and rounding the     resulting real number to the nearest representable floating-point     number whose mantissa has at most the specified number of bits, in     the specified direction of rounding. Some operations are always     or optionally done exactly.</p>
@@ -185,7 +185,7 @@ The output should be something like the following:
 </dd>
 <dt>FMPR_RND_NEAREST</dt>
 <dd>
-<p>    Specifies that the result of an operation should be rounded to the     nearest representable number, rounding to an odd bit if there is a tie     between two values. Note: the code for this rounding mode is currently     not implemented.</p>
+<p>    Specifies that the result of an operation should be rounded to the     nearest representable number, rounding to an odd mantissa if there is a tie     between two values. Note: the code for this rounding mode is currently     not implemented.</p>
 </dd>
 <dt>FMPR_RND_DOWN</dt>
 <dd>
@@ -282,6 +282,10 @@ The output should be something like the following:
 <dt>int fmpr_cmp(const fmpr_t x, const fmpr_t y)</dt>
 <dd>
 <p>    Returns negative, zero, or positive, depending on whether x is respectively     smaller, equal, or greater compared to y. Comparison with NaN is undefined.</p>
+</dd>
+<dt>int fmpr_cmpabs(const fmpr_t x, const fmpr_t y)</dt>
+<dd>
+<p>    Compares the absolute values of x and y.</p>
 </dd>
 <dt>int fmpr_sgn(const fmpr_t x)</dt>
 <dd>
@@ -627,7 +631,7 @@ The output should be something like the following:
 <dt>void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)</dt>
 <dt>void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);</dt>
 <dd>
-<p>    Sets $z = x / y$, rounded to prec bits. If $y$ contains zero, $z$ is     set to $0 \pm +\infty$.</p>
+<p>    Sets $z = x / y$, rounded to prec bits. If $y$ contains zero, $z$ is     set to $0 \pm \infty$. Otherwise, error propagation uses the rule     $$\left| \frac{x}{y} - \frac{x+\xi_1 a}{y+\xi_2 b} \right| =         \left|\frac{x \xi_2 b - y \xi_1 a}{y (y+\xi_2 b)}\right| \le         \frac{|xb|+|ya|}{|y| (|y|-b)}$$     where $-1 \le \xi_1, \xi_2 \le 1$, and     where the triangle inequality has been applied to the numerator and     the reverse triangle inequality has been applied to the denominator.</p>
 </dd>
 <dt>void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);</dt>
 <dd>
@@ -658,7 +662,7 @@ The output should be something like the following:
 <dt>void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)</dt>
 <dt>void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)</dt>
 <dd>
-<p>    Sets $y = b^e$.</p>
+<p>    Sets $y = b^e$ using binary exponentiation. Provided that $b$ and $e$     are small enough and the exponent is positive, the exact power can be     computed using FMPR_PREC_EXACT.</p>
 </dd>
 </dl>
 <a name="fmprb-h--real-ball-arithmetic--Special-functions"><h3>Special functions</h3></a>
@@ -667,11 +671,11 @@ The output should be something like the following:
 <dt>void fmprb_log_ui(fmprb_t z, ulong x, long prec)</dt>
 <dt>void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec)</dt>
 <dd>
-<p>    Sets $z = \log(x)$.</p>
+<p>    Sets $z = \log(x)$. Error propagation is done using the following rule:     assuming $m > r \ge 0$, the error is largest at $m - r$, and we have     $\log(m) - \log(m-r) = \log(1 + r/(m-r))$. The last expression is     calculated accurately for small radii via <tt>fmpr_log1p</tt>.     An input containing zero currently raises an exception.</p>
 </dd>
 <dt>void fmprb_exp(fmprb_t z, const fmprb_t x, long prec)</dt>
 <dd>
-<p>    Sets $z = \exp(x)$.</p>
+<p>    Sets $z = \exp(x)$. Error propagation is done using the following rule:     the error is largest at $m + r$, and we have     $\exp(m+r) - \exp(m) = \exp(m) (\exp(r)-1)$.     The last expression is calculated accurately for small radii     via <tt>fmpr_expm1</tt>.</p>
 </dd>
 <dt>void fmprb_fac_ui(fmprb_t x, ulong n, long prec)</dt>
 <dd>

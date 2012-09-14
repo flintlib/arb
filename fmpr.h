@@ -205,7 +205,7 @@ fmpr_sgn(const fmpr_t x)
 
 int fmpr_cmp(const fmpr_t x, const fmpr_t y);
 
-
+int fmpr_cmpabs(const fmpr_t x, const fmpr_t y);
 
 
 void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits);

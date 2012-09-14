@@ -28,5 +28,5 @@
 int
 fmprb_contains_zero(const fmprb_t x)
 {
-    return fmpr_cmp(fmprb_midref(x), fmprb_radref(x)) <= 0;
+    return fmpr_cmpabs(fmprb_midref(x), fmprb_radref(x)) <= 0;
 }
