@@ -171,6 +171,7 @@ docs = [
   ("fmpr.txt", "fmpr.h (floating-point arithmetic)", True),
   ("fmprb.txt", "fmprb.h (real ball arithmetic)", True),
   ("fmprb_poly.txt", "fmprb_poly.h (polynomials of real balls)", True),
+  ("history.txt", "History", False),
   ("credits.txt", "Credits", False),
 ]
 

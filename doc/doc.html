@@ -40,7 +40,7 @@ MathJax.Hub.Config({
 
 <h1>Arb documentation</h1>
 
-<p><i>Last updated: 2012-09-14 12:37:05 CET</i></p>
+<p><i>Last updated: 2012-09-14 13:04:20 CET</i></p>
 
 <h2>Contents</h2>
 
@@ -90,6 +90,10 @@ MathJax.Hub.Config({
 <li><a href="#fmprb-poly-h--polynomials-of-real-balls--Arithmetic">Arithmetic</a></li>
 <li><a href="#fmprb-poly-h--polynomials-of-real-balls--Differentiation">Differentiation</a></li>
 <li><a href="#fmprb-poly-h--polynomials-of-real-balls--Special-functions">Special functions</a></li>
+</ul></li>
+<li>
+<a href="#History-">History</a>
+<ul>
 </ul></li>
 <li>
 <a href="#Credits-">Credits</a>
@@ -585,7 +589,7 @@ The output should be something like the following:
 </dd>
 <dt>void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)</dt>
 <dd>
-<p>    Computes the exact interval represented by x, in the form of an integer     interval multiplied by a power of two, i.e. $x = [a, b] * 2^{\mathrm{exp}}$.</p>
+<p>    Computes the exact interval represented by x, in the form of an integer     interval multiplied by a power of two, i.e.     $x = [a, b] \times 2^{\mathrm{exp}}$.</p>
 <p>    The outcome is undefined if the midpoint or radius of x is non-finite,     or if the difference in magnitude between the midpoint and radius     is so large that representing the endpoints exactly would cause overflows.</p>
 </dd>
 <dt>long fmprb_rel_error_bits(const fmprb_t x)</dt>
@@ -737,10 +741,16 @@ The output should be something like the following:
 <dd>
 <p>    Computes $\zeta(s)$ for arbitrary $s \ge 2$ using a binary splitting     implementation of Borwein's formula. The algorithm has quasilinear     complexity with respect to the precision.</p>
 </dd>
-<dt>void fmprb_zeta_ui(fmprb_t x, ulong n, long prec)</dt>
+<dt>void fmprb_zeta_ui(fmprb_t x, ulong s, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(s)$ for nonnegative integer $s \ne 1$, automatically     choosing an appropriate algorithm.</p>
+</dd>
+<dt>void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)</dt>
 <dt>void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)</dt>
 <dt>void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)</dt>
-<dt>void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)</dt>
+<dd>
+<p>    Computes $\zeta(s)$ at num consecutive integers (respectively num     even or num odd integers) beginning with $s = \mathrm{start} \ge 2$,     automatically choosing an appropriate algorithm.</p>
+</dd>
 </dl>
 <hr />
 <h2><a name="fmprb-poly-h--polynomials-of-real-balls--">fmprb_poly.h (polynomials of real balls)</a></h2>
@@ -880,6 +890,14 @@ The output should be something like the following:
 <p>    Sets $f$ to the series expansion of $\log(\Gamma(1-x))$, truncated to     length $n$.</p>
 </dd>
 </dl>
+<hr />
+<h2><a name="History-">History</a></h2>
+<ul>
+<li>2012-09-14 - version 0.1</li>
+<li>2012-08-05 - began simplified rewrite</li>
+<li>2012-04-05 - experimental ball and polynomial code</li>
+</ul>
+
 <hr />
 <h2><a name="Credits-">Credits</a></h2>
 <p>Arb is licensed GNU General Public License version 2, or any later version.</p>

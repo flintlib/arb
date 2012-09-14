@@ -225,7 +225,8 @@ int fmprb_contains_zero(const fmprb_t x)
 void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
 
     Computes the exact interval represented by x, in the form of an integer
-    interval multiplied by a power of two, i.e. $x = [a, b] * 2^{\mathrm{exp}}$.
+    interval multiplied by a power of two, i.e.
+    $x = [a, b] \times 2^{\mathrm{exp}}$.
 
     The outcome is undefined if the midpoint or radius of x is non-finite,
     or if the difference in magnitude between the midpoint and radius
@@ -525,12 +526,18 @@ void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     implementation of Borwein's formula. The algorithm has quasilinear
     complexity with respect to the precision.
 
-void fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
+void fmprb_zeta_ui(fmprb_t x, ulong s, long prec)
+
+    Computes $\zeta(s)$ for nonnegative integer $s \ne 1$, automatically
+    choosing an appropriate algorithm.
+
+void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
 
 void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
 
 void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
 
-void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
-
+    Computes $\zeta(s)$ at num consecutive integers (respectively num
+    even or num odd integers) beginning with $s = \mathrm{start} \ge 2$,
+    automatically choosing an appropriate algorithm.
 
