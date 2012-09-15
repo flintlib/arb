@@ -95,8 +95,8 @@ elif [ -d "${FLINT_DIR}/.libs" ]; then
    FLINT_LIB_DIR="${FLINT_DIR}/.libs"
    FLINT_INCLUDE_DIR="${FLINT_DIR}"
 elif [ -e "${FLINT_DIR}/flint.h" ]; then
-   FLINT_LIB_DIR="/scratch/fjohanss/flint2"
-   FLINT_INCLUDE_DIR="/scratch/fjohanss/flint2"
+   FLINT_LIB_DIR="${FLINT_DIR}"
+   FLINT_INCLUDE_DIR="${FLINT_DIR}"
 else
    echo "${FLINT_DIR}"
    echo "Invalid FLINT directory?"
