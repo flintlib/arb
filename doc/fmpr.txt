@@ -429,6 +429,19 @@ long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd)
     Sets $z$ to the square root of $x$, rounded according to prec and rnd.
     The result is NaN if $x$ is negative.
 
+void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
+    long prec, fmpr_rnd_t rnd)
+
+void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e,
+    long prec, fmpr_rnd_t rnd)
+
+void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e,
+    long prec, fmpr_rnd_t rnd)
+
+    Sets $y = b^e$, computed using without guaranteeing correct (optimal)
+    rounding, but guaranteeing that the result is a correct upper or lower
+    bound if the rounding is directional. Currently requires $b \ge 0$.
+
 
 *******************************************************************************
 

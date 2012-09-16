@@ -586,5 +586,14 @@ void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
         mpfr_clear(u); \
     } while (0);
 
+void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
+    long prec, fmpr_rnd_t rnd);
+
+void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e,
+    long prec, fmpr_rnd_t rnd);
+
+void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e,
+    long prec, fmpr_rnd_t rnd);
+
 #endif
 
