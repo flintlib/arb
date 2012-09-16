@@ -245,6 +245,14 @@ void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
 
+void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long prec);
+
+static __inline__ void
+fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
+{
+    fmpr_add(fmprb_radref(x), fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
+}
+
 static __inline__ void
 fmprb_add_error_2exp_si(fmprb_t x, long err)
 {
@@ -252,7 +260,7 @@ fmprb_add_error_2exp_si(fmprb_t x, long err)
     fmpr_init(t);
     fmpz_set_ui(fmpr_manref(t), 1);
     fmpz_set_si(fmpr_expref(t), err);
-    fmpr_add(fmprb_radref(x), fmprb_radref(x), t, FMPRB_RAD_PREC, FMPR_RND_UP);
+    fmprb_add_error_fmpr(x, t);
     fmpr_clear(t);
 }
 

@@ -169,7 +169,6 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
 {
     zeta_bsplit_t sum;
     long wp, n;
-    long i;
 
     /* zeta(0) = -1/2 */
     if (s == 0)
@@ -187,15 +186,13 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
         abort();
     }
 
+    /* XXX: move this to a separate method, use elsewhere */
     /* for s > p, zeta(s) - 1 < 2^(-p) */
     if (s != 2 && s > prec)
     {
         fmprb_set_ui(x, 1UL);
-
         /* XXX: could make this even smaller when s is extremely large */
-        fmpz_one(fmpr_manref(fmprb_radref(x)));
-        fmpz_set_si(fmpr_expref(fmprb_radref(x)), -prec);
-
+        fmprb_add_error_2exp_si(x, -prec);
         return;
     }
 

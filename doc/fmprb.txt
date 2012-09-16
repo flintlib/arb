@@ -205,6 +205,10 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state,
 
 *******************************************************************************
 
+void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
+
+    Adds err to the radius of x.
+
 void fmprb_add_error_2exp_si(fmprb_t x, long e)
 
     Adds $2^e$ to the radius of x.
@@ -540,4 +544,49 @@ void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
     Computes $\zeta(s)$ at num consecutive integers (respectively num
     even or num odd integers) beginning with $s = \mathrm{start} \ge 2$,
     automatically choosing an appropriate algorithm.
+
+void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a,
+        long num, long prec)
+
+    Uses Karatsuba's algorithm [1] to compute num coefficients in the
+    Taylor series of $\Gamma(a+x)$ for rational $0 < a &le; 1$, i.e.
+    computes $\Gamma(a), \Gamma'(a) ... \Gamma^{(\mathrm{num}-1)}(a) / (\mathrm{num}-1)!$
+    This algorithm is most efficient at high precision, for num much smaller
+    than the number of bits, and with small denominators of $a$.
+    In particular, with num = 1, this algorithm computes $\Gamma(a)$
+    efficiently for small rational $a$.
+
+    Let $s = \max(2, \mathrm{num}-1)$. With parameters $r$ and $n$ chosen
+    such that $r \ge n$ and $n \ge 2 s \log 2 s$, Karatsuba shows that
+    $$\Gamma^{(j)}(a) = \sum_{k=0}^r \frac{(-1)^k}{k!}
+        \frac{n^{k+a}}{k+a}
+        \sum_{m=0}^j (-1)^m \frac{j! \, \log^{j-m} n}{(j-m)! (k+a)^m}
+        + \theta_j$$
+
+    where $$|\theta_j| \le \frac{5}{3} e^{-n} \log^s n +
+        \left(\frac{e}{r+2}\right)^{r+2} (1 + n^{r+2} \log^s n).$$
+
+    We choose the parameters $n$ and $r$ heuristically to be nearly optimal,
+    and then evaluate the above formula to bound $\theta_j$ rigorously.
+
+    Karatsuba claims that choosing $r \ge 3n$ gives
+    $|\theta_j| \le 2^{-n-1}$. This is, unfortunately, incorrect.
+    Setting $r = n \alpha$ and expanding the error term around $n = \infty$,
+    one finds that $\alpha$ asymptotically should be
+    $1/W(1/e) \approx 3.59112147666862$ where $W(x)$ is the Lambert W-function.
+    We also optimize the selection of $n$ by choosing
+    $n \approx b \log 2$ where $b$ is the desired number of bits, rather
+    than $n \approx b$, and round $n$ so that it has a short binary expansion
+    (this gives smaller numbers in the binary splitting stage).
+
+    Finally, if $s$ is small, we perform binary splitting to a working
+    precision of about $2.2$ times the target precision rather than exactly.
+    This factor was tested to give full accuracy up to at least one million
+    digits when $s \approx 1$. A more careful analysis should
+    be done here so that a working precision is selected which always is
+    sufficient and also nearly optimal.
+
+    [1] E. A. Karatsuba, "Fast evaluation of the Hurwitz zeta function and
+        Dirichlet L-series", Problems of Information Transmission,
+        Vol. 34, No. 4, 1998.
 
