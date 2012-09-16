@@ -213,23 +213,9 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     /* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
     fmprb_add_error_2exp_si(sum->C, (long) (ERROR_A - ERROR_B * n + 1));
 
-    /* To get zeta(s), multiply by D = 1/(1 - 2^(1-s)) */
-    {
-        fmpz_t t;
-        fmpz_init(t);
-        for (i = wp; i >= 0; i -= (s - 1))
-            fmpz_setbit(t, i);
-
-        fmprb_set_fmpz(sum->D, t);
-        fmpz_sub_ui(fmpr_expref(fmprb_midref(sum->D)),
-            fmpr_expref(fmprb_midref(sum->D)), wp);
-
-        fmprb_add_error_2exp_si(sum->D, -wp);
-
-        fmpz_clear(t);
-    }
-
-    fmprb_mul(x, sum->C, sum->D, wp);
+    /* convert from eta(s) to zeta(s) */
+    fmprb_div_2expm1_ui(x, sum->C, s - 1, wp);
+    fmprb_mul_2exp_si(x, x, s - 1);
 
     zeta_bsplit_clear(sum);
 }
