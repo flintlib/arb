@@ -105,6 +105,11 @@ fmprb_pow_fmpq(fmprb_t y, const fmprb_t x, const fmpq_t a, long prec)
     {
         fmprb_pow_fmpz(y, x, fmpq_numref(a), prec);
     }
+    /* TODO: generalize this to a = p/q for any small p, q */
+    else if (fmpz_is_one(fmpq_numref(a)) && fmpz_cmp_ui(fmpq_denref(a), 2) == 0)
+    {
+        fmprb_sqrt(y, x, prec);
+    }
     else
     {
         long wp;
