@@ -248,6 +248,7 @@ void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
 
 void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long prec);
+void fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec);
 
 static __inline__ void
 fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
