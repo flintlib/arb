@@ -41,7 +41,6 @@ bernoulli_cache_compute(long n)
     if (bernoulli_cache_num < n)
     {
         long new_num;
-        long i;
 
         new_num = FLINT_MAX(bernoulli_cache_num * 2, n);
         new_num = n;
@@ -91,21 +90,6 @@ double fmpr_get_d(const fmpr_t x)
     r = mpfr_get_d(t, MPFR_RNDN);
     mpfr_clear(t);
     return r;
-}
-
-void
-fmprb_add_error(fmprb_t x, const fmprb_t error)
-{
-    fmpr_t high;
-    fmpr_init(high);
-
-    fmpr_add(high, fmprb_midref(error), fmprb_radref(error),
-        FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmpr_add(fmprb_radref(x), fmprb_radref(x), high,
-        FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmpr_clear(high);
 }
 
 /*

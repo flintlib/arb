@@ -207,11 +207,16 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state,
 
 void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
 
-    Adds err to the radius of x.
+    Adds err, which is assumed to be nonnegative, to the radius of x.
 
 void fmprb_add_error_2exp_si(fmprb_t x, long e)
 
     Adds $2^e$ to the radius of x.
+
+void fmprb_add_error(fmprb_t x, const fmprb_t err)
+
+    Adds the supremum of err, which is assumed to be nonnegative, to the
+    radius of x.
 
 int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
 

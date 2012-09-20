@@ -251,23 +251,6 @@ void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long
 void fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec);
 
 static __inline__ void
-fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
-{
-    fmpr_add(fmprb_radref(x), fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
-}
-
-static __inline__ void
-fmprb_add_error_2exp_si(fmprb_t x, long err)
-{
-    fmpr_t t;
-    fmpr_init(t);
-    fmpz_set_ui(fmpr_manref(t), 1);
-    fmpz_set_si(fmpr_expref(t), err);
-    fmprb_add_error_fmpr(x, t);
-    fmpr_clear(t);
-}
-
-static __inline__ void
 fmprb_print(const fmprb_t x)
 {
     fmpr_print(fmprb_midref(x));
@@ -337,6 +320,10 @@ fmprb_rel_accuracy_bits(const fmprb_t x)
 {
     return -fmprb_rel_error_bits(x);
 }
+
+void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err);
+void fmprb_add_error_2exp_si(fmprb_t x, long err);
+void fmprb_add_error(fmprb_t x, const fmprb_t error);
 
 void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
