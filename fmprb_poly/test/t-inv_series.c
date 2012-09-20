@@ -77,6 +77,13 @@ int main()
             abort();
         }
 
+        fmprb_poly_inv_series(a, a, n, rbits2);
+        if (!fmprb_poly_equal(a, b))
+        {
+            printf("FAIL (aliasing)\n\n");
+            abort();
+        }
+
         fmpq_poly_clear(A);
         fmpq_poly_clear(B);
 

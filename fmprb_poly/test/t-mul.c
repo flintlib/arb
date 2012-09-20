@@ -40,7 +40,7 @@ int main()
     {
         long qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t A, B, C;
-        fmprb_poly_t a, b, c;
+        fmprb_poly_t a, b, c, d;
 
         qbits1 = 2 + n_randint(state, 200);
         qbits2 = 2 + n_randint(state, 200);
@@ -55,6 +55,7 @@ int main()
         fmprb_poly_init(a);
         fmprb_poly_init(b);
         fmprb_poly_init(c);
+        fmprb_poly_init(d);
 
         fmpq_poly_randtest(A, state, 1 + n_randint(state, 10), qbits1);
         fmpq_poly_randtest(B, state, 1 + n_randint(state, 10), qbits2);
@@ -80,6 +81,22 @@ int main()
             abort();
         }
 
+        fmprb_poly_set(d, a);
+        fmprb_poly_mul(d, d, b, rbits3);
+        if (!fmprb_poly_equal(d, c))
+        {
+            printf("FAIL (aliasing 1)\n\n");
+            abort();
+        }
+
+        fmprb_poly_set(d, b);
+        fmprb_poly_mul(d, a, d, rbits3);
+        if (!fmprb_poly_equal(d, c))
+        {
+            printf("FAIL (aliasing 2)\n\n");
+            abort();
+        }
+
         fmpq_poly_clear(A);
         fmpq_poly_clear(B);
         fmpq_poly_clear(C);
@@ -87,6 +104,7 @@ int main()
         fmprb_poly_clear(a);
         fmprb_poly_clear(b);
         fmprb_poly_clear(c);
+        fmprb_poly_clear(d);
     }
 
     flint_randclear(state);

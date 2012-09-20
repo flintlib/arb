@@ -36,23 +36,32 @@ void
 fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec)
 {
-    long len, len1, len2;
+    long len_out;
 
-    len1 = poly1->length;
-    len2 = poly2->length;
-
-    if (len1 == 0 || len2 == 0)
+    if ((poly1->length == 0) || (poly2->length == 0))
     {
         fmprb_poly_zero(res);
         return;
     }
 
-    len = len1 + len2 - 1;
+    len_out = poly1->length + poly2->length - 1;
 
-    fmprb_poly_fit_length(res, len);
+    if (res == poly1 || res == poly2)
+    {
+        fmprb_poly_t temp;
+        fmprb_poly_init2(temp, len_out);
+        _fmprb_poly_mul(temp->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
+        fmprb_poly_swap(res, temp);
+        fmprb_poly_clear(temp);
+    }
+    else
+    {
+        fmprb_poly_fit_length(res, len_out);
+        _fmprb_poly_mul(res->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
+    }
 
-    _fmprb_poly_mul(res->coeffs, poly1->coeffs, poly1->length,
-        poly2->coeffs, poly2->length, prec);
-
-    _fmprb_poly_set_length(res, len);
+    _fmprb_poly_set_length(res, len_out);
+    _fmprb_poly_normalise(res);
 }
