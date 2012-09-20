@@ -19,27 +19,62 @@
 =============================================================================*/
 /******************************************************************************
 
+    Copyright (C) 2008, 2009 William Hart
     Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
 
-#define CUTOFF 5
-
 void
-_fmprb_poly_mullow(fmprb_struct * res,
-    const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long n, long prec)
+_fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmprb_t c, long prec)
 {
-    if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
-        _fmprb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
-    else
-        _fmprb_poly_mullow_ztrunc(res, poly1, len1, poly2, len2, n, prec);
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_mul(res + i, vec + i, c, prec);
 }
 
 void
-fmprb_poly_mullow(fmprb_poly_t res, const fmprb_poly_t poly1,
+_fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_addmul(res + i, vec + i, c, prec);
+}
+
+void
+_fmprb_poly_mullow_classical(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long n, long prec)
+{
+    if ((len1 == 1 && len2 == 1) || n == 1)
+    {
+        fmprb_mul(res, poly1, poly2, prec);
+    }
+    else /* Ordinary case */
+    {
+        long i;
+
+        /* Set res[i] = poly1[i]*poly2[0] */
+        _fmprb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly2, prec);
+
+        /* Set res[i+len1-1] = in1[len1-1]*in2[i] */
+        if (n > len1)
+            _fmprb_vec_scalar_mul(res + len1, poly2 + 1, n - len1,
+                                      poly1 + len1 - 1, prec);
+
+        /* out[i+j] += in1[i]*in2[j] */
+        for (i = 0; i < FLINT_MIN(len1, n) - 1; i++)
+            _fmprb_vec_scalar_addmul(res + i + 1, poly2 + 1,
+                                         FLINT_MIN(len2, n - i) - 1,
+                                         poly1 + i, prec);
+    }
+}
+
+void
+fmprb_poly_mullow_classical(fmprb_poly_t res, const fmprb_poly_t poly1,
                                             const fmprb_poly_t poly2,
                                                 long n, long prec)
 {
@@ -59,16 +94,16 @@ fmprb_poly_mullow(fmprb_poly_t res, const fmprb_poly_t poly1,
     {
         fmprb_poly_t t;
         fmprb_poly_init2(t, n);
-        _fmprb_poly_mullow(t->coeffs, poly1->coeffs, poly1->length,
-                                poly2->coeffs, poly2->length, n, prec);
+        _fmprb_poly_mullow_classical(t->coeffs, poly1->coeffs, poly1->length,
+                                    poly2->coeffs, poly2->length, n, prec);
         fmprb_poly_swap(res, t);
         fmprb_poly_clear(t);
     }
     else
     {
         fmprb_poly_fit_length(res, n);
-        _fmprb_poly_mullow(res->coeffs, poly1->coeffs, poly1->length,
-                                poly2->coeffs, poly2->length, n, prec);
+        _fmprb_poly_mullow_classical(res->coeffs, poly1->coeffs, poly1->length,
+                                    poly2->coeffs, poly2->length, n, prec);
     }
 
     _fmprb_poly_set_length(res, n);

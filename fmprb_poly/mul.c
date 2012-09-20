@@ -41,7 +41,6 @@ fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
     len1 = poly1->length;
     len2 = poly2->length;
 
-    /* TODO: should check for inf/nan */
     if (len1 == 0 || len2 == 0)
     {
         fmprb_poly_zero(res);

@@ -26,16 +26,13 @@
 #include "fmprb_poly.h"
 
 void
-fmprb_poly_init(fmprb_poly_t poly)
+fmprb_poly_set(fmprb_poly_t poly, const fmprb_poly_t src)
 {
-    poly->coeffs = NULL;
-    poly->length = 0;
-    poly->alloc = 0;
-}
+    long i, len = fmprb_poly_length(src);
 
-void
-fmprb_poly_init2(fmprb_poly_t poly, long len)
-{
-    fmprb_poly_init(poly);
     fmprb_poly_fit_length(poly, len);
+    _fmprb_poly_set_length(poly, len);
+
+    for (i = 0; i < len; i++)
+        fmprb_set(poly->coeffs + i, src->coeffs + i);
 }

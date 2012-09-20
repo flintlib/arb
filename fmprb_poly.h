@@ -45,6 +45,8 @@ typedef fmprb_poly_struct fmprb_poly_t[1];
 
 void fmprb_poly_init(fmprb_poly_t poly);
 
+void fmprb_poly_init2(fmprb_poly_t poly, long len);
+
 void fmprb_poly_clear(fmprb_poly_t poly);
 
 void fmprb_poly_fit_length(fmprb_poly_t poly, long len);
@@ -53,7 +55,22 @@ void _fmprb_poly_set_length(fmprb_poly_t poly, long len);
 
 void _fmprb_poly_normalise(fmprb_poly_t poly);
 
+static __inline__ void
+fmprb_poly_swap(fmprb_poly_t poly1, fmprb_poly_t poly2)
+{
+    fmprb_poly_struct t = *poly1;
+    *poly1 = *poly2;
+    *poly2 = t;
+}
+
+void fmprb_poly_set(fmprb_poly_t poly, const fmprb_poly_t src);
+
 /* Basic manipulation */
+
+static __inline__ long fmprb_poly_length(const fmprb_poly_t poly)
+{
+    return poly->length;
+}
 
 static __inline__ void fmprb_poly_zero(fmprb_poly_t poly)
 {
@@ -88,6 +105,22 @@ void fmprb_poly_printd(const fmprb_poly_t poly, long digits);
 
 void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
+
+void _fmprb_poly_mullow_ztrunc(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long n, long prec);
+
+void fmprb_poly_mullow_ztrunc(fmprb_poly_t res, const fmprb_poly_t poly1,
+                                            const fmprb_poly_t poly2,
+                                                long n, long prec);
+
+void _fmprb_poly_mullow_classical(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long n, long prec);
+
+void fmprb_poly_mullow_classical(fmprb_poly_t res, const fmprb_poly_t poly1,
+                                            const fmprb_poly_t poly2,
+                                                long n, long prec);
 
 void _fmprb_poly_mullow(fmprb_struct * C,
     const fmprb_struct * A, long lenA,
