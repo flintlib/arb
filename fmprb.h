@@ -234,6 +234,8 @@ void fmprb_fib_ui(fmprb_t f, ulong n, long prec);
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_pi(fmprb_t x, long prec);
 
+void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
+
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
@@ -328,6 +330,23 @@ void fmprb_add_error(fmprb_t x, const fmprb_t error);
 void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
 void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
+
+/* TODO: this should be threadsafe */
+#define DEF_CACHED_CONSTANT(name, comp_func) \
+    long name ## _cached_prec = 0; \
+    fmprb_t name ## _cached_value; \
+    void \
+    name(fmprb_t x, long prec) \
+    { \
+        if (name ## _cached_prec < prec) \
+        { \
+            if (name ## _cached_prec == 0) \
+                fmprb_init(name ## _cached_value); \
+            comp_func(name ## _cached_value, prec); \
+            name ## _cached_prec = prec; \
+        } \
+        fmprb_set_round(x, name ## _cached_value, prec); \
+    } \
 
 #endif
 

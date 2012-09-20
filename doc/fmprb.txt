@@ -451,6 +451,10 @@ void fmprb_const_pi(fmprb_t x, long prec)
 
     Sets x to $\pi$. The value is cached for repeated use.
 
+void fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
+
+    Sets x to $\log \sqrt{2 \pi}$. The value is cached for repeated use.
+
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec)
 
     Sets x to Euler's constant $\gamma$, computed using the second

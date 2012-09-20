@@ -54,33 +54,6 @@ bernoulli_cache_compute(long n)
     }
 }
 
-/* log(sqrt(2*pi)) */
-void _fmprb_const_log_sqrt2pi(fmprb_t t, long prec)
-{
-    fmprb_const_pi(t, prec + 2);
-    fmprb_mul_2exp_si(t, t, 1);
-    fmprb_log(t, t, prec);
-    fmprb_mul_2exp_si(t, t, -1);
-}
-
-long fmprb_const_log_sqrt2pi_cached_prec = 0;
-fmprb_t fmprb_const_log_sqrt2pi_cache;
-
-void
-fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
-{  
-    if (fmprb_const_log_sqrt2pi_cached_prec < prec)
-    {
-        if (fmprb_const_log_sqrt2pi_cached_prec == 0)
-            fmprb_init(fmprb_const_log_sqrt2pi_cache);
-
-        _fmprb_const_log_sqrt2pi(fmprb_const_log_sqrt2pi_cache, prec);
-        fmprb_const_log_sqrt2pi_cached_prec = prec;
-    }
-
-    fmprb_set_round(x, fmprb_const_log_sqrt2pi_cache, prec);
-}
-
 double fmpr_get_d(const fmpr_t x)
 {
     double r;
