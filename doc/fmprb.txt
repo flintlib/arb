@@ -354,8 +354,10 @@ void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)
 
 void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec)
 
-    Sets $z$ to the square root of $x$, rounded to prec bits. As currently
-    implemented, the input must be exact and nonnegative.
+    Sets $z$ to the square root of $x$, rounded to prec bits.
+    Error propagation is done using the following rule:
+    assuming $m > r \ge 0$, the error is largest at $m - r$, and we have
+    $\sqrt{m} - \sqrt{m-r} \le r / (2 \sqrt{m-r})$.
 
 void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 

@@ -28,8 +28,7 @@
 long
 fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
-    long shift, man_shift, r, bc;
-    fmpz_t rem;
+    long r;
 
     if (fmpr_is_special(x))
     {
@@ -58,41 +57,9 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
         return r;
     }
 
-    fmpz_set(fmpr_expref(y), fmpr_expref(x));
-
-    man_shift = 0;
-
-    bc = fmpz_bits(fmpr_manref(x));
-
-    if (fmpz_is_odd(fmpr_expref(y)))
-    {
-        fmpz_sub_ui(fmpr_expref(y), fmpr_expref(y), 1UL);
-        man_shift += 1;
-        bc += 1;
-    }
-
-    shift = FLINT_MAX(4, 2 * prec - bc + 4);
-    shift += shift & 1;
-
-    fmpz_init(rem);
-    fmpz_mul_2exp(fmpr_manref(y), fmpr_manref(x), shift + man_shift);
-    fmpz_sqrtrem(fmpr_manref(y), rem, fmpr_manref(y));
-
-    if (!fmpz_is_zero(rem) && rnd != FMPR_RND_FLOOR && rnd != FMPR_RND_DOWN)
-    {
-        fmpz_mul_2exp(fmpr_manref(y), fmpr_manref(y), 1);
-        fmpz_add_ui(fmpr_manref(y), fmpr_manref(y), 1UL);
-        shift += 2;
-    }
-
-    fmpz_clear(rem);
-
-    fmpz_sub_ui(fmpr_expref(y), fmpr_expref(y), shift);
-    fmpz_tdiv_q_2exp(fmpr_expref(y), fmpr_expref(y), 1);
-
-    return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
+    CALL_MPFR_FUNC(r, mpfr_sqrt, y, x, prec, rnd);
+    return r;
 }
-
 
 long
 fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)
