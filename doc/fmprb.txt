@@ -613,3 +613,24 @@ void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a,
         Dirichlet L-series", Problems of Information Transmission,
         Vol. 34, No. 4, 1998.
 
+void fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets $y = \log \Gamma(x)$, assuming that $x > 0$.
+
+    For large $x$, uses Stirling's expansion
+    $$\log \Gamma(x) = \left(x-\frac{1}{2}\right)\log x - x +
+        \frac{\ln {2 \pi}}{2} + \sum_{k=1}^{n-1} t_k + R(n,x)
+    $$
+    where $$t_k = \frac{B_{2k}}{2k(2k-1)x^{2k-1}}$$ and $|R(n,x)| < t_n$.
+
+    If $x$ is too small for the asymptotic expansion to give sufficient
+    accuracy directly, we translate to $x + r$
+    using the formula $\log \Gamma(x) = \log \Gamma(x+r) -
+        \log(x (x+1) (x+2) \cdots (x+r-1))$.
+    To obtain a remainder smaller than $2^{-b}$, we must choose an $r$ such
+    that $x + r > \beta b$, where $\beta > \log(2) / (2 \pi) \approx 0.11$.
+    We use a slightly larger factor $\beta \approx 0.2$ to more closely
+    balance $n$ and $r$. A much larger $\beta$ (e.g. $\beta = 1$) could be
+    used to reduce the number of Bernoulli numbers that have to be
+    precomputed, at the expense of slower repeated evaluation.
+
