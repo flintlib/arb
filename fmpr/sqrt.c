@@ -57,8 +57,29 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
         return r;
     }
 
-    CALL_MPFR_FUNC(r, mpfr_sqrt, y, x, prec, rnd);
-    return r;
+    {
+        fmpr_t t;
+        fmpz_t e;
+
+        fmpr_init(t);
+        fmpz_init(e);
+
+        fmpz_neg(e, fmpr_expref(x));
+        if (fmpz_is_odd(e))
+            fmpz_add_ui(e, e, 1);
+        fmpr_mul_2exp_fmpz(t, x, e);
+
+        CALL_MPFR_FUNC(r, mpfr_sqrt, y, t, prec, rnd);
+
+        fmpz_neg(e, e);
+        fmpz_tdiv_q_2exp(e, e, 1);
+        fmpr_mul_2exp_fmpz(y, y, e);
+
+        fmpr_clear(t);
+        fmpz_clear(e);
+
+        return r;
+    }
 }
 
 long
