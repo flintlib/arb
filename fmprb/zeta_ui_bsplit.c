@@ -173,9 +173,7 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     /* zeta(0) = -1/2 */
     if (s == 0)
     {
-        /* XXX */
-        fmpz_set_si(fmpr_manref(fmprb_midref(x)), -1);
-        fmpz_set_si(fmpr_expref(fmprb_midref(x)), -1);
+        fmpr_set_si_2exp_si(fmprb_midref(x), -1, -1);
         fmpr_zero(fmprb_radref(x));
         return;
     }
@@ -184,16 +182,6 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     {
         printf("fmprb_zeta_ui_bsplit: zeta(1)");
         abort();
-    }
-
-    /* XXX: move this to a separate method, use elsewhere */
-    /* for s > p, zeta(s) - 1 < 2^(-p) */
-    if (s != 2 && s > prec)
-    {
-        fmprb_set_ui(x, 1UL);
-        /* XXX: could make this even smaller when s is extremely large */
-        fmprb_add_error_2exp_si(x, -prec);
-        return;
     }
 
     n = prec / ERROR_B + 2;

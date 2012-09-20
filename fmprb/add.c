@@ -68,3 +68,13 @@ fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
     fmprb_add(z, x, t, prec);
     fmprb_clear(t);
 }
+
+void
+fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_set_fmpr(t, y);
+    fmprb_add(z, x, t, prec);
+    fmprb_clear(t);
+}

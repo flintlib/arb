@@ -128,6 +128,12 @@ fmprb_abs(fmprb_t x, const fmprb_t y)
     fmpr_set(fmprb_radref(x), fmprb_radref(y));
 }
 
+static __inline__ void
+fmprb_set_fmpr(fmprb_t x, const fmpr_t y)
+{
+    fmpr_set(fmprb_midref(x), y);
+    fmpr_zero(fmprb_radref(x));
+}
 
 static __inline__ void
 fmprb_set_si(fmprb_t x, long y)
@@ -175,6 +181,7 @@ void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
 
 void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
@@ -239,6 +246,7 @@ void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
+void fmprb_zeta_ui_asymp(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec);
 void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);

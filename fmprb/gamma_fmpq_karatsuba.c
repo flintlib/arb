@@ -90,6 +90,11 @@ karatsuba_error(fmpr_t bound, long s, long n, long r)
     if (r < n || s < 2)
         abort();
 
+    fmpr_init(t);
+    fmpr_init(u);
+    fmpr_init(A);
+    fmpr_init(B);
+
     /* t = log(n)^s */
     fmpr_set_ui(t, n);
     fmpr_log(t, t, wp, FMPR_RND_UP);
@@ -115,6 +120,11 @@ karatsuba_error(fmpr_t bound, long s, long n, long r)
 
     /* A + B */
     fmpr_add(bound, A, B, wp, FMPR_RND_UP);
+
+    fmpr_clear(t);
+    fmpr_clear(u);
+    fmpr_clear(A);
+    fmpr_clear(B);
 }
 
 void

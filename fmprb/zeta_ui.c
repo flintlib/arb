@@ -41,9 +41,9 @@ fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
         abort();
     }
     /* fast detection of asymptotic case */
-    else if (n > 6 && n > 0.7 * prec)
+    else if (n > 0.7 * prec)
     {
-        fmprb_zeta_ui_euler_product(x, n, prec);
+        fmprb_zeta_ui_asymp(x, n, prec);
     }
     else if (n == 3)
     {

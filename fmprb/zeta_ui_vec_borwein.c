@@ -29,43 +29,6 @@
 #define ERROR_A 1.5849625007211561815 /* log2(3) */
 #define ERROR_B 2.5431066063272239453 /* log2(3+sqrt(8)) */
 
-/*
-Computes zeta(s) for s = start + i*step, 0 <= i < num, writing the
-consecutive values to the array z. Uses Borwein's algorithm, here
-extended to support fast multi-evaluation (but also works well
-for a single s).
-
-Requires start >= 2. For efficiency, the largest s should be at most about as
-large as prec. Arguments approaching LONG_MAX will cause overflows.
-One should therefore only use this function for s up to about prec, and
-then switch to the Euler product.
-
-References:
-
-P. Borwein, "An Efficient Algorithm for the Riemann Zeta Function",
-Constructive experimental and nonlinear analysis,
-CMS Conference Proc. 27 (2000), 29–34
-http://www.cecm.sfu.ca/personal/pborwein/PAPERS/P155.pdf
-
-The MPFR team (2012), "MPFR Algorithms", http://www.mpfr.org/algo.html
-
-X. Gourdon and P. Sebah (2003),
-"Numerical evaluation of the Riemann Zeta-function"
-http://numbers.computation.free.fr/Constants/Miscellaneous/zetaevaluations.pdf
-
-The algorithm for single s is basically identical to the one used in MPFR
-(see the MPFR Algorithms paper for a detailed description).
-In particular, we evaluate the sum backwards to avoid temporary storage of
-the d_k coefficients, and use integer arithmetic throughout since it
-is convenient and the terms turn out to be slightly larger than 2^prec.
-The only numerical error in the main loop comes from the division by k^s,
-which adds less than 1 unit of error per term.
-For fast multi-evaluation, we perform repeated divisions by k^step.
-Each division decreases the input error and adds at most 1 unit of rounding
-error, so by induction, the error per term is always smaller than 2 units.
-
-*/
-
 void
 fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
     ulong step, long prec)

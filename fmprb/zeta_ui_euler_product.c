@@ -68,8 +68,7 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
     {
         fmprb_t w;
         fmprb_init(w);
-        fmprb_set_ui(w, 1);
-        fmpz_set_si(fmpr_expref(fmprb_midref(w)), -s);
+        fmpr_set_ui_2exp_si(fmprb_midref(w), 1, -s);
         fmprb_sub(z, z, w, wp);
         fmprb_clear(w);
     }

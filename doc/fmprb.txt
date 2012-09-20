@@ -138,13 +138,15 @@ fmprb_abs(fmprb_t y, const fmprb_t x)
     Sets y to the absolute value of x. No attempt is made to improve the
     interval represented by x if it contains zero.
 
-void fmprb_set_si(fmprb_t x, long c)
+void fmprb_set_fmpr(fmprb_t y, const fmpr_t x)
 
-void fmprb_set_ui(fmprb_t x, ulong c)
+void fmprb_set_si(fmprb_t y, long x)
 
-void fmprb_set_fmpz(fmprb_t x, const fmpz_t c)
+void fmprb_set_ui(fmprb_t y, ulong x)
 
-    Sets x exactly to the integer c.
+void fmprb_set_fmpz(fmprb_t y, const fmpz_t x)
+
+    Sets y exactly to x.
 
 void fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
 
@@ -267,6 +269,8 @@ void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)
 
 void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+
+void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
 
     Sets $z = x + y$, rounded to prec bits. The precision can be
     FMPR_PREC_EXACT provided that the result fits in memory.
@@ -478,6 +482,13 @@ void fmprb_const_zeta3_bsplit(fmprb_t x, long prec)
 
     Sets x to Apery's constant $\zeta(3)$, computed by applying binary
     splitting to a hypergeometric series.
+
+void fmprb_zeta_ui_asymp(fmprb_t z, ulong s, long prec)
+
+    Assuming $s \ge 2$, approximates $\zeta(s)$ by $1 + 2^{-s}$ along with
+    a correct error bound. We use the following bounds: for $s > b$,
+    $\zeta(s) - 1 < 2^{-b}$, and generally,
+    $\zeta(s) - (1 + 2^{-s}) < 2^{2-\lfloor 3 s/2 \rfloor}$.
 
 void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
 
