@@ -562,6 +562,10 @@ void fmpr_set_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp);
 
 void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
 
+int fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t e);
+
+int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, long e);
+
 static __inline__ void
 fmpr_set_si_2exp_si(fmpr_t x, long man, long exp)
 {

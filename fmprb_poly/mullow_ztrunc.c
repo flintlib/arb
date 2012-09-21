@@ -136,28 +136,8 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
     /* extract integer polynomial */
     rounding = 0;
     for (i = 0; i < lenA; i++)
-    {
-        if (fmpr_is_zero(fmprb_midref(A + i)))
-        {
-            fmpz_zero(coeffs + i);
-        }
-        else
-        {
-            shift = _fmpz_sub_small(fmpr_expref(fmprb_midref(A + i)), exp);
-
-            if (shift >= 0)
-            {
-                fmpz_mul_2exp(coeffs + i,
-                    fmpr_manref(fmprb_midref(A + i)), shift);
-            }
-            else
-            {
-                fmpz_tdiv_q_2exp(coeffs + i,
-                    fmpr_manref(fmprb_midref(A + i)), -shift);
-                rounding = 1;
-            }
-        }
-    }
+        rounding |= fmpr_get_fmpz_fixed_fmpz(coeffs + i,
+                        fmprb_midref(A + i), exp);
 
     fmpr_zero(error);
 
@@ -184,6 +164,8 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
 
     fmpz_clear(top_exp);
 }
+
+
 
 void _fmprb_poly_mullow_ztrunc(fmprb_struct * C,
     const fmprb_struct * A, long lenA,
