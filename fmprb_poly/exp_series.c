@@ -142,6 +142,8 @@ _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
 void
 _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
 {
+    hlen = FLINT_MIN(hlen, n);
+
     if (n < NEWTON_EXP_CUTOFF)
     {
         _fmprb_poly_exp_series_basecase(f, h, hlen, n, prec);
@@ -160,14 +162,13 @@ _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long
             t = _fmprb_vec_init(n);
             _fmprb_vec_set(t + 1, h + 1, hlen - 1);
         }
+        else
+            t = (fmprb_struct *) h;
 
         fmprb_init(u);
         fmprb_exp(u, h, prec);
 
-        if (fix)
-            _fmprb_poly_exp_series_newton(f, g, t, n, prec, 0);
-        else
-            _fmprb_poly_exp_series_newton(f, g, h, n, prec, 0);
+        _fmprb_poly_exp_series_newton(f, g, t, n, prec, 0);
 
         if (!fmprb_is_one(u))
             _fmprb_vec_scalar_mul(f, f, n, u, prec);

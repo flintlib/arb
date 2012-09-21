@@ -206,11 +206,25 @@ void _fmprb_poly_exp_series_basecase(fmprb_struct * f,
 void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h,
         long n, long prec)
 
+void _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
+
+void fmprb_poly_exp_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
+
     Sets $f$ to the power series exponential of $h$, truncated to length $n$.
-    Uses a simple recurrence for the coefficients,
-    requiring $O(nm)$ operations where $m$ is the length of $h$. The
-    underscore method supports aliasing
-    and allows the input to be shorter than the output.
+
+    The basecase version uses a simple recurrence for the coefficients,
+    requiring $O(nm)$ operations where $m$ is the length of $h$.
+
+    The main implementation uses Newton iteration, starting from a small
+    number of terms given by the basecase algorithm. The complexity
+    is $O(M(n))$. Redundant operations in the Newton iteration are
+    avoided by using the scheme described in [1].
+
+    The underscore methods support aliasing and allow the input to be
+    shorter than the output, but require the lengths to be nonzero.
+
+    [1] G. Hanrot and P. Zimmermann, "Newton Iteration Revisited",
+        http://www.loria.fr/~zimmerma/papers/fastnewton.ps.gz (2004 preprint)
 
 void fmprb_poly_log_gamma_series(fmprb_poly_t f, long n, long prec)
 
