@@ -61,7 +61,7 @@ int main()
         fmprb_poly_init(r);
 
         fmpq_poly_randtest(A, state, m, qbits1);
-        fmpq_poly_randtest_not_zero(B, state, m, qbits2);
+        fmpq_poly_randtest_not_zero(B, state, n, qbits2);
 
         fmpq_poly_divrem(Q, R, A, B);
 

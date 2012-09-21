@@ -115,6 +115,14 @@ fmprb_set(fmprb_t x, const fmprb_t y)
 void fmprb_set_round(fmprb_t z, const fmprb_t x, long prec);
 
 static __inline__ void
+fmprb_swap(fmprb_t x, fmprb_t y)
+{
+    fmprb_struct t = *x;
+    *x = *y;
+    *y = t;
+}
+
+static __inline__ void
 fmprb_neg(fmprb_t x, const fmprb_t y)
 {
     fmpr_neg(fmprb_midref(x), fmprb_midref(y));
@@ -356,8 +364,6 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bit
         fmprb_set_round(x, name ## _cached_value, prec); \
     } \
 
-#endif
-
 /* vector functions */
 
 static __inline__ void
@@ -420,3 +426,4 @@ _fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
         fmprb_addmul(res + i, vec + i, c, prec);
 }
 
+#endif

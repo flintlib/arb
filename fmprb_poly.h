@@ -156,6 +156,14 @@ void _fmprb_poly_rem(fmprb_struct * R,
 void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
                              const fmprb_poly_t A, const fmprb_poly_t B, long prec);
 
+/* Evaluation */
+
+void
+_fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
+                           const fmprb_t a, long prec);
+
+void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec);
+
 /* Derivative and integral */
 
 void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec);

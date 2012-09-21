@@ -175,6 +175,18 @@ void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
     not contain zero. The implementation reverses the inputs and performs
     power series division.
 
+*******************************************************************************
+
+    Evaluation
+
+*******************************************************************************
+
+void _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
+                           const fmprb_t a, long prec)
+
+void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
+
+    Sets res to $f(a)$, evaluated using Horner's rule.
 
 *******************************************************************************
 
