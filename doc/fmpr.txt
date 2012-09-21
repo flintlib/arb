@@ -294,6 +294,13 @@ void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
     If x is zero, both man and exp are set to zero. If x is infinite or NaN,
     the result is undefined.
 
+int fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t e)
+
+int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, long e)
+
+    Converts x to a mantissa with predetermined exponent, i.e. computes
+    an integer y such that $y \times 2^e \approx x$, truncating if necessary.
+    Returns 0 if exact and 1 if truncation occurred.
 
 *******************************************************************************
 
