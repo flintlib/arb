@@ -140,6 +140,22 @@ void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long le
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
+void
+_fmprb_poly_div(fmprb_struct * Q,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec);
+
+void _fmprb_poly_divrem(fmprb_struct * Q, fmprb_struct * R,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec);
+
+void _fmprb_poly_rem(fmprb_struct * R,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec);
+
+void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
+                             const fmprb_poly_t A, const fmprb_poly_t B, long prec);
+
 /* Derivative and integral */
 
 void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec);

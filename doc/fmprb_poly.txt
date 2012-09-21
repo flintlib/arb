@@ -155,6 +155,26 @@ void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q,
 
     Sets Qinv to the power series inverse of Q.
 
+void _fmprb_poly_div(fmprb_struct * Q,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec)
+
+void _fmprb_poly_rem(fmprb_struct * R,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec)
+
+void _fmprb_poly_divrem(fmprb_struct * Q, fmprb_struct * R,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long prec)
+
+void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
+                             const fmprb_poly_t A, const fmprb_poly_t B, long prec)
+
+    Performs polynomial division with remainder, computing a quotient $Q$ and
+    a remainder $R$ such that $A = BQ + R$. The leading coefficient of $B$ must
+    not contain zero. The implementation reverses the inputs and performs
+    power series division.
+
 
 *******************************************************************************
 
