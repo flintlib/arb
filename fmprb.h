@@ -358,3 +358,65 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bit
 
 #endif
 
+/* vector functions */
+
+static __inline__ void
+_fmprb_vec_zero(fmprb_struct * A, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmprb_zero(A + i);
+}
+
+static __inline__ void
+_fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_set(res + i, vec + i);
+}
+
+static __inline__ void
+_fmprb_vec_neg(fmprb_struct * B, const fmprb_struct * A, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmprb_neg(B + i, A + i);
+}
+
+static __inline__ void
+_fmprb_vec_sub(fmprb_struct * C, const fmprb_struct * A,
+    const fmprb_struct * B, long n, long prec)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmprb_sub(C + i, A + i, B + i, prec);
+}
+
+static __inline__ void
+_fmprb_vec_add(fmprb_struct * C, const fmprb_struct * A,
+    const fmprb_struct * B, long n, long prec)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmprb_add(C + i, A + i, B + i, prec);
+}
+
+static __inline__ void
+_fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_mul(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_addmul(res + i, vec + i, c, prec);
+}
+

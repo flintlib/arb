@@ -26,13 +26,11 @@
 #include "fmprb_poly.h"
 
 void
-fmprb_poly_set(fmprb_poly_t poly, const fmprb_poly_t src)
+fmprb_poly_set(fmprb_poly_t dest, const fmprb_poly_t src)
 {
-    long i, len = fmprb_poly_length(src);
+    long len = fmprb_poly_length(src);
 
-    fmprb_poly_fit_length(poly, len);
-    _fmprb_poly_set_length(poly, len);
-
-    for (i = 0; i < len; i++)
-        fmprb_set(poly->coeffs + i, src->coeffs + i);
+    fmprb_poly_fit_length(dest, len);
+    _fmprb_vec_set(dest->coeffs, src->coeffs, len);
+    _fmprb_poly_set_length(dest, len);
 }

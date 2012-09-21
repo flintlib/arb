@@ -26,24 +26,13 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_neg(fmprb_struct * B, const fmprb_struct * A, long n, long prec)
-{
-    long i;
-
-    for (i = 0; i < n; i++)
-        fmprb_neg(B + i, A + i);
-}
-
-void
 _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)
 {
     long a[FLINT_BITS];
     long i, m, n;
     fmprb_struct * W;
 
-    W = flint_malloc(len * sizeof(fmprb_struct));
-    for (i = 0; i < len; i++)
-        fmprb_init(W + i);
+    W = _fmprb_vec_init(len);
 
     a[i = 0] = n = len;
     while (n >= 2)
@@ -58,13 +47,10 @@ _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, lo
 
         _fmprb_poly_mullow(W, Q, n, Qinv, m, n, prec);
         _fmprb_poly_mullow(Qinv + m, Qinv, m, W + m, n - m, n - m, prec);
-        _fmprb_poly_neg(Qinv + m, Qinv + m, n - m, prec);
+        _fmprb_vec_neg(Qinv + m, Qinv + m, n - m);
     }
 
-    for (i = 0; i < len; i++)
-        fmprb_clear(W + i);
-
-    flint_free(W);
+    _fmprb_vec_clear(W, len);
 }
 
 void

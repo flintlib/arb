@@ -25,49 +25,6 @@
 
 #include "fmprb_poly.h"
 
-static void
-_fmprb_vec_zero(fmprb_struct * A, long n)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        fmprb_zero(A + i);
-}
-
-void
-_fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        fmprb_set(res + i, vec + i);
-}
-
-
-static void
-_fmprb_vec_neg(fmprb_struct * B, const fmprb_struct * A, long n, long prec)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        fmprb_neg(B + i, A + i);
-}
-
-static void
-_fmprb_vec_sub(fmprb_struct * C, const fmprb_struct * A,
-    const fmprb_struct * B, long n, long prec)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        fmprb_sub(C + i, A + i, B + i, prec);
-}
-
-static void
-_fmprb_vec_add(fmprb_struct * C, const fmprb_struct * A,
-    const fmprb_struct * B, long n, long prec)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        fmprb_add(C + i, A + i, B + i, prec);
-}
-
 #define NEWTON_EXP_CUTOFF 6
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
@@ -108,7 +65,7 @@ _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
         /* g := exp(-h) + O(x^m) */
         _fmprb_poly_mullow(T, f, m, g, m2, m, prec);
         _fmprb_poly_mullow(g + m2, g, m2, T + m2, m - m2, m - m2, prec);
-        _fmprb_vec_neg(g + m2, g + m2, m - m2, prec);
+        _fmprb_vec_neg(g + m2, g + m2, m - m2);
 
         /* U := h' + g (f' - f h') + O(x^(n-1))
             Note: should replace h' by h' mod x^(m-1) */
@@ -130,7 +87,7 @@ _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
         {
             _fmprb_poly_mullow(T, f, n, g, m, n, prec);
             _fmprb_poly_mullow(g + m, g, m, T + m, n - m, n - m, prec);
-            _fmprb_vec_neg(g + m, g + m, n - m, prec);
+            _fmprb_vec_neg(g + m, g + m, n - m);
         }
     }
 
