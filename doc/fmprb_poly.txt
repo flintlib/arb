@@ -177,7 +177,7 @@ void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
 
 *******************************************************************************
 
-    Evaluation
+    Evaluation and interpolation
 
 *******************************************************************************
 
@@ -187,6 +187,16 @@ void _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
 void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
 
     Sets res to $f(a)$, evaluated using Horner's rule.
+
+void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs,
+    const fmprb_struct * ys, long n, long prec)
+
+void fmprb_poly_interpolate_newton(fmprb_poly_t poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most n that interpolates
+    the given x and y values. This implementation first interpolates in the
+    Newton basis and then converts back to the monomial basis.
 
 *******************************************************************************
 

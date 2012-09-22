@@ -85,6 +85,8 @@ fmprb_poly_one(fmprb_poly_t poly)
     _fmprb_poly_set_length(poly, 1);
 }
 
+void _fmprb_poly_reverse(fmprb_struct * res, const fmprb_struct * poly, long len, long n);
+
 /* Conversions */
 
 void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long prec);
@@ -156,13 +158,19 @@ void _fmprb_poly_rem(fmprb_struct * R,
 void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
                              const fmprb_poly_t A, const fmprb_poly_t B, long prec);
 
-/* Evaluation */
+/* Evaluation and interpolation */
 
 void
 _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
                            const fmprb_t a, long prec);
 
 void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec);
+
+void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs,
+    const fmprb_struct * ys, long n, long prec);
+
+void fmprb_poly_interpolate_newton(fmprb_poly_t poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
 
 /* Derivative and integral */
 

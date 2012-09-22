@@ -27,35 +27,6 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_reverse(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
-{
-    if (res == poly)
-    {
-        long i;
-
-        for (i = 0; i < n / 2; i++)
-        {
-            fmprb_struct t = res[i];
-            res[i] = res[n - 1 - i];
-            res[n - 1 - i] = t;
-        }
-
-        for (i = 0; i < n - len; i++)
-            fmprb_zero(res + i);
-    }
-    else
-    {
-        long i;
-
-        for (i = 0; i < n - len; i++)
-            fmprb_zero(res + i);
-
-        for (i = 0; i < len; i++)
-            fmprb_set(res + (n - len) + i, poly + (len - 1) - i);
-    }
-}
-
-void
 _fmprb_poly_div_series(fmprb_struct * Q,
     const fmprb_struct * A,
     const fmprb_struct * B, long n, long prec)
