@@ -165,7 +165,15 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
     fmpz_clear(top_exp);
 }
 
-
+int _fmprb_vec_rad_has_inf_nan(const fmprb_struct * vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (fmpr_is_nan(fmprb_radref(vec + i))
+            || fmpr_is_inf(fmprb_radref(vec + i)))
+            return 1;
+    return 0;
+}
 
 void _fmprb_poly_mullow_ztrunc(fmprb_struct * C,
     const fmprb_struct * A, long lenA,
@@ -175,6 +183,18 @@ void _fmprb_poly_mullow_ztrunc(fmprb_struct * C,
     fmpz_t Aexp, Bexp, Cexp;
     fmpr_t Aerr, Berr, Anorm, Bnorm, err;
     long i;
+
+    /* TODO: make the code below work correctly with out this workaround */
+    if (_fmprb_vec_rad_has_inf_nan(A, lenA) ||
+        _fmprb_vec_rad_has_inf_nan(B, lenB))
+    {
+        for (i = 0; i < n; i++)
+        {
+            fmpr_zero(fmprb_radref(C + i));
+            fmpr_pos_inf(fmprb_radref(C + i));
+        }
+        return;
+    }
 
     fmpz_init(Aexp);
     fmpz_init(Bexp);

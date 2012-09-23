@@ -263,6 +263,24 @@ void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly,
     the given x and y values. This implementation uses the barycentric
     form of Lagrange interpolation.
 
+void _fmprb_poly_interpolation_weights(fmprb_struct * w,
+    fmprb_struct ** tree, long len, long prec)
+
+void _fmprb_poly_interpolate_fast_precomp(fmprb_struct * poly,
+    const fmprb_struct * ys, fmprb_struct ** tree, const fmprb_struct * weights,
+    long len, long prec)
+
+void _fmprb_poly_interpolate_fast(fmprb_struct * poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long len, long prec)
+
+void fmprb_poly_interpolate_fast(fmprb_poly_t poly,
+        const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most n that interpolates
+    the given x and y values, using fast Lagrange interpolation.
+    The precomp function takes a precomputed product tree over the
+    x values and a vector of interpolation weights as additional inputs.
+
 *******************************************************************************
 
     Differentiation

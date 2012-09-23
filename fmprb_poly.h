@@ -218,6 +218,19 @@ _fmprb_poly_interpolate_barycentric(fmprb_struct * poly,
 void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly,
     const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
 
+void _fmprb_poly_interpolation_weights(fmprb_struct * w,
+    fmprb_struct ** tree, long len, long prec);
+
+void _fmprb_poly_interpolate_fast_precomp(fmprb_struct * poly,
+    const fmprb_struct * ys, fmprb_struct ** tree, const fmprb_struct * weights,
+    long len, long prec);
+
+void _fmprb_poly_interpolate_fast(fmprb_struct * poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long len, long prec);
+
+void fmprb_poly_interpolate_fast(fmprb_poly_t poly,
+        const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
+
 /* Derivative and integral */
 
 void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec);
