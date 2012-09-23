@@ -138,6 +138,19 @@ void _fmprb_poly_mul(fmprb_struct * C,
 void fmprb_poly_mul(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
 
+static __inline__ void
+_fmprb_poly_mul_monic(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec)
+{
+    if (len1 + len2 - 2 > 0)
+        _fmprb_poly_mullow(res, poly1, len1, poly2, len2, len1 + len2 - 2, prec);
+    fmprb_one(res + len1 + len2 - 2);
+}
+
+void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec);
+
+void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec);
+
 void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec);
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
@@ -158,6 +171,9 @@ void _fmprb_poly_rem(fmprb_struct * R,
 void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
                              const fmprb_poly_t A, const fmprb_poly_t B, long prec);
 
+void _fmprb_poly_div_root(fmprb_struct * Q, fmprb_t R, const fmprb_struct * A,
+    long len, const fmprb_t c, long prec);
+
 /* Evaluation and interpolation */
 
 void
@@ -170,6 +186,13 @@ void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs
     const fmprb_struct * ys, long n, long prec);
 
 void fmprb_poly_interpolate_newton(fmprb_poly_t poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
+
+void
+_fmprb_poly_interpolate_barycentric(fmprb_struct * poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
+
+void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly,
     const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec);
 
 /* Derivative and integral */

@@ -175,6 +175,24 @@ void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
     not contain zero. The implementation reverses the inputs and performs
     power series division.
 
+void _fmprb_poly_div_root(fmprb_struct * Q, fmprb_t R, const fmprb_struct * A,
+    long len, const fmprb_t c, long prec)
+
+    Divides $A$ by the polynomial $x - c$, computing the quotient $Q$ as well
+    as the remainder $R = f(c)$.
+
+*******************************************************************************
+
+    Product trees
+
+*******************************************************************************
+
+void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec)
+
+void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec)
+
+    Generates the polynomial $(x-x_0)(x-x_1)\cdots(x-x_{n-1})$.
+
 *******************************************************************************
 
     Evaluation and interpolation
@@ -197,6 +215,16 @@ void fmprb_poly_interpolate_newton(fmprb_poly_t poly,
     Recovers the unique polynomial of length at most n that interpolates
     the given x and y values. This implementation first interpolates in the
     Newton basis and then converts back to the monomial basis.
+
+void _fmprb_poly_interpolate_barycentric(fmprb_struct * poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+
+void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly,
+    const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most n that interpolates
+    the given x and y values. This implementation uses the barycentric
+    form of Lagrange interpolation.
 
 *******************************************************************************
 

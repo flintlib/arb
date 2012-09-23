@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("interpolate_newton....");
+    printf("interpolate_barycentric....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -80,7 +80,7 @@ int main()
         for (i = 0; i < n; i++)
             fmprb_poly_evaluate(ys + i, R, xs + i, rbits2);
 
-        fmprb_poly_interpolate_newton(S, xs, ys, n, rbits3);
+        fmprb_poly_interpolate_barycentric(S, xs, ys, n, rbits3);
 
         if (!fmprb_poly_contains_fmpq_poly(S, P))
         {
