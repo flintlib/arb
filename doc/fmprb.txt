@@ -418,6 +418,18 @@ void fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
     [1] R. Crandall and C. Pomerance, "Prime Numbers: A Computational
         Perspective", second edition, Springer (2005), p. 316.
 
+void fmprb_rfac_ui_multipoint(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+    Sets x to the rising factorial $x (x+1) (x+2) \cdots (x+n-1)$,
+    computed using fast multipoint evaluation. This only requires
+    $O(n^{1/2+\varepsilon})$ multiplications, but has high overhead
+    and poor numerical stability (adding $O(n)$ guard bits to the input
+    might be necessary to achieve full accuracy). It can be expected to
+    be faster than the binary splitting algorithm if the input is a
+    full-precision number, the precision is at least 100000 bits,
+    and $n$ is of the same order of magnitude as (perhaps slightly
+    smaller than) the number of bits.
+
 void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)
 
 void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec)
