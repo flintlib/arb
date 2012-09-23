@@ -193,6 +193,22 @@ void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long
 
     Generates the polynomial $(x-x_0)(x-x_1)\cdots(x-x_{n-1})$.
 
+fmprb_struct ** _fmprb_poly_tree_alloc(long len)
+
+    Returns an initialized data structured capable of representing a
+    reminder tree (product tree) of the given number of roots.
+
+void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
+
+    Deallocates a tree structure as allocated using _fmprb_poly_tree_alloc.
+
+void _fmprb_poly_tree_build(fmprb_struct ** tree,
+    const fmprb_struct * roots, long len, long prec)
+
+    Constructs a product tree from a given array of roots. The tree
+    structure must be pre-allocated to the specified length using
+    _fmprb_poly_tree_alloc.
+
 *******************************************************************************
 
     Evaluation and interpolation
@@ -205,6 +221,27 @@ void _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
 void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
 
     Sets res to $f(a)$, evaluated using Horner's rule.
+
+void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
+    const fmprb_struct * xs, long n, long prec)
+
+void fmprb_poly_evaluate_vec_iter(fmprb_struct * ys,
+        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
+
+    Evaluates the polynomial simultaneously at n given points, calling
+    _fmprb_poly_evaluate repeatedly.
+
+void _fmprb_poly_evaluate_vec_fast_precomp(fmprb_struct * vs, const fmprb_struct * poly,
+    long plen, fmprb_struct ** tree, long len, long prec)
+
+void _fmprb_poly_evaluate_vec_fast(fmprb_struct * ys, const fmprb_struct * poly, long plen,
+    const fmprb_struct * xs, long n, long prec)
+
+void fmprb_poly_evaluate_vec_fast(fmprb_struct * ys,
+        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
+
+    Evaluates the polynomial simultaneously at n given points, using
+    fast multipoint evaluation.
 
 void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs,
     const fmprb_struct * ys, long n, long prec)

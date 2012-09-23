@@ -19,7 +19,6 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2010 Sebastian Pancratz
     Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
@@ -27,44 +26,19 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
-                           const fmprb_t a, long prec)
+_fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
+    const fmprb_struct * xs, long n, long prec)
 {
-    if (len == 0)
-    {
-        fmprb_zero(res);
-    }
-    else if (len == 1 || fmprb_is_zero(a))
-    {
-        fmprb_set(res, f);
-    }
-    else
-    {
-        long i = len - 1;
-        fmprb_t t;
+    long i;
 
-        fmprb_init(t);
-        fmprb_set(res, f + i);
-        for (i = len - 2; i >= 0; i--)
-        {
-            fmprb_mul(t, res, a, prec);
-            fmprb_add(res, f + i, t, prec);
-        }
-        fmprb_clear(t);
-    }
+    for (i = 0; i < n; i++)
+        _fmprb_poly_evaluate(ys + i, poly, plen, xs + i, prec);
 }
 
 void
-fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
+fmprb_poly_evaluate_vec_iter(fmprb_struct * ys,
+        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
 {
-    if (res == a)
-    {
-        fmprb_t t;
-        fmprb_init(t);
-        _fmprb_poly_evaluate(t, f->coeffs, f->length, a, prec);
-        fmprb_swap(res, t);
-        fmprb_clear(t);
-    }
-    else
-        _fmprb_poly_evaluate(res, f->coeffs, f->length, a, prec);
+    _fmprb_poly_evaluate_vec_iter(ys, poly->coeffs,
+                                        poly->length, xs, n, prec);
 }

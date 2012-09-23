@@ -147,10 +147,6 @@ _fmprb_poly_mul_monic(fmprb_struct * res, const fmprb_struct * poly1, long len1,
     fmprb_one(res + len1 + len2 - 2);
 }
 
-void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec);
-
-void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec);
-
 void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec);
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
@@ -174,6 +170,18 @@ void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R,
 void _fmprb_poly_div_root(fmprb_struct * Q, fmprb_t R, const fmprb_struct * A,
     long len, const fmprb_t c, long prec);
 
+/* Product trees */
+
+void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec);
+
+void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec);
+
+fmprb_struct ** _fmprb_poly_tree_alloc(long len);
+
+void _fmprb_poly_tree_free(fmprb_struct ** tree, long len);
+
+void _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec);
+
 /* Evaluation and interpolation */
 
 void
@@ -181,6 +189,21 @@ _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
                            const fmprb_t a, long prec);
 
 void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec);
+
+void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
+    const fmprb_struct * xs, long n, long prec);
+
+void fmprb_poly_evaluate_vec_iter(fmprb_struct * ys,
+        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec);
+
+void _fmprb_poly_evaluate_vec_fast_precomp(fmprb_struct * vs, const fmprb_struct * poly,
+    long plen, fmprb_struct ** tree, long len, long prec);
+
+void _fmprb_poly_evaluate_vec_fast(fmprb_struct * ys, const fmprb_struct * poly, long plen,
+    const fmprb_struct * xs, long n, long prec);
+
+void fmprb_poly_evaluate_vec_fast(fmprb_struct * ys,
+        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec);
 
 void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs,
     const fmprb_struct * ys, long n, long prec);
