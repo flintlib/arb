@@ -236,6 +236,12 @@ void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
 void fmprb_exp(fmprb_t z, const fmprb_t x, long prec);
 
+void fmprb_sin(fmprb_t s, const fmprb_t x, long prec);
+void fmprb_cos(fmprb_t c, const fmprb_t x, long prec);
+void fmprb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
+
+void fmprb_atan(fmprb_t z, const fmprb_t x, long prec);
+
 void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
 
 void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec);

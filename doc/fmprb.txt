@@ -398,6 +398,22 @@ void fmprb_exp(fmprb_t z, const fmprb_t x, long prec)
     The last expression is calculated accurately for small radii
     via <tt>fmpr_expm1</tt>.
 
+void fmprb_sin(fmprb_t s, const fmprb_t x, long prec)
+
+void fmprb_cos(fmprb_t c, const fmprb_t x, long prec)
+
+void fmprb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
+
+    Sets $s = \sin x$, $c = \cos x$. Error propagation uses the rule
+    $|\sin(m \pm r) - \sin(m)| \le r$ (this could be tightened to
+    $\min(r,2)$).
+
+void fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets $z = \tan^{-1} x$. Letting $d = \max(0, |m| - r)$,
+    the propagated error is bounded by $r / (1 + d^2)$
+    (this could be tightened).
+
 void fmprb_fac_ui(fmprb_t x, ulong n, long prec)
 
     Sets x to n factorial, computed using binary splitting. Provided that
