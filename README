@@ -1,6 +1,12 @@
-This is an experimental C library implementing arbitrary-precision ball arithmetic on top of FLINT (http://flintlib.org/). Planned future additions include more functions, complex numbers, polynomial balls, and matrix balls. When the code stabilizes, it might get merged back into FLINT.
+Arb is an experimental C library implementing arbitrary-precision ball
+arithmetic, polynomials and matrices on top of FLINT (http://flintlib.org/).
+Planned features include complex numbers and fast computation of special
+functions. The project might get merged back into FLINT when the code
+stabilizes in the future.
 
 For documentation and additional details, see: http://fredrikj.net/arb/doc.html
+
+Development updates are occasionally posted to: http://fredrikj.net/blog/
 
 Author: Fredrik Johansson <fredrik.johansson@gmail.com>
 
