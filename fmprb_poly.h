@@ -217,6 +217,27 @@ void _fmprb_poly_compose_divconquer(fmprb_struct * res,
 void fmprb_poly_compose_divconquer(fmprb_poly_t res,
               const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec);
 
+void _fmprb_poly_compose_series_horner(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+                            const fmprb_struct * poly2, long len2, long n, long prec);
+
+void fmprb_poly_compose_series_horner(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec);
+
+void _fmprb_poly_compose_series_brent_kung(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+                            const fmprb_struct * poly2, long len2, long n, long prec);
+
+void fmprb_poly_compose_series_brent_kung(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec);
+
+void _fmprb_poly_compose_series(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+                            const fmprb_struct * poly2, long len2, long n, long prec);
+
+void fmprb_poly_compose_series(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec);
+
 /* Evaluation and interpolation */
 
 void

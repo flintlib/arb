@@ -249,6 +249,38 @@ void fmprb_poly_compose(fmprb_poly_t res,
     The underscore methods do not support aliasing of the output
     with either input polynomial.
 
+void _fmprb_poly_compose_series_horner(fmprb_struct * res,
+        const fmprb_struct * poly1, long len1,
+        const fmprb_struct * poly2, long len2, long n, long prec)
+
+void fmprb_poly_compose_series_horner(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec)
+
+void _fmprb_poly_compose_series_brent_kung(fmprb_struct * res,
+            const fmprb_struct * poly1, long len1,
+            const fmprb_struct * poly2, long len2, long n, long prec)
+
+void fmprb_poly_compose_series_brent_kung(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec)
+
+void _fmprb_poly_compose_series(fmprb_struct * res,
+            const fmprb_struct * poly1, long len1,
+            const fmprb_struct * poly2, long len2, long n, long prec)
+
+void fmprb_poly_compose_series(fmprb_poly_t res,
+                    const fmprb_poly_t poly1,
+                    const fmprb_poly_t poly2, long n, long prec)
+
+    Sets res to the power series composition $h(x) = f(g(x))$ truncated
+    to order $O(x^n)$ where $f$ is given by poly1 and $g$ is given by poly2,
+    respectively using Horner's rule, the Brent-Kung baby step-giant step
+    algorithm, and an automatic choice between the two algorithms.
+    We require that the constant term in $g(x)$ is exactly zero.
+    The underscore methods do not support aliasing of the output
+    with either input polynomial.
+
 *******************************************************************************
 
     Evaluation and interpolation
