@@ -2,6 +2,13 @@
     An <tt>fmprb_poly_t</tt> represents a polynomial over the real numbers,
     implemented as an array of coefficients of type <tt>fmprb_struct</tt>.
 
+    Most functions are provided in two versions: an underscore method which
+    operates directly on pre-allocated arrays of coefficients and generally
+    has some restrictions (such as requiring the lengths to be nonzero
+    and not supporting aliasing of the input and output arrays),
+    and a non-underscore method which performs automatic memory
+    management and handles degenerate cases.
+
 *******************************************************************************
 
     Types, macros and constants
@@ -12,8 +19,8 @@ fmprb_poly_struct
 
 fmprb_poly_t
 
-    Contains a pointer to an array of coefficients, the used length,
-    and the allocated size of the array.
+    Contains a pointer to an array of coefficients (coeffs), the used
+    length (length), and the allocated size of the array (alloc).
 
     An <tt>fmprb_poly_t</tt> is defined as an array of length one of type
     <tt>fmprb_poly_struct</tt>, permitting an <tt>fmprb_poly_t</tt> to
@@ -196,7 +203,7 @@ void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long
 fmprb_struct ** _fmprb_poly_tree_alloc(long len)
 
     Returns an initialized data structured capable of representing a
-    reminder tree (product tree) of the given number of roots.
+    remainder tree (product tree) of the given number of roots.
 
 void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
 
@@ -208,6 +215,39 @@ void _fmprb_poly_tree_build(fmprb_struct ** tree,
     Constructs a product tree from a given array of roots. The tree
     structure must be pre-allocated to the specified length using
     _fmprb_poly_tree_alloc.
+
+*******************************************************************************
+
+    Composition
+
+*******************************************************************************
+
+void _fmprb_poly_compose_horner(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec)
+
+void fmprb_poly_compose_horner(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
+
+void _fmprb_poly_compose_divconquer(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
+
+void fmprb_poly_compose_divconquer(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
+
+void _fmprb_poly_compose(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec)
+
+void fmprb_poly_compose(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
+
+    Sets res to the composition $h(x) = f(g(x))$ where $f$ is given by
+    poly1 and $g$ is given by poly2, respectively using Horner's rule,
+    divide-and-conquer, and an automatic choice between the two algorithms.
+    The underscore methods do not support aliasing of the output
+    with either input polynomial.
 
 *******************************************************************************
 

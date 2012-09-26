@@ -93,6 +93,14 @@ void fmprb_poly_set_fmpz_poly(fmprb_poly_t poly, const fmpz_poly_t src, long pre
 
 void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec);
 
+static __inline__ void
+fmprb_poly_set_fmprb(fmprb_poly_t poly, const fmprb_t c)
+{
+    fmprb_poly_fit_length(poly, 1);
+    fmprb_set(poly->coeffs, c);
+    _fmprb_poly_set_length(poly, !fmprb_is_zero(poly->coeffs));
+}
+
 /* Comparisons */
 
 int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
@@ -104,6 +112,10 @@ int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B);
 void fmprb_poly_printd(const fmprb_poly_t poly, long digits);
 
 /* Arithmetic */
+
+void
+_fmprb_poly_add(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
 
 void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
@@ -181,6 +193,29 @@ fmprb_struct ** _fmprb_poly_tree_alloc(long len);
 void _fmprb_poly_tree_free(fmprb_struct ** tree, long len);
 
 void _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec);
+
+/* Composition */
+
+void _fmprb_poly_compose(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
+
+void fmprb_poly_compose(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec);
+
+void _fmprb_poly_compose_horner(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
+
+void fmprb_poly_compose_horner(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec);
+
+void _fmprb_poly_compose_divconquer(fmprb_struct * res,
+    const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
+
+void fmprb_poly_compose_divconquer(fmprb_poly_t res,
+              const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec);
 
 /* Evaluation and interpolation */
 
