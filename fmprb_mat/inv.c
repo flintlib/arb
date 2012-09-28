@@ -25,52 +25,20 @@
 
 #include "fmprb_mat.h"
 
-void
-fmprb_mat_mul(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec)
+int
+fmprb_mat_inv(fmprb_mat_t X, const fmprb_mat_t A, long prec)
 {
-    long ar, ac, br, bc, i, j, k;
-
-    ar = fmprb_mat_nrows(A);
-    ac = fmprb_mat_ncols(A);
-    br = fmprb_mat_nrows(B);
-    bc = fmprb_mat_ncols(B);
-
-    if (ac != br || ar != fmprb_mat_nrows(C) || bc != fmprb_mat_ncols(C))
+    if (X == A)
     {
-        printf("fmprb_mat_mul: incompatible dimensions\n");
-        abort();
-    }
-
-    if (br == 0)
-    {
-        fmprb_mat_zero(C);
-        return;
-    }
-
-    if (A == C || B == C)
-    {
+        int r;
         fmprb_mat_t T;
-        fmprb_mat_init(T, ar, bc);
-        fmprb_mat_mul(T, A, B, prec);
-        fmprb_mat_swap(T, C);
+        fmprb_mat_init(T, fmprb_mat_nrows(A), fmprb_mat_ncols(A));
+        r = fmprb_mat_inv(T, A, prec);
+        fmprb_mat_swap(T, X);
         fmprb_mat_clear(T);
-        return;
+        return r;
     }
 
-    for (i = 0; i < ar; i++)
-    {
-        for (j = 0; j < bc; j++)
-        {
-            fmprb_mul(fmprb_mat_entry(C, i, j),
-                      fmprb_mat_entry(A, i, 0),
-                      fmprb_mat_entry(B, 0, j), prec);
-
-            for (k = 1; k < br; k++)
-            {
-                fmprb_addmul(fmprb_mat_entry(C, i, j),
-                             fmprb_mat_entry(A, i, k),
-                             fmprb_mat_entry(B, k, j), prec);
-            }
-        }
-    }
+    fmprb_mat_one(X);
+    return fmprb_mat_solve(X, A, X, prec);
 }

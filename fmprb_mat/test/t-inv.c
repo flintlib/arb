@@ -25,56 +25,40 @@
 
 #include "fmprb_mat.h"
 
-int fmpq_mat_is_invertible(const fmpq_mat_t A)
-{
-    int r;
-    fmpq_t t;
-    fmpq_init(t);
-    fmpq_mat_det(t, A);
-    r = !fmpq_is_zero(t);
-    fmpq_clear(t);
-    return r;
-}
-
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("lu....");
+    printf("inv....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        fmpq_mat_t Q;
-        fmprb_mat_t A, LU, P, L, U, T;
-        long i, j, n, qbits, prec, *perm;
-        int result, q_invertible, r_invertible;
+        fmpq_mat_t Q, Qinv;
+        fmprb_mat_t A, Ainv;
+        long n, qbits, prec;
+        int q_invertible, r_invertible, r_invertible2;
 
         n = n_randint(state, 8);
-        qbits = 1 + n_randint(state, 100);
-        prec = 2 + n_randint(state, 202);
+        qbits = 1 + n_randint(state, 30);
+        prec = 2 + n_randint(state, 200);
 
         fmpq_mat_init(Q, n, n);
+        fmpq_mat_init(Qinv, n, n);
+
         fmprb_mat_init(A, n, n);
-        fmprb_mat_init(LU, n, n);
-        fmprb_mat_init(P, n, n);
-        fmprb_mat_init(L, n, n);
-        fmprb_mat_init(U, n, n);
-        fmprb_mat_init(T, n, n);
-        perm = _perm_init(n);
+        fmprb_mat_init(Ainv, n, n);
 
         fmpq_mat_randtest(Q, state, qbits);
-        q_invertible = fmpq_mat_is_invertible(Q);
-
-        result = 1;
+        q_invertible = fmpq_mat_inv(Qinv, Q);
 
         if (!q_invertible)
         {
             fmprb_mat_set_fmpq_mat(A, Q, prec);
-            r_invertible = fmprb_mat_lu(perm, LU, A, prec);
+            r_invertible = fmprb_mat_inv(Ainv, A, prec);
             if (r_invertible)
             {
                 printf("FAIL: matrix is singular over Q but not over R\n");
@@ -83,7 +67,8 @@ int main()
 
                 printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
                 printf("A = \n"); fmprb_mat_printd(A, 15); printf("\n\n");
-                printf("LU = \n"); fmprb_mat_printd(LU, 15); printf("\n\n");
+                printf("Ainv = \n"); fmprb_mat_printd(Ainv, 15); printf("\n\n");
+                abort();
             }
         }
         else
@@ -92,7 +77,8 @@ int main()
             while (1)
             {
                 fmprb_mat_set_fmpq_mat(A, Q, prec);
-                r_invertible = fmprb_mat_lu(perm, LU, A, prec);
+                r_invertible = fmprb_mat_inv(Ainv, A, prec);
+
                 if (r_invertible)
                 {
                     break;
@@ -102,54 +88,44 @@ int main()
                     if (prec > 10000)
                     {
                         printf("FAIL: failed to converge at 10000 bits\n");
+                        printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
+                        printf("A = \n"); fmprb_mat_printd(A, 15); printf("\n\n");
                         abort();
                     }
                     prec *= 2;
                 }
             }
 
-            fmprb_mat_one(L);
-            for (i = 0; i < n; i++)
-                for (j = 0; j < i; j++)
-                    fmprb_set(fmprb_mat_entry(L, i, j),
-                        fmprb_mat_entry(LU, i, j));
-
-            for (i = 0; i < n; i++)
-                for (j = i; j < n; j++)
-                    fmprb_set(fmprb_mat_entry(U, i, j),
-                        fmprb_mat_entry(LU, i, j));
-
-            for (i = 0; i < n; i++)
-                fmprb_one(fmprb_mat_entry(P, perm[i], i));
-
-            fmprb_mat_mul(T, P, L, prec);
-            fmprb_mat_mul(T, T, U, prec);
-
-            if (!fmprb_mat_contains_fmpq_mat(T, Q))
+            if (!fmprb_mat_contains_fmpq_mat(Ainv, Qinv))
             {
                 printf("FAIL (containment, iter = %ld)\n", iter);
                 printf("n = %ld, prec = %ld\n", n, prec);
                 printf("\n");
 
                 printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                printf("A = \n"); fmprb_mat_printd(A, 15); printf("\n\n");
-                printf("LU = \n"); fmprb_mat_printd(LU, 15); printf("\n\n");
-                printf("L = \n"); fmprb_mat_printd(L, 15); printf("\n\n");
-                printf("U = \n"); fmprb_mat_printd(U, 15); printf("\n\n");
-                printf("P*L*U = \n"); fmprb_mat_printd(T, 15); printf("\n\n");
+                printf("Qinv = \n"); fmpq_mat_print(Qinv); printf("\n\n");
 
+                printf("A = \n"); fmprb_mat_printd(A, 15); printf("\n\n");
+                printf("Ainv = \n"); fmprb_mat_printd(Ainv, 15); printf("\n\n");
+
+                abort();
+            }
+
+            /* test aliasing */
+            r_invertible2 = fmprb_mat_inv(A, A, prec);
+            if (!fmprb_mat_equal(A, Ainv) || r_invertible != r_invertible2)
+            {
+                printf("FAIL (aliasing)\n");
+                printf("A = \n"); fmprb_mat_printd(A, 15); printf("\n\n");
+                printf("Ainv = \n"); fmprb_mat_printd(Ainv, 15); printf("\n\n");
                 abort();
             }
         }
 
         fmpq_mat_clear(Q);
+        fmpq_mat_clear(Qinv);
         fmprb_mat_clear(A);
-        fmprb_mat_clear(LU);
-        fmprb_mat_clear(P);
-        fmprb_mat_clear(L);
-        fmprb_mat_clear(U);
-        fmprb_mat_clear(T);
-        _perm_clear(perm);
+        fmprb_mat_clear(Ainv);
     }
 
     flint_randclear(state);

@@ -139,28 +139,57 @@ void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1,
 
 *******************************************************************************
 
-    LU decomposition
+    Solving
 
 *******************************************************************************
 
-int fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec)
+int fmprb_mat_lu(long * perm, fmprb_mat_t LU, const fmprb_mat_t A, long prec)
 
     Given an $n \times n$ matrix $A$, computes an LU decomposition $PLU = A$
     using Gaussian elimination with partial pivoting.
     The input and output matrices can be the same, performing the
     decomposition in-place.
 
-    Entry $i$ in the permutation vector is set to the row index in
+    Entry $i$ in the permutation vector perm is set to the row index in
     the input matrix corresponding to row $i$ in the output matrix.
 
     The algorithm succeeds and returns nonzero if it can find $n$ invertible
     (i.e. not containing zero) pivot entries. This guarantees that the matrix
     is invertible.
 
-    The algorithm fails and returns zero, leaving the values in $P$ and $LU$
+    The algorithm fails and returns zero, leaving the entries in $P$ and $LU$
     undefined, if it cannot find $n$ invertible pivot elements.
     In this case, either the matrix is singular, the input matrix was
     computed to insufficient precision, or the LU decomposition was
     attempted at insufficient precision.
 
+void fmprb_mat_solve_lu_precomp(fmprb_mat_t X, const long * perm,
+        const fmprb_mat_t LU, const fmprb_mat_t B, long prec)
+
+    Solves $AX = B$ given the precomputed nonsingular LU decomposition $A = PLU$.
+    The matrices $X$ and $B$ are allowed to be aliased with each other,
+    but $X$ is not allowed to be aliased with $LU$.
+
+int fmprb_mat_solve(fmprb_mat_t X, const fmprb_mat_t A,
+        const fmprb_mat_t B, long prec)
+
+    Solves $AX = B$ where $A$ is a nonsingular $n \times n$ matrix
+    and $X$ and $B$ are $n \times m$ matrices, using LU decomposition.
+
+    If $m > 0$ and $A$ cannot be inverted numerically (indicating either that
+    $A$ is singular or that the precision is insufficient), the values in the
+    output matrix are left undefined and zero is returned. A nonzero return
+    value guarantees that the matrix is invertible and that the exact solution
+    matrix is contained in the output.
+
+int fmprb_mat_inv(fmprb_mat_t X, const fmprb_mat_t A, long prec)
+
+    Sets $X = A^{-1}$ where $A$ is a square matrix, computed by solving
+    the system $AX = I$.
+
+    If $A$ cannot be inverted numerically (indicating either that
+    $A$ is singular or that the precision is insufficient), the values in the
+    output matrix are left undefined and zero is returned.
+    A nonzero return value guarantees that the matrix is invertible
+    and that the exact inverse is contained in the output.
 
