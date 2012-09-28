@@ -40,7 +40,7 @@ int main()
     {
         long m, n, k, qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_mat_t A, B, C;
-        fmprb_mat_t a, b, c;
+        fmprb_mat_t a, b, c, d;
 
         qbits1 = 2 + n_randint(state, 200);
         qbits2 = 2 + n_randint(state, 200);
@@ -59,6 +59,7 @@ int main()
         fmprb_mat_init(a, m, n);
         fmprb_mat_init(b, n, k);
         fmprb_mat_init(c, m, k);
+        fmprb_mat_init(d, m, k);
 
         fmpq_mat_randtest(A, state, qbits1);
         fmpq_mat_randtest(B, state, qbits2);
@@ -84,6 +85,32 @@ int main()
             abort();
         }
 
+        /* test aliasing with a */
+        if (fmprb_mat_nrows(a) == fmprb_mat_nrows(c) &&
+            fmprb_mat_ncols(a) == fmprb_mat_ncols(c))
+        {
+            fmprb_mat_set(d, a);
+            fmprb_mat_mul(d, d, b, rbits3);
+            if (!fmprb_mat_equal(d, c))
+            {
+                printf("FAIL (aliasing 1)\n\n");
+                abort();
+            }
+        }
+
+        /* test aliasing with b */
+        if (fmprb_mat_nrows(b) == fmprb_mat_nrows(c) &&
+            fmprb_mat_ncols(b) == fmprb_mat_ncols(c))
+        {
+            fmprb_mat_set(d, b);
+            fmprb_mat_mul(d, a, d, rbits3);
+            if (!fmprb_mat_equal(d, c))
+            {
+                printf("FAIL (aliasing 2)\n\n");
+                abort();
+            }
+        }
+
         fmpq_mat_clear(A);
         fmpq_mat_clear(B);
         fmpq_mat_clear(C);
@@ -91,6 +118,7 @@ int main()
         fmprb_mat_clear(a);
         fmprb_mat_clear(b);
         fmprb_mat_clear(c);
+        fmprb_mat_clear(d);
     }
 
     flint_randclear(state);

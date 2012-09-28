@@ -28,15 +28,32 @@
 void
 fmprb_mat_mul(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec)
 {
-    long ar, bc, br, i, j, k;
+    long ar, ac, br, bc, i, j, k;
 
     ar = fmprb_mat_nrows(A);
+    ac = fmprb_mat_ncols(A);
     br = fmprb_mat_nrows(B);
     bc = fmprb_mat_ncols(B);
+
+    if (ac != br || ar != fmprb_mat_nrows(C) || bc != fmprb_mat_ncols(C))
+    {
+        printf("fmprb_mat_mul: incompatible dimensions\n");
+        abort();
+    }
 
     if (br == 0)
     {
         fmprb_mat_zero(C);
+        return;
+    }
+
+    if (A == C || B == C)
+    {
+        fmprb_mat_t T;
+        fmprb_mat_init(T, ar, bc);
+        fmprb_mat_mul(T, A, B, prec);
+        fmprb_mat_set(C, T);
+        fmprb_mat_clear(T);
         return;
     }
 
