@@ -51,7 +51,7 @@ int main()
         fmpq_mat_t Q;
         fmprb_mat_t A, LU, P, L, U, T;
         long i, j, n, qbits, prec, *perm;
-        int result, q_invertible, r_invertible;
+        int q_invertible, r_invertible;
 
         n = n_randint(state, 8);
         qbits = 1 + n_randint(state, 100);
@@ -68,8 +68,6 @@ int main()
 
         fmpq_mat_randtest(Q, state, qbits);
         q_invertible = fmpq_mat_is_invertible(Q);
-
-        result = 1;
 
         if (!q_invertible)
         {

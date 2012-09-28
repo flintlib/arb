@@ -25,63 +25,30 @@
 
 #include "fmprb_mat.h"
 
-int
-fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec)
+long
+fmprb_mat_find_pivot_partial(const fmprb_mat_t mat,
+                                    long start_row, long end_row, long c)
 {
-    fmprb_t d, e;
-    fmprb_struct ** a;
-    long i, j, m, n, r, row, col;
-    int result;
+    long best_row, i;
 
-    m = fmprb_mat_nrows(A);
-    n = fmprb_mat_ncols(A);
+    best_row = -1;
 
-    result = 1;
-
-    if (m == 0 || n == 0)
-        return result;
-
-    fmprb_mat_set(LU, A);
-
-    a = LU->rows;
-
-    row = col = 0;
-    for (i = 0; i < m; i++)
-        P[i] = i;
-
-    fmprb_init(d);
-    fmprb_init(e);
-
-    while (row < m && col < n)
+    for (i = start_row; i < end_row; i++)
     {
-        r = fmprb_mat_find_pivot_partial(LU, row, m, col);
-
-        if (r == -1)
+        if (!fmprb_contains_zero(fmprb_mat_entry(mat, i, c)))
         {
-            result = 0;
-            break;
+            if (best_row == -1)
+            {
+                best_row = i;
+            }
+            /* todo: should take the radius into account */
+            else if (fmpr_cmpabs(fmprb_midref(fmprb_mat_entry(mat, i, c)),
+                    fmprb_midref(fmprb_mat_entry(mat, best_row, c))) > 0)
+            {
+                best_row = i;
+            }
         }
-        else if (r != row)
-            fmprb_mat_swap_rows(LU, P, row, r);
-
-        fmprb_set(d, a[row] + col);
-
-        for (j = row + 1; j < m; j++)
-        {
-            fmprb_div(e, a[j] + col, d, prec);
-            fmprb_neg(e, e);
-            _fmprb_vec_scalar_addmul(a[j] + col,
-                a[row] + col, n - col, e, prec);
-            fmprb_zero(a[j] + col);
-            fmprb_neg(a[j] + row, e);
-        }
-
-        row++;
-        col++;
     }
 
-    fmprb_clear(d);
-    fmprb_clear(e);
-
-    return result;
+    return best_row;
 }
