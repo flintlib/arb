@@ -286,9 +286,12 @@ fmprb_print(const fmprb_t x)
 static __inline__ void
 fmprb_printd(const fmprb_t x, long digits)
 {
-    fmpr_printd(fmprb_midref(x), digits);
-    printf(" +/- ");
-    fmpr_printd(fmprb_radref(x), 5);
+    fmpr_printd(fmprb_midref(x), FLINT_ABS(digits));
+    if (digits > 0)
+    {
+        printf(" +/- ");
+        fmpr_printd(fmprb_radref(x), 5);
+    }
 }
 
 static __inline__ void

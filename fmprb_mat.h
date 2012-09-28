@@ -52,6 +52,14 @@ void fmprb_mat_init(fmprb_mat_t mat, long r, long c);
 
 void fmprb_mat_clear(fmprb_mat_t mat);
 
+static __inline__ void
+fmprb_mat_swap(fmprb_mat_t mat1, fmprb_mat_t mat2)
+{
+    fmprb_mat_struct t = *mat1;
+    *mat1 = *mat2;
+    *mat2 = t;
+}
+
 /* Conversions */
 
 void fmprb_mat_set(fmprb_mat_t dest, const fmprb_mat_t src);
@@ -85,6 +93,10 @@ void fmprb_mat_add(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t ma
 void fmprb_mat_sub(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec);
 
 void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec);
+
+/* LU decomposition */
+
+int fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec);
 
 #endif
 

@@ -135,6 +135,32 @@ void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1,
     const fmprb_mat_t mat2, long prec)
 
     Sets res to the matrix product of mat1 and mat2. The operands must have
-    compatible dimensions for matrix multiplication. Aliasing of input
-    and output is currently not supported.
+    compatible dimensions for matrix multiplication.
+
+*******************************************************************************
+
+    LU decomposition
+
+*******************************************************************************
+
+int fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec)
+
+    Given an $n \times n$ matrix $A$, computes an LU decomposition $PLU = A$
+    using Gaussian elimination with partial pivoting.
+    The input and output matrices can be the same, performing the
+    decomposition in-place.
+
+    Entry $i$ in the permutation vector is set to the row index in
+    the input matrix corresponding to row $i$ in the output matrix.
+
+    The algorithm succeeds and returns nonzero if it can find $n$ invertible
+    (i.e. not containing zero) pivot entries. This guarantees that the matrix
+    is invertible.
+
+    The algorithm fails and returns zero, leaving the values in $P$ and $LU$
+    undefined, if it cannot find $n$ invertible pivot elements.
+    In this case, either the matrix is singular, the input matrix was
+    computed to insufficient precision, or the LU decomposition was
+    attempted at insufficient precision.
+
 
