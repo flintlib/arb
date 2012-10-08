@@ -27,6 +27,7 @@
 #define FMPRB_H
 
 #include "fmpr.h"
+#include "fmpz_poly.h"
 
 typedef struct
 {
@@ -252,6 +253,40 @@ void fmprb_rfac_ui_multipoint(fmprb_t y, const fmprb_t x, ulong n, long prec);
 
 void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec);
 void fmprb_fib_ui(fmprb_t f, ulong n, long prec);
+
+
+typedef struct
+{
+    fmpz_poly_t A;
+    fmpz_poly_t B;
+    fmpz_poly_t P;
+    fmpz_poly_t Q;
+
+    /* precomputation data */
+    int have_precomputed;
+    long r;
+    long boundA;
+    long boundB;
+    long boundK;
+    fmpr_t MK;
+}
+hypgeom_struct;
+
+typedef hypgeom_struct hypgeom_t[1];
+
+void hypgeom_init(hypgeom_t hyp);
+
+void hypgeom_clear(hypgeom_t hyp);
+
+void hypgeom_precompute(hypgeom_t hyp);
+
+long hypgeom_bound(fmpr_t error, int r,
+    long A, long B, long K, const fmpr_t TK, const fmpr_t z, long prec);
+
+void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const long n, long prec);
+
+void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec);
+
 
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_pi(fmprb_t x, long prec);

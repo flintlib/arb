@@ -176,7 +176,7 @@ fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd
     fmpr_init(t);
     fmpr_init(u);
     fmpr_set_fmpz(t, x);
-    fmpr_set_fmpz(u, x);
+    fmpr_set_fmpz(u, y);
     r = fmpr_div(z, t, u, prec, rnd);
     fmpr_clear(t);
     fmpr_clear(u);

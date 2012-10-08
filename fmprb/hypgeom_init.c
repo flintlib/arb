@@ -25,25 +25,23 @@
 
 #include "fmprb.h"
 
+void
+hypgeom_init(hypgeom_t hyp)
+{
+    fmpz_poly_init(hyp->A);
+    fmpz_poly_init(hyp->B);
+    fmpz_poly_init(hyp->P);
+    fmpz_poly_init(hyp->Q);
+    fmpr_init(hyp->MK);
+    hyp->have_precomputed = 0;
+}
 
 void
-fmprb_const_zeta3_bsplit(fmprb_t s, long prec)
+hypgeom_clear(hypgeom_t hyp)
 {
-    hypgeom_t series;
-    fmprb_t t;
-    fmprb_init(t);
-    hypgeom_init(series);
-
-    fmpz_poly_set_str(series->A, "3  77 250 205");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
-    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
-
-    prec += FLINT_CLOG2(prec);
-    fmprb_hypgeom_infsum(s, t, series, prec, prec);
-    fmprb_mul_ui(t ,t, 64, prec);
-    fmprb_div(s, s, t, prec);
-
-    hypgeom_clear(series);
-    fmprb_clear(t);
+    fmpz_poly_clear(hyp->A);
+    fmpz_poly_clear(hyp->B);
+    fmpz_poly_clear(hyp->P);
+    fmpz_poly_clear(hyp->Q);
+    fmpr_clear(hyp->MK);
 }
