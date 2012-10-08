@@ -97,6 +97,30 @@ void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t ma
 
 /* Solving */
 
+static __inline__ void
+fmprb_mat_swap_rows(fmprb_mat_t mat, long * perm, long r, long s)
+{
+    if (r != s)
+    {
+        fmprb_struct * u;
+        long t;
+
+        if (perm != NULL)
+        {
+            t = perm[s];
+            perm[s] = perm[r];
+            perm[r] = t;
+        }
+
+        u = mat->rows[s];
+        mat->rows[s] = mat->rows[r];
+        mat->rows[r] = u;
+    }
+}
+
+long fmprb_mat_find_pivot_partial(const fmprb_mat_t mat,
+                                    long start_row, long end_row, long c);
+
 int fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec);
 
 void fmprb_mat_solve_lu_precomp(fmprb_mat_t X, const long * perm,
@@ -105,6 +129,8 @@ void fmprb_mat_solve_lu_precomp(fmprb_mat_t X, const long * perm,
 int fmprb_mat_solve(fmprb_mat_t X, const fmprb_mat_t A, const fmprb_mat_t B, long prec);
 
 int fmprb_mat_inv(fmprb_mat_t X, const fmprb_mat_t A, long prec);
+
+void fmprb_mat_det(fmprb_t det, const fmprb_mat_t A, long prec);
 
 #endif
 

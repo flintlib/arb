@@ -392,8 +392,8 @@ void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h,
         long n, long prec)
 
     Sets $f$ to the power series logarithm of $h$, truncated to length $n$.
-    Uses the formula $\log f = \int f' / f$, adding the logarithm of the first
-    term in $f$ as the constant of integration.
+    Uses the formula $\log f = \int f' / f$, adding the logarithm of the
+    constant term in $h$ as the constant of integration.
     The underscore method does not support aliasing of the input and output
     arrays.
 

@@ -179,7 +179,7 @@ int fmprb_mat_solve(fmprb_mat_t X, const fmprb_mat_t A,
     If $m > 0$ and $A$ cannot be inverted numerically (indicating either that
     $A$ is singular or that the precision is insufficient), the values in the
     output matrix are left undefined and zero is returned. A nonzero return
-    value guarantees that the matrix is invertible and that the exact solution
+    value guarantees that $A$ is invertible and that the exact solution
     matrix is contained in the output.
 
 int fmprb_mat_inv(fmprb_mat_t X, const fmprb_mat_t A, long prec)
@@ -192,4 +192,12 @@ int fmprb_mat_inv(fmprb_mat_t X, const fmprb_mat_t A, long prec)
     output matrix are left undefined and zero is returned.
     A nonzero return value guarantees that the matrix is invertible
     and that the exact inverse is contained in the output.
+
+void fmprb_mat_det(fmprb_t det, const fmprb_mat_t A, long prec)
+
+    Computes the determinant of the matrix, using Gaussian elimination
+    with partial pivoting. If at some point an invertible pivot element
+    cannot be found, the elimination is stopped and the magnitude of the
+    determinant of the remaining submatrix is bounded using
+    Hadamard's inequality.
 
