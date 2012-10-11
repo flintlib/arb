@@ -1,8 +1,0 @@
-<p>Arb is licensed GNU General Public License version 2, or any later version.</p>
-
-<p>Fredrik's work on Arb is supported by Austrian Science Fund FWF Grant Y464-N18
-(Fast Computer Algebra for Special Functions).</p>
-
-<p>Arb includes code written by Bill Hart and Sebastian Pancratz
-for FLINT (also licensed GPL 2.0+).</p>
-
