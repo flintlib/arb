@@ -223,6 +223,11 @@ Precision and comparisons
 
     Returns nonzero iff *x* and *y* have some point in common.
 
+.. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+
+    Sets *u* to the upper bound of the absolute value of *x*,
+    rounded up to *prec* bits.
+
 .. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
 
     Computes the exact interval represented by *x*, in the form of an integer

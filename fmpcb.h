@@ -104,6 +104,30 @@ fmpcb_swap(fmpcb_t z, fmpcb_t x)
     fmprb_swap(fmpcb_imagref(z), fmpcb_imagref(x));
 }
 
+static __inline__ int
+fmpcb_overlaps(const fmpcb_t x, const fmpcb_t y)
+{
+    return fmprb_overlaps(fmpcb_realref(x), fmpcb_realref(y)) &&
+            fmprb_overlaps(fmpcb_imagref(x), fmpcb_imagref(y));
+}
+
+void
+fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
+{
+    fmpr_t v;
+    fmpr_init(v);
+
+    fmprb_get_abs_ubound_fmpr(u, fmpcb_realref(z), prec);
+    fmprb_get_abs_ubound_fmpr(v, fmpcb_realref(z), prec);
+
+    fmpr_mul(u, u, u, prec, FMPR_RND_UP);
+    fmpr_mul(v, v, v, prec, FMPR_RND_UP);
+    fmpr_add(u, u, v, prec, FMPR_RND_UP);
+    fmpr_sqrt(u, u, prec, FMPR_RND_UP);
+
+    fmpr_clear(v);
+}
+
 static __inline__ void
 fmpcb_add(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 {
