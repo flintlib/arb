@@ -56,6 +56,27 @@ fmpcb_clear(fmpcb_t x)
     fmprb_clear(fmpcb_imagref(x));
 }
 
+static __inline__ fmpcb_struct *
+_fmpcb_vec_init(long n)
+{
+    long i;
+    fmpcb_struct * v = flint_malloc(sizeof(fmpcb_struct) * n);
+
+    for (i = 0; i < n; i++)
+        fmpcb_init(v + i);
+
+    return v;
+}
+
+static __inline__ void
+_fmpcb_vec_clear(fmpcb_struct * v, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmpcb_clear(v + i);
+    flint_free(v);
+}
+
 static __inline__ int
 fmpcb_is_zero(const fmpcb_t z)
 {

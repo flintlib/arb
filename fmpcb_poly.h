@@ -94,4 +94,8 @@ void fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const 
 
 void fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec);
 
+void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
+    const fmpcb_struct * poly,
+    const fmpcb_struct * polyder, long len, long prec);
+
 #endif
