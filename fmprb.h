@@ -350,7 +350,7 @@ int fmprb_contains_zero(const fmprb_t x);
 
 int fmprb_overlaps(const fmprb_t x, const fmprb_t y);
 
-void
+static __inline__ void
 fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 {
     if (fmpr_sgn(fmprb_midref(x)) < 0)

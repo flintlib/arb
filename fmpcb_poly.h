@@ -98,4 +98,10 @@ void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
     const fmpcb_struct * poly,
     const fmpcb_struct * polyder, long len, long prec);
 
+long _fmpcb_poly_validate_roots(fmpcb_struct * roots,
+        const fmpcb_struct * poly, long len, long prec);
+
+void _fmpcb_poly_refine_roots_durand_kerner(fmpcb_struct * roots,
+        const fmpcb_struct * poly, long len, long prec);
+
 #endif

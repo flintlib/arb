@@ -132,7 +132,7 @@ fmpcb_overlaps(const fmpcb_t x, const fmpcb_t y)
             fmprb_overlaps(fmpcb_imagref(x), fmpcb_imagref(y));
 }
 
-void
+static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
     fmpr_t v;
