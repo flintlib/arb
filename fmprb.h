@@ -348,6 +348,8 @@ int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
 int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y);
 int fmprb_contains_zero(const fmprb_t x);
 
+int fmprb_overlaps(const fmprb_t x, const fmprb_t y);
+
 void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x);
 
 static __inline__ long

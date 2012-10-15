@@ -216,8 +216,12 @@ Precision and comparisons
 
 .. function:: int fmprb_contains_zero(const fmprb_t x)
 
-    Returns nonzero iff the given number is contained in the interval
+    Returns nonzero iff the given number *y* is contained in the interval
     represented by *x*.
+
+.. function:: int fmprb_overlaps(const fmprb_t x, const fmprb_t y)
+
+    Returns nonzero iff *x* and *y* have some point in common.
 
 .. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
 
