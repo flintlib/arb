@@ -104,4 +104,12 @@ long _fmpcb_poly_validate_roots(fmpcb_struct * roots,
 void _fmpcb_poly_refine_roots_durand_kerner(fmpcb_struct * roots,
         const fmpcb_struct * poly, long len, long prec);
 
+long _fmpcb_poly_find_roots(fmpcb_struct * roots,
+    const fmpcb_struct * poly,
+    const fmpcb_struct * initial, long len, long maxiter, long prec);
+
+long fmpcb_poly_find_roots(fmpcb_struct * roots,
+    const fmpcb_poly_t poly, const fmpcb_struct * initial,
+    long maxiter, long prec);
+
 #endif
