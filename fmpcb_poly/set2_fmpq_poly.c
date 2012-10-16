@@ -26,6 +26,16 @@
 #include "fmpcb_poly.h"
 
 void
+fmpcb_poly_set_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, long prec)
+{
+    fmprb_poly_t t;
+    fmprb_poly_init(t);
+    fmprb_poly_set_fmpq_poly(t, re, prec);
+    fmpcb_poly_set_fmprb_poly(poly, t);
+    fmprb_poly_clear(t);
+}
+
+void
 fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec)
 {
     fmprb_poly_t t, u;

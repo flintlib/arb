@@ -135,14 +135,6 @@ _fmpcb_poly_evaluate_mid(fmpcb_t res, const fmpcb_struct * f, long len,
     fmpcb_clear(t);
 }
 
-
-/*
-Refines the given roots simultaneously using a single iteration
-of the Durand-Kerner method. The radius of each root is set to an
-approximation of the correction, giving a rough estimate of its error (not
-a rigorous bound).
-*/
-
 void
 _fmpcb_poly_refine_roots_durand_kerner(fmpcb_struct * roots,
         const fmpcb_struct * poly, long len, long prec)

@@ -26,6 +26,24 @@
 #include "fmpcb_poly.h"
 
 void
+fmpcb_poly_set_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re)
+{
+    long i, len;
+
+    len = fmprb_poly_length(re);
+
+    fmpcb_poly_fit_length(poly, len);
+
+    for (i = 0; i < len; i++)
+    {
+        fmprb_set(fmpcb_realref(poly->coeffs + i), re->coeffs + i);
+        fmprb_zero(fmpcb_imagref(poly->coeffs + i));
+    }
+
+    _fmpcb_poly_set_length(poly, len);
+}
+
+void
 fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const fmprb_poly_t im)
 {
     long i, rlen, ilen, len;

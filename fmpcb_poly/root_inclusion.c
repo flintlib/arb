@@ -25,11 +25,6 @@
 
 #include "fmpcb_poly.h"
 
-/*
-Given any complex number m, and a polynomial f and its derivative f',
-sets r to an interval centered on m that is guaranteed to contain
-at least one root of f. Assumes len > 1.
-*/
 void
 _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
     const fmpcb_struct * poly,

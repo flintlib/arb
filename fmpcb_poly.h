@@ -90,7 +90,11 @@ void _fmpcb_poly_derivative(fmpcb_struct * res, const fmpcb_struct * poly, long 
 
 void fmpcb_poly_derivative(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec);
 
+void fmpcb_poly_set_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re);
+
 void fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const fmprb_poly_t im);
+
+void fmpcb_poly_set_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, long prec);
 
 void fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec);
 

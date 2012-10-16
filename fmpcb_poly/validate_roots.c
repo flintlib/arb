@@ -25,20 +25,6 @@
 
 #include "fmpcb_poly.h"
 
-/*
-Given a list of approximate roots of the input polynomial, this
-function sets a rigorous bounding interval for each root, and determines
-which roots are isolated from all the other roots.
-It then rearranges the list of roots so that the isolated roots
-are at the front of the list, and returns the count of isolated roots.
-
-If the return value equals the degree of the polynomial, then all
-roots have been separated. If the return value is smaller, all the
-remaining intervals are guaranteed to contain roots, but
-it is possible that not all of the polynomial's roots are contained
-among them.
-*/
-
 long
 _fmpcb_poly_validate_roots(fmpcb_struct * roots,
         const fmpcb_struct * poly, long len, long prec)
