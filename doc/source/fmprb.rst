@@ -353,7 +353,7 @@ Arithmetic
     assuming `m > r \ge 0`, the error is largest at `m - r`, and we have
     `\sqrt{m} - \sqrt{m-r} \le r / (2 \sqrt{m-r})`.
 
-void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
+.. function:: void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
 
