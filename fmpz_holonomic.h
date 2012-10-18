@@ -26,10 +26,11 @@
 #ifndef FMPZ_HOLONOMIC_H
 #define FMPZ_HOLONOMIC_H
 
-#include "fmprb.h"
 #include "fmpz.h"
 #include "fmpz_poly.h"
 #include "fmpz_mat.h"
+#include "fmprb.h"
+#include "fmprb_mat.h"
 
 static __inline__ void
 fmpz_poly_set_si2(fmpz_poly_t poly, long c0, long c1)
@@ -134,6 +135,28 @@ fmpz_holonomic_degree(const fmpz_holonomic_t op)
     return d;
 }
 
+static __inline__ int
+fmpz_holonomic_seq_is_constant(const fmpz_holonomic_t op)
+{
+    return fmpz_holonomic_order(op) == 0;
+}
+
+static __inline__ int
+fmpz_holonomic_seq_is_cfinite(const fmpz_holonomic_t op)
+{
+    long i;
+    for (i = 0; i < op->length; i++)
+        if (fmpz_poly_degree(op->coeffs + i) > 0)
+            return 0;
+    return 1;
+}
+
+static __inline__ int
+fmpz_holonomic_seq_is_hypgeom(const fmpz_holonomic_t op)
+{
+    return fmpz_holonomic_order(op) == 1;
+}
+
 
 /*******************************************************************************
 
@@ -166,6 +189,14 @@ fmpz_holonomic_seq_normalise(fmpz_holonomic_t op)
     fmpz_holonomic_normalise_content(op);
     fmpz_holonomic_normalise_sign(op);
 }
+
+/*******************************************************************************
+
+        Random generation
+
+*******************************************************************************/
+
+void fmpz_holonomic_randtest(fmpz_holonomic_t op, flint_rand_t state, long r, long d, long b);
 
 /*******************************************************************************
 
@@ -256,6 +287,8 @@ void fmpz_holonomic_forward_fmpz_mat(fmpz_mat_t M, fmpz_t Q, const fmpz_holonomi
 void fmpz_holonomic_get_nth_fmpz(fmpz_t res, const fmpz_holonomic_t op, const fmpz * initial, long n0, long n);
 
 void fmpz_holonomic_get_nth_fmpq(fmpq_t res, const fmpz_holonomic_t op, const fmpq * initial, long n0, long n);
+
+void fmpz_holonomic_forward_fmprb_mat(fmprb_mat_t M, fmprb_t Q, const fmpz_holonomic_t op, long start, long n, long prec);
 
 #endif
 

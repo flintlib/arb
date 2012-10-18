@@ -74,24 +74,45 @@ Basic operations
 
     Sets `op` to a copy of `op`.
 
-
 .. function:: void fmpz_holonomic_one(fmpz_holonomic_t op)
 
     Sets *op* to the constant operator 1. As a differential operator, this
     annihilates the zero function. As a difference operator, it annihilates
     the zero sequence.
 
+.. function:: void fmpz_holonomic_randtest(fmpz_holonomic_t op, flint_rand_t state, long r, long d, long b)
+
+    Sets *op* to a random nonzero operator of order at most *r*, degree
+    at most *d*, and with coefficients at most *b* bits in size. The operator
+    is guaranteed to have a nonzero leading coefficient, but otherwise
+    will not be normalised.
+
+Properties
+-------------------------------------------------------------------------------
 
 .. function:: long fmpz_holonomic_order(const fmpz_holonomic_t op)
 
     Returns the order *r* of *op*.
-
 
 .. function:: long fmpz_holonomic_degree(const fmpz_holonomic_t op)
 
     Returns the degree *d* of *op*, defined as the highest degree of
     all its coefficients.
 
+.. function:: int fmpz_holonomic_seq_is_constant(const fmpz_holonomic_t op)
+
+    Returns nonzero if *op* is zero-order, i.e. annihilates constant
+    sequences.
+
+.. function:: int fmpz_holonomic_seq_is_cfinite(const fmpz_holonomic_t op)
+
+    Returns nonzero if *op* has constant coefficients, i.e. annihilates
+    C-finite sequences.
+
+.. function:: int fmpz_holonomic_seq_is_hypgeom(const fmpz_holonomic_t op)
+
+    Return nonzero if *op* is first-order, i.e. annihilates hypergeometric
+    sequences.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -284,6 +305,9 @@ Sequence evaluation
     among the evaluation points, making the sequence undefined from
     that point onward.
 
+.. function:: void fmpz_holonomic_forward_fmprb_mat(fmprb_mat_t M, fmprb_t Q, const fmpz_holonomic_t op, long start, long n, long prec)
+
+    Equivalent to the *fmpz_mat* version, but truncates large entries.
 
 .. function:: void fmpz_holonomic_get_nth_fmpz(fmpz_t res, const fmpz_holonomic_t op, const fmpz * initial, long n0, long n)
 
