@@ -305,18 +305,33 @@ Sequence evaluation
     among the evaluation points, making the sequence undefined from
     that point onward.
 
+    It is assumed that *start + n* does not overflow a long (to start
+    from a larger initial value, one can shift the operator).
+
 .. function:: void fmpz_holonomic_forward_fmprb_mat(fmprb_mat_t M, fmprb_t Q, const fmpz_holonomic_t op, long start, long n, long prec)
 
     Equivalent to the *fmpz_mat* version, but truncates large entries.
+
+.. function:: void fmpz_holonomic_forward_nmod_mat(nmod_mat_t M, mp_limb_t * Q, const fmpz_holonomic_t op, ulong start, ulong n)
+
+    Computes a forward matrix modulo the word-size modulus of *M*. This
+    function implements a sublinear algorithm: letting `m = \lfloor \sqrt n \rfloor`,
+    we multiply together `m` shifted companion matrices, evaluate
+    them at the points `0, m, 2m, \ldots, m(m-1)` using fast multipoint
+    evaluation, and finally multiply together the evaluated matrices.
+    This implementation is not intended to be optimal for small *n*.
 
 .. function:: void fmpz_holonomic_get_nth_fmpz(fmpz_t res, const fmpz_holonomic_t op, const fmpz * initial, long n0, long n)
 
 .. function:: void fmpz_holonomic_get_nth_fmpq(fmpq_t res, const fmpz_holonomic_t op, const fmpq * initial, long n0, long n)
 
+.. function:: mp_limb_t fmpz_holonomic_get_nth_nmod(const fmpz_holonomic_t op, mp_srcptr initial, long n0, long n, nmod_t mod)
+
     Computes element `c(n)` in the sequence annihilated by the
     difference operator *op*, given the
     initial values `c(n_0), c(n_1), \ldots, c(n_0+r-1)` where
-    `r` is the order of *op*.
+    `r` is the order of *op*. This is done by computing a forward
+    matrix, and is not optimal for small *n*.
     The *fmpz* version assumes that the result is actually an integer.
 
 

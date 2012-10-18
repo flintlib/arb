@@ -29,6 +29,7 @@
 #include "fmpz.h"
 #include "fmpz_poly.h"
 #include "fmpz_mat.h"
+#include "nmod_mat.h"
 #include "fmprb.h"
 #include "fmprb_mat.h"
 
@@ -284,11 +285,15 @@ void fmpz_holonomic_get_series(fmpz_holonomic_t re, const fmpz_holonomic_t de);
 
 void fmpz_holonomic_forward_fmpz_mat(fmpz_mat_t M, fmpz_t Q, const fmpz_holonomic_t op, long start, long n);
 
+void fmpz_holonomic_forward_fmprb_mat(fmprb_mat_t M, fmprb_t Q, const fmpz_holonomic_t op, long start, long n, long prec);
+
+void fmpz_holonomic_forward_nmod_mat(nmod_mat_t M, mp_limb_t * Q, const fmpz_holonomic_t op, ulong start, ulong n);
+
 void fmpz_holonomic_get_nth_fmpz(fmpz_t res, const fmpz_holonomic_t op, const fmpz * initial, long n0, long n);
 
 void fmpz_holonomic_get_nth_fmpq(fmpq_t res, const fmpz_holonomic_t op, const fmpq * initial, long n0, long n);
 
-void fmpz_holonomic_forward_fmprb_mat(fmprb_mat_t M, fmprb_t Q, const fmpz_holonomic_t op, long start, long n, long prec);
+mp_limb_t fmpz_holonomic_get_nth_nmod(const fmpz_holonomic_t op, mp_srcptr initial, ulong n0, ulong n, nmod_t mod);
 
 #endif
 
