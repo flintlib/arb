@@ -78,6 +78,8 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions
     and identical entries.
 
+.. function:: int fmprb_mat_contains_fmpz_mat(const fmprb_mat_t mat1, const fmpz_mat_t mat2)
+
 .. function:: int fmprb_mat_contains_fmpq_mat(const fmprb_mat_t mat1, const fmpq_mat_t mat2)
 
     Returns nonzero iff the matrices have the same dimensions and each entry
@@ -119,6 +121,10 @@ Arithmetic
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
 
+.. function:: void fmprb_mat_pow_ui(fmprb_mat_t res, const fmprb_mat_t mat, ulong exp, long prec)
+
+    Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
+    is a square matrix.
 
 Gaussian elimination and solving
 -------------------------------------------------------------------------------

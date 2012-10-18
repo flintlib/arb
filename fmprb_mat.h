@@ -79,6 +79,8 @@ int fmprb_mat_equal(const fmprb_mat_t mat1, const fmprb_mat_t mat2);
 
 int fmprb_mat_contains_fmpq_mat(const fmprb_mat_t mat1, const fmpq_mat_t mat2);
 
+int fmprb_mat_contains_fmpz_mat(const fmprb_mat_t mat1, const fmpz_mat_t mat2);
+
 /* Special matrices */
 
 void fmprb_mat_zero(fmprb_mat_t mat);
@@ -94,6 +96,8 @@ void fmprb_mat_add(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t ma
 void fmprb_mat_sub(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec);
 
 void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec);
+
+void fmprb_mat_pow_ui(fmprb_mat_t B, const fmprb_mat_t A, ulong exp, long prec);
 
 /* Solving */
 
