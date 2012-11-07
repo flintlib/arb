@@ -4,10 +4,19 @@ History and changes
 For more details, view the detailed commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
-* version 0.3-git
+* 2012-11-07 - version 0.3
 
   * converted documentation to sphinx
-  * initial support for complex numbers and polynomials
+  * new module fmpcb for ball interval arithmetic over the complex numbers
+
+    * conversions, utility functions and arithmetic operations
+
+  * new module fmpcb_mat for matrices over the complex numbers
+
+    * conversions, utility functions and arithmetic operations
+    * multiplication, LU decomposition, solving, inverse and determinant
+
+  * new module fmpcb_poly for polynomials over the complex numbers
 
     * root isolation for complex polynomials
 
@@ -21,7 +30,8 @@ in the git repository https://github.com/fredrik-johansson/arb
     * computing the nth entry of a sequence using binary splitting
     * computing the nth entry mod p using fast multipoint evaluation
 
-  * generic code for evaluating hypergeometric series
+  * generic binary splitting code with automatic error bounding is now
+    used for evaluating hypergeometric series
   * matrix powering
   * various other helper functions
 

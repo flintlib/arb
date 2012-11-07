@@ -9,8 +9,6 @@ Urgent
 * Make sure that excessive shifts in add/sub are detected
   with exact precision.
 
-* Fix code duplication, add functions to encapsulate fiddly bits of code, etc.
-
 * Fix missing/wrong error bounds currently used in the code (see TODO/XXX).
 
 * Add missing polynomial functionality (conversions, arithmetic, etc.)
@@ -20,8 +18,6 @@ Important
 ---------
 
 * Transcendental functions.
-
-* Matrices.
 
 * Add adjustment code for balls (when the mantissa is much more precise than
   the error bound, it can be truncated). Also, try to work out consistent
