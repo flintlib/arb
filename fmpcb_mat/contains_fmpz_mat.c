@@ -23,18 +23,22 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
-void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+int
+fmpcb_mat_contains_fmpz_mat(const fmpcb_mat_t mat1, const fmpz_mat_t mat2)
 {
     long i, j;
 
-    if (fmprb_mat_ncols(dest) != 0)
-    {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
-    }
+    if ((fmpcb_mat_nrows(mat1) != fmpcb_mat_nrows(mat2)) ||
+        (fmpcb_mat_ncols(mat1) != fmpcb_mat_ncols(mat2)))
+        return 0;
+
+    for (i = 0; i < fmpcb_mat_nrows(mat1); i++)
+        for (j = 0; j < fmpcb_mat_ncols(mat1); j++)
+            if (!fmpcb_contains_fmpz(fmpcb_mat_entry(mat1, i, j),
+                fmpz_mat_entry(mat2, i, j)))
+                return 0;
+
+    return 1;
 }

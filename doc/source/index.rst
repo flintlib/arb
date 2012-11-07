@@ -32,6 +32,7 @@ Module documentation
    fmprb_mat.rst
    fmpcb.rst
    fmpcb_poly.rst
+   fmpcb_mat.rst
    fmpz_holonomic.rst
 
 Credits and references

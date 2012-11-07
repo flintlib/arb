@@ -23,18 +23,55 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
 void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+fmpcb_mat_pow_ui(fmpcb_mat_t B, const fmpcb_mat_t A, ulong exp, long prec)
 {
-    long i, j;
+    long d = fmpcb_mat_nrows(A);
 
-    if (fmprb_mat_ncols(dest) != 0)
+    if (exp <= 2 || d <= 1)
     {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
+        if (exp == 0 || d == 0)
+        {
+            fmpcb_mat_one(B);
+        }
+        else if (d == 1)
+        {
+            fmpcb_pow_ui(fmpcb_mat_entry(B, 0, 0),
+                 fmpcb_mat_entry(A, 0, 0), exp, prec);
+        }
+        else if (exp == 1)
+        {
+            fmpcb_mat_set(B, A);
+        }
+        else if (exp == 2)
+        {
+            fmpcb_mat_mul(B, A, A, prec);   /* todo: sqr */
+        }
+    }
+    else
+    {
+        fmpcb_mat_t T, U;
+        long i;
+
+        fmpcb_mat_init(T, d, d);
+        fmpcb_mat_set(T, A);
+        fmpcb_mat_init(U, d, d);
+
+        for (i = ((long) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
+        {
+            fmpcb_mat_mul(U, T, T, prec);   /* todo: sqr */
+
+            if (exp & (1L << i))
+                fmpcb_mat_mul(T, U, A, prec);
+            else
+                fmpcb_mat_swap(T, U);
+        }
+
+        fmpcb_mat_swap(B, T);
+        fmpcb_mat_clear(T);
+        fmpcb_mat_clear(U);
     }
 }
+

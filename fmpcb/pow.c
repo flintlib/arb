@@ -23,18 +23,58 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb.h"
 
 void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
 {
-    long i, j;
+    long i, wp, bits;
 
-    if (fmprb_mat_ncols(dest) != 0)
+    if (fmpz_is_zero(e))
     {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
+        fmpcb_one(y);
+        return;
+    }
+
+    if (fmpz_sgn(e) < 0)
+    {
+        fmpz_t f;
+        fmpz_init(f);
+        fmpz_neg(f, e);
+        fmpcb_pow_fmpz(y, b, f, prec + 2);
+        fmpcb_inv(y, y, prec);
+        fmpz_clear(f);
+    }
+
+    if (y == b)
+    {
+        fmpcb_t t;
+        fmpcb_init(t);
+        fmpcb_set(t, b);
+        fmpcb_pow_fmpz(y, t, e, prec);
+        fmpcb_clear(t);
+        return;
+    }
+
+    fmpcb_set(y, b);
+
+    bits = fmpz_bits(e);
+    wp = FMPR_PREC_ADD(prec, bits);
+
+    for (i = bits - 2; i >= 0; i--)
+    {
+        fmpcb_mul(y, y, y, wp);
+        if (fmpz_tstbit(e, i))
+            fmpcb_mul(y, y, b, wp);
     }
 }
+
+void
+fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
+{
+    fmpz_t f;
+    fmpz_init_set_ui(f, e);
+    fmpcb_pow_fmpz(y, b, f, prec);
+    fmpz_clear(f);
+}
+

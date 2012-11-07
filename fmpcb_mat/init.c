@@ -23,18 +23,24 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
 void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+fmpcb_mat_init(fmpcb_mat_t mat, long r, long c)
 {
-    long i, j;
-
-    if (fmprb_mat_ncols(dest) != 0)
+    if (r != 0 && c != 0)
     {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
+        long i;
+
+        mat->entries = _fmpcb_vec_init(r * c);
+        mat->rows = (fmpcb_struct **) flint_malloc(r * sizeof(fmpcb_struct *));
+
+        for (i = 0; i < r; i++)
+            mat->rows[i] = mat->entries + i * c;
     }
+    else
+        mat->entries = NULL;
+
+    mat->r = r;
+    mat->c = c;
 }

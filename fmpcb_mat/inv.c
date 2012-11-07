@@ -23,18 +23,22 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
-void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+int
+fmpcb_mat_inv(fmpcb_mat_t X, const fmpcb_mat_t A, long prec)
 {
-    long i, j;
-
-    if (fmprb_mat_ncols(dest) != 0)
+    if (X == A)
     {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
+        int r;
+        fmpcb_mat_t T;
+        fmpcb_mat_init(T, fmpcb_mat_nrows(A), fmpcb_mat_ncols(A));
+        r = fmpcb_mat_inv(T, A, prec);
+        fmpcb_mat_swap(T, X);
+        fmpcb_mat_clear(T);
+        return r;
     }
+
+    fmpcb_mat_one(X);
+    return fmpcb_mat_solve(X, A, X, prec);
 }

@@ -139,6 +139,48 @@ fmpcb_overlaps(const fmpcb_t x, const fmpcb_t y)
             fmprb_overlaps(fmpcb_imagref(x), fmpcb_imagref(y));
 }
 
+static __inline__ int
+fmpcb_contains_zero(const fmpcb_t x)
+{
+    return fmprb_contains_zero(fmpcb_realref(x)) &&
+            fmprb_contains_zero(fmpcb_imagref(x));
+}
+
+static __inline__ int
+fmpcb_contains_fmpq(const fmpcb_t x, const fmpq_t y)
+{
+    return fmprb_contains_fmpq(fmpcb_realref(x), y) &&
+            fmprb_contains_zero(fmpcb_imagref(x));
+}
+
+static __inline__ int
+fmpcb_contains_fmpz(const fmpcb_t x, const fmpz_t y)
+{
+    return fmprb_contains_fmpz(fmpcb_realref(x), y) &&
+            fmprb_contains_zero(fmpcb_imagref(x));
+}
+
+static __inline__ void
+fmpcb_set_si(fmpcb_t z, long c)
+{
+    fmprb_set_si(fmpcb_realref(z), c);
+    fmprb_zero(fmpcb_imagref(z));
+}
+
+static __inline__ void
+fmpcb_set_fmpz(fmpcb_t z, const fmpz_t c)
+{
+    fmprb_set_fmpz(fmpcb_realref(z), c);
+    fmprb_zero(fmpcb_imagref(z));
+}
+
+static __inline__ void
+fmpcb_set_fmpq(fmpcb_t z, const fmpq_t c, long prec)
+{
+    fmprb_set_fmpq(fmpcb_realref(z), c, prec);
+    fmprb_zero(fmpcb_imagref(z));
+}
+
 static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
@@ -216,6 +258,26 @@ fmpcb_mul_onei(fmpcb_t z, const fmpcb_t x)
 void fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec);
 
 static __inline__ void
+fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+{
+    fmpcb_t t;
+    fmpcb_init(t);
+    fmpcb_mul(t, x, y, prec);
+    fmpcb_add(z, z, t, prec);
+    fmpcb_clear(t);
+}
+
+static __inline__ void
+fmpcb_submul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+{
+    fmpcb_t t;
+    fmpcb_init(t);
+    fmpcb_mul(t, x, y, prec);
+    fmpcb_sub(z, z, t, prec);
+    fmpcb_clear(t);
+}
+
+static __inline__ void
 fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
 {
     fmprb_t t;
@@ -238,6 +300,19 @@ fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
     fmprb_clear(t);
 }
 
+static __inline__ void
+fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+{
+    fmpcb_t t;
+    fmpcb_init(t);
+    fmpcb_inv(t, y, prec);
+    fmpcb_mul(z, x, t, prec);
+    fmpcb_clear(t);
+}
+
+void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec);
+
+void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec);
 
 static __inline__ void
 _fmpcb_vec_zero(fmpcb_struct * A, long n)
@@ -254,6 +329,41 @@ _fmpcb_vec_set(fmpcb_struct * res, const fmpcb_struct * vec, long len)
     for (i = 0; i < len; i++)
         fmpcb_set(res + i, vec + i);
 }
+
+static __inline__ void
+_fmpcb_vec_scalar_submul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+{
+    if (len > 0)
+    {
+        long i;
+        fmpcb_t t;
+        fmpcb_init(t);
+        for (i = 0; i < len; i++)
+        {
+            fmpcb_mul(t, vec + i, c, prec);
+            fmpcb_sub(res + i, res + i, t, prec);
+        }
+        fmpcb_clear(t);
+    }
+}
+
+static __inline__ void
+_fmpcb_vec_scalar_addmul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+{
+    if (len > 0)
+    {
+        long i;
+        fmpcb_t t;
+        fmpcb_init(t);
+        for (i = 0; i < len; i++)
+        {
+            fmpcb_mul(t, vec + i, c, prec);
+            fmpcb_add(res + i, res + i, t, prec);
+        }
+        fmpcb_clear(t);
+    }
+}
+
 
 static __inline__ void
 fmpcb_print(const fmpcb_t x)

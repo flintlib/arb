@@ -23,18 +23,14 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
 void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+fmpcb_mat_clear(fmpcb_mat_t mat)
 {
-    long i, j;
-
-    if (fmprb_mat_ncols(dest) != 0)
+    if (mat->entries != NULL)
     {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
+        _fmpcb_vec_clear(mat->entries, mat->r * mat->c);
+        flint_free(mat->rows);
     }
 }

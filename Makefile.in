@@ -102,5 +102,5 @@ build/%.lo: %.c
 build/%.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(INCS) -c $< -o $@
 
-BUILD_DIRS = fmpr fmprb fmprb_poly fmprb_mat fmpz_holonomic fmpcb fmpcb_poly
+BUILD_DIRS = fmpr fmprb fmprb_poly fmprb_mat fmpz_holonomic fmpcb fmpcb_poly fmpcb_mat
 

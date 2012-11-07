@@ -23,18 +23,32 @@
 
 ******************************************************************************/
 
-#include "fmprb_mat.h"
+#include "fmpcb_mat.h"
 
-void
-fmprb_mat_set_fmpq_mat(fmprb_mat_t dest, const fmpq_mat_t src, long prec)
+int
+fmpcb_mat_solve(fmpcb_mat_t X, const fmpcb_mat_t A, const fmpcb_mat_t B, long prec)
 {
-    long i, j;
+    int result;
+    long n, m, *perm;
+    fmpcb_mat_t LU;
 
-    if (fmprb_mat_ncols(dest) != 0)
-    {
-        for (i = 0; i < fmprb_mat_nrows(dest); i++)
-            for (j = 0; j < fmprb_mat_ncols(dest); j++)
-                fmprb_set_fmpq(fmprb_mat_entry(dest, i, j),
-                    fmpq_mat_entry(src, i, j), prec);
-    }
+    n = fmpcb_mat_nrows(A);
+    m = fmpcb_mat_ncols(X);
+
+    if (n == 0 || m == 0)
+        return 1;
+
+    perm = _perm_init(n);
+    fmpcb_mat_init(LU, n, n);
+
+    result = fmpcb_mat_lu(perm, LU, A, prec);
+
+    if (result)
+        fmpcb_mat_solve_lu_precomp(X, perm, LU, B, prec);
+
+    fmpcb_mat_clear(LU);
+    _perm_clear(perm);
+
+    return result;
 }
+
