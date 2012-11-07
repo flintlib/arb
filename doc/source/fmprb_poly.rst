@@ -1,4 +1,4 @@
-fmprb_poly.h -- polynomials of real number balls
+fmprb_poly.h -- polynomials over the real numbers
 ===============================================================================
 
 An *fmprb_poly_t* represents a polynomial over the real numbers,

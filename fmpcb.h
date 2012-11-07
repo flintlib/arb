@@ -178,6 +178,13 @@ fmpcb_neg(fmpcb_t z, const fmpcb_t x)
 }
 
 static __inline__ void
+fmpcb_conj(fmpcb_t z, const fmpcb_t x)
+{
+    fmprb_set(fmpcb_realref(z), fmpcb_realref(x));
+    fmprb_neg(fmpcb_imagref(z), fmpcb_imagref(x));
+}
+
+static __inline__ void
 fmpcb_mul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 {
     fmprb_mul_ui(fmpcb_realref(z), fmpcb_realref(x), y, prec);
