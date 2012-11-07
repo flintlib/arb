@@ -126,6 +126,13 @@ fmpcb_swap(fmpcb_t z, fmpcb_t x)
 }
 
 static __inline__ int
+fmpcb_equal(const fmpcb_t x, const fmpcb_t y)
+{
+    return fmprb_equal(fmpcb_realref(x), fmpcb_realref(y)) &&
+            fmprb_equal(fmpcb_imagref(x), fmpcb_imagref(y));
+}
+
+static __inline__ int
 fmpcb_overlaps(const fmpcb_t x, const fmpcb_t y)
 {
     return fmprb_overlaps(fmpcb_realref(x), fmpcb_realref(y)) &&
@@ -199,66 +206,7 @@ fmpcb_mul_onei(fmpcb_t z, const fmpcb_t x)
     }
 }
 
-
-static __inline__ void
-fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
-{
-#define a fmpcb_realref(x)
-#define b fmpcb_imagref(x)
-#define c fmpcb_realref(y)
-#define d fmpcb_imagref(y)
-
-/*
-    TODO: use these optimizations, but fix aliasing issues
-
-    if (fmprb_is_zero(b))
-    {
-        fmpcb_mul_fmprb(z, y, a, prec);
-    }
-    else if (fmprb_is_zero(d))
-    {
-        fmpcb_mul_fmprb(z, x, c, prec);
-    }
-    else if (fmprb_is_zero(a))
-    {
-        fmpcb_mul_fmprb(z, y, b, prec);
-        fmpcb_mul_i(z, z);
-    }
-    else if (fmprb_is_zero(c))
-    {
-        fmpcb_mul_fmprb(z, x, d, prec);
-        fmpcb_mul_i(z, z);
-    }
-    else
-*/
-    {
-        fmprb_t t, u, v;
-
-        fmprb_init(t);
-        fmprb_init(u);
-        fmprb_init(v);
-
-        fmprb_add(t, a, b, prec);
-        fmprb_add(u, c, d, prec);
-        fmprb_mul(v, t, u, prec);
-
-        fmprb_mul(t, a, c, prec);
-        fmprb_mul(u, b, d, prec);
-
-        fmprb_sub(fmpcb_realref(z), t, u, prec);
-        fmprb_sub(fmpcb_imagref(z), v, t, prec);
-        fmprb_sub(fmpcb_imagref(z), fmpcb_imagref(z), u, prec);
-
-        fmprb_clear(t);
-        fmprb_clear(u);
-        fmprb_clear(v);
-    }
-
-#undef a
-#undef b
-#undef c
-#undef d
-}
+void fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec);
 
 static __inline__ void
 fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
@@ -300,6 +248,18 @@ _fmpcb_vec_set(fmpcb_struct * res, const fmpcb_struct * vec, long len)
         fmpcb_set(res + i, vec + i);
 }
 
+static __inline__ void
+fmpcb_print(const fmpcb_t x)
+{
+    printf("(");
+    fmprb_print(fmpcb_realref(x));
+    printf(", ");
+    fmprb_print(fmpcb_imagref(x));
+    printf(")");
+}
+
 void fmpcb_printd(const fmpcb_t z, long digits);
+
+void fmpcb_randtest(fmpcb_t z, flint_rand_t state, long prec, long mag_bits);
 
 #endif

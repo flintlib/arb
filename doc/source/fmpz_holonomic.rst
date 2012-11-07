@@ -325,7 +325,7 @@ Sequence evaluation
 
 .. function:: void fmpz_holonomic_get_nth_fmpq(fmpq_t res, const fmpz_holonomic_t op, const fmpq * initial, long n0, long n)
 
-.. function:: mp_limb_t fmpz_holonomic_get_nth_nmod(const fmpz_holonomic_t op, mp_srcptr initial, long n0, long n, nmod_t mod)
+.. function:: mp_limb_t fmpz_holonomic_get_nth_nmod(const fmpz_holonomic_t op, mp_srcptr initial, ulong n0, ulong n, nmod_t mod)
 
     Computes element `c(n)` in the sequence annihilated by the
     difference operator *op*, given the
