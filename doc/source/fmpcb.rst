@@ -52,15 +52,21 @@ Basic manipulation
 
     Returns nonzero iff *z* is exact.
 
-.. function:: fmpcb_zero(fmpcb_t z)
+.. function:: void fmpcb_zero(fmpcb_t z)
 
-.. function:: fmpcb_one(fmpcb_t z)
+.. function:: void fmpcb_one(fmpcb_t z)
 
-.. function:: fmpcb_onei(fmpcb_t z)
+.. function:: void fmpcb_onei(fmpcb_t z)
 
     Sets *z* respectively to 0, 1, `i = \sqrt{-1}`.
 
 .. function:: void fmpcb_set(fmpcb_t z, const fmpcb_t x)
+
+.. function:: void fmpcb_set_si(fmpcb_t z, long x)
+
+.. function:: void fmpcb_set_fmpz(fmpcb_t z, const fmpz_t x)
+
+.. function:: void fmpcb_set_fmpq(fmpcb_t z, const fmpq_t x, long prec)
 
     Sets *z* to a copy of *x*.
 
@@ -107,6 +113,16 @@ Precision and comparisons
     Sets *u* to an upper bound for the absolute value of *z*, computed
     using a working precision of *prec* bits.
 
+.. function:: int fmpcb_contains_fmpq(const fmpcb_t x, const fmpq_t y)
+
+.. function:: int fmpcb_contains_fmpz(const fmpcb_t x, const fmpz_t y)
+
+    Returns nonzero iff *y* is contained in *x*.
+
+.. function:: int fmpcb_contains_zero(const fmpcb_t x)
+
+    Returns nonzero iff zero is contained in *x*.
+
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -145,7 +161,23 @@ Arithmetic
     the formula `e = ac - bd`, `f = (a+b)(c+d) - ac - bd`,
     which requires three real multiplications instead of four.
 
+.. function:: void fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+
+.. function:: void fmpcb_submul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+
+    Adds (subtracts) the product of *x* and *y* to *z*.
+
 .. function:: void fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
 
     Sets *z* to the multiplicative inverse of *x*.
+
+.. function:: void fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+
+    Sets *z* to the quotient of *x* and *y*.
+
+.. function:: void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
+
+.. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
+
+    Sets *y* to *b* raised to the power *e*.
 

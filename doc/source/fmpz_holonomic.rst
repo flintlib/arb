@@ -22,7 +22,7 @@ equation
 
     a_0(x) f(x) + a_1(x) f'(x) + \ldots + a_r(x) f^{(r)}(x) = 0.
 
-A specific sequence of function is defined by fixing `r - 1` initial values
+A specific sequence of function is defined by fixing `r` initial values
 (derivatives), where `r` is called the *order* of the operator `A`.
 
 
