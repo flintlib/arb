@@ -32,7 +32,7 @@ _fmpcb_poly_mullow(fmpcb_struct * res,
     const fmpcb_struct * poly1, long len1,
     const fmpcb_struct * poly2, long len2, long n, long prec)
 {
-    if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF || 1)
+    if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
         _fmpcb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
     else
         _fmpcb_poly_mullow_transpose(res, poly1, len1, poly2, len2, n, prec);
