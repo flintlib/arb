@@ -25,13 +25,32 @@
 
 #include "fmpcb_poly.h"
 
-void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+int
+fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2)
 {
-    long len = fmpcb_poly_length(src);
+    long i;
+    fmpq_t t;
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+    if (poly2->length > poly1->length)
+        return 0;
+
+    fmpq_init(t);
+
+    for (i = 0; i < poly2->length; i++)
+    {
+        fmpq_poly_get_coeff_fmpq(t, poly2, i);
+        if (!fmpcb_contains_fmpq(poly1->coeffs + i, t))
+        {
+            fmpq_clear(t);
+            return 0;
+        }
+    }
+
+    fmpq_clear(t);
+
+    for (i = poly2->length; i < poly1->length; i++)
+        if (!fmpcb_contains_zero(poly1->coeffs + i))
+            return 0;
+
+    return 1;
 }
-

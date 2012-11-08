@@ -61,6 +61,10 @@ Basic properties and manipulation
 
     Sets *poly* to the constant polynomial 1.
 
+.. function:: void fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+
+    Sets *dest* to a copy of *src*.
+
 Input and output
 -------------------------------------------------------------------------------
 
@@ -68,6 +72,33 @@ Input and output
 
     Prints the polynomial as an array of coefficients, printing each
     coefficient using *fmprb_printd*.
+
+Random generation
+-------------------------------------------------------------------------------
+
+.. function:: void fmpcb_poly_randtest(fmpcb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+
+    Creates a random polynomial with length at most *len*.
+
+Comparisons
+-------------------------------------------------------------------------------
+
+.. function:: int fmpcb_poly_equal(const fmpcb_poly_t A, const fmpcb_poly_t B)
+
+    Returns nonzero iff *A* and *B* are identical as interval polynomials.
+
+.. function:: int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2)
+
+    Returns nonzero iff *poly2* is contained in *poly1*.
+
+.. function:: int _fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,
+        const fmpcb_struct * poly2, long len2)
+
+.. function:: int fmpcb_poly_overlaps(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+
+    Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
+    function requires that *len1* ist at least as large as *len2*.
+
 
 Conversions
 -------------------------------------------------------------------------------
@@ -82,6 +113,34 @@ Conversions
 
     Sets *poly* to the given real polynomial *re* plus the polynomial *im*
     multiplied by the imaginary unit.
+
+
+Arithmetic
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long prec)
+
+.. function:: void fmpcb_poly_add(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+
+.. function:: void _fmpcb_poly_mullow_classical(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow_classical(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+.. function:: void _fmpcb_poly_mullow_transpose(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+.. function:: void _fmpcb_poly_mullow(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+.. function:: void _fmpcb_poly_mul(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+
+.. function:: void fmpcb_poly_mul(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+
+.. function:: void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec)
+
+.. function:: void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec)
 
 
 Evaluation

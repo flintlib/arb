@@ -70,12 +70,6 @@ _fmpcb_get_rad_mag(const fmpcb_t z)
     return FLINT_MAX(rm, im);
 }
 
-int fmpcb_contains_zero(const fmpcb_t z)
-{
-    return fmprb_contains_zero(fmpcb_realref(z)) &&
-            fmprb_contains_zero(fmpcb_imagref(z));
-}
-
 void
 _fmpcb_poly_roots_initial_values(fmpcb_struct * roots, long deg, long prec)
 {

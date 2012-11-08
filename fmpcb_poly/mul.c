@@ -25,13 +25,44 @@
 
 #include "fmpcb_poly.h"
 
-void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+void _fmpcb_poly_mul(fmpcb_struct * C,
+    const fmpcb_struct * A, long lenA,
+    const fmpcb_struct * B, long lenB, long prec)
 {
-    long len = fmpcb_poly_length(src);
+    _fmpcb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
+}
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+void
+fmpcb_poly_mul(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec)
+{
+    long len_out;
+
+    if ((poly1->length == 0) || (poly2->length == 0))
+    {
+        fmpcb_poly_zero(res);
+        return;
+    }
+
+    len_out = poly1->length + poly2->length - 1;
+
+    if (res == poly1 || res == poly2)
+    {
+        fmpcb_poly_t temp;
+        fmpcb_poly_init2(temp, len_out);
+        _fmpcb_poly_mul(temp->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
+        fmpcb_poly_swap(res, temp);
+        fmpcb_poly_clear(temp);
+    }
+    else
+    {
+        fmpcb_poly_fit_length(res, len_out);
+        _fmpcb_poly_mul(res->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
+    }
+
+    _fmpcb_poly_set_length(res, len_out);
+    _fmpcb_poly_normalise(res);
 }
 

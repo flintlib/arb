@@ -90,6 +90,8 @@ void _fmpcb_poly_derivative(fmpcb_struct * res, const fmpcb_struct * poly, long 
 
 void fmpcb_poly_derivative(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec);
 
+void fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src);
+
 void fmpcb_poly_set_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re);
 
 void fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const fmprb_poly_t im);
@@ -97,6 +99,58 @@ void fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const 
 void fmpcb_poly_set_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, long prec);
 
 void fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec);
+
+void fmpcb_poly_randtest(fmpcb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits);
+
+int fmpcb_poly_equal(const fmpcb_poly_t A, const fmpcb_poly_t B);
+
+int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2);
+
+int _fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,
+        const fmpcb_struct * poly2, long len2);
+
+int fmpcb_poly_overlaps(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2);
+
+void _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long prec);
+
+void fmpcb_poly_add(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec);
+
+void fmpcb_poly_mullow_classical(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+                                            const fmpcb_poly_t poly2,
+                                                long n, long prec);
+
+void _fmpcb_poly_mullow_classical(fmpcb_struct * res,
+    const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long n, long prec);
+
+void _fmpcb_poly_mullow_transpose(fmpcb_struct * res,
+    const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long n, long prec);
+
+void fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+                                            const fmpcb_poly_t poly2,
+                                                long n, long prec);
+
+void _fmpcb_poly_mullow(fmpcb_struct * res,
+    const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long n, long prec);
+
+void fmpcb_poly_mullow(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+                                            const fmpcb_poly_t poly2,
+                                                long n, long prec);
+
+void _fmpcb_poly_mul(fmpcb_struct * C,
+    const fmpcb_struct * A, long lenA,
+    const fmpcb_struct * B, long lenB, long prec);
+
+void fmpcb_poly_mul(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec);
+
+void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec);
+
+void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
 void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
     const fmpcb_struct * poly,

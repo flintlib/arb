@@ -26,12 +26,34 @@
 #include "fmpcb_poly.h"
 
 void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+_fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long prec)
 {
-    long len = fmpcb_poly_length(src);
+    long i, min = FLINT_MIN(len1, len2);
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+    for (i = 0; i < min; i++)
+        fmpcb_add(res + i, poly1 + i, poly2 + i, prec);
+
+    /* TODO: round? */
+    for (i = min; i < len1; i++)
+        fmpcb_set(res + i, poly1 + i);
+
+    for (i = min; i < len2; i++)
+        fmpcb_set(res + i, poly2 + i);
+}
+
+void
+fmpcb_poly_add(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec)
+{
+    long max = FLINT_MAX(poly1->length, poly2->length);
+
+    fmpcb_poly_fit_length(res, max);
+
+    _fmpcb_poly_add(res->coeffs, poly1->coeffs, poly1->length, poly2->coeffs,
+                   poly2->length, prec);
+
+    _fmpcb_poly_set_length(res, max);
+    _fmpcb_poly_normalise(res);
 }
 

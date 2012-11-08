@@ -25,13 +25,18 @@
 
 #include "fmpcb_poly.h"
 
-void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+int
+fmpcb_poly_equal(const fmpcb_poly_t A, const fmpcb_poly_t B)
 {
-    long len = fmpcb_poly_length(src);
+    long i;
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+    if (A->length != B->length)
+        return 0;
+
+    for (i = 0; i < A->length; i++)
+        if (!fmpcb_equal(A->coeffs + i, B->coeffs + i))
+            return 0;
+
+    return 1;
 }
 

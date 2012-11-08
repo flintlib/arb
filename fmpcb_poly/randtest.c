@@ -26,12 +26,27 @@
 #include "fmpcb_poly.h"
 
 void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+fmprb_randtest2(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 {
-    long len = fmpcb_poly_length(src);
+    fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+    fmpr_randtest_not_zero(fmprb_radref(x), state, FMPRB_RAD_PREC, 4);
+    fmpr_abs(fmprb_radref(x), fmprb_radref(x));
+    fmpz_add(fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_midref(x)));
+}
+
+void
+fmpcb_poly_randtest(fmpcb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+{
+    long i;
+
+    fmpcb_poly_fit_length(poly, len);
+    for (i = 0; i < len; i++)
+    {
+        fmprb_randtest2(fmpcb_realref(poly->coeffs + i), state, prec, mag_bits);
+        fmprb_randtest2(fmpcb_imagref(poly->coeffs + i), state, prec, mag_bits);
+    }
+    _fmpcb_poly_set_length(poly, len);
+    _fmpcb_poly_normalise(poly);
 }
 

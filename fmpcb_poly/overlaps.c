@@ -25,13 +25,32 @@
 
 #include "fmpcb_poly.h"
 
-void
-fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
+int
+_fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,
+        const fmpcb_struct * poly2, long len2)
 {
-    long len = fmpcb_poly_length(src);
+    long i;
 
-    fmpcb_poly_fit_length(dest, len);
-    _fmpcb_vec_set(dest->coeffs, src->coeffs, len);
-    _fmpcb_poly_set_length(dest, len);
+    for (i = 0; i < len2; i++)
+        if (!fmpcb_overlaps(poly1 + i, poly2 + i))
+            return 0;
+
+    for (i = len2; i < len1; i++)
+        if (!fmpcb_contains_zero(poly1 + i))
+            return 0;
+
+    return 1;
+}
+
+int
+fmpcb_poly_overlaps(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+{
+    long len1 = poly1->length;
+    long len2 = poly2->length;
+
+    if (len1 >= len2)
+        return _fmpcb_poly_overlaps(poly1->coeffs, len1, poly2->coeffs, len2);
+    else
+        return _fmpcb_poly_overlaps(poly2->coeffs, len2, poly1->coeffs, len1);
 }
 

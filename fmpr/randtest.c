@@ -30,7 +30,7 @@ fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
 {
     fmpz_randtest(fmpr_manref(x), state, bits);
     fmpz_randtest(fmpr_expref(x), state, mag_bits);
-    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), bits);
+    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
     _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
 }
 
@@ -39,7 +39,7 @@ fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
 {
     fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
     fmpz_randtest(fmpr_expref(x), state, mag_bits);
-    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), bits);
+    fmpz_sub_ui(fmpr_expref(x), fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
     _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), bits, FMPR_RND_DOWN);
 }
 

@@ -331,6 +331,30 @@ _fmpcb_vec_set(fmpcb_struct * res, const fmpcb_struct * vec, long len)
 }
 
 static __inline__ void
+_fmpcb_vec_neg(fmpcb_struct * res, const fmpcb_struct * vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_neg(res + i, vec + i);
+}
+
+static __inline__ void
+_fmpcb_vec_add(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct * vec2, long len, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_add(res + i, vec1 + i, vec2 + i, prec);
+}
+
+static __inline__ void
+_fmpcb_vec_sub(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct * vec2, long len, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_sub(res + i, vec1 + i, vec2 + i, prec);
+}
+
+static __inline__ void
 _fmpcb_vec_scalar_submul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
 {
     if (len > 0)
@@ -364,6 +388,13 @@ _fmpcb_vec_scalar_addmul(fmpcb_struct * res, const fmpcb_struct * vec, long len,
     }
 }
 
+static __inline__ void
+_fmpcb_vec_scalar_mul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_mul(res + i, vec + i, c, prec);
+}
 
 static __inline__ void
 fmpcb_print(const fmpcb_t x)
