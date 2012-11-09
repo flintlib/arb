@@ -198,6 +198,8 @@ fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
     fmpr_clear(v);
 }
 
+void fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec);
+
 static __inline__ void
 fmpcb_add(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 {
@@ -313,6 +315,12 @@ fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec);
 
 void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec);
+
+void fmpcb_log(fmpcb_t r, const fmpcb_t z, long prec);
+
+void fmpcb_exp(fmpcb_t r, const fmpcb_t z, long prec);
+
+void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec);
 
 static __inline__ void
 _fmpcb_vec_zero(fmpcb_struct * A, long n)

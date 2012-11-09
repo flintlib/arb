@@ -123,6 +123,15 @@ Precision and comparisons
 
     Returns nonzero iff zero is contained in *x*.
 
+Complex parts
+-------------------------------------------------------------------------------
+
+.. function:: void fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec)
+
+    Sets *r* to a real interval containing the complex argument of *z*. We
+    define the complex argument have a discontinuity on `(-\infty,0]`, with
+    the special value `\operatorname{arg}(0) = 0`, and
+    `\operatorname{arg}(x+0i) = \pi` for `x < 0`.
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -175,9 +184,27 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
+Elementary functions
+-------------------------------------------------------------------------------
+
+.. function:: void fmpcb_log(fmpcb_t y, const fmpcb_t z, long prec)
+
+    Sets *y* to the principal branch of the natural logarithm of *z*,
+    computed as
+    `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
+
+.. function:: void fmpcb_exp(fmpcb_t y, const fmpcb_t z, long prec)
+
+    Sets *y* to the exponential function of *z*, computed as
+    `\exp(a+bi) = \exp(a) \left( \cos(b) + \sin(b) i \right)`.
+
 .. function:: void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
 
-    Sets *y* to *b* raised to the power *e*.
+    Sets *y* to *b* raised to the power *e*, computed using binary exponentiation.
+
+.. function:: void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec)
+
+    Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
 

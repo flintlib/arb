@@ -26,66 +26,36 @@
 #include "fmpcb.h"
 
 void
-fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
+fmpcb_log(fmpcb_t r, const fmpcb_t z, long prec)
 {
-    long i, wp, bits;
+#define a fmpcb_realref(z)
+#define b fmpcb_imagref(z)
 
-    if (fmpz_is_zero(e))
+    fmprb_t t, u;
+
+    fmprb_init(t);
+    fmprb_init(u);
+
+    fmprb_mul(t, a, a, prec);
+    fmprb_mul(u, b, b, prec);
+    fmprb_add(t, t, u, prec);
+
+    if (fmprb_contains_zero(t) || fmpr_sgn(fmprb_midref(t)) < 0)
     {
-        fmpcb_one(y);
-        return;
+        fmpr_zero(fmprb_midref(t));
+        fmpr_pos_inf(fmprb_radref(t));
+    }
+    else
+    {
+        fmprb_log(t, t, prec);
     }
 
-    if (fmpz_sgn(e) < 0)
-    {
-        fmpz_t f;
-        fmpz_init(f);
-        fmpz_neg(f, e);
-        fmpcb_pow_fmpz(y, b, f, prec + 2);
-        fmpcb_inv(y, y, prec);
-        fmpz_clear(f);
-    }
+    fmpcb_arg(u, z, prec);
 
-    if (y == b)
-    {
-        fmpcb_t t;
-        fmpcb_init(t);
-        fmpcb_set(t, b);
-        fmpcb_pow_fmpz(y, t, e, prec);
-        fmpcb_clear(t);
-        return;
-    }
+    fmprb_mul_2exp_si(fmpcb_realref(r), t, -1);
+    fmprb_set(fmpcb_imagref(r), u);
 
-    fmpcb_set(y, b);
-
-    bits = fmpz_bits(e);
-    wp = FMPR_PREC_ADD(prec, bits);
-
-    for (i = bits - 2; i >= 0; i--)
-    {
-        fmpcb_mul(y, y, y, wp);
-        if (fmpz_tstbit(e, i))
-            fmpcb_mul(y, y, b, wp);
-    }
-}
-
-void
-fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
-{
-    fmpz_t f;
-    fmpz_init_set_ui(f, e);
-    fmpcb_pow_fmpz(y, b, f, prec);
-    fmpz_clear(f);
-}
-
-void
-fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec)
-{
-    fmpcb_t t;
-    fmpcb_init(t);
-    fmpcb_log(t, x, prec);
-    fmpcb_mul(t, t, y, prec);
-    fmpcb_exp(r, t, prec);
-    fmpcb_clear(t);
+    fmprb_clear(t);
+    fmprb_clear(u);
 }
 
