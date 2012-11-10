@@ -206,7 +206,7 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
-Special functions
+Elementary function
 -------------------------------------------------------------------------------
 
 .. function:: void fmpcb_log(fmpcb_t y, const fmpcb_t z, long prec)
@@ -230,7 +230,7 @@ Special functions
 
     Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
 
-Elementary functions
+Special functions
 -------------------------------------------------------------------------------
 
 .. function:: void fmpcb_zeta_em_bound(fmpr_t bound, const fmpcb_t s, ulong N, ulong M, long prec)
