@@ -166,9 +166,19 @@ Arithmetic
 
     Sets *z* to the product of *x* and *y*. If at least one part of
     *x* or *y* is zero, the operations is reduced to two real multiplications.
+
+.. function:: void fmpcb_mul_alt(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+
+    Sets *z* to the product of *x* and *y*. If at least one part of
+    *x* or *y* is zero, the operations is reduced to two real multiplications.
     Otherwise, letting `x = a + bi`, `y = c + di`, `z = e + fi`, we use
     the formula `e = ac - bd`, `f = (a+b)(c+d) - ac - bd`,
     which requires three real multiplications instead of four.
+
+    The drawback of this algorithm is that the numerical stability is much
+    worse than for the default algorithm. In particular, if one operand
+    has a large error and the other a small error, the output error will
+    be about twice that of the large input error, rather than about the same.
 
 .. function:: void fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 

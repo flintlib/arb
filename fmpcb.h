@@ -259,6 +259,8 @@ fmpcb_mul_onei(fmpcb_t z, const fmpcb_t x)
 
 void fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec);
 
+void fmpcb_mul_alt(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec);
+
 static __inline__ void
 fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 {

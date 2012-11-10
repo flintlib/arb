@@ -26,7 +26,7 @@
 #include "fmpcb.h"
 
 void
-fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+fmpcb_mul_alt(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 {
 #define a fmpcb_realref(x)
 #define b fmpcb_imagref(x)
@@ -59,26 +59,26 @@ fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
     }
     else
     {
-        fmprb_t t, u, v, w;
+        fmprb_t t, u, v;
 
         fmprb_init(t);
         fmprb_init(u);
         fmprb_init(v);
-        fmprb_init(w);
+
+        fmprb_add(t, a, b, prec);
+        fmprb_add(u, c, d, prec);
+        fmprb_mul(v, t, u, prec);
 
         fmprb_mul(t, a, c, prec);
         fmprb_mul(u, b, d, prec);
 
-        fmprb_mul(v, a, d, prec);
-        fmprb_mul(w, b, c, prec);
-
         fmprb_sub(e, t, u, prec);
-        fmprb_add(f, v, w, prec);
+        fmprb_sub(f, v, t, prec);
+        fmprb_sub(f, f, u, prec);
 
         fmprb_clear(t);
         fmprb_clear(u);
         fmprb_clear(v);
-        fmprb_clear(w);
     }
 
 #undef a
@@ -88,3 +88,4 @@ fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 #undef e
 #undef f
 }
+
