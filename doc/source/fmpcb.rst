@@ -62,6 +62,8 @@ Basic manipulation
 
 .. function:: void fmpcb_set(fmpcb_t z, const fmpcb_t x)
 
+.. function:: void fmpcb_set_ui(fmpcb_t z, long x)
+
 .. function:: void fmpcb_set_si(fmpcb_t z, long x)
 
 .. function:: void fmpcb_set_fmpz(fmpcb_t z, const fmpz_t x)
@@ -144,9 +146,13 @@ Arithmetic
 
     Sets *z* to the complex conjugate of *x*.
 
+.. function:: void fmpcb_add_ui(fmpcb_t z, const fmpcb_t x, ulong c, long prec)
+
 .. function:: void fmpcb_add(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
     Sets *z* to the sum of *x* and *y*.
+
+.. function:: void fmpcb_sub_ui(fmpcb_t z, const fmpcb_t x, ulong c, long prec)
 
 .. function:: void fmpcb_sub(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
@@ -180,6 +186,10 @@ Arithmetic
     has a large error and the other a small error, the output error will
     be about twice that of the large input error, rather than about the same.
 
+.. function:: void fmpcb_mul_2exp_si(fmpcb_t z, const fmpcb_t x, long e)
+
+    Sets *z* to *x* multiplied by `2^e`, without rounding.
+
 .. function:: void fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
 .. function:: void fmpcb_submul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
@@ -189,6 +199,8 @@ Arithmetic
 .. function:: void fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
 
     Sets *z* to the multiplicative inverse of *x*.
+
+.. function:: void fmpcb_div_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 
 .. function:: void fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
