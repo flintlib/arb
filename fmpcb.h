@@ -359,6 +359,14 @@ void fmpcb_exp(fmpcb_t r, const fmpcb_t z, long prec);
 
 void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec);
 
+void fmpcb_zeta_em_bound(fmpr_t bound, const fmpcb_t s, ulong N, ulong M, long prec);
+
+void fmpcb_zeta_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, long target, long prec);
+
+void fmpcb_zeta_em_sum(fmpcb_t z, const fmpcb_t s, ulong N, ulong M, long prec);
+
+void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
+
 static __inline__ void
 _fmpcb_vec_zero(fmpcb_struct * A, long n)
 {

@@ -206,7 +206,7 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
-Elementary functions
+Special functions
 -------------------------------------------------------------------------------
 
 .. function:: void fmpcb_log(fmpcb_t y, const fmpcb_t z, long prec)
@@ -230,3 +230,54 @@ Elementary functions
 
     Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
 
+Elementary functions
+-------------------------------------------------------------------------------
+
+.. function:: void fmpcb_zeta_em_bound(fmpr_t bound, const fmpcb_t s, ulong N, ulong M, long prec)
+
+    Sets *bound* to a bound for the absolute truncation error when evaluating
+    `\zeta(s)` using the Euler-Maclaurin formula and truncating the
+    main series before term `N` and the tail series before term `M`.
+    If `s = a + bi`, then provided `a > -2M+1`, we use Backlund's inequality
+    (see [GS2003]_),
+
+    .. math ::
+
+        |R| < \left| \frac{s(s+1)\cdots(s+2M-1) B_{2M}}
+                        {(2M)! (a+2M-1) N^{s+2M-1}} \right|
+
+    Since the bound usually does not need to be as tight as possible,
+    we evaluate some of the terms in the formula using order-of-magnitude
+    bounds. The calculations are done using a working precision of *prec*
+    bits.
+
+.. function:: void fmpcb_zeta_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, long target, long prec)
+
+    Finds parameters *N* and *M* such that the truncation error
+    for Euler-Maclaurin summation of `\zeta(s)` is smaller than
+    `2^{-t}` where `t` is given by *target*, and sets *bound* to the
+    corresponding error bound.
+    The *prec* parameter specified the working precision used for
+    the error bounding itself.
+
+    We use bisection on *N*, choosing `M(N)` heuristically. This strategy
+    can certainly be improved.
+
+.. function:: void fmpcb_zeta_em_sum(fmpcb_t z, const fmpcb_t s, ulong N, ulong M, long prec)
+
+    Evaluates the truncated Euler-Maclaurin sum for the Riemann zeta function
+
+    .. math ::
+
+        \zeta(s) - \epsilon = \sum_{n=1}^{N-1} \frac{1}{n^s} + \frac{N^{1-s}}{s-1}
+            + \frac{N^{-s}}{2} + 
+            \sum_{r=1}^{M-1} \frac{B_{2r} s (s+1) \cdots (s+2r-2)}{(2r)! N^{s+2r-1}}
+
+    using a working precision of *prec* bits.
+
+.. function:: void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
+
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+    Uses Euler-Maclaurin summation with a working precision of *prec* bits and
+    default parameters obtained from *fmpcb_zeta_em_choose_param*,
+    targeting an absolute truncation error of `2^{-\operatorname{prec}}`.
