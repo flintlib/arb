@@ -206,7 +206,7 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
-Special functions
+Elementary functions
 -------------------------------------------------------------------------------
 
 .. function:: void fmpcb_log(fmpcb_t y, const fmpcb_t z, long prec)
@@ -220,6 +220,14 @@ Special functions
     Sets *y* to the exponential function of *z*, computed as
     `\exp(a+bi) = \exp(a) \left( \cos(b) + \sin(b) i \right)`.
 
+.. function:: void fmpcb_sin(fmpcb_t s, const fmpcb_t z, long prec)
+
+.. function:: void fmpcb_cos(fmpcb_t c, const fmpcb_t z, long prec)
+
+.. function:: void fmpcb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t z, long prec)
+
+    Sets `s = \sin z`, `c = \cos z`.
+
 .. function:: void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
@@ -230,7 +238,7 @@ Special functions
 
     Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
 
-Elementary functions
+Special functions
 -------------------------------------------------------------------------------
 
 .. function:: void fmpcb_zeta_em_bound(fmpr_t bound, const fmpcb_t s, ulong N, ulong M, long prec)
