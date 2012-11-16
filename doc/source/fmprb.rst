@@ -408,6 +408,15 @@ Elementary functions
     the propagated error is bounded by `r / (1 + d^2)`
     (this could be tightened).
 
+.. function:: void fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
+
+.. function:: void fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
+
+.. function:: void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
+
+    Sets `s = \sinh x`, `c = \cosh x`. Error propagation uses
+    the derivatives of the functions.
+
 Factorials and other integer functions
 ...............................................................................
 

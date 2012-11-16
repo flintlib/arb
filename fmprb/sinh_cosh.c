@@ -26,12 +26,14 @@
 #include "fmprb.h"
 
 long
-_fmpr_sin(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+_fmpr_sinh(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
         if (fmpr_is_zero(x))
             fmpr_zero(y);
+        else if (fmpr_is_inf(x))
+            fmpr_set(y, x);
         else
             fmpr_nan(y);
 
@@ -40,18 +42,20 @@ _fmpr_sin(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     else
     {
         long r;
-        CALL_MPFR_FUNC(r, mpfr_sin, y, x, prec, rnd);
+        CALL_MPFR_FUNC(r, mpfr_sinh, y, x, prec, rnd);
         return r;
     }
 }
 
 long
-_fmpr_cos(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+_fmpr_cosh(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
         if (fmpr_is_zero(x))
             fmpr_one(y);
+        else if (fmpr_is_inf(x))
+            fmpr_abs(y, x);
         else
             fmpr_nan(y);
 
@@ -60,13 +64,13 @@ _fmpr_cos(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     else
     {
         long r;
-        CALL_MPFR_FUNC(r, mpfr_cos, y, x, prec, rnd);
+        CALL_MPFR_FUNC(r, mpfr_cosh, y, x, prec, rnd);
         return r;
     }
 }
 
 void
-_fmpr_sin_cos(long * r1, long * r2, fmpr_t s, fmpr_t c, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+_fmpr_sinh_cosh(long * r1, long * r2, fmpr_t s, fmpr_t c, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -74,6 +78,16 @@ _fmpr_sin_cos(long * r1, long * r2, fmpr_t s, fmpr_t c, const fmpr_t x, long pre
         {
             fmpr_zero(s);
             fmpr_one(c);
+        }
+        else if (fmpr_is_pos_inf(x))
+        {
+            fmpr_pos_inf(s);
+            fmpr_pos_inf(c);
+        }
+        else if (fmpr_is_neg_inf(x))
+        {
+            fmpr_neg_inf(s);
+            fmpr_pos_inf(c);
         }
         else
         {
@@ -85,27 +99,35 @@ _fmpr_sin_cos(long * r1, long * r2, fmpr_t s, fmpr_t c, const fmpr_t x, long pre
     }
     else
     {
-        CALL_MPFR_FUNC_2X1(*r1, *r2, mpfr_sin_cos, s, c, x, prec, rnd);
+        CALL_MPFR_FUNC_2X1(*r1, *r2, mpfr_sinh_cosh, s, c, x, prec, rnd);
     }
 }
 
 void
-fmprb_sin(fmprb_t z, const fmprb_t x, long prec)
+fmprb_sinh(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
 
     if (fmprb_is_exact(x))
     {
-        r = _fmpr_sin(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        r = _fmpr_sinh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
     else
     {
         fmpr_t t;
         fmpr_init(t);
-        fmpr_set(t, fmprb_radref(x));
 
-        r = _fmpr_sin(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        /* the propagated error is bounded by sup(cosh([a,b]))*r */
+        if (fmpr_sgn(fmprb_midref(x)) >= 0)
+            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        else
+            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        _fmpr_cosh(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        r = _fmpr_sinh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
             FMPRB_RAD_PREC, FMPR_RND_UP);
 
@@ -116,22 +138,30 @@ fmprb_sin(fmprb_t z, const fmprb_t x, long prec)
 }
 
 void
-fmprb_cos(fmprb_t z, const fmprb_t x, long prec)
+fmprb_cosh(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
 
     if (fmprb_is_exact(x))
     {
-        r = _fmpr_cos(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        r = _fmpr_cosh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
     else
     {
         fmpr_t t;
         fmpr_init(t);
-        fmpr_set(t, fmprb_radref(x));
 
-        r = _fmpr_cos(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        /* the propagated error is bounded by sup(|sinh([a,b])|)*r */
+        if (fmpr_sgn(fmprb_midref(x)) >= 0)
+            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        else
+            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        _fmpr_sinh(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        r = _fmpr_cosh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
             FMPRB_RAD_PREC, FMPR_RND_UP);
 
@@ -142,28 +172,38 @@ fmprb_cos(fmprb_t z, const fmprb_t x, long prec)
 }
 
 void
-fmprb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
+fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
 {
     long r1, r2;
 
     if (fmprb_is_exact(x))
     {
-        _fmpr_sin_cos(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        _fmpr_sinh_cosh(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(s), fmprb_midref(s), r1);
         fmpr_set_error_result(fmprb_radref(c), fmprb_midref(c), r2);
     }
     else
     {
-        fmpr_t t;
+        fmpr_t t, u;
         fmpr_init(t);
-        fmpr_set(t, fmprb_radref(x));
+        fmpr_init(u);
 
-        _fmpr_sin_cos(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
+        if (fmpr_sgn(fmprb_midref(x)) >= 0)
+            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        else
+            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
 
-        fmpr_add_error_result(fmprb_radref(s), t, fmprb_midref(s), r1, FMPRB_RAD_PREC, FMPR_RND_UP);
+        _fmpr_sinh_cosh(&r1, &r2, t, u, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(u, u, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+
+        _fmpr_sinh_cosh(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
+
+        fmpr_add_error_result(fmprb_radref(s), u, fmprb_midref(s), r1, FMPRB_RAD_PREC, FMPR_RND_UP);
         fmpr_add_error_result(fmprb_radref(c), t, fmprb_midref(c), r2, FMPRB_RAD_PREC, FMPR_RND_UP);
 
         fmpr_clear(t);
+        fmpr_clear(u);
     }
 
     fmprb_adjust(s);

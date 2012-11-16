@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("sin_cos....");
+    printf("sinh_cosh....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -55,9 +55,9 @@ int main()
         fmprb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
-        mpfr_sin_cos(t, u, t, MPFR_RNDN);
+        mpfr_sinh_cosh(t, u, t, MPFR_RNDN);
 
-        fmprb_sin_cos(b, c, a, prec);
+        fmprb_sinh_cosh(b, c, a, prec);
 
         if (!fmprb_contains_mpfr(b, t))
         {
