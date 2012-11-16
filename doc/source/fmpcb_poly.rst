@@ -89,6 +89,8 @@ Comparisons
 
 .. function:: int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2)
 
+.. function:: int fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+
     Returns nonzero iff *poly2* is contained in *poly1*.
 
 .. function:: int _fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,

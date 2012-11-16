@@ -119,6 +119,8 @@ Precision and comparisons
 
 .. function:: int fmpcb_contains_fmpz(const fmpcb_t x, const fmpz_t y)
 
+.. function:: int fmpcb_contains(const fmpcb_t x, const fmpcb_t y)
+
     Returns nonzero iff *y* is contained in *x*.
 
 .. function:: int fmpcb_contains_zero(const fmpcb_t x)

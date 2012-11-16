@@ -160,6 +160,13 @@ fmpcb_contains_fmpz(const fmpcb_t x, const fmpz_t y)
             fmprb_contains_zero(fmpcb_imagref(x));
 }
 
+static __inline__ int
+fmpcb_contains(const fmpcb_t x, const fmpcb_t y)
+{
+    return fmprb_contains(fmpcb_realref(x), fmpcb_realref(y)) &&
+            fmprb_contains(fmpcb_imagref(x), fmpcb_imagref(y));
+}
+
 static __inline__ void
 fmpcb_set_ui(fmpcb_t z, ulong c)
 {
@@ -195,7 +202,7 @@ fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
     fmpr_init(v);
 
     fmprb_get_abs_ubound_fmpr(u, fmpcb_realref(z), prec);
-    fmprb_get_abs_ubound_fmpr(v, fmpcb_realref(z), prec);
+    fmprb_get_abs_ubound_fmpr(v, fmpcb_imagref(z), prec);
 
     fmpr_mul(u, u, u, prec, FMPR_RND_UP);
     fmpr_mul(v, v, v, prec, FMPR_RND_UP);

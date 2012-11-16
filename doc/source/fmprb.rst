@@ -216,6 +216,8 @@ Precision and comparisons
 
 .. function:: int fmprb_contains_zero(const fmprb_t x)
 
+.. function:: int fmprb_contains(const fmprb_t x, const fmprb_t y)
+
     Returns nonzero iff the given number *y* is contained in the interval
     represented by *x*.
 
