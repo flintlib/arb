@@ -367,6 +367,23 @@ fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
     fmpr_abs(u, u);
 }
 
+static __inline__ void
+fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+{
+    if (fmpr_sgn(fmprb_midref(x)) > 0)
+    {
+        fmpr_sub(u, fmprb_midref(x), fmprb_radref(x), prec, FMPR_RND_DOWN);
+    }
+    else
+    {
+        fmpr_add(u, fmprb_midref(x), fmprb_radref(x), prec, FMPR_RND_DOWN);
+        fmpr_neg(u, u);
+    }
+
+    if (fmpr_sgn(u) < 0)
+        fmpr_zero(u);
+}
+
 void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x);
 
 static __inline__ long

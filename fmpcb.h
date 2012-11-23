@@ -84,6 +84,12 @@ fmpcb_is_zero(const fmpcb_t z)
 }
 
 static __inline__ int
+fmpcb_is_one(const fmpcb_t z)
+{
+    return fmprb_is_one(fmpcb_realref(z)) && fmprb_is_zero(fmpcb_imagref(z));
+}
+
+static __inline__ int
 fmpcb_is_exact(const fmpcb_t z)
 {
     return fmprb_is_exact(fmpcb_realref(z)) && fmprb_is_exact(fmpcb_imagref(z));
@@ -116,6 +122,13 @@ fmpcb_set(fmpcb_t z, const fmpcb_t x)
 {
     fmprb_set(fmpcb_realref(z), fmpcb_realref(x));
     fmprb_set(fmpcb_imagref(z), fmpcb_imagref(x));
+}
+
+static __inline__ void
+fmpcb_set_round(fmpcb_t z, const fmpcb_t x, long prec)
+{
+    fmprb_set_round(fmpcb_realref(z), fmpcb_realref(x), prec);
+    fmprb_set_round(fmpcb_imagref(z), fmpcb_imagref(x), prec);
 }
 
 static __inline__ void
@@ -210,6 +223,34 @@ fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
     fmpr_sqrt(u, u, prec, FMPR_RND_UP);
 
     fmpr_clear(v);
+}
+
+static __inline__ void
+fmpcb_get_abs_lbound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
+{
+    fmpr_t v;
+    fmpr_init(v);
+
+    fmprb_get_abs_lbound_fmpr(u, fmpcb_realref(z), prec);
+    fmprb_get_abs_lbound_fmpr(v, fmpcb_imagref(z), prec);
+
+    fmpr_mul(u, u, u, prec, FMPR_RND_DOWN);
+    fmpr_mul(v, v, v, prec, FMPR_RND_DOWN);
+    fmpr_add(u, u, v, prec, FMPR_RND_DOWN);
+    fmpr_sqrt(u, u, prec, FMPR_RND_DOWN);
+
+    fmpr_clear(v);
+}
+
+static __inline__ void
+fmpcb_get_rad_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
+{
+    /* fixme: this bound is very sloppy */
+
+    if (fmpr_cmp(fmprb_radref(fmpcb_realref(z)), fmprb_radref(fmpcb_imagref(z))) >= 0)
+        fmpr_mul_2exp_si(u, fmprb_radref(fmpcb_realref(z)), 1);
+    else
+        fmpr_mul_2exp_si(u, fmprb_radref(fmpcb_imagref(z)), 1);
 }
 
 void fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec);
@@ -354,6 +395,13 @@ fmpcb_div_ui(fmpcb_t z, const fmpcb_t x, ulong c, long prec)
 {
     fmprb_div_ui(fmpcb_realref(z), fmpcb_realref(x), c, prec);
     fmprb_div_ui(fmpcb_imagref(z), fmpcb_imagref(x), c, prec);
+}
+
+static __inline__ void
+fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long c, long prec)
+{
+    fmprb_div_si(fmpcb_realref(z), fmpcb_realref(x), c, prec);
+    fmprb_div_si(fmpcb_imagref(z), fmpcb_imagref(x), c, prec);
 }
 
 void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec);
