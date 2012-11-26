@@ -30,24 +30,36 @@ fmprb_contains(const fmprb_t x, const fmprb_t y)
 {
     fmpr_t t;
     fmpr_t u;
-    int result;
+    int left_ok, right_ok;
 
     fmpr_init(t);
     fmpr_init(u);
 
-    fmpr_sub(t, fmprb_midref(x), fmprb_radref(x), FMPR_PREC_EXACT, FMPR_RND_FLOOR);
-    fmpr_sub(u, fmprb_midref(y), fmprb_radref(y), FMPR_PREC_EXACT, FMPR_RND_FLOOR);
+    fmpr_sub(t, fmprb_midref(x), fmprb_radref(x), 30, FMPR_RND_CEIL);
+    fmpr_sub(u, fmprb_midref(y), fmprb_radref(y), 30, FMPR_RND_FLOOR);
+    left_ok = fmpr_cmp(t, u) <= 0;
 
-    result = fmpr_cmp(t, u) <= 0;
+    if (!left_ok)
+    {
+        fmpr_sub(t, fmprb_midref(x), fmprb_radref(x), FMPR_PREC_EXACT, FMPR_RND_CEIL);
+        fmpr_sub(u, fmprb_midref(y), fmprb_radref(y), FMPR_PREC_EXACT, FMPR_RND_FLOOR);
+        left_ok = fmpr_cmp(t, u) <= 0;
+    }
 
-    fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPR_PREC_EXACT, FMPR_RND_CEIL);
-    fmpr_add(u, fmprb_midref(y), fmprb_radref(y), FMPR_PREC_EXACT, FMPR_RND_CEIL);
+    fmpr_add(t, fmprb_midref(x), fmprb_radref(x), 30, FMPR_RND_FLOOR);
+    fmpr_add(u, fmprb_midref(y), fmprb_radref(y), 30, FMPR_RND_CEIL);
+    right_ok = (fmpr_cmp(t, u) >= 0);
 
-    result = result && (fmpr_cmp(t, u) >= 0);
+    if (!right_ok)
+    {
+        fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPR_PREC_EXACT, FMPR_RND_FLOOR);
+        fmpr_add(u, fmprb_midref(y), fmprb_radref(y), FMPR_PREC_EXACT, FMPR_RND_CEIL);
+        right_ok = (fmpr_cmp(t, u) >= 0);
+    }
 
     fmpr_clear(t);
     fmpr_clear(u);
 
-    return result;
+    return left_ok && right_ok;
 }
 
