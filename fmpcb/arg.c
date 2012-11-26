@@ -86,6 +86,7 @@ fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec)
         {
             /* both positive and negative -- argument will be in 0 +/- pi/2 */
             fmprb_t t;
+            fmprb_init(t);
             fmprb_const_pi(t, FMPRB_RAD_PREC);
             fmprb_mul_2exp_si(t, t, -1);
             fmprb_zero(r);
@@ -128,6 +129,7 @@ fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec)
     else
     {
         fmprb_t t;
+        fmprb_init(t);
         fmprb_const_pi(t, FMPRB_RAD_PREC);
         fmprb_zero(r);
         fmprb_add_error(r, t);
