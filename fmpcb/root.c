@@ -25,77 +25,54 @@
 
 #include "fmpcb.h"
 
-/*
-Sets r = exp((-1)^inverse * (1/m) * (log(a) + 2 pi i k)). As k goes from 0 to m-1, this
-expression gives all the mth (inverse) roots of the complex number a, starting with
-the principal mth root.
-
-Algorithm: if the precision is high enough and |m| is small enough, we
-use Newton iteration to compute an inverse |m|-th root by solving
-f(z) = (1/z)^m - a = 0, by calling fmpcb_invroot_newton.
-The initial value is obtained by evaluating the exponential function.
-TODO: we should check that the initial value isolates the right root
-(if the error of a is large).
-*/
-
 void
-fmpcb_root_via_exp(fmpcb_t r, const fmpcb_t a, ulong k, ulong m, int inverse, long prec)
-{
-    fmpcb_log(r, a, prec);
-
-    if (k != 0)
-    {
-        fmprb_t t;
-        fmprb_init(t);
-        fmprb_const_pi(t, prec);
-        fmprb_mul_2exp_si(t, t, 1);
-        fmprb_mul_ui(t, t, k, prec);
-        fmprb_add(fmpcb_imagref(r), fmpcb_imagref(r), t, prec);
-        fmprb_clear(t);
-    }
-
-    fmpcb_div_ui(r, r, m, prec);
-    if (inverse)
-        fmpcb_neg(r, r);
-
-    fmpcb_exp(r, r, prec);
-}
-
-/* fixme: m+2 overflows in Newton */
-
-
-
-void
-fmpcb_root(fmpcb_t r, const fmpcb_t a, ulong k, ulong m, int inverse, long prec)
+fmpcb_root_exp(fmpcb_t r, const fmpcb_t a, long m, long index, long prec)
 {
     if (m == 1)
+        fmpcb_set_round(r, a, prec);
+    else if (m == -1)
+        fmpcb_inv(r, a, prec);
+    else
     {
-        if (inverse)
-            fmpcb_inv(r, a, prec);
-        else
-            fmpcb_set_round(r, a, prec);
+        fmpcb_log(r, a, prec);
+
+        if (index != 0)
+        {
+            fmprb_t t;
+            fmprb_init(t);
+            fmprb_const_pi(t, prec);
+            fmprb_mul_2exp_si(t, t, 1);
+            fmprb_mul_si(t, t, index, prec);
+            fmprb_add(fmpcb_imagref(r), fmpcb_imagref(r), t, prec);
+            fmprb_clear(t);
+        }
+
+        fmpcb_div_si(r, r, m, prec);
+        fmpcb_exp(r, r, prec);
     }
-    else if (prec < 300)
-    {
-        fmpcb_root_via_exp(r, a, k, m, inverse, prec);
-    }
+}
+
+void
+fmpcb_root_newton(fmpcb_t r, const fmpcb_t a, long m, long index, long prec)
+{
+    if (m == 1)
+        fmpcb_set_round(r, a, prec);
+    else if (m == -1)
+        fmpcb_inv(r, a, prec);
     else
     {
         long startprec;
-
         fmpcb_t t;
+
         fmpcb_init(t);
 
         startprec = 100;
-        fmpcb_root_via_exp(t, a, k, m, 1, startprec);
+        fmpcb_root_exp(t, a, -FLINT_ABS(m), index, startprec);
 
         /* note: should check isolation first */
-        if (1)
-        {
-            fmpcb_invroot_newton(t, a, m, t, startprec, prec);
-        }
+        fmpcb_invroot_newton(t, a, FLINT_ABS(m), t, startprec, prec);
 
-        if (inverse)
+        if (m < 0)
         {
             fmpcb_set(r, t);
         }
@@ -111,5 +88,18 @@ fmpcb_root(fmpcb_t r, const fmpcb_t a, ulong k, ulong m, int inverse, long prec)
 
         fmpcb_clear(t);
     }
+}
+
+void
+fmpcb_root(fmpcb_t r, const fmpcb_t a, long m, long index, long prec)
+{
+    if (m == 1)
+        fmpcb_set_round(r, a, prec);
+    else if (m == -1)
+        fmpcb_inv(r, a, prec);
+    else if (prec < 300 || !fmpcb_is_exact(a) || (m == LONG_MIN))
+        fmpcb_root_exp(r, a, m, index, prec);
+    else
+        fmpcb_root_newton(r, a, m, index, prec);
 }
 
