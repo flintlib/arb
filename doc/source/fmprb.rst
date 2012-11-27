@@ -216,6 +216,8 @@ Precision and comparisons
 
 .. function:: int fmprb_contains_zero(const fmprb_t x)
 
+.. function:: int fmprb_contains(const fmprb_t x, const fmprb_t y)
+
     Returns nonzero iff the given number *y* is contained in the interval
     represented by *x*.
 
@@ -227,6 +229,11 @@ Precision and comparisons
 
     Sets *u* to the upper bound of the absolute value of *x*,
     rounded up to *prec* bits.
+
+void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+
+    Sets *u* to the lower bound of the absolute value of *x*,
+    rounded down to *prec* bits.
 
 .. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
 
@@ -407,6 +414,15 @@ Elementary functions
     Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
     the propagated error is bounded by `r / (1 + d^2)`
     (this could be tightened).
+
+.. function:: void fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
+
+.. function:: void fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
+
+.. function:: void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
+
+    Sets `s = \sinh x`, `c = \cosh x`. Error propagation uses
+    the derivatives of the functions.
 
 Factorials and other integer functions
 ...............................................................................

@@ -44,6 +44,7 @@ fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
         fmpcb_pow_fmpz(y, b, f, prec + 2);
         fmpcb_inv(y, y, prec);
         fmpz_clear(f);
+        return;
     }
 
     if (y == b)
@@ -74,6 +75,16 @@ fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
 {
     fmpz_t f;
     fmpz_init_set_ui(f, e);
+    fmpcb_pow_fmpz(y, b, f, prec);
+    fmpz_clear(f);
+}
+
+void
+fmpcb_pow_si(fmpcb_t y, const fmpcb_t b, long e, long prec)
+{
+    fmpz_t f;
+    fmpz_init(f);
+    fmpz_set_si(f, e);
     fmpcb_pow_fmpz(y, b, f, prec);
     fmpz_clear(f);
 }

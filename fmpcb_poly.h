@@ -111,6 +111,8 @@ int _fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,
 
 int fmpcb_poly_overlaps(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2);
 
+int fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2);
+
 void _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
     const fmpcb_struct * poly2, long len2, long prec);
 

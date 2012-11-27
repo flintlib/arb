@@ -23,64 +23,66 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "fmpcb.h"
+#include "long_extras.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("sin_cos....");
+    printf("root_exp....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    /* check (a^(1/m))^m = a */
+    for (iter = 0; iter < 10000; iter++)
     {
-        fmprb_t a, b, c;
-        fmpq_t q;
-        mpfr_t t, u;
-        long prec = 2 + n_randint(state, 200);
+        fmpcb_t a, b, c;
+        long prec;
+        ulong m, index;
 
-        fmprb_init(a);
-        fmprb_init(b);
-        fmprb_init(c);
-        fmpq_init(q);
-        mpfr_init2(t, prec + 100);
-        mpfr_init2(u, prec + 100);
+        fmpcb_init(a);
+        fmpcb_init(b);
+        fmpcb_init(c);
 
-        fmprb_randtest(a, state, 1 + n_randint(state, 200), 3);
-        fmprb_randtest(b, state, 1 + n_randint(state, 200), 3);
-        fmprb_randtest(c, state, 1 + n_randint(state, 200), 3);
-        fmprb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
+        m = z_randtest_not_zero(state);
+        index = z_randtest(state);
 
-        fmpq_get_mpfr(t, q, MPFR_RNDN);
-        mpfr_sin_cos(t, u, t, MPFR_RNDN);
+        fmpcb_randtest(a, state, 1 + n_randint(state, 2000), 3);
+        fmpcb_randtest(b, state, 1 + n_randint(state, 2000), 3);
 
-        fmprb_sin_cos(b, c, a, prec);
+        prec = 2 + n_randint(state, 2000);
 
-        if (!fmprb_contains_mpfr(b, t))
+        fmpcb_root_exp(b, a, m, index, prec);
+        fmpcb_pow_si(c, b, m, prec);
+
+        if (!fmpcb_contains(c, a))
         {
-            printf("FAIL: containment (sin)\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("FAIL: containment\n\n");
+            printf("m = %ld\n\n", m);
+            printf("index = %ld\n\n", index);
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
             abort();
         }
 
-        if (!fmprb_contains_mpfr(c, u))
+        fmpcb_root_exp(a, a, m, index, prec);
+        if (!fmpcb_equal(a, b))
         {
-            printf("FAIL: containment (cos)\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("FAIL: aliasing\n\n");
+            printf("m = %ld\n\n", m);
+            printf("index = %ld\n\n", index);
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
             abort();
         }
 
-        fmprb_clear(a);
-        fmprb_clear(b);
-        fmprb_clear(c);
-        fmpq_clear(q);
-        mpfr_clear(t);
-        mpfr_clear(u);
+        fmpcb_clear(a);
+        fmpcb_clear(b);
+        fmpcb_clear(c);
     }
 
     flint_randclear(state);
@@ -88,3 +90,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

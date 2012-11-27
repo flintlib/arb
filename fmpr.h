@@ -604,6 +604,34 @@ fmpr_set_ui_2exp_si(fmpr_t x, ulong man, long exp)
         mpfr_clear(__u); \
     } while (0);
 
+#define CALL_MPFR_FUNC_2X1(r1, r2, func, y1, y2, x, prec, rnd) \
+    do { \
+        mpfr_t __t, __u, __v; \
+        mpfr_rnd_t __rnd; \
+        if (rnd == FMPR_RND_DOWN) __rnd = MPFR_RNDZ; \
+        else if (rnd == FMPR_RND_UP) __rnd = MPFR_RNDA; \
+        else if (rnd == FMPR_RND_FLOOR) __rnd = MPFR_RNDD; \
+        else if (rnd == FMPR_RND_CEIL) __rnd = MPFR_RNDU; \
+        else __rnd = MPFR_RNDN; \
+        mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
+        mpfr_init2(__u, FLINT_MAX(2, prec)); \
+        mpfr_init2(__v, FLINT_MAX(2, prec)); \
+        fmpr_get_mpfr(__t, x, MPFR_RNDD); \
+        func(__u, __v, __t, __rnd); \
+        if (mpfr_overflow_p() || mpfr_underflow_p()) \
+        { \
+            printf("exception: mpfr overflow\n"); \
+            abort(); \
+        } \
+        fmpr_set_mpfr(y1, __u); \
+        r1 = prec - fmpz_bits(fmpr_manref(y1)); \
+        fmpr_set_mpfr(y2, __v); \
+        r2 = prec - fmpz_bits(fmpr_manref(y2)); \
+        mpfr_clear(__t); \
+        mpfr_clear(__u); \
+        mpfr_clear(__v); \
+    } while (0);
+
 void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
     long prec, fmpr_rnd_t rnd);
 
