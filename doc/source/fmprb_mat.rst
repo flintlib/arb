@@ -1,4 +1,4 @@
-fmprb_mat.h -- matrices over the real numbers
+**fmprb_mat.h** -- matrices over the real numbers
 ===============================================================================
 
 An *fmprb_mat_t* represents a dense matrix over the real numbers,

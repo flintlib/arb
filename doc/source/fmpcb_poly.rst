@@ -1,4 +1,4 @@
-fmpcb_poly.h -- polynomials over the complex numbers
+**fmpcb_poly.h** -- polynomials over the complex numbers
 ===============================================================================
 
 Types, macros and constants

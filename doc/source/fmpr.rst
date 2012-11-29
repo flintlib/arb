@@ -1,4 +1,4 @@
-fmpr.h -- binary floating-point numbers
+**fmpr.h** -- binary floating-point numbers
 ===============================================================================
 
 A variable of type *fmpr_t* holds an arbitrary-precision binary

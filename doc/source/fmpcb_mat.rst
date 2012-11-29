@@ -1,4 +1,4 @@
-fmpcb_mat.h -- matrices over the complex numbers
+**fmpcb_mat.h** -- matrices over the complex numbers
 ===============================================================================
 
 An *fmpcb_mat_t* represents a dense matrix over the complex numbers,

@@ -1,4 +1,4 @@
-fmpz_holonomic.h -- holonomic sequences and functions
+**fmpz_holonomic.h** -- holonomic sequences and functions
 ===============================================================================
 
 This module provides support for holonomic sequences and functions,

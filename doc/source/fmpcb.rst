@@ -1,4 +1,4 @@
-fmpcb.h -- complex numbers
+**fmpcb.h** -- complex numbers
 ===============================================================================
 
 Types, macros and constants
@@ -222,7 +222,9 @@ Arithmetic
 
 .. function:: void fmpcb_div_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 
-.. function:: fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long c, long prec)
+.. function:: void fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long y, long prec)
+
+.. function:: void fmpcb_div_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
