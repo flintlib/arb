@@ -349,3 +349,15 @@ Special functions
     Uses Euler-Maclaurin summation with a working precision of *prec* bits and
     default parameters obtained from *fmpcb_zeta_em_choose_param*,
     targeting an absolute truncation error of `2^{-\operatorname{prec}}`.
+
+.. function:: void fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+
+    Evaluates the truncated Euler-Maclaurin sum of order `N, M` for the
+    length-*d* truncated Taylor series of the Hurwitz zeta function
+    `\zeta(s,a)` at `s`. With `a = 1`, this gives the usual
+    Riemann zeta function.
+
+    If *deflate* is nonzero, `\zeta(s,a) - 1/(s-1)` is evaluated
+    (which permits series expansion at `s = 1`).
+
+
