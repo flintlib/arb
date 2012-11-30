@@ -4,6 +4,8 @@ Welcome to Arb's documentation!
 Arb is a C library for arbitrary-precision
 floating-point ball arithmetic, developed by
 Fredrik Johansson (fredrik.johansson@gmail.com).
+It supports efficient high-precision computation with polynomials, power series, matrices
+and special functions over the real and complex numbers, with automatic, rigorous error control.
 
 The git repository is https://github.com/fredrik-johansson/arb/
 
@@ -14,7 +16,7 @@ General information
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    overview.rst
    setup.rst
@@ -24,7 +26,7 @@ Module documentation
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    fmpr.rst
    fmprb.rst
@@ -39,6 +41,7 @@ Credits and references
 ::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    credits.rst
+

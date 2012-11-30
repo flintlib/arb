@@ -1,4 +1,4 @@
-fmpcb.h -- complex numbers
+**fmpcb.h** -- complex numbers
 ===============================================================================
 
 Types, macros and constants
@@ -222,7 +222,9 @@ Arithmetic
 
 .. function:: void fmpcb_div_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 
-.. function:: fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long c, long prec)
+.. function:: void fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long y, long prec)
+
+.. function:: void fmpcb_div_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
@@ -347,3 +349,15 @@ Special functions
     Uses Euler-Maclaurin summation with a working precision of *prec* bits and
     default parameters obtained from *fmpcb_zeta_em_choose_param*,
     targeting an absolute truncation error of `2^{-\operatorname{prec}}`.
+
+.. function:: void fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+
+    Evaluates the truncated Euler-Maclaurin sum of order `N, M` for the
+    length-*d* truncated Taylor series of the Hurwitz zeta function
+    `\zeta(s,a)` at `s`. With `a = 1`, this gives the usual
+    Riemann zeta function.
+
+    If *deflate* is nonzero, `\zeta(s,a) - 1/(s-1)` is evaluated
+    (which permits series expansion at `s = 1`).
+
+

@@ -404,6 +404,14 @@ fmpcb_div_si(fmpcb_t z, const fmpcb_t x, long c, long prec)
     fmprb_div_si(fmpcb_imagref(z), fmpcb_imagref(x), c, prec);
 }
 
+static __inline__ void
+fmpcb_div_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t c, long prec)
+{
+    fmprb_div_fmpz(fmpcb_realref(z), fmpcb_realref(x), c, prec);
+    fmprb_div_fmpz(fmpcb_imagref(z), fmpcb_imagref(x), c, prec);
+}
+
+
 void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec);
 void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec);
 void fmpcb_pow_si(fmpcb_t y, const fmpcb_t b, long e, long prec);
@@ -512,6 +520,54 @@ _fmpcb_vec_scalar_mul(fmpcb_struct * res, const fmpcb_struct * vec, long len, co
     long i;
     for (i = 0; i < len; i++)
         fmpcb_mul(res + i, vec + i, c, prec);
+}
+
+void
+_fmpcb_vec_scalar_mul_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len, ulong c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_mul_ui(res + i, vec + i, c, prec);
+}
+
+void
+_fmpcb_vec_scalar_mul_2exp_si(fmpcb_struct * res, const fmpcb_struct * vec, long len, long c)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_mul_2exp_si(res + i, vec + i, c);
+}
+
+void
+_fmpcb_vec_scalar_div_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len, ulong c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_div_ui(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_fmpcb_vec_scalar_div(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_div(res + i, vec + i, c, prec);
+}
+
+void
+_fmpcb_vec_scalar_mul_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_mul_fmprb(res + i, vec + i, c, prec);
+}
+
+void
+_fmpcb_vec_scalar_div_fmpz(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpz_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_div_fmpz(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
