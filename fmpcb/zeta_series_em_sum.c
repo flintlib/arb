@@ -212,7 +212,7 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     _fmpcb_vec_set(z, sum, d);
 
     _fmpcb_vec_clear(t, d + 1);
-    _fmpcb_vec_clear(u, d;
+    _fmpcb_vec_clear(u, d);
     _fmpcb_vec_clear(v, d);
     _fmpcb_vec_clear(term, d);
     _fmpcb_vec_clear(sum, d);
