@@ -78,6 +78,14 @@ Input and output
     coefficient using *fmprb_printd*.
 
 
+Random generation
+-------------------------------------------------------------------------------
+
+.. function:: void fmprb_poly_randtest(fmprb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+
+    Creates a random polynomial with length at most *len*.
+
+
 Comparisons
 -------------------------------------------------------------------------------
 
@@ -90,6 +98,12 @@ Comparisons
     Returns nonzero iff *A* and *B* are equal as polynomial balls, i.e. all
     coefficients have equal midpoint and radius.
 
+.. function:: int _fmprb_poly_overlaps(const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2)
+
+.. function:: int fmprb_poly_overlaps(const fmprb_poly_t poly1, const fmprb_poly_t poly2)
+
+    Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
+    function requires that *len1* ist at least as large as *len2*.
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -340,5 +354,13 @@ Special functions
 
     Sets `f` to the series expansion of `\log(\Gamma(1-x))`, truncated to
     length `n`.
+
+.. function:: void _fmprb_poly_rfac_series_ui(fmprb_struct * res, const fmprb_struct * f, long flen, ulong r, long trunc, long prec)
+
+.. function:: void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
+
+    Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
+    to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
+    are at least 1, and does not support aliasing. Uses binary splitting.
 
 

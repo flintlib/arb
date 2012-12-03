@@ -16,7 +16,7 @@ General information
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    overview.rst
    setup.rst
@@ -26,7 +26,7 @@ Module documentation
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    fmpr.rst
    fmprb.rst
@@ -41,7 +41,7 @@ Credits and references
 ::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    credits.rst
 

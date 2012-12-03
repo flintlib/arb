@@ -107,9 +107,17 @@ int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t po
 
 int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B);
 
+int _fmprb_poly_overlaps(const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2);
+
+int fmprb_poly_overlaps(const fmprb_poly_t poly1, const fmprb_poly_t poly2);
+
 /* IO */
 
 void fmprb_poly_printd(const fmprb_poly_t poly, long digits);
+
+/* Random generation */
+
+void fmprb_poly_randtest(fmprb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits);
 
 /* Arithmetic */
 
@@ -313,6 +321,10 @@ void _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen,
 void fmprb_poly_exp_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec);
 
 void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
+
+void _fmprb_poly_rfac_series_ui(fmprb_struct * res, const fmprb_struct * f, long flen, ulong r, long trunc, long prec);
+
+void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec);
 
 #endif
 
