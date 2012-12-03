@@ -155,6 +155,11 @@ Complex parts
     the special value `\operatorname{arg}(0) = 0`, and
     `\operatorname{arg}(x+0i) = \pi` for `x < 0`.
 
+.. function:: void fmpcb_abs(fmprb_t r, const fmpcb_t z, long prec)
+
+    Sets *r* to the absolute value of *z*.
+
+
 Arithmetic
 -------------------------------------------------------------------------------
 
