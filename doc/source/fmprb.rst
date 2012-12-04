@@ -225,6 +225,33 @@ Precision and comparisons
 
     Returns nonzero iff *x* and *y* have some point in common.
 
+.. function:: int fmprb_is_nonzero(const fmprb_t x)
+
+    Returns nonzero iff zero is not contained in the interval represented
+    by *x*.
+
+.. function:: int fmprb_contains_negative(const fmprb_t x)
+
+.. function:: int fmprb_contains_nonpositive(const fmprb_t x)
+
+.. function:: int fmprb_contains_positive(const fmprb_t x)
+
+.. function:: int fmprb_contains_nonnegative(const fmprb_t x)
+
+    Returns nonzero iff there is any point *p* in the interval represented
+    by *x* that is, respectively, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
+
+.. function:: int fmprb_is_positive(const fmprb_t x)
+
+.. function:: int fmprb_is_nonnegative(const fmprb_t x)
+
+.. function:: int fmprb_is_negative(const fmprb_t x)
+
+.. function:: int fmprb_is_nonpositive(const fmprb_t x)
+
+    Returns nonzero iff all points *p* in the interval represented by *x*
+    satisfy, respectively, `p > 0`, `p \ge 0`, `p < 0`, `p \le 0`.
+
 .. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 
     Sets *u* to the upper bound of the absolute value of *x*,
@@ -359,6 +386,13 @@ Arithmetic
     Error propagation is done using the following rule:
     assuming `m > r \ge 0`, the error is largest at `m - r`, and we have
     `\sqrt{m} - \sqrt{m-r} \le r / (2 \sqrt{m-r})`.
+
+.. function:: void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets *z* to the square root of *x*, assuming that *x* represents a
+    nonnegative number (i.e. discarding any negative numbers in the input
+    interval), and producing an output interval not containing any
+    negative numbers (unless the radius is infinite).
 
 .. function:: void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 

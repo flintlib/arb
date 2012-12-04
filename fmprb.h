@@ -215,6 +215,8 @@ void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec);
 void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
+void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec);
+
 void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec);
@@ -355,6 +357,68 @@ int fmprb_contains_zero(const fmprb_t x);
 int fmprb_overlaps(const fmprb_t x, const fmprb_t y);
 
 int fmprb_contains(const fmprb_t x, const fmprb_t y);
+
+static __inline__ int
+fmprb_is_nonzero(const fmprb_t x)
+{
+    return !fmprb_contains_zero(x);
+}
+
+static __inline__ int
+fmprb_is_positive(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) > 0) &&
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) < 0);
+}
+
+static __inline__ int
+fmprb_is_nonnegative(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) >= 0) &&
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) <= 0);
+}
+
+static __inline__ int
+fmprb_is_negative(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) < 0) &&
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) < 0);
+}
+
+static __inline__ int
+fmprb_is_nonpositive(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) <= 0) &&
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) <= 0);
+}
+
+static __inline__ int
+fmprb_contains_negative(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) < 0) ||
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) > 0);
+}
+
+static __inline__ int
+fmprb_contains_nonpositive(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) <= 0) ||
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) >= 0);
+}
+
+static __inline__ int
+fmprb_contains_positive(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) > 0) ||
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) > 0);
+}
+
+static __inline__ int
+fmprb_contains_nonnegative(const fmprb_t x)
+{
+    return (fmpr_sgn(fmprb_midref(x)) >= 0) ||
+        (fmpr_cmp(fmprb_radref(x), fmprb_midref(x)) >= 0);
+}
 
 static __inline__ void
 fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
@@ -505,6 +569,31 @@ _fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
     long i;
     for (i = 0; i < len; i++)
         fmprb_addmul(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, const fmprb_struct * vec,
+        long len, long prec)
+{
+    fmpr_t t;
+    long i;
+
+    if (len < 1)
+    {
+        fmpr_zero(bound);
+    }
+    else
+    {
+        fmprb_get_abs_ubound_fmpr(bound, vec, prec);
+        fmpr_init(t);
+        for (i = 1; i < len; i++)
+        {
+            fmprb_get_abs_ubound_fmpr(t, vec + i, prec);
+            if (fmpr_cmp(t, bound) > 0)
+                fmpr_set(bound, t);
+        }
+        fmpr_clear(t);
+    }
 }
 
 #endif
