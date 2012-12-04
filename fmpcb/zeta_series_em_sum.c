@@ -99,7 +99,6 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     fmpz_t c;
     long i;
     ulong r, n;
-    int singular;
 
     bernoulli_cache_compute(2 * M);
 
@@ -185,7 +184,7 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     fmpcb_mul(Na, Na, Na, prec);
     fmpcb_inv(Na, Na, prec);
 
-    for (r = 1; r < M; r++)
+    for (r = 1; r <= M; r++)
     {
         /* sum += bernoulli number * term */
         fmprb_set_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r));
