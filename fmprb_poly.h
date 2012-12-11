@@ -101,6 +101,8 @@ fmprb_poly_set_fmprb(fmprb_poly_t poly, const fmprb_t c)
     _fmprb_poly_set_length(poly, !fmprb_is_zero(poly->coeffs));
 }
 
+void fmprb_poly_set_si(fmprb_poly_t poly, long c);
+
 /* Comparisons */
 
 int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
