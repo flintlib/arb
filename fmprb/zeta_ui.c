@@ -45,29 +45,43 @@ fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
     {
         fmprb_zeta_ui_asymp(x, n, prec);
     }
-    else if (n == 3)
-    {
-        fmprb_const_zeta3_bsplit(x, prec);
-    }
-    /* small even n */
-    else if ((n % 2 == 0) && (n < 40 + 0.11*prec))
-    {
-        fmprb_zeta_ui_bernoulli(x, n, prec);
-    }
-    /* small odd n, extremely high precision */
-    else if (n < prec * 0.0006)
-    {
-        fmprb_zeta_ui_bsplit(x, n, prec);
-    }
-    /* large n */
-    else if (prec > 20 && n > 6 && n > 0.4 * pow(prec, 0.8))
-    {
-        fmprb_zeta_ui_euler_product(x, n, prec);
-    }
-    /* fallback */
     else
     {
-        fmprb_zeta_ui_vec_borwein(x, n, 1, 0, prec);
+        /* even */
+        if (n % 2 == 0)
+        {
+            if (((prec < 10000) && (n < 40 + 0.11*prec)) ||
+                ((prec >= 10000) && (arith_bernoulli_number_size(n) * 0.9 < prec)))
+            {
+                fmprb_zeta_ui_bernoulli(x, n, prec);
+            }
+            else
+            {
+                fmprb_zeta_ui_euler_product(x, n, prec);
+            }
+        }
+        else
+        {
+            if (n == 3)
+            {
+                fmprb_const_zeta3_bsplit(x, prec);
+            }
+            else if (n < prec * 0.0006)
+            {
+                /* small odd n, extremely high precision */
+                fmprb_zeta_ui_bsplit(x, n, prec);
+            }
+            else if (prec > 20 && n > 6 && n > 0.4 * pow(prec, 0.8))
+            {
+                /* large n */
+                fmprb_zeta_ui_euler_product(x, n, prec);
+            }
+            else
+            {
+                /* fallback */
+                fmprb_zeta_ui_vec_borwein(x, n, 1, 0, prec);
+            }
+        }
     }
 }
 
