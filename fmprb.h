@@ -302,6 +302,8 @@ void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
+void fmprb_const_khinchin(fmprb_t K, long prec);
+
 void fmprb_zeta_ui_asymp(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
 void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec);

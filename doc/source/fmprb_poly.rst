@@ -66,6 +66,8 @@ Conversions
 
 .. function:: void fmprb_poly_set_fmpq_poly(fmprb_poly_t poly, const fmpq_poly_t src, long prec)
 
+.. function:: void fmprb_poly_set_si(fmprb_poly_t poly, long src)
+
     Sets *poly* to *src*, rounding the coefficients to *prec* bits.
 
 

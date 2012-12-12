@@ -28,6 +28,8 @@ The following software has been helpful in the development of Arb.
 Bibliography
 -------------------------------------------------------------------------------
 
+.. [BBC1997] D.H. Bailey, J. M. Borwein and R. E. Crandall, "On the Khintchine constant", Mathematics of Computation 66 (1997) 417-431
+
 .. [BBC2000] J.Borwein, D. M. Bradley and R. E. Crandall, "Computational strategies for the Riemann zeta function", Journal of Computational and Applied Mathematics 121 (2000) 247-296
 
 .. [BZ1992]_ J.Borwein and I.Zucker, "Fast evaluation of the gamma function for small rational fractions using complete elliptic integrals of the first kind", IMA Journal of Numerical Analysis 12 (1992) 519-526
