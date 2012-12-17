@@ -25,27 +25,54 @@
 
 #include "fmprb.h"
 
-/* sets y = x / (2^n - 1) */
-/* XXX: for huge n, use better algorithm / fix overflow in the loop */
+
+
+/* TODO: fix/optimize for n > prec */
 void
 fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
-    fmpz_t t;
-    fmprb_t u;
-    long i;
+    if (n < FLINT_BITS)
+    {
+        fmprb_div_ui(y, x, (1UL << n) - 1, prec);
+    }
+    else if (n < 1024 + prec / 32)
+    {
+        fmprb_t t;
+        fmprb_init(t);
+        fmprb_one(t);
+        fmpz_set_ui(fmpr_expref(fmprb_midref(t)), n);
+        fmprb_sub_ui(t, t, 1, prec);
+        fmprb_div(y, x, t, prec);
+        fmprb_clear(t);
+    }
+    else
+    {
+        fmprb_t s, t;
+        long i, b;
 
-    fmpz_init(t);
-    fmprb_init(u);
+        fmprb_init(s);
+        fmprb_init(t);
 
-    for (i = prec; i >= 0; i -= n)
-        fmpz_setbit(t, i);
+        /* x / (2^n - 1) = sum_{k>=1} x * 2^(-k*n)*/
 
-    fmpr_set_fmpz(fmprb_midref(u), t);
-    fmpr_one(fmprb_radref(u));
+        fmprb_mul_2exp_si(s, x, -n);
+        fmprb_set(t, s);
+        b = 1;
 
-    fmprb_mul(y, x, u, prec);
-    fmprb_mul_2exp_si(y, y, -prec-n);
+        for (i = 2; i <= prec / n; i++)
+        {
+            fmprb_mul_2exp_si(t, t, -n);
+            fmprb_add(s, s, t, prec);
+            b = i;
+        }
 
-    fmpz_clear(t);
-    fmprb_clear(u);
+        /* error bound: sum_{k>b} x * 2^(-k*n) <= x * 2^(-b*n - (n-1)) */
+        fmprb_mul_2exp_si(t, x, -b*n - (n-1));
+        fmprb_add_error(s, t);
+
+        fmprb_set(y, s);
+
+        fmprb_clear(s);
+        fmprb_clear(t);
+    }
 }
