@@ -207,7 +207,6 @@ int fmpr_cmp(const fmpr_t x, const fmpr_t y);
 
 int fmpr_cmpabs(const fmpr_t x, const fmpr_t y);
 
-
 void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
 
 void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
@@ -578,6 +577,28 @@ fmpr_set_ui_2exp_si(fmpr_t x, ulong man, long exp)
 {
     fmpr_set_ui(x, man);
     fmpr_mul_2exp_si(x, x, exp);
+}
+
+static __inline__ int fmpr_cmp_2exp_si(const fmpr_t x, long e)
+{
+    fmpr_t t;
+    int res;
+    fmpr_init(t);
+    fmpr_set_ui_2exp_si(t, 1, e);
+    res = fmpr_cmp(x, t);
+    fmpr_clear(t);
+    return res;
+}
+
+static __inline__ int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
+{
+    fmpr_t t;
+    int res;
+    fmpr_init(t);
+    fmpr_set_ui_2exp_si(t, 1, e);
+    res = fmpr_cmpabs(x, t);
+    fmpr_clear(t);
+    return res;
 }
 
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \

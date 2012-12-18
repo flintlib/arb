@@ -198,6 +198,12 @@ Comparisons
 
     Compares the absolute values of *x* and *y*.
 
+.. function:: int fmpr_cmp_2exp_si(const fmpr_t x, long e)
+
+.. function:: int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
+
+    Compares *x* (respectively its absolute value) with `2^e`.
+
 .. function:: int fmpr_sgn(const fmpr_t x)
 
     Returns `-1`, `0` or `+1` according to the sign of *x*. The sign

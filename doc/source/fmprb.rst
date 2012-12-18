@@ -271,6 +271,12 @@ Precision and comparisons
     or if the difference in magnitude between the midpoint and radius
     is so large that representing the endpoints exactly would cause overflows.
 
+.. function:: int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
+
+    If *x* contains a unique integer, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero.
+
 .. function:: long fmprb_rel_error_bits(const fmprb_t x)
 
     Returns the effective relative error of *x* measured in bits, defined as

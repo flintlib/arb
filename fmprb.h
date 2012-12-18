@@ -452,6 +452,8 @@ fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 
 void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x);
 
+int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x);
+
 static __inline__ long
 fmprb_rel_error_bits(const fmprb_t x)
 {
