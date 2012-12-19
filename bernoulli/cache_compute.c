@@ -41,7 +41,7 @@ bernoulli_cache_compute(long n)
         new_num = n;
 
         bernoulli_cache = flint_realloc(bernoulli_cache, new_num * sizeof(fmpq));
-        for (i = n; i < new_num; i++)
+        for (i = bernoulli_cache_num; i < new_num; i++)
             fmpq_init(bernoulli_cache + i);
 
         i = new_num - 1;
@@ -53,7 +53,7 @@ bernoulli_cache_compute(long n)
         bernoulli_rev_clear(iter);
 
         if (new_num > 1)
-            fmpq_set_si(bernoulli_cache + i, -1, 2);
+            fmpq_set_si(bernoulli_cache + 1, -1, 2);
 
         bernoulli_cache_num = new_num;
     }
