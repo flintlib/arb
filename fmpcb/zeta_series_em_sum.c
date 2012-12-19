@@ -25,9 +25,7 @@
 
 #include "fmpcb.h"
 #include "fmpcb_poly.h"
-
-void bernoulli_cache_compute(long n);
-extern fmpq * bernoulli_cache;
+#include "bernoulli.h"
 
 /* res = src * (c + x) */
 void _fmpcb_poly_mullow_cpx(fmpcb_struct * res, const fmpcb_struct * src, long len, const fmpcb_t c, long trunc, long prec)

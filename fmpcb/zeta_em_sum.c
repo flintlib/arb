@@ -24,9 +24,7 @@
 ******************************************************************************/
 
 #include "fmpcb.h"
-
-void bernoulli_cache_compute(long n);
-extern fmpq * bernoulli_cache;
+#include "bernoulli.h"
 
 void
 fmpcb_zeta_em_sum(fmpcb_t z, const fmpcb_t s, ulong N, ulong M, long prec)

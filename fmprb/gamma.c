@@ -26,33 +26,7 @@
 #include <math.h>
 #include "arith.h"
 #include "fmprb.h"
-
-/* TODO: the following helper functions should be moved to separate files,
-   and need test code */
-
-long bernoulli_cache_num = 0;
-fmpq * bernoulli_cache = NULL;
-
-/* makes sure that b_0, b_1 ... b_{n-1} are cached
-  TODO: don't recompute from scratch if nearly large enough */
-void
-bernoulli_cache_compute(long n)
-{
-    if (bernoulli_cache_num < n)
-    {
-        long new_num;
-
-        new_num = FLINT_MAX(bernoulli_cache_num * 2, n);
-        new_num = n;
-
-        _fmpz_vec_clear((fmpz *) bernoulli_cache, 2 * bernoulli_cache_num);
-        bernoulli_cache = (fmpq *) _fmpz_vec_init(2 * new_num);
-
-        arith_bernoulli_number_vec(bernoulli_cache, new_num);
-
-        bernoulli_cache_num = new_num;
-    }
-}
+#include "bernoulli.h"
 
 void
 fmprb_stirling_series_coeff(fmprb_t b, ulong k, long prec)

@@ -36,6 +36,7 @@ Module documentation
    fmpcb_poly.rst
    fmpcb_mat.rst
    fmpz_holonomic.rst
+   bernoulli.rst
 
 Credits and references
 ::::::::::::::::::::::::
