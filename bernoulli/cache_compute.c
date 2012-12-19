@@ -49,7 +49,7 @@ bernoulli_cache_compute(long n)
         bernoulli_rev_init(iter, i);
         for ( ; i >= 0; i -= 2)
             bernoulli_rev_next(fmpq_numref(bernoulli_cache + i),
-                fmpq_denref(bernoulli_cache + i), i);
+                fmpq_denref(bernoulli_cache + i), iter);
         bernoulli_rev_clear(iter);
 
         if (new_num > 1)
