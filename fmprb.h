@@ -316,7 +316,10 @@ void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
 
 void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long prec);
-void fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec);
+
+void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
+void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);
+void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec);
 
 static __inline__ void
 fmprb_print(const fmprb_t x)
@@ -493,6 +496,9 @@ void fmprb_add_error_2exp_si(fmprb_t x, long err);
 void fmprb_add_error(fmprb_t x, const fmprb_t error);
 
 void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
+void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
+void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
+void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
 void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
 

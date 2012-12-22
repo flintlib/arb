@@ -178,6 +178,20 @@ Random number generation
 
     Generates a random ball. The midpoint and radius will both be finite.
 
+.. function:: void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random number with zero radius.
+
+.. function:: void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random number with radius at most `2^{-\mathrm{prec}}`
+    the magnitude of the midpoint.
+
+.. function:: void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random number with midpoint and radius chosen independently,
+    possibly giving a very large interval.
+
 .. function:: void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits)
 
     Sets *q* to a random rational number from the interval represented by *x*.
@@ -723,9 +737,14 @@ Gamma function
     be done here so that a working precision is selected which always is
     sufficient and also nearly optimal.
 
-.. function:: void fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec)
+.. function:: void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
 
-    Sets `y = \log \Gamma(x)`, assuming that `x > 0`.
+.. function:: void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec)
+
+.. function:: void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets, respectively, `y = \Gamma(x)`, `y = 1/\Gamma(x)`,
+    `y = \log \Gamma(x)`.
 
     For large `x`, uses Stirling's expansion
 
@@ -744,8 +763,8 @@ Gamma function
 
     If `x` is too small for the asymptotic expansion to give sufficient
     accuracy directly, we translate to `x + r`
-    using the formula `\log \Gamma(x) = \log \Gamma(x+r) -
-    \log(x (x+1) (x+2) \cdots (x+r-1))`.
+    using the formula `\Gamma(x) = \Gamma(x+r) / 
+    (x (x+1) (x+2) \cdots (x+r-1))`.
 
     To obtain a remainder smaller than `2^{-b}`, we must choose an `r` such
     that `x + r > \beta b`, where `\beta > \log(2) / (2 \pi) \approx 0.11`.

@@ -26,26 +26,49 @@
 #include "fmprb.h"
 
 void
-fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+{
+    fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
+    fmpr_zero(fmprb_radref(x));
+}
+
+void
+fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+{
+    fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
+    fmpr_randtest(fmprb_radref(x), state, FMPRB_RAD_PREC, mag_bits);
+    fmpr_abs(fmprb_radref(x), fmprb_radref(x));
+}
+
+void
+fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 {
     fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
 
+    if (fmpr_is_zero(fmprb_midref(x)) || (n_randint(state, 8) == 0))
+    {
+        fmpr_zero(fmprb_radref(x));
+    }
+    else
+    {
+        fmpz_randtest_not_zero(fmpr_manref(fmprb_radref(x)), state, FMPRB_RAD_PREC);
+        fmpz_abs(fmpr_manref(fmprb_radref(x)), fmpr_manref(fmprb_radref(x)));
+        fmpz_sub_ui(fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_midref(x)), prec + FMPRB_RAD_PREC);
+    }
+}
+
+void
+fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+{
     switch (n_randint(state, 8))
     {
-        /* exact */
         case 0:
-            fmpr_zero(fmprb_radref(x));
+            fmprb_randtest_exact(x, state, prec, mag_bits);
             break;
-        /* arbitrary radius */
         case 1:
-            fmpr_randtest(fmprb_radref(x), state, FMPRB_RAD_PREC, mag_bits);
-            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
+            fmprb_randtest_wide(x, state, prec, mag_bits);
             break;
-        /* "typical" radius */
         default:
-            fmpr_randtest_not_zero(fmprb_radref(x), state, FMPRB_RAD_PREC, 4);
-            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
-            fmpz_add(fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_radref(x)),
-                fmpr_expref(fmprb_midref(x)));
+            fmprb_randtest_precise(x, state, prec, mag_bits);
     }
 }

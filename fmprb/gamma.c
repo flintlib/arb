@@ -159,7 +159,7 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
 }
 
 void
-fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec)
+fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
 {
     long r, n, wp;
     fmprb_t t, u;
@@ -179,6 +179,59 @@ fmprb_gamma_log(fmprb_t y, const fmprb_t x, long prec)
     fmprb_rfac_ui_bsplit(t, x, r, wp);
     fmprb_log(t, t, wp);
     fmprb_sub(y, u, t, prec);
+
+    fmprb_clear(t);
+    fmprb_clear(u);
+}
+
+void
+fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
+{
+    long r, n, wp;
+    fmprb_t t, u;
+
+    wp = prec + FLINT_BIT_COUNT(prec);
+
+    r = stirling_choose_r(x, wp);
+    n = stirling_choose_nterms(x, r, wp);
+
+    /* gamma(x) = gamma(x+r) / rf(x,r) */
+    fmprb_init(t);
+    fmprb_init(u);
+
+    fmprb_add_ui(t, x, r, wp);
+    fmprb_gamma_log_stirling(u, t, n, wp);
+    fmprb_exp(u, u, prec);
+
+    fmprb_rfac_ui_bsplit(t, x, r, wp);
+    fmprb_div(y, u, t, prec);
+
+    fmprb_clear(t);
+    fmprb_clear(u);
+}
+
+void
+fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec)
+{
+    long r, n, wp;
+    fmprb_t t, u;
+
+    wp = prec + FLINT_BIT_COUNT(prec);
+
+    r = stirling_choose_r(x, wp);
+    n = stirling_choose_nterms(x, r, wp);
+
+    /* 1/gamma(x) = rf(x,r) / gamma(x+r) */
+    fmprb_init(t);
+    fmprb_init(u);
+
+    fmprb_add_ui(t, x, r, wp);
+    fmprb_gamma_log_stirling(u, t, n, wp);
+    fmprb_neg(u, u);
+    fmprb_exp(u, u, prec);
+
+    fmprb_rfac_ui_bsplit(t, x, r, wp);
+    fmprb_mul(y, u, t, prec);
 
     fmprb_clear(t);
     fmprb_clear(u);
