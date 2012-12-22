@@ -32,8 +32,9 @@ fmprb_log(fmprb_t z, const fmprb_t x, long prec)
 
     if (fmprb_contains_zero(x) || fmpr_sgn(fmprb_midref(x)) < 0)
     {
-        printf("log: interval contains zero or negative numbers\n");
-        abort();
+        fmpr_nan(fmprb_midref(z));
+        fmpr_pos_inf(fmprb_radref(z));
+        return;
     }
 
     if (fmprb_is_exact(x))
