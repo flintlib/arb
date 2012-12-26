@@ -98,7 +98,7 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     long i;
     ulong r, n;
 
-    bernoulli_cache_compute(2 * M);
+    bernoulli_cache_compute(2 * M + 1);
 
     t = _fmpcb_vec_init(d + 1);
     u = _fmpcb_vec_init(d);
