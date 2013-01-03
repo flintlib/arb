@@ -25,10 +25,9 @@
 
 #include "fmpr.h"
 
-
 int main()
 {
-    long iter;
+    long iter, iter2;
     flint_rand_t state;
 
     printf("mul....");
@@ -36,71 +35,110 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
-        long bits;
-        fmpr_t x, y, z, w;
-        mpfr_t X, Y, Z;
-
-        bits = 2 + n_randint(state, 200);
+        fmpr_t x, y, z, v;
+        long prec, r1, r2;
+        fmpr_rnd_t rnd;
 
         fmpr_init(x);
         fmpr_init(y);
         fmpr_init(z);
-        fmpr_init(w);
+        fmpr_init(v);
 
-        mpfr_init2(X, bits + 100);
-        mpfr_init2(Y, bits + 100);
-        mpfr_init2(Z, bits);
-
-        fmpr_randtest_special(x, state, bits + n_randint(state, 100), 10);
-        fmpr_randtest_special(y, state, bits + n_randint(state, 100), 10);
-        fmpr_randtest_special(z, state, bits + n_randint(state, 100), 10);
-
-        fmpr_get_mpfr(X, x, MPFR_RNDN);
-        fmpr_get_mpfr(Y, y, MPFR_RNDN);
-
-        switch (n_randint(state, 4))
+        for (iter2 = 0; iter2 < 100; iter2++)
         {
+            fmpr_randtest_special(x, state, 2000, 200);
+            fmpr_randtest_special(y, state, 2000, 200);
+            prec = 2 + n_randint(state, 2000);
+
+            switch (n_randint(state, 4))
+            {
+                case 0:  rnd = FMPR_RND_DOWN; break;
+                case 1:  rnd = FMPR_RND_UP; break;
+                case 2:  rnd = FMPR_RND_FLOOR; break;
+                default: rnd = FMPR_RND_CEIL; break;
+            }
+
+            switch (n_randint(state, 5))
+            {
             case 0:
-                mpfr_mul(Z, X, Y, MPFR_RNDZ);
-                fmpr_mul(z, x, y, bits, FMPR_RND_DOWN);
+                r1 = fmpr_mul(z, x, y, prec, rnd);
+                r2 = fmpr_mul_naive(v, x, y, prec, rnd);
+                if (!fmpr_equal(z, v) || r1 != r2)
+                {
+                    printf("FAIL!\n");
+                    printf("x = "); fmpr_print(x); printf("\n\n");
+                    printf("y = "); fmpr_print(y); printf("\n\n");
+                    printf("z = "); fmpr_print(z); printf("\n\n");
+                    printf("v = "); fmpr_print(v); printf("\n\n");
+                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    abort();
+                }
                 break;
+
             case 1:
-                mpfr_mul(Z, X, Y, MPFR_RNDA);
-                fmpr_mul(z, x, y, bits, FMPR_RND_UP);
+                r1 = fmpr_mul(z, x, x, prec, rnd);
+                r2 = fmpr_mul_naive(v, x, x, prec, rnd);
+                if (!fmpr_equal(z, v) || r1 != r2)
+                {
+                    printf("FAIL (aliasing 1)!\n");
+                    printf("x = "); fmpr_print(x); printf("\n\n");
+                    printf("z = "); fmpr_print(z); printf("\n\n");
+                    printf("v = "); fmpr_print(v); printf("\n\n");
+                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    abort();
+                }
                 break;
+
             case 2:
-                mpfr_mul(Z, X, Y, MPFR_RNDD);
-                fmpr_mul(z, x, y, bits, FMPR_RND_FLOOR);
+                r2 = fmpr_mul_naive(v, x, x, prec, rnd);
+                r1 = fmpr_mul(x, x, x, prec, rnd);
+                if (!fmpr_equal(v, x) || r1 != r2)
+                {
+                    printf("FAIL (aliasing 2)!\n");
+                    printf("x = "); fmpr_print(x); printf("\n\n");
+                    printf("z = "); fmpr_print(z); printf("\n\n");
+                    printf("v = "); fmpr_print(v); printf("\n\n");
+                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    abort();
+                }
                 break;
+
             case 3:
-                mpfr_mul(Z, X, Y, MPFR_RNDU);
-                fmpr_mul(z, x, y, bits, FMPR_RND_CEIL);
+                r2 = fmpr_mul_naive(v, x, y, prec, rnd);
+                r1 = fmpr_mul(x, x, y, prec, rnd);
+                if (!fmpr_equal(x, v) || r1 != r2)
+                {
+                    printf("FAIL (aliasing 3)!\n");
+                    printf("x = "); fmpr_print(x); printf("\n\n");
+                    printf("y = "); fmpr_print(y); printf("\n\n");
+                    printf("v = "); fmpr_print(v); printf("\n\n");
+                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    abort();
+                }
                 break;
-        }
 
-        fmpr_set_mpfr(w, Z);
-
-        if (!fmpr_equal(z, w))
-        {
-            printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
-            abort();
+            default:
+                r2 = fmpr_mul_naive(v, x, y, prec, rnd);
+                r1 = fmpr_mul(x, y, x, prec, rnd);
+                if (!fmpr_equal(x, v) || r1 != r2)
+                {
+                    printf("FAIL (aliasing 4)!\n");
+                    printf("x = "); fmpr_print(x); printf("\n\n");
+                    printf("y = "); fmpr_print(y); printf("\n\n");
+                    printf("v = "); fmpr_print(v); printf("\n\n");
+                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    abort();
+                }
+                break;
+            }
         }
 
         fmpr_clear(x);
         fmpr_clear(y);
         fmpr_clear(z);
-        fmpr_clear(w);
-
-        mpfr_clear(X);
-        mpfr_clear(Y);
-        mpfr_clear(Z);
+        fmpr_clear(v);
     }
 
     flint_randclear(state);
