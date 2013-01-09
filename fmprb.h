@@ -165,6 +165,28 @@ fmprb_set_fmpz(fmprb_t x, const fmpz_t y)
     fmpr_zero(fmprb_radref(x));
 }
 
+static __inline__ void
+fmprb_set_fmpz_2exp(fmprb_t x, const fmpz_t y, const fmpz_t exp)
+{
+    fmpr_set_fmpz_2exp(fmprb_midref(x), y, exp);
+    fmpr_zero(fmprb_radref(x));
+}
+
+
+static __inline__ void
+fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, long prec)
+{
+    long r = fmpr_set_round_fmpz_2exp(fmprb_midref(y), x, exp, prec, FMPR_RND_DOWN);
+    fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
+}
+
+static __inline__ void
+fmprb_set_round_fmpz(fmprb_t y, const fmpz_t x, long prec)
+{
+    long r = fmpr_set_round_fmpz(fmprb_midref(y), x, prec, FMPR_RND_DOWN);
+    fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
+}
+
 static __inline__ int
 fmprb_is_one(const fmprb_t f)
 {

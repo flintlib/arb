@@ -79,8 +79,7 @@ fmpcb_zeta_em_sum(fmpcb_t z, const fmpcb_t s, ulong N, ulong M, long prec)
     for (r = 1; r < M; r++)
     {
         /* sum += bernoulli number * term */
-        fmprb_set_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r));
-        fmprb_set_round(x, x, prec);
+        fmprb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);
         fmprb_div_fmpz(x, x, fmpq_denref(bernoulli_cache + 2 * r), prec);
 
         fmprb_mul(fmpcb_realref(u), fmpcb_realref(term), x, prec);

@@ -42,22 +42,6 @@ void _fmpr_fmpz_vec_max_norm(fmpr_t norm, const fmpz * vec, long len, long prec)
     fmpr_abs(norm, norm);
 }
 
-/* XXX: refactor this */
-void fmprb_set_fmpz_2exp_round(fmprb_t y, const fmpz_t x, const fmpz_t exp, long prec)
-{
-    fmprb_set_fmpz(y, x);
-
-    if (!fmpz_is_zero(x))
-    {
-        long r;
-
-        fmpz_add(fmpr_expref(fmprb_midref(y)), fmpr_expref(fmprb_midref(y)), exp);
-
-        r = fmpr_set_round(fmprb_midref(y), fmprb_midref(y), prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
-    }
-}
-
 int _fmprb_poly_mid_get_hull(fmpz_t bot_exp, fmpz_t top_exp, const fmprb_struct * A, long lenA)
 {
     long i;
@@ -233,7 +217,7 @@ void _fmprb_poly_mullow_ztrunc(fmprb_struct * C,
 
     for (i = 0; i < n; i++)
     {
-        fmprb_set_fmpz_2exp_round(C + i, Ccoeffs + i, Cexp, prec);
+        fmprb_set_round_fmpz_2exp(C + i, Ccoeffs + i, Cexp, prec);
 
         /* there are at most (i+1) error terms for coefficient i */
         /* TODO: make this tight */

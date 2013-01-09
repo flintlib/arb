@@ -210,7 +210,38 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
 }
 
+static __inline__ long
+fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+{
+    if (fmpz_is_zero(x))
+    {
+        fmpr_zero(y);
+        return FMPR_PREC_EXACT;
+    }
+    else
+    {
+        return _fmpr_set_round(fmpr_manref(y), fmpr_expref(y), x, exp, prec, rnd);
+    }
+}
 
+static __inline__ long
+fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
+{
+    if (fmpz_is_zero(x))
+    {
+        fmpr_zero(y);
+        return FMPR_PREC_EXACT;
+    }
+    else
+    {
+        long ret;
+        fmpz_t exp;
+        fmpz_init(exp);
+        ret = _fmpr_set_round(fmpr_manref(y), fmpr_expref(y), x, exp, prec, rnd);
+        fmpz_clear(exp);
+        return ret;
+    }
+}
 
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)
@@ -528,6 +559,7 @@ fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
     */
     else
     {
+        /* TODO: inline this */
         fmpz_sub_ui(fmpr_expref(err), fmpr_expref(result), rret);
         fmpz_one(fmpr_manref(err));
     }

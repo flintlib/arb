@@ -30,9 +30,7 @@ fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_one(fmpq_denref(y)))
     {
-        fmpr_set_fmpz(x, fmpq_numref(y));
-        /* XXX: combine */
-        return fmpr_set_round(x, x, prec, rnd);
+        return fmpr_set_round_fmpz(x, fmpq_numref(y), prec, rnd);
     }
     else
     {

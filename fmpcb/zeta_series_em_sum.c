@@ -185,8 +185,7 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     for (r = 1; r <= M; r++)
     {
         /* sum += bernoulli number * term */
-        fmprb_set_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r));
-        fmprb_set_round(x, x, prec);
+        fmprb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);
         fmprb_div_fmpz(x, x, fmpq_denref(bernoulli_cache + 2 * r), prec);
 
         _fmpcb_vec_scalar_mul_fmprb(u, term, d, x, prec);

@@ -91,8 +91,7 @@ fmpr_gamma_ui_lbound(fmpr_t x, ulong n, long prec)
         fmpz_t t;
         fmpz_init(t);
         fmpz_fac_ui(t, n - 1);
-        fmpr_set_fmpz(x, t);
-        fmpr_set_round(x, x, prec, FMPR_RND_DOWN);
+        fmpr_set_round_fmpz(x, t, prec, FMPR_RND_DOWN);
         fmpz_clear(t);
     }
     else
@@ -131,8 +130,7 @@ fmpr_gamma_ui_ubound(fmpr_t x, ulong n, long prec)
         fmpz_t t;
         fmpz_init(t);
         fmpz_fac_ui(t, n - 1);
-        fmpr_set_fmpz(x, t);
-        fmpr_set_round(x, x, prec, FMPR_RND_UP);
+        fmpr_set_round_fmpz(x, t, prec, FMPR_RND_UP);
         fmpz_clear(t);
     }
     else
