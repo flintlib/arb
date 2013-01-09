@@ -25,7 +25,8 @@
 
 #include "fmpr.h"
 
-long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+long
+_fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
 {
     /* TODO: this should perhaps raise an exception to avoid ambiguity */
     if (fmpz_is_zero(man))

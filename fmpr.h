@@ -155,8 +155,7 @@ fmpr_one(fmpr_t x)
 
 /* ------------------------------------------------------------------------ */
 
-/* TODO: version for just the val2 reduction! */
-long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd);
+long _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd);
 
 static __inline__ void
 fmpr_set(fmpr_t y, const fmpr_t x)
@@ -168,8 +167,26 @@ fmpr_set(fmpr_t y, const fmpr_t x)
     }
 }
 
+long _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
+    const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd);
+
 static __inline__ long
-fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+_fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+{
+    if (fmpz_is_zero(man))
+    {
+        fmpz_zero(man);
+        fmpz_zero(exp);
+        return FMPR_PREC_EXACT;
+    }
+    else
+    {
+        return _fmpr_set_round(man, exp, man, exp, prec, rnd);
+    }
+}
+
+static __inline__ long
+fmpr_set_round_naive(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
     fmpr_set(y, x);
     if (fmpr_is_special(y))
@@ -177,6 +194,22 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     else
         return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
 }
+
+static __inline__ long
+fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+{
+    if (fmpr_is_special(x))
+    {
+        fmpr_set(y, x);
+        return FMPR_PREC_EXACT;
+    }
+    else
+    {
+        return _fmpr_set_round(fmpr_manref(y), fmpr_expref(y),
+            fmpr_manref(x), fmpr_expref(x), prec, rnd);
+    }
+}
+
 
 
 static __inline__ int
