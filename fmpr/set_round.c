@@ -69,22 +69,6 @@ mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
     return (i * FLINT_BITS) + c;
 }
 
-static __inline__ void
-tdiv_1(fmpz_t f, const fmpz_t g, ulong exp)
-{
-    __mpz_struct * z = _fmpz_promote(f);
-    __mpz_struct * h = COEFF_TO_PTR(*g);
-    mpz_tdiv_q_2exp(z, h, exp);
-}
-
-static __inline__ void
-tdiv_2(fmpz_t f, __mpz_struct * g, ulong exp)
-{
-    __mpz_struct * z = _fmpz_promote(f);
-    mpz_tdiv_q_2exp(z, g, exp);
-}
-
-
 long
 _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
     const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
@@ -230,15 +214,13 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
             }
             else
             {
-#if 1
-                tdiv_1(rman, man, val);
-#else
-                /* broken */
-                tdiv_2(rman, COEFF_TO_PTR(*man), val);
-#endif
+                __mpz_struct * w = _fmpz_promote(rman);
+                /* must reload pointer, as promoting rman could change it */
+                z = COEFF_TO_PTR(*man);
+                mpz_tdiv_q_2exp(w, z, val);
 
                 if (increment)
-                    COEFF_TO_PTR(*rman)->_mp_d[0]++;
+                    w->_mp_d[0]++;
             }
         }
 
