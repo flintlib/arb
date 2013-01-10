@@ -25,95 +25,263 @@
 
 #include "fmprb.h"
 
-void
-fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+static __inline__ void
+_fmpz_add_si(fmpz_t z, const fmpz_t x, long y)
 {
-    long r;
+    fmpz f;
 
-    if (fmprb_is_exact(x))
+    f = *x;
+
+    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(y))
+        fmpz_set_si(z, f + y);
+    else if (y >= 0)
+        fmpz_add_ui(z, x, y);
+    else
+        fmpz_sub_ui(z, x, -y);
+}
+
+static __inline__ void
+_fmpz_add(fmpz_t z, const fmpz_t x, const fmpz_t y)
+{
+    fmpz f, g;
+
+    f = *x;
+    g = *y;
+
+    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(g))
+        fmpz_set_si(z, f + g);
+    else
+        fmpz_add(z, x, y);
+}
+
+
+/* we speed up the radius operations by working with mantissas aligned to
+   FMPRB_RAD_PREC bits (possibly one less bit after multiplying)
+
+   TODO: write down proof that the additions don't cause overflow
+*/
+
+#define _RAD_MUL(a, ae, b, be) \
+    do { \
+        mp_limb_t hi, lo; \
+        umul_ppmm(hi, lo, a, b); \
+        a = ((hi << (FLINT_BITS - FMPRB_RAD_PREC)) | (lo >> FMPRB_RAD_PREC)) + 1; \
+        _fmpz_add(ae, ae, be); \
+    } while (0); \
+
+static __inline__ void
+_rad_bound(mp_limb_t * m, fmpz_t exp, const fmpr_t t)
+{
+    long e;
+    *m = fmpz_abs_ubound_ui_2exp(&e, fmpr_manref(t), FMPRB_RAD_PREC);
+    _fmpz_add_si(exp, fmpr_expref(t), e);
+}
+
+static __inline__ mp_limb_t
+_rad_add(mp_limb_t a, fmpz_t aexp, mp_limb_t b, fmpz_t bexp)
+{
+    long shift;
+
+    shift = _fmpz_sub_small(aexp, bexp);
+
+    if (shift == 0)
     {
-        if (fmprb_is_exact(y))
-        {
-            r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-            fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
-        }
+        return a + b;
+    }
+    else if (shift > 0)
+    {
+        if (shift <= FMPRB_RAD_PREC)
+            return a + (b >> shift) + 1;
         else
-        {
-            /* x * (y+b) = x*y + x*b */
-            fmpr_mul(fmprb_radref(z), fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_abs(fmprb_radref(z), fmprb_radref(z));
-
-            r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN); 
-            fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
-                fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
-        }
+            return a + 1;
     }
     else
     {
-        if (fmprb_is_exact(x))
-        {
-            /* (x+a) * y = x*y + y*a */
-            fmpr_mul(fmprb_radref(z), fmprb_midref(y), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_abs(fmprb_radref(z), fmprb_radref(z));
+        fmpz_swap(aexp, bexp);
 
-            r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-            fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
-                fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+        if ((-shift) <= FMPRB_RAD_PREC)
+            return b + (a >> (-shift)) + 1;
+        else
+            return b + 1;
+    }
+}
+
+void _fmprb_mul_main(fmpr_t z, fmpr_t c,
+    const fmpr_t x, const fmpr_t a,
+    const fmpr_t y, const fmpr_t b, long prec)
+{
+    mp_limb_t xm, am, ym, bm;
+    fmpz_t xe, ae, ye, be;
+    long r, shift;
+
+    fmpz_init(xe);
+    fmpz_init(ae);
+    fmpz_init(ye);
+    fmpz_init(be);
+
+    _rad_bound(&xm, xe, x);
+    _rad_bound(&ym, ye, y);
+    _rad_bound(&am, ae, a);
+    _rad_bound(&bm, be, b);
+
+    _RAD_MUL(xm, xe, bm, be);
+    _RAD_MUL(ym, ye, am, ae);
+    xm = _rad_add(xm, xe, ym, ye);
+
+    _RAD_MUL(am, ae, bm, be);
+    xm = _rad_add(xm, xe, am, ae);
+
+    r = fmpr_mul(z, x, y, prec, FMPR_RND_DOWN);
+
+    if (r != FMPR_RESULT_EXACT)
+    {
+        am = 1UL << FMPRB_RAD_PREC;
+        _fmpz_add_si(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
+        xm = _rad_add(xm, xe, am, ae);
+    }
+
+    shift = FMPRB_RAD_PREC;
+
+    /* make the radius mantissa odd and small */
+    xm += !(xm & 1);
+    while (xm >= (1UL << FMPRB_RAD_PREC))
+    {
+        xm = (xm >> 1) + 1;
+        xm += !(xm & 1);
+        shift++;
+    }
+
+    fmpz_set_ui(fmpr_manref(c), xm);
+    _fmpz_add_si(fmpr_expref(c), xe, shift);
+
+    fmpz_clear(xe);
+    fmpz_clear(ae);
+    fmpz_clear(ye);
+    fmpz_clear(be);
+}
+
+void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
+    const fmpr_t x, const fmpr_t a,
+    const fmpr_t y, long prec)
+{
+    mp_limb_t ym, am;
+    fmpz_t ye, ae;
+    long r, shift;
+
+    fmpz_init(ye);
+    fmpz_init(ae);
+
+    _rad_bound(&ym, ye, y);
+    _rad_bound(&am, ae, a);
+    _RAD_MUL(ym, ye, am, ae);
+
+    r = fmpr_mul(z, x, y, prec, FMPR_RND_DOWN);
+
+    if (r != FMPR_RESULT_EXACT)
+    {
+        am = 1UL << FMPRB_RAD_PREC;
+        _fmpz_add_si(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
+        ym = _rad_add(ym, ye, am, ae);
+    }
+
+    shift = FMPRB_RAD_PREC;
+
+    /* make the radius mantissa odd and small */
+    ym += !(ym & 1);
+    while (ym >= (1UL << FMPRB_RAD_PREC))
+    {
+        ym = (ym >> 1) + 1;
+        ym += !(ym & 1);
+        shift++;
+    }
+
+    fmpz_set_ui(fmpr_manref(c), ym);
+    _fmpz_add_si(fmpr_expref(c), ye, shift);
+
+    fmpz_clear(ye);
+    fmpz_clear(ae);
+}
+
+void
+fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+{
+    if (fmprb_is_exact(x))
+    {
+        long r;
+        r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+    }
+    else
+    {
+        if (fmpr_is_special(fmprb_midref(x)) ||
+            fmpr_is_special(fmprb_radref(x)) || fmpr_is_special(y))
+        {
+            fmprb_mul_fmpr_naive(z, x, y, prec);
         }
         else
         {
-            /* (x+a)*(y+b) = x*y + x*b + y*a + a*b*/
-            fmpr_t t, u;
-            fmpr_init(t);
-            fmpr_init(u);
-
-            fmpr_mul(t, fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_abs(t, t);
-
-            fmpr_mul(u, fmprb_midref(y), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_abs(u, u);
-
-            fmpr_add(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_addmul(t, fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-            r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-            fmpr_add_error_result(fmprb_radref(z), t,
-                fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-            fmpr_clear(t);
-            fmpr_clear(u);
+            _fmprb_mul_fmpr_main(fmprb_midref(z), fmprb_radref(z),
+                fmprb_midref(x), fmprb_radref(x), y, prec);
         }
     }
+}
 
-    fmprb_adjust(z);
+void
+fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+{
+    if (fmprb_is_exact(x))
+    {
+        fmprb_mul_fmpr(z, y, fmprb_midref(x), prec);
+    }
+    else if (fmprb_is_exact(y))
+    {
+        fmprb_mul_fmpr(z, x, fmprb_midref(y), prec);
+    }
+    else
+    {
+        if (fmpr_is_special(fmprb_midref(x)) || 
+                fmpr_is_special(fmprb_radref(x)) ||
+                fmpr_is_special(fmprb_midref(y)) ||
+                fmpr_is_special(fmprb_radref(y)))
+        {
+            fmprb_mul_main_naive(z, x, y, prec);
+        }
+        else
+        {
+            _fmprb_mul_main(fmprb_midref(z), fmprb_radref(z),
+                fmprb_midref(x), fmprb_radref(x),
+                fmprb_midref(y), fmprb_radref(y), prec);
+        }
+    }
 }
 
 void
 fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_ui(t, y);
-    fmprb_mul(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_ui(t, y);
+    fmprb_mul_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
 
 void
 fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_si(t, y);
-    fmprb_mul(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_si(t, y);
+    fmprb_mul_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
 
 void
 fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpz(t, y);
-    fmprb_mul(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, y);
+    fmprb_mul_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
+

@@ -25,31 +25,12 @@
 
 #include "fmprb.h"
 
-int
-fmpr_close(const fmpr_t a, const fmpr_t b)
-{
-    fmpr_t t;
-    int res1, res2;
-
-    fmpr_mul_ui(t, b, 257, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul_2exp_si(t, t, -8);
-    res1 = fmpr_cmp(a, t) <= 0;
-
-    fmpr_mul_ui(t, a, 257, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul_2exp_si(t, t, -8);
-    res2 = fmpr_cmp(b, t) <= 0;
-
-    fmpr_clear(t);
-
-    return res1 && res2;
-}
-
 int main()
 {
-    long iter, iter2;
+    long iter;
     flint_rand_t state;
 
-    printf("mul....");
+    printf("mul_naive....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -74,7 +55,7 @@ int main()
         fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 200));
         fmprb_get_rand_fmpq(y, state, b, 1 + n_randint(state, 200));
 
-        fmprb_mul(c, a, b, 2 + n_randint(state, 200));
+        fmprb_mul_naive(c, a, b, 2 + n_randint(state, 200));
         fmpq_mul(z, x, y);
 
         if (!fmprb_contains_fmpq(c, z))
@@ -117,7 +98,7 @@ int main()
         fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 200));
         fmprb_get_rand_fmpq(y, state, b, 1 + n_randint(state, 200));
 
-        fmprb_mul(a, a, b, 2 + n_randint(state, 200));
+        fmprb_mul_naive(a, a, b, 2 + n_randint(state, 200));
         fmpq_mul(z, x, y);
 
         if (!fmprb_contains_fmpq(a, z))
@@ -158,7 +139,7 @@ int main()
         fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 200));
         fmprb_get_rand_fmpq(y, state, b, 1 + n_randint(state, 200));
 
-        fmprb_mul(b, a, b, 2 + n_randint(state, 200));
+        fmprb_mul_naive(b, a, b, 2 + n_randint(state, 200));
         fmpq_mul(z, x, y);
 
         if (!fmprb_contains_fmpq(b, z))
@@ -178,108 +159,6 @@ int main()
         fmpq_clear(x);
         fmpq_clear(y);
         fmpq_clear(z);
-    }
-
-    /* main test */
-    for (iter = 0; iter < 10000; iter++)
-    {
-        fmprb_t x, y, z, v;
-        long prec;
-
-        fmprb_init(x);
-        fmprb_init(y);
-        fmprb_init(z);
-        fmprb_init(v);
-
-        for (iter2 = 0; iter2 < 100; iter2++)
-        {
-            fmpr_randtest_special(fmprb_midref(x), state, 2000, 200);
-            fmpr_randtest_special(fmprb_radref(x), state, 200, 200);
-            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
-
-            fmpr_randtest_special(fmprb_midref(y), state, 2000, 200);
-            fmpr_randtest_special(fmprb_radref(y), state, 200, 200);
-            fmpr_abs(fmprb_radref(y), fmprb_radref(y));
-
-            prec = 2 + n_randint(state, 2000);
-
-            switch (n_randint(state, 5))
-            {
-            case 0:
-                fmprb_mul(z, x, y, prec);
-                fmprb_mul_naive(v, x, y, prec);
-
-                if (!fmpr_equal(fmprb_midref(z), fmprb_midref(v))
-                    || !fmpr_close(fmprb_radref(z), fmprb_radref(v)))
-                {
-                    printf("FAIL!\n");
-                    printf("x = "); fmprb_print(x); printf("\n\n");
-                    printf("y = "); fmprb_print(y); printf("\n\n");
-                    printf("z = "); fmprb_print(z); printf("\n\n");
-                    printf("v = "); fmprb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 1:
-                fmprb_set(y, x);
-                fmprb_mul(z, x, y, prec);
-                fmprb_mul(v, x, x, prec);
-                if (!fmprb_equal(z, v))
-                {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); fmprb_print(x); printf("\n\n");
-                    printf("z = "); fmprb_print(z); printf("\n\n");
-                    printf("v = "); fmprb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 2:
-                fmprb_mul(v, x, x, prec);
-                fmprb_mul(x, x, x, prec);
-                if (!fmprb_equal(v, x))
-                {
-                    printf("FAIL (aliasing 2)!\n");
-                    printf("x = "); fmprb_print(x); printf("\n\n");
-                    printf("z = "); fmprb_print(z); printf("\n\n");
-                    printf("v = "); fmprb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 3:
-                fmprb_mul(v, x, y, prec);
-                fmprb_mul(x, x, y, prec);
-                if (!fmprb_equal(x, v))
-                {
-                    printf("FAIL (aliasing 3)!\n");
-                    printf("x = "); fmprb_print(x); printf("\n\n");
-                    printf("y = "); fmprb_print(y); printf("\n\n");
-                    printf("v = "); fmprb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            default:
-                fmprb_mul(v, x, y, prec);
-                fmprb_mul(x, y, x, prec);
-                if (!fmprb_equal(x, v))
-                {
-                    printf("FAIL (aliasing 4)!\n");
-                    printf("x = "); fmprb_print(x); printf("\n\n");
-                    printf("y = "); fmprb_print(y); printf("\n\n");
-                    printf("v = "); fmprb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-            }
-        }
-
-        fmprb_clear(x);
-        fmprb_clear(y);
-        fmprb_clear(z);
-        fmprb_clear(v);
     }
 
     flint_randclear(state);
