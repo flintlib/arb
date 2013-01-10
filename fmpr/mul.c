@@ -212,7 +212,7 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
         }
 
         _fmpz_add(zexp, xexp, yexp);
-        ret = FMPR_PREC_EXACT;
+        ret = FMPR_RESULT_EXACT;
     }
     else
     {
@@ -325,7 +325,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                 bc = FLINT_BITS - lead;
 
                 shift = 0;
-                ret = FMPR_PREC_EXACT;
+                ret = FMPR_RESULT_EXACT;
                 if (bc > prec)
                 {
                     shift = bc - prec;
@@ -354,7 +354,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                 bc = 2 * FLINT_BITS - lead;
 
                 shift = 0;
-                ret = FMPR_PREC_EXACT;
+                ret = FMPR_RESULT_EXACT;
                 if (bc > prec)
                 {
                     shift = bc - prec;

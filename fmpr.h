@@ -177,7 +177,7 @@ _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
     {
         fmpz_zero(man);
         fmpz_zero(exp);
-        return FMPR_PREC_EXACT;
+        return FMPR_RESULT_EXACT;
     }
     else
     {
@@ -201,7 +201,7 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     if (fmpr_is_special(x))
     {
         fmpr_set(y, x);
-        return FMPR_PREC_EXACT;
+        return FMPR_RESULT_EXACT;
     }
     else
     {
@@ -216,7 +216,7 @@ fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, 
     if (fmpz_is_zero(x))
     {
         fmpr_zero(y);
-        return FMPR_PREC_EXACT;
+        return FMPR_RESULT_EXACT;
     }
     else
     {
@@ -230,7 +230,7 @@ fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
     if (fmpz_is_zero(x))
     {
         fmpr_zero(y);
-        return FMPR_PREC_EXACT;
+        return FMPR_RESULT_EXACT;
     }
     else
     {

@@ -83,7 +83,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
         count_trailing_zeros(trail, v);
         v >>= trail;
         shift = trail;
-        ret = FMPR_PREC_EXACT;
+        ret = FMPR_RESULT_EXACT;
 
         /* may need to round */
         if (prec < FLINT_BITS - 2 - trail)
@@ -143,7 +143,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
         {
             if (rman != man) fmpz_set(rman, man);
             if (rexp != exp) fmpz_set(rexp, exp);
-            return FMPR_PREC_EXACT;
+            return FMPR_RESULT_EXACT;
         }
 
         /* trailing zeros */
@@ -156,7 +156,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
         /* no rounding necessary; just copy or shift to destination */
         if (bc - val <= prec)
         {
-            ret = FMPR_PREC_EXACT;
+            ret = FMPR_RESULT_EXACT;
             increment = 0;
         }
         else
