@@ -31,6 +31,8 @@ fmpr_close(const fmpr_t a, const fmpr_t b)
     fmpr_t t;
     int res1, res2;
 
+    fmpr_init(t);
+
     fmpr_mul_ui(t, b, 257, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmpr_mul_2exp_si(t, t, -8);
     res1 = fmpr_cmp(a, t) <= 0;
