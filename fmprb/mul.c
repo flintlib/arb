@@ -55,10 +55,24 @@ _fmpz_add(fmpz_t z, const fmpz_t x, const fmpz_t y)
 }
 
 
-/* we speed up the radius operations by working with mantissas aligned to
-   FMPRB_RAD_PREC bits (possibly one less bit after multiplying)
+/*
+We speed up the radius operations by working with mantissas aligned to
+FMPRB_RAD_PREC bits (possibly one less bit after multiplying).
 
-   TODO: write down proof that the additions don't cause overflow
+The error is computed as x*b + y*a + a*b + r where x, b, y, a, a, b, r are
+floating-point numbers of the form m * 2^e and m has
+exactly FMPRB_RAD_PREC bits, i.e. m <= 2^FMPRB_RAD_PREC - 1.
+
+The mantissas of the products x*b, y*a, a*b are computed as
+m3 = floor((m1 * m2) / 2^FMPRB_RAD_PREC) + 1.
+One can then verify that m3 <= 2^FMPRB_RAD_PREC - 1.
+
+In the additions, we do not normalise the output mantissa. The result is
+largest when exponents are the same: then we have precisely m3 = m1 + m2.
+
+Thus the final mantissa is <= 4 * (2^FMPRB_RAD_PREC - 1).
+If FMPRB_RAD_PREC <= FLINT_BITS - 2, this precisely fits in a limb
+without overflow.
 */
 
 #define _RAD_MUL(a, ae, b, be) \
