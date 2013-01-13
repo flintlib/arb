@@ -34,9 +34,9 @@
 #include "arith.h"
 #include "fmprb.h"
 
-extern long bernoulli_cache_num;
+extern long __thread bernoulli_cache_num;
 
-extern fmpq * bernoulli_cache;
+extern __thread fmpq * bernoulli_cache;
 
 void bernoulli_cache_compute(long n);
 
