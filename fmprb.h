@@ -529,10 +529,9 @@ void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_b
 
 void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
 
-/* TODO: this should be threadsafe */
 #define DEF_CACHED_CONSTANT(name, comp_func) \
-    long name ## _cached_prec = 0; \
-    fmprb_t name ## _cached_value; \
+    __thread long name ## _cached_prec = 0; \
+    __thread fmprb_t name ## _cached_value; \
     void \
     name(fmprb_t x, long prec) \
     { \
