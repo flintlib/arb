@@ -25,22 +25,6 @@
 
 #include "fmpr.h"
 
-static __inline__ void
-fmpz_set_neg_ui(fmpz_t f, ulong val)
-{
-    if (val > COEFF_MAX)
-    {
-        __mpz_struct *mpz_coeff = _fmpz_promote(f);
-        mpz_set_ui(mpz_coeff, val);
-        mpz_neg(mpz_coeff, mpz_coeff);
-    }
-    else
-    {
-        _fmpz_demote(f);
-        *f = -(long) val;
-    }
-}
-
 static __inline__ int
 rounds_up(fmpr_rnd_t rnd, int negative)
 {
@@ -49,44 +33,6 @@ rounds_up(fmpr_rnd_t rnd, int negative)
     if (rnd == FMPR_RND_FLOOR) return negative;
     return !negative;
 }
-
-
-static __inline__ void
-fmpz_set_uu(fmpz_t f, mp_limb_t hi, mp_limb_t lo)
-{
-    if (hi == 0)
-    {
-        fmpz_set_ui(f, lo);
-    }
-    else
-    {
-        __mpz_struct *z = _fmpz_promote(f);
-        if (z->_mp_alloc < 2)
-            mpz_realloc2(z, 2 * FLINT_BITS);
-        z->_mp_d[0] = lo;
-        z->_mp_d[1] = hi;
-        z->_mp_size = 2;
-    }
-}
-
-static __inline__ void
-fmpz_set_neg_uu(fmpz_t f, mp_limb_t hi, mp_limb_t lo)
-{
-    if (hi == 0)
-    {
-        fmpz_set_neg_ui(f, lo);
-    }
-    else
-    {
-        __mpz_struct *z = _fmpz_promote(f);
-        if (z->_mp_alloc < 2)
-            mpz_realloc2(z, 2 * FLINT_BITS);
-        z->_mp_d[0] = lo;
-        z->_mp_d[1] = hi;
-        z->_mp_size = -2;
-    }
-}
-
 
 static __inline__ void
 _fmpz_add(fmpz_t z, const fmpz_t x, const fmpz_t y)
@@ -204,7 +150,7 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
             if (!negative)
                 fmpz_set_ui(zman, tmp[0]);
             else
-                fmpz_set_neg_ui(zman, tmp[0]);
+                fmpz_neg_ui(zman, tmp[0]);
         }
         else
         {
@@ -339,7 +285,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                 if (!negative)
                     fmpz_set_ui(fmpr_manref(z), lo);
                 else
-                    fmpz_set_neg_ui(fmpr_manref(z), lo);
+                    fmpz_neg_ui(fmpr_manref(z), lo);
 
                 _fmpz_add2_fmpz_si(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
 
@@ -385,7 +331,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                         if (!negative)
                             fmpz_set_ui(fmpr_manref(z), hi);
                         else
-                            fmpz_set_neg_ui(fmpr_manref(z), hi);
+                            fmpz_neg_ui(fmpr_manref(z), hi);
                     }
                     else
                     {
@@ -400,18 +346,18 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                         ret = trail;
 
                         if (!negative)
-                            fmpz_set_uu(fmpr_manref(z), hi, lo);
+                            fmpz_set_uiui(fmpr_manref(z), hi, lo);
                         else
-                            fmpz_set_neg_uu(fmpr_manref(z), hi, lo);
+                            fmpz_neg_uiui(fmpr_manref(z), hi, lo);
                     }
 
                 }
                 else
                 {
                     if (!negative)
-                        fmpz_set_uu(fmpr_manref(z), hi, lo);
+                        fmpz_set_uiui(fmpr_manref(z), hi, lo);
                     else
-                        fmpz_set_neg_uu(fmpr_manref(z), hi, lo);
+                        fmpz_neg_uiui(fmpr_manref(z), hi, lo);
                 }
 
                 _fmpz_add2_fmpz_si(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
