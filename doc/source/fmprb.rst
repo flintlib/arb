@@ -690,52 +690,87 @@ Riemann zeta function
 Gamma function
 ...............................................................................
 
-.. function:: void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long prec)
+.. function:: void _fmprb_gamma_series_fmpq_bsplit(fmprb_struct * res, const fmpq_t a, long len, long prec)
 
-    Uses Karatsuba's algorithm [Kar1998]_ to compute num coefficients in the
-    Taylor series of `\Gamma(a+x)` for rational `0 < a \le 1`, i.e.
-    computes `\Gamma(a), \Gamma'(a) ... \Gamma^{(\mathrm{num}-1)}(a) / (\mathrm{num}-1)!`
-    This algorithm is most efficient at high precision, for num much smaller
-    than the number of bits, and with small denominators of *a*.
-    In particular, with num = 1, this algorithm computes `\Gamma(a)`
+    Given a rational number `0 < a \le 1`, uses binary splitting to compute
+    *len* coefficients in the Taylor series of `\Gamma(a+x)`, i.e. computes
+    `\Gamma(a), \Gamma'(a) ... \Gamma^{(\mathrm{len}-1)}(a) / (\mathrm{len}-1)!`.
+    In particular, with *len* = 1, this function computes `\Gamma(a)`
     efficiently for small rational *a*.
 
-    Let `s = \max(2, \mathrm{num}-1)`. With parameters `r` and `n` chosen
-    such that `r \ge n` and `n \ge 2 s \log 2 s`, Karatsuba shows that
+    The *len* = 1 case of this algorithm dates back to Brent [Bre1978]_,
+    and the extension to higher derivatives was done by Karatsuba [Kar1998]_.
+    Karatsuba's original algorithm is suboptimal for large *len*;
+    we use the faster algorithm given (without error bounds)
+    by Borwein, Bradley and Crandall [BBC2000]_.
+
+    The algorithm consists of evaluating the finite part of
 
     .. math ::
 
-        \Gamma^{(j)}(a) = \sum_{k=0}^r \frac{(-1)^k}{k!}
-        \frac{n^{k+a}}{k+a}
-        \sum_{m=0}^j (-1)^m \frac{j! \, \log^{j-m} n}{(j-m)! (k+a)^m}
-        + \theta_j
+        \Gamma(s) = \int_0^{\infty} e^{-t} t^{s-1} dt = 
+        N^s \left( \sum_{k=0}^R \frac{(-1)^k N^k}{(k + s) k!} + S \right) + I
 
     where
 
     .. math ::
 
-        |\theta_j| \le \frac{5}{3} e^{-n} \log^s n +
-        \left(\frac{e}{r+2}\right)^{r+2} (1 + n^{r+2} \log^s n).
+        S = \sum_{k=R+1}^{\infty} \frac{(-1)^k N^k}{(k + s) k!}
 
-    We choose the parameters `n` and `r` heuristically to be nearly optimal,
-    and then evaluate the above formula to bound `\theta_j` rigorously.
+    and
 
-    Karatsuba claims that choosing `r \ge 3n` gives
-    `|\theta_j| \le 2^{-n-1}`. This is, unfortunately, incorrect.
-    Setting `r = n \alpha` and expanding the error term around `n = \infty`,
-    one finds that `\alpha` asymptotically should be
-    `1/W(1/e) \approx 3.59112147666862` where `W(x)` is the Lambert W-function.
-    We also optimize the selection of `n` by choosing
-    `n \approx b \log 2` where `b` is the desired number of bits, rather
-    than `n \approx b`, and round `n` so that it has a short binary expansion
-    (this gives smaller numbers in the binary splitting stage).
+    .. math ::
 
-    Finally, if `s` is small, we perform binary splitting to a working
-    precision of about `2.2` times the target precision rather than exactly.
-    This factor was tested to give full accuracy up to at least one million
-    digits when `s \approx 1`. A more careful analysis should
-    be done here so that a working precision is selected which always is
-    sufficient and also nearly optimal.
+        I = \int_N^{\infty} e^{-t} t^{s-1} dt.
+
+    This formula is valid for complex `s` with `\Re{s} > 0`.
+    It is therefore also valid if `s` is a power series argument `s = a + x`
+    where `\Re{a} > 0`, so doing the arithmetic with truncated power
+    series gives us the derivatives.
+
+    We now discuss choosing the parameters `R` and `N`, and bounding
+    the error terms `S` and `I`. We assume that `0 < \Re{a} \le 1`, `N \ge 1`
+    and `R \ge 2 N`. The coefficients of `I` are given by
+
+    .. math ::
+
+        I = \int_N^{\infty} e^{-t} t^{a+x-1} dt =
+        \sum_{j=0}^{\infty} \frac{x^j}{j!}
+        \int_N^{\infty} e^{-t} t^{a-1} \log^j t \; dt.
+
+    As shown by Karatsuba, the integrals are bounded in absolute value by
+    `2 e^{-N} \log^j N`. Thus, for a precision of `p` bits, `N` should be
+    about `p \log 2`.
+
+    Expanding the terms in `S` as geometric series gives
+
+    .. math ::
+
+        S = \sum_{j=0}^{\infty} \, x^j \,
+        \sum_{k=R+1}^{\infty} \frac{(-1)^{k+j} N^k}{(k+a)^{j+1} k!}.
+
+    By the assumption that `R \ge 2 N`, the sums are bounded by
+
+    .. math ::
+
+        \frac{N^R}{R^{j+1} R!} \left(\frac{1}{2} + \frac{1}{4} + \ldots\right) =
+        \frac{N^R}{R^{j+1} R!} \le \frac{1}{R^{j+1}} N^R \left(\frac{e}{R}\right)^R.
+
+    Let `R = cN` where `c` is to be determined. Expanding the
+    logarithm of `N^R \left(\frac{e}{R}\right)^R` around `N = \infty`
+    gives the approximate magnitude `(c - c \log c) N`. Setting this equal
+    to `-p \log 2`, we find that we should take
+    `c = 1/W(1/e) \approx 3.59112147666862` where `W(x)` is the
+    Lambert W-function. (Karatsuba gives the incorrect value `c = 3`).
+
+    We also estimate the working precision needed in the binary splitting
+    stage (the binary splitting could be done with exact arithmetic, but
+    this is unnecessarily costly). Assume that the sum is around unity in
+    magnitude. The binary logarithm of term `k` is roughly
+    `b(k) = k \log_2 N + k \log_2 e - k \log_2 k`. Since
+    `b'(k) = \log_2 N - \log_2 k`, the largest term magnitude occurs
+    roughly at `k = N`, so we need to increase the working precision
+    by about `b(N) = N / \log 2` bits.
 
 .. function:: void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
 
