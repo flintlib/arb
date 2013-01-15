@@ -237,6 +237,7 @@ void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
 
 void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec);
@@ -342,11 +343,11 @@ void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
 void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
 
-void fmprb_gamma_fmpq_karatsuba(fmprb_struct * v, const fmpq_t a, long num, long prec);
-
 void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec);
+
+void _fmprb_gamma_series_fmpq_bsplit(fmprb_struct * res, const fmpq_t a, long len, long prec);
 
 static __inline__ void
 fmprb_print(const fmprb_t x)
@@ -596,6 +597,19 @@ _fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
     long i;
     for (i = 0; i < len; i++)
         fmprb_mul(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmpz_t c, long prec)
+{
+    long i;
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, c);
+    for (i = 0; i < len; i++)
+        fmprb_mul_fmpr(res + i, vec + i, t, prec);
+    fmpr_clear(t);
 }
 
 static __inline__ void
