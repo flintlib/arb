@@ -27,112 +27,195 @@
 #include "fmprb_poly.h"
 #include "fmpcb_poly.h"
 
-/*
-    4 / (2pi)^(2M) * (N+a)^(1-s-2M) * rf(s, 2+2M-1) * (N+a)^(-x)
-    Note: this is with the tail sum done up to M inclusive.
-
-    For convergence, Re(N+a) > 0 and Re(1-s-2M) < 0.
- */
-
+void
+fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_log(t, x, prec);
+    fmprb_mul(t, t, y, prec);
+    fmprb_exp(z, t, prec);
+    fmprb_clear(t);
+}
 
 void
-fmpcb_zeta_series_em_vec_bound(fmprb_struct * vec,
-        const fmpcb_t s, const fmpcb_t a, long d, long N, long M, long wp)
+bound_I(fmprb_struct * I, const fmprb_t A, const fmprb_t B, const fmprb_t C, long len, long wp)
 {
-    fmprb_struct *t, *u;
-    fmprb_struct sx[2];
-    fmprb_t x, y, z;
-    fmpcb_t w, h, Na, Ms;
-    long i;
+    long k;
 
-    fmpcb_init(Na);
-    fmpcb_init(Ms);
+    fmprb_t D, Dk, L, T, Bm1;
 
-    fmpcb_add_ui(Na, a, N, wp);
-    fmpcb_add_ui(Ms, s, 2*M-1, wp);
-    fmpcb_neg(Ms, Ms);
+    fmprb_init(D);
+    fmprb_init(Dk);
+    fmprb_init(Bm1);
+    fmprb_init(T);
+    fmprb_init(L);
 
-    if (!fmprb_is_positive(fmpcb_realref(Na)) ||
-        !fmprb_is_negative(fmpcb_realref(Ms)) || N < 1 || M < 1)
+    fmprb_sub_ui(Bm1, B, 1, wp);
+    fmprb_one(L);
+
+    /* T = 1 / (A^Bm1 * Bm1) */
+    fmprb_ui_div(T, 1, A, wp);
+    fmprb_pow(T, T, Bm1, wp);
+    fmprb_div(T, T, Bm1, wp);
+
+    if (len > 1)
     {
-        fmpcb_clear(Na);
-        fmpcb_clear(Ms);
-
-        for (i = 0; i < d; i++)
-        {
-            fmpr_pos_inf(fmprb_midref(vec + i));
-            fmpr_zero(fmprb_radref(vec + i));
-        }
-        return;
+        fmprb_log(D, A, wp);
+        fmprb_add(D, D, C, wp);
+        fmprb_mul(D, D, Bm1, wp);
+        fmprb_set(Dk, D);
     }
 
-    t = _fmprb_vec_init(d);
-    u = _fmprb_vec_init(d);
+    for (k = 0; k < len; k++)
+    {
+        if (k > 0)
+        {
+            fmprb_mul_ui(L, L, k, wp);
+            fmprb_add(L, L, Dk, wp);
+            fmprb_mul(Dk, Dk, D, wp);
+        }
 
-    fmprb_init(x);
-    fmprb_init(y);
-    fmprb_init(z);
+        fmprb_mul(I + k, L, T, wp);
+        fmprb_div(T, T, Bm1, wp);
+    }
 
-    fmpcb_init(w);
-    fmpcb_init(h);
+    fmprb_clear(D);
+    fmprb_clear(Dk);
+    fmprb_clear(Bm1);
+    fmprb_clear(T);
+    fmprb_clear(L);
+}
 
-    /* x = 4 / (2pi)^(2M) */
-    fmprb_const_pi(x, wp);
-    fmprb_mul_ui(x, x, 2, wp);
-    fmprb_pow_ui(x, x, 2 * M, wp);
-    fmprb_ui_div(x, 4, x, wp);
+/* 0.5*(B/AN)^2 + |B|/AN */
+void
+bound_C(fmprb_t C, const fmprb_t AN, const fmprb_t B, long wp)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_abs(t, B);
+    fmprb_div(t, t, AN, wp);
+    fmprb_mul_2exp_si(C, t, -1);
+    fmprb_add_ui(C, C, 1, wp);
+    fmprb_mul(C, C, t, wp);
+    fmprb_clear(t);
+}
 
-    /* y = |(N+a)^(-(s+2M-1))| */
-    fmpcb_pow(w, Na, Ms, wp);
-    fmpcb_abs(y, w, wp);
+void
+bound_K(fmprb_t C, const fmprb_t AN, const fmprb_t B, const fmprb_t T, long wp)
+{
+    if (fmprb_is_zero(B) || fmprb_is_zero(T))
+    {
+        fmprb_one(C);
+    }
+    else
+    {
+        fmprb_div(C, B, AN, wp);
+        /* TODO: atan is dumb, should also bound by pi/2 */
+        fmprb_atan(C, C, wp);
+        fmprb_mul(C, C, T, wp);
+        if (fmprb_is_nonpositive(C))
+            fmprb_one(C);
+        else
+            fmprb_exp(C, C, wp);
+    }
+}
 
-    /* x = x * y */
-    fmprb_mul(x, x, y, wp);
-
-    /* rising factorial */
+void
+bound_rfac(fmprb_struct * F, const fmpcb_t s, ulong n, long len, long wp)
+{
+    fmprb_struct sx[2];
     fmprb_init(sx + 0);
     fmprb_init(sx + 1);
     fmpcb_abs(sx + 0, s, wp);
     fmprb_one(sx + 1);
-    _fmprb_poly_rfac_series_ui(t, sx, 2, 2+2*M-1, d, wp);
+    _fmprb_vec_zero(F, len);
+    _fmprb_poly_rfac_series_ui(F, sx, 2, n, len, wp);
     fmprb_clear(sx + 0);
     fmprb_clear(sx + 1);
+}
 
-    /* exponential */
-    fmpcb_log(w, Na, wp);
-    fmpcb_abs(z, w, wp);
-    fmprb_one(u + 0);
-    for (i = 1; i < d; i++)
+void
+fmpcb_zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long len, long wp)
+{
+    fmprb_t K, C, AN, S2M;
+    fmprb_struct *F, *R;
+    long k;
+
+    const fmprb_struct * alpha = fmpcb_realref(a);
+    const fmprb_struct * beta  = fmpcb_imagref(a);
+    const fmprb_struct * sigma = fmpcb_realref(s);
+    const fmprb_struct * tau   = fmpcb_imagref(s);
+
+    fmprb_init(AN);
+    fmprb_init(S2M);
+
+    /* require alpha + N > 1, sigma + 2M > 1 */
+    fmprb_add_ui(AN, alpha, N - 1, wp);
+    fmprb_add_ui(S2M, sigma, 2*M - 1, wp);
+
+    if (!fmprb_is_positive(AN) || !fmprb_is_positive(S2M) || N < 1 || M < 1)
     {
-        fmprb_mul(u + i, u + i - 1, z, wp);
-        fmprb_div_ui(u + i, u + i, i, wp);
+        fmprb_clear(AN);
+        fmprb_clear(S2M);
+
+        for (k = 0; k < len; k++)
+        {
+            fmpr_pos_inf(fmprb_midref(bound + k));
+            fmpr_zero(fmprb_radref(bound + k));
+        }
+        return;
     }
 
-    /* multiply everything together */
-    _fmprb_poly_mullow(vec, t, d, u, d, d, wp);
-    _fmprb_vec_scalar_mul(vec, vec, d, x, wp);
+    /* alpha + N, sigma + 2M */
+    fmprb_add_ui(AN, AN, 1, wp);
+    fmprb_add_ui(S2M, S2M, 1, wp);
 
-    fmprb_clear(x);
-    fmprb_clear(y);
-    fmprb_clear(z);
+    R = _fmprb_vec_init(len);
+    F = _fmprb_vec_init(len);
 
-    fmpcb_clear(w);
-    fmpcb_clear(h);
+    fmprb_init(K);
+    fmprb_init(C);
 
-    fmpcb_clear(Na);
-    fmpcb_clear(Ms);
+    /* bound for power integral */
+    bound_C(C, AN, beta, wp);
+    bound_K(K, AN, beta, tau, wp);
+    bound_I(R, AN, S2M, C, len, wp);
 
-    _fmprb_vec_clear(t, d);
-    _fmprb_vec_clear(u, d);
+    for (k = 0; k < len; k++)
+    {
+        fmprb_mul(R + k, R + k, K, wp);
+        fmprb_div_ui(K, K, k + 1, wp);
+    }
+
+    /* bound for rising factorial */
+    bound_rfac(F, s, 2*M, len, wp);
+
+    /* product */
+    _fmprb_poly_mullow(bound, F, len, R, len, len, wp);
+
+    /* bound for bernoulli polynomials, 4 / (2pi)^(2M) */
+    fmprb_const_pi(C, wp);
+    fmprb_mul_2exp_si(C, C, 1);
+    fmprb_pow_ui(C, C, 2 * M, wp);
+    fmprb_ui_div(C, 4, C, wp);
+    _fmprb_vec_scalar_mul(bound, bound, len, C, wp);
+
+    fmprb_clear(K);
+    fmprb_clear(C);
+    fmprb_clear(AN);
+    fmprb_clear(S2M);
+
+    _fmprb_vec_clear(R, len);
+    _fmprb_vec_clear(F, len);
 }
 
 void
 fmpcb_zeta_series_em_bound(fmpr_t bound,
-        const fmpcb_t s, const fmpcb_t a, long d, long N, long M, long wp)
+        const fmpcb_t s, const fmpcb_t a, long N, long M, long len, long wp)
 {
-    fmprb_struct * vec = _fmprb_vec_init(d);
-    fmpcb_zeta_series_em_vec_bound(vec, s, a, d, N, M, wp);
-    _fmprb_vec_get_abs_ubound_fmpr(bound, vec, d, wp);
-    _fmprb_vec_clear(vec, d);
+    fmprb_struct * vec = _fmprb_vec_init(len);
+    fmpcb_zeta_series_em_vec_bound(vec, s, a, N, M, len, wp);
+    _fmprb_vec_get_abs_ubound_fmpr(bound, vec, len, wp);
+    _fmprb_vec_clear(vec, len);
 }
-

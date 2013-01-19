@@ -46,7 +46,7 @@ fmpcb_zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpc
     A = 1;
     B = 2;
 
-    fmpcb_zeta_series_em_bound(Bbound, s, a, d, B, choose_M(B, target), prec);
+    fmpcb_zeta_series_em_bound(Bbound, s, a, B, choose_M(B, target), d, prec);
 
     if (fmpr_cmp(Bbound, tol) > 0)
     {
@@ -58,7 +58,7 @@ fmpcb_zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpc
 
             if (B == 0) abort();
 
-            fmpcb_zeta_series_em_bound(Bbound, s, a, d, B, choose_M(B, target), prec);
+            fmpcb_zeta_series_em_bound(Bbound, s, a, B, choose_M(B, target), d, prec);
         }
 
         /* bisect (-A, B] */
@@ -66,7 +66,7 @@ fmpcb_zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpc
         {
             C = A + (B - A) / 2;
 
-            fmpcb_zeta_series_em_bound(Cbound, s, a, d, C, choose_M(C, target), prec);
+            fmpcb_zeta_series_em_bound(Cbound, s, a, C, choose_M(C, target), d, prec);
 
             if (fmpr_cmp(Cbound, tol) < 0)
             {
