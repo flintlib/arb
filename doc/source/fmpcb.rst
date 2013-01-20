@@ -424,7 +424,7 @@ Special functions
 
     If `F = \sum_k f_k x^k \in \mathbb{C}[[x]]`, define
     `|F| = \sum_k |f_k| x^k` and `|F| \le |G|` if
-    `\forall_k : |f_k| \le |g_0|`. It is easy to check that
+    `\forall_k : |f_k| \le |g_k|`. It is easy to check that
     `|F + G| \le |F| + |G|` and `|FG| \le |F||G|`. With this notation,
 
     .. math ::
