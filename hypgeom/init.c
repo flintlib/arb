@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "hypgeom.h"
 
 void
 hypgeom_init(hypgeom_t hyp)

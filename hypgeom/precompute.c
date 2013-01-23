@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include <math.h>
-#include "fmprb.h"
+#include "hypgeom.h"
 
 /* Compute a pure ratio P2(k)/Q2(k) for the term
    A(k)/B(k) * [P(1)P(2)...P(k)] / [Q(1)Q(2)...Q(k)] */
@@ -122,9 +122,9 @@ _hypgeom_precompute(hypgeom_t hyp, const fmpz_poly_t P, const fmpz_poly_t Q)
     fmpz_init(t);
 
     hyp->r = fmpz_poly_degree(Q) - fmpz_poly_degree(P);
-    hyp->boundA = hypgeom_root_norm(P);
-    hyp->boundB = hypgeom_root_norm(Q);
-    hyp->boundK = 1 + FLINT_MAX(hyp->boundA, 2 * hyp->boundB);
+    hyp->boundC = hypgeom_root_norm(P);
+    hyp->boundD = hypgeom_root_norm(Q);
+    hyp->boundK = 1 + FLINT_MAX(hyp->boundC, 2 * hyp->boundD);
 
     fmpr_one(hyp->MK);
 

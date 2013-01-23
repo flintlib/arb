@@ -1,4 +1,4 @@
-**bernoulli.h** -- support code for Bernoulli numbers
+**bernoulli.h** -- support for Bernoulli numbers
 ===============================================================================
 
 Generation of Bernoulli numbers

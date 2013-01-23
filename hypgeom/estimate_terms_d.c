@@ -23,32 +23,57 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include <math.h>
+#include "double_extras.h"
 #include "hypgeom.h"
 
-void
-fmprb_const_pi_chudnovsky(fmprb_t s, long prec)
+#define LOG2 0.69314718055994530942
+#define EXP1 2.7182818284590452354
+
+static __inline__ double d_root(double x, int r)
 {
-    hypgeom_t series;
-    fmprb_t t, u;
-
-    fmprb_init(t);
-    fmprb_init(u);
-    hypgeom_init(series);
-
-    fmpz_poly_set_str(series->A, "2  13591409 545140134");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "4  5 -46 108 -72");
-    fmpz_poly_set_str(series->Q, "4  0 0 0 10939058860032000");
-
-    prec += FLINT_CLOG2(prec);
-    fmprb_hypgeom_infsum(s, t, series, prec, prec);
-    fmprb_sqrt_ui(u, 640320, prec);
-    fmprb_mul_ui(u, u, 640320 / 12, prec);
-    fmprb_mul(u, u, t, prec);
-    fmprb_div(s, u, s, prec);
-
-    hypgeom_clear(series);
-    fmprb_clear(t);
-    fmprb_clear(u);
+    if (r == 1)
+        return x;
+    if (r == 2)
+        return sqrt(x);
+    return pow(x, 1. / r);
 }
+
+double fmpr_get_d(const fmpr_t x);
+
+long
+hypgeom_estimate_terms(const fmpr_t z, int r, long prec)
+{
+    double y, t;
+
+    t = fmpr_get_d(z);
+    t = fabs(t);
+
+    if (t == 0)
+        return 1;
+
+    if (r == 0)
+    {
+        if (t >= 1)
+        {
+            printf("z must be smaller than 1\n");
+            abort();
+        }
+
+        y = (log(1-t) - prec * LOG2) / log(t) + 1;
+    }
+    else
+    {
+        y = (prec * LOG2) / (d_root(t, r) * EXP1 * r);
+        y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
+    }
+
+    if (y >= LONG_MAX / 2)
+    {
+        printf("error: series will converge too slowly\n");
+        abort();
+    }
+
+    return y;
+}
+

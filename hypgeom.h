@@ -23,32 +23,45 @@
 
 ******************************************************************************/
 
+#ifndef HYPGEOM_H
+#define HYPGEOM_H
+
 #include "fmprb.h"
-#include "hypgeom.h"
+#include "fmpz_poly.h"
 
-void
-fmprb_const_pi_chudnovsky(fmprb_t s, long prec)
+typedef struct
 {
-    hypgeom_t series;
-    fmprb_t t, u;
+    fmpz_poly_t A;
+    fmpz_poly_t B;
+    fmpz_poly_t P;
+    fmpz_poly_t Q;
 
-    fmprb_init(t);
-    fmprb_init(u);
-    hypgeom_init(series);
-
-    fmpz_poly_set_str(series->A, "2  13591409 545140134");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "4  5 -46 108 -72");
-    fmpz_poly_set_str(series->Q, "4  0 0 0 10939058860032000");
-
-    prec += FLINT_CLOG2(prec);
-    fmprb_hypgeom_infsum(s, t, series, prec, prec);
-    fmprb_sqrt_ui(u, 640320, prec);
-    fmprb_mul_ui(u, u, 640320 / 12, prec);
-    fmprb_mul(u, u, t, prec);
-    fmprb_div(s, u, s, prec);
-
-    hypgeom_clear(series);
-    fmprb_clear(t);
-    fmprb_clear(u);
+    /* precomputation data */
+    int have_precomputed;
+    long r;
+    long boundC;
+    long boundD;
+    long boundK;
+    fmpr_t MK;
 }
+hypgeom_struct;
+
+typedef hypgeom_struct hypgeom_t[1];
+
+void hypgeom_init(hypgeom_t hyp);
+
+void hypgeom_clear(hypgeom_t hyp);
+
+void hypgeom_precompute(hypgeom_t hyp);
+
+long hypgeom_estimate_terms(const fmpr_t z, int r, long prec);
+
+long hypgeom_bound(fmpr_t error, int r,
+    long C, long D, long K, const fmpr_t TK, const fmpr_t z, long prec);
+
+void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const long n, long prec);
+
+void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec);
+
+#endif
+

@@ -371,11 +371,11 @@ Special functions
 
     .. math ::
 
-        \begin{align}
-        \sum_{k=N}^U f(k) = & \int_N^U f(t) dt + \frac{1}{2} \left(f(N) + f(U)\right) \\
-                           & + \sum_{k=1}^{M} \frac{B_{2k}}{(2k)!} \left( f^{(2k-1)}(U) - f^{(2k-1)}(N) \right) \\
-                          & - \int_N^U \frac{\tilde B_{2M}(t)}{(2M)!} f^{(2M)}(t) dt
-        \end{align}
+        \sum_{k=N}^U f(k) = \int_N^U f(t) dt + \frac{1}{2} \left(f(N) + f(U)\right)
+
+                           + \sum_{k=1}^{M} \frac{B_{2k}}{(2k)!} \left( f^{(2k-1)}(U) - f^{(2k-1)}(N) \right)
+
+                          - \int_N^U \frac{\tilde B_{2M}(t)}{(2M)!} f^{(2M)}(t) dt
 
     where `f` is a sufficiently differentiable function (for example,
     analytic), `B_n` is a Bernoulli number, and

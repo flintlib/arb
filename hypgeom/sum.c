@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "hypgeom.h"
 
 static __inline__ void
 fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, long x)
@@ -201,7 +201,7 @@ fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long
         hyp->have_precomputed = 1;
     }
 
-    n = hypgeom_bound(err, hyp->r, hyp->boundA, hyp->boundB,
+    n = hypgeom_bound(err, hyp->r, hyp->boundC, hyp->boundD,
         hyp->boundK, hyp->MK, z, target_prec);
 
     fmprb_hypgeom_sum(P, Q, hyp, n, prec);

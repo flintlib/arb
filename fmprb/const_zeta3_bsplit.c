@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "fmprb.h"
-
+#include "hypgeom.h"
 
 void
 fmprb_const_zeta3_bsplit(fmprb_t s, long prec)

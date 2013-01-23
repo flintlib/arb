@@ -26,7 +26,7 @@ Module documentation
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    fmpr.rst
    fmprb.rst
@@ -35,8 +35,9 @@ Module documentation
    fmpcb.rst
    fmpcb_poly.rst
    fmpcb_mat.rst
-   fmpz_holonomic.rst
    bernoulli.rst
+   hypgeom.rst
+   fmpz_holonomic.rst
 
 Credits and references
 ::::::::::::::::::::::::
