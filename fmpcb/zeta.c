@@ -28,16 +28,10 @@
 void
 fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
 {
-    ulong M, N;
-    fmpr_t bound;
-
-    fmpr_init(bound);
-    fmpcb_zeta_em_choose_param(bound, &N, &M, s, prec, FMPRB_RAD_PREC);
-
-    fmpcb_zeta_em_sum(z, s, N, M, prec);
-
-    fmprb_add_error_fmpr(fmpcb_realref(z), bound);
-    fmprb_add_error_fmpr(fmpcb_imagref(z), bound);
-
-    fmpr_clear(bound);
+    fmpcb_t a;
+    fmpcb_init(a);
+    fmpcb_one(a);
+    fmpcb_zeta_series(z, s, a, 0, 1, prec);
+    fmpcb_clear(a);
 }
+

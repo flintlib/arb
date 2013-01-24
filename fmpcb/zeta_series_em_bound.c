@@ -121,18 +121,69 @@ bound_K(fmprb_t C, const fmprb_t AN, const fmprb_t B, const fmprb_t T, long wp)
     }
 }
 
+/* Absolute value of rising factorial (could speed up once complex gamma is available). */
+void
+fmpcb_rfac_abs_ubound2(fmpr_t bound, const fmpcb_t s, ulong n, long prec)
+{
+    fmpr_t term, t;
+    ulong k;
+
+    /* M(k) = (a+k)^2 + b^2
+       M(0) = a^2 + b^2
+       M(k+1) = M(k) + 2*a + (2*k+1)
+    */
+    fmpr_init(t);
+    fmpr_init(term);
+
+    fmpr_one(bound);
+
+    /* M(0) = a^2 + b^2 */
+    fmprb_get_abs_ubound_fmpr(t, fmpcb_realref(s), prec);
+    fmpr_mul(term, t, t, prec, FMPR_RND_UP);
+    fmprb_get_abs_ubound_fmpr(t, fmpcb_imagref(s), prec);
+    fmpr_mul(t, t, t, prec, FMPR_RND_UP);
+    fmpr_add(term, term, t, prec, FMPR_RND_UP);
+
+    /* we add t = 2*a to each term. note that this can be signed;
+       we always want the most positive value */
+    fmpr_add(t, fmprb_midref(fmpcb_realref(s)),
+        fmprb_radref(fmpcb_realref(s)), prec, FMPR_RND_CEIL);
+    fmpr_mul_2exp_si(t, t, 1);
+
+    for (k = 0; k < n; k++)
+    {
+        fmpr_mul(bound, bound, term, prec, FMPR_RND_UP);
+        fmpr_add_ui(term, term, 2 * k + 1, prec, FMPR_RND_UP);
+        fmpr_add(term, term, t, prec, FMPR_RND_UP);
+    }
+
+    fmpr_sqrt(bound, bound, prec, FMPR_RND_UP);
+
+    fmpr_clear(t);
+    fmpr_clear(term);
+}
+
+
 void
 bound_rfac(fmprb_struct * F, const fmpcb_t s, ulong n, long len, long wp)
 {
-    fmprb_struct sx[2];
-    fmprb_init(sx + 0);
-    fmprb_init(sx + 1);
-    fmpcb_abs(sx + 0, s, wp);
-    fmprb_one(sx + 1);
-    _fmprb_vec_zero(F, len);
-    _fmprb_poly_rfac_series_ui(F, sx, 2, n, len, wp);
-    fmprb_clear(sx + 0);
-    fmprb_clear(sx + 1);
+    if (len == 1)
+    {
+        fmpcb_rfac_abs_ubound2(fmprb_midref(F + 0), s, n, wp);
+        fmpr_zero(fmprb_radref(F + 0));
+    }
+    else
+    {
+        fmprb_struct sx[2];
+        fmprb_init(sx + 0);
+        fmprb_init(sx + 1);
+        fmpcb_abs(sx + 0, s, wp);
+        fmprb_one(sx + 1);
+        _fmprb_vec_zero(F, len);
+        _fmprb_poly_rfac_series_ui(F, sx, 2, n, len, wp);
+        fmprb_clear(sx + 0);
+        fmprb_clear(sx + 1);
+    }
 }
 
 void

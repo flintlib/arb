@@ -440,23 +440,12 @@ void fmpcb_root_exp(fmpcb_t r, const fmpcb_t a, long m, long index, long prec);
 void fmpcb_root_newton(fmpcb_t r, const fmpcb_t a, long m, long index, long prec);
 void fmpcb_root(fmpcb_t r, const fmpcb_t a, long m, long index, long prec);
 
-void fmpcb_zeta_em_bound(fmpr_t bound, const fmpcb_t s, ulong N, ulong M, long prec);
-
-void fmpcb_zeta_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, long target, long prec);
-
-void fmpcb_zeta_em_sum(fmpcb_t z, const fmpcb_t s, ulong N, ulong M, long prec);
-
-void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
-
-
-
 void fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec);
 void fmpcb_zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, const fmpcb_t a, long d, long target, long prec);
-
-
 void fmpcb_zeta_series_em_bound(fmpr_t bound, const fmpcb_t s, const fmpcb_t a, long N, long M, long d, long wp);
 void fmpcb_zeta_series_em_vec_bound(fmprb_struct * vec, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long d, long wp);
 void fmpcb_zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec);
+void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
 
 
 static __inline__ void

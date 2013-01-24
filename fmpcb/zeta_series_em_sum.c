@@ -76,7 +76,6 @@ void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_struct * res, const fmpcb_t N, const fmp
     fmpcb_log(logN, N, prec);
     fmpcb_mul(res + 0, logN, c, prec);
     fmpcb_neg(res + 0, res + 0);
-
     fmpcb_exp(res + 0, res + 0, prec);
 
     for (i = 1; i < trunc; i++)
@@ -88,6 +87,31 @@ void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_struct * res, const fmpcb_t N, const fmp
     fmpcb_clear(logN);
 }
 
+static __inline__ int
+fmprb_is_int(const fmprb_t x)
+{
+    return fmprb_is_zero(x) || 
+        (fmprb_is_exact(x) &&
+                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
+}
+
+static __inline__ int
+fmpcb_is_int(const fmpcb_t z)
+{
+    return fmprb_is_zero(fmpcb_imagref(z)) && fmprb_is_int(fmpcb_realref(z));
+}
+
+static __inline__ void
+_fmpcb_vec_scalar_div_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        fmprb_div(fmpcb_realref(res + i), fmpcb_realref(vec + i), c, prec);
+        fmprb_div(fmpcb_imagref(res + i), fmpcb_imagref(vec + i), c, prec);
+    }
+}
+
 void
 fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 {
@@ -97,6 +121,7 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     fmpz_t c;
     long i;
     ulong r, n;
+    int aint;
 
     bernoulli_cache_compute(2 * M + 1);
 
@@ -114,6 +139,8 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     /* sum 1/(n+a)^(s+x) */
     for (n = 0; n < N; n++)
     {
+        /* printf("sum 1: %ld %ld\n", n, N); */
+
         fmpcb_add_ui(Na, a, n, prec);
         _fmpcb_poly_fmpcb_invpow_cpx(t, Na, s, d, prec);
         _fmpcb_vec_add(sum, sum, t, d, prec);
@@ -178,12 +205,17 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     _fmpcb_poly_mullow_cpx(u, u, d, s, d, prec);
     _fmpcb_vec_scalar_div(term, u, d, Na, prec);
 
-    /* 1/(N+a)^2 */
+    /* (N+a)^2 or 1/(N+a)^2 */
     fmpcb_mul(Na, Na, Na, prec);
-    fmpcb_inv(Na, Na, prec);
+    aint = fmpcb_is_int(Na);
+
+    if (!aint)
+        fmpcb_inv(Na, Na, prec);
 
     for (r = 1; r <= M; r++)
     {
+        /* printf("sum 2: %ld %ld\n", r, M); */
+
         /* sum += bernoulli number * term */
         fmprb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);
         fmprb_div_fmpz(x, x, fmpq_denref(bernoulli_cache + 2 * r), prec);
@@ -198,11 +230,19 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
         fmprb_add_ui(fmpcb_realref(splus), fmpcb_realref(splus), 1, prec);
         _fmpcb_poly_mullow_cpx(term, term, d, splus, d, prec);
 
-        /* TODO: div fmpz when fmpz! */
-        fmpz_set_ui(c, 2*r+1);
-        fmpz_mul_ui(c, c, 2*r+2);
-        fmpcb_div_fmpz(rec, Na, c, prec);
-        _fmpcb_vec_scalar_mul(term, term, d, rec, prec);
+        if (aint)
+        {
+            fmprb_mul_ui(x, fmpcb_realref(Na), 2*r+1, prec);
+            fmprb_mul_ui(x, x, 2*r+2, prec);
+            _fmpcb_vec_scalar_div_fmprb(term, term, d, x, prec);
+        }
+        else
+        {
+            fmpz_set_ui(c, 2*r+1);
+            fmpz_mul_ui(c, c, 2*r+2);
+            fmpcb_div_fmpz(rec, Na, c, prec);
+            _fmpcb_vec_scalar_mul(term, term, d, rec, prec);
+        }
     }
 
     _fmpcb_vec_set(z, sum, d);
