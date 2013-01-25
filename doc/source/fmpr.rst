@@ -152,8 +152,7 @@ Special values
     0, `+\infty`, `-\infty`, NaN, i.e. not a finite, nonzero
     floating-point value.
 
-
-Assignment and rounding
+Assignment, rounding and conversions
 -------------------------------------------------------------------------------
 
 .. function:: long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
@@ -165,6 +164,8 @@ Assignment and rounding
     Sets *y* to a copy of *x*.
 
 .. function:: long fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+
+.. function:: long fmpr_set_round_fmpz(fmpr_t x, const fmpz_t x, long prec, fmpr_rnd_t rnd)
 
     Sets *y* to a copy of *x* rounded in the direction specified by rnd to the
     number of bits specified by prec.
@@ -178,62 +179,6 @@ Assignment and rounding
 .. function:: void fmpr_add_error_result(fmpr_t err, const fmpr_t err_in, const fmpr_t result, long rret, long prec, fmpr_rnd_t rnd)
 
     Like *fmpr_set_error_result*, but adds *err_in* to the error.
-
-
-Comparisons
--------------------------------------------------------------------------------
-
-.. function:: int fmpr_equal(const fmpr_t x, const fmpr_t y)
-
-    Returns nonzero iff *x* and *y* are exactly equal. This function does
-    not treat NaN specially, i.e. NaN compares as equal to itself.
-
-.. function:: int fmpr_cmp(const fmpr_t x, const fmpr_t y)
-
-    Returns negative, zero, or positive, depending on whether *x* is
-    respectively smaller, equal, or greater compared to *y*.
-    Comparison with NaN is undefined.
-
-.. function:: int fmpr_cmpabs(const fmpr_t x, const fmpr_t y)
-
-    Compares the absolute values of *x* and *y*.
-
-.. function:: int fmpr_cmp_2exp_si(const fmpr_t x, long e)
-
-.. function:: int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
-
-    Compares *x* (respectively its absolute value) with `2^e`.
-
-.. function:: int fmpr_sgn(const fmpr_t x)
-
-    Returns `-1`, `0` or `+1` according to the sign of *x*. The sign
-    of NaN is undefined.
-
-
-Random number generation
--------------------------------------------------------------------------------
-
-.. function:: void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
-
-    Generates a finite random number whose mantissa has precision at most
-    *bits* and whose exponent has at most *mag_bits* bits. The
-    values are distributed non-uniformly: special bit patterns are generated
-    with high probability in order to allow the test code to exercise corner
-    cases.
-
-.. function:: void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
-
-    Identical to *fmpr_randtest*, except that zero is never produced
-    as an output.
-
-.. function:: void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
-
-    Indentical to *fmpr_randtest*, except that the output occasionally
-    is set to an infinity or NaN.
-
-
-Conversions
--------------------------------------------------------------------------------
 
 .. function:: int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
 
@@ -272,6 +217,11 @@ Conversions
 
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`.
 
+.. function:: long fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+
+    Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`, rounded according
+    to *prec* and *rnd*.
+
 .. function:: void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
 
     Sets *man* and *exp* to the unique integers such that
@@ -287,6 +237,59 @@ Conversions
     Converts *x* to a mantissa with predetermined exponent, i.e. computes
     an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
     Returns 0 if exact and 1 if truncation occurred.
+
+
+Comparisons
+-------------------------------------------------------------------------------
+
+.. function:: int fmpr_equal(const fmpr_t x, const fmpr_t y)
+
+    Returns nonzero iff *x* and *y* are exactly equal. This function does
+    not treat NaN specially, i.e. NaN compares as equal to itself.
+
+.. function:: int fmpr_cmp(const fmpr_t x, const fmpr_t y)
+
+    Returns negative, zero, or positive, depending on whether *x* is
+    respectively smaller, equal, or greater compared to *y*.
+    Comparison with NaN is undefined.
+
+.. function:: int fmpr_cmpabs(const fmpr_t x, const fmpr_t y)
+
+    Compares the absolute values of *x* and *y*.
+
+.. function:: int fmpr_cmp_2exp_si(const fmpr_t x, long e)
+
+.. function:: int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
+
+    Compares *x* (respectively its absolute value) with `2^e`.
+
+.. function:: int fmpr_sgn(const fmpr_t x)
+
+    Returns `-1`, `0` or `+1` according to the sign of *x*. The sign
+    of NaN is undefined.
+
+Random number generation
+-------------------------------------------------------------------------------
+
+.. function:: void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+
+    Generates a finite random number whose mantissa has precision at most
+    *bits* and whose exponent has at most *mag_bits* bits. The
+    values are distributed non-uniformly: special bit patterns are generated
+    with high probability in order to allow the test code to exercise corner
+    cases.
+
+.. function:: void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+
+    Identical to *fmpr_randtest*, except that zero is never produced
+    as an output.
+
+.. function:: void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+
+    Indentical to *fmpr_randtest*, except that the output occasionally
+    is set to an infinity or NaN.
+
+
 
 
 Input and output

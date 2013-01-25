@@ -156,6 +156,15 @@ Basic manipulation
 
     Returns nonzero iff *x* is exactly 1.
 
+.. function:: void fmprb_set_fmpz_2exp(fmprb_t x, const fmpz_t y, const fmpz_t exp)
+
+    Sets *x* to *y* multiplied by 2 raised to the power *exp*.
+
+.. function:: void fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, long prec)
+
+    Sets *x* to *y* multiplied by 2 raised to the power *exp*, rounding
+    the result to *prec* bits.
+
 
 Input and output
 -------------------------------------------------------------------------------
@@ -356,7 +365,7 @@ Arithmetic
 
 .. function:: void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
 
-.. function:: void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);
+.. function:: void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec)
 
     Sets `z = x / y`, rounded to *prec* bits. If *y* contains zero, *z* is
     set to `0 \pm \infty`. Otherwise, error propagation uses the rule
