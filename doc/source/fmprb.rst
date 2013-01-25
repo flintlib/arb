@@ -379,7 +379,7 @@ Arithmetic
     where the triangle inequality has been applied to the numerator and
     the reverse triangle inequality has been applied to the denominator.
 
-.. function:: void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
+.. function:: void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
     Sets `y = x / (2^n - 1)`, rounded to *prec* bits.
 

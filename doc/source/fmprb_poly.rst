@@ -206,7 +206,7 @@ Composition
 
 .. function:: void fmprb_poly_compose_horner(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
 
-.. function:: void _fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long prec);
+.. function:: void _fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long prec)
 
 .. function:: void fmprb_poly_compose_divconquer(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
 

@@ -167,7 +167,7 @@ Derivatives
 Root-finding
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m, const fmpcb_struct * poly, const fmpcb_struct * polyder, long len, long prec);
+.. function:: void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m, const fmpcb_struct * poly, const fmpcb_struct * polyder, long len, long prec)
 
     Given any complex number `m`, and a nonconstant polynomial `f` and its
     derivative `f'`, sets *r* to an interval centered on `m` that is

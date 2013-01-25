@@ -200,12 +200,12 @@ Assignment, rounding and conversions
 
     Sets *x* exactly to the integer *c*.
 
-.. function:: void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);
+.. function:: void fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
 
     Sets *y* to the exact value of *x*. The result is undefined
     if *x* is not a finite fraction.
 
-.. function:: long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
+.. function:: long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
 
     Sets *x* to the value of *y*, rounded according to *prec* and *rnd*.
 
@@ -222,7 +222,7 @@ Assignment, rounding and conversions
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`, rounded according
     to *prec* and *rnd*.
 
-.. function:: void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
+.. function:: void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x)
 
     Sets *man* and *exp* to the unique integers such that
     `x = \mathrm{man} \times 2^{\mathrm{exp}}` and *man* is odd,
