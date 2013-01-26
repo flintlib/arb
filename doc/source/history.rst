@@ -4,6 +4,24 @@ History and changes
 For more details, view the detailed commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2013-01-26 - version 0.4
+
+  * much faster fmpr_mul, fmprb_mul and set_round, resulting in general speed improvements
+  * code for computing the complex Hurwitz zeta function with derivatives
+  * fixed and documented error bounds for hypergeometric series
+  * better algorithm for series evaluation of the gamma function at a rational point
+  * much faster generation of Bernoulli numbers
+  * complex log, exp, pow, trigonometric functions (currently based on MPFR)
+  * complex nth roots via Newton iteration
+  * added code for arithmetic on fmpcb_polys
+  * code for computing Khinchin's constant
+  * code for rising factorials of polynomials or power series
+  * faster sin_cos
+  * better div_2expm1
+  * many other new helper functions
+  * improved thread safety
+  * more test code for core operations
+
 * 2012-11-07 - version 0.3
 
   * converted documentation to sphinx
