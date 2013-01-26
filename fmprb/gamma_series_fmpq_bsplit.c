@@ -46,7 +46,7 @@ gamma_sum_bsplit(fmprb_t P, fmprb_t Q,
     }
     else
     {
-        long m, prec, lenbl, lentl, lenbr, lentr, lent, lenb, alloc;
+        long m, lenbl, lentl, lenbr, lentr, lent, lenb, alloc;
         fmprb_t PL, QL, PR, QR;
         fmprb_struct *BL, *TL, *BR, *TR, *TT;
 
@@ -100,7 +100,6 @@ evaluate_series(fmprb_struct * S, const fmpq_t a, long r, long N, long len, long
 {
     fmprb_t P, Q;
     fmprb_struct *B, *T;
-    long i;
 
     fmprb_init(P);
     fmprb_init(Q);

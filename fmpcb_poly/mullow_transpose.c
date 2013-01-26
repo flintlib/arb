@@ -96,7 +96,7 @@ fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
                                             const fmpcb_poly_t poly2,
                                                 long n, long prec)
 {
-    long len1, len2, len_out;
+    long len1, len2;
 
     len1 = poly1->length;
     len2 = poly2->length;

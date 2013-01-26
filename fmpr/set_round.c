@@ -123,7 +123,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
     }
     else
     {
-        long size, bc, val, val_bits, val_limbs, ret, old_val;
+        long size, bc, val, val_bits, val_limbs, ret;
         int negative, increment;
         mp_ptr d;
         __mpz_struct * z = COEFF_TO_PTR(*man);
@@ -164,14 +164,12 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
             /* truncation */
             if (!rounds_up(rnd, negative))
             {
-                old_val = val;
                 val = mpn_scan1(d, bc - prec);
                 increment = 0;
             }
             /* round to next higher odd mantissa */
             else
             {
-                old_val = val;
                 val = mpn_scan0b(d, size, bc - prec);
 
                 /* can overflow to next power of 2 */
