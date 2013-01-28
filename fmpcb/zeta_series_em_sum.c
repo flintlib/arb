@@ -137,13 +137,44 @@ fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int
     fmpz_init(c);
 
     /* sum 1/(n+a)^(s+x) */
-    for (n = 0; n < N; n++)
+    if (fmpcb_is_one(a) && (d == 1))
     {
-        /* printf("sum 1: %ld %ld\n", n, N); */
+        fmpcb_struct * pows;
+        long j;
 
-        fmpcb_add_ui(Na, a, n, prec);
-        _fmpcb_poly_fmpcb_invpow_cpx(t, Na, s, d, prec);
-        _fmpcb_vec_add(sum, sum, t, d, prec);
+        pows = _fmpcb_vec_init(N + 1);
+        fmpcb_one(pows + 1);
+
+        for (i = 2; i <= N; i++)
+        {
+            if (fmpcb_is_zero(pows + i))
+            {
+                fmprb_log_ui(fmpcb_realref(pows + i), i, prec);
+                fmprb_zero(fmpcb_imagref(pows + i));
+                fmpcb_mul(pows + i, pows + i, s, prec);
+                fmpcb_neg(pows + i, pows + i);
+                fmpcb_exp(pows + i, pows + i, prec);
+            }
+
+            for (j = 2; j <= i && i * j <= N; j++)
+                if (fmpcb_is_zero(pows + i * j))
+                    fmpcb_mul(pows + i * j, pows + i, pows + j, prec);
+        }
+
+        for (i = 1; i <= N; i++)
+            fmpcb_add(sum, sum, pows + i, prec);
+
+        _fmpcb_vec_clear(pows, N + 1);
+    }
+    else
+    {
+        for (n = 0; n < N; n++)
+        {
+            /* printf("sum 1: %ld %ld\n", n, N); */
+            fmpcb_add_ui(Na, a, n, prec);
+            _fmpcb_poly_fmpcb_invpow_cpx(t, Na, s, d, prec);
+            _fmpcb_vec_add(sum, sum, t, d, prec);
+        }
     }
 
     /* t = 1/(N+a)^(s+x); we might need one extra term for deflation */
