@@ -35,7 +35,7 @@ fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
     {
         fmprb_div_ui(y, x, (1UL << n) - 1, prec);
     }
-    else if (n < 1024 + prec / 32)
+    else if (n < 1024 + prec / 32 || n > LONG_MAX / 2)
     {
         fmprb_t t;
         fmprb_init(t);
@@ -59,7 +59,7 @@ fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
         fmprb_set(t, s);
         b = 1;
 
-        for (i = 2; i <= prec / n; i++)
+        for (i = 2; i <= prec / n + 1; i++)
         {
             fmprb_mul_2exp_si(t, t, -n);
             fmprb_add(s, s, t, prec);
