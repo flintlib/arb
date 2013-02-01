@@ -34,6 +34,9 @@ fmprb_overlaps(const fmprb_t x, const fmprb_t y)
     if (fmpr_is_inf(fmprb_radref(x)) || fmpr_is_inf(fmprb_radref(y)))
         return 1;
 
+    if (fmpr_equal(fmprb_midref(x), fmprb_midref(y)))
+        return 1;
+
     fmpr_init(r);
     fmpr_init(d);
 
