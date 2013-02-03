@@ -91,7 +91,7 @@ stirling_choose_nterms(const fmprb_t x, long r, double bits)
 void
 fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
 {
-    fmprb_t t, u, b, w;
+    fmprb_t t, u, b, w, v;
     long k, term_prec;
     double z_mag, term_mag;
 
@@ -99,6 +99,7 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
     fmprb_init(u);
     fmprb_init(b);
     fmprb_init(w);
+    fmprb_init(v);
 
     fmprb_log(w, z, prec);
 
@@ -122,7 +123,17 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
             term_prec = FLINT_MAX(term_prec, 10);
 
             fmprb_stirling_series_coeff(b, k, term_prec);
-            fmprb_mul(s, s, u, term_prec);
+
+            if (prec > 2000)
+            {
+                fmprb_set_round(v, u, term_prec);
+                fmprb_mul(s, s, v, term_prec);
+            }
+            else
+            {
+                fmprb_mul(s, s, u, term_prec);
+            }
+
             fmprb_add(s, s, b, term_prec);
         }
 
@@ -155,6 +166,7 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
     fmprb_clear(u);
     fmprb_clear(b);
     fmprb_clear(w);
+    fmprb_clear(v);
 }
 
 void
