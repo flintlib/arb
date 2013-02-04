@@ -35,7 +35,6 @@ typedef struct
     fmprb_t B;
     fmprb_t C;
     fmprb_t D;
-    fmprb_t E;
     fmprb_t Q1;
     fmprb_t Q2;
     fmprb_t Q3;
@@ -51,7 +50,6 @@ zeta_bsplit_init(zeta_bsplit_t S)
     fmprb_init(S->B);
     fmprb_init(S->C);
     fmprb_init(S->D);
-    fmprb_init(S->E);
     fmprb_init(S->Q1);
     fmprb_init(S->Q2);
     fmprb_init(S->Q3);
@@ -64,7 +62,6 @@ zeta_bsplit_clear(zeta_bsplit_t S)
     fmprb_clear(S->B);
     fmprb_clear(S->C);
     fmprb_clear(S->D);
-    fmprb_clear(S->E);
     fmprb_clear(S->Q1);
     fmprb_clear(S->Q2);
     fmprb_clear(S->Q3);
@@ -76,13 +73,13 @@ zeta_coeff_k(zeta_bsplit_t S, long k, long n, long s)
 {
     if (k + 1 < 0)
     {
-        fmprb_set_si(S->D, 1);
-        fmprb_set_si(S->Q1, 1);
+        fmprb_one(S->D);
+        fmprb_one(S->Q1);
     }
     else if (k + 1 > n)
     {
         fmprb_zero(S->D);
-        fmprb_set_si(S->Q1, 1);
+        fmprb_one(S->Q1);
     }
     else
     {
@@ -94,23 +91,22 @@ zeta_coeff_k(zeta_bsplit_t S, long k, long n, long s)
 
     if (k - 1 < 0)
     {
-        fmprb_zero(S->E);
-        fmprb_set_si(S->Q2, 1);
+        fmprb_zero(S->A);
+        fmprb_one(S->Q2);
     }
     else if (k - 1 >= n)
     {
-        fmprb_set_si(S->E, 1);
-        fmprb_set_si(S->Q2, 1);
+        fmprb_one(S->A);
+        fmprb_one(S->Q2);
     }
     else
     {
-        fmprb_set_si(S->E, ((k - 1) % 2) ? -1 : 1);
-        fmprb_set_si(S->Q2, k);
-        fmprb_ui_pow_ui(S->Q2, k, s, FMPR_PREC_EXACT);   /* XXX */
+        fmprb_set_si(S->A, k % 2 ? 1 : -1);
+        fmprb_mul(S->A, S->A, S->Q1, FMPR_PREC_EXACT);
+        fmprb_ui_pow_ui(S->Q2, k, s, FMPR_PREC_EXACT);
     }
 
-    fmprb_mul(S->Q3, S->Q1, S->Q2, FMPR_PREC_EXACT);     /* XXX */
-    fmprb_mul(S->A, S->E, S->Q1, FMPR_PREC_EXACT);
+    fmprb_mul(S->Q3, S->Q1, S->Q2, FMPR_PREC_EXACT);
     fmprb_zero(S->B);
     fmprb_set(S->C, S->Q1);
 }
@@ -134,31 +130,26 @@ zeta_bsplit(zeta_bsplit_t L, long a, long b,
         zeta_bsplit_init(R);
         zeta_bsplit(R, a, m, n, s, 1, bits);
 
-        fmprb_mul(L->E, L->E, R->Q2, bits);
-        fmprb_addmul(L->E, R->E, L->Q2, bits);
-
         fmprb_mul(L->B, L->B, R->D, bits);
         fmprb_addmul(L->B, L->A, R->C, bits);
 
         fmprb_mul(L->B, L->B, R->Q2, bits);
         fmprb_addmul(L->B, R->B, L->Q3, bits);
 
-        if (cont)
-        {
-            fmprb_mul(L->A, L->A, R->Q3, bits);
-            fmprb_addmul(L->A, R->A, L->Q3, bits);
-        }
+        fmprb_mul(L->A, L->A, R->Q3, bits);
+        fmprb_addmul(L->A, R->A, L->Q3, bits);
 
         fmprb_mul(L->C, L->C, R->D, bits);
         fmprb_addmul(L->C, R->C, L->Q1, bits);
-        fmprb_mul(L->Q2, L->Q2, R->Q2, bits);
 
         if (cont)
         {
             fmprb_mul(L->D, L->D, R->D, bits);
-            fmprb_mul(L->Q1, L->Q1, R->Q1, bits);
-            fmprb_mul(L->Q3, L->Q3, R->Q3, bits);
+            fmprb_mul(L->Q2, L->Q2, R->Q2, bits);
         }
+
+        fmprb_mul(L->Q1, L->Q1, R->Q1, bits);
+        fmprb_mul(L->Q3, L->Q3, R->Q3, bits);
 
         zeta_bsplit_clear(R);
     }
@@ -190,10 +181,12 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     zeta_bsplit_init(sum);
     zeta_bsplit(sum, 0, n + 1, n, s, 0, wp);
 
-    fmprb_mul(sum->E, sum->E, sum->C, wp);
-    fmprb_sub(sum->E, sum->E, sum->B, wp);
-    fmprb_mul(sum->Q2, sum->Q2, sum->C, wp);
-    fmprb_div(sum->C, sum->E, sum->Q2, wp);
+    /*  A/Q3 - B/Q3 / (C/Q1) = (A*C - B*Q1) / (Q3*C)    */
+    fmprb_mul(sum->A, sum->A, sum->C, wp);
+    fmprb_mul(sum->B, sum->B, sum->Q1, wp);
+    fmprb_sub(sum->A, sum->A, sum->B, wp);
+    fmprb_mul(sum->Q3, sum->Q3, sum->C, wp);
+    fmprb_div(sum->C, sum->A, sum->Q3, wp);
 
     /* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
     fmprb_add_error_2exp_si(sum->C, (long) (ERROR_A - ERROR_B * n + 1));
@@ -204,3 +197,4 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
 
     zeta_bsplit_clear(sum);
 }
+

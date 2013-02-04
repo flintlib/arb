@@ -678,8 +678,89 @@ Riemann zeta function
 .. function:: void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
 
     Computes `\zeta(s)` for arbitrary `s \ge 2` using a binary splitting
-    implementation of Borwein's formula. The algorithm has quasilinear
-    complexity with respect to the precision.
+    implementation of Borwein's algorithm. This has quasilinear complexity
+    with respect to the precision (assuming that `s` is fixed).
+    We have
+
+    .. math ::
+
+        \zeta(s) = \frac{1}{d_n (1-2^{1-s})}
+        \sum_{k=0}^{n-1} \frac{(-1)^k(d_n-d_k)}{(k+1)^s} + \gamma_n(s)
+
+    where
+
+    .. math ::
+
+        d_k = n \sum_{i=0}^k \frac{(n+i-1)! 4^i}{(n-i)! (2i)!}.
+
+    On the domain of interest, `|\gamma_n(s)| \le 3 / (3 + \sqrt 8)^n`.
+
+    We write the summation as a system of first-order recurrences for
+    `(s_k, d_k, t_k)` where `t_k = d_k - d_{k-1}`. This system is
+    described by the matrix equation
+
+    .. math ::
+
+        \begin{pmatrix} s_{k+1} \\ d_{k+2} \\ t_{k+3} \end{pmatrix}
+        =
+        \begin{pmatrix}
+        1 & (-1)^k (k+1)^{-s} & 0 \\
+        0 & 1 & 1 \\
+        0 & 0 & u(k)
+        \end{pmatrix}
+        \begin{pmatrix} s_k \\ d_{k+1} \\ t_{k+2} \end{pmatrix}.
+
+    We derive the binary splitting scheme by considering a product
+    of an arbitrary pair in the chain `M_{n-1} M_{n-2} \cdots M_1 M_0`.
+    This gives
+
+    .. math ::
+
+        \begin{pmatrix}
+        1 & A_L & B_L \\
+        0 & 1 & C_L \\
+        0 & 0 & D_L
+        \end{pmatrix}
+        \begin{pmatrix}
+        1 & A_R & B_R \\
+        0 & 1 & C_R \\
+        0 & 0 & D_R
+        \end{pmatrix} =
+        \begin{pmatrix}
+        1 & A_L+A_R & B_R+A_L C_R+B_L D_R \\
+        0 & 1 & C_R+C_L D_R \\
+        0 & 0 & D_L D_R
+        \end{pmatrix}.
+
+    The next step is to clear denominators. Instead of putting the
+    whole matrix on a common denominator, we optimize by putting `C, D` on a
+    denominator `Q_1` (the product of denominators of `u`) and `A, B` on
+    a common denominator `Q_3 = Q_1 Q_2` (where `Q_2` is the product of
+    `(k+1)^s` factors). This gives a small efficiency improvement. Thus,
+    we have
+
+    .. math ::
+
+        \begin{pmatrix}
+        1 & \dfrac{A_L}{Q_{3L}} & \dfrac{B_L}{Q_{3L}} \\[3ex]
+        0 & 1 & \dfrac{C_L}{Q_{1L}} \\[3ex]
+        0 & 0 & \dfrac{D_L}{Q_{1L}}
+        \end{pmatrix}
+        \begin{pmatrix}
+        1 & \dfrac{A_R}{Q_{3R}} & \dfrac{B_R}{Q_{3R}} \\[3ex]
+        0 & 1 & \dfrac{C_R}{Q_{1R}} \\[3ex]
+        0 & 0 & \dfrac{D_R}{Q_{1R}}
+        \end{pmatrix} =
+        \begin{pmatrix}
+        1 & \dfrac{Q_{3L} A_R + A_L Q_{3R}}{Q_{3L} Q_{3R}} & \dfrac{Q_{3L} B_R + A_L C_R Q_{2R} + B_L D_R Q_{2R}}{Q_{3L} Q_{3R}} \\[3ex]
+        0 & 1 & \dfrac{Q_{1L} C_R + C_L D_R}{Q_{1L} Q_{1R}} \\[3ex]
+        0 & 0 & \dfrac{D_L D_R}{Q_{1L} Q_{1R}}
+        \end{pmatrix}.
+
+    In the final matrix, we note that 
+    `A / Q_3 = \sum_k (-1)^k (k+1)^{-s}`, and `C / Q_1 = d_n`.
+    Thus `(1 / d_n) \sum_k (-1)^k (k+1)^{-s} (d_n - d_k)` is given by
+    `A/Q_3 - (B/Q_3) / (C/Q_1) = (A C - B Q_1) / (Q_3 C)`.
 
 .. function:: void fmprb_zeta_ui(fmprb_t x, ulong s, long prec)
 
