@@ -27,8 +27,6 @@
 #include "double_extras.h"
 #include "hypgeom.h"
 
-double fmpr_get_d(const fmpr_t x);
-
 static __inline__ double d_root(double x, int r)
 {
     if (r == 1)
@@ -124,7 +122,7 @@ long hypgeom_root_bound(const fmpr_t z, int r)
     else
     {
         double zd;
-        zd = fmpr_get_d(z);
+        zd = fmpr_get_d(z, FMPR_RND_UP);
         return d_root(zd, r) + 2;
     }
 }

@@ -192,6 +192,10 @@ Assignment, rounding and conversions
 
     Sets *x* to the exact value of the MPFR variable *y*.
 
+.. function:: double fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd)
+
+    Returns *x* rounded to a *double* in the direction specified by *rnd*.
+
 .. function:: void fmpr_set_ui(fmpr_t x, ulong c)
 
 .. function:: void fmpr_set_si(fmpr_t x, long c)

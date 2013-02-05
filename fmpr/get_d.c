@@ -23,55 +23,21 @@
 
 ******************************************************************************/
 
-#include <math.h>
-#include "double_extras.h"
-#include "hypgeom.h"
+#include "fmpr.h"
 
-#define LOG2 0.69314718055994530942
-#define EXP1 2.7182818284590452354
-
-static __inline__ double d_root(double x, int r)
+double
+fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd)
 {
-    if (r == 1)
-        return x;
-    if (r == 2)
-        return sqrt(x);
-    return pow(x, 1. / r);
-}
+    double r;
+    mpfr_rnd_t mrnd;
+    mpfr_t t;
 
-long
-hypgeom_estimate_terms(const fmpr_t z, int r, long prec)
-{
-    double y, t;
+    mrnd = rnd_to_mpfr(rnd);
+    mpfr_init2(t, 53);
+    fmpr_get_mpfr(t, x, mrnd);
+    r = mpfr_get_d(t, mrnd);
 
-    t = fmpr_get_d(z, FMPR_RND_UP);
-    t = fabs(t);
-
-    if (t == 0)
-        return 1;
-
-    if (r == 0)
-    {
-        if (t >= 1)
-        {
-            printf("z must be smaller than 1\n");
-            abort();
-        }
-
-        y = (log(1-t) - prec * LOG2) / log(t) + 1;
-    }
-    else
-    {
-        y = (prec * LOG2) / (d_root(t, r) * EXP1 * r);
-        y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
-    }
-
-    if (y >= LONG_MAX / 2)
-    {
-        printf("error: series will converge too slowly\n");
-        abort();
-    }
-
-    return y;
+    mpfr_clear(t);
+    return r;
 }
 

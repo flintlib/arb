@@ -41,6 +41,15 @@
 #define FMPR_RND_DOWN 3
 #define FMPR_RND_NEAR 4
 
+static __inline__ mpfr_rnd_t rnd_to_mpfr(fmpr_rnd_t rnd)
+{
+    if (rnd == FMPR_RND_DOWN) return MPFR_RNDZ;
+    else if (rnd == FMPR_RND_UP) return MPFR_RNDA;
+    else if (rnd == FMPR_RND_FLOOR) return MPFR_RNDD;
+    else if (rnd == FMPR_RND_CEIL) return MPFR_RNDU;
+    else return MPFR_RNDN;
+}
+
 typedef struct
 {
     fmpz man;
@@ -277,59 +286,11 @@ void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bi
 
 void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
 
-static __inline__ int
-fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
-{
-    int r;
+int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd);
 
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y)) mpfr_set_zero(x, 0);
-        else if (fmpr_is_pos_inf(y)) mpfr_set_inf(x, 1);
-        else if (fmpr_is_neg_inf(y)) mpfr_set_inf(x, -1);
-        else mpfr_set_nan(x);
-        r = 0;
-    }
-    else if (COEFF_IS_MPZ(*fmpr_expref(y)))
-    {
-        printf("exception: exponent too large to convert to mpfr");
-        abort();
-    }
-    else
-    {
-        if (!COEFF_IS_MPZ(*fmpr_manref(y)))
-            r = mpfr_set_si_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);
-        else
-            r = mpfr_set_z_2exp(x, COEFF_TO_PTR(*fmpr_manref(y)), *fmpr_expref(y), rnd);
+void fmpr_set_mpfr(fmpr_t x, const mpfr_t y);
 
-        if (!mpfr_regular_p(x))
-        {
-            printf("exception: exponent too large to convert to mpfr");
-            abort();
-        }
-    }
-
-    return r;
-}
-
-static __inline__ void
-fmpr_set_mpfr(fmpr_t x, const mpfr_t y)
-{
-    if (!mpfr_regular_p(y))
-    {
-        if (mpfr_zero_p(y)) fmpr_zero(x);
-        else if (mpfr_inf_p(y) && mpfr_sgn(y) > 0) fmpr_pos_inf(x);
-        else if (mpfr_inf_p(y) && mpfr_sgn(y) < 0) fmpr_neg_inf(x);
-        else fmpr_nan(x);
-    }
-    else
-    {
-        __mpz_struct * z = _fmpz_promote(fmpr_manref(x));
-        fmpz_set_si(fmpr_expref(x), mpfr_get_z_2exp(z, y));
-        _fmpz_demote_val(fmpr_manref(x));
-        _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), y->_mpfr_prec, FMPR_RND_DOWN);
-    }
-}
+double fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd);
 
 static __inline__ void fmpr_set_ui(fmpr_t x, ulong c)
 {
@@ -671,11 +632,7 @@ static __inline__ int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
     do { \
         mpfr_t __t, __u; \
         mpfr_rnd_t __rnd; \
-        if (rnd == FMPR_RND_DOWN) __rnd = MPFR_RNDZ; \
-        else if (rnd == FMPR_RND_UP) __rnd = MPFR_RNDA; \
-        else if (rnd == FMPR_RND_FLOOR) __rnd = MPFR_RNDD; \
-        else if (rnd == FMPR_RND_CEIL) __rnd = MPFR_RNDU; \
-        else __rnd = MPFR_RNDN; \
+        __rnd = rnd_to_mpfr(rnd); \
         mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
@@ -695,11 +652,7 @@ static __inline__ int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
     do { \
         mpfr_t __t, __u, __v; \
         mpfr_rnd_t __rnd; \
-        if (rnd == FMPR_RND_DOWN) __rnd = MPFR_RNDZ; \
-        else if (rnd == FMPR_RND_UP) __rnd = MPFR_RNDA; \
-        else if (rnd == FMPR_RND_FLOOR) __rnd = MPFR_RNDD; \
-        else if (rnd == FMPR_RND_CEIL) __rnd = MPFR_RNDU; \
-        else __rnd = MPFR_RNDN; \
+        __rnd = rnd_to_mpfr(rnd); \
         mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
         mpfr_init2(__v, FLINT_MAX(2, prec)); \

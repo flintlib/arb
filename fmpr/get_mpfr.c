@@ -23,55 +23,40 @@
 
 ******************************************************************************/
 
-#include <math.h>
-#include "double_extras.h"
-#include "hypgeom.h"
+#include "fmpr.h"
 
-#define LOG2 0.69314718055994530942
-#define EXP1 2.7182818284590452354
-
-static __inline__ double d_root(double x, int r)
+int
+fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
 {
-    if (r == 1)
-        return x;
-    if (r == 2)
-        return sqrt(x);
-    return pow(x, 1. / r);
-}
+    int r;
 
-long
-hypgeom_estimate_terms(const fmpr_t z, int r, long prec)
-{
-    double y, t;
-
-    t = fmpr_get_d(z, FMPR_RND_UP);
-    t = fabs(t);
-
-    if (t == 0)
-        return 1;
-
-    if (r == 0)
+    if (fmpr_is_special(y))
     {
-        if (t >= 1)
-        {
-            printf("z must be smaller than 1\n");
-            abort();
-        }
-
-        y = (log(1-t) - prec * LOG2) / log(t) + 1;
+        if (fmpr_is_zero(y)) mpfr_set_zero(x, 0);
+        else if (fmpr_is_pos_inf(y)) mpfr_set_inf(x, 1);
+        else if (fmpr_is_neg_inf(y)) mpfr_set_inf(x, -1);
+        else mpfr_set_nan(x);
+        r = 0;
+    }
+    else if (COEFF_IS_MPZ(*fmpr_expref(y)))
+    {
+        printf("exception: exponent too large to convert to mpfr");
+        abort();
     }
     else
     {
-        y = (prec * LOG2) / (d_root(t, r) * EXP1 * r);
-        y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
+        if (!COEFF_IS_MPZ(*fmpr_manref(y)))
+            r = mpfr_set_si_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);
+        else
+            r = mpfr_set_z_2exp(x, COEFF_TO_PTR(*fmpr_manref(y)), *fmpr_expref(y), rnd);
+
+        if (!mpfr_regular_p(x))
+        {
+            printf("exception: exponent too large to convert to mpfr");
+            abort();
+        }
     }
 
-    if (y >= LONG_MAX / 2)
-    {
-        printf("error: series will converge too slowly\n");
-        abort();
-    }
-
-    return y;
+    return r;
 }
 

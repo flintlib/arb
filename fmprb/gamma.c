@@ -39,18 +39,6 @@ fmprb_stirling_series_coeff(fmprb_t b, ulong k, long prec)
     fmpz_clear(d);
 }
 
-
-double fmpr_get_d(const fmpr_t x)
-{
-    double r;
-    mpfr_t t;
-    mpfr_init2(t, 53);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    r = mpfr_get_d(t, MPFR_RNDN);
-    mpfr_clear(t);
-    return r;
-}
-
 /*
 Heuristic: we use Stirling's series if abs(x) > beta * prec.
 
@@ -63,7 +51,7 @@ argument reduction.
 
 long stirling_choose_r(const fmprb_t x, long wp)
 {
-    double t = fmpr_get_d(fmprb_midref(x));
+    double t = fmpr_get_d(fmprb_midref(x), FMPR_RND_FLOOR);
     double want = FLINT_MAX(5, GAMMA_STIRLING_BETA * wp);
 
     return (long) FLINT_MAX(0, want - t + 1);
@@ -77,7 +65,7 @@ stirling_choose_nterms(const fmprb_t x, long r, double bits)
     double t, logt;
     double mag;
 
-    t = fmpr_get_d(fmprb_midref(x)) + r;
+    t = fmpr_get_d(fmprb_midref(x), FMPR_RND_FLOOR) + r;
     logt = log(t);
 
     for (i = 1; ; i++)
@@ -112,7 +100,7 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
     {
         fmprb_ui_div(t, 1UL, z, prec);
         fmprb_mul(u, t, t, prec);
-        z_mag = fmpr_get_d(fmprb_midref(w)) * 1.44269504088896;
+        z_mag = fmpr_get_d(fmprb_midref(w), FMPR_RND_UP) * 1.44269504088896;
 
         for (k = nterms - 1; k >= 1; k--)
         {

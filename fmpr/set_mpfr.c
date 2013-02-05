@@ -23,55 +23,24 @@
 
 ******************************************************************************/
 
-#include <math.h>
-#include "double_extras.h"
-#include "hypgeom.h"
+#include "fmpr.h"
 
-#define LOG2 0.69314718055994530942
-#define EXP1 2.7182818284590452354
-
-static __inline__ double d_root(double x, int r)
+void
+fmpr_set_mpfr(fmpr_t x, const mpfr_t y)
 {
-    if (r == 1)
-        return x;
-    if (r == 2)
-        return sqrt(x);
-    return pow(x, 1. / r);
-}
-
-long
-hypgeom_estimate_terms(const fmpr_t z, int r, long prec)
-{
-    double y, t;
-
-    t = fmpr_get_d(z, FMPR_RND_UP);
-    t = fabs(t);
-
-    if (t == 0)
-        return 1;
-
-    if (r == 0)
+    if (!mpfr_regular_p(y))
     {
-        if (t >= 1)
-        {
-            printf("z must be smaller than 1\n");
-            abort();
-        }
-
-        y = (log(1-t) - prec * LOG2) / log(t) + 1;
+        if (mpfr_zero_p(y)) fmpr_zero(x);
+        else if (mpfr_inf_p(y) && mpfr_sgn(y) > 0) fmpr_pos_inf(x);
+        else if (mpfr_inf_p(y) && mpfr_sgn(y) < 0) fmpr_neg_inf(x);
+        else fmpr_nan(x);
     }
     else
     {
-        y = (prec * LOG2) / (d_root(t, r) * EXP1 * r);
-        y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
+        __mpz_struct * z = _fmpz_promote(fmpr_manref(x));
+        fmpz_set_si(fmpr_expref(x), mpfr_get_z_2exp(z, y));
+        _fmpz_demote_val(fmpr_manref(x));
+        _fmpr_normalise(fmpr_manref(x), fmpr_expref(x), y->_mpfr_prec, FMPR_RND_DOWN);
     }
-
-    if (y >= LONG_MAX / 2)
-    {
-        printf("error: series will converge too slowly\n");
-        abort();
-    }
-
-    return y;
 }
 
