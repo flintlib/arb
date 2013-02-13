@@ -71,32 +71,14 @@ zeta_bsplit_clear(zeta_bsplit_t S)
 static __inline__ void
 zeta_coeff_k(zeta_bsplit_t S, long k, long n, long s)
 {
-    if (k + 1 < 0)
-    {
-        fmprb_one(S->D);
-        fmprb_one(S->Q1);
-    }
-    else if (k + 1 > n)
-    {
-        fmprb_zero(S->D);
-        fmprb_one(S->Q1);
-    }
-    else
-    {
-        fmprb_set_si(S->D, 2 * (n + (k + 1) - 1));
-        fmprb_mul_si(S->D, S->D, n + 1 - (k + 1), FMPR_PREC_EXACT);
-        fmprb_set_si(S->Q1, k + 1);
-        fmprb_mul_si(S->Q1, S->Q1, 2*(k + 1) - 1, FMPR_PREC_EXACT);
-    }
+    fmprb_set_si(S->D, 2 * (n + (k + 1) - 1));
+    fmprb_mul_si(S->D, S->D, n + 1 - (k + 1), FMPR_PREC_EXACT);
+    fmprb_set_si(S->Q1, k + 1);
+    fmprb_mul_si(S->Q1, S->Q1, 2*(k + 1) - 1, FMPR_PREC_EXACT);
 
-    if (k - 1 < 0)
+    if (k == 0)
     {
         fmprb_zero(S->A);
-        fmprb_one(S->Q2);
-    }
-    else if (k - 1 >= n)
-    {
-        fmprb_one(S->A);
         fmprb_one(S->Q2);
     }
     else
