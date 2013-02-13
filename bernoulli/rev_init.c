@@ -38,7 +38,7 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
     iter->n = nmax;
 
     iter->alloc = 0;
-    if (nmax < bernoulli_rev_MIN)
+    if (nmax < BERNOULLI_REV_MIN)
         return;
 
     iter->prec = wp = global_prec(nmax);

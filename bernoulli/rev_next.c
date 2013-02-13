@@ -37,7 +37,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     n = iter->n;
     wp = iter->prec;
 
-    if (n < bernoulli_rev_MIN)
+    if (n < BERNOULLI_REV_MIN)
     {
         _arith_bernoulli_number(numer, denom, n);
         if (n != 0)
@@ -104,7 +104,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
         iter->max_power, iter->max_power);
 
     /* readjust precision */
-    if (n % 64 == 0 && n > bernoulli_rev_MIN)
+    if (n % 64 == 0 && n > BERNOULLI_REV_MIN)
     {
         long new_prec, new_max;
 

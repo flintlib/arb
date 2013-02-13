@@ -80,7 +80,7 @@ static __inline__ long global_prec(ulong nmax)
 
 
 /* avoid potential numerical problems for very small n */
-#define bernoulli_rev_MIN 32
+#define BERNOULLI_REV_MIN 32
 
 typedef struct
 {
