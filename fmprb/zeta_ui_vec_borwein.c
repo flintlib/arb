@@ -29,6 +29,8 @@
 #define ERROR_A 1.5849625007211561815 /* log2(3) */
 #define ERROR_B 2.5431066063272239453 /* log2(3+sqrt(8)) */
 
+void borwein_error(fmpr_t err, long n);
+
 void
 fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
     ulong step, long prec)
@@ -36,6 +38,7 @@ fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
     long j, k, s, n, wp;
     fmpz_t c, d, t, u;
     fmpz * zeta;
+    fmpr_t err;
 
     if (num < 1)
         return;
@@ -76,6 +79,9 @@ fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
         fmpz_add(d, d, c);
     }
 
+    fmpr_init(err);
+    borwein_error(err, n);
+
     for (k = 0; k < num; k++)
     {
         fmprb_struct * x = z + k;
@@ -87,12 +93,14 @@ fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num,
         fmprb_div_fmpz(x, x, d, wp);
 
         /* mathematical error for eta(s), bounded by 3/(3+sqrt(8))^n */
-        fmprb_add_error_2exp_si(x, (long) (ERROR_A - ERROR_B * n + 1));
+        fmprb_add_error_fmpr(x, err);
 
         /* convert from eta(s) to zeta(s) */
         fmprb_div_2expm1_ui(x, x, s - 1, wp);
         fmprb_mul_2exp_si(x, x, s - 1);
     }
+
+    fmpr_clear(err);
 
     fmpz_clear(c);
     fmpz_clear(d);

@@ -137,10 +137,21 @@ zeta_bsplit(zeta_bsplit_t L, long a, long b,
     }
 }
 
+/* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
+void
+borwein_error(fmpr_t err, long n)
+{
+    fmpr_sqrt_ui(err, 8, FMPRB_RAD_PREC, FMPR_RND_DOWN);
+    fmpr_add_ui(err, err, 3, FMPRB_RAD_PREC, FMPR_RND_DOWN);
+    fmpr_pow_sloppy_ui(err, err, n, FMPRB_RAD_PREC, FMPR_RND_DOWN);
+    fmpr_ui_div(err, 3, err, FMPRB_RAD_PREC, FMPR_RND_UP);
+}
+
 void
 fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
 {
     zeta_bsplit_t sum;
+    fmpr_t err;
     long wp, n;
 
     /* zeta(0) = -1/2 */
@@ -170,8 +181,10 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
     fmprb_mul(sum->Q3, sum->Q3, sum->C, wp);
     fmprb_div(sum->C, sum->A, sum->Q3, wp);
 
-    /* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
-    fmprb_add_error_2exp_si(sum->C, (long) (ERROR_A - ERROR_B * n + 1));
+    fmpr_init(err);
+    borwein_error(err, n);
+    fmprb_add_error_fmpr(sum->C, err);
+    fmpr_clear(err);
 
     /* convert from eta(s) to zeta(s) */
     fmprb_div_2expm1_ui(x, sum->C, s - 1, wp);
