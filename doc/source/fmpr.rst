@@ -60,7 +60,7 @@ Types, macros and constants
 
     Specifies the rounding mode for the result of an approximate operation.
 
-.. macro:: FMPR_RND_NEAREST
+.. macro:: FMPR_RND_NEAR
 
     Specifies that the result of an operation should be rounded to the
     nearest representable number, rounding to an odd mantissa if there is a tie
@@ -203,6 +203,21 @@ Assignment, rounding and conversions
 .. function:: void fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
 
     Sets *x* exactly to the integer *c*.
+
+.. function:: void fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
+
+    Sets *z* to *x* rounded to the nearest integer in the direction
+    specified by *rnd*. If *rnd* is *FMPR_RND_NEAR*, rounds to the
+    nearest even integer in case of a tie.
+    Aborts if *x* is infinite, NaN or if the exponent is unreasonably large.
+
+.. function:: long fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd)
+
+    Returns *x* rounded to the nearest integer in the direction
+    specified by *rnd*. If *rnd* is *FMPR_RND_NEAR*, rounds to the
+    nearest even integer in case of a tie.
+    Aborts if *x* is infinite, NaN, or the
+    value is too large to fit in a *long*.
 
 .. function:: void fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
 
