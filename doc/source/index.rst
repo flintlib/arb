@@ -36,6 +36,7 @@ Module documentation
    fmpcb_poly.rst
    fmpcb_mat.rst
    bernoulli.rst
+   gamma.rst
    hypgeom.rst
    fmpz_holonomic.rst
 
