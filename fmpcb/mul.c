@@ -57,28 +57,89 @@ fmpcb_mul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
         fmprb_mul(f, b, d, prec);
         fmpcb_mul_onei(z, z);
     }
+    /* squaring = a^2-b^2, 2ab */
+    else if (x == y)
+    {
+        /* aliasing */
+        if (z == x)
+        {
+            fmprb_t t;
+            fmprb_init(t);
+
+            fmprb_mul(t, a, b, prec);
+            fmprb_mul_2exp_si(t, t, 1);
+            fmprb_mul(e, a, a, prec);
+            fmprb_mul(f, b, b, prec);
+            fmprb_sub(e, e, f, prec);
+            fmprb_swap(f, t);
+
+            fmprb_clear(t);
+        }
+        else
+        {
+            fmprb_mul(e, a, a, prec);
+            fmprb_mul(f, b, b, prec);
+            fmprb_sub(e, e, f, prec);
+            fmprb_mul(f, a, b, prec);
+            fmprb_mul_2exp_si(f, f, 1);
+        }
+    }
     else
     {
-        fmprb_t t, u, v, w;
+        /* aliasing */
+        if (z == x)
+        {
+            fmprb_t t, u;
 
-        fmprb_init(t);
-        fmprb_init(u);
-        fmprb_init(v);
-        fmprb_init(w);
+            fmprb_init(t);
+            fmprb_init(u);
 
-        fmprb_mul(t, a, c, prec);
-        fmprb_mul(u, b, d, prec);
+            fmprb_mul(t, a, c, prec);
+            fmprb_mul(u, a, d, prec);
 
-        fmprb_mul(v, a, d, prec);
-        fmprb_mul(w, b, c, prec);
+            fmprb_mul(e, b, d, prec);
+            fmprb_sub(e, t, e, prec);
 
-        fmprb_sub(e, t, u, prec);
-        fmprb_add(f, v, w, prec);
+            fmprb_mul(f, b, c, prec);
+            fmprb_add(f, u, f, prec);
 
-        fmprb_clear(t);
-        fmprb_clear(u);
-        fmprb_clear(v);
-        fmprb_clear(w);
+            fmprb_clear(t);
+            fmprb_clear(u);
+        }
+        else if (z == y)
+        {
+            fmprb_t t, u;
+
+            fmprb_init(t);
+            fmprb_init(u);
+
+            fmprb_mul(t, c, a, prec);
+            fmprb_mul(u, c, b, prec);
+
+            fmprb_mul(e, d, b, prec);
+            fmprb_sub(e, t, e, prec);
+
+            fmprb_mul(f, d, a, prec);
+            fmprb_add(f, u, f, prec);
+
+            fmprb_clear(t);
+            fmprb_clear(u);
+        }
+        else
+        {
+            fmprb_t t;
+            fmprb_init(t);
+
+            fmprb_mul(e, a, c, prec);
+            fmprb_mul(t, b, d, prec);
+            fmprb_sub(e, e, t, prec);
+
+            fmprb_mul(f, a, d, prec);
+            fmprb_mul(t, b, c, prec);
+            fmprb_add(f, f, t, prec);
+
+            fmprb_clear(t);
+        }
     }
 
 #undef a

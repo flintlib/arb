@@ -197,6 +197,8 @@ Arithmetic
 
     Sets *z* to the product of *x* and *y*. If at least one part of
     *x* or *y* is zero, the operations is reduced to two real multiplications.
+    If *x* and *y* are the same pointers, they are assumed to represent
+    the same mathematical quantity and the squaring formula is used.
 
 .. function:: void fmpcb_mul_alt(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
