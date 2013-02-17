@@ -78,6 +78,8 @@ Basic manipulation
 
 void fmpcb_set_round(fmpcb_t z, const fmpcb_t x, long prec)
 
+void fmpcb_set_round_fmpz(fmpcb_t z, const fmpz_t x, long prec)
+
     Sets *z* to *x*, rounded to *prec* bits.
 
 .. function:: void fmpcb_swap(fmpcb_t z, fmpcb_t x)
@@ -171,13 +173,17 @@ Arithmetic
 
     Sets *z* to the complex conjugate of *x*.
 
-.. function:: void fmpcb_add_ui(fmpcb_t z, const fmpcb_t x, ulong c, long prec)
+.. function:: void fmpcb_add_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_add_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_add(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
     Sets *z* to the sum of *x* and *y*.
 
-.. function:: void fmpcb_sub_ui(fmpcb_t z, const fmpcb_t x, ulong c, long prec)
+.. function:: void fmpcb_sub_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_sub_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_sub(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
@@ -188,6 +194,8 @@ Arithmetic
     Sets *z* to *x* multiplied by the imaginary unit.
 
 .. function:: void fmpcb_mul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_mul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_mul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
 
@@ -219,9 +227,19 @@ Arithmetic
 
 .. function:: void fmpcb_addmul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
+.. function:: void fmpcb_addmul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_addmul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
+
+    Sets *z* to *z* plus the product of *x* and *y*.
+
 .. function:: void fmpcb_submul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
-    Adds (subtracts) the product of *x* and *y* to *z*.
+.. function:: void fmpcb_submul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_submul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
+
+    Sets *z* to *z* minus the product of *x* and *y*.
 
 .. function:: void fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
 
