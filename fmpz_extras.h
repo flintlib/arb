@@ -54,6 +54,15 @@ fmpz_add_si(fmpz_t z, const fmpz_t x, long y)
 }
 
 static __inline__ void
+fmpz_sub_si(fmpz_t z, const fmpz_t x, long y)
+{
+    if (y >= 0)
+        fmpz_sub_ui(z, x, y);
+    else
+        fmpz_add_ui(z, x, -y);
+}
+
+static __inline__ void
 fmpz_add_si_inline(fmpz_t z, const fmpz_t x, long y)
 {
     fmpz f;
@@ -64,6 +73,19 @@ fmpz_add_si_inline(fmpz_t z, const fmpz_t x, long y)
         fmpz_set_si(z, f + y);
     else
         fmpz_add_si(z, x, y);
+}
+
+static __inline__ void
+fmpz_sub_si_inline(fmpz_t z, const fmpz_t x, long y)
+{
+    fmpz f;
+
+    f = *x;
+
+    if (!COEFF_IS_MPZ(f) && (COEFF_MIN <= y && y <= COEFF_MAX))
+        fmpz_set_si(z, f - y);
+    else
+        fmpz_sub_si(z, x, y);
 }
 
 static __inline__ void

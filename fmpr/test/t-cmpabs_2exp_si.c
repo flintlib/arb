@@ -25,43 +25,51 @@
 
 #include "fmpr.h"
 
-int
-fmpr_cmp(const fmpr_t x, const fmpr_t y)
+
+int main()
 {
-    int res, xsign, ysign;
-    fmpr_t t;
+    long iter;
+    flint_rand_t state;
 
-    if (fmpr_equal(x, y))
-        return 0;
+    printf("cmpabs_2exp_si....");
+    fflush(stdout);
 
-    if (fmpr_is_special(x) || fmpr_is_special(y))
+    flint_randinit(state);
+
+    for (iter = 0; iter < 100000; iter++)
     {
-        if (fmpr_is_nan(x) || fmpr_is_nan(y))
-            return 0;
-        if (fmpr_is_zero(y)) return fmpr_sgn(x);
-        if (fmpr_is_zero(x)) return -fmpr_sgn(y);
-        if (fmpr_is_pos_inf(x)) return 1;
-        if (fmpr_is_neg_inf(y)) return 1;
-        return -1;
+        long bits, e;
+        fmpr_t x, y;
+        int cmp1, cmp2;
+
+        bits = 2 + n_randint(state, 1000);
+        e = n_randtest(state);
+
+        fmpr_init(x);
+        fmpr_init(y);
+
+        fmpr_randtest_special(x, state, bits, 10);
+        fmpr_set_ui_2exp_si(y, 1, e);
+
+        cmp1 = fmpr_cmpabs(x, y);
+        cmp2 = fmpr_cmpabs_2exp_si(x, e);
+
+        if (cmp1 != cmp2)
+        {
+            printf("FAIL\n\n");
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = "); fmpr_print(y); printf("\n\n");
+            printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
+            abort();
+        }
+
+        fmpr_clear(x);
+        fmpr_clear(y);
     }
 
-    xsign = fmpr_sgn(x);
-    ysign = fmpr_sgn(y);
-
-    if (xsign != ysign)
-        return (xsign < 0) ? -1 : 1;
-
-    /* Reduces to integer comparison if bottom exponents are the same */
-    if (fmpz_equal(fmpr_expref(x), fmpr_expref(y)))
-        return fmpz_cmp(fmpr_manref(x), fmpr_manref(y)) < 0 ? -1 : 1;
-
-    /* TODO: compare position of top exponents to avoid subtraction */
-
-    fmpr_init(t);
-    fmpr_sub(t, x, y, 2, FMPR_RND_DOWN);
-    res = fmpr_sgn(t);
-    fmpr_clear(t);
-
-    return res;
+    flint_randclear(state);
+    _fmpz_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
 

@@ -19,49 +19,44 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpr.h"
 
 int
-fmpr_cmp(const fmpr_t x, const fmpr_t y)
+fmpr_cmp_2exp_si(const fmpr_t x, long e)
 {
-    int res, xsign, ysign;
-    fmpr_t t;
+    long bc;
+    int ret;
+    fmpz_t t;
 
-    if (fmpr_equal(x, y))
-        return 0;
-
-    if (fmpr_is_special(x) || fmpr_is_special(y))
+    if (fmpr_is_special(x))
     {
-        if (fmpr_is_nan(x) || fmpr_is_nan(y))
-            return 0;
-        if (fmpr_is_zero(y)) return fmpr_sgn(x);
-        if (fmpr_is_zero(x)) return -fmpr_sgn(y);
+        if (fmpr_is_zero(x)) return -1;
         if (fmpr_is_pos_inf(x)) return 1;
-        if (fmpr_is_neg_inf(y)) return 1;
+        if (fmpr_is_neg_inf(x)) return -1;
+        if (fmpr_is_nan(x)) return 0;
         return -1;
     }
 
-    xsign = fmpr_sgn(x);
-    ysign = fmpr_sgn(y);
+    if (fmpz_is_one(fmpr_manref(x)))
+        return fmpz_cmp_si(fmpr_expref(x), e);
 
-    if (xsign != ysign)
-        return (xsign < 0) ? -1 : 1;
+    if (fmpz_sgn(fmpr_manref(x)) < 0)
+        return -1;
 
-    /* Reduces to integer comparison if bottom exponents are the same */
-    if (fmpz_equal(fmpr_expref(x), fmpr_expref(y)))
-        return fmpz_cmp(fmpr_manref(x), fmpr_manref(y)) < 0 ? -1 : 1;
+    bc = fmpz_bits(fmpr_manref(x));
 
-    /* TODO: compare position of top exponents to avoid subtraction */
+    fmpz_init(t);
 
-    fmpr_init(t);
-    fmpr_sub(t, x, y, 2, FMPR_RND_DOWN);
-    res = fmpr_sgn(t);
-    fmpr_clear(t);
+    fmpz_add_si_inline(t, fmpr_expref(x), bc);
+    fmpz_sub_si_inline(t, t, e);
 
-    return res;
+    ret = (fmpz_sgn(t) <= 0) ? -1 : 1;
+
+    fmpz_clear(t);
+    return ret;
 }
 

@@ -534,27 +534,9 @@ fmpr_set_ui_2exp_si(fmpr_t x, ulong man, long exp)
     fmpr_mul_2exp_si(x, x, exp);
 }
 
-static __inline__ int fmpr_cmp_2exp_si(const fmpr_t x, long e)
-{
-    fmpr_t t;
-    int res;
-    fmpr_init(t);
-    fmpr_set_ui_2exp_si(t, 1, e);
-    res = fmpr_cmp(x, t);
-    fmpr_clear(t);
-    return res;
-}
+int fmpr_cmp_2exp_si(const fmpr_t x, long e);
 
-static __inline__ int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
-{
-    fmpr_t t;
-    int res;
-    fmpr_init(t);
-    fmpr_set_ui_2exp_si(t, 1, e);
-    res = fmpr_cmpabs(x, t);
-    fmpr_clear(t);
-    return res;
-}
+int fmpr_cmpabs_2exp_si(const fmpr_t x, long e);
 
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
