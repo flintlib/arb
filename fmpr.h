@@ -483,10 +483,7 @@ fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)
     else
     {
         fmpz_set(fmpr_manref(y), fmpr_manref(x));
-        if (e > 0)
-            fmpz_add_ui(fmpr_expref(y), fmpr_expref(x), e);
-        else
-            fmpz_sub_ui(fmpr_expref(y), fmpr_expref(x), -e);
+        fmpz_add_si_inline(fmpr_expref(y), fmpr_expref(x), e);
     }
 }
 
