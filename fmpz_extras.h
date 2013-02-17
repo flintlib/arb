@@ -26,6 +26,7 @@
 #ifndef FMPZ_EXTRAS_H
 #define FMPZ_EXTRAS_H
 
+#include <limits.h>
 #include "flint.h"
 #include "fmpz.h"
 
