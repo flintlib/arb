@@ -48,7 +48,7 @@ int main()
         fmpr_init(x);
         fmpr_init(y);
 
-        fmpr_randtest_special(x, state, bits, 10);
+        fmpr_randtest_special(x, state, bits, 100);
         fmpr_set_ui_2exp_si(y, 1, e);
 
         cmp1 = fmpr_cmp(x, y);

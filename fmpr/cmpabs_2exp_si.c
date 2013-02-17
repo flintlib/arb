@@ -25,6 +25,11 @@
 
 #include "fmpr.h"
 
+static __inline__ int sgn(int x)
+{
+    return (x > 0) - (x < 0);
+}
+
 int
 fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
 {
@@ -41,7 +46,7 @@ fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
     }
 
     if (fmpz_is_pm1(fmpr_manref(x)))
-        return fmpz_cmp_si(fmpr_expref(x), e);
+        return sgn(fmpz_cmp_si(fmpr_expref(x), e));
 
     bc = fmpz_bits(fmpr_manref(x));
 
