@@ -33,6 +33,7 @@
 #include "flint.h"
 #include "fmpz.h"
 #include "fmpq.h"
+#include "fmpz_extras.h"
 
 #define fmpr_rnd_t int
 #define FMPR_RND_FLOOR 0
@@ -337,83 +338,6 @@ fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
         fmpz_set_ui(fmpr_expref(x), v);
     }
 }
-
-/* Some fmpz helper functions */
-
-/* sets z = x + y*2^shift */
-static __inline__ void fmpz_add_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
-{
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_mul_2exp(t, y, shift);
-    fmpz_add(z, x, t);
-    fmpz_clear(t);
-}
-
-static __inline__ void fmpz_sub_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
-{
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_mul_2exp(t, y, shift);
-    fmpz_sub(z, x, t);
-    fmpz_clear(t);
-}
-
-static long _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y)
-{
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_sub(t, x, y);
-    if (!COEFF_IS_MPZ(*t))
-    {
-        /* no need to free t */
-        return *t;
-    }
-    else
-    {
-        int sign = fmpz_sgn(t);
-        fmpz_clear(t);
-        return (sign > 0) ? LONG_MAX : -LONG_MAX;
-    }
-}
-
-static __inline__ long _fmpz_sub_small(const fmpz_t x, const fmpz_t y)
-{
-    if (!COEFF_IS_MPZ(*x) && !COEFF_IS_MPZ(*y))
-    {
-        return (*x) - (*y);
-    }
-    else
-    {
-        return _fmpz_sub_small_large(x, y);
-    }
-}
-
-static __inline__ mp_size_t
-_fmpz_size(const fmpz_t f)
-{
-    fmpz d = *f;
-
-    if (!COEFF_IS_MPZ(d))
-        return 1;
-    else
-        return mpz_size(COEFF_TO_PTR(d));
-}
-
-static __inline__ void
-fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
-{
-    if (e <= 1)
-    {
-        fmpz_set_ui(x, e == 0 ? 1UL : b);
-    }
-    else
-    {
-        fmpz_set_ui(x, b);
-        fmpz_pow_ui(x, x, e);
-    }
-}
-
 
 /* Arithmetic */
 

@@ -34,88 +34,6 @@ rounds_up(fmpr_rnd_t rnd, int negative)
     return !negative;
 }
 
-static __inline__ void
-_fmpz_add(fmpz_t z, const fmpz_t x, const fmpz_t y)
-{
-    fmpz f, g;
-
-    f = *x;
-    g = *y;
-
-    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(g))
-        fmpz_set_si(z, f + g);
-    else
-        fmpz_add(z, x, y);
-}
-
-static __inline__ void
-_fmpz_add2_fmpz_si(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
-{
-    fmpz f, g, h;
-
-    f = *x;
-    g = *y;
-
-    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(g))
-    {
-        h = f + g;
-
-        if (!COEFF_IS_MPZ(h) && !COEFF_IS_MPZ(c))
-        {
-            fmpz_set_si(z, h + c);
-            return;
-        }
-    }
-
-    fmpz_add(z, x, y);
-    if (c >= 0)
-        fmpz_add_ui(z, z, c);
-    else
-        fmpz_sub_ui(z, z, -c);
-}
-
-/* sets z = +/- ({src, n} >> shift) where 0 <= shift < FLINT_BITS
-   and the top limb of src is nonzero */
-/* TODO: optimize for result = 1 limb */
-
-static __inline__ void
-_fmpz_set_mpn_rshift(fmpz_t z, mp_ptr src, mp_size_t n, unsigned int shift, int negative)
-{
-    __mpz_struct * zptr;
-    zptr = _fmpz_promote(z);
-
-    if (zptr->_mp_alloc < n)
-        mpz_realloc2(zptr, n * FLINT_BITS);
-
-    if (shift == 0)
-    {
-        flint_mpn_copyi(zptr->_mp_d, src, n);
-    }
-    else
-    {
-        mpn_rshift(zptr->_mp_d, src, n, shift);
-        while (zptr->_mp_d[n - 1] == 0) /* todo: can only do one iter? */
-            n--;
-    }
-
-    zptr->_mp_size = negative ? -n : n;
-    _fmpz_demote_val(z);
-}
-
-/* sets z = +/- {src, n} where n >= 2 and the top limb of src is nonzero */
-static __inline__ void
-_fmpz_set_mpn_large(fmpz_t z, mp_ptr src, mp_size_t n, int negative)
-{
-    __mpz_struct * zz;
-    zz = _fmpz_promote(z);
-
-    if (zz->_mp_alloc < n)
-        mpz_realloc2(zz, n * FLINT_BITS);
-
-    flint_mpn_copyi(zz->_mp_d, src, n);
-    zz->_mp_size = negative ? -n : n;
-}
-
 #define MUL_STACK_ALLOC 40
 
 /* requires xn >= yn, xman and yman both normalised and odd */
@@ -154,10 +72,10 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
         }
         else
         {
-            _fmpz_set_mpn_large(zman, tmp, zn, negative);
+            fmpz_set_mpn_large(zman, tmp, zn, negative);
         }
 
-        _fmpz_add(zexp, xexp, yexp);
+        fmpz_add_inline(zexp, xexp, yexp);
         ret = FMPR_RESULT_EXACT;
     }
     else
@@ -191,8 +109,8 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
         ret = (trail_limbs * FLINT_BITS) + trail_bits - cut_bit;
         shift = (cut_limb + trail_limbs) * FLINT_BITS + trail_bits;
 
-        _fmpz_set_mpn_rshift(zman, res, zn, trail_bits, negative);
-        _fmpz_add2_fmpz_si(zexp, xexp, yexp, shift);
+        fmpz_set_mpn_rshift(zman, res, zn, trail_bits, negative);
+        fmpz_add2_fmpz_si_inline(zexp, xexp, yexp, shift);
     }
 
     if (alloc > MUL_STACK_ALLOC)
@@ -287,7 +205,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                 else
                     fmpz_neg_ui(fmpr_manref(z), lo);
 
-                _fmpz_add2_fmpz_si(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
+                fmpz_add2_fmpz_si_inline(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
 
                 return ret;
             }
@@ -360,7 +278,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
                         fmpz_neg_uiui(fmpr_manref(z), hi, lo);
                 }
 
-                _fmpz_add2_fmpz_si(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
+                fmpz_add2_fmpz_si_inline(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y), shift);
                 return ret;
             }
         }

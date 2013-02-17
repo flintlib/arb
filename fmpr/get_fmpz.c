@@ -25,18 +25,6 @@
 
 #include "fmpr.h"
 
-/* round away from zero */
-void
-fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, mp_bitcnt_t exp)
-{
-    int sign = fmpz_sgn(x);
-
-    if (sign > 0)
-        fmpz_cdiv_q_2exp(z, x, exp);
-    else
-        fmpz_fdiv_q_2exp(z, x, exp);
-}
-
 void
 fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
 {

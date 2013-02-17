@@ -25,36 +25,6 @@
 
 #include "fmprb.h"
 
-static __inline__ void
-_fmpz_add_si(fmpz_t z, const fmpz_t x, long y)
-{
-    fmpz f;
-
-    f = *x;
-
-    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(y))
-        fmpz_set_si(z, f + y);
-    else if (y >= 0)
-        fmpz_add_ui(z, x, y);
-    else
-        fmpz_sub_ui(z, x, -y);
-}
-
-static __inline__ void
-_fmpz_add(fmpz_t z, const fmpz_t x, const fmpz_t y)
-{
-    fmpz f, g;
-
-    f = *x;
-    g = *y;
-
-    if (!COEFF_IS_MPZ(f) && !COEFF_IS_MPZ(g))
-        fmpz_set_si(z, f + g);
-    else
-        fmpz_add(z, x, y);
-}
-
-
 /*
 We speed up the radius operations by working with mantissas aligned to
 FMPRB_RAD_PREC bits (possibly one less bit after multiplying).
@@ -80,7 +50,7 @@ without overflow.
         mp_limb_t hi, lo; \
         umul_ppmm(hi, lo, a, b); \
         a = ((hi << (FLINT_BITS - FMPRB_RAD_PREC)) | (lo >> FMPRB_RAD_PREC)) + 1; \
-        _fmpz_add(ae, ae, be); \
+        fmpz_add_inline(ae, ae, be); \
     } while (0); \
 
 static __inline__ void
@@ -88,7 +58,7 @@ _rad_bound(mp_limb_t * m, fmpz_t exp, const fmpr_t t)
 {
     long e;
     *m = fmpz_abs_ubound_ui_2exp(&e, fmpr_manref(t), FMPRB_RAD_PREC);
-    _fmpz_add_si(exp, fmpr_expref(t), e);
+    fmpz_add_si_inline(exp, fmpr_expref(t), e);
 }
 
 static __inline__ mp_limb_t
@@ -150,7 +120,7 @@ void _fmprb_mul_main(fmpr_t z, fmpr_t c,
     if (r != FMPR_RESULT_EXACT)
     {
         am = 1UL << FMPRB_RAD_PREC;
-        _fmpz_add_si(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
+        fmpz_add_si_inline(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
         xm = _rad_add(xm, xe, am, ae);
     }
 
@@ -166,7 +136,7 @@ void _fmprb_mul_main(fmpr_t z, fmpr_t c,
     }
 
     fmpz_set_ui(fmpr_manref(c), xm);
-    _fmpz_add_si(fmpr_expref(c), xe, shift);
+    fmpz_add_si_inline(fmpr_expref(c), xe, shift);
 
     fmpz_clear(xe);
     fmpz_clear(ae);
@@ -194,7 +164,7 @@ void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
     if (r != FMPR_RESULT_EXACT)
     {
         am = 1UL << FMPRB_RAD_PREC;
-        _fmpz_add_si(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
+        fmpz_add_si_inline(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
         ym = _rad_add(ym, ye, am, ae);
     }
 
@@ -210,7 +180,7 @@ void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
     }
 
     fmpz_set_ui(fmpr_manref(c), ym);
-    _fmpz_add_si(fmpr_expref(c), ye, shift);
+    fmpz_add_si_inline(fmpr_expref(c), ye, shift);
 
     fmpz_clear(ye);
     fmpz_clear(ae);

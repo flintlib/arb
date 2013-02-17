@@ -25,17 +25,6 @@
 
 #include "fmpr.h"
 
-static __inline__ void
-_fmpz_add_ui(fmpz_t z, const fmpz_t x, ulong y)
-{
-    fmpz f = *x;
-
-    if (!COEFF_IS_MPZ(f) && y <= COEFF_MAX)
-        fmpz_set_si(z, f + y);
-    else
-        fmpz_add_ui(z, x, y);
-}
-
 static __inline__ int
 rounds_up(fmpr_rnd_t rnd, int negative)
 {
@@ -118,7 +107,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
         /* the input is small, so the output must be small too */
         _fmpz_demote(rman);
         *rman = v;
-        _fmpz_add_ui(rexp, exp, shift);
+        fmpz_add_ui_inline(rexp, exp, shift);
         return ret;
     }
     else
@@ -176,7 +165,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
                 if (val == bc)
                 {
                     fmpz_set_si(rman, negative ? -1 : 1);
-                    _fmpz_add_ui(rexp, exp, bc);
+                    fmpz_add_ui_inline(rexp, exp, bc);
                     return prec;
                 }
 
@@ -222,7 +211,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
             }
         }
 
-        _fmpz_add_ui(rexp, exp, val);
+        fmpz_add_ui_inline(rexp, exp, val);
         return ret;
     }
 }
