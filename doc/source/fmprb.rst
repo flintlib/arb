@@ -499,15 +499,15 @@ Factorials and other integer functions
 .. function:: void fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
     Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
-    computed using binary splitting.
-    The basecase processes eight factors at a time using the formula
+    computed using binary splitting. At high precision,
+    the basecase processes eight factors at a time using the formula
 
     .. math ::
 
         x(x+1)\cdots(x+7) = (28 + 98x + 63x^2 + 14x^3 + x^4)^2 - 16 (7+2x)^2,
 
-    replacing 7 full-precision multiplications with 4 squarings and
-    1 multiplication ([CP2005]_, page 316).
+    replacing 7 full-precision multiplications with 3 squarings,
+    1 multiplication, and several linear operations ([CP2005]_, page 316).
     Empirically, this is about twice as fast at high precision.
     Numerical stability is slightly worse.
 

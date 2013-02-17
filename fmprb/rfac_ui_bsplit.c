@@ -29,31 +29,52 @@
 static void
 rfac_eight(fmprb_t t, const fmprb_t x, long prec)
 {
-    fmprb_t u, v;
+    if (prec < 768)
+    {
+        fmprb_t u;
+        long i;
 
-    fmprb_init(u);
-    fmprb_init(v);
+        fmprb_init(u);
 
-    fmprb_mul(t, x, x, prec);
-    fmprb_mul(v, x, t, prec);
-    fmprb_mul(u, t, t, prec);
+        fmprb_add_ui(u, x, 1, prec);
+        fmprb_mul(t, x, u, prec);
 
-    fmprb_addmul_ui(u, v, 14UL, prec);
-    fmprb_addmul_ui(u, t, 63UL, prec);
-    fmprb_addmul_ui(u, x, 98UL, prec);
-    fmprb_add_ui(u, u, 28UL, prec);
+        for (i = 2; i < 8; i++)
+        {
+            fmprb_add_ui(u, u, 1, prec);
+            fmprb_mul(t, t, u, prec);
+        }
 
-    fmprb_mul(u, u, u, prec);
+        fmprb_clear(u);
+    }
+    else
+    {
+        fmprb_t u, v;
 
-    fmprb_mul_2exp_si(t, x, 1);
-    fmprb_add_ui(t, t, 7UL, prec);
-    fmprb_mul(t, t, t, prec);
-    fmprb_mul_2exp_si(t, t, 4);
+        fmprb_init(u);
+        fmprb_init(v);
 
-    fmprb_sub(t, u, t, prec);
+        /* t = x^2, v = x^3, u = x^4 */
+        fmprb_mul(t, x, x, prec);
+        fmprb_mul(v, x, t, prec);
+        fmprb_mul(u, t, t, prec);
 
-    fmprb_clear(u);
-    fmprb_clear(v);
+        /* u = (28 + ...)^2 */
+        fmprb_addmul_ui(u, v, 14UL, prec);
+        fmprb_addmul_ui(u, t, 63UL, prec);
+        fmprb_addmul_ui(u, x, 98UL, prec);
+        fmprb_add_ui(u, u, 28UL, prec);
+        fmprb_mul(u, u, u, prec);
+
+        /* 16 (7+2x)^2 = 784 + 448x + 64x^2 */
+        fmprb_sub_ui(u, u, 784UL, prec);
+        fmprb_submul_ui(u, x, 448UL, prec);
+        fmprb_mul_2exp_si(t, t, 6);
+        fmprb_sub(t, u, t, prec);
+
+        fmprb_clear(u);
+        fmprb_clear(v);
+    }
 }
 
 /* assumes that the length is a multiple of 8 */

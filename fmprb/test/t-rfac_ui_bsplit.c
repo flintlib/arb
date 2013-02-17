@@ -50,13 +50,13 @@ int main()
         fmpq_init(y);
         fmpq_init(z);
 
-        fmprb_randtest(a, state, 1 + n_randint(state, 200), 10);
-        fmprb_randtest(b, state, 1 + n_randint(state, 200), 10);
+        fmprb_randtest(a, state, 1 + n_randint(state, 1000), 10);
+        fmprb_randtest(b, state, 1 + n_randint(state, 1000), 10);
         n = n_randint(state, 40);
 
-        fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 200));
+        fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 1000));
 
-        fmprb_rfac_ui_bsplit(b, a, n, 2 + n_randint(state, 200));
+        fmprb_rfac_ui_bsplit(b, a, n, 2 + n_randint(state, 1000));
 
         fmpq_one(y);
         for (i = 0; i < n; i++)
