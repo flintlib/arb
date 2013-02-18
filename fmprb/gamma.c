@@ -47,7 +47,7 @@ A larger beta gives faster convergence at the expense of extra
 argument reduction.
 */
 
-#define GAMMA_STIRLING_BETA 0.2
+#define GAMMA_STIRLING_BETA 0.21
 
 long stirling_choose_r(const fmprb_t x, long wp)
 {
@@ -70,7 +70,7 @@ stirling_choose_nterms(const fmprb_t x, long r, double bits)
 
     for (i = 1; ; i++)
     {
-        mag = arith_bernoulli_number_size(2 * i) - (logt / 0.693147180559945) * (2 * i - 1);
+        mag = bernoulli_bound_2exp_si(2 * i) - (logt * 1.4426950408889634) * (2 * i - 1);
         if (mag < -bits)
             return i;
     }
@@ -104,7 +104,7 @@ fmprb_gamma_log_stirling(fmprb_t s, const fmprb_t z, long nterms, long prec)
 
         for (k = nterms - 1; k >= 1; k--)
         {
-            term_mag = arith_bernoulli_number_size(2 * k);
+            term_mag = bernoulli_bound_2exp_si(2 * k);
             term_mag -= (2 * k - 1) * z_mag;
             term_prec = prec + term_mag;
             term_prec = FLINT_MIN(term_prec, prec);
