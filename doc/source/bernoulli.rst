@@ -44,3 +44,21 @@ Caching
     Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached
     globally. Warning: this function is not currently threadsafe.
 
+
+Bounding
+-------------------------------------------------------------------------------
+
+.. function:: long bernoulli_bound_2exp_si(ulong n)
+
+    Returns an integer `b` such that `|B_n| \le 2^b`. Uses a lookup table
+    for small `n`, and for larger `n` uses the inequality
+    `|B_n| < 4 n! / (2 \pi)^n < 4 (n+1)^{n+1} e^{-n} / (2 \pi)^n`.
+    Uses integer arithmetic throughout, with the bound for the logarithm
+    being looked up from a table. If `|B_n| = 0`, returns *LONG_MIN*.
+    Otherwise, the returned exponent `b` is never more than one percent
+    larger than the true magnitude.
+
+    This function is intended for use when `n` small enough that one might
+    comfortably compute `B_n` exactly. It aborts if `n` is so large that
+    internal overflow occurs.
+

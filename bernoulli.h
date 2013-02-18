@@ -103,5 +103,8 @@ void bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter);
 
 void bernoulli_rev_clear(bernoulli_rev_t iter);
 
+
+long bernoulli_bound_2exp_si(ulong n);
+
 #endif
 
