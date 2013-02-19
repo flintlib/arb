@@ -276,6 +276,7 @@ void fmprb_cosh(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
 
 void fmprb_atan(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_atan2(fmprb_t z, const fmprb_t b, const fmprb_t a, long prec);
 
 void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
 

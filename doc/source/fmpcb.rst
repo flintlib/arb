@@ -152,10 +152,12 @@ Complex parts
 
 .. function:: void fmpcb_arg(fmprb_t r, const fmpcb_t z, long prec)
 
-    Sets *r* to a real interval containing the complex argument of *z*. We
-    define the complex argument have a discontinuity on `(-\infty,0]`, with
+    Sets *r* to a real interval containing the complex argument (phase) of *z*.
+    We define the complex argument have a discontinuity on `(-\infty,0]`, with
     the special value `\operatorname{arg}(0) = 0`, and
-    `\operatorname{arg}(x+0i) = \pi` for `x < 0`.
+    `\operatorname{arg}(a+0i) = \pi` for `a < 0`. Equivalently, if
+    `z = a+bi`, the argument is given by `\operatorname{atan2}(b,a)`
+    (see *fmprb_atan2*).
 
 .. function:: void fmpcb_abs(fmprb_t r, const fmpcb_t z, long prec)
 

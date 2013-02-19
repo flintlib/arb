@@ -478,6 +478,13 @@ Elementary functions
     the propagated error is bounded by `r / (1 + d^2)`
     (this could be tightened).
 
+.. function:: void fmprb_atan2(fmprb_t r, const fmprb_t b, const fmprb_t a, long prec)
+
+    Sets *r* to an the argument (phase) of the complex number
+    `a + bi`, with the branch cut discontinuity on `(-\infty,0]`.
+    We define `\operatorname{atan2}(0,0) = 0`, and for `a < 0`,
+    `\operatorname{atan2}(0,a) = \pi`.
+
 .. function:: void fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
 
 .. function:: void fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
