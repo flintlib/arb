@@ -472,6 +472,14 @@ Elementary functions
     `|\sin(m \pm r) - \sin(m)| \le r` (this could be tightened to
     `\min(r,2)`).
 
+.. function:: void fmprb_sin_pi(fmprb_t s, const fmprb_t x, long prec)
+
+.. function:: void fmprb_cos_pi(fmprb_t c, const fmprb_t x, long prec)
+
+.. function:: void fmprb_sin_cos_pi(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
+
+    Sets `s = \sin \pi x`, `c = \cos \pi x`.
+
 .. function:: void fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 
     Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
