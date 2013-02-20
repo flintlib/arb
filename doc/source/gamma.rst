@@ -53,8 +53,8 @@ Evaluation using the Stirling series
 .. function :: void gamma_stirling_choose_param(int * reflect, long * r, long * n, double x, double y, double beta, int allow_reflection, long prec)
 
     Uses double precision arithmetic to compute parameters `r`, `n` such that
-    the remainder in the Stirling series approximately is bounded
-    by `2^{-\mathrm{prec}}`.
+    the remainder in the Stirling series with `z = x+yi`
+    approximately is bounded by `2^{-\mathrm{prec}}`.
 
     The parameter `n` is the truncation point in the asymptotic
     Stirling series. If `|z|` is too small for the Stirling series
@@ -72,7 +72,8 @@ Evaluation using the Stirling series
     very accurately.
 
     To obtain a remainder smaller than `2^{-b}`, we must choose an `r` such
-    that `x + r > \beta b`, where `\beta > \log(2) / (2 \pi) \approx 0.11`.
+    that, in the real case, `x + r > \beta b`, where
+    `\beta > \log(2) / (2 \pi) \approx 0.11`.
     In practice, a slightly larger factor `\beta \approx 0.2` more closely
     balances `n` and `r`. A much larger `\beta` (e.g. `\beta = 1`) could be
     used to reduce the number of Bernoulli numbers that have to be
