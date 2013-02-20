@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -61,11 +61,17 @@ int main()
             abort();
         }
 
-        fmprb_rgamma(a, a, prec2);
+        /* check 1/gamma(z+1) = 1/gamma(z)/z */
+        fmprb_div(b, b, a, prec1);
+        fmprb_add_ui(c, a, 1, prec1);
+        fmprb_rgamma(c, c, prec1);
 
-        if (!fmprb_equal(a, c))
+        if (!fmprb_overlaps(b, c))
         {
-            printf("FAIL: aliasing\n\n");
+            printf("FAIL: functional equation\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
             abort();
         }
 
@@ -79,3 +85,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

@@ -279,6 +279,10 @@ Elementary functions
 
     Sets `s = \sin z`, `c = \cos z`.
 
+.. function:: void fmpcb_sin_pi(fmpcb_t s, const fmpcb_t z, long prec)
+
+    Sets `s = \sin \pi z`.
+
 .. function:: void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
@@ -327,6 +331,29 @@ Elementary functions
 
 Special functions
 -------------------------------------------------------------------------------
+
+.. function:: void fmpcb_rfac_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
+    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
+    computed using binary splitting.
+
+.. function:: void fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_rgamma(fmpcb_t y, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_lgamma(fmpcb_t y, const fmpcb_t x, long prec)
+
+    Sets, respectively, `y = \Gamma(x)`, `y = 1/\Gamma(x)`,
+    `y = \log \Gamma(x)`.
+
+    The branch cut of the logarithmic gamma function is placed on the
+    negative half-axis, which means that
+    `\log \Gamma(z) + \log z = \log \Gamma(z+1)` holds for all `z`,
+    whereas `\log \Gamma(z) \ne \log(\Gamma(z))` in general.
+    Warning: the log gamma function does not currently use the reflection
+    formula, and gets very slow for `z` far into the left half-plane.
+
+    These functions are simple wrappers for the Stirling series code in the *gamma* module.
 
 .. function:: void fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 

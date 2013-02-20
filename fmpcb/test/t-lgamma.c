@@ -23,61 +23,64 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "fmpcb.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("gamma....");
+    printf("lgamma....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 3000; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
-        fmprb_t a, b, c;
+        fmpcb_t a, b, c;
         long prec1, prec2;
 
-        prec1 = 2 + n_randint(state, 1000);
+        prec1 = 2 + n_randint(state, 500);
         prec2 = prec1 + 30;
 
-        fmprb_init(a);
-        fmprb_init(b);
-        fmprb_init(c);
+        fmpcb_init(a);
+        fmpcb_init(b);
+        fmpcb_init(c);
 
-        fmprb_randtest_precise(a, state, 1 + n_randint(state, 1000), 3);
+        fmprb_randtest_precise(fmpcb_realref(a), state, 1 + n_randint(state, 1000), 3);
+        fmprb_randtest_precise(fmpcb_imagref(a), state, 1 + n_randint(state, 1000), 3);
 
-        fmprb_gamma(b, a, prec1);
-        fmprb_gamma(c, a, prec2);
+        fmpcb_lgamma(b, a, prec1);
+        fmpcb_lgamma(c, a, prec2);
 
-        if (!fmprb_overlaps(b, c))
+        if (!fmpcb_overlaps(b, c))
         {
             printf("FAIL: overlap\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
-            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
             abort();
         }
 
-        /* check gamma(z+1) = z gamma(z) */
-        fmprb_mul(b, b, a, prec1);
-        fmprb_add_ui(c, a, 1, prec1);
-        fmprb_gamma(c, c, prec1);
+        /* check lgamma(z+1) = lgamma(z) + log(z) */
+        fmpcb_log(c, a, prec1);
+        fmpcb_add(b, b, c, prec1);
 
-        if (!fmprb_overlaps(b, c))
+        fmpcb_add_ui(c, a, 1, prec1);
+        fmpcb_lgamma(c, c, prec1);
+
+        if (!fmpcb_overlaps(b, c))
         {
             printf("FAIL: functional equation\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
-            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
             abort();
         }
 
-        fmprb_clear(a);
-        fmprb_clear(b);
-        fmprb_clear(c);
+        fmpcb_clear(a);
+        fmpcb_clear(b);
+        fmpcb_clear(c);
     }
 
     flint_randclear(state);
@@ -85,3 +88,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

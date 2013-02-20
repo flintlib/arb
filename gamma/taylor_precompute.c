@@ -50,9 +50,15 @@ gamma_taylor_precompute(long num, long prec)
         fmprb_poly_t A;
         long i;
 
+        _fmprb_vec_clear(gamma_taylor_coeffs, gamma_taylor_num);
+
+        printf("precomputing: num %ld, prec %ld bits\n", num, prec);
+
         num = FLINT_MAX(gamma_taylor_num * 1.5, num);
         prec = FLINT_MAX(gamma_taylor_prec * 1.5, prec);
         prec = FLINT_MAX(prec, 64);
+
+        printf("precomputing (2): num %ld, prec %ld bits\n", num, prec);
 
         wp = prec * 1.01 + 32;
 

@@ -884,32 +884,6 @@ Gamma function
 .. function:: void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
 
     Sets, respectively, `y = \Gamma(x)`, `y = 1/\Gamma(x)`,
-    `y = \log \Gamma(x)`.
-
-    For large `x`, uses Stirling's expansion
-
-    .. math ::
-
-        \log \Gamma(x) = \left(x-\frac{1}{2}\right)\log x - x +
-        \frac{\ln {2 \pi}}{2} + \sum_{k=1}^{n-1} t_k + R(n,x)
-
-    where
-
-    .. math ::
-
-        t_k = \frac{B_{2k}}{2k(2k-1)x^{2k-1}}
-
-    and `|R(n,x)| < t_n`.
-
-    If `x` is too small for the asymptotic expansion to give sufficient
-    accuracy directly, we translate to `x + r`
-    using the formula `\Gamma(x) = \Gamma(x+r) / 
-    (x (x+1) (x+2) \cdots (x+r-1))`.
-
-    To obtain a remainder smaller than `2^{-b}`, we must choose an `r` such
-    that `x + r > \beta b`, where `\beta > \log(2) / (2 \pi) \approx 0.11`.
-    We use a slightly larger factor `\beta \approx 0.2` to more closely
-    balance `n` and `r`. A much larger `\beta` (e.g. `\beta = 1`) could be
-    used to reduce the number of Bernoulli numbers that have to be
-    precomputed, at the expense of slower repeated evaluation.
+    `y = \log \Gamma(x)`. These functions are simple wrappers for the
+    Stirling series code in the *gamma* module.
 

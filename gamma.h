@@ -29,6 +29,7 @@
 #include <math.h>
 #include "flint.h"
 #include "fmprb.h"
+#include "fmpcb.h"
 
 extern __thread long * gamma_taylor_bound_mag_cache;
 extern __thread fmpr_struct * gamma_taylor_bound_ratio_cache;
@@ -69,6 +70,17 @@ void gamma_taylor_precompute(long num, long prec);
 void gamma_taylor_eval_series_fmprb(fmprb_t y, const fmprb_t x, long prec);
 
 void gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec);
+
+
+void gamma_stirling_choose_param(int * reflect, long * r, long * n, double x, double y, double beta, int allow_reflection, long prec);
+
+void gamma_stirling_coeff(fmprb_t b, ulong k, long prec);
+
+void gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n);
+
+void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, long prec);
+
+void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, long prec);
 
 #endif
 
