@@ -19,57 +19,55 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2010 Sebastian Pancratz
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
 
-long
-_fmprb_bits(const fmprb_t x)
-{
-    return fmpz_bits(fmpr_manref(fmprb_midref(x)));
-}
-
-long
-_fmprb_vec_bits(const fmprb_struct * x, long len)
-{
-    long i, b, c;
-
-    b = 0;
-    for (i = 0; i < len; i++)
-    {
-        c = _fmprb_bits(x + i);
-        b = FLINT_MAX(b, c);
-    }
-
-    return b;
-}
-
 void
-_fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
+_fmprb_poly_evaluate_horner(fmprb_t y, const fmprb_struct * f, long len,
                            const fmprb_t x, long prec)
 {
-    if ((prec >= 1024) && (len >= 5 + 20000 / prec))
+    if (len == 0)
     {
-        long fbits, xbits;
-
-        xbits = _fmprb_bits(x);
-        fbits = _fmprb_vec_bits(f, len);
-
-        if (fbits <= prec / 2)
-        {
-            _fmprb_poly_evaluate_rectangular(res, f, len, x, prec);
-            return;
-        }
+        fmprb_zero(y);
     }
+    else if (len == 1 || fmprb_is_zero(x))
+    {
+        fmprb_set_round(y, f, prec);
+    }
+    else if (len == 2)
+    {
+        fmprb_mul(y, x, f + 1, prec);
+        fmprb_add(y, y, f + 0, prec);
+    }
+    else
+    {
+        long i = len - 1;
+        fmprb_t t, u;
 
-    _fmprb_poly_evaluate_horner(res, f, len, x, prec);
+        fmprb_init(t);
+        fmprb_init(u);
+        fmprb_set(u, f + i);
+
+        for (i = len - 2; i >= 0; i--)
+        {
+            fmprb_mul(t, u, x, prec);
+            fmprb_add(u, f + i, t, prec);
+        }
+
+        fmprb_swap(y, u);
+
+        fmprb_clear(t);
+        fmprb_clear(u);
+    }
 }
 
 void
-fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
+fmprb_poly_evaluate_horner(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
 {
-    _fmprb_poly_evaluate(res, f->coeffs, f->length, a, prec);
+    _fmprb_poly_evaluate_horner(res, f->coeffs, f->length, a, prec);
 }
 

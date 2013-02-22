@@ -25,30 +25,12 @@
 
 #include "fmprb_poly.h"
 
-long
-_fmprb_bits(const fmprb_t x)
-{
-    return fmpz_bits(fmpr_manref(fmprb_midref(x)));
-}
+long _fmprb_bits(const fmprb_t x);
 
-long
-_fmprb_vec_bits(const fmprb_struct * x, long len)
-{
-    long i, b, c;
-
-    b = 0;
-    for (i = 0; i < len; i++)
-    {
-        c = _fmprb_bits(x + i);
-        b = FLINT_MAX(b, c);
-    }
-
-    return b;
-}
+long _fmprb_vec_bits(const fmprb_struct * x, long len);
 
 void
-_fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
-                           const fmprb_t x, long prec)
+_fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
@@ -59,17 +41,17 @@ _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
 
         if (fbits <= prec / 2)
         {
-            _fmprb_poly_evaluate_rectangular(res, f, len, x, prec);
+            _fmprb_poly_evaluate2_rectangular(y, z, f, len, x, prec);
             return;
         }
     }
 
-    _fmprb_poly_evaluate_horner(res, f, len, x, prec);
+    _fmprb_poly_evaluate2_horner(y, z, f, len, x, prec);
 }
 
 void
-fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
+fmprb_poly_evaluate2(fmprb_t r, fmprb_t s, const fmprb_poly_t f, const fmprb_t a, long prec)
 {
-    _fmprb_poly_evaluate(res, f->coeffs, f->length, a, prec);
+    _fmprb_poly_evaluate2(r, s, f->coeffs, f->length, a, prec);
 }
 

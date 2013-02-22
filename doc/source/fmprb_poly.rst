@@ -173,31 +173,6 @@ Arithmetic
     as the remainder `R = f(c)`.
 
 
-Product trees
--------------------------------------------------------------------------------
-
-.. function:: void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec)
-
-.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec)
-
-    Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
-
-.. function:: fmprb_struct ** _fmprb_poly_tree_alloc(long len)
-
-    Returns an initialized data structured capable of representing a
-    remainder tree (product tree) of *len* roots.
-
-.. function:: void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
-
-    Deallocates a tree structure as allocated using *_fmprb_poly_tree_alloc*.
-
-.. function:: void _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec)
-
-    Constructs a product tree from a given array of *len* roots. The tree
-    structure must be pre-allocated to the specified length using
-    *_fmprb_poly_tree_alloc*.
-
-
 Composition
 -------------------------------------------------------------------------------
 
@@ -240,14 +215,72 @@ Composition
     with either input polynomial.
 
 
-Evaluation and interpolation
+Evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len, const fmprb_t a, long prec)
+.. function:: void _fmprb_poly_evaluate_horner(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
 
-.. function:: void fmprb_poly_evaluate(fmprb_t res, const fmprb_poly_t f, const fmprb_t a, long prec)
+.. function:: void fmprb_poly_evaluate_horner(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
 
-    Sets res to `f(a)`, evaluated using Horner's rule.
+.. function:: void _fmprb_poly_evaluate_rectangular(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate_rectangular(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
+
+    Sets `y = f(x)`, evaluated respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
+.. function:: void _fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
+
+    Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
+    When Horner's rule is used, the only advantage of evaluating the
+    function and its derivative simultaneously is that one does not have
+    to generate the derivative polynomial explicitly.
+    With the rectangular splitting algorithm, the powers can be reused,
+    making simultaneous evaluation slightly faster.
+
+Product trees
+-------------------------------------------------------------------------------
+
+.. function:: void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec)
+
+.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec)
+
+    Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
+
+.. function:: fmprb_struct ** _fmprb_poly_tree_alloc(long len)
+
+    Returns an initialized data structured capable of representing a
+    remainder tree (product tree) of *len* roots.
+
+.. function:: void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
+
+    Deallocates a tree structure as allocated using *_fmprb_poly_tree_alloc*.
+
+.. function:: void _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec)
+
+    Constructs a product tree from a given array of *len* roots. The tree
+    structure must be pre-allocated to the specified length using
+    *_fmprb_poly_tree_alloc*.
+
+
+Multipoint evaluation
+-------------------------------------------------------------------------------
 
 .. function:: void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen, const fmprb_struct * xs, long n, long prec)
 
@@ -264,6 +297,9 @@ Evaluation and interpolation
 
     Evaluates the polynomial simultaneously at *n* given points, using
     fast multipoint evaluation.
+
+Interpolation
+-------------------------------------------------------------------------------
 
 .. function:: void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
 
