@@ -131,8 +131,7 @@ Arithmetic
     the integers. The output error is computed by cross-multiplying the
     max norms.
 
-.. function:: void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A,
-              const fmprb_poly_t B, long n, long prec)
+.. function:: void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
 
