@@ -275,6 +275,10 @@ void fmprb_sin_pi(fmprb_t s, const fmprb_t x, long prec);
 void fmprb_cos_pi(fmprb_t c, const fmprb_t x, long prec);
 void fmprb_sin_cos_pi(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
 
+void fmprb_sin_cos_pi_fmpq(fmprb_t s, fmprb_t c, const fmpq_t x, long prec);
+void fmprb_sin_pi_fmpq(fmprb_t s, const fmpq_t x, long prec);
+void fmprb_cos_pi_fmpq(fmprb_t c, const fmpq_t x, long prec);
+
 void fmprb_sinh(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_cosh(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);

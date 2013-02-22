@@ -480,6 +480,24 @@ Elementary functions
 
     Sets `s = \sin \pi x`, `c = \cos \pi x`.
 
+.. function:: void fmprb_sin_pi_fmpq(fmprb_t s, const fmpq_t x, long prec)
+
+.. function:: void fmprb_cos_pi_fmpq(fmprb_t c, const fmpq_t x, long prec)
+
+.. function:: void fmprb_sin_cos_pi_fmpq(fmprb_t s, fmprb_t c, const fmpq_t x, long prec)
+
+    Sets `s = \sin \pi x`, `c = \cos \pi x` where `x` is a rational
+    number (whose numerator and denominator are assumed to be reduced).
+    We first use trigonometric symmetries to reduce the argument to the
+    octant `[0, 1/4]`. If the reduced argument is one of
+    `0, 1/4, 1/6, 1/8, 1/5, 1/10`, we use an explicit algebraic
+    formula. Otherwise
+    we multiply by a numerical approximation of `\pi`
+    and evaluate the trigonometric function the usual way.
+    Since the argument has been reduced to the first octant, this
+    gives full accuracy even if the original argument is close to
+    some root other the origin.
+
 .. function:: void fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 
     Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
