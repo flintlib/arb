@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("cos_pi_fmpq....");
+    printf("cos_pi_fmpq_algebraic....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,28 +38,41 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         fmprb_t c1, c2;
-        fmpq_t x;
+        ulong p, q, g;
         long prec;
 
         prec = 2 + n_randint(state, 5000);
+        q = 1 + n_randint(state, 500);
+        p = n_randint(state, q / 2 + 1);
+
+        g = n_gcd(q, p);
+        q /= g;
+        p /= g;
 
         fmprb_init(c1);
         fmprb_init(c2);
-        fmpq_init(x);
 
-        fmpq_randtest(x, state, 1 + n_randint(state, 200));
-
-        fmprb_cos_pi_fmpq(c1, x, prec);
+        _fmprb_cos_pi_fmpq_algebraic(c1, p, q, prec);
 
         fmprb_const_pi(c2, prec);
-        fmprb_mul_fmpz(c2, c2, fmpq_numref(x), prec);
-        fmprb_div_fmpz(c2, c2, fmpq_denref(x), prec);
+        fmprb_mul_ui(c2, c2, p, prec);
+        fmprb_div_ui(c2, c2, q, prec);
         fmprb_cos(c2, c2, prec);
 
         if (!fmprb_overlaps(c1, c2))
         {
             printf("FAIL: overlap\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
+            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("c1 = "); fmprb_printd(c1, 15); printf("\n\n");
+            printf("c2 = "); fmprb_printd(c2, 15); printf("\n\n");
+            abort();
+        }
+
+        if (fmprb_rel_accuracy_bits(c1) < prec - 2)
+        {
+            printf("FAIL: accuracy\n\n");
+            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("prec=%ld eff=%ld\n", prec, fmprb_rel_accuracy_bits(c1));
             printf("c1 = "); fmprb_printd(c1, 15); printf("\n\n");
             printf("c2 = "); fmprb_printd(c2, 15); printf("\n\n");
             abort();
@@ -67,7 +80,6 @@ int main()
 
         fmprb_clear(c1);
         fmprb_clear(c2);
-        fmpq_clear(x);
     }
 
     flint_randclear(state);

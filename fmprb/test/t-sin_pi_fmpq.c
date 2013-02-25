@@ -41,7 +41,7 @@ int main()
         fmpq_t x;
         long prec;
 
-        prec = 2 + n_randint(state, 1000);
+        prec = 2 + n_randint(state, 5000);
 
         fmprb_init(s1);
         fmprb_init(s2);

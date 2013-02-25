@@ -30,44 +30,56 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("cos_pi_fmpq....");
+    printf("sin_pi_fmpq_algebraic....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        fmprb_t c1, c2;
-        fmpq_t x;
+        fmprb_t s1, s2;
+        ulong p, q, g;
         long prec;
 
         prec = 2 + n_randint(state, 5000);
+        q = 1 + n_randint(state, 500);
+        p = n_randint(state, q / 2 + 1);
 
-        fmprb_init(c1);
-        fmprb_init(c2);
-        fmpq_init(x);
+        g = n_gcd(q, p);
+        q /= g;
+        p /= g;
 
-        fmpq_randtest(x, state, 1 + n_randint(state, 200));
+        fmprb_init(s1);
+        fmprb_init(s2);
 
-        fmprb_cos_pi_fmpq(c1, x, prec);
+        _fmprb_sin_pi_fmpq_algebraic(s1, p, q, prec);
 
-        fmprb_const_pi(c2, prec);
-        fmprb_mul_fmpz(c2, c2, fmpq_numref(x), prec);
-        fmprb_div_fmpz(c2, c2, fmpq_denref(x), prec);
-        fmprb_cos(c2, c2, prec);
+        fmprb_const_pi(s2, prec);
+        fmprb_mul_ui(s2, s2, p, prec);
+        fmprb_div_ui(s2, s2, q, prec);
+        fmprb_sin(s2, s2, prec);
 
-        if (!fmprb_overlaps(c1, c2))
+        if (!fmprb_overlaps(s1, s2))
         {
             printf("FAIL: overlap\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("c1 = "); fmprb_printd(c1, 15); printf("\n\n");
-            printf("c2 = "); fmprb_printd(c2, 15); printf("\n\n");
+            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("s1 = "); fmprb_printd(s1, 15); printf("\n\n");
+            printf("s2 = "); fmprb_printd(s2, 15); printf("\n\n");
             abort();
         }
 
-        fmprb_clear(c1);
-        fmprb_clear(c2);
-        fmpq_clear(x);
+        if (fmprb_rel_accuracy_bits(s1) < prec - 2)
+        {
+            printf("FAIL: accuracy\n\n");
+            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("prec=%ld eff=%ld\n", prec, fmprb_rel_accuracy_bits(s1));
+            printf("s1 = "); fmprb_printd(s1, 15); printf("\n\n");
+            printf("s2 = "); fmprb_printd(s2, 15); printf("\n\n");
+            abort();
+        }
+
+        fmprb_clear(s1);
+        fmprb_clear(s2);
     }
 
     flint_randclear(state);

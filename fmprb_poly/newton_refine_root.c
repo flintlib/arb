@@ -25,6 +25,13 @@
 
 #include "fmprb_poly.h"
 
+long _fmpr_mag(const fmpr_t c)
+{
+    long m = fmpz_bits(fmpr_manref(c)) + fmpz_get_si(fmpr_expref(c));
+
+    return FLINT_MAX(m, 0);
+}
+
 void
 _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len,
     const fmprb_t start,
@@ -38,8 +45,7 @@ _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len,
 
     start_prec = fmprb_rel_accuracy_bits(start);
 
-    /* todo: padding should be based on the logarithm of convergence_factor */
-    padding = 5;
+    padding = 5 + _fmpr_mag(convergence_factor);
     precs[0] = prec + padding;
     iters = 1;
     while ((iters < FLINT_BITS) && (precs[iters-1] + padding > 2*start_prec))
@@ -64,6 +70,7 @@ _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len,
             printf("warning: newton_refine_root: improvement failed\n");
             break;
         }
+
     }
 }
 

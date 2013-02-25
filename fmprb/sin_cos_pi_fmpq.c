@@ -25,61 +25,40 @@
 
 #include "fmprb.h"
 
-/* evaluates sin(pi v/w), cos(pi v/w) assuming
-   (for best performance and accuracy)
-   v, w reduced and 0 <= v/w <= 1/4. */
+int
+use_algebraic(const fmpz_t v, const fmpz_t w, long prec)
+{
+    fmpz q = *w;
+    int r;
+
+    if (COEFF_IS_MPZ(q))
+        return 0;
+
+    if (q <= 6)
+        return 1;
+
+    count_trailing_zeros(r, q);
+    q >>= r;
+
+    if (r >= 4 && prec < (r - 3) * 300)
+        return 0;
+
+    if (q > 1000)
+        return 0;
+
+    if (prec < 1500 + 150 * q)
+        return 0;
+
+    return 1;
+}
 
 void
 _fmprb_sin_cos_pi_fmpq_oct(fmprb_t s, fmprb_t c,
             const fmpz_t v, const fmpz_t w, long prec)
 {
-    if (*v == 0)
+    if (use_algebraic(v, w, prec))
     {
-        fmprb_zero(s);
-        fmprb_one(c);
-    }
-    else if (*v == 1 && *w == 4)
-    {
-        fmprb_sqrt_ui(s, 2, prec);
-        fmprb_mul_2exp_si(s, s, -1);
-        fmprb_set(c, s);
-    }
-    else if (*v == 1 && *w == 6)
-    {
-        fmprb_one(s);
-        fmprb_mul_2exp_si(s, s, -1);
-        fmprb_sqrt_ui(c, 3, prec);
-        fmprb_mul_2exp_si(c, c, -1);
-    }
-    else if (*v == 1 && *w == 8)
-    {
-        fmprb_sqrt_ui(s, 2, prec);
-        fmprb_add_ui(c, s, 2, prec);
-        fmprb_sqrt(c, c, prec);
-        fmprb_mul_2exp_si(c, c, -1);
-        fmprb_sub_ui(s, s, 2, prec);
-        fmprb_neg(s, s);
-        fmprb_sqrt(s, s, prec);
-        fmprb_mul_2exp_si(s, s, -1);
-    }
-    else if (*v == 1 && *w == 5)
-    {
-        fmprb_sqrt_ui(s, 5, prec);
-        fmprb_add_ui(c, s, 1, prec);
-        fmprb_mul_2exp_si(c, c, -2);
-        fmprb_sub_ui(s, s, 5, prec);
-        fmprb_neg(s, s);
-        fmprb_mul_2exp_si(s, s, -3);
-        fmprb_sqrt(s, s, prec);
-    }
-    else if (*v == 1 && *w == 10)
-    {
-        fmprb_sqrt_ui(c, 5, prec);
-        fmprb_sub_ui(s, c, 1, prec);
-        fmprb_mul_2exp_si(s, s, -2);
-        fmprb_add_ui(c, c, 5, prec);
-        fmprb_mul_2exp_si(c, c, -3);
-        fmprb_sqrt(c, c, prec);
+        _fmprb_sin_cos_pi_fmpq_algebraic(s, c, *v, *w, prec);
     }
     else
     {
@@ -93,41 +72,9 @@ _fmprb_sin_cos_pi_fmpq_oct(fmprb_t s, fmprb_t c,
 void
 _fmprb_sin_pi_fmpq_oct(fmprb_t s, const fmpz_t v, const fmpz_t w, long prec)
 {
-    if (*v == 0)
+    if (use_algebraic(v, w, prec))
     {
-        fmprb_zero(s);
-    }
-    else if (*v == 1 && *w == 4)
-    {
-        fmprb_sqrt_ui(s, 2, prec);
-        fmprb_mul_2exp_si(s, s, -1);
-    }
-    else if (*v == 1 && *w == 6)
-    {
-        fmprb_one(s);
-        fmprb_mul_2exp_si(s, s, -1);
-    }
-    else if (*v == 1 && *w == 8)
-    {
-        fmprb_sqrt_ui(s, 2, prec);
-        fmprb_sub_ui(s, s, 2, prec);
-        fmprb_neg(s, s);
-        fmprb_sqrt(s, s, prec);
-        fmprb_mul_2exp_si(s, s, -1);
-    }
-    else if (*v == 1 && *w == 5)
-    {
-        fmprb_sqrt_ui(s, 5, prec);
-        fmprb_sub_ui(s, s, 5, prec);
-        fmprb_neg(s, s);
-        fmprb_mul_2exp_si(s, s, -3);
-        fmprb_sqrt(s, s, prec);
-    }
-    else if (*v == 1 && *w == 10)
-    {
-        fmprb_sqrt_ui(s, 5, prec);
-        fmprb_sub_ui(s, s, 1, prec);
-        fmprb_mul_2exp_si(s, s, -2);
+        _fmprb_sin_pi_fmpq_algebraic(s, *v, *w, prec);
     }
     else
     {
@@ -141,39 +88,9 @@ _fmprb_sin_pi_fmpq_oct(fmprb_t s, const fmpz_t v, const fmpz_t w, long prec)
 void
 _fmprb_cos_pi_fmpq_oct(fmprb_t c, const fmpz_t v, const fmpz_t w, long prec)
 {
-    if (*v == 0)
+    if (use_algebraic(v, w, prec))
     {
-        fmprb_one(c);
-    }
-    else if (*v == 1 && *w == 4)
-    {
-        fmprb_sqrt_ui(c, 2, prec);
-        fmprb_mul_2exp_si(c, c, -1);
-    }
-    else if (*v == 1 && *w == 6)
-    {
-        fmprb_sqrt_ui(c, 3, prec);
-        fmprb_mul_2exp_si(c, c, -1);
-    }
-    else if (*v == 1 && *w == 8)
-    {
-        fmprb_sqrt_ui(c, 2, prec);
-        fmprb_add_ui(c, c, 2, prec);
-        fmprb_sqrt(c, c, prec);
-        fmprb_mul_2exp_si(c, c, -1);
-    }
-    else if (*v == 1 && *w == 5)
-    {
-        fmprb_sqrt_ui(c, 5, prec);
-        fmprb_add_ui(c, c, 1, prec);
-        fmprb_mul_2exp_si(c, c, -2);
-    }
-    else if (*v == 1 && *w == 10)
-    {
-        fmprb_sqrt_ui(c, 5, prec);
-        fmprb_add_ui(c, c, 5, prec);
-        fmprb_mul_2exp_si(c, c, -3);
-        fmprb_sqrt(c, c, prec);
+        _fmprb_cos_pi_fmpq_algebraic(c, *v, *w, prec);
     }
     else
     {

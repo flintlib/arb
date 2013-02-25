@@ -436,11 +436,8 @@ Arithmetic
     computed using *FMPR_PREC_EXACT*.
 
 
-Special functions
+Exponentials and logarithms
 -------------------------------------------------------------------------------
-
-Elementary functions
-...............................................................................
 
 .. function:: void fmprb_log(fmprb_t z, const fmprb_t x, long prec)
 
@@ -461,6 +458,10 @@ Elementary functions
     `\exp(m+r) - \exp(m) = \exp(m) (\exp(r)-1)`.
     The last expression is calculated accurately for small radii
     via *fmpr_expm1*.
+
+
+Trigonometric functions
+-------------------------------------------------------------------------------
 
 .. function:: void fmprb_sin(fmprb_t s, const fmprb_t x, long prec)
 
@@ -489,14 +490,47 @@ Elementary functions
     Sets `s = \sin \pi x`, `c = \cos \pi x` where `x` is a rational
     number (whose numerator and denominator are assumed to be reduced).
     We first use trigonometric symmetries to reduce the argument to the
-    octant `[0, 1/4]`. If the reduced argument is one of
-    `0, 1/4, 1/6, 1/8, 1/5, 1/10`, we use an explicit algebraic
-    formula. Otherwise
-    we multiply by a numerical approximation of `\pi`
-    and evaluate the trigonometric function the usual way.
-    Since the argument has been reduced to the first octant, this
-    gives full accuracy even if the original argument is close to
-    some root other the origin.
+    octant `[0, 1/4]`. Then we either multiply by a numerical approximation
+    of `\pi` and evaluate the trigonometric function the usual way,
+    or we use algebraic methods (*_fmprb_sin_pi_fmpq_algebraic* et al),
+    depending on which is estimated to be faster.
+    Since the argument has been reduced to the first octant, the
+    first of these two methods gives full accuracy even if the original
+    argument is close to some root other the origin.
+
+.. function:: void _fmprb_sin_pi_fmpq_algebraic(fmprb_t s, ulong p, ulong q, long prec)
+
+.. function:: void _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
+
+.. function:: void _fmprb_sin_cos_pi_fmpq_algebraic(fmprb_t s, fmprb_t c, ulong p, ulong q, long prec)
+
+    Uses algebraic methods to evaluate `s = \sin(p \pi / q)`,
+    `c = \cos(p \pi / q)` where `0 \le 2p \le q` and `\gcd(p,q) = 1`.
+    This is efficient if `q` has the form `2^r`, `3 \times 2^r` or `5 \times 2^r`,
+    with `r \ge 0`, or if `q` is a moderately large integer and the precision
+    is in the thousands of bits (otherwise simply evaluating
+    the trigonometric function as a transcendental is cheaper).
+
+    We use direct formulas if `1 \le q \le 6`.
+    Otherwise, consider the cosine case (we shift the sine into a cosine,
+    and for evaluating both functions simultaneously, we use the Pythagorean
+    theorem `\sin x = \pm \sqrt{1-\cos^2 x}`, costing one extra square root).
+
+    We first remove the largest power of two `2^r` dividing `q` by repeatedly
+    doubling the angle (requiring the computation of `r` nested square roots).
+    If `q = 2^r` or `q = 3 \times 2^r` or `q = 5 \times 2^r` this allows us to
+    recurse all the way to the direct formulas, and we are done.
+
+    Otherwise, having transformed `p, q` so that `q` is odd,
+    we generate the minimal polynomial in `\mathbb{Z}[x]` of the
+    algebraic number `\cos(p \pi / q)` and refine a low-precision
+    value of the root to high accuracy using Newton iteration.
+
+    This function assumes that `q` is small for correct operation.
+    In particular, it assumes that `4p` does not overflow a limb.
+    For efficiency, we also assume that `q / 2^r` is reasonably small
+    (otherwise the minimal polynomial becomes impractically large, possibly
+    exhausting the available memory).
 
 .. function:: void fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 
@@ -511,6 +545,9 @@ Elementary functions
     We define `\operatorname{atan2}(0,0) = 0`, and for `a < 0`,
     `\operatorname{atan2}(0,a) = \pi`.
 
+Hyperbolic functions
+-------------------------------------------------------------------------------
+
 .. function:: void fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
 
 .. function:: void fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
@@ -520,8 +557,9 @@ Elementary functions
     Sets `s = \sinh x`, `c = \cosh x`. Error propagation uses
     the derivatives of the functions.
 
+
 Factorials and other integer functions
-...............................................................................
+-------------------------------------------------------------------------------
 
 .. function:: void fmprb_fac_ui(fmprb_t x, ulong n, long prec)
 
@@ -573,8 +611,9 @@ Factorials and other integer functions
     Provided that *n* is small enough, an exact Fibonacci number can be
     computed using *FMPR_PREC_EXACT*.
 
+
 Constants
-...............................................................................
+-------------------------------------------------------------------------------
 
 .. function:: void fmprb_const_pi_chudnovsky(fmprb_t x, long prec)
 
@@ -642,7 +681,7 @@ Constants
     it is sufficient to choose `M \ge p / (2 \log_2 N)`.
 
 Riemann zeta function
-...............................................................................
+-------------------------------------------------------------------------------
 
 .. function:: void fmprb_const_zeta3_bsplit(fmprb_t x, long prec)
 
@@ -811,7 +850,7 @@ Riemann zeta function
     automatically choosing an appropriate algorithm.
 
 Gamma function
-...............................................................................
+-------------------------------------------------------------------------------
 
 .. function:: void _fmprb_gamma_series_fmpq_bsplit(fmprb_struct * res, const fmpq_t a, long len, long prec)
 
