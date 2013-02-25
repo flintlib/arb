@@ -401,3 +401,50 @@ Special functions
     are at least 1, and does not support aliasing. Uses binary splitting.
 
 
+Root-finding
+-------------------------------------------------------------------------------
+
+.. function:: void _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor, const fmprb_struct * poly, long len, const fmprb_t convergence_interval, long prec)
+
+    Given an interval `I` specified by *convergence_interval*, evaluates a bound
+    for `C = \sup_{t,u \in I} \frac{1}{2} |f''(t)| / |f'(u)|`,
+    where `f` is the polynomial defined by the coefficients *{poly, len}*.
+    The bound is obtained by evaluating `f'(I)` and `f''(I)` directly.
+    If `f` has large coefficients, `I` must be extremely precise in order to
+    get a finite factor.
+
+.. function:: int _fmprb_poly_newton_step(fmprb_t xnew, const fmprb_struct * poly, long len, const fmprb_t x, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long prec)
+
+    Performs a single step with Newton's method.
+
+    The input consists of the polynomial `f` specified by the coefficients
+    *{poly, len}*, an interval `x = [m-r, m+r]` known to contain a single root of `f`,
+    an interval `I` (*convergence_interval*) containing `x` with an
+    associated bound (*convergence_factor*) for
+    `C = \sup_{t,u \in I} \frac{1}{2} |f''(t)| / |f'(u)|`,
+    and a working precision *prec*.
+
+    The Newton update consists of setting
+    `x' = [m'-r', m'+r']` where `m' = m - f(m) / f'(m)`
+    and `r' = C r^2`. The expression `m - f(m) / f'(m)` is evaluated
+    using ball arithmetic at a working precision of *prec* bits, and the
+    rounding error during this evaluation is accounted for in the output.
+    We now check that `x' \in I` and `m' < m`. If both conditions are
+    satisfied, we set *xnew* to `x'` and return nonzero.
+    If either condition fails, we set *xnew* to `x` and return zero,
+    indicating that no progress was made.
+
+.. function:: void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len, const fmprb_t start, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long eval_extra_prec, long prec)
+
+    Refines a precise estimate of a polynomial root to high precision
+    by performing several Newton steps, using nearly optimally
+    chosen doubling precision steps.
+
+    The inputs are defined as for *_fmprb_poly_newton_step*, except for
+    the precision parameters: *prec* is the target accuracy and
+    *eval_extra_prec* is the estimated number of guard bits that need
+    to be added to evaluate the polynomial accurately close to the root
+    (typically, if the polynomial has large coefficients of alternating
+    signs, this needs to be approximately the bit size of the coefficients).
+
+

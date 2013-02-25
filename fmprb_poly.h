@@ -341,5 +341,23 @@ void _fmprb_poly_rfac_series_ui(fmprb_struct * res, const fmprb_struct * f, long
 
 void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec);
 
+/* Root-finding */
+
+void _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor,
+    const fmprb_struct * poly, long len,
+    const fmprb_t convergence_interval, long prec);
+
+int _fmprb_poly_newton_step(fmprb_t xnew, const fmprb_struct * poly, long len,
+    const fmprb_t x,
+    const fmprb_t convergence_interval,
+    const fmpr_t convergence_factor, long prec);
+
+void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
+    long len, const fmprb_t start,
+    const fmprb_t convergence_interval,
+    const fmpr_t convergence_factor,
+    long eval_extra_prec,
+    long prec);
+
 #endif
 
