@@ -60,13 +60,6 @@ Types, macros and constants
 
     Specifies the rounding mode for the result of an approximate operation.
 
-.. macro:: FMPR_RND_NEAR
-
-    Specifies that the result of an operation should be rounded to the
-    nearest representable number, rounding to an odd mantissa if there is a tie
-    between two values. Note: the code for this rounding mode is currently
-    not implemented.
-
 .. macro:: FMPR_RND_DOWN
 
     Specifies that the result of an operation should be rounded to the
@@ -86,6 +79,14 @@ Types, macros and constants
 
     Specifies that the result of an operation should be rounded to the
     nearest representable number in the direction towards plus infinity.
+
+.. macro:: FMPR_RND_NEAR
+
+    Specifies that the result of an operation should be rounded to the
+    nearest representable number, rounding to an odd mantissa if there is a tie
+    between two values. *Warning*: this rounding mode is currently
+    not implemented (except for a few conversions functions where this 
+    stated explicitly).
 
 .. macro:: FMPR_PREC_EXACT
 
@@ -236,7 +237,7 @@ Assignment, rounding and conversions
 
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`.
 
-.. function:: long fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+.. function:: long fmpr_set_round_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
 
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`, rounded according
     to *prec* and *rnd*.
