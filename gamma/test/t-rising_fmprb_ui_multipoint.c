@@ -1,19 +1,19 @@
 /*=============================================================================
 
-    This file is part of fmprb.
+    This file is part of ARB.
 
-    fmprb is free software; you can redistribute it and/or modify
+    ARB is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    fmprb is distributed in the hope that it will be useful,
+    ARB is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with fmprb; if not, write to the Free Software
+    along with ARB; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 =============================================================================*/
@@ -23,14 +23,14 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "gamma.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("rfac_ui_bsplit....");
+    printf("rising_fmprb_ui_multipoint....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -50,13 +50,13 @@ int main()
         fmpq_init(y);
         fmpq_init(z);
 
-        fmprb_randtest(a, state, 1 + n_randint(state, 1000), 10);
-        fmprb_randtest(b, state, 1 + n_randint(state, 1000), 10);
+        fmprb_randtest(a, state, 1 + n_randint(state, 200), 10);
+        fmprb_randtest(b, state, 1 + n_randint(state, 200), 10);
         n = n_randint(state, 40);
 
-        fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 1000));
+        fmprb_get_rand_fmpq(x, state, a, 1 + n_randint(state, 200));
 
-        fmprb_rfac_ui_bsplit(b, a, n, 2 + n_randint(state, 1000));
+        gamma_rising_fmprb_ui_multipoint(b, a, n, 2 + n_randint(state, 200));
 
         fmpq_one(y);
         for (i = 0; i < n; i++)
@@ -100,8 +100,8 @@ int main()
         n = n_randint(state, 100);
 
         prec = 2 + n_randint(state, 200);
-        fmprb_rfac_ui_bsplit(y, x, n, prec);
-        fmprb_rfac_ui_bsplit(x, x, n, prec);
+        gamma_rising_fmprb_ui_multipoint(y, x, n, prec);
+        gamma_rising_fmprb_ui_multipoint(x, x, n, prec);
 
         if (!fmprb_equal(x, y))
         {

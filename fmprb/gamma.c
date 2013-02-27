@@ -27,7 +27,7 @@
 #include "gamma.h"
 
 /* tuning factor */
-#define GAMMA_STIRLING_BETA 0.21
+#define GAMMA_STIRLING_BETA 0.24
 
 static void
 choose(int * reflect, long * r, long * n, const fmprb_t z,
@@ -61,7 +61,7 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
         /* gamma(x) = (rf(1-x, r) * pi) / (gamma(1-x+r) sin(pi x)) */
         fmprb_sub_ui(t, x, 1, wp);
         fmprb_neg(t, t);
-        fmprb_rfac_ui_bsplit(u, t, r, wp);
+        gamma_rising_fmprb_ui_bsplit(u, t, r, wp);
         fmprb_const_pi(v, wp);
         fmprb_mul(u, u, v, wp);
         fmprb_add_ui(t, t, r, wp);
@@ -76,7 +76,7 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
         fmprb_add_ui(t, x, r, wp);
         gamma_stirling_eval_series_fmprb(u, t, n, wp);
         fmprb_exp(u, u, prec);
-        fmprb_rfac_ui_bsplit(v, x, r, wp);
+        gamma_rising_fmprb_ui_bsplit(v, x, r, wp);
     }
 
     if (inverse)
@@ -119,7 +119,7 @@ fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
     fmprb_add_ui(t, x, r, wp);
     gamma_stirling_eval_series_fmprb(u, t, n, wp);
 
-    fmprb_rfac_ui_bsplit(t, x, r, wp);
+    gamma_rising_fmprb_ui_bsplit(t, x, r, wp);
     fmprb_log(t, t, wp);
     fmprb_sub(y, u, t, prec);
 

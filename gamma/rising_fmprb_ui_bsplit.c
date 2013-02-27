@@ -24,44 +24,28 @@
 ******************************************************************************/
 
 #include "gamma.h"
-#include "fmprb_poly.h"
 
 void
-gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec)
+gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
-    long v;
-    fmprb_t t, u;
-
-    /* nearest integer (TODO: clamp, avoiding overflow) */
-    v = fmpr_get_si(fmprb_midref(x), FMPR_RND_NEAR);
-
-    fmprb_init(t);
-    fmprb_init(u);
-
-    if (v == 0)
+    if (prec < 768 || n < 8)
     {
-        gamma_taylor_eval_series_fmprb(u, x, prec);
-        fmprb_mul(u, u, x, prec);
-        fmprb_ui_div(y, 1, u, prec);
+        gamma_rising_fmprb_ui_bsplit_simple(y, x, n, prec);
     }
-    else if (v > 0)
+    else if (prec < 1500 || n < 500000 / prec)
     {
-        fmprb_sub_si(t, x, v, prec);
-        gamma_taylor_eval_series_fmprb(t, t, prec);
-        fmprb_sub_si(u, x, v - 1, prec);
-        gamma_rising_fmprb_ui_bsplit(u, u, v - 1, prec);
-        fmprb_div(y, u, t, prec);
+        gamma_rising_fmprb_ui_bsplit_eight(y, x, n, prec);
     }
     else
     {
-        fmprb_add_si(t, x, (-v), prec);
-        gamma_taylor_eval_series_fmprb(t, t, prec);
-        gamma_rising_fmprb_ui_bsplit(u, x, (-v) + 1, prec);
-        fmprb_mul(y, u, t, prec);
-        fmprb_ui_div(y, 1, y, prec);
-    }
+        ulong step, s1, s2;
 
-    fmprb_clear(t);
-    fmprb_clear(u);
+        /* experimental fit */
+        s1 = 2 * sqrt(n);
+        s2 = 10 * pow(prec - 1200, 0.25);
+        step = FLINT_MIN(s1, s2);
+
+        gamma_rising_fmprb_ui_bsplit_rectangular(y, x, n, step, prec);
+    }
 }
 

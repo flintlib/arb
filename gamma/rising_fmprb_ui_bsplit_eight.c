@@ -19,97 +19,68 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "gamma.h"
 
 /* x(x+1)...(x+7) = (28 + 98x + 63x^2 + 14x^3 + x^4)^2 - 16 (7+2x)^2 */
 static void
 rfac_eight(fmprb_t t, const fmprb_t x, long prec)
 {
-    if (prec < 768)
-    {
-        fmprb_t u;
-        long i;
+    fmprb_t u, v;
 
-        fmprb_init(u);
+    fmprb_init(u);
+    fmprb_init(v);
 
-        fmprb_add_ui(u, x, 1, prec);
-        fmprb_mul(t, x, u, prec);
+    /* t = x^2, v = x^3, u = x^4 */
+    fmprb_mul(t, x, x, prec);
+    fmprb_mul(v, x, t, prec);
+    fmprb_mul(u, t, t, prec);
 
-        for (i = 2; i < 8; i++)
-        {
-            fmprb_add_ui(u, u, 1, prec);
-            fmprb_mul(t, t, u, prec);
-        }
+    /* u = (28 + ...)^2 */
+    fmprb_addmul_ui(u, v, 14UL, prec);
+    fmprb_addmul_ui(u, t, 63UL, prec);
+    fmprb_addmul_ui(u, x, 98UL, prec);
+    fmprb_add_ui(u, u, 28UL, prec);
+    fmprb_mul(u, u, u, prec);
 
-        fmprb_clear(u);
-    }
-    else
-    {
-        fmprb_t u, v;
+    /* 16 (7+2x)^2 = 784 + 448x + 64x^2 */
+    fmprb_sub_ui(u, u, 784UL, prec);
+    fmprb_submul_ui(u, x, 448UL, prec);
+    fmprb_mul_2exp_si(t, t, 6);
+    fmprb_sub(t, u, t, prec);
 
-        fmprb_init(u);
-        fmprb_init(v);
-
-        /* t = x^2, v = x^3, u = x^4 */
-        fmprb_mul(t, x, x, prec);
-        fmprb_mul(v, x, t, prec);
-        fmprb_mul(u, t, t, prec);
-
-        /* u = (28 + ...)^2 */
-        fmprb_addmul_ui(u, v, 14UL, prec);
-        fmprb_addmul_ui(u, t, 63UL, prec);
-        fmprb_addmul_ui(u, x, 98UL, prec);
-        fmprb_add_ui(u, u, 28UL, prec);
-        fmprb_mul(u, u, u, prec);
-
-        /* 16 (7+2x)^2 = 784 + 448x + 64x^2 */
-        fmprb_sub_ui(u, u, 784UL, prec);
-        fmprb_submul_ui(u, x, 448UL, prec);
-        fmprb_mul_2exp_si(t, t, 6);
-        fmprb_sub(t, u, t, prec);
-
-        fmprb_clear(u);
-        fmprb_clear(v);
-    }
+    fmprb_clear(u);
+    fmprb_clear(v);
 }
 
-/* assumes that the length is a multiple of 8 */
+/* assumes y and x not aliased, the length is a positive multiple of 8 */
 static void
-bsplit_eight(fmprb_t y, const fmprb_t x,
-    ulong a, ulong b, long prec)
+bsplit(fmprb_t y, const fmprb_t x, ulong a, ulong b, long prec)
 {
+    fmprb_t t;
+    fmprb_init(t);
+
     if (b - a == 8)
     {
-        fmprb_t t;
-        fmprb_init(t);
         fmprb_add_ui(t, x, a, prec);
         rfac_eight(y, t, prec);
-        fmprb_clear(t);
     }
     else
     {
         ulong m = a + ((b - a) / 16) * 8;
-
-        fmprb_t L, R;
-
-        fmprb_init(L);
-        fmprb_init(R);
-
-        bsplit_eight(L, x, a, m, prec);
-        bsplit_eight(R, x, m, b, prec);
-        fmprb_mul(y, L, R, prec);
-
-        fmprb_clear(L);
-        fmprb_clear(R);
+        bsplit(y, x, a, m, prec);
+        bsplit(t, x, m, b, prec);
+        fmprb_mul(y, y, t, prec);
     }
+
+    fmprb_clear(t);
 }
 
 void
-fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
+gamma_rising_fmprb_ui_bsplit_eight(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
     if (n == 0)
     {
@@ -117,11 +88,12 @@ fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
     }
     else if (n == 1)
     {
-        fmprb_set(y, x);
+        fmprb_set_round(y, x, prec);
     }
     else
     {
-        long k, a, wp;
+        ulong k, a;
+        long wp;
         fmprb_t t, u;
 
         wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
@@ -131,7 +103,7 @@ fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
         if (n >= 8)
         {
-            bsplit_eight(t, x, 0, (n / 8) * 8, wp);
+            bsplit(t, x, 0, (n / 8) * 8, wp);
             a = (n / 8) * 8;
         }
         else
@@ -146,9 +118,10 @@ fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
             fmprb_mul(t, t, u, wp);
         }
 
-        fmprb_set(y, t);
+        fmprb_set_round(y, t, prec);
 
         fmprb_clear(t);
         fmprb_clear(u);
     }
 }
+

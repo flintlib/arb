@@ -110,3 +110,55 @@ Evaluation using the Stirling series
     is included in the radius of the output.
 
 
+Rising factorials
+--------------------------------------------------------------------------------
+
+.. function :: void gamma_rising_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+.. function :: void gamma_rising_fmprb_ui_bsplit_eight(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+.. function :: void gamma_rising_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec)
+
+.. function :: void gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+    Sets `y` to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
+    computed using binary splitting.
+
+    The different versions of this function process the basecase differently.
+    The *simple* version simply multiplies together several factors
+    one after another.
+
+    The *eight* version processes eight factors at a time using the formula
+
+    .. math ::
+
+        x(x+1)\cdots(x+7) = (28 + 98x + 63x^2 + 14x^3 + x^4)^2 - 16 (7+2x)^2,
+
+    replacing 7 full-precision multiplications with 3 squarings,
+    1 multiplication, and several linear operations ([CP2005]_, page 316).
+    Empirically, if `x` is a full-precision number, this is about twice as
+    fast as the *simple* version at high precision. Numerical stability is
+    slightly worse.
+
+    The *rectangular* version processes *step* factors at a time by
+    expanding the polynomial `f(t) = t (t+1) (t+2) \cdots (t+\mathrm{step}-1)`
+    and evaluating each factor `f(x + \mathrm{step} \, k)`
+    using rectangular splitting. At very high precision, if `x` is a
+    full-precision number, this asymptotically reduces the number of
+    full-precision multiplications required.
+
+    The function *gamma_rising_fmprb_ui_bsplit* automatically chooses
+    an algorithm depending on the inputs.
+
+.. function :: void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
+
+    Sets `y` to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
+    computed using fast multipoint evaluation. This only requires
+    `O(n^{1/2+\varepsilon})` multiplications, but has high overhead
+    and poor numerical stability (adding `O(n)` guard bits to the input
+    might be necessary to achieve full accuracy). It can be expected to
+    be faster than the binary splitting algorithm if the input is a
+    full-precision number, the precision is at least 100000 bits,
+    and *n* is of the same order of magnitude as (perhaps slightly
+    smaller than) the number of bits.
+

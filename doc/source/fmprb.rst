@@ -567,32 +567,9 @@ Factorials and other integer functions
     *n* is small enough, the exact factorial can be computed using
     *FMPR_PREC_EXACT*.
 
-.. function:: void fmprb_rfac_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
+.. function:: void fmprb_rising_fmprb_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
-    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
-    computed using binary splitting. At high precision,
-    the basecase processes eight factors at a time using the formula
-
-    .. math ::
-
-        x(x+1)\cdots(x+7) = (28 + 98x + 63x^2 + 14x^3 + x^4)^2 - 16 (7+2x)^2,
-
-    replacing 7 full-precision multiplications with 3 squarings,
-    1 multiplication, and several linear operations ([CP2005]_, page 316).
-    Empirically, this is about twice as fast at high precision.
-    Numerical stability is slightly worse.
-
-.. function:: void fmprb_rfac_ui_multipoint(fmprb_t y, const fmprb_t x, ulong n, long prec)
-
-    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
-    computed using fast multipoint evaluation. This only requires
-    `O(n^{1/2+\varepsilon})` multiplications, but has high overhead
-    and poor numerical stability (adding `O(n)` guard bits to the input
-    might be necessary to achieve full accuracy). It can be expected to
-    be faster than the binary splitting algorithm if the input is a
-    full-precision number, the precision is at least 100000 bits,
-    and *n* is of the same order of magnitude as (perhaps slightly
-    smaller than) the number of bits.
+    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`.
 
 .. function:: void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)
 

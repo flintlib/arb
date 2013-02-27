@@ -19,15 +19,15 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "gamma.h"
 #include "fmprb_poly.h"
 
 void
-fmprb_rfac_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
+gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
 {
     long i, m, wp;
     fmprb_struct *t, *u, *v;
@@ -39,7 +39,7 @@ fmprb_rfac_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
         if (n == 0)
             fmprb_one(f);
         else
-            fmprb_set(f, c);
+            fmprb_set_round(f, c, prec);
         return;
     }
 
@@ -90,3 +90,4 @@ fmprb_rfac_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
     fmprb_clear(r);
     fmprb_clear(w);
 }
+

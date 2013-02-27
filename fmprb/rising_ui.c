@@ -19,49 +19,16 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
+#include "fmprb.h"
 #include "gamma.h"
-#include "fmprb_poly.h"
 
 void
-gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec)
+fmprb_rising_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
-    long v;
-    fmprb_t t, u;
-
-    /* nearest integer (TODO: clamp, avoiding overflow) */
-    v = fmpr_get_si(fmprb_midref(x), FMPR_RND_NEAR);
-
-    fmprb_init(t);
-    fmprb_init(u);
-
-    if (v == 0)
-    {
-        gamma_taylor_eval_series_fmprb(u, x, prec);
-        fmprb_mul(u, u, x, prec);
-        fmprb_ui_div(y, 1, u, prec);
-    }
-    else if (v > 0)
-    {
-        fmprb_sub_si(t, x, v, prec);
-        gamma_taylor_eval_series_fmprb(t, t, prec);
-        fmprb_sub_si(u, x, v - 1, prec);
-        gamma_rising_fmprb_ui_bsplit(u, u, v - 1, prec);
-        fmprb_div(y, u, t, prec);
-    }
-    else
-    {
-        fmprb_add_si(t, x, (-v), prec);
-        gamma_taylor_eval_series_fmprb(t, t, prec);
-        gamma_rising_fmprb_ui_bsplit(u, x, (-v) + 1, prec);
-        fmprb_mul(y, u, t, prec);
-        fmprb_ui_div(y, 1, y, prec);
-    }
-
-    fmprb_clear(t);
-    fmprb_clear(u);
+    gamma_rising_fmprb_ui_bsplit(y, x, n, prec);
 }
 
