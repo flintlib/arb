@@ -344,10 +344,9 @@ Elementary functions
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: void fmpcb_rfac_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+void fmpcb_rising_ui(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
 
-    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
-    computed using binary splitting.
+    Sets *y* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`.
 
 .. function:: void fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec)
 
