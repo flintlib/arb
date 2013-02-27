@@ -121,6 +121,14 @@ Rising factorials
 
 .. function :: void gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
+.. function :: void gamma_rising_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
+.. function :: void gamma_rising_fmpcb_ui_bsplit_eight(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
+.. function :: void gamma_rising_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec)
+
+.. function :: void gamma_rising_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
     Sets `y` to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
     computed using binary splitting.
 
