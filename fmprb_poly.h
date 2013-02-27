@@ -27,6 +27,7 @@
 #define FMPRB_POLY_H
 
 #include "fmprb.h"
+#include "fmpcb.h"
 #include "fmpz_poly.h"
 #include "fmpq_poly.h"
 
@@ -268,6 +269,15 @@ void fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_poly_t f
 void _fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec);
 void fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec);
 
+
+void _fmprb_poly_evaluate_fmpcb_horner(fmpcb_t res, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate_fmpcb_horner(fmpcb_t res, const fmprb_poly_t f, const fmpcb_t a, long prec);
+
+void _fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, const fmprb_struct * poly, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t res, const fmprb_poly_t f, const fmpcb_t a, long prec);
+
+void _fmprb_poly_evaluate_fmpcb(fmpcb_t res, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate_fmpcb(fmpcb_t res, const fmprb_poly_t f, const fmpcb_t a, long prec);
 
 void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
     const fmprb_struct * xs, long n, long prec);

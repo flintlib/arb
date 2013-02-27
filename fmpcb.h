@@ -216,6 +216,20 @@ fmpcb_set_fmpq(fmpcb_t z, const fmpq_t c, long prec)
 }
 
 static __inline__ void
+fmpcb_set_fmprb(fmpcb_t z, const fmprb_t c)
+{
+    fmprb_set(fmpcb_realref(z), c);
+    fmprb_zero(fmpcb_imagref(z));
+}
+
+static __inline__ void
+fmpcb_set_round_fmprb(fmpcb_t z, const fmprb_t x, long prec)
+{
+    fmprb_set_round(fmpcb_realref(z), x, prec);
+    fmprb_zero(fmpcb_imagref(z));
+}
+
+static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
     fmpr_t v;
@@ -298,9 +312,23 @@ fmpcb_add_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 }
 
 static __inline__ void
+fmpcb_add_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
+{
+    fmprb_add(fmpcb_realref(z), fmpcb_realref(x), y, prec);
+    fmprb_set_round(fmpcb_imagref(z), fmpcb_imagref(x), prec);
+}
+
+static __inline__ void
 fmpcb_sub_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 {
     fmprb_sub_fmpz(fmpcb_realref(z), fmpcb_realref(x), y, prec);
+    fmprb_set_round(fmpcb_imagref(z), fmpcb_imagref(x), prec);
+}
+
+static __inline__ void
+fmpcb_sub_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
+{
+    fmprb_sub(fmpcb_realref(z), fmpcb_realref(x), y, prec);
     fmprb_set_round(fmpcb_imagref(z), fmpcb_imagref(x), prec);
 }
 
@@ -419,6 +447,20 @@ fmpcb_submul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 {
     fmprb_submul_fmpz(fmpcb_realref(z), fmpcb_realref(x), y, prec);
     fmprb_submul_fmpz(fmpcb_imagref(z), fmpcb_imagref(x), y, prec);
+}
+
+static __inline__ void
+fmpcb_addmul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
+{
+    fmprb_addmul(fmpcb_realref(z), fmpcb_realref(x), y, prec);
+    fmprb_addmul(fmpcb_imagref(z), fmpcb_imagref(x), y, prec);
+}
+
+static __inline__ void
+fmpcb_submul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
+{
+    fmprb_submul(fmpcb_realref(z), fmpcb_realref(x), y, prec);
+    fmprb_submul(fmpcb_imagref(z), fmpcb_imagref(x), y, prec);
 }
 
 static __inline__ void

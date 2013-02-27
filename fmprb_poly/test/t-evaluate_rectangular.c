@@ -45,6 +45,7 @@ int main()
         fmprb_init(y2);
         fmprb_poly_init(f);
 
+        fmprb_randtest(x, state, 2 + n_randint(state, 1000), 5);
         fmprb_poly_randtest(f, state, 2 + n_randint(state, 100), 2 + n_randint(state, 1000), 5);
 
         fmprb_poly_evaluate_rectangular(y1, f, x, 2 + n_randint(state, 1000));

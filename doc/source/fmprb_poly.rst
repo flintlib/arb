@@ -233,6 +233,22 @@ Evaluation
     Sets `y = f(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
+.. function:: void _fmprb_poly_evaluate_fmpcb_horner(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate_fmpcb_horner(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate_fmpcb(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate_fmpcb(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+    Sets `y = f(x)` where `x` is a complex number, evaluating the
+    polynomial respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
 .. function:: void _fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)

@@ -48,6 +48,7 @@ int main()
         fmprb_poly_init(f);
         fmprb_poly_init(g);
 
+        fmprb_randtest(x, state, 2 + n_randint(state, 1000), 5);
         fmprb_poly_randtest(f, state, 2 + n_randint(state, 100), 2 + n_randint(state, 1000), 5);
         fmprb_poly_derivative(g, f, 2 + n_randint(state, 1000));
 
