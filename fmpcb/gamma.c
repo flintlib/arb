@@ -27,7 +27,7 @@
 #include "gamma.h"
 
 /* tuning factor */
-#define GAMMA_STIRLING_BETA 0.21
+#define GAMMA_STIRLING_BETA 0.23
 
 static void
 choose(int * reflect, long * r, long * n, const fmpcb_t z, int use_refl, long prec)
@@ -61,7 +61,7 @@ _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
         /* gamma(x) = (rf(1-x, r) * pi) / (gamma(1-x+r) sin(pi x)) */
         fmpcb_sub_ui(t, x, 1, wp);
         fmpcb_neg(t, t);
-        fmpcb_rfac_ui_bsplit(u, t, r, wp);
+        gamma_rising_fmpcb_ui_bsplit(u, t, r, wp);
         fmprb_const_pi(fmpcb_realref(v), wp);
         fmpcb_mul_fmprb(u, u, fmpcb_realref(v), wp);
         fmpcb_add_ui(t, t, r, wp);
@@ -76,7 +76,7 @@ _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
         fmpcb_add_ui(t, x, r, wp);
         gamma_stirling_eval_series_fmpcb(u, t, n, wp);
         fmpcb_exp(u, u, prec);
-        fmpcb_rfac_ui_bsplit(v, x, r, wp);
+        gamma_rising_fmpcb_ui_bsplit(v, x, r, wp);
     }
 
     if (inverse)
