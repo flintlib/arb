@@ -314,7 +314,8 @@ Precision and comparisons
 
 .. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
 
-    Sets *x* to an interval containing both *a* and *b*.
+    Sets *x* to a ball containing the interval `[a, b]`. We
+    require that `a \le b`.
 
 .. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
