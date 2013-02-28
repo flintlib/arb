@@ -444,6 +444,11 @@ Arithmetic
     Sets *z* to the square root of *x*, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
 
+.. function:: long fmpr_root(fmpr_t z, const fmpr_t x, ulong k, long prec)
+
+    Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
+    Warning: this function wraps MPFR, and is currently only fast for small *k*.
+
 .. function:: void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e, long prec, fmpr_rnd_t rnd)
 
 .. function:: void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, long prec, fmpr_rnd_t rnd)

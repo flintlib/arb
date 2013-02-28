@@ -423,6 +423,12 @@ Arithmetic
     interval), and producing an output interval not containing any
     negative numbers (unless the radius is infinite).
 
+.. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
+
+    Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
+    Warning: this function is only fast for small fixed *k*. For large *k*,
+    it is better to use the exponential function.
+
 .. function:: void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)

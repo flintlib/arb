@@ -383,6 +383,8 @@ long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd);
 long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd);
 
+long fmpr_root(fmpr_t y, const fmpr_t x, ulong k, long prec, fmpr_rnd_t rnd);
+
 long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 
@@ -544,6 +546,27 @@ int fmpr_cmpabs_2exp_si(const fmpr_t x, long e);
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
         func(__u, __t, __rnd); \
+        if (mpfr_overflow_p() || mpfr_underflow_p()) \
+        { \
+            printf("exception: mpfr overflow\n"); \
+            abort(); \
+        } \
+        fmpr_set_mpfr(y, __u); \
+        r = prec - fmpz_bits(fmpr_manref(y)); \
+        mpfr_clear(__t); \
+        mpfr_clear(__u); \
+    } while (0);
+
+
+#define CALL_MPFR_FUNC_K(r, func, y, x, k, prec, rnd) \
+    do { \
+        mpfr_t __t, __u; \
+        mpfr_rnd_t __rnd; \
+        __rnd = rnd_to_mpfr(rnd); \
+        mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
+        mpfr_init2(__u, FLINT_MAX(2, prec)); \
+        fmpr_get_mpfr(__t, x, MPFR_RNDD); \
+        func(__u, __t, k, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             printf("exception: mpfr overflow\n"); \
