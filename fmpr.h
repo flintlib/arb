@@ -537,6 +537,24 @@ int fmpr_cmp_2exp_si(const fmpr_t x, long e);
 
 int fmpr_cmpabs_2exp_si(const fmpr_t x, long e);
 
+static __inline__ void
+fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)
+{
+    if (fmpr_cmp(a, b) <= 0)
+        fmpr_set(z, a);
+    else
+        fmpr_set(z, b);
+}
+
+static __inline__ void
+fmpr_max(fmpr_t z, const fmpr_t a, const fmpr_t b)
+{
+    if (fmpr_cmp(a, b) > 0)
+        fmpr_set(z, a);
+    else
+        fmpr_set(z, b);
+}
+
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t __t, __u; \

@@ -288,6 +288,13 @@ Comparisons
     Returns `-1`, `0` or `+1` according to the sign of *x*. The sign
     of NaN is undefined.
 
+.. function:: void fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)
+
+.. function:: void fmpr_max(fmpr_t z, const fmpr_t a, const fmpr_t b)
+
+    Sets *z* respectively to the minimum and the maximum of *a* and *b*.
+
+
 Random number generation
 -------------------------------------------------------------------------------
 
