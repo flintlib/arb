@@ -177,6 +177,13 @@ fmpr_set(fmpr_t y, const fmpr_t x)
     }
 }
 
+static __inline__ void
+fmpr_swap(fmpr_t x, fmpr_t y)
+{
+    fmpz_swap(fmpr_manref(x), fmpr_manref(y));
+    fmpz_swap(fmpr_expref(x), fmpr_expref(y));
+}
+
 long _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
     const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd);
 

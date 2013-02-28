@@ -164,6 +164,10 @@ Assignment, rounding and conversions
 
     Sets *y* to a copy of *x*.
 
+.. function:: void fmpr_swap(fmpr_t x, fmpr_t y)
+
+    Swaps *x* and *y* efficiently.
+
 .. function:: long fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
 .. function:: long fmpr_set_round_fmpz(fmpr_t x, const fmpz_t x, long prec, fmpr_rnd_t rnd)
