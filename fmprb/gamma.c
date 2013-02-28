@@ -33,12 +33,24 @@ static void
 choose(int * reflect, long * r, long * n, const fmprb_t z,
     int use_reflect, long prec)
 {
-    double x;
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(z), 40) > 0)
+    {
+        if (use_reflect && fmpr_sgn(fmprb_midref(z)) < 0)
+            *reflect = 1;
+        else
+            *reflect = 0;
 
-    x = fmpr_get_d(fmprb_midref(z), FMPR_RND_NEAR);
+        *r = 0;
+        *n = 1;
+    }
+    else
+    {
+        double x;
+        x = fmpr_get_d(fmprb_midref(z), FMPR_RND_NEAR);
 
-    gamma_stirling_choose_param(reflect, r, n, x, 0.0,
-        GAMMA_STIRLING_BETA, use_reflect, prec);
+        gamma_stirling_choose_param(reflect, r, n, x, 0.0,
+            GAMMA_STIRLING_BETA, use_reflect, prec);
+    }
 }
 
 static void

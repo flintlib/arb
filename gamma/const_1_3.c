@@ -31,7 +31,6 @@ gamma_const_1_3_eval(fmprb_t s, long prec)
 {
     hypgeom_t series;
     fmprb_t t, u;
-    fmpq_t one_six;
 
     fmprb_init(t);
     fmprb_init(u);

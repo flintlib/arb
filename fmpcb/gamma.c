@@ -30,15 +30,29 @@
 #define GAMMA_STIRLING_BETA 0.23
 
 static void
-choose(int * reflect, long * r, long * n, const fmpcb_t z, int use_refl, long prec)
+choose(int * reflect, long * r, long * n, const fmpcb_t z, int use_reflect, long prec)
 {
-    double x, y;
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_realref(z)), 40) > 0 ||
+        fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_imagref(z)), 40) > 0)
+    {
+        if (use_reflect && fmpr_sgn(fmprb_midref(fmpcb_realref(z))) < 0)
+            *reflect = 1;
+        else
+            *reflect = 0;
 
-    x = fmpr_get_d(fmprb_midref(fmpcb_realref(z)), FMPR_RND_NEAR);
-    y = fmpr_get_d(fmprb_midref(fmpcb_imagref(z)), FMPR_RND_NEAR);
+        *r = 0;
+        *n = 1;
+    }
+    else
+    {
+        double x, y;
 
-    gamma_stirling_choose_param(reflect, r, n, x, y,
-        GAMMA_STIRLING_BETA, use_refl, prec);
+        x = fmpr_get_d(fmprb_midref(fmpcb_realref(z)), FMPR_RND_NEAR);
+        y = fmpr_get_d(fmprb_midref(fmpcb_imagref(z)), FMPR_RND_NEAR);
+
+        gamma_stirling_choose_param(reflect, r, n, x, y,
+            GAMMA_STIRLING_BETA, use_reflect, prec);
+    }
 }
 
 static void
