@@ -89,5 +89,9 @@ void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long 
 
 void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec);
 
+void gamma_const_1_3(fmprb_t x, long prec);
+void gamma_const_1_4(fmprb_t x, long prec);
+
+
 #endif
 

@@ -174,6 +174,27 @@ Rising factorials
 Rational arguments
 --------------------------------------------------------------------------------
 
+.. function:: void gamma_const_1_4(fmprb_t x, long prec)
+
+    Sets `x = \Gamma(1/4)`, evaluated using the formula
+
+    .. math ::
+
+        \Gamma(1/4) = \sqrt{\frac{(2\pi)^{3/2}}{\operatorname{agm}(1, \sqrt 2)}}.
+
+    The value is cached for repeated use.
+
+.. function:: void gamma_const_1_3(fmprb_t x, long prec)
+
+    Sets `x = \Gamma(1/3)`, evaluated using the formula
+
+    .. math ::
+
+        \Gamma(1/3) = \left( \frac{12 \pi^4}{\sqrt 10}
+            \sum_{k=0}^{\infty} \frac{(6k)!(-1)^k}{(k!)^3 (3k)! 3^k 160^{3k}} \right)^{1/6}.
+
+    The value is cached for repeated use.
+
 .. function:: void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
 
     Given a rational number `0 < a \le 1`, uses binary splitting to compute
