@@ -413,6 +413,9 @@ Arithmetic
     Sets `z = z - x \times y`, rounded to *prec* bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
 
+Powers and roots
+-------------------------------------------------------------------------------
+
 .. function:: void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)
 
 .. function:: void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)
@@ -449,6 +452,9 @@ Arithmetic
     are small enough and the exponent is positive, the exact power can be
     computed using *FMPR_PREC_EXACT*.
 
+.. function:: void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+    Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
 Exponentials and logarithms
 -------------------------------------------------------------------------------

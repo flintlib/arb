@@ -307,6 +307,8 @@ void fmprb_const_pi(fmprb_t x, long prec);
 
 void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 
+void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+
 void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
