@@ -324,8 +324,6 @@ void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec);
 
-void _fmprb_gamma_series_fmpq_bsplit(fmprb_struct * res, const fmpq_t a, long len, long prec);
-
 static __inline__ void
 fmprb_print(const fmprb_t x)
 {

@@ -24,13 +24,14 @@
 ******************************************************************************/
 
 #include "fmprb.h"
+#include "gamma.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("gamma_series_fmpq_bsplit....");
+    printf("series_fmpq_hypgeom....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,8 +55,8 @@ int main()
         p = q - n_randint(state, q);
         fmpq_set_si(a, p, q);
 
-        _fmprb_gamma_series_fmpq_bsplit(u, a, len, prec1);
-        _fmprb_gamma_series_fmpq_bsplit(v, a, len, prec2);
+        gamma_series_fmpq_hypgeom(u, a, len, prec1);
+        gamma_series_fmpq_hypgeom(v, a, len, prec2);
 
         for (i = 0; i < len; i++)
         {

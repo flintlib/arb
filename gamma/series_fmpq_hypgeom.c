@@ -19,12 +19,13 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
 #include "fmprb_poly.h"
+#include "gamma.h"
 
 static void
 gamma_sum_bsplit(fmprb_t P, fmprb_t Q,
@@ -208,7 +209,7 @@ _fmprb_poly_ui_pow_series(fmprb_struct * res, ulong c, long len, long wp)
 }
 
 void
-_fmprb_gamma_series_fmpq_bsplit(fmprb_struct * res, const fmpq_t a, long len, long prec)
+gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
 {
     long N, R, wp, bsplit_wp;
     fmprb_struct *S, *logs;

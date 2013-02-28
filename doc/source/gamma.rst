@@ -170,3 +170,89 @@ Rising factorials
     and *n* is of the same order of magnitude as (perhaps slightly
     smaller than) the number of bits.
 
+
+Rational arguments
+--------------------------------------------------------------------------------
+
+.. function:: void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
+
+    Given a rational number `0 < a \le 1`, uses binary splitting to compute
+    *len* coefficients in the Taylor series of `\Gamma(a+x)`, i.e. computes
+    `\Gamma(a), \Gamma'(a) ... \Gamma^{(\mathrm{len}-1)}(a) / (\mathrm{len}-1)!`.
+    In particular, with *len* = 1, this function computes `\Gamma(a)`
+    efficiently for small rational *a*.
+
+    The *len* = 1 case of this algorithm dates back to Brent [Bre1978]_,
+    and the extension to higher derivatives was done by Karatsuba [Kar1998]_.
+    Karatsuba's original algorithm is suboptimal for large *len*;
+    we use the faster algorithm given without error bounds
+    by Borwein, Bradley and Crandall [BBC2000]_.
+
+    The algorithm consists of evaluating the finite part of
+
+    .. math ::
+
+        \Gamma(s) = \int_0^{\infty} e^{-t} t^{s-1} dt = 
+        N^s \left( \sum_{k=0}^R \frac{(-1)^k N^k}{(k + s) k!} + S \right) + I
+
+    where
+
+    .. math ::
+
+        S = \sum_{k=R+1}^{\infty} \frac{(-1)^k N^k}{(k + s) k!}
+
+    and
+
+    .. math ::
+
+        I = \int_N^{\infty} e^{-t} t^{s-1} dt.
+
+    This formula is valid for complex `s` with `\Re{s} > 0`.
+    It is therefore also valid if `s` is a power series argument `s = a + x`
+    where `\Re{a} > 0`, so doing the arithmetic with truncated power
+    series gives us the derivatives.
+
+    We now discuss choosing the parameters `R` and `N`, and bounding
+    the error terms `S` and `I`. We assume that `0 < \Re{a} \le 1`, `N \ge 1`
+    and `R \ge 2 N`. The coefficients of `I` are given by
+
+    .. math ::
+
+        I = \int_N^{\infty} e^{-t} t^{a+x-1} dt =
+        \sum_{j=0}^{\infty} \frac{x^j}{j!}
+        \int_N^{\infty} e^{-t} t^{a-1} \log^j t \; dt.
+
+    As shown by Karatsuba, the integrals are bounded in absolute value by
+    `2 e^{-N} \log^j N`. Thus, for a precision of `p` bits, `N` should be
+    about `p \log 2`.
+
+    Expanding the terms in `S` as geometric series gives
+
+    .. math ::
+
+        S = \sum_{j=0}^{\infty} \, x^j \,
+        \sum_{k=R+1}^{\infty} \frac{(-1)^{k+j} N^k}{(k+a)^{j+1} k!}.
+
+    By the assumption that `R \ge 2 N`, the sums are bounded by
+
+    .. math ::
+
+        \frac{N^R}{R^{j+1} R!} \left(\frac{1}{2} + \frac{1}{4} + \ldots\right) =
+        \frac{N^R}{R^{j+1} R!} \le \frac{1}{R^{j+1}} N^R \left(\frac{e}{R}\right)^R.
+
+    Let `R = cN` where `c` is to be determined. Expanding the
+    logarithm of `N^R \left(\frac{e}{R}\right)^R` around `N = \infty`
+    gives the approximate magnitude `(c - c \log c) N`. Setting this equal
+    to `-p \log 2`, we find that we should take
+    `c = 1/W(1/e) \approx 3.59112147666862` where `W(x)` is the
+    Lambert W-function. (Karatsuba gives the incorrect value `c = 3`).
+
+    We also estimate the working precision needed in the binary splitting
+    stage (the binary splitting could be done with exact arithmetic, but
+    this is unnecessarily costly). Assume that the sum is around unity in
+    magnitude. The binary logarithm of term `k` is roughly
+    `b(k) = k \log_2 N + k \log_2 e - k \log_2 k`. Since
+    `b'(k) = \log_2 N - \log_2 k`, the largest term magnitude occurs
+    roughly at `k = N`, so we need to increase the working precision
+    by about `b(N) = N / \log 2` bits.
+
