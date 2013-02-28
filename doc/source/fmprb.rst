@@ -312,11 +312,11 @@ Precision and comparisons
     Returns the effective relative accuracy of *x* measured in bits,
     equal to the negative of the return value from *fmprb_rel_error_bits*.
 
-void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
+.. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
 
     Sets *x* to an interval containing both *a* and *b*.
 
-void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
     Sets *z* to a ball containing both *x* and *y*.
 
