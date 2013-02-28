@@ -23,14 +23,14 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_bsplit....");
+    printf("zeta_ui_bernoulli....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -47,9 +47,10 @@ int main()
         fmprb_init(r);
         mpfr_init2(s, prec + 100);
 
-        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n == 1);
+        do { n = n_randint(state, 1 << n_randint(state, 10)); }
+            while (n % 2 || n == 0);
 
-        fmprb_zeta_ui_bsplit(r, n, prec);
+        fmprb_zeta_ui_bernoulli(r, n, prec);
         mpfr_zeta_ui(s, n, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))

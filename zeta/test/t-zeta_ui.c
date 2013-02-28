@@ -23,14 +23,14 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_euler_product....");
+    printf("zeta_ui....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -42,14 +42,14 @@ int main()
         mpfr_t s;
         long prec, accuracy;
 
-        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n < 6);
-
-        prec = 2 + n_randint(state, 12 * n);
+        prec = 2 + n_randint(state, 1 << n_randint(state, 14));
 
         fmprb_init(r);
         mpfr_init2(s, prec + 100);
 
-        fmprb_zeta_ui_euler_product(r, n, prec);
+        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n == 1);
+
+        fmprb_zeta_ui(r, n, prec);
         mpfr_zeta_ui(s, n, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))

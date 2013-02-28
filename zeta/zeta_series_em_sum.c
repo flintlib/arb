@@ -23,6 +23,7 @@
 
 ******************************************************************************/
 
+#include "zeta.h"
 #include "fmpcb.h"
 #include "fmpcb_poly.h"
 #include "bernoulli.h"

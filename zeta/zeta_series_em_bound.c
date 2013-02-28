@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpcb.h"
+#include "zeta.h"
 #include "fmprb_poly.h"
 #include "fmpcb_poly.h"
 

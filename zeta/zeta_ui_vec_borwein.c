@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 /* With parameter n, the error is bounded by 3/(3+sqrt(8))^n */
 #define ERROR_A 1.5849625007211561815 /* log2(3) */

@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpcb.h"
+#include "zeta.h"
 
 static ulong choose_M(ulong N, long target)
 {

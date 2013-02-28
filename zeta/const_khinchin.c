@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include <math.h>
-#include "fmprb.h"
+#include "zeta.h"
 
 void
 fmprb_const_khinchin_eval_param(fmprb_t s, ulong N, ulong M, long prec)

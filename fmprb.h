@@ -309,21 +309,6 @@ void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 
 void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 
-void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
-void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
-
-void fmprb_const_khinchin(fmprb_t K, long prec);
-
-void fmprb_zeta_ui_asymp(fmprb_t x, ulong s, long prec);
-void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec);
-void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec);
-void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);
-void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec);
-void fmprb_zeta_ui(fmprb_t x, ulong n, long prec);
-
-void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec);
-void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
-void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
 
 void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);

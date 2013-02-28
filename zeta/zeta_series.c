@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpcb.h"
+#include "zeta.h"
 
 void
 fmpcb_zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)

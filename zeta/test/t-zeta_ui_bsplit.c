@@ -23,32 +23,33 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_asymp....");
+    printf("zeta_ui_bsplit....");
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+
+    for (iter = 0; iter < 1000; iter++)
     {
         fmprb_t r;
         ulong n;
         mpfr_t s;
-        long prec;
+        long prec, accuracy;
 
-        prec = 2 + n_randint(state, 1 << n_randint(state, 10));
+        prec = 2 + n_randint(state, 1 << n_randint(state, 14));
 
         fmprb_init(r);
         mpfr_init2(s, prec + 100);
 
-        n = 2 + n_randint(state, 1 << n_randint(state, 10));
+        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n == 1);
 
-        fmprb_zeta_ui_asymp(r, n, prec);
+        fmprb_zeta_ui_bsplit(r, n, prec);
         mpfr_zeta_ui(s, n, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))
@@ -57,6 +58,15 @@ int main()
             printf("n = %lu\n\n", n);
             printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
             printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+            abort();
+        }
+
+        accuracy = fmprb_rel_accuracy_bits(r);
+
+        if (accuracy < prec - 4)
+        {
+            printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
+            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
             abort();
         }
 

@@ -25,6 +25,7 @@
 
 #include "fmprb.h"
 #include "fmprb_poly.h"
+#include "arith.h"
 
 void
 _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
@@ -85,7 +86,7 @@ _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
     else
     {
         /* compute root of the minimal polynomial */
-        long start_prec, eval_extra_prec, d;
+        long start_prec, eval_extra_prec;
         fmpz_poly_t poly;
         fmprb_poly_t fpoly;
         fmpr_t interval_bound;

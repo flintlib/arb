@@ -23,27 +23,49 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
-#include "hypgeom.h"
+#include "zeta.h"
 
-void
-fmprb_const_zeta3_bsplit(fmprb_t s, long prec)
+int main()
 {
-    hypgeom_t series;
-    fmprb_t t;
-    fmprb_init(t);
-    hypgeom_init(series);
+    long iter;
+    flint_rand_t state;
 
-    fmpz_poly_set_str(series->A, "3  77 250 205");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
-    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
+    printf("zeta_ui_asymp....");
+    fflush(stdout);
+    flint_randinit(state);
 
-    prec += FLINT_CLOG2(prec);
-    fmprb_hypgeom_infsum(s, t, series, prec, prec);
-    fmprb_mul_ui(t ,t, 64, prec);
-    fmprb_div(s, s, t, prec);
+    for (iter = 0; iter < 10000; iter++)
+    {
+        fmprb_t r;
+        ulong n;
+        mpfr_t s;
+        long prec;
 
-    hypgeom_clear(series);
-    fmprb_clear(t);
+        prec = 2 + n_randint(state, 1 << n_randint(state, 10));
+
+        fmprb_init(r);
+        mpfr_init2(s, prec + 100);
+
+        n = 2 + n_randint(state, 1 << n_randint(state, 10));
+
+        fmprb_zeta_ui_asymp(r, n, prec);
+        mpfr_zeta_ui(s, n, MPFR_RNDN);
+
+        if (!fmprb_contains_mpfr(r, s))
+        {
+            printf("FAIL: containment\n\n");
+            printf("n = %lu\n\n", n);
+            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
+            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+            abort();
+        }
+
+        fmprb_clear(r);
+        mpfr_clear(s);
+    }
+
+    flint_randclear(state);
+    _fmpz_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }

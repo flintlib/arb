@@ -23,24 +23,27 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
+#include "hypgeom.h"
 
 void
-fmprb_zeta_ui_asymp(fmprb_t x, ulong s, long prec)
+fmprb_const_zeta3_bsplit(fmprb_t s, long prec)
 {
-    fmprb_set_ui(x, 1UL);
+    hypgeom_t series;
+    fmprb_t t;
+    fmprb_init(t);
+    hypgeom_init(series);
 
-    if (s != 2 && s > prec)
-    {
-        fmprb_add_error_2exp_si(x, -prec);
-    }
-    else
-    {
-        fmpr_t t;
-        fmpr_init(t);
-        fmpr_set_ui_2exp_si(t, 1, -s);
-        fmprb_add_fmpr(x, x, t, prec);
-        fmprb_add_error_2exp_si(x, 2 - (3 * s) / 2);
-        fmpr_clear(t);
-    }
+    fmpz_poly_set_str(series->A, "3  77 250 205");
+    fmpz_poly_set_str(series->B, "1  1");
+    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
+    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
+
+    prec += FLINT_CLOG2(prec);
+    fmprb_hypgeom_infsum(s, t, series, prec, prec);
+    fmprb_mul_ui(t ,t, 64, prec);
+    fmprb_div(s, s, t, prec);
+
+    hypgeom_clear(series);
+    fmprb_clear(t);
 }

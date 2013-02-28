@@ -23,14 +23,14 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("const_euler_brent_mcmillan....");
+    printf("const_zeta3_bsplit....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -40,13 +40,13 @@ int main()
         mpfr_t s;
         long accuracy, prec;
 
-        prec = 2 + n_randint(state, 1 << n_randint(state, 16));
+        prec = 2 + n_randint(state, 1 << n_randint(state, 17));
 
         fmprb_init(r);
         mpfr_init2(s, prec + 1000);
 
-        fmprb_const_euler_brent_mcmillan(r, prec);
-        mpfr_const_euler(s, MPFR_RNDN);
+        fmprb_const_zeta3_bsplit(r, prec);
+        mpfr_zeta_ui(s, 3, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))
         {

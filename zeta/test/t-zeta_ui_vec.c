@@ -23,56 +23,66 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "zeta.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("const_zeta3_bsplit....");
+    printf("zeta_ui_vec....");
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 250; iter++)
+
+    for (iter = 0; iter < 100; iter++)
     {
-        fmprb_t r;
+        fmprb_struct * r;
+        ulong n;
+        long i, num;
         mpfr_t s;
-        long accuracy, prec;
+        long prec, accuracy;
 
-        prec = 2 + n_randint(state, 1 << n_randint(state, 17));
+        prec = 2 + n_randint(state, 1 << n_randint(state, 13));
+        num = 1 + n_randint(state, 20);
 
-        fmprb_init(r);
-        mpfr_init2(s, prec + 1000);
+        r = _fmprb_vec_init(num);
+        mpfr_init2(s, prec + 100);
 
-        fmprb_const_zeta3_bsplit(r, prec);
-        mpfr_zeta_ui(s, 3, MPFR_RNDN);
+        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n < 2);
 
-        if (!fmprb_contains_mpfr(r, s))
+        fmprb_zeta_ui_vec(r, n, num, prec);
+
+        for (i = 0; i < num; i++)
         {
-            printf("FAIL: containment\n\n");
-            printf("prec = %ld\n", prec);
-            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            abort();
+            mpfr_zeta_ui(s, n + i, MPFR_RNDN);
+
+            if (!fmprb_contains_mpfr(r + i, s))
+            {
+                printf("FAIL: containment\n\n");
+                printf("n = %lu\n\n", n + i);
+                printf("r = "); fmprb_printd(r + i, prec / 3.33); printf("\n\n");
+                printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+                abort();
+            }
+
+            accuracy = fmprb_rel_accuracy_bits(r + i);
+
+            if (accuracy < prec - 4)
+            {
+                printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
+                printf("n = %lu\n\n", n + i);
+                printf("r = "); fmprb_printd(r + i, prec / 3.33); printf("\n\n");
+                abort();
+            }
         }
 
-        accuracy = fmprb_rel_accuracy_bits(r);
-
-        if (accuracy < prec - 4)
-        {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec = %ld\n", prec);
-            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            abort();
-        }
-
-        fmprb_clear(r);
+        _fmprb_vec_clear(r, num);
         mpfr_clear(s);
     }
 
     flint_randclear(state);
     _fmpz_cleanup();
-    mpfr_free_cache();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }

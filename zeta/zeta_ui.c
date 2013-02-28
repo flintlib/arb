@@ -25,7 +25,7 @@
 
 #include <math.h>
 #include "arith.h"
-#include "fmprb.h"
+#include "zeta.h"
 
 void
 fmprb_zeta_ui(fmprb_t x, ulong n, long prec)
