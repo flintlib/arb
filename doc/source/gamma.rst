@@ -190,10 +190,17 @@ Rational arguments
 
     .. math ::
 
-        \Gamma(1/3) = \left( \frac{12 \pi^4}{\sqrt 10}
+        \Gamma(1/3) = \left( \frac{12 \pi^4}{\sqrt{10}}
             \sum_{k=0}^{\infty} \frac{(6k)!(-1)^k}{(k!)^3 (3k)! 3^k 160^{3k}} \right)^{1/6}.
 
-    The value is cached for repeated use.
+    The value is cached for repeated use. An alternative formula which
+    could be used is
+
+    .. math ::
+
+        \Gamma(1/3) = \frac{2^{4/9} \pi^{2/3}}{3^{1/12} \left( \operatorname{agm}\left(1,\frac{1}{2} \sqrt{2+\sqrt{3}}\right)\right)^{1/3}},
+
+    but this appears to be slightly slower in practice.
 
 .. function:: void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
 
