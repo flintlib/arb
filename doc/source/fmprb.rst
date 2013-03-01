@@ -636,6 +636,10 @@ Constants
 
     Sets *x* to `\pi`. The value is cached for repeated use.
 
+.. function:: void fmprb_const_sqrt_pi(fmprb_t x, long prec)
+
+    Sets *x* to `\sqrt{\pi}`. The value is cached for repeated use.
+
 .. function:: void fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
 
     Sets *x* to `\log \sqrt{2 \pi}`. The value is cached for repeated use.
