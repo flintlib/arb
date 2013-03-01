@@ -174,27 +174,34 @@ Rising factorials
 Rational arguments
 --------------------------------------------------------------------------------
 
-.. function:: void gamma_const_1_4(fmprb_t x, long prec)
+.. function:: void gamma_small_frac(fmprb_t y, unsigned int p, unsigned int q, long prec)
 
-    Sets `x = \Gamma(1/4)`, evaluated using the formula
+    Efficiently evaluates `y = \Gamma(p/q)` where `p/q` (assumed to be reduced)
+    is one of `1, 1/2, 1/3, 2/3, 1/4, 3/4, 1/6, 5/6`.
+
+    The cases `\Gamma(1) = 1` and `\Gamma(1/2) = \sqrt \pi` are trivial.
+    We reduce all remaining cases to `\Gamma(1/3)` or `\Gamma(1/4)`
+    using the following relations:
 
     .. math ::
 
-        \Gamma(1/4) = \sqrt{\frac{(2\pi)^{3/2}}{\operatorname{agm}(1, \sqrt 2)}}.
+        \Gamma(2/3) = \frac{2 \pi}{3^{1/2} \Gamma(1/3)}, \quad \quad
+        \Gamma(3/4) = \frac{2^{1/2} \pi}{\Gamma(1/4)},
 
-    The value is cached for repeated use.
+        \Gamma(1/6) = \frac{\Gamma(1/3)^2}{(\pi/3)^{1/2} 2^{1/3}}, \quad \quad
+        \Gamma(5/6) = \frac{2 \pi (\pi/3)^{1/2} 2^{1/3}}{\Gamma(1/3)^2}.
 
-.. function:: void gamma_const_1_3(fmprb_t x, long prec)
-
-    Sets `x = \Gamma(1/3)`, evaluated using the formula
+    The values of `\Gamma(1/3)` and `\Gamma(1/4)` are cached for fast
+    repeated evaluation. We compute them rapidly to high precision using
 
     .. math ::
 
         \Gamma(1/3) = \left( \frac{12 \pi^4}{\sqrt{10}}
-            \sum_{k=0}^{\infty} \frac{(6k)!(-1)^k}{(k!)^3 (3k)! 3^k 160^{3k}} \right)^{1/6}.
+            \sum_{k=0}^{\infty}
+            \frac{(6k)!(-1)^k}{(k!)^3 (3k)! 3^k 160^{3k}} \right)^{1/6}, \quad \quad
+        \Gamma(1/4) = \sqrt{\frac{(2\pi)^{3/2}}{\operatorname{agm}(1, \sqrt 2)}}.
 
-    The value is cached for repeated use. An alternative formula which
-    could be used is
+    An alternative formula which could be used for `\Gamma(1/3)` is
 
     .. math ::
 

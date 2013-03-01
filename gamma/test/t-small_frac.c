@@ -30,11 +30,11 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("const_1_4....");
+    printf("small_frac....");
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 250; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
         fmprb_t r, s;
         fmpq_t q;
@@ -46,8 +46,19 @@ int main()
         fmprb_init(s);
         fmpq_init(q);
 
-        fmpq_set_si(q, 1, 4);
-        gamma_const_1_4(r, prec);
+        switch (n_randint(state, 8))
+        {
+            case 0: fmpq_set_si(q, 1, 1); break;
+            case 1: fmpq_set_si(q, 1, 2); break;
+            case 2: fmpq_set_si(q, 1, 3); break;
+            case 3: fmpq_set_si(q, 2, 3); break;
+            case 4: fmpq_set_si(q, 1, 4); break;
+            case 5: fmpq_set_si(q, 3, 4); break;
+            case 6: fmpq_set_si(q, 1, 6); break;
+            default: fmpq_set_si(q, 5, 6); break;
+        }
+
+        gamma_small_frac(r, *fmpq_numref(q), *fmpq_denref(q), prec);
         gamma_series_fmpq_hypgeom(s, q, 1, prec);
 
         if (!fmprb_overlaps(r, s))

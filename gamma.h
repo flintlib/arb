@@ -88,9 +88,7 @@ void gamma_rising_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec
 void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec);
 
 void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec);
-
-void gamma_const_1_3(fmprb_t x, long prec);
-void gamma_const_1_4(fmprb_t x, long prec);
+void gamma_small_frac(fmprb_t y, unsigned int p, unsigned int q, long prec);
 
 
 #endif
