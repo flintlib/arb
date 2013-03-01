@@ -25,18 +25,13 @@
 
 #include "fmprb_poly.h"
 
-long _fmprb_bits(const fmprb_t x);
-
-long _fmprb_vec_bits(const fmprb_struct * x, long len);
-
 void
 _fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
-        long fbits, xbits;
+        long fbits;
 
-        xbits = _fmprb_bits(x);
         fbits = _fmprb_vec_bits(f, len);
 
         if (fbits <= prec / 2)

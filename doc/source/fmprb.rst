@@ -321,6 +321,13 @@ Precision and comparisons
 
     Sets *z* to a ball containing both *x* and *y*.
 
+.. function:: long fmprb_bits(const fmprb_t x)
+
+    Returns the number of bits needed to represent the absolute value
+    of the mantissa of the midpoint of *x*, i.e. the minimum precision
+    sufficient to represent *x* exactly. Returns 0 if the midpoint
+    of *x* is a special value.
+
 
 Arithmetic
 -------------------------------------------------------------------------------

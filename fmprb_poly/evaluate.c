@@ -25,36 +25,14 @@
 
 #include "fmprb_poly.h"
 
-long
-_fmprb_bits(const fmprb_t x)
-{
-    return fmpz_bits(fmpr_manref(fmprb_midref(x)));
-}
-
-long
-_fmprb_vec_bits(const fmprb_struct * x, long len)
-{
-    long i, b, c;
-
-    b = 0;
-    for (i = 0; i < len; i++)
-    {
-        c = _fmprb_bits(x + i);
-        b = FLINT_MAX(b, c);
-    }
-
-    return b;
-}
-
 void
 _fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
                            const fmprb_t x, long prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
-        long fbits, xbits;
+        long fbits;
 
-        xbits = _fmprb_bits(x);
         fbits = _fmprb_vec_bits(f, len);
 
         if (fbits <= prec / 2)

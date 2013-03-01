@@ -298,6 +298,12 @@ Comparisons
 
     Sets *z* respectively to the minimum and the maximum of *a* and *b*.
 
+.. function:: long fmpr_bits(const fmpr_t x)
+
+    Returns the number of bits needed to represent the absolute value
+    of the mantissa of *x*, i.e. the minimum precision sufficient to represent
+    *x* exactly. Returns 0 if *x* is a special value.
+
 
 Random number generation
 -------------------------------------------------------------------------------
@@ -319,8 +325,6 @@ Random number generation
 
     Indentical to *fmpr_randtest*, except that the output occasionally
     is set to an infinity or NaN.
-
-
 
 
 Input and output

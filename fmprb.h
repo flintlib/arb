@@ -489,6 +489,12 @@ fmprb_rel_accuracy_bits(const fmprb_t x)
     return -fmprb_rel_error_bits(x);
 }
 
+static __inline__ long
+fmprb_bits(const fmprb_t x)
+{
+    return fmpr_bits(fmprb_midref(x));
+}
+
 void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err);
 void fmprb_add_error_2exp_si(fmprb_t x, long err);
 void fmprb_add_error(fmprb_t x, const fmprb_t error);
@@ -614,6 +620,21 @@ _fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, const fmprb_struct * vec,
         }
         fmpr_clear(t);
     }
+}
+
+static __inline__ long
+_fmprb_vec_bits(const fmprb_struct * x, long len)
+{
+    long i, b, c;
+
+    b = 0;
+    for (i = 0; i < len; i++)
+    {
+        c = fmprb_bits(x + i);
+        b = FLINT_MAX(b, c);
+    }
+
+    return b;
 }
 
 #endif

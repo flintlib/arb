@@ -562,6 +562,15 @@ fmpr_max(fmpr_t z, const fmpr_t a, const fmpr_t b)
         fmpr_set(z, b);
 }
 
+static __inline__ long
+fmpr_bits(const fmpr_t x)
+{
+    if (fmpr_is_special(x))
+        return 0;
+    else
+        return fmpz_bits(fmpr_manref(x));
+}
+
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t __t, __u; \

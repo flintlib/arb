@@ -28,7 +28,7 @@
 void
 gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
-    if (prec < 768 || n < 8)
+    if (prec < 768 || n < 8 || fmprb_bits(x) < prec / 8)
     {
         gamma_rising_fmprb_ui_bsplit_simple(y, x, n, prec);
     }

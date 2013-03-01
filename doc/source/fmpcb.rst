@@ -151,6 +151,13 @@ Precision and comparisons
 
     Returns nonzero iff zero is contained in *x*.
 
+.. function:: long fmpcb_bits(const fmpcb_t x)
+
+    Returns the maximum of *fmprb_bits* applied to the real
+    and imaginary parts of *x*, i.e. the minimum precision sufficient
+    to represent *x* exactly.
+
+
 Complex parts
 -------------------------------------------------------------------------------
 

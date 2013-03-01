@@ -691,4 +691,19 @@ void fmpcb_printd(const fmpcb_t z, long digits);
 
 void fmpcb_randtest(fmpcb_t z, flint_rand_t state, long prec, long mag_bits);
 
+static __inline__ long
+fmpcb_bits(const fmpcb_t x)
+{
+    long b1, b2;
+    b1 = fmprb_bits(fmpcb_realref(x));
+    b2 = fmprb_bits(fmpcb_imagref(x));
+    return FLINT_MAX(b1, b2);
+}
+
+static __inline__ long
+_fmpcb_vec_bits(const fmpcb_struct * vec, long len)
+{
+    return _fmprb_vec_bits((const fmprb_struct *) vec, 2 * len);
+}
+
 #endif
