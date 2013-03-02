@@ -104,6 +104,13 @@ void bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter);
 void bernoulli_rev_clear(bernoulli_rev_t iter);
 
 
+#define BERNOULLI_ENSURE_CACHED(n) \
+  do { \
+    long __n = (n); \
+    if (__n >= bernoulli_cache_num) \
+        bernoulli_cache_compute(__n + 1); \
+  } while (0); \
+
 long bernoulli_bound_2exp_si(ulong n);
 
 #endif

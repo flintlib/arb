@@ -26,35 +26,6 @@
 #include "fmpcb.h"
 #include "gamma.h"
 
-/* tuning factor */
-#define GAMMA_STIRLING_BETA 0.23
-
-static void
-choose(int * reflect, long * r, long * n, const fmpcb_t z, int use_reflect, long prec)
-{
-    if (fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_realref(z)), 40) > 0 ||
-        fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_imagref(z)), 40) > 0)
-    {
-        if (use_reflect && fmpr_sgn(fmprb_midref(fmpcb_realref(z))) < 0)
-            *reflect = 1;
-        else
-            *reflect = 0;
-
-        *r = 0;
-        *n = 1;
-    }
-    else
-    {
-        double x, y;
-
-        x = fmpr_get_d(fmprb_midref(fmpcb_realref(z)), FMPR_RND_NEAR);
-        y = fmpr_get_d(fmprb_midref(fmpcb_imagref(z)), FMPR_RND_NEAR);
-
-        gamma_stirling_choose_param(reflect, r, n, x, y,
-            GAMMA_STIRLING_BETA, use_reflect, prec);
-    }
-}
-
 static void
 _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
 {
@@ -64,7 +35,7 @@ _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
 
     wp = prec + FLINT_BIT_COUNT(prec);
 
-    choose(&reflect, &r, &n, x, 1, wp);
+    gamma_stirling_choose_param_fmpcb(&reflect, &r, &n, x, 1, wp);
 
     fmpcb_init(t);
     fmpcb_init(u);
@@ -148,7 +119,7 @@ fmpcb_lgamma(fmpcb_t y, const fmpcb_t x, long prec)
 
     wp = prec + FLINT_BIT_COUNT(prec);
 
-    choose(&reflect, &r, &n, x, 0, wp);
+    gamma_stirling_choose_param_fmpcb(&reflect, &r, &n, x, 0, wp);
 
     /* log(gamma(x)) = log(gamma(x+r)) - log(rf(x,r)) */
     fmpcb_init(t);

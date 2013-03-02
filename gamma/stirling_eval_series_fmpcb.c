@@ -94,8 +94,6 @@ gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, long p
 
     fmpcb_log(w, z, prec);
 
-    bernoulli_cache_compute(2 * (nterms + 1));
-
     nterms = FLINT_MAX(nterms, 1);
 
     fmpcb_zero(s);

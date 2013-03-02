@@ -74,4 +74,5 @@
   Double check the proof of correctness of the complex Newton iteration
   and make it work when the polynomial is not exact.
 
+* Write a cleanup function that frees all cached data.
 

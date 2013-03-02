@@ -24,17 +24,34 @@
 ******************************************************************************/
 
 #include "gamma.h"
-#include "bernoulli.h"
+
+/* tuning factor */
+#define GAMMA_STIRLING_BETA 0.23
 
 void
-gamma_stirling_coeff(fmprb_t b, ulong k, long prec)
+gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n,
+    const fmpcb_t z, int use_reflect, long prec)
 {
-    fmpz_t d;
-    fmpz_init(d);
-    BERNOULLI_ENSURE_CACHED(2 * k);
-    fmprb_set_round_fmpz(b, fmpq_numref(bernoulli_cache + 2 * k), prec);
-    fmpz_mul2_uiui(d, fmpq_denref(bernoulli_cache + 2 * k), 2 * k, 2 * k - 1);
-    fmprb_div_fmpz(b, b, d, prec);
-    fmpz_clear(d);
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_realref(z)), 40) > 0 ||
+        fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_imagref(z)), 40) > 0)
+    {
+        if (use_reflect && fmpr_sgn(fmprb_midref(fmpcb_realref(z))) < 0)
+            *reflect = 1;
+        else
+            *reflect = 0;
+
+        *r = 0;
+        *n = 1;
+    }
+    else
+    {
+        double x, y;
+
+        x = fmpr_get_d(fmprb_midref(fmpcb_realref(z)), FMPR_RND_NEAR);
+        y = fmpr_get_d(fmprb_midref(fmpcb_imagref(z)), FMPR_RND_NEAR);
+
+        gamma_stirling_choose_param(reflect, r, n, x, y,
+            GAMMA_STIRLING_BETA, use_reflect, prec);
+    }
 }
 

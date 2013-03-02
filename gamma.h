@@ -69,6 +69,9 @@ void gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec);
 
 
 void gamma_stirling_choose_param(int * reflect, long * r, long * n, double x, double y, double beta, int allow_reflection, long prec);
+void gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n, const fmprb_t z, int use_reflect, long prec);
+void gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n, const fmpcb_t z, int use_reflect, long prec);
+
 void gamma_stirling_coeff(fmprb_t b, ulong k, long prec);
 void gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n);
 void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, long prec);
