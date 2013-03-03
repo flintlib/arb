@@ -29,23 +29,10 @@ void
 gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
     if (prec < 768 || n < 8 || fmprb_bits(x) < prec / 8)
-    {
         gamma_rising_fmprb_ui_bsplit_simple(y, x, n, prec);
-    }
     else if (prec < 1500 || n < 500000 / prec)
-    {
         gamma_rising_fmprb_ui_bsplit_eight(y, x, n, prec);
-    }
     else
-    {
-        ulong step, s1, s2;
-
-        /* experimental fit */
-        s1 = 2 * sqrt(n);
-        s2 = 10 * pow(prec - 1200, 0.25);
-        step = FLINT_MIN(s1, s2);
-
-        gamma_rising_fmprb_ui_bsplit_rectangular(y, x, n, step, prec);
-    }
+        gamma_rising_fmprb_ui_bsplit_rectangular(y, x, n, 0, prec);
 }
 

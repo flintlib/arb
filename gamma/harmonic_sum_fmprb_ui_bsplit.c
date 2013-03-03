@@ -26,13 +26,11 @@
 #include "gamma.h"
 
 void
-gamma_rising_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+gamma_harmonic_sum_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
 {
-    if (n < 8 || fmpcb_bits(x) < prec / 8)
-        gamma_rising_fmpcb_ui_bsplit_simple(y, x, n, prec);
-    else if (prec < 250 || n < 250000 / prec)
-        gamma_rising_fmpcb_ui_bsplit_eight(y, x, n, prec);
+    if (prec < 768 || n < 8 || fmprb_bits(x) < prec / 8)
+        gamma_harmonic_sum_fmprb_ui_bsplit_simple(y, x, n, prec);
     else
-        gamma_rising_fmpcb_ui_bsplit_rectangular(y, x, n, 0, prec);
+        gamma_harmonic_sum_fmprb_ui_bsplit_rectangular(y, x, n, 0, prec);
 }
 

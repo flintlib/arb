@@ -50,7 +50,7 @@ void
 gamma_rising_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec)
 {
     fmprb_t t, u;
-    ulong b;
+    ulong s1, s2, b;
     long wp;
 
     wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
@@ -58,6 +58,12 @@ gamma_rising_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ul
     fmprb_init(t);
     fmprb_init(u);
 
+    if (step == 0)
+    {
+        s1 = 2 * sqrt(n);
+        s2 = 10 * pow(prec, 0.25);
+        step = FLINT_MIN(s1, s2);
+    }
     step = FLINT_MAX(step, 1);
     b = (n / step) * step;
 

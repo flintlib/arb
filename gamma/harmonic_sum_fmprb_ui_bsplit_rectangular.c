@@ -27,36 +27,47 @@
 #include "fmprb_poly.h"
 
 static void
-bsplit_step(fmpcb_t y, const fmprb_struct * poly, ulong step, const fmpcb_t x, ulong a, ulong b, long prec)
+bsplit_step(fmprb_t p, fmprb_t q, const fmprb_struct * poly, ulong step,
+        const fmprb_t x, ulong a, ulong b, long prec)
 {
     if (b - a == step)
     {
-        fmpcb_add_ui(y, x, a, prec);
-        _fmprb_poly_evaluate_fmpcb(y, poly, step + 1, y, prec);
+        fmprb_add_ui(p, x, a, prec);
+        _fmprb_poly_evaluate2_rectangular(q, p, poly, step + 1, p, prec);
     }
     else
     {
-        ulong m = a + ((b - a) / (2 * step)) * step;
-        fmpcb_t t;
-        fmpcb_init(t);
-        bsplit_step(y, poly, step, x, a, m, prec);
-        bsplit_step(t, poly, step, x, m, b, prec);
-        fmpcb_mul(y, y, t, prec);
-        fmpcb_clear(t);
+        fmprb_t r, s;
+        ulong m;
+
+        fmprb_init(r);
+        fmprb_init(s);
+
+        m = a + ((b - a) / (2 * step)) * step;
+        bsplit_step(p, q, poly, step, x, a, m, prec);
+        bsplit_step(r, s, poly, step, x, m, b, prec);
+
+        fmprb_mul(p, p, s, prec);
+        fmprb_mul(r, r, q, prec);
+        fmprb_add(p, p, r, prec);
+        fmprb_mul(q, q, s, prec);
+
+        fmprb_clear(r);
+        fmprb_clear(s);
     }
 }
 
 void
-gamma_rising_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec)
+gamma_harmonic_sum_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec)
 {
-    fmpcb_t t, u;
-    ulong s1, s2, b;
+    fmprb_t t, u;
+    ulong b, s1, s2;
     long wp;
 
     wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 
-    fmpcb_init(t);
-    fmpcb_init(u);
+    fmprb_init(t);
+    fmprb_init(u);
 
     if (step == 0)
     {
@@ -76,19 +87,20 @@ gamma_rising_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ul
         fmprb_init(xpoly + 1);
         fmprb_one(xpoly + 1);
         _fmprb_poly_rfac_series_ui(poly, xpoly, 2, step, step + 1, wp);
-        bsplit_step(t, poly, step, x, 0, b, wp);
+        bsplit_step(t, u, poly, step, x, 0, b, wp);
+        fmprb_div(t, t, u, wp);
         _fmprb_vec_clear(poly, step + 1);
     }
     else
     {
-        fmpcb_one(t);
+        fmprb_zero(t);
     }
 
-    fmpcb_add_ui(u, x, b, wp);
-    gamma_rising_fmpcb_ui_bsplit_simple(u, u, n - b, wp);
-    fmpcb_mul(y, t, u, prec);
+    fmprb_add_ui(u, x, b, wp);
+    gamma_harmonic_sum_fmprb_ui_bsplit(u, u, n - b, wp);
+    fmprb_add(y, t, u, prec);
 
-    fmpcb_clear(t);
-    fmpcb_clear(u);
+    fmprb_clear(t);
+    fmprb_clear(u);
 }
 
