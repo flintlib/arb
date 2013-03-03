@@ -32,6 +32,9 @@ fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd)
     mpfr_rnd_t mrnd;
     mpfr_t t;
 
+    if (fmpr_is_zero(x))
+        return 0.0;
+
     mrnd = rnd_to_mpfr(rnd);
     mpfr_init2(t, 53);
     fmpr_get_mpfr(t, x, mrnd);
