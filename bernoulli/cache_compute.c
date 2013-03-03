@@ -37,8 +37,7 @@ bernoulli_cache_compute(long n)
         long i, new_num;
         bernoulli_rev_t iter;
 
-        new_num = FLINT_MAX(bernoulli_cache_num * 2, n);
-        new_num = n;
+        new_num = FLINT_MAX(bernoulli_cache_num + 128, n);
 
         bernoulli_cache = flint_realloc(bernoulli_cache, new_num * sizeof(fmpq));
         for (i = bernoulli_cache_num; i < new_num; i++)
@@ -47,9 +46,11 @@ bernoulli_cache_compute(long n)
         i = new_num - 1;
         i -= (i % 2);
         bernoulli_rev_init(iter, i);
-        for ( ; i >= 0; i -= 2)
+        for ( ; i >= bernoulli_cache_num; i -= 2)
+        {
             bernoulli_rev_next(fmpq_numref(bernoulli_cache + i),
                 fmpq_denref(bernoulli_cache + i), iter);
+        }
         bernoulli_rev_clear(iter);
 
         if (new_num > 1)
