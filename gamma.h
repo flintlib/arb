@@ -68,13 +68,12 @@ void gamma_taylor_eval_series_fmprb(fmprb_t y, const fmprb_t x, long prec);
 void gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec);
 
 
-void gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n, const fmprb_t z, int use_reflect, long prec);
-void gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n, const fmpcb_t z, int use_reflect, long prec);
+void gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n, const fmprb_t z, int use_reflect, int digamma, long prec);
+void gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n, const fmpcb_t z, int use_reflect, int digamma, long prec);
 
-void gamma_stirling_coeff(fmprb_t b, ulong k, long prec);
-void gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n);
-void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, long prec);
-void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, long prec);
+void gamma_stirling_coeff(fmprb_t b, ulong k, int digamma, long prec);
+void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, long prec);
+void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int digamma, long prec);
 
 
 void gamma_rising_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec);

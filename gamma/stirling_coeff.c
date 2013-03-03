@@ -27,13 +27,16 @@
 #include "bernoulli.h"
 
 void
-gamma_stirling_coeff(fmprb_t b, ulong k, long prec)
+gamma_stirling_coeff(fmprb_t b, ulong k, int digamma, long prec)
 {
     fmpz_t d;
     fmpz_init(d);
     BERNOULLI_ENSURE_CACHED(2 * k);
     fmprb_set_round_fmpz(b, fmpq_numref(bernoulli_cache + 2 * k), prec);
-    fmpz_mul2_uiui(d, fmpq_denref(bernoulli_cache + 2 * k), 2 * k, 2 * k - 1);
+    if (digamma)
+        fmpz_mul_ui(d, fmpq_denref(bernoulli_cache + 2 * k), 2 * k);
+    else
+        fmpz_mul2_uiui(d, fmpq_denref(bernoulli_cache + 2 * k), 2 * k, 2 * k - 1);
     fmprb_div_fmpz(b, b, d, prec);
     fmpz_clear(d);
 }

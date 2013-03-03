@@ -28,7 +28,7 @@
 #include "bernoulli.h"
 
 void
-gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n)
+gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, int digamma, long n)
 {
     if (fmprb_contains_nonpositive(z))
     {
@@ -51,9 +51,13 @@ gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n)
         else
         {
             fmpr_ui_div(t, 1, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_pow_sloppy_ui(t, t, 2 * n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
 
-            gamma_stirling_coeff(b, n, FMPRB_RAD_PREC);
+            if (digamma)
+                fmpr_pow_sloppy_ui(t, t, 2 * n, FMPRB_RAD_PREC, FMPR_RND_UP);
+            else
+                fmpr_pow_sloppy_ui(t, t, 2 * n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
+
+            gamma_stirling_coeff(b, n, digamma, FMPRB_RAD_PREC);
 
             fmprb_get_abs_ubound_fmpr(err, b, FMPRB_RAD_PREC);
             fmpr_mul(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
@@ -65,30 +69,32 @@ gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, long n)
 }
 
 void
-gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, long prec)
+gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, long prec)
 {
-    fmprb_t t, u, b, w, v;
+    fmprb_t b, t, logz, zinv, zinv2;
     fmpr_t err;
 
     long k, term_prec;
     double z_mag, term_mag;
 
-    fmprb_init(t);
-    fmprb_init(u);
     fmprb_init(b);
-    fmprb_init(w);
-    fmprb_init(v);
+    fmprb_init(t);
+    fmprb_init(logz);
+    fmprb_init(zinv);
+    fmprb_init(zinv2);
 
-    fmprb_log(w, z, prec);
+    fmprb_log(logz, z, prec);
+    fmprb_ui_div(zinv, 1UL, z, prec);
 
     nterms = FLINT_MAX(nterms, 1);
 
     fmprb_zero(s);
+
     if (nterms > 1)
     {
-        fmprb_ui_div(t, 1UL, z, prec);
-        fmprb_mul(u, t, t, prec);
-        z_mag = fmpr_get_d(fmprb_midref(w), FMPR_RND_UP) * 1.44269504088896;
+        fmprb_mul(zinv2, zinv, zinv, prec);
+
+        z_mag = fmpr_get_d(fmprb_midref(logz), FMPR_RND_UP) * 1.44269504088896;
 
         for (k = nterms - 1; k >= 1; k--)
         {
@@ -98,46 +104,54 @@ gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, long p
             term_prec = FLINT_MIN(term_prec, prec);
             term_prec = FLINT_MAX(term_prec, 10);
 
-            gamma_stirling_coeff(b, k, term_prec);
-
             if (prec > 2000)
             {
-                fmprb_set_round(v, u, term_prec);
-                fmprb_mul(s, s, v, term_prec);
+                fmprb_set_round(t, zinv2, term_prec);
+                fmprb_mul(s, s, t, term_prec);
             }
             else
-            {
-                fmprb_mul(s, s, u, term_prec);
-            }
+                fmprb_mul(s, s, zinv2, term_prec);
 
+            gamma_stirling_coeff(b, k, digamma, term_prec);
             fmprb_add(s, s, b, term_prec);
         }
 
-        fmprb_mul(s, s, t, prec);
+        if (digamma)
+            fmprb_mul(s, s, zinv2, prec);
+        else
+            fmprb_mul(s, s, zinv, prec);
     }
 
     /* remainder bound */
     fmpr_init(err);
-    gamma_stirling_bound_remainder(err, z, nterms);
+    gamma_stirling_bound_remainder(err, z, digamma, nterms);
     fmprb_add_error_fmpr(s, err);
     fmpr_clear(err);
 
-    /* (z-0.5)*log(z) - z + log(2*pi)/2 */
-    fmprb_set_ui(t, 1);
-    fmprb_mul_2exp_si(t, t, -1);
-    fmprb_sub(t, z, t, prec);
-    fmprb_mul(t, w, t, prec);
-
-    fmprb_add(s, s, t, prec);
-    fmprb_sub(s, s, z, prec);
-
-    fmprb_const_log_sqrt2pi(t, prec);
-    fmprb_add(s, s, t, prec);
+    if (digamma)
+    {
+        fmprb_neg(s, s);
+        fmprb_mul_2exp_si(zinv, zinv, -1);
+        fmprb_sub(s, s, zinv, prec);
+        fmprb_add(s, s, logz, prec);
+    }
+    else
+    {
+        /* (z-0.5)*log(z) - z + log(2*pi)/2 */
+        fmprb_set_ui(t, 1);
+        fmprb_mul_2exp_si(t, t, -1);
+        fmprb_sub(t, z, t, prec);
+        fmprb_mul(t, logz, t, prec);
+        fmprb_add(s, s, t, prec);
+        fmprb_sub(s, s, z, prec);
+        fmprb_const_log_sqrt2pi(t, prec);
+        fmprb_add(s, s, t, prec);
+    }
 
     fmprb_clear(t);
-    fmprb_clear(u);
     fmprb_clear(b);
-    fmprb_clear(w);
-    fmprb_clear(v);
+    fmprb_clear(zinv);
+    fmprb_clear(zinv2);
+    fmprb_clear(logz);
 }
 

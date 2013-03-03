@@ -58,7 +58,7 @@ gamma_stirling_bound_remainder_fmpcb(fmpr_t err, const fmpcb_t z, long n)
     fmprb_init(b);
     fmpr_init(t);
 
-    gamma_stirling_coeff(b, n, FMPRB_RAD_PREC);
+    gamma_stirling_coeff(b, n, 0, FMPRB_RAD_PREC);
     fmprb_get_abs_ubound_fmpr(t, b, FMPRB_RAD_PREC);
     fmpr_mul(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
 
@@ -77,7 +77,7 @@ gamma_stirling_bound_remainder_fmpcb(fmpr_t err, const fmpcb_t z, long n)
 }
 
 void
-gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, long prec)
+gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int digamma, long prec)
 {
     fmpcb_t t, u, w, v;
     fmprb_t b;
@@ -111,7 +111,7 @@ gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, long p
             term_prec = FLINT_MIN(term_prec, prec);
             term_prec = FLINT_MAX(term_prec, 10);
 
-            gamma_stirling_coeff(b, k, term_prec);
+            gamma_stirling_coeff(b, k, 0, term_prec);
 
             if (prec > 2000)
             {

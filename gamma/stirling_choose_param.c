@@ -48,7 +48,7 @@ _fmpr_mag(const fmpr_t x)
 #define PI 3.1415926535897932385
 
 static long
-choose_n(double log2z, double argz, long prec)
+choose_n(double log2z, double argz, int digamma, long prec)
 {
     double argf, boundn;
     long n;
@@ -58,7 +58,10 @@ choose_n(double log2z, double argz, long prec)
 
     for (n = 1; ; n++)
     {
-        boundn = bernoulli_bound_2exp_si(2*n) - (2*n-1)*log2z + (2*n)*argf;
+        if (digamma)
+            boundn = bernoulli_bound_2exp_si(2*n) - (2*n)*log2z + (2*n+1)*argf;
+        else
+            boundn = bernoulli_bound_2exp_si(2*n) - (2*n-1)*log2z + (2*n)*argf;
 
         /* success */
         if (boundn <= -prec)
@@ -74,7 +77,8 @@ choose_n(double log2z, double argz, long prec)
 }
 
 void
-choose_small(int * reflect, long * r, long * n, double x, double y, int use_reflect, long prec)
+choose_small(int * reflect, long * r, long * n,
+    double x, double y, int use_reflect, int digamma, long prec)
 {
     double w, argz, log2z;
     long rr;
@@ -104,12 +108,12 @@ choose_small(int * reflect, long * r, long * n, double x, double y, int use_refl
     argz = atan2(y, x);
 
     *r = rr;
-    *n = choose_n(log2z, argz, prec);
+    *n = choose_n(log2z, argz, digamma, prec);
 }
 
 void
 choose_large(int * reflect, long * r, long * n,
-    const fmpr_t a, const fmpr_t b, int use_reflect, long prec)
+    const fmpr_t a, const fmpr_t b, int use_reflect, int digamma, long prec)
 {
     if (use_reflect && fmpr_sgn(a) < 0)
         *reflect = 1;
@@ -159,14 +163,14 @@ choose_large(int * reflect, long * r, long * n,
         if (argz == PI)
             *n = 0;
         else
-            *n = choose_n(log2z, argz, prec);
+            *n = choose_n(log2z, argz, digamma, prec);
     }
 }
 
 
 void
 gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n,
-    const fmpcb_t z, int use_reflect, long prec)
+    const fmpcb_t z, int use_reflect, int digamma, long prec)
 {
     const fmpr_struct * a = fmprb_midref(fmpcb_realref(z));
     const fmpr_struct * b = fmprb_midref(fmpcb_imagref(z));
@@ -177,19 +181,19 @@ gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n,
     }
     else if (fmpr_cmpabs_2exp_si(a, 40) > 0 || fmpr_cmpabs_2exp_si(b, 40) > 0)
     {
-        choose_large(reflect, r, n, a, b, use_reflect, prec);
+        choose_large(reflect, r, n, a, b, use_reflect, digamma, prec);
     }
     else
     {
         choose_small(reflect, r, n,
             fmpr_get_d(a, FMPR_RND_NEAR),
-            fmpr_get_d(b, FMPR_RND_NEAR), use_reflect, prec);
+            fmpr_get_d(b, FMPR_RND_NEAR), use_reflect, digamma, prec);
     }
 }
 
 void
 gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n,
-    const fmprb_t x, int use_reflect, long prec)
+    const fmprb_t x, int use_reflect, int digamma, long prec)
 {
     const fmpr_struct * a = fmprb_midref(x);
 
@@ -201,13 +205,13 @@ gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n,
     {
         fmpr_t b;
         fmpr_init(b);
-        choose_large(reflect, r, n, a, b, use_reflect, prec);
+        choose_large(reflect, r, n, a, b, use_reflect, digamma, prec);
         fmpr_clear(b);
     }
     else
     {
         choose_small(reflect, r, n,
-            fmpr_get_d(a, FMPR_RND_NEAR), 0.0, use_reflect, prec);
+            fmpr_get_d(a, FMPR_RND_NEAR), 0.0, use_reflect, digamma, prec);
     }
 }
 
