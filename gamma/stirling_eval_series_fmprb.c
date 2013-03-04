@@ -138,7 +138,7 @@ gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int di
     else
     {
         /* (z-0.5)*log(z) - z + log(2*pi)/2 */
-        fmprb_set_ui(t, 1);
+        fmprb_one(t);
         fmprb_mul_2exp_si(t, t, -1);
         fmprb_sub(t, z, t, prec);
         fmprb_mul(t, logz, t, prec);

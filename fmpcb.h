@@ -531,6 +531,7 @@ void fmpcb_cos(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_sin_cos(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec);
 
 void fmpcb_sin_pi(fmpcb_t r, const fmpcb_t z, long prec);
+void fmpcb_sin_cos_pi(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec);
 
 void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec);
 
@@ -542,6 +543,8 @@ void fmpcb_root(fmpcb_t r, const fmpcb_t a, long m, long index, long prec);
 void fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec);
 void fmpcb_rgamma(fmpcb_t y, const fmpcb_t x, long prec);
 void fmpcb_lgamma(fmpcb_t y, const fmpcb_t x, long prec);
+
+void fmpcb_digamma(fmpcb_t y, const fmpcb_t x, long prec);
 
 void fmpcb_rising_ui(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 
