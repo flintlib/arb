@@ -642,6 +642,13 @@ Constants
 
         \log 2 = \frac{3}{4} \sum_{k=0}^{\infty} \frac{(-1)^k (k!)^2}{2^k (2k+1)!}
 
+.. function:: void fmprb_const_log10(fmprb_t s, long prec)
+
+    Sets *x* to `\log 10`. The value is cached for repeated use.
+    Uses the generic hypergeometric series code to evaluate the
+    Machin-like formula
+    `\log 10 = 46 \operatorname{atanh}(1/31) + 34 \operatorname{atanh}(1/49) + 20 \operatorname{atanh}(1/161)`.
+
 .. function:: void fmprb_const_e(fmprb_t s, long prec)
 
     Sets *x* to Euler's number `e = \sum_{n=0}^{\infty} 1/n!`, evaluated

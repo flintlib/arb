@@ -307,6 +307,7 @@ void fmprb_const_pi(fmprb_t x, long prec);
 void fmprb_const_sqrt_pi(fmprb_t t, long prec);
 void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 void fmprb_const_log2(fmprb_t s, long prec);
+void fmprb_const_log10(fmprb_t s, long prec);
 void fmprb_const_catalan(fmprb_t s, long prec);
 void fmprb_const_e(fmprb_t s, long prec);
 
