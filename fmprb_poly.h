@@ -279,6 +279,17 @@ void fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t res, const fmprb_poly_t f, co
 void _fmprb_poly_evaluate_fmpcb(fmpcb_t res, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
 void fmprb_poly_evaluate_fmpcb(fmpcb_t res, const fmprb_poly_t f, const fmpcb_t a, long prec);
 
+void _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec);
+
+void _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec);
+
+void _fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec);
+void fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec);
+
+
+
 void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
     const fmprb_struct * xs, long n, long prec);
 

@@ -270,6 +270,22 @@ Evaluation
     With the rectangular splitting algorithm, the powers can be reused,
     making simultaneous evaluation slightly faster.
 
+.. function:: void _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
+
+    Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
+
 Product trees
 -------------------------------------------------------------------------------
 
