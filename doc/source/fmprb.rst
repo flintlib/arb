@@ -620,32 +620,44 @@ Factorials and other integer functions
 Constants
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_const_pi_chudnovsky(fmprb_t x, long prec)
-
-    Sets *x* to `\pi`, computed using the Chudnovsky algorithm.
-    Letting `A = 13591409`, `B =  545140134`, `C = 640320`,
-    we have `\pi \approx 1 / s_N` where
-
-    .. math ::
-
-        s_N = 12 \sum_{k=0}^N \frac{(-1)^k (6k)! (A+Bk)}
-            {(3k)! (k!)^3 C^{3k+3/2}}
-
-    The implementation computes an approximation for the
-    algebraic number `1/s_N` using binary splitting, bounding
-    the rounding error automatically.
-    The hypergeometric term ratio is asymptotically
-    `R = C^3 / (2^6 \times 3^3) \approx 1.5 \times 10^{14}`, and in fact we have
-    `|\pi - 1/s_N| < 1/R^N` (with a more detailed calculation, the truncation
-    error could be bounded closer to `1/R^{N+1}`).
-
 .. function:: void fmprb_const_pi(fmprb_t x, long prec)
 
     Sets *x* to `\pi`. The value is cached for repeated use.
+    Uses the generic hypergeometric series code to evaluate the Chudnovsky series
+
+    .. math ::
+
+        \frac{1}{\pi} = 12 \sum^\infty_{k=0} \frac{(-1)^k (6k)! (13591409 + 545140134k)}{(3k)!(k!)^3 640320^{3k + 3/2}}
 
 .. function:: void fmprb_const_sqrt_pi(fmprb_t x, long prec)
 
     Sets *x* to `\sqrt{\pi}`. The value is cached for repeated use.
+
+.. function:: void fmprb_const_log2(fmprb_t s, long prec)
+
+    Sets *x* to `\log 2`. The value is cached for repeated use.
+    Uses the generic hypergeometric series code to evaluate the representation
+
+    .. math ::
+
+        \log 2 = \frac{3}{4} \sum_{k=0}^{\infty} \frac{(-1)^k (k!)^2}{2^k (2k+1)!}
+
+.. function:: void fmprb_const_e(fmprb_t s, long prec)
+
+    Sets *x* to Euler's number `e = \sum_{n=0}^{\infty} 1/n!`, evaluated
+    using the generic hypergeometric series code.
+    The value is cached for repeated use.
+
+.. function:: void fmprb_const_catalan(fmprb_t s, long prec)
+
+    Sets *x* to Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`.
+    The value is cached for repeated use. Uses the generic hypergeometric
+    series code to evaluate the representation
+
+    .. math ::
+
+        C = \sum_{k=0}^{\infty} \frac{(-1)^k 4^{4 k+1}
+            \left(40 k^2+56 k+19\right) [(k+1)!]^2 [(2k+2)!]^3}{(k+1)^3 (2 k+1) [(4k+4)!]^2}
 
 .. function:: void fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
 

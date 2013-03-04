@@ -304,9 +304,11 @@ void fmprb_fib_ui(fmprb_t f, ulong n, long prec);
 
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_pi(fmprb_t x, long prec);
-
 void fmprb_const_sqrt_pi(fmprb_t t, long prec);
 void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
+void fmprb_const_log2(fmprb_t s, long prec);
+void fmprb_const_catalan(fmprb_t s, long prec);
+void fmprb_const_e(fmprb_t s, long prec);
 
 void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 
