@@ -95,13 +95,8 @@ int main()
         fmprb_init(lb);
         fmprb_init(lalb);
 
-        do {
-            fmprb_randtest(a, state, 1 + n_randint(state, 400), 400);
-        } while (fmprb_contains_nonpositive(a));
-
-        do {
-            fmprb_randtest(b, state, 1 + n_randint(state, 400), 400);
-        } while (fmprb_contains_nonpositive(a));
+        fmprb_randtest(a, state, 1 + n_randint(state, 400), 400);
+        fmprb_randtest(b, state, 1 + n_randint(state, 400), 400);
 
         fmprb_log(la, a, prec);
         fmprb_log(lb, b, prec);
