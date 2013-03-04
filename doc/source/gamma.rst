@@ -50,11 +50,14 @@ Evaluation using Taylor series
 Evaluation using the Stirling series
 --------------------------------------------------------------------------------
 
-.. function :: void gamma_stirling_choose_param(int * reflect, long * r, long * n, double x, double y, double beta, int allow_reflection, long prec)
+.. function:: void gamma_stirling_choose_param_fmprb(int * reflect, long * r, long * n, const fmprb_t x, int allow_reflection, int digamma, long prec)
 
-    Uses double precision arithmetic to compute parameters `r`, `n` such that
-    the remainder in the Stirling series with `z = x+yi`
-    approximately is bounded by `2^{-\mathrm{prec}}`.
+.. function:: void gamma_stirling_choose_param_fmpcb(int * reflect, long * r, long * n, const fmprb_t x, int allow_reflection, int digamma, long prec)
+
+    Compute parameters `r`, `n` such that the remainder in the Stirling
+    series with `z = x+yi` approximately is bounded by `2^{-\mathrm{prec}}`.
+    If *digamma* is nonzero, the calculation is done for the digamma
+    function.
 
     The parameter `n` is the truncation point in the asymptotic
     Stirling series. If `|z|` is too small for the Stirling series
@@ -65,7 +68,8 @@ Evaluation using the Stirling series
     If *allow_reflection* is nonzero, the *reflect* flag is set if `z`
     should be replaced with `1-z` using the reflection formula.
 
-    Note that this function does not guarantee the error bound rigorously;
+    This function uses double precision arithmetic internally,
+    and does not guarantee the error bound rigorously;
     a rigorous error bound, which also accounts for the radius of `z`,
     is computed a posteriori when evaluating the Stirling series.
     However, in practice, this function does estimate the bound
@@ -79,14 +83,14 @@ Evaluation using the Stirling series
     used to reduce the number of Bernoulli numbers that have to be
     precomputed, at the expense of slower repeated evaluation.
 
-.. function :: void gamma_stirling_coeff(fmprb_t b, ulong k, long prec)
+.. function :: void gamma_stirling_coeff(fmprb_t b, ulong k, int digamma, long prec)
 
-    Sets `b = B_{2k} / (2k (2k-1))`, rounded to *prec* bits.
-    Assumes that the Bernoulli number has been precomputed.
+    Sets `b = B_{2k} / (2k (2k-1))`, rounded to *prec* bits, or if *digamma*
+    is nonzero, sets `b = B_{2k} / (2k)`.
 
-.. function :: void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long n, long prec)
+.. function :: void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long n, int digamma, long prec)
 
-.. function :: void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long n, long prec)
+.. function :: void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long n, int digamma, long prec)
 
     Evaluates the Stirling series
 
@@ -101,13 +105,19 @@ Evaluation using the Stirling series
 
         t_k = \frac{B_{2k}}{2k(2k-1)z^{2k-1}}.
 
-    The bound
+    If *digamma* is nonzero, the derivative of this series (i.e. the
+    expansion for the digamma function) is evaluated.
+
+    The error bound
 
     .. math ::
 
-        |R(n,z)| \le \frac{t_n}{\cos(0.5 \arg(z))^{2n}}
+        |R(n,z)| \le \frac{|t_n|}{\cos(0.5 \arg(z))^{2n}}
 
-    is included in the radius of the output.
+    is included in the output (when evaluating the digamma function, the
+    expression is the same except that `t_n` changes to the
+    differentiated term and the exponent `2n` changes to `2n+1`
+    (section 5.11 in [NIST2012]_).
 
 
 Rising factorials
@@ -153,9 +163,11 @@ Rising factorials
     and evaluating each factor `f(x + \mathrm{step} \, k)`
     using rectangular splitting. At very high precision, if `x` is a
     full-precision number, this asymptotically reduces the number of
-    full-precision multiplications required.
+    full-precision multiplications required. If the *step* parameter
+    is set to zero, a default value is used.
 
-    The function *gamma_rising_fmprb_ui_bsplit* automatically chooses
+    The functions *gamma_rising_fmprb_ui_bsplit* and
+    *gamma_rising_fmpcb_ui_bsplit* automatically choose
     an algorithm depending on the inputs.
 
 .. function :: void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
@@ -169,6 +181,31 @@ Rising factorials
     full-precision number, the precision is at least 100000 bits,
     and *n* is of the same order of magnitude as (perhaps slightly
     smaller than) the number of bits.
+
+.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec)
+
+.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
+
+.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
+.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec)
+
+.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+
+    Sets `y` to the harmonic sum `1/x + 1/(x+1) + \ldots + 1/(x+n-1)`,
+    computed using division-avoiding binary splitting.
+
+    The *rectangular* version processes *step* terms at a time in
+    analogy with the rising factorial algorithm.
+    Letting `f(t) = t (t+1) (t+2) \cdots (t+n-1)`, we have
+    `1/x + \ldots + 1/(x+n-1) = f'(x) / f(x)`.
+    If the *step* parameter is set to zero, a default value is used.
+
+    The functions *gamma_harmonic_sum_fmprb_ui_bsplit* and
+    *gamma_harmonic_sum_fmpcb_ui_bsplit* automatically choose
+    an algorithm depending on the inputs.
 
 
 Rational arguments

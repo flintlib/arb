@@ -657,11 +657,19 @@ Gamma function
 
 .. function:: void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
 
+    Sets `y = \Gamma(x)`, the gamma function.
+
 .. function:: void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets  `y = 1/\Gamma(x)`, avoiding division by zero at the poles
+    of the gamma function.
 
 .. function:: void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
 
-    Sets, respectively, `y = \Gamma(x)`, `y = 1/\Gamma(x)`,
-    `y = \log \Gamma(x)`. These functions are simple wrappers for the
-    Stirling series code in the *gamma* module.
+    Sets `y = \log \Gamma(x)`. The complex branch structure is assumed,
+    so if `x \le 0`, the result is an indeterminate interval.
+
+.. function:: void fmprb_digamma(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets `y = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
 
