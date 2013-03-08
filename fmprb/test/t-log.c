@@ -46,7 +46,7 @@ int main()
         fmprb_init(a);
         fmprb_init(b);
         fmpq_init(q);
-        mpfr_init2(t, prec + 200);
+        mpfr_init2(t, prec + 300);
 
         do {
             fmprb_randtest(a, state, 1 + n_randint(state, 200), 10);
