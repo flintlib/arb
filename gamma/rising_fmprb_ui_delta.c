@@ -96,7 +96,7 @@ gamma_rising_fmprb_ui_delta(fmprb_t y, const fmprb_t x, ulong n, ulong m, long p
     if (m == 0)
     {
         ulong m1, m2;
-        m1 = 0.04 * pow(wp, 0.65);
+        m1 = 0.2 * pow(wp, 0.4);
         m2 = n_sqrt(n);
         m = FLINT_MIN(m1, m2);
     }
