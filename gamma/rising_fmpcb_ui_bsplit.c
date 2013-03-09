@@ -28,11 +28,9 @@
 void
 gamma_rising_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
 {
-    if (n < 8 || fmpcb_bits(x) < prec / 8)
+    if (prec < 256 || n < 8 || fmpcb_bits(x) < prec / 8)
         gamma_rising_fmpcb_ui_bsplit_simple(y, x, n, prec);
-    else if (prec < 250 || n < 250000 / prec)
-        gamma_rising_fmpcb_ui_bsplit_eight(y, x, n, prec);
     else
-        gamma_rising_fmpcb_ui_bsplit_rectangular(y, x, n, 0, prec);
+        gamma_rising_fmpcb_ui_delta(y, x, n, 0, prec);
 }
 

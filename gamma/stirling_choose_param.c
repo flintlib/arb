@@ -27,7 +27,7 @@
 #include "bernoulli.h"
 
 /* tuning factor */
-#define GAMMA_STIRLING_BETA 0.23
+#define GAMMA_STIRLING_BETA 0.27
 
 static __inline__ long
 _fmpr_mag(const fmpr_t x)

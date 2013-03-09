@@ -81,6 +81,9 @@ void gamma_rising_fmprb_ui_bsplit_eight(fmprb_t y, const fmprb_t x, ulong n, lon
 void gamma_rising_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec);
 void gamma_rising_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec);
 
+void gamma_rising_fmprb_ui_delta(fmprb_t y, const fmprb_t x, ulong n, ulong m, long prec);
+void gamma_rising_fmpcb_ui_delta(fmpcb_t y, const fmpcb_t x, ulong n, ulong m, long prec);
+
 void gamma_rising_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 void gamma_rising_fmpcb_ui_bsplit_eight(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 void gamma_rising_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec);

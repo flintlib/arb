@@ -170,6 +170,43 @@ Rising factorials
     *gamma_rising_fmpcb_ui_bsplit* automatically choose
     an algorithm depending on the inputs.
 
+.. function :: void gamma_rising_fmprb_ui_delta(fmprb_t y, const fmprb_t x, ulong n, ulong m, long prec)
+
+.. function :: void gamma_rising_fmpcb_ui_delta(fmpcb_t y, const fmpcb_t x, ulong n, ulong m, long prec)
+
+    Sets `y` to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
+    computed as a product of partial products
+    `(x+k)(x+k+1)\cdots(x+k+m-1)`. Each partial product is obtained
+    from the previous by using a precomputed table of powers of `x` to
+    evaluate the difference
+
+    .. math ::
+
+        \Delta_m(x,k) = (x+k+m)_{(m)} - (x+k)_{(m)}.
+
+    The instance `m = 4` of this algorithm was used by Smith ([Smi2001]_),
+    but we generalize it to a variable `m` which can be chosen nearly
+    optimally depending on the precision and `n`.
+
+    The polynomials `\Delta_m(x,k) \in \mathbb{Z}[k][x]` are generated dynamically.
+    Expanding the rising factorials, applying the binomial theorem
+    a couple of times, and doing several rearrangements of the sums, we
+    find the closed form
+
+    .. math ::
+
+        \Delta_m(x,k) = \sum_{v=0}^{m-1} x^v \sum_{i=0}^{m-v-1} k^i C_m(v,i),
+
+    where
+
+    .. math ::
+
+        C_m(v,i) = \sum_{j=i+1}^{m-v} m^{j-i} \left[{m \atop v+j}\right] {{v+j} \choose v} {j \choose i}
+
+    in which the square bracket denotes an unsigned Stirling number
+    of the first kind.
+
+
 .. function :: void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
 
     Sets `y` to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`,
