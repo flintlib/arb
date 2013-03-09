@@ -39,7 +39,7 @@ _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z,
         fmpcb_set_round_fmprb(y, poly + 0, prec);
         fmpcb_zero(z);
     }
-    else if (fmprb_is_zero(x))
+    else if (fmpcb_is_zero(x))
     {
         fmpcb_set_round_fmprb(y, poly + 0, prec);
         fmpcb_set_round_fmprb(z, poly + 1, prec);
@@ -52,7 +52,7 @@ _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z,
     }
     else
     {
-        fmprb_t t, u, v;
+        fmpcb_t t, u, v;
         long i;
 
         fmpcb_init(t);
