@@ -25,8 +25,6 @@
 
 #include "fmprb.h"
 
-/* TODO: handle infinities; large shift efficiently */
-
 int
 fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
 {
@@ -37,23 +35,35 @@ fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
     else
     {
         fmpr_t t;
-        int result = 0;
+        fmpr_struct tmp[3];
+        int result;
 
         fmpr_init(t);
+        fmpr_init(tmp + 0);
+        fmpr_init(tmp + 1);
+        fmpr_init(tmp + 2);
 
-        fmpr_add(t, fmprb_midref(x), fmprb_radref(x),
-            FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        /* y >= xm - xr  <=>  0 >= xm - xr - y */
+        fmpr_set(tmp + 0, fmprb_midref(x));
+        fmpr_neg(tmp + 1, fmprb_radref(x));
+        fmpr_neg(tmp + 2, y);
+        fmpr_sum(t, tmp, 3, 30, FMPR_RND_DOWN);
+        result = (fmpr_sgn(t) <= 0);
 
-        if (fmpr_cmp(y, t) <= 0)
+        if (result)
         {
-            fmpr_sub(t, fmprb_midref(x), fmprb_radref(x),
-                FMPR_PREC_EXACT, FMPR_RND_DOWN);
-
-            if (fmpr_cmp(y, t) >= 0)
-                result = 1;
+            /* y <= xm + xr  <=>  0 <= xm + xr - y */
+            fmpr_neg(tmp + 1, tmp + 1);
+            fmpr_sum(t, tmp, 3, 30, FMPR_RND_DOWN);
+            result = (fmpr_sgn(t) >= 0);
         }
 
         fmpr_clear(t);
+        fmpr_clear(tmp + 0);
+        fmpr_clear(tmp + 1);
+        fmpr_clear(tmp + 2);
+
         return result;
     }
 }
+

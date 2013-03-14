@@ -1,6 +1,9 @@
 * Make sure that excessive shifts in add/sub are detected
-  with exact precision. Check correctness of overlaps/contains
+  with exact precision. Write tests for correctness of overlaps/contains
   in huge-exponent cases.
+
+* Work out semantics for comparisons/overlap/containment checks
+  when NaNs are involved, and write test code.
 
 * Fix missing/wrong error bounds currently used in the code (see TODO/XXX).
 
