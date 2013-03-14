@@ -387,6 +387,15 @@ Arithmetic
     can be  *FMPR_PREC_EXACT* to perform an exact addition, provided that the
     result fits in memory.
 
+.. function:: long fmpr_sum(fmpr_t s, const fmpr_struct * terms, long len, long prec, fmpr_rnd_t rnd)
+
+    Sets *s* to the sum of the array *terms* of length *len*, rounded to *prec* bits
+    in the direction *rnd*. The sum is computed as if done without any intermediate
+    rounding error, with only a single rounding applied to the final result.
+    Unlike repeated calls to *fmpr_add*, this function does not overflow if the
+    magnitudes of the terms are far apart. Warning: this function is implemented
+    naively, and the running time is quadratic with respect to *len* in the worst case.
+
 .. function:: long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 
 .. function:: long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
