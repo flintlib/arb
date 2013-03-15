@@ -61,7 +61,7 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
 {
     long wp, powprec;
     double powmag;
-    fmprb_t t;
+    fmprb_t t, u;
     ulong M;
     mp_limb_t p;
 
@@ -75,6 +75,7 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
     wp = prec + FLINT_BIT_COUNT(prec) + (prec/s) + 4;
 
     fmprb_init(t);
+    fmprb_init(u);
 
     /* z = 1 - 2^(-s) */
     fmprb_set_ui(z, 1UL);
@@ -95,8 +96,10 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
                 break;
 
         M = p;
+
         fmprb_ui_pow_ui(t, p, s, powprec);
-        fmprb_div(t, z, t, powprec);
+        fmprb_set_round(u, z, powprec);
+        fmprb_div(t, u, t, powprec);
         fmprb_sub(z, z, t, wp);
 
         p = n_nextprime(p, 0);
@@ -104,6 +107,7 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
 
     add_error(z, M, s);
     fmprb_clear(t);
+    fmprb_clear(u);
 }
 
 void
