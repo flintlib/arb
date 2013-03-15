@@ -84,7 +84,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     if (!fmprb_get_unique_fmpz(numer, z))
     {
         printf("warning: insufficient precision for B_%ld\n", n);
-        _arith_bernoulli_number(numer, denom, n);
+        _bernoulli_fmpq_ui(numer, denom, n);
     }
 
     /* update prefactor */

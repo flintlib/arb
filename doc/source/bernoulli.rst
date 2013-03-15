@@ -62,3 +62,50 @@ Bounding
     comfortably compute `B_n` exactly. It aborts if `n` is so large that
     internal overflow occurs.
 
+
+Computation of single Bernoulli numbers
+-------------------------------------------------------------------------------
+
+.. function:: void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec)
+
+    Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
+    computed using the formula `B_{2n} = (-1)^{n+1} 2 (2n)! \zeta(2n) / (2 \pi)^n`.
+
+    To avoid potential infinite recursion, we explicitly call the
+    Euler product implementation of the zeta function.
+    We therefore assume that the precision is small
+    enough and `n` large enough for the Euler product to converge
+    rapidly (otherwise this function will effectively hang).
+
+.. function:: void bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec)
+
+    Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
+    computed by a division of the exact fraction if `B_n` is in
+    the global cache or the exact numerator roughly is larger than
+    *prec* bits, and using *bernoulli_fmprb_ui_zeta*
+    otherwise. This function reads `B_n` from the global cache
+    if the number is already cached, but does not automatically extend
+    the cache by itself.
+
+.. function:: void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
+
+    Sets *num* and *den* to the reduced numerator and denominator
+    of the Bernoulli number `B_n`.
+
+    This function computes the denominator `d` using von Staudt-Clausen
+    theorem, numerically approximates `B_n` using *bernoulli_fmprb_ui_zeta*,
+    and then rounds `d B_n` to the correct numerator.
+    If the working precision is insufficient to determine the numerator,
+    the function prints a warning message and retries with increased
+    precision (this should not be expected to happen).
+
+.. function:: void _bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
+
+.. function:: void bernoulli_fmpq_ui(fmpq_t b, ulong n)
+
+    Computes the Bernoulli number `B_n` as an exact fraction, for an
+    isolated integer `n`. This function reads `B_n` from the global cache
+    if the number is already cached, but does not automatically extend
+    the cache by itself.
+
+

@@ -19,44 +19,55 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "zeta.h"
 #include "bernoulli.h"
+#include "zeta.h"
+
+void fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec);
 
 void
-fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec)
 {
-    fmpq_t b;
-    fmprb_t t, f;
-    long wp;
+    long wp, piwp;
 
-    if (n % 2)
+    fmprb_t t, u;
+
+    if (n < 10 || n % 2 != 0)
         abort();
 
-    wp = prec + FLINT_BIT_COUNT(n) + 2;
+    wp = prec + 8;
+    piwp = wp + 2*FLINT_BIT_COUNT(n);
 
-    fmpq_init(b);
     fmprb_init(t);
-    fmprb_init(f);
+    fmprb_init(u);
 
-    bernoulli_fmpq_ui(b, n);
-    fmprb_set_fmpq(x, b, wp);
-
-    fmprb_const_pi(t, wp);
+    /* |B_n| = 2 * n! / (2*pi)^n * zeta(n) */
+    fmprb_fac_ui(b, n, wp);
+    fmprb_const_pi(t, piwp);
     fmprb_mul_2exp_si(t, t, 1);
-    fmprb_pow_ui(t, t, n, wp);
+    fmprb_pow_ui(t, t, n, piwp);
 
-    fmprb_fac_ui(f, n, wp);
+    if (n > 0.7 * wp)
+    {
+        fmprb_zeta_ui_asymp(u, n, wp);
+        fmprb_mul(b, b, u, wp);
+    }
+    else
+    {
+        fmprb_zeta_inv_ui_euler_product(u, n, wp);
+        fmprb_mul(t, t, u, wp);
+    }
 
-    fmprb_div(t, t, f, wp);
-    fmprb_mul(x, x, t, wp);
-    fmprb_abs(x, x);
-    fmprb_mul_2exp_si(x, x, -1);
+    fmprb_div(b, b, t, prec);
+    fmprb_mul_2exp_si(b, b, 1);
+
+    if (n % 4 == 0)
+        fmprb_neg(b, b);
 
     fmprb_clear(t);
-    fmprb_clear(f);
-    fmpq_clear(b);
+    fmprb_clear(u);
 }
+

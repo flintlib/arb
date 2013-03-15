@@ -19,44 +19,45 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "zeta.h"
 #include "bernoulli.h"
 
 void
-fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+_bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
 {
-    fmpq_t b;
-    fmprb_t t, f;
-    long wp;
+    long prec;
+    fmprb_t t;
+
+    arith_bernoulli_number_denom(den, n);
 
     if (n % 2)
-        abort();
+    {
+        fmpz_set_si(num, -(n == 1));
+        return;
+    }
 
-    wp = prec + FLINT_BIT_COUNT(n) + 2;
+    if (n < BERNOULLI_SMALL_NUMER_LIMIT)
+    {
+        fmpz_set_si(num, _bernoulli_numer_small[n / 2]);
+        return;
+    }
 
-    fmpq_init(b);
     fmprb_init(t);
-    fmprb_init(f);
 
-    bernoulli_fmpq_ui(b, n);
-    fmprb_set_fmpq(x, b, wp);
+    for (prec = arith_bernoulli_number_size(n) + fmpz_bits(den) + 2; ; prec += 20)
+    {
+        bernoulli_fmprb_ui_zeta(t, n, prec);
+        fmprb_mul_fmpz(t, t, den, prec);
 
-    fmprb_const_pi(t, wp);
-    fmprb_mul_2exp_si(t, t, 1);
-    fmprb_pow_ui(t, t, n, wp);
+        if (fmprb_get_unique_fmpz(num, t))
+            break;
 
-    fmprb_fac_ui(f, n, wp);
-
-    fmprb_div(t, t, f, wp);
-    fmprb_mul(x, x, t, wp);
-    fmprb_abs(x, x);
-    fmprb_mul_2exp_si(x, x, -1);
+        printf("warning: %ld insufficient precision for Bernoulli number %lu\n", prec, n);
+    }
 
     fmprb_clear(t);
-    fmprb_clear(f);
-    fmpq_clear(b);
 }
+

@@ -19,44 +19,39 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "zeta.h"
 #include "bernoulli.h"
 
 void
-fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec)
 {
-    fmpq_t b;
-    fmprb_t t, f;
-    long wp;
+    if (n < bernoulli_cache_num)
+    {
+        fmprb_set_fmpq(b, bernoulli_cache + n, prec);
+    }
+    else
+    {
+        int use_frac;
 
-    if (n % 2)
-        abort();
+        use_frac = (n < BERNOULLI_SMALL_NUMER_LIMIT) || (n % 2 != 0);
+        if (!use_frac)
+            use_frac = (prec > global_prec(n));
 
-    wp = prec + FLINT_BIT_COUNT(n) + 2;
-
-    fmpq_init(b);
-    fmprb_init(t);
-    fmprb_init(f);
-
-    bernoulli_fmpq_ui(b, n);
-    fmprb_set_fmpq(x, b, wp);
-
-    fmprb_const_pi(t, wp);
-    fmprb_mul_2exp_si(t, t, 1);
-    fmprb_pow_ui(t, t, n, wp);
-
-    fmprb_fac_ui(f, n, wp);
-
-    fmprb_div(t, t, f, wp);
-    fmprb_mul(x, x, t, wp);
-    fmprb_abs(x, x);
-    fmprb_mul_2exp_si(x, x, -1);
-
-    fmprb_clear(t);
-    fmprb_clear(f);
-    fmpq_clear(b);
+        if (use_frac)
+        {
+            fmpq_t t;
+            fmpq_init(t);
+            bernoulli_fmpq_ui(t, n);
+            fmprb_set_fmpq(b, t, prec);
+            fmpq_clear(t);
+        }
+        else
+        {
+            bernoulli_fmprb_ui_zeta(b, n, prec);
+        }
+    }
 }
+

@@ -113,5 +113,32 @@ void bernoulli_rev_clear(bernoulli_rev_t iter);
 
 long bernoulli_bound_2exp_si(ulong n);
 
+
+void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec);
+
+void bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec);
+
+void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n);
+
+static __inline__ void
+_bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
+{
+    if (n < bernoulli_cache_num)
+    {
+        fmpz_set(num, fmpq_numref(bernoulli_cache + n));
+        fmpz_set(den, fmpq_denref(bernoulli_cache + n));
+    }
+    else
+    {
+        _bernoulli_fmpq_ui_zeta(num, den, n);
+    }
+}
+
+static __inline__ void
+bernoulli_fmpq_ui(fmpq_t b, ulong n)
+{
+    _bernoulli_fmpq_ui(fmpq_numref(b), fmpq_denref(b), n);
+}
+
 #endif
 

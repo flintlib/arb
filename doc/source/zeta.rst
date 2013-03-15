@@ -37,8 +37,7 @@ Integer zeta values
 
 .. function:: void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
 
-    Computes `\zeta(n)` for even *n* via the corresponding Bernoulli number,
-    which is generated using FLINT.
+    Computes `\zeta(n)` for even *n* via the corresponding Bernoulli number.
 
 .. function:: void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec)
 
