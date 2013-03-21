@@ -42,14 +42,6 @@ sense for (Lipschitz) continuous functions, and
 trying to approximate functions close to singularities might result in
 slow convergence, or failure to converge.
 
-**Warning**: some methods for transcendental functions and constants
-currently perform the error propagation in a non-rigorous way, due to the
-implementation being incomplete (in some cases, a
-rigorous error bound for the algorithm or function might not
-be known at all).
-This should be indicated in the documentation for each function.
-
-
 Types, macros and constants
 -------------------------------------------------------------------------------
 
