@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("const_euler_brent_mcmillan....");
+    printf("const_euler....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -45,7 +45,7 @@ int main()
         fmprb_init(r);
         mpfr_init2(s, prec + 1000);
 
-        fmprb_const_euler_brent_mcmillan(r, prec);
+        fmprb_const_euler(r, prec);
         mpfr_const_euler(s, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))

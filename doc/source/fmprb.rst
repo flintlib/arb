@@ -655,6 +655,32 @@ Constants
     using the generic hypergeometric series code.
     The value is cached for repeated use.
 
+.. function:: void fmprb_const_euler(fmprb_t res, long prec)
+
+    Sets *x* to Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
+    where `H_k` denotes a harmonic number. The value is cached for repeated use.
+    Uses the Brent-McMillan formula ([BM1980]_,  [MPFR2012]_)
+
+    .. math ::
+
+        \gamma = \frac{S_0(2n) - K_0(2n)}{I_0(2n)} - \log(n)
+
+    in which `n` is a free parameter and
+
+    .. math ::
+
+        S_0(x) = \sum_{k=0}^{\infty} \frac{H_k}{(k!)^2} \left(\frac{x}{2}\right)^{2k}, \quad
+        I_0(x) = \sum_{k=0}^{\infty} \frac{1}{(k!)^2} \left(\frac{x}{2}\right)^{2k}
+
+        2x I_0(x) K_0(x) \sim \sum_{k=0}^{\infty} \frac{[(2k)!]^3}{(k!)^4 8^{2k} x^{2k}}.
+
+    The first two series are evaluated simultaneously, and the error
+    is easily bounded.
+    The third series is a divergent asymptotic expansion. With some work, it
+    can be shown (to be published) that the error when `x = 2n` and
+    the sum goes up to `k = 2n-1` is bounded by `8e^{-4n}`.
+    Since `I_0(2n) \sim e^{2n} / n^{1/2}`, the final error is `O(e^{-8n})`.
+
 .. function:: void fmprb_const_catalan(fmprb_t s, long prec)
 
     Sets *x* to Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`.

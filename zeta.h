@@ -31,7 +31,6 @@
 #include "fmprb.h"
 #include "fmpcb.h"
 
-void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec);
 void fmprb_const_zeta3_bsplit(fmprb_t x, long prec);
 
 void fmprb_const_khinchin(fmprb_t K, long prec);

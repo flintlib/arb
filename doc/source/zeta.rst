@@ -173,15 +173,6 @@ Integer zeta values
 Related constants
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_const_euler_brent_mcmillan(fmprb_t res, long prec)
-
-    Sets *x* to Euler's constant `\gamma`, computed using the second
-    Bessel function formula of Brent and McMillan ([BM1980]_,  [MPFR2012]_).
-    Brent and McMillan conjectured that the error depending
-    on the internal parameter *n* is of order `O(e^{-8n})`. Brent has
-    recently proved that this bound is correct, but without determining
-    an explicit big-O factor [Bre2010]_.
-
 .. function:: void fmprb_const_khinchin(fmprb_t res, long prec)
 
     Sets *res* to Khinchin's constant `K_0`, computed as

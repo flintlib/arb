@@ -37,7 +37,7 @@ fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)
     _fmprb_poly_set_length(z, n);
 
     if (n > 0) fmprb_zero(z->coeffs);
-    if (n > 1) fmprb_const_euler_brent_mcmillan(z->coeffs + 1, prec);
+    if (n > 1) fmprb_const_euler(z->coeffs + 1, prec);
     if (n > 2) fmprb_zeta_ui_vec(z->coeffs + 2, 2, n - 2, prec);
 
     for (i = 2; i < n; i++)
