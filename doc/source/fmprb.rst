@@ -698,6 +698,8 @@ Gamma function
 
 .. function:: void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
 
+.. function:: void fmprb_gamma_fmpq(fmprb_t y, const fmpq_t x, long prec)
+
     Sets `y = \Gamma(x)`, the gamma function.
 
 .. function:: void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec)

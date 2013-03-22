@@ -33,6 +33,48 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
     long r, n, wp;
     fmprb_t t, u, v;
 
+    if (fmprb_is_exact(x))
+    {
+        const fmpr_struct * mid = fmprb_midref(x);
+
+        if (fmpr_is_special(mid))
+        {
+            if (!inverse && fmpr_is_pos_inf(mid))
+            {
+                fmprb_set(y, x);
+            }
+            else if (fmpr_is_nan(mid) || fmpr_is_neg_inf(mid) || !inverse)
+            {
+                fmpr_nan(fmprb_midref(y));
+                fmpr_pos_inf(fmprb_radref(y));
+            }
+            else
+            {
+                fmprb_zero(y);
+            }
+            return;
+        }
+        else
+        {
+            const fmpz exp = *fmpr_expref(mid);
+            const fmpz man = *fmpr_manref(mid);
+
+            /* fast gamma(n), gamma(n/2) or gamma(n/4) */
+            if (!COEFF_IS_MPZ(exp) && (exp >= -2) &&
+                ((double) fmpz_bits(&man) + exp < prec))
+            {
+                fmpq_t a;
+                fmpq_init(a);
+                fmpr_get_fmpq(a, mid);
+                fmprb_gamma_fmpq(y, a, prec + 2 * inverse);
+                if (inverse)
+                    fmprb_ui_div(y, 1, y, prec);
+                fmpq_clear(a);
+                return;
+            }
+        }
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     gamma_stirling_choose_param_fmprb(&reflect, &r, &n, x, 1, 0, wp);
