@@ -245,6 +245,9 @@ void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
 void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec);
 
+void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+
+
 void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec);

@@ -349,9 +349,7 @@ fmpcb_conj(fmpcb_t z, const fmpcb_t x)
 static __inline__ void
 fmpcb_abs(fmprb_t u, const fmpcb_t z, long prec)
 {
-    fmprb_mul(u, fmpcb_realref(z), fmpcb_realref(z), prec);
-    fmprb_addmul(u, fmpcb_imagref(z), fmpcb_imagref(z), prec);
-    fmprb_sqrtpos(u, u, prec);
+    fmprb_hypot(u, fmpcb_realref(z), fmpcb_imagref(z), prec);
 }
 
 static __inline__ void

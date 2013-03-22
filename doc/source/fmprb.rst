@@ -434,6 +434,10 @@ Powers and roots
     interval), and producing an output interval not containing any
     negative numbers (unless the radius is infinite).
 
+.. function:: void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+    Sets *z* to `\sqrt{x^2 + y^2}`.
+
 .. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
