@@ -314,6 +314,14 @@ Elementary functions
 
     Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
 
+.. function:: void fmpcb_sqrt(fmpcb_t r, const fmpcb_t z, long prec)
+
+    Sets *r* to the square root of *z*.
+    If either the real or imaginary part is exactly zero, only
+    a single real square root is needed. Generally, we use the formula
+    `\sqrt{a+bi} = u/2 + ib/u, u = \sqrt{2(|a+bi|+a)}`,
+    requiring two real square root extractions.
+
 .. function:: void fmpcb_invroot_newton(fmpcb_t r, const fmpcb_t a, ulong m, const fmpcb_t r0, long startprec, long prec)
 
     Given one inverse *m*-th root *r0* (with a valid error bound) of the complex
