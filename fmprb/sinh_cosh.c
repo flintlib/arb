@@ -19,194 +19,108 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
 
-long
-_fmpr_sinh(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+void
+fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
 {
-    if (fmpr_is_special(x))
+    if (fmprb_is_zero(x))
     {
-        if (fmpr_is_zero(x))
-            fmpr_zero(y);
-        else if (fmpr_is_inf(x))
-            fmpr_set(y, x);
-        else
-            fmpr_nan(y);
-
-        return FMPR_RESULT_EXACT;
+        fmprb_zero(s);
     }
     else
     {
-        long r;
-        CALL_MPFR_FUNC(r, mpfr_sinh, y, x, prec, rnd);
-        return r;
-    }
-}
+        fmprb_t t;
+        long wp = prec + 4;
 
-long
-_fmpr_cosh(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
-{
-    if (fmpr_is_special(x))
-    {
-        if (fmpr_is_zero(x))
-            fmpr_one(y);
-        else if (fmpr_is_inf(x))
-            fmpr_abs(y, x);
+        fmprb_init(t);
+
+        if (fmpr_cmpabs_2exp_si(fmprb_midref(x), -1) <= 0)
+        {
+            fmprb_mul_2exp_si(s, x, 1);
+            fmprb_expm1(s, s, wp);
+            fmprb_add_ui(t, s, 1, wp);
+            fmprb_sqrt(t, t, wp);
+            fmprb_div(s, s, t, prec);
+        }
         else
-            fmpr_nan(y);
+        {
+            fmprb_exp(s, x, wp);
+            fmprb_ui_div(t, 1, s, wp);
+            fmprb_sub(s, s, t, prec);
+        }
 
-        return FMPR_RESULT_EXACT;
-    }
-    else
-    {
-        long r;
-        CALL_MPFR_FUNC(r, mpfr_cosh, y, x, prec, rnd);
-        return r;
+        fmprb_mul_2exp_si(s, s, -1);
+        fmprb_clear(t);
     }
 }
 
 void
-_fmpr_sinh_cosh(long * r1, long * r2, fmpr_t s, fmpr_t c, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
 {
-    if (fmpr_is_special(x))
+    if (fmprb_is_zero(x))
     {
-        if (fmpr_is_zero(x))
-        {
-            fmpr_zero(s);
-            fmpr_one(c);
-        }
-        else if (fmpr_is_pos_inf(x))
-        {
-            fmpr_pos_inf(s);
-            fmpr_pos_inf(c);
-        }
-        else if (fmpr_is_neg_inf(x))
-        {
-            fmpr_neg_inf(s);
-            fmpr_pos_inf(c);
-        }
-        else
-        {
-            fmpr_nan(s);
-            fmpr_nan(c);
-        }
-
-        *r1 = *r2 = FMPR_RESULT_EXACT;
+        fmprb_one(c);
     }
     else
     {
-        CALL_MPFR_FUNC_2X1(*r1, *r2, mpfr_sinh_cosh, s, c, x, prec, rnd);
+        fmprb_t t;
+        long wp = prec + 4;
+
+        fmprb_init(t);
+
+        fmprb_exp(c, x, wp);
+        fmprb_ui_div(t, 1, c, wp);
+        fmprb_add(c, c, t, prec);
+        fmprb_mul_2exp_si(c, c, -1);
+
+        fmprb_clear(t);
     }
-}
-
-void
-fmprb_sinh(fmprb_t z, const fmprb_t x, long prec)
-{
-    long r;
-
-    if (fmprb_is_exact(x))
-    {
-        r = _fmpr_sinh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
-    }
-    else
-    {
-        fmpr_t t;
-        fmpr_init(t);
-
-        /* the propagated error is bounded by sup(cosh([a,b]))*r */
-        if (fmpr_sgn(fmprb_midref(x)) >= 0)
-            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-        else
-            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        _fmpr_cosh(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        r = _fmpr_sinh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
-            FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        fmpr_clear(t);
-    }
-
-    fmprb_adjust(z);
-}
-
-void
-fmprb_cosh(fmprb_t z, const fmprb_t x, long prec)
-{
-    long r;
-
-    if (fmprb_is_exact(x))
-    {
-        r = _fmpr_cosh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
-    }
-    else
-    {
-        fmpr_t t;
-        fmpr_init(t);
-
-        /* the propagated error is bounded by sup(|sinh([a,b])|)*r */
-        if (fmpr_sgn(fmprb_midref(x)) >= 0)
-            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-        else
-            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        _fmpr_sinh(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        r = _fmpr_cosh(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
-            FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        fmpr_clear(t);
-    }
-
-    fmprb_adjust(z);
 }
 
 void
 fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
 {
-    long r1, r2;
-
-    if (fmprb_is_exact(x))
+    if (fmprb_is_zero(x))
     {
-        _fmpr_sinh_cosh(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(s), fmprb_midref(s), r1);
-        fmpr_set_error_result(fmprb_radref(c), fmprb_midref(c), r2);
+        fmprb_zero(s);
+        fmprb_one(c);
     }
     else
     {
-        fmpr_t t, u;
-        fmpr_init(t);
-        fmpr_init(u);
+        long wp = prec + 4;
 
-        if (fmpr_sgn(fmprb_midref(x)) >= 0)
-            fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmprb_t t, u;
+        fmprb_init(t);
+        fmprb_init(u);
+
+        if (fmpr_cmpabs_2exp_si(fmprb_midref(x), -1) <= 0)
+        {
+            fmprb_mul_2exp_si(t, x, 1);
+            fmprb_expm1(t, t, wp);
+            fmprb_add_ui(u, t, 1, wp);
+            fmprb_sqrt(u, u, wp);
+            fmprb_ui_div(u, 1, u, wp);
+            fmprb_mul(s, t, u, prec);
+            fmprb_add_ui(t, t, 2, wp);
+            fmprb_mul(c, t, u, prec);
+        }
         else
-            fmpr_sub(t, fmprb_radref(x), fmprb_midref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        {
+            fmprb_exp(t, x, wp);
+            fmprb_ui_div(u, 1, t, wp);
+            fmprb_sub(s, t, u, prec);
+            fmprb_add(c, t, u, prec);
+        }
 
-        _fmpr_sinh_cosh(&r1, &r2, t, u, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul(u, u, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        _fmpr_sinh_cosh(&r1, &r2, fmprb_midref(s), fmprb_midref(c), fmprb_midref(x), prec, FMPR_RND_DOWN);
-
-        fmpr_add_error_result(fmprb_radref(s), u, fmprb_midref(s), r1, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_add_error_result(fmprb_radref(c), t, fmprb_midref(c), r2, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        fmpr_clear(t);
-        fmpr_clear(u);
+        fmprb_mul_2exp_si(s, s, -1);
+        fmprb_mul_2exp_si(c, c, -1);
+        fmprb_clear(t);
+        fmprb_clear(u);
     }
-
-    fmprb_adjust(s);
-    fmprb_adjust(c);
 }
 

@@ -583,9 +583,10 @@ Hyperbolic functions
 
 .. function:: void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
 
-    Sets `s = \sinh x`, `c = \cosh x`. Error propagation uses
-    the derivatives of the functions.
-
+    Sets `s = \sinh x`, `c = \cosh x`. If the midpoint of `x` is close
+    to zero and the hyperbolic sine is to be computed,
+    evaluates `(e^{2x}\pm1) / (2e^x)` via :func:`fmprb_expm1`
+    to avoid loss of accuracy. Otherwise evaluates `(e^x \pm e^{-x}) / 2`.
 
 Factorials and other integer functions
 -------------------------------------------------------------------------------
