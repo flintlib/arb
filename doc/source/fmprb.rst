@@ -613,7 +613,7 @@ Factorials and other integer functions
 
 .. function:: void fmprb_fib_ui(fmprb_t f, ulong n, long prec)
 
-    Sets x to the Fibonacci number `F_n`. Uses the binary squaring
+    Sets *f* to the Fibonacci number `F_n`. Uses the binary squaring
     algorithm described in [Tak2000]_.
     Provided that *n* is small enough, an exact Fibonacci number can be
     computed using *FMPR_PREC_EXACT*.
@@ -644,20 +644,20 @@ Constants
 
         \log 2 = \frac{3}{4} \sum_{k=0}^{\infty} \frac{(-1)^k (k!)^2}{2^k (2k+1)!}
 
-.. function:: void fmprb_const_log10(fmprb_t s, long prec)
+.. function:: void fmprb_const_log10(fmprb_t x, long prec)
 
     Sets *x* to `\log 10`. The value is cached for repeated use.
     Uses the generic hypergeometric series code to evaluate the
     Machin-like formula
     `\log 10 = 46 \operatorname{atanh}(1/31) + 34 \operatorname{atanh}(1/49) + 20 \operatorname{atanh}(1/161)`.
 
-.. function:: void fmprb_const_e(fmprb_t s, long prec)
+.. function:: void fmprb_const_e(fmprb_t x, long prec)
 
     Sets *x* to Euler's number `e = \sum_{n=0}^{\infty} 1/n!`, evaluated
     using the generic hypergeometric series code.
     The value is cached for repeated use.
 
-.. function:: void fmprb_const_euler(fmprb_t res, long prec)
+.. function:: void fmprb_const_euler(fmprb_t x, long prec)
 
     Sets *x* to Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
     where `H_k` denotes a harmonic number. The value is cached for repeated use.
@@ -683,7 +683,7 @@ Constants
     the sum goes up to `k = 2n-1` is bounded by `8e^{-4n}`.
     Since `I_0(2n) \sim e^{2n} / n^{1/2}`, the final error is `O(e^{-8n})`.
 
-.. function:: void fmprb_const_catalan(fmprb_t s, long prec)
+.. function:: void fmprb_const_catalan(fmprb_t x, long prec)
 
     Sets *x* to Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`.
     The value is cached for repeated use. Uses the generic hypergeometric
