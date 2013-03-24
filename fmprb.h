@@ -272,6 +272,7 @@ void fmprb_log_ui(fmprb_t z, ulong x, long prec);
 void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
 void fmprb_exp(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_expm1(fmprb_t z, const fmprb_t x, long prec);
 
 void fmprb_sin(fmprb_t s, const fmprb_t x, long prec);
 void fmprb_cos(fmprb_t c, const fmprb_t x, long prec);
@@ -349,6 +350,13 @@ fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
 {
     fmpr_mul_2exp_si(fmprb_midref(y), fmprb_midref(x), e);
     fmpr_mul_2exp_si(fmprb_radref(y), fmprb_radref(x), e);
+}
+
+static __inline__ void
+fmprb_mul_2exp_fmpz(fmprb_t y, const fmprb_t x, const fmpz_t e)
+{
+    fmpr_mul_2exp_fmpz(fmprb_midref(y), fmprb_midref(x), e);
+    fmpr_mul_2exp_fmpz(fmprb_radref(y), fmprb_radref(x), e);
 }
 
 static __inline__ void
@@ -507,6 +515,7 @@ fmprb_bits(const fmprb_t x)
 
 void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err);
 void fmprb_add_error_2exp_si(fmprb_t x, long err);
+void fmprb_add_error_2exp_fmpz(fmprb_t x, const fmpz_t err);
 void fmprb_add_error(fmprb_t x, const fmprb_t error);
 
 void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);

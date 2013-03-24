@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("exp....");
+    printf("expm1....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -52,9 +52,9 @@ int main()
         fmprb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
-        mpfr_exp(t, t, MPFR_RNDN);
+        mpfr_expm1(t, t, MPFR_RNDN);
 
-        fmprb_exp(b, a, prec);
+        fmprb_expm1(b, a, prec);
 
         if (!fmprb_contains_mpfr(b, t))
         {
@@ -64,7 +64,7 @@ int main()
             abort();
         }
 
-        fmprb_exp(a, a, prec);
+        fmprb_expm1(a, a, prec);
 
         if (!fmprb_equal(a, b))
         {
@@ -94,8 +94,8 @@ int main()
 
         fmprb_randtest_precise(a, state, 1 + n_randint(state, 1000), 100);
 
-        fmprb_exp(b, a, prec1);
-        fmprb_exp(c, a, prec2);
+        fmprb_expm1(b, a, prec1);
+        fmprb_expm1(c, a, prec2);
 
         if (!fmprb_overlaps(b, c))
         {
@@ -108,17 +108,15 @@ int main()
 
         fmprb_randtest_precise(b, state, 1 + n_randint(state, 1000), 100);
 
-        /* check exp(a)*exp(b) = exp(a+b) */
-        fmprb_exp(c, a, prec1);
-        fmprb_exp(d, b, prec1);
-        fmprb_mul(c, c, d, prec1);
+        /* compare with exp */
+        fmprb_expm1(c, a, prec1);
 
-        fmprb_add(d, a, b, prec1);
-        fmprb_exp(d, d, prec1);
+        fmprb_exp(d, a, prec1);
+        fmprb_sub_ui(d, d, 1, prec1);
 
         if (!fmprb_overlaps(c, d))
         {
-            printf("FAIL: functional equation\n\n");
+            printf("FAIL: comparison with exp\n\n");
             printf("a = "); fmprb_print(a); printf("\n\n");
             printf("b = "); fmprb_print(b); printf("\n\n");
             printf("c = "); fmprb_print(c); printf("\n\n");

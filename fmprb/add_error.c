@@ -42,6 +42,17 @@ fmprb_add_error_2exp_si(fmprb_t x, long err)
 }
 
 void
+fmprb_add_error_2exp_fmpz(fmprb_t x, const fmpz_t err)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    fmpz_one(fmpr_manref(t));
+    fmpz_set(fmpr_expref(t), err);
+    fmprb_add_error_fmpr(x, t);
+    fmpr_clear(t);
+}
+
+void
 fmprb_add_error(fmprb_t x, const fmprb_t error)
 {
     fmpr_t high;

@@ -214,6 +214,8 @@ Precision and comparisons
 
 .. function:: void fmprb_add_error_2exp_si(fmprb_t x, long e)
 
+.. function:: void fmprb_add_error_2exp_fmpz(fmprb_t x, const fmpz_t e)
+
     Adds `2^e` to the radius of *x*.
 
 .. function:: void fmprb_add_error(fmprb_t x, const fmprb_t err)
@@ -361,6 +363,8 @@ Arithmetic
 
 .. function:: void fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
 
+.. function:: void fmprb_mul_2exp_fmpz(fmprb_t y, const fmprb_t x, const fmpz_t e)
+
     Sets *y* to *x* multiplied by `2^e`.
 
 .. function:: void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
@@ -479,10 +483,11 @@ Exponentials and logarithms
 
     Sets `z = \exp(x)`. Error propagation is done using the following rule:
     the error is largest at `m + r`, and we have
-    `\exp(m+r) - \exp(m) = \exp(m) (\exp(r)-1)`.
-    The last expression is calculated accurately for small radii
-    via *fmpr_expm1*.
+    `\exp(m+r) - \exp(m) = \exp(m) (\exp(r)-1) \le r \exp(m+r)`.
 
+.. function:: void fmprb_expm1(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets `z = \exp(x)-1`, computed accurately when `x \approx 0`.
 
 Trigonometric functions
 -------------------------------------------------------------------------------
