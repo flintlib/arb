@@ -25,31 +25,92 @@
 
 #include "fmprb.h"
 
-long
+static long
 _fmpr_atan(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 {
-    if (fmpr_is_zero(x) || fmpr_is_nan(x))
+    long r;
+    CALL_MPFR_FUNC(r, mpfr_atan, y, x, prec, rnd);
+    return r;
+}
+
+void
+fmprb_atan_fmpr(fmprb_t z, const fmpr_t x, long prec)
+{
+    if (fmpr_is_special(x))
     {
-        fmpr_set(y, x);
-        return FMPR_RESULT_EXACT;
+        if (fmpr_is_zero(x))
+        {
+            fmprb_zero(z);
+        }
+        else if (fmpr_is_nan(x))
+        {
+            fmpr_nan(fmprb_midref(z));
+            fmpr_pos_inf(fmprb_radref(z));
+        }
+        else if (fmpr_is_pos_inf(x))
+        {
+            fmprb_const_pi(z, prec);
+            fmprb_mul_2exp_si(z, z, -1);
+        }
+        else if (fmpr_is_neg_inf(x))
+        {
+            fmprb_const_pi(z, prec);
+            fmprb_mul_2exp_si(z, z, -1);
+            fmprb_neg(z, z);
+        }
     }
     else
     {
         long r;
-        CALL_MPFR_FUNC(r, mpfr_atan, y, x, prec, rnd);
-        return r;
+        fmpz_t mag;
+
+        fmpz_init(mag);
+
+        /* 2^(mag-1) <= |x| < 2^mag */
+        fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+
+        /* atan(x) = x + eps, |eps| < x^3 */
+        if (fmpz_cmp_si(mag, -(prec/3) - 2) < 0)
+        {
+            fmpz_mul_ui(mag, mag, 3);
+            fmprb_set_fmpr(z, x);
+            fmprb_set_round(z, z, prec);
+            fmprb_add_error_2exp_fmpz(z, mag);
+        }
+        /* atan(x) = pi/2 - eps, eps < 1/x <= 2^(1-mag) */
+        /* TODO: also use atan(x) = pi/2 - 1/x + eps, eps < 1/x^3 */
+        else if (fmpz_cmp_si(mag, prec + 2) > 0)
+        {
+            fmpz_neg(mag, mag);
+            fmpz_add_ui(mag, mag, 1);
+            if (fmpr_sgn(x) > 0)
+            {
+                fmprb_const_pi(z, prec);
+            }
+            else
+            {
+                fmprb_const_pi(z, prec);
+                fmprb_neg(z, z);
+            }
+            fmprb_mul_2exp_si(z, z, -1);
+            fmprb_add_error_2exp_fmpz(z, mag);
+        }
+        else
+        {
+            r = _fmpr_atan(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
+            fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+        }
+
+        fmpz_clear(mag);
     }
 }
 
 void
 fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 {
-    long r;
-
     if (fmprb_is_exact(x))
     {
-        r = _fmpr_atan(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+        fmprb_atan_fmpr(z, fmprb_midref(x), prec);
     }
     else
     {
@@ -79,9 +140,8 @@ fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
             fmpr_set(t, fmprb_radref(x));
         }
 
-        r = _fmpr_atan(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), t, fmprb_midref(z), r,
-            FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmprb_atan_fmpr(z, fmprb_midref(x), prec);
+        fmpr_add(fmprb_radref(z), fmprb_radref(z), t, FMPRB_RAD_PREC, FMPR_RND_UP);
 
         fmpr_clear(t);
         fmpr_clear(u);
@@ -89,3 +149,4 @@ fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 
     fmprb_adjust(z);
 }
+

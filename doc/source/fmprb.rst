@@ -477,7 +477,6 @@ Exponentials and logarithms
     assuming `m > r \ge 0`, the error is largest at `m - r`, and we have
     `\log(m) - \log(m-r) = \log(1 + r/(m-r))`. The last expression is
     calculated accurately for small radii via *fmpr_log1p*.
-    An input containing zero currently raises an exception.
 
 .. function:: void fmprb_exp(fmprb_t z, const fmprb_t x, long prec)
 
@@ -499,8 +498,7 @@ Trigonometric functions
 .. function:: void fmprb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
 
     Sets `s = \sin x`, `c = \cos x`. Error propagation uses the rule
-    `|\sin(m \pm r) - \sin(m)| \le r` (this could be tightened to
-    `\min(r,2)`).
+    `|\sin(m \pm r) - \sin(m)| \le \min(r,2)`.
 
 .. function:: void fmprb_sin_pi(fmprb_t s, const fmprb_t x, long prec)
 

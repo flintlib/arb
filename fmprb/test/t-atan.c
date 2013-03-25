@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -76,6 +76,54 @@ int main()
         fmprb_clear(b);
         fmpq_clear(q);
         mpfr_clear(t);
+    }
+
+    /* check large arguments */
+    for (iter = 0; iter < 10000; iter++)
+    {
+        fmprb_t a, b, c, d;
+        long prec1, prec2;
+
+        prec1 = 2 + n_randint(state, 1000);
+        prec2 = prec1 + 30;
+
+        fmprb_init(a);
+        fmprb_init(b);
+        fmprb_init(c);
+        fmprb_init(d);
+
+        fmprb_randtest_precise(a, state, 1 + n_randint(state, 1000), 100);
+
+        fmprb_atan(b, a, prec1);
+        fmprb_atan(c, a, prec2);
+
+        if (!fmprb_overlaps(b, c))
+        {
+            printf("FAIL: overlap\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            abort();
+        }
+
+        /* check tan(atan(x)) = x */
+        fmprb_sin_cos(c, d, b, prec1);
+        fmprb_div(c, c, d, prec1);
+
+        if (!fmprb_contains(c, a))
+        {
+            printf("FAIL: functional equation\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("d = "); fmprb_print(d); printf("\n\n");
+            abort();
+        }
+
+        fmprb_clear(a);
+        fmprb_clear(b);
+        fmprb_clear(c);
+        fmprb_clear(d);
     }
 
     flint_randclear(state);

@@ -78,6 +78,57 @@ int main()
         mpfr_clear(t);
     }
 
+    /* check large arguments */
+    for (iter = 0; iter < 10000; iter++)
+    {
+        fmprb_t a, b, c, d;
+        long prec1, prec2;
+
+        prec1 = 2 + n_randint(state, 1000);
+        prec2 = prec1 + 30;
+
+        fmprb_init(a);
+        fmprb_init(b);
+        fmprb_init(c);
+        fmprb_init(d);
+
+        fmprb_randtest_precise(a, state, 1 + n_randint(state, 1000), 100);
+
+        fmprb_sin(b, a, prec1);
+        fmprb_sin(c, a, prec2);
+
+        if (!fmprb_overlaps(b, c))
+        {
+            printf("FAIL: overlap\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            abort();
+        }
+
+        /* check sin(2a) = 2sin(a)cos(a) */
+        fmprb_mul_2exp_si(c, a, 1);
+        fmprb_sin(c, c, prec1);
+
+        fmprb_cos(d, a, prec1);
+        fmprb_mul(b, b, d, prec1);
+        fmprb_mul_2exp_si(b, b, 1);
+
+        if (!fmprb_overlaps(b, c))
+        {
+            printf("FAIL: functional equation\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            abort();
+        }
+
+        fmprb_clear(a);
+        fmprb_clear(b);
+        fmprb_clear(c);
+        fmprb_clear(d);
+    }
+
     flint_randclear(state);
     _fmpz_cleanup();
     printf("PASS\n");
