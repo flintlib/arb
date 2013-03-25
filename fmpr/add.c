@@ -85,7 +85,7 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         if (shift > ysize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
-            if (ysize + prec < shift + fmpz_bits(fmpr_manref(x)))
+            if (ysize + prec - (long) fmpz_bits(fmpr_manref(x)) < shift)
             {
                 return _fmpr_add_eps(z, x, fmpz_sgn(fmpr_manref(y)), prec, rnd);
             }
@@ -104,7 +104,7 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         if (shift > xsize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
-            if (xsize + prec < shift + fmpz_bits(fmpr_manref(y)))
+            if (xsize + prec - (long) fmpz_bits(fmpr_manref(y)) < shift)
             {
                 return _fmpr_add_eps(z, y, fmpz_sgn(fmpr_manref(x)), prec, rnd);
             }
