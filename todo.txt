@@ -65,10 +65,6 @@
 
 * Faster elementary functions at low precision (especially log/arctan).
 
-* Gamma function for rational/integer arguments.
-
-* Tune cutoff for the reflection formula for gamma.
-
 * Document fmpz_extras
 
 * Move zeta functions to own module and cleanup.

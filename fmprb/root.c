@@ -30,6 +30,18 @@ fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 {
     long r;
 
+    if (k == 1)
+    {
+        fmprb_set_round(z, x, prec);
+        return;
+    }
+
+    if (k == 2)
+    {
+        fmprb_sqrt(z, x, prec);
+        return;
+    }
+
     if (fmprb_contains_negative(x))
     {
         fmpr_nan(fmprb_midref(z));

@@ -28,17 +28,6 @@
 #include "fmpcb_poly.h"
 
 void
-fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_log(t, x, prec);
-    fmprb_mul(t, t, y, prec);
-    fmprb_exp(z, t, prec);
-    fmprb_clear(t);
-}
-
-void
 bound_I(fmprb_struct * I, const fmprb_t A, const fmprb_t B, const fmprb_t C, long len, long wp)
 {
     long k;

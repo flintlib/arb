@@ -19,106 +19,84 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
 
 void
-fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
-{
-    long i, wp, bits;
-
-    if (fmpz_is_zero(e))
-    {
-        fmprb_set_ui(y, 1UL);
-        return;
-    }
-
-    if (fmpz_sgn(e) < 0)
-    {
-        fmpz_t f;
-        fmpz_init(f);
-        fmpz_neg(f, e);
-        fmprb_pow_fmpz(y, b, f, prec + 2);
-        fmprb_ui_div(y, 1UL, y, prec);
-        fmpz_clear(f);
-    }
-
-    if (y == b)
-    {
-        fmprb_t t;
-        fmprb_init(t);
-        fmprb_set(t, b);
-        fmprb_pow_fmpz(y, t, e, prec);
-        fmprb_clear(t);
-        return;
-    }
-
-    fmprb_set(y, b);
-
-    bits = fmpz_bits(e);
-    wp = FMPR_PREC_ADD(prec, bits);
-
-    for (i = bits - 2; i >= 0; i--)
-    {
-        fmprb_mul(y, y, y, wp);
-        if (fmpz_tstbit(e, i))
-            fmprb_mul(y, y, b, wp);
-    }
-}
-
-void
-fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec)
-{
-    fmpz_t f;
-    fmpz_init_set_ui(f, e);
-    fmprb_pow_fmpz(y, b, f, prec);
-    fmpz_clear(f);
-}
-
-void
-fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec)
+_fmprb_pow_exp(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     fmprb_t t;
     fmprb_init(t);
-    fmprb_set_ui(t, b);
-    fmprb_pow_ui(y, t, e, prec);
+    fmprb_log(t, x, prec);
+    fmprb_mul(t, t, y, prec);
+    fmprb_exp(z, t, prec);
     fmprb_clear(t);
 }
 
 void
-fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
+fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_si(t, b);
-    fmprb_pow_ui(y, t, e, prec);
-    fmprb_clear(t);
+    if (fmprb_is_exact(y))
+    {
+        if (fmpr_is_zero(fmprb_midref(y)))
+        {
+            fmprb_one(z);
+            return;
+        }
+
+        if (!fmpr_is_special(fmprb_midref(y)) && !fmpr_is_special(fmprb_midref(x)))
+        {
+            const fmpz * exp_exp = fmpr_expref(fmprb_midref(y));
+
+            /* smallish integer powers and square roots */
+            if (!COEFF_IS_MPZ(*exp_exp) && (*exp_exp >= -1L))
+            {
+                long exp_bits;
+
+                exp_bits = *exp_exp + fmpz_bits(fmpr_manref(fmprb_midref(y)));
+
+                if (exp_bits < 64)
+                {
+                    fmpz_t e;
+                    fmpz_init(e);
+
+                    if (*exp_exp == -1L)
+                    {
+                        fmprb_sqrt(z, x, prec + exp_bits);
+                        fmpz_set(e, fmpr_manref(fmprb_midref(y)));
+                        fmprb_pow_fmpz_binexp(z, z, e, prec);
+                    }
+                    else
+                    {
+                        fmpz_mul_2exp(e, fmpr_manref(fmprb_midref(y)), *exp_exp);
+                        fmprb_pow_fmpz_binexp(z, x, e, prec);
+                    }
+
+                    fmpz_clear(e);
+                    return;
+                }
+            }
+
+            /* (-x)^n = (-1)^n * x^n */
+            if (fmpz_sgn(exp_exp) >= 0 && fmpr_sgn(fmprb_midref(x)) < 0)
+            {
+                fmprb_t t;
+                int odd;
+                fmprb_init(t);
+                fmprb_neg(t, x);
+                odd = fmpz_is_zero(exp_exp);
+                _fmprb_pow_exp(z, t, y, prec);
+                if (odd)
+                    fmprb_neg(z, z);
+                fmprb_clear(t);
+                return;
+            }
+        }
+    }
+
+    _fmprb_pow_exp(z, x, y, prec);
 }
 
-void
-fmprb_pow_fmpq(fmprb_t y, const fmprb_t x, const fmpq_t a, long prec)
-{
-    if (fmpz_is_one(fmpq_denref(a)))
-    {
-        fmprb_pow_fmpz(y, x, fmpq_numref(a), prec);
-    }
-    /* TODO: generalize this to a = p/q for any small p, q */
-    else if (fmpz_is_one(fmpq_numref(a)) && fmpz_cmp_ui(fmpq_denref(a), 2) == 0)
-    {
-        fmprb_sqrt(y, x, prec);
-    }
-    else
-    {
-        long wp;
-
-        wp = prec + 10;
-
-        fmprb_log(y, x, wp);
-        fmprb_mul_fmpz(y, y, fmpq_numref(a), wp);
-        fmprb_div_fmpz(y, y, fmpq_denref(a), wp);
-        fmprb_exp(y, y, prec);
-    }
-}

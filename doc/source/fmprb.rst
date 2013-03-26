@@ -445,8 +445,11 @@ Powers and roots
 .. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
-    Warning: this function is only fast for small fixed *k*. For large *k*,
-    it is better to use the exponential function.
+    As currently implemented, this function is only fast for small
+    fixed *k*. For large *k* it is better to use :func:`fmprb_pow_fmpq`
+    or :func:`fmprb_pow`.
+
+.. function:: void fmprb_pow_fmpz_binexp(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 
 .. function:: void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
 
@@ -456,9 +459,27 @@ Powers and roots
 
 .. function:: void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec)
 
-    Sets `y = b^e` using binary exponentiation. Provided that *b* and *e*
+    Sets `y = b^e` using binary exponentiation (with an initial division
+    if `e < 0`). Provided that *b* and *e*
     are small enough and the exponent is positive, the exact power can be
-    computed using *FMPR_PREC_EXACT*.
+    computed by setting the precision to *FMPR_PREC_EXACT*.
+
+    Note that these functions can get slow if the exponent is
+    extremely large (in such cases :func:`fmprb_pow` may be superior).
+
+.. function:: void fmprb_pow_fmpq(fmprb_t y, const fmprb_t b, const fmpq_t e, long prec)
+
+    Sets `y = b^e`, computed as `y = (b^{1/q})^p` if the denominator of
+    `e = p/q` is small, and generally as `y = \exp(e \log b)`.
+
+    Note that this function can get slow if the exponent is
+    extremely large (in such cases :func:`fmprb_pow` may be superior).
+
+.. function:: void fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+    Sets `z = x^y`, computed using binary exponentiation if `y` if
+    a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
+    half-integer, and generally as `z = \exp(y \log x)`.
 
 .. function:: void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 

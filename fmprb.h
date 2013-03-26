@@ -258,13 +258,14 @@ void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
 
+void fmprb_pow_fmpz_binexp(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec);
+void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec);
 void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec);
 void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec);
 void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec);
-void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec);
 
+void fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec);
-
 void fmprb_pow_fmpq(fmprb_t y, const fmprb_t x, const fmpq_t a, long prec);
 
 void fmprb_log(fmprb_t z, const fmprb_t x, long prec);
