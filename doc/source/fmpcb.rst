@@ -311,7 +311,7 @@ Elementary functions
 .. function:: void fmpcb_cot(fmpcb_t s, const fmpcb_t z, long prec)
 
     Sets `s = \cot z = (\cos z) / (\sin z)`, evaluated as
-    `\tan(a+bi) = -\sin(2a)/(\cos(2a) - \cosh(2b)) + i\sinh(2b)/(\cos(2a) - \cosh(2b))`
+    `\cot(a+bi) = -\sin(2a)/(\cos(2a) - \cosh(2b)) + i\sinh(2b)/(\cos(2a) - \cosh(2b))`
     using the same strategy as :func:`fmpcb_tan`.
     If `|z|` is close to zero, however, we evaluate
     `1 / \tan(z)` to avoid catastrophic cancellation.
