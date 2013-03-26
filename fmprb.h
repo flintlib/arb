@@ -294,6 +294,8 @@ void _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec);
 void fmprb_sinh(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_cosh(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
+void fmprb_tanh(fmprb_t y, const fmprb_t x, long prec);
+void fmprb_coth(fmprb_t y, const fmprb_t x, long prec);
 
 void fmprb_atan(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_atan2(fmprb_t z, const fmprb_t b, const fmprb_t a, long prec);

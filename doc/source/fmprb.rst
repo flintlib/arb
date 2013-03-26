@@ -580,6 +580,9 @@ Trigonometric functions
     (otherwise the minimal polynomial becomes impractically large, possibly
     exhausting the available memory).
 
+Inverse trigonometric functions
+-------------------------------------------------------------------------------
+
 .. function:: void fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
 
     Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
@@ -606,6 +609,18 @@ Hyperbolic functions
     to zero and the hyperbolic sine is to be computed,
     evaluates `(e^{2x}\pm1) / (2e^x)` via :func:`fmprb_expm1`
     to avoid loss of accuracy. Otherwise evaluates `(e^x \pm e^{-x}) / 2`.
+
+.. function:: void fmprb_tanh(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets `y = \tanh x = (\sinh x) / (\cosh x)`, evaluated
+    via :func:`expm1` as `\tanh x = (e^{2x} - 1) / (e^{2x} + 1)` if
+    the midpoint of `x` is negative and as
+    `\tanh x = (1 - e^{-2x}) / (1 + e^{-2x})` otherwise.
+
+.. function:: void fmprb_coth(fmprb_t y, const fmprb_t x, long prec)
+
+    Sets `y = \coth x = (\cosh x) / (\sinh x)`, evaluated using
+    the same strategy as :func:`fmprb_tanh`.
 
 Factorials and other integer functions
 -------------------------------------------------------------------------------
