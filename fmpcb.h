@@ -461,28 +461,7 @@ fmpcb_submul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
     fmprb_submul(fmpcb_imagref(z), fmpcb_imagref(x), y, prec);
 }
 
-static __inline__ void
-fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-
-#define a fmpcb_realref(x)
-#define b fmpcb_imagref(x)
-
-    fmprb_mul(t, a, a, prec);
-    fmprb_addmul(t, b, b, prec);
-
-    fmprb_div(fmpcb_realref(z), a, t, prec);
-    fmprb_div(fmpcb_imagref(z), b, t, prec);
-
-    fmprb_neg(fmpcb_imagref(z), fmpcb_imagref(z));
-
-#undef a
-#undef b
-
-    fmprb_clear(t);
-}
+void fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec);
 
 static __inline__ void
 fmpcb_div(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
@@ -531,6 +510,7 @@ void fmpcb_sin_cos(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec);
 void fmpcb_sin_pi(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_sin_cos_pi(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec);
 
+void fmpcb_pow_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec);
 void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec);
 
 void fmpcb_sqrt(fmpcb_t y, const fmpcb_t x, long prec);

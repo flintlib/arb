@@ -168,7 +168,7 @@ Complex parts
     the special value `\operatorname{arg}(0) = 0`, and
     `\operatorname{arg}(a+0i) = \pi` for `a < 0`. Equivalently, if
     `z = a+bi`, the argument is given by `\operatorname{atan2}(b,a)`
-    (see *fmprb_atan2*).
+    (see :funct:`fmprb_atan2`).
 
 .. function:: void fmpcb_abs(fmprb_t r, const fmpcb_t z, long prec)
 
@@ -308,11 +308,19 @@ Elementary functions
 
 .. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
 
-    Sets *y* to *b* raised to the power *e*, computed using binary exponentiation.
+    Sets `y = b^e` using binary exponentiation (with an initial division
+    if `e < 0`). Provided that *b* and *e*
+    are small enough and the exponent is positive, the exact power can be
+    computed by setting the precision to *FMPR_PREC_EXACT*.
 
-.. function:: void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec)
+    Note that these functions can get slow if the exponent is
+    extremely large (in such cases :func:`fmpcb_pow` may be superior).
 
-    Sets *r* to *x* raised to the power *y*, computed as `x^y = \exp(y \log x)`.
+.. function:: void fmpcb_pow(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
+
+    Sets `z = x^y`, computed using binary exponentiation if `y` if
+    a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
+    half-integer, and generally as `z = \exp(y \log x)`.
 
 .. function:: void fmpcb_sqrt(fmpcb_t r, const fmpcb_t z, long prec)
 
