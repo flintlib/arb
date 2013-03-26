@@ -529,6 +529,22 @@ Trigonometric functions
 
     Sets `s = \sin \pi x`, `c = \cos \pi x`.
 
+.. function:: void fmprb_tan(fmprb_t y, const fmprb_t x, long prec);
+
+    Sets `y = \tan x = (\sin x) / (\cos y)`.
+
+.. function:: void fmprb_cot(fmprb_t y, const fmprb_t x, long prec);
+
+    Sets `y = \cot x = (\cos x) / (\sin y)`.
+
+.. function:: void fmprb_tan_pi(fmprb_t y, const fmprb_t x, long prec);
+
+    Sets `y = \tan \pi x`.
+
+.. function:: void fmprb_cot_pi(fmprb_t y, const fmprb_t x, long prec);
+
+    Sets `y = \cot \pi x`.
+
 .. function:: void fmprb_sin_pi_fmpq(fmprb_t s, const fmpq_t x, long prec)
 
 .. function:: void fmprb_cos_pi_fmpq(fmprb_t c, const fmpq_t x, long prec)

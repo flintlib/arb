@@ -168,7 +168,7 @@ Complex parts
     the special value `\operatorname{arg}(0) = 0`, and
     `\operatorname{arg}(a+0i) = \pi` for `a < 0`. Equivalently, if
     `z = a+bi`, the argument is given by `\operatorname{atan2}(b,a)`
-    (see :funct:`fmprb_atan2`).
+    (see :func:`fmprb_atan2`).
 
 .. function:: void fmpcb_abs(fmprb_t r, const fmpcb_t z, long prec)
 
@@ -296,9 +296,13 @@ Elementary functions
 
 .. function:: void fmpcb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t z, long prec)
 
-    Sets `s = \sin z`, `c = \cos z`.
+    Sets `s = \sin z`, `c = \cos z`, evaluated as
+    `\sin(a+bi) = \sin(a)\cosh(b) + i \cos(a)\sinh(b)`,
+    `\cos(a+bi) = \cos(a)\cosh(b) - i \sin(a)\sinh(b)`.
 
 .. function:: void fmpcb_sin_pi(fmpcb_t s, const fmpcb_t z, long prec)
+
+.. function:: void fmpcb_cos_pi(fmpcb_t s, const fmpcb_t z, long prec)
 
 .. function:: void fmpcb_sin_cos_pi(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec)
 
