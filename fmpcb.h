@@ -506,6 +506,8 @@ void fmpcb_exp(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_sin(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_cos(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_sin_cos(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec);
+void fmpcb_tan(fmpcb_t r, const fmpcb_t z, long prec);
+void fmpcb_cot(fmpcb_t r, const fmpcb_t z, long prec);
 
 void fmpcb_sin_pi(fmpcb_t r, const fmpcb_t z, long prec);
 void fmpcb_cos_pi(fmpcb_t r, const fmpcb_t z, long prec);
