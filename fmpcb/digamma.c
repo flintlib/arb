@@ -46,8 +46,7 @@ fmpcb_digamma(fmpcb_t y, const fmpcb_t x, long prec)
     {
         fmpcb_sub_ui(t, x, 1, wp);
         fmpcb_neg(t, t);
-        fmpcb_sin_cos_pi(u, v, x, wp);
-        fmpcb_div(v, v, u, wp);  /* todo: write a complex cotangent function */
+        fmpcb_cot_pi(v, x, wp);
         fmprb_const_pi(fmpcb_realref(u), wp);
         fmpcb_mul_fmprb(v, v, fmpcb_realref(u), wp);
         gamma_harmonic_sum_fmpcb_ui_bsplit(u, t, r, wp);

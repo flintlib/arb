@@ -46,8 +46,7 @@ fmprb_digamma(fmprb_t y, const fmprb_t x, long prec)
     {
         fmprb_sub_ui(t, x, 1, wp);
         fmprb_neg(t, t);
-        fmprb_sin_cos_pi(u, v, x, wp);
-        fmprb_div(v, v, u, wp);
+        fmprb_cot_pi(v, x, wp);
         fmprb_const_pi(u, wp);
         fmprb_mul(v, v, u, wp);
         gamma_harmonic_sum_fmprb_ui_bsplit(u, t, r, wp);
