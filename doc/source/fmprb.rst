@@ -679,7 +679,7 @@ Constants
 .. function:: void fmprb_const_euler(fmprb_t x, long prec)
 
     Sets *x* to Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
-    where `H_k` denotes a harmonic number. The value is cached for repeated use.
+    where `H_k = 1 + 1/2 + \ldots + 1/k`. The value is cached for repeated use.
     Uses the Brent-McMillan formula ([BM1980]_,  [MPFR2012]_)
 
     .. math ::
@@ -695,8 +695,13 @@ Constants
 
         2x I_0(x) K_0(x) \sim \sum_{k=0}^{\infty} \frac{[(2k)!]^3}{(k!)^4 8^{2k} x^{2k}}.
 
-    The first two series are evaluated simultaneously, and the error
-    is easily bounded.
+    All series are evaluated using binary splitting.
+    The first two series are evaluated simultaneously, with the summation
+    taken up to `\beta n` where `\beta \approx 4.9706257595442318644`
+    satisfies `\beta (\log \beta - 1) = 3`. The error is easily bounded
+    by twice the first discarded term and is of order `O(e^{-6n})`.
+    Since both `S_0` and `I_0` are of size `O(e^{2n})`, their relative
+    errors and the absolute error of their quotient is `O(e^{-8n})`.
     The third series is a divergent asymptotic expansion. With some work, it
     can be shown (to be published) that the error when `x = 2n` and
     the sum goes up to `k = 2n-1` is bounded by `8e^{-4n}`.
