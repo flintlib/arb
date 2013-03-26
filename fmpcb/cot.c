@@ -25,92 +25,9 @@
 
 #include "fmpcb.h"
 
-void
-fmpcb_cot_lower_halfplane(fmpcb_t r, const fmpcb_t z, long prec)
-{
-    fmprb_t s, c, t, u, v;
-    long wp;
+void fmpcb_tan_lower_halfplane(fmpcb_t r, const fmpcb_t z, long prec, int pi, int cot);
 
-#define a fmpcb_realref(z)
-#define b fmpcb_imagref(z)
-
-    fmprb_init(s);
-    fmprb_init(c);
-    fmprb_init(t);
-    fmprb_init(u);
-    fmprb_init(v);
-
-    wp = prec + 6;
-
-    fmprb_mul_2exp_si(t, a, 1);
-    fmprb_sin_cos(s, c, t, wp);
-
-    /* t = exp(4b) - 1 */
-    fmprb_mul_2exp_si(t, b, 2);
-    fmprb_expm1(t, t, wp);
-
-    /* u = 2exp(2b) (sqrt would be inaccurate when b is very negative) */
-    fmprb_mul_2exp_si(u, b, 1);
-    fmprb_exp(u, u, wp);
-    fmprb_mul_2exp_si(u, u, 1);
-
-    /* im = -(exp(4b) - 1) / (-2 cos(2a) exp(2b) + (exp(4b) - 1) + 2) */
-    fmprb_mul(v, c, u, wp);
-    fmprb_neg(v, v);
-    fmprb_add(v, v, t, wp);
-    fmprb_add_ui(v, v, 2, wp);
-    fmprb_div(fmpcb_imagref(r), t, v, prec);
-    fmprb_neg(fmpcb_imagref(r), fmpcb_imagref(r));
-
-    /* re = 2 exp(2b) sin(2a) / (...) */
-    fmprb_mul(s, s, u, wp);
-    fmprb_div(fmpcb_realref(r), s, v, prec);
-
-    fmprb_clear(s);
-    fmprb_clear(c);
-    fmprb_clear(t);
-    fmprb_clear(u);
-    fmprb_clear(v);
-
-#undef a
-#undef b
-}
-
-void
-fmpcb_cot_near_real(fmpcb_t r, const fmpcb_t z, long prec)
-{
-#define a fmpcb_realref(z)
-#define b fmpcb_imagref(z)
-
-    fmprb_t sa, ca, sb, cb;
-    long wp;
-
-    fmprb_init(sa);
-    fmprb_init(ca);
-    fmprb_init(sb);
-    fmprb_init(cb);
-
-    wp = prec + 6;
-
-    fmprb_mul_2exp_si(sa, a, 1);
-    fmprb_sin_cos(sa, ca, sa, wp);
-    fmprb_mul_2exp_si(sb, b, 1);
-    fmprb_sinh_cosh(sb, cb, sb, wp);
-
-    fmprb_sub(ca, ca, cb, wp);
-
-    fmprb_div(fmpcb_realref(r), sa, ca, prec);
-    fmprb_neg(fmpcb_realref(r), fmpcb_realref(r));
-    fmprb_div(fmpcb_imagref(r), sb, ca, prec);
-
-    fmprb_clear(sa);
-    fmprb_clear(ca);
-    fmprb_clear(sb);
-    fmprb_clear(cb);
-
-#undef a
-#undef b
-}
+void fmpcb_tan_near_real(fmpcb_t r, const fmpcb_t z, long prec, int pi, int cot);
 
 void
 fmpcb_cot(fmpcb_t r, const fmpcb_t z, long prec)
@@ -138,17 +55,64 @@ fmpcb_cot(fmpcb_t r, const fmpcb_t z, long prec)
             }
             else
             {
-                fmpcb_cot_near_real(r, z, prec);
+                fmpcb_tan_near_real(r, z, prec, 0, 1);
             }
         }
         else if (fmpr_sgn(fmprb_midref(fmpcb_imagref(z))) < 0)
         {
-            fmpcb_cot_lower_halfplane(r, z, prec);
+            fmpcb_tan_lower_halfplane(r, z, prec, 0, 1);
         }
         else
         {
             fmpcb_neg(r, z);
-            fmpcb_cot_lower_halfplane(r, r, prec);
+            fmpcb_tan_lower_halfplane(r, r, prec, 0, 1);
+            fmpcb_neg(r, r);
+        }
+    }
+}
+
+void
+fmpcb_cot_pi(fmpcb_t r, const fmpcb_t z, long prec)
+{
+    if (fmprb_is_zero(fmpcb_imagref(z)))
+    {
+        fmprb_cot_pi(fmpcb_realref(r), fmpcb_realref(z), prec);
+        fmprb_zero(fmpcb_imagref(r));
+    }
+    else if (fmprb_is_zero(fmpcb_realref(z)))
+    {
+        fmprb_t t;
+        fmprb_init(t);
+        fmprb_const_pi(t, prec + 4);
+        fmprb_mul(t, fmpcb_imagref(z), t, prec + 4);
+        fmprb_coth(fmpcb_imagref(r), t, prec);
+        fmprb_neg(fmpcb_imagref(r), fmpcb_imagref(r));
+        fmprb_zero(fmpcb_realref(r));
+        fmprb_clear(t);
+    }
+    else
+    {
+        if (fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_imagref(z)), 1) < 0)
+        {
+            if (fmpr_cmpabs_2exp_si(fmprb_midref(fmpcb_realref(z)), 1) < 0)
+            {
+                /* cos(...) - cosh(...) becomes inaccurate near 0 */
+                fmpcb_tan_pi(r, z, prec + 4);
+                fmpcb_inv(r, r, prec);
+            }
+            else
+            {
+                fmpcb_tan_near_real(r, z, prec, 1, 1);
+            }
+        }
+        else if (fmpr_sgn(fmprb_midref(fmpcb_imagref(z))) < 0)
+        {
+            fmpcb_tan_lower_halfplane(r, z, prec, 1, 1);
+        }
+        else
+        {
+            fmpcb_neg(r, z);
+            fmpcb_tan_lower_halfplane(r, r, prec, 1, 1);
             fmpcb_neg(r, r);
         }
     }

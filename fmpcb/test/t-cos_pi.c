@@ -30,14 +30,14 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("tan....");
+    printf("cos_pi....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
-        fmpcb_t x, y, a, b, c, d;
+        fmpcb_t x, y, a, b, c;
         long prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
@@ -48,13 +48,11 @@ int main()
         fmpcb_init(a);
         fmpcb_init(b);
         fmpcb_init(c);
-        fmpcb_init(d);
 
         fmpcb_randtest(x, state, 1 + n_randint(state, 1000), 2 + n_randint(state, 100));
-        fmpcb_randtest(y, state, 1 + n_randint(state, 1000), 2 + n_randint(state, 100));
 
-        fmpcb_tan(a, x, prec1);
-        fmpcb_tan(b, x, prec2);
+        fmpcb_cos_pi(a, x, prec1);
+        fmpcb_cos_pi(b, x, prec2);
 
         /* check consistency */
         if (!fmpcb_overlaps(a, b))
@@ -66,28 +64,22 @@ int main()
             abort();
         }
 
-        /* check tan(x+y) = (tan(x) + tan(y)) / (1 - tan(x) tan(y)) */
-        fmpcb_add(b, x, y, prec1);
-        fmpcb_tan(b, b, prec1);
+        /* compare with cos */
+        fmprb_const_pi(fmpcb_realref(c), prec1);
+        fmpcb_mul_fmprb(y, x, fmpcb_realref(c), prec1);
+        fmpcb_cos(c, y, prec1);
 
-        fmpcb_tan(c, y, prec1);
-        fmpcb_add(d, a, c, prec1);
-        fmpcb_mul(c, a, c, prec1);
-        fmpcb_sub_ui(c, c, 1, prec1);
-        fmpcb_neg(c, c);
-        fmpcb_div(d, d, c, prec1);
-
-        if (!fmpcb_overlaps(b, d))
+        if (!fmpcb_overlaps(a, c))
         {
             printf("FAIL: functional equation\n\n");
             printf("x = "); fmpcb_print(x); printf("\n\n");
             printf("y = "); fmpcb_print(y); printf("\n\n");
-            printf("b = "); fmpcb_print(b); printf("\n\n");
-            printf("d = "); fmpcb_print(d); printf("\n\n");
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
             abort();
         }
 
-        fmpcb_tan(x, x, prec1);
+        fmpcb_cos_pi(x, x, prec1);
 
         if (!fmpcb_overlaps(a, x))
         {
@@ -102,7 +94,6 @@ int main()
         fmpcb_clear(a);
         fmpcb_clear(b);
         fmpcb_clear(c);
-        fmpcb_clear(d);
     }
 
     flint_randclear(state);

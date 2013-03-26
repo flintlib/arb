@@ -79,10 +79,10 @@ int main()
         if (!fmpcb_overlaps(b, d))
         {
             printf("FAIL: functional equation\n\n");
-            printf("x = "); fmpcb_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpcb_printd(y, 15); printf("\n\n");
-            printf("b = "); fmpcb_printd(b, 15); printf("\n\n");
-            printf("d = "); fmpcb_printd(d, 15); printf("\n\n");
+            printf("x = "); fmpcb_print(x); printf("\n\n");
+            printf("y = "); fmpcb_print(y); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("d = "); fmpcb_print(d); printf("\n\n");
             abort();
         }
 

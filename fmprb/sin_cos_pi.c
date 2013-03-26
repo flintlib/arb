@@ -32,6 +32,13 @@ fmprb_sin_pi(fmprb_t y, const fmprb_t x, long prec)
     fmprb_t u;
     fmpz_t v;
 
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(t), FLINT_MAX(65536, (4*prec))) > 0)
+    {
+        fmpr_zero(fmprb_midref(y));
+        fmpr_one(fmprb_radref(y));
+        return;
+    }
+
     fmprb_init(t);
     fmprb_init(u);
     fmpz_init(v);
@@ -74,6 +81,13 @@ fmprb_cos_pi(fmprb_t y, const fmprb_t x, long prec)
     fmprb_t u;
     fmpz_t v;
 
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(t), FLINT_MAX(65536, (4*prec))) > 0)
+    {
+        fmpr_zero(fmprb_midref(y));
+        fmpr_one(fmprb_radref(y));
+        return;
+    }
+
     fmprb_init(t);
     fmprb_init(u);
     fmpz_init(v);
@@ -115,6 +129,15 @@ fmprb_sin_cos_pi(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
     fmprb_t t;
     fmprb_t u;
     fmpz_t v;
+
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
+    {
+        fmpr_zero(fmprb_midref(s));
+        fmpr_one(fmprb_radref(s));
+        fmpr_zero(fmprb_midref(c));
+        fmpr_one(fmprb_radref(c));
+        return;
+    }
 
     fmprb_init(t);
     fmprb_init(u);

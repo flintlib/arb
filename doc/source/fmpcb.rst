@@ -300,13 +300,40 @@ Elementary functions
     `\sin(a+bi) = \sin(a)\cosh(b) + i \cos(a)\sinh(b)`,
     `\cos(a+bi) = \cos(a)\cosh(b) - i \sin(a)\sinh(b)`.
 
+.. function:: void fmpcb_tan(fmpcb_t s, const fmpcb_t z, long prec)
+
+    Sets `s = \tan z = (\sin z) / (\cos z)`, evaluated as
+    `\tan(a+bi) = \sin(2a)/(\cos(2a) + \cosh(2b)) + i\sinh(2b)/(\cos(2a) + \cosh(2b))`.
+    If `|b|` is small, the formula is evaluated as written; otherwise,
+    we rewrite the hyperbolic functions in terms of decaying exponentials
+    and evaluate the expression accurately using :func:`fmprb_expm1`.
+
+.. function:: void fmpcb_cot(fmpcb_t s, const fmpcb_t z, long prec)
+
+    Sets `s = \cot z = (\cos z) / (\sin z)`, evaluated as
+    `\tan(a+bi) = -\sin(2a)/(\cos(2a) - \cosh(2b)) + i\sinh(2b)/(\cos(2a) - \cosh(2b))`
+    using the same strategy as :func:`fmpcb_tan`.
+    If `|z|` is close to zero, however, we evaluate
+    `1 / \tan(z)` to avoid catastrophic cancellation.
+
 .. function:: void fmpcb_sin_pi(fmpcb_t s, const fmpcb_t z, long prec)
 
 .. function:: void fmpcb_cos_pi(fmpcb_t s, const fmpcb_t z, long prec)
 
 .. function:: void fmpcb_sin_cos_pi(fmpcb_t s, fmpcb_t c, const fmpcb_t z, long prec)
 
-    Sets `s = \sin \pi z`, `c = \cos \pi z`.
+    Sets `s = \sin \pi z`, `c = \cos \pi z`, evaluating the trigonometric
+    factors of the real and imaginary part accurately via :func:`fmprb_sin_cos_pi`.
+
+.. function:: void fmpcb_tan_pi(fmpcb_t s, const fmpcb_t z, long prec)
+
+    Sets `s = \tan \pi z`. Uses the same algorithm as :func:`fmpcb_tan`,
+    but evaluating the sine and cosine accurately via :func:`fmprb_sin_cos_pi`.
+
+.. function:: void fmpcb_cot_pi(fmpcb_t s, const fmpcb_t z, long prec)
+
+    Sets `s = \cot \pi z`. Uses the same algorithm as :func:`fmpcb_cot`,
+    but evaluating the sine and cosine accurately via :func:`fmprb_sin_cos_pi`.
 
 .. function:: void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec)
 
