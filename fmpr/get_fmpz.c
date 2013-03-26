@@ -95,6 +95,10 @@ fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
                         fmpz_sub_ui(z, z, 1);
                 }
             }
+            else if (fmpz_bits(fmpr_manref(x)) < exp)  /* < 0.5 */
+            {
+                fmpz_zero(z);
+            }
             else
             {
                 /* add 1/2 and round to floor */
