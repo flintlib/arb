@@ -32,7 +32,7 @@ fmprb_sin_pi(fmprb_t y, const fmprb_t x, long prec)
     fmprb_t u;
     fmpz_t v;
 
-    if (fmpr_cmpabs_2exp_si(fmprb_midref(t), FLINT_MAX(65536, (4*prec))) > 0)
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
     {
         fmpr_zero(fmprb_midref(y));
         fmpr_one(fmprb_radref(y));
@@ -81,7 +81,7 @@ fmprb_cos_pi(fmprb_t y, const fmprb_t x, long prec)
     fmprb_t u;
     fmpz_t v;
 
-    if (fmpr_cmpabs_2exp_si(fmprb_midref(t), FLINT_MAX(65536, (4*prec))) > 0)
+    if (fmpr_cmpabs_2exp_si(fmprb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
     {
         fmpr_zero(fmprb_midref(y));
         fmpr_one(fmprb_radref(y));
