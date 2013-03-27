@@ -27,15 +27,6 @@
 #include "double_extras.h"
 #include "hypgeom.h"
 
-static __inline__ double d_root(double x, int r)
-{
-    if (r == 1)
-        return x;
-    if (r == 2)
-        return sqrt(x);
-    return pow(x, 1. / r);
-}
-
 void
 fmpr_gamma_ui_lbound(fmpr_t x, ulong n, long prec)
 {
@@ -112,8 +103,7 @@ fmpr_gamma_ui_ubound(fmpr_t x, ulong n, long prec)
     }
 }
 
-/* FIXME: use more than doubles for this */
-long hypgeom_root_bound(const fmpr_t z, int r)
+long hypgeom_root_bound(const fmpr_t z, int r, long prec)
 {
     if (r == 0)
     {
@@ -121,9 +111,14 @@ long hypgeom_root_bound(const fmpr_t z, int r)
     }
     else
     {
-        double zd;
-        zd = fmpr_get_d(z, FMPR_RND_UP);
-        return d_root(zd, r) + 2;
+        fmpr_t t;
+        long v;
+        fmpr_init(t);
+        fmpr_root(t, z, r, prec, FMPR_RND_UP);
+        fmpr_add_ui(t, t, 1, prec, FMPR_RND_UP);
+        v = fmpr_get_si(t, FMPR_RND_UP);
+        fmpr_clear(t);
+        return v;
     }
 }
 
@@ -227,7 +222,7 @@ hypgeom_bound(fmpr_t error, int r,
     n = FLINT_MAX(n, K + 1);
 
     /* required for z^k / (k!)^r to be decreasing */
-    m = hypgeom_root_bound(z, r);
+    m = hypgeom_root_bound(z, r, wp);
     n = FLINT_MAX(n, m);
 
     /*  We now have |R(k)| <= G(k) where G(k) is monotonically decreasing,
