@@ -535,7 +535,7 @@ void fmpcb_digamma(fmpcb_t y, const fmpcb_t x, long prec);
 void fmpcb_rising_ui(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 
 void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
-
+void fmpcb_hurwitz_zeta(fmpcb_t z, const fmpcb_t s, const fmpcb_t a, long prec);
 
 static __inline__ void
 _fmpcb_vec_zero(fmpcb_struct * A, long n)

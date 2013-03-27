@@ -432,3 +432,9 @@ Special functions
 
     Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
 
+.. function:: void fmpcb_hurwitz_zeta(fmpcb_t z, const fmpcb_t s, long prec)
+
+    Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
+    Note: for computing derivatives with respect to `s`, see the
+    functions in the *zeta* module.
+

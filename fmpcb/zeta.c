@@ -27,12 +27,18 @@
 #include "zeta.h"
 
 void
+fmpcb_hurwitz_zeta(fmpcb_t z, const fmpcb_t s, const fmpcb_t a, long prec)
+{
+    zeta_series(z, s, a, 0, 1, prec);
+}
+
+void
 fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
 {
     fmpcb_t a;
     fmpcb_init(a);
     fmpcb_one(a);
-    zeta_series(z, s, a, 0, 1, prec);
+    fmpcb_hurwitz_zeta(z, s, a, prec);
     fmpcb_clear(a);
 }
 
