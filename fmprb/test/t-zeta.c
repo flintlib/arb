@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpcb.h"
+#include "fmprb.h"
 
 int main()
 {
@@ -37,34 +37,33 @@ int main()
 
     for (iter = 0; iter < 3000; iter++)
     {
-        fmpcb_t a, b, c;
+        fmprb_t a, b, c;
         long prec1, prec2;
 
         prec1 = 2 + n_randint(state, 500);
         prec2 = prec1 + 30;
 
-        fmpcb_init(a);
-        fmpcb_init(b);
-        fmpcb_init(c);
+        fmprb_init(a);
+        fmprb_init(b);
+        fmprb_init(c);
 
-        fmprb_randtest_precise(fmpcb_realref(a), state, 1 + n_randint(state, 500), 5);
-        fmprb_randtest_precise(fmpcb_imagref(a), state, 1 + n_randint(state, 500), 3);
+        fmprb_randtest_precise(a, state, 1 + n_randint(state, 500), 5);
 
-        fmpcb_zeta(b, a, prec1);
-        fmpcb_zeta(c, a, prec2);
+        fmprb_zeta(b, a, prec1);
+        fmprb_zeta(c, a, prec2);
 
-        if (!fmpcb_overlaps(b, c))
+        if (!fmprb_overlaps(b, c))
         {
             printf("FAIL: overlap\n\n");
-            printf("a = "); fmpcb_print(a); printf("\n\n");
-            printf("b = "); fmpcb_print(b); printf("\n\n");
-            printf("c = "); fmpcb_print(c); printf("\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
             abort();
         }
 
-        fmpcb_clear(a);
-        fmpcb_clear(b);
-        fmpcb_clear(c);
+        fmprb_clear(a);
+        fmprb_clear(b);
+        fmprb_clear(c);
     }
 
     flint_randclear(state);

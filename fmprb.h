@@ -336,6 +336,10 @@ void fmprb_gamma_fmpz(fmprb_t y, const fmpz_t x, long prec);
 
 void fmprb_digamma(fmprb_t y, const fmprb_t x, long prec);
 
+void fmprb_zeta(fmprb_t y, const fmprb_t s, long prec);
+void fmprb_zeta_ui(fmprb_t b, ulong n, long prec);
+void fmprb_bernoulli_ui(fmprb_t b, ulong n, long prec);
+
 static __inline__ void
 fmprb_print(const fmprb_t x)
 {

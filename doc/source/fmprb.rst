@@ -804,3 +804,26 @@ Special functions
     Provided that *n* is small enough, an exact Fibonacci number can be
     computed by setting the precision to *FMPR_PREC_EXACT*.
 
+.. function:: void fmprb_zeta(fmprb_t z, const fmprb_t s, long prec)
+
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+
+    Note: the Hurwitz zeta function is also available, but takes
+    complex arguments (see :func:`fmpcb_hurwitz_zeta`).
+    For computation of the derivatives with respect to `s`, see the functions
+    in the *zeta* module.
+
+.. function:: void fmprb_zeta_ui(fmprb_t b, ulong n, long prec)
+
+    Sets *b* to the Riemann zeta value `\zeta(n)`. This function is intended
+    for numerical evaluation of isolated zeta values; for
+    multi-evaluation, see the functions in the *bernoulli* and *zeta* modules.
+
+.. function:: void fmprb_bernoulli_ui(fmprb_t b, ulong n, long prec)
+
+    Sets *b* to the Bernoulli number `B_n`. This function is intended
+    for numerical evaluation of isolated Bernoulli numbers; for
+    multi-evaluation or exact computation, see the functions in the
+    *bernoulli* module.
+
+
