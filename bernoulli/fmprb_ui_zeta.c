@@ -45,7 +45,7 @@ bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec)
     fmprb_init(u);
 
     /* |B_n| = 2 * n! / (2*pi)^n * zeta(n) */
-    fmprb_fac_ui(b, n, wp);
+    fmprb_fac_ui(b, n, piwp);
     fmprb_const_pi(t, piwp);
     fmprb_mul_2exp_si(t, t, 1);
     fmprb_pow_ui(t, t, n, piwp);
