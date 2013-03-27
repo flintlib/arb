@@ -638,37 +638,6 @@ Hyperbolic functions
     Sets `y = \coth x = (\cosh x) / (\sinh x)`, evaluated using
     the same strategy as :func:`fmprb_tanh`.
 
-Factorials and other integer functions
--------------------------------------------------------------------------------
-
-.. function:: void fmprb_fac_ui(fmprb_t x, ulong n, long prec)
-
-    Sets *x* to *n* factorial, computed using binary splitting. Provided that
-    *n* is small enough, the exact factorial can be computed using
-    *FMPR_PREC_EXACT*.
-
-.. function:: void fmprb_rising_fmprb_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
-
-    Sets *x* to the rising factorial `x (x+1) (x+2) \cdots (x+n-1)`.
-
-.. function:: void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)
-
-.. function:: void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec)
-
-    Sets *x* to the binomial coefficient `{n \choose k}`, computed using
-    binary splitting. Provided that *n* and *k* are small enough, an exact
-    binomial coefficient can be computed using *FMPR_PREC_EXACT*.
-
-.. function:: void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)
-
-.. function:: void fmprb_fib_ui(fmprb_t f, ulong n, long prec)
-
-    Sets *f* to the Fibonacci number `F_n`. Uses the binary squaring
-    algorithm described in [Tak2000]_.
-    Provided that *n* is small enough, an exact Fibonacci number can be
-    computed using *FMPR_PREC_EXACT*.
-
-
 Constants
 -------------------------------------------------------------------------------
 
@@ -783,12 +752,14 @@ Constants
     Sets *x* to `\log \sqrt{2 \pi}`. The value is cached for repeated use.
 
 
-Gamma function
+Special functions
 -------------------------------------------------------------------------------
 
 .. function:: void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec)
 
 .. function:: void fmprb_gamma_fmpq(fmprb_t y, const fmpq_t x, long prec)
+
+.. function:: void fmprb_gamma_fmpz(fmprb_t y, const fmpz_t x, long prec)
 
     Sets `y = \Gamma(x)`, the gamma function.
 
@@ -805,4 +776,31 @@ Gamma function
 .. function:: void fmprb_digamma(fmprb_t y, const fmprb_t x, long prec)
 
     Sets `y = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
+
+.. function:: void fmprb_fac_ui(fmprb_t y, ulong n, long prec)
+
+    Sets *y* to `n!`, computed via the gamma function.
+
+.. function:: void fmprb_rising_fmprb_ui(fmprb_t y, const fmprb_t x, ulong k, long prec)
+
+    Sets *y* to the rising factorial `(x)_k = x (x+1) (x+2) \cdots (x+k-1)`.
+    Warning: this is currently slow for large *k*. In a future version,
+    the gamma function will automatically be used when appropriate.
+
+.. function:: void fmprb_bin_ui(fmprb_t y, const fmprb_t n, ulong k, long prec)
+
+.. function:: void fmprb_bin_uiui(fmprb_t y, ulong n, ulong k, long prec)
+
+    Sets *y* to the binomial coefficient `{n \choose k}`, evaluated
+    as `{n \choose k} = (n-k+1)_k / k!`.
+    The warning for :func:`fmprb_rising_fmprb_ui` applies.
+
+.. function:: void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec)
+
+.. function:: void fmprb_fib_ui(fmprb_t f, ulong n, long prec)
+
+    Sets *f* to the Fibonacci number `F_n`. Uses the binary squaring
+    algorithm described in [Tak2000]_.
+    Provided that *n* is small enough, an exact Fibonacci number can be
+    computed by setting the precision to *FMPR_PREC_EXACT*.
 

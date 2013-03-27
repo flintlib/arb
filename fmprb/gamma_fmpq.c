@@ -68,3 +68,12 @@ fmprb_gamma_fmpq(fmprb_t y, const fmpq_t x, long prec)
     gamma_fmpq_stirling(y, x, prec);
 }
 
+void
+fmprb_gamma_fmpz(fmprb_t y, const fmpz_t x, long prec)
+{
+    fmpq_t t;
+    *fmpq_numref(t) = *x;
+    *fmpq_denref(t) = 1L;
+    fmprb_gamma_fmpq(y, t, prec);
+}
+

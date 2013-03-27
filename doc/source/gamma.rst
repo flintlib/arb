@@ -5,14 +5,8 @@ This module implements various algorithms for evaluating the
 gamma function and related functions. The functions provided here are mainly
 intended for internal use, though they may be useful to call directly in some
 applications where the default algorithm choices are suboptimal.
-Most applications should use the standard, user-friendly top-level functions:
-
-* :func:`fmprb_gamma`
-* :func:`fmprb_rgamma`
-* :func:`fmprb_lgamma`
-* :func:`fmpcb_gamma`
-* :func:`fmpcb_rgamma`
-* :func:`fmpcb_lgamma`
+Most applications should use the standard, user-friendly top-level functions
+in the *fmprb* and *fmpcb* modules.
 
 
 Evaluation using Taylor series

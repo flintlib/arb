@@ -332,6 +332,7 @@ void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_gamma_fmpq(fmprb_t y, const fmpq_t x, long prec);
+void fmprb_gamma_fmpz(fmprb_t y, const fmpz_t x, long prec);
 
 void fmprb_digamma(fmprb_t y, const fmprb_t x, long prec);
 

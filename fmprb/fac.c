@@ -19,36 +19,20 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
 
-static void
-fmprb_fac_ui_bsplit(fmprb_t x, ulong a, ulong b, long prec)
-{
-    if (b - a == 1)
-    {
-        fmprb_set_ui(x, b);
-    }
-    else
-    {
-        fmprb_t y;
-        long m = a + (b - a) / 2;
-
-        fmprb_init(y);
-        fmprb_fac_ui_bsplit(x, a, m, prec);
-        fmprb_fac_ui_bsplit(y, m, b, prec);
-        fmprb_mul(x, x, y, prec);
-
-        fmprb_clear(y);
-    }
-}
-
 void
 fmprb_fac_ui(fmprb_t x, ulong n, long prec)
 {
-    fmprb_fac_ui_bsplit(x, 0, FLINT_MAX(n, 1),
-        FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n)));
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_set_ui(t, n);
+    fmpz_add_ui(t, t, 1);
+    fmprb_gamma_fmpz(x, t, prec);
+    fmpz_clear(t);
 }
+

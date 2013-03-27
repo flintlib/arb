@@ -19,58 +19,37 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
-
-static void
-fmprb_bin_ui_bsplit(fmprb_t P, fmprb_t Q,
-    const fmprb_t n, ulong a, ulong b, ulong k, long prec)
-{
-    if (b - a == 1)
-    {
-        fmprb_sub_ui(P, n, k - b, prec);
-        fmprb_set_ui(Q, b);
-    }
-    else
-    {
-        fmprb_t R, S;
-        long m = a + (b - a) / 2;
-
-        fmprb_init(R);
-        fmprb_init(S);
-        fmprb_bin_ui_bsplit(P, Q, n, a, m, k, prec);
-        fmprb_bin_ui_bsplit(R, S, n, m, b, k, prec);
-        fmprb_mul(P, P, R, prec);
-        fmprb_mul(Q, Q, S, prec);
-
-        fmprb_clear(R);
-        fmprb_clear(S);
-    }
-}
 
 void
 fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec)
 {
     if (k == 0)
     {
-        fmprb_set_ui(x, 1UL);
+        fmprb_one(x);
+    }
+    else if (k == 1)
+    {
+        fmprb_set_round(x, n, prec);
     }
     else
     {
-        fmprb_t P, Q;
+        fmprb_t t, u;
 
-        fmprb_init(P);
-        fmprb_init(Q);
+        fmprb_init(t);
+        fmprb_init(u);
 
-        fmprb_bin_ui_bsplit(P, Q, n, 0, k, k, prec + FLINT_BIT_COUNT(k));
+        fmprb_sub_ui(t, n, k - 1, prec);
+        fmprb_rising_ui(t, t, k, prec);
+        fmprb_fac_ui(u, k, prec);
+        fmprb_div(x, t, u, prec);
 
-        fmprb_div(x, P, Q, prec);
-
-        fmprb_clear(P);
-        fmprb_clear(Q);
+        fmprb_clear(t);
+        fmprb_clear(u);
     }
 }
 
