@@ -23,24 +23,16 @@
 
 ******************************************************************************/
 
+#include "fmpcb.h"
 #include "zeta.h"
 
 void
-fmprb_zeta_ui_asymp(fmprb_t x, ulong s, long prec)
+fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
 {
-    fmprb_set_ui(x, 1UL);
-
-    if (s != 2 && s > prec)
-    {
-        fmprb_add_error_2exp_si(x, -prec);
-    }
-    else
-    {
-        fmpr_t t;
-        fmpr_init(t);
-        fmpr_set_ui_2exp_si(t, 1, -s);
-        fmprb_add_fmpr(x, x, t, prec);
-        fmprb_add_error_2exp_si(x, 2 - (3 * s) / 2);
-        fmpr_clear(t);
-    }
+    fmpcb_t a;
+    fmpcb_init(a);
+    fmpcb_one(a);
+    zeta_series(z, s, a, 0, 1, prec);
+    fmpcb_clear(a);
 }
+

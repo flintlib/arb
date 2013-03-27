@@ -30,34 +30,29 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_euler_product....");
+    printf("apery_bsplit....");
     fflush(stdout);
     flint_randinit(state);
 
-
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 250; iter++)
     {
         fmprb_t r;
-        ulong n;
         mpfr_t s;
-        long prec, accuracy;
+        long accuracy, prec;
 
-        do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n < 6);
-
-        prec = 2 + n_randint(state, 12 * n);
+        prec = 2 + n_randint(state, 1 << n_randint(state, 17));
 
         fmprb_init(r);
-        mpfr_init2(s, prec + 100);
+        mpfr_init2(s, prec + 1000);
 
-        fmprb_zeta_ui_euler_product(r, n, prec);
-        mpfr_zeta_ui(s, n, MPFR_RNDN);
+        zeta_apery_bsplit(r, prec);
+        mpfr_zeta_ui(s, 3, MPFR_RNDN);
 
         if (!fmprb_contains_mpfr(r, s))
         {
             printf("FAIL: containment\n\n");
-            printf("n = %lu\n\n", n);
+            printf("prec = %ld\n", prec);
             printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
             abort();
         }
 
@@ -65,7 +60,8 @@ int main()
 
         if (accuracy < prec - 4)
         {
-            printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
+            printf("FAIL: poor accuracy\n\n");
+            printf("prec = %ld\n", prec);
             printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
             abort();
         }
@@ -76,6 +72,7 @@ int main()
 
     flint_randclear(state);
     _fmpz_cleanup();
+    mpfr_free_cache();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -114,7 +114,7 @@ _fmpcb_vec_scalar_div_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long l
 }
 
 void
-fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 {
     fmpcb_struct *t, *u, *v, *term, *sum;
     fmpcb_t splus, Na, rec;

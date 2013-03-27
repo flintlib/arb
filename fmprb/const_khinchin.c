@@ -69,7 +69,7 @@ fmprb_const_khinchin_eval_param(fmprb_t s, ulong N, ulong M, long prec)
     for (n = 1; n <= M; n++)
     {
         /* zeta(2n,N) / n */
-        fmprb_zeta_ui(t, 2 * n, prec);
+        zeta_ui(t, 2 * n, prec);
         fmprb_sub_ui(t, t, 1, prec);
         for (k = 0; k < N - 2; k++)
         {

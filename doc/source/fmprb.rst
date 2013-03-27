@@ -749,6 +749,35 @@ Constants
         C = \sum_{k=0}^{\infty} \frac{(-1)^k 4^{4 k+1}
             \left(40 k^2+56 k+19\right) [(k+1)!]^2 [(2k+2)!]^3}{(k+1)^3 (2 k+1) [(4k+4)!]^2}
 
+.. function:: void fmprb_const_khinchin(fmprb_t res, long prec)
+
+    Sets *res* to Khinchin's constant `K_0`, computed as
+
+    .. math ::
+
+        \log K_0 = \frac{1}{\log 2} \left[
+        \sum_{k=2}^{N-1} \log \left(\frac{k-1}{k} \right) \log \left(\frac{k+1}{k} \right)
+        + \sum_{n=1}^\infty 
+        \frac {\zeta (2n,N)}{n} \sum_{k=1}^{2n-1} \frac{(-1)^{k+1}}{k}
+        \right]
+
+    where `N \ge 2` is a free parameter that can be used for tuning [BBC1997]_.
+    If the infinite series is truncated after `n = M`, the remainder
+    is smaller in absolute value than
+
+    .. math ::
+
+        \sum_{n=M+1}^{\infty} \zeta(2n, N) = 
+        \sum_{n=M+1}^{\infty} \sum_{k=0}^{\infty} (k+N)^{-2n} \le
+        \sum_{n=M+1}^{\infty} \left( N^{-2n} + \int_0^{\infty} (t+N)^{-2n} dt \right)
+
+        = \sum_{n=M+1}^{\infty} \frac{1}{N^{2n}} \left(1 + \frac{N}{2n-1}\right)
+        \le \sum_{n=M+1}^{\infty} \frac{N+1}{N^{2n}} = \frac{1}{N^{2M} (N-1)}
+        \le \frac{1}{N^{2M}}.
+
+    Thus, for an error of at most `2^{-p}` in the series,
+    it is sufficient to choose `M \ge p / (2 \log_2 N)`.
+
 .. function:: void fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
 
     Sets *x* to `\log \sqrt{2 \pi}`. The value is cached for repeated use.

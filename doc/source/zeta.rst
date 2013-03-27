@@ -4,19 +4,19 @@
 Integer zeta values
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_const_zeta3_bsplit(fmprb_t x, long prec)
+.. function:: void zeta_apery_bsplit(fmprb_t x, long prec)
 
     Sets *x* to Apery's constant `\zeta(3)`, computed by applying binary
     splitting to a hypergeometric series.
 
-.. function:: void fmprb_zeta_ui_asymp(fmprb_t z, ulong s, long prec)
+.. function:: void zeta_ui_asymp(fmprb_t z, ulong s, long prec)
 
     Assuming `s \ge 2`, approximates `\zeta(s)` by `1 + 2^{-s}` along with
     a correct error bound. We use the following bounds: for `s > b`,
     `\zeta(s) - 1 < 2^{-b}`, and generally,
     `\zeta(s) - (1 + 2^{-s}) < 2^{2-\lfloor 3 s/2 \rfloor}`.
 
-.. function:: void fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
+.. function:: void zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
 
     Computes `\zeta(s)` using the Euler product. This is fast only if *s*
     is large compared to the precision.
@@ -35,11 +35,11 @@ Integer zeta values
     the geometric series allows us to conclude that
     `\epsilon(M) \le f(s,M)`.
 
-.. function:: void fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+.. function:: void zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
 
     Computes `\zeta(n)` for even *n* via the corresponding Bernoulli number.
 
-.. function:: void fmprb_zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec)
+.. function:: void zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec)
 
     Evaluates `\zeta(s)` at `\mathrm{num}` consecutive integers *s* beginning
     with *start* and proceeding in increments of *step*.
@@ -67,7 +67,7 @@ Integer zeta values
     additional rounding error, so by induction, the error per term
     is always smaller than 2 units.
 
-.. function:: void fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
+.. function:: void zeta_ui_borwein_bsplit(fmprb_t x, ulong s, long prec)
 
     Computes `\zeta(s)` for arbitrary `s \ge 2` using a binary splitting
     implementation of Borwein's algorithm. This has quasilinear complexity
@@ -154,61 +154,28 @@ Integer zeta values
     Thus `(1 / d_n) \sum_k (-1)^k (k+1)^{-s} (d_n - d_k)` is given by
     `A/Q_3 - (B/Q_3) / (C/Q_1) = (A C - B Q_1) / (Q_3 C)`.
 
-.. function:: void fmprb_zeta_ui(fmprb_t x, ulong s, long prec)
+.. function:: void zeta_ui(fmprb_t x, ulong s, long prec)
 
     Computes `\zeta(s)` for nonnegative integer `s \ne 1`, automatically
     choosing an appropriate algorithm.
 
-.. function:: void fmprb_zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
 
-.. function:: void fmprb_zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
 
-.. function:: void fmprb_zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
 
     Computes `\zeta(s)` at num consecutive integers (respectively num
     even or num odd integers) beginning with `s = \mathrm{start} \ge 2`,
     automatically choosing an appropriate algorithm.
 
 
-Related constants
--------------------------------------------------------------------------------
-
-.. function:: void fmprb_const_khinchin(fmprb_t res, long prec)
-
-    Sets *res* to Khinchin's constant `K_0`, computed as
-
-    .. math ::
-
-        \log K_0 = \frac{1}{\log 2} \left[
-        \sum_{k=2}^{N-1} \log \left(\frac{k-1}{k} \right) \log \left(\frac{k+1}{k} \right)
-        + \sum_{n=1}^\infty 
-        \frac {\zeta (2n,N)}{n} \sum_{k=1}^{2n-1} \frac{(-1)^{k+1}}{k}
-        \right]
-
-    where `N \ge 2` is a free parameter that can be used for tuning [BBC1997]_.
-    If the infinite series is truncated after `n = M`, the remainder
-    is smaller in absolute value than
-
-    .. math ::
-
-        \sum_{n=M+1}^{\infty} \zeta(2n, N) = 
-        \sum_{n=M+1}^{\infty} \sum_{k=0}^{\infty} (k+N)^{-2n} \le
-        \sum_{n=M+1}^{\infty} \left( N^{-2n} + \int_0^{\infty} (t+N)^{-2n} dt \right)
-
-        = \sum_{n=M+1}^{\infty} \frac{1}{N^{2n}} \left(1 + \frac{N}{2n-1}\right)
-        \le \sum_{n=M+1}^{\infty} \frac{N+1}{N^{2n}} = \frac{1}{N^{2M} (N-1)}
-        \le \frac{1}{N^{2M}}.
-
-    Thus, for an error of at most `2^{-p}` in the series,
-    it is sufficient to choose `M \ge p / (2 \log_2 N)`.
-
-
 Euler-Maclaurin summation
 -------------------------------------------------------------------------------
 
-.. function:: void fmpcb_zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+.. function:: void zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 
-.. function:: void fmpcb_zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
+.. function:: void zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
 
     Evaluates the truncated Euler-Maclaurin sum of order `N, M` for the
     length-*d* truncated Taylor series of the Hurwitz zeta function
@@ -354,13 +321,8 @@ Euler-Maclaurin summation
 
     where `L_0 = 1`, `L_k = k L_{k-1} + D^k` and `D = (B-1) (C + \log A)`.
 
-.. function:: void fmpcb_zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, const fmpcb_t a, long d, long target, long prec)
+.. function:: void zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, const fmpcb_t a, long d, long target, long prec)
 
     Chooses *N* and *M* using a default algorithm.
-
-.. function:: void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
-
-    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
-
 
 

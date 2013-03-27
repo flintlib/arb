@@ -19,31 +19,30 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "zeta.h"
-#include "hypgeom.h"
 
 void
-fmprb_const_zeta3_bsplit(fmprb_t s, long prec)
+zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
 {
-    hypgeom_t series;
-    fmprb_t t;
-    fmprb_init(t);
-    hypgeom_init(series);
+    long i, num_borwein;
+    ulong cutoff;
 
-    fmpz_poly_set_str(series->A, "3  77 250 205");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
-    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
+    cutoff = 40 + 0.3 * prec;
 
-    prec += FLINT_CLOG2(prec);
-    fmprb_hypgeom_infsum(s, t, series, prec, prec);
-    fmprb_mul_ui(t ,t, 64, prec);
-    fmprb_div(s, s, t, prec);
+    if (cutoff > start)
+    {
+        num_borwein = 1 + (cutoff - start) / 2;
+        num_borwein = FLINT_MIN(num_borwein, num);
+    }
+    else
+        num_borwein = 0;
 
-    hypgeom_clear(series);
-    fmprb_clear(t);
+    zeta_ui_vec_borwein(x, start, num_borwein, 2, prec);
+    for (i = num_borwein; i < num; i++)
+        zeta_ui(x + i, start + 2 * i, prec);
 }
+

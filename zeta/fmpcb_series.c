@@ -26,12 +26,32 @@
 #include "zeta.h"
 
 void
-fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
+zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
 {
-    fmpcb_t a;
-    fmpcb_init(a);
-    fmpcb_one(a);
-    fmpcb_zeta_series(z, s, a, 0, 1, prec);
-    fmpcb_clear(a);
+    ulong M, N;
+    long i;
+    fmpr_t bound;
+    fmprb_struct * vb;
+
+    if (d < 1)
+        return;
+
+    fmpr_init(bound);
+    vb = _fmprb_vec_init(d);
+
+    zeta_series_em_choose_param(bound, &N, &M, s, a, d, prec, FMPRB_RAD_PREC);
+    zeta_series_em_vec_bound(vb, s, a, N, M, d, 2 * prec);
+
+    zeta_series_em_sum(z, s, a, deflate, N, M, d, prec);
+
+    for (i = 0; i < d; i++)
+    {
+        fmprb_get_abs_ubound_fmpr(bound, vb + i, FMPRB_RAD_PREC);
+        fmprb_add_error_fmpr(fmpcb_realref(z + i), bound);
+        fmprb_add_error_fmpr(fmpcb_imagref(z + i), bound);
+    }
+
+    fmpr_clear(bound);
+    _fmprb_vec_clear(vb, d);
 }
 

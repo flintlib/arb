@@ -19,53 +19,32 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "zeta.h"
 
-int main()
+void
+zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
 {
-    long iter;
-    flint_rand_t state;
+    long i, num_odd, num_even, start_odd;
+    fmprb_struct * tmp;
 
-    printf("zeta_ui_asymp....");
-    fflush(stdout);
-    flint_randinit(state);
+    num_odd = num / 2 + (start & num & 1);
+    num_even = num - num_odd;
 
-    for (iter = 0; iter < 10000; iter++)
-    {
-        fmprb_t r;
-        ulong n;
-        mpfr_t s;
-        long prec;
+    start_odd = start % 2;
 
-        prec = 2 + n_randint(state, 1 << n_randint(state, 10));
+    zeta_ui_vec_even(x, start + start_odd, num_even, prec);
+    zeta_ui_vec_odd(x + num_even, start + !start_odd, num_odd, prec);
 
-        fmprb_init(r);
-        mpfr_init2(s, prec + 100);
-
-        n = 2 + n_randint(state, 1 << n_randint(state, 10));
-
-        fmprb_zeta_ui_asymp(r, n, prec);
-        mpfr_zeta_ui(s, n, MPFR_RNDN);
-
-        if (!fmprb_contains_mpfr(r, s))
-        {
-            printf("FAIL: containment\n\n");
-            printf("n = %lu\n\n", n);
-            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
-            abort();
-        }
-
-        fmprb_clear(r);
-        mpfr_clear(s);
-    }
-
-    flint_randclear(state);
-    _fmpz_cleanup();
-    printf("PASS\n");
-    return EXIT_SUCCESS;
+    /* interleave */
+    tmp = flint_malloc(sizeof(fmprb_struct) * num);
+    for (i = 0; i < num_even; i++) tmp[i] = x[i];
+    for (i = 0; i < num_odd; i++) tmp[num_even + i] = x[num_even + i];
+    for (i = 0; i < num_even; i++) x[start_odd + 2  * i] = tmp[i];
+    for (i = 0; i < num_odd; i++) x[!start_odd + 2  * i] = tmp[num_even + i];
+    flint_free(tmp);
 }
+

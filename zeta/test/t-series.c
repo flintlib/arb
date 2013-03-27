@@ -30,12 +30,12 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("zeta_series....");
+    printf("series....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 500; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
         fmpcb_t s, a;
         fmpcb_struct *z1, *z2;
@@ -78,8 +78,8 @@ int main()
         z1 = _fmpcb_vec_init(len);
         z2 = _fmpcb_vec_init(len);
 
-        fmpcb_zeta_series(z1, s, a, deflate, len, prec1);
-        fmpcb_zeta_series(z2, s, a, deflate, len, prec2);
+        zeta_series(z1, s, a, deflate, len, prec1);
+        zeta_series(z2, s, a, deflate, len, prec2);
 
         for (i = 0; i < len; i++)
         {

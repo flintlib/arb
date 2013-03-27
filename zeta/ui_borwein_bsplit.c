@@ -148,7 +148,7 @@ borwein_error(fmpr_t err, long n)
 }
 
 void
-fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
+zeta_ui_borwein_bsplit(fmprb_t x, ulong s, long prec)
 {
     zeta_bsplit_t sum;
     fmpr_t err;
@@ -164,7 +164,7 @@ fmprb_zeta_ui_bsplit(fmprb_t x, ulong s, long prec)
 
     if (s == 1)
     {
-        printf("fmprb_zeta_ui_bsplit: zeta(1)");
+        printf("zeta_ui_borwein_bsplit: zeta(1)");
         abort();
     }
 

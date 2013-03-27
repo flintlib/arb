@@ -176,7 +176,7 @@ bound_rfac(fmprb_struct * F, const fmpcb_t s, ulong n, long len, long wp)
 }
 
 void
-fmpcb_zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long len, long wp)
+zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long len, long wp)
 {
     fmprb_t K, C, AN, S2M;
     fmprb_struct *F, *R;
@@ -251,11 +251,11 @@ fmpcb_zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpc
 }
 
 void
-fmpcb_zeta_series_em_bound(fmpr_t bound,
+zeta_series_em_bound(fmpr_t bound,
         const fmpcb_t s, const fmpcb_t a, long N, long M, long len, long wp)
 {
     fmprb_struct * vec = _fmprb_vec_init(len);
-    fmpcb_zeta_series_em_vec_bound(vec, s, a, N, M, len, wp);
+    zeta_series_em_vec_bound(vec, s, a, N, M, len, wp);
     _fmprb_vec_get_abs_ubound_fmpr(bound, vec, len, wp);
     _fmprb_vec_clear(vec, len);
 }

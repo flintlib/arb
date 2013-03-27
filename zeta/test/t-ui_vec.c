@@ -30,38 +30,36 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_vec_borwein....");
+    printf("ui_vec....");
     fflush(stdout);
     flint_randinit(state);
-
 
     for (iter = 0; iter < 100; iter++)
     {
         fmprb_struct * r;
         ulong n;
-        long i, num, step;
+        long i, num;
         mpfr_t s;
         long prec, accuracy;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 13));
         num = 1 + n_randint(state, 20);
-        step = 1 + n_randint(state, 5);
 
         r = _fmprb_vec_init(num);
         mpfr_init2(s, prec + 100);
 
         do { n = n_randint(state, 1 << n_randint(state, 10)); } while (n < 2);
 
-        fmprb_zeta_ui_vec_borwein(r, n, num, step, prec);
+        zeta_ui_vec(r, n, num, prec);
 
         for (i = 0; i < num; i++)
         {
-            mpfr_zeta_ui(s, n + i * step, MPFR_RNDN);
+            mpfr_zeta_ui(s, n + i, MPFR_RNDN);
 
             if (!fmprb_contains_mpfr(r + i, s))
             {
                 printf("FAIL: containment\n\n");
-                printf("n = %lu\n\n", n + i * step);
+                printf("n = %lu\n\n", n + i);
                 printf("r = "); fmprb_printd(r + i, prec / 3.33); printf("\n\n");
                 printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
                 abort();
@@ -72,7 +70,7 @@ int main()
             if (accuracy < prec - 4)
             {
                 printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
-                printf("n = %lu\n\n", n + i * step);
+                printf("n = %lu\n\n", n + i);
                 printf("r = "); fmprb_printd(r + i, prec / 3.33); printf("\n\n");
                 abort();
             }

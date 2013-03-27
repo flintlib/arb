@@ -24,34 +24,26 @@
 ******************************************************************************/
 
 #include "zeta.h"
+#include "hypgeom.h"
 
 void
-fmpcb_zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
+zeta_apery_bsplit(fmprb_t s, long prec)
 {
-    ulong M, N;
-    long i;
-    fmpr_t bound;
-    fmprb_struct * vb;
+    hypgeom_t series;
+    fmprb_t t;
+    fmprb_init(t);
+    hypgeom_init(series);
 
-    if (d < 1)
-        return;
+    fmpz_poly_set_str(series->A, "3  77 250 205");
+    fmpz_poly_set_str(series->B, "1  1");
+    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
+    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
 
-    fmpr_init(bound);
-    vb = _fmprb_vec_init(d);
+    prec += FLINT_CLOG2(prec);
+    fmprb_hypgeom_infsum(s, t, series, prec, prec);
+    fmprb_mul_ui(t ,t, 64, prec);
+    fmprb_div(s, s, t, prec);
 
-    fmpcb_zeta_series_em_choose_param(bound, &N, &M, s, a, d, prec, FMPRB_RAD_PREC);
-    fmpcb_zeta_series_em_vec_bound(vb, s, a, N, M, d, 2 * prec);
-
-    fmpcb_zeta_series_em_sum(z, s, a, deflate, N, M, d, prec);
-
-    for (i = 0; i < d; i++)
-    {
-        fmprb_get_abs_ubound_fmpr(bound, vb + i, FMPRB_RAD_PREC);
-        fmprb_add_error_fmpr(fmpcb_realref(z + i), bound);
-        fmprb_add_error_fmpr(fmpcb_imagref(z + i), bound);
-    }
-
-    fmpr_clear(bound);
-    _fmprb_vec_clear(vb, d);
+    hypgeom_clear(series);
+    fmprb_clear(t);
 }
-

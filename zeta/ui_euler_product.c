@@ -57,7 +57,7 @@ add_error(fmprb_t z, ulong M, ulong s)
 }
 
 void
-fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
+zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
 {
     long wp, powprec;
     double powmag;
@@ -111,13 +111,9 @@ fmprb_zeta_inv_ui_euler_product(fmprb_t z, ulong s, long prec)
 }
 
 void
-fmprb_zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
+zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
 {
-    fmprb_t one;
-    fmprb_init(one);
-    fmprb_set_ui(one, 1);
-    fmprb_zeta_inv_ui_euler_product(z, s, prec);
-    fmprb_div(z, one, z, prec);
-    fmprb_clear(one);
+    zeta_inv_ui_euler_product(z, s, prec);
+    fmprb_ui_div(z, 1, z, prec);
 }
 

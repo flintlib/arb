@@ -534,6 +534,7 @@ void fmpcb_digamma(fmpcb_t y, const fmpcb_t x, long prec);
 
 void fmpcb_rising_ui(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 
+void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
 
 
 static __inline__ void

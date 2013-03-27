@@ -19,60 +19,52 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "zeta.h"
+#include "fmpcb.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("zeta_ui_bernoulli....");
+    printf("zeta....");
     fflush(stdout);
+
     flint_randinit(state);
 
-
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 3000; iter++)
     {
-        fmprb_t r;
-        ulong n;
-        mpfr_t s;
-        long prec, accuracy;
+        fmpcb_t a, b, c;
+        long prec1, prec2;
 
-        prec = 2 + n_randint(state, 1 << n_randint(state, 14));
+        prec1 = 2 + n_randint(state, 500);
+        prec2 = prec1 + 30;
 
-        fmprb_init(r);
-        mpfr_init2(s, prec + 100);
+        fmpcb_init(a);
+        fmpcb_init(b);
+        fmpcb_init(c);
 
-        do { n = n_randint(state, 1 << n_randint(state, 10)); }
-            while (n % 2 || n == 0);
+        fmprb_randtest_precise(fmpcb_realref(a), state, 1 + n_randint(state, 500), 3);
+        fmprb_randtest_precise(fmpcb_imagref(a), state, 1 + n_randint(state, 500), 3);
 
-        fmprb_zeta_ui_bernoulli(r, n, prec);
-        mpfr_zeta_ui(s, n, MPFR_RNDN);
+        fmpcb_zeta(b, a, prec1);
+        fmpcb_zeta(c, a, prec2);
 
-        if (!fmprb_contains_mpfr(r, s))
+        if (!fmpcb_overlaps(b, c))
         {
-            printf("FAIL: containment\n\n");
-            printf("n = %lu\n\n", n);
-            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+            printf("FAIL: overlap\n\n");
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
             abort();
         }
 
-        accuracy = fmprb_rel_accuracy_bits(r);
-
-        if (accuracy < prec - 4)
-        {
-            printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
-            printf("r = "); fmprb_printd(r, prec / 3.33); printf("\n\n");
-            abort();
-        }
-
-        fmprb_clear(r);
-        mpfr_clear(s);
+        fmpcb_clear(a);
+        fmpcb_clear(b);
+        fmpcb_clear(c);
     }
 
     flint_randclear(state);

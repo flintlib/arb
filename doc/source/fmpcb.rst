@@ -428,3 +428,7 @@ Special functions
 
     Sets `y = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
 
+.. function:: void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
+
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+

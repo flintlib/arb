@@ -19,44 +19,18 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "zeta.h"
-#include "bernoulli.h"
 
 void
-fmprb_zeta_ui_bernoulli(fmprb_t x, ulong n, long prec)
+zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
 {
-    fmpq_t b;
-    fmprb_t t, f;
-    long wp;
+    long i;
 
-    if (n % 2)
-        abort();
-
-    wp = prec + FLINT_BIT_COUNT(n) + 2;
-
-    fmpq_init(b);
-    fmprb_init(t);
-    fmprb_init(f);
-
-    bernoulli_fmpq_ui(b, n);
-    fmprb_set_fmpq(x, b, wp);
-
-    fmprb_const_pi(t, wp);
-    fmprb_mul_2exp_si(t, t, 1);
-    fmprb_pow_ui(t, t, n, wp);
-
-    fmprb_fac_ui(f, n, wp);
-
-    fmprb_div(t, t, f, wp);
-    fmprb_mul(x, x, t, wp);
-    fmprb_abs(x, x);
-    fmprb_mul_2exp_si(x, x, -1);
-
-    fmprb_clear(t);
-    fmprb_clear(f);
-    fmpq_clear(b);
+    for (i = 0; i < num; i++)
+        zeta_ui(x + i, start + 2 * i, prec);
 }
+

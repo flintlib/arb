@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "fmprb_poly.h"
-
+#include "zeta.h"
 
 /* series expansion for log(gamma(1-x)) at x = 0 */
 
@@ -38,7 +38,7 @@ fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec)
 
     if (n > 0) fmprb_zero(z->coeffs);
     if (n > 1) fmprb_const_euler(z->coeffs + 1, prec);
-    if (n > 2) fmprb_zeta_ui_vec(z->coeffs + 2, 2, n - 2, prec);
+    if (n > 2) zeta_ui_vec(z->coeffs + 2, 2, n - 2, prec);
 
     for (i = 2; i < n; i++)
         fmprb_div_ui(z->coeffs + i, z->coeffs + i, i, prec);
