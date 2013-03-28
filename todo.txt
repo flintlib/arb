@@ -67,8 +67,6 @@
 
 * Document fmpz_extras
 
-* Move zeta functions to own module and cleanup.
-
 * Use the complex Newton iteration for cos(pi p/q) when appropriate.
   Double check the proof of correctness of the complex Newton iteration
   and make it work when the polynomial is not exact.
