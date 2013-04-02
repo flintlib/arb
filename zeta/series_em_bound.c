@@ -231,7 +231,7 @@ zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpcb_t a,
     /* bound for rising factorial */
     bound_rfac(F, s, 2*M, len, wp);
 
-    /* product */
+    /* product (TODO: only need upper bound; write a function for this) */
     _fmprb_poly_mullow(bound, F, len, R, len, len, wp);
 
     /* bound for bernoulli polynomials, 4 / (2pi)^(2M) */

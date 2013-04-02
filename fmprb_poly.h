@@ -147,6 +147,13 @@ void fmprb_poly_mullow_classical(fmprb_poly_t res, const fmprb_poly_t poly1,
                                             const fmprb_poly_t poly2,
                                                 long n, long prec);
 
+void _fmprb_poly_mullow_block(fmprb_struct * C,
+    const fmprb_struct * A, long lenA,
+    const fmprb_struct * B, long lenB, long n, long prec);
+
+void fmprb_poly_mullow_block(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long len, long prec);
+
 void _fmprb_poly_mullow(fmprb_struct * C,
     const fmprb_struct * A, long lenA,
     const fmprb_struct * B, long lenB, long n, long prec);

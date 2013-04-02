@@ -35,7 +35,7 @@ _fmprb_poly_mullow(fmprb_struct * res,
     if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
         _fmprb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
     else
-        _fmprb_poly_mullow_ztrunc(res, poly1, len1, poly2, len2, n, prec);
+        _fmprb_poly_mullow_block(res, poly1, len1, poly2, len2, n, prec);
 }
 
 void
