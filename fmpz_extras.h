@@ -251,5 +251,23 @@ fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
     }
 }
 
+static __inline__ void
+fmpz_max(fmpz_t z, const fmpz_t x, const fmpz_t y)
+{
+    if (fmpz_cmp(x, y) >= 0)
+        fmpz_set(z, x);
+    else
+        fmpz_set(z, y);
+}
+
+static __inline__ void
+fmpz_min(fmpz_t z, const fmpz_t x, const fmpz_t y)
+{
+    if (fmpz_cmp(x, y) < 0)
+        fmpz_set(z, x);
+    else
+        fmpz_set(z, y);
+}
+
 #endif
 
