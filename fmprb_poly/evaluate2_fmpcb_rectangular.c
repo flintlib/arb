@@ -65,17 +65,7 @@ _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z,
     fmpcb_init(t);
     fmprb_init(c);
 
-    for (i = 0; i <= m; i++)
-    {
-        if (i == 0)
-            fmpcb_one(xs + i);
-        else if (i == 1)
-            fmpcb_set(xs + i, x);
-        else if (i % 2 == 0)
-            fmpcb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
-        else
-            fmpcb_mul(xs + i, xs + i - 1, x, prec);
-    }
+    _fmpcb_vec_set_powers(xs, x, m + 1, prec);
 
     fmpcb_set_fmprb(y, poly + (r - 1) * m);
     for (j = 1; (r - 1) * m + j < len; j++)

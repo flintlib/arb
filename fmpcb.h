@@ -696,4 +696,22 @@ _fmpcb_vec_bits(const fmpcb_struct * vec, long len)
     return _fmprb_vec_bits((const fmprb_struct *) vec, 2 * len);
 }
 
+static __inline__ void
+_fmpcb_vec_set_powers(fmpcb_struct * xs, const fmpcb_t x, long len, long prec)
+{
+    long i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (i == 0)
+            fmpcb_one(xs + i);
+        else if (i == 1)
+            fmpcb_set_round(xs + i, x, prec);
+        else if (i % 2 == 0)
+            fmpcb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
+        else
+            fmpcb_mul(xs + i, xs + i - 1, x, prec);
+    }
+}
+
 #endif

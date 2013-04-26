@@ -670,4 +670,22 @@ _fmprb_vec_bits(const fmprb_struct * x, long len)
     return b;
 }
 
+static __inline__ void
+_fmprb_vec_set_powers(fmprb_struct * xs, const fmprb_t x, long len, long prec)
+{
+    long i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (i == 0)
+            fmprb_one(xs + i);
+        else if (i == 1)
+            fmprb_set_round(xs + i, x, prec);
+        else if (i % 2 == 0)
+            fmprb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
+        else
+            fmprb_mul(xs + i, xs + i - 1, x, prec);
+    }
+}
+
 #endif
