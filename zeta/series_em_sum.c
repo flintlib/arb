@@ -171,7 +171,7 @@ zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int defla
     {
         for (n = 0; n < N; n++)
         {
-            printf("sum 1: %ld %ld\n", n, N);
+            /* printf("sum 1: %ld %ld\n", n, N); */
             fmpcb_add_ui(Na, a, n, prec);
             _fmpcb_poly_fmpcb_invpow_cpx(t, Na, s, d, prec);
             _fmpcb_vec_add(sum, sum, t, d, prec);
@@ -246,7 +246,7 @@ zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int defla
 
     for (r = 1; r <= M; r++)
     {
-        printf("sum 2: %ld %ld\n", r, M);
+        /* printf("sum 2: %ld %ld\n", r, M); */
 
         /* sum += bernoulli number * term */
         fmprb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);
