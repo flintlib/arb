@@ -119,6 +119,12 @@ Arithmetic
 
     Sets *C* to the sum of *A* and *B*.
 
+.. function:: void _fmprb_poly_mullow_classical(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+
+.. function:: void _fmprb_poly_mullow_ztrunc(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+
+.. function:: void _fmprb_poly_mullow_block(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+
 .. function:: void _fmprb_poly_mullow(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
@@ -126,10 +132,25 @@ Arithmetic
     inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`,
     `n > 0`, `\mathrm{lenA} + \mathrm{lenB} - 1 \ge n`.
 
-    As currently implemented, this function puts each input polynomial on
-    a common exponent, truncates to prec bits, and multiplies exactly over
+    The *classical* version uses a plain loop. This has good numerical
+    stability but gets slow for large *n*.
+
+    The *ztrunc* version puts each input polynomial on
+    a common exponent, truncates to *prec* bits, and multiplies exactly over
     the integers. The output error is computed by cross-multiplying the
-    max norms.
+    max norms. This is fast but has poor numerical stability unless all
+    coefficients are of the same magnitude.
+
+    The *block* version decomposes the product into several
+    subproducts which are computed exactly over the integers.
+    This is typically nearly as fast as *ztrunc*, and the numerical
+    stability is essentially as good as *classical*.
+
+.. function:: void fmprb_poly_mullow_classical(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
+
+.. function:: void fmprb_poly_mullow_ztrunc(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
+
+.. function:: void fmprb_poly_mullow_block(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
 
 .. function:: void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
 
@@ -139,7 +160,7 @@ Arithmetic
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
     length *n*. The output is not allowed to be aliased with either of the
-    inputs. We require $\mathrm{lenA} \ge \mathrm{lenB} > 0$, $n > 0$.
+    inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`, `n > 0`.
     This function currently calls *_fmprb_poly_mullow*.
 
 .. function:: void fmprb_poly_mul(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
