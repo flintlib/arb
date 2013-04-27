@@ -25,11 +25,11 @@
 
 #include "gamma.h"
 
-__thread long * gamma_taylor_bound_mag_cache = NULL;
+TLS_PREFIX long * gamma_taylor_bound_mag_cache = NULL;
 
-__thread fmpr_struct * gamma_taylor_bound_ratio_cache = NULL;
+TLS_PREFIX fmpr_struct * gamma_taylor_bound_ratio_cache = NULL;
 
-__thread long gamma_taylor_bound_cache_num = 0;
+TLS_PREFIX long gamma_taylor_bound_cache_num = 0;
 
 void
 gamma_taylor_bound_extend_cache(long n)

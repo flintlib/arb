@@ -35,6 +35,15 @@
 #include "fmpq.h"
 #include "fmpz_extras.h"
 
+#include "config.h"
+#ifdef HAVE_TLS
+#if HAVE_TLS
+#define TLS_PREFIX __thread
+#else
+#define TLS_PREFIX
+#endif
+#endif
+
 #define fmpr_rnd_t int
 #define FMPR_RND_FLOOR 0
 #define FMPR_RND_CEIL 1

@@ -31,13 +31,13 @@
 #include "fmprb.h"
 #include "fmpcb.h"
 
-extern __thread long * gamma_taylor_bound_mag_cache;
-extern __thread fmpr_struct * gamma_taylor_bound_ratio_cache;
-extern __thread long gamma_taylor_bound_cache_num;
+extern TLS_PREFIX long * gamma_taylor_bound_mag_cache;
+extern TLS_PREFIX fmpr_struct * gamma_taylor_bound_ratio_cache;
+extern TLS_PREFIX long gamma_taylor_bound_cache_num;
 
-extern __thread fmprb_struct * gamma_taylor_coeffs;
-extern __thread long gamma_taylor_prec;
-extern __thread long gamma_taylor_num;
+extern TLS_PREFIX fmprb_struct * gamma_taylor_coeffs;
+extern TLS_PREFIX long gamma_taylor_prec;
+extern TLS_PREFIX long gamma_taylor_num;
 
 void gamma_taylor_bound_ratio(fmpr_t r, long n);
 long gamma_taylor_bound_mag(long n);

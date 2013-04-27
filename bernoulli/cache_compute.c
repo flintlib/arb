@@ -25,9 +25,9 @@
 
 #include "bernoulli.h"
 
-__thread long bernoulli_cache_num = 0;
+TLS_PREFIX long bernoulli_cache_num = 0;
 
-__thread fmpq * bernoulli_cache = NULL;
+TLS_PREFIX fmpq * bernoulli_cache = NULL;
 
 void
 bernoulli_cache_compute(long n)

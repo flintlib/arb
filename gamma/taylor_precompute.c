@@ -26,11 +26,11 @@
 #include "gamma.h"
 #include "fmprb_poly.h"
 
-__thread fmprb_struct * gamma_taylor_coeffs = NULL;
+TLS_PREFIX fmprb_struct * gamma_taylor_coeffs = NULL;
 
-__thread long gamma_taylor_prec = 0;
+TLS_PREFIX long gamma_taylor_prec = 0;
 
-__thread long gamma_taylor_num = 0;
+TLS_PREFIX long gamma_taylor_num = 0;
 
 void
 fmprb_poly_neg(fmprb_poly_t y, const fmprb_poly_t x)
