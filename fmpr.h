@@ -42,6 +42,8 @@
 #else
 #define TLS_PREFIX
 #endif
+#else
+#define TLS_PREFIX
 #endif
 
 #define fmpr_rnd_t int
