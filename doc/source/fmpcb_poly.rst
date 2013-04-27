@@ -170,10 +170,20 @@ Root-finding
 .. function:: void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m, const fmpcb_struct * poly, const fmpcb_struct * polyder, long len, long prec)
 
     Given any complex number `m`, and a nonconstant polynomial `f` and its
-    derivative `f'`, sets *r* to an interval centered on `m` that is
+    derivative `f'`, sets *r* to a complex interval centered on `m` that is
     guaranteed to contain at least one root of `f`.
     Such an interval is obtained by taking a ball of radius `|f(m)/f'(m)| n`
-    where `n` is the degree of `f`.
+    where `n` is the degree of `f`. Proof: assume that the distance
+    to the nearest root exceeds `r = |f(m)/f'(m)| n`. Then
+
+    .. math ::
+
+        \left|\frac{f'(m)}{f(m)}\right| =
+            \left|\sum_i \frac{1}{m-\zeta_i}\right|
+            \le \sum_i \frac{1}{|m-\zeta_i|}
+            < \frac{n}{r} = \left|\frac{f'(m)}{f(m)}\right|
+
+    which is a contradiction (see [Kob2010]_).
 
 .. function:: long _fmpcb_poly_validate_roots(fmpcb_struct * roots, const fmpcb_struct * poly, long len, long prec)
 
