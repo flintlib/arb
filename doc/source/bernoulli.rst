@@ -7,7 +7,8 @@ Generation of Bernoulli numbers
 .. type:: bernoulli_rev_t
 
     An iterator object for generating a range of even-indexed Bernoulli numbers
-    in reverse order, i.e. computing `B_n, B_{n-2}, B_{n-4}, \ldots, B_0`.
+    exactly in reverse order, i.e. computing the exact
+    fractions `B_n, B_{n-2}, B_{n-4}, \ldots, B_0`.
     The Bernoulli numbers are generated from scratch, i.e.
     no caching is performed.
 
