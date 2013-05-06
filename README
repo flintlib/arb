@@ -11,7 +11,9 @@ For documentation and additional details, see: http://fredrikj.net/arb/
 
 Development updates are occasionally posted to: http://fredrikj.net/blog/
 
+Bug reports, feature requests and other comments are welcome on the
+FLINT mailing list: flint-devel@googlegroups.com
+
 Author: Fredrik Johansson <fredrik.johansson@gmail.com>
 
 The build scripts are copied from FLINT and were written by Bill Hart.
-
