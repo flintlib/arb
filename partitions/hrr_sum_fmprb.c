@@ -243,7 +243,8 @@ sinh_cosh_divk_precomp(fmprb_t sh, fmprb_t ch, fmprb_t ex, long k, long prec)
 {
     fmprb_t t;
     fmprb_init(t);
-    fmprb_root(ch, ex, k, prec);
+    fmprb_set_round(t, ex, prec);
+    fmprb_root(ch, t, k, prec);
     /* The second term doesn't need full precision,
        but this doesn't affect performance that much... */
     fmprb_ui_div(t, 1, ch, prec);
