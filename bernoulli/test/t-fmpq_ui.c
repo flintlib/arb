@@ -25,12 +25,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <mpir.h>
-#include "flint.h"
-#include "arith.h"
-#include "fmpz.h"
 #include "fmpz_vec.h"
-#include "fmpq.h"
+#include "arith.h"
 #include "bernoulli.h"
 
 int main()
