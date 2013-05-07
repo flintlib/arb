@@ -3,9 +3,12 @@ Installation and usage basics
 
 Arb has the following dependencies:
 
-* MPIR (http://www.mpir.org)
+* MPIR (http://www.mpir.org) or GMP (http://www.gmplib.org)
 * MPFR (http://www.mpfr.org)
 * FLINT (http://www.flintlib.org)
+
+If MPIR is used instead of GMP, it must be compiled with
+the --enable-gmpcompat option.
 
 Currently a source checkout of FLINT from
 https://github.com/fredrik-johansson/flint2 is required.
@@ -17,9 +20,9 @@ To compile, test and install Arb from source, do::
     make check
     make install
 
-If MPIR, MPFR or FLINT is installed in some other location than
+If GMP/MPIR, MPFR or FLINT is installed in some other location than
 the default path /usr/local, pass the
-flag --with-mpir=... --with-mpfr=... or --with-flint=... with
+flag --with-gmp=... --with-mpfr=... or --with-flint=... with
 the correct path to configure (type ./configure --help to show
 more options).
 
