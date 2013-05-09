@@ -1,8 +1,8 @@
 **fmprb_poly.h** -- polynomials over the real numbers
 ===============================================================================
 
-An *fmprb_poly_t* represents a polynomial over the real numbers,
-implemented as an array of coefficients of type *fmprb_struct*.
+An :type:`fmprb_poly_t` represents a polynomial over the real numbers,
+implemented as an array of coefficients of type :type:`fmprb_struct`.
 
 Most functions are provided in two versions: an underscore method which
 operates directly on pre-allocated arrays of coefficients and generally
@@ -161,7 +161,7 @@ Arithmetic
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
     length *n*. The output is not allowed to be aliased with either of the
     inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`, `n > 0`.
-    This function currently calls *_fmprb_poly_mullow*.
+    This function is implemented as a simple wrapper for :func:`_fmprb_poly_mullow`.
 
 .. function:: void fmprb_poly_mul(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
 
@@ -329,7 +329,7 @@ Product trees
 
     Constructs a product tree from a given array of *len* roots. The tree
     structure must be pre-allocated to the specified length using
-    *_fmprb_poly_tree_alloc*.
+    :func:`_fmprb_poly_tree_alloc`.
 
 
 Multipoint evaluation
@@ -340,7 +340,7 @@ Multipoint evaluation
 .. function:: void fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
 
     Evaluates the polynomial simultaneously at *n* given points, calling
-    *_fmprb_poly_evaluate* repeatedly.
+    :func:`_fmprb_poly_evaluate` repeatedly.
 
 .. function:: void _fmprb_poly_evaluate_vec_fast_precomp(fmprb_struct * vs, const fmprb_struct * poly, long plen, fmprb_struct ** tree, long len, long prec)
 

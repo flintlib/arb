@@ -1,6 +1,16 @@
 **fmpcb_poly.h** -- polynomials over the complex numbers
 ===============================================================================
 
+An :type:`fmpcb_poly_t` represents a polynomial over the complex numbers,
+implemented as an array of coefficients of type :type:`fmpcb_struct`.
+
+Most functions are provided in two versions: an underscore method which
+operates directly on pre-allocated arrays of coefficients and generally
+has some restrictions (such as requiring the lengths to be nonzero
+and not supporting aliasing of the input and output arrays),
+and a non-underscore method which performs automatic memory
+management and handles degenerate cases.
+
 Types, macros and constants
 -------------------------------------------------------------------------------
 
@@ -119,30 +129,87 @@ Conversions
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long prec)
+.. function:: void _fmpcb_poly_add(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
 
-.. function:: void fmpcb_poly_add(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+    Sets *{C, max(lenA, lenB)}* to the sum of *{A, lenA}* and *{B, lenB}*.
+    Allows aliasing of the input and output operands.
 
-.. function:: void _fmpcb_poly_mullow_classical(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+.. function:: void fmpcb_poly_add(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long prec)
 
-.. function:: void fmpcb_poly_mullow_classical(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+    Sets *C* to the sum of *A* and *B*.
 
-.. function:: void _fmpcb_poly_mullow_transpose(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_classical(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
 
-.. function:: void fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_transpose(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
 
-.. function:: void _fmpcb_poly_mullow(fmpcb_struct * res, const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_transpose_gauss(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
 
-.. function:: void fmpcb_poly_mullow(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+.. function:: void _fmpcb_poly_mullow(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
+
+    Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
+    length *n*. The output is not allowed to be aliased with either of the
+    inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`,
+    `n > 0`, `\mathrm{lenA} + \mathrm{lenB} - 1 \ge n`.
+
+    The *classical* version uses a plain loop.
+
+    The *transpose* version evaluates the product using four real polynomial
+    multiplications (via :func:`_fmprb_poly_mullow`).
+
+    The *transpose_gauss* version evaluates the product using three real
+    polynomial multiplications. This is almost always faster than *transpose*,
+    but has worse numerical stability when the coefficients vary
+    in magnitude.
+
+    The default function :func:`_fmpcb_poly_mullow` automatically switches
+    been *classical* and *transpose* multiplication.
+
+.. function:: void fmpcb_poly_mullow_classical(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow_transpose(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow_transpose_gauss(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
+
+.. function:: void fmpcb_poly_mullow(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
+
+    Sets *C* to the product of *A* and *B*, truncated to length *n*.
 
 .. function:: void _fmpcb_poly_mul(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
 
-.. function:: void fmpcb_poly_mul(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+    Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
+    length *n*. The output is not allowed to be aliased with either of the
+    inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`, `n > 0`.
+    This function currently calls *_fmpcb_poly_mullow*.
+
+.. function:: void fmpcb_poly_mul(fmpcb_poly_t C, const fmpcb_poly_t A1, const fmpcb_poly_t B2, long prec)
+
+    Sets *C* to the product of *A* and *B*.
 
 .. function:: void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec)
 
+    Sets *{Qinv, len}* to the power series inverse of *{Q, len}*. Uses Newton iteration.
+
 .. function:: void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec)
 
+    Sets *Qinv* to the power series inverse of *Q*.
+
+.. function:: void _fmpcb_poly_div(fmpcb_struct * Q, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+
+.. function:: void _fmpcb_poly_rem(fmpcb_struct * R, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+
+.. function:: void _fmpcb_poly_divrem(fmpcb_struct * Q, fmpcb_struct * R, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+
+.. function:: void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R, const fmpcb_poly_t A, const fmpcb_poly_t B, long prec)
+
+    Performs polynomial division with remainder, computing a quotient `Q` and
+    a remainder `R` such that `A = BQ + R`. The leading coefficient of `B` must
+    not contain zero. The implementation reverses the inputs and performs
+    power series division.
+
+.. function:: void _fmpcb_poly_div_root(fmpcb_struct * Q, fmpcb_t R, const fmpcb_struct * A, long len, const fmpcb_t c, long prec)
+
+    Divides `A` by the polynomial `x - c`, computing the quotient `Q` as well
+    as the remainder `R = f(c)`.
 
 Evaluation
 -------------------------------------------------------------------------------
@@ -154,7 +221,84 @@ Evaluation
     Evaluates the polynomial using Horner's rule.
 
 
-Derivatives
+Product trees
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_product_roots(fmpcb_struct * poly, const fmpcb_struct * xs, long n, long prec)
+
+.. function:: void fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_struct * xs, long n, long prec)
+
+    Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
+
+.. function:: fmpcb_struct ** _fmpcb_poly_tree_alloc(long len)
+
+    Returns an initialized data structured capable of representing a
+    remainder tree (product tree) of *len* roots.
+
+.. function:: void _fmpcb_poly_tree_free(fmpcb_struct ** tree, long len)
+
+    Deallocates a tree structure as allocated using *_fmpcb_poly_tree_alloc*.
+
+.. function:: void _fmpcb_poly_tree_build(fmpcb_struct ** tree, const fmpcb_struct * roots, long len, long prec)
+
+    Constructs a product tree from a given array of *len* roots. The tree
+    structure must be pre-allocated to the specified length using
+    :func:`_fmpcb_poly_tree_alloc`.
+
+
+Multipoint evaluation
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_struct * poly, long plen, const fmpcb_struct * xs, long n, long prec)
+
+.. function:: void fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+
+    Evaluates the polynomial simultaneously at *n* given points, calling
+    :func:`_fmpcb_poly_evaluate` repeatedly.
+
+.. function:: void _fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_struct * vs, const fmpcb_struct * poly, long plen, fmpcb_struct ** tree, long len, long prec)
+
+.. function:: void _fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_struct * poly, long plen, const fmpcb_struct * xs, long n, long prec)
+
+.. function:: void fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+
+    Evaluates the polynomial simultaneously at *n* given points, using
+    fast multipoint evaluation.
+
+Interpolation
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_interpolate_newton(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+
+.. function:: void fmpcb_poly_interpolate_newton(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most *n* that interpolates
+    the given *x* and *y* values. This implementation first interpolates in the
+    Newton basis and then converts back to the monomial basis.
+
+.. function:: void _fmpcb_poly_interpolate_barycentric(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+
+.. function:: void fmpcb_poly_interpolate_barycentric(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most *n* that interpolates
+    the given *x* and *y* values. This implementation uses the barycentric
+    form of Lagrange interpolation.
+
+.. function:: void _fmpcb_poly_interpolation_weights(fmpcb_struct * w, fmpcb_struct ** tree, long len, long prec)
+
+.. function:: void _fmpcb_poly_interpolate_fast_precomp(fmpcb_struct * poly, const fmpcb_struct * ys, fmpcb_struct ** tree, const fmpcb_struct * weights, long len, long prec)
+
+.. function:: void _fmpcb_poly_interpolate_fast(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long len, long prec)
+
+.. function:: void fmpcb_poly_interpolate_fast(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+
+    Recovers the unique polynomial of length at most *n* that interpolates
+    the given *x* and *y* values, using fast Lagrange interpolation.
+    The precomp function takes a precomputed product tree over the
+    *x* values and a vector of interpolation weights as additional inputs.
+
+
+Differentiation
 -------------------------------------------------------------------------------
 
 .. function:: void _fmpcb_poly_derivative(fmpcb_struct * res, const fmpcb_struct * poly, long len, long prec)
