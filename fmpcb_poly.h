@@ -162,6 +162,23 @@ void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long le
 
 void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
+void _fmpcb_poly_reverse(fmpcb_struct * res, const fmpcb_struct * poly, long len, long n);
+
+void _fmpcb_poly_div(fmpcb_struct * Q,
+    const fmpcb_struct * A, long lenA,
+    const fmpcb_struct * B, long lenB, long prec);
+
+void _fmpcb_poly_divrem(fmpcb_struct * Q, fmpcb_struct * R,
+    const fmpcb_struct * A, long lenA,
+    const fmpcb_struct * B, long lenB, long prec);
+
+void _fmpcb_poly_rem(fmpcb_struct * R,
+    const fmpcb_struct * A, long lenA,
+    const fmpcb_struct * B, long lenB, long prec);
+
+void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R,
+                             const fmpcb_poly_t A, const fmpcb_poly_t B, long prec);
+
 void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
     const fmpcb_struct * poly,
     const fmpcb_struct * polyder, long len, long prec);
