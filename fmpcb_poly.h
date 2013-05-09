@@ -158,6 +158,15 @@ void _fmpcb_poly_mul(fmpcb_struct * C,
 void fmpcb_poly_mul(fmpcb_poly_t res, const fmpcb_poly_t poly1,
               const fmpcb_poly_t poly2, long prec);
 
+static __inline__ void
+_fmpcb_poly_mul_monic(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long prec)
+{
+    if (len1 + len2 - 2 > 0)
+        _fmpcb_poly_mullow(res, poly1, len1, poly2, len2, len1 + len2 - 2, prec);
+    fmpcb_one(res + len1 + len2 - 2);
+}
+
 void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec);
 
 void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
@@ -178,6 +187,75 @@ void _fmpcb_poly_rem(fmpcb_struct * R,
 
 void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R,
                              const fmpcb_poly_t A, const fmpcb_poly_t B, long prec);
+
+void _fmpcb_poly_div_root(fmpcb_struct * Q, fmpcb_t R, const fmpcb_struct * A,
+    long len, const fmpcb_t c, long prec);
+
+void
+_fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_struct * vs, const fmpcb_struct * poly,
+    long plen, fmpcb_struct ** tree, long len, long prec);
+
+void _fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_struct * poly, long plen,
+    const fmpcb_struct * xs, long n, long prec);
+
+void
+fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys,
+        const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec);
+
+void
+_fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_struct * poly, long plen,
+    const fmpcb_struct * xs, long n, long prec);
+
+void
+fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys,
+        const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec);
+
+void
+_fmpcb_poly_interpolate_barycentric(fmpcb_struct * poly,
+    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec);
+
+void
+fmpcb_poly_interpolate_barycentric(fmpcb_poly_t poly,
+    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec);
+
+void
+_fmpcb_poly_interpolation_weights(fmpcb_struct * w,
+    fmpcb_struct ** tree, long len, long prec);
+
+void
+_fmpcb_poly_interpolate_fast_precomp(fmpcb_struct * poly,
+    const fmpcb_struct * ys, fmpcb_struct ** tree, const fmpcb_struct * weights,
+    long len, long prec);
+
+void
+_fmpcb_poly_interpolate_fast(fmpcb_struct * poly,
+    const fmpcb_struct * xs, const fmpcb_struct * ys, long len, long prec);
+
+void
+fmpcb_poly_interpolate_fast(fmpcb_poly_t poly,
+        const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec);
+
+void
+_fmpcb_poly_interpolate_newton(fmpcb_struct * poly, const fmpcb_struct * xs,
+    const fmpcb_struct * ys, long n, long prec);
+
+void
+fmpcb_poly_interpolate_newton(fmpcb_poly_t poly,
+    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec);
+
+void
+_fmpcb_poly_product_roots(fmpcb_struct * poly, const fmpcb_struct * xs, long n, long prec);
+
+void
+fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_struct * xs, long n, long prec);
+
+fmpcb_struct ** _fmpcb_poly_tree_alloc(long len);
+
+void _fmpcb_poly_tree_free(fmpcb_struct ** tree, long len);
+
+void
+_fmpcb_poly_tree_build(fmpcb_struct ** tree, const fmpcb_struct * roots, long len, long prec);
+
 
 void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
     const fmpcb_struct * poly,
