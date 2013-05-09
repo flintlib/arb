@@ -158,9 +158,9 @@ Arithmetic
 
 .. function:: void _fmprb_poly_mul(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
 
-    Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
-    length *n*. The output is not allowed to be aliased with either of the
-    inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`, `n > 0`.
+    Sets *{C, lenA + lenB - 1}* to the product of *{A, lenA}* and *{B, lenB}*.
+    The output is not allowed to be aliased with either of the
+    inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`.
     This function is implemented as a simple wrapper for :func:`_fmprb_poly_mullow`.
 
 .. function:: void fmprb_poly_mul(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
