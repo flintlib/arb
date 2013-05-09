@@ -179,7 +179,7 @@ Arithmetic
     Sets *{C, lenA + lenB - 1}* to the product of *{A, lenA}* and *{B, lenB}*.
     The output is not allowed to be aliased with either of the
     inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`.
-    This function currently calls *_fmpcb_poly_mullow*.
+    This function is implemented as a simple wrapper for :func:`_fmpcb_poly_mullow`.
 
 .. function:: void fmpcb_poly_mul(fmpcb_poly_t C, const fmpcb_poly_t A1, const fmpcb_poly_t B2, long prec)
 
