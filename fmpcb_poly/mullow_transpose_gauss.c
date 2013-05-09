@@ -26,12 +26,12 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_mullow_transpose(fmpcb_struct * res,
+_fmpcb_poly_mullow_transpose_gauss(fmpcb_struct * res,
     const fmpcb_struct * poly1, long len1,
     const fmpcb_struct * poly2, long len2, long n, long prec)
 {
     fmprb_struct *a, *b, *c, *d, *e, *f, *w;
-    fmprb_struct *t;
+    fmprb_struct *t, *u, *v;
     long i;
 
     len1 = FLINT_MIN(len1, n);
@@ -45,8 +45,9 @@ _fmpcb_poly_mullow_transpose(fmpcb_struct * res,
     e = d + len2;
     f = e + n;
 
-    /* (e+fi) = (a+bi)(c+di) = (ac - bd) + (ad + bc)i */
     t = _fmprb_vec_init(n);
+    u = _fmprb_vec_init(n);
+    v = _fmprb_vec_init(n);
 
     for (i = 0; i < len1; i++)
     {
@@ -66,13 +67,16 @@ _fmpcb_poly_mullow_transpose(fmpcb_struct * res,
         f[i] = *fmpcb_imagref(res + i);
     }
 
-    _fmprb_poly_mullow(e, a, len1, c, len2, n, prec);
-    _fmprb_poly_mullow(t, b, len1, d, len2, n, prec);
-    _fmprb_vec_sub(e, e, t, n, prec);
+    _fmprb_vec_add(t, a, b, len1, prec);
+    _fmprb_vec_add(u, c, d, len2, prec);
 
-    _fmprb_poly_mullow(f, a, len1, d, len2, n, prec);
-    _fmprb_poly_mullow(t, b, len1, c, len2, n, prec);
-    _fmprb_vec_add(f, f, t, n, prec);
+    _fmprb_poly_mullow(v, t, len1, u, len2, n, prec);
+    _fmprb_poly_mullow(t, a, len1, c, len2, n, prec);
+    _fmprb_poly_mullow(u, b, len1, d, len2, n, prec);
+
+    _fmprb_vec_sub(e, t, u, n, prec);
+    _fmprb_vec_sub(f, v, t, n, prec);
+    _fmprb_vec_sub(f, f, u, n, prec);
 
     for (i = 0; i < n; i++)
     {
@@ -81,11 +85,14 @@ _fmpcb_poly_mullow_transpose(fmpcb_struct * res,
     }
 
     _fmprb_vec_clear(t, n);
+    _fmprb_vec_clear(u, n);
+    _fmprb_vec_clear(v, n);
+
     flint_free(w);
 }
 
 void
-fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+fmpcb_poly_mullow_transpose_gauss(fmpcb_poly_t res, const fmpcb_poly_t poly1,
                                             const fmpcb_poly_t poly2,
                                                 long n, long prec)
 {
@@ -108,7 +115,7 @@ fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
     {
         fmpcb_poly_t t;
         fmpcb_poly_init2(t, n);
-        _fmpcb_poly_mullow_transpose(t->coeffs, poly1->coeffs, len1,
+        _fmpcb_poly_mullow_transpose_gauss(t->coeffs, poly1->coeffs, len1,
                                 poly2->coeffs, len2, n, prec);
         fmpcb_poly_swap(res, t);
         fmpcb_poly_clear(t);
@@ -116,7 +123,7 @@ fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
     else
     {
         fmpcb_poly_fit_length(res, n);
-        _fmpcb_poly_mullow_transpose(res->coeffs, poly1->coeffs, len1,
+        _fmpcb_poly_mullow_transpose_gauss(res->coeffs, poly1->coeffs, len1,
                                 poly2->coeffs, len2, n, prec);
     }
 

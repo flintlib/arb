@@ -135,6 +135,14 @@ void fmpcb_poly_mullow_transpose(fmpcb_poly_t res, const fmpcb_poly_t poly1,
                                             const fmpcb_poly_t poly2,
                                                 long n, long prec);
 
+void _fmpcb_poly_mullow_transpose_gauss(fmpcb_struct * res,
+    const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long n, long prec);
+
+void fmpcb_poly_mullow_transpose_gauss(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+                                            const fmpcb_poly_t poly2,
+                                                long n, long prec);
+
 void _fmpcb_poly_mullow(fmpcb_struct * res,
     const fmpcb_struct * poly1, long len1,
     const fmpcb_struct * poly2, long len2, long n, long prec);
