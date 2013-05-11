@@ -9,6 +9,8 @@
 
 * Add missing polynomial functionality (conversions, arithmetic, etc.)
 
+* Make mullow and power series methods always truncate the inputs to length n.
+
 * More transcendental functions.
 
 * Add adjustment code for balls (when the mantissa is much more precise than
