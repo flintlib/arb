@@ -102,5 +102,5 @@ build/%.lo: %.c
 build/%.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(INCS) -c $< -o $@
 
-BUILD_DIRS = fmpr fmprb fmprb_poly fmprb_mat fmpcb fmpcb_poly fmpcb_mat bernoulli hypgeom gamma zeta fmpz_extras fmpz_holonomic partitions
+BUILD_DIRS = fmpr fmprb fmprb_poly fmprb_mat fmpcb fmpcb_poly fmpcb_mat elefun bernoulli hypgeom gamma zeta fmpz_extras fmpz_holonomic partitions
 
