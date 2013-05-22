@@ -27,11 +27,33 @@
 #define ELEFUN_H
 
 #include "fmprb.h"
+#include "fmpz_extras.h"
 
+static __inline__ void
+fmpz_print_fixed(const fmpz_t x, long prec)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, x);
+    fmpr_mul_2exp_si(t, t, -prec);
+    fmpr_printd(t, prec / 3.33);
+    fmpr_clear(t);
+}
+
+#define EXP_CACHE_PREC 1024
+#define EXP_CACHE_BITS 8
+#define EXP_CACHE_NUM (1L<<EXP_CACHE_BITS)
+#define EXP_CACHE_LEVELS 2
+#define EXP_CACHE_REDUCTION (EXP_CACHE_LEVELS * EXP_CACHE_BITS)
 
 long elefun_exp_taylor_bound(long mag, long prec);
 
 void elefun_exp_fixed_taylor_horner_precomp(fmpz_t y, fmpz_t yerr, const fmpz_t x, long n, long prec);
+
+void elefun_exp_fixed_precomp(fmpz_t y, fmpz_t yerr, fmpz_t exponent,
+    const fmpz_t x, const fmpz_t xerr, long prec);
+
+int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one);
 
 #endif
 

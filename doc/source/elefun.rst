@@ -30,3 +30,50 @@ The exponential function
     of `s_i` by at most `2\epsilon`. Using induction, we obtain
     the bound `h = 2n-1`.
 
+.. function:: void elefun_exp_fixed_precomp(fmpz_t y, fmpz_t yerr, fmpz_t exponent, const fmpz_t x, const fmpz_t xerr, long prec)
+
+    Given a fixed-point ball with midpoint *x* and radius *xerr*,
+    computes a fixed-point ball *y* and *yerr* and a corresponding *exponent*
+    giving the value of the exponential function.
+
+    To avoid overflow, *xerr* must be small (for accuracy, it should be
+    much smaller than 1).
+
+    We first use division with remainder to remove `n \log 2`
+    from `x`, leaving `0 \le x < 1` (and setting *exponent* to `n`).
+    The value of `\log 2` is computed with 1 ulp error,
+    which adds `|n|` ulp to the error of *x*.
+
+    We then write `x = x_0 + x_1 + x_2` where `x_0` and `x_1` hold
+    the top bits of `x`, looking up `E_0 = e^{x_0}` and
+    `E_1 = e^{x_1}` from a table and computing
+    `E_2 = e^{x_2}` using the Taylor series. Let the corresponding (absolute value)
+    errors be `T_0, T_1, T_2` ulp (`\epsilon = 2^{-p}`).
+    Next, we compute `E_0 (E_1 E_2)` using fixed-point multiplications.
+    To bound the error, we write:
+
+    .. math ::
+
+        Y_0 = E_2 + T_2 \epsilon
+
+        Y_1 = (E_1 + T_1 \epsilon) Y_0 + \epsilon
+
+        Y_2 = (E_0 + T_0 \epsilon) Y_1 + \epsilon
+
+    Expanding the expression for `Y_2 - E_0 E_1 E_2` and using
+    `T_0, T_1 \le 1`, `E_0 \le 3`, `E_1, E_2 \le 1.1`,
+    `\epsilon^2 \le \epsilon`, we find that the error is
+    bounded by `9 + 7 T_2` ulp.
+
+    Finally, we add the propagated error. We have
+    `e^{a+b} - e^a \le b e^b e^a`. We bound `b e^b` by `b + b^2 + b^3`
+    if `b \le 1`, and crudely by `4^b` otherwise.
+
+.. function:: int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one)
+
+    Returns nonzero and sets *z* to a ball containing `e^x`
+    (respectively `e^x-1` if *minus_one* is set), if *prec* and the input
+    are small enough to efficiently (and accurately) use the fixed-point code
+    with precomputation. If the precision or the arguments are too large,
+    returns zero without altering *z*.
+

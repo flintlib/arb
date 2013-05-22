@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "fmprb.h"
+#include "elefun.h"
 
 void
 fmpr_exp_ubound(fmpr_t y, const fmpr_t x, long prec, long maglim)
@@ -235,6 +236,9 @@ void
 _fmprb_exp(fmprb_t z, const fmprb_t x, long prec, int m1)
 {
     long maglim = FLINT_MAX(128, 2 * prec);
+
+    if (elefun_exp_precomp(z, x, prec, m1))
+        return;
 
     if (fmprb_is_exact(x))
     {

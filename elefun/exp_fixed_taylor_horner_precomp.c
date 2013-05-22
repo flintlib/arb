@@ -26,7 +26,6 @@
 #include "elefun.h"
 
 #define NUM_INVERSE_FACTORIALS 256
-#define INVERSE_FACTORIALS_PREC 1024
 
 __thread fmpz inverse_factorials[NUM_INVERSE_FACTORIALS];
 __thread int inverse_factorials_init = 0;
@@ -38,7 +37,7 @@ compute_inverse_factorials()
     fmpz_t t;
     fmpz_init(t);
     fmpz_one(t);
-    fmpz_mul_2exp(t, t, INVERSE_FACTORIALS_PREC);
+    fmpz_mul_2exp(t, t, EXP_CACHE_PREC);
     for (i = 0; i < NUM_INVERSE_FACTORIALS; i++)
     {
         fmpz_init(inverse_factorials + i);
@@ -52,7 +51,7 @@ compute_inverse_factorials()
 void
 elefun_exp_fixed_taylor_horner_precomp(fmpz_t y, fmpz_t yerr, const fmpz_t x, long n, long prec)
 {
-    if (n == 0 || prec > INVERSE_FACTORIALS_PREC || n > NUM_INVERSE_FACTORIALS)
+    if (n == 0 || prec > EXP_CACHE_PREC || n > NUM_INVERSE_FACTORIALS)
     {
         abort();
     }
@@ -91,12 +90,12 @@ elefun_exp_fixed_taylor_horner_precomp(fmpz_t y, fmpz_t yerr, const fmpz_t x, lo
 
         fmpz_init(t);
 
-        fmpz_tdiv_q_2exp(y, inverse_factorials + n - 1, INVERSE_FACTORIALS_PREC - prec);
+        fmpz_tdiv_q_2exp(y, inverse_factorials + n - 1, EXP_CACHE_PREC - prec);
 
         for (i = n - 2; i >= 0; i--)
         {
             fmpz_mul_tdiv_q_2exp(y, y, x, prec);
-            fmpz_tdiv_q_2exp(t, inverse_factorials + i, INVERSE_FACTORIALS_PREC - prec);
+            fmpz_tdiv_q_2exp(t, inverse_factorials + i, EXP_CACHE_PREC - prec);
             fmpz_add(y, y, t);
         }
 

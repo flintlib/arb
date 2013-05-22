@@ -31,6 +31,7 @@
 
 
 #define DOUBLE_PREC 53
+#define MIN_PREC 20
 #define PI 3.141592653589793238462643
 #define INV_LOG2 (1.44269504088896340735992468 + 1e-12)
 #define HRR_A (1.1143183348516376904 + 1e-12)  /* 44*pi^2/(225*sqrt(3)) */
@@ -309,7 +310,7 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
 
         if (prod->prefactor != 0)
         {
-            if (prec > DOUBLE_PREC)
+            if (prec > MIN_PREC)
                 prec = partitions_prec_bound(n, k, N);
 
             /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
@@ -323,7 +324,7 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
             fmprb_set_round(t2, C, prec);
             fmprb_div_ui(t2, t2, k, prec);
 
-            if (k < 35)
+            if (k < 35 && prec > 1000)
                 sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
             else
                 fmprb_sinh_cosh(t3, t4, t2, prec);
