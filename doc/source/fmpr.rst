@@ -177,10 +177,10 @@ Assignment, rounding and conversions
 
 .. function:: long _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd)
 
-    Given a positive integer represented by a pointer *x* to a raw array of
-    *xn* limbs, sets *man* to the floating-point mantissa of
-    that integer rounded to *prec* bits in direction *rnd*,
-    sets *shift* to the exponent, and returns the error bound.
+    Given an integer represented by a pointer *x* to a raw array of
+    *xn* limbs (negated if *negative* is nonzero), sets *man* to
+    the corresponding floating-point mantissa rounded to *prec* bits in
+    direction *rnd*, sets *shift* to the exponent, and returns the error bound.
     We require that *xn* is positive and that the leading limb of *x* is nonzero.
 
 .. function:: void fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
