@@ -128,7 +128,7 @@ fmpz_add2_fmpz_si_inline(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
 /* TODO: optimize for result = 1 limb */
 
 static __inline__ void
-fmpz_set_mpn_rshift(fmpz_t z, mp_ptr src, mp_size_t n, unsigned int shift, int negative)
+fmpz_set_mpn_rshift(fmpz_t z, mp_srcptr src, mp_size_t n, unsigned int shift, int negative)
 {
     __mpz_struct * zptr;
     zptr = _fmpz_promote(z);
@@ -153,7 +153,7 @@ fmpz_set_mpn_rshift(fmpz_t z, mp_ptr src, mp_size_t n, unsigned int shift, int n
 
 /* sets z = +/- {src, n} where n >= 2 and the top limb of src is nonzero */
 static __inline__ void
-fmpz_set_mpn_large(fmpz_t z, mp_ptr src, mp_size_t n, int negative)
+fmpz_set_mpn_large(fmpz_t z, mp_srcptr src, mp_size_t n, int negative)
 {
     __mpz_struct * zz;
     zz = _fmpz_promote(z);

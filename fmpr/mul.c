@@ -43,12 +43,12 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
     int negative, long prec, fmpr_rnd_t rnd)
 {
-    long zn, alloc, lead, bc, ret;
+    long zn, alloc, ret, shift;
     mp_limb_t tmp_stack[MUL_STACK_ALLOC];
     mp_ptr tmp;
 
     zn = xn + yn;
-    alloc = zn + 1;  /* may need one extra temp limb for rounding carry */
+    alloc = zn;
 
     if (alloc > MUL_STACK_ALLOC)
         tmp = flint_malloc(alloc * sizeof(mp_limb_t));
@@ -56,62 +56,10 @@ _fmpr_mul_large(fmpz_t zman, fmpz_t zexp,
         tmp = tmp_stack;
 
     mpn_mul(tmp, xman, xn, yman, yn);
-
     zn = zn - (tmp[zn-1] == 0);
-    count_leading_zeros(lead, tmp[zn-1]);
-    bc = zn * FLINT_BITS - lead;
 
-    if (bc <= prec)
-    {
-        if (zn == 1)
-        {
-            if (!negative)
-                fmpz_set_ui(zman, tmp[0]);
-            else
-                fmpz_neg_ui(zman, tmp[0]);
-        }
-        else
-        {
-            fmpz_set_mpn_large(zman, tmp, zn, negative);
-        }
-
-        fmpz_add_inline(zexp, xexp, yexp);
-        ret = FMPR_RESULT_EXACT;
-    }
-    else
-    {
-        long cut_limb, cut_bit, shift, trail_limbs, trail_bits;
-        mp_limb_t cy;
-        mp_ptr res;
-
-        shift = bc - prec;
-        cut_limb = shift / FLINT_BITS;
-        cut_bit = shift % FLINT_BITS;
-
-        /* cut off at the rounding bit */
-        tmp[cut_limb] &= ~(((mp_limb_t) 1UL << cut_bit) - 1UL);
-        if (rounds_up(rnd, negative))
-        {
-            cy = mpn_add_1(tmp + cut_limb,
-                tmp + cut_limb, zn - cut_limb, (1UL << cut_bit));
-            tmp[zn] = cy;
-            zn += cy;
-        }
-
-        /* remove trailing zero limbs */
-        trail_limbs = 0;
-        while (tmp[cut_limb + trail_limbs] == 0)
-            trail_limbs++;
-
-        res = tmp + (cut_limb + trail_limbs);
-        zn -= (cut_limb + trail_limbs);
-        count_trailing_zeros(trail_bits, res[0]);
-        ret = (trail_limbs * FLINT_BITS) + trail_bits - cut_bit;
-        shift = (cut_limb + trail_limbs) * FLINT_BITS + trail_bits;
-
-        fmpz_set_mpn_rshift(zman, res, zn, trail_bits, negative);
-        fmpz_add2_fmpz_si_inline(zexp, xexp, yexp, shift);
-    }
+    ret = _fmpr_set_round_mpn(&shift, zman, tmp, zn, negative, prec, rnd);
+    fmpz_add2_fmpz_si_inline(zexp, xexp, yexp, shift);
 
     if (alloc > MUL_STACK_ALLOC)
         flint_free(tmp);

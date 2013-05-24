@@ -271,6 +271,8 @@ fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
     }
 }
 
+long _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd);
+
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)
 {
