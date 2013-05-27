@@ -19,26 +19,29 @@ At the moment, Arb contains:
   integer/floating-point and mixed-precision algorithms).
 
 * A module (fmprb) for real ball arithmetic, where a ball is
-  implemented as a pair of fmpr numbers.
+  implemented as a pair of fmpr numbers, and a corresponding module (fmpcb) for
+  complex numbers in rectangular form.
 
 * Functions for fast high-precision computation of some mathematical constants,
   based on ball arithmetic.
 
-* A module (fmprb_poly) for polynomials or power series over the real numbers,
-  implemented using balls as coefficients, with fast polynomial multiplication.
+* Modules (fmprb_poly, fmpcb_poly) for polynomials or power series over the
+  real and complex numbers, implemented using balls as coefficients,
+  with fast polynomial multiplication.
 
-* A rudimentary module (fmprb_mat) for matrices over the real numbers,
-  implemented using balls as coefficients.
+* Modules (fmprb_mat, fmpcb_mat) for matrices over the real and complex
+  numbers, implemented using balls as coefficients.
 
-Planned features include: transcendental functions and more extensive
-polynomial and matrix functionality, as well as support for complex numbers.
+Planned features include more transcendental functions and more extensive
+polynomial and matrix functionality, as well as further optimizations.
 
-Arb uses `MPIR <http://mpir.org>`_ and `FLINT <http://flintlib.org/>`_
+Arb uses `GMP <http://mpir.org>`_ / `MPIR <http://mpir.org>`_ and
+`FLINT <http://flintlib.org/>`_
 for the underlying integer arithmetic and other functions.
 The code conventions borrow from FLINT, and the project might get
 merged back into FLINT when the code stabilizes in the future.
-Arb also uses `MPFR <http://mpfr.org/>`_, mainly for testing purposes
-and fallback code.
+Arb also uses `MPFR <http://mpfr.org/>`_ for testing purposes
+and for evaluation of some functions.
 
 The current version of Arb implements most of its floating-point arithmetic
 naively using high-level FLINT types. The speed at low precision is far from
