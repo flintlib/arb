@@ -183,6 +183,18 @@ Assignment, rounding and conversions
     direction *rnd*, sets *shift* to the exponent, and returns the error bound.
     We require that *xn* is positive and that the leading limb of *x* is nonzero.
 
+.. function:: long fmpr_set_round_ui_2exp_fmpz(fmpr_t z, mp_limb_t lo, const fmpz_t exp, int negative, long prec, fmpr_rnd_t rnd)
+
+    Sets *z* to the unsigned integer *lo* times two to the power *exp*,
+    negating the value if *negative* is nonzero, and rounding the result
+    to *prec* bits in direction *rnd*.
+
+.. function:: long fmpr_set_round_uiui_2exp_fmpz(fmpr_t z, mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative, long prec, fmpr_rnd_t rnd)
+
+    Sets *z* to the unsigned two-limb integer *{hi, lo}* times two to the
+    power *exp*, negating the value if *negative* is nonzero, and rounding the result
+    to *prec* bits in direction *rnd*.
+
 .. function:: void fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
 
     Given the return value *rret* and output variable *result* from a

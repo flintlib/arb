@@ -53,6 +53,15 @@
 #define FMPR_RND_DOWN 3
 #define FMPR_RND_NEAR 4
 
+static __inline__ int
+rounds_up(fmpr_rnd_t rnd, int negative)
+{
+    if (rnd == FMPR_RND_DOWN) return 0;
+    if (rnd == FMPR_RND_UP) return 1;
+    if (rnd == FMPR_RND_FLOOR) return negative;
+    return !negative;
+}
+
 static __inline__ mpfr_rnd_t rnd_to_mpfr(fmpr_rnd_t rnd)
 {
     if (rnd == FMPR_RND_DOWN) return MPFR_RNDZ;
@@ -272,6 +281,15 @@ fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
 }
 
 long _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd);
+
+long fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
+        mp_limb_t lo, const fmpz_t exp, int negative,
+        long prec, fmpr_rnd_t rnd);
+
+long fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
+    mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative,
+    long prec, fmpr_rnd_t rnd);
+
 
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)
