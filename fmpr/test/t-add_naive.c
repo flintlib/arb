@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -31,7 +31,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("add....");
+    printf("add_naive....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -56,10 +56,10 @@ int main()
         fmpr_randtest_special(t, state, bits, 10);
         fmpr_randtest_special(u, state, bits, 10);
 
-        res1 = fmpr_add(t, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
-        res2 = fmpr_add(t, t, z, FMPR_PREC_EXACT, FMPR_RND_DOWN);
-        res3 = fmpr_add(u, y, z, FMPR_PREC_EXACT, FMPR_RND_DOWN);
-        res4 = fmpr_add(u, x, u, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        res1 = fmpr_add_naive(t, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        res2 = fmpr_add_naive(t, t, z, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        res3 = fmpr_add_naive(u, y, z, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        res4 = fmpr_add_naive(u, x, u, FMPR_PREC_EXACT, FMPR_RND_DOWN);
 
         if (!fmpr_equal(t, u) ||
             res1 != FMPR_RESULT_EXACT || res2 != FMPR_RESULT_EXACT ||
@@ -82,81 +82,27 @@ int main()
         fmpr_clear(u);
     }
 
-    /* compare with add_naive */
-    for (iter = 0; iter < 1000000; iter++)
-    {
-        long prec, ret1, ret2;
-        fmpr_t x, y, z, w;
-        fmpr_rnd_t rnd;
-
-        fmpr_init(x);
-        fmpr_init(y);
-        fmpr_init(z);
-        fmpr_init(w);
-
-        fmpr_randtest_special(x, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 200));
-        fmpr_randtest_special(y, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 200));
-        fmpr_randtest_special(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 200));
-
-        prec = 2 + n_randint(state, 1000);
-        if (n_randint(state, 10) == 0 &&
-                fmpz_bits(fmpr_expref(x)) < 10 &&
-                fmpz_bits(fmpr_expref(y)) < 10)
-            prec = FMPR_PREC_EXACT;
-
-        switch (n_randint(state, 4))
-        {
-            case 0: rnd = FMPR_RND_DOWN; break;
-            case 1: rnd = FMPR_RND_UP; break;
-            case 2: rnd = FMPR_RND_FLOOR; break;
-            default: rnd = FMPR_RND_CEIL; break;
-        }
-
-        ret1 = fmpr_add(z, x, y, prec, rnd);
-        ret2 = fmpr_add_naive(w, x, y, prec, rnd);
-
-        /* XXX: should investigate why fmpr_add sometimes returns
-                1 bit worse error bound than fmpr_add_naive */
-        if (!fmpr_equal(z, w) || !(ret1 == ret2 || ret1 == ret2 + 1))
-        {
-            printf("FAIL\n\n");
-            printf("iter %ld\n", iter);
-            printf("prec = %ld\n", prec);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
-            printf("ret1 = %ld, ret2 = %ld\n", ret1, ret2);
-            abort();
-        }
-
-        fmpr_clear(x);
-        fmpr_clear(y);
-        fmpr_clear(z);
-        fmpr_clear(w);
-    }
-
     /* compare rounding with mpfr */
-    for (iter = 0; iter < 1000000; iter++)
+    for (iter = 0; iter < 100000; iter++)
     {
         long bits, res;
         int mpfr_res;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
 
-        bits = 2 + n_randint(state, 500);
+        bits = 2 + n_randint(state, 200);
 
         fmpr_init(x);
         fmpr_init(y);
         fmpr_init(z);
         fmpr_init(w);
 
-        mpfr_init2(X, bits + 500);
-        mpfr_init2(Y, bits + 500);
+        mpfr_init2(X, bits + 100);
+        mpfr_init2(Y, bits + 100);
         mpfr_init2(Z, bits);
 
-        fmpr_randtest_special(x, state, bits + n_randint(state, 500), 10);
-        fmpr_randtest_special(y, state, bits + n_randint(state, 500), 10);
+        fmpr_randtest_special(x, state, bits + n_randint(state, 100), 10);
+        fmpr_randtest_special(y, state, bits + n_randint(state, 100), 10);
         fmpr_randtest_special(z, state, bits, 10);
 
         fmpr_get_mpfr(X, x, MPFR_RNDN);
@@ -166,19 +112,19 @@ int main()
         {
             case 0:
                 mpfr_res = mpfr_add(Z, X, Y, MPFR_RNDZ);
-                res = fmpr_add(z, x, y, bits, FMPR_RND_DOWN);
+                res = fmpr_add_naive(z, x, y, bits, FMPR_RND_DOWN);
                 break;
             case 1:
                 mpfr_res = mpfr_add(Z, X, Y, MPFR_RNDA);
-                res = fmpr_add(z, x, y, bits, FMPR_RND_UP);
+                res = fmpr_add_naive(z, x, y, bits, FMPR_RND_UP);
                 break;
             case 2:
                 mpfr_res = mpfr_add(Z, X, Y, MPFR_RNDD);
-                res = fmpr_add(z, x, y, bits, FMPR_RND_FLOOR);
+                res = fmpr_add_naive(z, x, y, bits, FMPR_RND_FLOOR);
                 break;
             default:
                 mpfr_res = mpfr_add(Z, X, Y, MPFR_RNDU);
-                res = fmpr_add(z, x, y, bits, FMPR_RND_CEIL);
+                res = fmpr_add_naive(z, x, y, bits, FMPR_RND_CEIL);
                 break;
         }
 
@@ -187,7 +133,6 @@ int main()
         if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0))
         {
             printf("FAIL\n\n");
-            printf("iter %ld\n", iter);
             printf("bits = %ld\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
@@ -207,7 +152,7 @@ int main()
             fmpr_init(true_error);
 
             fmpr_set_error_result(error_bound, z, res);
-            fmpr_add(z_exact, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+            fmpr_add_naive(z_exact, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
 
             fmpr_sub(true_error, z, z_exact, FMPR_PREC_EXACT, FMPR_RND_DOWN);
             fmpr_abs(true_error, true_error);

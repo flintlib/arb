@@ -393,6 +393,8 @@ long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
 long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
 long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
 
+long fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+
 long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
 long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);

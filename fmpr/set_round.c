@@ -25,15 +25,6 @@
 
 #include "fmpr.h"
 
-static __inline__ int
-rounds_up(fmpr_rnd_t rnd, int negative)
-{
-    if (rnd == FMPR_RND_DOWN) return 0;
-    if (rnd == FMPR_RND_UP) return 1;
-    if (rnd == FMPR_RND_FLOOR) return negative;
-    return !negative;
-}
-
 /* like mpn_scan0b, but takes an upper size */
 static __inline__ mp_bitcnt_t
 mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)

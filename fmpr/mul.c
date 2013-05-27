@@ -25,15 +25,6 @@
 
 #include "fmpr.h"
 
-static __inline__ int
-rounds_up(fmpr_rnd_t rnd, int negative)
-{
-    if (rnd == FMPR_RND_DOWN) return 0;
-    if (rnd == FMPR_RND_UP) return 1;
-    if (rnd == FMPR_RND_FLOOR) return negative;
-    return !negative;
-}
-
 #define MUL_STACK_ALLOC 40
 
 /* requires xn >= yn, xman and yman both normalised and odd */
