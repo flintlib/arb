@@ -31,6 +31,29 @@
 __thread mp_ptr __add_tmp = NULL;
 __thread long __add_alloc = 0;
 
+#define ADD_TMP_ALLOC \
+    if (alloc <= ADD_STACK_ALLOC) \
+    { \
+        tmp = tmp_stack; \
+    } \
+    else if (alloc <= ADD_TLS_ALLOC) \
+    { \
+        if (__add_alloc < alloc) \
+        { \
+            __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc); \
+            __add_alloc = alloc; \
+        } \
+        tmp = __add_tmp; \
+    } \
+    else \
+    { \
+        tmp = flint_malloc(sizeof(mp_limb_t) * alloc); \
+    }
+
+#define ADD_TMP_FREE \
+    if (alloc > ADD_TLS_ALLOC) \
+        flint_free(tmp);
+
 /* computes x + y * 2^shift (optionally negated) */
 long
 _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
@@ -64,23 +87,7 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
         {
             alloc = shift_limbs + yn + 1;
 
-            if (alloc <= ADD_STACK_ALLOC)
-            {
-                tmp = tmp_stack;
-            }
-            else if (alloc <= ADD_TLS_ALLOC)
-            {
-                if (__add_alloc < alloc)
-                {
-                    __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc);
-                    __add_alloc = alloc;
-                }
-                tmp = __add_tmp;
-            }
-            else
-            {
-                tmp = flint_malloc(sizeof(mp_limb_t) * alloc);
-            }
+            ADD_TMP_ALLOC
 
             flint_mpn_copyi(tmp, xman, xn);
             flint_mpn_zero(tmp + xn, shift_limbs - xn);
@@ -105,23 +112,7 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
             alloc1 = FLINT_MAX(alloc2 + shift_limbs, xn) + 1; /* space for sum */
             alloc = alloc1 + alloc2;
 
-            if (alloc <= ADD_STACK_ALLOC)
-            {
-                tmp = tmp_stack;
-            }
-            else if (alloc <= ADD_TLS_ALLOC)
-            {
-                if (__add_alloc < alloc)
-                {
-                    __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc);
-                    __add_alloc = alloc;
-                }
-                tmp = __add_tmp;
-            }
-            else
-            {
-                tmp = flint_malloc(sizeof(mp_limb_t) * alloc);
-            }
+            ADD_TMP_ALLOC
 
             tmp2 = tmp + alloc1;
 
@@ -183,23 +174,7 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
         {
             alloc = shift_limbs + yn + 1;
 
-            if (alloc <= ADD_STACK_ALLOC)
-            {
-                tmp = tmp_stack;
-            }
-            else if (alloc <= ADD_TLS_ALLOC)
-            {
-                if (__add_alloc < alloc)
-                {
-                    __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc);
-                    __add_alloc = alloc;
-                }
-                tmp = __add_tmp;
-            }
-            else
-            {
-                tmp = flint_malloc(sizeof(mp_limb_t) * alloc);
-            }
+            ADD_TMP_ALLOC
 
             mpn_neg_n(tmp, xman, xn);
 
@@ -220,9 +195,6 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
 
             mpn_sub_1(tmp + shift_limbs, tmp + shift_limbs, zn - shift_limbs, 1);
 
-            while (tmp[zn-1] == 0)
-                zn--;
-
             /* y has larger absolute value, and determines the sign */
             negative = ysign;
         }
@@ -234,23 +206,7 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
             alloc1 = FLINT_MAX(alloc2 + shift_limbs, xn); /* space for difference */
             alloc = alloc1 + alloc2;
 
-            if (alloc <= ADD_STACK_ALLOC)
-            {
-                tmp = tmp_stack;
-            }
-            else if (alloc <= ADD_TLS_ALLOC)
-            {
-                if (__add_alloc < alloc)
-                {
-                    __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc);
-                    __add_alloc = alloc;
-                }
-                tmp = __add_tmp;
-            }
-            else
-            {
-                tmp = flint_malloc(sizeof(mp_limb_t) * alloc);
-            }
+            ADD_TMP_ALLOC
 
             tmp2 = tmp + alloc1;
 
@@ -317,8 +273,6 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
                 }
 
                 zn = xn;
-                while (tmp[zn-1] == 0)
-                    zn--;
             }
             else if (tn + shift_limbs < xn)
             {
@@ -329,8 +283,6 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
                 cy = mpn_sub_n(tmp + shift_limbs, xman + shift_limbs, tmp2, tn);
                 mpn_sub_1(tmp + shift_limbs + tn, xman + shift_limbs + tn, xn - tn - shift_limbs, cy);
                 zn = xn;
-                while (tmp[zn-1] == 0)
-                    zn--;
                 negative = xsign;
             }
             else
@@ -347,19 +299,20 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
                 }
 
                 zn = shift_limbs + tn;
-                while (tmp[zn-1] == 0)
-                    zn--;
                 negative = ysign;
             }
         }
+
+        /* there might have been cancellation */
+        while (tmp[zn-1] == 0)
+            zn--;
     }
 
     ret = _fmpr_set_round_mpn(&shift, zman, tmp, zn, negative, prec, rnd);
     fmpz_add_si_inline(zexp, exp, shift);
 
 cleanup:
-    if (alloc > ADD_TLS_ALLOC)
-        flint_free(tmp);
+    ADD_TMP_FREE
 
     return ret;
 }
@@ -403,7 +356,7 @@ _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_
 long
 fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
-    long ret, shift, xn, yn;
+    long shift, xn, yn;
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr, yptr;
     fmpz xv, yv;
