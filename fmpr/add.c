@@ -28,8 +28,8 @@
 #define ADD_STACK_ALLOC 40
 #define ADD_TLS_ALLOC 1000
 
-__thread mp_ptr __add_tmp = NULL;
-__thread long __add_alloc = 0;
+TLS_PREFIX mp_ptr __add_tmp = NULL;
+TLS_PREFIX long __add_alloc = 0;
 
 #define ADD_TMP_ALLOC \
     if (alloc <= ADD_STACK_ALLOC) \
