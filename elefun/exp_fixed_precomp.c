@@ -26,10 +26,10 @@
 #include "elefun.h"
 
 /* todo: dynamic alloc */
-__thread fmpz_t ln2_cache;
-__thread fmpz exp_cache[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
-__thread long exp_cache_exp[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
-__thread int exp_cache_init = 0;
+TLS_PREFIX fmpz_t ln2_cache;
+TLS_PREFIX fmpz exp_cache[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
+TLS_PREFIX long exp_cache_exp[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
+TLS_PREFIX int exp_cache_init = 0;
 
 /* max 1 ulp error (TODO: check this) */
 void

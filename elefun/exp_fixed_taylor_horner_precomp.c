@@ -27,8 +27,8 @@
 
 #define NUM_INVERSE_FACTORIALS 256
 
-__thread fmpz inverse_factorials[NUM_INVERSE_FACTORIALS];
-__thread int inverse_factorials_init = 0;
+TLS_PREFIX fmpz inverse_factorials[NUM_INVERSE_FACTORIALS];
+TLS_PREFIX int inverse_factorials_init = 0;
 
 void
 compute_inverse_factorials()
