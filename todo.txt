@@ -1,6 +1,15 @@
+* Verify error bounds used in the fixed-point exponential code
+
+* Consider changing the interface of functions such as X_set_Y, X_neg_Y
+  to always take a precision parameter (and get rid of X_set_round_Y,
+  X_neg_Y etc.). Perhaps have X_setexact_Y methods for convenience,
+  or make an exception for _set_ in particular.
+
 * Make sure that excessive shifts in add/sub are detected
   with exact precision. Write tests for correctness of overlaps/contains
   in huge-exponent cases.
+
+* Double-check correctness of add/sub code with large shifts (rounding x+eps).
 
 * Work out semantics for comparisons/overlap/containment checks
   when NaNs are involved, and write test code.
