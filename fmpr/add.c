@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -54,12 +54,71 @@ __thread long __add_alloc = 0;
     if (alloc > ADD_TLS_ALLOC) \
         flint_free(tmp);
 
+#define READ_SIGN_PTR(zsign, ztmp, zptr, zn, zv) \
+    if (!COEFF_IS_MPZ(zv)) \
+    { \
+        zsign = zv < 0; \
+        ztmp = FLINT_ABS(zv); \
+        zptr = &ztmp; \
+        zn = 1; \
+    } \
+    else \
+    { \
+        __mpz_struct * zz = COEFF_TO_PTR(zv); \
+        zptr = zz->_mp_d; \
+        zn = zz->_mp_size; \
+        zsign = zn < 0; \
+        zn = FLINT_ABS(zn); \
+    }
+
+static __inline__ long
+_fmpr_add_small(fmpr_t z, mp_limb_t x, int xsign, const fmpz_t xexp, mp_limb_t y, int ysign, const fmpz_t yexp, long shift, long prec, long rnd)
+{
+    mp_limb_t hi, lo, t, u;
+    int sign = ysign;
+
+    t = x;
+    u = y;
+
+    lo = u << shift;
+    hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
+
+    if (xsign == ysign)
+    {
+        add_ssaaaa(hi, lo, hi, lo, 0, t);
+    }
+    else
+    {
+        if (hi == 0)
+        {
+            if (lo >= t)
+            {
+                lo = lo - t;
+            }
+            else
+            {
+                lo = t - lo;
+                sign = !sign;
+            }
+        }
+        else
+        {
+            sub_ddmmss(hi, lo, hi, lo, 0, t);
+        }
+    }
+
+    if (hi == 0)
+        return fmpr_set_round_ui_2exp_fmpz(z, lo, xexp, sign, prec, rnd);
+    else
+        return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, xexp, sign, prec, rnd);
+}
+
 /* computes x + y * 2^shift (optionally negated) */
 long
-_fmpr_add_large(fmpz_t zman, fmpz_t zexp,
-        mp_srcptr xman, mp_size_t xn, int xsign,
-        mp_srcptr yman, mp_size_t yn, int ysign,
-        const fmpz_t exp, long shift, long prec, fmpr_rnd_t rnd)
+_fmpr_add_large(fmpr_t z,
+        mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
+        mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
+        long shift, long prec, fmpr_rnd_t rnd)
 {
     long tn, zn, alloc, ret, shift_bits, shift_limbs;
     int negative;
@@ -69,6 +128,43 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
 
     shift_limbs = shift / FLINT_BITS;
     shift_bits = shift % FLINT_BITS;
+
+    /* x does not overlap with y or the result -- outcome is
+       equivalent to adding/subtracting a small number to/from y
+       and rounding */
+    if (shift > xn * FLINT_BITS &&
+        prec != FMPR_PREC_EXACT &&
+        xn * FLINT_BITS + prec - (FLINT_BITS * (yn - 1)) < shift)
+    {
+        zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
+        zn = FLINT_MAX(zn, yn) + 2;
+        shift_limbs = zn - yn;
+        alloc = zn;
+
+        ADD_TMP_ALLOC
+
+        flint_mpn_zero(tmp, shift_limbs);
+        flint_mpn_copyi(tmp + shift_limbs, yman, yn);
+
+        if (xsign == ysign)
+        {
+            tmp[0] = 1;
+        }
+        else
+        {
+            mpn_sub_1(tmp, tmp, zn, 1);
+            while (tmp[zn-1] == 0)
+                zn--;
+        }
+
+        ret = _fmpr_set_round_mpn(&shift, fmpr_manref(z), tmp, zn, ysign, prec, rnd);
+        shift -= shift_limbs * FLINT_BITS;
+        fmpz_add_si_inline(fmpr_expref(z), yexp, shift);
+
+        ADD_TMP_FREE
+
+        return ret;
+    }
 
     if (xsign == ysign)
     {
@@ -247,8 +343,7 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
                     /* the result is exactly zero */
                     if (comp == 0)
                     {
-                        fmpz_zero(zman);
-                        fmpz_zero(zexp);
+                        fmpr_zero(z);
                         ret = FMPR_RESULT_EXACT;
                         goto cleanup;
                     }
@@ -308,8 +403,8 @@ _fmpr_add_large(fmpz_t zman, fmpz_t zexp,
             zn--;
     }
 
-    ret = _fmpr_set_round_mpn(&shift, zman, tmp, zn, negative, prec, rnd);
-    fmpz_add_si_inline(zexp, exp, shift);
+    ret = _fmpr_set_round_mpn(&shift, fmpr_manref(z), tmp, zn, negative, prec, rnd);
+    fmpz_add_si_inline(fmpr_expref(z), xexp, shift);
 
 cleanup:
     ADD_TMP_FREE
@@ -360,8 +455,8 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr, yptr;
     fmpz xv, yv;
-    const fmpz * exp;
-    const fmpz * exp2;
+    const fmpz * xexp;
+    const fmpz * yexp;
     int xsign, ysign;
 
     if (fmpr_is_special(x) || fmpr_is_special(y))
@@ -369,111 +464,31 @@ fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         return _fmpr_add_special(z, x, y, prec, rnd);
     }
 
-    shift = _fmpz_sub_small(fmpr_expref(x), fmpr_expref(y));
+    shift = _fmpz_sub_small(fmpr_expref(y), fmpr_expref(x));
 
     if (shift >= 0)
     {
-        exp = fmpr_expref(y);
-        exp2 = fmpr_expref(x);
-        xv = *fmpr_manref(y);
-        yv = *fmpr_manref(x);
+        xexp = fmpr_expref(x);
+        yexp = fmpr_expref(y);
+        xv = *fmpr_manref(x);
+        yv = *fmpr_manref(y);
     }
     else
     {
-        exp = fmpr_expref(x);
-        exp2 = fmpr_expref(y);
-        xv = *fmpr_manref(x);
-        yv = *fmpr_manref(y);
+        xexp = fmpr_expref(y);
+        yexp = fmpr_expref(x);
+        xv = *fmpr_manref(y);
+        yv = *fmpr_manref(x);
         shift = -shift;
     }
 
-    if (!COEFF_IS_MPZ(xv))
-    {
-        xsign = xv < 0;
-        xtmp = FLINT_ABS(xv);
-        xptr = &xtmp;
-        xn = 1;
-    }
+    READ_SIGN_PTR(xsign, xtmp, xptr, xn, xv)
+    READ_SIGN_PTR(ysign, ytmp, yptr, yn, yv)
+
+    if ((xn == 1) && (yn == 1) && (shift < FLINT_BITS))
+        return _fmpr_add_small(z, xptr[0], xsign, xexp, yptr[0], ysign, yexp, shift, prec, rnd);
     else
-    {
-        __mpz_struct * zz = COEFF_TO_PTR(xv);
-        xptr = zz->_mp_d;
-        xn = zz->_mp_size;
-        xsign = xn < 0;
-        xn = FLINT_ABS(xn);
-    }
-
-    if (!COEFF_IS_MPZ(yv))
-    {
-        ysign = yv < 0;
-        ytmp = FLINT_ABS(yv);
-        yptr = &ytmp;
-        yn = 1;
-    }
-    else
-    {
-        __mpz_struct * zz = COEFF_TO_PTR(yv);
-        yptr = zz->_mp_d;
-        yn = zz->_mp_size;
-        ysign = yn < 0;
-        yn = FLINT_ABS(yn);
-    }
-
-    if (xn == 1 && yn == 1)
-    {
-        if (shift < FLINT_BITS)
-        {
-            mp_limb_t hi, lo, t, u;
-
-            t = xptr[0];
-            u = yptr[0];
-
-            lo = u << shift;
-            hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
-
-            if (xsign == ysign)
-            {
-                add_ssaaaa(hi, lo, hi, lo, 0, t);
-                return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, exp, xsign, prec, rnd);
-            }
-            else
-            {
-                int sign = ysign;
-
-                if (hi == 0)
-                {
-                    if (lo >= t)
-                    {
-                        lo = lo - t;
-                    }
-                    else
-                    {
-                        lo = t - lo;
-                        sign = !sign;
-                    }
-                }
-                else
-                {
-                    sub_ddmmss(hi, lo, hi, lo, 0, t);
-                }
-
-                return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, exp, sign, prec, rnd);
-            }
-        }
-    }
-
-    /* x and y do not overlap, and x does not overlap with result */
-    if (shift > xn * FLINT_BITS &&
-        prec != FMPR_PREC_EXACT && 
-       xn * FLINT_BITS + prec - (FLINT_BITS * (yn - 1)) < shift)
-    {
-        if (exp == fmpr_expref(y))
-            return _fmpr_add_eps(z, x, xsign ? -1 : 1, prec, rnd);
-        else
-            return _fmpr_add_eps(z, y, xsign ? -1 : 1, prec, rnd);
-    }
-
-    return _fmpr_add_large(fmpr_manref(z), fmpr_expref(z),
-            xptr, xn, xsign, yptr, yn, ysign, exp, shift, prec, rnd);
+        return _fmpr_add_large(z, xptr, xn, xsign, xexp, yptr, yn, ysign, yexp, shift, prec, rnd);
 }
+
 
