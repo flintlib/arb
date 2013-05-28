@@ -131,6 +131,12 @@ _fmprb_poly_add(fmprb_struct * res, const fmprb_struct * poly1, long len1,
 void fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
 
+void _fmprb_poly_sub(fmprb_struct * res, const fmprb_struct * poly1, long len1,
+    const fmprb_struct * poly2, long len2, long prec);
+
+void fmprb_poly_sub(fmprb_poly_t res, const fmprb_poly_t poly1,
+              const fmprb_poly_t poly2, long prec);
+
 void _fmprb_poly_mullow_ztrunc(fmprb_struct * res,
     const fmprb_struct * poly1, long len1,
     const fmprb_struct * poly2, long len2, long n, long prec);

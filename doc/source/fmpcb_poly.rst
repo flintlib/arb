@@ -138,6 +138,15 @@ Arithmetic
 
     Sets *C* to the sum of *A* and *B*.
 
+.. function:: void _fmpcb_poly_sub(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+
+    Sets *{C, max(lenA, lenB)}* to the difference of *{A, lenA}* and *{B, lenB}*.
+    Allows aliasing of the input and output operands.
+
+.. function:: void fmpcb_poly_sub(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long prec)
+
+    Sets *C* to the difference of *A* and *B*.
+
 .. function:: void _fmpcb_poly_mullow_classical(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
 
 .. function:: void _fmpcb_poly_mullow_transpose(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)

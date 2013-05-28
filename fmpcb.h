@@ -132,6 +132,13 @@ fmpcb_set_round(fmpcb_t z, const fmpcb_t x, long prec)
 }
 
 static __inline__ void
+fmpcb_neg_round(fmpcb_t z, const fmpcb_t x, long prec)
+{
+    fmprb_neg_round(fmpcb_realref(z), fmpcb_realref(x), prec);
+    fmprb_neg_round(fmpcb_imagref(z), fmpcb_imagref(x), prec);
+}
+
+static __inline__ void
 fmpcb_swap(fmpcb_t z, fmpcb_t x)
 {
     fmprb_swap(fmpcb_realref(z), fmpcb_realref(x));

@@ -119,6 +119,12 @@ void _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
 void fmpcb_poly_add(fmpcb_poly_t res, const fmpcb_poly_t poly1,
               const fmpcb_poly_t poly2, long prec);
 
+void _fmpcb_poly_sub(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long prec);
+
+void fmpcb_poly_sub(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec);
+
 void fmpcb_poly_mullow_classical(fmpcb_poly_t res, const fmpcb_poly_t poly1,
                                             const fmpcb_poly_t poly2,
                                                 long n, long prec);

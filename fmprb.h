@@ -131,6 +131,13 @@ fmprb_neg(fmprb_t x, const fmprb_t y)
 }
 
 static __inline__ void
+fmprb_neg_round(fmprb_t x, const fmprb_t y, long prec)
+{
+    fmprb_set_round(x, y, prec);
+    fmprb_neg(x, x);
+}
+
+static __inline__ void
 fmprb_abs(fmprb_t x, const fmprb_t y)
 {
     fmpr_abs(fmprb_midref(x), fmprb_midref(y));

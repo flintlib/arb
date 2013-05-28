@@ -23,36 +23,36 @@
 
 ******************************************************************************/
 
-#include "fmprb_poly.h"
+#include "fmpcb_poly.h"
 
 void
-_fmprb_poly_add(fmprb_struct * res, const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long prec)
+_fmpcb_poly_sub(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
+    const fmpcb_struct * poly2, long len2, long prec)
 {
     long i, min = FLINT_MIN(len1, len2);
 
     for (i = 0; i < min; i++)
-        fmprb_add(res + i, poly1 + i, poly2 + i, prec);
+        fmpcb_sub(res + i, poly1 + i, poly2 + i, prec);
 
     for (i = min; i < len1; i++)
-        fmprb_set_round(res + i, poly1 + i, prec);
+        fmpcb_set_round(res + i, poly1 + i, prec);
 
     for (i = min; i < len2; i++)
-        fmprb_set_round(res + i, poly2 + i, prec);
+        fmpcb_neg_round(res + i, poly2 + i, prec);
 }
 
 void
-fmprb_poly_add(fmprb_poly_t res, const fmprb_poly_t poly1,
-              const fmprb_poly_t poly2, long prec)
+fmpcb_poly_sub(fmpcb_poly_t res, const fmpcb_poly_t poly1,
+              const fmpcb_poly_t poly2, long prec)
 {
     long max = FLINT_MAX(poly1->length, poly2->length);
 
-    fmprb_poly_fit_length(res, max);
+    fmpcb_poly_fit_length(res, max);
 
-    _fmprb_poly_add(res->coeffs, poly1->coeffs, poly1->length, poly2->coeffs,
+    _fmpcb_poly_sub(res->coeffs, poly1->coeffs, poly1->length, poly2->coeffs,
                    poly2->length, prec);
 
-    _fmprb_poly_set_length(res, max);
-    _fmprb_poly_normalise(res);
+    _fmpcb_poly_set_length(res, max);
+    _fmpcb_poly_normalise(res);
 }
 

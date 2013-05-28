@@ -119,6 +119,15 @@ Arithmetic
 
     Sets *C* to the sum of *A* and *B*.
 
+.. function:: void _fmprb_poly_sub(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+
+    Sets *{C, max(lenA, lenB)}* to the difference of *{A, lenA}* and *{B, lenB}*.
+    Allows aliasing of the input and output operands.
+
+.. function:: void fmprb_poly_sub(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
+
+    Sets *C* to the difference of *A* and *B*.
+
 .. function:: void _fmprb_poly_mullow_classical(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
 
 .. function:: void _fmprb_poly_mullow_ztrunc(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)

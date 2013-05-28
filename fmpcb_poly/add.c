@@ -34,12 +34,11 @@ _fmpcb_poly_add(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
     for (i = 0; i < min; i++)
         fmpcb_add(res + i, poly1 + i, poly2 + i, prec);
 
-    /* TODO: round? */
     for (i = min; i < len1; i++)
-        fmpcb_set(res + i, poly1 + i);
+        fmpcb_set_round(res + i, poly1 + i, prec);
 
     for (i = min; i < len2; i++)
-        fmpcb_set(res + i, poly2 + i);
+        fmpcb_set_round(res + i, poly2 + i, prec);
 }
 
 void
