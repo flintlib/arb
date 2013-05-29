@@ -363,10 +363,21 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
     fmprb_clear(t4);
 }
 
+/* defined in flint*/
+#define NUMBER_OF_SMALL_PARTITIONS 128
+extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
+
 void
 partitions_fmpz_ui(fmpz_t p, ulong n)
 {
     fmprb_t x;
+
+    if (n < NUMBER_OF_SMALL_PARTITIONS)
+    {
+        fmpz_set_ui(p, partitions_lookup[n]);
+        return;
+    }
+
     fmprb_init(x);
     partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n));
 
