@@ -31,40 +31,68 @@ TLS_PREFIX fmpz exp_cache[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
 TLS_PREFIX long exp_cache_exp[EXP_CACHE_LEVELS][EXP_CACHE_NUM];
 TLS_PREFIX int exp_cache_init = 0;
 
-/* max 1 ulp error (TODO: check this) */
+void
+fmprb_get_fmpz_fixed_si_check_1ulp(fmpz_t r, const fmprb_t x, long exponent)
+{
+    fmprb_t t;
+    fmprb_init(t);
+
+    fmpr_get_fmpz_fixed_si(r, fmprb_midref(x), exponent);
+
+    /* now compute an upper bound for the error */
+    fmprb_set_fmpz(t, r);
+    fmprb_mul_2exp_si(t, t, exponent);
+
+    fmprb_sub(t, t, x, FMPRB_RAD_PREC);
+    fmprb_abs(t, t);
+
+    fmpr_add(fmprb_radref(t), fmprb_midref(t), fmprb_radref(t),
+        FMPRB_RAD_PREC, FMPR_RND_CEIL);
+
+    if (fmpr_cmp_2exp_si(fmprb_radref(t), exponent) > 0)
+    {
+        printf("error larger than 1 ulp!\n");
+        abort();
+    }
+
+    fmprb_clear(t);
+}
+
 void
 compute_exp_cache()
 {
     long i, j, wp;
-    fmpr_t x, y;
+    fmprb_t x, y;
 
     wp = EXP_CACHE_PREC + 30;
 
-    fmpr_init(x);
-    fmpr_init(y);
+    fmprb_init(x);
+    fmprb_init(y);
 
     for (i = 0; i < EXP_CACHE_LEVELS; i++)
     {
-        fmpr_set_ui_2exp_si(x, 1, -(i+1) * EXP_CACHE_BITS);
-        fmpr_exp(x, x, wp, FMPR_RND_DOWN);
-        fmpr_one(y);
+        fmpr_set_ui_2exp_si(fmprb_midref(x), 1, -(i+1) * EXP_CACHE_BITS);
+        fmpr_zero(fmprb_radref(x));
+
+        elefun_exp_via_mpfr(x, x, wp);
+        fmprb_one(y);
 
         for (j = 0; j < EXP_CACHE_NUM; j++)
         {
             fmpz_init(exp_cache[i] + j);
-            fmpr_get_fmpz_fixed_si(exp_cache[i] + j, y, -EXP_CACHE_PREC);
-            fmpr_mul(y, y, x, wp, FMPR_RND_DOWN);
+
+            fmprb_get_fmpz_fixed_si_check_1ulp(exp_cache[i] + j, y, -EXP_CACHE_PREC);
+            fmprb_mul(y, y, x, wp);
         }
     }
 
+    fmprb_const_log2(x, wp);
+
     fmpz_init(ln2_cache);
-    fmpr_set_ui(x, 2);
-    fmpr_log(x, x, wp, FMPR_RND_DOWN);
+    fmprb_get_fmpz_fixed_si_check_1ulp(ln2_cache, x, -EXP_CACHE_PREC);
 
-    fmpr_get_fmpz_fixed_si(ln2_cache, x, -EXP_CACHE_PREC);
-
-    fmpr_clear(x);
-    fmpr_clear(y);
+    fmprb_clear(x);
+    fmprb_clear(y);
 
     exp_cache_init = 1;
 }
