@@ -29,7 +29,6 @@
 #include "fmprb.h"
 #include "math.h"
 
-
 #define DOUBLE_PREC 53
 #define MIN_PREC 20
 #define PI 3.141592653589793238462643
@@ -38,68 +37,6 @@
 #define HRR_B (0.0592384391754448833 + 1e-12)  /* pi*sqrt(2)/75 */
 #define HRR_C (2.5650996603237281911 + 1e-12)  /* pi*sqrt(2/3) */
 #define HRR_D (1.2424533248940001551 + 1e-12)  /* log(2) + log(3)/2 */
-
-static void
-_fmpr_sinh(fmpr_t y, const fmpr_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpr(t, x);
-    fmprb_sinh(t, t, prec);
-    fmpr_add(y, fmprb_midref(t), fmprb_radref(t), prec, FMPR_RND_UP);
-    fmprb_clear(t);
-}
-
-
-/* Equation (1.8) in the paper */
-void
-partitions_remainder_bound_fmpr(fmpr_t b, ulong n, ulong N)
-{
-    fmpr_t A, B, C, t, u;
-
-    fmpr_init(A);
-    fmpr_init(B);
-    fmpr_init(C);
-    fmpr_init(t);
-    fmpr_init(u);
-
-    /* bound for 44*pi^2/(225*sqrt(3)) */
-    fmpr_set_si_2exp_si(A, 18695160, -24);
-
-    /* bound for pi*sqrt(2)/75 */
-    fmpr_set_si_2exp_si(B, 993857, -24);
-
-    /* bound for pi*sqrt(2/3) */
-    fmpr_set_si_2exp_si(C, 43035232, -24);
-
-    /* first term: A / sqrt(N) */
-    fmpr_sqrt_ui(t, N, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-    fmpr_div(b, A, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    /* B * sqrt(N/(n-1)) */
-    fmpr_set_ui(t, N);
-    fmpr_div_ui(t, t, n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_sqrt(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul(t, B, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    /* sinh(C*sqrt(n)/N) */
-    fmpr_sqrt_ui(u, n, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_div_ui(u, u, N, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul(u, C, u, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    _fmpr_sinh(u, u, FMPRB_RAD_PREC);
-
-    /* second term: B * ... * sinh... */
-    fmpr_mul(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_add(b, b, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmpr_clear(A);
-    fmpr_clear(B);
-    fmpr_clear(C);
-    fmpr_clear(t);
-    fmpr_clear(u);
-}
-
 
 static double
 partitions_remainder_bound(double n, double terms)
