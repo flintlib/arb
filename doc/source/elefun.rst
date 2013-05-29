@@ -77,3 +77,10 @@ The exponential function
     with precomputation. If the precision or the arguments are too large,
     returns zero without altering *z*.
 
+.. function:: void elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec)
+
+    Computes the exponential function by calling MPFR, implementing error
+    propagation using the rule `e^{a+b} - e^a \le b e^{a+b}`.
+    This implementation guarantees consistent rounding but will overflow
+    for too large *x*.
+

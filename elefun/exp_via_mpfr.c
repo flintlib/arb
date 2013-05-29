@@ -23,39 +23,37 @@
 
 ******************************************************************************/
 
-#ifndef ELEFUN_H
-#define ELEFUN_H
-
-#include "fmprb.h"
-#include "fmpz_extras.h"
+#include "elefun.h"
 
 static __inline__ void
-fmpz_print_fixed(const fmpz_t x, long prec)
+elefun_exp_fmpr_via_mpfr(fmprb_t z, const fmpr_t x, long prec)
 {
-    fmpr_t t;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, x);
-    fmpr_mul_2exp_si(t, t, -prec);
-    fmpr_printd(t, prec / 3.33);
-    fmpr_clear(t);
+    long r;
+    r = fmpr_exp(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
+    fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
 }
 
-#define EXP_CACHE_PREC 1024
-#define EXP_CACHE_BITS 8
-#define EXP_CACHE_NUM (1L<<EXP_CACHE_BITS)
-#define EXP_CACHE_LEVELS 2
-#define EXP_CACHE_REDUCTION (EXP_CACHE_LEVELS * EXP_CACHE_BITS)
+void
+elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec)
+{
+    if (fmprb_is_exact(x))
+    {
+        elefun_exp_fmpr_via_mpfr(z, fmprb_midref(x), prec);
+    }
+    else
+    {
+        /* exp(a+b) - exp(a) = exp(a) * (exp(b)-1) <= b * exp(a+b) */
+        fmpr_t t;
+        fmpr_init(t);
 
-long elefun_exp_taylor_bound(long mag, long prec);
+        fmpr_add(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_CEIL);
+        fmpr_exp(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(t, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
 
-void elefun_exp_fixed_taylor_horner_precomp(fmpz_t y, fmpz_t yerr, const fmpz_t x, long n, long prec);
+        elefun_exp_fmpr_via_mpfr(z, fmprb_midref(x), prec);
+        fmpr_add(fmprb_radref(z), fmprb_radref(z), t, FMPRB_RAD_PREC, FMPR_RND_UP);
 
-void elefun_exp_fixed_precomp(fmpz_t y, fmpz_t yerr, fmpz_t exponent,
-    const fmpz_t x, const fmpz_t xerr, long prec);
-
-int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one);
-
-void elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec);
-
-#endif
+        fmpr_clear(t);
+    }
+}
 
