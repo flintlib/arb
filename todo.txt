@@ -84,3 +84,7 @@
 
 * Write a cleanup function that frees all cached data.
 
+* Investigate using Chebyshev polynomials for elefun_cos_minpoly.
+  This is certainly faster when n is prime, but might be faster for all n,
+  at least if implemented cleverly.
+
