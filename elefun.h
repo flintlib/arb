@@ -27,6 +27,7 @@
 #define ELEFUN_H
 
 #include "fmprb.h"
+#include "fmprb_poly.h"
 #include "fmpz_extras.h"
 
 static __inline__ void
@@ -56,6 +57,13 @@ void elefun_exp_fixed_precomp(fmpz_t y, fmpz_t yerr, fmpz_t exponent,
 int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one);
 
 void elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec);
+
+
+void _elefun_cos_minpoly_roots(fmprb_struct * alpha, long d, ulong n, long prec);
+
+void _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n);
+
+void elefun_cos_minpoly(fmpz_poly_t poly, ulong n);
 
 #endif
 

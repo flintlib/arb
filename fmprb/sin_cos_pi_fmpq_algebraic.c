@@ -25,7 +25,7 @@
 
 #include "fmprb.h"
 #include "fmprb_poly.h"
-#include "arith.h"
+#include "elefun.h"
 
 void
 _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
@@ -98,9 +98,9 @@ _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
         fmprb_poly_init(fpoly);
 
         if (p % 2 == 0)
-            arith_cos_minpoly(poly, q);
+            elefun_cos_minpoly(poly, q);
         else
-            arith_cos_minpoly(poly, 2 * q);
+            elefun_cos_minpoly(poly, 2 * q);
 
         eval_extra_prec = fmpz_poly_max_bits(poly);
         eval_extra_prec = FLINT_ABS(eval_extra_prec);
