@@ -4,7 +4,7 @@ History and changes
 For more details, view the detailed commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
-* future - version 0.6-git
+* 2013-05-31 - version 0.6
 
   * made fast polynomial multiplication over the reals numerically stable by using a blockwise algorithm
   * disabled default use of the Gauss formula for multiplication of complex polynomials, to improve numerical stability

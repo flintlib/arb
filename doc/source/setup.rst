@@ -6,17 +6,13 @@ Dependencies
 
 Arb has the following dependencies:
 
-* Either MPIR (http://www.mpir.org) 2.6.0 or later, or GMP (http://www.gmplib.org) 5.1.0 or later
-* MPFR (http://www.mpfr.org) 3.0.0 or later
-* FLINT (http://www.flintlib.org)
-
-If MPIR is used instead of GMP, it must be compiled with
-the ``--enable-gmpcompat`` option.
-
-Currently a source checkout of FLINT from
-https://github.com/fredrik-johansson/flint2 is required
-(the first release version of FLINT to be compatible with Arb
-will be FLINT 2.4).
+* Either MPIR (http://www.mpir.org) 2.6.0 or later, or GMP (http://www.gmplib.org) 5.1.0 or later.
+  If MPIR is used instead of GMP, it must be compiled with the ``--enable-gmpcompat`` option.
+* MPFR (http://www.mpfr.org) 3.0.0 or later.
+* FLINT (http://www.flintlib.org) Currently a source checkout of FLINT from
+  https://github.com/fredrik-johansson/flint2 is required
+  (the first release version of FLINT to be compatible with Arb
+  will be FLINT 2.4).
 
 
 Installation as part of FLINT

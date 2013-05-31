@@ -16,7 +16,7 @@ General information
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    overview.rst
    setup.rst
