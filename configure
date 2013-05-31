@@ -33,7 +33,7 @@ until [ -z "$1" ]; do
          exit 0
          ;;
       "--with-gmp="*)
-         GMP_DIR=`expr substr $1 13 length $1`
+         GMP_DIR=`expr substr $1 12 length $1`
          ;;
       "--with-mpfr="*)
          MPFR_DIR=`expr substr $1 13 length $1`
@@ -69,11 +69,11 @@ done
 if [ -d "${GMP_DIR}/lib" ]; then
    GMP_LIB_DIR="${GMP_DIR}/lib"
    GMP_INCLUDE_DIR="${GMP_DIR}/include"
-elif [ -d "${MPIR_DIR}/.libs" ]; then
-   GMP_LIB_DIR="${MPIR_DIR}/.libs"
-   GMP_INCLUDE_DIR="${MPIR_DIR}"
+elif [ -d "${GMP_DIR}/.libs" ]; then
+   GMP_LIB_DIR="${GMP_DIR}/.libs"
+   GMP_INCLUDE_DIR="${GMP_DIR}"
 else
-   echo "Invalid MPIR directory"
+   echo "Invalid GMP/MPIR directory"
    exit 1
 fi
 
