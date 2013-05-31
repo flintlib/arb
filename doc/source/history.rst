@@ -4,6 +4,23 @@ History and changes
 For more details, view the detailed commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* future - version 0.6-git
+
+  * made fast polynomial multiplication over the reals numerically stable by using a blockwise algorithm
+  * disabled default use of the Gauss formula for multiplication of complex polynomials, to improve numerical stability
+  * added division and remainder for complex polynomials
+  * added fast multipoint evaluation and interpolation for complex polynomials
+  * added missing fmprb_poly_sub and fmpcb_poly_sub functions
+  * faster exponentials (fmprb_exp and dependent functions) at low precision, using precomputation
+  * rewrote fmpr_add and fmpr_sub using mpn level code, improving efficiency at low precision
+  * ported the partition function implementation from flint (using ball arithmetic
+    in all steps of the calculation to guarantee correctness)
+  * ported algorithm for computing the cosine minimal polynomial from flint (using
+    ball arithmetic to guarantee correctness)
+  * support using gmp instead of mpir
+  * only use thread-local storage when enabled in flint
+  * slightly faster error bounding for the zeta function
+  * added some other helper functions
 
 * 2013-03-28 - version 0.5
 

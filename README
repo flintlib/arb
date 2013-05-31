@@ -4,8 +4,8 @@ matrices, and evaluation of special functions, all with rigorous error
 bounding.
 
 Arb depends on FLINT (http://flintlib.org/), MPIR (http://mpir.org)
-and MPFR (http://mpfr.org). It is currently built as a standalone library,
-but in the future might become an extension module for FLINT.
+and MPFR (http://mpfr.org). It can be built as a standalone library,
+or as part of FLINT as an optional extension package.
 
 For documentation and additional details, see: http://fredrikj.net/arb/
 
