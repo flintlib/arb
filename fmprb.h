@@ -250,6 +250,9 @@ void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec);
 void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec);
 
+void fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec);
+
 void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec);
 
 void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);

@@ -47,8 +47,8 @@ fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)
         fmpr_t err;
         fmpr_init(err);
         fmpr_sub(err, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_sqrt(err, err, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_div(err, fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_rsqrt(err, err, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(err, fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
         fmpr_mul_2exp_si(err, err, -1);
 
         r = fmpr_sqrt(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);

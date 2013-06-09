@@ -442,6 +442,13 @@ Powers and roots
 
     Sets *z* to `\sqrt{x^2 + y^2}`.
 
+.. function:: void fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
+
+.. function:: void fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec)
+
+    Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
+    At high precision, this is faster than computing a square root.
+
 .. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.

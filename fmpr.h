@@ -425,6 +425,8 @@ long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
 long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd);
 long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd);
 
+long fmpr_rsqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+
 long fmpr_root(fmpr_t y, const fmpr_t x, ulong k, long prec, fmpr_rnd_t rnd);
 
 long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);

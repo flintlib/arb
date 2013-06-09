@@ -1,0 +1,83 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ARB; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2012 Fredrik Johansson
+
+******************************************************************************/
+
+#include "fmpr.h"
+
+long
+fmpr_rsqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+{
+    long r;
+
+    if (fmpr_is_special(x))
+    {
+        if (fmpr_is_zero(x))
+            fmpr_pos_inf(y);
+        else if (fmpr_is_pos_inf(x))
+            fmpr_zero(y);
+        else
+            fmpr_nan(y);
+
+        return FMPR_RESULT_EXACT;
+    }
+
+    if (fmpr_sgn(x) < 0)
+    {
+        fmpr_nan(y);
+        return FMPR_RESULT_EXACT;
+    }
+
+    /* special case: 4^n */
+    if (fmpz_is_one(fmpr_manref(x)) && fmpz_is_even(fmpr_expref(x)))
+    {
+        r = fmpr_set_round(y, x, prec, rnd);
+        fmpz_tdiv_q_2exp(fmpr_expref(y), fmpr_expref(y), 1);
+        fmpz_neg(fmpr_expref(y), fmpr_expref(y));
+        return r;
+    }
+
+    {
+        fmpr_t t;
+        fmpz_t e;
+
+        fmpr_init(t);
+        fmpz_init(e);
+
+        fmpz_neg(e, fmpr_expref(x));
+        if (fmpz_is_odd(e))
+            fmpz_add_ui(e, e, 1);
+        fmpr_mul_2exp_fmpz(t, x, e);
+
+        CALL_MPFR_FUNC(r, mpfr_rec_sqrt, y, t, prec, rnd);
+
+        fmpz_tdiv_q_2exp(e, e, 1);
+        fmpr_mul_2exp_fmpz(y, y, e);
+
+        fmpr_clear(t);
+        fmpz_clear(e);
+
+        return r;
+    }
+}
+

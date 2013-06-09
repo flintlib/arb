@@ -488,6 +488,12 @@ Arithmetic
     Sets *z* to the square root of *x*, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
 
+.. function:: long fmpr_rsqrt(fmpr_t z, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+
+    Sets *z* to the reciprocal square root of *x*, rounded according to
+    *prec* and *rnd*. The result is NaN if *x* is negative.
+    At high precision, this is faster than computing a square root.
+
 .. function:: long fmpr_root(fmpr_t z, const fmpr_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.

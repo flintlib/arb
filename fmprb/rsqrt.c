@@ -19,34 +19,16 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb.h"
 
 void
-fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
+fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
-
-    if (k == 1)
-    {
-        fmprb_set_round(z, x, prec);
-        return;
-    }
-
-    if (k == 2)
-    {
-        fmprb_sqrt(z, x, prec);
-        return;
-    }
-
-    if (k == -2)
-    {
-        fmprb_rsqrt(z, x, prec);
-        return;
-    }
 
     if (fmprb_contains_negative(x))
     {
@@ -57,37 +39,43 @@ fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 
     if (fmprb_is_exact(x))
     {
-        r = fmpr_root(fmprb_midref(z), fmprb_midref(x), k, prec, FMPR_RND_DOWN);
+        r = fmpr_rsqrt(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
     else
     {
-        fmpr_t t, u, err;
+        fmpr_t t, err;
 
         fmpr_init(t);
-        fmpr_init(u);
         fmpr_init(err);
 
         /* lower point */
-        fmpr_sub(err, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        fmpr_sub(t, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_DOWN);
 
-        /* derivative x^(1/k) / (x k) at lower point */
-        fmpr_root(t, err, k, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul_ui(u, err, k, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_div(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+        /* error bound: (1/2) t^(-3/2) * rad */
+        fmpr_rsqrt(err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_div(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul(err, err, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul_2exp_si(err, err, -1);
 
-        /* multiplied by distance */
-        fmpr_mul(err, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        r = fmpr_root(fmprb_midref(z), fmprb_midref(x), k, prec, FMPR_RND_DOWN);
+        r = fmpr_rsqrt(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
         fmpr_add_error_result(fmprb_radref(z), err, fmprb_midref(z), r,
             FMPRB_RAD_PREC, FMPR_RND_UP);
 
         fmpr_clear(t);
-        fmpr_clear(u);
         fmpr_clear(err);
     }
 
     fmprb_adjust(z);
+}
+
+void
+fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec)
+{
+    fmprb_t t;
+    fmprb_init(t);
+    fmprb_set_ui(t, x);
+    fmprb_rsqrt(z, t, prec);
+    fmprb_clear(t);
 }
 
