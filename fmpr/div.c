@@ -44,6 +44,20 @@ _fmpr_div_special(fmpr_t z, const fmpr_t x, const fmpr_t y)
         fmpr_neg_inf(z);
 }
 
+static __inline__ int
+low_bits_are_zero(const fmpz_t u, int bits)
+{
+    fmpz f = *u;
+    mp_limb_t low;
+
+    if (!COEFF_IS_MPZ(f))
+        low = FLINT_ABS(f);
+    else
+        low = COEFF_TO_PTR(f)->_mp_d[0];
+
+    return (low & ((1UL << bits) - 1)) == 0;
+}
+
 long
 fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
@@ -65,36 +79,50 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long extra;
+        long xbits, ybits, extra, extra_pad, extra_control;
         int negative;
-        fmpz_t t, rem;
+        fmpz_t t, u;
 
         /* todo: work out exact needed shift */
-        extra = prec - fmpz_bits(fmpr_manref(x)) + fmpz_bits(fmpr_manref(y)) + 5;
-        extra = FLINT_MAX(extra, 5);
+        xbits = fmpz_bits(fmpr_manref(x));
+        ybits = fmpz_bits(fmpr_manref(y));
 
-        negative = fmpz_sgn(fmpr_manref(x)) != fmpz_sgn(fmpr_manref(y));
+        extra = prec - xbits + ybits;
+        extra = FLINT_MAX(extra, 0);
 
-        fmpz_init(rem);
+        extra_pad = 32;
+        extra_control = 24;
+        extra += extra_pad;
+
         fmpz_init(t);
+        fmpz_init(u);
 
         fmpz_mul_2exp(t, fmpr_manref(x), extra);
-        fmpz_tdiv_qr(fmpr_manref(z), rem, t, fmpr_manref(y));
+        fmpz_tdiv_q(u, t, fmpr_manref(y));
 
-        if (!fmpz_is_zero(rem))
+        if (low_bits_are_zero(u, extra_control))
         {
-            fmpz_mul_2exp(fmpr_manref(z), fmpr_manref(z), 1);
+            fmpz_t v;
+            fmpz_init(v);
+            fmpz_mul(v, u, fmpr_manref(y));
 
-            if (negative)
-                fmpz_sub_ui(fmpr_manref(z), fmpr_manref(z), 1);
-            else
-                fmpz_add_ui(fmpr_manref(z), fmpr_manref(z), 1);
+            negative = fmpz_sgn(fmpr_manref(x)) != fmpz_sgn(fmpr_manref(y));
 
-            extra++;
+            if (!fmpz_equal(t, v))
+            {
+                if (negative)
+                    fmpz_sub_ui(u, u, 1);
+                else
+                    fmpz_add_ui(u, u, 1);
+            }
+
+            fmpz_clear(v);
         }
 
-        fmpz_clear(rem);
+        fmpz_swap(fmpr_manref(z), u);
+
         fmpz_clear(t);
+        fmpz_clear(u);
 
         fmpz_sub(fmpr_expref(z), fmpr_expref(x), fmpr_expref(y));
         fmpz_sub_ui(fmpr_expref(z), fmpr_expref(z), extra);

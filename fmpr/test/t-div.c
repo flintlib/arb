@@ -25,7 +25,6 @@
 
 #include "fmpr.h"
 
-
 int main()
 {
     long iter;
@@ -38,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        long bits, r1, r2;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
 
@@ -63,20 +62,20 @@ int main()
         switch (n_randint(state, 4))
         {
             case 0:
-                mpfr_div(Z, X, Y, MPFR_RNDZ);
-                fmpr_div(z, x, y, bits, FMPR_RND_DOWN);
+                r1 = mpfr_div(Z, X, Y, MPFR_RNDZ);
+                r2 = fmpr_div(z, x, y, bits, FMPR_RND_DOWN);
                 break;
             case 1:
-                mpfr_div(Z, X, Y, MPFR_RNDA);
-                fmpr_div(z, x, y, bits, FMPR_RND_UP);
+                r1 = mpfr_div(Z, X, Y, MPFR_RNDA);
+                r2 = fmpr_div(z, x, y, bits, FMPR_RND_UP);
                 break;
             case 2:
-                mpfr_div(Z, X, Y, MPFR_RNDD);
-                fmpr_div(z, x, y, bits, FMPR_RND_FLOOR);
+                r1 = mpfr_div(Z, X, Y, MPFR_RNDD);
+                r2 = fmpr_div(z, x, y, bits, FMPR_RND_FLOOR);
                 break;
             case 3:
-                mpfr_div(Z, X, Y, MPFR_RNDU);
-                fmpr_div(z, x, y, bits, FMPR_RND_CEIL);
+                r1 = mpfr_div(Z, X, Y, MPFR_RNDU);
+                r2 = fmpr_div(z, x, y, bits, FMPR_RND_CEIL);
                 break;
         }
 
@@ -88,10 +87,11 @@ int main()
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w))
+        if (!fmpr_equal(z, w) || ((r1 == 0) != (r2 == FMPR_RESULT_EXACT)))
         {
             printf("FAIL\n\n");
             printf("bits = %ld\n", bits);
+            printf("r1 = %ld, r2 = %ld\n", r1, r2);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
