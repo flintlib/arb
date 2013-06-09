@@ -118,31 +118,31 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 void
 fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_ui(t, y);
-    fmprb_div(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_ui(t, y);
+    fmprb_div_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
 
 void
 fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_si(t, y);
-    fmprb_div(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_si(t, y);
+    fmprb_div_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
 
 void
 fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpz(t, y);
-    fmprb_div(z, x, t, prec);
-    fmprb_clear(t);
+    fmpr_t t;
+    fmpr_init(t);
+    fmpr_set_fmpz(t, y);
+    fmprb_div_fmpr(z, x, t, prec);
+    fmpr_clear(t);
 }
 
 void

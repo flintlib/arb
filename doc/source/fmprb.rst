@@ -375,6 +375,8 @@ Arithmetic
 
 .. function:: void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
 
+.. function:: void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+
 .. function:: void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
 
 .. function:: void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec)
