@@ -25,40 +25,54 @@
 
 #include "fmprb.h"
 
+static __inline__ void
+fmprb_div_zero(fmprb_t z)
+{
+    fmpr_zero(fmprb_midref(z));
+    fmpr_pos_inf(fmprb_radref(z));
+    return;
+}
+
+void
+fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+{
+    long r;
+
+    if (fmpr_is_zero(y))
+    {
+        fmprb_div_zero(z);
+    }
+    else if (fmprb_is_exact(x))
+    {
+        r = fmpr_div(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+    }
+    else
+    {
+        /* (x + a) / y = x/y + a/y */
+
+        fmpr_divappr_abs_ubound(fmprb_radref(z), fmprb_radref(x), y, FMPRB_RAD_PREC);
+        fmpr_abs(fmprb_radref(z), fmprb_radref(z));
+
+        r = fmpr_div(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN); 
+        fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
+            fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+    }
+}
+
 void
 fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     long r;
 
-    if (fmprb_contains_zero(y))
-    {
-        fmpr_zero(fmprb_midref(z));
-        fmpr_pos_inf(fmprb_radref(z));
-        return;
-    }
-
     if (fmprb_is_exact(y))
     {
-        if (fmprb_is_exact(x))
-        {
-            r = fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-            fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
-        }
-        else
-        {
-            /* (x + a) / y = x/y + a/y */
-
-            fmpr_div(fmprb_radref(z), fmprb_radref(x), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpr_abs(fmprb_radref(z), fmprb_radref(z));
-
-            r = fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN); 
-            fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
-                fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
-        }
+        fmprb_div_fmpr(z, x, fmprb_midref(y), prec);
     }
     else
     {
         fmpr_t t, u;
+
         fmpr_init(t);
         fmpr_init(u);
 
@@ -71,18 +85,28 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
         /* denominator of error bound: |y|(|y|-b), rounded down */
         if (fmpr_sgn(fmprb_midref(y)) > 0)
-            fmpr_sub(u, fmprb_radref(y), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        {
+            fmpr_sub(u, fmprb_midref(y), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+        }
         else
-            fmpr_add(u, fmprb_radref(y), fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_mul(u, u, fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_abs(u, u);
+        {
+            fmpr_add(u, fmprb_midref(y), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+            fmpr_neg(u, u);
+        }
 
-        /* error bound */
-        fmpr_div(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+        if (fmpr_sgn(u) <= 0 || fmpr_is_nan(u))
+        {
+            fmprb_div_zero(z);
+        }
+        else
+        {
+            fmpr_mul(u, u, fmprb_midref(y), FMPRB_RAD_PREC, FMPR_RND_DOWN);
+            fmpr_divappr_abs_ubound(t, t, u, FMPRB_RAD_PREC);
 
-        r = fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), t,
-            fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+            r = fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+            fmpr_add_error_result(fmprb_radref(z), t,
+                fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+        }
 
         fmpr_clear(t);
         fmpr_clear(u);

@@ -176,7 +176,7 @@ fmprb_log(fmprb_t y, const fmprb_t x, long prec)
         }
         else
         {
-            fmpr_div(err, fmprb_radref(x), err, FMPRB_RAD_PREC, FMPR_RND_UP);
+            fmpr_divappr_abs_ubound(err, fmprb_radref(x), err, FMPRB_RAD_PREC);
             fmpr_log1p_ubound(err, err);
         }
 

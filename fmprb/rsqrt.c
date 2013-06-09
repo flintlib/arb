@@ -54,7 +54,7 @@ fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
 
         /* error bound: (1/2) t^(-3/2) * rad */
         fmpr_rsqrt(err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_div(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_divappr_abs_ubound(err, err, t, FMPRB_RAD_PREC);
         fmpr_mul(err, err, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
         fmpr_mul_2exp_si(err, err, -1);
 

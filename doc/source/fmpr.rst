@@ -453,6 +453,11 @@ Arithmetic
     Sets `z = x / y`, rounded according to *prec* and *rnd*. If *y* is zero,
     *z* is set to NaN.
 
+.. function:: void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec)
+
+    Sets `z` to an upper bound for `|x| / |y|`, computed to a precision
+    of approximately *prec* bits. The error can be a few ulp.
+
 .. function:: long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 
 .. function:: long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)

@@ -133,7 +133,7 @@ fmprb_atan(fmprb_t z, const fmprb_t x, long prec)
         {
             fmpr_mul(t, t, t, FMPRB_RAD_PREC, FMPR_RND_DOWN);
             fmpr_add_ui(t, t, 1UL, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-            fmpr_div(t, fmprb_radref(x), t, FMPRB_RAD_PREC, FMPR_RND_UP);
+            fmpr_divappr_abs_ubound(t, fmprb_radref(x), t, FMPRB_RAD_PREC);
         }
         else
         {
