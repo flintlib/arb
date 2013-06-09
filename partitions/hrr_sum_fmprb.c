@@ -159,8 +159,8 @@ eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
 
         if (prod->sqrt_q != 1)
         {
-            fmprb_sqrt_ui(t, prod->sqrt_q, prec);
-            fmprb_div(sum, sum, t, prec);
+            fmprb_rsqrt_ui(t, prod->sqrt_q, prec);
+            fmprb_mul(sum, sum, t, prec);
         }
 
         for (i = 0; i < prod->n; i++)
