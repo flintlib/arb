@@ -73,7 +73,7 @@ int main()
                 r1 = mpfr_div(Z, X, Y, MPFR_RNDD);
                 r2 = fmpr_div(z, x, y, bits, FMPR_RND_FLOOR);
                 break;
-            case 3:
+            default:
                 r1 = mpfr_div(Z, X, Y, MPFR_RNDU);
                 r2 = fmpr_div(z, x, y, bits, FMPR_RND_CEIL);
                 break;

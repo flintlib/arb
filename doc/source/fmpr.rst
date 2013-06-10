@@ -221,6 +221,10 @@ Assignment, rounding and conversions
 
     Returns *x* rounded to a *double* in the direction specified by *rnd*.
 
+.. function:: void fmpr_set_d(fmpr_t x, double v)
+
+    Sets *x* the the exact value of the argument *v* of type *double*.
+
 .. function:: void fmpr_set_ui(fmpr_t x, ulong c)
 
 .. function:: void fmpr_set_si(fmpr_t x, long c)

@@ -25,27 +25,60 @@
 
 #include "fmpr.h"
 
-double
-fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd)
+void
+fmpr_set_d(fmpr_t x, double v)
 {
-    double r;
-    mpfr_rnd_t mrnd;
+#if FLINT_BITS == 64
+    mp_limb_t h, sign, exp, frac;
+    long real_exp, real_man;
+    union { double uf; mp_limb_t ul; } u;
+
+    u.uf = v;
+    h = u.ul;
+
+    sign = h >> 63;
+    exp = (h << 1) >> 53;
+    frac = (h << 12) >> 12;
+
+    if (exp == 0 && frac == 0)
+    {
+        fmpr_zero(x);
+    }
+    else if (exp == 0x7ff)
+    {
+        if (frac == 0)
+        {
+            if (sign)
+                fmpr_neg_inf(x);
+            else
+                fmpr_pos_inf(x);
+        }
+        else
+        {
+            fmpr_nan(x);
+        }
+    }
+    else
+    {
+        real_exp = exp - 1023 - 52;
+
+        frac |= (1UL << 52);
+        real_man = sign ? (-frac) : frac;
+
+        fmpr_set_si_2exp_si(x, real_man, real_exp);
+    }
+#else
     mpfr_t t;
     mp_limb_t tmp[2];
-
-    if (fmpr_is_zero(x))
-        return 0.0;
-
-    mrnd = rnd_to_mpfr(rnd);
 
     t->_mpfr_prec = 53;
     t->_mpfr_sign = 1;
     t->_mpfr_exp = 0;
     t->_mpfr_d = tmp;
 
-    fmpr_get_mpfr(t, x, mrnd);
-    r = mpfr_get_d(t, mrnd);
+    mpfr_set_d(t, v, MPFR_RNDD);
 
-    return r;
+    fmpr_set_mpfr(x, t);
+#endif
 }
 

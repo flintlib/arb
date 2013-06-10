@@ -25,27 +25,45 @@
 
 #include "fmpr.h"
 
-double
-fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd)
+int main()
 {
-    double r;
-    mpfr_rnd_t mrnd;
-    mpfr_t t;
-    mp_limb_t tmp[2];
+    long iter;
+    flint_rand_t state;
 
-    if (fmpr_is_zero(x))
-        return 0.0;
+    printf("get_d....");
+    fflush(stdout);
 
-    mrnd = rnd_to_mpfr(rnd);
+    flint_randinit(state);
 
-    t->_mpfr_prec = 53;
-    t->_mpfr_sign = 1;
-    t->_mpfr_exp = 0;
-    t->_mpfr_d = tmp;
+    /* test exact roundtrip */
+    for (iter = 0; iter < 100000; iter++)
+    {
+        fmpr_t x, z;
+        double y;
 
-    fmpr_get_mpfr(t, x, mrnd);
-    r = mpfr_get_d(t, mrnd);
+        fmpr_init(x);
+        fmpr_init(z);
 
-    return r;
+        fmpr_randtest_special(x, state, 53, 8);
+        y = fmpr_get_d(x, FMPR_RND_DOWN);
+        fmpr_set_d(z, y);
+
+        if (!fmpr_equal(x, z))
+        {
+            printf("FAIL:\n\n");
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = %.17g\n\n", y);
+            printf("z = "); fmpr_print(z); printf("\n\n");
+            abort();
+        }
+
+        fmpr_clear(x);
+        fmpr_clear(z);
+    }
+
+    flint_randclear(state);
+    _fmpz_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
 

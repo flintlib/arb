@@ -331,6 +331,8 @@ void fmpr_set_mpfr(fmpr_t x, const mpfr_t y);
 
 double fmpr_get_d(const fmpr_t x, fmpr_rnd_t rnd);
 
+void fmpr_set_d(fmpr_t x, double v);
+
 static __inline__ void fmpr_set_ui(fmpr_t x, ulong c)
 {
     if (c == 0)
