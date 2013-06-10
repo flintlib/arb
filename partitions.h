@@ -33,9 +33,11 @@
 
 void partitions_rademacher_bound(fmpr_t b, ulong n, ulong N);
 
-void partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N);
+void partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles);
 
 void partitions_fmpz_ui(fmpz_t p, ulong n);
+
+void partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n);
 
 #endif
 

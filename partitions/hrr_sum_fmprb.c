@@ -29,6 +29,9 @@
 #include "fmprb.h"
 #include "math.h"
 
+#define DOUBLE_CUTOFF 40
+#define DOUBLE_ERR 1e-12
+
 #define DOUBLE_PREC 53
 #define MIN_PREC 20
 #define PI 3.141592653589793238462643
@@ -122,12 +125,57 @@ partitions_prec_bound(ulong n, long k, long N)
     return prec;
 }
 
+static double
+cos_pi_pq(mp_limb_signed_t p, mp_limb_signed_t q)
+{
+    /* Force 0 <= p < q */
+    p = FLINT_ABS(p);
+    p %= (2 * q);
+    if (p >= q)
+        p = 2 * q - p;
 
+    if (4 * p <= q)
+        return cos(p * PI / q);
+    else if (4 * p < 3 * q)
+        return sin((q - 2*p) * PI / (2 * q));
+    else
+        return -cos((q - p) * PI / q);
+}
+
+static double
+eval_trig_prod_d(trig_prod_t prod)
+{
+    int i;
+    double s;
+    mp_limb_t v;
+
+    if (prod->prefactor == 0)
+        return 0.0;
+
+    s = prod->prefactor;
+
+    v = n_gcd(FLINT_MAX(prod->sqrt_p, prod->sqrt_q),
+              FLINT_MIN(prod->sqrt_p, prod->sqrt_q));
+    prod->sqrt_p /= v;
+    prod->sqrt_q /= v;
+
+    if (prod->sqrt_p != 1)
+        s *= sqrt(prod->sqrt_p);
+    if (prod->sqrt_q != 1)
+        s /= sqrt(prod->sqrt_q);
+
+    for (i = 0; i < prod->n; i++)
+        s *= cos_pi_pq(prod->cos_p[i], prod->cos_q[i]);
+
+    return s;
+}
 
 static void
 eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
 {
     int i;
+    mp_limb_t v;
+    fmprb_t t;
 
     if (prod->prefactor == 0)
     {
@@ -135,45 +183,36 @@ eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
         return;
     }
 
-    if (prec <= DOUBLE_PREC && 0)
+    fmprb_init(t);
+
+    fmprb_set_si(sum, prod->prefactor);
+    v = n_gcd(FLINT_MAX(prod->sqrt_p, prod->sqrt_q),
+              FLINT_MIN(prod->sqrt_p, prod->sqrt_q));
+    prod->sqrt_p /= v;
+    prod->sqrt_q /= v;
+
+    if (prod->sqrt_p != 1)
     {
+        fmprb_sqrt_ui(t, prod->sqrt_p, prec);
+        fmprb_mul(sum, sum, t, prec);
     }
-    else
+
+    if (prod->sqrt_q != 1)
     {
-        mp_limb_t v;
-        fmprb_t t;
-
-        fmprb_init(t);
-
-        fmprb_set_si(sum, prod->prefactor);
-        v = n_gcd(FLINT_MAX(prod->sqrt_p, prod->sqrt_q),
-                  FLINT_MIN(prod->sqrt_p, prod->sqrt_q));
-        prod->sqrt_p /= v;
-        prod->sqrt_q /= v;
-
-        if (prod->sqrt_p != 1)
-        {
-            fmprb_sqrt_ui(t, prod->sqrt_p, prec);
-            fmprb_mul(sum, sum, t, prec);
-        }
-
-        if (prod->sqrt_q != 1)
-        {
-            fmprb_rsqrt_ui(t, prod->sqrt_q, prec);
-            fmprb_mul(sum, sum, t, prec);
-        }
-
-        for (i = 0; i < prod->n; i++)
-        {
-            fmpq_t pq;
-            *fmpq_numref(pq) = prod->cos_p[i];
-            *fmpq_denref(pq) = prod->cos_q[i];
-            fmprb_cos_pi_fmpq(t, pq, prec);
-            fmprb_mul(sum, sum, t, prec);
-        }
-
-        fmprb_clear(t);
+        fmprb_rsqrt_ui(t, prod->sqrt_q, prec);
+        fmprb_mul(sum, sum, t, prec);
     }
+
+    for (i = 0; i < prod->n; i++)
+    {
+        fmpq_t pq;
+        *fmpq_numref(pq) = prod->cos_p[i];
+        *fmpq_denref(pq) = prod->cos_q[i];
+        fmprb_cos_pi_fmpq(t, pq, prec);
+        fmprb_mul(sum, sum, t, prec);
+    }
+
+    fmprb_clear(t);
 }
 
 static void
@@ -195,13 +234,14 @@ sinh_cosh_divk_precomp(fmprb_t sh, fmprb_t ch, fmprb_t ex, long k, long prec)
 
 
 void
-partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
+partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
 {
     trig_prod_t prod;
     fmprb_t acc, C, t1, t2, t3, t4, exp1;
     fmpr_t bound;
     fmpz_t n24;
     long k, prec, res_prec, acc_prec, guard_bits;
+    double Cd;
 
     if (n <= 2)
     {
@@ -240,6 +280,8 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
     /* exp1 = exp(C) */
     fmprb_exp(exp1, C, prec);
 
+    Cd = PI * sqrt(24*n-1) / 6;
+
     for (k = N0; k <= N; k++)
     {
         trig_prod_init(prod);
@@ -247,28 +289,45 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N)
 
         if (prod->prefactor != 0)
         {
+
             if (prec > MIN_PREC)
                 prec = partitions_prec_bound(n, k, N);
 
-            /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
             prod->prefactor *= 4;
             prod->sqrt_p *= 3;
             prod->sqrt_q *= k;
-            eval_trig_prod(t1, prod, prec);
-            fmprb_div_fmpz(t1, t1, n24, prec);
 
-            /* Multiply by (cosh(z) - sinh(z)/z) where z = C / k */
-            fmprb_set_round(t2, C, prec);
-            fmprb_div_ui(t2, t2, k, prec);
+            if (prec > DOUBLE_CUTOFF || !use_doubles)
+            {
+                /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
+                eval_trig_prod(t1, prod, prec);
+                fmprb_div_fmpz(t1, t1, n24, prec);
 
-            if (k < 35 && prec > 1000)
-                sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
+                /* Multiply by (cosh(z) - sinh(z)/z) where z = C / k */
+                fmprb_set_round(t2, C, prec);
+                fmprb_div_ui(t2, t2, k, prec);
+
+                if (k < 35 && prec > 1000)
+                    sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
+                else
+                    fmprb_sinh_cosh(t3, t4, t2, prec);
+
+                fmprb_div(t3, t3, t2, prec);
+                fmprb_sub(t2, t4, t3, prec);
+                fmprb_mul(t1, t1, t2, prec);
+            }
             else
-                fmprb_sinh_cosh(t3, t4, t2, prec);
+            {
+                double xx, zz, xxerr;
 
-            fmprb_div(t3, t3, t2, prec);
-            fmprb_sub(t2, t4, t3, prec);
-            fmprb_mul(t1, t1, t2, prec);
+                xx = eval_trig_prod_d(prod) / (24*n - 1);
+                zz = Cd / k;
+                xx = xx * (cosh(zz) - sinh(zz) / zz);
+
+                xxerr = fabs(xx) * DOUBLE_ERR + DOUBLE_ERR;
+                fmpr_set_d(fmprb_midref(t1), xx);
+                fmpr_set_d(fmprb_radref(t1), xxerr);
+            }
 
             /* Add to accumulator */
             fmprb_add(acc, acc, t1, acc_prec);
@@ -316,7 +375,32 @@ partitions_fmpz_ui(fmpz_t p, ulong n)
     }
 
     fmprb_init(x);
-    partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n));
+    partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n), 0);
+
+    if (!fmprb_get_unique_fmpz(p, x))
+    {
+        printf("not unique!\n");
+        fmprb_printd(x, 50);
+        printf("\n");
+        abort();
+    }
+
+    fmprb_clear(x);
+}
+
+void
+partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n)
+{
+    fmprb_t x;
+
+    if (n < NUMBER_OF_SMALL_PARTITIONS)
+    {
+        fmpz_set_ui(p, partitions_lookup[n]);
+        return;
+    }
+
+    fmprb_init(x);
+    partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n), 1);
 
     if (!fmprb_get_unique_fmpz(p, x))
     {

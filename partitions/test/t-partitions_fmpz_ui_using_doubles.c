@@ -104,7 +104,7 @@ int main(void)
     flint_rand_t state;
     long i;
 
-    printf("partitions_fmpz_ui....");
+    printf("partitions_fmpz_ui_using_doubles....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -120,7 +120,7 @@ int main(void)
 
         for (i = 0; i < NUM; i++)
         {
-            partitions_fmpz_ui(p, i);
+            partitions_fmpz_ui_using_doubles(p, i);
             if (!fmpz_equal(p, v + i))
             {
                 printf("FAIL:\n");
@@ -135,7 +135,7 @@ int main(void)
 
         for (i = 0; testdata[i][0] != 0; i++)
         {
-            partitions_fmpz_ui(p, testdata[i][0]);
+            partitions_fmpz_ui_using_doubles(p, testdata[i][0]);
 
             if (fmpz_fdiv_ui(p, 1000000000) != testdata[i][1])
             {
