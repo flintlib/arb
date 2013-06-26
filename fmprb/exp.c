@@ -26,6 +26,21 @@
 #include "fmprb.h"
 #include "elefun.h"
 
+static int
+range_check_mpfr(const fmpz_t mag)
+{
+    if (COEFF_IS_MPZ(*mag))
+        return 0;
+
+    if (FLINT_ABS(*mag) <= 24)
+        return 1;
+
+    if (FLINT_ABS(*mag) < FLINT_CLOG2(MPFR_EMAX_MAX) - 4)
+        return 1;
+
+    return 0;
+}
+
 void
 fmpr_exp_ubound(fmpr_t y, const fmpr_t x, long prec, long maglim)
 {
@@ -50,7 +65,7 @@ fmpr_exp_ubound(fmpr_t y, const fmpr_t x, long prec, long maglim)
     fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
 
     /* normal range -- ok to just call mpfr */
-    if (!COEFF_IS_MPZ(*mag) && (FLINT_ABS(*mag) <= 24))
+    if (range_check_mpfr(mag))
     {
         fmpr_exp(y, x, prec, FMPR_RND_UP);
     }
@@ -153,7 +168,7 @@ fmprb_exp_fmpr(fmprb_t z, const fmpr_t x, long prec, long maglim, int m1)
         small_cutoff = -FLINT_MAX(24, 4 + prec / 2);
 
     /* standard case */
-    if (!COEFF_IS_MPZ(*mag) && (*mag > small_cutoff) && (*mag <= 24))
+    if (range_check_mpfr(mag) && *mag > small_cutoff)
     {
         if (m1)
             r = fmpr_expm1(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
