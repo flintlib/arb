@@ -619,6 +619,8 @@ fmpr_bits(const fmpr_t x)
         __rnd = rnd_to_mpfr(rnd); \
         mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
+        mpfr_set_emin(MPFR_EMIN_MIN); \
+        mpfr_set_emax(MPFR_EMAX_MAX); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
         func(__u, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
@@ -640,6 +642,8 @@ fmpr_bits(const fmpr_t x)
         __rnd = rnd_to_mpfr(rnd); \
         mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
+        mpfr_set_emin(MPFR_EMIN_MIN); \
+        mpfr_set_emax(MPFR_EMAX_MAX); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
         func(__u, __t, k, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
@@ -661,6 +665,8 @@ fmpr_bits(const fmpr_t x)
         mpfr_init2(__t, 2 + fmpz_bits(fmpr_manref(x))); \
         mpfr_init2(__u, FLINT_MAX(2, prec)); \
         mpfr_init2(__v, FLINT_MAX(2, prec)); \
+        mpfr_set_emin(MPFR_EMIN_MIN); \
+        mpfr_set_emax(MPFR_EMAX_MAX); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
         func(__u, __v, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
