@@ -133,7 +133,7 @@ _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n)
 {
     fmprb_struct * alpha, * fcoeffs;
     fmpz_t t;
-    len_t i, prec;
+    long i, prec;
 
     if (n <= ELEFUN_COS_MINPOLY_MAX_LOOKUP)
     {
