@@ -262,6 +262,20 @@ void fmprb_poly_compose_series(fmprb_poly_t res,
                     const fmprb_poly_t poly1,
                     const fmprb_poly_t poly2, long n, long prec);
 
+/* Reversion */
+
+void _fmprb_poly_revert_series_lagrange(fmprb_struct * Qinv, const fmprb_struct * Q, long n, long prec);
+void fmprb_poly_revert_series_lagrange(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
+void _fmprb_poly_revert_series_newton(fmprb_struct * Qinv, const fmprb_struct * Q, long n, long prec);
+void fmprb_poly_revert_series_newton(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
+void _fmprb_poly_revert_series_lagrange_fast(fmprb_struct * Qinv, const fmprb_struct * Q, long n, long prec);
+void fmprb_poly_revert_series_lagrange_fast(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
+void _fmprb_poly_revert_series(fmprb_struct * Qinv, const fmprb_struct * Q, long n, long prec);
+void fmprb_poly_revert_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
 /* Evaluation and interpolation */
 
 void _fmprb_poly_evaluate_horner(fmprb_t res, const fmprb_struct * f, long len, const fmprb_t a, long prec);

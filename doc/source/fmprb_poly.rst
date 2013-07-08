@@ -245,6 +245,32 @@ Composition
     with either input polynomial.
 
 
+.. function:: void _fmprb_poly_revert_series_lagrange(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+
+.. function:: void fmprb_poly_revert_series_lagrange(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
+
+.. function:: void _fmprb_poly_revert_series_newton(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+
+.. function:: void fmprb_poly_revert_series_newton(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
+
+.. function:: void _fmprb_poly_revert_series_lagrange_fast(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+
+.. function:: void fmprb_poly_revert_series_lagrange_fast(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
+
+.. function:: void _fmprb_poly_revert_series(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+
+.. function:: void fmprb_poly_revert_series(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
+
+    Sets `h` to the power series reversion of `f`, i.e. the expansion
+    of the compositional inverse function `f^{-1}(x)`,
+    truncated to order `O(x^n)`, using respectively
+    Lagrange inversion, Newton iteration, fast Lagrange inversion,
+    and a default algorithm choice.
+
+    We require that the constant term in `f` is exactly zero and that the
+    linear term is nonzero. The underscore methods assume that `f` is zero-padded to length `n`
+    and do not support aliasing.
+
 Evaluation
 -------------------------------------------------------------------------------
 
