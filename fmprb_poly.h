@@ -73,6 +73,11 @@ static __inline__ long fmprb_poly_length(const fmprb_poly_t poly)
     return poly->length;
 }
 
+static __inline__ long fmprb_poly_degree(const fmprb_poly_t poly)
+{
+    return poly->length - 1;
+}
+
 static __inline__ void fmprb_poly_zero(fmprb_poly_t poly)
 {
     poly->length = 0;
@@ -86,7 +91,37 @@ fmprb_poly_one(fmprb_poly_t poly)
     _fmprb_poly_set_length(poly, 1);
 }
 
+void fmprb_poly_set_coeff_si(fmprb_poly_t poly, long n, long x);
+
+void fmprb_poly_set_coeff_fmprb(fmprb_poly_t poly, long n, const fmprb_t x);
+
+void fmprb_poly_get_coeff_fmprb(fmprb_t x, const fmprb_poly_t poly, long n);
+
+#define fmprb_poly_get_coeff_ptr(poly, n) \
+    ((n) < (poly)->length ? (poly)->coeffs + (n) : NULL)
+
 void _fmprb_poly_reverse(fmprb_struct * res, const fmprb_struct * poly, long len, long n);
+
+void _fmprb_poly_shift_right(fmprb_struct * res, const fmprb_struct * poly, long len, long n);
+
+void fmprb_poly_shift_right(fmprb_poly_t res, const fmprb_poly_t poly, long n);
+
+void _fmprb_poly_shift_left(fmprb_struct * res, const fmprb_struct * poly, long len, long n);
+
+void fmprb_poly_shift_left(fmprb_poly_t res, const fmprb_poly_t poly, long n);
+
+static __inline__ void
+fmprb_poly_truncate(fmprb_poly_t poly, long newlen)
+{
+    if (poly->length > newlen)
+    {
+        long i;
+        for (i = newlen; i < poly->length; i++)
+            fmprb_zero(poly->coeffs + i);
+        poly->length = newlen;
+        _fmprb_poly_normalise(poly);
+    }
+}
 
 /* Conversions */
 

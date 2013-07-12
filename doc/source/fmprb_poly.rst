@@ -52,12 +52,65 @@ Memory management
 
     Strips any trailing coefficients which are identical to zero.
 
+Basic manipulation
+-------------------------------------------------------------------------------
+
 .. function:: void fmprb_poly_zero(fmprb_poly_t poly)
 
 .. function:: void fmprb_poly_one(fmprb_poly_t poly)
 
     Sets *poly* to the constant 0 respectively 1.
 
+.. function:: void fmprb_poly_set_coeff_si(fmprb_poly_t poly, long n, long c)
+
+.. function:: void fmprb_poly_set_coeff_fmprb(fmprb_poly_t poly, long n, const fmprb_t c)
+
+    Sets the coefficient with index *n* in *poly* to the value *c*.
+    We require that *n* is nonnegative.
+
+.. function:: void fmprb_poly_get_coeff_fmprb(fmprb_t v, const fmprb_poly_t poly, long n)
+
+    Sets *v* to the value of the coefficient with index *n* in *poly*.
+    We require that *n* is nonnegative.
+
+.. macro:: fmprb_poly_get_coeff_ptr(poly, n)
+
+    Given `n >= 0`, returns a pointer to coefficient *n* of *poly*,
+    or *NULL* if *n* exceeds the length of *poly*.
+
+.. function:: void _fmprb_poly_shift_right(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+
+.. function:: void fmprb_poly_shift_right(fmprb_poly_t res, const fmprb_poly_t poly, long n)
+
+    Sets *res* to *poly* divided by `x^n`, throwing away the lower coefficients.
+    We require that *n* is nonnegative.
+
+.. function:: void _fmprb_poly_shift_left(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+
+.. function:: void fmprb_poly_shift_left(fmprb_poly_t res, const fmprb_poly_t poly, long n)
+
+    Sets *res* to *poly* multiplied by `x^n`.
+    We require that *n* is nonnegative.
+
+.. function:: void fmprb_poly_truncate(fmprb_poly_t poly, long n)
+
+    Truncates *poly* to have length at most *n*, i.e. degree
+    strictly smaller than *n*.
+
+.. function:: long fmprb_poly_length(const fmprb_poly_t poly)
+
+    Returns the length of *poly*, i.e. zero if *poly* is
+    identically zero, and otherwise one more than the index
+    of the highest term that is not identically zero.
+
+.. function:: long fmprb_poly_degree(const fmprb_poly_t poly)
+
+    Returns the degree of *poly*, defined as one less than its length.
+    Note that if one or several leading coefficients are balls
+    containing zero, this value can be larger than the true
+    degree of the exact polynomial represented by *poly*,
+    so the return value of this function is effectively
+    an upper bound.
 
 Conversions
 -------------------------------------------------------------------------------
