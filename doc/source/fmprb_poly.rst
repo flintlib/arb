@@ -229,13 +229,13 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*.
 
-.. function:: void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)
+.. function:: void _fmprb_poly_inv_series(fmprb_struct * Q, const fmprb_struct * A, long Alen, long len, long prec)
 
-    Sets *{Qinv, len}* to the power series inverse of *{Q, Qlen}*. Uses Newton iteration.
+    Sets *{Q, len}* to the power series inverse of *{A, Alen}*. Uses Newton iteration.
 
-.. function:: void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec)
+.. function:: void fmprb_poly_inv_series(fmprb_poly_t Q, const fmprb_poly_t A, long n, long prec)
 
-    Sets *Qinv* to the power series inverse of *Q*, truncated to length *n*.
+    Sets *Q* to the power series inverse of *A*, truncated to length *n*.
 
 .. function:: void  _fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen, const fmprb_struct * B, long Blen, long n, long prec)
 
