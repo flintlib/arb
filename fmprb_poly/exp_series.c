@@ -101,7 +101,7 @@ _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long
 {
     hlen = FLINT_MIN(hlen, n);
 
-    if (n < NEWTON_EXP_CUTOFF)
+    if (hlen < NEWTON_EXP_CUTOFF)
     {
         _fmprb_poly_exp_series_basecase(f, h, hlen, n, prec);
     }
