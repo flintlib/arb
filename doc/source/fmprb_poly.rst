@@ -231,11 +231,20 @@ Arithmetic
 
 .. function:: void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec)
 
-    Sets *{Qinv, len}* to the power series inverse of *{Q, len}*. Uses Newton iteration.
+    Sets *{Qinv, len}* to the power series inverse of *{Q, Qlen}*. Uses Newton iteration.
 
 .. function:: void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec)
 
-    Sets *Qinv* to the power series inverse of *Q*.
+    Sets *Qinv* to the power series inverse of *Q*, truncated to length *n*.
+
+.. function:: void  _fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen, const fmprb_struct * B, long Blen, long n, long prec)
+
+    Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
+    Uses Newton iteration followed by multiplication.
+
+.. function:: void fmprb_poly_div_series(fmprb_poly_t Q, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
+
+    Sets *Q* to the power series quotient *A* divided by *B*, truncated to length *n*.
 
 .. function:: void _fmprb_poly_div(fmprb_struct * Q, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
 

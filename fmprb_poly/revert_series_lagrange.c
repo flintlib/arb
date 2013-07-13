@@ -48,7 +48,7 @@ _fmprb_poly_revert_series_lagrange(fmprb_struct * Qinv,
     fmprb_zero(Qinv);
     fmprb_ui_div(Qinv + 1, 1, Q + 1, prec);
 
-    _fmprb_poly_inv_series(R, Q + 1, n - 1, prec);
+    _fmprb_poly_inv_series(R, Q + 1, n - 1, n - 1, prec);
     _fmprb_vec_set(S, R, n - 1);
 
     for (i = 2; i < n; i++)

@@ -53,7 +53,7 @@ _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
 
     /* f := exp(h) + O(x^m), g := exp(-h) + O(x^m2) */
     _fmprb_poly_exp_series_basecase(f, h, n, n, prec);
-    _fmprb_poly_inv_series(g, f, (n + 1) / 2, prec);
+    _fmprb_poly_inv_series(g, f, (n + 1) / 2, (n + 1) / 2, prec);
 
     for (i--; i >= 0; i--)
     {

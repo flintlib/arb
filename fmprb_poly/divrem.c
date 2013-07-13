@@ -20,32 +20,23 @@
 /******************************************************************************
 
     Copyright (C) 2011 William Hart
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
 
-void
-_fmprb_poly_div_series(fmprb_struct * Q,
-    const fmprb_struct * A,
-    const fmprb_struct * B, long n, long prec)
-{
-    fmprb_struct * Binv = _fmprb_vec_init(n);
-
-    _fmprb_poly_inv_series(Binv, B, n, prec);
-    _fmprb_poly_mullow(Q, Binv, n, A, n, n, prec);
-
-    _fmprb_vec_clear(Binv, n);
-}
+/* TODO: tighten this code */
 
 void
 _fmprb_poly_div(fmprb_struct * Q,
     const fmprb_struct * A, long lenA,
     const fmprb_struct * B, long lenB, long prec)
 {
-    const long lenQ = lenA - lenB + 1;
+    long lenQ, lenB2;
     fmprb_struct * Arev, * Brev;
+
+    lenQ = lenA - lenB + 1;
 
     Arev = _fmprb_vec_init(2 * lenQ);
     Brev = Arev + lenQ;
@@ -55,14 +46,15 @@ _fmprb_poly_div(fmprb_struct * Q,
     if (lenB >= lenQ)
     {
         _fmprb_poly_reverse(Brev, B + (lenB - lenQ), lenQ, lenQ);
+        lenB2 = lenQ;
     }
     else
     {
         _fmprb_poly_reverse(Brev, B, lenB, lenB);
-        _fmprb_vec_zero(Brev + lenB, lenQ - lenB);
+        lenB2 = lenB;
     }
 
-    _fmprb_poly_div_series(Q, Arev, Brev, lenQ, prec);
+    _fmprb_poly_div_series(Q, Arev, lenQ, Brev, lenB2, lenQ, prec);
     _fmprb_poly_reverse(Q, Q, lenQ, lenQ);
 
     _fmprb_vec_clear(Arev, 2 * lenQ);

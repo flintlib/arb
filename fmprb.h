@@ -620,6 +620,15 @@ _fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
+_fmprb_vec_scalar_div(fmprb_struct * res, const fmprb_struct * vec,
+    long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_div(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
 _fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
     long len, const fmpz_t c, long prec)
 {

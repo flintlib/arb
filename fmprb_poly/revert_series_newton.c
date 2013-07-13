@@ -25,16 +25,6 @@
 
 #include "fmprb_poly.h"
 
-/* TODO: make a proper function */
-static __inline__ void 
-_fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, const fmprb_struct * B, long n, long prec)
-{
-    fmprb_struct * Binv = _fmprb_vec_init(n);
-    _fmprb_poly_inv_series(Binv, B, n, prec);
-    _fmprb_poly_mullow(Q, A, n, Binv, n, n, prec);
-    _fmprb_vec_clear(Binv, n);
-}
-
 #define CUTOFF 5
 
 void
@@ -71,7 +61,7 @@ _fmprb_poly_revert_series_newton(fmprb_struct * Qinv, const fmprb_struct * Q, lo
         _fmprb_poly_compose_series(T, Q, k, Qinv, k, k, prec);
         _fmprb_poly_derivative(U, T, k, prec); fmprb_zero(U + k - 1);
         fmprb_zero(T + 1);
-        _fmprb_poly_div_series(V, T, U, k, prec);
+        _fmprb_poly_div_series(V, T, k, U, k, k, prec);
         _fmprb_poly_derivative(T, Qinv, k, prec);
         _fmprb_poly_mullow(U, V, k, T, k, k, prec);
         _fmprb_vec_sub(Qinv, Qinv, U, k, prec);

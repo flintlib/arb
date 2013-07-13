@@ -218,9 +218,15 @@ _fmprb_poly_mul_monic(fmprb_struct * res, const fmprb_struct * poly1, long len1,
     fmprb_one(res + len1 + len2 - 2);
 }
 
-void _fmprb_poly_inv_series(fmprb_struct * Qinv, const fmprb_struct * Q, long len, long prec);
+void _fmprb_poly_inv_series(fmprb_struct * Qinv,
+    const fmprb_struct * Q, long Qlen, long len, long prec);
 
 void fmprb_poly_inv_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
+
+void  _fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen,
+    const fmprb_struct * B, long Blen, long n, long prec);
+
+void fmprb_poly_div_series(fmprb_poly_t Q, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec);
 
 void
 _fmprb_poly_div(fmprb_struct * Q,

@@ -40,7 +40,7 @@ _fmprb_poly_log_series(fmprb_struct * res, fmprb_struct * f, long n, long prec)
 
     _fmprb_poly_derivative(f_diff, f, n, prec);
     fmprb_zero(f_diff + n - 1);
-    _fmprb_poly_inv_series(f_inv, f, n, prec);
+    _fmprb_poly_inv_series(f_inv, f, n, n, prec);
     _fmprb_poly_mullow(res, f_diff, n - 1, f_inv, n - 1, n - 1, prec);
     _fmprb_poly_integral(res, res, n, prec);
     fmprb_set(res, a);
