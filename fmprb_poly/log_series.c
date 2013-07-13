@@ -19,68 +19,56 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_log_series(fmprb_struct * res, fmprb_struct * f, long n, long prec)
+_fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
 {
-    fmprb_struct * f_diff;
-    fmprb_struct * f_inv;
+    fmprb_struct *f_diff, *f_inv;
     fmprb_t a;
+    long alloc;
 
-    f_diff = _fmprb_vec_init(n);
-    f_inv = _fmprb_vec_init(n);
+    if (flen == 1)
+    {
+        fmprb_log(res, f, prec);
+        _fmprb_vec_zero(res + 1, n - 1);
+        return;
+    }
+
+    flen = FLINT_MIN(flen, n);
+    alloc = n + flen - 1;
+    f_inv = _fmprb_vec_init(alloc);
+    f_diff = f_inv + n;
+
     fmprb_init(a);
-
     fmprb_log(a, f, prec);
 
-    _fmprb_poly_derivative(f_diff, f, n, prec);
-    fmprb_zero(f_diff + n - 1);
-    _fmprb_poly_inv_series(f_inv, f, n, n, prec);
-    _fmprb_poly_mullow(res, f_diff, n - 1, f_inv, n - 1, n - 1, prec);
+    _fmprb_poly_derivative(f_diff, f, flen, prec);
+    _fmprb_poly_inv_series(f_inv, f, flen, n, prec);
+    _fmprb_poly_mullow(res, f_inv, n - 1, f_diff, flen - 1, n - 1, prec);
     _fmprb_poly_integral(res, res, n, prec);
-    fmprb_set(res, a);
+    fmprb_swap(res, a);
 
     fmprb_clear(a);
-    _fmprb_vec_clear(f_diff, n);
-    _fmprb_vec_clear(f_inv, n);
+    _fmprb_vec_clear(f_inv, alloc);
 }
 
 void
 fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 {
-    if (f->length < 1 || n < 1)
+    if (f->length == 0 || n == 0)
     {
-        printf("Exception: log_series: input must be nonzero\n");
+        printf("fmprb_poly_log_series: require n > 0 and nonzero input\n");
         abort();
     }
 
-    if (f->length < n || res == f)
-    {
-        long i;
-        fmprb_poly_t t;
-
-        fmprb_poly_init(t);
-        fmprb_poly_fit_length(t, n);
-
-        for (i = 0; i < FLINT_MIN(n, f->length); i++)
-            fmprb_set(t->coeffs + i, f->coeffs + i);
-        for (i = FLINT_MIN(n, f->length); i < n; i++)
-            fmprb_zero(t->coeffs + i);
-
-        _fmprb_poly_set_length(t, n);
-        fmprb_poly_log_series(res, t, n, prec);
-
-        fmprb_poly_clear(t);
-        return;
-    }
-
     fmprb_poly_fit_length(res, n);
-    _fmprb_poly_log_series(res->coeffs, f->coeffs, n, prec);
+    _fmprb_poly_log_series(res->coeffs, f->coeffs, f->length, n, prec);
     _fmprb_poly_set_length(res, n);
     _fmprb_poly_normalise(res);
 }
+

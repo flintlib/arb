@@ -576,6 +576,16 @@ _fmprb_vec_zero(fmprb_struct * A, long n)
         fmprb_zero(A + i);
 }
 
+static __inline__ int
+_fmprb_vec_is_zero(const fmprb_struct * vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!fmprb_is_zero(vec + i))
+            return 0;
+    return 1;
+}
+
 static __inline__ void
 _fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
 {

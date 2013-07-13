@@ -506,15 +506,16 @@ Differentiation
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_log_series(fmprb_struct * f, fmprb_struct * h, long n, long prec)
+.. function:: void _fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
 
-.. function:: void fmprb_poly_log_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
+.. function:: void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
-    Sets `f` to the power series logarithm of `h`, truncated to length `n`.
+    Sets *res* to the power series logarithm of *f*, truncated to length *n*.
     Uses the formula `\log f = \int f' / f`, adding the logarithm of the
-    constant term in `h` as the constant of integration.
-    The underscore method does not support aliasing of the input and output
-    arrays.
+    constant term in *f* as the constant of integration.
+
+    The underscore method supports aliasing of the input and output
+    arrays. It requires that *flen* and *n* are greater than zero.
 
 .. function:: void _fmprb_poly_exp_series_basecase(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
 
