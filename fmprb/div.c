@@ -47,6 +47,11 @@ fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
         r = fmpr_div(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
+    else if (fmpr_is_pos_inf(fmprb_radref(x)))
+    {
+        fmpr_div(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_pos_inf(fmprb_radref(z));
+    }
     else
     {
         /* (x + a) / y = x/y + a/y */
@@ -68,6 +73,11 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
     if (fmprb_is_exact(y))
     {
         fmprb_div_fmpr(z, x, fmprb_midref(y), prec);
+    }
+    else if (fmpr_is_pos_inf(fmprb_radref(x)) || fmpr_is_pos_inf(fmprb_radref(y)))
+    {
+        fmpr_div(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+        fmpr_pos_inf(fmprb_radref(z));
     }
     else
     {

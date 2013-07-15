@@ -28,44 +28,59 @@
 void
 fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
 {
-    long r;
-
     /* (x+a) * y = x*y + y*a */
+    if (fmpr_is_pos_inf(fmprb_radref(x)))
+    {
+        fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_pos_inf(fmprb_radref(z));
+    }
+    else
+    {
+        long r;
 
-    fmpr_mul(fmprb_radref(z), fmprb_radref(x), y, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_abs(fmprb_radref(z), fmprb_radref(z));
+        fmpr_mul(fmprb_radref(z), fmprb_radref(x), y, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_abs(fmprb_radref(z), fmprb_radref(z));
 
-    r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
-    fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
-        fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+        r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_add_error_result(fmprb_radref(z), fmprb_radref(z),
+            fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+    }
 }
 
 void
 fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
-    fmpr_t t, u;
-    long r;
+    if (fmpr_is_pos_inf(fmprb_radref(x)) || fmpr_is_pos_inf(fmprb_radref(y)))
+    {
+        fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+        fmpr_pos_inf(fmprb_radref(z));
+    }
+    else
+    {
+        fmpr_t t, u;
+        long r;
 
-    fmpr_init(t);
-    fmpr_init(u);
+        fmpr_init(t);
+        fmpr_init(u);
 
-    /* (x+a)*(y+b) = x*y + x*b + y*a + a*b*/
+        /* (x+a)*(y+b) = x*y + x*b + y*a + a*b*/
 
-    fmpr_mul(t, fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_abs(t, t);
+        fmpr_mul(t, fmprb_midref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_abs(t, t);
 
-    fmpr_mul(u, fmprb_midref(y), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_abs(u, u);
+        fmpr_mul(u, fmprb_midref(y), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_abs(u, u);
 
-    fmpr_add(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_addmul(t, fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_add(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_addmul(t, fmprb_radref(x), fmprb_radref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
 
-    r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
-    fmpr_add_error_result(fmprb_radref(z), t,
-        fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
+        r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), fmprb_midref(y), prec, FMPR_RND_DOWN);
+        fmpr_add_error_result(fmprb_radref(z), t,
+            fmprb_midref(z), r, FMPRB_RAD_PREC, FMPR_RND_UP);
 
-    fmpr_clear(t);
-    fmpr_clear(u);
+        fmpr_clear(t);
+        fmpr_clear(u);
+    }
 }
 
 void

@@ -30,7 +30,7 @@ fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
 {
     long r;
 
-    if (fmprb_contains_negative(x))
+    if (fmprb_contains_nonpositive(x))
     {
         fmpr_nan(fmprb_midref(z));
         fmpr_pos_inf(fmprb_radref(z));
