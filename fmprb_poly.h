@@ -425,6 +425,10 @@ void _fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long fle
 
 void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
+void _fmprb_poly_atan_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec);
+
+void fmprb_poly_atan_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
+
 void _fmprb_poly_exp_series_basecase(fmprb_struct * f,
         const fmprb_struct * h, long hlen, long n, long prec);
 

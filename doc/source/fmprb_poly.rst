@@ -532,8 +532,19 @@ Special functions
 .. function:: void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
     Sets *res* to the power series logarithm of *f*, truncated to length *n*.
-    Uses the formula `\log f = \int f' / f`, adding the logarithm of the
+    Uses the formula `\log(f(x)) = \int f'(x) / f(x) dx`, adding the logarithm of the
     constant term in *f* as the constant of integration.
+
+    The underscore method supports aliasing of the input and output
+    arrays. It requires that *flen* and *n* are greater than zero.
+
+.. function:: void _fmprb_poly_atan_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+
+.. function:: void fmprb_poly_atan_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
+
+    Sets *res* to the power series inverse tangent of *f*, truncated to length *n*.
+    Uses the formula `\tan^{-1}(f(x)) = \int f'(x) / (1+f(x)^2) dx`, adding the inverse
+    tangent of the constant term in *f* as the constant of integration.
 
     The underscore method supports aliasing of the input and output
     arrays. It requires that *flen* and *n* are greater than zero.
