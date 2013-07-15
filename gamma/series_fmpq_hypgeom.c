@@ -113,7 +113,7 @@ evaluate_series(fmprb_struct * S, const fmpq_t a, long r, long N, long len, long
 
     /* S = T / (B * Q) */
     _fmprb_vec_scalar_mul(B, B, len, Q, bsplit_wp);
-    _fmprb_poly_inv_series(S, B, len, bsplit_wp);
+    _fmprb_poly_inv_series(S, B, len, len, bsplit_wp);
     _fmprb_poly_mullow(B, T, len, S, len, len, bsplit_wp);
     _fmprb_vec_set(S, B, len);
 
