@@ -652,6 +652,15 @@ _fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
+_fmprb_vec_mul_2exp_si(fmprb_struct * res, const fmprb_struct * src,
+long len, long c)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_mul_2exp_si(res + i, src + i, c);
+}
+
+static __inline__ void
 _fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
     long len, const fmprb_t c, long prec)
 {

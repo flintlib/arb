@@ -411,6 +411,16 @@ void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
 
 /* Special functions */
 
+void _fmprb_poly_rsqrt_series(fmprb_struct * g,
+    const fmprb_struct * h, long hlen, long len, long prec);
+
+void fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
+
+void _fmprb_poly_sqrt_series(fmprb_struct * g,
+    const fmprb_struct * h, long hlen, long len, long prec);
+
+void fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
+
 void _fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec);
 
 void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
@@ -447,6 +457,24 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
     const fmpr_t convergence_factor,
     long eval_extra_prec,
     long prec);
+
+/* Macros */
+
+#define NEWTON_ITER_BEGIN(from, to, step_from, step_to) \
+    { \
+        long __steps[FLINT_BITS], __i; \
+        __steps[__i = 0] = step_to = (to); \
+        while (step_to > (from)) \
+            __steps[++__i] = (step_to = (step_to + 1) / 2); \
+        for (__i--; __i >= 0; __i--) \
+        { \
+            step_from = step_to; \
+            step_to = __steps[__i]; \
+
+
+#define NEWTON_ITER_END \
+        } \
+    } \
 
 #endif
 

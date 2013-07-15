@@ -506,6 +506,27 @@ Differentiation
 Special functions
 -------------------------------------------------------------------------------
 
+.. function:: void _fmprb_poly_sqrt_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
+
+    Sets *g* to the power series square root of *h*, truncated to length *n*.
+    Uses division-free Newton iteration for the reciprocal square root,
+    followed by a multiplication.
+
+    The underscore method does not support aliasing of the input and output
+    arrays. It requires that *hlen* and *n* are greater than zero.
+
+.. function:: void _fmprb_poly_rsqrt_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
+
+    Sets *g* to the reciprocal power series square root of *h*, truncated to length *n*.
+    Uses division-free Newton iteration.
+
+    The underscore method does not support aliasing of the input and output
+    arrays. It requires that *hlen* and *n* are greater than zero.
+
 .. function:: void _fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
