@@ -48,7 +48,7 @@ _fmprb_poly_tan_series(fmprb_struct * g,
 
     NEWTON_BASECASE(n)
     _fmprb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec);
-    _fmprb_poly_div_series(g, t, len, u, n, n, prec);
+    _fmprb_poly_div_series(g, t, n, u, n, n, prec);
     NEWTON_END_BASECASE
 
     NEWTON_LOOP(m, n)
