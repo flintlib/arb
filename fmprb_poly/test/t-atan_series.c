@@ -54,11 +54,7 @@ int main()
         fmprb_poly_init(c);
         fmprb_poly_init(d);
 
-        fmpq_poly_randtest_not_zero(A, state, m, qbits);
-        fmpq_poly_zero(A);
-        fmpq_poly_set_coeff_si(A, 1, 1);
-        fmpq_poly_sin_series(A, A, m);
-
+        fmpq_poly_randtest(A, state, m, qbits);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
         fmprb_poly_atan_series(b, a, n, rbits2);
@@ -69,9 +65,9 @@ int main()
         fmprb_poly_sub(c, d, c, rbits2);
         fmprb_poly_add(d, a, a, rbits2);
 
-        if (fmprb_poly_length(d) != 0)
+        if (fmprb_poly_length(c) != 0)
         {
-            fmprb_poly_div_series(c, c, d, n, rbits2);
+            fmprb_poly_div_series(c, d, c, n, rbits2);
             fmprb_poly_atan_series(c, c, n, rbits2);
             fmprb_poly_add(d, b, b, rbits2);
 
