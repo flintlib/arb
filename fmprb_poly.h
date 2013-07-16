@@ -438,6 +438,12 @@ void _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen,
 
 void fmprb_poly_exp_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec);
 
+void _fmprb_poly_sin_cos_series_basecase(fmprb_struct * s,
+                                    fmprb_struct * c, const fmprb_struct * h, long hlen, long n, long prec);
+
+void fmprb_poly_sin_cos_series_basecase(fmprb_poly_t s, fmprb_poly_t c,
+        const fmprb_poly_t h, long n, long prec);
+
 void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
 
 void _fmprb_poly_rfac_series_ui(fmprb_struct * res, const fmprb_struct * f, long flen, ulong r, long trunc, long prec);

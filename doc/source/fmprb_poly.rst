@@ -570,6 +570,18 @@ Special functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
+.. function:: void _fmprb_poly_sin_cos_series_basecase(fmprb_struct * s, fmprb_struct * c, const fmprb_struct * h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_sin_cos_series_basecase(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
+
+    Sets *s* and *c* to the power series sine and cosine of *h*.
+
+    The basecase version uses a simple recurrence for the coefficients,
+    requiring `O(nm)` operations where `m` is the length of `h`.
+
+    The underscore method supports aliasing and allows the input to be
+    shorter than the output, but requires the lengths to be nonzero.
+
 .. function:: void fmprb_poly_log_gamma_series(fmprb_poly_t f, long n, long prec)
 
     Sets `f` to the series expansion of `\log(\Gamma(1-x))`, truncated to
