@@ -181,6 +181,14 @@ Arithmetic
 
     Sets *C* to the difference of *A* and *B*.
 
+.. function:: void fmprb_poly_neg(fmprb_poly_t C, const fmprb_poly_t A)
+
+    Sets *C* to the negation of *A*.
+
+.. function:: void fmprb_poly_scalar_mul_2exp_si(fmprb_poly_t C, const fmprb_poly_t A, long c)
+
+    Sets *C* to *A* multiplied by `2^c`.
+
 .. function:: void _fmprb_poly_mullow_classical(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
 
 .. function:: void _fmprb_poly_mullow_ztrunc(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
@@ -581,6 +589,19 @@ Special functions
 
     The underscore method supports aliasing and allows the input to be
     shorter than the output, but requires the lengths to be nonzero.
+
+.. function:: void _fmprb_poly_tan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long len, long prec)
+
+.. function:: void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
+
+    Sets *g* to the power series tangent of *h*.
+
+    For small *n* takes the quotient of the sine and cosine as computed
+    using the basecase algorithm. For large *n*, uses Newton iteration
+    to invert the inverse tangent series. The complexity is `O(n)`.
+
+    The underscore version does not support aliasing, and requires
+    the lengths to be nonzero.
 
 .. function:: void fmprb_poly_log_gamma_series(fmprb_poly_t f, long n, long prec)
 

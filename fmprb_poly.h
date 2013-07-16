@@ -172,6 +172,22 @@ void _fmprb_poly_sub(fmprb_struct * res, const fmprb_struct * poly1, long len1,
 void fmprb_poly_sub(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long prec);
 
+static __inline__ void
+fmprb_poly_neg(fmprb_poly_t res, const fmprb_poly_t poly)
+{
+    fmprb_poly_fit_length(res, poly->length);
+    _fmprb_vec_neg(res->coeffs, poly->coeffs, poly->length);
+    _fmprb_poly_set_length(res, poly->length);
+}
+
+static __inline__ void
+fmprb_poly_scalar_mul_2exp_si(fmprb_poly_t res, const fmprb_poly_t poly, long c)
+{
+    fmprb_poly_fit_length(res, poly->length);
+    _fmprb_vec_scalar_mul_2exp_si(res->coeffs, poly->coeffs, poly->length, c);
+    _fmprb_poly_set_length(res, poly->length);
+}
+
 void _fmprb_poly_mullow_ztrunc(fmprb_struct * res,
     const fmprb_struct * poly1, long len1,
     const fmprb_struct * poly2, long len2, long n, long prec);
@@ -443,6 +459,10 @@ void _fmprb_poly_sin_cos_series_basecase(fmprb_struct * s,
 
 void fmprb_poly_sin_cos_series_basecase(fmprb_poly_t s, fmprb_poly_t c,
         const fmprb_poly_t h, long n, long prec);
+
+void _fmprb_poly_tan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long len, long prec);
+
+void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
 
 void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
 

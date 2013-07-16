@@ -25,60 +25,66 @@
 
 #include "fmprb_poly.h"
 
+#define TAN_NEWTON_CUTOFF 20
+
 void
-_fmprb_poly_rsqrt_series(fmprb_struct * g,
+_fmprb_poly_tan_series(fmprb_struct * g,
     const fmprb_struct * h, long hlen, long len, long prec)
 {
+    fmprb_struct *t, *u;
     hlen = FLINT_MIN(hlen, len);
-    fmprb_rsqrt(g, h, prec);
 
     if (hlen == 1)
     {
+        fmprb_tan(g, h, prec);
         _fmprb_vec_zero(g + 1, len - 1);
+        return;
     }
-    else
-    {
-        fmprb_struct *t, *u;
-        t = _fmprb_vec_init(2 * len);
-        u = t + len;
 
-        NEWTON_INIT(1, len)
+    t = _fmprb_vec_init(2 * len);
+    u = t + len;
 
-        NEWTON_LOOP(m, n)
-        _fmprb_poly_mullow(t, g, m, g, m, n, prec);
-        _fmprb_poly_mullow(u, t, n, g, n, n, prec);
-        _fmprb_poly_mullow(t, u, n, h, hlen, n, prec);
-        _fmprb_vec_scalar_mul_2exp_si(g + m, t + m, n - m, -1);
-        _fmprb_vec_neg(g + m, g + m, n - m);
-        NEWTON_END_LOOP
+    NEWTON_INIT(TAN_NEWTON_CUTOFF, len)
 
-        NEWTON_END
+    NEWTON_BASECASE(n)
+    _fmprb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec);
+    _fmprb_poly_div_series(g, t, len, u, n, n, prec);
+    NEWTON_END_BASECASE
 
-        _fmprb_vec_clear(t, 2 * len);
-    }
+    NEWTON_LOOP(m, n)
+    _fmprb_poly_mullow(u, g, m, g, m, n, prec);
+    fmprb_add_ui(u, u, 1, prec);
+    _fmprb_poly_atan_series(t, g, m, n, prec);
+    _fmprb_poly_sub(t + m, h + m, FLINT_MAX(0, hlen - m), t + m, n - m, prec);
+    _fmprb_poly_mullow(g + m, u, n, t + m, n - m, n - m, prec);
+    NEWTON_END_LOOP
+
+    NEWTON_END
+
+    _fmprb_vec_clear(t, 2 * len);
 }
 
 void
-fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
+fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 {
-    if (n == 0 || h->length == 0)
+    if (h->length == 0 || n == 0)
     {
-        printf("fmprb_poly_rsqrt_series: require n > 0 and nonzero input\n");
-        abort();
+        fmprb_poly_zero(g);
+        return;
     }
 
     if (g == h)
     {
         fmprb_poly_t t;
         fmprb_poly_init(t);
-        fmprb_poly_rsqrt_series(t, h, n, prec);
+        fmprb_poly_tan_series(t, h, n, prec);
         fmprb_poly_swap(g, t);
         fmprb_poly_clear(t);
         return;
     }
 
     fmprb_poly_fit_length(g, n);
-    _fmprb_poly_rsqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
+    _fmprb_poly_tan_series(g->coeffs, h->coeffs, h->length, n, prec);
     _fmprb_poly_set_length(g, n);
     _fmprb_poly_normalise(g);
 }
