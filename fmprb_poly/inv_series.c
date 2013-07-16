@@ -43,30 +43,23 @@ _fmprb_poly_inv_series(fmprb_struct * Qinv,
     }
     else
     {
-        long a[FLINT_BITS];
-        long i, m, n, Qnlen, Wlen, W2len;
+        long Qnlen, Wlen, W2len;
         fmprb_struct * W;
 
         W = _fmprb_vec_init(len);
 
-        a[i = 0] = n = len;
-        while (n >= 2)
-            a[++i] = (n = (n + 1) / 2);
+        NEWTON_INIT(1, len)
+        NEWTON_LOOP(m, n)
 
-        for (i--; i >= 0; i--)
-        {
-            m = n;
-            n = a[i];
+        Qnlen = FLINT_MIN(Qlen, n);
+        Wlen = FLINT_MIN(Qnlen + m - 1, n);
+        W2len = Wlen - m;
+        MULLOW(W, Q, Qnlen, Qinv, m, Wlen, prec);
+        MULLOW(Qinv + m, Qinv, m, W + m, W2len, n - m, prec);
+        _fmprb_vec_neg(Qinv + m, Qinv + m, n - m);
 
-            Qnlen = FLINT_MIN(Qlen, n);
-            Wlen = FLINT_MIN(Qnlen + m - 1, n);
-            W2len = Wlen - m;
-
-            MULLOW(W, Q, Qnlen, Qinv, m, Wlen, prec);
-            MULLOW(Qinv + m, Qinv, m, W + m, W2len, n - m, prec);
-
-            _fmprb_vec_neg(Qinv + m, Qinv + m, n - m);
-        }
+        NEWTON_END_LOOP
+        NEWTON_END
 
         _fmprb_vec_clear(W, len);
     }
