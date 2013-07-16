@@ -494,9 +494,9 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
     { \
         long __steps[FLINT_BITS], __i, __from, __to; \
         __steps[__i = 0] = __to = (to); \
-        while (__to > (from)) \
+        __from = (from); \
+        while (__to > __from) \
             __steps[++__i] = (__to = (__to + 1) / 2); \
-        __from = from; /* suppress warning if basecase block omitted */ \
 
 #define NEWTON_BASECASE(bc_to) { long bc_to = __to;
 
