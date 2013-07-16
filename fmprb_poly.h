@@ -470,21 +470,28 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
 
 /* Macros */
 
-#define NEWTON_ITER_BEGIN(from, to, step_from, step_to) \
+#define NEWTON_INIT(from, to) \
     { \
-        long __steps[FLINT_BITS], __i; \
-        __steps[__i = 0] = step_to = (to); \
-        while (step_to > (from)) \
-            __steps[++__i] = (step_to = (step_to + 1) / 2); \
-        for (__i--; __i >= 0; __i--) \
+        long __steps[FLINT_BITS], __i, __from, __to; \
+        __steps[__i = 0] = __to = (to); \
+        while (__to > (from)) \
+            __steps[++__i] = (__to = (__to + 1) / 2); \
+        __from = from; /* suppress warning if basecase block omitted */ \
+
+#define NEWTON_BASECASE(bc_to) { long bc_to = __to;
+
+#define NEWTON_END_BASECASE }
+
+#define NEWTON_LOOP(step_from, step_to) \
         { \
-            step_from = step_to; \
-            step_to = __steps[__i]; \
+            for (__i--; __i >= 0; __i--) \
+            { \
+                long step_from = __steps[__i+1]; \
+                long step_to = __steps[__i]; \
 
+#define NEWTON_END_LOOP }}
 
-#define NEWTON_ITER_END \
-        } \
-    } \
+#define NEWTON_END }
 
 #endif
 

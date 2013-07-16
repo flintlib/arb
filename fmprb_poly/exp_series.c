@@ -25,75 +25,74 @@
 
 #include "fmprb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 6
+#define NEWTON_EXP_CUTOFF 8
+
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
 g = exp(-x) only to length (n+1)/2 */
 static void
 _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
-    const fmprb_struct * h, long n, long prec, int inverse)
+    const fmprb_struct * h, long len, long prec, int inverse)
 {
-    long a[FLINT_BITS];
-    long i, m, m2, l, alloc;
-    fmprb_struct * T, * U, * hprime;
+    long alloc;
+    fmprb_struct *T, *U, *hprime;
 
-    alloc = n;
+    alloc = 3 * len;
     T = _fmprb_vec_init(alloc);
-    U = _fmprb_vec_init(alloc);
-    hprime = _fmprb_vec_init(alloc);
+    U = T + len;
+    hprime = U + len;
 
-    _fmprb_poly_derivative(hprime, h, n, prec);
-    fmprb_zero(hprime + n - 1);
+    _fmprb_poly_derivative(hprime, h, len, prec);
+    fmprb_zero(hprime + len - 1);
 
-    for (i = 1; (1L << i) < n; i++);
-    a[i = 0] = n;
-    while (n >= NEWTON_EXP_CUTOFF)
-        a[++i] = (n = (n + 1) / 2);
+    NEWTON_INIT(NEWTON_EXP_CUTOFF, len)
 
     /* f := exp(h) + O(x^m), g := exp(-h) + O(x^m2) */
+    NEWTON_BASECASE(n)
     _fmprb_poly_exp_series_basecase(f, h, n, n, prec);
     _fmprb_poly_inv_series(g, f, (n + 1) / 2, (n + 1) / 2, prec);
+    NEWTON_END_BASECASE
 
-    for (i--; i >= 0; i--)
+    /* extend from length m to length n */
+    NEWTON_LOOP(m, n)
+
+    long m2 = (m + 1) / 2;
+    long l = m - 1; /* shifted for derivative */
+
+    /* g := exp(-h) + O(x^m) */
+    _fmprb_poly_mullow(T, f, m, g, m2, m, prec);
+    _fmprb_poly_mullow(g + m2, g, m2, T + m2, m - m2, m - m2, prec);
+    _fmprb_vec_neg(g + m2, g + m2, m - m2);
+
+    /* U := h' + g (f' - f h') + O(x^(n-1))
+        Note: should replace h' by h' mod x^(m-1) */
+    _fmprb_vec_zero(f + m, n - m);
+    _fmprb_poly_mullow(T, f, n, hprime, n, n, prec); /* should be mulmid */
+    _fmprb_poly_derivative(U, f, n, prec); fmprb_zero(U + n - 1); /* should skip low terms */
+    _fmprb_vec_sub(U + l, U + l, T + l, n - l, prec);
+    _fmprb_poly_mullow(T + l, g, n - m, U + l, n - m, n - m, prec);
+    _fmprb_vec_add(U + l, hprime + l, T + l, n - m, prec);
+
+    /* f := f + f * (h - int U) + O(x^n) = exp(h) + O(x^n) */
+    _fmprb_poly_integral(U, U, n, prec); /* should skip low terms */
+    _fmprb_vec_sub(U + m, h + m, U + m, n - m, prec);
+    _fmprb_poly_mullow(f + m, f, n - m, U + m, n - m, n - m, prec);
+
+    /* g := exp(-h) + O(x^n) */
+    /* not needed if we only want exp(x) */
+    if (n == len && inverse)
     {
-        m = n; /* previous length */
-        n = a[i]; /* new length */
-        m2 = (m + 1) / 2;
-        l = m - 1; /* shifted for derivative */
-
-        /* g := exp(-h) + O(x^m) */
-        _fmprb_poly_mullow(T, f, m, g, m2, m, prec);
-        _fmprb_poly_mullow(g + m2, g, m2, T + m2, m - m2, m - m2, prec);
-        _fmprb_vec_neg(g + m2, g + m2, m - m2);
-
-        /* U := h' + g (f' - f h') + O(x^(n-1))
-            Note: should replace h' by h' mod x^(m-1) */
-        _fmprb_vec_zero(f + m, n - m);
-        _fmprb_poly_mullow(T, f, n, hprime, n, n, prec); /* should be mulmid */
-        _fmprb_poly_derivative(U, f, n, prec); fmprb_zero(U + n - 1); /* should skip low terms */
-        _fmprb_vec_sub(U + l, U + l, T + l, n - l, prec);
-        _fmprb_poly_mullow(T + l, g, n - m, U + l, n - m, n - m, prec);
-        _fmprb_vec_add(U + l, hprime + l, T + l, n - m, prec);
-
-        /* f := f + f * (h - int U) + O(x^n) = exp(h) + O(x^n) */
-        _fmprb_poly_integral(U, U, n, prec); /* should skip low terms */
-        _fmprb_vec_sub(U + m, h + m, U + m, n - m, prec);
-        _fmprb_poly_mullow(f + m, f, n - m, U + m, n - m, n - m, prec);
-
-        /* g := exp(-h) + O(x^n) */
-        /* not needed if we only want exp(x) */
-        if (i == 0 && inverse)
-        {
-            _fmprb_poly_mullow(T, f, n, g, m, n, prec);
-            _fmprb_poly_mullow(g + m, g, m, T + m, n - m, n - m, prec);
-            _fmprb_vec_neg(g + m, g + m, n - m);
-        }
+        _fmprb_poly_mullow(T, f, n, g, m, n, prec);
+        _fmprb_poly_mullow(g + m, g, m, T + m, n - m, n - m, prec);
+        _fmprb_vec_neg(g + m, g + m, n - m);
     }
 
-    _fmprb_vec_clear(hprime, alloc);
+    NEWTON_END_LOOP
+
+    NEWTON_END
+
     _fmprb_vec_clear(T, alloc);
-    _fmprb_vec_clear(U, alloc);
 }
 
 void

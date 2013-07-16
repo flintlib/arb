@@ -38,21 +38,21 @@ _fmprb_poly_rsqrt_series(fmprb_struct * g,
     }
     else
     {
-        long m, n;
         fmprb_struct *t, *u;
-
         t = _fmprb_vec_init(2 * len);
         u = t + len;
 
-        NEWTON_ITER_BEGIN(1, len, m, n)
+        NEWTON_INIT(1, len)
 
+        NEWTON_LOOP(m, n)
         _fmprb_poly_mullow(t, g, m, g, m, n, prec);
         _fmprb_poly_mullow(u, t, n, g, n, n, prec);
         _fmprb_poly_mullow(t, u, n, h, hlen, n, prec);
         _fmprb_vec_mul_2exp_si(g + m, t + m, n - m, -1);
         _fmprb_vec_neg(g + m, g + m, n - m);
+        NEWTON_END_LOOP
 
-        NEWTON_ITER_END
+        NEWTON_END
 
         _fmprb_vec_clear(t, 2 * len);
     }
