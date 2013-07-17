@@ -621,6 +621,19 @@ Inverse trigonometric functions
     We define `\operatorname{atan2}(0,0) = 0`, and for `a < 0`,
     `\operatorname{atan2}(0,a) = \pi`.
 
+.. function:: void fmprb_asin(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets `z = \sin^{-1} x = \tan^{-1}(x / \sqrt{1-x^2})`.
+    If `x` is not contained in the domain `[-1,1]`, the result is an
+    indeterminate interval.
+
+.. function:: void fmprb_acos(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets `z = \cos^{-1} x = \pi/2 - \sin^{-1} x`.
+    If `x` is not contained in the domain `[-1,1]`, the result is an
+    indeterminate interval.
+
+
 Hyperbolic functions
 -------------------------------------------------------------------------------
 
@@ -638,7 +651,7 @@ Hyperbolic functions
 .. function:: void fmprb_tanh(fmprb_t y, const fmprb_t x, long prec)
 
     Sets `y = \tanh x = (\sinh x) / (\cosh x)`, evaluated
-    via :func:`expm1` as `\tanh x = (e^{2x} - 1) / (e^{2x} + 1)` if
+    via :func:`fmprb_expm1` as `\tanh x = (e^{2x} - 1) / (e^{2x} + 1)` if
     the midpoint of `x` is negative and as
     `\tanh x = (1 - e^{-2x}) / (1 + e^{-2x})` otherwise.
 

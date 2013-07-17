@@ -316,6 +316,9 @@ void fmprb_coth(fmprb_t y, const fmprb_t x, long prec);
 void fmprb_atan(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_atan2(fmprb_t z, const fmprb_t b, const fmprb_t a, long prec);
 
+void fmprb_asin(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_acos(fmprb_t z, const fmprb_t x, long prec);
+
 void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
 void fmprb_rising_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
 
