@@ -26,8 +26,8 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen,
-    const fmprb_struct * xs, long n, long prec)
+_fmprb_poly_evaluate_vec_iter(fmprb_ptr ys, fmprb_srcptr poly, long plen,
+    fmprb_srcptr xs, long n, long prec)
 {
     long i;
 
@@ -36,8 +36,8 @@ _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long
 }
 
 void
-fmprb_poly_evaluate_vec_iter(fmprb_struct * ys,
-        const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
+fmprb_poly_evaluate_vec_iter(fmprb_ptr ys,
+        const fmprb_poly_t poly, fmprb_srcptr xs, long n, long prec)
 {
     _fmprb_poly_evaluate_vec_iter(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

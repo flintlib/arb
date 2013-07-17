@@ -54,6 +54,15 @@ Types, macros and constants
     *fmprb_struct*, permitting an *fmprb_t* to be passed by
     reference.
 
+.. type:: fmprb_ptr
+
+   Alias for :code:`fmprb_struct *`, used for vectors of numbers.
+
+.. type:: fmprb_srcptr
+
+   Alias for :code:`const fmprb_struct *`, used for vectors of numbers
+   when passed as constant input to functions.
+
 .. macro:: FMPRB_RAD_PREC
 
     The precision used for operations on the radius. This is small
@@ -80,11 +89,11 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
-.. function:: fmprb_struct * _fmprb_vec_init(long n)
+.. function:: fmprb_ptr _fmprb_vec_init(long n)
 
     Returns a pointer to an array of *n* initialized *fmprb_struct*:s.
 
-.. function:: void _fmprb_vec_clear(fmprb_struct * v, long n)
+.. function:: void _fmprb_vec_clear(fmprb_ptr v, long n)
 
     Clears an array of *n* initialized *fmprb_struct*:s.
 

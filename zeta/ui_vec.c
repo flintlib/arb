@@ -26,10 +26,10 @@
 #include "zeta.h"
 
 void
-zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
+zeta_ui_vec(fmprb_ptr x, ulong start, long num, long prec)
 {
     long i, num_odd, num_even, start_odd;
-    fmprb_struct * tmp;
+    fmprb_ptr tmp;
 
     num_odd = num / 2 + (start & num & 1);
     num_even = num - num_odd;

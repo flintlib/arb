@@ -59,7 +59,7 @@ int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one);
 void elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec);
 
 
-void _elefun_cos_minpoly_roots(fmprb_struct * alpha, long d, ulong n, long prec);
+void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec);
 
 void _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n);
 

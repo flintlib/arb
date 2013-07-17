@@ -29,7 +29,7 @@
 
 static void
 gamma_sum_bsplit(fmprb_t P, fmprb_t Q,
-            fmprb_struct * B, fmprb_struct * T,
+            fmprb_ptr B, fmprb_ptr T,
             const fmpz_t p, const fmpz_t q,
             long a, long b, long N, long L, long wp)
 {
@@ -49,7 +49,7 @@ gamma_sum_bsplit(fmprb_t P, fmprb_t Q,
     {
         long m, lenbl, lentl, lenbr, lentr, lent, lenb, alloc;
         fmprb_t PL, QL, PR, QR;
-        fmprb_struct *BL, *TL, *BR, *TR, *TT;
+        fmprb_ptr BL, TL, BR, TR, TT;
 
         fmprb_init(PL);
         fmprb_init(QL);
@@ -97,10 +97,10 @@ gamma_sum_bsplit(fmprb_t P, fmprb_t Q,
 }
 
 static void
-evaluate_series(fmprb_struct * S, const fmpq_t a, long r, long N, long len, long wp, long bsplit_wp)
+evaluate_series(fmprb_ptr S, const fmpq_t a, long r, long N, long len, long wp, long bsplit_wp)
 {
     fmprb_t P, Q;
-    fmprb_struct *B, *T;
+    fmprb_ptr B, T;
 
     fmprb_init(P);
     fmprb_init(Q);
@@ -127,7 +127,7 @@ evaluate_series(fmprb_struct * S, const fmpq_t a, long r, long N, long len, long
 void fmpr_gamma_ui_lbound(fmpr_t x, ulong n, long prec);
 
 static void
-add_error_series(fmprb_struct * S, long R, long N, long len)
+add_error_series(fmprb_ptr S, long R, long N, long len)
 {
     long i;
     fmpr_t t, u;
@@ -154,7 +154,7 @@ add_error_series(fmprb_struct * S, long R, long N, long len)
 }
 
 static void
-add_error_integral(fmprb_struct * v, long n, long num)
+add_error_integral(fmprb_ptr v, long n, long num)
 {
     fmpr_t t, u;
     long j;
@@ -186,7 +186,7 @@ add_error_integral(fmprb_struct * v, long n, long num)
 }
 
 void
-_fmprb_poly_ui_pow_series(fmprb_struct * res, ulong c, long len, long wp)
+_fmprb_poly_ui_pow_series(fmprb_ptr res, ulong c, long len, long wp)
 {
     long i;
 
@@ -209,10 +209,10 @@ _fmprb_poly_ui_pow_series(fmprb_struct * res, ulong c, long len, long wp)
 }
 
 void
-gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
+gamma_series_fmpq_hypgeom(fmprb_ptr res, const fmpq_t a, long len, long prec)
 {
     long N, R, wp, bsplit_wp;
-    fmprb_struct *S, *logs;
+    fmprb_ptr S, logs;
     fmprb_t t;
 
     wp = prec * 1.01 + 10;

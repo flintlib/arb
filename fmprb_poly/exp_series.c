@@ -32,11 +32,11 @@
 with inverse=0 uses g as scratch space, computing
 g = exp(-x) only to length (n+1)/2 */
 static void
-_fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
-    const fmprb_struct * h, long len, long prec, int inverse)
+_fmprb_poly_exp_series_newton(fmprb_ptr f, fmprb_ptr g,
+    fmprb_srcptr h, long len, long prec, int inverse)
 {
     long alloc;
-    fmprb_struct *T, *U, *hprime;
+    fmprb_ptr T, U, hprime;
 
     alloc = 3 * len;
     T = _fmprb_vec_init(alloc);
@@ -96,7 +96,7 @@ _fmprb_poly_exp_series_newton(fmprb_struct * f, fmprb_struct * g,
 }
 
 void
-_fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
+_fmprb_poly_exp_series(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
@@ -106,7 +106,7 @@ _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long
     }
     else
     {
-        fmprb_struct *g, *t;
+        fmprb_ptr g, t;
         fmprb_t u;
         int fix;
 
@@ -119,7 +119,7 @@ _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long
             _fmprb_vec_set(t + 1, h + 1, hlen - 1);
         }
         else
-            t = (fmprb_struct *) h;
+            t = (fmprb_ptr) h;
 
         fmprb_init(u);
         fmprb_exp(u, h, prec);

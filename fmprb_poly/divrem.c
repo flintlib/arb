@@ -29,12 +29,12 @@
 /* TODO: tighten this code */
 
 void
-_fmprb_poly_div(fmprb_struct * Q,
-    const fmprb_struct * A, long lenA,
-    const fmprb_struct * B, long lenB, long prec)
+_fmprb_poly_div(fmprb_ptr Q,
+    fmprb_srcptr A, long lenA,
+    fmprb_srcptr B, long lenB, long prec)
 {
     long lenQ, lenB2;
-    fmprb_struct * Arev, * Brev;
+    fmprb_ptr Arev, Brev;
 
     lenQ = lenA - lenB + 1;
 
@@ -60,9 +60,9 @@ _fmprb_poly_div(fmprb_struct * Q,
     _fmprb_vec_clear(Arev, 2 * lenQ);
 }
 
-void _fmprb_poly_divrem(fmprb_struct * Q, fmprb_struct * R,
-    const fmprb_struct * A, long lenA,
-    const fmprb_struct * B, long lenB, long prec)
+void _fmprb_poly_divrem(fmprb_ptr Q, fmprb_ptr R,
+    fmprb_srcptr A, long lenA,
+    fmprb_srcptr B, long lenB, long prec)
 {
     const long lenQ = lenA - lenB + 1;
     _fmprb_poly_div(Q, A, lenA, B, lenB, prec);
@@ -77,12 +77,12 @@ void _fmprb_poly_divrem(fmprb_struct * Q, fmprb_struct * R,
     }
 }
 
-void _fmprb_poly_rem(fmprb_struct * R,
-    const fmprb_struct * A, long lenA,
-    const fmprb_struct * B, long lenB, long prec)
+void _fmprb_poly_rem(fmprb_ptr R,
+    fmprb_srcptr A, long lenA,
+    fmprb_srcptr B, long lenB, long prec)
 {
     const long lenQ = lenA - lenB + 1;
-    fmprb_struct * Q = _fmprb_vec_init(lenQ);
+    fmprb_ptr Q = _fmprb_vec_init(lenQ);
     _fmprb_poly_divrem(Q, R, A, lenA, B, lenB, prec);
     _fmprb_vec_clear(Q, lenQ);
 }

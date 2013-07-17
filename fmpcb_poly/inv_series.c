@@ -26,11 +26,11 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec)
+_fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long len, long prec)
 {
     long a[FLINT_BITS];
     long i, m, n;
-    fmpcb_struct * W;
+    fmpcb_ptr W;
 
     W = _fmpcb_vec_init(len);
 

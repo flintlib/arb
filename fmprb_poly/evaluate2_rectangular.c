@@ -26,11 +26,11 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_struct * poly,
+_fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, fmprb_srcptr poly,
     long len, const fmprb_t x, long prec)
 {
     long i, j, m, r;
-    fmprb_struct * xs;
+    fmprb_ptr xs;
     fmprb_t s, t, c;
 
     if (len < 3)

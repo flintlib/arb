@@ -39,7 +39,7 @@ Integer zeta values
 
     Computes `\zeta(n)` for even *n* via the corresponding Bernoulli number.
 
-.. function:: void zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec)
+.. function:: void zeta_ui_vec_borwein(fmprb_ptr z, ulong start, long num, ulong step, long prec)
 
     Evaluates `\zeta(s)` at `\mathrm{num}` consecutive integers *s* beginning
     with *start* and proceeding in increments of *step*.
@@ -159,11 +159,11 @@ Integer zeta values
     Computes `\zeta(s)` for nonnegative integer `s \ne 1`, automatically
     choosing an appropriate algorithm.
 
-.. function:: void zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec(fmprb_ptr x, ulong start, long num, long prec)
 
-.. function:: void zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec_even(fmprb_ptr x, ulong start, long num, long prec)
 
-.. function:: void zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec)
+.. function:: void zeta_ui_vec_odd(fmprb_ptr x, ulong start, long num, long prec)
 
     Computes `\zeta(s)` at num consecutive integers (respectively num
     even or num odd integers) beginning with `s = \mathrm{start} \ge 2`,
@@ -173,9 +173,9 @@ Integer zeta values
 Euler-Maclaurin summation
 -------------------------------------------------------------------------------
 
-.. function:: void zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+.. function:: void zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 
-.. function:: void zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
+.. function:: void zeta_series(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
 
     Evaluates the truncated Euler-Maclaurin sum of order `N, M` for the
     length-*d* truncated Taylor series of the Hurwitz zeta function

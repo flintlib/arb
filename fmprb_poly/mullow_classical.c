@@ -27,9 +27,9 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_mullow_classical(fmprb_struct * res,
-    const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long n, long prec)
+_fmprb_poly_mullow_classical(fmprb_ptr res,
+    fmprb_srcptr poly1, long len1,
+    fmprb_srcptr poly2, long len2, long n, long prec)
 {
     if ((len1 == 1 && len2 == 1) || n == 1)
     {

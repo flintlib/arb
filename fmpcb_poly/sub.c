@@ -26,8 +26,8 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_sub(fmpcb_struct * res, const fmpcb_struct * poly1, long len1,
-    const fmpcb_struct * poly2, long len2, long prec)
+_fmpcb_poly_sub(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long prec)
 {
     long i, min = FLINT_MIN(len1, len2);
 

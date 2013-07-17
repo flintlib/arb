@@ -28,10 +28,10 @@
 #define CUTOFF 5
 
 void
-_fmprb_poly_revert_series_newton(fmprb_struct * Qinv, const fmprb_struct * Q, long n, long prec)
+_fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec)
 {
     long i, k, a[FLINT_BITS];
-    fmprb_struct *T, *U, *V;
+    fmprb_ptr T, U, V;
 
     if (n <= 2)
     {
@@ -76,7 +76,7 @@ void
 fmprb_poly_revert_series_newton(fmprb_poly_t Qinv,
                                     const fmprb_poly_t Q, long n, long prec)
 {
-    fmprb_struct *Qcopy;
+    fmprb_ptr Qcopy;
     int Qalloc;
     long Qlen = Q->length;
 

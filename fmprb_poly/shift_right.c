@@ -28,7 +28,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_shift_right(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+_fmprb_poly_shift_right(fmprb_ptr res, fmprb_srcptr poly, long len, long n)
 {
     long i;
 

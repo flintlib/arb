@@ -33,7 +33,7 @@ fmpcb_mat_init(fmpcb_mat_t mat, long r, long c)
         long i;
 
         mat->entries = _fmpcb_vec_init(r * c);
-        mat->rows = (fmpcb_struct **) flint_malloc(r * sizeof(fmpcb_struct *));
+        mat->rows = (fmpcb_ptr *) flint_malloc(r * sizeof(fmpcb_ptr));
 
         for (i = 0; i < r; i++)
             mat->rows[i] = mat->entries + i * c;

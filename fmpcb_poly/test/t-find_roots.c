@@ -42,7 +42,7 @@ int main()
         fmpcb_poly_t B;
         fmpcb_poly_t C;
         fmpcb_t t;
-        fmpcb_struct * roots;
+        fmpcb_ptr roots;
         long i, deg, isolated;
         long prec = 10 + n_randint(state, 400);
 

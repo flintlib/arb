@@ -26,9 +26,9 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+_fmprb_poly_log_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long prec)
 {
-    fmprb_struct *f_diff, *f_inv;
+    fmprb_ptr f_diff, f_inv;
     fmprb_t a;
     long alloc;
 

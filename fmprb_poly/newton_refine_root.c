@@ -33,7 +33,7 @@ long _fmpr_mag(const fmpr_t c)
 }
 
 void
-_fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len,
+_fmprb_poly_newton_refine_root(fmprb_t r, fmprb_srcptr poly, long len,
     const fmprb_t start,
     const fmprb_t convergence_interval,
     const fmpr_t convergence_factor,

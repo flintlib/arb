@@ -27,12 +27,12 @@
 #include "fmprb_mat.h"
 
 void
-_fmprb_poly_compose_series_brent_kung(fmprb_struct * res,
-    const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long n, long prec)
+_fmprb_poly_compose_series_brent_kung(fmprb_ptr res,
+    fmprb_srcptr poly1, long len1,
+    fmprb_srcptr poly2, long len2, long n, long prec)
 {
     fmprb_mat_t A, B, C;
-    fmprb_struct *t, *h;
+    fmprb_ptr t, h;
     long i, m;
 
     if (n == 1)

@@ -42,7 +42,7 @@ void _fmpr_fmpz_vec_max_norm(fmpr_t norm, const fmpz * vec, long len, long prec)
     fmpr_abs(norm, norm);
 }
 
-int _fmprb_poly_mid_get_hull(fmpz_t bot_exp, fmpz_t top_exp, const fmprb_struct * A, long lenA)
+int _fmprb_poly_mid_get_hull(fmpz_t bot_exp, fmpz_t top_exp, fmprb_srcptr A, long lenA)
 {
     long i;
     fmpz_t t;
@@ -87,7 +87,7 @@ int _fmprb_poly_mid_get_hull(fmpz_t bot_exp, fmpz_t top_exp, const fmprb_struct 
 /* convert to an fmpz poly with a common exponent and coefficients
    at most prec bits, also bounding input error plus rounding error */
 void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
-                            const fmprb_struct * A, long lenA, long prec)
+                            fmprb_srcptr A, long lenA, long prec)
 {
     fmpz_t top_exp, bot_exp;
     long shift;
@@ -149,7 +149,7 @@ void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
     fmpz_clear(top_exp);
 }
 
-int _fmprb_vec_rad_has_inf_nan(const fmprb_struct * vec, long len)
+int _fmprb_vec_rad_has_inf_nan(fmprb_srcptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -159,9 +159,9 @@ int _fmprb_vec_rad_has_inf_nan(const fmprb_struct * vec, long len)
     return 0;
 }
 
-void _fmprb_poly_mullow_ztrunc(fmprb_struct * C,
-    const fmprb_struct * A, long lenA,
-    const fmprb_struct * B, long lenB, long n, long prec)
+void _fmprb_poly_mullow_ztrunc(fmprb_ptr C,
+    fmprb_srcptr A, long lenA,
+    fmprb_srcptr B, long lenB, long n, long prec)
 {
     fmpz * Acoeffs, * Bcoeffs, * Ccoeffs;
     fmpz_t Aexp, Bexp, Cexp;

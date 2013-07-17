@@ -25,15 +25,15 @@
 
 #include "fmprb_poly.h"
 
-fmprb_struct ** _fmprb_poly_tree_alloc(long len)
+fmprb_ptr * _fmprb_poly_tree_alloc(long len)
 {
-    fmprb_struct ** tree = NULL;
+    fmprb_ptr * tree = NULL;
 
     if (len)
     {
         long i, height = FLINT_CLOG2(len);
 
-        tree = flint_malloc(sizeof(fmprb_struct *) * (height + 1));
+        tree = flint_malloc(sizeof(fmprb_ptr) * (height + 1));
         for (i = 0; i <= height; i++)
             tree[i] = _fmprb_vec_init(len + (len >> i) + 1);
     }
@@ -41,7 +41,7 @@ fmprb_struct ** _fmprb_poly_tree_alloc(long len)
     return tree;
 }
 
-void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
+void _fmprb_poly_tree_free(fmprb_ptr * tree, long len)
 {
     if (len)
     {
@@ -55,10 +55,11 @@ void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
 }
 
 void
-_fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec)
+_fmprb_poly_tree_build(fmprb_ptr * tree, fmprb_srcptr roots, long len, long prec)
 {
     long height, pow, left, i;
-    fmprb_struct *pa, *pb, *a, *b;
+    fmprb_ptr pa, pb;
+    fmprb_srcptr a, b;
 
     if (len == 0)
         return;
@@ -79,8 +80,8 @@ _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long le
 
         for (i = 0; i < len / 2; i++)
         {
-            a = (fmprb_struct *) (roots + (2 * i));
-            b = (fmprb_struct *) (roots + (2 * i + 1));
+            a = (fmprb_srcptr) (roots + (2 * i));
+            b = (fmprb_srcptr) (roots + (2 * i + 1));
 
             fmprb_mul(pa + (3 * i), a, b, prec);
             fmprb_add(pa + (3 * i + 1), a, b, prec);

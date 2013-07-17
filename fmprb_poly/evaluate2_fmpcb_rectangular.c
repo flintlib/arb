@@ -27,10 +27,10 @@
 
 void
 _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z,
-    const fmprb_struct * poly, long len, const fmpcb_t x, long prec)
+    fmprb_srcptr poly, long len, const fmpcb_t x, long prec)
 {
     long i, j, m, r;
-    fmpcb_struct * xs;
+    fmpcb_ptr xs;
     fmpcb_t s, t;
     fmprb_t c;
 

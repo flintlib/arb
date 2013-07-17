@@ -26,8 +26,8 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_compose_series_horner(fmprb_struct * res, const fmprb_struct * poly1, long len1,
-                            const fmprb_struct * poly2, long len2, long n, long prec)
+_fmprb_poly_compose_series_horner(fmprb_ptr res, fmprb_srcptr poly1, long len1,
+                            fmprb_srcptr poly2, long len2, long n, long prec)
 {
     if (n == 1)
     {
@@ -38,7 +38,7 @@ _fmprb_poly_compose_series_horner(fmprb_struct * res, const fmprb_struct * poly1
         long i = len1 - 1;
         long lenr;
 
-        fmprb_struct * t = _fmprb_vec_init(n);
+        fmprb_ptr t = _fmprb_vec_init(n);
 
         lenr = len2;
         _fmprb_vec_scalar_mul(res, poly2, len2, poly1 + i, prec);

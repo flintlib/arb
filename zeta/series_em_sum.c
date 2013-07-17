@@ -29,7 +29,7 @@
 #include "bernoulli.h"
 
 /* res = src * (c + x) */
-void _fmpcb_poly_mullow_cpx(fmpcb_struct * res, const fmpcb_struct * src, long len, const fmpcb_t c, long trunc, long prec)
+void _fmpcb_poly_mullow_cpx(fmpcb_ptr res, fmpcb_srcptr src, long len, const fmpcb_t c, long trunc, long prec)
 {
     long i;
 
@@ -46,7 +46,7 @@ void _fmpcb_poly_mullow_cpx(fmpcb_struct * res, const fmpcb_struct * src, long l
 }
 
 /* series of 1/N^(c+x) */
-void _fmpcb_poly_ui_invpow_cpx(fmpcb_struct * res, ulong N, const fmpcb_t c, long trunc, long prec)
+void _fmpcb_poly_ui_invpow_cpx(fmpcb_ptr res, ulong N, const fmpcb_t c, long trunc, long prec)
 {
     long i;
 
@@ -68,7 +68,7 @@ void _fmpcb_poly_ui_invpow_cpx(fmpcb_struct * res, ulong N, const fmpcb_t c, lon
     fmpcb_clear(logN);
 }
 
-void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_struct * res, const fmpcb_t N, const fmpcb_t c, long trunc, long prec)
+void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res, const fmpcb_t N, const fmpcb_t c, long trunc, long prec)
 {
     long i;
     fmpcb_t logN;
@@ -103,7 +103,7 @@ fmpcb_is_int(const fmpcb_t z)
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_div_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmprb_t c, long prec)
+_fmpcb_vec_scalar_div_fmprb(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmprb_t c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -114,9 +114,9 @@ _fmpcb_vec_scalar_div_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long l
 }
 
 void
-zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
+zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec)
 {
-    fmpcb_struct *t, *u, *v, *term, *sum;
+    fmpcb_ptr t, u, v, term, sum;
     fmpcb_t splus, Na, rec;
     fmprb_t x;
     fmpz_t c;
@@ -140,7 +140,7 @@ zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int defla
     /* sum 1/(n+a)^(s+x) */
     if (fmpcb_is_one(a) && (d == 1))
     {
-        fmpcb_struct * pows;
+        fmpcb_ptr pows;
         long j;
 
         pows = _fmpcb_vec_init(N + 1);

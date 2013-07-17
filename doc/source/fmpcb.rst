@@ -13,6 +13,15 @@ Types, macros and constants
     *fmpcb_struct*, permitting an *fmpcb_t* to be passed by
     reference.
 
+.. type:: fmpcb_ptr
+
+   Alias for :code:`fmpcb_struct *`, used for vectors of numbers.
+
+.. type:: fmpcb_srcptr
+
+   Alias for :code:`const fmpcb_struct *`, used for vectors of numbers
+   when passed as constant input to functions.
+
 .. macro:: fmpcb_realref(x)
 
     Macro returning a pointer to the real part of *x* as an *fmprb_t*.
@@ -33,11 +42,11 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
-.. function:: fmpcb_struct * _fmpcb_vec_init(long n)
+.. function:: fmpcb_ptr _fmpcb_vec_init(long n)
 
     Returns a pointer to an array of *n* initialized *fmpcb_struct*:s.
 
-.. function:: void _fmpcb_vec_clear(fmpcb_struct * v, long n)
+.. function:: void _fmpcb_vec_clear(fmpcb_ptr v, long n)
 
     Clears an array of *n* initialized *fmpcb_struct*:s.
 

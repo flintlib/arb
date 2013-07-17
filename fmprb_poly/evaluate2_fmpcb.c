@@ -26,7 +26,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+_fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 {
     _fmprb_poly_evaluate2_fmpcb_rectangular(y, z, f, len, x, prec);
 }

@@ -37,6 +37,8 @@ typedef struct
 fmpcb_struct;
 
 typedef fmpcb_struct fmpcb_t[1];
+typedef fmpcb_struct * fmpcb_ptr;
+typedef const fmpcb_struct * fmpcb_srcptr;
 
 #define fmpcb_realref(x) (&(x)->real)
 #define fmpcb_imagref(x) (&(x)->imag)
@@ -56,11 +58,11 @@ fmpcb_clear(fmpcb_t x)
     fmprb_clear(fmpcb_imagref(x));
 }
 
-static __inline__ fmpcb_struct *
+static __inline__ fmpcb_ptr
 _fmpcb_vec_init(long n)
 {
     long i;
-    fmpcb_struct * v = flint_malloc(sizeof(fmpcb_struct) * n);
+    fmpcb_ptr v = flint_malloc(sizeof(fmpcb_struct) * n);
 
     for (i = 0; i < n; i++)
         fmpcb_init(v + i);
@@ -69,7 +71,7 @@ _fmpcb_vec_init(long n)
 }
 
 static __inline__ void
-_fmpcb_vec_clear(fmpcb_struct * v, long n)
+_fmpcb_vec_clear(fmpcb_ptr v, long n)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -545,7 +547,7 @@ void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec);
 void fmpcb_hurwitz_zeta(fmpcb_t z, const fmpcb_t s, const fmpcb_t a, long prec);
 
 static __inline__ void
-_fmpcb_vec_zero(fmpcb_struct * A, long n)
+_fmpcb_vec_zero(fmpcb_ptr A, long n)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -553,7 +555,7 @@ _fmpcb_vec_zero(fmpcb_struct * A, long n)
 }
 
 static __inline__ void
-_fmpcb_vec_set(fmpcb_struct * res, const fmpcb_struct * vec, long len)
+_fmpcb_vec_set(fmpcb_ptr res, fmpcb_srcptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -561,7 +563,7 @@ _fmpcb_vec_set(fmpcb_struct * res, const fmpcb_struct * vec, long len)
 }
 
 static __inline__ void
-_fmpcb_vec_neg(fmpcb_struct * res, const fmpcb_struct * vec, long len)
+_fmpcb_vec_neg(fmpcb_ptr res, fmpcb_srcptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -569,7 +571,7 @@ _fmpcb_vec_neg(fmpcb_struct * res, const fmpcb_struct * vec, long len)
 }
 
 static __inline__ void
-_fmpcb_vec_add(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct * vec2, long len, long prec)
+_fmpcb_vec_add(fmpcb_ptr res, fmpcb_srcptr vec1, fmpcb_srcptr vec2, long len, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -577,7 +579,7 @@ _fmpcb_vec_add(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct
 }
 
 static __inline__ void
-_fmpcb_vec_sub(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct * vec2, long len, long prec)
+_fmpcb_vec_sub(fmpcb_ptr res, fmpcb_srcptr vec1, fmpcb_srcptr vec2, long len, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -585,7 +587,7 @@ _fmpcb_vec_sub(fmpcb_struct * res, const fmpcb_struct * vec1, const fmpcb_struct
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_submul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+_fmpcb_vec_scalar_submul(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpcb_t c, long prec)
 {
     if (len > 0)
     {
@@ -602,7 +604,7 @@ _fmpcb_vec_scalar_submul(fmpcb_struct * res, const fmpcb_struct * vec, long len,
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_addmul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+_fmpcb_vec_scalar_addmul(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpcb_t c, long prec)
 {
     if (len > 0)
     {
@@ -619,7 +621,7 @@ _fmpcb_vec_scalar_addmul(fmpcb_struct * res, const fmpcb_struct * vec, long len,
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_mul(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+_fmpcb_vec_scalar_mul(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpcb_t c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -627,7 +629,7 @@ _fmpcb_vec_scalar_mul(fmpcb_struct * res, const fmpcb_struct * vec, long len, co
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_mul_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len, ulong c, long prec)
+_fmpcb_vec_scalar_mul_ui(fmpcb_ptr res, fmpcb_srcptr vec, long len, ulong c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -635,7 +637,7 @@ _fmpcb_vec_scalar_mul_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len,
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_mul_2exp_si(fmpcb_struct * res, const fmpcb_struct * vec, long len, long c)
+_fmpcb_vec_scalar_mul_2exp_si(fmpcb_ptr res, fmpcb_srcptr vec, long len, long c)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -643,7 +645,7 @@ _fmpcb_vec_scalar_mul_2exp_si(fmpcb_struct * res, const fmpcb_struct * vec, long
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_div_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len, ulong c, long prec)
+_fmpcb_vec_scalar_div_ui(fmpcb_ptr res, fmpcb_srcptr vec, long len, ulong c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -651,7 +653,7 @@ _fmpcb_vec_scalar_div_ui(fmpcb_struct * res, const fmpcb_struct * vec, long len,
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_div(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpcb_t c, long prec)
+_fmpcb_vec_scalar_div(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpcb_t c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -659,7 +661,7 @@ _fmpcb_vec_scalar_div(fmpcb_struct * res, const fmpcb_struct * vec, long len, co
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_mul_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmprb_t c, long prec)
+_fmpcb_vec_scalar_mul_fmprb(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmprb_t c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -667,7 +669,7 @@ _fmpcb_vec_scalar_mul_fmprb(fmpcb_struct * res, const fmpcb_struct * vec, long l
 }
 
 static __inline__ void
-_fmpcb_vec_scalar_div_fmpz(fmpcb_struct * res, const fmpcb_struct * vec, long len, const fmpz_t c, long prec)
+_fmpcb_vec_scalar_div_fmpz(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpz_t c, long prec)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -698,13 +700,13 @@ fmpcb_bits(const fmpcb_t x)
 }
 
 static __inline__ long
-_fmpcb_vec_bits(const fmpcb_struct * vec, long len)
+_fmpcb_vec_bits(fmpcb_srcptr vec, long len)
 {
-    return _fmprb_vec_bits((const fmprb_struct *) vec, 2 * len);
+    return _fmprb_vec_bits((fmprb_srcptr) vec, 2 * len);
 }
 
 static __inline__ void
-_fmpcb_vec_set_powers(fmpcb_struct * xs, const fmpcb_t x, long len, long prec)
+_fmpcb_vec_set_powers(fmpcb_ptr xs, const fmpcb_t x, long len, long prec)
 {
     long i;
 

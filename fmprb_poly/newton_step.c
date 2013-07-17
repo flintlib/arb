@@ -26,7 +26,7 @@
 #include "fmprb_poly.h"
 
 int
-_fmprb_poly_newton_step(fmprb_t xnew, const fmprb_struct * poly, long len,
+_fmprb_poly_newton_step(fmprb_t xnew, fmprb_srcptr poly, long len,
     const fmprb_t x,
     const fmprb_t convergence_interval,
     const fmpr_t convergence_factor, long prec)

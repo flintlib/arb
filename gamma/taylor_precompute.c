@@ -26,7 +26,7 @@
 #include "gamma.h"
 #include "fmprb_poly.h"
 
-TLS_PREFIX fmprb_struct * gamma_taylor_coeffs = NULL;
+TLS_PREFIX fmprb_ptr gamma_taylor_coeffs = NULL;
 
 TLS_PREFIX long gamma_taylor_prec = 0;
 

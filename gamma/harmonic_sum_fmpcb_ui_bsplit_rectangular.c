@@ -27,7 +27,7 @@
 #include "fmprb_poly.h"
 
 static void
-bsplit_step(fmpcb_t p, fmpcb_t q, const fmprb_struct * poly, ulong step,
+bsplit_step(fmpcb_t p, fmpcb_t q, fmprb_srcptr poly, ulong step,
         const fmpcb_t x, ulong a, ulong b, long prec)
 {
     if (b - a == step)
@@ -80,7 +80,7 @@ gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong
 
     if (b != 0)
     {
-        fmprb_struct * poly;
+        fmprb_ptr poly;
         fmprb_struct xpoly[2];
         poly = _fmprb_vec_init(step + 1);
         fmprb_init(xpoly + 0);

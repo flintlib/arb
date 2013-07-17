@@ -37,8 +37,8 @@ static __inline__ long length(long flen, ulong r, long trunc)
 }
 
 static void
-_fmprb_poly_rfac_series_ui_bsplit(fmprb_struct * res,
-    const fmprb_struct * f, long flen, ulong a, ulong b,
+_fmprb_poly_rfac_series_ui_bsplit(fmprb_ptr res,
+    fmprb_srcptr f, long flen, ulong a, ulong b,
         long trunc, long prec)
 {
     flen = FLINT_MIN(flen, trunc);
@@ -50,7 +50,7 @@ _fmprb_poly_rfac_series_ui_bsplit(fmprb_struct * res,
     }
     else
     {
-        fmprb_struct *L, *R;
+        fmprb_ptr L, R;
         long len1, len2;
 
         long m = a + (b - a) / 2;
@@ -72,8 +72,8 @@ _fmprb_poly_rfac_series_ui_bsplit(fmprb_struct * res,
 }
 
 void
-_fmprb_poly_rfac_series_ui(fmprb_struct * res,
-    const fmprb_struct * f, long flen, ulong r,
+_fmprb_poly_rfac_series_ui(fmprb_ptr res,
+    fmprb_srcptr f, long flen, ulong r,
         long trunc, long prec)
 {
     _fmprb_poly_rfac_series_ui_bsplit(res, f, flen, 0, r, trunc, prec);

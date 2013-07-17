@@ -27,9 +27,9 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_mullow_classical(fmpcb_struct * res,
-    const fmpcb_struct * poly1, long len1,
-    const fmpcb_struct * poly2, long len2, long n, long prec)
+_fmpcb_poly_mullow_classical(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long n, long prec)
 {
     if ((len1 == 1 && len2 == 1) || n == 1)
     {

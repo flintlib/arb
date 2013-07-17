@@ -37,6 +37,8 @@ typedef struct
 fmprb_struct;
 
 typedef fmprb_struct fmprb_t[1];
+typedef fmprb_struct * fmprb_ptr;
+typedef const fmprb_struct * fmprb_srcptr;
 
 #define fmprb_midref(x) (&(x)->mid)
 #define fmprb_radref(x) (&(x)->rad)
@@ -59,11 +61,11 @@ fmprb_clear(fmprb_t x)
     fmpr_clear(fmprb_radref(x));
 }
 
-static __inline__ fmprb_struct *
+static __inline__ fmprb_ptr
 _fmprb_vec_init(long n)
 {
     long i;
-    fmprb_struct * v = flint_malloc(sizeof(fmprb_struct) * n);
+    fmprb_ptr v = flint_malloc(sizeof(fmprb_struct) * n);
 
     for (i = 0; i < n; i++)
         fmprb_init(v + i);
@@ -72,7 +74,7 @@ _fmprb_vec_init(long n)
 }
 
 static __inline__ void
-_fmprb_vec_clear(fmprb_struct * v, long n)
+_fmprb_vec_clear(fmprb_ptr v, long n)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -572,7 +574,7 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bit
 /* vector functions */
 
 static __inline__ void
-_fmprb_vec_zero(fmprb_struct * A, long n)
+_fmprb_vec_zero(fmprb_ptr A, long n)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -580,7 +582,7 @@ _fmprb_vec_zero(fmprb_struct * A, long n)
 }
 
 static __inline__ int
-_fmprb_vec_is_zero(const fmprb_struct * vec, long len)
+_fmprb_vec_is_zero(fmprb_srcptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -590,7 +592,7 @@ _fmprb_vec_is_zero(const fmprb_struct * vec, long len)
 }
 
 static __inline__ void
-_fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
+_fmprb_vec_set(fmprb_ptr res, fmprb_srcptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -598,7 +600,7 @@ _fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
 }
 
 static __inline__ void
-_fmprb_vec_swap(fmprb_struct * res, fmprb_struct * vec, long len)
+_fmprb_vec_swap(fmprb_ptr res, fmprb_ptr vec, long len)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -606,7 +608,7 @@ _fmprb_vec_swap(fmprb_struct * res, fmprb_struct * vec, long len)
 }
 
 static __inline__ void
-_fmprb_vec_neg(fmprb_struct * B, const fmprb_struct * A, long n)
+_fmprb_vec_neg(fmprb_ptr B, fmprb_srcptr A, long n)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -614,8 +616,8 @@ _fmprb_vec_neg(fmprb_struct * B, const fmprb_struct * A, long n)
 }
 
 static __inline__ void
-_fmprb_vec_sub(fmprb_struct * C, const fmprb_struct * A,
-    const fmprb_struct * B, long n, long prec)
+_fmprb_vec_sub(fmprb_ptr C, fmprb_srcptr A,
+    fmprb_srcptr B, long n, long prec)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -623,8 +625,8 @@ _fmprb_vec_sub(fmprb_struct * C, const fmprb_struct * A,
 }
 
 static __inline__ void
-_fmprb_vec_add(fmprb_struct * C, const fmprb_struct * A,
-    const fmprb_struct * B, long n, long prec)
+_fmprb_vec_add(fmprb_ptr C, fmprb_srcptr A,
+    fmprb_srcptr B, long n, long prec)
 {
     long i;
     for (i = 0; i < n; i++)
@@ -632,7 +634,7 @@ _fmprb_vec_add(fmprb_struct * C, const fmprb_struct * A,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
+_fmprb_vec_scalar_mul(fmprb_ptr res, fmprb_srcptr vec,
     long len, const fmprb_t c, long prec)
 {
     long i;
@@ -641,7 +643,7 @@ _fmprb_vec_scalar_mul(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_div(fmprb_struct * res, const fmprb_struct * vec,
+_fmprb_vec_scalar_div(fmprb_ptr res, fmprb_srcptr vec,
     long len, const fmprb_t c, long prec)
 {
     long i;
@@ -650,7 +652,7 @@ _fmprb_vec_scalar_div(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
+_fmprb_vec_scalar_mul_fmpz(fmprb_ptr res, fmprb_srcptr vec,
     long len, const fmpz_t c, long prec)
 {
     long i;
@@ -663,8 +665,7 @@ _fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_mul_2exp_si(fmprb_struct * res, const fmprb_struct * src,
-    long len, long c)
+_fmprb_vec_scalar_mul_2exp_si(fmprb_ptr res, fmprb_srcptr src, long len, long c)
 {
     long i;
     for (i = 0; i < len; i++)
@@ -672,7 +673,7 @@ _fmprb_vec_scalar_mul_2exp_si(fmprb_struct * res, const fmprb_struct * src,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
+_fmprb_vec_scalar_addmul(fmprb_ptr res, fmprb_srcptr vec,
     long len, const fmprb_t c, long prec)
 {
     long i;
@@ -681,7 +682,7 @@ _fmprb_vec_scalar_addmul(fmprb_struct * res, const fmprb_struct * vec,
 }
 
 static __inline__ void
-_fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, const fmprb_struct * vec,
+_fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, fmprb_srcptr vec,
         long len, long prec)
 {
     fmpr_t t;
@@ -706,7 +707,7 @@ _fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, const fmprb_struct * vec,
 }
 
 static __inline__ long
-_fmprb_vec_bits(const fmprb_struct * x, long len)
+_fmprb_vec_bits(fmprb_srcptr x, long len)
 {
     long i, b, c;
 
@@ -721,7 +722,7 @@ _fmprb_vec_bits(const fmprb_struct * x, long len)
 }
 
 static __inline__ void
-_fmprb_vec_set_powers(fmprb_struct * xs, const fmprb_t x, long len, long prec)
+_fmprb_vec_set_powers(fmprb_ptr xs, const fmprb_t x, long len, long prec)
 {
     long i;
 

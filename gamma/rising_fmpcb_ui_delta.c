@@ -31,7 +31,7 @@ void rising_difference_polynomial(fmpz * s, fmpz * c, ulong m);
 void
 gamma_rising_fmpcb_ui_delta(fmpcb_t y, const fmpcb_t x, ulong n, ulong m, long prec)
 {
-    fmpcb_struct * xs;
+    fmpcb_ptr xs;
     fmpcb_t t, u, v;
     ulong i, k, rem;
     fmpz_t c, h;

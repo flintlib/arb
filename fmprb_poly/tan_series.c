@@ -28,10 +28,10 @@
 #define TAN_NEWTON_CUTOFF 20
 
 void
-_fmprb_poly_tan_series(fmprb_struct * g,
-    const fmprb_struct * h, long hlen, long len, long prec)
+_fmprb_poly_tan_series(fmprb_ptr g,
+    fmprb_srcptr h, long hlen, long len, long prec)
 {
-    fmprb_struct *t, *u;
+    fmprb_ptr t, u;
     hlen = FLINT_MIN(hlen, len);
 
     if (hlen == 1)

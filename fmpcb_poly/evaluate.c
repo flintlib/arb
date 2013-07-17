@@ -26,7 +26,7 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_struct * f, long len,
+_fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len,
                            const fmpcb_t a, long prec)
 {
     if (len == 0)

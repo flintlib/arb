@@ -26,7 +26,7 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_derivative(fmpcb_struct * res, const fmpcb_struct * poly, long len, long prec)
+_fmpcb_poly_derivative(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
 {
     long i;
 

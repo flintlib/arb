@@ -37,18 +37,18 @@ void zeta_ui_asymp(fmprb_t x, ulong s, long prec);
 void zeta_ui_borwein_bsplit(fmprb_t x, ulong s, long prec);
 void zeta_ui_euler_product(fmprb_t z, ulong s, long prec);
 void zeta_ui_bernoulli(fmprb_t x, ulong n, long prec);
-void zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec);
+void zeta_ui_vec_borwein(fmprb_ptr z, ulong start, long num, ulong step, long prec);
 void zeta_ui(fmprb_t x, ulong n, long prec);
 
-void zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec);
-void zeta_ui_vec_odd(fmprb_struct * x, ulong start, long num, long prec);
-void zeta_ui_vec(fmprb_struct * x, ulong start, long num, long prec);
+void zeta_ui_vec_even(fmprb_ptr x, ulong start, long num, long prec);
+void zeta_ui_vec_odd(fmprb_ptr x, ulong start, long num, long prec);
+void zeta_ui_vec(fmprb_ptr x, ulong start, long num, long prec);
 
-void zeta_series_em_sum(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec);
+void zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, ulong N, ulong M, long d, long prec);
 void zeta_series_em_choose_param(fmpr_t bound, ulong * N, ulong * M, const fmpcb_t s, const fmpcb_t a, long d, long target, long prec);
 void zeta_series_em_bound(fmpr_t bound, const fmpcb_t s, const fmpcb_t a, long N, long M, long d, long wp);
-void zeta_series_em_vec_bound(fmprb_struct * vec, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long d, long wp);
-void zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec);
+void zeta_series_em_vec_bound(fmprb_ptr vec, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long d, long wp);
+void zeta_series(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec);
 
 #endif
 

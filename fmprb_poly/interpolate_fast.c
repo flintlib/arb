@@ -26,10 +26,10 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_interpolation_weights(fmprb_struct * w,
-    fmprb_struct ** tree, long len, long prec)
+_fmprb_poly_interpolation_weights(fmprb_ptr w,
+    fmprb_ptr * tree, long len, long prec)
 {
-    fmprb_struct * tmp;
+    fmprb_ptr tmp;
     long i, n, height;
 
     if (len == 0)
@@ -58,11 +58,11 @@ _fmprb_poly_interpolation_weights(fmprb_struct * w,
 }
 
 void
-_fmprb_poly_interpolate_fast_precomp(fmprb_struct * poly,
-    const fmprb_struct * ys, fmprb_struct ** tree, const fmprb_struct * weights,
+_fmprb_poly_interpolate_fast_precomp(fmprb_ptr poly,
+    fmprb_srcptr ys, fmprb_ptr * tree, fmprb_srcptr weights,
     long len, long prec)
 {
-    fmprb_struct *t, *u, *pa, *pb;
+    fmprb_ptr t, u, pa, pb;
     long i, pow, left;
 
     if (len == 0)
@@ -105,11 +105,11 @@ _fmprb_poly_interpolate_fast_precomp(fmprb_struct * poly,
 }
 
 void
-_fmprb_poly_interpolate_fast(fmprb_struct * poly,
-    const fmprb_struct * xs, const fmprb_struct * ys, long len, long prec)
+_fmprb_poly_interpolate_fast(fmprb_ptr poly,
+    fmprb_srcptr xs, fmprb_srcptr ys, long len, long prec)
 {
-    fmprb_struct ** tree;
-    fmprb_struct *w;
+    fmprb_ptr * tree;
+    fmprb_ptr w;
 
     tree = _fmprb_poly_tree_alloc(len);
     _fmprb_poly_tree_build(tree, xs, len, prec);
@@ -125,7 +125,7 @@ _fmprb_poly_interpolate_fast(fmprb_struct * poly,
 
 void
 fmprb_poly_interpolate_fast(fmprb_poly_t poly,
-        const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+        fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 {
     if (n == 0)
     {

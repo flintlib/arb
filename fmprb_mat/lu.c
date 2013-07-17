@@ -29,7 +29,7 @@ int
 fmprb_mat_lu(long * P, fmprb_mat_t LU, const fmprb_mat_t A, long prec)
 {
     fmprb_t d, e;
-    fmprb_struct ** a;
+    fmprb_ptr * a;
     long i, j, m, n, r, row, col;
     int result;
 

@@ -26,10 +26,10 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_sqrt_series(fmprb_struct * g,
-    const fmprb_struct * h, long hlen, long len, long prec)
+_fmprb_poly_sqrt_series(fmprb_ptr g,
+    fmprb_srcptr h, long hlen, long len, long prec)
 {
-    fmprb_struct * t;
+    fmprb_ptr t;
     hlen = FLINT_MIN(hlen, len);
     t = _fmprb_vec_init(len);
     _fmprb_poly_rsqrt_series(t, h, hlen, len, prec);

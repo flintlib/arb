@@ -26,7 +26,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_reverse(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+_fmprb_poly_reverse(fmprb_ptr res, fmprb_srcptr poly, long len, long n)
 {
     if (res == poly)
     {

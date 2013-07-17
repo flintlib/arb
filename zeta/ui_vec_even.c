@@ -26,7 +26,7 @@
 #include "zeta.h"
 
 void
-zeta_ui_vec_even(fmprb_struct * x, ulong start, long num, long prec)
+zeta_ui_vec_even(fmprb_ptr x, ulong start, long num, long prec)
 {
     long i;
 

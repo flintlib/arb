@@ -26,10 +26,10 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_interpolation_weights(fmpcb_struct * w,
-    fmpcb_struct ** tree, long len, long prec)
+_fmpcb_poly_interpolation_weights(fmpcb_ptr w,
+    fmpcb_ptr * tree, long len, long prec)
 {
-    fmpcb_struct * tmp;
+    fmpcb_ptr tmp;
     long i, n, height;
 
     if (len == 0)
@@ -58,11 +58,11 @@ _fmpcb_poly_interpolation_weights(fmpcb_struct * w,
 }
 
 void
-_fmpcb_poly_interpolate_fast_precomp(fmpcb_struct * poly,
-    const fmpcb_struct * ys, fmpcb_struct ** tree, const fmpcb_struct * weights,
+_fmpcb_poly_interpolate_fast_precomp(fmpcb_ptr poly,
+    fmpcb_srcptr ys, fmpcb_ptr * tree, fmpcb_srcptr weights,
     long len, long prec)
 {
-    fmpcb_struct *t, *u, *pa, *pb;
+    fmpcb_ptr t, u, pa, pb;
     long i, pow, left;
 
     if (len == 0)
@@ -105,11 +105,11 @@ _fmpcb_poly_interpolate_fast_precomp(fmpcb_struct * poly,
 }
 
 void
-_fmpcb_poly_interpolate_fast(fmpcb_struct * poly,
-    const fmpcb_struct * xs, const fmpcb_struct * ys, long len, long prec)
+_fmpcb_poly_interpolate_fast(fmpcb_ptr poly,
+    fmpcb_srcptr xs, fmpcb_srcptr ys, long len, long prec)
 {
-    fmpcb_struct ** tree;
-    fmpcb_struct *w;
+    fmpcb_ptr * tree;
+    fmpcb_ptr w;
 
     tree = _fmpcb_poly_tree_alloc(len);
     _fmpcb_poly_tree_build(tree, xs, len, prec);
@@ -125,7 +125,7 @@ _fmpcb_poly_interpolate_fast(fmpcb_struct * poly,
 
 void
 fmpcb_poly_interpolate_fast(fmpcb_poly_t poly,
-        const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+        fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 {
     if (n == 0)
     {

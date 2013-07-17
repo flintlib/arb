@@ -36,7 +36,7 @@ int main()
 
     for (iter = 0; iter < 100; iter++)
     {
-        fmprb_struct * r;
+        fmprb_ptr r;
         ulong n;
         long i, num;
         mpfr_t s;

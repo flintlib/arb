@@ -27,10 +27,10 @@
 
 void
 _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor,
-    const fmprb_struct * poly, long len,
+    fmprb_srcptr poly, long len,
     const fmprb_t convergence_interval, long prec)
 {
-    fmprb_struct * deriv;
+    fmprb_ptr deriv;
     fmprb_t t, u;
 
     fmprb_init(t);

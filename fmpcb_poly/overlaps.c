@@ -26,8 +26,8 @@
 #include "fmpcb_poly.h"
 
 int
-_fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1,
-        const fmpcb_struct * poly2, long len2)
+_fmpcb_poly_overlaps(fmpcb_srcptr poly1, long len1,
+        fmpcb_srcptr poly2, long len2)
 {
     long i;
 

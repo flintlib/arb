@@ -28,9 +28,9 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_compose_horner(fmprb_struct * res,
-    const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long prec)
+_fmprb_poly_compose_horner(fmprb_ptr res,
+    fmprb_srcptr poly1, long len1,
+    fmprb_srcptr poly2, long len2, long prec)
 {
     if (len1 == 1)
     {
@@ -49,7 +49,7 @@ _fmprb_poly_compose_horner(fmprb_struct * res,
     {
         const long alloc = (len1 - 1) * (len2 - 1) + 1;
         long i = len1 - 1, lenr = len2;
-        fmprb_struct *t, *t1, *t2;
+        fmprb_ptr t, t1, t2;
         t = _fmprb_vec_init(alloc);
 
         if (len1 % 2 == 0)

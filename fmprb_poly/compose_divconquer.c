@@ -28,13 +28,14 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, long len1,
-                                          const fmprb_struct * poly2, long len2, long prec)
+_fmprb_poly_compose_divconquer(fmprb_ptr res, fmprb_srcptr poly1, long len1,
+                                          fmprb_srcptr poly2, long len2, long prec)
 {
     long i, j, k, n;
     long *hlen, alloc, powlen;
-    fmprb_struct *v, **h, *pow, *temp;
-    
+    fmprb_ptr v, pow, temp;
+    fmprb_ptr * h;
+
     if (len1 == 1)
     {
         fmprb_set(res, poly1);
@@ -71,7 +72,7 @@ _fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, l
         alloc += hlen[i];
 
     v = _fmprb_vec_init(alloc + 2 * powlen);
-    h = (fmprb_struct **) flint_malloc(((len1 + 1) / 2) * sizeof(fmprb_struct *));
+    h = (fmprb_ptr *) flint_malloc(((len1 + 1) / 2) * sizeof(fmprb_ptr));
     h[0] = v;
     for (i = 0; i < (len1 - 1) / 2; i++)
     {
@@ -140,7 +141,7 @@ _fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, l
         _fmprb_poly_mul(temp, pow, powlen, pow, powlen, prec);
         powlen += powlen - 1;
         {
-            fmprb_struct * t = pow;
+            fmprb_ptr t = pow;
             pow = temp;
             temp = t;
         }

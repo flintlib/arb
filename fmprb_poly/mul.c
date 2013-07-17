@@ -25,9 +25,9 @@
 
 #include "fmprb_poly.h"
 
-void _fmprb_poly_mul(fmprb_struct * C,
-    const fmprb_struct * A, long lenA,
-    const fmprb_struct * B, long lenB, long prec)
+void _fmprb_poly_mul(fmprb_ptr C,
+    fmprb_srcptr A, long lenA,
+    fmprb_srcptr B, long lenB, long prec)
 {
     _fmprb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
 }
