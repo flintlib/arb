@@ -25,43 +25,32 @@
 
 #include "fmprb_poly.h"
 
-#define TANGENT_CUTOFF 20
-
 void
-_fmprb_poly_sin_cos_series(fmprb_ptr s, fmprb_ptr c, const fmprb_srcptr h, long hlen, long len, long prec)
+_fmprb_poly_cos_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 {
-    if (hlen < TANGENT_CUTOFF)
-        _fmprb_poly_sin_cos_series_basecase(s, c, h, hlen, len, prec);
-    else
-        _fmprb_poly_sin_cos_series_tangent(s, c, h, hlen, len, prec);
+    fmprb_ptr t = _fmprb_vec_init(n);
+    _fmprb_poly_sin_cos_series(t, g, h, hlen, n, prec);
+    _fmprb_vec_clear(t, n);
 }
 
 void
-fmprb_poly_sin_cos_series(fmprb_poly_t s, fmprb_poly_t c,
-                                    const fmprb_poly_t h, long n, long prec)
+fmprb_poly_cos_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 {
-    long hlen = h->length;
-
     if (n == 0)
     {
-        fmprb_poly_zero(s);
-        fmprb_poly_zero(c);
+        fmprb_poly_zero(g);
         return;
     }
 
-    if (hlen == 0)
+    if (h->length == 0)
     {
-        fmprb_poly_zero(s);
-        fmprb_poly_one(c);
+        fmprb_poly_one(g);
         return;
     }
 
-    fmprb_poly_fit_length(s, n);
-    fmprb_poly_fit_length(c, n);
-    _fmprb_poly_sin_cos_series(s->coeffs, c->coeffs, h->coeffs, hlen, n, prec);
-    _fmprb_poly_set_length(s, n);
-    _fmprb_poly_normalise(s);
-    _fmprb_poly_set_length(c, n);
-    _fmprb_poly_normalise(c);
+    fmprb_poly_fit_length(g, n);
+    _fmprb_poly_cos_series(g->coeffs, h->coeffs, h->length, n, prec);
+    _fmprb_poly_set_length(g, n);
+    _fmprb_poly_normalise(g);
 }
 

@@ -474,6 +474,20 @@ void _fmprb_poly_sin_cos_series_tangent(fmprb_ptr s, fmprb_ptr c,
 void fmprb_poly_sin_cos_series_tangent(fmprb_poly_t s, fmprb_poly_t c,
                                     const fmprb_poly_t h, long n, long prec);
 
+void _fmprb_poly_sin_cos_series(fmprb_ptr s, fmprb_ptr c,
+                        const fmprb_srcptr h, long hlen, long len, long prec);
+
+void fmprb_poly_sin_cos_series(fmprb_poly_t s, fmprb_poly_t c,
+                                    const fmprb_poly_t h, long n, long prec);
+
+void _fmprb_poly_sin_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec);
+
+void fmprb_poly_sin_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
+
+void _fmprb_poly_cos_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec);
+
+void fmprb_poly_cos_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
+
 void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, long prec);
 
 void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);

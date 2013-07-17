@@ -606,7 +606,12 @@ Special functions
 
 .. function:: void fmprb_poly_sin_cos_series_tangent(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
 
-    Sets *s* and *c* to the power series sine and cosine of *h*.
+.. function:: void _fmprb_poly_sin_cos_series(fmprb_ptr s, fmprb_ptr c, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_sin_cos_series(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
+
+    Sets *s* and *c* to the power series sine and cosine of *h*, computed
+    simultaneously.
 
     The *basecase* version uses a simple recurrence for the coefficients,
     requiring `O(nm)` operations where `m` is the length of `h`.
@@ -621,7 +626,22 @@ Special functions
     to improve accuracy and avoid dividing by zero at the poles of
     the tangent function.
 
+    The default version automatically selects between the *basecase* and
+    *tangent* algorithms depending on the input.
+
     The underscore methods support aliasing and require the lengths to be nonzero.
+
+.. function:: void _fmprb_poly_sin_series(fmprb_ptr s, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_sin_series(fmprb_poly_t s, const fmprb_poly_t h, long n, long prec)
+
+.. function:: void _fmprb_poly_cos_series(fmprb_ptr c, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_cos_series(fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
+
+    Respectively evaluates the power series sine or cosine. These functions
+    simply wrap :func:`_fmprb_poly_sin_cos_series`. The underscore methods
+    support aliasing and require the lengths to be nonzero.
 
 .. function:: void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, long prec)
 

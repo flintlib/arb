@@ -92,4 +92,7 @@
 
 * Add polynomial mulmid, and use in Newton iteration
 
+* Tune basecase/Newton selection for exp/sin/cos series (the basecase
+  algorithms are more stable, and faster for quite large n)
+
 
