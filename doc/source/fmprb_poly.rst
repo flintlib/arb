@@ -602,13 +602,26 @@ Special functions
 
 .. function:: void fmprb_poly_sin_cos_series_basecase(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
 
+.. function:: void _fmprb_poly_sin_cos_series_tangent(fmprb_ptr s, fmprb_ptr c, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_sin_cos_series_tangent(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
+
     Sets *s* and *c* to the power series sine and cosine of *h*.
 
-    The basecase version uses a simple recurrence for the coefficients,
+    The *basecase* version uses a simple recurrence for the coefficients,
     requiring `O(nm)` operations where `m` is the length of `h`.
 
-    The underscore method supports aliasing and allows the input to be
-    shorter than the output, but requires the lengths to be nonzero.
+    The *tangent* version uses the tangent half-angle formulas to compute
+    the sine and cosine via :func:`_fmprb_poly_tan_series`. This
+    requires `O(M(n))` operations.
+    When `h = h_0 + h_1` where the constant term `h_0` is nonzero,
+    the evaluation is done as
+    `\sin(h_0 + h_1) = \cos(h_0) \sin(h_1) + \sin(h_0) \cos(h_1)`,
+    `\cos(h_0 + h_1) = \cos(h_0) \cos(h_1) - \sin(h_0) \sin(h_1)`,
+    to improve accuracy and avoid dividing by zero at the poles of
+    the tangent function.
+
+    The underscore methods support aliasing and require the lengths to be nonzero.
 
 .. function:: void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, long prec)
 

@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("sin_cos_series_basecase....");
+    printf("sin_cos_series_tangent....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -59,7 +59,7 @@ int main()
         fmpq_poly_randtest(A, state, m, qbits);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
-        fmprb_poly_sin_cos_series_basecase(b, c, a, n, rbits2);
+        fmprb_poly_sin_cos_series_tangent(b, c, a, n, rbits2);
 
         /* Check sin(x)^2 + cos(x)^2 = 1 */
         fmprb_poly_mullow(d, b, b, n, rbits2);
@@ -82,7 +82,7 @@ int main()
         }
 
         fmprb_poly_set(d, a);
-        fmprb_poly_sin_cos_series_basecase(d, c, d, n, rbits2);
+        fmprb_poly_sin_cos_series_tangent(d, c, d, n, rbits2);
         if (!fmprb_poly_equal(b, d))
         {
             printf("FAIL (aliasing 1)\n\n");
@@ -90,7 +90,7 @@ int main()
         }
 
         fmprb_poly_set(d, a);
-        fmprb_poly_sin_cos_series_basecase(b, d, d, n, rbits2);
+        fmprb_poly_sin_cos_series_tangent(b, d, d, n, rbits2);
         if (!fmprb_poly_equal(c, d))
         {
             printf("FAIL (aliasing 2)\n\n");

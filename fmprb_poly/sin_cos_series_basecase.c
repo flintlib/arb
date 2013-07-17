@@ -33,11 +33,18 @@ _fmprb_poly_sin_cos_series_basecase(fmprb_ptr s,
     fmprb_ptr a;
     fmprb_t t, u;
 
+    fmprb_sin_cos(s, c, h, prec);
+
+    if (hlen == 1)
+    {
+        _fmprb_vec_zero(s + 1, n - 1);
+        _fmprb_vec_zero(c + 1, n - 1);
+        return;
+    }
+
     fmprb_init(t);
     fmprb_init(u);
     a = _fmprb_vec_init(alen);
-
-    fmprb_sin_cos(s, c, h, prec);
 
     for (k = 1; k < alen; k++)
         fmprb_mul_ui(a + k, h + k, k, prec);
