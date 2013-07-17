@@ -23,45 +23,57 @@
 
 ******************************************************************************/
 
-#include "gamma.h"
-#include "fmprb_poly.h"
-
-TLS_PREFIX fmprb_struct * gamma_taylor_coeffs = NULL;
-
-TLS_PREFIX long gamma_taylor_prec = 0;
-
-TLS_PREFIX long gamma_taylor_num = 0;
+#include "fmprb.h"
 
 void
-gamma_taylor_precompute(long num, long prec)
+fmprb_acos(fmprb_t z, const fmprb_t x, long prec)
 {
-    long wp;
+    fmprb_t t, u;
 
-    if (gamma_taylor_num < num || gamma_taylor_prec < prec)
+    if (fmprb_is_exact(x))
     {
-        fmprb_poly_t A;
-        long i;
+        int side;
 
-        _fmprb_vec_clear(gamma_taylor_coeffs, gamma_taylor_num);
+        if (fmpr_is_zero(fmprb_midref(x)))
+        {
+            fmprb_const_pi(z, prec);
+            fmprb_mul_2exp_si(z, z, -1);
+            return;
+        }
 
-        num = FLINT_MAX(gamma_taylor_num * 1.5, num);
-        prec = FLINT_MAX(gamma_taylor_prec * 1.5, prec);
-        prec = FLINT_MAX(prec, 64);
+        side = fmpr_cmpabs_2exp_si(fmprb_midref(x), 0);
 
-        wp = prec * 1.01 + 32;
-
-        /* TODO: cleanup */
-        fmprb_poly_init(A);
-        fmprb_poly_log_gamma_series(A, num, wp);
-        fmprb_poly_neg(A, A);
-        fmprb_poly_exp_series(A, A, num, wp);
-
-        for (i = 1; i < num; i += 2)
-            fmprb_neg(A->coeffs + i, A->coeffs + i);
-
-        gamma_taylor_coeffs = A->coeffs;
-        gamma_taylor_num = A->length;
-        gamma_taylor_prec = prec;
+        /* +/- 1 */
+        if (side == 0)
+        {
+            if (fmpr_is_one(fmprb_midref(x)))
+                fmprb_zero(z);
+            else
+                fmprb_const_pi(z, prec);
+            return;
+        }
+        else if (side > 0)
+        {
+            fmpr_nan(fmprb_midref(z));
+            fmpr_pos_inf(fmprb_radref(z));
+            return;
+        }
     }
+
+    fmprb_init(t);
+    fmprb_init(u);
+
+    fmprb_mul(t, x, x, FMPR_PREC_EXACT);
+    fmprb_sub_ui(t, t, 1, prec);
+    fmprb_neg(t, t);
+    fmprb_rsqrt(t, t, prec);
+    fmprb_mul(t, x, t, prec);
+    fmprb_atan(t, t, prec);
+    fmprb_const_pi(u, prec);
+    fmprb_mul_2exp_si(u, u, -1);
+    fmprb_sub(z, u, t, prec);
+
+    fmprb_clear(t);
+    fmprb_clear(u);
 }
 

@@ -550,12 +550,32 @@ Special functions
 
 .. function:: void fmprb_poly_atan_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
-    Sets *res* to the power series inverse tangent of *f*, truncated to length *n*.
-    Uses the formula `\tan^{-1}(f(x)) = \int f'(x) / (1+f(x)^2) dx`, adding the inverse
-    tangent of the constant term in *f* as the constant of integration.
+.. function:: void _fmprb_poly_asin_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
 
-    The underscore method supports aliasing of the input and output
-    arrays. It requires that *flen* and *n* are greater than zero.
+.. function:: void fmprb_poly_asin_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
+
+.. function:: void _fmprb_poly_acos_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+
+.. function:: void fmprb_poly_acos_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
+
+    Sets *res* respectively to the power series inverse tangent,
+    inverse sine and inverse cosine of *f*, truncated to length *n*.
+
+    Uses the formulas
+
+    .. math ::
+
+        \tan^{-1}(f(x)) = \int f'(x) / (1+f(x)^2) dx,
+
+        \sin^{-1}(f(x)) = \int f'(x) / (1-f(x)^2)^{1/2} dx,
+
+        \cos^{-1}(f(x)) = -\int f'(x) / (1-f(x)^2)^{1/2} dx,
+
+    adding the inverse
+    function of the constant term in *f* as the constant of integration.
+
+    The underscore methods supports aliasing of the input and output
+    arrays. They require that *flen* and *n* are greater than zero.
 
 .. function:: void _fmprb_poly_exp_series_basecase(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
 
