@@ -33,14 +33,6 @@ TLS_PREFIX long gamma_taylor_prec = 0;
 TLS_PREFIX long gamma_taylor_num = 0;
 
 void
-fmprb_poly_neg(fmprb_poly_t y, const fmprb_poly_t x)
-{
-    fmprb_poly_fit_length(y, x->length);
-    _fmprb_vec_neg(y->coeffs, x->coeffs, x->length);
-    _fmprb_poly_set_length(y, x->length);
-}
-
-void
 gamma_taylor_precompute(long num, long prec)
 {
     long wp;
