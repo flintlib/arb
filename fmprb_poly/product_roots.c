@@ -27,7 +27,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec)
+_fmprb_poly_product_roots(fmprb_ptr poly, fmprb_srcptr xs, long n, long prec)
 {
     if (n == 0)
     {
@@ -48,7 +48,7 @@ _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, 
     else
     {
         const long m = (n + 1) / 2;
-        fmprb_struct * tmp;
+        fmprb_ptr tmp;
 
         tmp = _fmprb_vec_init(n + 2);
 
@@ -61,7 +61,7 @@ _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, 
 }
 
 void
-fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec)
+fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_ptr xs, long n, long prec)
 {
     fmprb_poly_fit_length(poly, n + 1);
     _fmprb_poly_product_roots(poly->coeffs, xs, n, prec);

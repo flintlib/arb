@@ -103,7 +103,7 @@ Comparisons
 
     Returns nonzero iff *poly2* is contained in *poly1*.
 
-.. function:: int _fmpcb_poly_overlaps(const fmpcb_struct * poly1, long len1, const fmpcb_struct * poly2, long len2)
+.. function:: int _fmpcb_poly_overlaps(fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2)
 
 .. function:: int fmpcb_poly_overlaps(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
 
@@ -129,7 +129,7 @@ Conversions
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_add(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_add(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
     Sets *{C, max(lenA, lenB)}* to the sum of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
@@ -138,7 +138,7 @@ Arithmetic
 
     Sets *C* to the sum of *A* and *B*.
 
-.. function:: void _fmpcb_poly_sub(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_sub(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
     Sets *{C, max(lenA, lenB)}* to the difference of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
@@ -147,13 +147,13 @@ Arithmetic
 
     Sets *C* to the difference of *A* and *B*.
 
-.. function:: void _fmpcb_poly_mullow_classical(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_classical(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmpcb_poly_mullow_transpose(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_transpose(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmpcb_poly_mullow_transpose_gauss(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmpcb_poly_mullow_transpose_gauss(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmpcb_poly_mullow(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmpcb_poly_mullow(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long n, long prec)
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
     length *n*. The output is not allowed to be aliased with either of the
@@ -183,7 +183,7 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
 
-.. function:: void _fmpcb_poly_mul(fmpcb_struct * C, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_mul(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
     Sets *{C, lenA + lenB - 1}* to the product of *{A, lenA}* and *{B, lenB}*.
     The output is not allowed to be aliased with either of the
@@ -194,7 +194,7 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*.
 
-.. function:: void _fmpcb_poly_inv_series(fmpcb_struct * Qinv, const fmpcb_struct * Q, long len, long prec)
+.. function:: void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long len, long prec)
 
     Sets *{Qinv, len}* to the power series inverse of *{Q, len}*. Uses Newton iteration.
 
@@ -202,11 +202,11 @@ Arithmetic
 
     Sets *Qinv* to the power series inverse of *Q*.
 
-.. function:: void _fmpcb_poly_div(fmpcb_struct * Q, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_div(fmpcb_ptr Q, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
-.. function:: void _fmpcb_poly_rem(fmpcb_struct * R, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_rem(fmpcb_ptr R, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
-.. function:: void _fmpcb_poly_divrem(fmpcb_struct * Q, fmpcb_struct * R, const fmpcb_struct * A, long lenA, const fmpcb_struct * B, long lenB, long prec)
+.. function:: void _fmpcb_poly_divrem(fmpcb_ptr Q, fmpcb_ptr R, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
 .. function:: void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R, const fmpcb_poly_t A, const fmpcb_poly_t B, long prec)
 
@@ -215,7 +215,7 @@ Arithmetic
     not contain zero. The implementation reverses the inputs and performs
     power series division.
 
-.. function:: void _fmpcb_poly_div_root(fmpcb_struct * Q, fmpcb_t R, const fmpcb_struct * A, long len, const fmpcb_t c, long prec)
+.. function:: void _fmpcb_poly_div_root(fmpcb_ptr Q, fmpcb_t R, fmpcb_srcptr A, long len, const fmpcb_t c, long prec)
 
     Divides `A` by the polynomial `x - c`, computing the quotient `Q` as well
     as the remainder `R = f(c)`.
@@ -223,7 +223,7 @@ Arithmetic
 Evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_struct * f, long len, const fmpcb_t a, long prec)
+.. function:: void _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec)
 
 .. function:: void fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec)
 
@@ -233,22 +233,22 @@ Evaluation
 Product trees
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_product_roots(fmpcb_struct * poly, const fmpcb_struct * xs, long n, long prec)
+.. function:: void _fmpcb_poly_product_roots(fmpcb_ptr poly, fmpcb_srcptr xs, long n, long prec)
 
-.. function:: void fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_struct * xs, long n, long prec)
+.. function:: void fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_ptr xs, long n, long prec)
 
     Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
 
-.. function:: fmpcb_struct ** _fmpcb_poly_tree_alloc(long len)
+.. function:: fmpcb_ptr * _fmpcb_poly_tree_alloc(long len)
 
     Returns an initialized data structured capable of representing a
     remainder tree (product tree) of *len* roots.
 
-.. function:: void _fmpcb_poly_tree_free(fmpcb_struct ** tree, long len)
+.. function:: void _fmpcb_poly_tree_free(fmpcb_ptr * tree, long len)
 
     Deallocates a tree structure as allocated using *_fmpcb_poly_tree_alloc*.
 
-.. function:: void _fmpcb_poly_tree_build(fmpcb_struct ** tree, const fmpcb_struct * roots, long len, long prec)
+.. function:: void _fmpcb_poly_tree_build(fmpcb_ptr * tree, fmpcb_srcptr roots, long len, long prec)
 
     Constructs a product tree from a given array of *len* roots. The tree
     structure must be pre-allocated to the specified length using
@@ -258,18 +258,18 @@ Product trees
 Multipoint evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_struct * poly, long plen, const fmpcb_struct * xs, long n, long prec)
+.. function:: void _fmpcb_poly_evaluate_vec_iter(fmpcb_ptr ys, fmpcb_srcptr poly, long plen, fmpcb_srcptr xs, long n, long prec)
 
-.. function:: void fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+.. function:: void fmpcb_poly_evaluate_vec_iter(fmpcb_ptr ys, const fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec)
 
     Evaluates the polynomial simultaneously at *n* given points, calling
     :func:`_fmpcb_poly_evaluate` repeatedly.
 
-.. function:: void _fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_struct * vs, const fmpcb_struct * poly, long plen, fmpcb_struct ** tree, long len, long prec)
+.. function:: void _fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_ptr vs, fmpcb_srcptr poly, long plen, fmpcb_ptr * tree, long len, long prec)
 
-.. function:: void _fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_struct * poly, long plen, const fmpcb_struct * xs, long n, long prec)
+.. function:: void _fmpcb_poly_evaluate_vec_fast(fmpcb_ptr ys, fmpcb_srcptr poly, long plen, fmpcb_srcptr xs, long n, long prec)
 
-.. function:: void fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+.. function:: void fmpcb_poly_evaluate_vec_fast(fmpcb_ptr ys, const fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec)
 
     Evaluates the polynomial simultaneously at *n* given points, using
     fast multipoint evaluation.
@@ -277,29 +277,29 @@ Multipoint evaluation
 Interpolation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_interpolate_newton(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+.. function:: void _fmpcb_poly_interpolate_newton(fmpcb_ptr poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 
-.. function:: void fmpcb_poly_interpolate_newton(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+.. function:: void fmpcb_poly_interpolate_newton(fmpcb_poly_t poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation first interpolates in the
     Newton basis and then converts back to the monomial basis.
 
-.. function:: void _fmpcb_poly_interpolate_barycentric(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+.. function:: void _fmpcb_poly_interpolate_barycentric(fmpcb_ptr poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 
-.. function:: void fmpcb_poly_interpolate_barycentric(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+.. function:: void fmpcb_poly_interpolate_barycentric(fmpcb_poly_t poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation uses the barycentric
     form of Lagrange interpolation.
 
-.. function:: void _fmpcb_poly_interpolation_weights(fmpcb_struct * w, fmpcb_struct ** tree, long len, long prec)
+.. function:: void _fmpcb_poly_interpolation_weights(fmpcb_ptr w, fmpcb_ptr * tree, long len, long prec)
 
-.. function:: void _fmpcb_poly_interpolate_fast_precomp(fmpcb_struct * poly, const fmpcb_struct * ys, fmpcb_struct ** tree, const fmpcb_struct * weights, long len, long prec)
+.. function:: void _fmpcb_poly_interpolate_fast_precomp(fmpcb_ptr poly, fmpcb_srcptr ys, fmpcb_ptr * tree, fmpcb_srcptr weights, long len, long prec)
 
-.. function:: void _fmpcb_poly_interpolate_fast(fmpcb_struct * poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long len, long prec)
+.. function:: void _fmpcb_poly_interpolate_fast(fmpcb_ptr poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long len, long prec)
 
-.. function:: void fmpcb_poly_interpolate_fast(fmpcb_poly_t poly, const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+.. function:: void fmpcb_poly_interpolate_fast(fmpcb_poly_t poly, fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values, using fast Lagrange interpolation.
@@ -310,7 +310,7 @@ Interpolation
 Differentiation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_derivative(fmpcb_struct * res, const fmpcb_struct * poly, long len, long prec)
+.. function:: void _fmpcb_poly_derivative(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
 
 .. function:: void fmpcb_poly_derivative(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec)
 
@@ -320,7 +320,7 @@ Differentiation
 Root-finding
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m, const fmpcb_struct * poly, const fmpcb_struct * polyder, long len, long prec)
+.. function:: void _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m, fmpcb_srcptr poly, fmpcb_srcptr polyder, long len, long prec)
 
     Given any complex number `m`, and a nonconstant polynomial `f` and its
     derivative `f'`, sets *r* to a complex interval centered on `m` that is
@@ -338,7 +338,7 @@ Root-finding
 
     which is a contradiction (see [Kob2010]_).
 
-.. function:: long _fmpcb_poly_validate_roots(fmpcb_struct * roots, const fmpcb_struct * poly, long len, long prec)
+.. function:: long _fmpcb_poly_validate_roots(fmpcb_ptr roots, fmpcb_srcptr poly, long len, long prec)
 
     Given a list of approximate roots of the input polynomial, this
     function sets a rigorous bounding interval for each root, and determines
@@ -352,16 +352,16 @@ Root-finding
     it is possible that not all of the polynomial's roots are contained
     among them.
 
-.. function:: void _fmpcb_poly_refine_roots_durand_kerner(fmpcb_struct * roots, const fmpcb_struct * poly, long len, long prec)
+.. function:: void _fmpcb_poly_refine_roots_durand_kerner(fmpcb_ptr roots, fmpcb_srcptr poly, long len, long prec)
 
     Refines the given roots simultaneously using a single iteration
     of the Durand-Kerner method. The radius of each root is set to an
     approximation of the correction, giving a rough estimate of its error (not
     a rigorous bound).
 
-.. function:: long _fmpcb_poly_find_roots(fmpcb_struct * roots, const fmpcb_struct * poly, const fmpcb_struct * initial, long len, long maxiter, long prec)
+.. function:: long _fmpcb_poly_find_roots(fmpcb_ptr roots, fmpcb_srcptr poly, fmpcb_srcptr initial, long len, long maxiter, long prec)
 
-.. function:: long fmpcb_poly_find_roots(fmpcb_struct * roots, const fmpcb_poly_t poly, const fmpcb_struct * initial, long maxiter, long prec)
+.. function:: long fmpcb_poly_find_roots(fmpcb_ptr roots, const fmpcb_poly_t poly, fmpcb_srcptr initial, long maxiter, long prec)
 
     Attempts to compute all the roots of the given nonzero polynomial *poly*
     using a working precision of *prec* bits. If *n* denotes the degree of *poly*,

@@ -26,7 +26,7 @@
 #include "fmpcb_poly.h"
 
 static void
-_interpolate_newton(fmpcb_struct * ys, const fmpcb_struct * xs, long n, long prec)
+_interpolate_newton(fmpcb_ptr ys, fmpcb_srcptr xs, long n, long prec)
 {
     fmpcb_t p, q, t;
     long i, j;
@@ -54,7 +54,7 @@ _interpolate_newton(fmpcb_struct * ys, const fmpcb_struct * xs, long n, long pre
 }
 
 static void
-_newton_to_monomial(fmpcb_struct * ys, const fmpcb_struct * xs, long n, long prec)
+_newton_to_monomial(fmpcb_ptr ys, fmpcb_srcptr xs, long n, long prec)
 {
     fmpcb_t t, u;
     long i, j;
@@ -84,8 +84,8 @@ _newton_to_monomial(fmpcb_struct * ys, const fmpcb_struct * xs, long n, long pre
 }
 
 void
-_fmpcb_poly_interpolate_newton(fmpcb_struct * poly, const fmpcb_struct * xs,
-    const fmpcb_struct * ys, long n, long prec)
+_fmpcb_poly_interpolate_newton(fmpcb_ptr poly, fmpcb_srcptr xs,
+    fmpcb_srcptr ys, long n, long prec)
 {
     if (n == 1)
     {
@@ -102,7 +102,7 @@ _fmpcb_poly_interpolate_newton(fmpcb_struct * poly, const fmpcb_struct * xs,
 
 void
 fmpcb_poly_interpolate_newton(fmpcb_poly_t poly,
-    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+    fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 {
     if (n == 0)
     {

@@ -27,8 +27,8 @@
 
 void
 _fmpcb_poly_root_inclusion(fmpcb_t r, const fmpcb_t m,
-    const fmpcb_struct * poly,
-    const fmpcb_struct * polyder, long len, long prec)
+    fmpcb_srcptr poly,
+    fmpcb_srcptr polyder, long len, long prec)
 {
     fmpcb_t t;
     fmpr_t u, v;

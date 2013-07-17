@@ -71,7 +71,7 @@ _fmpcb_get_rad_mag(const fmpcb_t z)
 }
 
 void
-_fmpcb_poly_roots_initial_values(fmpcb_struct * roots, long deg, long prec)
+_fmpcb_poly_roots_initial_values(fmpcb_ptr roots, long deg, long prec)
 {
     long i;
 
@@ -96,9 +96,9 @@ _fmpcb_poly_roots_initial_values(fmpcb_struct * roots, long deg, long prec)
 }
 
 long
-_fmpcb_poly_find_roots(fmpcb_struct * roots,
-    const fmpcb_struct * poly,
-    const fmpcb_struct * initial, long len, long maxiter, long prec)
+_fmpcb_poly_find_roots(fmpcb_ptr roots,
+    fmpcb_srcptr poly,
+    fmpcb_srcptr initial, long len, long maxiter, long prec)
 {
     long iter, i, deg;
     long rootmag, max_rootmag, correction, max_correction;
@@ -173,8 +173,8 @@ _fmpcb_poly_find_roots(fmpcb_struct * roots,
 
 
 long
-fmpcb_poly_find_roots(fmpcb_struct * roots,
-    const fmpcb_poly_t poly, const fmpcb_struct * initial,
+fmpcb_poly_find_roots(fmpcb_ptr roots,
+    const fmpcb_poly_t poly, fmpcb_srcptr initial,
     long maxiter, long prec)
 {
     long len = poly->length;

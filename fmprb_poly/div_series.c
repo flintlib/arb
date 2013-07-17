@@ -32,8 +32,8 @@
         _fmprb_poly_mullow(z, y, yn, x, xn, nn, prec); \
 
 void 
-_fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen,
-    const fmprb_struct * B, long Blen, long n, long prec)
+_fmprb_poly_div_series(fmprb_ptr Q, fmprb_srcptr A, long Alen,
+    fmprb_srcptr B, long Blen, long n, long prec)
 {
     Alen = FLINT_MIN(Alen, n);
     Blen = FLINT_MIN(Blen, n);
@@ -45,7 +45,7 @@ _fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen,
     }
     else
     {
-        fmprb_struct * Binv;
+        fmprb_ptr Binv;
         Binv = _fmprb_vec_init(n);
         _fmprb_poly_inv_series(Binv, B, Blen, n, prec);
         MULLOW(Q, A, Alen, Binv, n, n, prec);

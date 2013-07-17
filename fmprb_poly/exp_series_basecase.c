@@ -26,11 +26,11 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_exp_series_basecase(fmprb_struct * f,
-        const fmprb_struct * h, long hlen, long n, long prec)
+_fmprb_poly_exp_series_basecase(fmprb_ptr f,
+        fmprb_srcptr h, long hlen, long n, long prec)
 {
     long j, k, alen = FLINT_MIN(n, hlen);
-    fmprb_struct * a;
+    fmprb_ptr a;
     fmprb_t s;
 
     fmprb_init(s);

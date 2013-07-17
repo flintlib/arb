@@ -26,10 +26,10 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_interpolate_barycentric(fmpcb_struct * poly,
-    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+_fmpcb_poly_interpolate_barycentric(fmpcb_ptr poly,
+    fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 {
-    fmpcb_struct *P, *Q, *w;
+    fmpcb_ptr P, Q, w;
     fmpcb_t t;
     long i, j;
 
@@ -79,7 +79,7 @@ _fmpcb_poly_interpolate_barycentric(fmpcb_struct * poly,
 
 void
 fmpcb_poly_interpolate_barycentric(fmpcb_poly_t poly,
-    const fmpcb_struct * xs, const fmpcb_struct * ys, long n, long prec)
+    fmpcb_srcptr xs, fmpcb_srcptr ys, long n, long prec)
 {
     if (n == 0)
     {

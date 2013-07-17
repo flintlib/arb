@@ -27,7 +27,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_div_root(fmprb_struct * Q, fmprb_t R, const fmprb_struct * A,
+_fmprb_poly_div_root(fmprb_ptr Q, fmprb_t R, fmprb_srcptr A,
     long len, const fmprb_t c, long prec)
 {
     fmprb_t r, t;

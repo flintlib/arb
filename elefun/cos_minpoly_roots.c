@@ -28,7 +28,7 @@
 
 /* computes all the d roots alpha_j of Phi_n(x) */
 void
-_elefun_cos_minpoly_roots(fmprb_struct * alpha, long d, ulong n, long prec)
+_elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec)
 {
     fmprb_t t, u, v, s1, s2, c1, c2;
     long i, j;

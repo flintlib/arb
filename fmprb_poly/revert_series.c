@@ -26,8 +26,8 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_revert_series(fmprb_struct * Qinv,
-    const fmprb_struct * Q, long n, long prec)
+_fmprb_poly_revert_series(fmprb_ptr Qinv,
+    fmprb_srcptr Q, long n, long prec)
 {
     _fmprb_poly_revert_series_lagrange_fast(Qinv, Q, n, prec);
 }
@@ -36,7 +36,7 @@ void
 fmprb_poly_revert_series(fmprb_poly_t Qinv,
                                     const fmprb_poly_t Q, long n, long prec)
 {
-    fmprb_struct *Qcopy;
+    fmprb_ptr Qcopy;
     int Qalloc;
     long Qlen = Q->length;
 

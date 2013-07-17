@@ -26,8 +26,8 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_struct * poly, long plen,
-    const fmpcb_struct * xs, long n, long prec)
+_fmpcb_poly_evaluate_vec_iter(fmpcb_ptr ys, fmpcb_srcptr poly, long plen,
+    fmpcb_srcptr xs, long n, long prec)
 {
     long i;
 
@@ -36,8 +36,8 @@ _fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys, const fmpcb_struct * poly, long
 }
 
 void
-fmpcb_poly_evaluate_vec_iter(fmpcb_struct * ys,
-        const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+fmpcb_poly_evaluate_vec_iter(fmpcb_ptr ys,
+        const fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec)
 {
     _fmpcb_poly_evaluate_vec_iter(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

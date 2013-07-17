@@ -26,12 +26,12 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_mullow_transpose(fmpcb_struct * res,
-    const fmpcb_struct * poly1, long len1,
-    const fmpcb_struct * poly2, long len2, long n, long prec)
+_fmpcb_poly_mullow_transpose(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long n, long prec)
 {
-    fmprb_struct *a, *b, *c, *d, *e, *f, *w;
-    fmprb_struct *t;
+    fmprb_ptr a, b, c, d, e, f, w;
+    fmprb_ptr t;
     long i;
 
     len1 = FLINT_MIN(len1, n);

@@ -28,9 +28,9 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_compose(fmprb_struct * res,
-    const fmprb_struct * poly1, long len1,
-    const fmprb_struct * poly2, long len2, long prec)
+_fmprb_poly_compose(fmprb_ptr res,
+    fmprb_srcptr poly1, long len1,
+    fmprb_srcptr poly2, long len2, long prec)
 {
     if (len1 <= 7)
         _fmprb_poly_compose_horner(res, poly1, len1, poly2, len2, prec);

@@ -33,10 +33,10 @@
 
 typedef struct
 {
-    fmprb_struct * entries;
+    fmprb_ptr entries;
     long r;
     long c;
-    fmprb_struct ** rows;
+    fmprb_ptr * rows;
 }
 fmprb_mat_struct;
 
@@ -106,7 +106,7 @@ fmprb_mat_swap_rows(fmprb_mat_t mat, long * perm, long r, long s)
 {
     if (r != s)
     {
-        fmprb_struct * u;
+        fmprb_ptr u;
         long t;
 
         if (perm != NULL)

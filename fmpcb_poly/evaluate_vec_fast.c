@@ -27,8 +27,8 @@
 
 /* This gives some speedup for small lengths. */
 static __inline__ void
-_fmpcb_poly_rem_2(fmpcb_struct * r, const fmpcb_struct * a, long al,
-    const fmpcb_struct * b, long bl, long prec)
+_fmpcb_poly_rem_2(fmpcb_ptr r, fmpcb_srcptr a, long al,
+    fmpcb_srcptr b, long bl, long prec)
 {
     if (al == 2)
     {
@@ -42,13 +42,13 @@ _fmpcb_poly_rem_2(fmpcb_struct * r, const fmpcb_struct * a, long al,
 }
 
 void
-_fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_struct * vs, const fmpcb_struct * poly,
-    long plen, fmpcb_struct ** tree, long len, long prec)
+_fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_ptr vs, fmpcb_srcptr poly,
+    long plen, fmpcb_ptr * tree, long len, long prec)
 {
     long height, i, j, pow, left;
     long tree_height;
     long tlen;
-    fmpcb_struct *t, *u, *swap, *pa, *pb, *pc;
+    fmpcb_ptr t, u, swap, pa, pb, pc;
 
     /* avoid worrying about some degenerate cases */
     if (len < 2 || plen < 2)
@@ -129,10 +129,10 @@ _fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_struct * vs, const fmpcb_struct * po
     _fmpcb_vec_clear(u, len);
 }
 
-void _fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_struct * poly, long plen,
-    const fmpcb_struct * xs, long n, long prec)
+void _fmpcb_poly_evaluate_vec_fast(fmpcb_ptr ys, fmpcb_srcptr poly, long plen,
+    fmpcb_srcptr xs, long n, long prec)
 {
-    fmpcb_struct ** tree;
+    fmpcb_ptr * tree;
 
     tree = _fmpcb_poly_tree_alloc(n);
     _fmpcb_poly_tree_build(tree, xs, n, prec);
@@ -141,8 +141,8 @@ void _fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys, const fmpcb_struct * poly,
 }
 
 void
-fmpcb_poly_evaluate_vec_fast(fmpcb_struct * ys,
-        const fmpcb_poly_t poly, const fmpcb_struct * xs, long n, long prec)
+fmpcb_poly_evaluate_vec_fast(fmpcb_ptr ys,
+        const fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec)
 {
     _fmpcb_poly_evaluate_vec_fast(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

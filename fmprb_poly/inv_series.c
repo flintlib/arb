@@ -32,8 +32,8 @@
         _fmprb_poly_mullow(z, y, yn, x, xn, nn, prec); \
 
 void
-_fmprb_poly_inv_series(fmprb_struct * Qinv,
-    const fmprb_struct * Q, long Qlen, long len, long prec)
+_fmprb_poly_inv_series(fmprb_ptr Qinv,
+    fmprb_srcptr Q, long Qlen, long len, long prec)
 {
     fmprb_ui_div(Qinv, 1UL, Q, prec);
 
@@ -44,7 +44,7 @@ _fmprb_poly_inv_series(fmprb_struct * Qinv,
     else
     {
         long Qnlen, Wlen, W2len;
-        fmprb_struct * W;
+        fmprb_ptr W;
 
         W = _fmprb_vec_init(len);
 

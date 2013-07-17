@@ -29,7 +29,7 @@ long
 fmprb_mat_gauss_partial(fmprb_mat_t A, long prec)
 {
     fmprb_t e;
-    fmprb_struct ** a;
+    fmprb_ptr * a;
     long j, m, n, r, rank, row, col, sign;
 
     m = A->r;
@@ -87,7 +87,7 @@ fmprb_get_fmpr_abs_ubound(fmpr_t u, const fmprb_t x, long prec)
 }
 
 void
-fmprb_vec_get_fmpr_2norm_squared_bound(fmpr_t s, const fmprb_struct * vec, long len, long prec)
+fmprb_vec_get_fmpr_2norm_squared_bound(fmpr_t s, fmprb_srcptr vec, long len, long prec)
 {
     long i;
     fmpr_t t;

@@ -28,7 +28,7 @@
 #include "fmpcb_poly.h"
 
 void
-bound_I(fmprb_struct * I, const fmprb_t A, const fmprb_t B, const fmprb_t C, long len, long wp)
+bound_I(fmprb_ptr I, const fmprb_t A, const fmprb_t B, const fmprb_t C, long len, long wp)
 {
     long k;
 
@@ -154,7 +154,7 @@ fmpcb_rfac_abs_ubound2(fmpr_t bound, const fmpcb_t s, ulong n, long prec)
 
 
 void
-bound_rfac(fmprb_struct * F, const fmpcb_t s, ulong n, long len, long wp)
+bound_rfac(fmprb_ptr F, const fmpcb_t s, ulong n, long len, long wp)
 {
     if (len == 1)
     {
@@ -176,16 +176,16 @@ bound_rfac(fmprb_struct * F, const fmpcb_t s, ulong n, long len, long wp)
 }
 
 void
-zeta_series_em_vec_bound(fmprb_struct * bound, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long len, long wp)
+zeta_series_em_vec_bound(fmprb_ptr bound, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long len, long wp)
 {
     fmprb_t K, C, AN, S2M;
-    fmprb_struct *F, *R;
+    fmprb_ptr F, R;
     long k;
 
-    const fmprb_struct * alpha = fmpcb_realref(a);
-    const fmprb_struct * beta  = fmpcb_imagref(a);
-    const fmprb_struct * sigma = fmpcb_realref(s);
-    const fmprb_struct * tau   = fmpcb_imagref(s);
+    fmprb_srcptr alpha = fmpcb_realref(a);
+    fmprb_srcptr beta  = fmpcb_imagref(a);
+    fmprb_srcptr sigma = fmpcb_realref(s);
+    fmprb_srcptr tau   = fmpcb_imagref(s);
 
     fmprb_init(AN);
     fmprb_init(S2M);
@@ -254,7 +254,7 @@ void
 zeta_series_em_bound(fmpr_t bound,
         const fmpcb_t s, const fmpcb_t a, long N, long M, long len, long wp)
 {
-    fmprb_struct * vec = _fmprb_vec_init(len);
+    fmprb_ptr vec = _fmprb_vec_init(len);
     zeta_series_em_vec_bound(vec, s, a, N, M, len, wp);
     _fmprb_vec_get_abs_ubound_fmpr(bound, vec, len, wp);
     _fmprb_vec_clear(vec, len);

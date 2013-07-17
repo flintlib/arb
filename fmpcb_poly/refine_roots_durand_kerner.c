@@ -117,7 +117,7 @@ fmpcb_inv_mid(fmpcb_t z, const fmpcb_t x, long prec)
 }
 
 void
-_fmpcb_poly_evaluate_mid(fmpcb_t res, const fmpcb_struct * f, long len,
+_fmpcb_poly_evaluate_mid(fmpcb_t res, fmpcb_srcptr f, long len,
                            const fmpcb_t a, long prec)
 {
     long i = len - 1;
@@ -136,8 +136,8 @@ _fmpcb_poly_evaluate_mid(fmpcb_t res, const fmpcb_struct * f, long len,
 }
 
 void
-_fmpcb_poly_refine_roots_durand_kerner(fmpcb_struct * roots,
-        const fmpcb_struct * poly, long len, long prec)
+_fmpcb_poly_refine_roots_durand_kerner(fmpcb_ptr roots,
+        fmpcb_srcptr poly, long len, long prec)
 {
     long i, j;
 

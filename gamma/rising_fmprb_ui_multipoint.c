@@ -30,7 +30,7 @@ void
 gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long prec)
 {
     long i, m, wp;
-    fmprb_struct *t, *u, *v;
+    fmprb_ptr t, u, v;
     fmprb_t r, w;
     ulong s;
 

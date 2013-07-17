@@ -26,7 +26,7 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_reverse(fmpcb_struct * res, const fmpcb_struct * poly, long len, long n)
+_fmpcb_poly_reverse(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n)
 {
     if (res == poly)
     {

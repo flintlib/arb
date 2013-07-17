@@ -27,7 +27,7 @@
 
 
 void
-_fmprb_poly_atan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+_fmprb_poly_atan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 {
     fmprb_t c;
     fmprb_init(c);
@@ -42,7 +42,7 @@ _fmprb_poly_atan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, lon
     }
     else
     {
-        fmprb_struct *t, *u;
+        fmprb_ptr t, u;
         long ulen;
 
         t = _fmprb_vec_init(n);

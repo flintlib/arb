@@ -35,7 +35,7 @@ extern TLS_PREFIX long * gamma_taylor_bound_mag_cache;
 extern TLS_PREFIX fmpr_struct * gamma_taylor_bound_ratio_cache;
 extern TLS_PREFIX long gamma_taylor_bound_cache_num;
 
-extern TLS_PREFIX fmprb_struct * gamma_taylor_coeffs;
+extern TLS_PREFIX fmprb_ptr gamma_taylor_coeffs;
 extern TLS_PREFIX long gamma_taylor_prec;
 extern TLS_PREFIX long gamma_taylor_num;
 
@@ -101,7 +101,7 @@ void gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, 
 void gamma_harmonic_sum_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 void gamma_harmonic_sum_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
 
-void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec);
+void gamma_series_fmpq_hypgeom(fmprb_ptr res, const fmpq_t a, long len, long prec);
 void gamma_small_frac(fmprb_t y, unsigned int p, unsigned int q, long prec);
 
 void gamma_fmpq_outward(fmprb_t y, const fmpq_t x, long prec);

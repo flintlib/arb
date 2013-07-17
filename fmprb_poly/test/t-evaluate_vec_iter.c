@@ -41,7 +41,7 @@ int main()
         fmpq_poly_t F;
         fmpq * X, * Y;
         fmprb_poly_t f;
-        fmprb_struct * x, * y;
+        fmprb_ptr x, y;
 
         qbits1 = 2 + n_randint(state, 100);
         qbits2 = 2 + n_randint(state, 100);

@@ -28,9 +28,9 @@
 #define CUTOFF 4
 
 void
-_fmpcb_poly_mullow(fmpcb_struct * res,
-    const fmpcb_struct * poly1, long len1,
-    const fmpcb_struct * poly2, long len2, long n, long prec)
+_fmpcb_poly_mullow(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long n, long prec)
 {
     if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
         _fmpcb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);

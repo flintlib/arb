@@ -26,8 +26,8 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_compose_series(fmprb_struct * res, const fmprb_struct * poly1, long len1,
-                            const fmprb_struct * poly2, long len2, long n, long prec)
+_fmprb_poly_compose_series(fmprb_ptr res, fmprb_srcptr poly1, long len1,
+                            fmprb_srcptr poly2, long len2, long n, long prec)
 {
     if (len1 < 6 || n < 6)
         _fmprb_poly_compose_series_horner(res, poly1, len1, poly2, len2, n, prec);

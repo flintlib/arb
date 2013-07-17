@@ -41,7 +41,7 @@ int main()
         fmpq_poly_t P;
         fmprb_poly_t R, S;
         fmpq_t t, u;
-        fmprb_struct * xs, * ys;
+        fmprb_ptr xs, ys;
 
         fmpq_poly_init(P);
         fmprb_poly_init(R);

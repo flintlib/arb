@@ -25,9 +25,9 @@
 
 #include "fmpcb_poly.h"
 
-void _fmpcb_poly_mul(fmpcb_struct * C,
-    const fmpcb_struct * A, long lenA,
-    const fmpcb_struct * B, long lenB, long prec)
+void _fmpcb_poly_mul(fmpcb_ptr C,
+    fmpcb_srcptr A, long lenA,
+    fmpcb_srcptr B, long lenB, long prec)
 {
     _fmpcb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
 }

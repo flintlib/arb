@@ -27,7 +27,7 @@
 
 void
 _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z,
-    const fmprb_struct * poly, long len, const fmpcb_t x, long prec)
+    fmprb_srcptr poly, long len, const fmpcb_t x, long prec)
 {
     if (len == 0)
     {

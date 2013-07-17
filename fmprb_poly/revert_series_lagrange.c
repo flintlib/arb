@@ -26,11 +26,11 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_revert_series_lagrange(fmprb_struct * Qinv,
-    const fmprb_struct * Q, long n, long prec)
+_fmprb_poly_revert_series_lagrange(fmprb_ptr Qinv,
+    fmprb_srcptr Q, long n, long prec)
 {
     long i;
-    fmprb_struct *R, *S, *T, *tmp;
+    fmprb_ptr R, S, T, tmp;
 
     if (n <= 2)
     {
@@ -67,7 +67,7 @@ void
 fmprb_poly_revert_series_lagrange(fmprb_poly_t Qinv,
                                     const fmprb_poly_t Q, long n, long prec)
 {
-    fmprb_struct *Qcopy;
+    fmprb_ptr Qcopy;
     int Qalloc;
     long Qlen = Q->length;
 

@@ -26,7 +26,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)
+_fmprb_poly_integral(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
 {
     long k = len - 1;
 

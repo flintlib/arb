@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         fmpcb_t s, a;
-        fmpcb_struct *z1, *z2;
+        fmpcb_ptr z1, z2;
         long i, len, prec1, prec2;
         int deflate;
 

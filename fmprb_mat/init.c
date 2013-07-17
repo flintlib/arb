@@ -33,7 +33,7 @@ fmprb_mat_init(fmprb_mat_t mat, long r, long c)
         long i;
 
         mat->entries = _fmprb_vec_init(r * c);
-        mat->rows = (fmprb_struct **) flint_malloc(r * sizeof(fmprb_struct *));
+        mat->rows = (fmprb_ptr *) flint_malloc(r * sizeof(fmprb_ptr));
 
         for (i = 0; i < r; i++)
             mat->rows[i] = mat->entries + i * c;

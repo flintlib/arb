@@ -36,7 +36,7 @@ fmprb_mat_solve_lu_precomp(fmprb_mat_t X, const long * perm,
 
     if (X == B)
     {
-        fmprb_struct * tmp = flint_malloc(sizeof(fmprb_struct) * n);
+        fmprb_ptr tmp = flint_malloc(sizeof(fmprb_struct) * n);
 
         for (c = 0; c < m; c++)
         {

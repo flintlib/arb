@@ -25,15 +25,15 @@
 
 #include "fmpcb_poly.h"
 
-fmpcb_struct ** _fmpcb_poly_tree_alloc(long len)
+fmpcb_ptr * _fmpcb_poly_tree_alloc(long len)
 {
-    fmpcb_struct ** tree = NULL;
+    fmpcb_ptr * tree = NULL;
 
     if (len)
     {
         long i, height = FLINT_CLOG2(len);
 
-        tree = flint_malloc(sizeof(fmpcb_struct *) * (height + 1));
+        tree = flint_malloc(sizeof(fmpcb_ptr) * (height + 1));
         for (i = 0; i <= height; i++)
             tree[i] = _fmpcb_vec_init(len + (len >> i) + 1);
     }
@@ -41,7 +41,7 @@ fmpcb_struct ** _fmpcb_poly_tree_alloc(long len)
     return tree;
 }
 
-void _fmpcb_poly_tree_free(fmpcb_struct ** tree, long len)
+void _fmpcb_poly_tree_free(fmpcb_ptr * tree, long len)
 {
     if (len)
     {
@@ -55,10 +55,11 @@ void _fmpcb_poly_tree_free(fmpcb_struct ** tree, long len)
 }
 
 void
-_fmpcb_poly_tree_build(fmpcb_struct ** tree, const fmpcb_struct * roots, long len, long prec)
+_fmpcb_poly_tree_build(fmpcb_ptr * tree, fmpcb_srcptr roots, long len, long prec)
 {
     long height, pow, left, i;
-    fmpcb_struct *pa, *pb, *a, *b;
+    fmpcb_ptr pa, pb;
+    fmpcb_srcptr a, b;
 
     if (len == 0)
         return;
@@ -79,8 +80,8 @@ _fmpcb_poly_tree_build(fmpcb_struct ** tree, const fmpcb_struct * roots, long le
 
         for (i = 0; i < len / 2; i++)
         {
-            a = (fmpcb_struct *) (roots + (2 * i));
-            b = (fmpcb_struct *) (roots + (2 * i + 1));
+            a = (fmpcb_srcptr) (roots + (2 * i));
+            b = (fmpcb_srcptr) (roots + (2 * i + 1));
 
             fmpcb_mul(pa + (3 * i), a, b, prec);
             fmpcb_add(pa + (3 * i + 1), a, b, prec);

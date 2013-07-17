@@ -131,7 +131,7 @@ magnitude_bound(long d)
 void
 _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n)
 {
-    fmprb_struct * alpha, * fcoeffs;
+    fmprb_ptr alpha, fcoeffs;
     fmpz_t t;
     long i, prec;
 

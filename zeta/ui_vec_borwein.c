@@ -32,7 +32,7 @@
 void borwein_error(fmpr_t err, long n);
 
 void
-zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long prec)
+zeta_ui_vec_borwein(fmprb_ptr z, ulong start, long num, ulong step, long prec)
 {
     long j, k, s, n, wp;
     fmpz_t c, d, t, u;
@@ -83,7 +83,7 @@ zeta_ui_vec_borwein(fmprb_struct * z, ulong start, long num, ulong step, long pr
 
     for (k = 0; k < num; k++)
     {
-        fmprb_struct * x = z + k;
+        fmprb_ptr x = z + k;
         s = start + step * k;
 
         fmprb_set_fmpz(x, zeta + k);

@@ -30,7 +30,7 @@ void
 fmprb_const_khinchin_eval_param(fmprb_t s, ulong N, ulong M, long prec)
 {
     fmprb_t t, u, h;
-    fmprb_struct * pows;
+    fmprb_ptr pows;
     long k, n;
 
     fmprb_init(t);

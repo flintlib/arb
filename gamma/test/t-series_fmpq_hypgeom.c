@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 250; iter++)
     {
-        fmprb_struct *u, *v;
+        fmprb_ptr u, v;
         fmpq_t a;
         ulong p, q;
         long i, len, prec1, prec2;

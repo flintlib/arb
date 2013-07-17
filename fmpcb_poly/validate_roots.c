@@ -26,13 +26,13 @@
 #include "fmpcb_poly.h"
 
 long
-_fmpcb_poly_validate_roots(fmpcb_struct * roots,
-        const fmpcb_struct * poly, long len, long prec)
+_fmpcb_poly_validate_roots(fmpcb_ptr roots,
+        fmpcb_srcptr poly, long len, long prec)
 {
     long i, j, deg;
     long isolated, nonisolated, total_isolated;
-    fmpcb_struct * deriv;
-    fmpcb_struct * tmp;
+    fmpcb_ptr deriv;
+    fmpcb_ptr tmp;
     int *overlap;
 
     deg = len - 1;

@@ -26,7 +26,7 @@
 #include "fmprb_poly.h"
 
 void
-_fmprb_poly_evaluate(fmprb_t res, const fmprb_struct * f, long len,
+_fmprb_poly_evaluate(fmprb_t res, fmprb_srcptr f, long len,
                            const fmprb_t x, long prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))

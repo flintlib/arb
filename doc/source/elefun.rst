@@ -87,7 +87,7 @@ The exponential function
 Trigonometric functions
 --------------------------------------------------------------------------------
 
-.. function:: void _elefun_cos_minpoly_roots(fmprb_struct * alpha, long d, ulong n, long prec)
+.. function:: void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec)
 
     Sets the vector *alpha* to the the *d* roots of `\Phi_n(x)`, computed
     using a working precision of *prec* bits.

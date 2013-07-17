@@ -78,14 +78,14 @@ Basic manipulation
     Given `n >= 0`, returns a pointer to coefficient *n* of *poly*,
     or *NULL* if *n* exceeds the length of *poly*.
 
-.. function:: void _fmprb_poly_shift_right(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+.. function:: void _fmprb_poly_shift_right(fmprb_ptr res, fmprb_srcptr poly, long len, long n)
 
 .. function:: void fmprb_poly_shift_right(fmprb_poly_t res, const fmprb_poly_t poly, long n)
 
     Sets *res* to *poly* divided by `x^n`, throwing away the lower coefficients.
     We require that *n* is nonnegative.
 
-.. function:: void _fmprb_poly_shift_left(fmprb_struct * res, const fmprb_struct * poly, long len, long n)
+.. function:: void _fmprb_poly_shift_left(fmprb_ptr res, fmprb_srcptr poly, long len, long n)
 
 .. function:: void fmprb_poly_shift_left(fmprb_poly_t res, const fmprb_poly_t poly, long n)
 
@@ -153,7 +153,7 @@ Comparisons
     Returns nonzero iff *A* and *B* are equal as polynomial balls, i.e. all
     coefficients have equal midpoint and radius.
 
-.. function:: int _fmprb_poly_overlaps(const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2)
+.. function:: int _fmprb_poly_overlaps(fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2)
 
 .. function:: int fmprb_poly_overlaps(const fmprb_poly_t poly1, const fmprb_poly_t poly2)
 
@@ -163,7 +163,7 @@ Comparisons
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_add(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_add(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
     Sets *{C, max(lenA, lenB)}* to the sum of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
@@ -172,7 +172,7 @@ Arithmetic
 
     Sets *C* to the sum of *A* and *B*.
 
-.. function:: void _fmprb_poly_sub(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_sub(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
     Sets *{C, max(lenA, lenB)}* to the difference of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
@@ -189,13 +189,13 @@ Arithmetic
 
     Sets *C* to *A* multiplied by `2^c`.
 
-.. function:: void _fmprb_poly_mullow_classical(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmprb_poly_mullow_classical(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmprb_poly_mullow_ztrunc(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmprb_poly_mullow_ztrunc(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmprb_poly_mullow_block(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmprb_poly_mullow_block(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
-.. function:: void _fmprb_poly_mullow(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long n, long prec)
+.. function:: void _fmprb_poly_mullow(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
     length *n*. The output is not allowed to be aliased with either of the
@@ -226,7 +226,7 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
 
-.. function:: void _fmprb_poly_mul(fmprb_struct * C, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_mul(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
     Sets *{C, lenA + lenB - 1}* to the product of *{A, lenA}* and *{B, lenB}*.
     The output is not allowed to be aliased with either of the
@@ -237,7 +237,7 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*.
 
-.. function:: void _fmprb_poly_inv_series(fmprb_struct * Q, const fmprb_struct * A, long Alen, long len, long prec)
+.. function:: void _fmprb_poly_inv_series(fmprb_ptr Q, fmprb_srcptr A, long Alen, long len, long prec)
 
     Sets *{Q, len}* to the power series inverse of *{A, Alen}*. Uses Newton iteration.
 
@@ -245,7 +245,7 @@ Arithmetic
 
     Sets *Q* to the power series inverse of *A*, truncated to length *n*.
 
-.. function:: void  _fmprb_poly_div_series(fmprb_struct * Q, const fmprb_struct * A, long Alen, const fmprb_struct * B, long Blen, long n, long prec)
+.. function:: void  _fmprb_poly_div_series(fmprb_ptr Q, fmprb_srcptr A, long Alen, fmprb_srcptr B, long Blen, long n, long prec)
 
     Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
     Uses Newton iteration followed by multiplication.
@@ -254,11 +254,11 @@ Arithmetic
 
     Sets *Q* to the power series quotient *A* divided by *B*, truncated to length *n*.
 
-.. function:: void _fmprb_poly_div(fmprb_struct * Q, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_div(fmprb_ptr Q, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
-.. function:: void _fmprb_poly_rem(fmprb_struct * R, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_rem(fmprb_ptr R, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
-.. function:: void _fmprb_poly_divrem(fmprb_struct * Q, fmprb_struct * R, const fmprb_struct * A, long lenA, const fmprb_struct * B, long lenB, long prec)
+.. function:: void _fmprb_poly_divrem(fmprb_ptr Q, fmprb_ptr R, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
 .. function:: void fmprb_poly_divrem(fmprb_poly_t Q, fmprb_poly_t R, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
 
@@ -267,7 +267,7 @@ Arithmetic
     not contain zero. The implementation reverses the inputs and performs
     power series division.
 
-.. function:: void _fmprb_poly_div_root(fmprb_struct * Q, fmprb_t R, const fmprb_struct * A, long len, const fmprb_t c, long prec)
+.. function:: void _fmprb_poly_div_root(fmprb_ptr Q, fmprb_t R, fmprb_srcptr A, long len, const fmprb_t c, long prec)
 
     Divides `A` by the polynomial `x - c`, computing the quotient `Q` as well
     as the remainder `R = f(c)`.
@@ -276,15 +276,15 @@ Arithmetic
 Composition
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_compose_horner(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long prec)
+.. function:: void _fmprb_poly_compose_horner(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long prec)
 
 .. function:: void fmprb_poly_compose_horner(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
 
-.. function:: void _fmprb_poly_compose_divconquer(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long prec)
+.. function:: void _fmprb_poly_compose_divconquer(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long prec)
 
 .. function:: void fmprb_poly_compose_divconquer(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
 
-.. function:: void _fmprb_poly_compose(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long prec)
+.. function:: void _fmprb_poly_compose(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long prec)
 
 .. function:: void fmprb_poly_compose(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long prec)
 
@@ -294,15 +294,15 @@ Composition
     The underscore methods do not support aliasing of the output
     with either input polynomial.
 
-.. function:: void _fmprb_poly_compose_series_horner(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long n, long prec)
+.. function:: void _fmprb_poly_compose_series_horner(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long n, long prec)
 
 .. function:: void fmprb_poly_compose_series_horner(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long n, long prec)
 
-.. function:: void _fmprb_poly_compose_series_brent_kung(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long n, long prec)
+.. function:: void _fmprb_poly_compose_series_brent_kung(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long n, long prec)
 
 .. function:: void fmprb_poly_compose_series_brent_kung(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long n, long prec)
 
-.. function:: void _fmprb_poly_compose_series(fmprb_struct * res, const fmprb_struct * poly1, long len1, const fmprb_struct * poly2, long len2, long n, long prec)
+.. function:: void _fmprb_poly_compose_series(fmprb_ptr res, fmprb_srcptr poly1, long len1, fmprb_srcptr poly2, long len2, long n, long prec)
 
 .. function:: void fmprb_poly_compose_series(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long n, long prec)
 
@@ -315,19 +315,19 @@ Composition
     with either input polynomial.
 
 
-.. function:: void _fmprb_poly_revert_series_lagrange(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_lagrange(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_lagrange(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series_newton(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_newton(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_newton(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series_lagrange_fast(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_lagrange_fast(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series(fmprb_struct * h, const fmprb_struct * f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
@@ -344,30 +344,30 @@ Composition
 Evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_evaluate_horner(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate_horner(fmprb_t y, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate_horner(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate_rectangular(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate_rectangular(fmprb_t y, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate_rectangular(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate(fmprb_t y, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate(fmprb_t y, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate(fmprb_t y, const fmprb_poly_t f, const fmprb_t x, long prec)
 
     Sets `y = f(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
-.. function:: void _fmprb_poly_evaluate_fmpcb_horner(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate_fmpcb_horner(fmpcb_t y, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate_fmpcb_horner(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate_fmpcb(fmpcb_t y, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate_fmpcb(fmpcb_t y, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate_fmpcb(fmpcb_t y, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
@@ -375,15 +375,15 @@ Evaluation
     polynomial respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
-.. function:: void _fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_horner(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_rectangular(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_struct * f, long len, const fmprb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, fmprb_srcptr f, long len, const fmprb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2(fmprb_t y, fmprb_t z, const fmprb_poly_t f, const fmprb_t x, long prec)
 
@@ -396,15 +396,15 @@ Evaluation
     With the rectangular splitting algorithm, the powers can be reused,
     making simultaneous evaluation slightly faster.
 
-.. function:: void _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
-.. function:: void _fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_struct * f, long len, const fmpcb_t x, long prec)
+.. function:: void _fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, fmprb_srcptr f, long len, const fmpcb_t x, long prec)
 
 .. function:: void fmprb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const fmprb_poly_t f, const fmpcb_t x, long prec)
 
@@ -415,22 +415,22 @@ Evaluation
 Product trees
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_product_roots(fmprb_struct * poly, const fmprb_struct * xs, long n, long prec)
+.. function:: void _fmprb_poly_product_roots(fmprb_ptr poly, fmprb_srcptr xs, long n, long prec)
 
-.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_struct * xs, long n, long prec)
+.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_ptr xs, long n, long prec)
 
     Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
 
-.. function:: fmprb_struct ** _fmprb_poly_tree_alloc(long len)
+.. function:: fmprb_ptr * _fmprb_poly_tree_alloc(long len)
 
     Returns an initialized data structured capable of representing a
     remainder tree (product tree) of *len* roots.
 
-.. function:: void _fmprb_poly_tree_free(fmprb_struct ** tree, long len)
+.. function:: void _fmprb_poly_tree_free(fmprb_ptr * tree, long len)
 
     Deallocates a tree structure as allocated using *_fmprb_poly_tree_alloc*.
 
-.. function:: void _fmprb_poly_tree_build(fmprb_struct ** tree, const fmprb_struct * roots, long len, long prec)
+.. function:: void _fmprb_poly_tree_build(fmprb_ptr * tree, fmprb_srcptr roots, long len, long prec)
 
     Constructs a product tree from a given array of *len* roots. The tree
     structure must be pre-allocated to the specified length using
@@ -440,18 +440,18 @@ Product trees
 Multipoint evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_struct * poly, long plen, const fmprb_struct * xs, long n, long prec)
+.. function:: void _fmprb_poly_evaluate_vec_iter(fmprb_ptr ys, fmprb_srcptr poly, long plen, fmprb_srcptr xs, long n, long prec)
 
-.. function:: void fmprb_poly_evaluate_vec_iter(fmprb_struct * ys, const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
+.. function:: void fmprb_poly_evaluate_vec_iter(fmprb_ptr ys, const fmprb_poly_t poly, fmprb_srcptr xs, long n, long prec)
 
     Evaluates the polynomial simultaneously at *n* given points, calling
     :func:`_fmprb_poly_evaluate` repeatedly.
 
-.. function:: void _fmprb_poly_evaluate_vec_fast_precomp(fmprb_struct * vs, const fmprb_struct * poly, long plen, fmprb_struct ** tree, long len, long prec)
+.. function:: void _fmprb_poly_evaluate_vec_fast_precomp(fmprb_ptr vs, fmprb_srcptr poly, long plen, fmprb_ptr * tree, long len, long prec)
 
-.. function:: void _fmprb_poly_evaluate_vec_fast(fmprb_struct * ys, const fmprb_struct * poly, long plen, const fmprb_struct * xs, long n, long prec)
+.. function:: void _fmprb_poly_evaluate_vec_fast(fmprb_ptr ys, fmprb_srcptr poly, long plen, fmprb_srcptr xs, long n, long prec)
 
-.. function:: void fmprb_poly_evaluate_vec_fast(fmprb_struct * ys, const fmprb_poly_t poly, const fmprb_struct * xs, long n, long prec)
+.. function:: void fmprb_poly_evaluate_vec_fast(fmprb_ptr ys, const fmprb_poly_t poly, fmprb_srcptr xs, long n, long prec)
 
     Evaluates the polynomial simultaneously at *n* given points, using
     fast multipoint evaluation.
@@ -459,29 +459,29 @@ Multipoint evaluation
 Interpolation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_interpolate_newton(fmprb_struct * poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+.. function:: void _fmprb_poly_interpolate_newton(fmprb_ptr poly, fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 
-.. function:: void fmprb_poly_interpolate_newton(fmprb_poly_t poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+.. function:: void fmprb_poly_interpolate_newton(fmprb_poly_t poly, fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation first interpolates in the
     Newton basis and then converts back to the monomial basis.
 
-.. function:: void _fmprb_poly_interpolate_barycentric(fmprb_struct * poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+.. function:: void _fmprb_poly_interpolate_barycentric(fmprb_ptr poly, fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 
-.. function:: void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+.. function:: void fmprb_poly_interpolate_barycentric(fmprb_poly_t poly, fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation uses the barycentric
     form of Lagrange interpolation.
 
-.. function:: void _fmprb_poly_interpolation_weights(fmprb_struct * w, fmprb_struct ** tree, long len, long prec)
+.. function:: void _fmprb_poly_interpolation_weights(fmprb_ptr w, fmprb_ptr * tree, long len, long prec)
 
-.. function:: void _fmprb_poly_interpolate_fast_precomp(fmprb_struct * poly, const fmprb_struct * ys, fmprb_struct ** tree, const fmprb_struct * weights, long len, long prec)
+.. function:: void _fmprb_poly_interpolate_fast_precomp(fmprb_ptr poly, fmprb_srcptr ys, fmprb_ptr * tree, fmprb_srcptr weights, long len, long prec)
 
-.. function:: void _fmprb_poly_interpolate_fast(fmprb_struct * poly, const fmprb_struct * xs, const fmprb_struct * ys, long len, long prec)
+.. function:: void _fmprb_poly_interpolate_fast(fmprb_ptr poly, fmprb_srcptr xs, fmprb_srcptr ys, long len, long prec)
 
-.. function:: void fmprb_poly_interpolate_fast(fmprb_poly_t poly, const fmprb_struct * xs, const fmprb_struct * ys, long n, long prec)
+.. function:: void fmprb_poly_interpolate_fast(fmprb_poly_t poly, fmprb_srcptr xs, fmprb_srcptr ys, long n, long prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values, using fast Lagrange interpolation.
@@ -492,7 +492,7 @@ Interpolation
 Differentiation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_derivative(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)
+.. function:: void _fmprb_poly_derivative(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
 
     Sets *{res, len - 1}* to the derivative of *{poly, len}*.
     Allows aliasing of the input and output.
@@ -501,7 +501,7 @@ Differentiation
 
     Sets *res* to the derivative of *poly*.
 
-.. function:: void _fmprb_poly_integral(fmprb_struct * res, const fmprb_struct * poly, long len, long prec)
+.. function:: void _fmprb_poly_integral(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
 
     Sets *{res, len}* to the integral of *{poly, len - 1}*.
     Allows aliasing of the input and output.
@@ -514,7 +514,7 @@ Differentiation
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_sqrt_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_sqrt_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 
@@ -525,7 +525,7 @@ Special functions
     The underscore method does not support aliasing of the input and output
     arrays. It requires that *hlen* and *n* are greater than zero.
 
-.. function:: void _fmprb_poly_rsqrt_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_rsqrt_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 
@@ -535,7 +535,7 @@ Special functions
     The underscore method does not support aliasing of the input and output
     arrays. It requires that *hlen* and *n* are greater than zero.
 
-.. function:: void _fmprb_poly_log_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+.. function:: void _fmprb_poly_log_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
@@ -546,15 +546,15 @@ Special functions
     The underscore method supports aliasing of the input and output
     arrays. It requires that *flen* and *n* are greater than zero.
 
-.. function:: void _fmprb_poly_atan_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+.. function:: void _fmprb_poly_atan_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_atan_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_asin_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+.. function:: void _fmprb_poly_asin_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_asin_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_acos_series(fmprb_struct * res, const fmprb_struct * f, long flen, long n, long prec)
+.. function:: void _fmprb_poly_acos_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_acos_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 
@@ -577,11 +577,11 @@ Special functions
     The underscore methods supports aliasing of the input and output
     arrays. They require that *flen* and *n* are greater than zero.
 
-.. function:: void _fmprb_poly_exp_series_basecase(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_exp_series_basecase(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_exp_series_basecase(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
 
-.. function:: void _fmprb_poly_exp_series(fmprb_struct * f, const fmprb_struct * h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_exp_series(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_exp_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
 
@@ -598,7 +598,7 @@ Special functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _fmprb_poly_sin_cos_series_basecase(fmprb_struct * s, fmprb_struct * c, const fmprb_struct * h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_sin_cos_series_basecase(fmprb_ptr s, fmprb_ptr c, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_sin_cos_series_basecase(fmprb_poly_t s, fmprb_poly_t c, const fmprb_poly_t h, long n, long prec)
 
@@ -610,7 +610,7 @@ Special functions
     The underscore method supports aliasing and allows the input to be
     shorter than the output, but requires the lengths to be nonzero.
 
-.. function:: void _fmprb_poly_tan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long len, long prec)
+.. function:: void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, long prec)
 
 .. function:: void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 
@@ -628,7 +628,7 @@ Special functions
     Sets `f` to the series expansion of `\log(\Gamma(1-x))`, truncated to
     length `n`.
 
-.. function:: void _fmprb_poly_rfac_series_ui(fmprb_struct * res, const fmprb_struct * f, long flen, ulong r, long trunc, long prec)
+.. function:: void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec)
 
 .. function:: void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
 
@@ -640,7 +640,7 @@ Special functions
 Root-finding
 -------------------------------------------------------------------------------
 
-.. function:: void _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor, const fmprb_struct * poly, long len, const fmprb_t convergence_interval, long prec)
+.. function:: void _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor, fmprb_srcptr poly, long len, const fmprb_t convergence_interval, long prec)
 
     Given an interval `I` specified by *convergence_interval*, evaluates a bound
     for `C = \sup_{t,u \in I} \frac{1}{2} |f''(t)| / |f'(u)|`,
@@ -649,7 +649,7 @@ Root-finding
     If `f` has large coefficients, `I` must be extremely precise in order to
     get a finite factor.
 
-.. function:: int _fmprb_poly_newton_step(fmprb_t xnew, const fmprb_struct * poly, long len, const fmprb_t x, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long prec)
+.. function:: int _fmprb_poly_newton_step(fmprb_t xnew, fmprb_srcptr poly, long len, const fmprb_t x, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long prec)
 
     Performs a single step with Newton's method.
 
@@ -670,7 +670,7 @@ Root-finding
     If either condition fails, we set *xnew* to `x` and return zero,
     indicating that no progress was made.
 
-.. function:: void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly, long len, const fmprb_t start, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long eval_extra_prec, long prec)
+.. function:: void _fmprb_poly_newton_refine_root(fmprb_t r, fmprb_srcptr poly, long len, const fmprb_t start, const fmprb_t convergence_interval, const fmpr_t convergence_factor, long eval_extra_prec, long prec)
 
     Refines a precise estimate of a polynomial root to high precision
     by performing several Newton steps, using nearly optimally

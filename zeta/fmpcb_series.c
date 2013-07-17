@@ -26,12 +26,12 @@
 #include "zeta.h"
 
 void
-zeta_series(fmpcb_struct * z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
+zeta_series(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec)
 {
     ulong M, N;
     long i;
     fmpr_t bound;
-    fmprb_struct * vb;
+    fmprb_ptr vb;
 
     if (d < 1)
         return;

@@ -27,11 +27,11 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_div_series(fmpcb_struct * Q,
-    const fmpcb_struct * A,
-    const fmpcb_struct * B, long n, long prec)
+_fmpcb_poly_div_series(fmpcb_ptr Q,
+    fmpcb_srcptr A,
+    fmpcb_srcptr B, long n, long prec)
 {
-    fmpcb_struct * Binv = _fmpcb_vec_init(n);
+    fmpcb_ptr Binv = _fmpcb_vec_init(n);
 
     _fmpcb_poly_inv_series(Binv, B, n, prec);
     _fmpcb_poly_mullow(Q, Binv, n, A, n, n, prec);
@@ -40,12 +40,12 @@ _fmpcb_poly_div_series(fmpcb_struct * Q,
 }
 
 void
-_fmpcb_poly_div(fmpcb_struct * Q,
-    const fmpcb_struct * A, long lenA,
-    const fmpcb_struct * B, long lenB, long prec)
+_fmpcb_poly_div(fmpcb_ptr Q,
+    fmpcb_srcptr A, long lenA,
+    fmpcb_srcptr B, long lenB, long prec)
 {
     const long lenQ = lenA - lenB + 1;
-    fmpcb_struct * Arev, * Brev;
+    fmpcb_ptr Arev, Brev;
 
     Arev = _fmpcb_vec_init(2 * lenQ);
     Brev = Arev + lenQ;
@@ -68,9 +68,9 @@ _fmpcb_poly_div(fmpcb_struct * Q,
     _fmpcb_vec_clear(Arev, 2 * lenQ);
 }
 
-void _fmpcb_poly_divrem(fmpcb_struct * Q, fmpcb_struct * R,
-    const fmpcb_struct * A, long lenA,
-    const fmpcb_struct * B, long lenB, long prec)
+void _fmpcb_poly_divrem(fmpcb_ptr Q, fmpcb_ptr R,
+    fmpcb_srcptr A, long lenA,
+    fmpcb_srcptr B, long lenB, long prec)
 {
     const long lenQ = lenA - lenB + 1;
     _fmpcb_poly_div(Q, A, lenA, B, lenB, prec);
@@ -85,12 +85,12 @@ void _fmpcb_poly_divrem(fmpcb_struct * Q, fmpcb_struct * R,
     }
 }
 
-void _fmpcb_poly_rem(fmpcb_struct * R,
-    const fmpcb_struct * A, long lenA,
-    const fmpcb_struct * B, long lenB, long prec)
+void _fmpcb_poly_rem(fmpcb_ptr R,
+    fmpcb_srcptr A, long lenA,
+    fmpcb_srcptr B, long lenB, long prec)
 {
     const long lenQ = lenA - lenB + 1;
-    fmpcb_struct * Q = _fmpcb_vec_init(lenQ);
+    fmpcb_ptr Q = _fmpcb_vec_init(lenQ);
     _fmpcb_poly_divrem(Q, R, A, lenA, B, lenB, prec);
     _fmpcb_vec_clear(Q, lenQ);
 }

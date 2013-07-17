@@ -277,7 +277,7 @@ Rational arguments
 
     but this appears to be slightly slower in practice.
 
-.. function:: void gamma_series_fmpq_hypgeom(fmprb_struct * res, const fmpq_t a, long len, long prec)
+.. function:: void gamma_series_fmpq_hypgeom(fmprb_ptr res, const fmpq_t a, long len, long prec)
 
     Given a rational number `0 < a \le 1`, uses binary splitting to compute
     *len* coefficients in the Taylor series of `\Gamma(a+x)`, i.e. computes

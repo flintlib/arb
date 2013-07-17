@@ -26,11 +26,11 @@
 #include "fmprb_poly.h"
 
 void _fmprb_poly_get_fmpz_poly_2exp(fmpr_t error, fmpz_t exp, fmpz  * coeffs,
-                            const fmprb_struct * A, long lenA, long prec);
+                            fmprb_srcptr A, long lenA, long prec);
 
 void
-_fmprb_vec_add_fmpz_vec_2exp(fmprb_struct * z,
-    const fmprb_struct * x, const fmpz * y, const fmpz_t exp, long len, long prec)
+_fmprb_vec_add_fmpz_vec_2exp(fmprb_ptr z,
+    fmprb_srcptr x, const fmpz * y, const fmpz_t exp, long len, long prec)
 {
     fmpr_t t;
     long i;
@@ -91,7 +91,7 @@ int read_exps(long * xmag, const fmpr_struct * x, long xlen)
 }
 
 void
-add_mulbound(fmprb_struct * z,
+add_mulbound(fmprb_ptr z,
         const fmpr_struct * x, long xlen,
         const fmpr_struct * y, long ylen, long n)
 {
@@ -154,7 +154,7 @@ add_mulbound(fmprb_struct * z,
 
 
 static int
-is_exact(const fmprb_struct * x, long len)
+is_exact(fmprb_srcptr x, long len)
 {
     long i;
 
@@ -166,7 +166,7 @@ is_exact(const fmprb_struct * x, long len)
 }
 
 static void
-add_errors(fmprb_struct * z, const fmprb_struct * x, long xlen, const fmprb_struct * y, long ylen, long n)
+add_errors(fmprb_ptr z, fmprb_srcptr x, long xlen, fmprb_srcptr y, long ylen, long n)
 {
     int xexact, yexact;
 
@@ -184,7 +184,7 @@ add_errors(fmprb_struct * z, const fmprb_struct * x, long xlen, const fmprb_stru
 #define CLASSICAL_CUTOFF 6
 
 static void
-get_blocks(long * xblocks, const fmprb_struct * x, long xlen, long prec)
+get_blocks(long * xblocks, fmprb_srcptr x, long xlen, long prec)
 {
     fmpz_t top, bot, t, b, v, block_top, block_bot;
     long i, block;
@@ -254,7 +254,7 @@ get_blocks(long * xblocks, const fmprb_struct * x, long xlen, long prec)
 }
 
 static int
-has_infnan(const fmprb_struct * x, long len)
+has_infnan(fmprb_srcptr x, long len)
 {
     long i;
 
@@ -271,14 +271,14 @@ has_infnan(const fmprb_struct * x, long len)
 }
 
 void
-_fmprb_poly_mullow_block(fmprb_struct * z,
-    const fmprb_struct * x, long xlen,
-    const fmprb_struct * y, long ylen,
+_fmprb_poly_mullow_block(fmprb_ptr z,
+    fmprb_srcptr x, long xlen,
+    fmprb_srcptr y, long ylen,
     long n, long prec)
 {
     long *xblocks, *yblocks;
     long i, j, xp, yp, xl, yl, bn, r, s;
-    fmprb_struct * tmp;
+    fmprb_ptr tmp;
     fmpr_t t, error;
     fmpz_t xexp, yexp, zexp;
     fmpz *xz, *yz, *zz;
