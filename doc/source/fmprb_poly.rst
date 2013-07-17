@@ -631,7 +631,7 @@ Special functions
 
     For small *n* takes the quotient of the sine and cosine as computed
     using the basecase algorithm. For large *n*, uses Newton iteration
-    to invert the inverse tangent series. The complexity is `O(n)`.
+    to invert the inverse tangent series. The complexity is `O(M(n))`.
 
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
