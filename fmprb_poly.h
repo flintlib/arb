@@ -490,6 +490,8 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
 
 /* Macros */
 
+#ifndef NEWTON_INIT
+
 #define NEWTON_INIT(from, to) \
     { \
         long __steps[FLINT_BITS], __i, __from, __to; \
@@ -512,6 +514,8 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, const fmprb_struct * poly,
 #define NEWTON_END_LOOP }}
 
 #define NEWTON_END }
+
+#endif
 
 #endif
 

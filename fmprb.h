@@ -595,6 +595,14 @@ _fmprb_vec_set(fmprb_struct * res, const fmprb_struct * vec, long len)
 }
 
 static __inline__ void
+_fmprb_vec_swap(fmprb_struct * res, fmprb_struct * vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_swap(res + i, vec + i);
+}
+
+static __inline__ void
 _fmprb_vec_neg(fmprb_struct * B, const fmprb_struct * A, long n)
 {
     long i;
@@ -653,7 +661,7 @@ _fmprb_vec_scalar_mul_fmpz(fmprb_struct * res, const fmprb_struct * vec,
 
 static __inline__ void
 _fmprb_vec_scalar_mul_2exp_si(fmprb_struct * res, const fmprb_struct * src,
-long len, long c)
+    long len, long c)
 {
     long i;
     for (i = 0; i < len; i++)
