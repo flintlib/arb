@@ -25,14 +25,13 @@
 
 #include "fmprb_poly.h"
 
-
 void
-_fmprb_poly_atan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
+_fmprb_poly_asin_series(fmprb_struct * g, const fmprb_struct * h, long hlen, long n, long prec)
 {
     fmprb_t c;
     fmprb_init(c);
 
-    fmprb_atan(c, h, prec);
+    fmprb_asin(c, h, prec);
 
     hlen = FLINT_MIN(hlen, n);
 
@@ -48,13 +47,14 @@ _fmprb_poly_atan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, lon
         t = _fmprb_vec_init(n);
         u = _fmprb_vec_init(n);
 
-        /* atan(h(x)) = integral(h'(x)/(1+h(x)^2)) */
+        /* asin(h(x)) = integral(h'(x)/sqrt(1-h(x)^2)) */
         ulen = FLINT_MIN(n, 2 * hlen - 1);
         _fmprb_poly_mullow(u, h, hlen, h, hlen, ulen, prec);
-        fmprb_add_ui(u, u, 1, prec);
-
-        _fmprb_poly_derivative(t, h, hlen, prec);
-        _fmprb_poly_div_series(g, t, hlen - 1, u, ulen, n, prec);
+        fmprb_sub_ui(u, u, 1, prec);
+        _fmprb_vec_neg(u, u, ulen);
+        _fmprb_poly_rsqrt_series(t, u, ulen, n, prec);
+        _fmprb_poly_derivative(u, h, hlen, prec);
+        _fmprb_poly_mullow(g, t, n, u, hlen - 1, n, prec);
         _fmprb_poly_integral(g, g, n, prec);
 
         _fmprb_vec_clear(t, n);
@@ -66,7 +66,7 @@ _fmprb_poly_atan_series(fmprb_struct * g, const fmprb_struct * h, long hlen, lon
 }
 
 void
-fmprb_poly_atan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
+fmprb_poly_asin_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 {
     long hlen = h->length;
 
@@ -77,7 +77,7 @@ fmprb_poly_atan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
     }
 
     fmprb_poly_fit_length(g, n);
-    _fmprb_poly_atan_series(g->coeffs, h->coeffs, hlen, n, prec);
+    _fmprb_poly_asin_series(g->coeffs, h->coeffs, hlen, n, prec);
     _fmprb_poly_set_length(g, n);
     _fmprb_poly_normalise(g);
 }

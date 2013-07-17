@@ -58,7 +58,7 @@ int main()
 
         if (!fmprb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment, prec = %ld\n\n", prec);
+            printf("FAIL: containment\n\n");
             printf("a = "); fmprb_printd(a, 100); printf("\n\n");
             printf("b = "); fmprb_printd(b, 100); printf("\n\n");
             abort();
