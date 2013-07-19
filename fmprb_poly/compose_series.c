@@ -29,10 +29,33 @@ void
 _fmprb_poly_compose_series(fmprb_ptr res, fmprb_srcptr poly1, long len1,
                             fmprb_srcptr poly2, long len2, long n, long prec)
 {
-    if (len1 < 6 || n < 6)
+    if (len2 == 2)  /* fast linear case (TODO: all monomials) */
+    {
+        long i;
+        fmprb_t t;
+
+        fmprb_init(t);
+
+        fmprb_set(t, poly2 + 1);
+        fmprb_set_round(res, poly1, prec);
+
+        for (i = 1; i < n; i++)
+        {
+            fmprb_mul(res + i, poly1 + i, t, prec);
+            if (i + 1 < n)
+                fmprb_mul(t, t, poly2 + 1, prec);
+        }
+
+        fmprb_clear(t);
+    }
+    else if (len1 < 6 || n < 6)
+    {
         _fmprb_poly_compose_series_horner(res, poly1, len1, poly2, len2, n, prec);
+    }
     else
+    {
         _fmprb_poly_compose_series_brent_kung(res, poly1, len1, poly2, len2, n, prec);
+    }
 }
 
 void
