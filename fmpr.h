@@ -79,6 +79,8 @@ typedef struct
 fmpr_struct;
 
 typedef fmpr_struct fmpr_t[1];
+typedef fmpr_struct * fmpr_ptr;
+typedef const fmpr_struct * fmpr_srcptr;
 
 #define fmpr_manref(x) (&(x)->man)
 #define fmpr_expref(x) (&(x)->exp)
@@ -691,6 +693,29 @@ void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e,
 
 void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e,
     long prec, fmpr_rnd_t rnd);
+
+/* vector functions */
+
+static __inline__ fmpr_ptr
+_fmpr_vec_init(long n)
+{
+    long i;
+    fmpr_ptr v = flint_malloc(sizeof(fmpr_struct) * n);
+
+    for (i = 0; i < n; i++)
+        fmpr_init(v + i);
+
+    return v;
+}
+
+static __inline__ void
+_fmpr_vec_clear(fmpr_ptr v, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        fmpr_clear(v + i);
+    flint_free(v);
+}
 
 #endif
 

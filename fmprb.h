@@ -739,4 +739,12 @@ _fmprb_vec_set_powers(fmprb_ptr xs, const fmprb_t x, long len, long prec)
     }
 }
 
+static __inline__ void
+_fmprb_vec_add_error_fmpr_vec(fmprb_ptr res, fmpr_srcptr err, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_add_error_fmpr(res + i, err + i);
+}
+
 #endif

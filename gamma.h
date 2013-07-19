@@ -79,6 +79,8 @@ void gamma_stirling_coeff(fmprb_t b, ulong k, int digamma, long prec);
 void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, long prec);
 void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int digamma, long prec);
 
+void gamma_stirling_eval_fmprb_series(fmprb_ptr res, const fmprb_t z, long n, long num, long prec);
+
 
 void gamma_rising_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec);
 void gamma_rising_fmprb_ui_bsplit_eight(fmprb_t y, const fmprb_t x, ulong n, long prec);
