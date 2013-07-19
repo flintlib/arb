@@ -108,17 +108,7 @@ gamma_rising_fmprb_ui_delta(fmprb_t y, const fmprb_t x, ulong n, ulong m, long p
     d = _fmpz_vec_init(m * m);
     s = _fmpz_vec_init(m + 1);
 
-    for (i = 0; i <= m; i++)
-    {
-        if (i == 0)
-            fmprb_one(xs + i);
-        else if (i == 1)
-            fmprb_set(xs + i, x);
-        else if (i % 2 == 0)
-            fmprb_mul(xs + i, xs + i / 2, xs + i / 2, wp);
-        else
-            fmprb_mul(xs + i, xs + i - 1, x, wp);
-    }
+    _fmprb_vec_set_powers(xs, x, m + 1, wp);
 
     rising_difference_polynomial(s, d, m);
 
