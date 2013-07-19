@@ -113,6 +113,50 @@ Evaluation using the Stirling series
     differentiated term and the exponent `2n` changes to `2n+1`
     (section 5.11 in [NIST2012]_).
 
+.. function :: void gamma_stirling_bound_phase(fmpr_t bound, const fmpcb_t z, long prec)
+
+    Sets *bound* to an upper bound for the phase factor
+    `b = 1/\cos(\operatorname{arg}(z)/2)` which appears in the error bound
+    for the Stirling series. By trigonometric identities, assuming
+    that `z = x+yi`, we have `b = \sqrt{1 + t^2}` where
+
+    .. math ::
+
+        t = \frac{y}{\sqrt{x^2 + y^2} + x} = \frac{\sqrt{x^2 + y^2} - x}{y}
+
+    We bound `x` and `y` such that `|\operatorname{arg}(x+yi)|`
+    is maximized, and then evaluate `t` with the choice of square root
+    expression that avoids cancellation, using directional rounding throughout.
+
+.. function :: void gamma_stirling_bound_fmprb(fmpr_struct * err, const fmprb_t z, long k0, long knum, long n)
+
+.. function :: void gamma_stirling_bound_fmpcb(fmpr_struct * err, const fmpcb_t z, long k0, long knum, long n)
+
+    Computes bounds for the truncation error in the Stirling series
+    when summed up to term `n - 1` inclusive. An exact expression for the
+    truncation error is given (see [Olv1997]_ pp. 293-295) by
+
+    .. math ::
+
+        R_n(z) = \int_0^{\infty} \frac{B_{2n} - {\tilde B}_{2n}(x)}{2n(x+z)^{2n}} dt.
+
+    We optionally evaluate the bound for several terms in the
+    Taylor series: considering `R_n(z+t) \in \mathbb{C}[[t]]`, we
+    compute bounds for the coefficient of `t^k` for *knum* consecutive
+    values of *k* starting with *k0*.
+    Using the fact that the numerator of the integrand is bounded in
+    absolute value by `2 |B_{2n}|`, and using the bound for `|x+z|`
+    given by [Olv1997]_, we obtain
+
+    .. math ::
+
+        |[t^k] R_n(z+t)| \le 2 |B_{2n}|
+            \frac{\Gamma(2n+k-1)}{\Gamma(k+1) \Gamma(2n+1)}
+            \; |z| \; (b / |z|)^{2n+k}
+
+    where `b` is the phase factor implemented by
+    :func:`gamma_stirling_bound_phase`.
+
 
 Rising factorials
 --------------------------------------------------------------------------------

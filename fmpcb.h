@@ -241,35 +241,57 @@ fmpcb_set_round_fmprb(fmpcb_t z, const fmprb_t x, long prec)
 static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
-    fmpr_t v;
-    fmpr_init(v);
+    if (fmprb_is_zero(fmpcb_imagref(z)))
+    {
+        fmprb_get_abs_ubound_fmpr(u, fmpcb_realref(z), prec);
+    }
+    else if (fmprb_is_zero(fmpcb_realref(z)))
+    {
+        fmprb_get_abs_ubound_fmpr(u, fmpcb_imagref(z), prec);
+    }
+    else
+    {
+        fmpr_t v;
+        fmpr_init(v);
 
-    fmprb_get_abs_ubound_fmpr(u, fmpcb_realref(z), prec);
-    fmprb_get_abs_ubound_fmpr(v, fmpcb_imagref(z), prec);
+        fmprb_get_abs_ubound_fmpr(u, fmpcb_realref(z), prec);
+        fmprb_get_abs_ubound_fmpr(v, fmpcb_imagref(z), prec);
 
-    fmpr_mul(u, u, u, prec, FMPR_RND_UP);
-    fmpr_mul(v, v, v, prec, FMPR_RND_UP);
-    fmpr_add(u, u, v, prec, FMPR_RND_UP);
-    fmpr_sqrt(u, u, prec, FMPR_RND_UP);
+        fmpr_mul(u, u, u, prec, FMPR_RND_UP);
+        fmpr_mul(v, v, v, prec, FMPR_RND_UP);
+        fmpr_add(u, u, v, prec, FMPR_RND_UP);
+        fmpr_sqrt(u, u, prec, FMPR_RND_UP);
 
-    fmpr_clear(v);
+        fmpr_clear(v);
+    }
 }
 
 static __inline__ void
 fmpcb_get_abs_lbound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
-    fmpr_t v;
-    fmpr_init(v);
+    if (fmprb_is_zero(fmpcb_imagref(z)))
+    {
+        fmprb_get_abs_lbound_fmpr(u, fmpcb_realref(z), prec);
+    }
+    else if (fmprb_is_zero(fmpcb_realref(z)))
+    {
+        fmprb_get_abs_lbound_fmpr(u, fmpcb_imagref(z), prec);
+    }
+    else
+    {
+        fmpr_t v;
+        fmpr_init(v);
 
-    fmprb_get_abs_lbound_fmpr(u, fmpcb_realref(z), prec);
-    fmprb_get_abs_lbound_fmpr(v, fmpcb_imagref(z), prec);
+        fmprb_get_abs_lbound_fmpr(u, fmpcb_realref(z), prec);
+        fmprb_get_abs_lbound_fmpr(v, fmpcb_imagref(z), prec);
 
-    fmpr_mul(u, u, u, prec, FMPR_RND_DOWN);
-    fmpr_mul(v, v, v, prec, FMPR_RND_DOWN);
-    fmpr_add(u, u, v, prec, FMPR_RND_DOWN);
-    fmpr_sqrt(u, u, prec, FMPR_RND_DOWN);
+        fmpr_mul(u, u, u, prec, FMPR_RND_DOWN);
+        fmpr_mul(v, v, v, prec, FMPR_RND_DOWN);
+        fmpr_add(u, u, v, prec, FMPR_RND_DOWN);
+        fmpr_sqrt(u, u, prec, FMPR_RND_DOWN);
 
-    fmpr_clear(v);
+        fmpr_clear(v);
+    }
 }
 
 static __inline__ void
