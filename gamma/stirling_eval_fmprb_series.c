@@ -141,8 +141,8 @@ gamma_stirling_eval_fmprb_series(fmprb_ptr res, const fmprb_t z, long n, long nu
     }
     else
     {
-        tlen = FLINT_MIN(2 * (n - 1) + 1, num);
-        qlen = FLINT_MIN(2 * (n - 1) - 1, num);
+        qlen = FLINT_MIN(2 * (n - 1) + 1, num);
+        tlen = FLINT_MIN(2 * (n - 1) - 1, num);
         bsplit(Q, T, z, 1, n, num, prec);
         _fmprb_poly_div_series(res, T, tlen, Q, qlen, num, prec);
     }
