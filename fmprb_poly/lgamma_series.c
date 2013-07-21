@@ -27,16 +27,16 @@
 #include "gamma.h"
 
 void
-_fmprb_poly_lgamma_cpx_series(fmprb_ptr res, const fmprb_t z, long len, long prec)
+_fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
 {
     int reflect;
     long r, n, rflen, wp;
     fmprb_t zr;
     fmprb_ptr t, u, f;
 
+    hlen = FLINT_MIN(hlen, len);
     wp = prec + FLINT_BIT_COUNT(prec);
-
-    gamma_stirling_choose_param_fmprb(&reflect, &r, &n, z, 0, 0, wp);
+    gamma_stirling_choose_param_fmprb(&reflect, &r, &n, h, 0, 0, wp);
 
     t = _fmprb_vec_init(len);
     u = _fmprb_vec_init(len);
@@ -44,56 +44,31 @@ _fmprb_poly_lgamma_cpx_series(fmprb_ptr res, const fmprb_t z, long len, long pre
     fmprb_init(zr);
 
     /* log(gamma(z)) = log(gamma(z+r)) - log(rf(z,r)) */
-    fmprb_add_ui(zr, z, r, wp);
+    fmprb_add_ui(zr, h, r, wp);
 
     /* u = log(gamma(z+r)) */
     gamma_stirling_eval_fmprb_series(u, zr, n, len, wp);
 
-    /* t = rising factorial */
-    fmprb_set(f, z);
-    fmprb_one(f + 1);
-    rflen = FLINT_MIN(len, r + 1);
-    _fmprb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, prec);
-    _fmprb_poly_log_series(t, t, rflen, len, wp);
+    /* subtract t = log(rf(z,r)) */
+    if (r != 0)
+    {
+        fmprb_set(f, h);
+        fmprb_one(f + 1);
+        rflen = FLINT_MIN(len, r + 1);
+        _fmprb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, prec);
+        _fmprb_poly_log_series(t, t, rflen, len, wp);
+        _fmprb_vec_sub(u, u, t, len, prec);
+    }
 
-    _fmprb_vec_sub(res, u, t, len, prec);
+    /* compose with nonconstant part */
+    fmprb_zero(t);
+    _fmprb_vec_set(t + 1, h + 1, hlen - 1);
+    _fmprb_poly_compose_series(res, u, len, t, hlen, len, prec);
 
     fmprb_clear(zr);
     _fmprb_vec_clear(t, len);
     _fmprb_vec_clear(u, len);
     _fmprb_vec_clear(f, 2);
-}
-
-void
-fmprb_poly_lgamma_cpx_series(fmprb_poly_t res, const fmprb_t z, long num, long prec)
-{
-    fmprb_poly_fit_length(res, num);
-    _fmprb_poly_lgamma_cpx_series(res->coeffs, z, num, prec);
-    _fmprb_poly_set_length(res, num);
-    _fmprb_poly_normalise(res);
-}
-
-void
-_fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
-{
-    fmprb_ptr t, u;
-    fmprb_t z;
-
-    hlen = FLINT_MIN(hlen, len);
-
-    t = _fmprb_vec_init(hlen);
-    u = _fmprb_vec_init(len);
-    fmprb_init(z);
-
-    fmprb_set(z, h);
-    _fmprb_vec_set(t + 1, h + 1, hlen - 1);
-
-    _fmprb_poly_lgamma_cpx_series(u, z, len, prec);
-    _fmprb_poly_compose_series(res, u, len, t, hlen, len, prec);
-
-    fmprb_clear(z);
-    _fmprb_vec_clear(t, hlen);
-    _fmprb_vec_clear(u, len);
 }
 
 void
