@@ -492,7 +492,9 @@ void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, lo
 
 void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
 
-void fmprb_poly_log_gamma_series(fmprb_poly_t z, long n, long prec);
+void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
+
+void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
 void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec);
 

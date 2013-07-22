@@ -56,11 +56,11 @@ Types, macros and constants
 
 .. type:: fmprb_ptr
 
-   Alias for :code:`fmprb_struct *`, used for vectors of numbers.
+   Alias for ``fmprb_struct *``, used for vectors of numbers.
 
 .. type:: fmprb_srcptr
 
-   Alias for :code:`const fmprb_struct *`, used for vectors of numbers
+   Alias for ``const fmprb_struct *``, used for vectors of numbers
    when passed as constant input to functions.
 
 .. macro:: FMPRB_RAD_PREC

@@ -15,11 +15,11 @@ Types, macros and constants
 
 .. type:: fmpcb_ptr
 
-   Alias for :code:`fmpcb_struct *`, used for vectors of numbers.
+   Alias for ``fmpcb_struct *``, used for vectors of numbers.
 
 .. type:: fmpcb_srcptr
 
-   Alias for :code:`const fmpcb_struct *`, used for vectors of numbers
+   Alias for ``const fmpcb_struct *``, used for vectors of numbers
    when passed as constant input to functions.
 
 .. macro:: fmpcb_realref(x)

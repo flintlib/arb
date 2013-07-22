@@ -52,7 +52,9 @@ gamma_taylor_precompute(long num, long prec)
 
         /* TODO: cleanup */
         fmprb_poly_init(A);
-        fmprb_poly_log_gamma_series(A, num, wp);
+        fmprb_poly_set_coeff_si(A, 0, 1);
+        fmprb_poly_set_coeff_si(A, 1, -1);
+        fmprb_poly_lgamma_series(A, A, num, wp);
         fmprb_poly_neg(A, A);
         fmprb_poly_exp_series(A, A, num, wp);
 

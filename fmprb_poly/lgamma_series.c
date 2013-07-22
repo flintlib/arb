@@ -25,39 +25,114 @@
 
 #include "fmprb_poly.h"
 #include "gamma.h"
+#include "zeta.h"
+
+int
+fmpr_cmpabs_ui(const fmpr_t x, ulong y)
+{
+    fmpr_t t;
+    int res;
+    fmpr_init(t);
+    fmpr_set_ui(t, y);
+    res = fmpr_cmpabs(x, t);
+    fmpr_clear(t);
+    return res;
+}
+
+
+static __inline__ int
+fmprb_is_int(const fmprb_t x)
+{
+    return fmprb_is_zero(x) ||
+        (fmprb_is_exact(x) &&
+                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
+}
+
+static __inline__ void
+_fmprb_vec_indeterminate(fmprb_ptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        fmpr_nan(fmprb_midref(vec + i));
+        fmpr_pos_inf(fmprb_radref(vec + i));
+    }
+}
+
+static __inline__ void
+_log_rfac_series(fmprb_ptr t, const fmprb_t x, long r, long len, long prec)
+{
+    fmprb_struct f[2];
+    long rflen;
+
+    fmprb_init(f);
+    fmprb_init(f + 1);
+    fmprb_set(f, x);
+    fmprb_one(f + 1);
+
+    rflen = FLINT_MIN(len, r + 1);
+    _fmprb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, prec);
+    _fmprb_poly_log_series(t, t, rflen, len, prec);
+
+    fmprb_clear(f);
+    fmprb_clear(f + 1);
+}
 
 void
 _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
 {
     int reflect;
-    long r, n, rflen, wp;
+    long i, r, n, wp;
     fmprb_t zr;
-    fmprb_ptr t, u, f;
+    fmprb_ptr t, u;
 
     hlen = FLINT_MIN(hlen, len);
     wp = prec + FLINT_BIT_COUNT(prec);
-    gamma_stirling_choose_param_fmprb(&reflect, &r, &n, h, 0, 0, wp);
 
     t = _fmprb_vec_init(len);
     u = _fmprb_vec_init(len);
-    f = _fmprb_vec_init(2);
     fmprb_init(zr);
 
-    /* log(gamma(z)) = log(gamma(z+r)) - log(rf(z,r)) */
-    fmprb_add_ui(zr, h, r, wp);
-
-    /* u = log(gamma(z+r)) */
-    gamma_stirling_eval_fmprb_series(u, zr, n, len, wp);
-
-    /* subtract t = log(rf(z,r)) */
-    if (r != 0)
+    /* use zeta values at small integers */
+    if (fmprb_is_int(h) && (fmpr_cmpabs_ui(fmprb_midref(h), prec / 2) < 0))
     {
-        fmprb_set(f, h);
-        fmprb_one(f + 1);
-        rflen = FLINT_MIN(len, r + 1);
-        _fmprb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, prec);
-        _fmprb_poly_log_series(t, t, rflen, len, wp);
-        _fmprb_vec_sub(u, u, t, len, prec);
+        r = fmpr_get_si(fmprb_midref(h), FMPR_RND_DOWN);
+
+        if (r <= 0)
+        {
+            _fmprb_vec_indeterminate(res, len);
+        }
+        else
+        {
+            fmprb_zero(t);
+
+            if (len > 1) fmprb_const_euler(u + 1, wp);
+            if (len > 2) zeta_ui_vec(u + 2, 2, len - 2, wp);
+            for (i = 2; i < len; i++)
+                fmprb_div_ui(u + i, u + i, i, wp);
+            for (i = 1; i < len; i += 2)
+                fmprb_neg(u + i, u + i);
+
+            if (r != 1)
+            {
+                fmprb_one(zr);
+                _log_rfac_series(t, zr, r - 1, len, wp);
+                _fmprb_vec_add(u, u, t, len, wp);
+            }
+        }
+    }
+    else
+    {
+        /* otherwise use Stirling series */
+        gamma_stirling_choose_param_fmprb(&reflect, &r, &n, h, 0, 0, wp);
+        fmprb_add_ui(zr, h, r, wp);
+        gamma_stirling_eval_fmprb_series(u, zr, n, len, wp);
+
+        if (r != 0)
+        {
+            _log_rfac_series(t, h, r, len, wp);
+            _fmprb_vec_sub(u, u, t, len, wp);
+        }
     }
 
     /* compose with nonconstant part */
@@ -68,7 +143,6 @@ _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
     fmprb_clear(zr);
     _fmprb_vec_clear(t, len);
     _fmprb_vec_clear(u, len);
-    _fmprb_vec_clear(f, 2);
 }
 
 void
