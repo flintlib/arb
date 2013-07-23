@@ -496,6 +496,10 @@ void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, l
 
 void fmprb_poly_gamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
+void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
+
+void fmprb_poly_rgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
+
 void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
 
 void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
