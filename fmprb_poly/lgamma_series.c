@@ -27,19 +27,6 @@
 #include "gamma.h"
 #include "zeta.h"
 
-int
-fmpr_cmpabs_ui(const fmpr_t x, ulong y)
-{
-    fmpr_t t;
-    int res;
-    fmpr_init(t);
-    fmpr_set_ui(t, y);
-    res = fmpr_cmpabs(x, t);
-    fmpr_clear(t);
-    return res;
-}
-
-
 static __inline__ int
 fmprb_is_int(const fmprb_t x)
 {
@@ -104,8 +91,7 @@ _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
         }
         else
         {
-            fmprb_zero(t);
-
+            fmprb_zero(u);
             if (len > 1) fmprb_const_euler(u + 1, wp);
             if (len > 2) zeta_ui_vec(u + 2, 2, len - 2, wp);
             for (i = 2; i < len; i++)
