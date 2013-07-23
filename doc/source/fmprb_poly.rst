@@ -656,20 +656,29 @@ Special functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
+.. function:: void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_gamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
+
+.. function:: void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_rgamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
+
 .. function:: void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
 
-    Sets *res* to the series expansion of `\log \Gamma(h(x))`, truncated to
-    length *n*.
+    Sets *res* to the series expansion of `\Gamma(h(x))`, `1/\Gamma(h(x))`,
+    or `\log \Gamma(h(x))`, truncated to length *n*.
 
-    This function first computes the expansion with respect to the constant
-    term of *h*, and then calls :func:`_fmprb_poly_compose_series`.
-    It uses an expansion in terms of the Riemann zeta function if the
-    constant term of *h* is a small integer, and Stirling's series otherwise.
+    These functions first generate the Taylor series at the constant
+    term of *h*, and then call :func:`_fmprb_poly_compose_series`.
+    The Taylor coefficients are generated using the Riemann zeta function
+    if the constant term of *h* is a small integer,
+    and with Stirling's series otherwise.
 
-    The underscore method supports aliasing of the input and output
-    arrays. It requires that *hlen* and *n* are greater than zero.
+    The underscore methods support aliasing of the input and output
+    arrays, and require that *hlen* and *n* are greater than zero.
 
 .. function:: void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec)
 
