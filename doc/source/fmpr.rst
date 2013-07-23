@@ -303,6 +303,8 @@ Comparisons
 
 .. function:: int fmpr_cmpabs(const fmpr_t x, const fmpr_t y)
 
+.. function:: int fmpr_cmpabs_ui(const fmpr_t x, ulong y)
+
     Compares the absolute values of *x* and *y*.
 
 .. function:: int fmpr_cmp_2exp_si(const fmpr_t x, long e)
