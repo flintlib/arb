@@ -89,14 +89,6 @@ void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res, const fmpcb_t N, const fmpcb_t 
 }
 
 static __inline__ int
-fmprb_is_int(const fmprb_t x)
-{
-    return fmprb_is_zero(x) || 
-        (fmprb_is_exact(x) &&
-                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
-}
-
-static __inline__ int
 fmpcb_is_int(const fmpcb_t z)
 {
     return fmprb_is_zero(fmpcb_imagref(z)) && fmprb_is_int(fmpcb_realref(z));

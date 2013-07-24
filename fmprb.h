@@ -406,6 +406,14 @@ int fmprb_overlaps(const fmprb_t x, const fmprb_t y);
 int fmprb_contains(const fmprb_t x, const fmprb_t y);
 
 static __inline__ int
+fmprb_is_int(const fmprb_t x)
+{
+    return fmprb_is_zero(x) ||
+        (fmprb_is_exact(x) &&
+                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
+}
+
+static __inline__ int
 fmprb_is_nonzero(const fmprb_t x)
 {
     return !fmprb_contains_zero(x);
@@ -745,6 +753,17 @@ _fmprb_vec_add_error_fmpr_vec(fmprb_ptr res, fmpr_srcptr err, long len)
     long i;
     for (i = 0; i < len; i++)
         fmprb_add_error_fmpr(res + i, err + i);
+}
+
+static __inline__ void
+_fmprb_vec_indeterminate(fmprb_ptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        fmpr_nan(fmprb_midref(vec + i));
+        fmpr_pos_inf(fmprb_radref(vec + i));
+    }
 }
 
 #endif

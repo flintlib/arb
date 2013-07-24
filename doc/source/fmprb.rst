@@ -251,6 +251,10 @@ Precision and comparisons
 
     Returns nonzero iff *x* and *y* have some point in common.
 
+.. function:: int fmprb_is_int(const fmprb_t x)
+
+    Returns nonzero iff *x* is an exact integer.
+
 .. function:: int fmprb_is_nonzero(const fmprb_t x)
 
     Returns nonzero iff zero is not contained in the interval represented

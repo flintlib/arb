@@ -27,25 +27,6 @@
 #include "gamma.h"
 #include "zeta.h"
 
-static __inline__ int
-fmprb_is_int(const fmprb_t x)
-{
-    return fmprb_is_zero(x) ||
-        (fmprb_is_exact(x) &&
-                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
-}
-
-static __inline__ void
-_fmprb_vec_indeterminate(fmprb_ptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-    {
-        fmpr_nan(fmprb_midref(vec + i));
-        fmpr_pos_inf(fmprb_radref(vec + i));
-    }
-}
-
 static __inline__ void
 _log_rfac_series(fmprb_ptr t, const fmprb_t x, long r, long len, long prec)
 {

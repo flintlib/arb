@@ -167,6 +167,10 @@ fmprb_mat_det(fmprb_t det, const fmprb_mat_t A, long prec)
         fmprb_mat_t T;
         fmprb_mat_init(T, fmprb_mat_nrows(A), fmprb_mat_ncols(A));
         fmprb_mat_set(T, A);
+
+        printf("computing det of:\n");
+        fmprb_mat_printd(A, 15); printf("\n");
+
         fmprb_mat_det_inplace(det, T, prec);
         fmprb_mat_clear(T);
     }
