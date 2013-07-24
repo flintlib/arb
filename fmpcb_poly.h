@@ -90,6 +90,10 @@ void _fmpcb_poly_derivative(fmpcb_ptr res, fmpcb_srcptr poly, long len, long pre
 
 void fmpcb_poly_derivative(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec);
 
+void _fmpcb_poly_integral(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec);
+
+void fmpcb_poly_integral(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec);
+
 void fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src);
 
 void fmpcb_poly_set_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re);

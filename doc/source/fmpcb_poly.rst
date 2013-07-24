@@ -321,9 +321,21 @@ Differentiation
 
 .. function:: void _fmpcb_poly_derivative(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
 
+    Sets *{res, len - 1}* to the derivative of *{poly, len}*.
+    Allows aliasing of the input and output.
+
 .. function:: void fmpcb_poly_derivative(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec)
 
     Sets *res* to the derivative of *poly*.
+
+.. function:: void _fmprb_poly_integral(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
+
+    Sets *{res, len}* to the integral of *{poly, len - 1}*.
+    Allows aliasing of the input and output.
+
+.. function:: void fmpcb_poly_integral(fmpcb_poly_t res, const fmpcb_poly_t poly, long prec)
+
+    Sets *res* to the integral of *poly*.
 
 
 Root-finding
