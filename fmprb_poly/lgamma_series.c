@@ -50,7 +50,7 @@ void
 _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
 {
     int reflect;
-    long i, r, n, wp;
+    long r, n, wp;
     fmprb_t zr;
     fmprb_ptr t, u;
 
@@ -72,13 +72,7 @@ _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
         }
         else
         {
-            fmprb_zero(u);
-            if (len > 1) fmprb_const_euler(u + 1, wp);
-            if (len > 2) zeta_ui_vec(u + 2, 2, len - 2, wp);
-            for (i = 2; i < len; i++)
-                fmprb_div_ui(u + i, u + i, i, wp);
-            for (i = 1; i < len; i += 2)
-                fmprb_neg(u + i, u + i);
+            gamma_lgamma_series_at_one(u, len, wp);
 
             if (r != 1)
             {
@@ -115,14 +109,13 @@ _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
 void
 fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 {
-    if (f->length == 0 || n == 0)
-    {
-        printf("fmprb_poly_lgamma_series: require n > 0 and nonzero input\n");
-        abort();
-    }
-
     fmprb_poly_fit_length(res, n);
-    _fmprb_poly_lgamma_series(res->coeffs, f->coeffs, f->length, n, prec);
+
+    if (f->length == 0 || n == 0)
+        _fmprb_vec_indeterminate(res->coeffs, n);
+    else
+        _fmprb_poly_lgamma_series(res->coeffs, f->coeffs, f->length, n, prec);
+
     _fmprb_poly_set_length(res, n);
     _fmprb_poly_normalise(res);
 }

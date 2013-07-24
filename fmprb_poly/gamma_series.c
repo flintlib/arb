@@ -53,29 +53,20 @@ _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long p
         {
             _fmprb_vec_indeterminate(v, len);
         }
+        else if (r == 1)
+        {
+            gamma_lgamma_series_at_one(u, len, wp);
+            _fmprb_poly_exp_series(v, u, len, len, wp);
+        }
         else
         {
-            fmprb_zero(u);
-            if (len > 1) fmprb_const_euler(u + 1, wp);
-            if (len > 2) zeta_ui_vec(u + 2, 2, len - 2, wp);
-            for (i = 2; i < len; i++)
-                fmprb_div_ui(u + i, u + i, i, wp);
-            for (i = 1; i < len; i += 2)
-                fmprb_neg(u + i, u + i);
-
-            if (r == 1)
-            {
-                _fmprb_poly_exp_series(v, u, len, len, wp);
-            }
-            else
-            {
-                _fmprb_poly_exp_series(t, u, len, len, wp);
-                fmprb_one(f);
-                fmprb_one(f + 1);
-                rflen = FLINT_MIN(len, r);
-                _fmprb_poly_rfac_series_ui(u, f, FLINT_MIN(2, len), r - 1, rflen, wp);
-                _fmprb_poly_mullow(v, t, len, u, rflen, len, wp);
-            }
+            gamma_lgamma_series_at_one(u, len, wp);
+            _fmprb_poly_exp_series(t, u, len, len, wp);
+            fmprb_one(f);
+            fmprb_one(f + 1);
+            rflen = FLINT_MIN(len, r);
+            _fmprb_poly_rfac_series_ui(u, f, FLINT_MIN(2, len), r - 1, rflen, wp);
+            _fmprb_poly_mullow(v, t, len, u, rflen, len, wp);
         }
     }
     else

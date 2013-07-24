@@ -49,13 +49,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
     {
         r = fmpr_get_si(fmprb_midref(h), FMPR_RND_DOWN);
 
-        fmprb_zero(u);
-        if (len > 1) fmprb_const_euler(u + 1, wp);
-        if (len > 2) zeta_ui_vec(u + 2, 2, len - 2, wp);
-        for (i = 2; i < len; i++)
-            fmprb_div_ui(u + i, u + i, i, wp);
-        for (i = 1; i < len; i += 2)
-            fmprb_neg(u + i, u + i);
+        gamma_lgamma_series_at_one(u, len, wp);
 
         _fmprb_vec_neg(u, u, len);
         _fmprb_poly_exp_series(t, u, len, len, wp);
@@ -78,6 +72,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long 
             fmprb_one(f + 1);
             rflen = FLINT_MIN(len, r);
             _fmprb_poly_rfac_series_ui(v, f, FLINT_MIN(2, len), r - 1, rflen, wp);
+
             /* TODO: use div_series? */
             _fmprb_poly_inv_series(u, v, rflen, len, wp);
             _fmprb_poly_mullow(v, t, len, u, len, len, wp);
