@@ -194,13 +194,22 @@ Arithmetic
 
     Sets *C* to the product of *A* and *B*.
 
-.. function:: void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long len, long prec)
+.. function:: void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long len, long prec)
 
-    Sets *{Qinv, len}* to the power series inverse of *{Q, len}*. Uses Newton iteration.
+    Sets *{Qinv, len}* to the power series inverse of *{Q, Qlen}*. Uses Newton iteration.
 
 .. function:: void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec)
 
     Sets *Qinv* to the power series inverse of *Q*.
+
+.. function:: void  _fmpcb_poly_div_series(fmpcb_ptr Q, fmpcb_srcptr A, long Alen, fmpcb_srcptr B, long Blen, long n, long prec)
+
+    Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
+    Uses Newton iteration followed by multiplication.
+
+.. function:: void fmpcb_poly_div_series(fmpcb_poly_t Q, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
+
+    Sets *Q* to the power series quotient *A* divided by *B*, truncated to length *n*.
 
 .. function:: void _fmpcb_poly_div(fmpcb_ptr Q, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 

@@ -26,26 +26,17 @@
 
 #include "fmpcb_poly.h"
 
-void
-_fmpcb_poly_div_series(fmpcb_ptr Q,
-    fmpcb_srcptr A,
-    fmpcb_srcptr B, long n, long prec)
-{
-    fmpcb_ptr Binv = _fmpcb_vec_init(n);
-
-    _fmpcb_poly_inv_series(Binv, B, n, prec);
-    _fmpcb_poly_mullow(Q, Binv, n, A, n, n, prec);
-
-    _fmpcb_vec_clear(Binv, n);
-}
+/* TODO: tighten this code */
 
 void
 _fmpcb_poly_div(fmpcb_ptr Q,
     fmpcb_srcptr A, long lenA,
     fmpcb_srcptr B, long lenB, long prec)
 {
-    const long lenQ = lenA - lenB + 1;
+    long lenQ, lenB2;
     fmpcb_ptr Arev, Brev;
+
+    lenQ = lenA - lenB + 1;
 
     Arev = _fmpcb_vec_init(2 * lenQ);
     Brev = Arev + lenQ;
@@ -55,14 +46,15 @@ _fmpcb_poly_div(fmpcb_ptr Q,
     if (lenB >= lenQ)
     {
         _fmpcb_poly_reverse(Brev, B + (lenB - lenQ), lenQ, lenQ);
+        lenB2 = lenQ;
     }
     else
     {
         _fmpcb_poly_reverse(Brev, B, lenB, lenB);
-        _fmpcb_vec_zero(Brev + lenB, lenQ - lenB);
+        lenB2 = lenB;
     }
 
-    _fmpcb_poly_div_series(Q, Arev, Brev, lenQ, prec);
+    _fmpcb_poly_div_series(Q, Arev, lenQ, Brev, lenB2, lenQ, prec);
     _fmpcb_poly_reverse(Q, Q, lenQ, lenQ);
 
     _fmpcb_vec_clear(Arev, 2 * lenQ);
@@ -143,4 +135,3 @@ void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R,
     _fmpcb_poly_set_length(R, lenB - 1);
     _fmpcb_poly_normalise(R);
 }
-

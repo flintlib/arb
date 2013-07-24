@@ -19,74 +19,62 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpcb_poly.h"
 
-#define MULLOW(z, x, xn, y, yn, nn, prec) \
-    if ((xn) >= (yn)) \
-        _fmpcb_poly_mullow(z, x, xn, y, yn, nn, prec); \
-    else \
-        _fmpcb_poly_mullow(z, y, yn, x, xn, nn, prec); \
-
-void
-_fmpcb_poly_inv_series(fmpcb_ptr Qinv,
-    fmpcb_srcptr Q, long Qlen, long len, long prec)
+void 
+_fmpcb_poly_div_series(fmpcb_ptr Q, fmpcb_srcptr A, long Alen,
+    fmpcb_srcptr B, long Blen, long n, long prec)
 {
-    fmpcb_inv(Qinv, Q, prec);
+    Alen = FLINT_MIN(Alen, n);
+    Blen = FLINT_MIN(Blen, n);
 
-    if (Qlen == 1)
+    if (Blen == 1)
     {
-        _fmpcb_vec_zero(Qinv + 1, len - 1);
+        _fmpcb_vec_scalar_div(Q, A, Alen, B, prec);
+        _fmpcb_vec_zero(Q + Alen, n - Alen);
     }
     else
     {
-        long Qnlen, Wlen, W2len;
-        fmpcb_ptr W;
-
-        W = _fmpcb_vec_init(len);
-
-        NEWTON_INIT(1, len)
-        NEWTON_LOOP(m, n)
-
-        Qnlen = FLINT_MIN(Qlen, n);
-        Wlen = FLINT_MIN(Qnlen + m - 1, n);
-        W2len = Wlen - m;
-        MULLOW(W, Q, Qnlen, Qinv, m, Wlen, prec);
-        MULLOW(Qinv + m, Qinv, m, W + m, W2len, n - m, prec);
-        _fmpcb_vec_neg(Qinv + m, Qinv + m, n - m);
-
-        NEWTON_END_LOOP
-        NEWTON_END
-
-        _fmpcb_vec_clear(W, len);
+        fmpcb_ptr Binv;
+        Binv = _fmpcb_vec_init(n);
+        _fmpcb_poly_inv_series(Binv, B, Blen, n, prec);
+        _fmpcb_poly_mullow(Q, Binv, n, A, Alen, n, prec);
+        _fmpcb_vec_clear(Binv, n);
     }
 }
 
 void
-fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec)
+fmpcb_poly_div_series(fmpcb_poly_t Q, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
 {
-    if (n == 0 || Q->length == 0)
+    if (n == 0 || B->length == 0)
     {
         printf("fmpcb_poly_inv_series: require n > 0 and nonzero input\n");
         abort();
     }
 
-    if (Qinv == Q)
+    if (A->length == 0)
+    {
+        fmpcb_poly_zero(Q);
+        return;
+    }
+
+    if (Q == A || Q == B)
     {
         fmpcb_poly_t t;
         fmpcb_poly_init(t);
-        fmpcb_poly_inv_series(t, Q, n, prec);
-        fmpcb_poly_swap(Qinv, t);
+        fmpcb_poly_div_series(t, A, B, n, prec);
+        fmpcb_poly_swap(Q, t);
         fmpcb_poly_clear(t);
         return;
     }
 
-    fmpcb_poly_fit_length(Qinv, n);
-    _fmpcb_poly_inv_series(Qinv->coeffs, Q->coeffs, Q->length, n, prec);
-    _fmpcb_poly_set_length(Qinv, n);
-    _fmpcb_poly_normalise(Qinv);
+    fmpcb_poly_fit_length(Q, n);
+    _fmpcb_poly_div_series(Q->coeffs, A->coeffs, A->length, B->coeffs, B->length, n, prec);
+    _fmpcb_poly_set_length(Q, n);
+    _fmpcb_poly_normalise(Q);
 }
 

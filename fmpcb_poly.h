@@ -173,9 +173,14 @@ _fmpcb_poly_mul_monic(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
     fmpcb_one(res + len1 + len2 - 2);
 }
 
-void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long len, long prec);
+void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long len, long prec);
 
 void fmpcb_poly_inv_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
+
+void  _fmpcb_poly_div_series(fmpcb_ptr Q, fmpcb_srcptr A, long Alen,
+    fmpcb_srcptr B, long Blen, long n, long prec);
+
+void fmpcb_poly_div_series(fmpcb_poly_t Q, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec);
 
 void _fmpcb_poly_reverse(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n);
 
