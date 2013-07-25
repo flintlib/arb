@@ -56,7 +56,8 @@ _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr Qinv, fmprb_srcptr Q, long n, 
 
     _fmprb_poly_inv_series(Ri(1), Q + 1, n - 1, n - 1, prec);
     for (i = 2; i <= m; i++)
-        _fmprb_poly_mullow(Ri(i), Ri(i-1), n - 1, Ri(1), n - 1, n - 1, prec);
+        _fmprb_poly_mullow(Ri(i), Ri((i + 1) / 2), n - 1, Ri(i / 2), n - 1, n - 1, prec);
+
     for (i = 2; i < m; i++)
         fmprb_div_ui(Qinv + i, Ri(i) + i - 1, i, prec);
 

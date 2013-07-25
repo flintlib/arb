@@ -59,7 +59,7 @@ _fmprb_poly_compose_series_brent_kung(fmprb_ptr res,
     fmprb_set_ui(A->rows[0] + 0, 1UL);
     _fmprb_vec_set(A->rows[1], poly2, len2);
     for (i = 2; i < m; i++)
-        _fmprb_poly_mullow(A->rows[i], A->rows[i-1], n, poly2, len2, n, prec);
+        _fmprb_poly_mullow(A->rows[i], A->rows[(i + 1) / 2], n, A->rows[i / 2], n, n, prec);
 
     fmprb_mat_mul(C, B, A, prec);
 

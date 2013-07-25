@@ -88,8 +88,6 @@
   This is certainly faster when n is prime, but might be faster for all n,
   at least if implemented cleverly.
 
-* Add polynomial squaring code, and exploit in pow, Brent-Kung, etc.
-
 * Add polynomial mulmid, and use in Newton iteration
 
 * Tune basecase/Newton selection for exp/sin/cos series (the basecase
