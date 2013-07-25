@@ -20,6 +20,7 @@
 /******************************************************************************
 
     Copyright (C) 2008, 2009 William Hart
+    Copyright (C) 2011 Sebastian Pancratz
     Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
@@ -31,23 +32,40 @@ _fmprb_poly_mullow_classical(fmprb_ptr res,
     fmprb_srcptr poly1, long len1,
     fmprb_srcptr poly2, long len2, long n, long prec)
 {
-    if ((len1 == 1 && len2 == 1) || n == 1)
+    len1 = FLINT_MIN(len1, n);
+    len2 = FLINT_MIN(len2, n);
+
+    if (n == 1)
     {
         fmprb_mul(res, poly1, poly2, prec);
     }
-    else /* Ordinary case */
+    else if (poly1 == poly2 && len1 == len2)
     {
         long i;
 
-        /* Set res[i] = poly1[i]*poly2[0] */
+        _fmprb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly1, prec);
+        _fmprb_vec_scalar_mul(res + len1, poly1 + 1, n - len1, poly1 + len1 - 1, prec);
+
+        for (i = 1; i < len1 - 1; i++)
+            _fmprb_vec_scalar_addmul(res + i + 1, poly1 + 1,
+                FLINT_MIN(i - 1, n - (i + 1)), poly1 + i, prec);
+
+        for (i = 1; i < FLINT_MIN(2 * len1 - 2, n); i++)
+            fmprb_mul_2exp_si(res + i, res + i, 1);
+
+        for (i = 1; i < FLINT_MIN(len1 - 1, (n + 1) / 2); i++)
+            fmprb_addmul(res + 2 * i, poly1 + i, poly1 + i, prec);
+    }
+    else
+    {
+        long i;
+
         _fmprb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly2, prec);
 
-        /* Set res[i+len1-1] = in1[len1-1]*in2[i] */
         if (n > len1)
             _fmprb_vec_scalar_mul(res + len1, poly2 + 1, n - len1,
                                       poly1 + len1 - 1, prec);
 
-        /* out[i+j] += in1[i]*in2[j] */
         for (i = 0; i < FLINT_MIN(len1, n) - 1; i++)
             _fmprb_vec_scalar_addmul(res + i + 1, poly2 + 1,
                                          FLINT_MIN(len2, n - i) - 1,

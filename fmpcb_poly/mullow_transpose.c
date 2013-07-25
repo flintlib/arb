@@ -71,8 +71,16 @@ _fmpcb_poly_mullow_transpose(fmpcb_ptr res,
     _fmprb_vec_sub(e, e, t, n, prec);
 
     _fmprb_poly_mullow(f, a, len1, d, len2, n, prec);
-    _fmprb_poly_mullow(t, b, len1, c, len2, n, prec);
-    _fmprb_vec_add(f, f, t, n, prec);
+    /* squaring */
+    if (poly1 == poly2 && len1 == len2)
+    {
+        _fmprb_vec_scalar_mul_2exp_si(f, f, n, 1);
+    }
+    else
+    {
+        _fmprb_poly_mullow(t, b, len1, c, len2, n, prec);
+        _fmprb_vec_add(f, f, t, n, prec);
+    }
 
     for (i = 0; i < n; i++)
     {

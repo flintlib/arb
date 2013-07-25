@@ -102,6 +102,33 @@ int main()
             abort();
         }
 
+        /* test squaring */
+        fmpcb_poly_set(b, a);
+        fmpcb_poly_mullow_transpose(c, a, b, trunc, rbits3);
+        fmpcb_poly_mullow_transpose(d, a, a, trunc, rbits3);
+        if (!fmpcb_poly_overlaps(c, d))  /* not guaranteed to be identical */
+        {
+            printf("FAIL (squaring)\n\n");
+
+            printf("a = "); fmpcb_poly_printd(a, 15); printf("\n\n");
+            printf("b = "); fmpcb_poly_printd(b, 15); printf("\n\n");
+            printf("c = "); fmpcb_poly_printd(c, 15); printf("\n\n");
+
+            abort();
+        }
+
+        fmpcb_poly_mullow_transpose(a, a, a, trunc, rbits3);
+        if (!fmpcb_poly_equal(d, a))
+        {
+            printf("FAIL (aliasing, squaring)\n\n");
+
+            printf("a = "); fmpcb_poly_printd(a, 15); printf("\n\n");
+            printf("b = "); fmpcb_poly_printd(b, 15); printf("\n\n");
+            printf("d = "); fmpcb_poly_printd(d, 15); printf("\n\n");
+
+            abort();
+        }
+
         fmpq_poly_clear(A);
         fmpq_poly_clear(B);
         fmpq_poly_clear(C);

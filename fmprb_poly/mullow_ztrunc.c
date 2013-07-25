@@ -167,16 +167,18 @@ void _fmprb_poly_mullow_ztrunc(fmprb_ptr C,
     fmpz_t Aexp, Bexp, Cexp;
     fmpr_t Aerr, Berr, Anorm, Bnorm, err;
     long i;
+    int squaring;
+
+    lenA = FLINT_MIN(lenA, n);
+    lenB = FLINT_MIN(lenB, n);
+
+    squaring = (A == B) && (lenA == lenB);
 
     /* TODO: make the code below work correctly with out this workaround */
     if (_fmprb_vec_rad_has_inf_nan(A, lenA) ||
-        _fmprb_vec_rad_has_inf_nan(B, lenB))
+        (!squaring && _fmprb_vec_rad_has_inf_nan(B, lenB)))
     {
-        for (i = 0; i < n; i++)
-        {
-            fmpr_zero(fmprb_radref(C + i));
-            fmpr_pos_inf(fmprb_radref(C + i));
-        }
+        _fmprb_vec_indeterminate(C, n);
         return;
     }
 
@@ -195,25 +197,43 @@ void _fmprb_poly_mullow_ztrunc(fmprb_ptr C,
     fmpr_init(err);
 
     _fmprb_poly_get_fmpz_poly_2exp(Aerr, Aexp, Acoeffs, A, lenA, prec);
-    _fmprb_poly_get_fmpz_poly_2exp(Berr, Bexp, Bcoeffs, B, lenB, prec);
 
-    /* main multiplication */
-    if (lenA >= lenB)
-        _fmpz_poly_mullow(Ccoeffs, Acoeffs, lenA, Bcoeffs, lenB, n);
+    if (squaring)
+    {
+        _fmpz_poly_sqrlow(Ccoeffs, Acoeffs, lenA, n);
+        fmpz_add(Cexp, Aexp, Aexp);
+
+        /* cross-multiply error bounds: (A+r)(B+s) = A^2 + 2Ar + r^2 */
+        _fmpr_fmpz_vec_max_norm(Anorm, Acoeffs, lenA, FMPRB_RAD_PREC);
+        fmpr_mul_2exp_fmpz(Anorm, Anorm, Aexp);
+
+        fmpr_mul(err, Anorm, Aerr, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul_2exp_si(err, err, 1);
+        fmpr_addmul(err, Aerr, Aerr, FMPRB_RAD_PREC, FMPR_RND_UP);
+    }
     else
-        _fmpz_poly_mullow(Ccoeffs, Bcoeffs, lenB, Acoeffs, lenA, n);
+    {
+        _fmprb_poly_get_fmpz_poly_2exp(Berr, Bexp, Bcoeffs, B, lenB, prec);
 
-    fmpz_add(Cexp, Aexp, Bexp);
+        /* main multiplication */
+        if (lenA >= lenB)
+            _fmpz_poly_mullow(Ccoeffs, Acoeffs, lenA, Bcoeffs, lenB, n);
+        else
+            _fmpz_poly_mullow(Ccoeffs, Bcoeffs, lenB, Acoeffs, lenA, n);
 
-    /* cross-multiply error bounds: (A+r)(B+s) = AB + As + Br + rs */
-    _fmpr_fmpz_vec_max_norm(Anorm, Acoeffs, lenA, FMPRB_RAD_PREC);
-    fmpr_mul_2exp_fmpz(Anorm, Anorm, Aexp);
-    _fmpr_fmpz_vec_max_norm(Bnorm, Bcoeffs, lenB, FMPRB_RAD_PREC);
-    fmpr_mul_2exp_fmpz(Bnorm, Bnorm, Bexp);
+        fmpz_add(Cexp, Aexp, Bexp);
 
-    fmpr_mul(err, Aerr, Berr, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_addmul(err, Anorm, Berr, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_addmul(err, Bnorm, Aerr, FMPRB_RAD_PREC, FMPR_RND_UP);
+        /* cross-multiply error bounds: (A+r)(B+s) = AB + As + Br + rs */
+        _fmpr_fmpz_vec_max_norm(Anorm, Acoeffs, lenA, FMPRB_RAD_PREC);
+        fmpr_mul_2exp_fmpz(Anorm, Anorm, Aexp);
+
+        _fmpr_fmpz_vec_max_norm(Bnorm, Bcoeffs, lenB, FMPRB_RAD_PREC);
+        fmpr_mul_2exp_fmpz(Bnorm, Bnorm, Bexp);
+
+        fmpr_mul(err, Aerr, Berr, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_addmul(err, Anorm, Berr, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_addmul(err, Bnorm, Aerr, FMPRB_RAD_PREC, FMPR_RND_UP);
+    }
 
     for (i = 0; i < n; i++)
     {

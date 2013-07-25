@@ -31,23 +31,40 @@ _fmpcb_poly_mullow_classical(fmpcb_ptr res,
     fmpcb_srcptr poly1, long len1,
     fmpcb_srcptr poly2, long len2, long n, long prec)
 {
-    if ((len1 == 1 && len2 == 1) || n == 1)
+    len1 = FLINT_MIN(len1, n);
+    len2 = FLINT_MIN(len2, n);
+
+    if (n == 1)
     {
         fmpcb_mul(res, poly1, poly2, prec);
     }
-    else /* Ordinary case */
+    else if (poly1 == poly2 && len1 == len2)
     {
         long i;
 
-        /* Set res[i] = poly1[i]*poly2[0] */
+        _fmpcb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly1, prec);
+        _fmpcb_vec_scalar_mul(res + len1, poly1 + 1, n - len1, poly1 + len1 - 1, prec);
+
+        for (i = 1; i < len1 - 1; i++)
+            _fmpcb_vec_scalar_addmul(res + i + 1, poly1 + 1,
+                FLINT_MIN(i - 1, n - (i + 1)), poly1 + i, prec);
+
+        for (i = 1; i < FLINT_MIN(2 * len1 - 2, n); i++)
+            fmpcb_mul_2exp_si(res + i, res + i, 1);
+
+        for (i = 1; i < FLINT_MIN(len1 - 1, (n + 1) / 2); i++)
+            fmpcb_addmul(res + 2 * i, poly1 + i, poly1 + i, prec);
+    }
+    else
+    {
+        long i;
+
         _fmpcb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly2, prec);
 
-        /* Set res[i+len1-1] = in1[len1-1]*in2[i] */
         if (n > len1)
             _fmpcb_vec_scalar_mul(res + len1, poly2 + 1, n - len1,
                                       poly1 + len1 - 1, prec);
 
-        /* out[i+j] += in1[i]*in2[j] */
         for (i = 0; i < FLINT_MIN(len1, n) - 1; i++)
             _fmpcb_vec_scalar_addmul(res + i + 1, poly2 + 1,
                                          FLINT_MIN(len2, n - i) - 1,

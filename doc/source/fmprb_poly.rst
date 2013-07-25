@@ -216,6 +216,10 @@ Arithmetic
     This is typically nearly as fast as *ztrunc*, and the numerical
     stability is essentially as good as *classical*.
 
+    If the input pointers are identical (and the lengths are the same),
+    they are assumed to represent the same polynomial, and its
+    square is computed.
+
 .. function:: void fmprb_poly_mullow_classical(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
 
 .. function:: void fmprb_poly_mullow_ztrunc(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
@@ -225,6 +229,8 @@ Arithmetic
 .. function:: void fmprb_poly_mullow(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long n, long prec)
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
+    If the same variable is passed for *A* and *B*, sets *C* to the square
+    of *A* truncated to length *n*.
 
 .. function:: void _fmprb_poly_mul(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long prec)
 
@@ -233,9 +239,15 @@ Arithmetic
     inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`.
     This function is implemented as a simple wrapper for :func:`_fmprb_poly_mullow`.
 
+    If the input pointers are identical (and the lengths are the same),
+    they are assumed to represent the same polynomial, and its
+    square is computed.
+
 .. function:: void fmprb_poly_mul(fmprb_poly_t C, const fmprb_poly_t A, const fmprb_poly_t B, long prec)
 
     Sets *C* to the product of *A* and *B*.
+    If the same variable is passed for *A* and *B*, sets *C* to the
+    square of *A*.
 
 .. function:: void _fmprb_poly_inv_series(fmprb_ptr Q, fmprb_srcptr A, long Alen, long len, long prec)
 

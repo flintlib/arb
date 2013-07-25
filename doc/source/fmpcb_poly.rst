@@ -173,6 +173,10 @@ Arithmetic
     The default function :func:`_fmpcb_poly_mullow` automatically switches
     been *classical* and *transpose* multiplication.
 
+    If the input pointers are identical (and the lengths are the same),
+    they are assumed to represent the same polynomial, and its
+    square is computed.
+
 .. function:: void fmpcb_poly_mullow_classical(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
 
 .. function:: void fmpcb_poly_mullow_transpose(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
@@ -182,6 +186,8 @@ Arithmetic
 .. function:: void fmpcb_poly_mullow(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long n, long prec)
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
+    If the same variable is passed for *A* and *B*, sets *C* to the
+    square of *A* truncated to length *n*.
 
 .. function:: void _fmpcb_poly_mul(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long prec)
 
@@ -190,9 +196,15 @@ Arithmetic
     inputs. We require `\mathrm{lenA} \ge \mathrm{lenB} > 0`.
     This function is implemented as a simple wrapper for :func:`_fmpcb_poly_mullow`.
 
+    If the input pointers are identical (and the lengths are the same),
+    they are assumed to represent the same polynomial, and its
+    square is computed.
+
 .. function:: void fmpcb_poly_mul(fmpcb_poly_t C, const fmpcb_poly_t A1, const fmpcb_poly_t B2, long prec)
 
     Sets *C* to the product of *A* and *B*.
+    If the same variable is passed for *A* and *B*, sets *C* to
+    the square of *A*.
 
 .. function:: void _fmpcb_poly_inv_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long len, long prec)
 
@@ -328,7 +340,7 @@ Differentiation
 
     Sets *res* to the derivative of *poly*.
 
-.. function:: void _fmprb_poly_integral(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
+.. function:: void _fmpcb_poly_integral(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec)
 
     Sets *{res, len}* to the integral of *{poly, len - 1}*.
     Allows aliasing of the input and output.

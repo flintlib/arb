@@ -165,17 +165,42 @@ is_exact(fmprb_srcptr x, long len)
     return 1;
 }
 
+/* TODO: distribute to get rid of one polynomial multiplication */
 static void
-add_errors(fmprb_ptr z, fmprb_srcptr x, long xlen, fmprb_srcptr y, long ylen, long n)
+add_errors(fmprb_ptr z, fmprb_srcptr x, long xlen, fmprb_srcptr y, long ylen, long n, int squaring)
 {
     int xexact, yexact;
+    const fmpr_struct * xmid = ((fmpr_struct *) x);
+    const fmpr_struct * xrad = ((fmpr_struct *) x) + 1;
+    const fmpr_struct * ymid = ((fmpr_struct *) y);
+    const fmpr_struct * yrad = ((fmpr_struct *) y) + 1;
 
-    xexact = is_exact(x, xlen);
-    yexact = is_exact(y, ylen);
+    if (squaring)
+    {
+        long i;
+        xexact = is_exact(x, xlen);
 
-    if (!yexact)            add_mulbound(z, ((const fmpr_struct *) x), xlen, ((const fmpr_struct *) y) + 1, ylen, n);
-    if (!xexact)            add_mulbound(z, ((const fmpr_struct *) x) + 1, xlen, ((const fmpr_struct *) y), ylen, n);
-    if (!xexact && !yexact) add_mulbound(z, ((const fmpr_struct *) x) + 1, xlen, ((const fmpr_struct *) y) + 1, ylen, n);
+        if (!xexact)
+        {
+            add_mulbound(z, xmid, xlen, xrad, xlen, n);
+
+            /* XXX: for tightness, assumes that z is zero to begin with */
+            for (i = 0; i < n; i++)
+                fmpr_mul_2exp_si(fmprb_radref(z + i), fmprb_radref(z + i), 1);
+
+            add_mulbound(z, xrad, xlen, xrad, xlen, n);
+        }
+
+    }
+    else
+    {
+        xexact = is_exact(x, xlen);
+        yexact = is_exact(y, ylen);
+
+        if (!yexact)            add_mulbound(z, xmid, xlen, yrad, ylen, n);
+        if (!xexact)            add_mulbound(z, xrad, xlen, ymid, ylen, n);
+        if (!xexact && !yexact) add_mulbound(z, xrad, xlen, yrad, ylen, n);
+    }
 }
 
 /* largest block height = ALPHA*prec + BETA */
@@ -282,8 +307,14 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
     fmpr_t t, error;
     fmpz_t xexp, yexp, zexp;
     fmpz *xz, *yz, *zz;
+    int squaring;
 
-    if (has_infnan(x, xlen) || has_infnan(y, ylen))
+    xlen = FLINT_MIN(xlen, n);
+    ylen = FLINT_MIN(ylen, n);
+
+    squaring = (x == y) && (xlen == ylen);
+
+    if (has_infnan(x, xlen) || (!squaring && has_infnan(y, ylen)))
     {
         _fmprb_poly_mullow_classical(z, x, xlen, y, ylen, n, prec);
         return;
@@ -307,15 +338,40 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
 
     /* split input polynomials into blocks with similar-size exponents */
     get_blocks(xblocks, x, xlen, prec);
-    get_blocks(yblocks, y, ylen, prec);
+
+    if (squaring)
+        for (i = 0; i < xlen + 1; i++)
+            yblocks[i] = xblocks[i];
+    else
+        get_blocks(yblocks, y, ylen, prec);
 
     /* start with the zero polynomial plus the error */
     _fmprb_vec_zero(z, n);
-    add_errors(z, x, xlen, y, ylen, n);
+
+    add_errors(z, x, xlen, y, ylen, n, squaring);
+
+    if (squaring)
+    {
+        /* sum of squares of blocks */
+        for (i = 0; (xp = xblocks[i]) != xlen; i++)
+        {
+            if (2 * xp < n)
+            {
+                xl = xblocks[i + 1] - xp;
+                bn = FLINT_MIN(2 * xl - 1, n - 2 * xp);
+                xl = FLINT_MIN(xl, bn);
+
+                _fmprb_poly_get_fmpz_poly_2exp(error, xexp, xz, x + xp, xl, FMPR_PREC_EXACT);
+                _fmpz_poly_sqrlow(zz, xz, xl, bn);
+                fmpz_add(zexp, xexp, xexp);
+                _fmprb_vec_add_fmpz_vec_2exp(z + 2 * xp, z + 2 * xp, zz, zexp, bn, prec);
+            }
+        }
+    }
 
     for (i = 0; (xp = xblocks[i]) != xlen; i++)
     {
-        for (j = 0; (yp = yblocks[j]) != ylen; j++)
+        for (j = squaring ? i + 1 : 0; (yp = yblocks[j]) != ylen; j++)
         {
             if (xp + yp < n)
             {
@@ -336,8 +392,10 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
                             zi = xp + yp + r + s;
 
                             fmpr_mul(t, fmprb_midref(x + xp + r), fmprb_midref(y + yp + s), FMPR_PREC_EXACT, FMPR_RND_DOWN);
-                            ret = fmpr_add(fmprb_midref(z + zi), fmprb_midref(z + zi), t, prec, FMPR_RND_DOWN);
+                            if (squaring)
+                                fmpr_mul_2exp_si(t, t, 1);
 
+                            ret = fmpr_add(fmprb_midref(z + zi), fmprb_midref(z + zi), t, prec, FMPR_RND_DOWN);
                             fmpr_add_error_result(fmprb_radref(z + zi), fmprb_radref(z + zi),
                                 fmprb_midref(z + zi), ret, prec, FMPR_RND_UP);
                         }
@@ -352,6 +410,8 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
                     _fmprb_poly_get_fmpz_poly_2exp(error, yexp, yz, y + yp, yl, FMPR_PREC_EXACT);
                     _fmpz_poly_mullow(zz, xz, xl, yz, yl, bn);
                     fmpz_add(zexp, xexp, yexp);
+                    if (squaring)
+                        fmpz_add_ui(zexp, zexp, 1);
                     _fmprb_vec_add_fmpz_vec_2exp(z + xp + yp, z + xp + yp, zz, zexp, bn, prec);
                 }
             }
