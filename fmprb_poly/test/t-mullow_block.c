@@ -136,6 +136,85 @@ int main()
         fmprb_poly_clear(d);
     }
 
+    for (iter = 0; iter < 3000; iter++)
+    {
+        long rbits1, rbits2, rbits3, trunc;
+        fmprb_poly_t a, b, c, ab, ac, bc, abc, abc2;
+
+        rbits1 = 2 + n_randint(state, 300);
+        rbits2 = 2 + n_randint(state, 300);
+        rbits3 = 2 + n_randint(state, 300);
+        trunc = n_randint(state, 100);
+
+        fmprb_poly_init(a);
+        fmprb_poly_init(b);
+        fmprb_poly_init(c);
+        fmprb_poly_init(ab);
+        fmprb_poly_init(ac);
+        fmprb_poly_init(bc);
+        fmprb_poly_init(abc);
+        fmprb_poly_init(abc2);
+
+        fmprb_poly_randtest(a, state, 1 + n_randint(state, 100), rbits1, 1 + n_randint(state, 100));
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 100), rbits2, 1 + n_randint(state, 100));
+        fmprb_poly_randtest(c, state, 1 + n_randint(state, 100), rbits2, 1 + n_randint(state, 100));
+
+        /* check a*(b+c) = a*b + a*c */
+        fmprb_poly_mullow_block(ab, a, b, trunc, rbits3);
+        fmprb_poly_mullow_block(ac, a, c, trunc, rbits3);
+        fmprb_poly_add(abc, ab, ac, rbits3);
+
+        fmprb_poly_add(bc, b, c, rbits3);
+        fmprb_poly_mullow_block(abc2, a, bc, trunc, rbits3);
+
+        if (!fmprb_poly_overlaps(abc, abc2))
+        {
+            printf("FAIL (a*(b+c) = a*b + a*c) \n\n");
+            printf("bits3 = %ld\n", rbits3);
+            printf("trunc = %ld\n", trunc);
+
+            printf("a = "); fmprb_poly_printd(a, 15); printf("\n\n");
+            printf("b = "); fmprb_poly_printd(b, 15); printf("\n\n");
+            printf("c = "); fmprb_poly_printd(c, 15); printf("\n\n");
+
+            abort();
+        }
+
+        /* check (b+c)^2 = b^2 + 2bc + c^2 */
+        fmprb_poly_mullow_block(a, b, c, trunc, rbits3);
+        fmprb_poly_scalar_mul_2exp_si(a, a, 1);
+        fmprb_poly_mullow_block(abc, b, b, trunc, rbits3);
+        fmprb_poly_mullow_block(abc2, c, c, trunc, rbits3);
+        fmprb_poly_add(abc, abc, a, rbits3);
+        fmprb_poly_add(abc, abc, abc2, rbits3);
+
+        fmprb_poly_mullow_block(abc2, bc, bc, trunc, rbits3);
+
+        if (!fmprb_poly_overlaps(abc, abc2))
+        {
+            printf("FAIL ((b+c)^2 = b^2 + 2bc + c^2) \n\n");
+            printf("bits3 = %ld\n", rbits3);
+            printf("trunc = %ld\n", trunc);
+
+            printf("b = "); fmprb_poly_printd(b, 15); printf("\n\n");
+            printf("c = "); fmprb_poly_printd(c, 15); printf("\n\n");
+
+            printf("abc  = "); fmprb_poly_printd(abc, 15); printf("\n\n");
+            printf("abc2 = "); fmprb_poly_printd(abc2, 15); printf("\n\n");
+
+            abort();
+        }
+
+        fmprb_poly_clear(a);
+        fmprb_poly_clear(b);
+        fmprb_poly_clear(c);
+        fmprb_poly_clear(ab);
+        fmprb_poly_clear(ac);
+        fmprb_poly_clear(bc);
+        fmprb_poly_clear(abc);
+        fmprb_poly_clear(abc2);
+    }
+
     flint_randclear(state);
     _fmpz_cleanup();
     printf("PASS\n");
