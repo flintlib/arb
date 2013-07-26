@@ -29,7 +29,6 @@ static void
 fmprb_randtest2(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 {
     fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
-
     fmpr_randtest_not_zero(fmprb_radref(x), state, FMPRB_RAD_PREC, 4);
     fmpr_abs(fmprb_radref(x), fmprb_radref(x));
     fmpz_add(fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_radref(x)), fmpr_expref(fmprb_midref(x)));

@@ -27,13 +27,6 @@
 #include "gamma.h"
 #include "zeta.h"
 
-/*
->>> print zeta(s); print (2*pi)**s * sin(pi*s/2) / pi * gamma(1-s) * zeta(1-s)
-0.00259925498714932
-0.00259925498714933
-*/
-
-
 static __inline__ void
 _fmprb_vec_printd(fmprb_srcptr vec, long len, long digits)
 {
@@ -106,7 +99,6 @@ _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr h, long hlen, const fmprb_t a, 
         fmprb_mul_2exp_si(pi, pi, 1);
         _fmprb_poly_pow_cpx(s1, pi, h, len, prec);
         fmprb_mul_2exp_si(pi, pi, -1);
-        /* printf("s1:\n"); _fmprb_vec_printd(s1, len, 15); printf("\n"); */
 
         /* s2 = sin(pi*s/2) / pi */
         fmprb_mul_2exp_si(pi, pi, -1);
@@ -115,14 +107,12 @@ _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr h, long hlen, const fmprb_t a, 
         fmprb_mul_2exp_si(pi, pi, 1);
         _fmprb_poly_sin_series(s2, f, 2, len, prec);
         _fmprb_vec_scalar_div(s2, s2, len, pi, prec);
-        /* printf("s2:\n"); _fmprb_vec_printd(s2, len, 15); printf("\n"); */
 
         /* s3 = gamma(1-s) */
         fmprb_sub_ui(f, h, 1, prec);
         fmprb_neg(f, f);
         fmprb_set_si(f + 1, -1);
         _fmprb_poly_gamma_series(s3, f, 2, len, prec);
-        /* printf("s3:\n"); _fmprb_vec_printd(s3, len, 15); printf("\n"); */
 
         /* s4 = zeta(1-s) */
         fmprb_sub_ui(f, h, 1, prec);
@@ -134,13 +124,12 @@ _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr h, long hlen, const fmprb_t a, 
             fmprb_set(s4 + i, fmpcb_realref(z + i));
         for (i = 1; i < len; i += 2)
             fmprb_neg(s4 + i, s4 + i);
-        /* printf("s4:\n"); _fmprb_vec_printd(s4, len, 15); printf("\n"); */
 
         _fmprb_poly_mullow(u, s1, len, s2, len, len, prec);
         _fmprb_poly_mullow(s1, s3, len, s4, len, len, prec);
         _fmprb_poly_mullow(t, u, len, s1, len, len, prec);
 
-        /* add 1/(1-(h+t)) = 1/(1-h) + t/(1-h)^2 + ... */
+        /* add 1/(1-(s+t)) = 1/(1-s) + t/(1-s)^2 + ... */
         if (deflate)
         {
             fmprb_sub_ui(u, h, 1, prec);
@@ -195,7 +184,6 @@ fmprb_poly_zeta_series(fmprb_poly_t res, const fmprb_poly_t f, const fmprb_t a, 
         fmprb_t t;
         fmprb_init(t);
         _fmprb_poly_zeta_series(res->coeffs, t, 1, a, deflate, n, prec);
-        printf("hga\n");
         fmprb_clear(t);
     }
     else

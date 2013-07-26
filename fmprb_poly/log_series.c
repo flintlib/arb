@@ -60,14 +60,17 @@ _fmprb_poly_log_series(fmprb_ptr res, fmprb_srcptr f, long flen, long n, long pr
 void
 fmprb_poly_log_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec)
 {
-    if (f->length == 0 || n == 0)
+    if (n == 0)
     {
-        printf("fmprb_poly_log_series: require n > 0 and nonzero input\n");
-        abort();
+        fmprb_poly_zero(res);
+        return;
     }
 
     fmprb_poly_fit_length(res, n);
-    _fmprb_poly_log_series(res->coeffs, f->coeffs, f->length, n, prec);
+    if (f->length == 0)
+        _fmprb_vec_indeterminate(res->coeffs, n);
+    else
+        _fmprb_poly_log_series(res->coeffs, f->coeffs, f->length, n, prec);
     _fmprb_poly_set_length(res, n);
     _fmprb_poly_normalise(res);
 }
