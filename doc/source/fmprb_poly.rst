@@ -668,15 +668,15 @@ Special functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
-.. function:: void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_gamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
 
-.. function:: void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_rgamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
 
-.. function:: void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long n, long prec)
+.. function:: void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
 
@@ -700,7 +700,7 @@ Special functions
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
     are at least 1, and does not support aliasing. Uses binary splitting.
 
-.. function:: void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr s, long slen, const fmprb_t a, int deflate, long n, long prec)
+.. function:: void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr s, long slen, const fmprb_t a, int deflate, long n, long prec)
 
 .. function:: void fmprb_poly_zeta_series(fmprb_poly_t res, const fmprb_poly_t s, const fmprb_t a, int deflate, long n, long prec)
 

@@ -28,7 +28,7 @@
 #include "zeta.h"
 
 void
-_fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
+_fmprb_poly_gamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec)
 {
     int reflect;
     long i, rflen, r, n, wp;

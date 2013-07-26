@@ -58,7 +58,7 @@ _fmprb_poly_pow_cpx(fmprb_ptr res, const fmprb_t c, const fmprb_t d, long trunc,
 }
 
 void
-_fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr h, long hlen, const fmprb_t a, int deflate, long len, long prec)
+_fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, const fmprb_t a, int deflate, long len, long prec)
 {
     long i;
     fmpcb_t cs, ca;

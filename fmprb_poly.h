@@ -492,15 +492,15 @@ void _fmprb_poly_tan_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long len, lo
 
 void fmprb_poly_tan_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec);
 
-void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
+void _fmprb_poly_gamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec);
 
 void fmprb_poly_gamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
-void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
+void _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec);
 
 void fmprb_poly_rgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
-void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec);
+void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec);
 
 void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
@@ -508,7 +508,7 @@ void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong 
 
 void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec);
 
-void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_ptr h, long hlen, const fmprb_t a, int deflate, long len, long prec);
+void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, const fmprb_t a, int deflate, long len, long prec);
 
 void fmprb_poly_zeta_series(fmprb_poly_t res, const fmprb_poly_t f, const fmprb_t a, int deflate, long n, long prec);
 

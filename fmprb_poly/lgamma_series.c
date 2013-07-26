@@ -47,7 +47,7 @@ _log_rfac_series(fmprb_ptr t, const fmprb_t x, long r, long len, long prec)
 }
 
 void
-_fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_ptr h, long hlen, long len, long prec)
+_fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec)
 {
     int reflect;
     long r, n, wp;
