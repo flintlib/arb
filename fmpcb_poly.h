@@ -476,5 +476,22 @@ void _fmpcb_poly_tan_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long len, lo
 
 void fmpcb_poly_tan_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
 
+void _fmpcb_poly_gamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_gamma_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);
+
+void _fmpcb_poly_rgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_rgamma_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);
+
+void _fmpcb_poly_lgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_lgamma_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);
+
+void _fmpcb_poly_rfac_series_ui(fmpcb_ptr res, fmpcb_srcptr f, long flen, ulong r, long trunc, long prec);
+
+void fmpcb_poly_rfac_series_ui(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, long trunc, long prec);
+
+
 #endif
 
