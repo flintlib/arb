@@ -283,6 +283,66 @@ void fmpcb_poly_divrem(fmpcb_poly_t Q, fmpcb_poly_t R,
 void _fmpcb_poly_div_root(fmpcb_ptr Q, fmpcb_t R, fmpcb_srcptr A,
     long len, const fmpcb_t c, long prec);
 
+/* Composition */
+
+void _fmpcb_poly_compose(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long prec);
+
+void fmpcb_poly_compose(fmpcb_poly_t res,
+              const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec);
+
+void _fmpcb_poly_compose_horner(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long prec);
+
+void fmpcb_poly_compose_horner(fmpcb_poly_t res,
+              const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec);
+
+void _fmpcb_poly_compose_divconquer(fmpcb_ptr res,
+    fmpcb_srcptr poly1, long len1,
+    fmpcb_srcptr poly2, long len2, long prec);
+
+void fmpcb_poly_compose_divconquer(fmpcb_poly_t res,
+              const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec);
+
+void _fmpcb_poly_compose_series_horner(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
+                            fmpcb_srcptr poly2, long len2, long n, long prec);
+
+void fmpcb_poly_compose_series_horner(fmpcb_poly_t res,
+                    const fmpcb_poly_t poly1,
+                    const fmpcb_poly_t poly2, long n, long prec);
+
+void _fmpcb_poly_compose_series_brent_kung(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
+                            fmpcb_srcptr poly2, long len2, long n, long prec);
+
+void fmpcb_poly_compose_series_brent_kung(fmpcb_poly_t res,
+                    const fmpcb_poly_t poly1,
+                    const fmpcb_poly_t poly2, long n, long prec);
+
+void _fmpcb_poly_compose_series(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
+                            fmpcb_srcptr poly2, long len2, long n, long prec);
+
+void fmpcb_poly_compose_series(fmpcb_poly_t res,
+                    const fmpcb_poly_t poly1,
+                    const fmpcb_poly_t poly2, long n, long prec);
+
+/* Reversion */
+
+void _fmpcb_poly_revert_series_lagrange(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void fmpcb_poly_revert_series_lagrange(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
+
+void _fmpcb_poly_revert_series_newton(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void fmpcb_poly_revert_series_newton(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
+
+void _fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void fmpcb_poly_revert_series_lagrange_fast(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
+
+void _fmpcb_poly_revert_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void fmpcb_poly_revert_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
+
+
+
 void
 _fmpcb_poly_evaluate_vec_fast_precomp(fmpcb_ptr vs, fmpcb_srcptr poly,
     long plen, fmpcb_ptr * tree, long len, long prec);

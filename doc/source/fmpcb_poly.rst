@@ -304,6 +304,74 @@ Arithmetic
     Divides `A` by the polynomial `x - c`, computing the quotient `Q` as well
     as the remainder `R = f(c)`.
 
+Composition
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_compose_horner(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long prec)
+
+.. function:: void fmpcb_poly_compose_horner(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+
+.. function:: void _fmpcb_poly_compose_divconquer(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long prec)
+
+.. function:: void fmpcb_poly_compose_divconquer(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+
+.. function:: void _fmpcb_poly_compose(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long prec)
+
+.. function:: void fmpcb_poly_compose(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long prec)
+
+    Sets *res* to the composition `h(x) = f(g(x))` where `f` is given by
+    *poly1* and `g` is given by *poly2*, respectively using Horner's rule,
+    divide-and-conquer, and an automatic choice between the two algorithms.
+    The underscore methods do not support aliasing of the output
+    with either input polynomial.
+
+.. function:: void _fmpcb_poly_compose_series_horner(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_compose_series_horner(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+.. function:: void _fmpcb_poly_compose_series_brent_kung(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_compose_series_brent_kung(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+.. function:: void _fmpcb_poly_compose_series(fmpcb_ptr res, fmpcb_srcptr poly1, long len1, fmpcb_srcptr poly2, long len2, long n, long prec)
+
+.. function:: void fmpcb_poly_compose_series(fmpcb_poly_t res, const fmpcb_poly_t poly1, const fmpcb_poly_t poly2, long n, long prec)
+
+    Sets *res* to the power series composition `h(x) = f(g(x))` truncated
+    to order `O(x^n)` where `f` is given by *poly1* and `g` is given by *poly2*,
+    respectively using Horner's rule, the Brent-Kung baby step-giant step
+    algorithm, and an automatic choice between the two algorithms.
+    We require that the constant term in `g(x)` is exactly zero.
+    The underscore methods do not support aliasing of the output
+    with either input polynomial.
+
+
+.. function:: void _fmpcb_poly_revert_series_lagrange(fmpcb_ptr h, fmpcb_srcptr f, long n, long prec)
+
+.. function:: void fmpcb_poly_revert_series_lagrange(fmpcb_poly_t h, const fmpcb_poly_t f, long n, long prec)
+
+.. function:: void _fmpcb_poly_revert_series_newton(fmpcb_ptr h, fmpcb_srcptr f, long n, long prec)
+
+.. function:: void fmpcb_poly_revert_series_newton(fmpcb_poly_t h, const fmpcb_poly_t f, long n, long prec)
+
+.. function:: void _fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr h, fmpcb_srcptr f, long n, long prec)
+
+.. function:: void fmpcb_poly_revert_series_lagrange_fast(fmpcb_poly_t h, const fmpcb_poly_t f, long n, long prec)
+
+.. function:: void _fmpcb_poly_revert_series(fmpcb_ptr h, fmpcb_srcptr f, long n, long prec)
+
+.. function:: void fmpcb_poly_revert_series(fmpcb_poly_t h, const fmpcb_poly_t f, long n, long prec)
+
+    Sets `h` to the power series reversion of `f`, i.e. the expansion
+    of the compositional inverse function `f^{-1}(x)`,
+    truncated to order `O(x^n)`, using respectively
+    Lagrange inversion, Newton iteration, fast Lagrange inversion,
+    and a default algorithm choice.
+
+    We require that the constant term in `f` is exactly zero and that the
+    linear term is nonzero. The underscore methods assume that `f` is zero-padded to length `n`
+    and do not support aliasing.
+
 Evaluation
 -------------------------------------------------------------------------------
 
