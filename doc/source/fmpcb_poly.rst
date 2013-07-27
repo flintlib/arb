@@ -511,6 +511,117 @@ Differentiation
     Sets *res* to the integral of *poly*.
 
 
+Special functions
+-------------------------------------------------------------------------------
+
+.. function:: void _fmpcb_poly_log_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec)
+
+.. function:: void fmpcb_poly_log_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec)
+
+    Sets *res* to the power series logarithm of *f*, truncated to length *n*.
+    Uses the formula `\log(f(x)) = \int f'(x) / f(x) dx`, adding the logarithm of the
+    constant term in *f* as the constant of integration.
+
+    The underscore method supports aliasing of the input and output
+    arrays. It requires that *flen* and *n* are greater than zero.
+
+.. function:: void _fmpcb_poly_atan_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec)
+
+.. function:: void fmpcb_poly_atan_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec)
+
+    Sets *res* the power series inverse tangent of *f*, truncated to length *n*.
+
+    Uses the formula
+
+    .. math ::
+
+        \tan^{-1}(f(x)) = \int f'(x) / (1+f(x)^2) dx,
+
+    adding the function of the constant term in *f* as the constant of integration.
+
+    The underscore method supports aliasing of the input and output
+    arrays. It requires that *flen* and *n* are greater than zero.
+
+.. function:: void _fmpcb_poly_exp_series_basecase(fmpcb_ptr f, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_exp_series_basecase(fmpcb_poly_t f, const fmpcb_poly_t h, long n, long prec)
+
+.. function:: void _fmpcb_poly_exp_series(fmpcb_ptr f, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_exp_series(fmpcb_poly_t f, const fmpcb_poly_t h, long n, long prec)
+
+    Sets `f` to the power series exponential of `h`, truncated to length `n`.
+
+    The basecase version uses a simple recurrence for the coefficients,
+    requiring `O(nm)` operations where `m` is the length of `h`.
+
+    The main implementation uses Newton iteration, starting from a small
+    number of terms given by the basecase algorithm. The complexity
+    is `O(M(n))`. Redundant operations in the Newton iteration are
+    avoided by using the scheme described in [HZ2004]_.
+
+    The underscore methods support aliasing and allow the input to be
+    shorter than the output, but require the lengths to be nonzero.
+
+.. function:: void _fmpcb_poly_sin_cos_series_basecase(fmpcb_ptr s, fmpcb_ptr c, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_sin_cos_series_basecase(fmpcb_poly_t s, fmpcb_poly_t c, const fmpcb_poly_t h, long n, long prec)
+
+.. function:: void _fmpcb_poly_sin_cos_series_tangent(fmpcb_ptr s, fmpcb_ptr c, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_sin_cos_series_tangent(fmpcb_poly_t s, fmpcb_poly_t c, const fmpcb_poly_t h, long n, long prec)
+
+.. function:: void _fmpcb_poly_sin_cos_series(fmpcb_ptr s, fmpcb_ptr c, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_sin_cos_series(fmpcb_poly_t s, fmpcb_poly_t c, const fmpcb_poly_t h, long n, long prec)
+
+    Sets *s* and *c* to the power series sine and cosine of *h*, computed
+    simultaneously.
+
+    The *basecase* version uses a simple recurrence for the coefficients,
+    requiring `O(nm)` operations where `m` is the length of `h`.
+
+    The *tangent* version uses the tangent half-angle formulas to compute
+    the sine and cosine via :func:`_fmpcb_poly_tan_series`. This
+    requires `O(M(n))` operations.
+    When `h = h_0 + h_1` where the constant term `h_0` is nonzero,
+    the evaluation is done as
+    `\sin(h_0 + h_1) = \cos(h_0) \sin(h_1) + \sin(h_0) \cos(h_1)`,
+    `\cos(h_0 + h_1) = \cos(h_0) \cos(h_1) - \sin(h_0) \sin(h_1)`,
+    to improve accuracy and avoid dividing by zero at the poles of
+    the tangent function.
+
+    The default version automatically selects between the *basecase* and
+    *tangent* algorithms depending on the input.
+
+    The underscore methods support aliasing and require the lengths to be nonzero.
+
+.. function:: void _fmpcb_poly_sin_series(fmpcb_ptr s, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_sin_series(fmpcb_poly_t s, const fmpcb_poly_t h, long n, long prec)
+
+.. function:: void _fmpcb_poly_cos_series(fmpcb_ptr c, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_cos_series(fmpcb_poly_t c, const fmpcb_poly_t h, long n, long prec)
+
+    Respectively evaluates the power series sine or cosine. These functions
+    simply wrap :func:`_fmpcb_poly_sin_cos_series`. The underscore methods
+    support aliasing and require the lengths to be nonzero.
+
+.. function:: void _fmpcb_poly_tan_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long len, long prec)
+
+.. function:: void fmpcb_poly_tan_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
+
+    Sets *g* to the power series tangent of *h*.
+
+    For small *n* takes the quotient of the sine and cosine as computed
+    using the basecase algorithm. For large *n*, uses Newton iteration
+    to invert the inverse tangent series. The complexity is `O(M(n))`.
+
+    The underscore version does not support aliasing, and requires
+    the lengths to be nonzero.
+
+
 Root-finding
 -------------------------------------------------------------------------------
 

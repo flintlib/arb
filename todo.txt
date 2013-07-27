@@ -93,4 +93,5 @@
 * Tune basecase/Newton selection for exp/sin/cos series (the basecase
   algorithms are more stable, and faster for quite large n)
 
+* Look at using the exponential to compute the complex sine/cosine series
 

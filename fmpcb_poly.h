@@ -427,4 +427,54 @@ long fmpcb_poly_find_roots(fmpcb_ptr roots,
     const fmpcb_poly_t poly, fmpcb_srcptr initial,
     long maxiter, long prec);
 
+/* Special functions */
+
+void _fmpcb_poly_log_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec);
+
+void fmpcb_poly_log_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);
+
+void _fmpcb_poly_atan_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec);
+
+void fmpcb_poly_atan_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);
+
+void _fmpcb_poly_exp_series_basecase(fmpcb_ptr f,
+        fmpcb_srcptr h, long hlen, long n, long prec);
+
+void fmpcb_poly_exp_series_basecase(fmpcb_poly_t f, const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_exp_series(fmpcb_ptr f, fmpcb_srcptr h, long hlen, long n, long prec);
+
+void fmpcb_poly_exp_series(fmpcb_poly_t f, const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_sin_cos_series_basecase(fmpcb_ptr s,
+                                    fmpcb_ptr c, fmpcb_srcptr h, long hlen, long n, long prec);
+
+void fmpcb_poly_sin_cos_series_basecase(fmpcb_poly_t s, fmpcb_poly_t c,
+        const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_sin_cos_series_tangent(fmpcb_ptr s, fmpcb_ptr c,
+                        const fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_sin_cos_series_tangent(fmpcb_poly_t s, fmpcb_poly_t c,
+                                    const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_sin_cos_series(fmpcb_ptr s, fmpcb_ptr c,
+                        const fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_sin_cos_series(fmpcb_poly_t s, fmpcb_poly_t c,
+                                    const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_sin_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long n, long prec);
+
+void fmpcb_poly_sin_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_cos_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long n, long prec);
+
+void fmpcb_poly_cos_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_tan_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_tan_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
+
 #endif
+

@@ -745,4 +745,10 @@ _fmpcb_vec_set_powers(fmpcb_ptr xs, const fmpcb_t x, long len, long prec)
     }
 }
 
+static __inline__ void
+_fmpcb_vec_indeterminate(fmpcb_ptr vec, long len)
+{
+    _fmprb_vec_indeterminate((fmprb_ptr) vec, 2 * len);
+}
+
 #endif
