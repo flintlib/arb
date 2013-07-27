@@ -746,6 +746,17 @@ _fmpcb_vec_set_powers(fmpcb_ptr xs, const fmpcb_t x, long len, long prec)
 }
 
 static __inline__ void
+_fmpcb_vec_add_error_fmpr_vec(fmpcb_ptr res, fmpr_srcptr err, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        fmprb_add_error_fmpr(fmpcb_realref(res + i), err + i);
+        fmprb_add_error_fmpr(fmpcb_imagref(res + i), err + i);
+    }
+}
+
+static __inline__ void
 _fmpcb_vec_indeterminate(fmpcb_ptr vec, long len)
 {
     _fmprb_vec_indeterminate((fmprb_ptr) vec, 2 * len);
