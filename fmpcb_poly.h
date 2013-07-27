@@ -67,6 +67,11 @@ static __inline__ long fmpcb_poly_length(const fmpcb_poly_t poly)
     return poly->length;
 }
 
+static __inline__ long fmpcb_poly_degree(const fmpcb_poly_t poly)
+{
+    return poly->length - 1;
+}
+
 static __inline__ void fmpcb_poly_zero(fmpcb_poly_t poly)
 {
     poly->length = 0;
@@ -79,6 +84,15 @@ fmpcb_poly_one(fmpcb_poly_t poly)
     fmpcb_one(poly->coeffs);
     _fmpcb_poly_set_length(poly, 1);
 }
+
+void fmpcb_poly_set_coeff_si(fmpcb_poly_t poly, long n, long x);
+
+void fmpcb_poly_set_coeff_fmpcb(fmpcb_poly_t poly, long n, const fmpcb_t x);
+
+void fmpcb_poly_get_coeff_fmpcb(fmpcb_t x, const fmpcb_poly_t poly, long n);
+
+#define fmpcb_poly_get_coeff_ptr(poly, n) \
+    ((n) < (poly)->length ? (poly)->coeffs + (n) : NULL)
 
 void fmpcb_poly_printd(const fmpcb_poly_t poly, long digits);
 

@@ -75,7 +75,7 @@ Basic manipulation
 
 .. macro:: fmprb_poly_get_coeff_ptr(poly, n)
 
-    Given `n >= 0`, returns a pointer to coefficient *n* of *poly*,
+    Given `n \ge 0`, returns a pointer to coefficient *n* of *poly*,
     or *NULL* if *n* exceeds the length of *poly*.
 
 .. function:: void _fmprb_poly_shift_right(fmprb_ptr res, fmprb_srcptr poly, long len, long n)

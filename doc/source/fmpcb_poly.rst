@@ -61,7 +61,18 @@ Basic properties and manipulation
 
 .. function:: long fmpcb_poly_length(const fmpcb_poly_t poly)
 
-    Returns the length of the polynomial.
+    Returns the length of *poly*, i.e. zero if *poly* is
+    identically zero, and otherwise one more than the index
+    of the highest term that is not identically zero.
+
+.. function:: long fmpcb_poly_degree(const fmpcb_poly_t poly)
+
+    Returns the degree of *poly*, defined as one less than its length.
+    Note that if one or several leading coefficients are balls
+    containing zero, this value can be larger than the true
+    degree of the exact polynomial represented by *poly*,
+    so the return value of this function is effectively
+    an upper bound.
 
 .. function:: void fmpcb_poly_zero(fmpcb_poly_t poly)
 
@@ -74,6 +85,23 @@ Basic properties and manipulation
 .. function:: void fmpcb_poly_set(fmpcb_poly_t dest, const fmpcb_poly_t src)
 
     Sets *dest* to a copy of *src*.
+
+.. function:: void fmpcb_poly_set_coeff_si(fmpcb_poly_t poly, long n, long c)
+
+.. function:: void fmpcb_poly_set_coeff_fmpcb(fmpcb_poly_t poly, long n, const fmpcb_t c)
+
+    Sets the coefficient with index *n* in *poly* to the value *c*.
+    We require that *n* is nonnegative.
+
+.. function:: void fmpcb_poly_get_coeff_fmpcb(fmpcb_t v, const fmpcb_poly_t poly, long n)
+-
+    Sets *v* to the value of the coefficient with index *n* in *poly*.
+    We require that *n* is nonnegative.
+
+.. macro:: fmpcb_poly_get_coeff_ptr(poly, n)
+
+    Given `n \ge 0`, returns a pointer to coefficient *n* of *poly*,
+    or *NULL* if *n* exceeds the length of *poly*.
 
 Input and output
 -------------------------------------------------------------------------------
