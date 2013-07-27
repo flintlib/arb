@@ -23,10 +23,10 @@
 
 ******************************************************************************/
 
-#include "fmpcb_poly.h"
+#include "fmprb_poly.h"
 
 int
-fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+fmprb_poly_contains(const fmprb_poly_t poly1, const fmprb_poly_t poly2)
 {
     long i;
 
@@ -35,12 +35,12 @@ fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
 
     for (i = 0; i < poly2->length; i++)
     {
-        if (!fmpcb_contains(poly1->coeffs + i, poly2->coeffs + i))
+        if (!fmprb_contains(poly1->coeffs + i, poly2->coeffs + i))
             return 0;
     }
 
     for (i = poly2->length; i < poly1->length; i++)
-        if (!fmpcb_contains_zero(poly1->coeffs + i))
+        if (!fmprb_contains_zero(poly1->coeffs + i))
             return 0;
 
     return 1;

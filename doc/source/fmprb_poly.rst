@@ -144,6 +144,8 @@ Random generation
 Comparisons
 -------------------------------------------------------------------------------
 
+.. function:: int fmprb_poly_contains(const fmprb_poly_t poly1, const fmprb_poly_t poly2)
+
 .. function:: int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)
 
     Returns nonzero iff *poly1* contains *poly2*.

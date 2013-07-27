@@ -141,6 +141,8 @@ void fmprb_poly_set_si(fmprb_poly_t poly, long c);
 
 /* Comparisons */
 
+int fmprb_poly_contains(const fmprb_poly_t poly1, const fmprb_poly_t poly2);
+
 int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
 
 int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B);

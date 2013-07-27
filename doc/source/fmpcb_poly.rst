@@ -94,7 +94,7 @@ Basic properties and manipulation
     We require that *n* is nonnegative.
 
 .. function:: void fmpcb_poly_get_coeff_fmpcb(fmpcb_t v, const fmpcb_poly_t poly, long n)
--
+
     Sets *v* to the value of the coefficient with index *n* in *poly*.
     We require that *n* is nonnegative.
 
@@ -144,9 +144,9 @@ Comparisons
 
     Returns nonzero iff *A* and *B* are identical as interval polynomials.
 
-.. function:: int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2)
-
 .. function:: int fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+
+.. function:: int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2)
 
     Returns nonzero iff *poly2* is contained in *poly1*.
 
@@ -161,6 +161,8 @@ Comparisons
 Conversions
 -------------------------------------------------------------------------------
 
+.. function:: void fmpcb_poly_set_fmpz_poly(fmpcb_poly_t poly, const fmpz_poly_t re, long prec)
+
 .. function:: void fmpcb_poly_set_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re)
 
 .. function:: void fmpcb_poly_set2_fmprb_poly(fmpcb_poly_t poly, const fmprb_poly_t re, const fmprb_poly_t im)
@@ -169,8 +171,14 @@ Conversions
 
 .. function:: void fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec)
 
-    Sets *poly* to the given real polynomial *re* plus the polynomial *im*
-    multiplied by the imaginary unit.
+    Sets *poly* to the given real part *re* plus the imaginary part *im*,
+    both rounded to *prec* bits.
+
+.. function:: void fmpcb_poly_set_fmpcb(fmpcb_poly_t poly, long src)
+
+.. function:: void fmpcb_poly_set_si(fmpcb_poly_t poly, long src)
+
+    Sets *poly* to *src*.
 
 
 Arithmetic
@@ -193,6 +201,14 @@ Arithmetic
 .. function:: void fmpcb_poly_sub(fmpcb_poly_t C, const fmpcb_poly_t A, const fmpcb_poly_t B, long prec)
 
     Sets *C* to the difference of *A* and *B*.
+
+.. function:: void fmpcb_poly_neg(fmpcb_poly_t C, const fmpcb_poly_t A)
+
+    Sets *C* to the negation of *A*.
+
+.. function:: void fmpcb_poly_scalar_mul_2exp_si(fmpcb_poly_t C, const fmpcb_poly_t A, long c)
+
+    Sets *C* to *A* multiplied by `2^c`.
 
 .. function:: void _fmpcb_poly_mullow_classical(fmpcb_ptr C, fmpcb_srcptr A, long lenA, fmpcb_srcptr B, long lenB, long n, long prec)
 

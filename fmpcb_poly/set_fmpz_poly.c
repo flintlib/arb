@@ -25,23 +25,14 @@
 
 #include "fmpcb_poly.h"
 
-int
-fmpcb_poly_contains(const fmpcb_poly_t poly1, const fmpcb_poly_t poly2)
+void
+fmpcb_poly_set_fmpz_poly(fmpcb_poly_t poly, const fmpz_poly_t src, long prec)
 {
-    long i;
+    long i, len = fmpz_poly_length(src);
 
-    if (poly2->length > poly1->length)
-        return 0;
+    fmpcb_poly_fit_length(poly, len);
+    _fmpcb_poly_set_length(poly, len);
 
-    for (i = 0; i < poly2->length; i++)
-    {
-        if (!fmpcb_contains(poly1->coeffs + i, poly2->coeffs + i))
-            return 0;
-    }
-
-    for (i = poly2->length; i < poly1->length; i++)
-        if (!fmpcb_contains_zero(poly1->coeffs + i))
-            return 0;
-
-    return 1;
+    for (i = 0; i < len; i++)
+        fmpcb_set_round_fmpz(poly->coeffs + i, src->coeffs + i, prec);
 }

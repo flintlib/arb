@@ -139,6 +139,18 @@ void fmpcb_poly_set_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, long prec
 
 void fmpcb_poly_set2_fmpq_poly(fmpcb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec);
 
+void fmpcb_poly_set_fmpz_poly(fmpcb_poly_t poly, const fmpz_poly_t src, long prec);
+
+static __inline__ void
+fmpcb_poly_set_fmpcb(fmpcb_poly_t poly, const fmpcb_t c)
+{
+    fmpcb_poly_fit_length(poly, 1);
+    fmpcb_set(poly->coeffs, c);
+    _fmpcb_poly_set_length(poly, !fmpcb_is_zero(poly->coeffs));
+}
+
+void fmpcb_poly_set_si(fmpcb_poly_t poly, long c);
+
 void fmpcb_poly_randtest(fmpcb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits);
 
 int fmpcb_poly_equal(const fmpcb_poly_t A, const fmpcb_poly_t B);
@@ -163,6 +175,22 @@ void _fmpcb_poly_sub(fmpcb_ptr res, fmpcb_srcptr poly1, long len1,
 
 void fmpcb_poly_sub(fmpcb_poly_t res, const fmpcb_poly_t poly1,
               const fmpcb_poly_t poly2, long prec);
+
+static __inline__ void
+fmpcb_poly_neg(fmpcb_poly_t res, const fmpcb_poly_t poly)
+{
+    fmpcb_poly_fit_length(res, poly->length);
+    _fmpcb_vec_neg(res->coeffs, poly->coeffs, poly->length);
+    _fmpcb_poly_set_length(res, poly->length);
+}
+
+static __inline__ void
+fmpcb_poly_scalar_mul_2exp_si(fmpcb_poly_t res, const fmpcb_poly_t poly, long c)
+{
+    fmpcb_poly_fit_length(res, poly->length);
+    _fmpcb_vec_scalar_mul_2exp_si(res->coeffs, poly->coeffs, poly->length, c);
+    _fmpcb_poly_set_length(res, poly->length);
+}
 
 void fmpcb_poly_mullow_classical(fmpcb_poly_t res, const fmpcb_poly_t poly1,
                                             const fmpcb_poly_t poly2,
