@@ -94,6 +94,27 @@ void fmpcb_poly_get_coeff_fmpcb(fmpcb_t x, const fmpcb_poly_t poly, long n);
 #define fmpcb_poly_get_coeff_ptr(poly, n) \
     ((n) < (poly)->length ? (poly)->coeffs + (n) : NULL)
 
+void _fmpcb_poly_shift_right(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n);
+
+void fmpcb_poly_shift_right(fmpcb_poly_t res, const fmpcb_poly_t poly, long n);
+
+void _fmpcb_poly_shift_left(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n);
+
+void fmpcb_poly_shift_left(fmpcb_poly_t res, const fmpcb_poly_t poly, long n);
+
+static __inline__ void
+fmpcb_poly_truncate(fmpcb_poly_t poly, long newlen)
+{
+    if (poly->length > newlen)
+    {
+        long i;
+        for (i = newlen; i < poly->length; i++)
+            fmpcb_zero(poly->coeffs + i);
+        poly->length = newlen;
+        _fmpcb_poly_normalise(poly);
+    }
+}
+
 void fmpcb_poly_printd(const fmpcb_poly_t poly, long digits);
 
 void _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec);

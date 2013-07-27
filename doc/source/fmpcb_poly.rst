@@ -103,6 +103,25 @@ Basic properties and manipulation
     Given `n \ge 0`, returns a pointer to coefficient *n* of *poly*,
     or *NULL* if *n* exceeds the length of *poly*.
 
+.. function:: void _fmpcb_poly_shift_right(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n)
+
+.. function:: void fmpcb_poly_shift_right(fmpcb_poly_t res, const fmpcb_poly_t poly, long n)
+
+    Sets *res* to *poly* divided by `x^n`, throwing away the lower coefficients.
+    We require that *n* is nonnegative.
+
+.. function:: void _fmpcb_poly_shift_left(fmpcb_ptr res, fmpcb_srcptr poly, long len, long n)
+
+.. function:: void fmpcb_poly_shift_left(fmpcb_poly_t res, const fmpcb_poly_t poly, long n)
+
+    Sets *res* to *poly* multiplied by `x^n`.
+    We require that *n* is nonnegative.
+
+.. function:: void fmpcb_poly_truncate(fmpcb_poly_t poly, long n)
+
+    Truncates *poly* to have length at most *n*, i.e. degree
+    strictly smaller than *n*.
+
 Input and output
 -------------------------------------------------------------------------------
 
