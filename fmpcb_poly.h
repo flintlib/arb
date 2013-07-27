@@ -117,9 +117,23 @@ fmpcb_poly_truncate(fmpcb_poly_t poly, long newlen)
 
 void fmpcb_poly_printd(const fmpcb_poly_t poly, long digits);
 
-void _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec);
+void _fmpcb_poly_evaluate_horner(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec);
+void fmpcb_poly_evaluate_horner(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec);
 
+void _fmpcb_poly_evaluate_rectangular(fmpcb_t y, fmpcb_srcptr poly, long len, const fmpcb_t x, long prec);
+void fmpcb_poly_evaluate_rectangular(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec);
+
+void _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec);
 void fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec);
+
+void _fmpcb_poly_evaluate2_horner(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec);
+void fmpcb_poly_evaluate2_horner(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec);
+
+void _fmpcb_poly_evaluate2_rectangular(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec);
+void fmpcb_poly_evaluate2_rectangular(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec);
+
+void _fmpcb_poly_evaluate2(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec);
+void fmpcb_poly_evaluate2(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec);
 
 void _fmpcb_poly_derivative(fmpcb_ptr res, fmpcb_srcptr poly, long len, long prec);
 

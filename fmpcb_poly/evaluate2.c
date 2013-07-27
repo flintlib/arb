@@ -26,8 +26,7 @@
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len,
-                           const fmpcb_t x, long prec)
+_fmpcb_poly_evaluate2(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
@@ -37,17 +36,17 @@ _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len,
 
         if (fbits <= prec / 2)
         {
-            _fmpcb_poly_evaluate_rectangular(res, f, len, x, prec);
+            _fmpcb_poly_evaluate2_rectangular(y, z, f, len, x, prec);
             return;
         }
     }
 
-    _fmpcb_poly_evaluate_horner(res, f, len, x, prec);
+    _fmpcb_poly_evaluate2_horner(y, z, f, len, x, prec);
 }
 
 void
-fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec)
+fmpcb_poly_evaluate2(fmpcb_t r, fmpcb_t s, const fmpcb_poly_t f, const fmpcb_t a, long prec)
 {
-    _fmpcb_poly_evaluate(res, f->coeffs, f->length, a, prec);
+    _fmpcb_poly_evaluate2(r, s, f->coeffs, f->length, a, prec);
 }
 

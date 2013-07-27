@@ -19,35 +19,55 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2010 Sebastian Pancratz
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpcb_poly.h"
 
 void
-_fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len,
+_fmpcb_poly_evaluate_horner(fmpcb_t y, fmpcb_srcptr f, long len,
                            const fmpcb_t x, long prec)
 {
-    if ((prec >= 1024) && (len >= 5 + 20000 / prec))
+    if (len == 0)
     {
-        long fbits;
-
-        fbits = _fmpcb_vec_bits(f, len);
-
-        if (fbits <= prec / 2)
-        {
-            _fmpcb_poly_evaluate_rectangular(res, f, len, x, prec);
-            return;
-        }
+        fmpcb_zero(y);
     }
+    else if (len == 1 || fmpcb_is_zero(x))
+    {
+        fmpcb_set_round(y, f, prec);
+    }
+    else if (len == 2)
+    {
+        fmpcb_mul(y, x, f + 1, prec);
+        fmpcb_add(y, y, f + 0, prec);
+    }
+    else
+    {
+        long i = len - 1;
+        fmpcb_t t, u;
 
-    _fmpcb_poly_evaluate_horner(res, f, len, x, prec);
+        fmpcb_init(t);
+        fmpcb_init(u);
+        fmpcb_set(u, f + i);
+
+        for (i = len - 2; i >= 0; i--)
+        {
+            fmpcb_mul(t, u, x, prec);
+            fmpcb_add(u, f + i, t, prec);
+        }
+
+        fmpcb_swap(y, u);
+
+        fmpcb_clear(t);
+        fmpcb_clear(u);
+    }
 }
 
 void
-fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec)
+fmpcb_poly_evaluate_horner(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec)
 {
-    _fmpcb_poly_evaluate(res, f->coeffs, f->length, a, prec);
+    _fmpcb_poly_evaluate_horner(res, f->coeffs, f->length, a, prec);
 }
 

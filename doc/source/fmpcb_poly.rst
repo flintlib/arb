@@ -307,11 +307,41 @@ Arithmetic
 Evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _fmpcb_poly_evaluate(fmpcb_t res, fmpcb_srcptr f, long len, const fmpcb_t a, long prec)
+.. function:: void _fmpcb_poly_evaluate_horner(fmpcb_t y, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
 
-.. function:: void fmpcb_poly_evaluate(fmpcb_t res, const fmpcb_poly_t f, const fmpcb_t a, long prec)
+.. function:: void fmpcb_poly_evaluate_horner(fmpcb_t y, const fmpcb_poly_t f, const fmpcb_t x, long prec)
 
-    Evaluates the polynomial using Horner's rule.
+.. function:: void _fmpcb_poly_evaluate_rectangular(fmpcb_t y, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_poly_evaluate_rectangular(fmpcb_t y, const fmpcb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmpcb_poly_evaluate(fmpcb_t y, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_poly_evaluate(fmpcb_t y, const fmpcb_poly_t f, const fmpcb_t x, long prec)
+
+    Sets `y = f(x)`, evaluated respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
+.. function:: void _fmpcb_poly_evaluate2_horner(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_poly_evaluate2_horner(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmpcb_poly_evaluate2_rectangular(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_poly_evaluate2_rectangular(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec)
+
+.. function:: void _fmpcb_poly_evaluate2(fmpcb_t y, fmpcb_t z, fmpcb_srcptr f, long len, const fmpcb_t x, long prec)
+
+.. function:: void fmpcb_poly_evaluate2(fmpcb_t y, fmpcb_t z, const fmpcb_poly_t f, const fmpcb_t x, long prec)
+
+    Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
+    rectangular splitting, and an automatic algorithm choice.
+
+    When Horner's rule is used, the only advantage of evaluating the
+    function and its derivative simultaneously is that one does not have
+    to generate the derivative polynomial explicitly.
+    With the rectangular splitting algorithm, the powers can be reused,
+    making simultaneous evaluation slightly faster.
 
 
 Product trees
