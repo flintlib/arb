@@ -651,6 +651,25 @@ Special functions
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
     are at least 1, and does not support aliasing. Uses binary splitting.
 
+.. function:: void _fmpcb_poly_zeta_series(fmpcb_ptr res, fmpcb_srcptr s, long slen, const fmpcb_t a, int deflate, long n, long prec)
+
+.. function:: void fmpcb_poly_zeta_series(fmpcb_poly_t res, const fmpcb_poly_t s, const fmpcb_t a, int deflate, long n, long prec)
+
+    Sets *res* to the Hurwitz zeta function `\zeta(s,a)` where `s` a power
+    series and `a` is a constant, truncated to length *n*.
+    To evaluate the usual Riemann zeta function, set `a = 1`.
+
+    If *deflate* is nonzero, evaluates `\zeta(s,a) + 1/(1-s)`, which
+    is well-defined as a limit when the constant term of `s` is 1.
+    In particular, expanding `\zeta(s,a) + 1/(1-s)` with `s = 1+x`
+    gives the Stieltjes constants
+
+    .. math ::
+
+        \sum_{k=0}^{n-1} \frac{(-1)^k}{k!} \gamma_k(a) x^k`.
+
+    If `a = 1`, this implementation uses the reflection formula if the midpoint
+    of the constant term of `s` is negative.
 
 Root-finding
 -------------------------------------------------------------------------------

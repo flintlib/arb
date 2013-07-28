@@ -492,6 +492,10 @@ void _fmpcb_poly_rfac_series_ui(fmpcb_ptr res, fmpcb_srcptr f, long flen, ulong 
 
 void fmpcb_poly_rfac_series_ui(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, long trunc, long prec);
 
+void _fmpcb_poly_zeta_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, const fmpcb_t a, int deflate, long len, long prec);
+
+void fmpcb_poly_zeta_series(fmpcb_poly_t res, const fmpcb_poly_t f, const fmpcb_t a, int deflate, long n, long prec);
+
 
 #endif
 
