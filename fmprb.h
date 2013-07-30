@@ -566,18 +566,25 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bit
 #define DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \
     TLS_PREFIX fmprb_t name ## _cached_value; \
-    void \
-    name(fmprb_t x, long prec) \
+    void name ## _cleanup(void) \
+    { \
+        fmprb_clear(name ## _cached_value); \
+        name ## _cached_prec = 0; \
+    } \
+    void name(fmprb_t x, long prec) \
     { \
         if (name ## _cached_prec < prec) \
         { \
             if (name ## _cached_prec == 0) \
+            { \
                 fmprb_init(name ## _cached_value); \
+                flint_register_cleanup_function(name ## _cleanup); \
+            } \
             comp_func(name ## _cached_value, prec); \
             name ## _cached_prec = prec; \
         } \
         fmprb_set_round(x, name ## _cached_value, prec); \
-    } \
+    }
 
 /* vector functions */
 

@@ -31,6 +31,12 @@
 TLS_PREFIX mp_ptr __add_tmp = NULL;
 TLS_PREFIX long __add_alloc = 0;
 
+void _add_tmp_cleanup(void)
+{
+    flint_free(__add_tmp);
+    __add_alloc = 0;
+}
+
 #define ADD_TMP_ALLOC \
     if (alloc <= ADD_STACK_ALLOC) \
     { \
@@ -40,6 +46,10 @@ TLS_PREFIX long __add_alloc = 0;
     { \
         if (__add_alloc < alloc) \
         { \
+            if (__add_alloc == 0) \
+            { \
+                flint_register_cleanup_function(_add_tmp_cleanup); \
+            } \
             __add_tmp = flint_realloc(__add_tmp, sizeof(mp_limb_t) * alloc); \
             __add_alloc = alloc; \
         } \
