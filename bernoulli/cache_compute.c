@@ -30,12 +30,29 @@ TLS_PREFIX long bernoulli_cache_num = 0;
 TLS_PREFIX fmpq * bernoulli_cache = NULL;
 
 void
+bernoulli_cleanup(void)
+{
+    long i;
+
+    for (i = 0; i < bernoulli_cache_num; i++)
+        fmpq_clear(bernoulli_cache + i);
+
+    flint_free(bernoulli_cache);
+    bernoulli_cache_num = 0;
+}
+
+void
 bernoulli_cache_compute(long n)
 {
     if (bernoulli_cache_num < n)
     {
         long i, new_num;
         bernoulli_rev_t iter;
+
+        if (bernoulli_cache_num == 0)
+        {
+            flint_register_cleanup_function(bernoulli_cleanup);
+        }
 
         new_num = FLINT_MAX(bernoulli_cache_num + 128, n);
 

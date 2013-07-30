@@ -162,7 +162,7 @@ int main()
         fmprb_clear(y);
     }
 
-    _fmpz_cleanup();
+    flint_cleanup();
     printf("PASS\n");
     return 0;
 }

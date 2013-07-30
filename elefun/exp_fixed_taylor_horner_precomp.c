@@ -30,6 +30,14 @@
 TLS_PREFIX fmpz inverse_factorials[NUM_INVERSE_FACTORIALS];
 TLS_PREFIX int inverse_factorials_init = 0;
 
+void clear_inverse_factorials()
+{
+    int i;
+    for (i = 0; i < NUM_INVERSE_FACTORIALS; i++)
+        fmpz_clear(inverse_factorials + i);
+    inverse_factorials_init = 0;
+}
+
 void
 compute_inverse_factorials()
 {
@@ -46,6 +54,7 @@ compute_inverse_factorials()
     }
     fmpz_clear(t);
     inverse_factorials_init = 1;
+    flint_register_cleanup_function(clear_inverse_factorials);
 }
 
 void

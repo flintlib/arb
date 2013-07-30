@@ -59,6 +59,20 @@ fmprb_get_fmpz_fixed_si_check_1ulp(fmpz_t r, const fmprb_t x, long exponent)
 }
 
 void
+exp_cache_cleanup()
+{
+    long i, j;
+
+    for (i = 0; i < EXP_CACHE_LEVELS; i++)
+        for (j = 0; j < EXP_CACHE_NUM; j++)
+            fmpz_clear(exp_cache[i] + j);
+
+    fmpz_clear(ln2_cache);
+
+    exp_cache_init = 0;
+}
+
+void
 compute_exp_cache()
 {
     long i, j, wp;
@@ -95,6 +109,8 @@ compute_exp_cache()
     fmprb_clear(y);
 
     exp_cache_init = 1;
+
+    flint_register_cleanup_function(exp_cache_cleanup);
 }
 
 void
