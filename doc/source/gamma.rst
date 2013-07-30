@@ -82,9 +82,9 @@ Evaluation using the Stirling series
     Sets `b = B_{2k} / (2k (2k-1))`, rounded to *prec* bits, or if *digamma*
     is nonzero, sets `b = B_{2k} / (2k)`.
 
-.. function :: void gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long n, int digamma, long prec)
+.. function :: void gamma_stirling_eval_fmprb(fmprb_t s, const fmprb_t z, long n, int digamma, long prec)
 
-.. function :: void gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long n, int digamma, long prec)
+.. function :: void gamma_stirling_eval_fmpcb(fmpcb_t s, const fmpcb_t z, long n, int digamma, long prec)
 
     Evaluates the Stirling series
 
@@ -101,17 +101,7 @@ Evaluation using the Stirling series
 
     If *digamma* is nonzero, the derivative of this series (i.e. the
     expansion for the digamma function) is evaluated.
-
-    The error bound
-
-    .. math ::
-
-        |R(n,z)| \le \frac{|t_n|}{\cos(0.5 \arg(z))^{2n}}
-
-    is included in the output (when evaluating the digamma function, the
-    expression is the same except that `t_n` changes to the
-    differentiated term and the exponent `2n` changes to `2n+1`
-    (section 5.11 in [NIST2012]_).
+    The error bound for the tail `R(n,z)` is included in the output.
 
 .. function :: void gamma_stirling_bound_phase(fmpr_t bound, const fmpcb_t z, long prec)
 
@@ -138,7 +128,7 @@ Evaluation using the Stirling series
 
     .. math ::
 
-        R_n(z) = \int_0^{\infty} \frac{B_{2n} - {\tilde B}_{2n}(x)}{2n(x+z)^{2n}} dt.
+        R_n(z) = \int_0^{\infty} \frac{B_{2n} - {\tilde B}_{2n}(x)}{2n(x+z)^{2n}} dx.
 
     We optionally evaluate the bound for several terms in the
     Taylor series: considering `R_n(z+t) \in \mathbb{C}[[t]]`, we

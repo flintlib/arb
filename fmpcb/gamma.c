@@ -50,7 +50,7 @@ _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
         fmprb_const_pi(fmpcb_realref(v), wp);
         fmpcb_mul_fmprb(u, u, fmpcb_realref(v), wp);
         fmpcb_add_ui(t, t, r, wp);
-        gamma_stirling_eval_series_fmpcb(v, t, n, 0, wp);
+        gamma_stirling_eval_fmpcb(v, t, n, 0, wp);
         fmpcb_exp(v, v, wp);
         fmpcb_sin_pi(t, x, wp);
         fmpcb_mul(v, v, t, wp);
@@ -59,7 +59,7 @@ _fmpcb_gamma(fmpcb_t y, const fmpcb_t x, long prec, int inverse)
     {
         /* gamma(x) = gamma(x+r) / rf(x,r) */
         fmpcb_add_ui(t, x, r, wp);
-        gamma_stirling_eval_series_fmpcb(u, t, n, 0, wp);
+        gamma_stirling_eval_fmpcb(u, t, n, 0, wp);
         fmpcb_exp(u, u, prec);
         gamma_rising_fmpcb_ui_bsplit(v, x, r, wp);
     }
@@ -126,7 +126,7 @@ fmpcb_lgamma(fmpcb_t y, const fmpcb_t x, long prec)
     fmpcb_init(u);
 
     fmpcb_add_ui(t, x, r, wp);
-    gamma_stirling_eval_series_fmpcb(u, t, n, 0, wp);
+    gamma_stirling_eval_fmpcb(u, t, n, 0, wp);
 
     fmpcb_log_rfac_ui(t, x, r, wp);
     fmpcb_sub(y, u, t, prec);

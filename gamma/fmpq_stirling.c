@@ -56,7 +56,7 @@ gamma_fmpq_stirling(fmprb_t y, const fmpq_t a, long prec)
         fmprb_sub_ui(t, x, 1, wp);
         fmprb_neg(t, t);
         fmprb_add_ui(t, t, r, wp);
-        gamma_stirling_eval_series_fmprb(v, t, n, 0, wp);
+        gamma_stirling_eval_fmprb(v, t, n, 0, wp);
         fmprb_exp(v, v, wp);
         fmprb_sin_pi_fmpq(t, a, wp);
         fmprb_mul(v, v, t, wp);
@@ -65,7 +65,7 @@ gamma_fmpq_stirling(fmprb_t y, const fmpq_t a, long prec)
     {
         /* gamma(x) = gamma(x+r) / rf(x,r) */
         fmprb_add_ui(t, x, r, wp);
-        gamma_stirling_eval_series_fmprb(u, t, n, 0, wp);
+        gamma_stirling_eval_fmprb(u, t, n, 0, wp);
         fmprb_exp(u, u, prec);
         gamma_rising_fmprb_fmpq_ui_bsplit(v, a, r, wp);
     }

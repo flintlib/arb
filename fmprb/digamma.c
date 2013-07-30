@@ -52,13 +52,13 @@ fmprb_digamma(fmprb_t y, const fmprb_t x, long prec)
         gamma_harmonic_sum_fmprb_ui_bsplit(u, t, r, wp);
         fmprb_add(v, v, u, wp);
         fmprb_add_ui(t, t, r, wp);
-        gamma_stirling_eval_series_fmprb(u, t, n, 1, wp);
+        gamma_stirling_eval_fmprb(u, t, n, 1, wp);
         fmprb_sub(y, u, v, wp);
     }
     else
     {
         fmprb_add_ui(t, x, r, wp);
-        gamma_stirling_eval_series_fmprb(u, t, n, 1, wp);
+        gamma_stirling_eval_fmprb(u, t, n, 1, wp);
         gamma_harmonic_sum_fmprb_ui_bsplit(t, x, r, wp);
         fmprb_sub(y, u, t, prec);
     }

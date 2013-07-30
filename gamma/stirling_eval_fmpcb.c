@@ -27,65 +27,8 @@
 #include "gamma.h"
 #include "bernoulli.h"
 
-/*
-B_(2n) / (2n (2n-1)) / |z|^(2n-1) * (1/cos(0.5*arg(z))^(2n))
-*/
 void
-gamma_stirling_bound_remainder_fmpcb(fmpr_t err, const fmpcb_t z, int digamma, long n)
-{
-    fmpr_t t;
-    fmprb_t b;
-
-    if (fmprb_contains_zero(fmpcb_imagref(z)) &&
-        fmprb_contains_nonpositive(fmpcb_realref(z)))
-    {
-        fmpr_pos_inf(err);
-        return;
-    }
-
-    /* bound 1 / |z|^(2n-1) */
-    fmpcb_get_abs_lbound_fmpr(err, z, FMPRB_RAD_PREC);
-
-    if (fmpr_is_zero(err))
-    {
-        fmpr_pos_inf(err);
-        return;
-    }
-    fmpr_ui_div(err, 1, err, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    if (digamma)
-        fmpr_pow_sloppy_ui(err, err, 2 * n, FMPRB_RAD_PREC, FMPR_RND_UP);
-    else
-        fmpr_pow_sloppy_ui(err, err, 2 * n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    /* bound coefficient */
-    fmprb_init(b);
-    fmpr_init(t);
-
-    gamma_stirling_coeff(b, n, digamma, FMPRB_RAD_PREC);
-    fmprb_get_abs_ubound_fmpr(t, b, FMPRB_RAD_PREC);
-    fmpr_mul(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    /* bound 1/cos(0.5*arg(z))^(2n) */
-    fmpcb_arg(b, z, FMPRB_RAD_PREC);
-    fmprb_mul_2exp_si(b, b, -1);
-    fmprb_cos(b, b, FMPRB_RAD_PREC);
-    fmprb_get_abs_lbound_fmpr(t, b, FMPRB_RAD_PREC);
-    fmpr_ui_div(t, 1, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    if (digamma)
-        fmpr_pow_sloppy_ui(t, t, 2 * n + 1, FMPRB_RAD_PREC, FMPR_RND_UP);
-    else
-        fmpr_pow_sloppy_ui(t, t, 2 * n, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmpr_mul(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-    fmprb_clear(b);
-    fmpr_clear(t);
-}
-
-void
-gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int digamma, long prec)
+gamma_stirling_eval_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int digamma, long prec)
 {
     fmpcb_t t, logz, zinv, zinv2;
     fmprb_t b;
@@ -141,7 +84,7 @@ gamma_stirling_eval_series_fmpcb(fmpcb_t s, const fmpcb_t z, long nterms, int di
 
     /* remainder bound */
     fmpr_init(err);
-    gamma_stirling_bound_remainder_fmpcb(err, z, digamma, nterms);
+    gamma_stirling_bound_fmpcb(err, z, digamma ? 1 : 0, 1, nterms);
     fmprb_add_error_fmpr(fmpcb_realref(s), err);
     fmprb_add_error_fmpr(fmpcb_imagref(s), err);
     fmpr_clear(err);

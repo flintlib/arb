@@ -28,7 +28,7 @@
 /* evaluate sum_{k=0}^{n-1} c_{k+1} x^k
   precision estimate assumes x <= 1/2 */
 void
-gamma_taylor_eval_series_fmprb(fmprb_t y, const fmprb_t x, long prec)
+gamma_taylor_eval_fmprb(fmprb_t y, const fmprb_t x, long prec)
 {
     long i, n, wp;
     fmprb_t t, u, v;

@@ -28,48 +28,7 @@
 #include "bernoulli.h"
 
 void
-gamma_stirling_bound_remainder(fmpr_t err, const fmprb_t z, int digamma, long n)
-{
-    if (fmprb_contains_nonpositive(z))
-    {
-        fmpr_pos_inf(err);
-    }
-    else
-    {
-        fmpr_t t;
-        fmprb_t b;
-
-        fmpr_init(t);
-        fmprb_init(b);
-
-        fmpr_sub(t, fmprb_midref(z), fmprb_radref(z), FMPRB_RAD_PREC, FMPR_RND_FLOOR);
-
-        if (fmpr_sgn(t) <= 0)
-        {
-            fmpr_pos_inf(err);
-        }
-        else
-        {
-            fmpr_ui_div(t, 1, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-            if (digamma)
-                fmpr_pow_sloppy_ui(t, t, 2 * n, FMPRB_RAD_PREC, FMPR_RND_UP);
-            else
-                fmpr_pow_sloppy_ui(t, t, 2 * n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-            gamma_stirling_coeff(b, n, digamma, FMPRB_RAD_PREC);
-
-            fmprb_get_abs_ubound_fmpr(err, b, FMPRB_RAD_PREC);
-            fmpr_mul(err, err, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-        }
-
-        fmpr_clear(t);
-        fmprb_clear(b);
-    }
-}
-
-void
-gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, long prec)
+gamma_stirling_eval_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, long prec)
 {
     fmprb_t b, t, logz, zinv, zinv2;
     fmpr_t err;
@@ -124,7 +83,7 @@ gamma_stirling_eval_series_fmprb(fmprb_t s, const fmprb_t z, long nterms, int di
 
     /* remainder bound */
     fmpr_init(err);
-    gamma_stirling_bound_remainder(err, z, digamma, nterms);
+    gamma_stirling_bound_fmprb(err, z, digamma ? 1 : 0, 1, nterms);
     fmprb_add_error_fmpr(s, err);
     fmpr_clear(err);
 

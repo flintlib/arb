@@ -92,7 +92,7 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
         fmprb_const_pi(v, wp);
         fmprb_mul(u, u, v, wp);
         fmprb_add_ui(t, t, r, wp);
-        gamma_stirling_eval_series_fmprb(v, t, n, 0, wp);
+        gamma_stirling_eval_fmprb(v, t, n, 0, wp);
         fmprb_exp(v, v, wp);
         fmprb_sin_pi(t, x, wp);
         fmprb_mul(v, v, t, wp);
@@ -101,7 +101,7 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
     {
         /* gamma(x) = gamma(x+r) / rf(x,r) */
         fmprb_add_ui(t, x, r, wp);
-        gamma_stirling_eval_series_fmprb(u, t, n, 0, wp);
+        gamma_stirling_eval_fmprb(u, t, n, 0, wp);
         fmprb_exp(u, u, prec);
         gamma_rising_fmprb_ui_bsplit(v, x, r, wp);
     }
@@ -144,7 +144,7 @@ fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec)
     fmprb_init(u);
 
     fmprb_add_ui(t, x, r, wp);
-    gamma_stirling_eval_series_fmprb(u, t, n, 0, wp);
+    gamma_stirling_eval_fmprb(u, t, n, 0, wp);
     gamma_rising_fmprb_ui_bsplit(t, x, r, wp);
     fmprb_log(t, t, wp);
     fmprb_sub(y, u, t, prec);
