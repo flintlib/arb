@@ -90,18 +90,25 @@ Evaluation using the Stirling series
 
     .. math ::
 
-        \log \Gamma(z) - R(n,z) = \left(z-\frac{1}{2}\right)\log z - z +
-              \frac{\ln {2 \pi}}{2} + \sum_{k=1}^{n-1} t_k
-
-    where
-
-    .. math ::
-
-        t_k = \frac{B_{2k}}{2k(2k-1)z^{2k-1}}.
+        \log \Gamma(z) = \left(z-\frac{1}{2}\right)\log z - z +
+              \frac{\ln {2 \pi}}{2}
+                + \sum_{k=1}^{n-1}  \frac{B_{2k}}{2k(2k-1)z^{2k-1}}
+              + R(n,z).
 
     If *digamma* is nonzero, the derivative of this series (i.e. the
     expansion for the digamma function) is evaluated.
-    The error bound for the tail `R(n,z)` is included in the output.
+    The error bound for the tail `R(n,z)` (computed via
+    :func:`gamma_stirling_bound_fmprb` or
+    :func:`gamma_stirling_bound_fmpcb`) is included in the output.
+
+.. function :: void gamma_stirling_eval_fmprb_series(fmprb_ptr res, const fmprb_t z, long n, long num, long prec)
+
+.. function :: void gamma_stirling_eval_fmpcb_series(fmpcb_ptr res, const fmpcb_t z, long n, long num, long prec)
+
+    Evaluates the Stirling series of a power series `z + t`,
+    computing *num* coefficients. The error bound (computed via
+    :func:`gamma_stirling_bound_fmprb` or
+    :func:`gamma_stirling_bound_fmpcb`) is included in the output.
 
 .. function :: void gamma_stirling_bound_phase(fmpr_t bound, const fmpcb_t z, long prec)
 
