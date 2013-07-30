@@ -31,7 +31,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("rfac_series_ui....");
+    printf("rising_ui_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -72,9 +72,9 @@ int main()
             _fmprb_poly_normalise(g);
         }
 
-        fmprb_poly_rfac_series_ui(h1, f, a, trunc, bits);
-        fmprb_poly_rfac_series_ui(h2, g, b, trunc, bits);
-        fmprb_poly_rfac_series_ui(h3, f, a + b, trunc, bits);
+        fmprb_poly_rising_ui_series(h1, f, a, trunc, bits);
+        fmprb_poly_rising_ui_series(h2, g, b, trunc, bits);
+        fmprb_poly_rising_ui_series(h3, f, a + b, trunc, bits);
 
         fmprb_poly_mullow(h1h2, h1, h2, trunc, bits);
 
@@ -96,7 +96,7 @@ int main()
             abort();
         }
 
-        fmprb_poly_rfac_series_ui(f, f, a, trunc, bits);
+        fmprb_poly_rising_ui_series(f, f, a, trunc, bits);
 
         if (!fmprb_poly_equal(f, h1))
         {

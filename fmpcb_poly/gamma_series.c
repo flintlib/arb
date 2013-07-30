@@ -85,7 +85,7 @@ _fmpcb_poly_gamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lon
                 fmpcb_neg(f, f);
                 fmpcb_set_si(f + 1, -1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmpcb_poly_rfac_series_ui(u, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmpcb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
                 fmpcb_const_pi(v, wp);
                 _fmpcb_vec_scalar_mul(u, u, rflen, v, wp);
             }
@@ -109,7 +109,7 @@ _fmpcb_poly_gamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lon
                 fmpcb_set(f, h);
                 fmpcb_one(f + 1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmpcb_poly_rfac_series_ui(u, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmpcb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
                 _fmpcb_poly_inv_series(t, u, rflen, len, wp);
 
                 fmpcb_add_ui(f, h, r, wp);

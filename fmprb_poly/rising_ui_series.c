@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpcb_poly.h"
+#include "fmprb_poly.h"
 
 
 static __inline__ long length(long flen, ulong r, long trunc)
@@ -37,20 +37,20 @@ static __inline__ long length(long flen, ulong r, long trunc)
 }
 
 static void
-_fmpcb_poly_rfac_series_ui_bsplit(fmpcb_ptr res,
-    fmpcb_srcptr f, long flen, ulong a, ulong b,
+_fmprb_poly_rising_ui_series_bsplit(fmprb_ptr res,
+    fmprb_srcptr f, long flen, ulong a, ulong b,
         long trunc, long prec)
 {
     flen = FLINT_MIN(flen, trunc);
 
     if (b - a == 1)
     {
-        fmpcb_add_ui(res, f, a, prec);
-        _fmpcb_vec_set(res + 1, f + 1, flen - 1);
+        fmprb_add_ui(res, f, a, prec);
+        _fmprb_vec_set(res + 1, f + 1, flen - 1);
     }
     else
     {
-        fmpcb_ptr L, R;
+        fmprb_ptr L, R;
         long len1, len2;
 
         long m = a + (b - a) / 2;
@@ -58,42 +58,42 @@ _fmpcb_poly_rfac_series_ui_bsplit(fmpcb_ptr res,
         len1 = length(flen, m - a, trunc);
         len2 = length(flen, b - m, trunc);
 
-        L = _fmpcb_vec_init(len1 + len2);
+        L = _fmprb_vec_init(len1 + len2);
         R = L + len1;
 
-        _fmpcb_poly_rfac_series_ui_bsplit(L, f, flen, a, m, trunc, prec);
-        _fmpcb_poly_rfac_series_ui_bsplit(R, f, flen, m, b, trunc, prec);
+        _fmprb_poly_rising_ui_series_bsplit(L, f, flen, a, m, trunc, prec);
+        _fmprb_poly_rising_ui_series_bsplit(R, f, flen, m, b, trunc, prec);
 
-        _fmpcb_poly_mullow(res, L, len1, R, len2,
+        _fmprb_poly_mullow(res, L, len1, R, len2,
             FLINT_MIN(trunc, len1 + len2 - 1), prec);
 
-        _fmpcb_vec_clear(L, len1 + len2);
+        _fmprb_vec_clear(L, len1 + len2);
     }
 }
 
 void
-_fmpcb_poly_rfac_series_ui(fmpcb_ptr res,
-    fmpcb_srcptr f, long flen, ulong r,
+_fmprb_poly_rising_ui_series(fmprb_ptr res,
+    fmprb_srcptr f, long flen, ulong r,
         long trunc, long prec)
 {
-    _fmpcb_poly_rfac_series_ui_bsplit(res, f, flen, 0, r, trunc, prec);
+    _fmprb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
 }
 
 
 void
-fmpcb_poly_rfac_series_ui(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, long trunc, long prec)
+fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
 {
     long len;
 
     if (f->length == 0 && r != 0)
     {
-        fmpcb_poly_zero(res);
+        fmprb_poly_zero(res);
         return;
     }
 
     if (r == 0)
     {
-        fmpcb_poly_one(res);
+        fmprb_poly_one(res);
         return;
     }
 
@@ -101,18 +101,18 @@ fmpcb_poly_rfac_series_ui(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, long 
 
     if (f == res)
     {
-        fmpcb_poly_t tmp;
-        fmpcb_poly_init(tmp);
-        fmpcb_poly_rfac_series_ui(tmp, f, r, trunc, prec);
-        fmpcb_poly_swap(tmp, res);
-        fmpcb_poly_clear(tmp);
+        fmprb_poly_t tmp;
+        fmprb_poly_init(tmp);
+        fmprb_poly_rising_ui_series(tmp, f, r, trunc, prec);
+        fmprb_poly_swap(tmp, res);
+        fmprb_poly_clear(tmp);
     }
     else
     {
-        fmpcb_poly_fit_length(res, len);
-        _fmpcb_poly_rfac_series_ui(res->coeffs, f->coeffs, f->length, r, trunc, prec);
-        _fmpcb_poly_set_length(res, len);
-        _fmpcb_poly_normalise(res);
+        fmprb_poly_fit_length(res, len);
+        _fmprb_poly_rising_ui_series(res->coeffs, f->coeffs, f->length, r, trunc, prec);
+        _fmprb_poly_set_length(res, len);
+        _fmprb_poly_normalise(res);
     }
 }
 

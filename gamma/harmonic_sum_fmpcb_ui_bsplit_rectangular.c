@@ -86,7 +86,7 @@ gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong
         fmprb_init(xpoly + 0);
         fmprb_init(xpoly + 1);
         fmprb_one(xpoly + 1);
-        _fmprb_poly_rfac_series_ui(poly, xpoly, 2, step, step + 1, wp);
+        _fmprb_poly_rising_ui_series(poly, xpoly, 2, step, step + 1, wp);
         bsplit_step(t, u, poly, step, x, 0, b, wp);
         fmpcb_div(t, t, u, wp);
         _fmprb_vec_clear(poly, step + 1);

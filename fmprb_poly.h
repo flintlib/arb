@@ -506,9 +506,9 @@ void _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long le
 
 void fmprb_poly_lgamma_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
 
-void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec);
+void _fmprb_poly_rising_ui_series(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec);
 
-void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec);
+void fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec);
 
 void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, const fmprb_t a, int deflate, long len, long prec);
 

@@ -694,9 +694,9 @@ Special functions
     The underscore methods support aliasing of the input and output
     arrays, and require that *hlen* and *n* are greater than zero.
 
-.. function:: void _fmprb_poly_rfac_series_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec)
+.. function:: void _fmprb_poly_rising_ui_series(fmprb_ptr res, fmprb_srcptr f, long flen, ulong r, long trunc, long prec)
 
-.. function:: void fmprb_poly_rfac_series_ui(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
+.. function:: void fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
 
     Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*

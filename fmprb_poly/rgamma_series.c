@@ -63,7 +63,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, lo
             fmprb_set(f, h);
             fmprb_one(f + 1);
             rflen = FLINT_MIN(len, 2 - r);
-            _fmprb_poly_rfac_series_ui(u, f, FLINT_MIN(2, len), 1 - r, rflen, wp);
+            _fmprb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), 1 - r, rflen, wp);
             _fmprb_poly_mullow(v, t, len, u, rflen, len, wp);
         }
         else
@@ -71,7 +71,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, lo
             fmprb_one(f);
             fmprb_one(f + 1);
             rflen = FLINT_MIN(len, r);
-            _fmprb_poly_rfac_series_ui(v, f, FLINT_MIN(2, len), r - 1, rflen, wp);
+            _fmprb_poly_rising_ui_series(v, f, FLINT_MIN(2, len), r - 1, rflen, wp);
 
             /* TODO: use div_series? */
             _fmprb_poly_inv_series(u, v, rflen, len, wp);
@@ -113,7 +113,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, lo
                 fmprb_neg(f, f);
                 fmprb_set_si(f + 1, -1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmprb_poly_rfac_series_ui(v, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmprb_poly_rising_ui_series(v, f, FLINT_MIN(2, len), r, rflen, wp);
                 fmprb_const_pi(u, wp);
                 _fmprb_vec_scalar_mul(v, v, rflen, u, wp);
 
@@ -138,7 +138,7 @@ _fmprb_poly_rgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, lo
                 fmprb_set(f, h);
                 fmprb_one(f + 1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmprb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmprb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, wp);
 
                 fmprb_add_ui(f, h, r, wp);
                 gamma_stirling_eval_fmprb_series(v, f, n, len, wp);

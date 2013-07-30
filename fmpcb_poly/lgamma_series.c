@@ -28,7 +28,7 @@
 #include "zeta.h"
 
 static __inline__ void
-_log_rfac_series(fmpcb_ptr t, const fmpcb_t x, long r, long len, long prec)
+_log_rising_ui_series(fmpcb_ptr t, const fmpcb_t x, long r, long len, long prec)
 {
     fmpcb_struct f[2];
     fmprb_t pi, u, v;
@@ -46,7 +46,7 @@ _log_rfac_series(fmpcb_ptr t, const fmpcb_t x, long r, long len, long prec)
     fmpcb_one(f + 1);
 
     rflen = FLINT_MIN(len, r + 1);
-    _fmpcb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, prec);
+    _fmpcb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, prec);
     _fmpcb_poly_log_series(t, t, rflen, len, prec);
 
     /* now get the right branch cut for the constant term
@@ -126,7 +126,7 @@ _fmpcb_poly_lgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lo
 
         if (r != 0)
         {
-            _log_rfac_series(t, h, r, len, wp);
+            _log_rising_ui_series(t, h, r, len, wp);
             _fmpcb_vec_sub(u, u, t, len, wp);
         }
     }

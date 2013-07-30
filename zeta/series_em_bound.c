@@ -169,7 +169,7 @@ bound_rfac(fmprb_ptr F, const fmpcb_t s, ulong n, long len, long wp)
         fmpcb_abs(sx + 0, s, wp);
         fmprb_one(sx + 1);
         _fmprb_vec_zero(F, len);
-        _fmprb_poly_rfac_series_ui(F, sx, 2, n, len, wp);
+        _fmprb_poly_rising_ui_series(F, sx, 2, n, len, wp);
         fmprb_clear(sx + 0);
         fmprb_clear(sx + 1);
     }

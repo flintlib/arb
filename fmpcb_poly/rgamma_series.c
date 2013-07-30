@@ -83,7 +83,7 @@ _fmpcb_poly_rgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lo
                 fmpcb_neg(f, f);
                 fmpcb_set_si(f + 1, -1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmpcb_poly_rfac_series_ui(v, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmpcb_poly_rising_ui_series(v, f, FLINT_MIN(2, len), r, rflen, wp);
                 fmpcb_const_pi(u, wp);
                 _fmpcb_vec_scalar_mul(v, v, rflen, u, wp);
 
@@ -108,7 +108,7 @@ _fmpcb_poly_rgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lo
                 fmpcb_set(f, h);
                 fmpcb_one(f + 1);
                 rflen = FLINT_MIN(len, r + 1);
-                _fmpcb_poly_rfac_series_ui(t, f, FLINT_MIN(2, len), r, rflen, wp);
+                _fmpcb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, wp);
 
                 fmpcb_add_ui(f, h, r, wp);
                 gamma_stirling_eval_fmpcb_series(v, f, n, len, wp);
