@@ -70,7 +70,7 @@ int main()
         fmpz_holonomic_clear(op);
     }
 
-    _fmpz_cleanup();
+    flint_cleanup();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -72,8 +72,7 @@ int main()
     }
 
     flint_randclear(state);
-    _fmpz_cleanup();
-    mpfr_free_cache();
+    flint_cleanup();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }

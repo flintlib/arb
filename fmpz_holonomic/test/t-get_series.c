@@ -162,7 +162,7 @@ int main()
         fmpq_clear(s);
     }
 
-    _fmpz_cleanup();
+    flint_cleanup();
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
