@@ -530,6 +530,13 @@ void fmpcb_pow_fmpz(fmpcb_t y, const fmpcb_t b, const fmpz_t e, long prec);
 void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec);
 void fmpcb_pow_si(fmpcb_t y, const fmpcb_t b, long e, long prec);
 
+static __inline__ void
+fmpcb_const_pi(fmpcb_t x, long prec)
+{
+    fmprb_const_pi(fmpcb_realref(x), prec);
+    fmprb_zero(fmpcb_imagref(x));
+}
+
 void fmpcb_log(fmpcb_t r, const fmpcb_t z, long prec);
 
 void fmpcb_exp(fmpcb_t r, const fmpcb_t z, long prec);

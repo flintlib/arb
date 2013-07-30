@@ -28,13 +28,6 @@
 #include "zeta.h"
 
 void
-fmpcb_const_pi(fmpcb_t x, long prec)
-{
-    fmprb_const_pi(fmpcb_realref(x), prec);
-    fmprb_zero(fmpcb_imagref(x));
-}
-
-void
 _fmpcb_poly_gamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, long prec)
 {
     int reflect;

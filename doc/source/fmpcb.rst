@@ -288,6 +288,10 @@ Arithmetic
 Elementary functions
 -------------------------------------------------------------------------------
 
+.. function:: void fmpcb_const_pi(fmpcb_t y, long prec)
+
+    Sets *y* to the constant `\pi`.
+
 .. function:: void fmpcb_log(fmpcb_t y, const fmpcb_t z, long prec)
 
     Sets *y* to the principal branch of the natural logarithm of *z*,
