@@ -60,6 +60,8 @@ _fmprb_poly_newton_refine_root(fmprb_t r, fmprb_srcptr poly, long len,
         }
     }
 
+    fmprb_set(r, start);
+
     for (i = iters - 1; i >= 0; i--)
     {
         wp = precs[i] + eval_extra_prec;
