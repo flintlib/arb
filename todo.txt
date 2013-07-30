@@ -75,6 +75,8 @@
 * Rewrite fmprb_div (similar to fmprb_mul)
 
 * Faster elementary functions at low precision (especially log/arctan).
+  Use Brent's algorithm (http://maths-people.anu.edu.au/~brent/pd/RNC7t4.pdf):
+  atan(x) = atan(p/q) + atan((q*x-p)/(q+p*x))
 
 * Document fmpz_extras
 
@@ -94,4 +96,16 @@
   algorithms are more stable, and faster for quite large n)
 
 * Look at using the exponential to compute the complex sine/cosine series
+
+* Extend sieving to power series evaluation of the zeta function (when
+  computing a small number of derivatives). Also save a factor two in
+  the sieving by skipping even terms. Then also use binary splitting
+  to speed up the tail evaluation when computing a large number of derivatives.
+
+* Extend Stirling series code to compute polygamma functions (i.e. starting
+  the series from some derivative), and optimize for a small number of
+  derivatives by using a direct recurrence instead of binary splitting.
+
+* Fall back to the real code when evaluating gamma functions (or their
+  power series) at points that happen to be real
 
