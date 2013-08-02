@@ -158,8 +158,8 @@ fmpcb_pow_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
 
                     if (*exp_exp == -1L)
                     {
-                        fmpcb_sqrt(z, x, prec + exp_bits);
                         fmpz_set(e, fmpr_manref(fmprb_midref(y)));
+                        fmpcb_sqrt(z, x, prec + exp_bits);
                         fmpcb_pow_fmpz(z, z, e, prec);
                     }
                     else

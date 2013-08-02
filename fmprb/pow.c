@@ -65,8 +65,8 @@ fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
                     if (*exp_exp == -1L)
                     {
-                        fmprb_sqrt(z, x, prec + exp_bits);
                         fmpz_set(e, fmpr_manref(fmprb_midref(y)));
+                        fmprb_sqrt(z, x, prec + exp_bits);
                         fmprb_pow_fmpz_binexp(z, z, e, prec);
                     }
                     else

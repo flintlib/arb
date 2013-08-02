@@ -88,6 +88,33 @@ int main()
             abort();
         }
 
+        fmprb_pow(c, a, b, prec1);
+        fmprb_set(d, a);
+        fmprb_pow(d, d, b, prec2);
+
+        if (!fmprb_overlaps(c, d))
+        {
+            printf("FAIL: aliasing 1\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("d = "); fmprb_print(d); printf("\n\n");
+            abort();
+        }
+
+        fmprb_set(d, b);
+        fmprb_pow(d, a, d, prec2);
+
+        if (!fmprb_overlaps(c, d))
+        {
+            printf("FAIL: aliasing 2\n\n");
+            printf("a = "); fmprb_print(a); printf("\n\n");
+            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("c = "); fmprb_print(c); printf("\n\n");
+            printf("d = "); fmprb_print(d); printf("\n\n");
+            abort();
+        }
+
         fmprb_clear(a);
         fmprb_clear(b);
         fmprb_clear(c);
