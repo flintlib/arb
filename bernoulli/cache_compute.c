@@ -38,6 +38,7 @@ bernoulli_cleanup(void)
         fmpq_clear(bernoulli_cache + i);
 
     flint_free(bernoulli_cache);
+    bernoulli_cache = NULL;
     bernoulli_cache_num = 0;
 }
 

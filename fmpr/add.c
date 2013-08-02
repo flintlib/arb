@@ -34,6 +34,7 @@ TLS_PREFIX long __add_alloc = 0;
 void _add_tmp_cleanup(void)
 {
     flint_free(__add_tmp);
+    __add_tmp = NULL;
     __add_alloc = 0;
 }
 
