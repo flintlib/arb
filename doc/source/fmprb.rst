@@ -782,6 +782,10 @@ Constants
     Thus, for an error of at most `2^{-p}` in the series,
     it is sufficient to choose `M \ge p / (2 \log_2 N)`.
 
+.. function:: void fmprb_const_glaisher(fmprb_t res, long prec)
+
+    Sets *res* to the Glaisher-Kinkelin constant `A = \exp(1/12 - \zeta'(-1))`.
+
 .. function:: void fmprb_const_log_sqrt2pi(fmprb_t x, long prec)
 
     Sets *x* to `\log \sqrt{2 \pi}`. The value is cached for repeated use.

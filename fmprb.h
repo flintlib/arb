@@ -340,6 +340,7 @@ void fmprb_const_euler(fmprb_t s, long prec);
 void fmprb_const_catalan(fmprb_t s, long prec);
 void fmprb_const_e(fmprb_t s, long prec);
 void fmprb_const_khinchin(fmprb_t K, long prec);
+void fmprb_const_glaisher(fmprb_t y, long prec);
 
 void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 
