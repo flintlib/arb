@@ -50,5 +50,8 @@ void zeta_series_em_bound(fmpr_t bound, const fmpcb_t s, const fmpcb_t a, long N
 void zeta_series_em_vec_bound(fmprb_ptr vec, const fmpcb_t s, const fmpcb_t a, ulong N, ulong M, long d, long wp);
 void zeta_series(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, long prec);
 
+void zeta_powsum_series_naive(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, long n, long len, long prec);
+void zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, long prec);
+
 #endif
 

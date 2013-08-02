@@ -113,7 +113,7 @@ zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, u
     fmprb_t x;
     fmpz_t c;
     long i;
-    ulong r, n;
+    ulong r;
     int aint;
 
     BERNOULLI_ENSURE_CACHED(2 * M);
@@ -129,46 +129,16 @@ zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, u
     fmprb_init(x);
     fmpz_init(c);
 
-    /* sum 1/(n+a)^(s+x) */
-    if (fmpcb_is_one(a) && (d == 1))
+    /* sum 1/(k+a)^(s+x) */
+    if (fmpcb_is_one(a) && d <= 3)
     {
-        fmpcb_ptr pows;
-        long j;
-
-        pows = _fmpcb_vec_init(N + 1);
-        fmpcb_one(pows + 1);
-
-        for (i = 2; i <= N; i++)
-        {
-            if (fmpcb_is_zero(pows + i))
-            {
-                fmprb_log_ui(fmpcb_realref(pows + i), i, prec);
-                fmprb_zero(fmpcb_imagref(pows + i));
-                fmpcb_mul(pows + i, pows + i, s, prec);
-                fmpcb_neg(pows + i, pows + i);
-                fmpcb_exp(pows + i, pows + i, prec);
-            }
-
-            for (j = 2; j <= i && i * j <= N; j++)
-                if (fmpcb_is_zero(pows + i * j))
-                    fmpcb_mul(pows + i * j, pows + i, pows + j, prec);
-        }
-
-        for (i = 1; i <= N; i++)
-            fmpcb_add(sum, sum, pows + i, prec);
-
-        _fmpcb_vec_clear(pows, N + 1);
+        zeta_powsum_one_series_sieved(sum, s, N, d, prec);
     }
     else
     {
-        for (n = 0; n < N; n++)
-        {
-            /* printf("sum 1: %ld %ld\n", n, N); */
-            fmpcb_add_ui(Na, a, n, prec);
-            _fmpcb_poly_fmpcb_invpow_cpx(t, Na, s, d, prec);
-            _fmpcb_vec_add(sum, sum, t, d, prec);
-        }
+        zeta_powsum_series_naive(sum, s, a, N, d, prec);
     }
+
 
     /* t = 1/(N+a)^(s+x); we might need one extra term for deflation */
     fmpcb_add_ui(Na, a, N, prec);
