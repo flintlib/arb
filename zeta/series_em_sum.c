@@ -129,6 +129,8 @@ zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, u
     fmprb_init(x);
     fmpz_init(c);
 
+    prec += 2 * (FLINT_BIT_COUNT(N) + FLINT_BIT_COUNT(d));
+
     /* sum 1/(k+a)^(s+x) */
     if (fmpcb_is_one(a) && d <= 3)
     {
