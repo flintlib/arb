@@ -84,7 +84,8 @@
   Double check the proof of correctness of the complex Newton iteration
   and make it work when the polynomial is not exact.
 
-* Write a cleanup function that frees all cached data.
+* For small cos(pi p/q) and sin(pi p/q) use a lookup table of the
+  1/q values and then do complex binary exponentiation.
 
 * Investigate using Chebyshev polynomials for elefun_cos_minpoly.
   This is certainly faster when n is prime, but might be faster for all n,
@@ -97,10 +98,11 @@
 
 * Look at using the exponential to compute the complex sine/cosine series
 
-* Extend sieving to power series evaluation of the zeta function (when
-  computing a small number of derivatives). Also save a factor two in
-  the sieving by skipping even terms. Then also use binary splitting
-  to speed up the tail evaluation when computing a large number of derivatives.
+* Use binary splitting to speed up the tail evaluation of zeta when
+  computing a large number of derivatives; also check if
+  skipping even terms in the power sum helps.
+
+* Tune zeta algorithm selection.
 
 * Extend Stirling series code to compute polygamma functions (i.e. starting
   the series from some derivative), and optimize for a small number of
