@@ -24,46 +24,37 @@
 ******************************************************************************/
 
 #include "fmprb.h"
-#include "fmprb_poly.h"
+#include "zeta.h"
 
 void
 fmprb_const_glaisher_eval(fmprb_t y, long prec)
 {
-    fmprb_t t;
-    fmprb_struct z[2];
+    fmpcb_struct z[2];
+    fmpcb_t s, a;
     long wp;
 
-    fmprb_init(t);
-    fmprb_init(z + 0);
-    fmprb_init(z + 1);
+    fmpcb_init(z + 0);
+    fmpcb_init(z + 1);
+    fmpcb_init(s);
+    fmpcb_init(a);
 
     wp = prec + 20;
 
-    fmprb_set_ui(z + 0, 2);
-    fmprb_one(z + 1);
-    fmprb_one(t);
+    /* directly evaluating at s = -1 is slightly faster
+       than evaluating at s = 2 */
+    fmpcb_set_si(s, -1);
+    fmpcb_one(a);
+    zeta_series(z, s, a, 0, 2, wp);
 
-    _fmprb_poly_zeta_series(z, z, 2, t, 0, 2, wp);
+    fmprb_one(y);
+    fmprb_div_ui(y, y, 12, wp);
+    fmprb_sub(y, y, fmpcb_realref(z + 1), wp);
+    fmprb_exp(y, y, wp);
 
-    fmprb_const_pi(z, wp);
-    fmprb_mul(z, z, z, wp);
-    fmprb_mul_2exp_si(z, z, 1);
-    fmprb_div(z, z + 1, z, wp);
-
-    fmprb_const_euler(t, wp);
-    fmprb_div_ui(t, t, 12, wp);
-    fmprb_sub(t, t, z, wp);
-    fmprb_exp(y, t, wp);
-
-    fmprb_const_pi(t, wp);
-    fmprb_mul_2exp_si(t, t, 1);
-    fmprb_root(t, t, 12, wp);
-
-    fmprb_mul(y, y, t, prec);
-
-    fmprb_clear(t);
-    fmprb_clear(z + 0);
-    fmprb_clear(z + 1);
+    fmpcb_clear(z + 0);
+    fmpcb_clear(z + 1);
+    fmpcb_clear(s);
+    fmpcb_clear(a);
 }
 
 DEF_CACHED_CONSTANT(fmprb_const_glaisher, fmprb_const_glaisher_eval)
