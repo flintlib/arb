@@ -30,11 +30,10 @@
 void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res,
     const fmpcb_t N, const fmpcb_t c, long trunc, long prec);
 
-
 #define POWER(_k) (powers + (((_k)-1)/2) * (len))
 #define DIVISOR(_k) (divisors[((_k)-1)/2])
 
-#define COMPUTE_POWER(t, k) \
+#define COMPUTE_POWER(t, k, kprev) \
   do { \
     if (integer) \
     { \
@@ -44,13 +43,15 @@ void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res,
         fmprb_zero(fmpcb_imagref(t)); \
         if (len != 1) \
         { \
-            fmprb_log_ui(logk, k, prec); \
+            zeta_log_ui_from_prev(logk, k, logk, kprev, prec); \
+            kprev = k; \
             fmprb_neg(logk, logk); \
         } \
     } \
     else \
     { \
-        fmprb_log_ui(logk, k, prec); \
+        zeta_log_ui_from_prev(logk, k, logk, kprev, prec); \
+        kprev = k; \
         fmprb_neg(logk, logk); \
         fmprb_mul(w, logk, fmpcb_imagref(s), prec); \
         fmprb_sin_cos(fmpcb_imagref(t), fmpcb_realref(t), w, prec); \
@@ -71,6 +72,7 @@ void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res,
         fmpcb_mul_fmprb(t + i, t + i - 1, logk, prec); \
         fmpcb_div_ui(t + i, t + i, i, prec); \
     } \
+    fmprb_neg(logk, logk); \
   } while (0); \
 
 void
@@ -78,7 +80,7 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
 {
     long * divisors;
     long powers_alloc;
-    long i, j, k, power_of_two, horner_point;
+    long i, j, k, kprev, power_of_two, horner_point;
     int critical_line, integer;
 
     fmpcb_ptr powers;
@@ -113,14 +115,15 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
 
     _fmpcb_vec_zero(z, len);
 
-    COMPUTE_POWER(x, 2);
+    kprev = 0;
+    COMPUTE_POWER(x, 2, kprev);
 
     for (k = 1; k <= n; k += 2)
     {
         /* t = k^(-s) */
         if (DIVISOR(k) == 0)
         {
-            COMPUTE_POWER(t, k);
+            COMPUTE_POWER(t, k, kprev);
         }
         else
         {
