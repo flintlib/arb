@@ -94,7 +94,7 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
     integer = fmprb_is_zero(fmpcb_imagref(s)) && fmprb_is_int(fmpcb_realref(s));
 
     divisors = flint_calloc(n / 2 + 1, sizeof(long));
-    powers_alloc = (n / 4 + 1) * len;
+    powers_alloc = (n / 6 + 1) * len;
     powers = _fmpcb_vec_init(powers_alloc);
 
     for (i = 3; i <= n; i += 2)
@@ -136,7 +136,7 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
                 _fmpcb_poly_mullow(t, p1, len, p2, len, len, prec);
         }
 
-        if (k * 2 < n)
+        if (k * 3 <= n)
             _fmpcb_vec_set(POWER(k), t, len);
 
         _fmpcb_vec_add(u, u, t, len, prec);
