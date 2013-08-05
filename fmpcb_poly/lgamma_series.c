@@ -27,20 +27,18 @@
 #include "gamma.h"
 #include "zeta.h"
 
+void
+_fmpcb_log_rising_correct_branch(fmpcb_t t,
+        const fmpcb_t t_wrong, const fmpcb_t z, ulong r, long prec);
+
 static __inline__ void
 _log_rising_ui_series(fmpcb_ptr t, const fmpcb_t x, long r, long len, long prec)
 {
     fmpcb_struct f[2];
-    fmprb_t pi, u, v;
-    fmpz_t pi_mult;
-    long i, rflen, argprec;
+    long rflen;
 
     fmpcb_init(f);
     fmpcb_init(f + 1);
-    fmprb_init(u);
-    fmprb_init(pi);
-    fmprb_init(v);
-    fmpz_init(pi_mult);
 
     fmpcb_set(f, x);
     fmpcb_one(f + 1);
@@ -49,53 +47,10 @@ _log_rising_ui_series(fmpcb_ptr t, const fmpcb_t x, long r, long len, long prec)
     _fmpcb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, prec);
     _fmpcb_poly_log_series(t, t, rflen, len, prec);
 
-    /* now get the right branch cut for the constant term
-       TODO: make this a proper function */
-    argprec = FLINT_MIN(prec, 40);
-
-    fmprb_zero(u);
-    for (i = 0; i < r; i++)
-    {
-        fmpcb_add_ui(f, x, i, argprec);
-        fmpcb_arg(v, f, argprec);
-        fmprb_add(u, u, v, argprec);
-    }
-
-    if (argprec == prec)
-    {
-        fmprb_set(fmpcb_imagref(t), u);
-    }
-    else
-    {
-        fmprb_sub(v, u, fmpcb_imagref(t), argprec);
-        fmprb_const_pi(pi, argprec);
-        fmprb_div(v, v, pi, argprec);
-
-        if (fmprb_get_unique_fmpz(pi_mult, v))
-        {
-            fmprb_const_pi(v, prec);
-            fmprb_mul_fmpz(v, v, pi_mult, prec);
-            fmprb_add(fmpcb_imagref(t), fmpcb_imagref(t), v, prec);
-        }
-        else
-        {
-            fmprb_zero(u);
-            for (i = 0; i < r; i++)
-            {
-                fmpcb_add_ui(f, x, i, prec);
-                fmpcb_arg(v, f, prec);
-                fmprb_add(u, u, v, prec);
-            }
-            fmprb_set(fmpcb_imagref(t), u);
-        }
-    }
+    _fmpcb_log_rising_correct_branch(t, t, x, r, prec);
 
     fmpcb_clear(f);
     fmpcb_clear(f + 1);
-    fmprb_clear(u);
-    fmprb_clear(v);
-    fmprb_clear(pi);
-    fmpz_clear(pi_mult);
 }
 
 void
@@ -116,6 +71,12 @@ _fmpcb_poly_lgamma_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, long len, lo
     /* TODO: use real code at real numbers */
     if (0)
     {
+    }
+    else if (len <= 2)
+    {
+        fmpcb_lgamma(u, h, wp);
+        if (len == 2)
+            fmpcb_digamma(u + 1, h, wp);
     }
     else
     {

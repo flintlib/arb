@@ -82,6 +82,12 @@ _fmprb_poly_lgamma_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, lo
             }
         }
     }
+    else if (len <= 2)
+    {
+        fmprb_lgamma(u, h, wp);
+        if (len == 2)
+            fmprb_digamma(u + 1, h, wp);
+    }
     else
     {
         /* otherwise use Stirling series */
