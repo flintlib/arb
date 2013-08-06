@@ -25,7 +25,7 @@
 
 #include "fmprb.h"
 
-#define ASSERT(cond) if (!(cond)) { printf("FAIL: %ld\n", __LINE__); abort(); }
+#define ASSERT(cond) if (!(cond)) { printf("FAIL: %d\n", __LINE__); abort(); }
 
 int main()
 {
@@ -76,6 +76,133 @@ int main()
     ASSERT(!fmprb_is_zero(indet_exact));
     ASSERT(!fmprb_is_zero(indet_pos_rad));
     ASSERT(!fmprb_is_zero(indet_inf_rad));
+
+    ASSERT(!fmprb_is_nonzero(zero));
+    ASSERT(fmprb_is_nonzero(pos));
+    ASSERT(fmprb_is_nonzero(neg));
+    ASSERT(fmprb_is_nonzero(pos_inf));
+    ASSERT(fmprb_is_nonzero(neg_inf));
+    ASSERT(fmprb_is_nonzero(pos_inf_err));
+    ASSERT(fmprb_is_nonzero(neg_inf_err));
+    ASSERT(!fmprb_is_nonzero(zero_pm_inf));
+    ASSERT(!fmprb_is_nonzero(pos_pm_inf));
+    ASSERT(!fmprb_is_nonzero(neg_pm_inf));
+    ASSERT(!fmprb_is_nonzero(indet_exact));
+    ASSERT(!fmprb_is_nonzero(indet_pos_rad));
+    ASSERT(!fmprb_is_nonzero(indet_inf_rad));
+
+
+    ASSERT(!fmprb_is_positive(zero));
+    ASSERT(fmprb_is_positive(pos));
+    ASSERT(!fmprb_is_positive(neg));
+    ASSERT(fmprb_is_positive(pos_inf));
+    ASSERT(!fmprb_is_positive(neg_inf));
+    ASSERT(fmprb_is_positive(pos_inf_err));
+    ASSERT(!fmprb_is_positive(neg_inf_err));
+    ASSERT(!fmprb_is_positive(zero_pm_inf));
+    ASSERT(!fmprb_is_positive(pos_pm_inf));
+    ASSERT(!fmprb_is_positive(neg_pm_inf));
+    ASSERT(!fmprb_is_positive(indet_exact));
+    ASSERT(!fmprb_is_positive(indet_pos_rad));
+    ASSERT(!fmprb_is_positive(indet_inf_rad));
+
+    ASSERT(!fmprb_is_negative(zero));
+    ASSERT(!fmprb_is_negative(pos));
+    ASSERT(fmprb_is_negative(neg));
+    ASSERT(!fmprb_is_negative(pos_inf));
+    ASSERT(fmprb_is_negative(neg_inf));
+    ASSERT(!fmprb_is_negative(pos_inf_err));
+    ASSERT(fmprb_is_negative(neg_inf_err));
+    ASSERT(!fmprb_is_negative(zero_pm_inf));
+    ASSERT(!fmprb_is_negative(pos_pm_inf));
+    ASSERT(!fmprb_is_negative(neg_pm_inf));
+    ASSERT(!fmprb_is_negative(indet_exact));
+    ASSERT(!fmprb_is_negative(indet_pos_rad));
+    ASSERT(!fmprb_is_negative(indet_inf_rad));
+
+    ASSERT(fmprb_is_nonnegative(zero));
+    ASSERT(fmprb_is_nonnegative(pos));
+    ASSERT(!fmprb_is_nonnegative(neg));
+    ASSERT(fmprb_is_nonnegative(pos_inf));
+    ASSERT(!fmprb_is_nonnegative(neg_inf));
+    ASSERT(fmprb_is_nonnegative(pos_inf_err));
+    ASSERT(!fmprb_is_nonnegative(neg_inf_err));
+    ASSERT(!fmprb_is_nonnegative(zero_pm_inf));
+    ASSERT(!fmprb_is_nonnegative(pos_pm_inf));
+    ASSERT(!fmprb_is_nonnegative(neg_pm_inf));
+    ASSERT(!fmprb_is_nonnegative(indet_exact));
+    ASSERT(!fmprb_is_nonnegative(indet_pos_rad));
+    ASSERT(!fmprb_is_nonnegative(indet_inf_rad));
+
+    ASSERT(fmprb_is_nonpositive(zero));
+    ASSERT(!fmprb_is_nonpositive(pos));
+    ASSERT(fmprb_is_nonpositive(neg));
+    ASSERT(!fmprb_is_nonpositive(pos_inf));
+    ASSERT(fmprb_is_nonpositive(neg_inf));
+    ASSERT(!fmprb_is_nonpositive(pos_inf_err));
+    ASSERT(fmprb_is_nonpositive(neg_inf_err));
+    ASSERT(!fmprb_is_nonpositive(zero_pm_inf));
+    ASSERT(!fmprb_is_nonpositive(pos_pm_inf));
+    ASSERT(!fmprb_is_nonpositive(neg_pm_inf));
+    ASSERT(!fmprb_is_nonpositive(indet_exact));
+    ASSERT(!fmprb_is_nonpositive(indet_pos_rad));
+    ASSERT(!fmprb_is_nonpositive(indet_inf_rad));
+
+    ASSERT(!fmprb_contains_negative(zero));
+    ASSERT(!fmprb_contains_negative(pos));
+    ASSERT(fmprb_contains_negative(neg));
+    ASSERT(!fmprb_contains_negative(pos_inf));
+    ASSERT(fmprb_contains_negative(neg_inf));
+    ASSERT(!fmprb_contains_negative(pos_inf_err));
+    ASSERT(fmprb_contains_negative(neg_inf_err));
+    ASSERT(fmprb_contains_negative(zero_pm_inf));
+    ASSERT(fmprb_contains_negative(pos_pm_inf));
+    ASSERT(fmprb_contains_negative(neg_pm_inf));
+    ASSERT(fmprb_contains_negative(indet_exact));
+    ASSERT(fmprb_contains_negative(indet_pos_rad));
+    ASSERT(fmprb_contains_negative(indet_inf_rad));
+
+    ASSERT(fmprb_contains_nonpositive(zero));
+    ASSERT(!fmprb_contains_nonpositive(pos));
+    ASSERT(fmprb_contains_nonpositive(neg));
+    ASSERT(!fmprb_contains_nonpositive(pos_inf));
+    ASSERT(fmprb_contains_nonpositive(neg_inf));
+    ASSERT(!fmprb_contains_nonpositive(pos_inf_err));
+    ASSERT(fmprb_contains_nonpositive(neg_inf_err));
+    ASSERT(fmprb_contains_nonpositive(zero_pm_inf));
+    ASSERT(fmprb_contains_nonpositive(pos_pm_inf));
+    ASSERT(fmprb_contains_nonpositive(neg_pm_inf));
+    ASSERT(fmprb_contains_nonpositive(indet_exact));
+    ASSERT(fmprb_contains_nonpositive(indet_pos_rad));
+    ASSERT(fmprb_contains_nonpositive(indet_inf_rad));
+
+    ASSERT(!fmprb_contains_positive(zero));
+    ASSERT(fmprb_contains_positive(pos));
+    ASSERT(!fmprb_contains_positive(neg));
+    ASSERT(fmprb_contains_positive(pos_inf));
+    ASSERT(!fmprb_contains_positive(neg_inf));
+    ASSERT(fmprb_contains_positive(pos_inf_err));
+    ASSERT(!fmprb_contains_positive(neg_inf_err));
+    ASSERT(fmprb_contains_positive(zero_pm_inf));
+    ASSERT(fmprb_contains_positive(pos_pm_inf));
+    ASSERT(fmprb_contains_positive(neg_pm_inf));
+    ASSERT(fmprb_contains_positive(indet_exact));
+    ASSERT(fmprb_contains_positive(indet_pos_rad));
+    ASSERT(fmprb_contains_positive(indet_inf_rad));
+
+    ASSERT(fmprb_contains_nonnegative(zero));
+    ASSERT(fmprb_contains_nonnegative(pos));
+    ASSERT(!fmprb_contains_nonnegative(neg));
+    ASSERT(fmprb_contains_nonnegative(pos_inf));
+    ASSERT(!fmprb_contains_nonnegative(neg_inf));
+    ASSERT(fmprb_contains_nonnegative(pos_inf_err));
+    ASSERT(!fmprb_contains_nonnegative(neg_inf_err));
+    ASSERT(fmprb_contains_nonnegative(zero_pm_inf));
+    ASSERT(fmprb_contains_nonnegative(pos_pm_inf));
+    ASSERT(fmprb_contains_nonnegative(neg_pm_inf));
+    ASSERT(fmprb_contains_nonnegative(indet_exact));
+    ASSERT(fmprb_contains_nonnegative(indet_pos_rad));
+    ASSERT(fmprb_contains_nonnegative(indet_inf_rad));
 
     ASSERT(fmprb_is_finite(zero));
     ASSERT(fmprb_is_finite(pos));

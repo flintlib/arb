@@ -468,56 +468,64 @@ static __inline__ int
 fmprb_is_positive(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) > 0) &&
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) < 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) < 0) &&
+         !fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_is_nonnegative(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) >= 0) &&
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) <= 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) <= 0) &&
+         !fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_is_negative(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) < 0) &&
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) < 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) < 0) &&
+         !fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_is_nonpositive(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) <= 0) &&
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) <= 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) <= 0) &&
+         !fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_contains_negative(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) < 0) ||
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) > 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) > 0)
+        || fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_contains_nonpositive(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) <= 0) ||
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) >= 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) >= 0)
+        || fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_contains_positive(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) > 0) ||
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) > 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) > 0)
+        || fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ int
 fmprb_contains_nonnegative(const fmprb_t x)
 {
     return (fmpr_sgn(fmprb_midref(x)) >= 0) ||
-        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) >= 0);
+        (fmpr_cmpabs(fmprb_radref(x), fmprb_midref(x)) >= 0)
+        || fmpr_is_nan(fmprb_midref(x));
 }
 
 static __inline__ void
