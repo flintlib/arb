@@ -44,11 +44,8 @@ sense for (Lipschitz) continuous functions, and
 trying to approximate functions close to singularities might result in
 slow convergence, or failure to converge.
 
-Special values
--------------------------------------------------------------------------------
-
 The following balls with an infinite or NaN component are permitted,
-and may be returned as output from functions:
+and may be returned as output from functions.
 
 * The ball `[+\infty \pm c]`, where `c` is finite, represents the point at positive infinity. Such a ball can always be replaced by `[+\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
 * The ball `[-\infty \pm c]`, where `c` is finite, represents the point at negative infinity. Such a ball can always be replaced by `[-\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
@@ -114,31 +111,8 @@ Memory management
     Clears an array of *n* initialized *fmprb_struct*:s.
 
 
-Basic manipulation
+Assignment and rounding
 -------------------------------------------------------------------------------
-
-.. function:: int fmprb_is_exact(const fmprb_t x)
-
-    Returns nonzero iff the radius of *x* is zero.
-
-.. function:: int fmprb_equal(const fmprb_t x, const fmprb_t y)
-
-    Returns nonzero iff *x* and *y* are equal as balls, i.e. have both the
-    same midpoint and radius.
-
-    Note that this is not the same thing as testing whether both
-    *x* and *y* certainly represent the same real number, unless
-    either *x* and *y* is exact (and neither contains NaN).
-    To test whether both operands *might* represent the same mathematical
-    quantity, use :func:`fmprb_overlaps` or :func:`fmprb_contains`.
-
-.. function:: void fmprb_zero(fmprb_t x)
-
-    Sets *x* to zero.
-
-.. function:: int fmprb_is_zero(const fmprb_t x)
-
-    Returns nonzero iff the midpoint and radius of *x* are both zero.
 
 .. function:: void fmprb_set(fmprb_t y, const fmprb_t x)
 
@@ -147,15 +121,6 @@ Basic manipulation
 .. function:: void fmprb_set_round(fmprb_t y, const fmprb_t x, long prec)
 
     Sets *y* to a copy of *x*, rounded to *prec* bits.
-
-.. function:: void fmprb_neg(fmprb_t y, const fmprb_t x)
-
-    Sets *y* to the negation of *x*.
-
-.. function:: void fmprb_abs(fmprb_t y, const fmprb_t x)
-
-    Sets *y* to the absolute value of *x*. No attempt is made to improve the
-    interval represented by *x* if it contains zero.
 
 .. function:: void fmprb_set_fmpr(fmprb_t y, const fmpr_t x)
 
@@ -171,14 +136,6 @@ Basic manipulation
 
     Sets *y* to the rational number *x*, rounded to *prec* bits.
 
-.. function:: void fmprb_one(fmprb_t x)
-
-    Sets *x* to the exact integer 1.
-
-.. function:: int fmprb_is_one(const fmprb_t x)
-
-    Returns nonzero iff *x* is exactly 1.
-
 .. function:: void fmprb_set_fmpz_2exp(fmprb_t x, const fmpz_t y, const fmpz_t exp)
 
     Sets *x* to *y* multiplied by 2 raised to the power *exp*.
@@ -188,8 +145,17 @@ Basic manipulation
     Sets *x* to *y* multiplied by 2 raised to the power *exp*, rounding
     the result to *prec* bits.
 
-Special intervals
+
+Assignment of special values
 -------------------------------------------------------------------------------
+
+.. function:: void fmprb_zero(fmprb_t x)
+
+    Sets *x* to zero.
+
+.. function:: void fmprb_one(fmprb_t x)
+
+    Sets *x* to the exact integer 1.
 
 .. function:: void fmprb_pos_inf(fmprb_t x)
 
@@ -207,11 +173,6 @@ Special intervals
 
     Sets *x* to `[\operatorname{NaN} \pm \infty]`, representing
     an indeterminate result.
-
-.. function:: int fmprb_is_finite(fmprb_t x)
-
-    Returns nonzero iff the midpoint and radius of *x* are both finite
-    floating-point numbers, i.e. not infinities or NaN.
 
 
 Input and output
@@ -266,7 +227,7 @@ Random number generation
     cause overflows.
 
 
-Precision and comparisons
+Radius and interval operations
 -------------------------------------------------------------------------------
 
 .. function:: void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
@@ -283,6 +244,119 @@ Precision and comparisons
 
     Adds the supremum of *err*, which is assumed to be nonnegative, to the
     radius of *x*.
+
+.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+
+    Sets *z* to a ball containing both *x* and *y*.
+
+.. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+
+    Sets *u* to the upper bound of the absolute value of *x*,
+    rounded up to *prec* bits.
+
+.. function:: void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+
+    Sets *u* to the lower bound of the absolute value of *x*,
+    rounded down to *prec* bits.
+
+.. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
+
+    Computes the exact interval represented by *x*, in the form of an integer
+    interval multiplied by a power of two, i.e. `x = [a, b] \times 2^{\mathrm{exp}}`.
+
+    The outcome is undefined if the midpoint or radius of *x* is non-finite,
+    or if the difference in magnitude between the midpoint and radius
+    is so large that representing the endpoints exactly would cause overflows.
+
+.. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
+
+    Sets *x* to a ball containing the interval `[a, b]`. We
+    require that `a \le b`.
+
+.. function:: long fmprb_rel_error_bits(const fmprb_t x)
+
+    Returns the effective relative error of *x* measured in bits, defined as
+    the difference between the position of the top bit in the radius
+    and the top bit in the midpoint, plus one.
+    The result is clamped between plus/minus *FMPR_PREC_EXACT*.
+
+.. function:: long fmprb_rel_accuracy_bits(const fmprb_t x)
+
+    Returns the effective relative accuracy of *x* measured in bits,
+    equal to the negative of the return value from *fmprb_rel_error_bits*.
+
+.. function:: long fmprb_bits(const fmprb_t x)
+
+    Returns the number of bits needed to represent the absolute value
+    of the mantissa of the midpoint of *x*, i.e. the minimum precision
+    sufficient to represent *x* exactly. Returns 0 if the midpoint
+    of *x* is a special value.
+
+.. function:: int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
+
+    If *x* contains a unique integer, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero.
+
+
+Comparisons
+-------------------------------------------------------------------------------
+
+.. function:: int fmprb_is_zero(const fmprb_t x)
+
+    Returns nonzero iff the midpoint and radius of *x* are both zero.
+
+.. function:: int fmprb_is_nonzero(const fmprb_t x)
+
+    Returns nonzero iff zero is not contained in the interval represented
+    by *x*.
+
+.. function:: int fmprb_is_one(const fmprb_t x)
+
+    Returns nonzero iff *x* is exactly 1.
+
+.. function:: int fmprb_is_finite(fmprb_t x)
+
+    Returns nonzero iff the midpoint and radius of *x* are both finite
+    floating-point numbers, i.e. not infinities or NaN.
+
+.. function:: int fmprb_is_exact(const fmprb_t x)
+
+    Returns nonzero iff the radius of *x* is zero.
+
+.. function:: int fmprb_is_int(const fmprb_t x)
+
+    Returns nonzero iff *x* is an exact integer.
+
+.. function:: int fmprb_equal(const fmprb_t x, const fmprb_t y)
+
+    Returns nonzero iff *x* and *y* are equal as balls, i.e. have both the
+    same midpoint and radius.
+
+    Note that this is not the same thing as testing whether both
+    *x* and *y* certainly represent the same real number, unless
+    either *x* and *y* is exact (and neither contains NaN).
+    To test whether both operands *might* represent the same mathematical
+    quantity, use :func:`fmprb_overlaps` or :func:`fmprb_contains`,
+    depending on the circumstance.
+
+.. function:: int fmprb_is_positive(const fmprb_t x)
+
+.. function:: int fmprb_is_nonnegative(const fmprb_t x)
+
+.. function:: int fmprb_is_negative(const fmprb_t x)
+
+.. function:: int fmprb_is_nonpositive(const fmprb_t x)
+
+    Returns nonzero iff all points *p* in the interval represented by *x*
+    satisfy, respectively, `p > 0`, `p \ge 0`, `p < 0`, `p \le 0`.
+
+.. function:: int fmprb_overlaps(const fmprb_t x, const fmprb_t y)
+
+    Returns nonzero iff *x* and *y* have some point in common.
+    If either *x* or *y* contains NaN, this function always returns nonzero
+    (as a NaN could be anything, it could in particular contain any
+    number that is included in the other operand).
 
 .. function:: int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
 
@@ -304,22 +378,6 @@ Precision and comparisons
     the points included in *y*).
     If *y* contains NaN and *x* does not, it always returns zero.
 
-.. function:: int fmprb_overlaps(const fmprb_t x, const fmprb_t y)
-
-    Returns nonzero iff *x* and *y* have some point in common.
-    If either *x* or *y* contains NaN, this function always returns nonzero
-    (as a NaN could be anything, it could in particular contain any
-    number that is included in the other operand).
-
-.. function:: int fmprb_is_int(const fmprb_t x)
-
-    Returns nonzero iff *x* is an exact integer.
-
-.. function:: int fmprb_is_nonzero(const fmprb_t x)
-
-    Returns nonzero iff zero is not contained in the interval represented
-    by *x*.
-
 .. function:: int fmprb_contains_negative(const fmprb_t x)
 
 .. function:: int fmprb_contains_nonpositive(const fmprb_t x)
@@ -331,73 +389,18 @@ Precision and comparisons
     Returns nonzero iff there is any point *p* in the interval represented
     by *x* that is, respectively, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
 
-.. function:: int fmprb_is_positive(const fmprb_t x)
-
-.. function:: int fmprb_is_nonnegative(const fmprb_t x)
-
-.. function:: int fmprb_is_negative(const fmprb_t x)
-
-.. function:: int fmprb_is_nonpositive(const fmprb_t x)
-
-    Returns nonzero iff all points *p* in the interval represented by *x*
-    satisfy, respectively, `p > 0`, `p \ge 0`, `p < 0`, `p \le 0`.
-
-.. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
-
-    Sets *u* to the upper bound of the absolute value of *x*,
-    rounded up to *prec* bits.
-
-.. function:: void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
-
-    Sets *u* to the lower bound of the absolute value of *x*,
-    rounded down to *prec* bits.
-
-.. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
-
-    Computes the exact interval represented by *x*, in the form of an integer
-    interval multiplied by a power of two, i.e. `x = [a, b] \times 2^{\mathrm{exp}}`.
-
-    The outcome is undefined if the midpoint or radius of *x* is non-finite,
-    or if the difference in magnitude between the midpoint and radius
-    is so large that representing the endpoints exactly would cause overflows.
-
-.. function:: int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
-
-    If *x* contains a unique integer, sets *z* to that value and returns
-    nonzero. Otherwise (if *x* represents no integers or more than one integer),
-    returns zero.
-
-.. function:: long fmprb_rel_error_bits(const fmprb_t x)
-
-    Returns the effective relative error of *x* measured in bits, defined as
-    the difference between the position of the top bit in the radius
-    and the top bit in the midpoint, plus one.
-    The result is clamped between plus/minus *FMPR_PREC_EXACT*.
-
-.. function:: long fmprb_rel_accuracy_bits(const fmprb_t x)
-
-    Returns the effective relative accuracy of *x* measured in bits,
-    equal to the negative of the return value from *fmprb_rel_error_bits*.
-
-.. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
-
-    Sets *x* to a ball containing the interval `[a, b]`. We
-    require that `a \le b`.
-
-.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
-
-    Sets *z* to a ball containing both *x* and *y*.
-
-.. function:: long fmprb_bits(const fmprb_t x)
-
-    Returns the number of bits needed to represent the absolute value
-    of the mantissa of the midpoint of *x*, i.e. the minimum precision
-    sufficient to represent *x* exactly. Returns 0 if the midpoint
-    of *x* is a special value.
-
 
 Arithmetic
 -------------------------------------------------------------------------------
+
+.. function:: void fmprb_neg(fmprb_t y, const fmprb_t x)
+
+    Sets *y* to the negation of *x*.
+
+.. function:: void fmprb_abs(fmprb_t y, const fmprb_t x)
+
+    Sets *y* to the absolute value of *x*. No attempt is made to improve the
+    interval represented by *x* if it contains zero.
 
 .. function:: void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
