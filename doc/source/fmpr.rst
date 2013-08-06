@@ -95,7 +95,7 @@ Types, macros and constants
     If passed as the precision parameter to a function, indicates that no
     rounding is to be performed. This must only be used when it is known
     that the result of the operation can be represented exactly and fits
-    in memory (the typical use case is working with values small integers).
+    in memory (the typical use case is working small integer values).
     Note that, for example, adding two numbers whose exponents are far
     apart can easily produce an exact result that is far too large to
     store in memory.
