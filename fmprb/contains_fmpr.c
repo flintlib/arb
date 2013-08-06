@@ -28,7 +28,15 @@
 int
 fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y)
 {
-    if (fmprb_is_exact(x))
+    if (fmpr_is_nan(y))
+    {
+        return fmpr_is_nan(fmprb_midref(x));
+    }
+    else if (fmpr_is_nan(fmprb_midref(x)))
+    {
+        return 1;
+    }
+    else if (fmprb_is_exact(x))
     {
         return fmpr_equal(fmprb_midref(x), y);
     }

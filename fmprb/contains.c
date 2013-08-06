@@ -36,6 +36,9 @@ fmprb_contains(const fmprb_t x, const fmprb_t y)
     if (fmprb_is_exact(y))
         return fmprb_contains_fmpr(x, fmprb_midref(y));
 
+    if (fmpr_is_nan(fmprb_midref(y)))
+        return fmpr_is_nan(fmprb_midref(x));
+
     fmpr_init(t);
     fmpr_init(u);
 

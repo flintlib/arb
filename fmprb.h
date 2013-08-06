@@ -54,7 +54,7 @@ fmprb_init(fmprb_t x)
     fmpr_init(fmprb_radref(x));
 }
 
-#define FMPRB_DEBUG 1
+#define FMPRB_DEBUG 0
 
 static __inline__ void
 fmprb_clear(fmprb_t x)
@@ -605,6 +605,7 @@ void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
+void fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
 
 void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
 

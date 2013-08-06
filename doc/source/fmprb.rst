@@ -126,6 +126,12 @@ Basic manipulation
     Returns nonzero iff *x* and *y* are equal as balls, i.e. have both the
     same midpoint and radius.
 
+    Note that this is not the same thing as testing whether both
+    *x* and *y* certainly represent the same real number, unless
+    either *x* and *y* is exact (and neither contains NaN).
+    To test whether both operands *might* represent the same mathematical
+    quantity, use :func:`fmprb_overlaps` or :func:`fmprb_contains`.
+
 .. function:: void fmprb_zero(fmprb_t x)
 
     Sets *x* to zero.
@@ -290,12 +296,20 @@ Precision and comparisons
 
 .. function:: int fmprb_contains(const fmprb_t x, const fmprb_t y)
 
-    Returns nonzero iff the given number *y* is contained in the interval
-    represented by *x*.
+    Returns nonzero iff the given number (or ball) *y* is contained in
+    the interval represented by *x*.
+
+    If *x* is contains NaN, this function always returns nonzero (as it
+    could represent anything, and in particular could represent all
+    the points included in *y*).
+    If *y* contains NaN and *x* does not, it always returns zero.
 
 .. function:: int fmprb_overlaps(const fmprb_t x, const fmprb_t y)
 
     Returns nonzero iff *x* and *y* have some point in common.
+    If either *x* or *y* contains NaN, this function always returns nonzero
+    (as a NaN could be anything, it could in particular contain any
+    number that is included in the other operand).
 
 .. function:: int fmprb_is_int(const fmprb_t x)
 
