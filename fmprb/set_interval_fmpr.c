@@ -34,6 +34,8 @@ fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
     fmprb_add_fmpr(x, x, b, prec);
     fmpr_sub(t, b, a, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmprb_add_error_fmpr(x, t);
+    if (fmpr_is_nan(fmprb_radref(x)))
+        fmpr_pos_inf(fmprb_radref(x));
     fmprb_mul_2exp_si(x, x, -1);
     fmpr_clear(t);
 }

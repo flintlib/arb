@@ -155,6 +155,10 @@ static __inline__ int fmpr_is_nan(const fmpr_t x) {
     return fmpr_is_special(x) && (*fmpr_expref(x) == FMPR_EXP_NAN);
 }
 
+static __inline__ int fmpr_is_finite(const fmpr_t x) {
+    return fmpr_is_zero(x) || !fmpr_is_special(x);
+}
+
 static __inline__ void fmpr_pos_inf(fmpr_t x) {
     fmpz_zero(fmpr_manref(x));
     fmpz_set_si(fmpr_expref(x), FMPR_EXP_POS_INF);

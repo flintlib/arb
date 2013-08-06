@@ -72,3 +72,29 @@ fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
             fmprb_randtest_precise(x, state, prec, mag_bits);
     }
 }
+
+void
+fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+{
+    fmprb_randtest(x, state, prec, mag_bits);
+
+    if (n_randint(state, 10) == 0)
+        fmpr_pos_inf(fmprb_radref(x));
+
+    switch (n_randint(state, 10))
+    {
+        case 0:
+            fmpr_pos_inf(fmprb_midref(x));
+            break;
+        case 1:
+            fmpr_neg_inf(fmprb_midref(x));
+            break;
+        case 2:
+            fmpr_nan(fmprb_midref(x));
+            fmpr_pos_inf(fmprb_radref(x));
+            break;
+        default:
+            break;
+    }
+}
+

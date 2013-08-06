@@ -34,6 +34,13 @@ fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
         fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
         fmpr_pos_inf(fmprb_radref(z));
     }
+    else if (fmpr_is_zero(fmprb_radref(x)))
+    {
+        long r;
+
+        r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
+        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+    }
     else
     {
         long r;

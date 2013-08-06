@@ -195,13 +195,8 @@ int main()
 
         for (iter2 = 0; iter2 < 100; iter2++)
         {
-            fmpr_randtest_special(fmprb_midref(x), state, 2000, 200);
-            fmpr_randtest_special(fmprb_radref(x), state, 200, 200);
-            fmpr_abs(fmprb_radref(x), fmprb_radref(x));
-
-            fmpr_randtest_special(fmprb_midref(y), state, 2000, 200);
-            fmpr_randtest_special(fmprb_radref(y), state, 200, 200);
-            fmpr_abs(fmprb_radref(y), fmprb_radref(y));
+            fmprb_randtest_special(x, state, n_randint(state,2) ? 2000 : 200, 200);
+            fmprb_randtest_special(y, state, n_randint(state,2) ? 2000 : 200, 200);
 
             prec = 2 + n_randint(state, 2000);
 

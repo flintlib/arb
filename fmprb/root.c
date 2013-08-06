@@ -50,8 +50,7 @@ fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
 
     if (fmprb_contains_negative(x))
     {
-        fmpr_nan(fmprb_midref(z));
-        fmpr_pos_inf(fmprb_radref(z));
+        fmprb_indeterminate(z);
         return;
     }
 
@@ -71,17 +70,27 @@ fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
         /* lower point */
         fmpr_sub(err, fmprb_midref(x), fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_DOWN);
 
-        /* derivative x^(1/k) / (x k) at lower point */
-        fmpr_root(t, err, k, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul_ui(u, err, k, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_divappr_abs_ubound(t, t, u, FMPRB_RAD_PREC);
+        if (fmpr_is_zero(err))
+        {
+            fmpr_root(err, fmprb_midref(x), k, FMPRB_RAD_PREC, FMPR_RND_UP);
+            r = fmpr_root(fmprb_midref(z), fmprb_midref(x), k, prec, FMPR_RND_DOWN);
+            fmpr_add_error_result(fmprb_radref(z), err, fmprb_midref(z), r,
+                FMPRB_RAD_PREC, FMPR_RND_UP);
+        }
+        else
+        {
+            /* derivative x^(1/k) / (x k) at lower point */
+            fmpr_root(t, err, k, FMPRB_RAD_PREC, FMPR_RND_UP);
+            fmpr_mul_ui(u, err, k, FMPRB_RAD_PREC, FMPR_RND_DOWN);
+            fmpr_divappr_abs_ubound(t, t, u, FMPRB_RAD_PREC);
 
-        /* multiplied by distance */
-        fmpr_mul(err, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
+            /* multiplied by distance */
+            fmpr_mul(err, t, fmprb_radref(x), FMPRB_RAD_PREC, FMPR_RND_UP);
 
-        r = fmpr_root(fmprb_midref(z), fmprb_midref(x), k, prec, FMPR_RND_DOWN);
-        fmpr_add_error_result(fmprb_radref(z), err, fmprb_midref(z), r,
-            FMPRB_RAD_PREC, FMPR_RND_UP);
+            r = fmpr_root(fmprb_midref(z), fmprb_midref(x), k, prec, FMPR_RND_DOWN);
+            fmpr_add_error_result(fmprb_radref(z), err, fmprb_midref(z), r,
+                FMPRB_RAD_PREC, FMPR_RND_UP);
+        }
 
         fmpr_clear(t);
         fmpr_clear(u);

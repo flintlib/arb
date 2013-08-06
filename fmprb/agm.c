@@ -30,6 +30,12 @@ fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     fmprb_t t, u, v, w;
 
+    if (fmprb_contains_negative(x) || fmprb_contains_negative(y))
+    {
+        fmprb_indeterminate(z);
+        return;
+    }
+
     if (fmprb_is_zero(x) || fmprb_is_zero(y))
     {
         fmprb_zero(z);
@@ -58,7 +64,14 @@ fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
         fmprb_swap(w, u);
     }
 
-    fmprb_union(z, t, u, prec);
+    if (!fmprb_is_finite(t) || !fmprb_is_finite(u))
+    {
+        fmprb_indeterminate(z);
+    }
+    else
+    {
+        fmprb_union(z, t, u, prec);
+    }
 
     fmprb_clear(t);
     fmprb_clear(u);

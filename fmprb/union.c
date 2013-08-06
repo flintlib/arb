@@ -30,6 +30,18 @@ fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 {
     fmpr_t left, right, t;
 
+    if (fmpr_is_nan(fmprb_midref(x)) || fmpr_is_nan(fmprb_midref(y)))
+    {
+        fmprb_indeterminate(z);
+        return;
+    }
+
+    if (fmpr_is_pos_inf(fmprb_radref(x)) || fmpr_is_pos_inf(fmprb_radref(y)))
+    {
+        fmprb_zero_pm_inf(z);
+        return;
+    }
+
     fmpr_init(left);
     fmpr_init(right);
     fmpr_init(t);

@@ -54,9 +54,19 @@ fmprb_init(fmprb_t x)
     fmpr_init(fmprb_radref(x));
 }
 
+#define FMPRB_DEBUG 1
+
 static __inline__ void
 fmprb_clear(fmprb_t x)
 {
+#if FMPRB_DEBUG
+    if (fmpr_is_nan(fmprb_radref(x)) || fmpr_sgn(fmprb_radref(x)) < 0)
+    {
+        printf("ABORT: nan or negative radius!\n");
+        abort();
+    }
+#endif
+
     fmpr_clear(fmprb_midref(x));
     fmpr_clear(fmprb_radref(x));
 }
@@ -106,6 +116,40 @@ static __inline__ int
 fmprb_is_zero(const fmprb_t x)
 {
     return fmpr_is_zero(fmprb_midref(x)) && fmpr_is_zero(fmprb_radref(x));
+}
+
+static __inline__ void
+fmprb_pos_inf(fmprb_t x)
+{
+    fmpr_pos_inf(fmprb_midref(x));
+    fmpr_zero(fmprb_radref(x));
+}
+
+static __inline__ void
+fmprb_neg_inf(fmprb_t x)
+{
+    fmpr_neg_inf(fmprb_midref(x));
+    fmpr_zero(fmprb_radref(x));
+}
+
+static __inline__ void
+fmprb_zero_pm_inf(fmprb_t x)
+{
+    fmpr_zero(fmprb_midref(x));
+    fmpr_pos_inf(fmprb_radref(x));
+}
+
+static __inline__ void
+fmprb_indeterminate(fmprb_t x)
+{
+    fmpr_nan(fmprb_midref(x));
+    fmpr_pos_inf(fmprb_radref(x));
+}
+
+static __inline__ int
+fmprb_is_finite(fmprb_t x)
+{
+    return fmpr_is_finite(fmprb_midref(x)) && fmpr_is_finite(fmprb_radref(x));
 }
 
 static __inline__ void

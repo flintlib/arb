@@ -68,6 +68,7 @@ fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
 
         /* error bound: sum_{k>b} x * 2^(-k*n) <= x * 2^(-b*n - (n-1)) */
         fmprb_mul_2exp_si(t, x, -b*n - (n-1));
+        fmprb_abs(t, t);
         fmprb_add_error(s, t);
 
         fmprb_set(y, s);

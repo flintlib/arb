@@ -155,6 +155,14 @@ Special values
     0, `+\infty`, `-\infty`, NaN, i.e. not a finite, nonzero
     floating-point value.
 
+.. function:: int fmpr_is_finite(fmpr_t x)
+
+    Returns nonzero iff *x* is a finite floating-point value,
+    i.e. not one of the values `+\infty`, `-\infty`, NaN.
+    (Note that this is not equivalent to the negation of
+    :func:`fmpr_is_inf`.)
+
+
 Assignment, rounding and conversions
 -------------------------------------------------------------------------------
 

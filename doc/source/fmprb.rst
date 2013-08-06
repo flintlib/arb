@@ -4,8 +4,8 @@
 ===============================================================================
 
 An :type:`fmprb_t` represents a ball over the real numbers,
-that is, an interval `[m-r, m+r]` where the midpoint `m` and the
-radius `r` are (extended) real numbers and `r` is nonnegative.
+that is, an interval `[m \pm r] \equiv [m-r, m+r]` where the midpoint `m` and the
+radius `r` are (extended) real numbers and `r` is nonnegative (possibly infinite).
 The result of an (approximate) operation done on *fmprb_t* variables
 is a ball which contains the result of the (mathematically exact) operation
 applied to any choice of points in the input balls.
@@ -43,6 +43,20 @@ There are some caveats: in general, ball arithmetic only makes
 sense for (Lipschitz) continuous functions, and 
 trying to approximate functions close to singularities might result in
 slow convergence, or failure to converge.
+
+Special values
+-------------------------------------------------------------------------------
+
+The following balls with an infinite or NaN component are permitted,
+and may be returned as output from functions:
+
+* The ball `[+\infty \pm c]`, where `c` is finite, represents the point at positive infinity. Such a ball can always be replaced by `[+\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
+* The ball `[-\infty \pm c]`, where `c` is finite, represents the point at negative infinity. Such a ball can always be replaced by `[-\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
+* The ball `[c \pm \infty]`, where `c` is finite or infinite, represents the whole extended real line `[-\infty,+\infty]`. Such a ball can always be replaced by `[0 \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library). Note that there is no way to represent a half-infinite interval such as `[0,\infty]`.
+* The ball `[\operatorname{NaN} \pm c]`, where `c` is finite or infinite, represents an indeterminate value (the value could be any extended real number, or it could represent a function being evaluated outside its domain of definition, for example where the result would be complex). Such an indeterminate ball can always be replaced by `[\operatorname{NaN} \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library).
+
+The radius of a ball is not allowed to be negative or NaN.
+
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -168,6 +182,31 @@ Basic manipulation
     Sets *x* to *y* multiplied by 2 raised to the power *exp*, rounding
     the result to *prec* bits.
 
+Special intervals
+-------------------------------------------------------------------------------
+
+.. function:: void fmprb_pos_inf(fmprb_t x)
+
+    Sets *x* to positive infinity, with a zero radius.
+
+.. function:: void fmprb_neg_inf(fmprb_t x)
+
+    Sets *x* to negative infinity, with a zero radius.
+
+.. function:: void fmprb_zero_pm_inf(fmprb_t x)
+
+    Sets *x* to `[0 \pm \infty]`, representing the whole extended real line.
+
+.. function:: void fmprb_indeterminate(fmprb_t x)
+
+    Sets *x* to `[\operatorname{NaN} \pm \infty]`, representing
+    an indeterminate result.
+
+.. function:: int fmprb_is_finite(fmprb_t x)
+
+    Returns nonzero iff the midpoint and radius of *x* are both finite
+    floating-point numbers, i.e. not infinities or NaN.
+
 
 Input and output
 -------------------------------------------------------------------------------
@@ -203,6 +242,11 @@ Random number generation
 
     Generates a random number with midpoint and radius chosen independently,
     possibly giving a very large interval.
+
+.. function:: void fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random interval, possibly having NaN or an infinity
+    as the midpoint and possibly having an infinite radius.
 
 .. function:: void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits)
 
