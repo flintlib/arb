@@ -326,3 +326,45 @@ Euler-Maclaurin summation
     Chooses *N* and *M* using a default algorithm.
 
 
+Power sums
+-------------------------------------------------------------------------------
+
+.. function:: void zeta_log_ui_from_prev(fmprb_t log_k1, ulong k1, fmprb_t log_k0, ulong k0, long prec)
+
+    Computes `\log(k_1)`, given `\log(k_0)` where `k_0 < k_1`.
+    At high precision, this function uses the formula
+    `\log(k_1) = \log(k_0) + 2 \operatorname{atanh}((k_1-k_0)/(k_1+k_0))`,
+    evaluating the inverse hyperbolic tangent using binary splitting
+    (for best efficiency, `k_0` should be large and `k_1 - k_0` should
+    be small). Otherwise, it ignores `\log(k_0)` and evaluates the logarithm
+    the usual way.
+
+.. function:: void zeta_powsum_series_naive(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, long n, long len, long prec)
+
+    Computes
+
+    .. math ::
+
+        z = S(s,a,n) = \sum_{k=0}^{n-1} \frac{1}{(k+a)^{s+t}}
+
+    as a power series in `t` truncated to length *len*. This function
+    evaluates the sum naively term by term.
+
+.. function:: void zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, long prec)
+
+    Computes
+
+    .. math ::
+
+        z = S(s,1,n) \sum_{k=1}^n \frac{1}{k^{s+t}}
+
+    as a power series in `t` truncated to length *len*.
+    This function stores a table of powers that have already been calculated,
+    computing `(ij)^r` as `i^r j^r` whenever `k = ij` is
+    composite. As a further optimization, it groups all even `k` and
+    evaluates the sum as a polynomial in `2^{-(s+t)}`.
+    This scheme requires about `n / \log n` powers, `n / 2` multiplications,
+    and temporary storage of `n / 6` power series. Due to the extra
+    power series multiplications, it is only faster than the naive
+    algorithm when *len* is small.
+
