@@ -3,7 +3,7 @@
 **fmpr.h** -- binary floating-point numbers
 ===============================================================================
 
-A variable of type *fmpr_t* holds an arbitrary-precision binary
+A variable of type :type:`fmpr_t` holds an arbitrary-precision binary
 floating-point number, i.e. a rational number of the form
 `x \times 2^y` where `x, y \in \mathbb{Z}` and `x` is odd;
 or one of the special values zero, plus infinity, minus infinity,
