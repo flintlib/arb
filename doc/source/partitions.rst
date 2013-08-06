@@ -1,3 +1,5 @@
+.. _partitions:
+
 **partitions.h** -- computation of the partition function
 ===============================================================================
 

@@ -1,5 +1,17 @@
+.. _zeta:
+
 **zeta.h** -- support for the zeta function
 ===============================================================================
+
+This module implements various algorithms for evaluating the
+Riemann zeta function and related functions. The functions provided here are
+mainly intended for internal use, though they may be useful to call directly
+in some applications where the default algorithm choices are suboptimal.
+Most applications should use the user-friendly functions
+in the :ref:`fmprb <fmprb>` and :ref:`fmpcb <fmpcb>` modules (or for
+power series, the functions in the
+:ref:`fmprb_poly <fmprb-poly>` and :ref:`fmpcb_poly <fmpcb-poly>`
+modules).
 
 Integer zeta values
 -------------------------------------------------------------------------------

@@ -1,5 +1,23 @@
+.. _bernoulli:
+
 **bernoulli.h** -- support for Bernoulli numbers
 ===============================================================================
+
+This module provides helper functions for exact or approximate calculation
+of the Bernoulli numbers, which are defined by the exponential
+generating function
+
+.. math ::
+
+    \frac{x}{e^x-1} = \sum_{n=0}^{\infty} B_n \frac{x^n}{n!}.
+
+Efficient algorithms are implemented for both multi-evaluation
+and calculation of isolated Bernoulli numbers.
+A global (or thread-local) cache is also provided,
+to support fast repeated evaluation of various special functions
+that depend on the Bernoulli numbers (including the gamma function
+and the Riemann zeta function).
+
 
 Generation of Bernoulli numbers
 --------------------------------------------------------------------------------
@@ -49,12 +67,13 @@ Caching
 
 .. var:: fmpq * bernoulli_cache
 
-    Global cache of Bernoulli numbers.
+    Cache of Bernoulli numbers. Uses thread-local storage if enabled
+    in FLINT.
 
 .. function:: void bernoulli_cache_compute(long n)
 
-    Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached
-    globally. Warning: this function is not currently threadsafe.
+    Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached.
+    Calling :func:`flint_cleanup()` frees the cache.
 
 
 Bounding

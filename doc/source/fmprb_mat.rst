@@ -1,8 +1,10 @@
+.. _fmprb-mat:
+
 **fmprb_mat.h** -- matrices over the real numbers
 ===============================================================================
 
-An *fmprb_mat_t* represents a dense matrix over the real numbers,
-implemented as an array of entries of type *fmprb_struct*.
+An :type:`fmprb_mat_t` represents a dense matrix over the real numbers,
+implemented as an array of entries of type :type:`fmprb_struct`.
 
 The dimension (number of rows and columns) of a matrix is fixed at
 initialization, and the user must ensure that inputs and outputs to

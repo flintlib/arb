@@ -1,5 +1,27 @@
+.. _fmpcb:
+
 **fmpcb.h** -- complex numbers
 ===============================================================================
+
+An :type:`fmpcb_t` represents a complex numbers with
+error bounds. An :type:`fmpcb_t` consists of a pair of real number
+balls of type :type:`fmprb_struct`, representing the real and
+imaginary part with separate error bounds.
+
+An :type:`fmpcb_t` thus represents a rectangle
+`[m_1-r_1, m_1+r_1] + [m_2-r_2, m_2+r_2] i` in the complex plane.
+This is used instead of a disk or square representation
+(consisting of a complex floating-point midpoint with a single radius),
+since it allows implementing many operations more conveniently by splitting
+into ball operations on the real and imaginary parts.
+It also allows tracking when complex numbers have an exact (for example
+exactly zero) real part and an inexact imaginary part, or vice versa.
+
+The interface for the :type:`fmpcb_t` type is slightly less developed
+than that for the :type:`fmprb_t` type. In many cases, the user can
+easily perform missing operations by directly manipulating the real and
+imaginary parts.
+
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -444,10 +466,14 @@ Special functions
 .. function:: void fmpcb_zeta(fmpcb_t z, const fmpcb_t s, long prec)
 
     Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`fmpcb_poly_zeta_series` or the functions in the
+    :ref:`zeta <zeta>` module.
 
 .. function:: void fmpcb_hurwitz_zeta(fmpcb_t z, const fmpcb_t s, const fmpcb_t a, long prec)
 
     Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
-    Note: for computing derivatives with respect to `s`, see the
-    functions in the *zeta* module.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`fmpcb_poly_zeta_series` or the functions in the
+    :ref:`zeta <zeta>` module.
 

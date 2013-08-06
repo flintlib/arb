@@ -20,6 +20,7 @@ General information
 
    overview.rst
    setup.rst
+   issues.rst
    history.rst
 
 Module documentation

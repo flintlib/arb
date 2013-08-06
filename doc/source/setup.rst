@@ -1,3 +1,5 @@
+.. _setup:
+
 Setup
 ===============================================================================
 
@@ -92,20 +94,4 @@ The output of the example program should be something like the following::
 
     3.1415926535897932384626433832795028841971693993751 +/- 4.2764e-50
 
-
-Thread safety and caches
--------------------------------------------------------------------------------
-
-Arb should be fully threadsafe, provided that both MPFR and FLINT have
-been built in threadsafe mode. Please note that thread safety is
-not currently tested, and caution is therefore recommended.
-
-Arb may cache some data (such as the value of `\pi` and
-Bernoulli numbers) to speed up various computations. In threadsafe mode,
-caches use thread-local storage (there is currently no way to save memory
-and avoid recomputation by having several threads share the same cache).
-Caches can be freed by calling the ``flint_cleanup()`` function. To avoid
-memory leaks, the user should call ``flint_cleanup()`` when exiting a thread.
-It is also recommended to call ``flint_cleanup()`` when exiting the main
-program.
 

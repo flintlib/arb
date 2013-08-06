@@ -1,3 +1,5 @@
+.. _fmprb-poly:
+
 **fmprb_poly.h** -- polynomials over the real numbers
 ===============================================================================
 

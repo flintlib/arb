@@ -1,7 +1,9 @@
+.. _fmprb:
+
 **fmprb.h** -- real numbers represented as floating-point balls
 ===============================================================================
 
-An *fmprb_t* represents a ball over the real numbers,
+An :type:`fmprb_t` represents a ball over the real numbers,
 that is, an interval `[m-r, m+r]` where the midpoint `m` and the
 radius `r` are (extended) real numbers and `r` is nonnegative.
 The result of an (approximate) operation done on *fmprb_t* variables
@@ -849,8 +851,9 @@ Special functions
 
     Note: the Hurwitz zeta function is also available, but takes
     complex arguments (see :func:`fmpcb_hurwitz_zeta`).
-    For computation of the derivatives with respect to `s`, see the functions
-    in the *zeta* module.
+    For computing derivatives with respect to `s`,
+    use :func:`fmprb_poly_zeta_series` or the functions in the
+    :ref:`zeta <zeta>` module.
 
 .. function:: void fmprb_zeta_ui(fmprb_t b, ulong n, long prec)
 

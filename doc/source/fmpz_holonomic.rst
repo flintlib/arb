@@ -1,3 +1,5 @@
+.. _fmpz-holonomic:
+
 **fmpz_holonomic.h** -- holonomic sequences and functions
 ===============================================================================
 

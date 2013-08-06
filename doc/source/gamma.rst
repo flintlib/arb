@@ -1,3 +1,5 @@
+.. _gamma:
+
 **gamma.h** -- support for the gamma function
 ===============================================================================
 
@@ -5,8 +7,11 @@ This module implements various algorithms for evaluating the
 gamma function and related functions. The functions provided here are mainly
 intended for internal use, though they may be useful to call directly in some
 applications where the default algorithm choices are suboptimal.
-Most applications should use the standard, user-friendly top-level functions
-in the *fmprb* and *fmpcb* modules.
+Most applications should use the user-friendly functions
+in the :ref:`fmprb <fmprb>` and :ref:`fmpcb <fmpcb>` modules (or for
+power series, the functions in the
+:ref:`fmprb_poly <fmprb-poly>` and :ref:`fmpcb_poly <fmpcb-poly>`
+modules).
 
 
 Evaluation using Taylor series
@@ -101,12 +106,13 @@ Evaluation using the Stirling series
     :func:`gamma_stirling_bound_fmprb` or
     :func:`gamma_stirling_bound_fmpcb`) is included in the output.
 
-.. function :: void gamma_stirling_eval_fmprb_series(fmprb_ptr res, const fmprb_t z, long n, long num, long prec)
+.. function :: void gamma_stirling_eval_fmprb_series(fmprb_ptr res, const fmprb_t z, long n, long len, long prec)
 
-.. function :: void gamma_stirling_eval_fmpcb_series(fmpcb_ptr res, const fmpcb_t z, long n, long num, long prec)
+.. function :: void gamma_stirling_eval_fmpcb_series(fmpcb_ptr res, const fmpcb_t z, long n, long len, long prec)
 
-    Evaluates the Stirling series of a power series `z + t`,
-    computing *num* coefficients. The error bound (computed via
+    Evaluates the Stirling series of a power series argument `z + t`,
+    writing a power series truncated to length *len* to the output *res*.
+    The error bound (computed via
     :func:`gamma_stirling_bound_fmprb` or
     :func:`gamma_stirling_bound_fmpcb`) is included in the output.
 

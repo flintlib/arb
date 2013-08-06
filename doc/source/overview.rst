@@ -1,3 +1,5 @@
+.. _overview:
+
 Feature overview
 ===============================================================================
 
@@ -12,25 +14,30 @@ standard floating-point arithmetic. (See for example [Hoe2009]_.)
 
 At the moment, Arb contains:
 
-* A module (fmpr) for correctly rounded arbitrary-precision
+* A module (:ref:`fmpr <fmpr>`) for correctly rounded arbitrary-precision
   floating-point arithmetic. Arb numbers have a few special features, such
   as arbitrary-size exponents (useful for combinatorics and asymptotics) and
   dynamic allocation (facilitating implementation of hybrid
   integer/floating-point and mixed-precision algorithms).
 
-* A module (fmprb) for real ball arithmetic, where a ball is
-  implemented as a pair of fmpr numbers, and a corresponding module (fmpcb) for
-  complex numbers in rectangular form.
+* A module (:ref:`fmprb <fmprb>`) for real ball arithmetic, where a ball is
+  implemented as a pair of fmpr numbers, and a corresponding module
+  (:ref:`fmpcb <fmpcb>`) for complex numbers in rectangular form.
 
-* Functions for fast high-precision computation of some mathematical constants,
-  based on ball arithmetic.
+* Functions for fast high-precision evaluation of various
+  mathematical constants and special functions, implemented using
+  ball arithmetic with rigorous error bounds.
 
-* Modules (fmprb_poly, fmpcb_poly) for polynomials or power series over the
-  real and complex numbers, implemented using balls as coefficients,
-  with fast polynomial multiplication.
+* Modules (:ref:`fmprb_poly <fmprb-poly>`, :ref:`fmpcb_poly <fmpcb-poly>`)
+  for polynomials or power series over the real and complex numbers,
+  implemented using balls as coefficients,
+  with asymptotically fast polynomial multiplication and
+  many other operations.
 
-* Modules (fmprb_mat, fmpcb_mat) for matrices over the real and complex
-  numbers, implemented using balls as coefficients.
+* Modules (:ref:`fmprb_mat <fmprb-mat>`, :ref:`fmpcb_mat <fmpcb-mat>`)
+  for matrices over the real and complex numbers,
+  implemented using balls as coefficients.
+  At the moment, only rudimentary linear algebra operations are provided.
 
 Planned features include more transcendental functions and more extensive
 polynomial and matrix functionality, as well as further optimizations.
@@ -47,7 +54,6 @@ The current version of Arb implements most of its floating-point arithmetic
 naively using high-level FLINT types. The speed at low precision is far from
 optimal, and the memory management can sometimes be wasteful. The internals
 will be rewritten in the future to fix the inefficiencies,
-which eventually should make Arb ball arithmetic about as fast as mpz or mpfr arithmetic at any precision.
+which eventually should make Arb ball arithmetic about as fast as
+mpz or mpfr arithmetic at any precision.
 
-**Warning**: as this is an early version, any part of the interface is
-subject to change! Also be aware that there are known and unknown bugs.

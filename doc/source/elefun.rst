@@ -1,5 +1,18 @@
+.. _elefun:
+
 **elefun.h** -- support for evaluation of elementary functions
 ===============================================================================
+
+This module implements algorithms used internally for evaluation
+of elementary functions (exp, log, sin, atan, ...).
+The functions provided here are mainly
+intended for internal use, though they may be useful to call directly in some
+applications where the default algorithm choices are suboptimal.
+Most applications should use the user-friendly functions
+in the :ref:`fmprb <fmprb>` and :ref:`fmpcb <fmpcb>` modules (or for
+power series, the functions in the
+:ref:`fmprb_poly <fmprb-poly>` and :ref:`fmpcb_poly <fmpcb-poly>`
+modules).
 
 The exponential function
 --------------------------------------------------------------------------------

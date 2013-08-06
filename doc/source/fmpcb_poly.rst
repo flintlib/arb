@@ -1,3 +1,5 @@
+.. _fmpcb-poly:
+
 **fmpcb_poly.h** -- polynomials over the complex numbers
 ===============================================================================
 
