@@ -147,7 +147,7 @@ fmprb_indeterminate(fmprb_t x)
 }
 
 static __inline__ int
-fmprb_is_finite(fmprb_t x)
+fmprb_is_finite(const fmprb_t x)
 {
     return fmpr_is_finite(fmprb_midref(x)) && fmpr_is_finite(fmprb_radref(x));
 }

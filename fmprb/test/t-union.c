@@ -44,9 +44,9 @@ int main()
         fmprb_init(y);
         fmprb_init(z);
 
-        fmprb_randtest(x, state, 200, 10);
-        fmprb_randtest(y, state, 200, 10);
-        fmprb_randtest(z, state, 200, 10);
+        fmprb_randtest_special(x, state, 200, 10);
+        fmprb_randtest_special(y, state, 200, 10);
+        fmprb_randtest_special(z, state, 200, 10);
 
         prec = 2 + n_randint(state, 200);
 

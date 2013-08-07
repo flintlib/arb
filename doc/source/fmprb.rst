@@ -252,12 +252,12 @@ Radius and interval operations
 .. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 
     Sets *u* to the upper bound of the absolute value of *x*,
-    rounded up to *prec* bits.
+    rounded up to *prec* bits. If *x* contains NaN, the result is NaN.
 
 .. function:: void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 
     Sets *u* to the lower bound of the absolute value of *x*,
-    rounded down to *prec* bits.
+    rounded down to *prec* bits. If *x* contains NaN, the result is NaN.
 
 .. function:: void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t x)
 
@@ -350,6 +350,7 @@ Comparisons
 
     Returns nonzero iff all points *p* in the interval represented by *x*
     satisfy, respectively, `p > 0`, `p \ge 0`, `p < 0`, `p \le 0`.
+    If *x* contains NaN, returns zero.
 
 .. function:: int fmprb_overlaps(const fmprb_t x, const fmprb_t y)
 
@@ -387,7 +388,8 @@ Comparisons
 .. function:: int fmprb_contains_nonnegative(const fmprb_t x)
 
     Returns nonzero iff there is any point *p* in the interval represented
-    by *x* that is, respectively, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
+    by *x* satisfying, respectively, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
+    If *x* contains NaN, returns nonzero.
 
 
 Arithmetic

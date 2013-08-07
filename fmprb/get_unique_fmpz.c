@@ -28,7 +28,7 @@
 int
 fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
 {
-    if (fmpr_is_inf(fmprb_radref(x)) || fmpr_is_nan(fmprb_radref(x)))
+    if (!fmprb_is_finite(x))
     {
         return 0;
     }

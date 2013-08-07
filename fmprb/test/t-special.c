@@ -558,6 +558,58 @@ int main()
     ASSERT(fmprb_overlaps(indet_inf_rad, indet_pos_rad));
     ASSERT(fmprb_overlaps(indet_inf_rad, indet_inf_rad));
 
+    {
+        fmpz_t t;
+        fmpz_init(t);
+
+        ASSERT(fmprb_get_unique_fmpz(t, zero));
+        ASSERT(!fmprb_get_unique_fmpz(t, pos_inf));
+        ASSERT(!fmprb_get_unique_fmpz(t, neg_inf));
+        ASSERT(!fmprb_get_unique_fmpz(t, pos_inf_err));
+        ASSERT(!fmprb_get_unique_fmpz(t, neg_inf_err));
+        ASSERT(!fmprb_get_unique_fmpz(t, zero_pm_inf));
+        ASSERT(!fmprb_get_unique_fmpz(t, pos_pm_inf));
+        ASSERT(!fmprb_get_unique_fmpz(t, neg_pm_inf));
+        ASSERT(!fmprb_get_unique_fmpz(t, indet_exact));
+        ASSERT(!fmprb_get_unique_fmpz(t, indet_pos_rad));
+        ASSERT(!fmprb_get_unique_fmpz(t, indet_inf_rad));
+
+        fmpz_clear(t);
+    }
+
+    {
+        fmpr_t b;
+        long wp = 30;
+
+        fmpr_init(b);
+
+        fmprb_get_abs_ubound_fmpr(b, zero, wp); ASSERT(fmpr_is_zero(b));
+        fmprb_get_abs_ubound_fmpr(b, pos, wp); ASSERT(fmpr_sgn(b) > 0);
+        fmprb_get_abs_ubound_fmpr(b, neg, wp); ASSERT(fmpr_sgn(b) > 0);
+        fmprb_get_abs_ubound_fmpr(b, pos_inf, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_ubound_fmpr(b, neg_inf, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_ubound_fmpr(b, pos_inf_err, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_ubound_fmpr(b, neg_inf_err, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_ubound_fmpr(b, zero_pm_inf, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_ubound_fmpr(b, indet_exact, wp); ASSERT(fmpr_is_nan(b));
+        fmprb_get_abs_ubound_fmpr(b, indet_pos_rad, wp); ASSERT(fmpr_is_nan(b));
+        fmprb_get_abs_ubound_fmpr(b, indet_inf_rad, wp); ASSERT(fmpr_is_nan(b));
+
+        fmprb_get_abs_lbound_fmpr(b, zero, wp); ASSERT(fmpr_is_zero(b));
+        fmprb_get_abs_lbound_fmpr(b, pos, wp); ASSERT(fmpr_sgn(b) > 0);
+        fmprb_get_abs_lbound_fmpr(b, neg, wp); ASSERT(fmpr_sgn(b) > 0);
+        fmprb_get_abs_lbound_fmpr(b, pos_inf, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_lbound_fmpr(b, neg_inf, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_lbound_fmpr(b, pos_inf_err, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_lbound_fmpr(b, neg_inf_err, wp); ASSERT(fmpr_is_pos_inf(b));
+        fmprb_get_abs_lbound_fmpr(b, zero_pm_inf, wp); ASSERT(fmpr_is_zero(b));
+        fmprb_get_abs_lbound_fmpr(b, indet_exact, wp); ASSERT(fmpr_is_nan(b));
+        fmprb_get_abs_lbound_fmpr(b, indet_pos_rad, wp); ASSERT(fmpr_is_nan(b));
+        fmprb_get_abs_lbound_fmpr(b, indet_inf_rad, wp); ASSERT(fmpr_is_nan(b));
+
+        fmpr_clear(b);
+    }
+
     fmprb_clear(zero);
     fmprb_clear(pos);
     fmprb_clear(neg);
