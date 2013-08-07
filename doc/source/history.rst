@@ -3,8 +3,51 @@
 History and changes
 ===============================================================================
 
-For more details, view the detailed commit log
+For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
+
+* 2013-08-07 - version 0.7
+
+  * floating-point and ball functions
+
+    * documented, added test code, and fixed bugs for various operations involving a ball containing an infinity or NaN
+    * added reciprocal square root functions (fmpr_rsqrt, fmprb_rsqrt) based on mpfr_rec_sqrt
+    * faster high-precision division by not computing an explicit remainder
+    * slightly faster computation of pi by using new reciprocal square root and division code
+    * added an fmpr function for approximate division to speed up certain radius operations
+    * added fmpr_set_d for conversion from double
+    * allow use of doubles to optionally compute the partition function faster but without an error bound
+    * bypass mpfr overflow when computing the exponential function to extremely high precision (approximately 1 billion digits)
+    * made fmprb_exp faster for large numbers at extremely high precision by skipping the log(2) removal
+    * made fmpcb_lgamma faster at high precision by speeding up the argument reduction branch computation
+    * added fmprb_asin, fmprb_acos
+    * added various other utility functions to the fmprb module
+    * added a function for computing the Glaisher constant
+    * optimized evaluation of the Riemann zeta function at high precision
+
+  * polynomials and power series
+
+    * made squaring of polynomials faster than generic multiplication
+    * implemented power series reversion (various algorithms) for the fmprb_poly type
+    * added many fmprb_poly utility functions (shifting, truncating, setting/getting coefficients, etc.)
+    * improved power series division when either operand is short
+    * improved power series logarithm when the input is short
+    * improved power series exponential to use the basecase algorithm for short input regardless of the output size
+    * added power series square root and reciprocal square root
+    * added atan, tan, sin, cos, sin_cos, asin, acos fmprb_poly power series functions
+    * added Newton iteration macros to simplify various functions
+    * added gamma functions of real and complex power series ([fmprb/fmpcb]_poly_[gamma/rgamma/lgamma]_series)
+    * added wrappers for computing the Hurwitz zeta function of a power series ([fmprb/fmpcb]_poly_zeta_series)
+    * implemented sieving and other optimizations to improve performance for evaluating the zeta function of a short power series
+    * improved power series composition when the inner series is linear
+    * added many fmpcb_poly versions of nearly all fmprb_poly functions
+    * improved speed and stability of series composition/reversion by balancing the power table exponents
+
+  * other
+
+    * added support for freeing all cached data by calling flint_cleanup()
+    * introduced fmprb_ptr, fmprb_srcptr, fmpcb_ptr, fmpcb_srcptr typedefs for cleaner function signatures
+    * various bug fixes and general cleanup
 
 * 2013-05-31 - version 0.6
 
