@@ -80,7 +80,8 @@ zeta_powsum_series_naive_threaded(fmpcb_ptr z,
     powsum_arg_t * args;
     long i, num_threads;
 
-    num_threads = 1;
+    num_threads = flint_get_num_threads();
+
     threads = flint_malloc(sizeof(pthread_t) * num_threads);
     args = flint_malloc(sizeof(powsum_arg_t) * num_threads);
 
