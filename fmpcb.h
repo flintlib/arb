@@ -698,6 +698,25 @@ _fmpcb_vec_scalar_mul_fmprb(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmp
 }
 
 static __inline__ void
+_fmpcb_vec_scalar_div_fmprb(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmprb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        fmprb_div(fmpcb_realref(res + i), fmpcb_realref(vec + i), c, prec);
+        fmprb_div(fmpcb_imagref(res + i), fmpcb_imagref(vec + i), c, prec);
+    }
+}
+
+static __inline__ void
+_fmpcb_vec_scalar_mul_fmpz(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpz_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_mul_fmpz(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
 _fmpcb_vec_scalar_div_fmpz(fmpcb_ptr res, fmpcb_srcptr vec, long len, const fmpz_t c, long prec)
 {
     long i;
