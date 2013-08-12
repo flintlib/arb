@@ -29,7 +29,8 @@
 #include "bernoulli.h"
 
 static void
-bsplit(fmpcb_ptr P, fmpcb_ptr T, const fmpcb_t s, const fmpcb_t Na, long a, long b, long len, long prec)
+bsplit(fmpcb_ptr P, fmpcb_ptr T, const fmpcb_t s, const fmpcb_t Na,
+    long a, long b, int cont, long len, long prec)
 {
     long plen = FLINT_MIN(2 * (b - a) + 1, len);
 
@@ -105,11 +106,12 @@ bsplit(fmpcb_ptr P, fmpcb_ptr T, const fmpcb_t s, const fmpcb_t Na, long a, long
         P2 = T1 + len1;
         T2 = P2 + len2;
 
-        bsplit(P1, T1, s, Na, a, m, len, prec);
-        bsplit(P2, T2, s, Na, m, b, len, prec);
+        bsplit(P1, T1, s, Na, a, m, 1, len, prec);
+        bsplit(P2, T2, s, Na, m, b, 1, len, prec);
 
-        /* P = P1 * P2, TODO: skip final */
-        _fmpcb_poly_mullow(P, P2, len2, P1, len1, plen, prec);
+        /* P = P1 * P2 */
+        if (cont)
+            _fmpcb_poly_mullow(P, P2, len2, P1, len1, plen, prec);
 
         /* T = T1 + P1 * T2 */
         _fmpcb_poly_mullow(T, T2, len2, P1, len1, plen, prec);
@@ -135,7 +137,7 @@ zeta_em_tail_bsplit(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t Na, fmpcb_srcptr
     P = _fmpcb_vec_init(len);
     T = _fmpcb_vec_init(len);
 
-    bsplit(P, T, s, Na, 0, M, len, prec);
+    bsplit(P, T, s, Na, 0, M, 0, len, prec);
 
     _fmpcb_poly_mullow(z, T, len, Nasx, len, len, prec);
 
