@@ -39,7 +39,7 @@ zeta_series(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, long d, 
     fmpr_init(bound);
     vb = _fmprb_vec_init(d);
 
-    zeta_series_em_choose_param(bound, &N, &M, s, a, d, prec, FMPRB_RAD_PREC);
+    zeta_series_em_choose_param(bound, &N, &M, s, a, FLINT_MIN(d, 2), prec, FMPRB_RAD_PREC);
     zeta_series_em_vec_bound(vb, s, a, N, M, d, FMPRB_RAD_PREC);
 
     zeta_series_em_sum(z, s, a, deflate, N, M, d, prec);
