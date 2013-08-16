@@ -54,6 +54,8 @@ void zeta_log_ui_from_prev(fmprb_t s, ulong k, fmprb_t log_prev, ulong prev, lon
 
 void zeta_powsum_series_naive(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, long n, long len, long prec);
 void zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, long prec);
+void zeta_powsum_series_naive_threaded(fmpcb_ptr z,
+    const fmpcb_t s, const fmpcb_t a, long n, long len, long prec);
 
 void zeta_em_tail_naive(fmpcb_ptr sum, const fmpcb_t s, const fmpcb_t Na, fmpcb_srcptr Nasx, long M, long len, long prec);
 void zeta_em_tail_bsplit(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t Na, fmpcb_srcptr Nasx, long M, long len, long prec);

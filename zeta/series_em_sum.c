@@ -86,11 +86,14 @@ zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, u
     {
         zeta_powsum_one_series_sieved(sum, s, N, d, prec);
     }
+    else if (N > 50 && flint_get_num_threads() > 1)
+    {
+        zeta_powsum_series_naive_threaded(sum, s, a, N, d, prec);
+    }
     else
     {
         zeta_powsum_series_naive(sum, s, a, N, d, prec);
     }
-
 
     /* t = 1/(N+a)^(s+x); we might need one extra term for deflation */
     fmpcb_add_ui(Na, a, N, prec);

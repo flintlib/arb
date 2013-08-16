@@ -40,32 +40,41 @@ typedef struct
 }
 powsum_arg_t;
 
-void _fmpcb_poly_fmpcb_invpow_cpx(fmpcb_ptr res,
-    const fmpcb_t N, const fmpcb_t c, long trunc, long prec);
-
 void *
 _zeta_powsum_evaluator(void * arg_ptr)
 {
     powsum_arg_t arg = *((powsum_arg_t *) arg_ptr);
-    long k;
+    long i, k;
 
-    fmpcb_ptr t;
-    fmpcb_t c;
+    fmpcb_t t, u;
 
-    t = _fmpcb_vec_init(arg.len);
-    fmpcb_init(c);
+    fmpcb_init(t);
+    fmpcb_init(u);
 
     _fmpcb_vec_zero(arg.z, arg.len);
 
     for (k = arg.n0; k < arg.n1; k++)
     {
-        fmpcb_add_ui(c, arg.a, k, arg.prec);
-        _fmpcb_poly_fmpcb_invpow_cpx(t, c, arg.s, arg.len, arg.prec);
-        _fmpcb_vec_add(arg.z, arg.z, t, arg.len, arg.prec);
+        fmpcb_add_ui(t, arg.a, k, arg.prec);
+
+        fmpcb_log(t, t, arg.prec);
+
+        fmpcb_mul(u, t, arg.s, arg.prec);
+        fmpcb_neg(u, u);
+        fmpcb_exp(u, u, arg.prec);
+
+        fmpcb_add(arg.z, arg.z, u, arg.prec);
+
+        for (i = 1; i < arg.len; i++)
+        {
+            fmpcb_mul(u, u, t, arg.prec);
+            fmpcb_div_si(u, u, -i, arg.prec);
+            fmpcb_add(arg.z + i, arg.z + i, u, arg.prec);
+        }
     }
 
-    _fmpcb_vec_clear(t, arg.len);
-    fmpcb_clear(c);
+    fmpcb_clear(t);
+    fmpcb_clear(u);
 
     flint_cleanup();
 
