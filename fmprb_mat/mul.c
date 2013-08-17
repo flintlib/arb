@@ -28,49 +28,17 @@
 void
 fmprb_mat_mul(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec)
 {
-    long ar, ac, br, bc, i, j, k;
-
-    ar = fmprb_mat_nrows(A);
-    ac = fmprb_mat_ncols(A);
-    br = fmprb_mat_nrows(B);
-    bc = fmprb_mat_ncols(B);
-
-    if (ac != br || ar != fmprb_mat_nrows(C) || bc != fmprb_mat_ncols(C))
+    if (flint_get_num_threads() > 1 &&
+        ((double) fmprb_mat_nrows(A) *
+         (double) fmprb_mat_nrows(B) *
+         (double) fmprb_mat_ncols(B) *
+         (double) prec > 100000))
     {
-        printf("fmprb_mat_mul: incompatible dimensions\n");
-        abort();
+        fmprb_mat_mul_threaded(C, A, B, prec);
     }
-
-    if (br == 0)
+    else
     {
-        fmprb_mat_zero(C);
-        return;
-    }
-
-    if (A == C || B == C)
-    {
-        fmprb_mat_t T;
-        fmprb_mat_init(T, ar, bc);
-        fmprb_mat_mul(T, A, B, prec);
-        fmprb_mat_swap(T, C);
-        fmprb_mat_clear(T);
-        return;
-    }
-
-    for (i = 0; i < ar; i++)
-    {
-        for (j = 0; j < bc; j++)
-        {
-            fmprb_mul(fmprb_mat_entry(C, i, j),
-                      fmprb_mat_entry(A, i, 0),
-                      fmprb_mat_entry(B, 0, j), prec);
-
-            for (k = 1; k < br; k++)
-            {
-                fmprb_addmul(fmprb_mat_entry(C, i, j),
-                             fmprb_mat_entry(A, i, k),
-                             fmprb_mat_entry(B, k, j), prec);
-            }
-        }
+        fmprb_mat_mul_classical(C, A, B, prec);
     }
 }
+

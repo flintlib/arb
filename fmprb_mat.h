@@ -97,6 +97,10 @@ void fmprb_mat_sub(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t ma
 
 void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec);
 
+void fmprb_mat_mul_classical(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec);
+
+void fmprb_mat_mul_threaded(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec);
+
 void fmprb_mat_pow_ui(fmprb_mat_t B, const fmprb_mat_t A, ulong exp, long prec);
 
 /* Solving */
