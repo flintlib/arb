@@ -188,6 +188,10 @@ Precision and comparisons
     and imaginary parts of *x*, i.e. the minimum precision sufficient
     to represent *x* exactly.
 
+.. function:: void fmpcb_trim(fmpcb_t y, const fmpcb_t x)
+
+    Sets *y* to a a copy of *x* with both the real and imaginary
+    parts trimmed (see :func:`fmprb_trim`).
 
 Complex parts
 -------------------------------------------------------------------------------

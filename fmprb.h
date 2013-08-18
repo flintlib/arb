@@ -161,6 +161,8 @@ fmprb_set(fmprb_t x, const fmprb_t y)
 
 void fmprb_set_round(fmprb_t z, const fmprb_t x, long prec);
 
+void fmprb_trim(fmprb_t y, const fmprb_t x);
+
 static __inline__ void
 fmprb_swap(fmprb_t x, fmprb_t y)
 {
@@ -825,6 +827,14 @@ _fmprb_vec_indeterminate(fmprb_ptr vec, long len)
         fmpr_nan(fmprb_midref(vec + i));
         fmpr_pos_inf(fmprb_radref(vec + i));
     }
+}
+
+static __inline__ void
+_fmprb_vec_trim(fmprb_ptr res, fmprb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_trim(res + i, vec + i);
 }
 
 #endif

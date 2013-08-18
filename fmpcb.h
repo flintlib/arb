@@ -239,6 +239,13 @@ fmpcb_set_round_fmprb(fmpcb_t z, const fmprb_t x, long prec)
 }
 
 static __inline__ void
+fmpcb_trim(fmpcb_t z, const fmpcb_t x)
+{
+    fmprb_trim(fmpcb_realref(z), fmpcb_realref(x));
+    fmprb_trim(fmpcb_imagref(z), fmpcb_imagref(x));
+}
+
+static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
     if (fmprb_is_zero(fmpcb_imagref(z)))
@@ -786,6 +793,14 @@ static __inline__ void
 _fmpcb_vec_indeterminate(fmpcb_ptr vec, long len)
 {
     _fmprb_vec_indeterminate((fmprb_ptr) vec, 2 * len);
+}
+
+static __inline__ void
+_fmpcb_vec_trim(fmpcb_ptr res, fmpcb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmpcb_trim(res + i, vec + i);
 }
 
 #endif

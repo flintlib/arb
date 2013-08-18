@@ -292,6 +292,14 @@ Radius and interval operations
     sufficient to represent *x* exactly. Returns 0 if the midpoint
     of *x* is a special value.
 
+.. function:: void fmprb_trim(fmprb_t y, const fmprb_t x)
+
+    Sets *y* to a trimmed copy of *x*: rounds *x* to a number of bits
+    equal to the accuracy of *x* (as indicated by its radius),
+    plus a few guard bits. The resulting ball is guaranteed to
+    contain *x*, but is more economical if *x* has
+    less than full accuracy.
+
 .. function:: int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
 
     If *x* contains a unique integer, sets *z* to that value and returns
