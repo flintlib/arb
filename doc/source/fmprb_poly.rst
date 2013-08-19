@@ -556,7 +556,8 @@ Transforms
 
 .. function:: void fmprb_poly_binomial_transform(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec)
 
-    Computes the binomial transform of the input truncated to length *len*.
+    Computes the binomial transform of the input polynomial, truncating
+    the output to length *len*.
     The binomial transform maps the coefficients `a_k` in the input polynomial
     to the coefficients `b_k` in the output polynomial via
     `b_n = \sum_{k=0}^n (-1)^k {n \choose k} a_k`.
