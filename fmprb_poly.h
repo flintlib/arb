@@ -427,6 +427,28 @@ void _fmprb_poly_integral(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
 
 void fmprb_poly_integral(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
 
+/* Transforms */
+
+void fmprb_poly_borel_transform(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
+
+void _fmprb_poly_borel_transform(fmprb_ptr res, fmprb_srcptr poly, long len, long prec);
+
+void fmprb_poly_inv_borel_transform(fmprb_poly_t res, const fmprb_poly_t poly, long prec);
+
+void _fmprb_poly_inv_borel_transform(fmprb_ptr res, fmprb_srcptr poly, long len, long prec);
+
+void _fmprb_poly_binomial_transform_basecase(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec);
+
+void fmprb_poly_binomial_transform_basecase(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec);
+
+void _fmprb_poly_binomial_transform_convolution(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec);
+
+void fmprb_poly_binomial_transform_convolution(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec);
+
+void _fmprb_poly_binomial_transform(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec);
+
+void fmprb_poly_binomial_transform(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec);
+
 /* Special functions */
 
 void _fmprb_poly_rsqrt_series(fmprb_ptr g,

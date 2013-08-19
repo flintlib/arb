@@ -527,6 +527,57 @@ Differentiation
     Sets *res* to the integral of *poly*.
 
 
+Transforms
+-------------------------------------------------------------------------------
+
+.. function:: void _fmprb_poly_borel_transform(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
+
+.. function:: void fmprb_poly_borel_transform(fmprb_poly_t res, const fmprb_poly_t poly, long prec)
+
+    Computes the Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
+    to `\sum_k (a_k / k!) x^k`. The underscore method allows aliasing.
+
+.. function:: void _fmprb_poly_inv_borel_transform(fmprb_ptr res, fmprb_srcptr poly, long len, long prec)
+
+.. function:: void fmprb_poly_inv_borel_transform(fmprb_poly_t res, const fmprb_poly_t poly, long prec)
+
+    Computes the inverse Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
+    to `\sum_k a_k k! x^k`. The underscore method allows aliasing.
+
+.. function:: void _fmprb_poly_binomial_transform_basecase(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec)
+
+.. function:: void fmprb_poly_binomial_transform_basecase(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec)
+
+.. function:: void _fmprb_poly_binomial_transform_convolution(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec)
+
+.. function:: void fmprb_poly_binomial_transform_convolution(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec)
+
+.. function:: void _fmprb_poly_binomial_transform(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec)
+
+.. function:: void fmprb_poly_binomial_transform(fmprb_poly_t b, const fmprb_poly_t a, long len, long prec)
+
+    Computes the binomial transform of the input truncated to length *len*.
+    The binomial transform maps the coefficients `a_k` in the input polynomial
+    to the coefficients `b_k` in the output polynomial via
+    `b_n = \sum_{k=0}^n (-1)^k {n \choose k} a_k`.
+    The binomial transform is equivalent to the power series composition
+    `f(x) \to (1-x)^{-1} f(x/(x-1))`, and is its own inverse.
+
+    The *basecase* version evaluates coefficients one by one from the
+    definition, generating the binomial coefficients by a recurrence
+    relation.
+
+    The *convolution* version uses the identity
+    `T(f(x)) = B^{-1}(e^x B(f(-x)))` where `T` denotes the binomial
+    transform operator and `B` denotes the Borel transform operator.
+    This only costs a single polynomial multiplication, plus some
+    scalar operations.
+
+    The default version automatically chooses an algorithm.
+
+    The underscore methods do not support aliasing, and assume that
+    the lengths are nonzero.
+
 Special functions
 -------------------------------------------------------------------------------
 
