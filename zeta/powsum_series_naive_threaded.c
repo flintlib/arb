@@ -47,11 +47,12 @@ _zeta_powsum_evaluator(void * arg_ptr)
     powsum_arg_t arg = *((powsum_arg_t *) arg_ptr);
     long i, k;
 
-    fmpcb_t t, u;
+    fmpcb_t t, u, v;
     fmprb_t f;
 
     fmpcb_init(t);
     fmpcb_init(u);
+    fmpcb_init(v);
     fmprb_init(f);
 
     _fmpcb_vec_zero(arg.z, arg.len);
@@ -70,7 +71,8 @@ _zeta_powsum_evaluator(void * arg_ptr)
         /* forward: u *= (-1)^d * log(a+k)^d / d! */
         if (arg.d0 != 0)
         {
-            fmpcb_pow_ui(u, u, arg.d0, arg.prec);
+            fmpcb_pow_ui(v, t, arg.d0, arg.prec);
+            fmpcb_mul(u, u, v, arg.prec);
             fmprb_fac_ui(f, arg.d0, arg.prec);
             fmprb_div(fmpcb_realref(u), fmpcb_realref(u), f, arg.prec);
             fmprb_div(fmpcb_imagref(u), fmpcb_imagref(u), f, arg.prec);
@@ -90,6 +92,7 @@ _zeta_powsum_evaluator(void * arg_ptr)
 
     fmpcb_clear(t);
     fmpcb_clear(u);
+    fmpcb_clear(v);
     fmprb_clear(f);
 
     flint_cleanup();
