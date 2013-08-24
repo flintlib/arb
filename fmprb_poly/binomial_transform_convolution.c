@@ -29,19 +29,13 @@
 void
 _fmprb_poly_binomial_transform_convolution(fmprb_ptr b, fmprb_srcptr a, long alen, long len, long prec)
 {
-    long i, s;
+    long i;
     fmprb_ptr c, d;
 
     alen = FLINT_MIN(alen, len);
 
     c = _fmprb_vec_init(alen);
     d = _fmprb_vec_init(len);
-
-    /* Hack: rescale x -> 2^s x such that (2^s)^n / n! ~= 1,
-       improving efficiency of block multiplication. The proper
-       solution is to add automatic near-optimal scaling in the
-       block multiplication. */
-    s = (log(len) - 1) * 1.44269504088896 + 0.5;
 
     _fmprb_poly_borel_transform(c, a, alen, prec);
     for (i = 1; i < alen; i += 2)
@@ -51,15 +45,7 @@ _fmprb_poly_binomial_transform_convolution(fmprb_ptr b, fmprb_srcptr a, long ale
     for (i = 1; i < len; i++)
         fmprb_div_ui(d + i, d + i - 1, i, prec);
 
-    for (i = 0; i < alen; i++)
-        fmprb_mul_2exp_si(c + i, c + i, i * s);
-    for (i = 0; i < len; i++)
-        fmprb_mul_2exp_si(d + i, d + i, i * s);
-
     _fmprb_poly_mullow(b, d, len, c, alen, len, prec);
-
-    for (i = 0; i < len; i++)
-        fmprb_mul_2exp_si(b + i, b + i, -i * s);
 
     _fmprb_poly_inv_borel_transform(b, b, len, prec);
 

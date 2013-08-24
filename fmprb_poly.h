@@ -213,6 +213,10 @@ void _fmprb_poly_mullow_block(fmprb_ptr C,
 void fmprb_poly_mullow_block(fmprb_poly_t res, const fmprb_poly_t poly1,
               const fmprb_poly_t poly2, long len, long prec);
 
+void _fmprb_poly_mullow_block_scaled(fmprb_ptr z, fmprb_srcptr x, long xlen, fmprb_srcptr y, long ylen, long len, long prec);
+
+void fmprb_poly_mullow_block_scaled(fmprb_poly_t res, const fmprb_poly_t poly1, const fmprb_poly_t poly2, long len, long prec);
+
 void _fmprb_poly_mullow(fmprb_ptr C,
     fmprb_srcptr A, long lenA,
     fmprb_srcptr B, long lenB, long n, long prec);

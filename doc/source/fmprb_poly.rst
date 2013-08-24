@@ -199,6 +199,8 @@ Arithmetic
 
 .. function:: void _fmprb_poly_mullow_block(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
+.. function:: void _fmprb_poly_mullow_block_scaled(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
+
 .. function:: void _fmprb_poly_mullow(fmprb_ptr C, fmprb_srcptr A, long lenA, fmprb_srcptr B, long lenB, long n, long prec)
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
@@ -219,6 +221,36 @@ Arithmetic
     subproducts which are computed exactly over the integers.
     This is typically nearly as fast as *ztrunc*, and the numerical
     stability is essentially as good as *classical*.
+
+    The *block_scaled* version attempts to find an integer `c`
+    such that `A(2^c x)` and `B(2^c x)` have slowly varying
+    coefficients, then multiplies the scaled polynomials
+    using the *block* algorithm, and finally unscales the
+    result.
+
+    The scaling factor `c` is chosen in a quick, heuristic way
+    by picking the first and last nonzero terms in each polynomial.
+    If the indices in `A` are `a_2, a_1` and the log-2 magnitudes
+    are `e_2, e_1`, and the indices in `B` are `b_2, b_1`
+    with corresponding magnitudes `f_2, f_1`, then we compute
+    `c` as the weighted arithmetic mean of the slopes,
+    rounded to the nearest integer:
+
+    .. math ::
+
+        c = \left\lfloor
+            \frac{(e_2 - e_1) + (f_2 + f_1)}{(a_2 - a_1) + (b_2 - b_1)}
+            + \frac{1}{2}
+            \right \rfloor.
+
+    This strategy is used because it is simple. It is not optimal
+    in all cases, but will typically give good performance when
+    multiplying two power series with a similar decay rate.
+
+    The default algorithm chooses the *classical* algorithm for
+    small polynomials, the *block* algorithm for medium
+    polynomials, and the *block_scaled* algorithm for
+    large polynomials.
 
     If the input pointers are identical (and the lengths are the same),
     they are assumed to represent the same polynomial, and its

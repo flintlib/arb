@@ -25,17 +25,27 @@
 
 #include "fmprb_poly.h"
 
-#define CUTOFF 5
+#define BLOCK_CUTOFF 5
+#define SCALE_CUTOFF 50
 
 void
 _fmprb_poly_mullow(fmprb_ptr res,
     fmprb_srcptr poly1, long len1,
     fmprb_srcptr poly2, long len2, long n, long prec)
 {
-    if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
-        _fmprb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
+    if (n == 1)
+    {
+        fmprb_mul(res, poly1, poly2, prec);
+    }
     else
-        _fmprb_poly_mullow_block(res, poly1, len1, poly2, len2, n, prec);
+    {
+        if (n < BLOCK_CUTOFF || len1 < BLOCK_CUTOFF || len2 < BLOCK_CUTOFF)
+            _fmprb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
+        else if (n < SCALE_CUTOFF || len1 < SCALE_CUTOFF || len2 < SCALE_CUTOFF)
+            _fmprb_poly_mullow_block(res, poly1, len1, poly2, len2, n, prec);
+        else
+            _fmprb_poly_mullow_block_scaled(res, poly1, len1, poly2, len2, n, prec);
+    }
 }
 
 void

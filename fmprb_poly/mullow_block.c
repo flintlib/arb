@@ -269,6 +269,14 @@ get_blocks(long * xblocks, fmprb_srcptr x, long xlen, long prec)
 
     xblocks[block + 1] = xlen;
 
+    if (xlen > 1000 && 0)
+    {
+        printf("len %ld blocks %ld   ", xlen, block + 1);
+        fmprb_printd(x + 0, 5); printf(" ");
+        fmprb_printd(x + xlen / 2, 5); printf(" ");
+        fmprb_printd(x + xlen - 1, 5); printf("\n");
+    }
+
     fmpz_clear(top);
     fmpz_clear(bot);
     fmpz_clear(t);
@@ -295,6 +303,11 @@ has_infnan(fmprb_srcptr x, long len)
     return 0;
 }
 
+/*
+TODO: zero removal in block computation (remove zero blocks?)
+TODO: scaling here?!
+*/
+
 void
 _fmprb_poly_mullow_block(fmprb_ptr z,
     fmprb_srcptr x, long xlen,
@@ -303,7 +316,6 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
 {
     long *xblocks, *yblocks;
     long i, j, xp, yp, xl, yl, bn, r, s;
-    fmprb_ptr tmp;
     fmpr_t t, error;
     fmpz_t xexp, yexp, zexp;
     fmpz *xz, *yz, *zz;
@@ -320,6 +332,15 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
         return;
     }
 
+    /* Zero polynomials can appear for example in complex multiplication.
+       TODO: we should also throw away zero leading and trailing
+       parts of the blocks computed below. */
+    if (_fmprb_vec_is_zero(x, xlen) || (!squaring && _fmprb_vec_is_zero(y, ylen)))
+    {
+        _fmprb_vec_zero(z, n);
+        return;
+    }
+
     xblocks = flint_malloc(sizeof(long) * (xlen + 1));
     yblocks = flint_malloc(sizeof(long) * (ylen + 1));
 
@@ -333,8 +354,6 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
 
     fmpr_init(error);
     fmpr_init(t);
-
-    tmp = _fmprb_vec_init(n);
 
     /* split input polynomials into blocks with similar-size exponents */
     get_blocks(xblocks, x, xlen, prec);
@@ -429,7 +448,6 @@ _fmprb_poly_mullow_block(fmprb_ptr z,
     fmpr_clear(error);
     fmpr_clear(t);
 
-    _fmprb_vec_clear(tmp, n);
     flint_free(xblocks);
     flint_free(yblocks);
 }
