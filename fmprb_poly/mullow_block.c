@@ -269,14 +269,6 @@ get_blocks(long * xblocks, fmprb_srcptr x, long xlen, long prec)
 
     xblocks[block + 1] = xlen;
 
-    if (xlen > 1000 && 0)
-    {
-        printf("len %ld blocks %ld   ", xlen, block + 1);
-        fmprb_printd(x + 0, 5); printf(" ");
-        fmprb_printd(x + xlen / 2, 5); printf(" ");
-        fmprb_printd(x + xlen - 1, 5); printf("\n");
-    }
-
     fmpz_clear(top);
     fmpz_clear(bot);
     fmpz_clear(t);
@@ -302,11 +294,6 @@ has_infnan(fmprb_srcptr x, long len)
 
     return 0;
 }
-
-/*
-TODO: zero removal in block computation (remove zero blocks?)
-TODO: scaling here?!
-*/
 
 void
 _fmprb_poly_mullow_block(fmprb_ptr z,
