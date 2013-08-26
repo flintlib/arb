@@ -32,10 +32,38 @@ _fmprb_poly_compose(fmprb_ptr res,
     fmprb_srcptr poly1, long len1,
     fmprb_srcptr poly2, long len2, long prec)
 {
-    if (len1 <= 7)
+    if (len2 == 1)
+    {
+        _fmprb_poly_evaluate(res, poly1, len1, poly2, prec);
+    }
+    else if (_fmprb_vec_is_zero(poly2, len2 - 1)) /* poly2 is a monomial */
+    {
+        long i;
+        fmprb_t t;
+
+        fmprb_init(t);
+        fmprb_set(t, poly2 + len2 - 1);
+        fmprb_set_round(res, poly1, prec);
+
+        for (i = 1; i < len1; i++)
+        {
+            fmprb_mul(res + i * (len2 - 1), poly1 + i, t, prec);
+            if (i + 1 < len1)
+                fmprb_mul(t, t, poly2 + len2 - 1, prec);
+
+            _fmprb_vec_zero(res + (i - 1) * (len2 - 1) + 1, len2 - 2);
+        }
+
+        fmprb_clear(t);
+    }
+    else if (len1 <= 7)
+    {
         _fmprb_poly_compose_horner(res, poly1, len1, poly2, len2, prec);
+    }
     else
+    {
         _fmprb_poly_compose_divconquer(res, poly1, len1, poly2, len2, prec);
+    }
 }
 
 void fmprb_poly_compose(fmprb_poly_t res,
