@@ -32,12 +32,6 @@ _fmprb_poly_rsqrt_series(fmprb_ptr g,
     hlen = FLINT_MIN(hlen, len);
     fmprb_rsqrt(g, h, prec);
 
-    if (g == h)
-    {
-        printf("NO ZAPPING\n");
-        abort();
-    }
-
     if (hlen == 1)
     {
         _fmprb_vec_zero(g + 1, len - 1);
