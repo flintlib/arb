@@ -671,6 +671,14 @@ _fmprb_vec_set(fmprb_ptr res, fmprb_srcptr vec, long len)
 }
 
 static __inline__ void
+_fmprb_vec_set_round(fmprb_ptr res, fmprb_srcptr vec, long len, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        fmprb_set_round(res + i, vec + i, prec);
+}
+
+static __inline__ void
 _fmprb_vec_swap(fmprb_ptr res, fmprb_ptr vec, long len)
 {
     long i;

@@ -143,6 +143,8 @@ void fmprb_poly_set_si(fmprb_poly_t poly, long c);
 
 int fmprb_poly_contains(const fmprb_poly_t poly1, const fmprb_poly_t poly2);
 
+int fmprb_poly_contains_fmpz_poly(const fmprb_poly_t poly1, const fmpz_poly_t poly2);
+
 int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2);
 
 int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B);
@@ -455,6 +457,16 @@ void fmprb_poly_binomial_transform(fmprb_poly_t b, const fmprb_poly_t a, long le
 
 /* Special functions */
 
+void _fmprb_poly_pow_ui_trunc_binexp(fmprb_ptr res,
+    fmprb_srcptr f, long flen, ulong exp, long len, long prec);
+
+void fmprb_poly_pow_ui_trunc_binexp(fmprb_poly_t res,
+    const fmprb_poly_t poly, ulong exp, long len, long prec);
+
+void _fmprb_poly_pow_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong exp, long prec);
+
+void fmprb_poly_pow_ui(fmprb_poly_t res, const fmprb_poly_t poly, ulong exp, long prec);
+
 void _fmprb_poly_rsqrt_series(fmprb_ptr g,
     fmprb_srcptr h, long hlen, long len, long prec);
 
@@ -559,6 +571,32 @@ void _fmprb_poly_newton_refine_root(fmprb_t r, fmprb_srcptr poly,
     long prec);
 
 /* Macros */
+
+/* counts zero bits in the binary representation of e */
+static __inline__ int
+n_zerobits(mp_limb_t e)
+{
+    int zeros = 0;
+
+    while (e > 1)
+    {
+        zeros += !(e & 1);
+        e >>= 1;
+    }
+
+    return zeros;
+}
+
+static __inline__ long
+poly_pow_length(long poly_len, ulong exp, long trunc)
+{
+    mp_limb_t hi, lo;
+    umul_ppmm(hi, lo, poly_len - 1, exp);
+    add_ssaaaa(hi, lo, hi, lo, 0, 1);
+    if (hi != 0 || lo > (mp_limb_t) LONG_MAX)
+        return trunc;
+    return FLINT_MIN(lo, trunc);
+}
 
 #ifndef NEWTON_INIT
 
