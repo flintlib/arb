@@ -72,6 +72,7 @@ int main()
 
         fmpq_poly_randtest(A, state, m, qbits);
         fmpq_poly_set_coeff_ui(A, 0, 0UL);
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
 
         fmpq_poly_exp_series(B, A, n);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
@@ -160,6 +161,8 @@ int main()
         fmprb_poly_init(a);
         fmprb_poly_init(b);
         fmprb_poly_init(c);
+
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
 
         do {
             fmpq_poly_randtest_small(A, state, m, qbits);

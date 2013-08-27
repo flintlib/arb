@@ -640,6 +640,22 @@ Powers and special functions
 
     Sets *res* to *poly* raised to the power *exp*.
 
+.. function:: void _fmprb_poly_pow_series(fmprb_ptr h, fmprb_srcptr f, long flen, fmprb_srcptr g, long glen, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* and *glen* do not exceed *len*.
+
+.. function:: void fmprb_poly_pow_series(fmprb_poly_t h, const fmprb_poly_t f, const fmprb_poly_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently.
+
 .. function:: void _fmprb_poly_sqrt_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)

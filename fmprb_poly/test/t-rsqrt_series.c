@@ -56,6 +56,8 @@ int main()
         fmpq_poly_randtest_not_zero(A, state, m, qbits);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 30), rbits1, 5);
+
         fmprb_poly_rsqrt_series(b, a, n, rbits2);
 
         /* Check 1/((1/sqrt(a))^2) = a */

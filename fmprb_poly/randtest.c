@@ -40,8 +40,14 @@ fmprb_poly_randtest(fmprb_poly_t poly, flint_rand_t state, long len, long prec, 
     long i;
 
     fmprb_poly_fit_length(poly, len);
-    for (i = 0; i < len; i++)
-        fmprb_randtest2(poly->coeffs + i, state, prec, mag_bits);
+
+    if (n_randint(state, 2))
+        for (i = 0; i < len; i++)
+            fmprb_randtest(poly->coeffs + i, state, prec, mag_bits);
+    else
+        for (i = 0; i < len; i++)
+            fmprb_randtest2(poly->coeffs + i, state, prec, mag_bits);
+
     _fmprb_poly_set_length(poly, len);
     _fmprb_poly_normalise(poly);
 }

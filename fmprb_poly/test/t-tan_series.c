@@ -57,6 +57,7 @@ int main()
 
         fmpq_poly_randtest(A, state, m, qbits);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 50), rbits1, 5);
 
         fmprb_poly_tan_series(b, a, n, rbits2);
 
