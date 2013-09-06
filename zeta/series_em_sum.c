@@ -102,17 +102,21 @@ zeta_series_em_sum(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, int deflate, u
     /* sum += (N+a) * 1/((s+x)-1) * t */
     if (!deflate)
     {
-        /* u = 1/(s+x) has series [1/(s-1), -1/(s-1)^2, 1/(s-1)^3, ...] */
-        fmpcb_sub_ui(u + 0, s, 1, prec);
-        fmpcb_inv(u + 0, u + 0, prec);
-        for (i = 1; i < d; i++)
-            fmpcb_mul(u + i, u + i - 1, u + 0, prec);
-        for (i = 1; i < d; i += 2)
-            fmpcb_neg(u + i, u + i);
+        /* u = (N+a)^(1-(s+x)) */
+        fmpcb_sub_ui(v, s, 1, prec);
+        _fmpcb_poly_fmpcb_invpow_cpx(u, Na, v, d, prec);
 
-        _fmpcb_poly_mullow(v, u, d, t, d, d, prec);
-        _fmpcb_vec_scalar_mul(v, v, d, Na, prec);
-        _fmpcb_vec_add(sum, sum, v, d, prec);
+        /* divide by 1/((s-1) + x) */
+        fmpcb_sub_ui(v, s, 1, prec);
+        fmpcb_div(u, u, v, prec);
+
+        for (i = 1; i < d; i++)
+        {
+            fmpcb_sub(u + i, u + i, u + i - 1, prec);
+            fmpcb_div(u + i, u + i, v, prec);
+        }
+
+        _fmpcb_vec_add(sum, sum, u, d, prec);
     }
     /* sum += ((N+a)^(1-(s+x)) - 1) / ((s+x) - 1) */
     else
