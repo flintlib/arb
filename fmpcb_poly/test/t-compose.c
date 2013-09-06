@@ -61,6 +61,8 @@ int main()
         fmpq_poly_randtest(B, state, 1 + n_randint(state, 10), qbits2);
         fmpq_poly_compose(C, A, B);
 
+        fmpcb_poly_randtest(c, state, 1 + n_randint(state, 20), rbits1, 4);
+
         fmpcb_poly_set_fmpq_poly(a, A, rbits1);
         fmpcb_poly_set_fmpq_poly(b, B, rbits2);
         fmpcb_poly_compose(c, a, b, rbits3);

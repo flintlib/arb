@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -29,22 +29,32 @@ void
 _fmprb_poly_compose_series(fmprb_ptr res, fmprb_srcptr poly1, long len1,
                             fmprb_srcptr poly2, long len2, long n, long prec)
 {
-    if (len2 == 2)  /* fast linear case (TODO: all monomials) */
+    if (len2 == 1)
     {
-        long i;
+        fmprb_set_round(res, poly1, prec);
+        _fmprb_vec_zero(res + 1, n - 1);
+    }
+    else if (_fmprb_vec_is_zero(poly2 + 1, len2 - 2))  /* poly2 is a monomial */
+    {
+        long i, j;
         fmprb_t t;
 
         fmprb_init(t);
-
-        fmprb_set(t, poly2 + 1);
+        fmprb_set(t, poly2 + len2 - 1);
         fmprb_set_round(res, poly1, prec);
 
-        for (i = 1; i < n; i++)
+        for (i = 1, j = len2 - 1; i < len1 && j < n; i++, j += len2 - 1)
         {
-            fmprb_mul(res + i, poly1 + i, t, prec);
-            if (i + 1 < n)
-                fmprb_mul(t, t, poly2 + 1, prec);
+            fmprb_mul(res + j, poly1 + i, t, prec);
+
+            if (i + 1 < len1 && j + len2 - 1 < n)
+                fmprb_mul(t, t, poly2 + len2 - 1, prec);
         }
+
+        if (len2 != 2)
+            for (i = 1; i < n; i++)
+                if (i % (len2 - 1) != 0)
+                    fmprb_zero(res + i);
 
         fmprb_clear(t);
     }

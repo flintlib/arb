@@ -590,6 +590,16 @@ _fmpcb_vec_zero(fmpcb_ptr A, long n)
         fmpcb_zero(A + i);
 }
 
+static __inline__ int
+_fmpcb_vec_is_zero(fmpcb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!fmpcb_is_zero(vec + i))
+            return 0;
+    return 1;
+}
+
 static __inline__ void
 _fmpcb_vec_set(fmpcb_ptr res, fmpcb_srcptr vec, long len)
 {

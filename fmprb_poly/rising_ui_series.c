@@ -25,17 +25,6 @@
 
 #include "fmprb_poly.h"
 
-
-static __inline__ long length(long flen, ulong r, long trunc)
-{
-    mp_limb_t hi, lo;
-    umul_ppmm(hi, lo, flen - 1, r);
-    add_ssaaaa(hi, lo, hi, lo, 0, 1);
-    if (hi != 0 || lo > (mp_limb_t) LONG_MAX)
-        return trunc;
-    return FLINT_MIN(lo, trunc);
-}
-
 static void
 _fmprb_poly_rising_ui_series_bsplit(fmprb_ptr res,
     fmprb_srcptr f, long flen, ulong a, ulong b,
@@ -55,8 +44,8 @@ _fmprb_poly_rising_ui_series_bsplit(fmprb_ptr res,
 
         long m = a + (b - a) / 2;
 
-        len1 = length(flen, m - a, trunc);
-        len2 = length(flen, b - m, trunc);
+        len1 = poly_pow_length(flen, m - a, trunc);
+        len2 = poly_pow_length(flen, b - m, trunc);
 
         L = _fmprb_vec_init(len1 + len2);
         R = L + len1;
@@ -79,7 +68,6 @@ _fmprb_poly_rising_ui_series(fmprb_ptr res,
     _fmprb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
 }
 
-
 void
 fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, long trunc, long prec)
 {
@@ -97,7 +85,7 @@ fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, lon
         return;
     }
 
-    len = length(f->length, r, trunc);
+    len = poly_pow_length(f->length, r, trunc);
 
     if (f == res)
     {

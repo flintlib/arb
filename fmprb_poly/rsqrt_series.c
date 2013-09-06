@@ -39,14 +39,16 @@ _fmprb_poly_rsqrt_series(fmprb_ptr g,
     else
     {
         fmprb_ptr t, u;
+        long tlen;
         t = _fmprb_vec_init(2 * len);
         u = t + len;
 
         NEWTON_INIT(1, len)
 
         NEWTON_LOOP(m, n)
-        _fmprb_poly_mullow(t, g, m, g, m, n, prec);
-        _fmprb_poly_mullow(u, t, n, g, n, n, prec);
+        tlen = FLINT_MIN(2 * m - 1, n);
+        _fmprb_poly_mullow(t, g, m, g, m, tlen, prec);
+        _fmprb_poly_mullow(u, g, m, t, tlen, n, prec);
         _fmprb_poly_mullow(t, u, n, h, hlen, n, prec);
         _fmprb_vec_scalar_mul_2exp_si(g + m, t + m, n - m, -1);
         _fmprb_vec_neg(g + m, g + m, n - m);

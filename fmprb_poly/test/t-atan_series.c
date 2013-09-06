@@ -57,6 +57,8 @@ int main()
         fmpq_poly_randtest(A, state, m, qbits);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 30), rbits1, 5);
+
         fmprb_poly_atan_series(b, a, n, rbits2);
 
         /* Check 2 atan(x) = atan(2x/(1-x^2)) + C */

@@ -169,6 +169,8 @@ void fmpcb_poly_randtest(fmpcb_poly_t poly, flint_rand_t state, long len, long p
 
 int fmpcb_poly_equal(const fmpcb_poly_t A, const fmpcb_poly_t B);
 
+int fmpcb_poly_contains_fmpz_poly(const fmpcb_poly_t poly1, const fmpz_poly_t poly2);
+
 int fmpcb_poly_contains_fmpq_poly(const fmpcb_poly_t poly1, const fmpq_poly_t poly2);
 
 int _fmpcb_poly_overlaps(fmpcb_srcptr poly1, long len1,

@@ -148,11 +148,13 @@ Comparisons
 
 .. function:: int fmprb_poly_contains(const fmprb_poly_t poly1, const fmprb_poly_t poly2)
 
+.. function:: int fmprb_poly_contains_fmpz_poly(const fmprb_poly_t poly1, const fmpz_poly_t poly2)
+
 .. function:: int fmprb_poly_contains_fmpq_poly(const fmprb_poly_t poly1, const fmpq_poly_t poly2)
 
     Returns nonzero iff *poly1* contains *poly2*.
 
-.. function:: int fmprb_poly_equal(const fmprb_t A, const fmprb_t B)
+.. function:: int fmprb_poly_equal(const fmprb_poly_t A, const fmprb_poly_t B)
 
     Returns nonzero iff *A* and *B* are equal as polynomial balls, i.e. all
     coefficients have equal midpoint and radius.
@@ -611,8 +613,48 @@ Transforms
     The underscore methods do not support aliasing, and assume that
     the lengths are nonzero.
 
-Special functions
+Powers and special functions
 -------------------------------------------------------------------------------
+
+.. function:: void _fmprb_poly_pow_ui_trunc_binexp(fmprb_ptr res, fmprb_srcptr f, long flen, ulong exp, long len, long prec)
+
+    Sets *{res, len}* to *{f, flen}* raised to the power *exp*, truncated
+    to length *len*. Requires that *len* is no longer than the length
+    of the power as computed without truncation (i.e. no zero-padding is performed).
+    Does not support aliasing of the input and output, and requires
+    that *flen* and *len* are positive.
+    Uses binary expontiation.
+
+.. function:: void fmprb_poly_pow_ui_trunc_binexp(fmprb_poly_t res, const fmprb_poly_t poly, ulong exp, long len, long prec)
+
+    Sets *res* to *poly* raised to the power *exp*, truncated to length *len*.
+    Uses binary exponentiation.
+
+.. function:: void _fmprb_poly_pow_ui(fmprb_ptr res, fmprb_srcptr f, long flen, ulong exp, long prec)
+
+    Sets *res* to *{f, flen}* raised to the power *exp*. Does not
+    support aliasing of the input and output, and requires that
+    *flen* is positive.
+
+.. function:: void fmprb_poly_pow_ui(fmprb_poly_t res, const fmprb_poly_t poly, ulong exp, long prec)
+
+    Sets *res* to *poly* raised to the power *exp*.
+
+.. function:: void _fmprb_poly_pow_series(fmprb_ptr h, fmprb_srcptr f, long flen, fmprb_srcptr g, long glen, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* and *glen* do not exceed *len*.
+
+.. function:: void fmprb_poly_pow_series(fmprb_poly_t h, const fmprb_poly_t f, const fmprb_poly_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently.
 
 .. function:: void _fmprb_poly_sqrt_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec)
 

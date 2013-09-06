@@ -19,59 +19,55 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
-
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("inv_series....");
+    printf("pow_ui....");
     fflush(stdout);
 
     flint_randinit(state);
 
+    /* compare with fmpz_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
-        fmpq_poly_t A, B;
+        long zbits1, rbits1, rbits2;
+        ulong e;
+        fmpz_poly_t A, B;
         fmprb_poly_t a, b;
 
-        qbits = 2 + n_randint(state, 200);
+        zbits1 = 2 + n_randint(state, 100);
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
+        e = n_randint(state, 30);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
-
-        fmpq_poly_init(A);
-        fmpq_poly_init(B);
+        fmpz_poly_init(A);
+        fmpz_poly_init(B);
 
         fmprb_poly_init(a);
         fmprb_poly_init(b);
 
-        do {
-            fmpq_poly_randtest_not_zero(A, state, m, qbits);
-        } while (A->coeffs[0] == 0);
+        fmpz_poly_randtest(A, state, 1 + n_randint(state, 8), zbits1);
+        fmpz_poly_pow(B, A, e);
 
-        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
+        fmprb_poly_set_fmpz_poly(a, A, rbits1);
+        fmprb_poly_pow_ui(b, a, e, rbits2);
 
-        fmpq_poly_inv_series(B, A, n);
-        fmprb_poly_set_fmpq_poly(a, A, rbits1);
-        fmprb_poly_inv_series(b, a, n, rbits2);
-
-        if (!fmprb_poly_contains_fmpq_poly(b, B))
+        if (!fmprb_poly_contains_fmpz_poly(b, B))
         {
             printf("FAIL\n\n");
             printf("bits2 = %ld\n", rbits2);
+            printf("e = %lu\n", e);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
+            printf("A = "); fmpz_poly_print(A); printf("\n\n");
+            printf("B = "); fmpz_poly_print(B); printf("\n\n");
 
             printf("a = "); fmprb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); fmprb_poly_printd(b, 15); printf("\n\n");
@@ -79,15 +75,15 @@ int main()
             abort();
         }
 
-        fmprb_poly_inv_series(a, a, n, rbits2);
+        fmprb_poly_pow_ui(a, a, e, rbits2);
         if (!fmprb_poly_equal(a, b))
         {
             printf("FAIL (aliasing)\n\n");
             abort();
         }
 
-        fmpq_poly_clear(A);
-        fmpq_poly_clear(B);
+        fmpz_poly_clear(A);
+        fmpz_poly_clear(B);
 
         fmprb_poly_clear(a);
         fmprb_poly_clear(b);

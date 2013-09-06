@@ -63,6 +63,8 @@ int main()
         fmpq_poly_set_coeff_ui(B, 0, 0);
         fmpq_poly_compose_series(C, A, B, n);
 
+        fmprb_poly_randtest(c, state, 1 + n_randint(state, 20), rbits1, 4);
+
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
         fmprb_poly_set_fmpq_poly(b, B, rbits2);
         fmprb_poly_compose_series(c, a, b, n, rbits3);
