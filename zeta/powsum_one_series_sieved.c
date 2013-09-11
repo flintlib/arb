@@ -80,7 +80,7 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
 {
     long * divisors;
     long powers_alloc;
-    long i, j, k, kprev, power_of_two, horner_point;
+    long i, j, k, ibound, kprev, power_of_two, horner_point;
     int critical_line, integer;
 
     fmpcb_ptr powers;
@@ -97,9 +97,11 @@ zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, lo
     powers_alloc = (n / 6 + 1) * len;
     powers = _fmpcb_vec_init(powers_alloc);
 
-    for (i = 3; i <= n; i += 2)
-        for (j = 3 * i; j <= n; j += 2 * i)
-            DIVISOR(j) = i;
+    ibound = n_sqrt(n);
+    for (i = 3; i <= ibound; i += 2)
+        if (DIVISOR(i) == 0)
+            for (j = i * i; j <= n; j += 2 * i)
+                DIVISOR(j) = i;
 
     t = _fmpcb_vec_init(len);
     u = _fmpcb_vec_init(len);
