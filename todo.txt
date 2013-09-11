@@ -1,4 +1,5 @@
-* Verify error bounds used in the fixed-point exponential code
+Core arithmetic
+-------------------------------------------------------------------------------
 
 * Consider changing the interface of functions such as X_set_Y, X_neg_Y
   to always take a precision parameter (and get rid of X_set_round_Y,
@@ -13,14 +14,6 @@
 
 * Work out semantics for comparisons/overlap/containment checks
   when NaNs are involved, and write test code.
-
-* Fix missing/wrong error bounds currently used in the code (see TODO/XXX).
-
-* Add missing polynomial functionality (conversions, arithmetic, etc.)
-
-* Make mullow and power series methods always truncate the inputs to length n.
-
-* More transcendental functions.
 
 * Add adjustment code for balls (when the mantissa is much more precise than
   the error bound, it can be truncated). Also, try to work out more consistent
@@ -68,17 +61,40 @@
   large, and use where appropriate (e.g. polynomial and matrix multiplication
   where one bounds magnitudes in an initial pass).
 
-* Write a faster logarithmic rising factorial (with correct branch
-  cuts) for reducing the complex log gamma function. Also implement
-  the logarithmic reflection formula.
-
 * Rewrite fmprb_div (similar to fmprb_mul)
+
+
+Polynomial and power series arithmetic
+-------------------------------------------------------------------------------
+
+* Verify that mullow and power series methods always truncate the inputs to
+  length n.
+
+* Handle all input of special form ax^n + b quickly in composition and powering.
+
+* Implemented the addition and convlution methods for Taylor shifts.
+
+* Add polynomial mulmid, and use in Newton iteration
+
+* Tune basecase/Newton selection for exp/sin/cos series (the basecase
+  algorithms are more stable, and faster for quite large n)
+
+* Look at using the exponential to compute the complex sine/cosine series
+
+* Improve block multiplication, e.g. by discarding blocks that don't contribute
+  to the result, and scaling individual blocks.
+
+
+Elementary functions
+-------------------------------------------------------------------------------
+
+* Add more transcendental functions.
+
+* Double-check error bounds used in the fixed-point exponential code
 
 * Faster elementary functions at low precision (especially log/arctan).
   Use Brent's algorithm (http://maths-people.anu.edu.au/~brent/pd/RNC7t4.pdf):
   atan(x) = atan(p/q) + atan((q*x-p)/(q+p*x))
-
-* Document fmpz_extras
 
 * Use the complex Newton iteration for cos(pi p/q) when appropriate.
   Double check the proof of correctness of the complex Newton iteration
@@ -91,16 +107,13 @@
   This is certainly faster when n is prime, but might be faster for all n,
   at least if implemented cleverly.
 
-* Add polynomial mulmid, and use in Newton iteration
 
-* Tune basecase/Newton selection for exp/sin/cos series (the basecase
-  algorithms are more stable, and faster for quite large n)
+Special functions
+-------------------------------------------------------------------------------
 
-* Look at using the exponential to compute the complex sine/cosine series
-
-* Use binary splitting to speed up the tail evaluation of zeta when
-  computing a large number of derivatives; also check if
-  skipping even terms in the power sum helps.
+* Write a faster logarithmic rising factorial (with correct branch
+  cuts) for reducing the complex log gamma function. Also implement
+  the logarithmic reflection formula.
 
 * Tune zeta algorithm selection.
 
@@ -110,4 +123,12 @@
 
 * Fall back to the real code when evaluating gamma functions (or their
   power series) at points that happen to be real
+
+* Implement more functions: error functions, Bessel functions,
+  theta functions, etc.
+
+Other
+-------------------------------------------------------------------------------
+
+* Document fmpz_extras
 
