@@ -82,6 +82,28 @@ int main()
             abort();
         }
 
+        /* check aliasing */
+        if (iter < 5000)
+        {
+            fmprb_poly_set(d, a);
+            fmprb_poly_pow_series(d, d, b, len, rbits2);
+
+            if (!fmprb_poly_overlaps(c, d))
+            {
+                printf("FAIL (aliasing 1)\n");
+                abort();
+            }
+
+            fmprb_poly_set(d, b);
+            fmprb_poly_pow_series(d, a, d, len, rbits2);
+
+            if (!fmprb_poly_overlaps(c, d))
+            {
+                printf("FAIL (aliasing 2)\n");
+                abort();
+            }
+        }
+
         fmprb_poly_clear(a);
         fmprb_poly_clear(b);
         fmprb_poly_clear(c);

@@ -30,48 +30,10 @@ _fmprb_poly_pow_series(fmprb_ptr h,
     fmprb_srcptr f, long flen,
     fmprb_srcptr g, long glen, long len, long prec)
 {
-    if (glen == 1 && fmprb_is_exact(g))
+    if (glen == 1)
     {
-        /* g = small integer */
-        if (fmprb_is_int(g) &&
-            fmpr_cmpabs_2exp_si(fmprb_midref(g), FLINT_BITS - 1) < 0)
-        {
-            long e, hlen;
-
-            e = fmpz_get_si(fmpr_manref(fmprb_midref(g))) <<
-                fmpz_get_ui(fmpr_expref(fmprb_midref(g)));
-
-            hlen = poly_pow_length(flen, FLINT_ABS(e), len);
-
-            if (e >= 0)
-            {
-                _fmprb_poly_pow_ui_trunc_binexp(h, f, flen, e, hlen, prec);
-                _fmprb_vec_zero(h + hlen, len - hlen);
-            }
-            else
-            {
-                fmprb_ptr t;
-                t = _fmprb_vec_init(hlen);
-                _fmprb_poly_pow_ui_trunc_binexp(t, f, flen, -e, hlen, prec);
-                _fmprb_poly_inv_series(h, t, hlen, len, prec);
-                _fmprb_vec_clear(t, hlen);
-            }
-            return;
-        }
-
-        /* g = +/- 1/2 */
-        if (fmpr_cmpabs_2exp_si(fmprb_midref(g), -1) == 0)
-        {
-            if (fmpr_sgn(fmprb_midref(g)) > 0)
-            {
-                _fmprb_poly_sqrt_series(h, f, flen, len, prec);
-            }
-            else
-            {
-                _fmprb_poly_rsqrt_series(h, f, flen, len, prec);
-            }
-            return;
-        }
+        _fmprb_poly_pow_fmprb_series(h, f, flen, g, len, prec);
+        return;
     }
 
     /* f^g = exp(g * log(f)) */
@@ -138,7 +100,7 @@ fmprb_poly_pow_series(fmprb_poly_t h,
     if (f == h || g == h)
     {
         fmprb_poly_t t;
-        fmprb_poly_init(t);
+        fmprb_poly_init2(t, len);
         _fmprb_poly_pow_series(t->coeffs,
             f->coeffs, flen, g->coeffs, glen, len, prec);
         _fmprb_poly_set_length(t, len);

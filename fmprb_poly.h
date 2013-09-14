@@ -474,6 +474,12 @@ void _fmprb_poly_pow_series(fmprb_ptr h,
 void fmprb_poly_pow_series(fmprb_poly_t h,
     const fmprb_poly_t f, const fmprb_poly_t g, long len, long prec);
 
+void _fmprb_poly_pow_fmprb_series(fmprb_ptr h,
+    fmprb_srcptr f, long flen, const fmprb_t g, long len, long prec);
+
+void fmprb_poly_pow_fmprb_series(fmprb_poly_t h,
+    const fmprb_poly_t f, const fmprb_t g, long len, long prec);
+
 void _fmprb_poly_rsqrt_series(fmprb_ptr g,
     fmprb_srcptr h, long hlen, long len, long prec);
 
