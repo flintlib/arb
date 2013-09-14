@@ -40,14 +40,43 @@ _fmprb_poly_pow_ui_trunc_binexp(fmprb_ptr res,
     long rlen;
     ulong bit;
 
-    if (exp <= 2)
+    if (exp <= 1)
     {
         if (exp == 0)
             fmprb_one(res);
         else if (exp == 1)
             _fmprb_vec_set_round(res, f, len, prec);
+        return;
+    }
+
+    /* (f * x^r)^m = x^(rm) * f^m */
+    while (flen > 1 && fmprb_is_zero(f))
+    {
+        if (((ulong) len) > exp)
+        {
+            _fmprb_vec_zero(res, exp);
+            len -= exp;
+            res += exp;
+        }
         else
-            _fmprb_poly_mullow(res, f, flen, f, flen, len, prec);
+        {
+            _fmprb_vec_zero(res, len);
+            return;
+        }
+
+        f++;
+        flen--;
+    }
+
+    if (exp == 2)
+    {
+        _fmprb_poly_mullow(res, f, flen, f, flen, len, prec);
+        return;
+    }
+
+    if (flen == 1)
+    {
+        fmprb_pow_ui(res, f, exp, prec);
         return;
     }
 
