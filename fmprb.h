@@ -79,7 +79,7 @@ static __inline__ fmprb_ptr
 _fmprb_vec_init(long n)
 {
     long i;
-    fmprb_ptr v = flint_malloc(sizeof(fmprb_struct) * n);
+    fmprb_ptr v = (fmprb_ptr) flint_malloc(sizeof(fmprb_struct) * n);
 
     for (i = 0; i < n; i++)
         fmprb_init(v + i);

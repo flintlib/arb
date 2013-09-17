@@ -66,7 +66,7 @@ static __inline__ fmpcb_ptr
 _fmpcb_vec_init(long n)
 {
     long i;
-    fmpcb_ptr v = flint_malloc(sizeof(fmpcb_struct) * n);
+    fmpcb_ptr v = (fmpcb_ptr) flint_malloc(sizeof(fmpcb_struct) * n);
 
     for (i = 0; i < n; i++)
         fmpcb_init(v + i);

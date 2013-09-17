@@ -710,7 +710,7 @@ static __inline__ fmpr_ptr
 _fmpr_vec_init(long n)
 {
     long i;
-    fmpr_ptr v = flint_malloc(sizeof(fmpr_struct) * n);
+    fmpr_ptr v = (fmpr_ptr) flint_malloc(sizeof(fmpr_struct) * n);
 
     for (i = 0; i < n; i++)
         fmpr_init(v + i);
