@@ -31,6 +31,10 @@
 #include "fmprb.h"
 #include "fmpcb.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void zeta_apery_bsplit(fmprb_t x, long prec);
 
 void zeta_ui_asymp(fmprb_t x, ulong s, long prec);
@@ -59,6 +63,10 @@ void zeta_powsum_series_naive_threaded(fmpcb_ptr z,
 
 void zeta_em_tail_naive(fmpcb_ptr sum, const fmpcb_t s, const fmpcb_t Na, fmpcb_srcptr Nasx, long M, long len, long prec);
 void zeta_em_tail_bsplit(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t Na, fmpcb_srcptr Nasx, long M, long len, long prec);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

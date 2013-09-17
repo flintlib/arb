@@ -32,6 +32,11 @@
 #include "fmpq_mat.h"
 #include "fmprb_mat.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef struct
 {
     fmpcb_ptr entries;
@@ -136,6 +141,11 @@ int fmpcb_mat_solve(fmpcb_mat_t X, const fmpcb_mat_t A, const fmpcb_mat_t B, lon
 int fmpcb_mat_inv(fmpcb_mat_t X, const fmpcb_mat_t A, long prec);
 
 void fmpcb_mat_det(fmpcb_t det, const fmpcb_mat_t A, long prec);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

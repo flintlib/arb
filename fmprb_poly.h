@@ -31,6 +31,10 @@
 #include "fmpz_poly.h"
 #include "fmpq_poly.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     fmprb_ptr coeffs;
@@ -636,6 +640,10 @@ poly_pow_length(long poly_len, ulong exp, long trunc)
 
 #define NEWTON_END }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

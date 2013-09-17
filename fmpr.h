@@ -53,6 +53,10 @@
 #define FMPR_RND_DOWN 3
 #define FMPR_RND_NEAR 4
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static __inline__ int
 rounds_up(fmpr_rnd_t rnd, int negative)
 {
@@ -722,6 +726,11 @@ _fmpr_vec_clear(fmpr_ptr v, long n)
         fmpr_clear(v + i);
     flint_free(v);
 }
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

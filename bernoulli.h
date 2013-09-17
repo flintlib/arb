@@ -34,6 +34,10 @@
 #include "arith.h"
 #include "fmprb.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern long TLS_PREFIX bernoulli_cache_num;
 
 extern TLS_PREFIX fmpq * bernoulli_cache;
@@ -139,6 +143,10 @@ bernoulli_fmpq_ui(fmpq_t b, ulong n)
 {
     _bernoulli_fmpq_ui(fmpq_numref(b), fmpq_denref(b), n);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
