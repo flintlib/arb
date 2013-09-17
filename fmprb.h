@@ -29,6 +29,10 @@
 #include "fmpr.h"
 #include "fmpz_poly.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     fmpr_struct mid;
@@ -844,5 +848,9 @@ _fmprb_vec_trim(fmprb_ptr res, fmprb_srcptr vec, long len)
     for (i = 0; i < len; i++)
         fmprb_trim(res + i, vec + i);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

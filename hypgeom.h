@@ -29,6 +29,10 @@
 #include "fmprb.h"
 #include "fmpz_poly.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     fmpz_poly_t A;
@@ -62,6 +66,10 @@ long hypgeom_bound(fmpr_t error, int r,
 void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const long n, long prec);
 
 void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

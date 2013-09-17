@@ -29,6 +29,10 @@
 #include "fmpcb.h"
 #include "fmprb_poly.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     fmpcb_ptr coeffs;
@@ -498,6 +502,9 @@ void _fmpcb_poly_zeta_series(fmpcb_ptr res, fmpcb_srcptr h, long hlen, const fmp
 
 void fmpcb_poly_zeta_series(fmpcb_poly_t res, const fmpcb_poly_t f, const fmpcb_t a, int deflate, long n, long prec);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
