@@ -33,6 +33,10 @@
 #include "fmprb.h"
 #include "fmprb_mat.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static __inline__ void
 fmpz_poly_set_si2(fmpz_poly_t poly, long c0, long c1)
 {
@@ -294,6 +298,10 @@ void fmpz_holonomic_get_nth_fmpz(fmpz_t res, const fmpz_holonomic_t op, const fm
 void fmpz_holonomic_get_nth_fmpq(fmpq_t res, const fmpz_holonomic_t op, const fmpq * initial, long n0, long n);
 
 mp_limb_t fmpz_holonomic_get_nth_nmod(const fmpz_holonomic_t op, mp_srcptr initial, ulong n0, ulong n, nmod_t mod);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

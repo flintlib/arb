@@ -29,6 +29,10 @@
 #include "fmpr.h"
 #include "fmprb.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     fmprb_struct real;
@@ -812,5 +816,10 @@ _fmpcb_vec_trim(fmpcb_ptr res, fmpcb_srcptr vec, long len)
     for (i = 0; i < len; i++)
         fmpcb_trim(res + i, vec + i);
 }
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

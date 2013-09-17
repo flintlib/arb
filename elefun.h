@@ -30,6 +30,10 @@
 #include "fmprb_poly.h"
 #include "fmpz_extras.h"
 
+#ifdef __cplusplus
+extern "C"
+#endif
+
 static __inline__ void
 fmpz_print_fixed(const fmpz_t x, long prec)
 {
@@ -64,6 +68,10 @@ void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec);
 void _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n);
 
 void elefun_cos_minpoly(fmpz_poly_t poly, ulong n);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

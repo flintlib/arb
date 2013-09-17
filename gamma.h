@@ -31,6 +31,11 @@
 #include "fmprb.h"
 #include "fmpcb.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern TLS_PREFIX long * gamma_taylor_bound_mag_cache;
 extern TLS_PREFIX fmpr_struct * gamma_taylor_bound_ratio_cache;
 extern TLS_PREFIX long gamma_taylor_bound_cache_num;
@@ -114,6 +119,11 @@ void gamma_small_frac(fmprb_t y, unsigned int p, unsigned int q, long prec);
 
 void gamma_fmpq_outward(fmprb_t y, const fmpq_t x, long prec);
 void gamma_fmpq_stirling(fmprb_t y, const fmpq_t a, long prec);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
