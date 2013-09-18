@@ -35,7 +35,7 @@ fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
     else if (fmpr_is_zero(fmprb_radref(x)))
     {
         /* x = b*2^e, e >= 0 */
-        if (fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0)
+        if (fmpr_is_int(fmprb_midref(x)))
         {
             if (!fmpz_fits_si(fmpr_expref(fmprb_midref(x))))
             {
@@ -62,7 +62,7 @@ fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
     else
     {
         /* if the midpoint is exactly an integer, it is what we want */
-        if (fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0)
+        if (fmpr_is_int(fmprb_midref(x)))
         {
             if (!fmpz_fits_si(fmpr_expref(fmprb_midref(x))))
             {
