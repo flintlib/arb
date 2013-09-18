@@ -648,6 +648,15 @@ fmpr_is_int(const fmpr_t x)
         return fmpz_sgn(fmpr_expref(x)) >= 0;
 }
 
+static __inline__ int
+fmpr_is_int_2exp_si(const fmpr_t x, long e)
+{
+    if (fmpr_is_special(x))
+        return fmpr_is_zero(x);
+    else
+        return fmpz_cmp_si(fmpr_expref(x), e) >= 0;
+}
+
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t __t, __u; \

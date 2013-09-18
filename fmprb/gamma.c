@@ -56,12 +56,9 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
         }
         else
         {
-            const fmpz exp = *fmpr_expref(mid);
-            const fmpz man = *fmpr_manref(mid);
-
             /* fast gamma(n), gamma(n/2) or gamma(n/4) */
-            if (!COEFF_IS_MPZ(exp) && (exp >= -2) &&
-                ((double) fmpz_bits(&man) + exp < prec))
+            if (fmpr_cmpabs_2exp_si(mid, prec) < 0 &&
+                fmpr_is_int_2exp_si(mid, -2))
             {
                 fmpq_t a;
                 fmpq_init(a);

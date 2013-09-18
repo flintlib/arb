@@ -344,6 +344,10 @@ Comparisons
 
     Returns nonzero iff *x* is integer-valued.
 
+.. function:: int fmpr_is_int_2exp_si(const fmpr_t x, long e)
+
+    Returns nonzero iff *x* equals `n 2^e` for some integer *n*.
+
 .. function:: void fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
 
     Sets *b* to the smallest integer such that `|x| \le 2^b`.
