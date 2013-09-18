@@ -129,49 +129,43 @@ _fmpcb_pow_fmprb_exp(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
     fmpcb_clear(t);
 }
 
+#define BINEXP_LIMIT 64
+
 void
 fmpcb_pow_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
 {
-    if (fmprb_is_exact(y))
+    const fmpr_struct * ymid = fmprb_midref(y);
+    const fmpr_struct * yrad = fmprb_radref(y);
+
+    if (fmprb_is_zero(y))
     {
-        if (fmpr_is_zero(fmprb_midref(y)))
-        {
-            fmpcb_one(z);
-            return;
-        }
+        fmpcb_one(z);
+        return;
+    }
 
-        if (!fmpr_is_special(fmprb_midref(y)))
+    if (fmpr_is_zero(yrad))
+    {
+        /* small half-integer or integer */
+        if (fmpr_cmpabs_2exp_si(ymid, BINEXP_LIMIT) < 0 &&
+            fmpr_is_int_2exp_si(ymid, -1))
         {
-            const fmpz * exp_exp = fmpr_expref(fmprb_midref(y));
+            fmpz_t e;
+            fmpz_init(e);            
 
-            /* smallish integer powers and square roots */
-            if (!COEFF_IS_MPZ(*exp_exp) && (*exp_exp >= -1L))
+            if (fmpr_is_int(ymid))
             {
-                long exp_bits;
-
-                exp_bits = *exp_exp + fmpz_bits(fmpr_manref(fmprb_midref(y)));
-
-                if (exp_bits < 64)
-                {
-                    fmpz_t e;
-                    fmpz_init(e);
-
-                    if (*exp_exp == -1L)
-                    {
-                        fmpz_set(e, fmpr_manref(fmprb_midref(y)));
-                        fmpcb_sqrt(z, x, prec + exp_bits);
-                        fmpcb_pow_fmpz(z, z, e, prec);
-                    }
-                    else
-                    {
-                        fmpz_mul_2exp(e, fmpr_manref(fmprb_midref(y)), *exp_exp);
-                        fmpcb_pow_fmpz(z, x, e, prec);
-                    }
-
-                    fmpz_clear(e);
-                    return;
-                }
+                fmpr_get_fmpz_fixed_si(e, ymid, 0);
+                fmpcb_pow_fmpz_binexp(z, x, e, prec);
             }
+            else
+            {
+                fmpr_get_fmpz_fixed_si(e, ymid, -1);
+                fmpcb_sqrt(z, x, prec + fmpz_bits(e));
+                fmpcb_pow_fmpz_binexp(z, z, e, prec);
+            }
+
+            fmpz_clear(e);
+            return;
         }
     }
 

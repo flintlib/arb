@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* check large arguments */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 20000; iter++)
     {
         fmprb_t a, b, c, d, e, f;
         long prec1, prec2;

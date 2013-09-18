@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* check large arguments */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 20000; iter++)
     {
         fmpcb_t a, b, c, d, e, f;
         long prec1, prec2;
@@ -51,8 +51,13 @@ int main()
         fmpcb_init(e);
         fmpcb_init(f);
 
-        fmpcb_randtest(a, state, 1 + n_randint(state, 1000), 200);
-        fmpcb_randtest(b, state, 1 + n_randint(state, 1000), 200);
+        fmpcb_randtest(a, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 200));
+        if (n_randint(state, 4) == 0)
+            fmprb_zero(fmpcb_imagref(a));
+
+        fmpcb_randtest(b, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 200));
+        if (n_randint(state, 4) == 0)
+            fmprb_zero(fmpcb_imagref(b));
 
         fmpcb_pow(c, a, b, prec1);
         fmpcb_pow(d, a, b, prec2);
