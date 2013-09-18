@@ -32,7 +32,7 @@ static __inline__ void fmpr_get_bot_exp(fmpz_t exp, const fmpr_t x)
 
 static __inline__ void fmpr_get_top_exp(fmpz_t exp, const fmpr_t x)
 {
-    fmpz_add_ui(exp, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+    fmpr_abs_bound_lt_2exp_fmpz(exp, x);
 }
 
 void _fmpr_fmpz_vec_max_norm(fmpr_t norm, const fmpz * vec, long len, long prec)

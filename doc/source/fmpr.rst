@@ -340,6 +340,10 @@ Comparisons
     of the mantissa of *x*, i.e. the minimum precision sufficient to represent
     *x* exactly. Returns 0 if *x* is a special value.
 
+.. function:: int fmpr_is_int(const fmpr_t x)
+
+    Returns nonzero iff *x* is integer-valued.
+
 .. function:: void fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
 
     Sets *b* to the smallest integer such that `|x| \le 2^b`.

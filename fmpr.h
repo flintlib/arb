@@ -639,6 +639,15 @@ fmpr_bits(const fmpr_t x)
         return fmpz_bits(fmpr_manref(x));
 }
 
+static __inline__ int
+fmpr_is_int(const fmpr_t x)
+{
+    if (fmpr_is_special(x))
+        return fmpr_is_zero(x);
+    else
+        return fmpz_sgn(fmpr_expref(x)) >= 0;
+}
+
 #define CALL_MPFR_FUNC(r, func, y, x, prec, rnd) \
     do { \
         mpfr_t __t, __u; \

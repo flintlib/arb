@@ -77,7 +77,7 @@ fmprb_sin_fmpr(fmprb_t s, const fmpr_t x, long prec, long maglim)
         fmpz_init(mag);
 
         /* 2^(mag-1) <= |x| < 2^mag */
-        fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+        fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
         /* sin x = x + eps, |eps| < x^3 */
         if (fmpz_cmp_si(mag, -(prec/3) - 2) < 0)
@@ -131,7 +131,7 @@ fmprb_cos_fmpr(fmprb_t c, const fmpr_t x, long prec, long maglim)
         fmpz_init(mag);
 
         /* 2^(mag-1) <= |x| < 2^mag */
-        fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+        fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
         /* cos x = 1 - eps, |eps| < x^2 */
         if (fmpz_cmp_si(mag, -(prec/2) - 2) < 0)
@@ -187,7 +187,7 @@ fmprb_sin_cos_fmpr(fmprb_t s, fmprb_t c, const fmpr_t x, long prec, long maglim)
         fmpz_init(mag);
 
         /* 2^(mag-1) <= |x| < 2^mag */
-        fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+        fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
         /* sin x = x + eps, |eps| < x^3 */
         /* cos x = 1 - eps, |eps| < x^2 */

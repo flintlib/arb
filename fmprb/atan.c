@@ -67,7 +67,7 @@ fmprb_atan_fmpr(fmprb_t z, const fmpr_t x, long prec)
         fmpz_init(mag);
 
         /* 2^(mag-1) <= |x| < 2^mag */
-        fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+        fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
         /* atan(x) = x + eps, |eps| < x^3 */
         if (fmpz_cmp_si(mag, -(prec/3) - 2) < 0)

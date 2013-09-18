@@ -459,9 +459,8 @@ int fmprb_contains(const fmprb_t x, const fmprb_t y);
 static __inline__ int
 fmprb_is_int(const fmprb_t x)
 {
-    return fmprb_is_zero(x) ||
-        (fmprb_is_exact(x) &&
-                 fmpz_sgn(fmpr_expref(fmprb_midref(x))) >= 0);
+    return fmpr_is_zero(fmprb_radref(x)) &&
+           fmpr_is_int(fmprb_midref(x));
 }
 
 static __inline__ int

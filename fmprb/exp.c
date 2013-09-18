@@ -62,7 +62,7 @@ fmpr_exp_ubound(fmpr_t y, const fmpr_t x, long prec, long maglim)
     fmpz_init(mag);
 
     /* 2^(mag-1) <= |x| < 2^mag */
-    fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+    fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
     /* normal range -- ok to just call mpfr */
     if (range_check_mpfr(mag))
@@ -159,7 +159,7 @@ fmprb_exp_fmpr(fmprb_t z, const fmpr_t x, long prec, long maglim, int m1)
     fmpz_init(mag);
 
     /* 2^(mag-1) <= |x| < 2^mag */
-    fmpz_add_ui(mag, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+    fmpr_abs_bound_lt_2exp_fmpz(mag, x);
 
     /* magnitude for approximation by 1 + x */
     if (m1)

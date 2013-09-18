@@ -48,7 +48,7 @@ fmpr_log1p_ubound(fmpr_t y, const fmpr_t x)
     {
         fmpz_t exp;
         fmpz_init(exp);
-        fmpz_add_ui(exp, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+        fmpr_abs_bound_le_2exp_fmpz(exp, x);
 
         if (fmpz_cmp_si(exp, -8) < 0)
         {
@@ -58,12 +58,14 @@ fmpr_log1p_ubound(fmpr_t y, const fmpr_t x)
         {
             /* bound 1+x by 2^n */
             fmpr_add_ui(y, x, 1, FMPRB_RAD_PREC, FMPR_RND_UP);
-            fmpz_add_ui(fmpr_manref(y), fmpr_expref(y), fmpz_bits(fmpr_manref(y)));
 
-            /* log(2) < 11629080 / 2^24 */
-            fmpz_mul_ui(fmpr_manref(y), fmpr_manref(y), 11629080);
-            fmpz_set_si(fmpr_expref(y), -24);
-            _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), FMPRB_RAD_PREC, FMPR_RND_UP);
+            /* exp = bound for log_2(1+x) */
+            fmpr_abs_bound_lt_2exp_fmpz(exp, y);
+
+            /* multiply by 11629080 / 2^24 > log(2) to bound log(1+x) */
+            fmpz_mul_ui(exp, exp, 11629080);
+            fmpr_set_round_fmpz(y, exp, FMPRB_RAD_PREC, FMPR_RND_UP);
+            fmpr_mul_2exp_si(y, y, -24);
         }
         else
         {
@@ -113,7 +115,7 @@ fmprb_log_fmpr(fmprb_t y, const fmpr_t x, long prec)
     }
 
     fmpz_init(exp);
-    fmpz_add_ui(exp, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+    fmpr_abs_bound_lt_2exp_fmpz(exp, x);
 
     if (*exp >= -BIG_EXPONENT && *exp <= BIG_EXPONENT)
     {
