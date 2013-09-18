@@ -340,6 +340,16 @@ Comparisons
     of the mantissa of *x*, i.e. the minimum precision sufficient to represent
     *x* exactly. Returns 0 if *x* is a special value.
 
+.. function:: void fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
+
+    Sets *b* to the smallest integer such that `|x| \le 2^b`.
+    If *x* is zero, infinity or NaN, the result is undefined.
+
+.. function:: void fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
+
+    Sets *b* to the smallest integer such that `|x| < 2^b`.
+    If *x* is zero, infinity or NaN, the result is undefined.
+
 
 Random number generation
 -------------------------------------------------------------------------------

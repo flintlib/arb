@@ -598,6 +598,21 @@ int fmpr_cmp_2exp_si(const fmpr_t x, long e);
 int fmpr_cmpabs_2exp_si(const fmpr_t x, long e);
 
 static __inline__ void
+fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
+{
+    if (fmpz_is_pm1(fmpr_manref(x)))
+        fmpz_set(b, fmpr_expref(x));
+    else
+        fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+}
+
+static __inline__ void
+fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
+{
+    fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
+}
+
+static __inline__ void
 fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)
 {
     if (fmpr_cmp(a, b) <= 0)
