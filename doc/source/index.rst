@@ -22,6 +22,8 @@ General information
    setup.rst
    issues.rst
    history.rst
+   examples.rst
+
 
 Module documentation
 ::::::::::::::::::::
