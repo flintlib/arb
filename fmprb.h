@@ -583,10 +583,8 @@ fmprb_rel_error_bits(const fmprb_t x)
     fmpz_init(midmag);
     fmpz_init(radmag);
 
-    fmpz_add_ui(midmag, fmpr_expref(fmprb_midref(x)),
-        fmpz_bits(fmpr_manref(fmprb_midref(x))));
-    fmpz_add_ui(radmag, fmpr_expref(fmprb_radref(x)),
-        fmpz_bits(fmpr_manref(fmprb_radref(x))));
+    fmpr_abs_bound_lt_2exp_fmpz(midmag, fmprb_midref(x));
+    fmpr_abs_bound_lt_2exp_fmpz(radmag, fmprb_radref(x));
     fmpz_add_ui(radmag, radmag, 1);
 
     result = _fmpz_sub_small(radmag, midmag);

@@ -533,9 +533,10 @@ Arithmetic
     *prec* and *rnd*. The result is NaN if *x* is negative.
     At high precision, this is faster than computing a square root.
 
-.. function:: long fmpr_root(fmpr_t z, const fmpr_t x, ulong k, long prec)
+.. function:: long fmpr_root(fmpr_t z, const fmpr_t x, ulong k, long prec, fmpr_rnd_t rnd)
 
-    Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
+    Sets *z* to the *k*-th root of *x*, rounded to *prec* bits
+    in the direction *rnd*.
     Warning: this function wraps MPFR, and is currently only fast for small *k*.
 
 .. function:: void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e, long prec, fmpr_rnd_t rnd)
@@ -554,14 +555,14 @@ Special functions
 
 .. function:: long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
-    Sets *z* to `\log(x)`, rounded according to *prec* and *rnd*.
+    Sets *y* to `\log(x)`, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
     This function is currently implemented using MPFR and does not
     support large exponents.
 
 .. function:: long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
-    Sets *z* to `\log(1+x)`, rounded according to *prec* and *rnd*.
+    Sets *y* to `\log(1+x)`, rounded according to *prec* and *rnd*.
     This function
     computes an accurate value when *x* is small.
     The result is NaN if `1+x` is negative.
@@ -570,13 +571,13 @@ Special functions
 
 .. function:: long fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
-    Sets *z* to `\exp(x)`, rounded according to *prec* and *rnd*.
+    Sets *y* to `\exp(x)`, rounded according to *prec* and *rnd*.
     This function is currently implemented using MPFR and does not
     support large exponents.
 
 .. function:: long fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
 
-    Sets *z* to `\exp(x)-1`, rounded according to *prec* and *rnd*.
+    Sets *y* to `\exp(x)-1`, rounded according to *prec* and *rnd*.
     This function computes an accurate value when *x* is small.
     This function is currently implemented using MPFR and does not
     support large exponents.
