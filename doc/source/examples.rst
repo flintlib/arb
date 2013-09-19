@@ -16,7 +16,7 @@ pi.c
 
 This program computes `\pi` to an accuracy of roughly *n* decimal digits
 by calling the :func:`fmprb_const_pi` function with a
-working precision roughly `n \log_2(10)` bits.
+working precision of roughly `n \log_2(10)` bits.
 
 Sample output, computing `\pi` to one million digits::
 
@@ -58,4 +58,57 @@ Sample output::
     success!
     cpu/wall(s): 9.06 9.095
     virt/peak/res/peak(MB): 55.52 55.52 35.50 35.50
+
+keiper_li.c
+-------------------------------------------------------------------------------
+
+Given an input integer *n*, this program rigorously computes numerical
+values of the Keiper-Li coefficients
+`\lambda_0, \ldots, \lambda_n`. The Keiper-Li coefficients
+have the property that `\lambda_n > 0` for all `n > 0` if and only if the
+Riemann hypothesis is true. This program was used for the record
+computations described in [Joh2013]_ (the paper describes
+the algorithm in some more detail).
+
+The program takes the following parameters::
+
+    keiper_li n [-prec prec] [-threads num_threads] [-out out_file]
+
+The program prints the first and last few coefficients. It can optionally
+write all the computed data to a file. The working precision defaults
+to a value that should give all the coefficients to a few digits of
+accuracy, but can optionally be set higher (or lower).
+On a multicore system, using several threads results in faster
+execution.
+
+Sample output::
+
+    fredrik@lemur:~/src/arb$ build/examples/keiper_li 1000 -threads 2
+    zeta: cpu/wall(s): 0.4 0.244
+    virt/peak/res/peak(MB): 167.98 294.69 5.09 7.43
+    log: cpu/wall(s): 0.03 0.038
+    gamma: cpu/wall(s): 0.02 0.016
+    binomial transform: cpu/wall(s): 0.01 0.018
+    0: -0.69314718055994530941723212145817656807550013436026 +/- 6.5389e-347
+    1: 0.023095708966121033814310247906495291621932127152051 +/- 2.0924e-345
+    2: 0.046172867614023335192864243096033943387066108314123 +/- 1.674e-344
+    3: 0.0692129735181082679304973488726010689942120263932 +/- 5.0219e-344
+    4: 0.092197619873060409647627872409439018065541673490213 +/- 2.0089e-343
+    5: 0.11510854289223549048622128109857276671349132303596 +/- 1.0044e-342
+    6: 0.13792766871372988290416713700341666356138966078654 +/- 6.0264e-342
+    7: 0.16063715965299421294040287257385366292282442046163 +/- 2.1092e-341
+    8: 0.18321945964338257908193931774721859848998098273432 +/- 8.4368e-341
+    9: 0.20565733870917046170289387421343304741236553410044 +/- 7.5931e-340
+    10: 0.22793393631931577436930340573684453380748385942738 +/- 7.5931e-339
+    991: 2.3196617961613367928373899656994682562101430813341 +/- 2.461e-11
+    992: 2.3203766239254884035349896518332550233162909717288 +/- 9.5363e-11
+    993: 2.321092061239733282811659116333262802034375592414 +/- 1.8495e-10
+    994: 2.3218073540188462110258826121503870112747188888893 +/- 3.5907e-10
+    995: 2.3225217392815185726928702951225314023773358152533 +/- 6.978e-10
+    996: 2.3232344485814623873333223609413703912358283071281 +/- 1.3574e-09
+    997: 2.3239447114886014522889542667580382034526509232475 +/- 2.6433e-09
+    998: 2.3246517591032700808344143240352605148856869322209 +/- 5.1524e-09
+    999: 2.3253548275861382119812576052060526988544993162101 +/- 1.0053e-08
+    1000: 2.3260531616864664574065046940832238158044982041872 +/- 3.927e-08
+    virt/peak/res/peak(MB): 170.18 294.69 7.51 7.51
 
