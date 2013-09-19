@@ -358,6 +358,13 @@ Comparisons
     Sets *b* to the smallest integer such that `|x| < 2^b`.
     If *x* is zero, infinity or NaN, the result is undefined.
 
+.. function:: long fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
+
+    Returns the smallest integer *b* such that `|x| < 2^b`, clamping
+    the result to lie between -*FMPR_PREC_EXACT* and *FMPR_PREC_EXACT*
+    inclusive. If *x* is zero, -*FMPR_PREC_EXACT* is returned,
+    and if *x* is infinity or NaN, *FMPR_PREC_EXACT* is returned.
+
 
 Random number generation
 -------------------------------------------------------------------------------

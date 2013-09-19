@@ -25,36 +25,13 @@
 
 #include "fmpcb_poly.h"
 
-long _fmpr_get_exp(const fmpr_t x)
-{
-    if (fmpr_is_zero(x))
-    {
-        return -FMPR_PREC_EXACT;
-    }
-    else if (fmpr_is_inf(x) || fmpr_is_nan(x))
-    {
-        return FMPR_PREC_EXACT;
-    }
-    else
-    {
-        long res;
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_set(t, fmpr_expref(x));
-        fmpz_add_ui(t, t, fmpz_bits(fmpr_manref(x)));
-        res = fmpz_get_si(t);
-        fmpz_clear(t);
-        return res;
-    }
-}
-
 long
 _fmpcb_get_mid_mag(const fmpcb_t z)
 {
     long rm, im;
 
-    rm = _fmpr_get_exp(fmprb_midref(fmpcb_realref(z)));
-    im = _fmpr_get_exp(fmprb_midref(fmpcb_imagref(z)));
+    rm = fmpr_abs_bound_lt_2exp_si(fmprb_midref(fmpcb_realref(z)));
+    im = fmpr_abs_bound_lt_2exp_si(fmprb_midref(fmpcb_imagref(z)));
 
     return FLINT_MAX(rm, im);
 }
@@ -64,8 +41,8 @@ _fmpcb_get_rad_mag(const fmpcb_t z)
 {
     long rm, im;
 
-    rm = _fmpr_get_exp(fmprb_radref(fmpcb_realref(z)));
-    im = _fmpr_get_exp(fmprb_radref(fmpcb_imagref(z)));
+    rm = fmpr_abs_bound_lt_2exp_si(fmprb_radref(fmpcb_realref(z)));
+    im = fmpr_abs_bound_lt_2exp_si(fmprb_radref(fmpcb_imagref(z)));
 
     return FLINT_MAX(rm, im);
 }

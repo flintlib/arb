@@ -36,15 +36,18 @@ elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one)
     if (fmpr_cmp_2exp_si(fmprb_radref(x), -2) >= 0)
         return 0;
 
-    if (fmpr_cmpabs_2exp_si(fmprb_midref(x), 128) >= 0)
+    /* magnitude clamped between +/- FMPR_PREC_EXACT */
+    mag = fmpr_abs_bound_lt_2exp_si(fmprb_midref(x));
+
+    /* too large */
+    if (mag >= 128)
         return 0;
 
-    if (fmpr_cmpabs_2exp_si(fmprb_midref(x), -prec) < 0)
+    /* too small */
+    if (mag < -prec)
         return 0;
 
     fixed_wp = prec + 2 * FLINT_BIT_COUNT(prec);
-
-    mag = *fmpr_expref(fmprb_midref(x)) + fmpz_bits(fmpr_manref(fmprb_midref(x)));
 
     if (mag > 0)
         fixed_wp += mag;   /* for argument reduction */

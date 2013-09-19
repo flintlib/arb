@@ -29,22 +29,6 @@
 /* tuning factor */
 #define GAMMA_STIRLING_BETA 0.27
 
-static __inline__ long
-_fmpr_mag(const fmpr_t x)
-{
-    if (fmpr_is_special(x))
-    {
-        if (fmpr_is_zero(x))
-            return -FMPR_PREC_EXACT;
-        else
-            return FMPR_PREC_EXACT;
-    }
-    else
-    {
-        return fmpz_bits(fmpr_manref(x)) + *fmpr_expref(x) - 1;
-    }
-}
-
 #define PI 3.1415926535897932385
 
 static long
@@ -133,8 +117,8 @@ choose_large(int * reflect, long * r, long * n,
         long ab, bb;
         double log2z, argz;
 
-        ab = _fmpr_mag(a);
-        bb = _fmpr_mag(b);
+        ab = fmpr_abs_bound_lt_2exp_si(a);
+        bb = fmpr_abs_bound_lt_2exp_si(b);
 
         log2z = FLINT_MAX(ab, bb);
 

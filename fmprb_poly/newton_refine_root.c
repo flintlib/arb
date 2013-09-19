@@ -25,10 +25,9 @@
 
 #include "fmprb_poly.h"
 
-long _fmpr_mag(const fmpr_t c)
+static __inline__ long _fmpr_mag(const fmpr_t c)
 {
-    long m = fmpz_bits(fmpr_manref(c)) + fmpz_get_si(fmpr_expref(c));
-
+    long m = fmpr_abs_bound_lt_2exp_si(c);
     return FLINT_MAX(m, 0);
 }
 

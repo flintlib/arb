@@ -612,6 +612,8 @@ fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
     fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
 }
 
+long fmpr_abs_bound_lt_2exp_si(const fmpr_t x);
+
 static __inline__ void
 fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)
 {
