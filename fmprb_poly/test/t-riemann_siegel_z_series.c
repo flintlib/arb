@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("riemann_siegel_theta_series....");
+    printf("riemann_siegel_z_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,13 +54,13 @@ int main()
         fmprb_poly_init(d);
 
         fmprb_poly_randtest(a, state, m, rbits1, 10);
-        /* if (a->length != 0)
-            fmprb_randtest_precise(a->coeffs, state, rbits1, 1); */
+        if (a->length != 0)
+            fmprb_randtest_precise(a->coeffs, state, rbits1, 1);
         fmprb_poly_randtest(b, state, m, rbits1, 10);
         fmprb_poly_randtest(c, state, m, rbits1, 10);
 
-        fmprb_poly_riemann_siegel_theta_series(b, a, n1, rbits2);
-        fmprb_poly_riemann_siegel_theta_series(c, a, n2, rbits3);
+        fmprb_poly_riemann_siegel_z_series(b, a, n1, rbits2);
+        fmprb_poly_riemann_siegel_z_series(c, a, n2, rbits3);
 
         fmprb_poly_set(d, b);
         fmprb_poly_truncate(d, FLINT_MIN(n1, n2));
@@ -78,10 +78,9 @@ int main()
             abort();
         }
 
-        /* check theta(a) = -theta(-a) */
+        /* check Z(a) = Z(-a) */
         fmprb_poly_neg(d, a);
-        fmprb_poly_riemann_siegel_theta_series(c, d, n1, rbits2);
-        fmprb_poly_neg(c, c);
+        fmprb_poly_riemann_siegel_z_series(c, d, n1, rbits2);
 
         if (!fmprb_poly_overlaps(b, c))
         {
@@ -95,7 +94,7 @@ int main()
             abort();
         }
 
-        fmprb_poly_riemann_siegel_theta_series(a, a, n1, rbits2);
+        fmprb_poly_riemann_siegel_z_series(a, a, n1, rbits2);
         if (!fmprb_poly_overlaps(a, b))
         {
             printf("FAIL (aliasing)\n\n");

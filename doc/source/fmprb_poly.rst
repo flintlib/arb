@@ -859,7 +859,7 @@ Powers and special functions
 
     .. math ::
 
-        \sum_{k=0}^{n-1} \frac{(-1)^k}{k!} \gamma_k(a) x^k`.
+        \sum_{k=0}^{n-1} \frac{(-1)^k}{k!} \gamma_k(a) x^k.
 
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
@@ -879,6 +879,24 @@ Powers and special functions
     as the imaginary part of the log gamma function.
 
     The underscore method does not support aliasing of the input
+    and output arrays, and requires that the lengths are greater
+    than zero.
+
+.. function:: void _fmprb_poly_riemann_siegel_z_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_riemann_siegel_z_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
+
+    Sets *res* to the series expansion of the Riemann-Siegel Z-function
+
+    .. math ::
+
+        Z(h) = e^{i\theta(h)} \zeta(1/2+ih).
+
+    The zeros of the Z-function on the real line precisely
+    correspond to the imaginary parts of the zeros of
+    the Riemann zeta function on the critical line.
+
+    The underscore method supports aliasing of the input
     and output arrays, and requires that the lengths are greater
     than zero.
 
