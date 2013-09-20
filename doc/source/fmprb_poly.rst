@@ -864,6 +864,23 @@ Powers and special functions
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
 
+.. function:: void _fmprb_poly_riemann_siegel_theta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmprb_poly_riemann_siegel_theta_series(fmprb_poly_t res, const fmprb_poly_t h, long n, long prec)
+
+    Sets *res* to the series expansion of the Riemann-Siegel theta
+    function
+
+    .. math ::
+
+        \theta(h) = \arg \left(\Gamma\left(\frac{2ih+1}{4}\right)\right) - \frac{\log \pi}{2} h
+
+    where the argument of the gamma function is chosen continuously
+    as the imaginary part of the log gamma function.
+
+    The underscore method does not support aliasing of the input
+    and output arrays, and requires that the lengths are greater
+    than zero.
 
 Root-finding
 -------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+/* This file is public domain. Author: Fredrik Johansson. */
+
 #include <string.h>
 #include "fmprb.h"
 #include "fmpcb.h"

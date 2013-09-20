@@ -569,6 +569,10 @@ void _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, const fmp
 
 void fmprb_poly_zeta_series(fmprb_poly_t res, const fmprb_poly_t f, const fmprb_t a, int deflate, long n, long prec);
 
+void _fmprb_poly_riemann_siegel_theta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, long len, long prec);
+
+void fmprb_poly_riemann_siegel_theta_series(fmprb_poly_t res, const fmprb_poly_t f, long n, long prec);
+
 /* Root-finding */
 
 void _fmprb_poly_newton_convergence_factor(fmpr_t convergence_factor,
