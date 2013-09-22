@@ -35,6 +35,7 @@ Module documentation
    fmprb.rst
    fmprb_poly.rst
    fmprb_mat.rst
+   fmprb_calc.rst
    fmpcb.rst
    fmpcb_poly.rst
    fmpcb_mat.rst
