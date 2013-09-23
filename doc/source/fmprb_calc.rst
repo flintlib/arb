@@ -95,7 +95,7 @@ Root-finding
     and `r' = C r^2`. The expression `m - f(m) / f'(m)` is evaluated
     using ball arithmetic at a working precision of *prec* bits, and the
     rounding error during this evaluation is accounted for in the output.
-    We now check that `x' \in I` and `m' < m`. If both conditions are
+    We now check that `x' \in I` and `r' < r`. If both conditions are
     satisfied, we set *xnew* to `x'` and return *FMPRB_CALC_SUCCESS*.
     If either condition fails, we set *xnew* to `x` and return
     *FMPRB_CALC_NO_CONVERGENCE*, indicating that no progress
@@ -119,6 +119,12 @@ Root-finding
     This function returns *FMPRB_CALC_SUCCESS* if all attempted
     Newton steps are successful (note that this does not guarantee
     that the computed root is accurate to *prec* bits, which has
-    to be verified by the user). On failure, *FMPRB_CALC_IMPRECISE_INPUT*
-    or *FMPRB_CALC_NO_CONVERGENCE* may be returned.
+    to be verified by the user), only that it is more accurate
+    than the starting ball.
+
+    On failure, *FMPRB_CALC_IMPRECISE_INPUT*
+    or *FMPRB_CALC_NO_CONVERGENCE* may be returned. In this case, *r*
+    is set to a ball for the root which is valid but likely
+    does have full accuracy (it can possibly just be equal
+    to the starting ball).
 
