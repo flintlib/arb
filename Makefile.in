@@ -1,5 +1,5 @@
-LIBS=-L$(CURDIR) -L$(ARB_FLINT_LIB_DIR) -L$(ARB_GMP_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -larb -lflint -lmpfr -lgmp -lm
-LIBS2=-L$(ARB_FLINT_LIB_DIR) -L$(ARB_GMP_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -lflint -lmpfr -lgmp -lm
+LIBS=-L$(CURDIR) -L$(ARB_FLINT_LIB_DIR) -L$(ARB_GMP_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -larb -lflint -lmpfr -lgmp -lpthread -lm
+LIBS2=-L$(ARB_FLINT_LIB_DIR) -L$(ARB_GMP_LIB_DIR) -L$(ARB_MPFR_LIB_DIR) -lflint -lmpfr -lgmp -lpthread -lm
 INCS=-I$(CURDIR) -I$(ARB_GMP_INCLUDE_DIR) -I$(ARB_MPFR_INCLUDE_DIR) -I$(ARB_FLINT_INCLUDE_DIR)
 LINKLIBS=$(ARB_GMP_LIB_DIR)/libgmp.a $(ARB_MPFR_LIB_DIR)/libmpfr.a $(ARB_FLINT_LIB_DIR)/libflint.so
 
