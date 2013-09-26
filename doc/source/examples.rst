@@ -20,7 +20,7 @@ working precision of roughly `n \log_2(10)` bits.
 
 Sample output, computing `\pi` to one million digits::
 
-    fredrik@lemur:~/src/arb$ build/examples/pi 1000000
+    > build/examples/pi 1000000
     computing pi with a precision of 3321933 bits... cpu/wall(s): 0.58 0.586
     virt/peak/res/peak(MB): 28.24 36.84 8.86 15.56
     3.141592654 +/- 1.335e-1000001
@@ -46,7 +46,7 @@ does not contain zero.
 
 Sample output::
 
-    fredrik@lemur:~/src/arb$ build/examples/hilbert_matrix 200
+    > build/examples/hilbert_matrix 200
     prec=20: 0 +/- 5.5777e-330
     prec=40: 0 +/- 2.5785e-542
     prec=80: 0 +/- 8.1169e-926
@@ -83,7 +83,7 @@ execution.
 
 Sample output::
 
-    fredrik@lemur:~/src/arb$ build/examples/keiper_li 1000 -threads 2
+    > build/examples/keiper_li 1000 -threads 2
     zeta: cpu/wall(s): 0.4 0.244
     virt/peak/res/peak(MB): 167.98 294.69 5.09 7.43
     log: cpu/wall(s): 0.03 0.038
@@ -151,7 +151,7 @@ With *function* 0, the program isolates roots of the Riemann zeta function
 on the critical line, and guarantees that no roots are missed
 (there are more efficient ways to do this, but it is a nice example)::
 
-    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 0 0.0 50.0 -verbose
+    > build/examples/real_roots 0 0.0 50.0 -verbose
     interval: 25 +/- 25
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     found isolated root in: 14.12353515625 +/- 0.012207
@@ -173,7 +173,7 @@ on the critical line, and guarantees that no roots are missed
 
 Find just one root and refine it to approximately 75 digits::
 
-    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 0 0.0 50.0 -maxfound 1 -refine 75
+    > build/examples/real_roots 0 0.0 50.0 -maxfound 1 -refine 75
     interval: 25 +/- 25
     maxdepth = 30, maxeval = 100000, maxfound = 1, low_prec = 30
     refined root:
@@ -186,11 +186,11 @@ Find just one root and refine it to approximately 75 digits::
     cpu/wall(s): 0.41 0.415
     virt/peak/res/peak(MB): 20.76 20.76 2.23 2.23
 
-Find roots of `\sin(x^2)` on `(0,50)`. The algorithm cannot isolate
+Find roots of `\sin(x^2)` on `(0,100)`. The algorithm cannot isolate
 the root at `x = 0` (it is at the endpoint of the interval, and in any
 case a root of multiplicity higher than one). The failure is reported::
 
-    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 2 0 100
+    > build/examples/real_roots 2 0 100
     interval: 50 +/- 50
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
@@ -202,7 +202,7 @@ case a root of multiplicity higher than one). The failure is reported::
 
 This does not miss any roots::
 
-    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 2 1 100
+    > build/examples/real_roots 2 1 100
     interval: 50.5 +/- 49.5
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
@@ -215,7 +215,7 @@ This does not miss any roots::
 Looking for roots of `\sin(1/x)` on `(0,1)`, the algorithm finds many roots,
 but will never find all of them since there are infinitely many::
 
-    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 3 0.0 1.0
+    > build/examples/real_roots 3 0.0 1.0
     interval: 0.5 +/- 0.5
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
