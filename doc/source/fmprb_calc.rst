@@ -71,6 +71,62 @@ Debugging
 Root-finding
 -------------------------------------------------------------------------------
 
+.. function :: long fmprb_calc_isolate_roots(fmprb_ptr * found, int ** flags, fmprb_calc_func_t func, void * param, const fmprb_t interval, long maxdepth, long maxeval, long maxfound, long prec)
+
+    Rigorously isolates single roots of a real analytic function
+    on the interior of an interval.
+
+    This routine writes an array of *n* interesting subintervals of
+    *interval* to *found* and corresponding flags to *flags*, returning the integer *n*.
+    The output has the following properties:
+
+    * The function has no roots on *interval* outside of the output
+      subintervals.
+
+    * Subintervals are sorted in increasing order (with no overlap except
+      possibly starting and ending with the same point).
+
+    * Subintervals with a flag of 1 contain exactly one (single) root.
+
+    * Subintervals with any other flag may or may not contain roots.
+
+    If no flags other than 1 occur, all roots of the function on *interval*
+    have been isolated. If there are output subintervals on which the
+    existence or nonexistence of roots could not be determined,
+    the user may attempt further searches on those subintervals
+    (possibly with increased precision and/or increased
+    bounds for the breaking criteria). Note that roots of multiplicity
+    higher than one and roots located exactly at endpoints cannot be isolated
+    by the algorithm.
+
+    The following breaking criteria are implemented:
+
+    * At most *maxdepth* recursive subdivisions are attempted. The smallest
+      details that can be distinguished are therefore about
+      `2^{-\text{maxdepth}}` times the width of *interval*.
+      A typical, reasonable value might be between 20 and 50.
+
+    * If the total number of tested subintervals exceeds *maxeval*, the
+      algorithm is terminated and any untested subintervals are added
+      to the output. The total number of calls to *func* is thereby restricted
+      to a small multiple of *maxeval* (the actual count can be slightly
+      higher depending on implementation details).
+      A typical, reasonable value might be between 100 and 100000.
+
+    * The algorithm terminates if *maxfound* roots have been isolated.
+      In particular, setting *maxfound* to 1 can be used to locate
+      just one root of the function even if there are numerous roots.
+      To try to find all roots, *LONG_MAX* may be passed.
+
+    The argument *prec* denotes the precision used to evaluate the
+    function. It is possibly also used for some other arithmetic operations
+    performed internally by the algorithm. Note that it probably does not
+    make sense for *maxdepth* to exceed *prec*.
+
+    Warning: it is assumed that subdivision points of *interval* can be
+    represented exactly as floating-point numbers in memory.
+    Do not pass `1 \pm 2^{-10^{100}}` as input.
+
 .. function:: void fmprb_calc_newton_conv_factor(fmpr_t conv_factor, fmprb_calc_func_t func, void * param, const fmprb_t conv_region, long prec)
 
     Given an interval `I` specified by *conv_region*, evaluates a bound

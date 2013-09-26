@@ -449,6 +449,7 @@ fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
 int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y);
 int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y);
 int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
+int fmprb_contains_si(const fmprb_t x, long y);
 int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y);
 int fmprb_contains_zero(const fmprb_t x);
 
