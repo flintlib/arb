@@ -127,6 +127,14 @@ Root-finding
     represented exactly as floating-point numbers in memory.
     Do not pass `1 \pm 2^{-10^{100}}` as input.
 
+.. function:: int fmprb_calc_refine_root_bisect(fmprb_t r, fmprb_calc_func_t func, void * param, const fmprb_t start, long iter, long prec)
+
+    Given an interval *start* known to contain a single root of *func*,
+    refines it using *iter* bisection steps. The algorithm can
+    return a failure code if the sign of the function at an evaluation
+    point is ambiguous. The output *r* is set to a valid isolating interval
+    (possibly just *start*) even if the algorithm fails.
+
 .. function:: void fmprb_calc_newton_conv_factor(fmpr_t conv_factor, fmprb_calc_func_t func, void * param, const fmprb_t conv_region, long prec)
 
     Given an interval `I` specified by *conv_region*, evaluates a bound

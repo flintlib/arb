@@ -50,6 +50,9 @@ long fmprb_calc_isolate_roots(fmprb_ptr * blocks, int ** flags,
     const fmprb_t block, long maxdepth, long maxeval, long maxfound,
     long prec);
 
+int fmprb_calc_refine_root_bisect(fmprb_t r, fmprb_calc_func_t func,
+    void * param, const fmprb_t start, long iter, long prec);
+
 void fmprb_calc_newton_conv_factor(fmpr_t conv_factor,
     fmprb_calc_func_t func, void * param, const fmprb_t conv_region, long prec);
 

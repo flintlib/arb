@@ -112,3 +112,119 @@ Sample output::
     1000: 2.3260531616864664574065046940832238158044982041872 +/- 3.927e-08
     virt/peak/res/peak(MB): 170.18 294.69 7.51 7.51
 
+
+real_roots.c
+-------------------------------------------------------------------------------
+
+This program isolates the roots of a function on the interval `(a,b)`
+(where *a* and *b* are input as double-precision literals)
+using the routines in the :ref:`fmprb_calc <fmprb-calc>` module.
+The program takes the following arguments::
+
+    real_roots function a b [-refine d] [-verbose] [-maxdepth n] [-maxeval n] [-maxfound n] [-prec n]
+
+The following functions (specified by an integer code) are implemented:
+
+* 0 - `Z(x)` (Riemann-Siegel Z-function)
+* 1 - `\sin(x)`
+* 2 - `\sin(x^2)`
+* 3 - `\sin(1/x)`
+
+The following options are available:
+
+* ``-refine d``: If provided, after isolating the roots, attempt to refine
+  the roots to *d* digits of accuracy using a few bisection steps followed
+  by Newton's method with adaptive precision, and then print them.
+
+* ``-verbose``: Print more information.
+
+* ``-maxdepth n``: Stop searching after *n* recursive subdivisions.
+
+* ``-maxeval n``: Stop searching after approximately *n* function evaluations
+   (the actual number evaluations will be a small multiple of this).
+
+* ``-maxfound n``: Stop searching after having found *n* isolated roots.
+
+* ``-prec n``: Working precision to use for the root isolation.
+
+With *function* 0, the program isolates roots of the Riemann zeta function
+on the critical line, and guarantees that no roots are missed
+(there are more efficient ways to do this, but it is a nice example)::
+
+    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 0 0.0 50.0 -verbose
+    interval: 25 +/- 25
+    maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
+    found isolated root in: 14.12353515625 +/- 0.012207
+    found isolated root in: 21.0205078125 +/- 0.024414
+    found isolated root in: 25.0244140625 +/- 0.024414
+    found isolated root in: 30.43212890625 +/- 0.012207
+    found isolated root in: 32.9345703125 +/- 0.024414
+    found isolated root in: 37.5732421875 +/- 0.024414
+    found isolated root in: 40.9423828125 +/- 0.024414
+    found isolated root in: 43.32275390625 +/- 0.012207
+    found isolated root in: 48.01025390625 +/- 0.012207
+    found isolated root in: 49.76806640625 +/- 0.012207
+    ---------------------------------------------------------------
+    Found roots: 10
+    Subintervals possibly containing undetected roots: 0
+    Function evaluations: 3425
+    cpu/wall(s): 1.22 1.229
+    virt/peak/res/peak(MB): 20.63 20.66 2.23 2.23
+
+Find just one root and refine it to approximately 75 digits::
+
+    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 0 0.0 50.0 -maxfound 1 -refine 75
+    interval: 25 +/- 25
+    maxdepth = 30, maxeval = 100000, maxfound = 1, low_prec = 30
+    refined root:
+    14.134725141734693790457251983562470270784257115699243175685567460149963429809 +/- 8.4532e-81
+
+    ---------------------------------------------------------------
+    Found roots: 1
+    Subintervals possibly containing undetected roots: 8
+    Function evaluations: 992
+    cpu/wall(s): 0.41 0.415
+    virt/peak/res/peak(MB): 20.76 20.76 2.23 2.23
+
+Find roots of `\sin(x^2)` on `(0,50)`. The algorithm cannot isolate
+the root at `x = 0` (it is at the endpoint of the interval, and in any
+case a root of multiplicity higher than one). The failure is reported::
+
+    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 2 0 100
+    interval: 50 +/- 50
+    maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
+    ---------------------------------------------------------------
+    Found roots: 3183
+    Subintervals possibly containing undetected roots: 1
+    Function evaluations: 34058
+    cpu/wall(s): 0.26 0.263
+    virt/peak/res/peak(MB): 20.73 20.76 1.72 1.72
+
+This does not miss any roots::
+
+    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 2 1 100
+    interval: 50.5 +/- 49.5
+    maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
+    ---------------------------------------------------------------
+    Found roots: 3183
+    Subintervals possibly containing undetected roots: 0
+    Function evaluations: 34039
+    cpu/wall(s): 0.26 0.266
+    virt/peak/res/peak(MB): 20.73 20.76 1.70 1.70
+
+Looking for roots of `\sin(1/x)` on `(0,1)`, the algorithm finds many roots,
+but will never find all of them since there are infinitely many::
+
+    popeye:/scratch/fjohanss/64/arb> build/examples/real_roots 3 0.0 1.0
+    interval: 0.5 +/- 0.5
+    maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
+    ---------------------------------------------------------------
+    Found roots: 10198
+    Subintervals possibly containing undetected roots: 24695
+    Function evaluations: 202587
+    cpu/wall(s): 1.73 1.731
+    virt/peak/res/peak(MB): 21.84 22.89 2.76 2.76
+
+Remark: the program always computes rigorous containing intervals
+for the roots, but the accuracy after refinement could be less than *d* digits.
+

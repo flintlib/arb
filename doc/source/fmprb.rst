@@ -932,7 +932,8 @@ Special functions
 
     Sets *b* to the Riemann zeta value `\zeta(n)`. This function is intended
     for numerical evaluation of isolated zeta values; for
-    multi-evaluation, see the functions in the *bernoulli* and *zeta* modules.
+    multi-evaluation, see the functions in the :ref:`bernoulli <bernoulli>`
+    and :ref:`zeta <zeta>` modules.
 
 .. function:: void fmprb_bernoulli_ui(fmprb_t b, ulong n, long prec)
 
