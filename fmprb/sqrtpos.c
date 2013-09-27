@@ -51,7 +51,14 @@ fmprb_nonnegative_part(fmprb_t z, const fmprb_t x, long prec)
 void
 fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec)
 {
-    if (fmprb_contains_nonpositive(x))
+    if (!fmprb_is_finite(x))
+    {
+        if (fmpr_is_zero(fmprb_radref(x)) && fmpr_is_pos_inf(fmprb_midref(x)))
+            fmprb_pos_inf(z);
+        else
+            fmprb_zero_pm_inf(z);
+    }
+    else if (fmprb_contains_nonpositive(x))
     {
         fmpr_t t;
         fmpr_init(t);
