@@ -39,6 +39,7 @@ Module documentation
    fmpcb.rst
    fmpcb_poly.rst
    fmpcb_mat.rst
+   fmpcb_calc.rst
    elefun.rst
    bernoulli.rst
    gamma.rst
