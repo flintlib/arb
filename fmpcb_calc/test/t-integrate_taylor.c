@@ -39,58 +39,66 @@ sin_x(fmpcb_ptr out, const fmpcb_t inp, void * params, long order, long prec)
     return 0;
 }
 
-static const double answers[10] = {
-  1.04570093561423094, 2.0358667496686487, 4.82706400405656566,
-  11.2347033850581819, 27.1331828778516522, 67.210305990439042,
-  168.564351176369878, 427.496180295369909, 1093.56959348921777,
-  2815.70144392142227
-};
-
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("cauchy_bound....");
+    printf("integrate_taylor....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100; iter++)
+    for (iter = 0; iter < 150; iter++)
     {
-        fmprb_t b, radius, ans;
-        fmpcb_t x;
-        long r, prec, maxdepth;
+        fmpcb_t ans, res, a, b;
+        fmpr_t inr, outr;
+        double t;
+        long goal, prec;
 
-        fmprb_init(b);
-        fmprb_init(radius);
-        fmpcb_init(x);
+        fmpcb_init(ans);
+        fmpcb_init(res);
+        fmpcb_init(a);
+        fmpcb_init(b);
+        fmpr_init(inr);
+        fmpr_init(outr);
 
-        fmpcb_set_ui(x, 5);
+        goal = 2 + n_randint(state, 300);
+        prec = 2 + n_randint(state, 300);
 
-        r = 1 + n_randint(state, 10);
-        fmprb_set_ui(radius, r);
+        fmpcb_randtest(a, state, 1 + n_randint(state, 200), 2);
+        fmpcb_randtest(b, state, 1 + n_randint(state, 200), 2);
 
-        prec = 2 + n_randint(state, 100);
-        maxdepth = n_randint(state, 10);
+        fmpcb_cos(ans, a, prec);
+        fmpcb_cos(res, b, prec);
+        fmpcb_sub(ans, ans, res, prec);
 
-        fmpcb_calc_cauchy_bound(b, sin_x, NULL, x, radius, maxdepth, prec);
+        t = (1 + n_randint(state, 20)) / 10.0;
+        fmpr_set_d(inr, t);
+        fmpr_set_d(outr, t + (1 + n_randint(state, 20)) / 5.0);
 
-        fmpr_set_d(fmprb_midref(ans), answers[r-1]);
-        fmpr_set_d(fmprb_radref(ans), 1e-8);
+        fmpcb_calc_integrate_taylor(res, sin_x, NULL,
+            a, b, inr, outr, goal, prec);
 
-        if (!fmprb_overlaps(b, ans))
+        if (!fmpcb_overlaps(res, ans))
         {
-            printf("FAIL\n");
-            printf("r = %ld, prec = %ld, maxdepth = %ld\n\n", r, prec, maxdepth);
-            fmprb_printd(b, 15); printf("\n\n");
-            fmprb_printd(ans, 15); printf("\n\n");
+            printf("FAIL! (iter = %ld)\n", iter);
+            printf("prec = %ld, goal = %ld\n", prec, goal);
+            printf("inr = "); fmpr_printd(inr, 15); printf("\n");
+            printf("outr = "); fmpr_printd(outr, 15); printf("\n");
+            printf("a = "); fmpcb_printd(a, 15); printf("\n");
+            printf("b = "); fmpcb_printd(b, 15); printf("\n");
+            printf("res = "); fmpcb_printd(res, 15); printf("\n\n");
+            printf("ans = "); fmpcb_printd(ans, 15); printf("\n\n");
             abort();
         }
 
-        fmprb_clear(b);
-        fmprb_clear(radius);
-        fmpcb_clear(x);
+        fmpcb_clear(ans);
+        fmpcb_clear(res);
+        fmpcb_clear(a);
+        fmpcb_clear(b);
+        fmpr_clear(inr);
+        fmpr_clear(outr);
     }
 
     flint_randclear(state);

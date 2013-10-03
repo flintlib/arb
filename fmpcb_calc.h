@@ -44,6 +44,15 @@ void fmpcb_calc_cauchy_bound(fmprb_t bound, fmpcb_calc_func_t func,
     void * param, const fmpcb_t x, const fmprb_t radius,
     long maxdepth, long prec);
 
+/* Integration */
+
+int fmpcb_calc_integrate_taylor(fmpcb_t res,
+    fmpcb_calc_func_t func, void * param,
+    const fmpcb_t a, const fmpcb_t b,
+    const fmpr_t inner_radius,
+    const fmpr_t outer_radius,
+    long accuracy_goal, long prec);
+
 #ifdef __cplusplus
 }
 #endif

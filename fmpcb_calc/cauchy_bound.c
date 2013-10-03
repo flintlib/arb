@@ -69,7 +69,6 @@ fmpcb_calc_cauchy_bound(fmprb_t bound, fmpcb_calc_func_t func, void * param,
         }
 
         fmprb_div_ui(b, b, n, prec);
-        fmprb_div(b, b, radius, prec);
 
         if (fmprb_is_exact(b) || fmpr_cmp(fmprb_radref(b), fmprb_midref(b)) < 0)
             break;
