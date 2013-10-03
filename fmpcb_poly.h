@@ -435,6 +435,14 @@ long fmpcb_poly_find_roots(fmpcb_ptr roots,
 
 /* Special functions */
 
+void _fmpcb_poly_rsqrt_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_rsqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
+
+void _fmpcb_poly_sqrt_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long len, long prec);
+
+void fmpcb_poly_sqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec);
+
 void _fmpcb_poly_log_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec);
 
 void fmpcb_poly_log_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec);

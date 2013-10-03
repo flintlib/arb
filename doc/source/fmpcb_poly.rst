@@ -518,6 +518,27 @@ Differentiation
 Special functions
 -------------------------------------------------------------------------------
 
+.. function:: void _fmpcb_poly_sqrt_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_sqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
+
+    Sets *g* to the power series square root of *h*, truncated to length *n*.
+    Uses division-free Newton iteration for the reciprocal square root,
+    followed by a multiplication.
+
+    The underscore method does not support aliasing of the input and output
+    arrays. It requires that *hlen* and *n* are greater than zero.
+
+.. function:: void _fmpcb_poly_rsqrt_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void fmpcb_poly_rsqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
+
+    Sets *g* to the reciprocal power series square root of *h*, truncated to length *n*.
+    Uses division-free Newton iteration.
+
+    The underscore method does not support aliasing of the input and output
+    arrays. It requires that *hlen* and *n* are greater than zero.
+
 .. function:: void _fmpcb_poly_log_series(fmpcb_ptr res, fmpcb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmpcb_poly_log_series(fmpcb_poly_t res, const fmpcb_poly_t f, long n, long prec)
