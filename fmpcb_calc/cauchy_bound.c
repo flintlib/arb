@@ -29,42 +29,70 @@ void
 fmpcb_calc_cauchy_bound(fmprb_t bound, fmpcb_calc_func_t func, void * param,
     const fmpcb_t x, const fmprb_t radius, long maxdepth, long prec)
 {
-    long i, n, depth;
+    long i, n, depth, wp;
 
-    fmprb_t pi, theta, v;
+    fmprb_t pi, theta, v, s1, c1, s2, c2, st, ct;
     fmpcb_t t, u;
     fmprb_t b;
 
     fmprb_init(pi);
     fmprb_init(theta);
+    fmprb_init(v);
+
+    fmprb_init(s1);
+    fmprb_init(c1);
+    fmprb_init(s2);
+    fmprb_init(c2);
+    fmprb_init(st);
+    fmprb_init(ct);
+
     fmpcb_init(t);
     fmpcb_init(u);
-    fmprb_init(v);
     fmprb_init(b);
 
-    fmprb_const_pi(pi, prec);
+    wp = prec + 20;
 
+    fmprb_const_pi(pi, wp);
     fmprb_zero_pm_inf(b);
 
     for (depth = 0, n = 16; depth < maxdepth; n *= 2, depth++)
     {
         fmprb_zero(b);
 
+        /* theta = 2 pi / n */
+        fmprb_div_ui(theta, pi, n, wp);
+        fmprb_mul_2exp_si(theta, theta, 1);
+
+        /* sine and cosine of i*theta and (i+1)*theta */
+        fmprb_zero(s1);
+        fmprb_one(c1);
+        fmprb_sin_cos(st, ct, theta, wp);
+        fmprb_set(s2, st);
+        fmprb_set(c2, ct);
+
         for (i = 0; i < n; i++)
         {
-            /* theta = 2 pi ([i,i+1]/n) */
-            fmpr_set_si(fmprb_midref(theta), 2 * i + 1);
-            fmpr_set_si(fmprb_radref(theta), 2);
-            fmprb_div_ui(theta, theta, n, prec);
-            fmprb_mul(theta, theta, pi, prec);
+            /* sine and cosine of 2 pi ([i,i+1]/n) */
 
-            fmprb_sin_cos(fmpcb_imagref(t), fmpcb_realref(t), theta, prec);
-            fmpcb_mul_fmprb(t, t, radius, prec);
+            /* since we use power of two subdivision points, the
+               sine and cosine are monotone on each subinterval */
+            fmprb_union(fmpcb_realref(t), c1, c2, wp);
+            fmprb_union(fmpcb_imagref(t), s1, s2, wp);
+            fmpcb_mul_fmprb(t, t, radius, wp);
             fmpcb_add(t, t, x, prec);
+
+            /* next angle */
+            fmprb_mul(v, c2, ct, wp);
+            fmprb_mul(c1, s2, st, wp);
+            fmprb_sub(c1, v, c1, wp);
+            fmprb_mul(v, c2, st, wp);
+            fmprb_mul(s1, s2, ct, wp);
+            fmprb_add(s1, v, s1, wp);
+            fmprb_swap(c1, c2);
+            fmprb_swap(s1, s2);
 
             func(u, t, param, 1, prec);
             fmpcb_abs(v, u, prec);
-
             fmprb_add(b, b, v, prec);
         }
 
@@ -78,9 +106,17 @@ fmpcb_calc_cauchy_bound(fmprb_t bound, fmpcb_calc_func_t func, void * param,
 
     fmprb_clear(pi);
     fmprb_clear(theta);
+    fmprb_clear(v);
+
     fmpcb_clear(t);
     fmpcb_clear(u);
-    fmprb_clear(v);
     fmprb_clear(b);
+
+    fmprb_clear(s1);
+    fmprb_clear(c1);
+    fmprb_clear(s2);
+    fmprb_clear(c2);
+    fmprb_clear(st);
+    fmprb_clear(ct);
 }
 
