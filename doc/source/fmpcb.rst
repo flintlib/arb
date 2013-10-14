@@ -378,6 +378,8 @@ Elementary functions
 
 .. function:: void fmpcb_pow_ui(fmpcb_t y, const fmpcb_t b, ulong e, long prec)
 
+.. function:: void fmpcb_pow_si(fmpcb_t y, const fmpcb_t b, long e, long prec)
+
     Sets `y = b^e` using binary exponentiation (with an initial division
     if `e < 0`). Provided that *b* and *e*
     are small enough and the exponent is positive, the exact power can be
@@ -385,6 +387,8 @@ Elementary functions
 
     Note that these functions can get slow if the exponent is
     extremely large (in such cases :func:`fmpcb_pow` may be superior).
+
+.. function:: void fmpcb_pow_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
 
 .. function:: void fmpcb_pow(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
