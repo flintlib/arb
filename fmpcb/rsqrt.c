@@ -24,7 +24,6 @@
 ******************************************************************************/
 
 #include "fmpcb.h"
-#include "profiler.h"
 
 void
 fmpcb_rsqrt(fmpcb_t y, const fmpcb_t x, long prec)
