@@ -109,9 +109,8 @@ _fmpcb_poly_exp_series(fmpcb_ptr f, fmpcb_srcptr h, long hlen, long n, long prec
     {
         fmpcb_exp(f, h, prec);
         fmpcb_mul(f + 1, f, h + 1, prec);  /* safe since hlen >= 2 */
-        _fmpcb_vec_zero(f + 2, n - 2);
     }
-    else if (_fmpcb_vec_is_zero(h + 1, hlen - 2)) /* h = a + bx^c */
+    else if (_fmpcb_vec_is_zero(h + 1, hlen - 2)) /* h = a + bx^d */
     {
         long i, j, d = hlen - 1;
         fmpcb_t t;
