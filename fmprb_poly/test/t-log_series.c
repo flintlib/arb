@@ -61,6 +61,7 @@ int main()
 
         fmpq_poly_log_series(B, A, n);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
         fmprb_poly_log_series(b, a, n, rbits2);
 
         if (!fmprb_poly_contains_fmpq_poly(b, B))
@@ -155,6 +156,7 @@ int main()
 
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
         fmprb_poly_log_series(b, a, n, rbits2);
         fmprb_poly_exp_series_basecase(c, b, n, rbits3);
 
