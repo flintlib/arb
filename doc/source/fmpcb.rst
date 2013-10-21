@@ -404,6 +404,14 @@ Elementary functions
     `\sqrt{a+bi} = u/2 + ib/u, u = \sqrt{2(|a+bi|+a)}`,
     requiring two real square root extractions.
 
+.. function:: void fmpcb_rsqrt(fmpcb_t r, const fmpcb_t z, long prec)
+
+    Sets *r* to the reciprocal square root of *z*.
+    If either the real or imaginary part is exactly zero, only
+    a single real reciprocal square root is needed. Generally, we use the
+    formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
+    requiring one real square root and one real reciprocal square root.
+
 .. function:: void fmpcb_invroot_newton(fmpcb_t r, const fmpcb_t a, ulong m, const fmpcb_t r0, long startprec, long prec)
 
     Given one inverse *m*-th root *r0* (with a valid error bound) of the complex

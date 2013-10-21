@@ -31,9 +31,7 @@ _fmpcb_poly_rsqrt_series(fmpcb_ptr g,
 {
     hlen = FLINT_MIN(hlen, len);
 
-    /* TODO: write an fmpcb_rsqrt */
-    fmpcb_sqrt(g, h, prec);
-    fmpcb_inv(g, g, prec);
+    fmpcb_rsqrt(g, h, prec);
 
     if (hlen == 1)
     {

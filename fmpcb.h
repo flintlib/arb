@@ -569,6 +569,7 @@ void fmpcb_pow_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec);
 void fmpcb_pow(fmpcb_t r, const fmpcb_t x, const fmpcb_t y, long prec);
 
 void fmpcb_sqrt(fmpcb_t y, const fmpcb_t x, long prec);
+void fmpcb_rsqrt(fmpcb_t y, const fmpcb_t x, long prec);
 
 void fmpcb_invroot_newton(fmpcb_t r, const fmpcb_t a, ulong m, const fmpcb_t r0, long startprec, long prec);
 void fmpcb_root_exp(fmpcb_t r, const fmpcb_t a, long m, long index, long prec);
