@@ -30,11 +30,19 @@ _fmprb_poly_rsqrt_series(fmprb_ptr g,
     fmprb_srcptr h, long hlen, long len, long prec)
 {
     hlen = FLINT_MIN(hlen, len);
+
     fmprb_rsqrt(g, h, prec);
 
     if (hlen == 1)
     {
         _fmprb_vec_zero(g + 1, len - 1);
+    }
+    else if (len == 2)
+    {
+        fmprb_div(g + 1, h + 1, h, prec);
+        fmprb_mul(g + 1, g + 1, g, prec);
+        fmprb_mul_2exp_si(g + 1, g + 1, -1);
+        fmprb_neg(g + 1, g + 1);
     }
     else
     {
@@ -63,10 +71,10 @@ _fmprb_poly_rsqrt_series(fmprb_ptr g,
 void
 fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 {
-    if (n == 0 || h->length == 0)
+    if (n == 0)
     {
-        printf("fmprb_poly_rsqrt_series: require n > 0 and nonzero input\n");
-        abort();
+        fmprb_poly_zero(g);
+        return;
     }
 
     if (g == h)
@@ -80,7 +88,10 @@ fmprb_poly_rsqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
     }
 
     fmprb_poly_fit_length(g, n);
-    _fmprb_poly_rsqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
+    if (h->length == 0)
+        _fmprb_vec_indeterminate(g->coeffs, n);
+    else
+        _fmprb_poly_rsqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
     _fmprb_poly_set_length(g, n);
     _fmprb_poly_normalise(g);
 }

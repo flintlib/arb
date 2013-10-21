@@ -29,21 +29,37 @@ void
 _fmprb_poly_sqrt_series(fmprb_ptr g,
     fmprb_srcptr h, long hlen, long len, long prec)
 {
-    fmprb_ptr t;
     hlen = FLINT_MIN(hlen, len);
-    t = _fmprb_vec_init(len);
-    _fmprb_poly_rsqrt_series(t, h, hlen, len, prec);
-    _fmprb_poly_mullow(g, t, len, h, hlen, len, prec);
-    _fmprb_vec_clear(t, len);
+
+    if (hlen == 1)
+    {
+        fmprb_sqrt(g, h, prec);
+        _fmprb_vec_zero(g + 1, len - 1);
+    }
+    else if (len == 2)
+    {
+        fmprb_sqrt(g, h, prec);
+        fmprb_div(g + 1, h + 1, h, prec);
+        fmprb_mul(g + 1, g + 1, g, prec);
+        fmprb_mul_2exp_si(g + 1, g + 1, -1);
+    }
+    else
+    {
+        fmprb_ptr t;
+        t = _fmprb_vec_init(len);
+        _fmprb_poly_rsqrt_series(t, h, hlen, len, prec);
+        _fmprb_poly_mullow(g, t, len, h, hlen, len, prec);
+        _fmprb_vec_clear(t, len);
+    }
 }
 
 void
 fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
 {
-    if (n == 0 || h->length == 0)
+    if (n == 0)
     {
-        printf("fmprb_poly_sqrt_series: require n > 0 and nonzero input\n");
-        abort();
+        fmprb_poly_zero(g);
+        return;
     }
 
     if (g == h)
@@ -57,7 +73,10 @@ fmprb_poly_sqrt_series(fmprb_poly_t g, const fmprb_poly_t h, long n, long prec)
     }
 
     fmprb_poly_fit_length(g, n);
-    _fmprb_poly_sqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
+    if (h->length == 0)
+        _fmprb_vec_indeterminate(g->coeffs, n);
+    else
+        _fmprb_poly_sqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
     _fmprb_poly_set_length(g, n);
     _fmprb_poly_normalise(g);
 }

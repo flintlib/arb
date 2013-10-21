@@ -39,6 +39,13 @@ _fmpcb_poly_rsqrt_series(fmpcb_ptr g,
     {
         _fmpcb_vec_zero(g + 1, len - 1);
     }
+    else if (len == 2)
+    {
+        fmpcb_div(g + 1, h + 1, h, prec);
+        fmpcb_mul(g + 1, g + 1, g, prec);
+        fmpcb_mul_2exp_si(g + 1, g + 1, -1);
+        fmpcb_neg(g + 1, g + 1);
+    }
     else
     {
         fmpcb_ptr t, u;
@@ -66,10 +73,10 @@ _fmpcb_poly_rsqrt_series(fmpcb_ptr g,
 void
 fmpcb_poly_rsqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
 {
-    if (n == 0 || h->length == 0)
+    if (n == 0)
     {
-        printf("fmpcb_poly_rsqrt_series: require n > 0 and nonzero input\n");
-        abort();
+        fmpcb_poly_zero(g);
+        return;
     }
 
     if (g == h)
@@ -83,7 +90,10 @@ fmpcb_poly_rsqrt_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
     }
 
     fmpcb_poly_fit_length(g, n);
-    _fmpcb_poly_rsqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
+    if (h->length == 0)
+        _fmpcb_vec_indeterminate(g->coeffs, n);
+    else
+        _fmpcb_poly_rsqrt_series(g->coeffs, h->coeffs, h->length, n, prec);
     _fmpcb_poly_set_length(g, n);
     _fmpcb_poly_normalise(g);
 }
