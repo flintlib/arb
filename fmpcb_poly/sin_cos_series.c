@@ -25,15 +25,34 @@
 
 #include "fmpcb_poly.h"
 
-#define TANGENT_CUTOFF 20
+#define TANGENT_CUTOFF 80
 
 void
-_fmpcb_poly_sin_cos_series(fmpcb_ptr s, fmpcb_ptr c, const fmpcb_srcptr h, long hlen, long len, long prec)
+_fmpcb_poly_sin_cos_series(fmpcb_ptr s, fmpcb_ptr c, const fmpcb_srcptr h, long hlen, long n, long prec)
 {
-    if (hlen < TANGENT_CUTOFF)
-        _fmpcb_poly_sin_cos_series_basecase(s, c, h, hlen, len, prec);
+    hlen = FLINT_MIN(hlen, n);
+
+    if (hlen == 1)
+    {
+        fmpcb_sin_cos(s, c, h, prec);
+        _fmpcb_vec_zero(s + 1, n - 1);
+        _fmpcb_vec_zero(c + 1, n - 1);
+    }
+    else if (n == 2)
+    {
+        fmpcb_t t;
+        fmpcb_init(t);
+        fmpcb_set(t, h + 1);
+        fmpcb_sin_cos(s, c, h, prec);
+        fmpcb_mul(s + 1, c, t, prec);
+        fmpcb_neg(t, t);
+        fmpcb_mul(c + 1, s, t, prec);
+        fmpcb_clear(t);
+    }
+    else if (hlen < TANGENT_CUTOFF)
+        _fmpcb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec);
     else
-        _fmpcb_poly_sin_cos_series_tangent(s, c, h, hlen, len, prec);
+        _fmpcb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec);
 }
 
 void
@@ -55,6 +74,9 @@ fmpcb_poly_sin_cos_series(fmpcb_poly_t s, fmpcb_poly_t c,
         fmpcb_poly_one(c);
         return;
     }
+
+    if (hlen == 1)
+        n = 1;
 
     fmpcb_poly_fit_length(s, n);
     fmpcb_poly_fit_length(c, n);

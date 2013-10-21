@@ -28,22 +28,45 @@
 void
 _fmpcb_poly_sin_series(fmpcb_ptr g, fmpcb_srcptr h, long hlen, long n, long prec)
 {
-    fmpcb_ptr t = _fmpcb_vec_init(n);
-    _fmpcb_poly_sin_cos_series(g, t, h, hlen, n, prec);
-    _fmpcb_vec_clear(t, n);
+    hlen = FLINT_MIN(hlen, n);
+
+    if (hlen == 1)
+    {
+        fmpcb_sin(g, h, prec);
+        _fmpcb_vec_zero(g + 1, n - 1);
+    }
+    else if (n == 2)
+    {
+        fmpcb_t t;
+        fmpcb_init(t);
+        fmpcb_sin_cos(g, t, h, prec);
+        fmpcb_mul(g + 1, h + 1, t, prec);  /* safe since hlen >= 2 */
+        fmpcb_clear(t);
+    }
+    else
+    {
+        fmpcb_ptr t = _fmpcb_vec_init(n);
+        _fmpcb_poly_sin_cos_series(g, t, h, hlen, n, prec);
+        _fmpcb_vec_clear(t, n);
+    }
 }
 
 void
 fmpcb_poly_sin_series(fmpcb_poly_t g, const fmpcb_poly_t h, long n, long prec)
 {
-    if (h->length == 0 || n == 0)
+    long hlen = h->length;
+
+    if (hlen == 0 || n == 0)
     {
         fmpcb_poly_zero(g);
         return;
     }
 
+    if (hlen == 1)
+        n = 1;
+
     fmpcb_poly_fit_length(g, n);
-    _fmpcb_poly_sin_series(g->coeffs, h->coeffs, h->length, n, prec);
+    _fmpcb_poly_sin_series(g->coeffs, h->coeffs, hlen, n, prec);
     _fmpcb_poly_set_length(g, n);
     _fmpcb_poly_normalise(g);
 }

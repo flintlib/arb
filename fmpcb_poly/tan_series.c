@@ -31,37 +31,49 @@ void
 _fmpcb_poly_tan_series(fmpcb_ptr g,
     fmpcb_srcptr h, long hlen, long len, long prec)
 {
-    fmpcb_ptr t, u;
     hlen = FLINT_MIN(hlen, len);
 
     if (hlen == 1)
     {
         fmpcb_tan(g, h, prec);
         _fmpcb_vec_zero(g + 1, len - 1);
-        return;
     }
+    else if (len == 2)
+    {
+        fmpcb_t t;
+        fmpcb_init(t);
+        fmpcb_tan(g, h, prec);
+        fmpcb_mul(t, g, g, prec);
+        fmpcb_add_ui(t, t, 1, prec);
+        fmpcb_mul(g + 1, t, h + 1, prec);  /* safe since hlen >= 2 */
+        fmpcb_clear(t);
+    }
+    else
+    {
+        fmpcb_ptr t, u;
 
-    t = _fmpcb_vec_init(2 * len);
-    u = t + len;
+        t = _fmpcb_vec_init(2 * len);
+        u = t + len;
 
-    NEWTON_INIT(TAN_NEWTON_CUTOFF, len)
+        NEWTON_INIT(TAN_NEWTON_CUTOFF, len)
 
-    NEWTON_BASECASE(n)
-    _fmpcb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec);
-    _fmpcb_poly_div_series(g, t, n, u, n, n, prec);
-    NEWTON_END_BASECASE
+        NEWTON_BASECASE(n)
+        _fmpcb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec);
+        _fmpcb_poly_div_series(g, t, n, u, n, n, prec);
+        NEWTON_END_BASECASE
 
-    NEWTON_LOOP(m, n)
-    _fmpcb_poly_mullow(u, g, m, g, m, n, prec);
-    fmpcb_add_ui(u, u, 1, prec);
-    _fmpcb_poly_atan_series(t, g, m, n, prec);
-    _fmpcb_poly_sub(t + m, h + m, FLINT_MAX(0, hlen - m), t + m, n - m, prec);
-    _fmpcb_poly_mullow(g + m, u, n, t + m, n - m, n - m, prec);
-    NEWTON_END_LOOP
+        NEWTON_LOOP(m, n)
+        _fmpcb_poly_mullow(u, g, m, g, m, n, prec);
+        fmpcb_add_ui(u, u, 1, prec);
+        _fmpcb_poly_atan_series(t, g, m, n, prec);
+        _fmpcb_poly_sub(t + m, h + m, FLINT_MAX(0, hlen - m), t + m, n - m, prec);
+        _fmpcb_poly_mullow(g + m, u, n, t + m, n - m, n - m, prec);
+        NEWTON_END_LOOP
 
-    NEWTON_END
+        NEWTON_END
 
-    _fmpcb_vec_clear(t, 2 * len);
+        _fmpcb_vec_clear(t, 2 * len);
+    }
 }
 
 void
