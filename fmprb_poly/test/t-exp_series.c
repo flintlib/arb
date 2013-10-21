@@ -110,8 +110,16 @@ int main()
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
+        if (n_randint(state, 100) == 0)
+        {
+            m = 1 + n_randint(state, 300);
+            n = 1 + n_randint(state, 300);
+        }
+        else
+        {
+            m = 1 + n_randint(state, 20);
+            n = 1 + n_randint(state, 20);
+        }
 
         fmpq_poly_init(A);
         fmprb_poly_init(a);
@@ -119,6 +127,7 @@ int main()
 
         fmpq_poly_randtest_small(A, state, m, qbits);
 
+        fmprb_poly_randtest(a, state, 1 + n_randint(state, 300), rbits1, 5);
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
 
         fmprb_poly_exp_series(b, a, n, rbits2);
@@ -154,15 +163,23 @@ int main()
         rbits2 = 2 + n_randint(state, 200);
         rbits3 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
+        if (n_randint(state, 100) == 0)
+        {
+            m = 1 + n_randint(state, 300);
+            n = 1 + n_randint(state, 300);
+        }
+        else
+        {
+            m = 1 + n_randint(state, 20);
+            n = 1 + n_randint(state, 20);
+        }
 
         fmpq_poly_init(A);
         fmprb_poly_init(a);
         fmprb_poly_init(b);
         fmprb_poly_init(c);
 
-        fmprb_poly_randtest(b, state, 1 + n_randint(state, 20), rbits1, 5);
+        fmprb_poly_randtest(b, state, 1 + n_randint(state, 300), rbits1, 5);
 
         do {
             fmpq_poly_randtest_small(A, state, m, qbits);

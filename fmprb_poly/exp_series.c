@@ -25,7 +25,7 @@
 
 #include "fmprb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 8
+#define NEWTON_EXP_CUTOFF 60
 
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
@@ -33,7 +33,7 @@ with inverse=0 uses g as scratch space, computing
 g = exp(-x) only to length (n+1)/2 */
 static void
 _fmprb_poly_exp_series_newton(fmprb_ptr f, fmprb_ptr g,
-    fmprb_srcptr h, long len, long prec, int inverse)
+    fmprb_srcptr h, long len, long prec, int inverse, long cutoff)
 {
     long alloc;
     fmprb_ptr T, U, hprime;
@@ -46,7 +46,7 @@ _fmprb_poly_exp_series_newton(fmprb_ptr f, fmprb_ptr g,
     _fmprb_poly_derivative(hprime, h, len, prec);
     fmprb_zero(hprime + len - 1);
 
-    NEWTON_INIT(NEWTON_EXP_CUTOFF, len)
+    NEWTON_INIT(cutoff, len)
 
     /* f := exp(h) + O(x^m), g := exp(-h) + O(x^m2) */
     NEWTON_BASECASE(n)
@@ -100,7 +100,34 @@ _fmprb_poly_exp_series(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec
 {
     hlen = FLINT_MIN(hlen, n);
 
-    if (hlen < NEWTON_EXP_CUTOFF)
+    if (hlen == 1)
+    {
+        fmprb_exp(f, h, prec);
+        _fmprb_vec_zero(f + 1, n - 1);
+    }
+    else if (n == 2)
+    {
+        fmprb_exp(f, h, prec);
+        fmprb_mul(f + 1, f, h + 1, prec);  /* safe since hlen >= 2 */
+        _fmprb_vec_zero(f + 2, n - 2);
+    }
+    else if (_fmprb_vec_is_zero(h + 1, hlen - 2)) /* h = a + bx^c */
+    {
+        long i, j, d = hlen - 1;
+        fmprb_t t;
+        fmprb_init(t);
+        fmprb_set(t, h + d);
+        fmprb_exp(f, h, prec);
+        for (i = 1, j = d; j < n; j += d, i++)
+        {
+            fmprb_mul(f + j, f + j - d, t, prec);
+            fmprb_div_ui(f + j, f + j, i, prec);
+            _fmprb_vec_zero(f + j - d + 1, hlen - 2);
+        }
+        _fmprb_vec_zero(f + j - d + 1, n - (j - d + 1));
+        fmprb_clear(t);
+    }
+    else if (hlen < NEWTON_EXP_CUTOFF)
     {
         _fmprb_poly_exp_series_basecase(f, h, hlen, n, prec);
     }
@@ -124,7 +151,7 @@ _fmprb_poly_exp_series(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec
         fmprb_init(u);
         fmprb_exp(u, h, prec);
 
-        _fmprb_poly_exp_series_newton(f, g, t, n, prec, 0);
+        _fmprb_poly_exp_series_newton(f, g, t, n, prec, 0, NEWTON_EXP_CUTOFF);
 
         if (!fmprb_is_one(u))
             _fmprb_vec_scalar_mul(f, f, n, u, prec);
@@ -152,6 +179,9 @@ fmprb_poly_exp_series(fmprb_poly_t f, const fmprb_poly_t h, long n, long prec)
         fmprb_poly_one(f);
         return;
     }
+
+    if (hlen == 1)
+        n = 1;
 
     fmprb_poly_fit_length(f, n);
     _fmprb_poly_exp_series(f->coeffs, h->coeffs, hlen, n, prec);

@@ -44,8 +44,16 @@ int main()
         bits2 = 2 + n_randint(state, 200);
         bits3 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 30);
-        n = 1 + n_randint(state, 30);
+        if (n_randint(state, 100) == 0)
+        {
+            m = 1 + n_randint(state, 300);
+            n = 1 + n_randint(state, 300);
+        }
+        else
+        {
+            m = 1 + n_randint(state, 20);
+            n = 1 + n_randint(state, 20);
+        }
 
         fmpcb_poly_init(a);
         fmpcb_poly_init(b);
@@ -54,6 +62,9 @@ int main()
 
         fmpcb_poly_randtest(a, state, m, bits1, 10);
         fmpcb_poly_randtest(b, state, m, bits1, 10);
+
+        fmpcb_poly_randtest(c, state, 1 + n_randint(state, 300), bits1, 10);
+        fmpcb_poly_randtest(d, state, 1 + n_randint(state, 300), bits1, 10);
 
         /* check exp(a+b) = exp(a) exp(b) */
         fmpcb_poly_exp_series(c, a, n, bits2);
