@@ -97,6 +97,10 @@ fmpcb_root(fmpcb_t r, const fmpcb_t a, long m, long index, long prec)
         fmpcb_set_round(r, a, prec);
     else if (m == -1)
         fmpcb_inv(r, a, prec);
+    else if (m == 2)
+        fmpcb_sqrt(r, a, prec);
+    else if (m == -2)
+        fmpcb_rsqrt(r, a, prec);
     else if (prec < 300 || !fmpcb_is_exact(a) || (m == LONG_MIN))
         fmpcb_root_exp(r, a, m, index, prec);
     else
