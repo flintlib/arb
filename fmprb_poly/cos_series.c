@@ -35,7 +35,7 @@ _fmprb_poly_cos_series(fmprb_ptr g, fmprb_srcptr h, long hlen, long n, long prec
         fmprb_cos(g, h, prec);
         _fmprb_vec_zero(g + 1, n - 1);
     }
-    else if (n == 2 && 0)
+    else if (n == 2)
     {
         fmprb_t t;
         fmprb_init(t);
