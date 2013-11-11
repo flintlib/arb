@@ -135,6 +135,45 @@ Arithmetic
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
     is a square matrix.
 
+
+Scalar arithmetic
+-------------------------------------------------------------------------------
+
+.. function:: void fmpcb_mat_scalar_mul_2exp_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c)
+
+    Sets *B* to *A* multiplied by `2^c`.
+
+.. function:: void fmpcb_mat_scalar_addmul_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+
+.. function:: void fmpcb_mat_scalar_addmul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_addmul_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_addmul_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+
+    Sets *B* to `B + A \times c`.
+
+.. function:: void fmpcb_mat_scalar_mul_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+
+.. function:: void fmpcb_mat_scalar_mul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_mul_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_mul_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+
+    Sets *B* to `A \times c`.
+
+.. function:: void fmpcb_mat_scalar_div_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+
+.. function:: void fmpcb_mat_scalar_div_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_div_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+
+.. function:: void fmpcb_mat_scalar_div_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+
+    Sets *B* to `A / c`.
+
+
 Gaussian elimination and solving
 -------------------------------------------------------------------------------
 

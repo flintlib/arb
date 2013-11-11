@@ -247,6 +247,8 @@ Arithmetic
 
 .. function:: void fmpcb_mul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 
+.. function:: void fmpcb_mul_si(fmpcb_t z, const fmpcb_t x, long y, long prec)
+
 .. function:: void fmpcb_mul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_mul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
@@ -281,6 +283,8 @@ Arithmetic
 
 .. function:: void fmpcb_addmul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
 
+.. function:: void fmpcb_addmul_si(fmpcb_t z, const fmpcb_t x, long y, long prec)
+
 .. function:: void fmpcb_addmul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 
 .. function:: void fmpcb_addmul_fmprb(fmpcb_t z, const fmpcb_t x, const fmprb_t y, long prec)
@@ -290,6 +294,8 @@ Arithmetic
 .. function:: void fmpcb_submul(fmpcb_t z, const fmpcb_t x, const fmpcb_t y, long prec)
 
 .. function:: void fmpcb_submul_ui(fmpcb_t z, const fmpcb_t x, ulong y, long prec)
+
+.. function:: void fmpcb_submul_si(fmpcb_t z, const fmpcb_t x, long y, long prec)
 
 .. function:: void fmpcb_submul_fmpz(fmpcb_t z, const fmpcb_t x, const fmpz_t y, long prec)
 

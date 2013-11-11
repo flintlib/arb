@@ -109,6 +109,138 @@ void fmpcb_mat_mul(fmpcb_mat_t res, const fmpcb_mat_t mat1, const fmpcb_mat_t ma
 
 void fmpcb_mat_pow_ui(fmpcb_mat_t B, const fmpcb_mat_t A, ulong exp, long prec);
 
+/* Scalar arithmetic */
+
+static __inline__ void
+fmpcb_mat_scalar_mul_2exp_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_mul_2exp_si(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_addmul_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_addmul_si(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_mul_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_mul_si(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_div_si(fmpcb_mat_t B, const fmpcb_mat_t A, long c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_div_si(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_addmul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_addmul_fmpz(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+void
+fmpcb_mat_scalar_mul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_mul_fmpz(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_div_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_div_fmpz(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_addmul_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_addmul(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_mul_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_mul(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_div_fmpcb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpcb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_div(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_addmul_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_addmul_fmprb(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_mul_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_mul_fmprb(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
+static __inline__ void
+fmpcb_mat_scalar_div_fmprb(fmpcb_mat_t B, const fmpcb_mat_t A, const fmprb_t c, long prec)
+{
+    long i, j;
+
+    for (i = 0; i < fmpcb_mat_nrows(A); i++)
+        for (j = 0; j < fmpcb_mat_ncols(A); j++)
+            fmpcb_div_fmprb(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
+}
+
 /* Solving */
 
 static __inline__ void
