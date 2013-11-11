@@ -161,7 +161,7 @@ fmpcb_mat_scalar_addmul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c,
             fmpcb_addmul_fmpz(fmpcb_mat_entry(B, i, j), fmpcb_mat_entry(A, i, j), c, prec);
 }
 
-void
+static __inline__ void
 fmpcb_mat_scalar_mul_fmpz(fmpcb_mat_t B, const fmpcb_mat_t A, const fmpz_t c, long prec)
 {
     long i, j;

@@ -249,7 +249,7 @@ Radius and interval operations
 
     Sets *z* to a ball containing both *x* and *y*.
 
-.. void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+.. function:: void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 
     Sets *u* to the upper bound of the absolute value of *x*,
     rounded up to *prec* bits. If *x* contains NaN, the result is NaN.

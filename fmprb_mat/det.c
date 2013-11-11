@@ -72,20 +72,6 @@ fmprb_mat_gauss_partial(fmprb_mat_t A, long prec)
     return rank * sign;
 }
 
-static __inline__ void
-fmprb_get_fmpr_abs_ubound(fmpr_t u, const fmprb_t x, long prec)
-{
-    if (fmpr_sgn(fmprb_midref(x)) >= 0)
-    {
-        fmpr_add(u, fmprb_midref(x), fmprb_radref(x), prec, FMPR_RND_UP);
-    }
-    else
-    {
-        fmpr_sub(u, fmprb_midref(x), fmprb_radref(x), prec, FMPR_RND_UP);
-        fmpr_neg(u, u);
-    }
-}
-
 void
 fmprb_vec_get_fmpr_2norm_squared_bound(fmpr_t s, fmprb_srcptr vec, long len, long prec)
 {
@@ -97,7 +83,7 @@ fmprb_vec_get_fmpr_2norm_squared_bound(fmpr_t s, fmprb_srcptr vec, long len, lon
 
     for (i = 0; i < len; i++)
     {
-        fmprb_get_fmpr_abs_ubound(t, vec + i, prec);
+        fmprb_get_abs_ubound_fmpr(t, vec + i, prec);
         fmpr_addmul(s, t, t, prec, FMPR_RND_UP);
     }
 
