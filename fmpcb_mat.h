@@ -97,6 +97,10 @@ void fmpcb_mat_zero(fmpcb_mat_t mat);
 
 void fmpcb_mat_one(fmpcb_mat_t mat);
 
+/* Norms */
+
+void fmpcb_mat_bound_inf_norm(fmpr_t b, const fmpcb_mat_t A, long prec);
+
 /* Arithmetic */
 
 void fmpcb_mat_neg(fmpcb_mat_t dest, const fmpcb_mat_t src);

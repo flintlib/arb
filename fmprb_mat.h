@@ -95,6 +95,10 @@ void fmprb_mat_zero(fmprb_mat_t mat);
 
 void fmprb_mat_one(fmprb_mat_t mat);
 
+/* Norms */
+
+void fmprb_mat_bound_inf_norm(fmpr_t b, const fmprb_mat_t A, long prec);
+
 /* Arithmetic */
 
 void fmprb_mat_neg(fmprb_mat_t dest, const fmprb_mat_t src);

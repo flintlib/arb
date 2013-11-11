@@ -108,6 +108,15 @@ Special matrices
     and all other entries to zero.
 
 
+Norms
+-------------------------------------------------------------------------------
+
+.. function:: void fmprb_mat_bound_inf_norm(fmpr_t b, const fmprb_mat_t A, long prec)
+
+    Sets *b* to an upper bound for the infinity norm (i.e. the largest
+    absolute value row sum) of *A*, computed using floating-point arithmetic
+    at *prec* bits with all operations rounded up.
+
 Arithmetic
 -------------------------------------------------------------------------------
 
