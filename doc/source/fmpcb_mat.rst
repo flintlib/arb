@@ -255,11 +255,9 @@ Special functions
 
         \exp(A) = \sum_{k=0}^{\infty} \frac{A^k}{k!}.
 
-    The exponential function is evaluated using scaling followed by
-    rectangular splitting evaluation of the Taylor series.
-    Scaling amounts to picking a nonnegative integer *r* such that
-    the Taylor series converges quickly, and then evaluating
-    `\exp(A/2^r)^{2^r}`.
+    The function is evaluated as `\exp(A/2^r)^{2^r}`, where `r` is chosen
+    to give rapid convergence of the Taylor series. The series is
+    evaluated using rectangular splitting.
     If `\|A/2^r\| \le c` and `N \ge 2c`, we bound the entrywise error
     when truncating the Taylor series before term `N` by `2 c^N / N!`.
 
