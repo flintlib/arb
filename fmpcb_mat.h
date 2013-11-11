@@ -83,6 +83,10 @@ void fmpcb_mat_printd(const fmpcb_mat_t mat, long digits);
 
 int fmpcb_mat_equal(const fmpcb_mat_t mat1, const fmpcb_mat_t mat2);
 
+int fmpcb_mat_overlaps(const fmpcb_mat_t mat1, const fmpcb_mat_t mat2);
+
+int fmpcb_mat_contains(const fmpcb_mat_t mat1, const fmpcb_mat_t mat2);
+
 int fmpcb_mat_contains_fmpq_mat(const fmpcb_mat_t mat1, const fmpq_mat_t mat2);
 
 int fmpcb_mat_contains_fmpz_mat(const fmpcb_mat_t mat1, const fmpz_mat_t mat2);

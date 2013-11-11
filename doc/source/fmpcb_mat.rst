@@ -80,6 +80,13 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions
     and identical entries.
 
+.. function:: int fmpcb_mat_overlaps(const fmpcb_mat_t mat1, const fmpcb_mat_t mat2)
+
+    Returns nonzero iff the matrices have the same dimensions
+    and each entry in *mat1* overlaps with the corresponding entry in *mat2*.
+
+.. function:: int fmpcb_mat_contains(const fmpcb_mat_t mat1, const fmpcb_mat_t mat2)
+
 .. function:: int fmpcb_mat_contains_fmpz_mat(const fmpcb_mat_t mat1, const fmpz_mat_t mat2)
 
 .. function:: int fmpcb_mat_contains_fmpq_mat(const fmpcb_mat_t mat1, const fmpq_mat_t mat2)
