@@ -250,6 +250,13 @@ fmpcb_trim(fmpcb_t z, const fmpcb_t x)
 }
 
 static __inline__ void
+fmpcb_add_error_fmpr(fmpcb_t x, const fmpr_t err)
+{
+    fmprb_add_error_fmpr(fmpcb_realref(x), err);
+    fmprb_add_error_fmpr(fmpcb_imagref(x), err);
+}
+
+static __inline__ void
 fmpcb_get_abs_ubound_fmpr(fmpr_t u, const fmpcb_t z, long prec)
 {
     if (fmprb_is_zero(fmpcb_imagref(z)))
@@ -826,10 +833,7 @@ _fmpcb_vec_add_error_fmpr_vec(fmpcb_ptr res, fmpr_srcptr err, long len)
 {
     long i;
     for (i = 0; i < len; i++)
-    {
-        fmprb_add_error_fmpr(fmpcb_realref(res + i), err + i);
-        fmprb_add_error_fmpr(fmpcb_imagref(res + i), err + i);
-    }
+        fmpcb_add_error_fmpr(res + i, err + i);
 }
 
 static __inline__ void

@@ -282,6 +282,9 @@ int fmpcb_mat_inv(fmpcb_mat_t X, const fmpcb_mat_t A, long prec);
 
 void fmpcb_mat_det(fmpcb_t det, const fmpcb_mat_t A, long prec);
 
+/* Special functions */
+
+void fmpcb_mat_exp(fmpcb_mat_t B, const fmpcb_mat_t A, long prec);
 
 #ifdef __cplusplus
 }
