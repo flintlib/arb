@@ -62,7 +62,7 @@ int main()
         }
 
         /* check digamma(z+1) = digamma(z) + 1/z */
-        fmprb_ui_div(c, 1, a, prec1);
+        fmprb_inv(c, a, prec1);
         fmprb_add(b, b, c, prec1);
         fmprb_add_ui(c, a, 1, prec1);
         fmprb_digamma(c, c, prec1);

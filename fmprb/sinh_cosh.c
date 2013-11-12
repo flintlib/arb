@@ -50,7 +50,7 @@ fmprb_sinh(fmprb_t s, const fmprb_t x, long prec)
         else
         {
             fmprb_exp(s, x, wp);
-            fmprb_ui_div(t, 1, s, wp);
+            fmprb_inv(t, s, wp);
             fmprb_sub(s, s, t, prec);
         }
 
@@ -74,7 +74,7 @@ fmprb_cosh(fmprb_t c, const fmprb_t x, long prec)
         fmprb_init(t);
 
         fmprb_exp(c, x, wp);
-        fmprb_ui_div(t, 1, c, wp);
+        fmprb_inv(t, c, wp);
         fmprb_add(c, c, t, prec);
         fmprb_mul_2exp_si(c, c, -1);
 
@@ -104,7 +104,7 @@ fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
             fmprb_expm1(t, t, wp);
             fmprb_add_ui(u, t, 1, wp);
             fmprb_sqrt(u, u, wp);
-            fmprb_ui_div(u, 1, u, wp);
+            fmprb_inv(u, u, wp);
             fmprb_mul(s, t, u, prec);
             fmprb_add_ui(t, t, 2, wp);
             fmprb_mul(c, t, u, prec);
@@ -112,7 +112,7 @@ fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec)
         else
         {
             fmprb_exp(t, x, wp);
-            fmprb_ui_div(u, 1, t, wp);
+            fmprb_inv(u, t, wp);
             fmprb_sub(s, t, u, prec);
             fmprb_add(c, t, u, prec);
         }

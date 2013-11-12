@@ -42,7 +42,7 @@ gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec)
     {
         gamma_taylor_eval_fmprb(u, x, prec);
         fmprb_mul(u, u, x, prec);
-        fmprb_ui_div(y, 1, u, prec);
+        fmprb_inv(y, u, prec);
     }
     else if (v > 0)
     {
@@ -58,7 +58,7 @@ gamma_taylor_fmprb(fmprb_t y, const fmprb_t x, long prec)
         gamma_taylor_eval_fmprb(t, t, prec);
         gamma_rising_fmprb_ui_bsplit(u, x, (-v) + 1, prec);
         fmprb_mul(y, u, t, prec);
-        fmprb_ui_div(y, 1, y, prec);
+        fmprb_inv(y, y, prec);
     }
 
     fmprb_clear(t);

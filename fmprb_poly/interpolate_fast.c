@@ -52,7 +52,7 @@ _fmprb_poly_interpolation_weights(fmprb_ptr w,
     _fmprb_poly_evaluate_vec_fast_precomp(w, tmp, len, tree, len, prec);
 
     for (i = 0; i < len; i++)
-        fmprb_ui_div(w + i, 1UL, w + i, prec);
+        fmprb_inv(w + i, w + i, prec);
 
     _fmprb_vec_clear(tmp, len + 1);
 }

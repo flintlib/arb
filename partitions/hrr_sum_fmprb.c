@@ -224,7 +224,7 @@ sinh_cosh_divk_precomp(fmprb_t sh, fmprb_t ch, fmprb_t ex, long k, long prec)
     fmprb_root(ch, t, k, prec);
     /* The second term doesn't need full precision,
        but this doesn't affect performance that much... */
-    fmprb_ui_div(t, 1, ch, prec);
+    fmprb_inv(t, ch, prec);
     fmprb_sub(sh, ch, t, prec);
     fmprb_add(ch, ch, t, prec);
     fmprb_mul_2exp_si(ch, ch, -1);

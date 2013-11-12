@@ -35,7 +35,7 @@ void
 _fmprb_poly_inv_series(fmprb_ptr Qinv,
     fmprb_srcptr Q, long Qlen, long len, long prec)
 {
-    fmprb_ui_div(Qinv, 1UL, Q, prec);
+    fmprb_inv(Qinv, Q, prec);
 
     if (Qlen == 1)
     {

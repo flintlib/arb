@@ -48,7 +48,7 @@ int main()
 
         fmprb_rsqrt(b, a, prec);
 
-        fmprb_ui_div(c, 1, b, prec);
+        fmprb_inv(c, b, prec);
         fmprb_mul(c, c, c, prec);
 
         if (!fmprb_contains(c, a))

@@ -38,7 +38,7 @@ _fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long pr
         if (n >= 1)
             fmprb_zero(Qinv);
         if (n == 2)
-            fmprb_ui_div(Qinv + 1, 1, Q + 1, prec);
+            fmprb_inv(Qinv + 1, Q + 1, prec);
         return;
     }
 

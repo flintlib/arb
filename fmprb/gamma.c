@@ -65,7 +65,7 @@ _fmprb_gamma(fmprb_t y, const fmprb_t x, long prec, int inverse)
                 fmpr_get_fmpq(a, mid);
                 fmprb_gamma_fmpq(y, a, prec + 2 * inverse);
                 if (inverse)
-                    fmprb_ui_div(y, 1, y, prec);
+                    fmprb_inv(y, y, prec);
                 fmpq_clear(a);
                 return;
             }

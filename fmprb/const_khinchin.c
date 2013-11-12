@@ -84,14 +84,14 @@ fmprb_const_khinchin_eval_param(fmprb_t s, ulong N, ulong M, long prec)
         /* forward h by two */
         fmprb_set_ui(u, 2 * n);
         fmprb_mul_ui(u, u, 2 * n + 1, prec);
-        fmprb_ui_div(u, 1, u, prec);
+        fmprb_inv(u, u, prec);
         fmprb_sub(h, h, u, prec);
     }
 
     /* error bound 1/N^(2M) */
     fmprb_set_ui(t, N);
     fmprb_pow_ui(t, t, 2 * M, FMPRB_RAD_PREC);
-    fmprb_ui_div(t, 1, t, FMPRB_RAD_PREC);
+    fmprb_inv(t, t, FMPRB_RAD_PREC);
     fmprb_add_error(s, t);
 
     fmprb_log_ui(t, 2, prec);

@@ -43,7 +43,7 @@ gamma_stirling_eval_fmprb(fmprb_t s, const fmprb_t z, long nterms, int digamma, 
     fmprb_init(zinv2);
 
     fmprb_log(logz, z, prec);
-    fmprb_ui_div(zinv, 1UL, z, prec);
+    fmprb_inv(zinv, z, prec);
 
     nterms = FLINT_MAX(nterms, 1);
 

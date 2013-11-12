@@ -106,7 +106,7 @@ _fmprb_poly_log_cpx_series(fmprb_ptr res, const fmprb_t c, long num, long prec)
         if (i == 0)
             fmprb_log(res + i, c, prec);
         else if (i == 1)
-            fmprb_ui_div(res + i, 1, c, prec);
+            fmprb_inv(res + i, c, prec);
         else
             fmprb_mul(res + i, res + i - 1, res + 1, prec);
     }

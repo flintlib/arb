@@ -455,6 +455,10 @@ Arithmetic
 
     Sets *y* to *x* multiplied by `2^e`.
 
+.. function:: void fmprb_inv(fmprb_t z, const fmprb_t x, long prec)
+
+    Sets *z* to the multiplicative inverse of *x*.
+
 .. function:: void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 
 .. function:: void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)

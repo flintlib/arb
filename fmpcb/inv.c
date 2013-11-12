@@ -35,12 +35,12 @@ fmpcb_inv(fmpcb_t z, const fmpcb_t x, long prec)
 
     if (fmprb_is_zero(b))
     {
-        fmprb_ui_div(c, 1, a, prec);
+        fmprb_inv(c, a, prec);
         fmprb_zero(d);
     }
     else if (fmprb_is_zero(a))
     {
-        fmprb_ui_div(d, 1, b, prec);
+        fmprb_inv(d, b, prec);
         fmprb_neg(d, d);
         fmprb_zero(c);
     }

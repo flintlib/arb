@@ -134,7 +134,7 @@ _fmprb_poly_zeta_series(fmprb_ptr res, fmprb_srcptr h, long hlen, const fmprb_t 
         {
             fmprb_sub_ui(u, h, 1, prec);
             fmprb_neg(u, u);
-            fmprb_ui_div(u, 1, u, prec);
+            fmprb_inv(u, u, prec);
             for (i = 1; i < len; i++)
                 fmprb_mul(u + i, u + i - 1, u, prec);
             _fmprb_vec_add(t, t, u, len, prec);

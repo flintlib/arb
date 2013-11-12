@@ -57,7 +57,7 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
     for (j = 3; j <= iter->max_power; j += 2)
     {
         fmprb_ui_pow_ui(x, j, nmax, power_prec(j, nmax, wp));
-        fmprb_ui_div(x, 1UL, x, power_prec(j, nmax, wp));
+        fmprb_inv(x, x, power_prec(j, nmax, wp));
         round1 = fmpr_get_fmpz_fixed_si(t, fmprb_midref(x), -wp);
         fmpz_set(iter->powers + j, t);
 

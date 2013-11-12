@@ -59,7 +59,7 @@ _fmprb_poly_interpolate_barycentric(fmprb_ptr poly,
             }
         }
 
-        fmprb_ui_div(w + i, 1UL, w + i, prec);
+        fmprb_inv(w + i, w + i, prec);
     }
 
     _fmprb_vec_zero(poly, n);

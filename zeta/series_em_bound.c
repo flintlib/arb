@@ -44,7 +44,7 @@ bound_I(fmprb_ptr I, const fmprb_t A, const fmprb_t B, const fmprb_t C, long len
     fmprb_one(L);
 
     /* T = 1 / (A^Bm1 * Bm1) */
-    fmprb_ui_div(T, 1, A, wp);
+    fmprb_inv(T, A, wp);
     fmprb_pow(T, T, Bm1, wp);
     fmprb_div(T, T, Bm1, wp);
 

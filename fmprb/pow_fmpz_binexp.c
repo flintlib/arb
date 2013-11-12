@@ -37,12 +37,12 @@ fmprb_pow_fmpz_binexp(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
         else if (*e == 1L)
             fmprb_set_round(y, b, prec);
         else if (*e == -1L)
-            fmprb_ui_div(y, 1UL, b, prec);
+            fmprb_inv(y, b, prec);
         else if (*e == 2L)
             fmprb_mul(y, b, b, prec);
         else
         {
-            fmprb_ui_div(y, 1UL, b, prec);
+            fmprb_inv(y, b, prec);
             fmprb_mul(y, y, y, prec);
         }
         return;
@@ -54,7 +54,7 @@ fmprb_pow_fmpz_binexp(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec)
         fmpz_init(f);
         fmpz_neg(f, e);
         fmprb_pow_fmpz_binexp(y, b, f, prec + 2);
-        fmprb_ui_div(y, 1UL, y, prec);
+        fmprb_inv(y, y, prec);
         fmpz_clear(f);
         return;
     }

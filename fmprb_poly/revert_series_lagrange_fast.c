@@ -40,7 +40,7 @@ _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr Qinv, fmprb_srcptr Q, long n, 
         if (n >= 1)
             fmprb_zero(Qinv);
         if (n == 2)
-            fmprb_ui_div(Qinv + 1, 1, Q + 1, prec);
+            fmprb_inv(Qinv + 1, Q + 1, prec);
         return;
     }
 
@@ -52,7 +52,7 @@ _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr Qinv, fmprb_srcptr Q, long n, 
     T = _fmprb_vec_init(n - 1);
 
     fmprb_zero(Qinv);
-    fmprb_ui_div(Qinv + 1, 1, Q + 1, prec);
+    fmprb_inv(Qinv + 1, Q + 1, prec);
 
     _fmprb_poly_inv_series(Ri(1), Q + 1, n - 1, n - 1, prec);
     for (i = 2; i <= m; i++)

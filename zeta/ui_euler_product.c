@@ -114,6 +114,6 @@ void
 zeta_ui_euler_product(fmprb_t z, ulong s, long prec)
 {
     zeta_inv_ui_euler_product(z, s, prec);
-    fmprb_ui_div(z, 1, z, prec);
+    fmprb_inv(z, z, prec);
 }
 

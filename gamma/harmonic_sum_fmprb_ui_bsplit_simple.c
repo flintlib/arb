@@ -79,7 +79,7 @@ gamma_harmonic_sum_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, l
     }
     else if (n == 1)
     {
-        fmprb_ui_div(y, 1, x, prec);
+        fmprb_inv(y, x, prec);
     }
     else
     {

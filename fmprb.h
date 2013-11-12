@@ -286,6 +286,12 @@ void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
 void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec);
 void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);
 
+static __inline__ void
+fmprb_inv(fmprb_t y, const fmprb_t x, long prec)
+{
+    fmprb_ui_div(y, 1, x, prec);
+}
+
 void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
 
 
