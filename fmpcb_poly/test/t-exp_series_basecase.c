@@ -44,8 +44,8 @@ int main()
         bits2 = 2 + n_randint(state, 200);
         bits3 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 30);
-        n = 1 + n_randint(state, 30);
+        m = 1 + n_randint(state, 40);
+        n = 1 + n_randint(state, 40);
 
         fmpcb_poly_init(a);
         fmpcb_poly_init(b);

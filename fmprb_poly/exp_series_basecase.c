@@ -25,20 +25,20 @@
 
 #include "fmprb_poly.h"
 
-void
-_fmprb_poly_exp_series_basecase(fmprb_ptr f,
+#define MUL_CUTOFF 24
+
+static void
+_fmprb_poly_exp_series_basecase_rec(fmprb_ptr f, fmprb_ptr a,
         fmprb_srcptr h, long hlen, long n, long prec)
 {
-    long j, k, alen = FLINT_MIN(n, hlen);
-    fmprb_ptr a;
-    fmprb_t s;
+    long j, k;
 
+    fmprb_t s;
     fmprb_init(s);
-    a = _fmprb_vec_init(alen);
 
     fmprb_exp(f, h, prec);
 
-    for (k = 1; k < alen; k++)
+    for (k = 1; k < hlen; k++)
         fmprb_mul_ui(a + k, h + k, k, prec);
 
     for (k = 1; k < n; k++)
@@ -51,7 +51,43 @@ _fmprb_poly_exp_series_basecase(fmprb_ptr f,
     }
 
     fmprb_clear(s);
-    _fmprb_vec_clear(a, alen);
+}
+
+void
+_fmprb_poly_exp_series_basecase(fmprb_ptr f,
+        fmprb_srcptr h, long hlen, long n, long prec)
+{
+    hlen = FLINT_MIN(n, hlen);
+
+    if (n < MUL_CUTOFF || hlen < 0.9 * n)
+    {
+        fmprb_ptr t = _fmprb_vec_init(hlen);
+        _fmprb_poly_exp_series_basecase_rec(f, t, h, hlen, n, prec);
+        _fmprb_vec_clear(t, hlen);
+    }
+    else
+    {
+        long m, v;
+        fmprb_ptr t, u;
+
+        m = (n + 2) / 3;
+        v = m * 2;
+
+        t = _fmprb_vec_init(n);
+        u = _fmprb_vec_init(n - m);
+
+        _fmprb_poly_mullow(t, h + m, hlen - m, h + m, hlen - m, n - v, prec);
+        _fmprb_vec_scalar_mul_2exp_si(t, t, n - v, -1);
+
+        _fmprb_vec_set(u, h + m, v - m);
+        _fmprb_poly_add(u + v - m, t, n - v, h + v, hlen - v, prec);
+        _fmprb_poly_exp_series_basecase_rec(f, t, h, m, n, prec);
+        _fmprb_poly_mullow(t, f, n, u, n - m, n - m, prec);
+        _fmprb_poly_add(f + m, f + m, n - m, t, n - m, prec);
+
+        _fmprb_vec_clear(t, n);
+        _fmprb_vec_clear(u, n - m);
+    }
 }
 
 void

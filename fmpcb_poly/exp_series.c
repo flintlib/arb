@@ -25,7 +25,7 @@
 
 #include "fmpcb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 60
+#define NEWTON_EXP_CUTOFF 120
 
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
@@ -126,7 +126,7 @@ _fmpcb_poly_exp_series(fmpcb_ptr f, fmpcb_srcptr h, long hlen, long n, long prec
         _fmpcb_vec_zero(f + j - d + 1, n - (j - d + 1));
         fmpcb_clear(t);
     }
-    else if (hlen < NEWTON_EXP_CUTOFF)
+    else if (hlen <= NEWTON_EXP_CUTOFF)
     {
         _fmpcb_poly_exp_series_basecase(f, h, hlen, n, prec);
     }

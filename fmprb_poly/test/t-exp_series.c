@@ -112,8 +112,8 @@ int main()
 
         if (n_randint(state, 100) == 0)
         {
-            m = 1 + n_randint(state, 300);
-            n = 1 + n_randint(state, 300);
+            m = 1 + n_randint(state, 400);
+            n = 1 + n_randint(state, 400);
         }
         else
         {
@@ -165,8 +165,8 @@ int main()
 
         if (n_randint(state, 100) == 0)
         {
-            m = 1 + n_randint(state, 300);
-            n = 1 + n_randint(state, 300);
+            m = 1 + n_randint(state, 400);
+            n = 1 + n_randint(state, 400);
         }
         else
         {

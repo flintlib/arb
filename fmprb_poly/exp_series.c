@@ -25,8 +25,7 @@
 
 #include "fmprb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 60
-
+#define NEWTON_EXP_CUTOFF 120
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
@@ -126,7 +125,7 @@ _fmprb_poly_exp_series(fmprb_ptr f, fmprb_srcptr h, long hlen, long n, long prec
         _fmprb_vec_zero(f + j - d + 1, n - (j - d + 1));
         fmprb_clear(t);
     }
-    else if (hlen < NEWTON_EXP_CUTOFF)
+    else if (hlen <= NEWTON_EXP_CUTOFF)
     {
         _fmprb_poly_exp_series_basecase(f, h, hlen, n, prec);
     }

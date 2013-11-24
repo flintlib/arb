@@ -61,8 +61,8 @@ int main()
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
+        m = 1 + n_randint(state, 40);
+        n = 1 + n_randint(state, 40);
 
         fmpq_poly_init(A);
         fmpq_poly_init(B);
@@ -109,8 +109,8 @@ int main()
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
+        m = 1 + n_randint(state, 40);
+        n = 1 + n_randint(state, 40);
 
         fmpq_poly_init(A);
         fmprb_poly_init(a);
@@ -153,8 +153,8 @@ int main()
         rbits2 = 2 + n_randint(state, 200);
         rbits3 = 2 + n_randint(state, 200);
 
-        m = 1 + n_randint(state, 20);
-        n = 1 + n_randint(state, 20);
+        m = 1 + n_randint(state, 40);
+        n = 1 + n_randint(state, 40);
 
         fmpq_poly_init(A);
         fmprb_poly_init(a);
