@@ -3,7 +3,7 @@
 **fmpcb.h** -- complex numbers
 ===============================================================================
 
-An :type:`fmpcb_t` represents a complex numbers with
+An :type:`fmpcb_t` represents a complex number with
 error bounds. An :type:`fmpcb_t` consists of a pair of real number
 balls of type :type:`fmprb_struct`, representing the real and
 imaginary part with separate error bounds.
@@ -57,8 +57,7 @@ Memory management
 
 .. function:: void fmpcb_init(fmprb_t x)
 
-    Initializes the variable *x* for use. Its midpoint and radius are both
-    set to zero.
+    Initializes the variable *x* for use, and sets its value to zero.
 
 .. function:: void fmpcb_clear(fmpcb_t x)
 
@@ -149,7 +148,15 @@ Precision and comparisons
 
 .. function:: int fmpcb_equal(const fmpcb_t x, const fmpcb_t y)
 
-    Returns nonzero iff *x* and *y* are identical.
+    Returns nonzero iff *x* and *y* are identical as sets, i.e.
+    if the real and imaginary parts are equal as balls.
+
+    Note that this is not the same thing as testing whether both
+    *x* and *y* certainly represent the same complex number, unless
+    either *x* or *y* is exact (and neither contains NaN).
+    To test whether both operands *might* represent the same mathematical
+    quantity, use :func:`fmpcb_overlaps` or :func:`fmpcb_contains`,
+    depending on the circumstance.
 
 .. function:: int fmpcb_overlaps(const fmpcb_t x, const fmpcb_t y)
 

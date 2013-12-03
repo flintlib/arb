@@ -343,7 +343,7 @@ Comparisons
 
     Note that this is not the same thing as testing whether both
     *x* and *y* certainly represent the same real number, unless
-    either *x* and *y* is exact (and neither contains NaN).
+    either *x* or *y* is exact (and neither contains NaN).
     To test whether both operands *might* represent the same mathematical
     quantity, use :func:`fmprb_overlaps` or :func:`fmprb_contains`,
     depending on the circumstance.

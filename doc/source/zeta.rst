@@ -353,6 +353,9 @@ Power sums
 
 .. function:: void zeta_powsum_series_naive(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, long n, long len, long prec)
 
+.. function:: void zeta_powsum_series_naive_threaded(fmpcb_ptr z, const fmpcb_t s, const fmpcb_t a, long n, long len, long prec)
+
+
     Computes
 
     .. math ::
@@ -361,6 +364,8 @@ Power sums
 
     as a power series in `t` truncated to length *len*. This function
     evaluates the sum naively term by term.
+    The *threaded* version splits the computation
+    over the number of threads returned by *flint_get_num_threads()*.
 
 .. function:: void zeta_powsum_one_series_sieved(fmpcb_ptr z, const fmpcb_t s, long n, long len, long prec)
 

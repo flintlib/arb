@@ -134,10 +134,20 @@ Arithmetic
     Sets *res* to the difference of *mat1* and *mat2*. The operands must have
     the same dimensions.
 
+.. function:: void fmprb_mat_mul_classical(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec)
+
+.. function:: void fmprb_mat_mul_threaded(fmprb_mat_t C, const fmprb_mat_t A, const fmprb_mat_t B, long prec)
+
 .. function:: void fmprb_mat_mul(fmprb_mat_t res, const fmprb_mat_t mat1, const fmprb_mat_t mat2, long prec)
 
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
+
+    The *threaded* version splits the computation
+    over the number of threads returned by *flint_get_num_threads()*.
+    The default version automatically calls the *threaded* version
+    if the matrices are sufficiently large and more than one thread
+    can be used.
 
 .. function:: void fmprb_mat_pow_ui(fmprb_mat_t res, const fmprb_mat_t mat, ulong exp, long prec)
 
