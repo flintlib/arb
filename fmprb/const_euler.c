@@ -246,15 +246,12 @@ fmprb_log_ui_smooth(fmprb_t s, ulong n, long prec)
     fmprb_clear(t);
 }
 
-void fmpr_gamma_ui_lbound(fmpr_t x, ulong n, long prec);
-
-
 void
 fmprb_const_euler_eval(fmprb_t res, long prec)
 {
     euler_bsplit_t sum;
     fmprb_t t, u, v, P2, T2, Q2;
-    long bits, wp, wp2, n, K, M;
+    long bits, wp, wp2, n, N, M;
 
     bits = prec + 10;
     n = 0.086643397569993163677 * bits + 1;  /* log(2) / 8 */
@@ -271,7 +268,19 @@ fmprb_const_euler_eval(fmprb_t res, long prec)
         n = next_smooth(n);
     }
 
-    K = 4.9706257595442318644 * n;  /* 3/W(3/e) */
+    /* As shown in the paper, it is sufficient to take
+       N >= alpha n + 1 where alpha = 3/W(3/e) = 4.970625759544... */
+    {
+        fmpz_t a;
+        fmpz_init(a);
+        fmpz_set_ui(a, n);
+        fmpz_mul_ui(a, a, 4970626);
+        fmpz_cdiv_q_ui(a, a, 1000000);
+        fmpz_add_ui(a, a, 1);
+        N = fmpz_get_ui(a);
+        fmpz_clear(a);
+    }
+
     M = 2 * n;
 
     wp  = bits   + 2 * FLINT_BIT_COUNT(n);
@@ -285,69 +294,18 @@ fmprb_const_euler_eval(fmprb_t res, long prec)
     fmprb_init(u);
     fmprb_init(v);
 
-    /* Compute S0 = V / (Q D) + eps1
-               I0 = 1 + T / Q + eps2 */
-    euler_bsplit_1(sum, 0, K, n, wp, 0);
-    /* I0 = T / Q + eps2 */
+    /* Compute S0 = V / (Q D), I0 = 1 + T / Q */
+    euler_bsplit_1(sum, 0, N, n, wp, 0);
+
+    /* I0 = T / Q */
     fmprb_add(sum->T, sum->T, sum->Q, wp);
-
-    /* Assuming K > 2 and K >= 4n, eps1 and eps2 are both bounded by
-       2 H_K / (K!)^2 * n^(2K) < 4 log(K) * n^(2K) / (K!)^2
-    */
-    {
-        fmpr_t e, f;
-        fmpr_init(e);
-        fmpr_init(f);
-
-        fmpr_set_ui(e, n);
-        fmpr_pow_sloppy_ui(e, e, 2 * K, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        fmpr_set_ui(f, K);
-        fmpr_log(f, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul(e, e, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul_2exp_si(e, e, 2);
-
-        fmpr_gamma_ui_lbound(f, K + 1, FMPRB_RAD_PREC);
-        fmpr_mul(f, f, f, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-        fmpr_div(e, e, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-
-        /* T / Q + eps = (T + eps Q) / Q */
-        fmprb_get_abs_ubound_fmpr(f, sum->Q, FMPRB_RAD_PREC);
-        fmpr_mul(e, e, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmprb_add_error_fmpr(sum->T, e);
-
-        /* V / (Q D) + eps = (V + eps Q D) / (Q D) */
-        fmprb_get_abs_ubound_fmpr(f, sum->D, FMPRB_RAD_PREC);
-        fmpr_mul(e, e, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmprb_add_error_fmpr(sum->V, e);
-
-        fmpr_clear(e);
-        fmpr_clear(f);
-    }
 
     /* Compute S0 / I0 = V / (D T) */
     fmprb_mul(t, sum->T, sum->D, wp);
     fmprb_div(res, sum->V, t, wp);
 
-    /* Compute K0 (actually I_0(2n) K_0(2n)) = T2 / Q2 + eps */
+    /* Compute K0 (actually I_0(2n) K_0(2n)) = T2 / Q2 */
     euler_bsplit_2(P2, Q2, T2, 0, M, n, wp2, 0);
-
-    /* assuming M = 2n, eps is bounded by 2 exp(-4n) / n, and
-       T2 / Q2 = s + eps <=> (T2 - Q2 eps) / Q2 = s */
-    {
-        fmpr_t e, f;
-        fmpr_init(e);
-        fmpr_init(f);
-        fmpr_set_si(f, -4*n);
-        fmpr_exp(f, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_div_ui(f, f, n, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmpr_mul_2exp_si(f, f, 1);
-        fmprb_get_abs_ubound_fmpr(e, Q2, FMPRB_RAD_PREC);
-        fmpr_mul(e, e, f, FMPRB_RAD_PREC, FMPR_RND_UP);
-        fmprb_add_error_fmpr(T2, e);
-        fmpr_clear(e);
-        fmpr_clear(f);
-    }
 
     /* Compute K0 / I^2 = Q^2 * T2 / (Q2 * T^2) */
     fmprb_set_round(t, sum->Q, wp2);
@@ -363,6 +321,17 @@ fmprb_const_euler_eval(fmprb_t res, long prec)
     /* subtract log(n) */
     fmprb_log_ui_smooth(u, n, wp);
     fmprb_sub(res, res, u, wp);
+
+    /* add error bound 24 exp(-8n) */
+    {
+        fmpr_t b;
+        fmpr_init(b);
+        fmpr_set_si(b, -8*n);
+        fmpr_exp(b, b, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmpr_mul_ui(b, b, 24, FMPRB_RAD_PREC, FMPR_RND_UP);
+        fmprb_add_error_fmpr(res, b);
+        fmpr_clear(b);
+    }
 
     fmprb_clear(P2);
     fmprb_clear(T2);

@@ -811,15 +811,11 @@ Constants
 
     All series are evaluated using binary splitting.
     The first two series are evaluated simultaneously, with the summation
-    taken up to `\beta n` where `\beta \approx 4.9706257595442318644`
-    satisfies `\beta (\log \beta - 1) = 3`. The error is easily bounded
-    by twice the first discarded term and is of order `O(e^{-6n})`.
-    Since both `S_0` and `I_0` are of size `O(e^{2n})`, their relative
-    errors and the absolute error of their quotient is `O(e^{-8n})`.
-    The third series is a divergent asymptotic expansion. With some work, it
-    can be shown (to be published) that the error when `x = 2n` and
-    the sum goes up to `k = 2n-1` is bounded by `8e^{-4n}`.
-    Since `I_0(2n) \sim e^{2n} / n^{1/2}`, the final error is `O(e^{-8n})`.
+    taken up to `k = N - 1` inclusive where `N \ge \alpha n + 1` and
+    `\alpha \approx 4.9706257595442318644`
+    satisfies `\alpha (\log \alpha - 1) = 3`. The third series is taken
+    up to `k = 2n-1` inclusive. It is then shown in [BJ2013]_ that the error
+    is bounded by `24e^{-8n}`.
 
 .. function:: void fmprb_const_catalan(fmprb_t x, long prec)
 
