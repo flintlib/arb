@@ -228,3 +228,91 @@ but will never find all of them since there are infinitely many::
 Remark: the program always computes rigorous containing intervals
 for the roots, but the accuracy after refinement could be less than *d* digits.
 
+poly_roots.c
+-------------------------------------------------------------------------------
+
+This program finds the complex roots of an integer polynomial
+by calling :func:`fmpcb_poly_find_roots` with increasing
+precision until the roots certainly have been isolated.
+The program takes the following arguments::
+
+    poly_roots [-refine d] [-print d] <poly>
+
+    Isolates all the complex roots of a polynomial with
+    integer coefficients. For convergence, the input polynomial
+    is required to be squarefree.
+
+    If -refine d is passed, the roots are refined to an absolute
+    tolerance better than 10^(-d). By default, the roots are only
+    computed to sufficient accuracy to isolate them.
+    The refinement is not currently done efficiently.
+
+    If -print d is passed, the computed roots are printed to
+    d decimals. By default, the roots are not printed.
+
+    The polynomial can be specified by passing the following as <poly>:
+
+    a <n>          Easy polynomial 1 + 2x + ... + (n+1)x^n
+    t <n>          Chebyshev polynomial T_n
+    u <n>          Chebyshev polynomial U_n
+    p <n>          Legendre polynomial P_n
+    c <n>          Cyclotomic polynomial Phi_n
+    s <n>          Swinnerton-Dyer polynomial S_n
+    b <n>          Bernoulli polynomial B_n
+    w <n>          Wilkinson polynomial W_n
+    e <n>          Taylor series of exp(x) truncated to degree n
+    m <n> <m>      The Mignotte-like polynomial x^n + (100x+1)^m, n > m
+    c0 c1 ... cn   c0 + c1 x + ... + cn x^n where all c:s are specified integers
+
+This finds the roots of the Wilkinson polynomial with roots at the
+positive integers 1, 2, ..., 100::
+
+    > build/examples/poly_roots -print 15 w 100
+    prec=53: 0 isolated roots | cpu/wall(s): 0.42 0.426
+    prec=106: 0 isolated roots | cpu/wall(s): 1.37 1.368
+    prec=212: 0 isolated roots | cpu/wall(s): 1.48 1.485
+    prec=424: 100 isolated roots | cpu/wall(s): 0.61 0.611
+    done!
+    (1 + 1.7285178043492e-125j)  +/-  (7.2e-122, 7.2e-122j)
+    (2 + 5.1605530263601e-122j)  +/-  (3.77e-118, 3.77e-118j)
+    (3 + -2.58115555871665e-118j)  +/-  (5.72e-115, 5.72e-115j)
+    (4 + 1.02141628524271e-115j)  +/-  (4.38e-112, 4.38e-112j)
+    (5 + 1.61326834094948e-113j)  +/-  (2.6e-109, 2.6e-109j)
+        ...
+    (95 + 4.15294196875447e-62j)  +/-  (6.66e-59, 6.66e-59j)
+    (96 + 3.54502401922667e-64j)  +/-  (7.37e-60, 7.37e-60j)
+    (97 + -1.67755595325625e-65j)  +/-  (6.4e-61, 6.4e-61j)
+    (98 + 2.04638822325299e-65j)  +/-  (4e-62, 4e-62j)
+    (99 + -2.73425468028238e-66j)  +/-  (1.71e-63, 1.71e-63j)
+    (100 + -1.00950111302288e-68j)  +/-  (3.24e-65, 3.24e-65j)
+    cpu/wall(s): 3.88 3.893
+
+This finds the roots of a Bernoulli polynomial which has both real
+and complex roots. Note that the program does not attempt to determine
+that the imaginary parts of the real roots really are zero (this could
+be done by verifying sign changes)::
+
+    > build/examples/poly_roots -refine 100 -print 20 b 16
+    prec=53: 16 isolated roots | cpu/wall(s): 0 0.007
+    prec=106: 16 isolated roots | cpu/wall(s): 0 0.004
+    prec=212: 16 isolated roots | cpu/wall(s): 0 0.004
+    prec=424: 16 isolated roots | cpu/wall(s): 0 0.004
+    done!
+    (-0.94308706466055783383 + -5.512272663168484603e-128j)  +/-  (2.2e-125, 2.2e-125j)
+    (-0.75534059252067985752 + 1.937401283040249068e-128j)  +/-  (1.09e-125, 1.09e-125j)
+    (-0.24999757119077421009 + -4.5347924422246038692e-130j)  +/-  (3.6e-127, 3.6e-127j)
+    (0.24999757152512726002 + 4.2191300761823281708e-129j)  +/-  (4.98e-127, 4.98e-127j)
+    (0.75000242847487273998 + 9.0360649917413170142e-128j)  +/-  (8.88e-126, 8.88e-126j)
+    (1.2499975711907742101 + 7.8804123808107088267e-127j)  +/-  (2.66e-124, 2.66e-124j)
+    (1.7553405925206798575 + 5.432465269253967768e-126j)  +/-  (6.23e-123, 6.23e-123j)
+    (1.9430870646605578338 + 3.3035377342500953239e-125j)  +/-  (7.05e-123, 7.05e-123j)
+    (-0.99509334829256233279 + 0.44547958157103608805j)  +/-  (5.5e-125, 5.5e-125j)
+    (-0.99509334829256233279 + -0.44547958157103608805j)  +/-  (5.46e-125, 5.46e-125j)
+    (1.9950933482925623328 + 0.44547958157103608805j)  +/-  (1.44e-122, 1.44e-122j)
+    (1.9950933482925623328 + -0.44547958157103608805j)  +/-  (1.43e-122, 1.43e-122j)
+    (-0.92177327714429290564 + -1.0954360955079385542j)  +/-  (9.31e-125, 9.31e-125j)
+    (-0.92177327714429290564 + 1.0954360955079385542j)  +/-  (1.02e-124, 1.02e-124j)
+    (1.9217732771442929056 + 1.0954360955079385542j)  +/-  (9.15e-123, 9.15e-123j)
+    (1.9217732771442929056 + -1.0954360955079385542j)  +/-  (8.12e-123, 8.12e-123j)
+    cpu/wall(s): 0.02 0.02
+
