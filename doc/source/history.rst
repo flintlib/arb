@@ -6,6 +6,67 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2013-12-21 - version 1.0.0
+
+  * new example programs directory
+
+    * poly_roots example program
+    * real_roots example program
+    * pi_digits example program
+    * hilbert_matrix example program
+    * keiper_li example program
+
+  * new fmprb_calc module for calculus with real functions
+
+    * bisection-based root isolation
+    * asymptotically fast Newton root refinement
+
+  * new fmpcb_calc module for calculus with complex functions
+
+    * numerical integration using Taylor series
+
+  * scalar functions
+
+    * simplified fmprb_const_euler using published error bound
+    * added fmprb_inv
+    * fmprb_trim, fmpcb_trim
+    * added fmpcb_rsqrt (complex reciprocal square root)
+    * fixed bug in fmprb_sqrtpos with nonfinite input
+    * slightly improved fmprb powering code
+    * added various functions for bounding fmprs by powers of two
+    * added fmpr_is_int
+
+  * polynomials and power series
+
+    * implemented scaling to speed up blockwise multiplication
+    * slightly faster basecase power series exponentials
+    * improved sin/cos/tan/exp for short power series
+    * added complex sqrt_series, rsqrt_series
+    * implemented the Riemann-Siegel Z and theta functions for real power series
+    * added fmprb_poly_pow_series, fmprb_poly_pow_ui and related methods
+    * fmprb/fmpcb_poly_contains_fmpz_poly
+    * faster composition by monomials
+    * implemented Borel transform and binomial transform for real power series
+
+  * matrices
+
+    * implemented matrix exponentials
+    * multithreaded fmprb_mat_mul
+    * added matrix infinity norm functions
+    * added some more matrix-scalar functions
+    * added matrix contains and overlaps methods
+
+  * zeta function evaluation
+
+    * multithreaded power sum evaluation
+    * faster parameter selection when computing many derivatives
+    * implemented binary splitting to speed up computing many derivatives
+
+  * miscellaneous
+
+    * corrections for C++ compatibility (contributed by Jonathan Bober)
+    * several minor bugfixes and test code enhancements
+
 * 2013-08-07 - version 0.7
 
   * floating-point and ball functions
