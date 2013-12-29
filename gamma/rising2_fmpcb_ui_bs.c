@@ -24,16 +24,29 @@
 ******************************************************************************/
 
 #include "gamma.h"
-#include "fmprb_poly.h"
 
 static void
-bsplit_step(fmpcb_t p, fmpcb_t q, fmprb_srcptr poly, ulong step,
-        const fmpcb_t x, ulong a, ulong b, long prec)
+bsplit(fmpcb_t p, fmpcb_t q, const fmpcb_t x, ulong a, ulong b, long prec)
 {
-    if (b - a == step)
+    if (b - a < 8)
     {
-        fmpcb_add_ui(p, x, a, prec);
-        _fmprb_poly_evaluate2_fmpcb_rectangular(q, p, poly, step + 1, p, prec);
+        ulong k;
+        fmpcb_t t;
+
+        fmpcb_one(p);
+        fmpcb_add_ui(q, x, a, prec);
+
+        fmpcb_init(t);
+
+        for (k = a + 1; k < b; k++)
+        {
+            fmpcb_add_ui(t, x, k, prec);
+            fmpcb_mul(p, p, t, prec);
+            fmpcb_add(p, p, q, prec);
+            fmpcb_mul(q, q, t, prec);
+        }
+
+        fmpcb_clear(t);
     }
     else
     {
@@ -43,9 +56,9 @@ bsplit_step(fmpcb_t p, fmpcb_t q, fmprb_srcptr poly, ulong step,
         fmpcb_init(r);
         fmpcb_init(s);
 
-        m = a + ((b - a) / (2 * step)) * step;
-        bsplit_step(p, q, poly, step, x, a, m, prec);
-        bsplit_step(r, s, poly, step, x, m, b, prec);
+        m = a + (b - a) / 2;
+        bsplit(p, q, x, a, m, prec);
+        bsplit(r, s, x, m, b, prec);
 
         fmpcb_mul(p, p, s, prec);
         fmpcb_mul(r, r, q, prec);
@@ -58,49 +71,27 @@ bsplit_step(fmpcb_t p, fmpcb_t q, fmprb_srcptr poly, ulong step,
 }
 
 void
-gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec)
+gamma_rising2_fmpcb_ui_bs(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, long prec)
 {
-    fmpcb_t t, u;
-    ulong b, s1, s2;
-    long wp;
-
-    wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
-
-    fmpcb_init(t);
-    fmpcb_init(u);
-
-    if (step == 0)
+    if (n == 0)
     {
-        s1 = 2 * sqrt(n);
-        s2 = 10 * pow(prec, 0.25);
-        step = FLINT_MIN(s1, s2);
+        fmpcb_zero(v);
+        fmpcb_one(u);
     }
-    step = FLINT_MAX(step, 1);
-    b = (n / step) * step;
-
-    if (b != 0)
+    else if (n == 1)
     {
-        fmprb_ptr poly;
-        fmprb_struct xpoly[2];
-        poly = _fmprb_vec_init(step + 1);
-        fmprb_init(xpoly + 0);
-        fmprb_init(xpoly + 1);
-        fmprb_one(xpoly + 1);
-        _fmprb_poly_rising_ui_series(poly, xpoly, 2, step, step + 1, wp);
-        bsplit_step(t, u, poly, step, x, 0, b, wp);
-        fmpcb_div(t, t, u, wp);
-        _fmprb_vec_clear(poly, step + 1);
+        fmpcb_set(u, x);
+        fmpcb_one(v);
     }
     else
     {
-        fmpcb_zero(t);
+        fmpcb_t t;
+        long wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+
+        fmpcb_init(t);  /* support aliasing */
+        fmpcb_set(t, x);
+        bsplit(v, u, t, 0, n, wp);
+        fmpcb_clear(t);
     }
-
-    fmpcb_add_ui(u, x, b, wp);
-    gamma_harmonic_sum_fmpcb_ui_bsplit(u, u, n - b, wp);
-    fmpcb_add(y, t, u, prec);
-
-    fmpcb_clear(t);
-    fmpcb_clear(u);
 }
 

@@ -1,0 +1,181 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ARB; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2013 Fredrik Johansson
+
+******************************************************************************/
+
+#include "gamma.h"
+
+void
+_gamma_rf_bsplit(fmpz * A, ulong a, ulong b)
+{
+    ulong n = b - a;
+
+    if (n == 0)
+    {
+        fmpz_one(A);
+    }
+    else if (n < 8)
+    {
+        ulong j, k;
+
+        fmpz_set_ui(A, a);
+        fmpz_one(A + 1);
+
+        for (j = 1; j < n; j++)
+        {
+            fmpz_one(A + j + 1);
+
+            for (k = j; k > 0; k--)
+            {
+                fmpz_mul_ui(A + k, A + k, a + j);
+                fmpz_add(A + k, A + k, A + k - 1);
+            }
+
+            fmpz_mul_ui(A, A, a + j);
+        }
+    }
+    else
+    {
+        ulong m = a + (b - a) / 2;
+        ulong w = m - a;
+        ulong v = b - m;
+
+        fmpz *t, *A1, *A2;
+
+        t = _fmpz_vec_init(w + v + 2);
+
+        A1 = t;
+        A2 = A1 + w + 1;
+
+        _gamma_rf_bsplit(A1, a, m);
+        _gamma_rf_bsplit(A2, m, b);
+
+        _fmpz_poly_mul(A, A2, v + 1, A1, w + 1);
+
+        _fmpz_vec_clear(t, w + v + 2);
+    }
+}
+
+void
+gamma_rising2_fmprb_ui_rs(fmprb_t u, fmprb_t v,
+    const fmprb_t x, ulong n, ulong m, long prec)
+{
+    if (n == 0)
+    {
+        fmprb_zero(v);
+        fmprb_one(u);
+    }
+    else if (n == 1)
+    {
+        fmprb_set(u, x);
+        fmprb_one(v);
+    }
+    else
+    {
+        long wp;
+        ulong i, j, a, b;
+        fmprb_ptr xs;
+        fmprb_t S, T, U, V;
+        fmpz *A, *B;
+
+        wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+
+        if (m == 0)
+        {
+            ulong m1, m2;
+            m1 = 0.6 * pow(wp, 0.4);
+            m2 = n_sqrt(n);
+            m = FLINT_MIN(m1, m2);
+        }
+
+        m = FLINT_MAX(m, 1);
+
+        xs = _fmprb_vec_init(m + 1);
+        A = _fmpz_vec_init(2 * m + 1);
+        B = A + (m + 1);
+
+        fmprb_init(S);
+        fmprb_init(T);
+        fmprb_init(U);
+        fmprb_init(V);
+        _fmprb_vec_set_powers(xs, x, m + 1, wp);
+
+        for (i = 0; i < n; i += m)
+        {
+            a = i;
+            b = FLINT_MIN(n, a + m);
+
+            if (a == 0 || b != a + m)
+            {
+                _gamma_rf_bsplit(A, a, b);
+            }
+            else
+            {
+                fmpz tt = m;
+                _fmpz_poly_taylor_shift(A, &tt, m + 1);
+            }
+
+            _fmpz_poly_derivative(B, A, b - a + 1);
+
+            for (j = 0; j <= b - a; j++)
+            {
+                if (j == 0)
+                    fmprb_set_fmpz(S, A + j);
+                else
+                    fmprb_addmul_fmpz(S, xs + j, A + j, wp);
+            }
+
+            for (j = 0; j < b - a; j++)
+            {
+                if (j == 0)
+                    fmprb_set_fmpz(T, B + j);
+                else
+                    fmprb_addmul_fmpz(T, xs + j, B + j, wp);
+            }
+
+            if (i == 0)
+            {
+                fmprb_set(U, S);
+                fmprb_set(V, T);
+            }
+            else
+            {
+                fmprb_mul(V, V, S, wp);
+                fmprb_addmul(V, U, T, wp);
+                fmprb_mul(U, U, S, wp);
+            }
+        }
+
+        fmprb_set(u, U);
+        fmprb_set(v, V);
+
+        _fmprb_vec_clear(xs, m + 1);
+        _fmpz_vec_clear(A, 2 * m + 1);
+
+        fmprb_clear(S);
+        fmprb_clear(T);
+        fmprb_clear(U);
+        fmprb_clear(V);
+    }
+}
+

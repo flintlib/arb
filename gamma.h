@@ -105,13 +105,13 @@ void gamma_rising_fmprb_ui_multipoint(fmprb_t f, const fmprb_t c, ulong n, long 
 
 void gamma_rising_fmprb_fmpq_ui_bsplit(fmprb_t y, const fmpq_t x, ulong n, long prec);
 
-void gamma_harmonic_sum_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec);
-void gamma_harmonic_sum_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec);
-void gamma_harmonic_sum_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec);
+void gamma_rising2_fmprb_ui(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, long prec);
+void gamma_rising2_fmprb_ui_bs(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, long prec);
+void gamma_rising2_fmprb_ui_rs(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, ulong m, long prec);
 
-void gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec);
-void gamma_harmonic_sum_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
-void gamma_harmonic_sum_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec);
+void gamma_rising2_fmpcb_ui(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, long prec);
+void gamma_rising2_fmpcb_ui_bs(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, long prec);
+void gamma_rising2_fmpcb_ui_rs(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, ulong m, long prec);
 
 void gamma_lgamma_series_at_one(fmprb_ptr u, long len, long prec);
 void gamma_series_fmpq_hypgeom(fmprb_ptr res, const fmpq_t a, long len, long prec);

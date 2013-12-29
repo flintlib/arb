@@ -260,31 +260,22 @@ Rising factorials
     and *n* is of the same order of magnitude as (perhaps slightly
     smaller than) the number of bits.
 
-.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec)
+.. function :: void gamma_rising2_fmprb_ui_bs(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, long prec)
 
-.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit_rectangular(fmprb_t y, const fmprb_t x, ulong n, ulong step, long prec)
+.. function :: void gamma_rising2_fmprb_ui_rs(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, ulong step, long prec)
 
-.. function :: void gamma_harmonic_sum_fmprb_ui_bsplit(fmprb_t y, const fmprb_t x, ulong n, long prec)
+.. function :: void gamma_rising2_fmprb_ui(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, long prec)
 
-.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit_simple(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+.. function :: void gamma_rising2_fmpcb_ui_bs(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, long prec)
 
-.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit_rectangular(fmpcb_t y, const fmpcb_t x, ulong n, ulong step, long prec)
+.. function :: void gamma_rising2_fmpcb_ui_rs(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, ulong step, long prec)
 
-.. function :: void gamma_harmonic_sum_fmpcb_ui_bsplit(fmpcb_t y, const fmpcb_t x, ulong n, long prec)
+.. function :: void gamma_rising2_fmpcb_ui(fmpcb_t u, fmpcb_t v, const fmpcb_t x, ulong n, long prec)
 
-    Sets `y` to the harmonic sum `1/x + 1/(x+1) + \ldots + 1/(x+n-1)`,
-    computed using division-avoiding binary splitting.
-
-    The *rectangular* version processes *step* terms at a time in
-    analogy with the rising factorial algorithm.
-    Letting `f(t) = t (t+1) (t+2) \cdots (t+n-1)`, we have
-    `1/x + \ldots + 1/(x+n-1) = f'(x) / f(x)`.
-    If the *step* parameter is set to zero, a default value is used.
-
-    The functions *gamma_harmonic_sum_fmprb_ui_bsplit* and
-    *gamma_harmonic_sum_fmpcb_ui_bsplit* automatically choose
-    an algorithm depending on the inputs.
-
+    Letting `u(x) = x (x+1) (x+2) \cdots (x+n-1)`, simultaneously compute
+    `u(x)` and `v(x) = u'(x)`, respectively using binary splitting,
+    rectangular splitting (with optional nonzero step length *step*
+    to override the default choice), and an automatic algorithm choice.
 
 Rational arguments
 --------------------------------------------------------------------------------

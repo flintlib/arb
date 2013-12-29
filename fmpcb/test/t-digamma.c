@@ -62,6 +62,17 @@ int main()
             abort();
         }
 
+        fmpcb_set(c, a);
+        fmpcb_digamma(c, c, prec2);
+        if (!fmpcb_overlaps(b, c))
+        {
+            printf("FAIL: aliasing\n\n");
+            printf("a = "); fmpcb_print(a); printf("\n\n");
+            printf("b = "); fmpcb_print(b); printf("\n\n");
+            printf("c = "); fmpcb_print(c); printf("\n\n");
+            abort();
+        }
+
         /* check digamma(z+1) = digamma(z) + 1/z */
         fmpcb_inv(c, a, prec1);
         fmpcb_add(b, b, c, prec1);

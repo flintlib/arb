@@ -71,31 +71,27 @@ bsplit(fmprb_t p, fmprb_t q, const fmprb_t x, ulong a, ulong b, long prec)
 }
 
 void
-gamma_harmonic_sum_fmprb_ui_bsplit_simple(fmprb_t y, const fmprb_t x, ulong n, long prec)
+gamma_rising2_fmprb_ui_bs(fmprb_t u, fmprb_t v, const fmprb_t x, ulong n, long prec)
 {
     if (n == 0)
     {
-        fmprb_zero(y);
+        fmprb_zero(v);
+        fmprb_one(u);
     }
     else if (n == 1)
     {
-        fmprb_inv(y, x, prec);
+        fmprb_set(u, x);
+        fmprb_one(v);
     }
     else
     {
-        fmprb_t p, q;
-        long wp;
+        fmprb_t t;
+        long wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 
-        wp = FMPR_PREC_ADD(prec, FLINT_BIT_COUNT(n));
-
-        fmprb_init(p);
-        fmprb_init(q);
-
-        bsplit(p, q, x, 0, n, wp);
-        fmprb_div(y, p, q, prec);
-
-        fmprb_clear(p);
-        fmprb_clear(q);
+        fmprb_init(t);  /* support aliasing */
+        fmprb_set(t, x);
+        bsplit(v, u, t, 0, n, wp);
+        fmprb_clear(t);
     }
 }
 
