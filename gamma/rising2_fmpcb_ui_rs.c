@@ -88,21 +88,15 @@ gamma_rising2_fmpcb_ui_rs(fmpcb_t u, fmpcb_t v,
 
             _fmpz_poly_derivative(B, A, b - a + 1);
 
-            for (j = 0; j <= b - a; j++)
-            {
-                if (j == 0)
-                    fmpcb_set_fmpz(S, A + j);
-                else
-                    fmpcb_addmul_fmpz(S, xs + j, A + j, wp);
-            }
+            fmpcb_set_fmpz(S, A);
 
-            for (j = 0; j < b - a; j++)
-            {
-                if (j == 0)
-                    fmpcb_set_fmpz(T, B + j);
-                else
-                    fmpcb_addmul_fmpz(T, xs + j, B + j, wp);
-            }
+            for (j = 1; j <= b - a; j++)
+                fmpcb_addmul_fmpz(S, xs + j, A + j, wp);
+
+            fmpcb_set_fmpz(T, B);
+
+            for (j = 1; j < b - a; j++)
+                fmpcb_addmul_fmpz(T, xs + j, B + j, wp);
 
             if (i == 0)
             {
