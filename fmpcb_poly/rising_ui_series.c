@@ -19,22 +19,12 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpcb_poly.h"
-
-
-static __inline__ long length(long flen, ulong r, long trunc)
-{
-    mp_limb_t hi, lo;
-    umul_ppmm(hi, lo, flen - 1, r);
-    add_ssaaaa(hi, lo, hi, lo, 0, 1);
-    if (hi != 0 || lo > (mp_limb_t) LONG_MAX)
-        return trunc;
-    return FLINT_MIN(lo, trunc);
-}
+#include "gamma.h"
 
 static void
 _fmpcb_poly_rising_ui_series_bsplit(fmpcb_ptr res,
@@ -55,8 +45,8 @@ _fmpcb_poly_rising_ui_series_bsplit(fmpcb_ptr res,
 
         long m = a + (b - a) / 2;
 
-        len1 = length(flen, m - a, trunc);
-        len2 = length(flen, b - m, trunc);
+        len1 = poly_pow_length(flen, m - a, trunc);
+        len2 = poly_pow_length(flen, b - m, trunc);
 
         L = _fmpcb_vec_init(len1 + len2);
         R = L + len1;
@@ -76,9 +66,21 @@ _fmpcb_poly_rising_ui_series(fmpcb_ptr res,
     fmpcb_srcptr f, long flen, ulong r,
         long trunc, long prec)
 {
-    _fmpcb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
+    if (trunc == 1 || flen == 1)
+    {
+        gamma_rising_fmpcb_ui_bsplit(res, f, r, prec);
+        _fmpcb_vec_zero(res + 1, trunc - 1);
+    }
+    else if (trunc == 2)
+    {
+        gamma_rising2_fmpcb_ui(res, res + 1, f, r, prec);
+        fmpcb_mul(res + 1, res + 1, f + 1, prec);
+    }
+    else
+    {
+        _fmpcb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
+    }
 }
-
 
 void
 fmpcb_poly_rising_ui_series(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, long trunc, long prec)
@@ -97,20 +99,20 @@ fmpcb_poly_rising_ui_series(fmpcb_poly_t res, const fmpcb_poly_t f, ulong r, lon
         return;
     }
 
-    len = length(f->length, r, trunc);
+    len = poly_pow_length(f->length, r, trunc);
 
     if (f == res)
     {
         fmpcb_poly_t tmp;
         fmpcb_poly_init(tmp);
-        fmpcb_poly_rising_ui_series(tmp, f, r, trunc, prec);
+        fmpcb_poly_rising_ui_series(tmp, f, r, len, prec);
         fmpcb_poly_swap(tmp, res);
         fmpcb_poly_clear(tmp);
     }
     else
     {
         fmpcb_poly_fit_length(res, len);
-        _fmpcb_poly_rising_ui_series(res->coeffs, f->coeffs, f->length, r, trunc, prec);
+        _fmpcb_poly_rising_ui_series(res->coeffs, f->coeffs, f->length, r, len, prec);
         _fmpcb_poly_set_length(res, len);
         _fmpcb_poly_normalise(res);
     }

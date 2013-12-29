@@ -19,11 +19,12 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmprb_poly.h"
+#include "gamma.h"
 
 static void
 _fmprb_poly_rising_ui_series_bsplit(fmprb_ptr res,
@@ -65,7 +66,20 @@ _fmprb_poly_rising_ui_series(fmprb_ptr res,
     fmprb_srcptr f, long flen, ulong r,
         long trunc, long prec)
 {
-    _fmprb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
+    if (trunc == 1 || flen == 1)
+    {
+        gamma_rising_fmprb_ui_bsplit(res, f, r, prec);
+        _fmprb_vec_zero(res + 1, trunc - 1);
+    }
+    else if (trunc == 2)
+    {
+        gamma_rising2_fmprb_ui(res, res + 1, f, r, prec);
+        fmprb_mul(res + 1, res + 1, f + 1, prec);
+    }
+    else
+    {
+        _fmprb_poly_rising_ui_series_bsplit(res, f, flen, 0, r, trunc, prec);
+    }
 }
 
 void
@@ -91,14 +105,14 @@ fmprb_poly_rising_ui_series(fmprb_poly_t res, const fmprb_poly_t f, ulong r, lon
     {
         fmprb_poly_t tmp;
         fmprb_poly_init(tmp);
-        fmprb_poly_rising_ui_series(tmp, f, r, trunc, prec);
+        fmprb_poly_rising_ui_series(tmp, f, r, len, prec);
         fmprb_poly_swap(tmp, res);
         fmprb_poly_clear(tmp);
     }
     else
     {
         fmprb_poly_fit_length(res, len);
-        _fmprb_poly_rising_ui_series(res->coeffs, f->coeffs, f->length, r, trunc, prec);
+        _fmprb_poly_rising_ui_series(res->coeffs, f->coeffs, f->length, r, len, prec);
         _fmprb_poly_set_length(res, len);
         _fmprb_poly_normalise(res);
     }
