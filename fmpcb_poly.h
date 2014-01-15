@@ -335,16 +335,16 @@ void fmpcb_poly_compose_series(fmpcb_poly_t res,
 
 /* Reversion */
 
-void _fmpcb_poly_revert_series_lagrange(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void _fmpcb_poly_revert_series_lagrange(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long n, long prec);
 void fmpcb_poly_revert_series_lagrange(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
-void _fmpcb_poly_revert_series_newton(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void _fmpcb_poly_revert_series_newton(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long n, long prec);
 void fmpcb_poly_revert_series_newton(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
-void _fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void _fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long n, long prec);
 void fmpcb_poly_revert_series_lagrange_fast(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
-void _fmpcb_poly_revert_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec);
+void _fmpcb_poly_revert_series(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long n, long prec);
 void fmpcb_poly_revert_series(fmpcb_poly_t Qinv, const fmpcb_poly_t Q, long n, long prec);
 
 

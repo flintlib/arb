@@ -29,7 +29,7 @@
 #define Ri(ii) (R + (n-1)*((ii)-1))
 
 void
-_fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, long prec)
+_fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long Qlen, long n, long prec)
 {
     long i, j, k, m;
     fmpcb_ptr R, S, T, tmp;
@@ -54,7 +54,7 @@ _fmpcb_poly_revert_series_lagrange_fast(fmpcb_ptr Qinv, fmpcb_srcptr Q, long n, 
     fmpcb_zero(Qinv);
     fmpcb_inv(Qinv + 1, Q + 1, prec);
 
-    _fmpcb_poly_inv_series(Ri(1), Q + 1, n - 1, n - 1, prec);
+    _fmpcb_poly_inv_series(Ri(1), Q + 1, FLINT_MIN(Qlen, n) - 1, n - 1, prec);
     for (i = 2; i <= m; i++)
         _fmpcb_poly_mullow(Ri(i), Ri((i + 1) / 2), n - 1, Ri(i / 2), n - 1, n - 1, prec);
 
@@ -92,56 +92,31 @@ void
 fmpcb_poly_revert_series_lagrange_fast(fmpcb_poly_t Qinv,
                                     const fmpcb_poly_t Q, long n, long prec)
 {
-    fmpcb_ptr Qcopy;
-    int Qalloc;
     long Qlen = Q->length;
 
-    if (Q->length < 2 || !fmpcb_is_zero(Q->coeffs)
-                      || fmpcb_contains_zero(Q->coeffs + 1))
+    if (Qlen < 2 || !fmpcb_is_zero(Q->coeffs)
+                 || fmpcb_contains_zero(Q->coeffs + 1))
     {
         printf("Exception (fmpcb_poly_revert_series_lagrange_fast). Input \n"
                "must have zero constant term and nonzero coefficient of x^1.\n");
         abort();
     }
 
-    if (n < 2)
-    {
-        fmpcb_poly_zero(Qinv);
-        return;
-    }
-
-    if (Qlen >= n)
-    {
-        Qcopy = Q->coeffs;
-        Qalloc = 0;
-    }
-    else
-    {
-        long i;
-        Qcopy = _fmpcb_vec_init(n);
-        for (i = 0; i < Qlen; i++)
-            Qcopy[i] = Q->coeffs[i];
-        Qalloc = 1;
-    }
-
     if (Qinv != Q)
     {
         fmpcb_poly_fit_length(Qinv, n);
-        _fmpcb_poly_revert_series_lagrange_fast(Qinv->coeffs, Qcopy, n, prec);
+        _fmpcb_poly_revert_series_lagrange_fast(Qinv->coeffs, Q->coeffs, Qlen, n, prec);
     }
     else
     {
         fmpcb_poly_t t;
         fmpcb_poly_init2(t, n);
-        _fmpcb_poly_revert_series_lagrange_fast(t->coeffs, Qcopy, n, prec);
+        _fmpcb_poly_revert_series_lagrange_fast(t->coeffs, Q->coeffs, Qlen, n, prec);
         fmpcb_poly_swap(Qinv, t);
         fmpcb_poly_clear(t);
     }
 
     _fmpcb_poly_set_length(Qinv, n);
     _fmpcb_poly_normalise(Qinv);
-
-    if (Qalloc)
-        flint_free(Qcopy);
 }
 

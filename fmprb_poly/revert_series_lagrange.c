@@ -27,7 +27,7 @@
 
 void
 _fmprb_poly_revert_series_lagrange(fmprb_ptr Qinv,
-    fmprb_srcptr Q, long n, long prec)
+    fmprb_srcptr Q, long Qlen, long n, long prec)
 {
     long i;
     fmprb_ptr R, S, T, tmp;
@@ -48,7 +48,7 @@ _fmprb_poly_revert_series_lagrange(fmprb_ptr Qinv,
     fmprb_zero(Qinv);
     fmprb_inv(Qinv + 1, Q + 1, prec);
 
-    _fmprb_poly_inv_series(R, Q + 1, n - 1, n - 1, prec);
+    _fmprb_poly_inv_series(R, Q + 1, FLINT_MIN(Qlen, n) - 1, n - 1, prec);
     _fmprb_vec_set(S, R, n - 1);
 
     for (i = 2; i < n; i++)
@@ -67,56 +67,31 @@ void
 fmprb_poly_revert_series_lagrange(fmprb_poly_t Qinv,
                                     const fmprb_poly_t Q, long n, long prec)
 {
-    fmprb_ptr Qcopy;
-    int Qalloc;
     long Qlen = Q->length;
 
-    if (Q->length < 2 || !fmprb_is_zero(Q->coeffs)
-                      || fmprb_contains_zero(Q->coeffs + 1))
+    if (Qlen < 2 || !fmprb_is_zero(Q->coeffs)
+                 || fmprb_contains_zero(Q->coeffs + 1))
     {
         printf("Exception (fmprb_poly_revert_series_lagrange). Input must \n"
                "have zero constant term and nonzero coefficient of x^1.\n");
         abort();
     }
 
-    if (n < 2)
-    {
-        fmprb_poly_zero(Qinv);
-        return;
-    }
-
-    if (Qlen >= n)
-    {
-        Qcopy = Q->coeffs;
-        Qalloc = 0;
-    }
-    else
-    {
-        long i;
-        Qcopy = _fmprb_vec_init(n);
-        for (i = 0; i < Qlen; i++)
-            Qcopy[i] = Q->coeffs[i];
-        Qalloc = 1;
-    }
-
     if (Qinv != Q)
     {
         fmprb_poly_fit_length(Qinv, n);
-        _fmprb_poly_revert_series_lagrange(Qinv->coeffs, Qcopy, n, prec);
+        _fmprb_poly_revert_series_lagrange(Qinv->coeffs, Q->coeffs, Qlen, n, prec);
     }
     else
     {
         fmprb_poly_t t;
         fmprb_poly_init2(t, n);
-        _fmprb_poly_revert_series_lagrange(t->coeffs, Qcopy, n, prec);
+        _fmprb_poly_revert_series_lagrange(t->coeffs, Q->coeffs, Qlen, n, prec);
         fmprb_poly_swap(Qinv, t);
         fmprb_poly_clear(t);
     }
 
     _fmprb_poly_set_length(Qinv, n);
     _fmprb_poly_normalise(Qinv);
-
-    if (Qalloc)
-        flint_free(Qcopy);
 }
 

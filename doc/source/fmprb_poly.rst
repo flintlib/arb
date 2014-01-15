@@ -365,19 +365,19 @@ Composition
     with either input polynomial.
 
 
-.. function:: void _fmprb_poly_revert_series_lagrange(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_lagrange(fmprb_ptr h, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_lagrange(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series_newton(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_newton(fmprb_ptr h, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_newton(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr h, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series_lagrange_fast(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
-.. function:: void _fmprb_poly_revert_series(fmprb_ptr h, fmprb_srcptr f, long n, long prec)
+.. function:: void _fmprb_poly_revert_series(fmprb_ptr h, fmprb_srcptr f, long flen, long n, long prec)
 
 .. function:: void fmprb_poly_revert_series(fmprb_poly_t h, const fmprb_poly_t f, long n, long prec)
 
@@ -388,8 +388,8 @@ Composition
     and a default algorithm choice.
 
     We require that the constant term in `f` is exactly zero and that the
-    linear term is nonzero. The underscore methods assume that `f` is zero-padded to length `n`
-    and do not support aliasing.
+    linear term is nonzero. The underscore methods assume that *flen*
+    is at least 2, and do not support aliasing.
 
 Evaluation
 -------------------------------------------------------------------------------

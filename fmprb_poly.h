@@ -333,16 +333,16 @@ void fmprb_poly_compose_series(fmprb_poly_t res,
 
 /* Reversion */
 
-void _fmprb_poly_revert_series_lagrange(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec);
+void _fmprb_poly_revert_series_lagrange(fmprb_ptr Qinv, fmprb_srcptr Q, long Qlen, long n, long prec);
 void fmprb_poly_revert_series_lagrange(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
-void _fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec);
+void _fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long Qlen, long n, long prec);
 void fmprb_poly_revert_series_newton(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
-void _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec);
+void _fmprb_poly_revert_series_lagrange_fast(fmprb_ptr Qinv, fmprb_srcptr Q, long Qlen, long n, long prec);
 void fmprb_poly_revert_series_lagrange_fast(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
-void _fmprb_poly_revert_series(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec);
+void _fmprb_poly_revert_series(fmprb_ptr Qinv, fmprb_srcptr Q, long Qlen, long n, long prec);
 void fmprb_poly_revert_series(fmprb_poly_t Qinv, const fmprb_poly_t Q, long n, long prec);
 
 /* Evaluation and interpolation */

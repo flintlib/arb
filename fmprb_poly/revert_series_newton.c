@@ -28,7 +28,7 @@
 #define CUTOFF 5
 
 void
-_fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long prec)
+_fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long Qlen, long n, long prec)
 {
     long i, k, a[FLINT_BITS];
     fmprb_ptr T, U, V;
@@ -52,13 +52,13 @@ _fmprb_poly_revert_series_newton(fmprb_ptr Qinv, fmprb_srcptr Q, long n, long pr
     while (k >= CUTOFF)
         a[++i] = (k = (k + 1) / 2);
 
-    _fmprb_poly_revert_series_lagrange(Qinv, Q, k, prec);
+    _fmprb_poly_revert_series_lagrange(Qinv, Q, Qlen, k, prec);
     _fmprb_vec_zero(Qinv + k, n - k);
 
     for (i--; i >= 0; i--)
     {
         k = a[i];
-        _fmprb_poly_compose_series(T, Q, k, Qinv, k, k, prec);
+        _fmprb_poly_compose_series(T, Q, FLINT_MIN(Qlen, k), Qinv, k, k, prec);
         _fmprb_poly_derivative(U, T, k, prec); fmprb_zero(U + k - 1);
         fmprb_zero(T + 1);
         _fmprb_poly_div_series(V, T, k, U, k, k, prec);
@@ -76,56 +76,31 @@ void
 fmprb_poly_revert_series_newton(fmprb_poly_t Qinv,
                                     const fmprb_poly_t Q, long n, long prec)
 {
-    fmprb_ptr Qcopy;
-    int Qalloc;
     long Qlen = Q->length;
 
-    if (Q->length < 2 || !fmprb_is_zero(Q->coeffs)
-                      || fmprb_contains_zero(Q->coeffs + 1))
+    if (Qlen < 2 || !fmprb_is_zero(Q->coeffs)
+                 || fmprb_contains_zero(Q->coeffs + 1))
     {
         printf("Exception (fmprb_poly_revert_series_newton). Input must \n"
                "have zero constant term and nonzero coefficient of x^1.\n");
         abort();
     }
 
-    if (n < 2)
-    {
-        fmprb_poly_zero(Qinv);
-        return;
-    }
-
-    if (Qlen >= n)
-    {
-        Qcopy = Q->coeffs;
-        Qalloc = 0;
-    }
-    else
-    {
-        long i;
-        Qcopy = _fmprb_vec_init(n);
-        for (i = 0; i < Qlen; i++)
-            Qcopy[i] = Q->coeffs[i];
-        Qalloc = 1;
-    }
-
     if (Qinv != Q)
     {
         fmprb_poly_fit_length(Qinv, n);
-        _fmprb_poly_revert_series_newton(Qinv->coeffs, Qcopy, n, prec);
+        _fmprb_poly_revert_series_newton(Qinv->coeffs, Q->coeffs, Qlen, n, prec);
     }
     else
     {
         fmprb_poly_t t;
         fmprb_poly_init2(t, n);
-        _fmprb_poly_revert_series_newton(t->coeffs, Qcopy, n, prec);
+        _fmprb_poly_revert_series_newton(t->coeffs, Q->coeffs, Qlen, n, prec);
         fmprb_poly_swap(Qinv, t);
         fmprb_poly_clear(t);
     }
 
     _fmprb_poly_set_length(Qinv, n);
     _fmprb_poly_normalise(Qinv);
-
-    if (Qalloc)
-        flint_free(Qcopy);
 }
 
