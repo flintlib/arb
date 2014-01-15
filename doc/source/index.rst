@@ -46,7 +46,6 @@ Module documentation
    zeta.rst
    hypgeom.rst
    partitions.rst
-   fmpz_holonomic.rst
 
 Credits and references
 ::::::::::::::::::::::::
