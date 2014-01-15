@@ -467,7 +467,7 @@ Product trees
 
 .. function:: void _fmprb_poly_product_roots(fmprb_ptr poly, fmprb_srcptr xs, long n, long prec)
 
-.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_ptr xs, long n, long prec)
+.. function:: void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_srcptr xs, long n, long prec)
 
     Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
 

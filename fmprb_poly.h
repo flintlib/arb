@@ -279,7 +279,7 @@ void _fmprb_poly_div_root(fmprb_ptr Q, fmprb_t R, fmprb_srcptr A,
 
 void _fmprb_poly_product_roots(fmprb_ptr poly, fmprb_srcptr xs, long n, long prec);
 
-void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_ptr xs, long n, long prec);
+void fmprb_poly_product_roots(fmprb_poly_t poly, fmprb_srcptr xs, long n, long prec);
 
 fmprb_ptr * _fmprb_poly_tree_alloc(long len);
 

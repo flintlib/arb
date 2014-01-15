@@ -61,7 +61,7 @@ _fmpcb_poly_product_roots(fmpcb_ptr poly, fmpcb_srcptr xs, long n, long prec)
 }
 
 void
-fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_ptr xs, long n, long prec)
+fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec)
 {
     fmpcb_poly_fit_length(poly, n + 1);
     _fmpcb_poly_product_roots(poly->coeffs, xs, n, prec);

@@ -405,7 +405,7 @@ void
 _fmpcb_poly_product_roots(fmpcb_ptr poly, fmpcb_srcptr xs, long n, long prec);
 
 void
-fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_ptr xs, long n, long prec);
+fmpcb_poly_product_roots(fmpcb_poly_t poly, fmpcb_srcptr xs, long n, long prec);
 
 fmpcb_ptr * _fmpcb_poly_tree_alloc(long len);
 
