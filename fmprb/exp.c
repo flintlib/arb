@@ -170,11 +170,18 @@ fmprb_exp_fmpr(fmprb_t z, const fmpr_t x, long prec, long maglim, int m1)
     /* standard case */
     if (range_check_mpfr(mag) && *mag > small_cutoff)
     {
-        if (m1)
-            r = fmpr_expm1(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
+        if (prec > 4000)
+        {
+            elefun_exp_fmpr_bb(z, x, prec, m1);
+        }
         else
-            r = fmpr_exp(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
-        fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+        {
+            if (m1)
+                r = fmpr_expm1(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
+            else
+                r = fmpr_exp(fmprb_midref(z), x, prec, FMPR_RND_DOWN);
+            fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
+        }
     }
     /* close to zero */
     else if (fmpz_sgn(mag) < 0)

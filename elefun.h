@@ -68,6 +68,7 @@ void elefun_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 void elefun_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     const fmpz_t x, mp_bitcnt_t r, long N);
 
+void elefun_exp_fmpr_bb(fmprb_t z, const fmpr_t x, long prec, int m1);
 
 
 void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec);
