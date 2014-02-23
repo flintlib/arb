@@ -23,10 +23,11 @@ Core arithmetic
 
   The mantissa should probably be changed to an unsigned, top-aligned fraction
   (i.e. the exponent will point to the top rather than the bottom, and
-  the top bit of the ).
+  the top bit of the array of limbs will always be set).
 
   This requires a separate sign field, increasing the struct size from
   2 to 3 words, but ought to lead to simpler code and slightly less overhead.
+  (Optionally, the sign could be encoded as a bit of the exponent.)
 
   The unsigned fraction can be stored directly in a ulong when it has
   most 64 bits. A zero top bit can be used to tag the field as a pointer.
@@ -115,7 +116,10 @@ Special functions
   cuts) for reducing the complex log gamma function. Also implement
   the logarithmic reflection formula.
 
-* Tune zeta algorithm selection.
+* Tune zeta parameter selection. Also make it robust: for example,
+  if FMPRB_RAD_PREC is changed to 2 (a testing tactic suggested
+  by Paul Zimmermann), the parameter selection code currently hangs
+  in an infinite loop for many inputs.
 
 * Extend Stirling series code to compute polygamma functions (i.e. starting
   the series from some derivative), and optimize for a small number of
