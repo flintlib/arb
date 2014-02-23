@@ -19,16 +19,17 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2013, 2014 Fredrik Johansson
 
 ******************************************************************************/
 
+#include <math.h>
 #include "elefun.h"
 
 #define TABSIZE 256
 
 /* bounds for log2(1/n!) */
-static const int inverse_factorial_bounds[TABSIZE] = 
+static const int rec_fac_bound_2exp_si_tab[TABSIZE] = 
 {
     0, 0, -1, -2, -4, -6, -9, -12, -15, -18, -21, -25, -28, -32, -36,
     -40, -44, -48, -52, -56, -61, -65, -69, -74, -79, -83, -88, -93, -97,
@@ -56,6 +57,31 @@ static const int inverse_factorial_bounds[TABSIZE] =
     -1652, -1660, -1668, -1675
 };
 
+#define ONE_OVER_LOG2 1.4426950408889634074
+
+static __inline__ long
+rec_fac_bound_2exp_si(long n)
+{
+    if (n < TABSIZE)
+    {
+        return rec_fac_bound_2exp_si_tab[n];
+    }
+    else  /* TODO: reimplement without floats */
+    {
+        double x;
+
+        /* log(1/n!) < N*((n/e)^n */
+
+        x = (n - n * log(n)) * ONE_OVER_LOG2;
+        x = x * 0.9999;   /* counter rounding error */
+        x = ceil(x);      /* round to 0 */
+
+        /* TODO: check for overflow here */
+
+        return (long) x;
+    }
+}
+
 long
 elefun_exp_taylor_bound(long mag, long prec)
 {
@@ -63,14 +89,15 @@ elefun_exp_taylor_bound(long mag, long prec)
 
     /* assume x <= 1/4 */
     if (mag > -2)
-        abort();
-
-    for (i = 1; i < TABSIZE; i++)
     {
-        if (mag * i + inverse_factorial_bounds[i] < -prec - 1)
-            return i;
+        printf("elefun_exp_taylor_bound: too large input %ld\n", mag);
+        abort();
     }
 
-    abort();
+    for (i = 1; ; i++)
+    {
+        if (mag * i + rec_fac_bound_2exp_si(i) < -prec - 1)
+            return i;
+    }
 }
 
