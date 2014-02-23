@@ -62,6 +62,13 @@ int elefun_exp_precomp(fmprb_t z, const fmprb_t x, long prec, int minus_one);
 
 void elefun_exp_via_mpfr(fmprb_t z, const fmprb_t x, long prec);
 
+void elefun_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
+void elefun_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
+
 
 void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec);
 
