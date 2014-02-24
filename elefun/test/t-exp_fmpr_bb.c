@@ -48,9 +48,17 @@ int main()
         fmpr_zero(fmprb_radref(x));
 
         if (n_randint(state, 2))
+        {
+#if FLINT_BITS == 64
             fmprb_mul_2exp_si(x, x, 1 + n_randint(state, 40));
+#else
+            fmprb_mul_2exp_si(x, x, 1 + n_randint(state, 20));
+#endif
+        }
         else
+        {
             fmprb_mul_2exp_si(x, x, -n_randint(state, 1.5 * prec));
+        }
 
         elefun_exp_via_mpfr(y, x, prec + 100);
         elefun_exp_fmpr_bb(z, fmprb_midref(x), prec, 0);
