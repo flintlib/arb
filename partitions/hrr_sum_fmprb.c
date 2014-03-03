@@ -70,7 +70,7 @@ partitions_remainder_bound_log2(double n, double N)
 }
 
 static long
-partitions_needed_terms(ulong n)
+partitions_needed_terms(double n)
 {
     long N;
     for (N = 1; partitions_remainder_bound_log2(n, N) > 10; N++);
@@ -115,7 +115,7 @@ log2_ceil(double x)
 }
 
 static long
-partitions_prec_bound(ulong n, long k, long N)
+partitions_prec_bound(double n, long k, long N)
 {
     long prec;
 
@@ -234,24 +234,25 @@ sinh_cosh_divk_precomp(fmprb_t sh, fmprb_t ch, fmprb_t ex, long k, long prec)
 
 
 void
-partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
+partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_doubles)
 {
     trig_prod_t prod;
     fmprb_t acc, C, t1, t2, t3, t4, exp1;
     fmpr_t bound;
     fmpz_t n24;
     long k, prec, res_prec, acc_prec, guard_bits;
-    double Cd;
+    double nd, Cd;
 
-    if (n <= 2)
+    if (fmpz_cmp_ui(n, 2) <= 0)
     {
-        fmprb_set_ui(x, FLINT_MAX(1, n));
-        return;
+        abort();
     }
+
+    nd = fmpz_get_d(n);
 
     /* compute initial precision */
     guard_bits = 2 * FLINT_BIT_COUNT(N) + 32;
-    prec = partitions_remainder_bound_log2(n, N0) + guard_bits;
+    prec = partitions_remainder_bound_log2(nd, N0) + guard_bits;
     prec = FLINT_MAX(prec, DOUBLE_PREC);
     res_prec = acc_prec = prec;
 
@@ -267,7 +268,7 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
     fmprb_zero(x);
 
     /* n24 = 24n - 1 */
-    fmpz_set_ui(n24, n);
+    fmpz_set(n24, n);
     fmpz_mul_ui(n24, n24, 24);
     fmpz_sub_ui(n24, n24, 1);
 
@@ -280,18 +281,18 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
     /* exp1 = exp(C) */
     fmprb_exp(exp1, C, prec);
 
-    Cd = PI * sqrt(24*n-1) / 6;
+    Cd = PI * sqrt(24*nd-1) / 6;
 
     for (k = N0; k <= N; k++)
     {
         trig_prod_init(prod);
-        arith_hrr_expsum_factored(prod, k, n % k);
+        arith_hrr_expsum_factored(prod, k, fmpz_fdiv_ui(n, k));
 
         if (prod->prefactor != 0)
         {
 
             if (prec > MIN_PREC)
-                prec = partitions_prec_bound(n, k, N);
+                prec = partitions_prec_bound(nd, k, N);
 
             prod->prefactor *= 4;
             prod->sqrt_p *= 3;
@@ -320,7 +321,7 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
             {
                 double xx, zz, xxerr;
 
-                xx = eval_trig_prod_d(prod) / (24*n - 1);
+                xx = eval_trig_prod_d(prod) / (24*nd - 1);
                 zz = Cd / k;
                 xx = xx * (cosh(zz) - sinh(zz) / zz);
 
@@ -364,52 +365,68 @@ partitions_hrr_sum_fmprb(fmprb_t x, ulong n, long N0, long N, int use_doubles)
 extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
 
 void
+partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
+{
+    if (fmpz_cmp_ui(n, NUMBER_OF_SMALL_PARTITIONS) < 0)
+    {
+        if (fmpz_sgn(n) < 0)
+            fmpz_zero(p);
+        else
+            fmpz_set_ui(p, partitions_lookup[fmpz_get_ui(n)]);
+    }
+    else
+    {
+        fmprb_t x;
+        long N;
+
+        fmprb_init(x);
+
+        N = partitions_needed_terms(fmpz_get_d(n));
+        partitions_hrr_sum_fmprb(x, n, 1, N, use_doubles);
+
+        if (!fmprb_get_unique_fmpz(p, x))
+        {
+            printf("not unique!\n");
+            fmprb_printd(x, 50);
+            printf("\n");
+            abort();
+        }
+
+        fmprb_clear(x);
+    }
+}
+
+void
 partitions_fmpz_ui(fmpz_t p, ulong n)
 {
-    fmprb_t x;
-
     if (n < NUMBER_OF_SMALL_PARTITIONS)
     {
         fmpz_set_ui(p, partitions_lookup[n]);
-        return;
     }
-
-    fmprb_init(x);
-    partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n), 0);
-
-    if (!fmprb_get_unique_fmpz(p, x))
+    else
     {
-        printf("not unique!\n");
-        fmprb_printd(x, 50);
-        printf("\n");
-        abort();
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_set_ui(t, n);
+        partitions_fmpz_fmpz(p, t, 0);
+        fmpz_clear(t);
     }
-
-    fmprb_clear(x);
 }
 
 void
 partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n)
 {
-    fmprb_t x;
-
     if (n < NUMBER_OF_SMALL_PARTITIONS)
     {
         fmpz_set_ui(p, partitions_lookup[n]);
-        return;
     }
-
-    fmprb_init(x);
-    partitions_hrr_sum_fmprb(x, n, 1, partitions_needed_terms(n), 1);
-
-    if (!fmprb_get_unique_fmpz(p, x))
+    else
     {
-        printf("not unique!\n");
-        fmprb_printd(x, 50);
-        printf("\n");
-        abort();
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_set_ui(t, n);
+        partitions_fmpz_fmpz(p, t, 1);
+        fmpz_clear(t);
     }
-
-    fmprb_clear(x);
 }
 

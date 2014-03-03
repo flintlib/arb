@@ -38,15 +38,17 @@ _fmpr_sinh(fmpr_t y, const fmpr_t x, long prec)
 
 /* Equation (1.8) in the paper */
 void
-partitions_rademacher_bound(fmpr_t b, ulong n, ulong N)
+partitions_rademacher_bound(fmpr_t b, const fmpz_t n, ulong N)
 {
     fmpr_t A, B, C, t, u;
+    fmpz_t n1;
 
     fmpr_init(A);
     fmpr_init(B);
     fmpr_init(C);
     fmpr_init(t);
     fmpr_init(u);
+    fmpz_init(n1);
 
     /* bound for 44*pi^2/(225*sqrt(3)) */
     fmpr_set_si_2exp_si(A, 18695160, -24);
@@ -63,12 +65,13 @@ partitions_rademacher_bound(fmpr_t b, ulong n, ulong N)
 
     /* B * sqrt(N/(n-1)) */
     fmpr_set_ui(t, N);
-    fmpr_div_ui(t, t, n - 1, FMPRB_RAD_PREC, FMPR_RND_UP);
+    fmpz_sub_ui(n1, n, 1);
+    fmpr_div_fmpz(t, t, n1, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmpr_sqrt(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmpr_mul(t, B, t, FMPRB_RAD_PREC, FMPR_RND_UP);
 
     /* sinh(C*sqrt(n)/N) */
-    fmpr_sqrt_ui(u, n, FMPRB_RAD_PREC, FMPR_RND_UP);
+    fmpr_sqrt_fmpz(u, n, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmpr_div_ui(u, u, N, FMPRB_RAD_PREC, FMPR_RND_UP);
     fmpr_mul(u, C, u, FMPRB_RAD_PREC, FMPR_RND_UP);
 
@@ -83,5 +86,6 @@ partitions_rademacher_bound(fmpr_t b, ulong n, ulong N)
     fmpr_clear(C);
     fmpr_clear(t);
     fmpr_clear(u);
+    fmpz_clear(n1);
 }
 
