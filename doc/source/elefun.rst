@@ -121,7 +121,7 @@ The exponential function
 .. function:: void elefun_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
 
     Computes *T*, *Q* and *Qexp* such that
-    `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (x/2^r)/k!` using binary splitting.
+    `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (x/2^r)^k/k!` using binary splitting.
     Note that the sum is taken to *N* inclusive and omits the constant term.
 
     The *powtab* version precomputes a table of powers of *x*,
