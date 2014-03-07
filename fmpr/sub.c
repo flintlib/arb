@@ -55,72 +55,6 @@ static long _fmpr_sub_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long pre
 }
 
 long
-_fmpr_add_large(fmpr_t z,
-        mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
-        mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
-        long shift, long prec, fmpr_rnd_t rnd);
-
-static __inline__ long
-_fmpr_add_small(fmpr_t z, mp_limb_t x, int xsign, const fmpz_t xexp, mp_limb_t y, int ysign, const fmpz_t yexp, long shift, long prec, long rnd)
-{
-    mp_limb_t hi, lo, t, u;
-    int sign = ysign;
-
-    t = x;
-    u = y;
-
-    lo = u << shift;
-    hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
-
-    if (xsign == ysign)
-    {
-        add_ssaaaa(hi, lo, hi, lo, 0, t);
-    }
-    else
-    {
-        if (hi == 0)
-        {
-            if (lo >= t)
-            {
-                lo = lo - t;
-            }
-            else
-            {
-                lo = t - lo;
-                sign = !sign;
-            }
-        }
-        else
-        {
-            sub_ddmmss(hi, lo, hi, lo, 0, t);
-        }
-    }
-
-    if (hi == 0)
-        return fmpr_set_round_ui_2exp_fmpz(z, lo, xexp, sign, prec, rnd);
-    else
-        return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, xexp, sign, prec, rnd);
-}
-
-#define READ_SIGN_PTR(zsign, ztmp, zptr, zn, zv) \
-    if (!COEFF_IS_MPZ(zv)) \
-    { \
-        zsign = zv < 0; \
-        ztmp = FLINT_ABS(zv); \
-        zptr = &ztmp; \
-        zn = 1; \
-    } \
-    else \
-    { \
-        __mpz_struct * zz = COEFF_TO_PTR(zv); \
-        zptr = zz->_mp_d; \
-        zn = zz->_mp_size; \
-        zsign = zn < 0; \
-        zn = FLINT_ABS(zn); \
-    }
-
-
-long
 fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 {
     long shift, xn, yn;
@@ -153,8 +87,8 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         yv = *fmpr_manref(x);
     }
 
-    READ_SIGN_PTR(xsign, xtmp, xptr, xn, xv)
-    READ_SIGN_PTR(ysign, ytmp, yptr, yn, yv)
+    FMPZ_GET_MPN_READONLY(xsign, xn, xptr, xtmp, xv)
+    FMPZ_GET_MPN_READONLY(ysign, yn, yptr, ytmp, yv)
 
     if (shift >= 0)
     {
@@ -167,9 +101,9 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
 
     if ((xn == 1) && (yn == 1) && (shift < FLINT_BITS))
-        return _fmpr_add_small(z, xptr[0], xsign, xexp, yptr[0], ysign, yexp, shift, prec, rnd);
+        return _fmpr_add_1x1(z, xptr[0], xsign, xexp, yptr[0], ysign, yexp, shift, prec, rnd);
     else
-        return _fmpr_add_large(z, xptr, xn, xsign, xexp, yptr, yn, ysign, yexp, shift, prec, rnd);
+        return _fmpr_add_mpn(z, xptr, xn, xsign, xexp, yptr, yn, ysign, yexp, shift, prec, rnd);
 }
 
 

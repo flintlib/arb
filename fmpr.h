@@ -396,6 +396,67 @@ fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
 
 long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd);
 
+long _fmpr_add_mpn(fmpr_t z,
+        mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
+        mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
+        long shift, long prec, fmpr_rnd_t rnd);
+
+static __inline__ long
+_fmpr_add_1x1(fmpr_t z,
+        mp_limb_t x, int xsign, const fmpz_t xexp,
+        mp_limb_t y, int ysign, const fmpz_t yexp,
+        long shift, long prec, long rnd)
+{
+    mp_limb_t hi, lo, t, u;
+    int sign = ysign;
+
+    t = x;
+    u = y;
+
+    lo = u << shift;
+    hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
+
+    if (xsign == ysign)
+    {
+        add_ssaaaa(hi, lo, hi, lo, 0, t);
+    }
+    else
+    {
+        if (hi == 0)
+        {
+            if (lo >= t)
+            {
+                lo = lo - t;
+            }
+            else
+            {
+                lo = t - lo;
+                sign = !sign;
+            }
+        }
+        else
+        {
+            sub_ddmmss(hi, lo, hi, lo, 0, t);
+        }
+    }
+
+    if (hi == 0)
+        return fmpr_set_round_ui_2exp_fmpz(z, lo, xexp, sign, prec, rnd);
+    else
+        return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, xexp, sign, prec, rnd);
+}
+
+long fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+
+long _fmpr_mul_mpn(fmpz_t zman, fmpz_t zexp,
+    mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
+    mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
+    int negative, long prec, fmpr_rnd_t rnd);
+
+long _fmpr_mul_1x1(fmpz_t zman, fmpz_t zexp,
+  mp_limb_t u, const fmpz_t xexp, mp_limb_t v, const fmpz_t yexp,
+  int negative, long prec, fmpr_rnd_t rnd);
+
 long fmpr_mul_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
@@ -406,8 +467,6 @@ long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rn
 long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
 long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
 long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
-
-long fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 
 long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
