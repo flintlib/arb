@@ -448,12 +448,12 @@ _fmpr_add_1x1(fmpr_t z,
 
 long fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
 
-long _fmpr_mul_mpn(fmpz_t zman, fmpz_t zexp,
+long _fmpr_mul_mpn(fmpr_t z,
     mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
     int negative, long prec, fmpr_rnd_t rnd);
 
-long _fmpr_mul_1x1(fmpz_t zman, fmpz_t zexp,
+long _fmpr_mul_1x1(fmpr_t z,
   mp_limb_t u, const fmpz_t xexp, mp_limb_t v, const fmpz_t yexp,
   int negative, long prec, fmpr_rnd_t rnd);
 

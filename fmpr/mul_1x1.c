@@ -19,16 +19,15 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2013, 2014 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpr.h"
 
 long
-_fmpr_mul_1x1(fmpz_t zman, fmpz_t zexp,
-  mp_limb_t u, const fmpz_t xexp, mp_limb_t v, const fmpz_t yexp,
-  int negative, long prec, fmpr_rnd_t rnd)
+_fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
+    const fmpz_t yexp, int negative, long prec, fmpr_rnd_t rnd)
 {
     long lead, trail, bc, shift, ret;
     mp_limb_t hi, lo;
@@ -104,11 +103,11 @@ _fmpr_mul_1x1(fmpz_t zman, fmpz_t zexp,
     }
 
     if (!negative)
-        fmpz_set_uiui(zman, hi, lo);
+        fmpz_set_uiui(fmpr_manref(z), hi, lo);
     else
-        fmpz_neg_uiui(zman, hi, lo);
+        fmpz_neg_uiui(fmpr_manref(z), hi, lo);
 
-    fmpz_add2_fmpz_si_inline(zexp, xexp, yexp, shift);
+    fmpz_add2_fmpz_si_inline(fmpr_expref(z), xexp, yexp, shift);
     return ret;
 }
 

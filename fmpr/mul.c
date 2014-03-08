@@ -61,8 +61,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 
     if (!COEFF_IS_MPZ(xv) && !COEFF_IS_MPZ(yv))
     {
-        return _fmpr_mul_1x1(fmpr_manref(z), fmpr_expref(z),
-            FLINT_ABS(xv), fmpr_expref(x),
+        return _fmpr_mul_1x1(z, FLINT_ABS(xv), fmpr_expref(x),
             FLINT_ABS(yv), fmpr_expref(y), (xv ^ yv) < 0, prec, rnd);
     }
     else
@@ -76,15 +75,11 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
         FMPZ_GET_MPN_READONLY(ysign, yn, yptr, ytmp, yv)
 
         if (xn >= yn)
-            return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-                xptr, xn, fmpr_expref(x),
-                yptr, yn, fmpr_expref(y),
-                xsign ^ ysign, prec, rnd);
+            return _fmpr_mul_mpn(z, xptr, xn, fmpr_expref(x),
+                yptr, yn, fmpr_expref(y), xsign ^ ysign, prec, rnd);
         else
-            return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-                yptr, yn, fmpr_expref(y),
-                xptr, xn, fmpr_expref(x),
-                ysign ^ xsign, prec, rnd);
+            return _fmpr_mul_mpn(z, yptr, yn, fmpr_expref(y),
+                xptr, xn, fmpr_expref(x), ysign ^ xsign, prec, rnd);
     }
 }
 

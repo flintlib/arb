@@ -68,8 +68,7 @@ fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rn
         ytmp >>= bc;
         yexp = bc;
 
-        return _fmpr_mul_1x1(fmpr_manref(z), fmpr_expref(z),
-            FLINT_ABS(xv), fmpr_expref(x),
+        return _fmpr_mul_1x1(z, FLINT_ABS(xv), fmpr_expref(x),
             ytmp, &yexp, (xv ^ yv) < 0, prec, rnd);
     }
     else
@@ -84,18 +83,13 @@ fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rn
         FMPZ_GET_MPN_READONLY(ysign, yn, yptr, ytmp, yv)
 
         if (xn >= yn)
-            return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-                xptr, xn, fmpr_expref(x),
+            return _fmpr_mul_mpn(z, xptr, xn, fmpr_expref(x),
                 yptr, yn, &yexp, xsign ^ ysign, prec, rnd);
         else
-            return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-                yptr, yn, &yexp,
+            return _fmpr_mul_mpn(z, yptr, yn, &yexp,
                 xptr, xn, fmpr_expref(x), ysign ^ xsign, prec, rnd);
     }
 }
-
-
-
 
 long
 fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
@@ -144,16 +138,14 @@ fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
         ytmp >>= bc;
         yexp = bc;
 
-        return _fmpr_mul_1x1(fmpr_manref(z), fmpr_expref(z),
-            FLINT_ABS(xv), fmpr_expref(x),
+        return _fmpr_mul_1x1(z, FLINT_ABS(xv), fmpr_expref(x),
             ytmp, &yexp, (xv < 0) ^ ysign, prec, rnd);
     }
     else
     {
         FMPZ_GET_MPN_READONLY(xsign, xn, xptr, xtmp, xv)
 
-        return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-            xptr, xn, fmpr_expref(x),
+        return _fmpr_mul_mpn(z, xptr, xn, fmpr_expref(x),
             &ytmp, 1, &yexp, xsign ^ ysign, prec, rnd);
     }
 }
@@ -205,16 +197,14 @@ fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
         ytmp >>= bc;
         yexp = bc;
 
-        return _fmpr_mul_1x1(fmpr_manref(z), fmpr_expref(z),
-            FLINT_ABS(xv), fmpr_expref(x),
+        return _fmpr_mul_1x1(z, FLINT_ABS(xv), fmpr_expref(x),
             ytmp, &yexp, xv < 0, prec, rnd);
     }
     else
     {
         FMPZ_GET_MPN_READONLY(xsign, xn, xptr, xtmp, xv)
 
-        return _fmpr_mul_mpn(fmpr_manref(z), fmpr_expref(z),
-            xptr, xn, fmpr_expref(x),
+        return _fmpr_mul_mpn(z, xptr, xn, fmpr_expref(x),
             &ytmp, 1, &yexp, xsign, prec, rnd);
     }
 }

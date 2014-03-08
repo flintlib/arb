@@ -66,7 +66,7 @@ void _mul_tmp_cleanup(void)
         flint_free(tmp);
 
 long
-_fmpr_mul_mpn(fmpz_t zman, fmpz_t zexp,
+_fmpr_mul_mpn(fmpr_t z,
     mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
     int negative, long prec, fmpr_rnd_t rnd)
@@ -92,8 +92,8 @@ _fmpr_mul_mpn(fmpz_t zman, fmpz_t zexp,
         zn = zn - (tmp[zn - 1] == 0);
     }
 
-    ret = _fmpr_set_round_mpn(&shift, zman, tmp, zn, negative, prec, rnd);
-    fmpz_add2_fmpz_si_inline(zexp, xexp, yexp, shift);
+    ret = _fmpr_set_round_mpn(&shift, fmpr_manref(z), tmp, zn, negative, prec, rnd);
+    fmpz_add2_fmpz_si_inline(fmpr_expref(z), xexp, yexp, shift);
 
     MUL_TMP_FREE
 
