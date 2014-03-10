@@ -41,6 +41,7 @@ int main()
         long bits;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
+        long r;
 
         bits = 2 + n_randint(state, 200);
 
@@ -64,25 +65,25 @@ int main()
         {
             case 0:
                 mpfr_mul(Z, X, Y, MPFR_RNDZ);
-                fmpr_mul_naive(z, x, y, bits, FMPR_RND_DOWN);
+                r = fmpr_mul_naive(z, x, y, bits, FMPR_RND_DOWN);
                 break;
             case 1:
                 mpfr_mul(Z, X, Y, MPFR_RNDA);
-                fmpr_mul_naive(z, x, y, bits, FMPR_RND_UP);
+                r = fmpr_mul_naive(z, x, y, bits, FMPR_RND_UP);
                 break;
             case 2:
                 mpfr_mul(Z, X, Y, MPFR_RNDD);
-                fmpr_mul_naive(z, x, y, bits, FMPR_RND_FLOOR);
+                r = fmpr_mul_naive(z, x, y, bits, FMPR_RND_FLOOR);
                 break;
-            case 3:
+            default:
                 mpfr_mul(Z, X, Y, MPFR_RNDU);
-                fmpr_mul_naive(z, x, y, bits, FMPR_RND_CEIL);
+                r = fmpr_mul_naive(z, x, y, bits, FMPR_RND_CEIL);
                 break;
         }
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w))
+        if (!fmpr_equal(z, w) || !fmpr_check_ulp(z, r, bits))
         {
             printf("FAIL\n\n");
             printf("bits = %ld\n", bits);

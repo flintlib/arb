@@ -130,7 +130,8 @@ int main()
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0))
+        if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0)
+            || !fmpr_check_ulp(z, res, bits))
         {
             printf("FAIL\n\n");
             printf("bits = %ld\n", bits);

@@ -115,9 +115,8 @@ int main()
         ret1 = fmpr_add(z, x, y, prec, rnd);
         ret2 = fmpr_add_naive(w, x, y, prec, rnd);
 
-        /* XXX: should investigate why fmpr_add sometimes returns
-                1 bit worse error bound than fmpr_add_naive */
-        if (!fmpr_equal(z, w) || !(ret1 == ret2 || ret1 == ret2 + 1))
+        if (!fmpr_equal(z, w) || ret1 != ret2 ||
+            !fmpr_check_ulp(z, ret1, prec) || !fmpr_check_ulp(w, ret2, prec))
         {
             printf("FAIL\n\n");
             printf("iter %ld\n", iter);
@@ -184,7 +183,8 @@ int main()
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0))
+        if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0)
+            || !fmpr_check_ulp(z, res, bits))
         {
             printf("FAIL\n\n");
             printf("iter %ld\n", iter);

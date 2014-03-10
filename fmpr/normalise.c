@@ -86,7 +86,7 @@ _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
                 fmpz_tdiv_q_2exp(man, man, val);
 
             fmpz_add_ui(exp, exp, exp_shift);
-            return val;
+            return val - (val == prec);
         }
     }
 }

@@ -74,7 +74,8 @@ int main()
         fmpr_set_fmpz_2exp(y, man, exp);
         ret2 = fmpr_set_round(y, y, prec, rnd);
 
-        if (!fmpr_equal(x, y) || ret1 != ret2)
+        if (!fmpr_equal(x, y) || ret1 != ret2 ||
+            !fmpr_check_ulp(x, ret1, prec) || !fmpr_check_ulp(y, ret2, prec))
         {
             printf("FAIL\n\n");
             printf("prec: %ld\n", prec);

@@ -19,55 +19,58 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2014 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "fmpr.h"
-
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("set_fmpq....");
+    printf("ulp....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    /* test exact roundtrip R -> Q -> R */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res;
-        fmpr_t x, z;
-        fmpq_t y;
-
-        bits = 2 + n_randint(state, 200);
+        fmpr_t x, ulp, a, b;
+        long prec;
 
         fmpr_init(x);
-        fmpr_init(z);
-        fmpq_init(y);
+        fmpr_init(ulp);
+        fmpr_init(a);
+        fmpr_init(b);
 
-        fmpr_randtest(x, state, bits, 10);
-        fmpr_randtest(z, state, bits, 10);
+        prec = 2 + n_randint(state, 1000);
+        fmpr_randtest_not_zero(x, state, 1 + n_randint(state, 1000),
+            1 + n_randint(state, 100));
 
-        fmpr_get_fmpq(y, x);
-        res = fmpr_set_fmpq(z, y, bits, FMPR_RND_DOWN);
+        fmpr_ulp(ulp, x, prec);
 
-        if (!fmpr_equal(x, z) || !fmpr_check_ulp(z, res, bits))
+        fmpr_abs(a, x);
+        fmpr_mul_2exp_si(a, a, -prec);
+        fmpr_abs(b, x);
+        fmpr_mul_2exp_si(b, b, -prec+1);
+
+        if (!((fmpr_cmp(a, ulp) < 0) && (fmpr_cmp(ulp, b) <= 0)))
         {
-            printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
+            printf("FAIL!\n");
+            printf("prec = %ld\n", prec);
+            printf("x = "); fmpr_print(x); printf("\n");
+            printf("ulp = "); fmpr_print(ulp); printf("\n");
+            printf("a = "); fmpr_print(a); printf("\n");
+            printf("b = "); fmpr_print(b); printf("\n");
             abort();
         }
 
         fmpr_clear(x);
-        fmpr_clear(z);
-        fmpq_clear(y);
+        fmpr_clear(ulp);
+        fmpr_clear(a);
+        fmpr_clear(b);
     }
 
     flint_randclear(state);
@@ -75,3 +78,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

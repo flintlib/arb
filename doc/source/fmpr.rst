@@ -215,6 +215,21 @@ Assignment, rounding and conversions
 
     Like *fmpr_set_error_result*, but adds *err_in* to the error.
 
+.. function:: void fmpr_ulp(fmpr_t u, const fmpr_t x, long prec)
+
+    Sets *u* to the floating-point unit in the last place (ulp) of *x*.
+    The ulp is defined as in the MPFR documentation and satisfies
+    `2^{-n} |x| < u \le 2^{-n+1} |x|` for any finite nonzero *x*.
+    If *x* is a special value, *u* is set to the absolute value of *x*.
+
+.. function:: int fmpr_check_ulp(const fmpr_t x, long r, long prec)
+
+    Assume that *r* is the return code and *x* is the floating-point result
+    from a single floating-point rounding. Then this function returns nonzero
+    iff *x* and *r* define an error of exactly 0 or 1 ulp.
+    In other words, this function checks that :func:`fmpr_set_error_result`
+    gives exactly 0 or 1 ulp as expected.
+
 .. function:: int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
 
     Sets the MPFR variable *x* to the value of *y*. If the

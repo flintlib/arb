@@ -87,7 +87,8 @@ int main()
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w) || ((r1 == 0) != (r2 == FMPR_RESULT_EXACT)))
+        if (!fmpr_equal(z, w) || ((r1 == 0) != (r2 == FMPR_RESULT_EXACT))
+            || !fmpr_check_ulp(z, r2, bits))
         {
             printf("FAIL\n\n");
             printf("bits = %ld\n", bits);

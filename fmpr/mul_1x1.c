@@ -50,6 +50,10 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
             lo >>= trail;
             shift += trail;
             ret = trail;
+
+            /* special case: if the mantissa overflowed to the next power of two,
+               the error bound must be multiplied by two */
+            ret -= (trail == prec);
         }
     }
     else
@@ -86,6 +90,10 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
                 hi >>= trail;
                 shift += FLINT_BITS + trail;
                 ret = FLINT_BITS + trail;
+
+                /* special case: if the mantissa overflowed to the next power of two,
+                   the error bound must be multiplied by two */
+                ret -= (FLINT_BITS + trail == prec);
             }
             else
             {
@@ -98,6 +106,10 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
                     shift += trail;
                 }
                 ret = trail;
+
+                /* special case: if the mantissa overflowed to the next power of two,
+                   the error bound must be multiplied by two */
+                ret -= (trail == prec);
             }
         }
     }

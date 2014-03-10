@@ -60,6 +60,10 @@ fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
         shift += shift2;
         shift += trail;
         ret = trail;
+
+        /* special case: if the mantissa overflowed to the next power of two,
+           the error bound must be multiplied by two */
+        ret -= (trail == prec);
     }
 
     if (!negative)

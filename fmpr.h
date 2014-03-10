@@ -300,6 +300,9 @@ long fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
     mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative,
     long prec, fmpr_rnd_t rnd);
 
+void fmpr_ulp(fmpr_t u, const fmpr_t x, long prec);
+
+int fmpr_check_ulp(const fmpr_t result, long r, long prec);
 
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)

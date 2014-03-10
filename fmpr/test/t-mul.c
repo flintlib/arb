@@ -65,7 +65,7 @@ int main()
             case 0:
                 r1 = fmpr_mul(z, x, y, prec, rnd);
                 r2 = fmpr_mul_naive(v, x, y, prec, rnd);
-                if (!fmpr_equal(z, v) || r1 != r2)
+                if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
                     printf("FAIL!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
@@ -80,7 +80,7 @@ int main()
             case 1:
                 r1 = fmpr_mul(z, x, x, prec, rnd);
                 r2 = fmpr_mul_naive(v, x, x, prec, rnd);
-                if (!fmpr_equal(z, v) || r1 != r2)
+                if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
                     printf("FAIL (aliasing 1)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
@@ -94,7 +94,7 @@ int main()
             case 2:
                 r2 = fmpr_mul_naive(v, x, x, prec, rnd);
                 r1 = fmpr_mul(x, x, x, prec, rnd);
-                if (!fmpr_equal(v, x) || r1 != r2)
+                if (!fmpr_equal(v, x) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
                     printf("FAIL (aliasing 2)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
@@ -108,7 +108,7 @@ int main()
             case 3:
                 r2 = fmpr_mul_naive(v, x, y, prec, rnd);
                 r1 = fmpr_mul(x, x, y, prec, rnd);
-                if (!fmpr_equal(x, v) || r1 != r2)
+                if (!fmpr_equal(x, v) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
                     printf("FAIL (aliasing 3)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
@@ -122,7 +122,7 @@ int main()
             default:
                 r2 = fmpr_mul_naive(v, x, y, prec, rnd);
                 r1 = fmpr_mul(x, y, x, prec, rnd);
-                if (!fmpr_equal(x, v) || r1 != r2)
+                if (!fmpr_equal(x, v) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
                     printf("FAIL (aliasing 4)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");

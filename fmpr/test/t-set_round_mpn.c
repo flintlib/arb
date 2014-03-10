@@ -73,7 +73,9 @@ int main()
 
         ret2 = fmpr_set_round_fmpz(y, fx, prec, rnd);
 
-        if (!fmpz_equal(fmpr_manref(y), man) || !fmpz_equal(fmpr_expref(y), exp) || ret1 != ret2)
+        if (!fmpz_equal(fmpr_manref(y), man) ||
+            !fmpz_equal(fmpr_expref(y), exp) || ret1 != ret2 ||
+            !fmpr_check_ulp(y, ret2, prec))
         {
             printf("FAIL\n\n");
             printf("bits: %ld\n", bits);

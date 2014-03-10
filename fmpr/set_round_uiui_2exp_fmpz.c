@@ -91,6 +91,10 @@ fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
                 shift += FLINT_BITS + trail;
                 ret = FLINT_BITS + trail;
 
+                /* special case: if the mantissa overflowed to the next power of two,
+                   the error bound must be multiplied by two */
+                ret -= (trail + FLINT_BITS == prec);
+
                 if (!negative)
                     fmpz_set_ui(fmpr_manref(z), hi);
                 else
@@ -107,6 +111,10 @@ fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
                     shift += trail;
                 }
                 ret = trail;
+
+                /* special case: if the mantissa overflowed to the next power of two,
+                   the error bound must be multiplied by two */
+                ret -= (trail == prec);
 
                 if (!negative)
                     fmpz_set_uiui(fmpr_manref(z), hi, lo);

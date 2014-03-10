@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        long bits, res;
         fmpr_t x, z, w;
         mpfr_t X, Z;
 
@@ -60,25 +60,25 @@ int main()
         {
             case 0:
                 mpfr_rec_sqrt(Z, X, MPFR_RNDZ);
-                fmpr_rsqrt(z, x, bits, FMPR_RND_DOWN);
+                res = fmpr_rsqrt(z, x, bits, FMPR_RND_DOWN);
                 break;
             case 1:
                 mpfr_rec_sqrt(Z, X, MPFR_RNDA);
-                fmpr_rsqrt(z, x, bits, FMPR_RND_UP);
+                res = fmpr_rsqrt(z, x, bits, FMPR_RND_UP);
                 break;
             case 2:
                 mpfr_rec_sqrt(Z, X, MPFR_RNDD);
-                fmpr_rsqrt(z, x, bits, FMPR_RND_FLOOR);
+                res = fmpr_rsqrt(z, x, bits, FMPR_RND_FLOOR);
                 break;
-            case 3:
+            default:
                 mpfr_rec_sqrt(Z, X, MPFR_RNDU);
-                fmpr_rsqrt(z, x, bits, FMPR_RND_CEIL);
+                res = fmpr_rsqrt(z, x, bits, FMPR_RND_CEIL);
                 break;
         }
 
         fmpr_set_mpfr(w, Z);
 
-        if (!fmpr_equal(z, w))
+        if (!fmpr_equal(z, w) || !fmpr_check_ulp(z, res, bits))
         {
             printf("FAIL\n\n");
             printf("bits = %ld\n", bits);

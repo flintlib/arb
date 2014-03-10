@@ -117,7 +117,7 @@ _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int neg
             {
                 fmpz_set_si(man, negative ? -1 : 1);
                 *shift = bc;
-                return prec;
+                return prec - 1;
             }
 
             /* otherwise, we are cutting off at a zero bit, and

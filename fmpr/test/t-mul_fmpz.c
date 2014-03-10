@@ -78,7 +78,7 @@ int main()
             case 0:
                 r1 = fmpr_mul_fmpz(z, x, y, prec, rnd);
                 r2 = fmpr_mul_fmpz_naive(v, x, y, prec, rnd);
-                if (!fmpr_equal(z, v) || r1 != r2)
+                if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
                     printf("FAIL!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
@@ -95,7 +95,7 @@ int main()
                 fmpr_set(z, x);
                 r1 = fmpr_mul_fmpz(z, z, y, prec, rnd);
                 r2 = fmpr_mul_fmpz_naive(v, v, y, prec, rnd);
-                if (!fmpr_equal(z, v) || r1 != r2)
+                if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
                     printf("FAIL (aliasing 1)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");

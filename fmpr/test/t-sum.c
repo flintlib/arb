@@ -73,7 +73,8 @@ int main()
             fmpr_add(s2, s2, terms + i, FMPR_PREC_EXACT, FMPR_RND_DOWN);
         res2 = fmpr_set_round(s3, s2, prec, rnd);
 
-        if (!fmpr_equal(s1, s3) /*|| res1 != res2 */)
+        if (!fmpr_equal(s1, s3) || res1 != res2 ||
+            !fmpr_check_ulp(s1, res1, prec) || !fmpr_check_ulp(s3, res2, prec))
         {
             printf("FAIL (%ld)\n\n", iter);
             printf("prec = %ld\n\n", prec);

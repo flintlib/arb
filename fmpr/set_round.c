@@ -92,6 +92,10 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
                 shift += trail;
                 v = negative ? -w : w;
                 ret = trail;
+
+                /* special case: if w overflowed to the next power of two,
+                   the error bound must be multiplied by 2 */
+                ret -= (trail == prec);
             }
         }
 
@@ -157,7 +161,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
                 {
                     fmpz_set_si(rman, negative ? -1 : 1);
                     fmpz_add_ui_inline(rexp, exp, bc);
-                    return prec;
+                    return prec - 1;
                 }
 
                 /* otherwise, incrementing will not cause overflow below */
