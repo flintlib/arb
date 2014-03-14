@@ -55,6 +55,11 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
                the error bound must be multiplied by two */
             ret -= (trail == prec);
         }
+
+        if (!negative)
+            fmpz_set_ui(fmpr_manref(z), lo);
+        else
+            fmpz_neg_ui(fmpr_manref(z), lo);
     }
     else
     {
@@ -94,6 +99,11 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
                 /* special case: if the mantissa overflowed to the next power of two,
                    the error bound must be multiplied by two */
                 ret -= (FLINT_BITS + trail == prec);
+
+                if (!negative)
+                    fmpz_set_ui(fmpr_manref(z), hi);
+                else
+                    fmpz_neg_ui(fmpr_manref(z), hi);
             }
             else
             {
@@ -110,14 +120,21 @@ _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
                 /* special case: if the mantissa overflowed to the next power of two,
                    the error bound must be multiplied by two */
                 ret -= (trail == prec);
+
+                if (!negative)
+                    fmpz_set_uiui(fmpr_manref(z), hi, lo);
+                else
+                    fmpz_neg_uiui(fmpr_manref(z), hi, lo);
             }
         }
+        else
+        {
+            if (!negative)
+                fmpz_set_uiui(fmpr_manref(z), hi, lo);
+            else
+                fmpz_neg_uiui(fmpr_manref(z), hi, lo);
+        }
     }
-
-    if (!negative)
-        fmpz_set_uiui(fmpr_manref(z), hi, lo);
-    else
-        fmpz_neg_uiui(fmpr_manref(z), hi, lo);
 
     fmpz_add2_fmpz_si_inline(fmpr_expref(z), xexp, yexp, shift);
     return ret;
