@@ -70,7 +70,7 @@ rec_fac_bound_2exp_si(long n)
     {
         double x;
 
-        /* log(1/n!) < N*((n/e)^n */
+        /* log(1/n!) < log((e/n)^n) = n - n*log(n) */
 
         x = (n - n * log(n)) * ONE_OVER_LOG2;
         x = x * 0.9999;   /* counter rounding error */
