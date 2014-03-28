@@ -69,7 +69,7 @@ partitions_remainder_bound_log2(double n, double N)
     return (FLINT_MAX(t1, t2) + 1) * INV_LOG2;
 }
 
-static long
+long
 partitions_needed_terms(double n)
 {
     long N;
@@ -344,12 +344,6 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
 
     fmprb_add(x, x, acc, res_prec);
 
-    fmpr_init(bound);
-    partitions_rademacher_bound(bound, n, N);
-    /* printf("addery %lu %lu: ", n, N); fmpr_printd(bound, 20); printf("\n"); */
-    fmpr_add(fmprb_radref(x), fmprb_radref(x), bound, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_clear(bound);
-
     fmpz_clear(n24);
     fmprb_clear(acc);
     fmprb_clear(exp1);
@@ -360,73 +354,4 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
     fmprb_clear(t4);
 }
 
-/* defined in flint*/
-#define NUMBER_OF_SMALL_PARTITIONS 128
-extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
-
-void
-partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
-{
-    if (fmpz_cmp_ui(n, NUMBER_OF_SMALL_PARTITIONS) < 0)
-    {
-        if (fmpz_sgn(n) < 0)
-            fmpz_zero(p);
-        else
-            fmpz_set_ui(p, partitions_lookup[fmpz_get_ui(n)]);
-    }
-    else
-    {
-        fmprb_t x;
-        long N;
-
-        fmprb_init(x);
-
-        N = partitions_needed_terms(fmpz_get_d(n));
-        partitions_hrr_sum_fmprb(x, n, 1, N, use_doubles);
-
-        if (!fmprb_get_unique_fmpz(p, x))
-        {
-            printf("not unique!\n");
-            fmprb_printd(x, 50);
-            printf("\n");
-            abort();
-        }
-
-        fmprb_clear(x);
-    }
-}
-
-void
-partitions_fmpz_ui(fmpz_t p, ulong n)
-{
-    if (n < NUMBER_OF_SMALL_PARTITIONS)
-    {
-        fmpz_set_ui(p, partitions_lookup[n]);
-    }
-    else
-    {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_set_ui(t, n);
-        partitions_fmpz_fmpz(p, t, 0);
-        fmpz_clear(t);
-    }
-}
-
-void
-partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n)
-{
-    if (n < NUMBER_OF_SMALL_PARTITIONS)
-    {
-        fmpz_set_ui(p, partitions_lookup[n]);
-    }
-    else
-    {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_set_ui(t, n);
-        partitions_fmpz_fmpz(p, t, 1);
-        fmpz_clear(t);
-    }
-}
 
