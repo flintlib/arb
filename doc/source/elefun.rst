@@ -128,31 +128,3 @@ The exponential function
     resulting in slightly higher memory usage but better speed. For best
     efficiency, *N* should have many trailing zero bits.
 
-
-Trigonometric functions
---------------------------------------------------------------------------------
-
-.. function:: void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec)
-
-    Sets the vector *alpha* to the the *d* roots of `\Phi_n(x)`, computed
-    using a working precision of *prec* bits.
-
-.. function:: void _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n)
-
-.. function:: void elefun_cos_minpoly(fmpz_poly_t poly, ulong n)
-
-    Computes `\Phi_n(x)`, the minimal polynomial of `\cos(2\pi/n)`,
-    which for `n > 2` has degree `d = \varphi(n) / 2`.
-    For small `n`, the coefficients of the polynomial are looked up
-    from a table. For large `n`, we compute numerical approximations of
-    the roots using :func:`_elefun_cos_minpoly_roots`, then multiply
-    the linear factors together using a balanced product tree, and convert
-    the numerical coefficients to exact integers.
-
-    Since `\Phi_n(x) = 2^r \prod_{i=1}^d (x - \cos(\alpha_i))` for some
-    `\alpha_i`, where `r = d - 1` if `n` is a power of two and `r = d`
-    otherwise, we can use the binomial theorem to estimate the required
-    working precision as `d + \log_2 {d \choose d / 2}`, plus a few
-    guard bits. This estimate is not optimal, but it is acceptably tight
-    for large `n`.
-

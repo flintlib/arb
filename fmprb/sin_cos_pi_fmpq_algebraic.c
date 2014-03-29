@@ -98,11 +98,11 @@ _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
         fmprb_poly_init(fpoly);
 
         if (p % 2 == 0)
-            elefun_cos_minpoly(poly, q);
+            fmpz_poly_cos_minpoly(poly, q);
         else
-            elefun_cos_minpoly(poly, 2 * q);
+            fmpz_poly_cos_minpoly(poly, 2 * q);
 
-        eval_extra_prec = fmpz_poly_max_bits(poly);
+        eval_extra_prec = fmpz_poly_max_bits(poly) * 2; /* heuristic */
         eval_extra_prec = FLINT_ABS(eval_extra_prec);
         fmprb_poly_set_fmpz_poly(fpoly, poly, FMPR_PREC_EXACT);
 
@@ -112,6 +112,7 @@ _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
         fmprb_mul_ui(c, c, p, start_prec);
         fmprb_div_ui(c, c, q, start_prec);
         fmprb_cos(c, c, start_prec);
+        fmprb_mul_2exp_si(c, c, 1); /* poly is for 2*cos */
 
         if (100 + eval_extra_prec - 10 < prec)
         {
@@ -122,6 +123,8 @@ _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec)
             _fmprb_poly_newton_refine_root(c, fpoly->coeffs, fpoly->length,
                 c, interval, interval_bound, eval_extra_prec, prec);
         }
+
+        fmprb_mul_2exp_si(c, c, -1);
 
         fmpz_poly_clear(poly);
         fmprb_poly_clear(fpoly);

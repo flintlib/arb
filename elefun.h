@@ -71,12 +71,6 @@ void elefun_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 void elefun_exp_fmpr_bb(fmprb_t z, const fmpr_t x, long prec, int m1);
 
 
-void _elefun_cos_minpoly_roots(fmprb_ptr alpha, long d, ulong n, long prec);
-
-void _elefun_cos_minpoly(fmpz * coeffs, long d, ulong n);
-
-void elefun_cos_minpoly(fmpz_poly_t poly, ulong n);
-
 #ifdef __cplusplus
 }
 #endif
