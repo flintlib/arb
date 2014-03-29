@@ -46,7 +46,7 @@ static void *
 worker(void * arg_ptr)
 {
     worker_arg_t arg = *((worker_arg_t *) arg_ptr);
-    partitions_hrr_sum_fmprb(arg.x, arg.n, arg.N0, arg.N, 0);
+    partitions_hrr_sum_fmprb(arg.x, arg.n, arg.N0, arg.N, arg.use_doubles);
     flint_cleanup();
     return NULL;
 }
