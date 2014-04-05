@@ -125,27 +125,27 @@ The program takes the following arguments::
 
 The following functions (specified by an integer code) are implemented:
 
-* 0 - `Z(x)` (Riemann-Siegel Z-function)
-* 1 - `\sin(x)`
-* 2 - `\sin(x^2)`
-* 3 - `\sin(1/x)`
+  * 0 - `Z(x)` (Riemann-Siegel Z-function)
+  * 1 - `\sin(x)`
+  * 2 - `\sin(x^2)`
+  * 3 - `\sin(1/x)`
 
 The following options are available:
 
-* ``-refine d``: If provided, after isolating the roots, attempt to refine
-  the roots to *d* digits of accuracy using a few bisection steps followed
-  by Newton's method with adaptive precision, and then print them.
+  * ``-refine d``: If provided, after isolating the roots, attempt to refine
+    the roots to *d* digits of accuracy using a few bisection steps followed
+    by Newton's method with adaptive precision, and then print them.
 
-* ``-verbose``: Print more information.
+  * ``-verbose``: Print more information.
 
-* ``-maxdepth n``: Stop searching after *n* recursive subdivisions.
+  * ``-maxdepth n``: Stop searching after *n* recursive subdivisions.
 
-* ``-maxeval n``: Stop searching after approximately *n* function evaluations
-   (the actual number evaluations will be a small multiple of this).
+  * ``-maxeval n``: Stop searching after approximately *n* function evaluations
+    (the actual number evaluations will be a small multiple of this).
 
-* ``-maxfound n``: Stop searching after having found *n* isolated roots.
+  * ``-maxfound n``: Stop searching after having found *n* isolated roots.
 
-* ``-prec n``: Working precision to use for the root isolation.
+  * ``-prec n``: Working precision to use for the root isolation.
 
 With *function* 0, the program isolates roots of the Riemann zeta function
 on the critical line, and guarantees that no roots are missed

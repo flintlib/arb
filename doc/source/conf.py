@@ -69,7 +69,10 @@ exclude_patterns = []
 # The reST default role (used for this markup: `text`) to use for all documents.
 default_role = 'math'
 
-latex_preamble = '\usepackage{amsmath,amssymb}\n' 
+latex_preamble = r"""
+\usepackage{amsmath,amssymb}
+\setcounter{tocdepth}{2}
+"""
 
 primary_domain = 'c'
 
