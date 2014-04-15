@@ -70,7 +70,7 @@ partitions_remainder_bound_log2(double n, double N)
 }
 
 long
-partitions_needed_terms(double n)
+partitions_hrr_needed_terms(double n)
 {
     long N;
     for (N = 1; partitions_remainder_bound_log2(n, N) > 10; N++);
@@ -238,7 +238,6 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
 {
     trig_prod_t prod;
     fmprb_t acc, C, t1, t2, t3, t4, exp1;
-    fmpr_t bound;
     fmpz_t n24;
     long k, prec, res_prec, acc_prec, guard_bits;
     double nd, Cd;

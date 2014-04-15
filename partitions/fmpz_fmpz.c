@@ -30,7 +30,7 @@
 #define NUMBER_OF_SMALL_PARTITIONS 128
 extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
 
-long partitions_needed_terms(double n);
+long partitions_hrr_needed_terms(double n);
 
 typedef struct
 {
@@ -104,7 +104,7 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
         fmprb_init(x);
         fmpr_init(bound);
 
-        N = partitions_needed_terms(fmpz_get_d(n));
+        N = partitions_hrr_needed_terms(fmpz_get_d(n));
 
         if (fmpz_cmp_ui(n, 4e8) >= 0 && flint_get_num_threads() > 1)
         {
