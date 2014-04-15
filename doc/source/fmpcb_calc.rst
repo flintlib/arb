@@ -14,9 +14,7 @@ Types, macros and constants
 
 .. type:: fmpcb_calc_func_t
 
-    Typedef for a pointer to a function with signature
-
-    .. code ::
+    Typedef for a pointer to a function with signature::
 
         int func(fmpcb_ptr out, const fmpcb_t inp, void * param, long order, long prec)
 
