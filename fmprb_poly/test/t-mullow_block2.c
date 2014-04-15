@@ -30,13 +30,13 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("mullow_block_scaled....");
+    printf("mullow_block2....");
     fflush(stdout);
 
     flint_randinit(state);
 
     /* compare with fmpq_poly */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         long qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
         fmpq_poly_t A, B, C;
@@ -64,7 +64,7 @@ int main()
 
         fmprb_poly_set_fmpq_poly(a, A, rbits1);
         fmprb_poly_set_fmpq_poly(b, B, rbits2);
-        fmprb_poly_mullow_block_scaled(c, a, b, trunc, rbits3);
+        fmprb_poly_mullow_block2(c, a, b, trunc, rbits3);
 
         if (!fmprb_poly_contains_fmpq_poly(c, C))
         {
@@ -84,7 +84,7 @@ int main()
         }
 
         fmprb_poly_set(d, a);
-        fmprb_poly_mullow_block_scaled(d, d, b, trunc, rbits3);
+        fmprb_poly_mullow_block2(d, d, b, trunc, rbits3);
         if (!fmprb_poly_equal(d, c))
         {
             printf("FAIL (aliasing 1)\n\n");
@@ -92,7 +92,7 @@ int main()
         }
 
         fmprb_poly_set(d, b);
-        fmprb_poly_mullow_block_scaled(d, a, d, trunc, rbits3);
+        fmprb_poly_mullow_block2(d, a, d, trunc, rbits3);
         if (!fmprb_poly_equal(d, c))
         {
             printf("FAIL (aliasing 2)\n\n");
@@ -101,8 +101,8 @@ int main()
 
         /* test squaring */
         fmprb_poly_set(b, a);
-        fmprb_poly_mullow_block_scaled(c, a, b, trunc, rbits3);
-        fmprb_poly_mullow_block_scaled(d, a, a, trunc, rbits3);
+        fmprb_poly_mullow_block2(c, a, b, trunc, rbits3);
+        fmprb_poly_mullow_block2(d, a, a, trunc, rbits3);
         if (!fmprb_poly_overlaps(c, d))  /* not guaranteed to be identical */
         {
             printf("FAIL (squaring)\n\n");
@@ -114,7 +114,7 @@ int main()
             abort();
         }
 
-        fmprb_poly_mullow_block_scaled(a, a, a, trunc, rbits3);
+        fmprb_poly_mullow_block2(a, a, a, trunc, rbits3);
         if (!fmprb_poly_equal(d, a))
         {
             printf("FAIL (aliasing, squaring)\n\n");
@@ -136,7 +136,7 @@ int main()
         fmprb_poly_clear(d);
     }
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 3000; iter++)
     {
         long rbits1, rbits2, rbits3, trunc;
         fmprb_poly_t a, b, c, ab, ac, bc, abc, abc2;
@@ -160,12 +160,12 @@ int main()
         fmprb_poly_randtest(c, state, 1 + n_randint(state, 100), rbits2, 1 + n_randint(state, 100));
 
         /* check a*(b+c) = a*b + a*c */
-        fmprb_poly_mullow_block_scaled(ab, a, b, trunc, rbits3);
-        fmprb_poly_mullow_block_scaled(ac, a, c, trunc, rbits3);
+        fmprb_poly_mullow_block2(ab, a, b, trunc, rbits3);
+        fmprb_poly_mullow_block2(ac, a, c, trunc, rbits3);
         fmprb_poly_add(abc, ab, ac, rbits3);
 
         fmprb_poly_add(bc, b, c, rbits3);
-        fmprb_poly_mullow_block_scaled(abc2, a, bc, trunc, rbits3);
+        fmprb_poly_mullow_block2(abc2, a, bc, trunc, rbits3);
 
         if (!fmprb_poly_overlaps(abc, abc2))
         {
@@ -181,14 +181,14 @@ int main()
         }
 
         /* check (b+c)^2 = b^2 + 2bc + c^2 */
-        fmprb_poly_mullow_block_scaled(a, b, c, trunc, rbits3);
+        fmprb_poly_mullow_block2(a, b, c, trunc, rbits3);
         fmprb_poly_scalar_mul_2exp_si(a, a, 1);
-        fmprb_poly_mullow_block_scaled(abc, b, b, trunc, rbits3);
-        fmprb_poly_mullow_block_scaled(abc2, c, c, trunc, rbits3);
+        fmprb_poly_mullow_block2(abc, b, b, trunc, rbits3);
+        fmprb_poly_mullow_block2(abc2, c, c, trunc, rbits3);
         fmprb_poly_add(abc, abc, a, rbits3);
         fmprb_poly_add(abc, abc, abc2, rbits3);
 
-        fmprb_poly_mullow_block_scaled(abc2, bc, bc, trunc, rbits3);
+        fmprb_poly_mullow_block2(abc2, bc, bc, trunc, rbits3);
 
         if (!fmprb_poly_overlaps(abc, abc2))
         {

@@ -25,8 +25,9 @@
 
 #include "fmprb_poly.h"
 
-static __inline__ void
-_fmprb_poly_get_scale(fmpz_t scale, fmprb_srcptr x, long xlen, fmprb_srcptr y, long ylen)
+void
+_fmprb_poly_get_scale(fmpz_t scale, fmprb_srcptr x, long xlen,
+                                    fmprb_srcptr y, long ylen)
 {
     long xa, xb, ya, yb, den;
 

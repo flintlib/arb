@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* compare with fmpq_poly */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
         long qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
         fmpq_poly_t A, B, C;
@@ -136,7 +136,7 @@ int main()
         fmprb_poly_clear(d);
     }
 
-    for (iter = 0; iter < 3000; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
         long rbits1, rbits2, rbits3, trunc;
         fmprb_poly_t a, b, c, ab, ac, bc, abc, abc2;
