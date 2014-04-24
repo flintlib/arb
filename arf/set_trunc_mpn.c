@@ -21,9 +21,6 @@
 
     Copyright (C) 2014 Fredrik Johansson
 
-    mpn_scan1 based on GMP 4.0.
-    Copyright 1994, 1996, 2001 Free Software Foundation, Inc.
-
 ******************************************************************************/
 
 #include "arf.h"
