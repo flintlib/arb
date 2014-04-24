@@ -1,0 +1,484 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ARB; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2014 Fredrik Johansson
+
+******************************************************************************/
+
+#ifndef ARF_H
+#define ARF_H
+
+#include <math.h>
+#include "flint.h"
+#include "fmpr.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define LIMB_ONES (-(mp_limb_t) 1)
+#define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
+
+typedef long arf_prec_t;
+
+/* Return values to bound the rounding error. */
+#define ARF_RET_EXACT         ((arf_prec_t) 0)
+#define ARF_RET_INEXACT(prec) ((arf_prec_t) prec)
+
+/* Range where we can skip fmpz overflow checks for exponent manipulation. */
+#define ARF_MAX_LAGOM_EXP (COEFF_MAX / 4)
+#define ARF_MIN_LAGOM_EXP (-ARF_MAX_LAGOM_EXP)
+
+/* Exponent values used to encode special values. */
+#define ARF_EXP_ZERO 0
+#define ARF_EXP_NAN COEFF_MIN
+#define ARF_EXP_POS_INF (COEFF_MIN+1)
+#define ARF_EXP_NEG_INF (COEFF_MIN+2)
+
+/* Direct access to the exponent. */
+#define ARF_EXP(x) ((x)->exp)
+#define ARF_EXPREF(x) (&(x)->exp)
+
+/* Finite and with lagom big exponents. */
+#define ARF_IS_LAGOM(x) (ARF_EXP(x) >= ARF_MIN_LAGOM_EXP && \
+                         ARF_EXP(x) <= ARF_MAX_LAGOM_EXP)
+
+/* At least two limbs (needs pointer). */
+#define ARF_HAS_PTR(x) ((x)->size > ((2 << 1) + 1))
+
+/* Raw size field (encodes both limb size and sign). */
+#define ARF_XSIZE(x) ((x)->size)
+
+/* Construct size field value from size in limbs and sign bit. */
+#define ARF_MAKE_XSIZE(size, sgnbit) ((((mp_size_t) size) << 1) | sgnbit)
+
+/* The limb size, and the sign bit. */
+#define ARF_SIZE(x) (ARF_XSIZE(x) >> 1)
+#define ARF_SGNBIT(x) (ARF_XSIZE(x) & 1)
+
+/* Assumes non-special value */
+#define ARF_NEG(x) (ARF_XSIZE(x) ^= 1)
+
+/* Note: may also be hardcoded in a few places. */
+#define ARF_NOPTR_LIMBS 2
+
+/* Direct access to the limb data. */
+#define ARF_NOPTR_D(x)   ((x)->d.noptr.d)
+#define ARF_PTR_D(x)     ((x)->d.ptr.d)
+#define ARF_PTR_ALLOC(x) ((x)->d.ptr.alloc)
+
+/* Encoding for special values. */
+#define ARF_IS_SPECIAL(x) (ARF_XSIZE(x) == 0)
+
+/* To set a special value, first call this and then set the exponent. */
+#define ARF_MAKE_SPECIAL(x)         \
+    do {                            \
+        fmpz_clear(ARF_EXPREF(x));  \
+        ARF_DEMOTE(x);              \
+        ARF_XSIZE(x) = 0;           \
+    } while (0)
+
+
+typedef struct
+{
+    mp_limb_t d[ARF_NOPTR_LIMBS];
+}
+mantissa_noptr_struct;
+
+typedef struct
+{
+    mp_size_t alloc;
+    mp_ptr d;
+}
+mantissa_ptr_struct;
+
+typedef union
+{
+    mantissa_noptr_struct noptr;
+    mantissa_ptr_struct ptr;
+}
+mantissa_struct;
+
+typedef struct
+{
+    fmpz exp;
+    mp_size_t size;
+    mantissa_struct d;
+}
+arf_struct;
+
+typedef arf_struct arf_t[1];
+typedef arf_struct * arf_ptr;
+typedef const arf_struct * arf_srcptr;
+
+/* Warning: does not set size! -- also doesn't demote exponent. */
+#define ARF_DEMOTE(x)                 \
+    do {                              \
+        if (ARF_HAS_PTR(x))           \
+            flint_free(ARF_PTR_D(x)); \
+    } while (0)
+
+/* Get mpn pointer and size (xptr, xn) for read-only use. */
+#define ARF_GET_MPN_READONLY(xptr, xn, x)   \
+    do {                                    \
+        xn = ARF_SIZE(x);                   \
+        if (xn <= ARF_NOPTR_LIMBS)          \
+            xptr = ARF_NOPTR_D(x);          \
+        else                                \
+            xptr = ARF_PTR_D(x);            \
+    } while (0)
+
+/* Get mpn pointer xptr for writing *exactly* xn limbs to x. */
+#define ARF_GET_MPN_WRITE(xptr, xn, x)                      \
+    do {                                                    \
+        mp_size_t __xn = (xn);                              \
+        if ((__xn) <= ARF_NOPTR_LIMBS)                      \
+        {                                                   \
+            ARF_DEMOTE(x);                                  \
+            xptr = ARF_NOPTR_D(x);                          \
+        }                                                   \
+        else                                                \
+        {                                                   \
+            if (!ARF_HAS_PTR(x))                            \
+            {                                               \
+                ARF_PTR_D(x) = flint_malloc((__xn) *        \
+                        sizeof(mp_limb_t));                 \
+                ARF_PTR_ALLOC(x) = (__xn);                  \
+            }                                               \
+            else if (ARF_PTR_ALLOC(x) < (__xn))             \
+            {                                               \
+                ARF_PTR_D(x) = flint_realloc(ARF_PTR_D(x),  \
+                        (xn) * sizeof(mp_limb_t));          \
+                ARF_PTR_ALLOC(x) = (__xn);                  \
+            }                                               \
+            xptr = ARF_PTR_D(x);                            \
+        }                                                   \
+        ARF_XSIZE(x) = ARF_MAKE_XSIZE(__xn, 0);             \
+    } while (0)
+
+static __inline__ void
+arf_init(arf_t x)
+{
+    fmpz_init(ARF_EXPREF(x));
+    ARF_XSIZE(x) = 0;
+}
+
+static __inline__ void
+arf_clear(arf_t x)
+{
+    fmpz_clear(ARF_EXPREF(x));
+    ARF_DEMOTE(x);
+}
+
+static __inline__ void
+arf_zero(arf_t x)
+{
+    ARF_MAKE_SPECIAL(x);
+    ARF_EXP(x) = ARF_EXP_ZERO;
+}
+
+static __inline__ void
+arf_pos_inf(arf_t x)
+{
+    ARF_MAKE_SPECIAL(x);
+    ARF_EXP(x) = ARF_EXP_POS_INF;
+}
+
+static __inline__ void
+arf_neg_inf(arf_t x)
+{
+    ARF_MAKE_SPECIAL(x);
+    ARF_EXP(x) = ARF_EXP_NEG_INF;
+}
+
+static __inline__ void
+arf_nan(arf_t x)
+{
+    ARF_MAKE_SPECIAL(x);
+    ARF_EXP(x) = ARF_EXP_NAN;
+}
+
+static __inline__ int
+arf_is_special(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x);
+}
+
+static __inline__ int
+arf_is_zero(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_ZERO);
+}
+
+static __inline__ int
+arf_is_pos_inf(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_POS_INF);
+}
+
+static __inline__ int
+arf_is_neg_inf(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_NEG_INF);
+}
+
+static __inline__ int
+arf_is_nan(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_NAN);
+}
+
+static __inline__ int
+arf_is_normal(const arf_t x)
+{
+    return !ARF_IS_SPECIAL(x);
+}
+
+static __inline__ int
+arf_is_finite(const arf_t x)
+{
+    return !ARF_IS_SPECIAL(x) || (ARF_EXP(x) == ARF_EXP_ZERO);
+}
+
+static __inline__ int
+arf_is_inf(const arf_t x)
+{
+    return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_POS_INF ||
+                                 ARF_EXP(x) == ARF_EXP_NEG_INF);
+}
+
+static __inline__ void
+arf_one(arf_t x)
+{
+    fmpz_clear(ARF_EXPREF(x));
+    ARF_DEMOTE(x);
+    ARF_EXP(x) = 1;
+    ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
+    ARF_NOPTR_D(x)[0] = LIMB_TOP;
+}
+
+static __inline__ int
+arf_is_one(const arf_t x)
+{
+    return (ARF_EXP(x) == 1) && (ARF_XSIZE(x) == ARF_MAKE_XSIZE(1, 0))
+                             && ARF_NOPTR_D(x)[0] == LIMB_TOP;
+}
+
+static __inline__ void
+arf_swap(arf_t y, arf_t x)
+{
+    if (x != y)
+    {
+        arf_struct t = *x;
+        *x = *y;
+        *y = t;
+    }
+}
+
+static __inline__ void
+arf_set(arf_t y, const arf_t x)
+{
+    if (x != y)
+    {
+        /* Fast path */
+        if (!COEFF_IS_MPZ(ARF_EXP(x)) && !COEFF_IS_MPZ(ARF_EXP(y)))
+            ARF_EXP(y) = ARF_EXP(x);
+        else
+            fmpz_set(ARF_EXPREF(y), ARF_EXPREF(x));
+
+        /* Fast path */
+        if (!ARF_HAS_PTR(x))
+        {
+            ARF_DEMOTE(y);
+            (y)->d = (x)->d;
+        }
+        else
+        {
+            mp_ptr yptr;
+            mp_srcptr xptr;
+            mp_size_t n;
+
+            ARF_GET_MPN_READONLY(xptr, n, x);
+            ARF_GET_MPN_WRITE(yptr, n, y);
+            flint_mpn_copyi(yptr, xptr, n);
+        }
+
+        /* Important. */
+        ARF_XSIZE(y) = ARF_XSIZE(x);
+    }
+}
+
+static __inline__ void
+arf_neg(arf_t y, const arf_t x)
+{
+    arf_set(y, x);
+
+    if (arf_is_special(y))
+    {
+        if (arf_is_pos_inf(y))
+            arf_neg_inf(y);
+        else if (arf_is_neg_inf(y))
+            arf_pos_inf(y);
+    }
+    else
+    {
+        ARF_NEG(y);
+    }
+}
+
+static __inline__ void
+arf_set_ui(arf_t x, ulong v)
+{
+    if (v == 0)
+    {
+        arf_zero(x);
+    }
+    else
+    {
+        unsigned int c;
+        count_leading_zeros(c, v);
+        fmpz_set_ui(ARF_EXPREF(x), FLINT_BITS - c);
+        ARF_DEMOTE(x);
+        ARF_NOPTR_D(x)[0] = v << c;
+        ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
+    }
+}
+
+static __inline__ void
+arf_set_si(arf_t x, long v)
+{
+    arf_set_ui(x, FLINT_ABS(v));
+    if (v < 0)
+        ARF_NEG(x);
+}
+
+static __inline__ int
+arf_set_trunc_ui(arf_t x, ulong v, mp_bitcnt_t prec)
+{
+    if (v == 0)
+    {
+        arf_zero(x);
+        return 0;
+    }
+    else
+    {
+        unsigned int c;
+        int res;
+
+        count_leading_zeros(c, v);
+        fmpz_set_ui(ARF_EXPREF(x), FLINT_BITS - c);
+
+        v <<= c;
+
+        if (prec >= FLINT_BITS)
+        {
+            res = 0;
+        }
+        else
+        {
+            mp_limb_t mask = LIMB_ONES << (FLINT_BITS - prec);
+            res = (v & mask) != v;
+            v = (v & mask);
+        }
+
+        ARF_DEMOTE(x);
+        ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
+        ARF_NOPTR_D(x)[0] = v;
+
+        return res;
+    }
+}
+
+static __inline__ int
+arf_set_trunc_si(arf_t x, long v, mp_bitcnt_t prec)
+{
+    int r = arf_set_trunc_ui(x, FLINT_ABS(v), prec);
+    if (v < 0)
+        ARF_NEG(x);
+    return r;
+}
+
+/* Assumes xn > 0, x[0] != 0. */
+/* TBD: 1, 2 limb versions */
+void arf_set_mpn(arf_t y, mp_srcptr x, mp_size_t xn, int sgnbit);
+
+/* Assumes xn > 0, x[0] != 0. */
+/* TBD: 1, 2 limb versions, top-aligned version */
+int arf_set_trunc_mpn(arf_t y,
+    mp_srcptr x, mp_size_t xn, int sgnbit,
+    const fmpz_t topexp, mp_bitcnt_t prec);
+
+static __inline__ void
+arf_set_mpz(arf_t y, const mpz_t x)
+{
+    long size = x->_mp_size;
+
+    if (size == 0)
+        arf_zero(y);
+    else
+        arf_set_mpn(y, x->_mp_d, FLINT_ABS(size), size < 0);
+}
+
+static __inline__ int
+arf_set_trunc_mpz(arf_t y, const mpz_t x, long prec)
+{
+    long size = x->_mp_size;
+
+    if (size == 0)
+    {
+        arf_zero(y);
+        return 0;
+    }
+
+    return arf_set_trunc_mpn(y, x->_mp_d, FLINT_ABS(size),
+        (size < 0), NULL, prec);
+}
+
+static __inline__ void
+arf_set_fmpz(arf_t y, const fmpz_t x)
+{
+    if (!COEFF_IS_MPZ(*x))
+        arf_set_si(y, *x);
+    else
+        arf_set_mpz(y, COEFF_TO_PTR(*x));
+}
+
+static __inline__ int
+arf_set_trunc_fmpz(arf_t y, const fmpz_t x, long prec)
+{
+    if (!COEFF_IS_MPZ(*x))
+        return arf_set_trunc_si(y, *x, prec);
+    else
+        return arf_set_trunc_mpz(y, COEFF_TO_PTR(*x), prec);
+}
+
+void arf_get_fmpr(fmpr_t y, const arf_t x);
+
+int arf_equal(const arf_t x, const arf_t y);
+
+void arf_debug(const arf_t x);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+
