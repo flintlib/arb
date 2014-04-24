@@ -47,5 +47,3 @@ arf_set_mpfr(arf_t x, const mpfr_t y)
     }
 }
 
-
-
