@@ -25,32 +25,48 @@
 
 #include "arf.h"
 
-int
-arf_equal(const arf_t x, const arf_t y)
+void
+arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits)
 {
-    mp_size_t n;
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_randtest(t, state, bits);
+    arf_set_fmpz(x, t);
+    if (!arf_is_zero(x))
+        fmpz_randtest(ARF_EXPREF(x), state, mag_bits);
+    fmpz_clear(t);
+}
 
-    if (x == y)
-        return 1;
+void
+arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits)
+{
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_randtest_not_zero(t, state, bits);
+    arf_set_fmpz(x, t);
+    fmpz_randtest(ARF_EXPREF(x), state, mag_bits);
+    fmpz_clear(t);
+}
 
-    if (ARF_XSIZE(x) != ARF_XSIZE(y))
-        return 0;
-
-    if (!fmpz_equal(ARF_EXPREF(x), ARF_EXPREF(y)))
-        return 0;
-
-    n = ARF_SIZE(x);
-
-    if (n == 0)
-        return 1;
-
-    if (n == 1)
-        return ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0];
-
-    if (n == 2)
-        return (ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0] &&
-                ARF_NOPTR_D(x)[1] == ARF_NOPTR_D(y)[1]);
-
-    return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
+void
+arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits)
+{
+    switch (n_randint(state, 32))
+    {
+        case 0:
+            arf_zero(x);
+            break;
+        case 1:
+            arf_pos_inf(x);
+            break;
+        case 2:
+            arf_neg_inf(x);
+            break;
+        case 3:
+            arf_nan(x);
+            break;
+        default:
+            arf_randtest_not_zero(x, state, bits, mag_bits);
+    }
 }
 

@@ -19,38 +19,54 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012, 2014 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arf.h"
 
-int
-arf_equal(const arf_t x, const arf_t y)
+int main()
 {
-    mp_size_t n;
+    long iter;
+    flint_rand_t state;
 
-    if (x == y)
-        return 1;
+    printf("get_mpfr....");
+    fflush(stdout);
 
-    if (ARF_XSIZE(x) != ARF_XSIZE(y))
-        return 0;
+    flint_randinit(state);
 
-    if (!fmpz_equal(ARF_EXPREF(x), ARF_EXPREF(y)))
-        return 0;
+    for (iter = 0; iter < 100000; iter++)
+    {
+        long bits;
+        arf_t x, z;
+        mpfr_t y;
 
-    n = ARF_SIZE(x);
+        bits = 2 + n_randint(state, 200);
 
-    if (n == 0)
-        return 1;
+        arf_init(x);
+        arf_init(z);
+        mpfr_init2(y, bits);
 
-    if (n == 1)
-        return ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0];
+        arf_randtest_special(x, state, bits, 10);
+        arf_get_mpfr(y, x, MPFR_RNDN);
+        arf_set_mpfr(z, y);
 
-    if (n == 2)
-        return (ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0] &&
-                ARF_NOPTR_D(x)[1] == ARF_NOPTR_D(y)[1]);
+        if (!arf_equal(x, z))
+        {
+            printf("FAIL\n\n");
+            printf("x = "); arf_print(x); printf("\n\n");
+            printf("z = "); arf_print(z); printf("\n\n");
+            abort();
+        }
 
-    return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
+        arf_clear(x);
+        arf_clear(z);
+        mpfr_clear(y);
+    }
+
+    flint_randclear(state);
+    flint_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
 

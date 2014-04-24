@@ -26,31 +26,43 @@
 #include "arf.h"
 
 int
-arf_equal(const arf_t x, const arf_t y)
+arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd)
 {
-    mp_size_t n;
+    int r;
 
-    if (x == y)
-        return 1;
+    if (arf_is_special(y))
+    {
+        if (arf_is_zero(y))
+            mpfr_set_zero(x, 0);
+        else if (arf_is_pos_inf(y))
+            mpfr_set_inf(x, 1);
+        else if (arf_is_neg_inf(y))
+            mpfr_set_inf(x, -1);
+        else
+            mpfr_set_nan(x);
+        r = 0;
+    }
+    else if (COEFF_IS_MPZ(*ARF_EXPREF(y)))
+    {
+        printf("exception: exponent too large to convert to mpfr");
+        abort();
+    }
+    else
+    {
+        __mpfr_struct t;
+        mp_size_t n;
+        mp_srcptr d;
 
-    if (ARF_XSIZE(x) != ARF_XSIZE(y))
-        return 0;
+        ARF_GET_MPN_READONLY(d, n, y);
 
-    if (!fmpz_equal(ARF_EXPREF(x), ARF_EXPREF(y)))
-        return 0;
+        t._mpfr_d = (mp_ptr) d;
+        t._mpfr_exp = ARF_EXP(y);
+        t._mpfr_prec = n * FLINT_BITS;
+        t._mpfr_sign = ARF_SGNBIT(y) ? -1 : 1;
 
-    n = ARF_SIZE(x);
+        r = mpfr_set(x, &t, rnd);
+    }
 
-    if (n == 0)
-        return 1;
-
-    if (n == 1)
-        return ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0];
-
-    if (n == 2)
-        return (ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0] &&
-                ARF_NOPTR_D(x)[1] == ARF_NOPTR_D(y)[1]);
-
-    return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
+    return r;
 }
 

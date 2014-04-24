@@ -25,32 +25,27 @@
 
 #include "arf.h"
 
-int
-arf_equal(const arf_t x, const arf_t y)
+void
+arf_set_mpfr(arf_t x, const mpfr_t y)
 {
-    mp_size_t n;
-
-    if (x == y)
-        return 1;
-
-    if (ARF_XSIZE(x) != ARF_XSIZE(y))
-        return 0;
-
-    if (!fmpz_equal(ARF_EXPREF(x), ARF_EXPREF(y)))
-        return 0;
-
-    n = ARF_SIZE(x);
-
-    if (n == 0)
-        return 1;
-
-    if (n == 1)
-        return ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0];
-
-    if (n == 2)
-        return (ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0] &&
-                ARF_NOPTR_D(x)[1] == ARF_NOPTR_D(y)[1]);
-
-    return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
+    if (!mpfr_regular_p(y))
+    {
+        if (mpfr_zero_p(y))
+            arf_zero(x);
+        else if (mpfr_inf_p(y) && mpfr_sgn(y) > 0)
+            arf_pos_inf(x);
+        else if (mpfr_inf_p(y) && mpfr_sgn(y) < 0)
+            arf_neg_inf(x);
+        else
+            arf_nan(x);
+    }
+    else
+    {
+        mp_size_t n = (y->_mpfr_prec + FLINT_BITS - 1) / FLINT_BITS;
+        arf_set_mpn(x, y->_mpfr_d, n, y->_mpfr_sign < 0);
+        fmpz_set_si(ARF_EXPREF(x), y->_mpfr_exp);
+    }
 }
+
+
 

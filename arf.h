@@ -282,6 +282,25 @@ arf_is_one(const arf_t x)
                              && ARF_NOPTR_D(x)[0] == LIMB_TOP;
 }
 
+static __inline__ int
+arf_sgn(const arf_t x)
+{
+    if (arf_is_special(x))
+    {
+        if (arf_is_zero(x) || arf_is_nan(x))
+            return 0;
+        return arf_is_pos_inf(x) ? 1 : -1;
+    }
+    else
+    {
+        return ARF_SGNBIT(x) ? -1 : 1;
+    }
+}
+
+int arf_cmp(const arf_t x, const arf_t y);
+
+int arf_cmpabs(const arf_t x, const arf_t y);
+
 static __inline__ void
 arf_swap(arf_t y, arf_t x)
 {
@@ -472,9 +491,21 @@ arf_set_trunc_fmpz(arf_t y, const fmpz_t x, long prec)
 
 void arf_get_fmpr(fmpr_t y, const arf_t x);
 
+int arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd);
+
+void arf_set_mpfr(arf_t x, const mpfr_t y);
+
 int arf_equal(const arf_t x, const arf_t y);
 
 void arf_debug(const arf_t x);
+
+#define arf_print arf_debug
+
+void arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits);
+
+void arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits);
+
+void arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits);
 
 #ifdef __cplusplus
 }

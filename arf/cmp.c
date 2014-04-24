@@ -26,31 +26,50 @@
 #include "arf.h"
 
 int
-arf_equal(const arf_t x, const arf_t y)
+arf_cmp(const arf_t x, const arf_t y)
 {
-    mp_size_t n;
+    int xs, ys, ec, mc;
+    mp_size_t xn, yn;
+    mp_srcptr xp, yp;
 
-    if (x == y)
-        return 1;
+    if (arf_is_special(x) || arf_is_special(y))
+    {
+        if (arf_equal(x, y))
+            return 0;
+        if (arf_is_nan(x) || arf_is_nan(y))
+            return 0;
+        if (arf_is_zero(y)) return arf_sgn(x);
+        if (arf_is_zero(x)) return -arf_sgn(y);
+        if (arf_is_pos_inf(x)) return 1;
+        if (arf_is_neg_inf(y)) return 1;
+        return -1;
+    }
 
-    if (ARF_XSIZE(x) != ARF_XSIZE(y))
-        return 0;
+    xs = ARF_SGNBIT(x);
+    ys = ARF_SGNBIT(y);
 
-    if (!fmpz_equal(ARF_EXPREF(x), ARF_EXPREF(y)))
-        return 0;
+    if (xs != ys)
+        return xs ? -1 : 1;
 
-    n = ARF_SIZE(x);
+    ec = fmpz_cmp(ARF_EXPREF(x), ARF_EXPREF(y));
 
-    if (n == 0)
-        return 1;
+    if (ec != 0)
+        return ((ec < 0) ^ xs) ? -1 : 1;
 
-    if (n == 1)
-        return ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0];
+    ARF_GET_MPN_READONLY(xp, xn, x);
+    ARF_GET_MPN_READONLY(yp, yn, y);
 
-    if (n == 2)
-        return (ARF_NOPTR_D(x)[0] == ARF_NOPTR_D(y)[0] &&
-                ARF_NOPTR_D(x)[1] == ARF_NOPTR_D(y)[1]);
+    if (xn >= yn)
+        mc = mpn_cmp(xp + xn - yn, yp, yn);
+    else
+        mc = mpn_cmp(xp, yp + yn - xn, xn);
 
-    return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
+    if (mc != 0)
+        return ((mc < 0) ^ xs) ? -1 : 1;
+
+    if (xn != yn)
+        return ((xn < yn) ^ xs) ? -1 : 1;
+
+    return 0;
 }
 
