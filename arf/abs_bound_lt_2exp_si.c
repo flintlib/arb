@@ -25,42 +25,32 @@
 
 #include "arf.h"
 
-int
-arf_cmpabs_2exp_si(const arf_t x, long e)
+long
+arf_abs_bound_lt_2exp_si(const arf_t x)
 {
+    long res;
+
     if (arf_is_special(x))
     {
-        if (arf_is_zero(x)) return -1;
-        if (arf_is_inf(x)) return 1;
-        return 0;
-    }
-
-    /* Fast path. */
-    if (!COEFF_IS_MPZ(ARF_EXP(x)))
-    {
-        if (ARF_IS_POW2(x) && (ARF_EXP(x) - 1 == e))
-            return 0;
+        if (arf_is_zero(x))
+            return -ARF_PREC_EXACT;
         else
-            return (ARF_EXP(x) <= e) ? -1 : 1;
+            return ARF_PREC_EXACT;
     }
 
-    if (ARF_IS_POW2(x))
-    {
-        fmpz_t t;
-        fmpz_init(t);
+    if (!COEFF_IS_MPZ(ARF_EXP(x)))
+        return ARF_EXP(x);
 
-        fmpz_one(t);
-        fmpz_add_si(t, t, e);
+    if (fmpz_fits_si(ARF_EXPREF(x)))
+        res = fmpz_get_si(ARF_EXPREF(x));
+    else
+        res = fmpz_sgn(ARF_EXPREF(x)) < 0 ? -ARF_PREC_EXACT : ARF_PREC_EXACT;
 
-        if (fmpz_equal(ARF_EXPREF(x), t))
-        {
-            fmpz_clear(t);
-            return 0;
-        }
+    if (res < -ARF_PREC_EXACT)
+        res = -ARF_PREC_EXACT;
+    if (res > ARF_PREC_EXACT)
+        res = ARF_PREC_EXACT;
 
-        fmpz_clear(t);
-    }
-
-    return (fmpz_cmp_si(ARF_EXPREF(x), e) <= 0) ? -1 : 1;
+    return res;
 }
 

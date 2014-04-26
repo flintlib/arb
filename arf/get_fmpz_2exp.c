@@ -25,42 +25,48 @@
 
 #include "arf.h"
 
-int
-arf_cmpabs_2exp_si(const arf_t x, long e)
+void
+arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x)
 {
     if (arf_is_special(x))
     {
-        if (arf_is_zero(x)) return -1;
-        if (arf_is_inf(x)) return 1;
-        return 0;
+        fmpz_zero(man);
+        fmpz_zero(exp);
     }
-
-    /* Fast path. */
-    if (!COEFF_IS_MPZ(ARF_EXP(x)))
+    else
     {
-        if (ARF_IS_POW2(x) && (ARF_EXP(x) - 1 == e))
-            return 0;
-        else
-            return (ARF_EXP(x) <= e) ? -1 : 1;
-    }
+        mp_srcptr xptr;
+        mp_size_t xn;
+        int shift;
 
-    if (ARF_IS_POW2(x))
-    {
-        fmpz_t t;
-        fmpz_init(t);
+        ARF_GET_MPN_READONLY(xptr, xn, x);
 
-        fmpz_one(t);
-        fmpz_add_si(t, t, e);
+        count_trailing_zeros(shift, xptr[0]);
 
-        if (fmpz_equal(ARF_EXPREF(x), t))
+        fmpz_sub_ui(exp, ARF_EXPREF(x), xn * FLINT_BITS - shift);
+
+        if (xn == 1)
         {
-            fmpz_clear(t);
-            return 0;
+            if (ARF_SGNBIT(x))
+                fmpz_neg_ui(man, xptr[0] >> shift);
+            else
+                fmpz_set_ui(man, xptr[0] >> shift);
         }
+        else
+        {
+            __mpz_struct * z = _fmpz_promote(man);
 
-        fmpz_clear(t);
+            if (z->_mp_alloc < xn)
+                mpz_realloc(z, xn);
+
+            if (shift == 0)
+                flint_mpn_copyi(z->_mp_d, xptr, xn);
+            else
+                mpn_rshift(z->_mp_d, xptr, xn, shift);
+
+            /* top limb cannot be zero */
+            z->_mp_size = ARF_SGNBIT(x) ? -xn : xn;
+        }
     }
-
-    return (fmpz_cmp_si(ARF_EXPREF(x), e) <= 0) ? -1 : 1;
 }
 

@@ -28,8 +28,6 @@
 int
 arf_cmp_2exp_si(const arf_t x, long e)
 {
-    int pow2;
-
     if (arf_is_special(x))
     {
         if (arf_is_zero(x)) return -1;
@@ -41,18 +39,16 @@ arf_cmp_2exp_si(const arf_t x, long e)
     if (ARF_SGNBIT(x))
         return -1;
 
-    pow2 = (ARF_SIZE(x) == 1) && (ARF_NOPTR_D(x)[0] == LIMB_TOP);
-
     /* Fast path. */
     if (!COEFF_IS_MPZ(ARF_EXP(x)))
     {
-        if (pow2 && (ARF_EXP(x) - 1 == e))
+        if (ARF_IS_POW2(x) && (ARF_EXP(x) - 1 == e))
             return 0;
         else
             return (ARF_EXP(x) <= e) ? -1 : 1;
     }
 
-    if (pow2)
+    if (ARF_IS_POW2(x))
     {
         fmpz_t t;
         fmpz_init(t);

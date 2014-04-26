@@ -41,16 +41,7 @@ arf_get_fmpr(fmpr_t y, const arf_t x)
     }
     else
     {
-        mp_srcptr xptr;
-        mp_size_t xn;
-        long shift;
-
-        ARF_GET_MPN_READONLY(xptr, xn, x);
-
-        _fmpr_set_round_mpn(&shift, fmpr_manref(y),
-            xptr, xn, ARF_SGNBIT(x), FMPR_PREC_EXACT, FMPR_RND_DOWN);
-
-        fmpz_add_si(fmpr_expref(y), ARF_EXPREF(x), shift - xn * FLINT_BITS);
+        arf_get_fmpz_2exp(fmpr_manref(y), fmpr_expref(y), x);
     }
 }
 

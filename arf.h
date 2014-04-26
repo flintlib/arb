@@ -117,6 +117,9 @@ arf_rnd_to_mpfr(arf_rnd_t rnd)
 /* Encoding for special values. */
 #define ARF_IS_SPECIAL(x) (ARF_XSIZE(x) == 0)
 
+/* Value is +/- a power of two */
+#define ARF_IS_POW2(x) (ARF_SIZE(x) == 1) && (ARF_NOPTR_D(x)[0] == LIMB_TOP)
+
 /* To set a special value, first call this and then set the exponent. */
 #define ARF_MAKE_SPECIAL(x)         \
     do {                            \
@@ -494,6 +497,8 @@ int arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd);
 
 void arf_get_fmpr(fmpr_t y, const arf_t x);
 
+void arf_set_fmpr(arf_t y, const fmpr_t x);
+
 int arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd);
 
 void arf_set_mpfr(arf_t x, const mpfr_t y);
@@ -637,6 +642,38 @@ arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t exp, long prec, ar
         fmpz_add_inline(ARF_EXPREF(y), ARF_EXPREF(y), exp);
         return r;
     }
+}
+
+static __inline__ void
+arf_abs_bound_lt_2exp_fmpz(fmpz_t b, const arf_t x)
+{
+    if (arf_is_special(x))
+        fmpz_zero(b);
+    else
+        fmpz_set(b, ARF_EXPREF(x));
+}
+
+static __inline__ void
+arf_abs_bound_le_2exp_fmpz(fmpz_t b, const arf_t x)
+{
+    if (arf_is_special(x))
+        fmpz_zero(b);
+    else if (ARF_IS_POW2(x))
+        fmpz_sub_ui(b, ARF_EXPREF(x), 1);
+    else
+        fmpz_set(b, ARF_EXPREF(x));
+}
+
+long arf_abs_bound_lt_2exp_si(const arf_t x);
+
+void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
+
+static __inline__ void
+arf_set_fmpz_2exp(arf_t x, const fmpz_t man, const fmpz_t exp)
+{
+    arf_set_fmpz(x, man);
+    if (!arf_is_zero(x))
+        fmpz_add_inline(ARF_EXPREF(x), ARF_EXPREF(x), exp);
 }
 
 void arf_debug(const arf_t x);
