@@ -38,12 +38,12 @@ extern "C" {
 #define LIMB_ONES (-(mp_limb_t) 1)
 #define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
 
-#define arf_rnd_t int
-#define ARF_RND_DOWN 0
-#define ARF_RND_UP 1
-#define ARF_RND_FLOOR 2
-#define ARF_RND_CEIL 3
-#define ARF_RND_NEAR 4
+#define arf_rnd_t fmpr_rnd_t
+#define ARF_RND_DOWN FMPR_RND_DOWN
+#define ARF_RND_UP FMPR_RND_UP
+#define ARF_RND_FLOOR FMPR_RND_FLOOR
+#define ARF_RND_CEIL FMPR_RND_CEIL
+#define ARF_RND_NEAR FMPR_RND_NEAR
 
 static __inline__ int
 arf_rounds_up(arf_rnd_t rnd, int sgnbit)
@@ -53,6 +53,24 @@ arf_rounds_up(arf_rnd_t rnd, int sgnbit)
     if (rnd == ARF_RND_FLOOR) return sgnbit;
     return !sgnbit;
 }
+
+static __inline__ mpfr_rnd_t
+arf_rnd_to_mpfr(arf_rnd_t rnd)
+{
+    if (rnd == ARF_RND_DOWN) return MPFR_RNDZ;
+    else if (rnd == ARF_RND_UP) return MPFR_RNDA;
+    else if (rnd == ARF_RND_FLOOR) return MPFR_RNDD;
+    else if (rnd == ARF_RND_CEIL) return MPFR_RNDU;
+    else return MPFR_RNDN;
+}
+
+/* Allow 'infinite' precision for operations where a result can be computed exactly. */
+#define ARF_PREC_EXACT LONG_MAX
+
+#define ARF_PREC_ADD(prec,extra) ((prec) == ARF_PREC_EXACT ? ARF_PREC_EXACT : (prec) + (extra))
+
+#define ARF_RESULT_EXACT 0
+#define ARF_RESULT_INEXACT 1
 
 /* Range where we can skip fmpz overflow checks for exponent manipulation. */
 #define ARF_MAX_LAGOM_EXP (COEFF_MAX / 4)
@@ -468,6 +486,39 @@ arf_set_round_fmpz(arf_t y, const fmpz_t x, long prec, arf_rnd_t rnd)
         return arf_set_round_si(y, *x, prec, rnd);
     else
         return arf_set_round_mpz(y, COEFF_TO_PTR(*x), prec, rnd);
+}
+
+static __inline__ int
+arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+{
+    if (arf_is_special(x))
+    {
+        arf_set(y, x);
+        return 0;
+    }
+    else
+    {
+        /* XXX: fixme */
+        if (y == x)
+        {
+            int inexact;
+            arf_t t;
+            arf_init(t);
+            arf_set(t, x);
+            inexact = arf_set_round(y, t, prec, rnd);
+            arf_clear(t);
+            return inexact;
+        }
+        else
+        {
+            mp_srcptr xptr;
+            mp_size_t xn;
+
+            ARF_GET_MPN_READONLY(xptr, xn, x);
+            return arf_set_round_mpn(y, xptr, xn, ARF_SGNBIT(x),
+                ARF_EXPREF(x), prec, rnd);
+        }
+    }
 }
 
 void arf_get_fmpr(fmpr_t y, const arf_t x);
