@@ -30,24 +30,24 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("set_round_mpz....");
+    printf("set_round....");
     fflush(stdout);
 
     flint_randinit(state);
 
     {
-        arf_t x, y;
+        arf_t x, y, z;
 
         arf_init(x);
         arf_init(y);
+        arf_init(z);
 
         for (iter = 0; iter < 100000; iter++)
         {
             long bits1, bits2;
             int ret1, ret2;
-            fmpz_t a;
-            mpz_t b;
-            mpfr_t g;
+            mpfr_t g1, g2;
+            fmpz_t e;
             arf_rnd_t rnd;
 
             bits1 = 1 + n_randint(state, 1000);
@@ -55,30 +55,6 @@ int main()
 
             if (n_randint(state, 100) == 0)
                 bits2 = ARF_PREC_EXACT;
-
-            fmpz_init(a);
-            mpz_init(b);
-            mpfr_init2(g, FLINT_MIN(bits2, 10000));
-
-            if (n_randint(state, 100) == 0)
-            {
-                arf_clear(x);
-                arf_clear(y);
-                arf_init(x);
-                arf_init(y);
-            }
-
-            /* dirty output variables */
-            if (n_randint(state, 2))
-            {
-                arf_randtest_special(x, state, 1 + n_randint(state, 1000),
-                    1 + n_randint(state, 100));
-                arf_randtest_special(y, state, 1 + n_randint(state, 1000),
-                    1 + n_randint(state, 100));
-            }
-
-            fmpz_randtest(a, state, bits1);
-            fmpz_get_mpz(b, a);
 
             switch (n_randint(state, 4))
             {
@@ -88,30 +64,81 @@ int main()
                 default: rnd = ARF_RND_CEIL; break;
             }
 
-            ret1 = arf_set_round_mpz(x, b, bits2, rnd);
-            ret2 = mpfr_set_z(g, b, arf_rnd_to_mpfr(rnd));
-            arf_set_mpfr(y, g);
-            arf_equal(x, y);
+            fmpz_init(e);
+            mpfr_init2(g1, FLINT_MAX(2, bits1));
+            mpfr_init2(g2, FLINT_MIN(bits2, 10000));
 
-            if (!arf_equal(x, y) || ((ret1 == ARF_RESULT_EXACT) != (ret2 == 0)))
+            if (n_randint(state, 100) == 0)
+            {
+                arf_clear(x); arf_clear(y); arf_clear(z);
+                arf_init(x); arf_init(y); arf_init(z);
+            }
+
+            /* dirty output variables */
+            if (n_randint(state, 2))
+            {
+                arf_randtest_special(y, state, 1 + n_randint(state, 1000),
+                    1 + n_randint(state, 100));
+                arf_randtest_special(z, state, 1 + n_randint(state, 1000),
+                    1 + n_randint(state, 100));
+            }
+
+            arf_randtest_special(x, state, bits1, 1 + n_randint(state, 10));
+            arf_get_mpfr(g1, x, MPFR_RNDD); /* exact */
+
+            /* test large exponents */
+            if (n_randint(state, 4) == 0)
+                fmpz_randtest(e, state, 1 + n_randint(state, 100));
+
+            if (!arf_is_special(x))
+                fmpz_add(ARF_EXPREF(x), ARF_EXPREF(x), e);
+
+            ret1 = arf_set_round(y, x, bits2, rnd);
+            ret2 = mpfr_set(g2, g1, arf_rnd_to_mpfr(rnd));
+            arf_set_mpfr(z, g2);
+
+            if (!arf_is_special(y))
+                fmpz_sub(ARF_EXPREF(y), ARF_EXPREF(y), e);
+
+            if (!arf_equal(y, z) || ((ret1 == ARF_RESULT_EXACT) != (ret2 == 0)))
             {
                 printf("FAIL\n\n");
                 printf("bits1: %ld\n", bits1);
                 printf("bits2: %ld\n", bits2);
-                printf("a = "); fmpz_print(a); printf("\n\n");
                 printf("x = "); arf_print(x); printf("\n\n");
                 printf("y = "); arf_print(y); printf("\n\n");
+                printf("z = "); arf_print(z); printf("\n\n");
                 printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
                 abort();
             }
 
-            fmpz_clear(a);
-            mpz_clear(b);
-            mpfr_clear(g);
+            if (!arf_is_special(x))
+                fmpz_add(ARF_EXPREF(x), ARF_EXPREF(x), e);
+
+            ret1 = arf_set_round(y, x, bits2, rnd);
+            arf_set(z, x);
+            ret2 = arf_set_round(z, z, bits2, rnd);
+
+            if (!arf_equal(y, z) || ret1 != ret2)
+            {
+                printf("FAIL (aliasing)\n\n");
+                printf("bits1: %ld\n", bits1);
+                printf("bits2: %ld\n", bits2);
+                printf("x = "); arf_print(x); printf("\n\n");
+                printf("y = "); arf_print(y); printf("\n\n");
+                printf("z = "); arf_print(z); printf("\n\n");
+                printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
+                abort();
+            }
+
+            mpfr_clear(g1);
+            mpfr_clear(g2);
+            fmpz_clear(e);
         }
 
         arf_clear(x);
         arf_clear(y);
+        arf_clear(z);
     }
 
     flint_randclear(state);

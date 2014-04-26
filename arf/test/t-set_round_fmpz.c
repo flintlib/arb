@@ -54,7 +54,7 @@ int main()
             bits2 = 2 + n_randint(state, 1000);
 
             if (n_randint(state, 100) == 0)
-                bits2 = FMPR_PREC_EXACT;
+                bits2 = ARF_PREC_EXACT;
 
             fmpz_init(a);
             mpz_init(b);
