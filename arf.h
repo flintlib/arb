@@ -488,38 +488,9 @@ arf_set_round_fmpz(arf_t y, const fmpz_t x, long prec, arf_rnd_t rnd)
         return arf_set_round_mpz(y, COEFF_TO_PTR(*x), prec, rnd);
 }
 
-static __inline__ int
-arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
-{
-    if (arf_is_special(x))
-    {
-        arf_set(y, x);
-        return 0;
-    }
-    else
-    {
-        /* XXX: fixme */
-        if (y == x)
-        {
-            int inexact;
-            arf_t t;
-            arf_init(t);
-            arf_set(t, x);
-            inexact = arf_set_round(y, t, prec, rnd);
-            arf_clear(t);
-            return inexact;
-        }
-        else
-        {
-            mp_srcptr xptr;
-            mp_size_t xn;
+int arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd);
 
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            return arf_set_round_mpn(y, xptr, xn, ARF_SGNBIT(x),
-                ARF_EXPREF(x), prec, rnd);
-        }
-    }
-}
+int arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd);
 
 void arf_get_fmpr(fmpr_t y, const arf_t x);
 
@@ -528,6 +499,145 @@ int arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd);
 void arf_set_mpfr(arf_t x, const mpfr_t y);
 
 int arf_equal(const arf_t x, const arf_t y);
+
+static __inline__ void
+arf_min(arf_t z, const arf_t a, const arf_t b)
+{
+    if (arf_cmp(a, b) <= 0)
+        arf_set(z, a);
+    else
+        arf_set(z, b);
+}
+
+static __inline__ void
+arf_max(arf_t z, const arf_t a, const arf_t b)
+{
+    if (arf_cmp(a, b) > 0)
+        arf_set(z, a);
+    else
+        arf_set(z, b);
+}
+
+static __inline__ void
+arf_abs(arf_t y, const arf_t x)
+{
+    if (arf_sgn(x) < 0)
+        arf_neg(y, x);
+    else
+        arf_set(y, x);
+}
+
+static __inline__ long
+arf_bits(const arf_t x)
+{
+    if (arf_is_special(x))
+        return 0;
+    else
+    {
+        mp_srcptr xp;
+        mp_size_t xn;
+        long c;
+
+        ARF_GET_MPN_READONLY(xp, xn, x);
+        count_trailing_zeros(c, xp[0]);
+        return xn * FLINT_BITS - c;
+    }
+}
+
+static __inline__ void
+arf_bot(fmpz_t e, const arf_t x)
+{
+    if (arf_is_special(x))
+        fmpz_zero(e);
+    else
+        fmpz_sub_si(e, ARF_EXPREF(x), arf_bits(x));
+}
+
+static __inline__ int
+arf_is_int(const arf_t x)
+{
+    if (arf_is_special(x))
+        return arf_is_zero(x);
+    else
+    {
+        fmpz_t t;
+        int r;
+        fmpz_init(t);
+        arf_bot(t, x);
+        r = fmpz_sgn(t) >= 0;
+        fmpz_clear(t);
+        return r;
+    }
+}
+
+static __inline__ int
+arf_is_int_2exp_si(const arf_t x, long e)
+{
+    if (arf_is_special(x))
+        return arf_is_zero(x);
+    else
+    {
+        fmpz_t t;
+        int r;
+        fmpz_init(t);
+        arf_bot(t, x);
+        r = fmpz_cmp_si(t, e) >= 0;
+        fmpz_clear(t);
+        return r;
+    }
+}
+
+int arf_cmp_2exp_si(const arf_t x, long e);
+
+int arf_cmpabs_2exp_si(const arf_t x, long e);
+
+static __inline__ void
+arf_set_si_2exp_si(arf_t x, long man, long exp)
+{
+    arf_set_si(x, man);
+    if (man != 0)
+        fmpz_add_si_inline(ARF_EXPREF(x), ARF_EXPREF(x), exp);
+}
+
+static __inline__ void
+arf_set_ui_2exp_si(arf_t x, ulong man, long exp)
+{
+    arf_set_ui(x, man);
+    if (man != 0)
+        fmpz_add_si_inline(ARF_EXPREF(x), ARF_EXPREF(x), exp);
+}
+
+static __inline__ void
+arf_mul_2exp_si(arf_t y, const arf_t x, long e)
+{
+    arf_set(y, x);
+    if (!arf_is_special(y))
+        fmpz_add_si_inline(ARF_EXPREF(y), ARF_EXPREF(y), e);
+}
+
+static __inline__ void
+arf_mul_2exp_fmpz(arf_t y, const arf_t x, const fmpz_t e)
+{
+    arf_set(y, x);
+    if (!arf_is_special(y))
+        fmpz_add_inline(ARF_EXPREF(y), ARF_EXPREF(y), e);
+}
+
+static __inline__ int
+arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t exp, long prec, arf_rnd_t rnd)
+{
+    if (fmpz_is_zero(x))
+    {
+        arf_zero(y);
+        return 0;
+    }
+    else
+    {
+        int r = arf_set_round_fmpz(y, x, prec, rnd);
+        fmpz_add_inline(ARF_EXPREF(y), ARF_EXPREF(y), exp);
+        return r;
+    }
+}
 
 void arf_debug(const arf_t x);
 
