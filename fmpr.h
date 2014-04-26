@@ -47,10 +47,10 @@
 #endif
 
 #define fmpr_rnd_t int
-#define FMPR_RND_FLOOR 0
-#define FMPR_RND_CEIL 1
-#define FMPR_RND_UP 2
-#define FMPR_RND_DOWN 3
+#define FMPR_RND_DOWN 0
+#define FMPR_RND_UP 1
+#define FMPR_RND_FLOOR 2
+#define FMPR_RND_CEIL 3
 #define FMPR_RND_NEAR 4
 
 #ifdef __cplusplus
