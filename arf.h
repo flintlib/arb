@@ -34,14 +34,25 @@
 extern "C" {
 #endif
 
+#define LIMB_ONE ((mp_limb_t) 1)
 #define LIMB_ONES (-(mp_limb_t) 1)
 #define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
 
-typedef long arf_prec_t;
+#define arf_rnd_t int
+#define ARF_RND_DOWN 0
+#define ARF_RND_UP 1
+#define ARF_RND_FLOOR 2
+#define ARF_RND_CEIL 3
+#define ARF_RND_NEAR 4
 
-/* Return values to bound the rounding error. */
-#define ARF_RET_EXACT         ((arf_prec_t) 0)
-#define ARF_RET_INEXACT(prec) ((arf_prec_t) prec)
+static __inline__ int
+arf_rounds_up(arf_rnd_t rnd, int sgnbit)
+{
+    if (rnd == ARF_RND_DOWN) return 0;
+    if (rnd == ARF_RND_UP) return 1;
+    if (rnd == ARF_RND_FLOOR) return sgnbit;
+    return !sgnbit;
+}
 
 /* Range where we can skip fmpz overflow checks for exponent manipulation. */
 #define ARF_MAX_LAGOM_EXP (COEFF_MAX / 4)
@@ -366,16 +377,19 @@ arf_neg(arf_t y, const arf_t x)
 static __inline__ void
 arf_set_ui(arf_t x, ulong v)
 {
+    ARF_DEMOTE(x);
+    _fmpz_demote(ARF_EXPREF(x));
+
     if (v == 0)
     {
-        arf_zero(x);
+        ARF_EXP(x) = ARF_EXP_ZERO;
+        ARF_XSIZE(x) = 0;
     }
     else
     {
         unsigned int c;
         count_leading_zeros(c, v);
-        fmpz_set_ui(ARF_EXPREF(x), FLINT_BITS - c);
-        ARF_DEMOTE(x);
+        ARF_EXP(x) = FLINT_BITS - c;
         ARF_NOPTR_D(x)[0] = v << c;
         ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
     }
@@ -389,61 +403,9 @@ arf_set_si(arf_t x, long v)
         ARF_NEG(x);
 }
 
-static __inline__ int
-arf_set_trunc_ui(arf_t x, ulong v, mp_bitcnt_t prec)
-{
-    if (v == 0)
-    {
-        arf_zero(x);
-        return 0;
-    }
-    else
-    {
-        unsigned int c;
-        int res;
-
-        count_leading_zeros(c, v);
-        fmpz_set_ui(ARF_EXPREF(x), FLINT_BITS - c);
-
-        v <<= c;
-
-        if (prec >= FLINT_BITS)
-        {
-            res = 0;
-        }
-        else
-        {
-            mp_limb_t mask = LIMB_ONES << (FLINT_BITS - prec);
-            res = (v & mask) != v;
-            v = (v & mask);
-        }
-
-        ARF_DEMOTE(x);
-        ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
-        ARF_NOPTR_D(x)[0] = v;
-
-        return res;
-    }
-}
-
-static __inline__ int
-arf_set_trunc_si(arf_t x, long v, mp_bitcnt_t prec)
-{
-    int r = arf_set_trunc_ui(x, FLINT_ABS(v), prec);
-    if (v < 0)
-        ARF_NEG(x);
-    return r;
-}
-
 /* Assumes xn > 0, x[0] != 0. */
 /* TBD: 1, 2 limb versions */
 void arf_set_mpn(arf_t y, mp_srcptr x, mp_size_t xn, int sgnbit);
-
-/* Assumes xn > 0, x[0] != 0. */
-/* TBD: 1, 2 limb versions, top-aligned version */
-int arf_set_trunc_mpn(arf_t y,
-    mp_srcptr x, mp_size_t xn, int sgnbit,
-    const fmpz_t topexp, mp_bitcnt_t prec);
 
 static __inline__ void
 arf_set_mpz(arf_t y, const mpz_t x)
@@ -456,21 +418,6 @@ arf_set_mpz(arf_t y, const mpz_t x)
         arf_set_mpn(y, x->_mp_d, FLINT_ABS(size), size < 0);
 }
 
-static __inline__ int
-arf_set_trunc_mpz(arf_t y, const mpz_t x, long prec)
-{
-    long size = x->_mp_size;
-
-    if (size == 0)
-    {
-        arf_zero(y);
-        return 0;
-    }
-
-    return arf_set_trunc_mpn(y, x->_mp_d, FLINT_ABS(size),
-        (size < 0), NULL, prec);
-}
-
 static __inline__ void
 arf_set_fmpz(arf_t y, const fmpz_t x)
 {
@@ -480,13 +427,47 @@ arf_set_fmpz(arf_t y, const fmpz_t x)
         arf_set_mpz(y, COEFF_TO_PTR(*x));
 }
 
+int _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd);
+
+/* Assumes xn > 0, x[0] != 0. */
+/* TBD: 1, 2 limb versions, top-aligned version */
+int arf_set_round_mpn(arf_t y, mp_srcptr x, mp_size_t xn,
+    int sgnbit, const fmpz_t topexp, long prec, arf_rnd_t rnd);
+
 static __inline__ int
-arf_set_trunc_fmpz(arf_t y, const fmpz_t x, long prec)
+arf_set_round_ui(arf_t x, ulong v, long prec, arf_rnd_t rnd)
+{
+    return _arf_set_round_ui(x, v, 0, prec, rnd);
+}
+
+static __inline__ int
+arf_set_round_si(arf_t x, long v, long prec, arf_rnd_t rnd)
+{
+    return _arf_set_round_ui(x, FLINT_ABS(v), v < 0, prec, rnd);
+}
+
+static __inline__ int
+arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
+{
+    long size = x->_mp_size;
+
+    if (size == 0)
+    {
+        arf_zero(y);
+        return 0;
+    }
+
+    return arf_set_round_mpn(y, x->_mp_d, FLINT_ABS(size),
+        (size < 0), NULL, prec, rnd);
+}
+
+static __inline__ int
+arf_set_round_fmpz(arf_t y, const fmpz_t x, long prec, arf_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*x))
-        return arf_set_trunc_si(y, *x, prec);
+        return arf_set_round_si(y, *x, prec, rnd);
     else
-        return arf_set_trunc_mpz(y, COEFF_TO_PTR(*x), prec);
+        return arf_set_round_mpz(y, COEFF_TO_PTR(*x), prec, rnd);
 }
 
 void arf_get_fmpr(fmpr_t y, const arf_t x);
