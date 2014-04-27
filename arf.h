@@ -21,6 +21,9 @@
 
     Copyright (C) 2014 Fredrik Johansson
 
+    2x2 mul code taken from MPFR 2.3.0
+    (Copyright (C) 1991-2007 Free Software Foundation, Inc.)
+
 ******************************************************************************/
 
 #ifndef ARF_H
@@ -38,12 +41,23 @@ extern "C" {
 #define LIMB_ONES (-(mp_limb_t) 1)
 #define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
 
+#define MASK_LIMB(n, c) ((n) & (LIMB_ONES << (c)))
+
 #define arf_rnd_t fmpr_rnd_t
 #define ARF_RND_DOWN FMPR_RND_DOWN
 #define ARF_RND_UP FMPR_RND_UP
 #define ARF_RND_FLOOR FMPR_RND_FLOOR
 #define ARF_RND_CEIL FMPR_RND_CEIL
 #define ARF_RND_NEAR FMPR_RND_NEAR
+
+static __inline__ int
+arf_rounds_down(arf_rnd_t rnd, int sgnbit)
+{
+    if (rnd == ARF_RND_DOWN) return 1;
+    if (rnd == ARF_RND_UP) return 0;
+    if (rnd == ARF_RND_FLOOR) return !sgnbit;
+    return sgnbit;
+}
 
 static __inline__ int
 arf_rounds_up(arf_rnd_t rnd, int sgnbit)
@@ -678,13 +692,112 @@ arf_set_fmpz_2exp(arf_t x, const fmpz_t man, const fmpz_t exp)
 
 void arf_debug(const arf_t x);
 
-#define arf_print arf_debug
+void arf_print(const arf_t x);
 
 void arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits);
 
 void arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits);
 
 void arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits);
+
+#define ADD2_FAST_MAX (COEFF_MAX / 4)
+#define ADD2_FAST_MIN (-ADD2_FAST_MAX)
+
+static __inline__ void
+_fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+{
+    fmpz ze, xe, ye;
+
+    ze = *z;
+    xe = *x;
+    ye = *y;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
+                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
+    {
+        *z = xe + ye + c;
+    }
+    else
+    {
+        fmpz_add(z, x, y);
+        fmpz_add_si(z, z, c);
+    }
+}
+
+#define MUL_MPFR_MIN_LIMBS 25
+#define MUL_MPFR_MAX_LIMBS 10000
+
+#define nn_mul_2x1(r2, r1, r0, a1, a0, b0)                  \
+    do {                                                    \
+        mp_limb_t t1;                                       \
+        umul_ppmm(r1, r0, a0, b0);                          \
+        umul_ppmm(r2, t1, a1, b0);                          \
+        add_ssaaaa(r2, r1, r2, r1, 0, t1);                  \
+    } while (0)
+
+#define nn_mul_2x2(r3, r2, r1, r0, a1, a0, b1, b0)          \
+    do {                                                    \
+        mp_limb_t t1, t2, t3;                               \
+        umul_ppmm(r1, r0, a0, b0);                          \
+        umul_ppmm(r2, t1, a1, b0);                          \
+        add_ssaaaa(r2, r1, r2, r1, 0, t1);                  \
+        umul_ppmm(t1, t2, a0, b1);                          \
+        umul_ppmm(r3, t3, a1, b1);                          \
+        add_ssaaaa(r3, t1, r3, t1, 0, t3);                  \
+        add_ssaaaa(r2, r1, r2, r1, t1, t2);                 \
+        r3 += r2 < t1;                                      \
+    } while (0)
+
+#define ARF_MUL_STACK_ALLOC 40
+#define ARF_MUL_TLS_ALLOC 1000
+
+extern TLS_PREFIX mp_ptr __arf_mul_tmp;
+extern TLS_PREFIX long __arf_mul_alloc;
+
+extern void _arf_mul_tmp_cleanup(void);
+
+#define ARF_MUL_TMP_DECL \
+    mp_limb_t tmp_stack[ARF_MUL_STACK_ALLOC]; \
+
+#define ARF_MUL_TMP_ALLOC(tmp, alloc) \
+    if (alloc <= ARF_MUL_STACK_ALLOC) \
+    { \
+        tmp = tmp_stack; \
+    } \
+    else if (alloc <= ARF_MUL_TLS_ALLOC) \
+    { \
+        if (__arf_mul_alloc < alloc) \
+        { \
+            if (__arf_mul_alloc == 0) \
+            { \
+                flint_register_cleanup_function(_arf_mul_tmp_cleanup); \
+            } \
+            __arf_mul_tmp = flint_realloc(__arf_mul_tmp, sizeof(mp_limb_t) * alloc); \
+            __arf_mul_alloc = alloc; \
+        } \
+        tmp = __arf_mul_tmp; \
+    } \
+    else \
+    { \
+        tmp = flint_malloc(sizeof(mp_limb_t) * alloc); \
+    }
+
+#define ARF_MUL_TMP_FREE(tmp, alloc) \
+    if (alloc > ARF_MUL_TLS_ALLOC) \
+        flint_free(tmp);
+
+void arf_mul_special(arf_t z, const arf_t x, const arf_t y);
+
+int arf_mul_via_mpfr(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd);
+
+int arf_mul_rnd_any(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+
+int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec);
+
+#define arf_mul(z, x, y, prec, rnd)              \
+    ((rnd == FMPR_RND_DOWN)                      \
+        ? arf_mul_rnd_down(z, x, y, prec)        \
+        : arf_mul_rnd_any(z, x, y, prec, rnd))
 
 #ifdef __cplusplus
 }
