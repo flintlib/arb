@@ -76,8 +76,7 @@ arf_mul_via_mpfr(arf_ptr z, arf_srcptr x, arf_srcptr y,
 
     ret = (ret != 0);
 
-    fmpz_add2_fmpz_si_inline(ARF_EXPREF(z),
-        ARF_EXPREF(x), ARF_EXPREF(y), zf->_mpfr_exp);
+    _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), zf->_mpfr_exp);
 
     val = 0;
     while (tmp[val] == 0)
