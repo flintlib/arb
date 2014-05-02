@@ -104,7 +104,7 @@ arf_rnd_to_mpfr(arf_rnd_t rnd)
 #define ARF_IS_LAGOM(x) (ARF_EXP(x) >= ARF_MIN_LAGOM_EXP && \
                          ARF_EXP(x) <= ARF_MAX_LAGOM_EXP)
 
-/* At least two limbs (needs pointer). */
+/* More than two limbs (needs pointer). */
 #define ARF_HAS_PTR(x) ((x)->size > ((2 << 1) + 1))
 
 /* Raw size field (encodes both limb size and sign). */
@@ -466,8 +466,9 @@ int _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd);
 
 /* Assumes xn > 0, x[0] != 0. */
 /* TBD: 1, 2 limb versions, top-aligned version */
-int arf_set_round_mpn(arf_t y, mp_srcptr x, mp_size_t xn,
-    int sgnbit, const fmpz_t topexp, long prec, arf_rnd_t rnd);
+int
+_arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
+    int sgnbit, long prec, arf_rnd_t rnd);
 
 static __inline__ int
 arf_set_round_ui(arf_t x, ulong v, long prec, arf_rnd_t rnd)
@@ -484,7 +485,9 @@ arf_set_round_si(arf_t x, long v, long prec, arf_rnd_t rnd)
 static __inline__ int
 arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
 {
+    int inexact;
     long size = x->_mp_size;
+    long fix;
 
     if (size == 0)
     {
@@ -492,8 +495,11 @@ arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
         return 0;
     }
 
-    return arf_set_round_mpn(y, x->_mp_d, FLINT_ABS(size),
-        (size < 0), NULL, prec, rnd);
+    inexact = _arf_set_round_mpn(y, &fix, x->_mp_d, FLINT_ABS(size),
+        (size < 0), prec, rnd);
+    _fmpz_demote(ARF_EXPREF(y));
+    ARF_EXP(y) = FLINT_ABS(size) * FLINT_BITS + fix;
+    return inexact;
 }
 
 static __inline__ int
@@ -704,6 +710,29 @@ void arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits)
 #define ADD2_FAST_MIN (-ADD2_FAST_MAX)
 
 static __inline__ void
+_fmpz_set_fast(fmpz_t f, const fmpz_t g)
+{
+    if (!COEFF_IS_MPZ(*f) && !COEFF_IS_MPZ(*g))
+        *f = *g;
+    else
+        fmpz_set(f, g);
+}
+
+static __inline__ void
+_fmpz_add_fast(fmpz_t z, const fmpz_t x, long c)
+{
+    fmpz ze, xe;
+
+    ze = *z;
+    xe = *x;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX))
+        *z = xe + c;
+    else
+        fmpz_add_si(z, x, c);
+}
+
+static __inline__ void
 _fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
 {
     fmpz ze, xe, ye;
@@ -798,6 +827,50 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec);
     ((rnd == FMPR_RND_DOWN)                      \
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
+
+#define ARF_ADD_STACK_ALLOC 40
+#define ARF_ADD_TLS_ALLOC 1000
+
+extern TLS_PREFIX mp_ptr __arf_add_tmp;
+extern TLS_PREFIX long __arf_add_alloc;
+
+extern void _arf_add_tmp_cleanup(void);
+
+#define ARF_ADD_TMP_DECL \
+    mp_limb_t tmp_stack[ARF_ADD_STACK_ALLOC]; \
+
+#define ARF_ADD_TMP_ALLOC(tmp, alloc) \
+    if (alloc <= ARF_ADD_STACK_ALLOC) \
+    { \
+        tmp = tmp_stack; \
+    } \
+    else if (alloc <= ARF_ADD_TLS_ALLOC) \
+    { \
+        if (__arf_add_alloc < alloc) \
+        { \
+            if (__arf_add_alloc == 0) \
+            { \
+                flint_register_cleanup_function(_arf_add_tmp_cleanup); \
+            } \
+            __arf_add_tmp = flint_realloc(__arf_add_tmp, sizeof(mp_limb_t) * alloc); \
+            __arf_add_alloc = alloc; \
+        } \
+        tmp = __arf_add_tmp; \
+    } \
+    else \
+    { \
+        tmp = flint_malloc(sizeof(mp_limb_t) * alloc); \
+    }
+
+#define ARF_ADD_TMP_FREE(tmp, alloc) \
+    if (alloc > ARF_ADD_TLS_ALLOC) \
+        flint_free(tmp);
+
+int _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit,
+    const fmpz_t xexp, mp_srcptr yp, mp_size_t yn, int ysgnbit,
+    mp_bitcnt_t shift, long prec, arf_rnd_t rnd);
+
+int arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
 #ifdef __cplusplus
 }

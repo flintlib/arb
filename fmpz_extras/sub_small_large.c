@@ -23,42 +23,23 @@
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "fmpz_extras.h"
 
-int
-arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+long
+_fmpz_sub_small_large(const fmpz_t x, const fmpz_t y)
 {
-    if (arf_is_special(x))
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_sub(t, x, y);
+    if (!COEFF_IS_MPZ(*t))
     {
-        arf_neg(y, x);
-        return 0;
+        /* no need to free t */
+        return *t;
     }
     else
     {
-        /* XXX: fixme */
-        if (y == x)
-        {
-            int inexact;
-            arf_t t;
-            arf_init(t);
-            arf_set(t, x);
-            inexact = arf_neg_round(y, t, prec, rnd);
-            arf_clear(t);
-            return inexact;
-        }
-        else
-        {
-            mp_srcptr xptr;
-            mp_size_t xn;
-            int inexact;
-            long fix;
-
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
-                ARF_SGNBIT(x) ^ 1, prec, rnd);
-            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
-            return inexact;
-        }
+        int sign = fmpz_sgn(t);
+        fmpz_clear(t);
+        return (sign > 0) ? LONG_MAX : -LONG_MAX;
     }
 }
-

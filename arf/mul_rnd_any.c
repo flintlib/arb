@@ -40,6 +40,7 @@ arf_mul_rnd_any(arf_ptr z, arf_srcptr x, arf_srcptr y,
         long prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
+    long fix;
     int sgnbit, inexact;
 
     xn = ARF_XSIZE(x);
@@ -90,8 +91,8 @@ arf_mul_rnd_any(arf_ptr z, arf_srcptr x, arf_srcptr y,
             mpn_mul(tmp, xptr, xn, yptr, yn);
         }
 
-        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), 0);
-        inexact = arf_set_round_mpn(z, tmp, zn, sgnbit, ARF_EXPREF(z), prec, rnd);
+        inexact = _arf_set_round_mpn(z, &fix, tmp, zn, sgnbit, prec, rnd);
+        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), fix);
         ARF_MUL_TMP_FREE(tmp, alloc)
 
         return inexact;

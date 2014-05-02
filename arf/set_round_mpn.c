@@ -36,8 +36,8 @@ _arf_set_mpn_roundup_power_two(arf_t y, int sgnbit)
 }
 
 int
-arf_set_round_mpn(arf_t y, mp_srcptr x, mp_size_t xn,
-    int sgnbit, const fmpz_t topexp, long prec, arf_rnd_t rnd)
+_arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
+    int sgnbit, long prec, arf_rnd_t rnd)
 {
     unsigned int leading;
     mp_bitcnt_t exp, bc, val, val_bits;
@@ -51,10 +51,7 @@ arf_set_round_mpn(arf_t y, mp_srcptr x, mp_size_t xn,
     exp = xn * FLINT_BITS - leading;
 
     /* Set exponent. */
-    if (topexp == NULL)
-        fmpz_set_ui(ARF_EXPREF(y), exp);
-    else
-        fmpz_sub_si_inline(ARF_EXPREF(y), topexp, leading);
+    *exp_shift = -(long) leading;
 
     /* Find first nonzero bit. */
     val_limbs = 0;
@@ -112,7 +109,10 @@ arf_set_round_mpn(arf_t y, mp_srcptr x, mp_size_t xn,
             /* Overflow to next power of two (unlikely). */
             if (val == exp)
             {
-                _arf_set_mpn_roundup_power_two(y, sgnbit);
+                exp_shift[0]++;
+                ARF_DEMOTE(y);
+                ARF_NOPTR_D(y)[0] = LIMB_TOP;
+                ARF_XSIZE(y) = ARF_MAKE_XSIZE(1, sgnbit);
                 return 1;
             }
         }

@@ -30,6 +30,7 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
 {
     mp_size_t xn, yn, zn;
     mp_limb_t hi, lo;
+    long expfix;
     int sgnbit, ret, fix;
     mp_ptr zptr;
 
@@ -184,8 +185,8 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
         }
 
         zn = xn + yn;
-        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), 0);
-        ret = arf_set_round_mpn(z, zz, zn, sgnbit, ARF_EXPREF(z), prec, ARF_RND_DOWN);
+        ret = _arf_set_round_mpn(z, &expfix, zz, zn, sgnbit, prec, ARF_RND_DOWN);
+        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), expfix);
         return ret;
     }
     else if (yn > MUL_MPFR_MIN_LIMBS && prec != ARF_PREC_EXACT
@@ -223,8 +224,8 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
             mpn_mul(tmp, xptr, xn, yptr, yn);
         }
 
-        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), 0);
-        ret = arf_set_round_mpn(z, tmp, zn, sgnbit, ARF_EXPREF(z), prec, ARF_RND_DOWN);
+        ret = _arf_set_round_mpn(z, &expfix, tmp, zn, sgnbit, prec, ARF_RND_DOWN);
+        _fmpz_add2_fast(ARF_EXPREF(z), ARF_EXPREF(x), ARF_EXPREF(y), expfix);
         ARF_MUL_TMP_FREE(tmp, alloc)
 
         return ret;

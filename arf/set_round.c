@@ -50,10 +50,14 @@ arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
         {
             mp_srcptr xptr;
             mp_size_t xn;
+            long fix;
+            int inexact;
 
             ARF_GET_MPN_READONLY(xptr, xn, x);
-            return arf_set_round_mpn(y, xptr, xn, ARF_SGNBIT(x),
-                ARF_EXPREF(x), prec, rnd);
+            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
+                ARF_SGNBIT(x), prec, rnd);
+            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
+            return inexact;
         }
     }
 }

@@ -25,6 +25,35 @@
 
 #include "arf.h"
 
+/* Top-aligns the nonzero limb v and rounds it to prec bit. */
+#define ARF_NORMALISE_ROUND_LIMB(inexact, exp, v,               \
+                                    sgnbit, prec, rnd)          \
+    do {                                                        \
+        count_leading_zeros(exp, v);                            \
+        v <<= exp;                                              \
+        exp = FLINT_BITS - exp;                                 \
+        if (prec >= exp)                                        \
+        {                                                       \
+            inexact = 0;                                        \
+        }                                                       \
+        else                                                    \
+        {                                                       \
+            mp_limb_t __t = v;                                  \
+            v = MASK_LIMB(v, FLINT_BITS - prec);                \
+            inexact = (__t != v);                               \
+            if (inexact && arf_rounds_up(rnd, sgnbit))          \
+            {                                                   \
+                v += (LIMB_ONE << (FLINT_BITS - prec));         \
+                if (v == 0)                                     \
+                {                                               \
+                    v = LIMB_TOP;                               \
+                    exp++;                                      \
+                }                                               \
+            }                                                   \
+        }                                                       \
+    }                                                           \
+    while (0)
+
 int
 _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd)
 {
@@ -35,40 +64,12 @@ _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd)
     }
     else
     {
-        unsigned int bc, mask_bits;
-        int inexact;
-        mp_limb_t t;
+        int exp, inexact;
 
-        count_leading_zeros(bc, v);
-        v <<= bc;
-        bc = FLINT_BITS - bc;
+        ARF_NORMALISE_ROUND_LIMB(inexact, exp, v, sgnbit, prec, rnd);
 
-        if (prec >= bc)
-        {
-            inexact = 0;
-        }
-        else
-        {
-            mask_bits = FLINT_BITS - prec;
-
-            t = v;
-            v = (v >> mask_bits) << mask_bits;
-            inexact = (t != v);
-
-            if (inexact && arf_rounds_up(rnd, sgnbit))
-            {
-                v += (LIMB_ONE << (FLINT_BITS - prec));
-
-                /* Overflow to the next power of two (unlikely). */
-                if (v == 0)
-                {
-                    v = LIMB_TOP;
-                    bc++;
-                }
-            }
-        }
-
-        fmpz_set_ui(ARF_EXPREF(x), bc);
+        _fmpz_demote(ARF_EXPREF(x));
+        ARF_EXP(x) = exp;
         ARF_DEMOTE(x);
         ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, sgnbit);
         ARF_NOPTR_D(x)[0] = v;
