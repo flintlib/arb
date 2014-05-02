@@ -167,7 +167,6 @@ arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
     yptr = &ytmp;
     yn = 1;
 
-    count_leading_zeros(yexp, ytmp);
     yexp = FLINT_BITS;
     shift = _fmpz_sub_small(ARF_EXPREF(x), &yexp);
 
