@@ -911,6 +911,9 @@ int _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit,
     mp_bitcnt_t shift, long prec, arf_rnd_t rnd);
 
 int arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+int arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
+int arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);
+int arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd);
 
 int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 

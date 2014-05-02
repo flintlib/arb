@@ -89,3 +89,138 @@ arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
                            yptr, yn, ARF_SGNBIT(y), shift, prec, rnd);
 }
 
+int
+arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+{
+    mp_size_t xn, yn;
+    mp_srcptr xptr, yptr;
+    mp_limb_t ytmp;
+    int xsgnbit, ysgnbit;
+    fmpz yexp;
+    long shift;
+
+    if (y == 0)
+    {
+        return arf_set_round(z, x, prec, rnd);
+    }
+    else if (arf_is_special(x))
+    {
+        if (arf_is_zero(x))
+            return arf_set_round_si(z, y, prec, rnd);
+        else
+        {
+            arf_set(z, x);
+            return 0;
+        }
+    }
+
+    ysgnbit = (y < 0);
+    if (ysgnbit)
+        ytmp = -y;
+    else
+        ytmp = y;
+    yptr = &ytmp;
+    yn = 1;
+    yexp = FLINT_BITS;
+    /* XXX: worth the trouble to top-align y? */
+
+    shift = _fmpz_sub_small(ARF_EXPREF(x), &yexp);
+
+    xsgnbit = ARF_SGNBIT(x);
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    if (shift >= 0)
+        return _arf_add_mpn(z, xptr, xn, xsgnbit, ARF_EXPREF(x),
+                               yptr, yn, ysgnbit, shift, prec, rnd);
+    else
+        return _arf_add_mpn(z, yptr, yn, ysgnbit, &yexp,
+                               xptr, xn, xsgnbit, -shift, prec, rnd);
+}
+
+int
+arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+{
+    mp_size_t xn, yn;
+    mp_srcptr xptr, yptr;
+    mp_limb_t ytmp;
+    int xsgnbit, ysgnbit;
+    fmpz yexp;
+    long shift;
+
+    if (y == 0)
+    {
+        return arf_set_round(z, x, prec, rnd);
+    }
+    else if (arf_is_special(x))
+    {
+        if (arf_is_zero(x))
+            return arf_set_round_ui(z, y, prec, rnd);
+        else
+        {
+            arf_set(z, x);
+            return 0;
+        }
+    }
+
+    ysgnbit = 0;
+    ytmp = y;
+    yptr = &ytmp;
+    yn = 1;
+
+    count_leading_zeros(yexp, ytmp);
+    yexp = FLINT_BITS;
+    shift = _fmpz_sub_small(ARF_EXPREF(x), &yexp);
+
+    xsgnbit = ARF_SGNBIT(x);
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    if (shift >= 0)
+        return _arf_add_mpn(z, xptr, xn, xsgnbit, ARF_EXPREF(x),
+                               yptr, yn, ysgnbit, shift, prec, rnd);
+    else
+        return _arf_add_mpn(z, yptr, yn, ysgnbit, &yexp,
+                               xptr, xn, xsgnbit, -shift, prec, rnd);
+}
+
+int
+arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    mp_size_t xn, yn;
+    mp_srcptr xptr, yptr;
+    mp_limb_t ytmp;
+    int xsgnbit, ysgnbit;
+    fmpz yexp;
+    long shift;
+
+    if (fmpz_is_zero(y))
+    {
+        return arf_set_round(z, x, prec, rnd);
+    }
+    else if (arf_is_special(x))
+    {
+        if (arf_is_zero(x))
+            return arf_set_round_fmpz(z, y, prec, rnd);
+        else
+        {
+            arf_set(z, x);
+            return 0;
+        }
+    }
+
+    FMPZ_GET_MPN_READONLY(ysgnbit, yn, yptr, ytmp, *y)
+    yexp = yn * FLINT_BITS;
+    shift = _fmpz_sub_small(ARF_EXPREF(x), &yexp);
+
+    xsgnbit = ARF_SGNBIT(x);
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    if (shift >= 0)
+        return _arf_add_mpn(z, xptr, xn, xsgnbit, ARF_EXPREF(x),
+                               yptr, yn, ysgnbit, shift, prec, rnd);
+    else
+        return _arf_add_mpn(z, yptr, yn, ysgnbit, &yexp,
+                               xptr, xn, xsgnbit, -shift, prec, rnd);
+}
+
+
+

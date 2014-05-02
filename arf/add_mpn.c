@@ -51,7 +51,7 @@ _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit, const fmpz_t xexp
     ARF_ADD_TMP_DECL
 
     /* x +/- eps */
-    if (shift > prec + 1 &&
+    if (shift > prec + FLINT_BITS + 1 &&
         prec != ARF_PREC_EXACT &&
         shift > (xn + 1) * FLINT_BITS)
     {
