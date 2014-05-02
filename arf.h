@@ -777,6 +777,46 @@ _fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
         r3 += r2 < t1;                                      \
     } while (0)
 
+#define ARF_MPN_MUL(_z, _x, _xn, _y, _yn) \
+    if ((_xn) == (_yn)) \
+    { \
+        if ((_xn) == 1) \
+        { \
+            umul_ppmm((_z)[1], (_z)[0], (_x)[0], (_y)[0]); \
+        } \
+        else if ((_xn) == 2) \
+        { \
+            mp_limb_t __x1, __x0, __y1, __y0; \
+            __x0 = (_x)[0]; \
+            __x1 = (_x)[1]; \
+            __y0 = (_y)[0]; \
+            __y1 = (_y)[1]; \
+            nn_mul_2x2((_z)[3], (_z)[2], (_z)[1], (_z)[0], __x1, __x0, __y1, __y0); \
+        } \
+        else if ((_x) == (_y)) \
+        { \
+            mpn_sqr((_z), (_x), (_xn)); \
+        } \
+        else \
+        { \
+            mpn_mul_n((_z), (_x), (_y), (_xn)); \
+        } \
+    } \
+    else if ((_xn) > (_yn)) \
+    { \
+        if ((_yn) == 1) \
+            (_z)[(_xn) + (_yn) - 1] = mpn_mul_1((_z), (_x), (_xn), (_y)[0]); \
+        else \
+            mpn_mul((_z), (_x), (_xn), (_y), (_yn)); \
+    } \
+    else \
+    { \
+        if ((_xn) == 1) \
+            (_z)[(_xn) + (_yn) - 1] = mpn_mul_1((_z), (_y), (_yn), (_x)[0]); \
+        else \
+            mpn_mul((_z), (_y), (_yn), (_x), (_xn)); \
+    }
+
 #define ARF_MUL_STACK_ALLOC 40
 #define ARF_MUL_TLS_ALLOC 1000
 
@@ -871,6 +911,8 @@ int _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit,
     mp_bitcnt_t shift, long prec, arf_rnd_t rnd);
 
 int arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+
+int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
 #ifdef __cplusplus
 }
