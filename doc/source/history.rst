@@ -6,6 +6,32 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-05-03 - version 1.1.0
+
+  * faster and more accurate error bounds for polynomial multiplication
+    (error bounds are now always as good as with classical multiplication,
+    and multiplying high-degree polynomials with approximately equal
+    coefficients now has proper quasilinear complexity)
+
+  * faster and much less memory-hungry exponentials at very high precision
+
+  * improved the partition function to support n bigger than a single word,
+    and enabled the possibility to use two threads for the computation
+
+  * fixed a bug in floating-point arithmetic that caused a too small bound
+    for the rounding error to be reported when the result of an inexact
+    operation was rounded up to a power of two (this bug did
+    not affect the correctness of ball arithmetic, because operations on
+    ball midpoints always round down)
+
+  * minor optimizations to floating-point arithmetic
+
+  * improved argument reduction of the digamma function and short series
+    expansions of the rising factorial
+
+  * removed the holonomic module for now, as it did not really do anything
+    very useful
+
 * 2013-12-21 - version 1.0.0
 
   * new example programs directory
