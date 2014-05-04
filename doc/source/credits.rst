@@ -27,6 +27,27 @@ The following software has been helpful in the development of Arb.
 * HolonomicFunctions (Christoph Koutschan), http://www.risc.jku.at/research/combinat/software/HolonomicFunctions/
 * Sphinx (George Brandl and others), http://sphinx.pocoo.org
 
+Citing Arb
+-------------------------------------------------------------------------------
+
+If you wish to cite Arb in a scientific paper, the following reference can be used (you may also cite the manual or the website directly):
+
+\F. Johansson. "Arb: a C library for ball arithmetic", *ACM Communications in Computer Algebra*, 47(4):166-169, 2013.
+
+In BibTeX format::
+
+  @article{Johansson2013arb,
+    title={{A}rb: a {C} library for ball arithmetic},
+    author={F. Johansson},
+    journal={ACM Communications in Computer Algebra},
+    volume={47},
+    number={4},
+    pages={166--169},
+    year={2013},
+    publisher={ACM}
+  }
+
+
 Bibliography
 -------------------------------------------------------------------------------
 
