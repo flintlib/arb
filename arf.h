@@ -1040,6 +1040,14 @@ arf_fmpz_div_fmpz(arf_ptr z, const fmpz_t x, const fmpz_t y, long prec, arf_rnd_
     return r;
 }
 
+int arf_sqrt(arf_ptr z, arf_srcptr x, long prec, arf_rnd_t rnd);
+
+int arf_sqrt_ui(arf_t z, ulong x, long prec, arf_rnd_t rnd);
+
+int arf_sqrt_fmpz(arf_t z, const fmpz_t x, long prec, arf_rnd_t rnd);
+
+int arf_rsqrt(arf_ptr z, arf_srcptr x, long prec, arf_rnd_t rnd);
+
 #ifdef __cplusplus
 }
 #endif
