@@ -66,8 +66,8 @@ int main()
 
         for (iter2 = 0; iter2 < 100; iter2++)
         {
-            arf_randtest_special(x, state, 20, 10);
-            prec = 2 + n_randint(state, 20);
+            arf_randtest_special(x, state, 2000, 100);
+            prec = 2 + n_randint(state, 2000);
 
             switch (n_randint(state, 4))
             {
