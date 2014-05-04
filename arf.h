@@ -410,6 +410,32 @@ arf_neg(arf_t y, const arf_t x)
 }
 
 static __inline__ void
+arf_init_set_ui(arf_t x, ulong v)
+{
+    if (v == 0)
+    {
+        ARF_EXP(x) = ARF_EXP_ZERO;
+        ARF_XSIZE(x) = 0;
+    }
+    else
+    {
+        unsigned int c;
+        count_leading_zeros(c, v);
+        ARF_EXP(x) = FLINT_BITS - c;
+        ARF_NOPTR_D(x)[0] = v << c;
+        ARF_XSIZE(x) = ARF_MAKE_XSIZE(1, 0);
+    }
+}
+
+static __inline__ void
+arf_init_set_si(arf_t x, long v)
+{
+    arf_init_set_ui(x, FLINT_ABS(v));
+    if (v < 0)
+        ARF_NEG(x);
+}
+
+static __inline__ void
 arf_set_ui(arf_t x, ulong v)
 {
     ARF_DEMOTE(x);
@@ -753,6 +779,27 @@ _fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
     }
 }
 
+static __inline__ void
+_fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+{
+    fmpz ze, xe, ye;
+
+    ze = *z;
+    xe = *x;
+    ye = *y;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
+                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
+    {
+        *z = xe - ye + c;
+    }
+    else
+    {
+        fmpz_sub(z, x, y);
+        fmpz_add_si(z, z, c);
+    }
+}
+
 #define MUL_MPFR_MIN_LIMBS 25
 #define MUL_MPFR_MAX_LIMBS 10000
 
@@ -919,6 +966,79 @@ int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 int arf_sub_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
 int arf_sub_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);
 int arf_sub_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd);
+
+int arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_div_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_div(z, x, t, prec, rnd);
+}
+
+static __inline__ int
+arf_ui_div(arf_ptr z, ulong x, arf_srcptr y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_ui(t, x); /* no need to free */
+    return arf_div(z, t, y, prec, rnd);
+}
+
+static __inline__ int
+arf_div_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    return arf_div(z, x, t, prec, rnd);
+}
+
+static __inline__ int
+arf_si_div(arf_ptr z, long x, arf_srcptr y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_si(t, x); /* no need to free */
+    return arf_div(z, t, y, prec, rnd);
+}
+
+static __inline__ int
+arf_div_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    int r;
+    arf_init(t);
+    arf_set_fmpz(t, y);
+    r = arf_div(z, x, t, prec, rnd);
+    arf_clear(t);
+    return r;
+}
+
+static __inline__ int
+arf_fmpz_div(arf_ptr z, const fmpz_t x, arf_srcptr y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    int r;
+    arf_init(t);
+    arf_set_fmpz(t, x);
+    r = arf_div(z, t, y, prec, rnd);
+    arf_clear(t);
+    return r;
+}
+
+static __inline__ int
+arf_fmpz_div_fmpz(arf_ptr z, const fmpz_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    arf_t t, u;
+    int r;
+    arf_init(t);
+    arf_init(u);
+    arf_set_fmpz(t, x);
+    arf_set_fmpz(u, y);
+    r = arf_div(z, t, u, prec, rnd);
+    arf_clear(t);
+    arf_clear(u);
+    return r;
+}
 
 #ifdef __cplusplus
 }
