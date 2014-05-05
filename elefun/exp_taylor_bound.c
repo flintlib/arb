@@ -58,6 +58,44 @@ static const int rec_fac_bound_2exp_si_tab[TABSIZE] =
 };
 
 #define ONE_OVER_LOG2 1.4426950408889634074
+#define LOG2 0.69314718055994530942
+
+/* For all we know, the log() function shipped with some libm implementation
+   for MS-DOS from 1987 might have given less than six digits of accuracy, so
+   we reimplement the function poorly but reproducibly here. */
+
+#include "double_extras.h"
+
+static const double logcoeffs[] = {
+    0.0,
+    1.0,
+    0.5,
+    0.33333333333333333333,
+    0.25,
+    0.2,
+    0.16666666666666666667,
+    0.14285714285714285714,
+    0.125,
+    0.11111111111111111111,
+    0.1,
+    0.090909090909090909091,
+    0.083333333333333333333,
+    0.076923076923076923077,
+    0.071428571428571428571,
+    0.066666666666666666667,
+    0.0625,
+};
+
+double idiot_log(double x)
+{
+    double t;
+    int n;
+
+    t = frexp(x, &n);
+    t = sqrt(t);
+
+    return n * LOG2 - 2.0 * d_polyval(logcoeffs, 14, 1.0 - t);
+}
 
 static __inline__ long
 rec_fac_bound_2exp_si(long n)
@@ -66,13 +104,13 @@ rec_fac_bound_2exp_si(long n)
     {
         return rec_fac_bound_2exp_si_tab[n];
     }
-    else  /* TODO: reimplement without floats */
+    else
     {
         double x;
 
         /* log(1/n!) < log((e/n)^n) = n - n*log(n) */
 
-        x = (n - n * log(n)) * ONE_OVER_LOG2;
+        x = (n - n * idiot_log(n)) * ONE_OVER_LOG2;
         x = x * 0.9999;   /* counter rounding error */
         x = ceil(x);      /* round to 0 */
 

@@ -99,6 +99,9 @@ compute_bs_exponents(long * tab, long n)
         b = bb;
     }
 
+    /* Prevent compiler warning (ab is used to make the algorithm clear). */
+    ab = ab;
+
     /* we always include x^1 in the table, even if the binary splitting
        terminates at step length 2 */
     if (tab[length-1] != 1)

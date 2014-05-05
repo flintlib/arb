@@ -35,16 +35,16 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 5000; iter++)
     {
         fmprb_t x, y, z;
-        long prec = 2 + n_randint(state, 5000);
+        long prec = 2 + n_randint(state, 8000);
 
         fmprb_init(x);
         fmprb_init(y);
         fmprb_init(z);
 
-        fmprb_randtest(x, state, 1 + n_randint(state, 5000), 3);
+        fmprb_randtest(x, state, 1 + n_randint(state, 8000), 3);
         fmpr_zero(fmprb_radref(x));
 
         if (n_randint(state, 2))
