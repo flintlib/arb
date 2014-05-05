@@ -731,14 +731,17 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
         mpfr_set_emin(MPFR_EMIN_MIN); \
         mpfr_set_emax(MPFR_EMAX_MAX); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
-        func(__u, __t, __rnd); \
+        r = func(__u, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
-        r = prec - fmpz_bits(fmpr_manref(y)); \
+        if (r == 0) \
+            r = FMPR_RESULT_EXACT; \
+        else \
+            r = prec - fmpz_bits(fmpr_manref(y)); \
         mpfr_clear(__t); \
         mpfr_clear(__u); \
     } while (0);
@@ -754,14 +757,17 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
         mpfr_set_emin(MPFR_EMIN_MIN); \
         mpfr_set_emax(MPFR_EMAX_MAX); \
         fmpr_get_mpfr(__t, x, MPFR_RNDD); \
-        func(__u, __t, k, __rnd); \
+        r = func(__u, __t, k, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
-        r = prec - fmpz_bits(fmpr_manref(y)); \
+        if (r == 0) \
+            r = FMPR_RESULT_EXACT; \
+        else \
+            r = prec - fmpz_bits(fmpr_manref(y)); \
         mpfr_clear(__t); \
         mpfr_clear(__u); \
     } while (0);
