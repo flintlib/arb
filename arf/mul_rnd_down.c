@@ -232,3 +232,58 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
     }
 }
 
+int
+arf_mul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd)
+{
+    mp_size_t xn, yn;
+    long fix, shift;
+    int sgnbit, inexact;
+
+    yn = FLINT_ABS(y->_mp_size);
+    xn = ARF_XSIZE(x);
+    xn >>= 1;
+    sgnbit = ARF_SGNBIT(x) ^ (y->_mp_size < 0);
+
+    /* Either operand is a special value. */
+    if (xn == 0 || yn == 0)
+    {
+        if (arf_is_finite(x))
+        {
+            arf_zero(z);
+        }
+        else
+        {
+            arf_t t;
+            arf_init_set_si(t, mpz_sgn(y));
+            arf_mul(z, x, t, prec, rnd);
+            arf_clear(t);
+        }
+        return 0;
+    }
+    else
+    {
+        mp_size_t zn, alloc;
+        mp_srcptr xptr, yptr;
+        mp_ptr tmp;
+        ARF_MUL_TMP_DECL
+
+        ARF_GET_MPN_READONLY(xptr, xn, x);
+        yptr = y->_mp_d;
+
+        alloc = zn = xn + yn;
+        ARF_MUL_TMP_ALLOC(tmp, alloc)
+
+        ARF_MPN_MUL(tmp, xptr, xn, yptr, yn);
+
+        shift = yn * FLINT_BITS - (tmp[zn - 1] == 0) * FLINT_BITS;
+        zn -= (tmp[zn - 1] == 0);
+
+        inexact = _arf_set_round_mpn(z, &fix, tmp, zn, sgnbit, prec, rnd);
+
+        _fmpz_add_fast(ARF_EXPREF(z), ARF_EXPREF(x), fix + shift);
+        ARF_MUL_TMP_FREE(tmp, alloc)
+
+        return inexact;
+    }
+}
+

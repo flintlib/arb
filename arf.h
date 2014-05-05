@@ -915,6 +915,33 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec);
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
 
+static __inline__ int
+arf_mul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_mul(z, x, t, prec, rnd);
+}
+
+static __inline__ int
+arf_mul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    return arf_mul(z, x, t, prec, rnd);
+}
+
+int arf_mul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_mul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    if (!COEFF_IS_MPZ(*y))
+        return arf_mul_si(z, x, *y, prec, rnd);
+    else
+        return arf_mul_mpz(z, x, COEFF_TO_PTR(*y), prec, rnd);
+}
+
 #define ARF_ADD_STACK_ALLOC 40
 #define ARF_ADD_TLS_ALLOC 1000
 
@@ -966,6 +993,64 @@ int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 int arf_sub_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
 int arf_sub_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);
 int arf_sub_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd);
+
+int arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_addmul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_addmul(z, x, t, prec, rnd);
+}
+
+static __inline__ int
+arf_addmul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    return arf_addmul(z, x, t, prec, rnd);
+}
+
+int arf_addmul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_addmul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    if (!COEFF_IS_MPZ(*y))
+        return arf_addmul_si(z, x, *y, prec, rnd);
+    else
+        return arf_addmul_mpz(z, x, COEFF_TO_PTR(*y), prec, rnd);
+}
+
+int arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_submul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_submul(z, x, t, prec, rnd);
+}
+
+static __inline__ int
+arf_submul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    return arf_submul(z, x, t, prec, rnd);
+}
+
+int arf_submul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
+
+static __inline__ int
+arf_submul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+{
+    if (!COEFF_IS_MPZ(*y))
+        return arf_submul_si(z, x, *y, prec, rnd);
+    else
+        return arf_submul_mpz(z, x, COEFF_TO_PTR(*y), prec, rnd);
+}
 
 int arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
