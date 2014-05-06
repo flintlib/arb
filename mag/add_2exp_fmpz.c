@@ -26,26 +26,48 @@
 #include "mag.h"
 
 void
-mag_set_arf(mag_t y, const arf_t x)
+mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
 {
-    mp_srcptr xp;
-    mp_size_t xn;
-
-    if (arf_is_zero(x))
+    if (mag_is_special(x))
     {
-        mag_zero(y);
-    }
-    else if (arf_is_special(x))
-    {
-        mag_inf(y);
+        if (mag_is_zero(x))
+        {
+            MAG_MAN(z) = MAG_ONE_HALF;
+            _fmpz_add_fast(MAG_EXPREF(z), e, 1);
+        }
+        else
+        {
+            mag_inf(z);
+        }
     }
     else
     {
-        ARF_GET_MPN_READONLY(xp, xn, x);
+        long shift;
 
-        MAG_MAN(y) = (xp[xn - 1] >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
-        _fmpz_set_fast(MAG_EXPREF(y), ARF_EXPREF(x));
-        MAG_ADJUST_ONE_TOO_LARGE(y); /* TODO: combine  */
+        shift = _fmpz_sub_small(MAG_EXPREF(x), e);
+
+        if (shift >= 0)
+        {
+            _fmpz_set_fast(MAG_EXPREF(z), MAG_EXPREF(x));
+
+            if (shift >= MAG_BITS)
+                MAG_MAN(z) = MAG_MAN(x) + LIMB_ONE;
+            else
+                MAG_MAN(z) = MAG_MAN(x) + (LIMB_ONE << (MAG_BITS - shift));
+        }
+        else
+        {
+            shift = -shift;
+
+            _fmpz_set_fast(MAG_EXPREF(z), e);
+
+            if (shift >= MAG_BITS)
+                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + LIMB_ONE;
+            else
+                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + (MAG_MAN(x) >> shift);
+        }
+
+        MAG_ADJUST_ONE_TOO_LARGE(z);
     }
 }
 

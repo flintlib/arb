@@ -25,6 +25,61 @@
 
 #include "arb.h"
 
+void mag_add_arf_ulp(mag_t r, const arf_t z, long prec)
+{
+    if (ARF_IS_SPECIAL(z))
+    {
+        printf("error: ulp error not defined for special value!\n");
+        abort();
+    }
+    else
+    {
+        /* todo: speed up case r is special here */
+        fmpz_t e;
+        fmpz_init(e);
+        _fmpz_add_fast(e, ARF_EXPREF(z), -prec);
+        mag_add_2exp_fmpz(r, r, e);
+        fmpz_clear(e);
+    }
+}
+
+void
+mag_print(const mag_t x)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    mag_get_fmpr(t, x);
+    fmpr_printd(t, 5);
+    fmpr_clear(t);
+}
+
+void
+arb_addmul_slow(arb_t z, const arb_t x, const arb_t y, long prec)
+{
+    mag_t zr, xm, ym;
+    int inexact;
+
+    mag_init_set_arf(xm, ARB_MIDREF(x));
+    mag_init_set_arf(ym, ARB_MIDREF(y));
+
+    mag_init_set(zr, ARB_RADREF(z));
+    mag_addmul(zr, xm, ARB_RADREF(y));
+    mag_addmul(zr, ym, ARB_RADREF(x));
+    mag_addmul(zr, ARB_RADREF(x), ARB_RADREF(y));
+
+    inexact = arf_addmul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
+        prec, ARF_RND_DOWN);
+
+    if (inexact)
+        mag_add_arf_ulp(zr, ARB_MIDREF(z), prec);
+
+    mag_set(ARB_RADREF(z), zr); /* swap? */
+
+    mag_clear(zr);
+    mag_clear(xm);
+    mag_clear(ym);
+}
+
 void
 arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
 {
@@ -51,8 +106,7 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
     }
     else
     {
-        printf("big exponents and nans/infs not implemented yet!\n");
-        abort();
+        arb_addmul_slow(z, x, y, prec);
     }
 }
 

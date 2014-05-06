@@ -78,6 +78,22 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #endif
 
 
+#define MAG_ADJUST_ONE_TOO_LARGE(x) \
+    do { \
+        mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
+        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
+        if (__t) \
+            fmpz_add_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
+    } while (0)
+
+#define MAG_ADJUST_ONE_TOO_SMALL(x) \
+    do { \
+        mp_limb_t __t = !(MAG_MAN(x) >> (MAG_BITS - 1)); \
+        MAG_MAN(x) = (MAG_MAN(x) << __t); \
+        if (__t) \
+            fmpz_sub_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
+    } while (0)
+
 #define MAG_FAST_ADJUST_ONE_TOO_LARGE(x) \
     do { \
         mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
@@ -87,17 +103,9 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 
 #define MAG_FAST_ADJUST_ONE_TOO_SMALL(x) \
     do { \
-        mp_limb_t __t = MAG_MAN(x) >> (MAG_BITS - 1); \
+        mp_limb_t __t = !(MAG_MAN(x) >> (MAG_BITS - 1)); \
         MAG_MAN(x) = (MAG_MAN(x) << __t); \
         MAG_EXP(x) -= __t; \
-    } while (0)
-
-#define MAG_ADJUST_ONE_TOO_LARGE(x) \
-    do { \
-        mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
-        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
-        if (__t) \
-            fmpz_add_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
     } while (0)
 
 #define MAG_CHECK_BITS(rr) \
@@ -124,9 +132,31 @@ mag_init(mag_t x)
 }
 
 static __inline__ void
+mag_init_set(mag_t x, const mag_t y)
+{
+    fmpz_init_set(MAG_EXPREF(x), MAG_EXPREF(y));
+    MAG_MAN(x) = MAG_MAN(y);
+}
+
+static __inline__ void
 mag_clear(mag_t x)
 {
     fmpz_clear(MAG_EXPREF(x));
+}
+
+static __inline__ void
+mag_swap(mag_t x, mag_t y)
+{
+    mag_struct t = *x;
+    *x = *y;
+    *y = t;
+}
+
+static __inline__ void
+mag_set(mag_t x, const mag_t y)
+{
+    _fmpz_set_fast(ARF_EXPREF(x), ARF_EXPREF(y));
+    x->man = y->man;
 }
 
 static __inline__ void
@@ -163,27 +193,22 @@ mag_is_inf(const mag_t x)
 
 /* general versions */
 
-static __inline__ void
-mag_init_set_arf(mag_t y, const arf_t x)
-{
-    abort();
-}
-
-static __inline__ void
-mag_mul(mag_t z, const mag_t x, const mag_t y)
-{
-    abort();
-}
-
-static __inline__ void
-mag_addmul(mag_t z, const mag_t x, const mag_t y)
-{
-    abort();
-}
-
 void mag_set_fmpr(mag_t x, const fmpr_t y);
 
 void mag_set_arf(mag_t y, const arf_t x);
+
+static __inline__ void
+mag_init_set_arf(mag_t y, const arf_t x)
+{
+    mag_init(y);
+    mag_set_arf(y, x);
+}
+
+void mag_mul(mag_t z, const mag_t x, const mag_t y);
+
+void mag_addmul(mag_t z, const mag_t x, const mag_t y);
+
+void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
 /* Fast versions (no infs/nans, small exponents). Note that this
    applies to outputs too! */
@@ -331,10 +356,19 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
 static __inline__ void
 mag_get_fmpr(fmpr_t x, const mag_t r)
 {
-    if (!MAG_IS_LAGOM(r))
-        abort();
-
-    fmpr_set_ui_2exp_si(x, MAG_MAN(r), MAG_EXP(r) - MAG_BITS);
+    if (mag_is_zero(r))
+    {
+        fmpr_zero(x);
+    }
+    else if (mag_is_inf(r))
+    {
+        fmpr_pos_inf(x);
+    }
+    else
+    {
+        fmpr_set_ui_2exp_si(x, MAG_MAN(r), -MAG_BITS);
+        _fmpz_add2_fast(fmpr_expref(x), fmpr_expref(x), MAG_EXPREF(r), 0);
+    }
 }
 
 

@@ -26,26 +26,23 @@
 #include "mag.h"
 
 void
-mag_set_arf(mag_t y, const arf_t x)
+mag_mul(mag_t z, const mag_t x, const mag_t y)
 {
-    mp_srcptr xp;
-    mp_size_t xn;
-
-    if (arf_is_zero(x))
+    if (mag_is_special(x) || mag_is_special(y))
     {
-        mag_zero(y);
-    }
-    else if (arf_is_special(x))
-    {
-        mag_inf(y);
+        if (mag_is_inf(x) || mag_is_special(y))
+            mag_inf(z);
+        else
+            mag_zero(z);
     }
     else
     {
-        ARF_GET_MPN_READONLY(xp, xn, x);
+        long fix;
 
-        MAG_MAN(y) = (xp[xn - 1] >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
-        _fmpz_set_fast(MAG_EXPREF(y), ARF_EXPREF(x));
-        MAG_ADJUST_ONE_TOO_LARGE(y); /* TODO: combine  */
+        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
+        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
+        MAG_MAN(z) <<= fix;
+        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
     }
 }
 
