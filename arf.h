@@ -726,6 +726,16 @@ void arf_debug(const arf_t x);
 
 void arf_print(const arf_t x);
 
+static __inline__ void
+arf_printd(const arf_t y, long d)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    arf_get_fmpr(t, y);
+    fmpr_printd(t, d);
+    fmpr_clear(t);
+}
+
 void arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits);
 
 void arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits);
