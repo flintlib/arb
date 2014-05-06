@@ -85,6 +85,13 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
         MAG_EXP(x) += __t; \
     } while (0)
 
+#define MAG_FAST_ADJUST_ONE_TOO_SMALL(x) \
+    do { \
+        mp_limb_t __t = MAG_MAN(x) >> (MAG_BITS - 1); \
+        MAG_MAN(x) = (MAG_MAN(x) << __t); \
+        MAG_EXP(x) -= __t; \
+    } while (0)
+
 #define MAG_ADJUST_ONE_TOO_LARGE(x) \
     do { \
         mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
@@ -233,7 +240,7 @@ mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
     {
         MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
         MAG_EXP(z) = MAG_EXP(x) + MAG_EXP(y);
-        MAG_FAST_ADJUST_ONE_TOO_LARGE(z);
+        MAG_FAST_ADJUST_ONE_TOO_SMALL(z);
     }
 }
 
