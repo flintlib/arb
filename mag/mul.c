@@ -30,7 +30,7 @@ mag_mul(mag_t z, const mag_t x, const mag_t y)
 {
     if (mag_is_special(x) || mag_is_special(y))
     {
-        if (mag_is_inf(x) || mag_is_special(y))
+        if (mag_is_inf(x) || mag_is_inf(y))
             mag_inf(z);
         else
             mag_zero(z);

@@ -38,7 +38,7 @@ mag_addmul(mag_t z, const mag_t x, const mag_t y)
     }
     else if (mag_is_zero(x) || mag_is_zero(y))
     {
-        mag_zero(z);
+        return;
     }
     else
     {
@@ -70,6 +70,8 @@ mag_addmul(mag_t z, const mag_t x, const mag_t y)
             else
                 MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y))
                     + (MAG_MAN(z) >> shift) +  (2 * LIMB_ONE);
+
+            MAG_ADJUST_ONE_TOO_SMALL(z);
         }
 
         MAG_ADJUST_ONE_TOO_LARGE(z);

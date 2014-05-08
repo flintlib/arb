@@ -28,36 +28,101 @@
 
 #include <math.h>
 #include "flint.h"
-#include "arf.h"
+#include "fmpz.h"
+#include "fmpz_extras.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-The mag_t type is an unsigned floating-point type with a fixed-precision
-mantissa (30 bits) and unlimited exponent range, suited for representing
-magnitude bounds efficiently.
+#define LIMB_ONE ((mp_limb_t) 1)
+#define LIMB_ONES (-(mp_limb_t) 1)
+#define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
+#define MASK_LIMB(n, c) ((n) & (LIMB_ONES << (c)))
 
-Operations always produce a strict upper/lower bound, but for performance
-reasons, no attempt is made to compute the best possible bound
-(in general, a result may a few ulps larger/smaller than the optimal value).
+#define MAG_MAX_LAGOM_EXP (COEFF_MAX / 4)
+#define MAG_MIN_LAGOM_EXP (-MAG_MAX_LAGOM_EXP)
 
-The special values zero and positive infinity are supported (but not NaN).
+#define ADD2_FAST_MAX (COEFF_MAX / 4)
+#define ADD2_FAST_MIN (-ADD2_FAST_MAX)
 
-Applications requiring more flexibility (such as correct rounding, or
-higher precision) should use the arf_t type instead.
-*/
+/* TODO: rename these and move them to fmpz_extras */
 
-/* TODO: arf.h should depend on this, not the other way around  */
+static __inline__ void
+_fmpz_set_fast(fmpz_t f, const fmpz_t g)
+{
+    if (!COEFF_IS_MPZ(*f) && !COEFF_IS_MPZ(*g))
+        *f = *g;
+    else
+        fmpz_set(f, g);
+}
+
+static __inline__ void
+_fmpz_add_fast(fmpz_t z, const fmpz_t x, long c)
+{
+    fmpz ze, xe;
+
+    ze = *z;
+    xe = *x;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX))
+        *z = xe + c;
+    else
+        fmpz_add_si(z, x, c);
+}
+
+static __inline__ void
+_fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+{
+    fmpz ze, xe, ye;
+
+    ze = *z;
+    xe = *x;
+    ye = *y;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
+                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
+    {
+        *z = xe + ye + c;
+    }
+    else
+    {
+        fmpz_add(z, x, y);
+        fmpz_add_si(z, z, c);
+    }
+}
+
+static __inline__ void
+_fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+{
+    fmpz ze, xe, ye;
+
+    ze = *z;
+    xe = *x;
+    ye = *y;
+
+    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
+                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
+    {
+        *z = xe - ye + c;
+    }
+    else
+    {
+        fmpz_sub(z, x, y);
+        fmpz_add_si(z, z, c);
+    }
+}
+
+
+#define MAG_EXP_POS_INF (COEFF_MIN+1)
+
+/* Finite and with lagom big exponents. */
+#define MAG_IS_LAGOM(x) (MAG_EXP(x) >= MAG_MIN_LAGOM_EXP && \
+                         MAG_EXP(x) <= MAG_MAX_LAGOM_EXP)
 
 #define MAG_EXPREF(x) (&(x)->exp)
 #define MAG_EXP(x) ((x)->exp)
 #define MAG_MAN(x) ((x)->man)
-
-/* Finite and with lagom big exponents. */
-#define MAG_IS_LAGOM(x) (MAG_EXP(x) >= ARF_MIN_LAGOM_EXP && \
-                         MAG_EXP(x) <= ARF_MAX_LAGOM_EXP)
 
 #define MAG_BITS 30
 
@@ -155,7 +220,7 @@ mag_swap(mag_t x, mag_t y)
 static __inline__ void
 mag_set(mag_t x, const mag_t y)
 {
-    _fmpz_set_fast(ARF_EXPREF(x), ARF_EXPREF(y));
+    _fmpz_set_fast(MAG_EXPREF(x), MAG_EXPREF(y));
     x->man = y->man;
 }
 
@@ -164,13 +229,6 @@ mag_zero(mag_t x)
 {
     fmpz_zero(MAG_EXPREF(x));
     MAG_MAN(x) = 0;
-}
-
-static __inline__ void
-mag_inf(mag_t x)
-{
-    fmpz_clear(MAG_EXPREF(x));
-    MAG_EXP(x) = ARF_EXP_POS_INF;
 }
 
 static __inline__ int
@@ -185,6 +243,13 @@ mag_is_zero(const mag_t x)
     return (MAG_MAN(x) == 0) && (MAG_EXP(x) == 0);
 }
 
+static __inline__ void
+mag_inf(mag_t x)
+{
+    fmpz_clear(MAG_EXPREF(x));
+    MAG_EXP(x) = MAG_EXP_POS_INF;
+}
+
 static __inline__ int
 mag_is_inf(const mag_t x)
 {
@@ -193,22 +258,13 @@ mag_is_inf(const mag_t x)
 
 /* general versions */
 
-void mag_set_fmpr(mag_t x, const fmpr_t y);
-
-void mag_set_arf(mag_t y, const arf_t x);
-
-static __inline__ void
-mag_init_set_arf(mag_t y, const arf_t x)
-{
-    mag_init(y);
-    mag_set_arf(y, x);
-}
-
 void mag_mul(mag_t z, const mag_t x, const mag_t y);
 
 void mag_addmul(mag_t z, const mag_t x, const mag_t y);
 
 void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);
+
+void mag_div(mag_t z, const mag_t x, const mag_t y);
 
 /* Fast versions (no infs/nans, small exponents). Note that this
    applies to outputs too! */
@@ -231,27 +287,6 @@ static __inline__ int
 mag_fast_is_zero(const mag_t x)
 {
     return MAG_MAN(x) == 0;
-}
-
-static __inline__ void
-mag_fast_init_set_arf(mag_t y, const arf_t x)
-{
-    if (ARF_IS_SPECIAL(x))   /* x == 0 */
-    {
-        mag_fast_zero(y);
-    }
-    else
-    {
-        mp_srcptr xp;
-        mp_size_t xn;
-
-        ARF_GET_MPN_READONLY(xp, xn, x);
-
-        MAG_MAN(y) = (xp[xn - 1] >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
-        MAG_EXP(y) = ARF_EXP(x);
-
-        MAG_FAST_ADJUST_ONE_TOO_LARGE(y);
-    }
 }
 
 static __inline__ void
@@ -293,8 +328,7 @@ mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
             if (shift >= MAG_BITS)
                 MAG_MAN(z)++;
             else
-                MAG_MAN(z) = MAG_MAN(z) + (MAG_FIXMUL(MAG_MAN(x),
-                    MAG_MAN(y)) >> shift) + LIMB_ONE;
+                MAG_MAN(z) = MAG_MAN(z) + (MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) >> shift) + 1;
         }
         else
         {
@@ -302,11 +336,11 @@ mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
             MAG_EXP(z) = e;
 
             if (shift >= MAG_BITS)
-                MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y))
-                    + (2 * LIMB_ONE);
+                MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + 2;
             else
-                MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y))
-                    + (MAG_MAN(z) >> shift) +  (2 * LIMB_ONE);
+                MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + (MAG_MAN(z) >> shift) + 2;
+
+            MAG_FAST_ADJUST_ONE_TOO_SMALL(z);
         }
 
         MAG_FAST_ADJUST_ONE_TOO_LARGE(z);
@@ -327,7 +361,7 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
         long shift;
         shift = MAG_EXP(x) - e;
 
-        if (shift >= 0)
+        if (shift > 0)
         {
             MAG_EXP(z) = MAG_EXP(x);
 
@@ -340,18 +374,21 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
         {
             shift = -shift;
 
-            MAG_EXP(z) = e;
+            MAG_EXP(z) = e + 1;
 
             if (shift >= MAG_BITS)
-                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + LIMB_ONE;
+                MAG_MAN(z) = MAG_ONE_HALF + LIMB_ONE;
             else
-                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + (MAG_MAN(x) >> shift);
+                MAG_MAN(z) = MAG_ONE_HALF + (MAG_MAN(x) >> (shift + 1)) + LIMB_ONE;
         }
 
         MAG_FAST_ADJUST_ONE_TOO_LARGE(z);
     }
 }
 
+#include "fmpr.h"
+
+void mag_set_fmpr(mag_t x, const fmpr_t y);
 
 static __inline__ void
 mag_get_fmpr(fmpr_t x, const mag_t r)
@@ -370,7 +407,6 @@ mag_get_fmpr(fmpr_t x, const mag_t r)
         _fmpz_add2_fast(fmpr_expref(x), fmpr_expref(x), MAG_EXPREF(r), 0);
     }
 }
-
 
 #ifdef __cplusplus
 }

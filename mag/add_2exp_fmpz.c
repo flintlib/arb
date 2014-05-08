@@ -46,7 +46,7 @@ mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
 
         shift = _fmpz_sub_small(MAG_EXPREF(x), e);
 
-        if (shift >= 0)
+        if (shift > 0)
         {
             _fmpz_set_fast(MAG_EXPREF(z), MAG_EXPREF(x));
 
@@ -59,12 +59,12 @@ mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
         {
             shift = -shift;
 
-            _fmpz_set_fast(MAG_EXPREF(z), e);
+            _fmpz_add_fast(MAG_EXPREF(z), e, 1);
 
             if (shift >= MAG_BITS)
-                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + LIMB_ONE;
+                MAG_MAN(z) = MAG_ONE_HALF + LIMB_ONE;
             else
-                MAG_MAN(z) = (LIMB_ONE << MAG_BITS) + (MAG_MAN(x) >> shift);
+                MAG_MAN(z) = MAG_ONE_HALF + (MAG_MAN(x) >> (shift + 1)) + LIMB_ONE;
         }
 
         MAG_ADJUST_ONE_TOO_LARGE(z);

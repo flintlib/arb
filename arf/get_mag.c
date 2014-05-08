@@ -23,16 +23,29 @@
 
 ******************************************************************************/
 
-#include "mag.h"
 #include "arf.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+arf_get_mag(mag_t y, const arf_t x)
 {
-    arf_t t;
-    arf_init(t);
-    arf_set_fmpr(t, y);
-    arf_get_mag(x, t);
-    arf_clear(t);
+    if (arf_is_zero(x))
+    {
+        mag_zero(y);
+    }
+    else if (arf_is_special(x))
+    {
+        mag_inf(y);
+    }
+    else
+    {
+        mp_limb_t t, u;
+
+        ARF_GET_TOP_LIMB(t, x);
+        t = (t >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
+        u = t >> MAG_BITS;
+        t = (t >> u) + u;
+        _fmpz_add_fast(MAG_EXPREF(y), ARF_EXPREF(x), u);
+        MAG_MAN(y) = t;
+    }
 }
 

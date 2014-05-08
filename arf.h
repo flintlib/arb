@@ -32,16 +32,11 @@
 #include <math.h>
 #include "flint.h"
 #include "fmpr.h"
+#include "mag.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define LIMB_ONE ((mp_limb_t) 1)
-#define LIMB_ONES (-(mp_limb_t) 1)
-#define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
-
-#define MASK_LIMB(n, c) ((n) & (LIMB_ONES << (c)))
 
 #define arf_rnd_t fmpr_rnd_t
 #define ARF_RND_DOWN FMPR_RND_DOWN
@@ -87,8 +82,8 @@ arf_rnd_to_mpfr(arf_rnd_t rnd)
 #define ARF_RESULT_INEXACT 1
 
 /* Range where we can skip fmpz overflow checks for exponent manipulation. */
-#define ARF_MAX_LAGOM_EXP (COEFF_MAX / 4)
-#define ARF_MIN_LAGOM_EXP (-ARF_MAX_LAGOM_EXP)
+#define ARF_MAX_LAGOM_EXP MAG_MAX_LAGOM_EXP
+#define ARF_MIN_LAGOM_EXP MAG_MIN_LAGOM_EXP
 
 /* Exponent values used to encode special values. */
 #define ARF_EXP_ZERO 0
@@ -190,6 +185,15 @@ typedef const arf_struct * arf_srcptr;
             xptr = ARF_NOPTR_D(x);          \
         else                                \
             xptr = ARF_PTR_D(x);            \
+    } while (0)
+
+/* Assumes non-special! */
+#define ARF_GET_TOP_LIMB(lmb, x)                     \
+    do {                                             \
+        mp_srcptr __xptr;                            \
+        mp_size_t __xn;                              \
+        ARF_GET_MPN_READONLY(__xptr, __xn, (x));     \
+        (lmb) = __xptr[__xn - 1];                    \
     } while (0)
 
 /* Get mpn pointer xptr for writing *exactly* xn limbs to x. */
@@ -742,74 +746,6 @@ void arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits
 
 void arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits);
 
-#define ADD2_FAST_MAX (COEFF_MAX / 4)
-#define ADD2_FAST_MIN (-ADD2_FAST_MAX)
-
-static __inline__ void
-_fmpz_set_fast(fmpz_t f, const fmpz_t g)
-{
-    if (!COEFF_IS_MPZ(*f) && !COEFF_IS_MPZ(*g))
-        *f = *g;
-    else
-        fmpz_set(f, g);
-}
-
-static __inline__ void
-_fmpz_add_fast(fmpz_t z, const fmpz_t x, long c)
-{
-    fmpz ze, xe;
-
-    ze = *z;
-    xe = *x;
-
-    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX))
-        *z = xe + c;
-    else
-        fmpz_add_si(z, x, c);
-}
-
-static __inline__ void
-_fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
-{
-    fmpz ze, xe, ye;
-
-    ze = *z;
-    xe = *x;
-    ye = *y;
-
-    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
-                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
-    {
-        *z = xe + ye + c;
-    }
-    else
-    {
-        fmpz_add(z, x, y);
-        fmpz_add_si(z, z, c);
-    }
-}
-
-static __inline__ void
-_fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
-{
-    fmpz ze, xe, ye;
-
-    ze = *z;
-    xe = *x;
-    ye = *y;
-
-    if (!COEFF_IS_MPZ(ze) && (xe > ADD2_FAST_MIN && xe < ADD2_FAST_MAX) &&
-                             (ye > ADD2_FAST_MIN && ye < ADD2_FAST_MAX))
-    {
-        *z = xe - ye + c;
-    }
-    else
-    {
-        fmpz_sub(z, x, y);
-        fmpz_add_si(z, z, c);
-    }
-}
-
 #define MUL_MPFR_MIN_LIMBS 25
 #define MUL_MPFR_MAX_LIMBS 10000
 
@@ -1142,6 +1078,58 @@ int arf_sqrt_ui(arf_t z, ulong x, long prec, arf_rnd_t rnd);
 int arf_sqrt_fmpz(arf_t z, const fmpz_t x, long prec, arf_rnd_t rnd);
 
 int arf_rsqrt(arf_ptr z, arf_srcptr x, long prec, arf_rnd_t rnd);
+
+/* Magnitude bounds */
+
+void arf_get_mag(mag_t y, const arf_t x);
+
+static __inline__ void
+arf_set_mag(arf_t y, const mag_t x)
+{
+    if (mag_is_zero(x))
+    {
+        arf_zero(y);
+    }
+    else if (mag_is_inf(x))
+    {
+        arf_pos_inf(y);
+    }
+    else
+    {
+        _fmpz_set_fast(ARF_EXPREF(y), MAG_EXPREF(x));
+        ARF_DEMOTE(y);
+        ARF_XSIZE(y) = ARF_MAKE_XSIZE(1, 0);
+        ARF_NOPTR_D(y)[0] = MAG_MAN(x) << (FLINT_BITS - MAG_BITS);
+    }
+}
+
+static __inline__ void
+mag_init_set_arf(mag_t y, const arf_t x)
+{
+    mag_init(y);
+    arf_get_mag(y, x);
+}
+
+static __inline__ void
+mag_fast_init_set_arf(mag_t y, const arf_t x)
+{
+    if (ARF_IS_SPECIAL(x))   /* x == 0 */
+    {
+        mag_fast_zero(y);
+    }
+    else
+    {
+        mp_srcptr xp;
+        mp_size_t xn;
+
+        ARF_GET_MPN_READONLY(xp, xn, x);
+
+        MAG_MAN(y) = (xp[xn - 1] >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
+        MAG_EXP(y) = ARF_EXP(x);
+
+        MAG_FAST_ADJUST_ONE_TOO_LARGE(y);
+    }
+}
 
 #ifdef __cplusplus
 }

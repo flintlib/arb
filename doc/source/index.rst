@@ -47,6 +47,16 @@ Module documentation
    hypgeom.rst
    partitions.rst
 
+Module documentation (Arb 2.x types)
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   mag.rst
+   arf.rst
+   arb.rst
+
 Credits and references
 ::::::::::::::::::::::::
 
