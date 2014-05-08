@@ -4,7 +4,8 @@
 ===============================================================================
 
 The :type:`mag_t` type is an unsigned floating-point type with a
-fixed-precision mantissa (30 bits) and unlimited exponent range, suited for
+fixed-precision mantissa (30 bits) and an arbitrary-precision
+exponent (represented as an :type:`fmpz_t`), suited for
 representing and rigorously manipulating magnitude bounds efficiently.
 Operations always produce a strict upper or lower bound, but for performance
 reasons, no attempt is made to compute the best possible bound
@@ -12,10 +13,6 @@ reasons, no attempt is made to compute the best possible bound
 The special values zero and positive infinity are supported (but not NaN).
 Applications requiring more flexibility (such as correct rounding, or
 higher precision) should use the :type:`arf_t` type instead.
-
-The exponent is represented as an :type:`fmpz`. Special "fast" methods are
-provided for manipulating :type:`mag_t` objects under the assumption that
-no infinities are present and that exponents stay within a certain range.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -75,7 +72,7 @@ Arithmetic
 
 .. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `x + y`.
+    Sets `z` to an upper bound for `xy`.
 
 .. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
 
@@ -92,19 +89,49 @@ Arithmetic
 Fast versions
 -------------------------------------------------------------------------------
 
+The following methods assume that all inputs are finite and that all exponents
+(in all inputs as well as the final result) fit as *fmpz* inline values.
+They also assume that the output variables do not have promoted exponents,
+as they will be overwritten directly (thus leaking memory).
+
 .. function:: void mag_fast_init_set(mag_t x, const mag_t y)
+
+    Initialises *x* and sets it to the value of *y*.
 
 .. function:: void mag_fast_zero(mag_t x)
 
+    Sets *x* to zero.
+
 .. function:: int mag_fast_is_zero(const mag_t x)
 
-.. function:: void mag_fast_init_set_arf(mag_t y, const arf_t x)
+    Returns nonzero iff *x* to zero.
 
 .. function:: void mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
 
+    Sets `z` to an upper bound for `xy`.
+
 .. function:: void mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 
+    Sets `z` to an upper bound for `z + xy`.
+
 .. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
+
+    Sets `z` to an upper bound for `x + 2^e`.
+
+Input and output
+-------------------------------------------------------------------------------
+
+.. function:: void mag_print(const mag_t x)
+
+    Prints *x* to standard output.
+
+Random generation
+-------------------------------------------------------------------------------
+
+.. function:: void mag_randtest(mag_t x, flint_rand_t state, long expbits)
+
+    Sets *x* to a random value, with an exponent up to *expbits* bits large.
+    The special values zero and infinity are occasionally generated.
 
 Conversions
 -------------------------------------------------------------------------------
