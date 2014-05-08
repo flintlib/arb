@@ -50,19 +50,18 @@ int main()
         mag_init(yb);
         mag_init(zb);
 
-        fmpr_randtest(x, state, 2 + n_randint(state, 200), 100);
-        fmpr_randtest(y, state, 2 + n_randint(state, 200), 100);
-        fmpr_randtest(z, state, 2 + n_randint(state, 200), 100);
+        mag_randtest(xb, state, 100);
+        mag_randtest(yb, state, 100);
+        mag_randtest(zb, state, 100);
 
-        fmpr_abs(x, x);
-        fmpr_abs(y, y);
-        fmpr_abs(z, z);
-
-        mag_set_fmpr(xb, x);
-        mag_set_fmpr(yb, y);
-        mag_set_fmpr(zb, z);
+        mag_get_fmpr(x, xb);
+        mag_get_fmpr(y, yb);
+        mag_get_fmpr(z, zb);
 
         fmpr_addmul(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
+        if (fmpr_is_nan(z))
+            fmpr_pos_inf(z);
+
         fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
         fmpr_mul_2exp_si(z2, z2, -10);
 
@@ -76,10 +75,10 @@ int main()
         if (!(fmpr_cmpabs(z, w) <= 0 && fmpr_cmpabs(w, z2) <= 0))
         {
             printf("FAIL\n\n");
-            printf("x = "); fmpr_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 15); printf("\n\n");
-            printf("z = "); fmpr_printd(z, 15); printf("\n\n");
-            printf("w = "); fmpr_printd(w, 15); printf("\n\n");
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = "); fmpr_print(y); printf("\n\n");
+            printf("z = "); fmpr_print(z); printf("\n\n");
+            printf("w = "); fmpr_print(w); printf("\n\n");
             abort();
         }
 

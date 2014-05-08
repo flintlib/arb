@@ -49,3 +49,23 @@ arf_get_mag(mag_t y, const arf_t x)
     }
 }
 
+void
+arf_get_mag_lower(mag_t y, const arf_t x)
+{
+    if (arf_is_zero(x))
+    {
+        mag_zero(y);
+    }
+    else if (arf_is_special(x))
+    {
+        mag_inf(y);
+    }
+    else
+    {
+        mp_limb_t t;
+        ARF_GET_TOP_LIMB(t, x);
+        MAG_MAN(y) = t >> (FLINT_BITS - MAG_BITS);
+        _fmpz_set_fast(MAG_EXPREF(y), ARF_EXPREF(x));
+    }
+}
+

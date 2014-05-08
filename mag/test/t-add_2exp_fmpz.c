@@ -52,7 +52,7 @@ int main()
         mag_init(xb);
         mag_init(zb);
 
-        fmpr_randtest(x, state, 2 + n_randint(state, 200), 100);
+        fmpr_randtest(x, state, MAG_BITS, 100);
         fmpr_abs(x, x);
 
         fmpz_randtest(e, state, 100);

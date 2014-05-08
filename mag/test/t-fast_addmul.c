@@ -50,17 +50,18 @@ int main()
         mag_init(yb);
         mag_init(zb);
 
-        fmpr_randtest(x, state, 2 + n_randint(state, 200), 15);
-        fmpr_randtest(y, state, 2 + n_randint(state, 200), 15);
-        fmpr_randtest(z, state, 2 + n_randint(state, 200), 15);
+        mag_randtest(xb, state, 15);
+        mag_randtest(yb, state, 15);
+        mag_randtest(zb, state, 15);
 
-        fmpr_abs(x, x);
-        fmpr_abs(y, y);
-        fmpr_abs(z, z);
+        /* not supported */
+        if (mag_is_inf(xb)) mag_zero(xb);
+        if (mag_is_inf(yb)) mag_zero(yb);
+        if (mag_is_inf(zb)) mag_zero(zb);
 
-        mag_set_fmpr(xb, x);
-        mag_set_fmpr(yb, y);
-        mag_set_fmpr(zb, z);
+        mag_get_fmpr(x, xb);
+        mag_get_fmpr(y, yb);
+        mag_get_fmpr(z, zb);
 
         fmpr_addmul(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
         fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);

@@ -50,15 +50,19 @@ int main()
         mag_init(yb);
         mag_init(zb);
 
-        fmpr_randtest(x, state, 2 + n_randint(state, 200), 100);
-        fmpr_randtest(y, state, 2 + n_randint(state, 200), 100);
+        mag_randtest(xb, state, 100);
+        mag_randtest(yb, state, 100);
+
+        mag_get_fmpr(x, xb);
+        mag_get_fmpr(y, yb);
 
         fmpr_mul(z, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        if (fmpr_is_nan(z))
+            fmpr_pos_inf(z);
+
         fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
         fmpr_mul_2exp_si(z2, z2, -10);
 
-        mag_set_fmpr(xb, x);
-        mag_set_fmpr(yb, y);
         mag_mul(zb, xb, yb);
         mag_get_fmpr(w, zb);
 

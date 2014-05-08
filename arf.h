@@ -1083,6 +1083,8 @@ int arf_rsqrt(arf_ptr z, arf_srcptr x, long prec, arf_rnd_t rnd);
 
 void arf_get_mag(mag_t y, const arf_t x);
 
+void arf_get_mag_lower(mag_t y, const arf_t x);
+
 static __inline__ void
 arf_set_mag(arf_t y, const mag_t x)
 {

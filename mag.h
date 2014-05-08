@@ -142,6 +142,17 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #define MAG_FIXMUL(x, y) __mag_fixmul32((x), (y))
 #endif
 
+#define MAG_CHECK_BITS(rr) \
+    if (MAG_MAN(rr) != 0 && FLINT_BIT_COUNT(MAG_MAN(rr)) != MAG_BITS) \
+    { \
+        printf("FAIL: wrong number of bits in mantissa!\n"); \
+        abort(); \
+    }
+
+/* Note: assumes mantissa either has the right number of bits, or
+   one more bit (but in that case must not be all ones, as that
+   would round up to one extra bit again, requiring a second
+   correction). */
 
 #define MAG_ADJUST_ONE_TOO_LARGE(x) \
     do { \
@@ -149,6 +160,13 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
         MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
         if (__t) \
             fmpz_add_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
+    } while (0)
+
+#define MAG_FAST_ADJUST_ONE_TOO_LARGE(x) \
+    do { \
+        mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
+        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
+        MAG_EXP(x) += __t; \
     } while (0)
 
 #define MAG_ADJUST_ONE_TOO_SMALL(x) \
@@ -159,13 +177,6 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
             fmpz_sub_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
     } while (0)
 
-#define MAG_FAST_ADJUST_ONE_TOO_LARGE(x) \
-    do { \
-        mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
-        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
-        MAG_EXP(x) += __t; \
-    } while (0)
-
 #define MAG_FAST_ADJUST_ONE_TOO_SMALL(x) \
     do { \
         mp_limb_t __t = !(MAG_MAN(x) >> (MAG_BITS - 1)); \
@@ -173,12 +184,6 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
         MAG_EXP(x) -= __t; \
     } while (0)
 
-#define MAG_CHECK_BITS(rr) \
-    if (MAG_MAN(rr) != 0 && FLINT_BIT_COUNT(MAG_MAN(rr)) != MAG_BITS) \
-    { \
-        printf("FAIL: wrong number of bits in mantissa!\n"); \
-        abort(); \
-    }
 
 typedef struct
 {
@@ -248,6 +253,7 @@ mag_inf(mag_t x)
 {
     fmpz_clear(MAG_EXPREF(x));
     MAG_EXP(x) = MAG_EXP_POS_INF;
+    MAG_MAN(x) = 0;
 }
 
 static __inline__ int
@@ -405,6 +411,46 @@ mag_get_fmpr(fmpr_t x, const mag_t r)
     {
         fmpr_set_ui_2exp_si(x, MAG_MAN(r), -MAG_BITS);
         _fmpz_add2_fast(fmpr_expref(x), fmpr_expref(x), MAG_EXPREF(r), 0);
+    }
+}
+
+static __inline__ void
+mag_randtest(mag_t x, flint_rand_t state, long expbits)
+{
+    switch (n_randint(state, 32))
+    {
+        case 0:
+            mag_zero(x);
+            break;
+        case 1:
+            mag_inf(x);
+            break;
+        case 2:
+            MAG_MAN(x) = (LIMB_ONE << MAG_BITS) - 1;
+            fmpz_randtest(MAG_EXPREF(x), state, expbits);
+            break;
+        case 3:
+            MAG_MAN(x) = LIMB_ONE << (MAG_BITS - 1);
+            fmpz_randtest(MAG_EXPREF(x), state, expbits);
+            break;
+        default:
+            MAG_MAN(x) = (n_randtest(state) >> (FLINT_BITS - MAG_BITS));
+            MAG_MAN(x) |= (LIMB_ONE << (MAG_BITS - 1));
+            fmpz_randtest(MAG_EXPREF(x), state, expbits);
+    }
+}
+
+static __inline__ void
+mag_print(const mag_t x)
+{
+    if (mag_is_zero(x))
+        printf("0");
+    else if (mag_is_inf(x))
+        printf("inf");
+    else
+    {
+        printf("%lu x ", MAG_MAN(x));
+        fmpz_print(MAG_EXPREF(x));
     }
 }
 

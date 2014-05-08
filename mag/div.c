@@ -49,9 +49,17 @@ mag_div(mag_t z, const mag_t x, const mag_t y)
         udiv_qrnnd(q, r, hi, lo, MAG_MAN(y));
         q += 1;
 #endif
-
         fix = q >> MAG_BITS;
         q = (q >> fix) + fix;
+
+        /* could overflow to next power of two */
+        if (q >> MAG_BITS)
+        {
+            q >>= 1;
+            fix += 1;
+        }
+
+        MAG_MAN(z) = q;
         _fmpz_sub2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), fix);
     }
 }

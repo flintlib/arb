@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("fast_add_2exp_si....");
+    printf("div....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,8 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmpr_t x, y, z, z2, w;
-        mag_t xb, zb;
-        long e;
+        mag_t xb, yb, zb;
 
         fmpr_init(x);
         fmpr_init(y);
@@ -48,33 +47,33 @@ int main()
         fmpr_init(w);
 
         mag_init(xb);
+        mag_init(yb);
         mag_init(zb);
 
-        fmpr_randtest(x, state, MAG_BITS, 15);
-        fmpr_abs(x, x);
+        mag_randtest(xb, state, 10);
+        mag_randtest(yb, state, 10);
 
-        e = n_randint(state, 10000) - n_randint(state, 10000);
-        fmpr_set_ui_2exp_si(y, 1, e);
+        mag_get_fmpr(x, xb);
+        mag_get_fmpr(y, yb);
 
-        fmpr_add(z, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
+        fmpr_div(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
         fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
         fmpr_mul_2exp_si(z2, z2, -10);
 
-        mag_set_fmpr(xb, x);
-
-        mag_fast_add_2exp_si(zb, xb, e);
+        mag_div(zb, xb, yb);
         mag_get_fmpr(w, zb);
 
         MAG_CHECK_BITS(xb)
+        MAG_CHECK_BITS(yb)
         MAG_CHECK_BITS(zb)
 
         if (!(fmpr_cmpabs(z, w) <= 0 && fmpr_cmpabs(w, z2) <= 0))
         {
             printf("FAIL\n\n");
-            printf("x = "); fmpr_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 15); printf("\n\n");
-            printf("z = "); fmpr_printd(z, 15); printf("\n\n");
-            printf("w = "); fmpr_printd(w, 15); printf("\n\n");
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = "); fmpr_print(y); printf("\n\n");
+            printf("z = "); fmpr_print(z); printf("\n\n");
+            printf("w = "); fmpr_print(w); printf("\n\n");
             abort();
         }
 
@@ -85,6 +84,7 @@ int main()
         fmpr_clear(w);
 
         mag_clear(xb);
+        mag_clear(yb);
         mag_clear(zb);
     }
 
@@ -93,3 +93,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+
