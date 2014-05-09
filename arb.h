@@ -727,6 +727,17 @@ void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec);
 void arb_union(arb_t z, const arb_t x, const arb_t y, long prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, long bits);
 
+void arb_add(arb_t z, const arb_t x, const arb_t y, long prec);
+void arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec);
+void arb_add_ui(arb_t z, const arb_t x, ulong y, long prec);
+void arb_add_si(arb_t z, const arb_t x, long y, long prec);
+void arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
+
+void arb_sub(arb_t z, const arb_t x, const arb_t y, long prec);
+void arb_sub_arf(arb_t z, const arb_t x, const arf_t y, long prec);
+void arb_sub_ui(arb_t z, const arb_t x, ulong y, long prec);
+void arb_sub_si(arb_t z, const arb_t x, long y, long prec);
+void arb_sub_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
 
 #ifdef __cplusplus
 }
