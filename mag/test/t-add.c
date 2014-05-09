@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("addmul....");
+    printf("add....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -52,20 +52,18 @@ int main()
 
         mag_randtest_special(xb, state, 100);
         mag_randtest_special(yb, state, 100);
-        mag_randtest_special(zb, state, 100);
 
         mag_get_fmpr(x, xb);
         mag_get_fmpr(y, yb);
-        mag_get_fmpr(z, zb);
 
-        fmpr_addmul(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
+        fmpr_add(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
         if (fmpr_is_nan(z))
             fmpr_pos_inf(z);
 
         fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
         fmpr_mul_2exp_si(z2, z2, -10);
 
-        mag_addmul(zb, xb, yb);
+        mag_add(zb, xb, yb);
         mag_get_fmpr(w, zb);
 
         MAG_CHECK_BITS(xb)

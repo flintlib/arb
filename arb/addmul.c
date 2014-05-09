@@ -25,34 +25,6 @@
 
 #include "arb.h"
 
-void mag_add_arf_ulp(mag_t r, const arf_t z, long prec)
-{
-    if (ARF_IS_SPECIAL(z))
-    {
-        printf("error: ulp error not defined for special value!\n");
-        abort();
-    }
-    else
-    {
-        /* todo: speed up case r is special here */
-        fmpz_t e;
-        fmpz_init(e);
-        _fmpz_add_fast(e, ARF_EXPREF(z), -prec);
-        mag_add_2exp_fmpz(r, r, e);
-        fmpz_clear(e);
-    }
-}
-
-void
-mag_print(const mag_t x)
-{
-    fmpr_t t;
-    fmpr_init(t);
-    mag_get_fmpr(t, x);
-    fmpr_printd(t, 5);
-    fmpr_clear(t);
-}
-
 void
 arb_addmul_slow(arb_t z, const arb_t x, const arb_t y, long prec)
 {
@@ -71,9 +43,9 @@ arb_addmul_slow(arb_t z, const arb_t x, const arb_t y, long prec)
         prec, ARF_RND_DOWN);
 
     if (inexact)
-        mag_add_arf_ulp(zr, ARB_MIDREF(z), prec);
-
-    mag_set(ARB_RADREF(z), zr); /* swap? */
+        arf_mag_add_ulp(ARB_RADREF(z), zr, ARB_MIDREF(z), prec);
+    else
+        mag_set(ARB_RADREF(z), zr);
 
     mag_clear(zr);
     mag_clear(xm);

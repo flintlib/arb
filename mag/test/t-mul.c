@@ -50,8 +50,8 @@ int main()
         mag_init(yb);
         mag_init(zb);
 
-        mag_randtest(xb, state, 100);
-        mag_randtest(yb, state, 100);
+        mag_randtest_special(xb, state, 100);
+        mag_randtest_special(yb, state, 100);
 
         mag_get_fmpr(x, xb);
         mag_get_fmpr(y, yb);

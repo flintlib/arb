@@ -19,73 +19,68 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
+#include "arb.h"
 
 int main()
 {
     long iter;
     flint_rand_t state;
 
-    printf("fast_mul....");
+    printf("trim....");
     fflush(stdout);
-
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        fmpr_t x, y, z, z2, w;
-        mag_t xb, yb, zb;
+        arb_t x, y;
+        long acc1, acc2;
+        int accuracy_ok;
 
-        fmpr_init(x);
-        fmpr_init(y);
-        fmpr_init(z);
-        fmpr_init(z2);
-        fmpr_init(w);
+        arb_init(x);
+        arb_init(y);
 
-        mag_init(xb);
-        mag_init(yb);
-        mag_init(zb);
+        arb_randtest_special(x, state, 1000, 100);
 
-        mag_randtest(xb, state, 15);
-        mag_randtest(yb, state, 15);
+        arb_trim(y, x);
 
-        mag_get_fmpr(x, xb);
-        mag_get_fmpr(y, yb);
-
-        fmpr_mul(z, x, y, FMPR_PREC_EXACT, FMPR_RND_DOWN);
-        fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
-        fmpr_mul_2exp_si(z2, z2, -10);
-
-        mag_fast_mul(zb, xb, yb);
-        mag_get_fmpr(w, zb);
-
-        MAG_CHECK_BITS(xb)
-        MAG_CHECK_BITS(yb)
-        MAG_CHECK_BITS(zb)
-
-        if (!(fmpr_cmpabs(z, w) <= 0 && fmpr_cmpabs(w, z2) <= 0))
+        if (!arb_contains(y, x))
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 15); printf("\n\n");
-            printf("z = "); fmpr_printd(z, 15); printf("\n\n");
-            printf("w = "); fmpr_printd(w, 15); printf("\n\n");
+            printf("FAIL (containment):\n\n");
+            printf("x = "); arb_print(x); printf("\n\n");
+            printf("y = "); arb_print(y); printf("\n\n");
             abort();
         }
 
-        fmpr_clear(x);
-        fmpr_clear(y);
-        fmpr_clear(z);
-        fmpr_clear(z2);
-        fmpr_clear(w);
+        acc1 = arb_rel_accuracy_bits(x);
+        acc2 = arb_rel_accuracy_bits(y);
 
-        mag_clear(xb);
-        mag_clear(yb);
-        mag_clear(zb);
+        accuracy_ok = (acc1 < 0 && acc2 <= acc1) || (acc2 >= acc1 - 1);
+
+        if (!accuracy_ok)
+        {
+            printf("FAIL (accuracy):\n\n");
+            printf("x: %ld, y = %ld\n\n", acc1, acc2);
+            printf("x = "); arb_print(x); printf("\n\n");
+            printf("y = "); arb_print(y); printf("\n\n");
+            abort();
+        }
+
+        arb_trim(x, x);
+
+        if (!arb_equal(y, x))
+        {
+            printf("FAIL (aliasing):\n\n");
+            printf("x = "); arb_print(x); printf("\n\n");
+            printf("y = "); arb_print(y); printf("\n\n");
+            abort();
+        }
+
+        arb_clear(x);
+        arb_clear(y);
     }
 
     flint_randclear(state);

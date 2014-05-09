@@ -216,6 +216,10 @@ Comparisons and bounds
 
 .. function:: int arf_cmpabs(const arf_t x, const arf_t y)
 
+.. function:: int arf_cmpabs_ui(const arf_t x, ulong y)
+
+.. function:: int arf_cmpabs_mag(const arf_t x, const mag_t y)
+
     Compares the absolute values of *x* and *y*.
 
 .. function:: int arf_cmp_2exp_si(const arf_t x, long e)

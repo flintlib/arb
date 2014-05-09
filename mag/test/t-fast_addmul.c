@@ -54,11 +54,6 @@ int main()
         mag_randtest(yb, state, 15);
         mag_randtest(zb, state, 15);
 
-        /* not supported */
-        if (mag_is_inf(xb)) mag_zero(xb);
-        if (mag_is_inf(yb)) mag_zero(yb);
-        if (mag_is_inf(zb)) mag_zero(zb);
-
         mag_get_fmpr(x, xb);
         mag_get_fmpr(y, yb);
         mag_get_fmpr(z, zb);

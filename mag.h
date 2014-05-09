@@ -262,6 +262,21 @@ mag_is_inf(const mag_t x)
     return (MAG_MAN(x) == 0) && (MAG_EXP(x) != 0);
 }
 
+/* TODO: document */
+static __inline__ int
+mag_is_finite(const mag_t x)
+{
+    return !mag_is_inf(x);
+}
+
+/* TODO: document */
+static __inline__ int
+mag_equal(const mag_t x, const mag_t y)
+{
+    return (MAG_MAN(x) == MAG_MAN(y))
+        && fmpz_equal(MAG_EXPREF(x), MAG_EXPREF(y));
+}
+
 /* general versions */
 
 void mag_mul(mag_t z, const mag_t x, const mag_t y);
@@ -270,7 +285,39 @@ void mag_addmul(mag_t z, const mag_t x, const mag_t y);
 
 void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
+void mag_add(mag_t z, const mag_t x, const mag_t y);
+
 void mag_div(mag_t z, const mag_t x, const mag_t y);
+
+/* TODO: document */
+static __inline__ void
+mag_mul_2exp_si(mag_t z, const mag_t x, long y)
+{
+    if (mag_is_special(x))
+    {
+        mag_set(z, x);
+    }
+    else
+    {
+        fmpz_add_si_inline(MAG_EXPREF(z), MAG_EXPREF(x), y);
+        MAG_MAN(z) = MAG_MAN(x);
+    }
+}
+
+/* TODO: document */
+static __inline__ void
+mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+{
+    if (mag_is_special(x))
+    {
+        mag_set(z, x);
+    }
+    else
+    {
+        fmpz_add_inline(MAG_EXPREF(z), MAG_EXPREF(x), y);
+        MAG_MAN(z) = MAG_MAN(x);
+    }
+}
 
 /* Fast versions (no infs/nans, small exponents). Note that this
    applies to outputs too! */
@@ -414,8 +461,9 @@ mag_get_fmpr(fmpr_t x, const mag_t r)
     }
 }
 
+/* TODO: document */
 static __inline__ void
-mag_randtest(mag_t x, flint_rand_t state, long expbits)
+mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
 {
     switch (n_randint(state, 32))
     {
@@ -440,18 +488,50 @@ mag_randtest(mag_t x, flint_rand_t state, long expbits)
     }
 }
 
+/* TODO: update documentation */
+static __inline__ void
+mag_randtest(mag_t x, flint_rand_t state, long expbits)
+{
+    mag_randtest_special(x, state, expbits);
+    if (mag_is_inf(x))
+        mag_zero(x);
+}
+
 static __inline__ void
 mag_print(const mag_t x)
 {
+    printf("(");
     if (mag_is_zero(x))
         printf("0");
     else if (mag_is_inf(x))
         printf("inf");
     else
     {
-        printf("%lu x ", MAG_MAN(x));
+        printf("%lu * 2^", MAG_MAN(x));
         fmpz_print(MAG_EXPREF(x));
     }
+    printf(")");
+}
+
+static __inline__ void
+mag_printd(const mag_t x, long d)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    mag_get_fmpr(t, x);
+    fmpr_printd(t, d);
+    fmpr_clear(t);
+}
+
+/* TODO: document */
+static __inline__ void
+mag_get_fmpq(fmpq_t y, const mag_t x)
+{
+    fmpr_t t;
+    fmpr_init(t);
+    mag_get_fmpr(t, x);
+    fmpr_get_fmpq(y, t);
+    fmpr_clear(t);
 }
 
 #ifdef __cplusplus

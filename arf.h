@@ -468,6 +468,40 @@ arf_set_si(arf_t x, long v)
         ARF_NEG(x);
 }
 
+static __inline__ int
+arf_cmpabs_ui(const arf_t x, ulong y)
+{
+    arf_t t;
+    arf_init_set_ui(t, y);  /* no need to free */
+    return arf_cmpabs(x, t);
+}
+
+/* TODO: document */
+static __inline__ void
+arf_init_set_mag_shallow(arf_t y, const mag_t x)
+{
+    mp_limb_t t = MAG_MAN(x);
+    ARF_XSIZE(y) = ARF_MAKE_XSIZE(t != 0, 0);
+    ARF_EXP(y) = MAG_EXP(x);
+    ARF_NOPTR_D(y)[0] = t << (FLINT_BITS - MAG_BITS);
+}
+
+static __inline__ int
+arf_cmpabs_mag(const arf_t x, const mag_t y)
+{
+    arf_t t;
+    arf_init_set_mag_shallow(t, y);  /* no need to free */
+    return arf_cmpabs(x, t);
+}
+
+static __inline__ int
+arf_mag_cmpabs(const mag_t x, const arf_t y)
+{
+    arf_t t;
+    arf_init_set_mag_shallow(t, x);  /* no need to free */
+    return arf_cmpabs(t, y);
+}
+
 /* Assumes xn > 0, x[0] != 0. */
 /* TBD: 1, 2 limb versions */
 void arf_set_mpn(arf_t y, mp_srcptr x, mp_size_t xn, int sgnbit);
@@ -1131,6 +1165,49 @@ mag_fast_init_set_arf(mag_t y, const arf_t x)
 
         MAG_FAST_ADJUST_ONE_TOO_LARGE(y);
     }
+}
+
+/* TODO: document */
+static __inline__ void
+arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+{
+    if (ARF_IS_SPECIAL(y))
+    {
+        printf("error: ulp error not defined for special value!\n");
+        abort();
+    }
+    else
+    {
+        /* todo: speed up case r is special here */
+        fmpz_t e;
+        fmpz_init(e);
+        _fmpz_add_fast(e, ARF_EXPREF(y), -prec);
+        mag_add_2exp_fmpz(z, x, e);
+        fmpz_clear(e);
+    }
+}
+
+static __inline__ void
+arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
+{
+    if (ARF_IS_SPECIAL(y))
+    {
+        printf("error: ulp error not defined for special value!\n");
+        abort();
+    }
+    else
+    {
+        _fmpz_add_fast(MAG_EXPREF(z), ARF_EXPREF(y), 1 - prec);
+        MAG_MAN(z) = MAG_ONE_HALF;
+    }
+}
+
+void arf_get_fmpq(fmpq_t y, const arf_t x);
+
+static __inline__ int
+arf_set_fmpq(arf_t y, const fmpq_t x, long prec, arf_rnd_t rnd)
+{
+    return arf_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec, rnd);
 }
 
 #ifdef __cplusplus
