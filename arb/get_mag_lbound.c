@@ -82,7 +82,7 @@ _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
             if (arf_sgn(t) <= 0)
                 mag_zero(z);
             else
-                abort(); /*  arf_get_mag_lower(z, t); */
+                arf_get_mag_lower(z, t);
 
             arf_clear(t);
         }
@@ -91,6 +91,7 @@ _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
             mp_limb_t m;
 
             ARF_GET_TOP_LIMB(m, mid);
+            m = m >> (FLINT_BITS - MAG_BITS);
 
             if (shift <= MAG_BITS)
                 m = m - (MAG_MAN(rad) >> shift) - 1;
@@ -99,6 +100,7 @@ _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
 
             fix = !(m >> (MAG_BITS - 1));
             m <<= fix;
+            MAG_MAN(z) = m;
             _fmpz_add_fast(MAG_EXPREF(z), MAG_EXPREF(mid), -fix);
         }
     }

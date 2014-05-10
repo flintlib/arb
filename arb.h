@@ -745,6 +745,14 @@ void arb_mul_si(arb_t z, const arb_t x, long y, long prec);
 void arb_mul_ui(arb_t z, const arb_t x, ulong y, long prec);
 void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
 
+void arb_div(arb_t z, const arb_t x, const arb_t y, long prec);
+void arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec);
+void arb_div_si(arb_t z, const arb_t x, long y, long prec);
+void arb_div_ui(arb_t z, const arb_t x, ulong y, long prec);
+void arb_div_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
+void arb_fmpz_div_fmpz(arb_t z, const fmpz_t x, const fmpz_t y, long prec);
+void arb_ui_div(arb_t z, ulong x, const arb_t y, long prec);
+
 #ifdef __cplusplus
 }
 #endif
