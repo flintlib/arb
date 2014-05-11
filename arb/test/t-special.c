@@ -29,18 +29,12 @@
 
 int main()
 {
-#if 0
     arb_t zero, pos, neg, pos_inf, neg_inf, pos_inf_err, neg_inf_err,
       zero_pm_inf, pos_pm_inf, neg_pm_inf,
       indet_exact, indet_pos_rad, indet_inf_rad;
-#endif
 
     printf("special....");
     fflush(stdout);
-
-    printf(" [NOT YET IMPLEMENTED] ");
-
-#if 0
 
     arb_init(zero);
     arb_init(pos);
@@ -60,14 +54,14 @@ int main()
     arb_neg(neg, pos);
     arb_pos_inf(pos_inf);
     arb_neg_inf(neg_inf);
-    arb_pos_inf(pos_inf_err); arf_set_ui(arb_radref(pos_inf_err), 3);
+    arb_pos_inf(pos_inf_err); arf_get_mag(arb_radref(pos_inf_err), arb_midref(pos));
     arb_neg(neg_inf_err, pos_inf_err);
     arb_zero_pm_inf(zero_pm_inf);
-    arf_set_si(arb_midref(pos_pm_inf), 3); arf_pos_inf(arb_radref(pos_pm_inf));
-    arf_set_si(arb_midref(neg_pm_inf), -3); arf_pos_inf(arb_radref(neg_pm_inf));
-    arf_nan(arb_midref(indet_exact)); arf_zero(arb_radref(indet_exact));
-    arf_nan(arb_midref(indet_pos_rad)); arf_set_si(arb_radref(indet_pos_rad), 3);
-    arf_nan(arb_midref(indet_inf_rad)); arf_pos_inf(arb_radref(indet_inf_rad));
+    arf_set_si(arb_midref(pos_pm_inf), 3); mag_inf(arb_radref(pos_pm_inf));
+    arf_set_si(arb_midref(neg_pm_inf), -3); mag_inf(arb_radref(neg_pm_inf));
+    arf_nan(arb_midref(indet_exact)); mag_zero(arb_radref(indet_exact));
+    arf_nan(arb_midref(indet_pos_rad)); arf_get_mag(arb_radref(indet_pos_rad), arb_midref(pos));
+    arf_nan(arb_midref(indet_inf_rad)); arf_get_mag(arb_radref(indet_inf_rad), arb_midref(pos));
 
     ASSERT(arb_is_zero(zero));
     ASSERT(!arb_is_zero(pos));
@@ -629,8 +623,6 @@ int main()
     arb_clear(indet_exact);
     arb_clear(indet_pos_rad);
     arb_clear(indet_inf_rad);
-
-#endif
 
     flint_cleanup();
     printf("PASS\n");

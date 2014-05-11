@@ -408,7 +408,7 @@ arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
 }
 
 static __inline__ void
-arb_get_abs_lbound_fmpr(arf_t u, const arb_t x, long prec)
+arb_get_abs_lbound_arf(arf_t u, const arb_t x, long prec)
 {
     arf_t t;
     arf_init_set_mag_shallow(t, arb_radref(x));
@@ -467,227 +467,6 @@ arb_bits(const arb_t x)
 {
     return arf_bits(arb_midref(x));
 }
-
-
-/* vector functions */
-
-static __inline__ void
-_arb_vec_zero(arb_ptr A, long n)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        arb_zero(A + i);
-}
-
-static __inline__ int
-_arb_vec_is_zero(arb_srcptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        if (!arb_is_zero(vec + i))
-            return 0;
-    return 1;
-}
-
-static __inline__ void
-_arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_set(res + i, vec + i);
-}
-
-static __inline__ void
-_arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_set_round(res + i, vec + i, prec);
-}
-
-static __inline__ void
-_arb_vec_swap(arb_ptr res, arb_ptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_swap(res + i, vec + i);
-}
-
-static __inline__ void
-_arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        arb_neg(B + i, A + i);
-}
-
-/*
-static __inline__ void
-_arb_vec_sub(arb_ptr C, arb_srcptr A,
-    arb_srcptr B, long n, long prec)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        arb_sub(C + i, A + i, B + i, prec);
-}
-
-static __inline__ void
-_arb_vec_add(arb_ptr C, arb_srcptr A,
-    arb_srcptr B, long n, long prec)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        arb_add(C + i, A + i, B + i, prec);
-}
-
-static __inline__ void
-_arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec,
-    long len, const arb_t c, long prec)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_mul(res + i, vec + i, c, prec);
-}
-
-static __inline__ void
-_arb_vec_scalar_div(arb_ptr res, arb_srcptr vec,
-    long len, const arb_t c, long prec)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_div(res + i, vec + i, c, prec);
-}
-
-static __inline__ void
-_arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec,
-    long len, const fmpz_t c, long prec)
-{
-    long i;
-    arf_t t;
-    arf_init(t);
-    arf_set_fmpz(t, c);
-    for (i = 0; i < len; i++)
-        arb_mul_arf(res + i, vec + i, t, prec);
-    arf_clear(t);
-}
-
-static __inline__ void
-_arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_mul_2exp_si(res + i, src + i, c);
-}
-
-static __inline__ void
-_arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
-    long len, const arb_t c, long prec)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_addmul(res + i, vec + i, c, prec);
-}
-*/
-
-/* TODO: mag version? */
-static __inline__ void
-_arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
-        long len, long prec)
-{
-    arf_t t;
-    long i;
-
-    if (len < 1)
-    {
-        arf_zero(bound);
-    }
-    else
-    {
-        arb_get_abs_ubound_arf(bound, vec, prec);
-        arf_init(t);
-        for (i = 1; i < len; i++)
-        {
-            arb_get_abs_ubound_arf(t, vec + i, prec);
-            if (arf_cmp(t, bound) > 0)
-                arf_set(bound, t);
-        }
-        arf_clear(t);
-    }
-}
-
-static __inline__ long
-_arb_vec_bits(arb_srcptr x, long len)
-{
-    long i, b, c;
-
-    b = 0;
-    for (i = 0; i < len; i++)
-    {
-        c = arb_bits(x + i);
-        b = FLINT_MAX(b, c);
-    }
-
-    return b;
-}
-
-/*
-static __inline__ void
-_arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
-{
-    long i;
-
-    for (i = 0; i < len; i++)
-    {
-        if (i == 0)
-            arb_one(xs + i);
-        else if (i == 1)
-            arb_set_round(xs + i, x, prec);
-        else if (i % 2 == 0)
-            arb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
-        else
-            arb_mul(xs + i, xs + i - 1, x, prec);
-    }
-}
-*/
-
-/* TODO: mag verision ? */
-/*
-static __inline__ void
-_arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_add_error_arf(res + i, err + i);
-}
-*/
-
-static __inline__ void
-_arb_vec_indeterminate(arb_ptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_indeterminate(vec + i);
-}
-
-static __inline__ void
-_arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
-{
-    long i;
-    for (i = 0; i < len; i++)
-        arb_trim(res + i, vec + i);
-}
-
-void arb_mul(arb_t z, const arb_t x, const arb_t y, long prec);
-
-void arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec);
-
-/*
-static __inline__ void
-arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
-{
-    arb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
-}
-*/
 
 void arb_randtest_exact(arb_t x, flint_rand_t state, long prec, long mag_bits);
 
@@ -769,6 +548,214 @@ static __inline__ void
 arb_inv(arb_t y, const arb_t x, long prec)
 {
     arb_ui_div(y, 1, x, prec);
+}
+
+static __inline__ void
+arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
+{
+    arb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
+}
+
+/* vector functions */
+
+static __inline__ void
+_arb_vec_zero(arb_ptr A, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        arb_zero(A + i);
+}
+
+static __inline__ int
+_arb_vec_is_zero(arb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!arb_is_zero(vec + i))
+            return 0;
+    return 1;
+}
+
+static __inline__ void
+_arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_set(res + i, vec + i);
+}
+
+static __inline__ void
+_arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_set_round(res + i, vec + i, prec);
+}
+
+static __inline__ void
+_arb_vec_swap(arb_ptr res, arb_ptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_swap(res + i, vec + i);
+}
+
+static __inline__ void
+_arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        arb_neg(B + i, A + i);
+}
+
+static __inline__ void
+_arb_vec_sub(arb_ptr C, arb_srcptr A,
+    arb_srcptr B, long n, long prec)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        arb_sub(C + i, A + i, B + i, prec);
+}
+
+static __inline__ void
+_arb_vec_add(arb_ptr C, arb_srcptr A,
+    arb_srcptr B, long n, long prec)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        arb_add(C + i, A + i, B + i, prec);
+}
+
+static __inline__ void
+_arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec,
+    long len, const arb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_mul(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_arb_vec_scalar_div(arb_ptr res, arb_srcptr vec,
+    long len, const arb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_div(res + i, vec + i, c, prec);
+}
+
+static __inline__ void
+_arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec,
+    long len, const fmpz_t c, long prec)
+{
+    long i;
+    arf_t t;
+    arf_init(t);
+    arf_set_fmpz(t, c);
+    for (i = 0; i < len; i++)
+        arb_mul_arf(res + i, vec + i, t, prec);
+    arf_clear(t);
+}
+
+static __inline__ void
+_arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_mul_2exp_si(res + i, src + i, c);
+}
+
+static __inline__ void
+_arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
+    long len, const arb_t c, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_addmul(res + i, vec + i, c, prec);
+}
+
+/* TODO: mag version? */
+static __inline__ void
+_arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
+        long len, long prec)
+{
+    arf_t t;
+    long i;
+
+    if (len < 1)
+    {
+        arf_zero(bound);
+    }
+    else
+    {
+        arb_get_abs_ubound_arf(bound, vec, prec);
+        arf_init(t);
+        for (i = 1; i < len; i++)
+        {
+            arb_get_abs_ubound_arf(t, vec + i, prec);
+            if (arf_cmp(t, bound) > 0)
+                arf_set(bound, t);
+        }
+        arf_clear(t);
+    }
+}
+
+static __inline__ long
+_arb_vec_bits(arb_srcptr x, long len)
+{
+    long i, b, c;
+
+    b = 0;
+    for (i = 0; i < len; i++)
+    {
+        c = arb_bits(x + i);
+        b = FLINT_MAX(b, c);
+    }
+
+    return b;
+}
+
+static __inline__ void
+_arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
+{
+    long i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (i == 0)
+            arb_one(xs + i);
+        else if (i == 1)
+            arb_set_round(xs + i, x, prec);
+        else if (i % 2 == 0)
+            arb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
+        else
+            arb_mul(xs + i, xs + i - 1, x, prec);
+    }
+}
+
+/* TODO: mag verision ? */
+static __inline__ void
+_arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_add_error_arf(res + i, err + i);
+}
+
+static __inline__ void
+_arb_vec_indeterminate(arb_ptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_indeterminate(vec + i);
+}
+
+static __inline__ void
+_arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        arb_trim(res + i, vec + i);
 }
 
 #ifdef __cplusplus
