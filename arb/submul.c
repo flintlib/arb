@@ -26,14 +26,14 @@
 #include "arb.h"
 
 void
-arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+arb_submul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
 {
     mag_t ym;
     int inexact;
 
     if (arb_is_exact(x))
     {
-        inexact = arf_addmul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
+        inexact = arf_submul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
 
         if (inexact)
         {
@@ -47,7 +47,7 @@ arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
     {
         mag_fast_init_set_arf(ym, y);
         mag_fast_addmul(arb_radref(z), ym, arb_radref(x));
-        inexact = arf_addmul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
+        inexact = arf_submul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
         if (inexact)
             mag_fast_add_2exp_si(arb_radref(z), arb_radref(z), ARF_EXP(arb_midref(z)) - prec);
     }
@@ -56,7 +56,7 @@ arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
         mag_init_set_arf(ym, y);
         mag_addmul(arb_radref(z), ym, arb_radref(x));
 
-        inexact = arf_addmul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
+        inexact = arf_submul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
         if (inexact)
             arf_mag_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
 
@@ -65,18 +65,18 @@ arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
 }
 
 void
-arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_submul(arb_t z, const arb_t x, const arb_t y, long prec)
 {
     mag_t zr, xm, ym;
     int inexact;
 
     if (arb_is_exact(y))
     {
-        arb_addmul_arf(z, x, arb_midref(y), prec);
+        arb_submul_arf(z, x, arb_midref(y), prec);
     }
     else if (arb_is_exact(x))
     {
-        arb_addmul_arf(z, y, arb_midref(x), prec);
+        arb_submul_arf(z, y, arb_midref(x), prec);
     }
     else if (ARB_IS_LAGOM(x) && ARB_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
@@ -88,7 +88,7 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
         mag_fast_addmul(zr, ym, ARB_RADREF(x));
         mag_fast_addmul(zr, ARB_RADREF(x), ARB_RADREF(y));
 
-        inexact = arf_addmul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
+        inexact = arf_submul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
             prec, ARF_RND_DOWN);
 
         if (inexact)
@@ -106,7 +106,7 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
         mag_addmul(zr, ym, ARB_RADREF(x));
         mag_addmul(zr, ARB_RADREF(x), ARB_RADREF(y));
 
-        inexact = arf_addmul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
+        inexact = arf_submul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
             prec, ARF_RND_DOWN);
 
         if (inexact)
@@ -121,36 +121,36 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
 }
 
 void
-arb_addmul_si(arb_t z, const arb_t x, long y, long prec)
+arb_submul_si(arb_t z, const arb_t x, long y, long prec)
 {
     arf_t t;
     arf_init_set_si(t, y); /* no need to free */
-    arb_addmul_arf(z, x, t, prec);
+    arb_submul_arf(z, x, t, prec);
 }
 
 void
-arb_addmul_ui(arb_t z, const arb_t x, ulong y, long prec)
+arb_submul_ui(arb_t z, const arb_t x, ulong y, long prec)
 {
     arf_t t;
     arf_init_set_ui(t, y); /* no need to free */
-    arb_addmul_arf(z, x, t, prec);
+    arb_submul_arf(z, x, t, prec);
 }
 
 void
-arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
 {
     arf_t t;
 
     if (!COEFF_IS_MPZ(*y))
     {
         arf_init_set_si(t, *y); /* no need to free */
-        arb_addmul_arf(z, x, t, prec);
+        arb_submul_arf(z, x, t, prec);
     }
     else
     {
         arf_init(t);
         arf_set_fmpz(t, y);
-        arb_addmul_arf(z, x, t, prec);
+        arb_submul_arf(z, x, t, prec);
         arf_clear(t);
     }
 }

@@ -745,6 +745,18 @@ void arb_mul_si(arb_t z, const arb_t x, long y, long prec);
 void arb_mul_ui(arb_t z, const arb_t x, ulong y, long prec);
 void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
 
+void arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec);
+void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec);
+void arb_addmul_si(arb_t z, const arb_t x, long y, long prec);
+void arb_addmul_ui(arb_t z, const arb_t x, ulong y, long prec);
+void arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
+
+void arb_submul(arb_t z, const arb_t x, const arb_t y, long prec);
+void arb_submul_arf(arb_t z, const arb_t x, const arf_t y, long prec);
+void arb_submul_si(arb_t z, const arb_t x, long y, long prec);
+void arb_submul_ui(arb_t z, const arb_t x, ulong y, long prec);
+void arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
+
 void arb_div(arb_t z, const arb_t x, const arb_t y, long prec);
 void arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec);
 void arb_div_si(arb_t z, const arb_t x, long y, long prec);
@@ -752,6 +764,12 @@ void arb_div_ui(arb_t z, const arb_t x, ulong y, long prec);
 void arb_div_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
 void arb_fmpz_div_fmpz(arb_t z, const fmpz_t x, const fmpz_t y, long prec);
 void arb_ui_div(arb_t z, ulong x, const arb_t y, long prec);
+
+static __inline__ void
+arb_inv(arb_t y, const arb_t x, long prec)
+{
+    arb_ui_div(y, 1, x, prec);
+}
 
 #ifdef __cplusplus
 }
