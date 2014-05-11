@@ -82,9 +82,9 @@ arb_sqrt(arb_t z, const arb_t x, long prec)
         mag_init(zr);
         mag_init(rx);
 
-        /* rx = upper bound for x / r */
+        /* rx = upper bound for r / x */
         arf_get_mag_lower(rx, arb_midref(x));
-        mag_div(rx, rx, arb_radref(x));
+        mag_div(rx, arb_radref(x), rx);
 
         inexact = arf_sqrt(arb_midref(z), arb_midref(x), prec, ARB_RND);
 
@@ -95,7 +95,7 @@ arb_sqrt(arb_t z, const arb_t x, long prec)
 
         /* propagated error:   sqrt(x) - sqrt(x-r)
                              = sqrt(x) * [1 - sqrt(1 - r/x)]
-                            <= sqrt(x) * 0.5 * (t + t^2), t = r/x  */
+                            <= sqrt(x) * 0.5 * (rx + rx^2)  */
         mag_addmul(rx, rx, rx);
         mag_mul(zr, zr, rx);
         mag_mul_2exp_si(zr, zr, -1);
