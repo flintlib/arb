@@ -36,20 +36,16 @@ arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
         inexact = arf_addmul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
 
         if (inexact)
-        {
-            if (ARB_IS_LAGOM(z)) /* todo: arf_mag_fast_add_ulp -- or make arf_mag_add_ulp fast? */
-                mag_fast_add_2exp_si(arb_radref(z), arb_radref(z), ARF_EXP(arb_midref(z)) - prec);
-            else
-                arf_mag_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
-        }
+            arf_mag_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
     }
     else if (ARB_IS_LAGOM(x) && ARF_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
         mag_fast_init_set_arf(ym, y);
         mag_fast_addmul(arb_radref(z), ym, arb_radref(x));
         inexact = arf_addmul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
+
         if (inexact)
-            mag_fast_add_2exp_si(arb_radref(z), arb_radref(z), ARF_EXP(arb_midref(z)) - prec);
+            arf_mag_fast_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
     }
     else
     {
@@ -92,7 +88,7 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
             prec, ARF_RND_DOWN);
 
         if (inexact)
-            mag_fast_add_2exp_si(zr, zr, ARF_EXP(ARB_MIDREF(z)) - prec);
+            arf_mag_fast_add_ulp(zr, zr, arb_midref(z), prec);
 
         *ARB_RADREF(z) = *zr;
     }

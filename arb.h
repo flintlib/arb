@@ -556,6 +556,11 @@ arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
     arb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
 }
 
+void arb_sqrt(arb_t z, const arb_t x, long prec);
+void arb_sqrt_arf(arb_t z, const arf_t x, long prec);
+void arb_sqrt_fmpz(arb_t z, const fmpz_t x, long prec);
+void arb_sqrt_ui(arb_t z, ulong x, long prec);
+
 /* vector functions */
 
 static __inline__ void

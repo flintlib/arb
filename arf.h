@@ -1169,6 +1169,13 @@ mag_fast_init_set_arf(mag_t y, const arf_t x)
 
 /* TODO: document */
 static __inline__ void
+arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+{
+    mag_fast_add_2exp_si(z, x, ARF_EXP(y) - prec);
+}
+
+/* TODO: document */
+static __inline__ void
 arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
     if (ARF_IS_SPECIAL(y))
@@ -1176,12 +1183,15 @@ arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
         printf("error: ulp error not defined for special value!\n");
         abort();
     }
+    else if (MAG_IS_LAGOM(z) && MAG_IS_LAGOM(x) && ARF_IS_LAGOM(y))
+    {
+        arf_mag_fast_add_ulp(z, x, y, prec);
+    }
     else
     {
-        /* todo: speed up case r is special here */
         fmpz_t e;
         fmpz_init(e);
-        _fmpz_add_fast(e, ARF_EXPREF(y), -prec);
+        fmpz_sub_ui(e, ARF_EXPREF(y), prec);
         mag_add_2exp_fmpz(z, x, e);
         fmpz_clear(e);
     }

@@ -50,7 +50,7 @@ arb_mul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
         inexact = arf_mul(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
 
         if (inexact)
-            mag_fast_add_2exp_si(zr, zr, ARF_EXP(arb_midref(z)) - prec);
+            arf_mag_fast_add_ulp(zr, zr, arb_midref(z), prec);
 
         *arb_radref(z) = *zr;
     }
@@ -101,7 +101,7 @@ arb_mul(arb_t z, const arb_t x, const arb_t y, long prec)
         inexact = arf_mul(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
 
         if (inexact)
-            mag_fast_add_2exp_si(zr, zr, ARF_EXP(arb_midref(z)) - prec);
+            arf_mag_fast_add_ulp(zr, zr, arb_midref(z), prec);
 
         *arb_radref(z) = *zr;
     }
