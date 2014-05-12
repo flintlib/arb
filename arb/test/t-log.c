@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "arb.h"
 
 int main()
 {
@@ -38,46 +38,46 @@ int main()
     /* compare with mpfr */
     for (iter = 0; iter < 100000; iter++)
     {
-        fmprb_t a, b;
+        arb_t a, b;
         fmpq_t q;
         mpfr_t t;
         long prec = 2 + n_randint(state, 200);
 
-        fmprb_init(a);
-        fmprb_init(b);
+        arb_init(a);
+        arb_init(b);
         fmpq_init(q);
         mpfr_init2(t, prec + 300);
 
         do {
-            fmprb_randtest(a, state, 1 + n_randint(state, 200), 10);
-        } while (fmprb_contains_nonpositive(a));
+            arb_randtest(a, state, 1 + n_randint(state, 200), 10);
+        } while (arb_contains_nonpositive(a));
 
-        fmprb_randtest(b, state, 1 + n_randint(state, 200), 10);
-        fmprb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
+        arb_randtest(b, state, 1 + n_randint(state, 200), 10);
+        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
         mpfr_log(t, t, MPFR_RNDN);
 
-        fmprb_log(b, a, prec);
+        arb_log(b, a, prec);
 
-        if (!fmprb_contains_mpfr(b, t))
+        if (!arb_contains_mpfr(b, t))
         {
             printf("FAIL: containment\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
             abort();
         }
 
-        fmprb_log(a, a, prec);
+        arb_log(a, a, prec);
 
-        if (!fmprb_equal(a, b))
+        if (!arb_equal(a, b))
         {
             printf("FAIL: aliasing\n\n");
             abort();
         }
 
-        fmprb_clear(a);
-        fmprb_clear(b);
+        arb_clear(a);
+        arb_clear(b);
         fmpq_clear(q);
         mpfr_clear(t);
     }
@@ -85,53 +85,53 @@ int main()
     /* test large numbers */
     for (iter = 0; iter < 10000; iter++)
     {
-        fmprb_t a, b, ab, lab, la, lb, lalb;
+        arb_t a, b, ab, lab, la, lb, lalb;
         long prec = 2 + n_randint(state, 400);
 
-        fmprb_init(a);
-        fmprb_init(b);
-        fmprb_init(ab);
-        fmprb_init(lab);
-        fmprb_init(la);
-        fmprb_init(lb);
-        fmprb_init(lalb);
+        arb_init(a);
+        arb_init(b);
+        arb_init(ab);
+        arb_init(lab);
+        arb_init(la);
+        arb_init(lb);
+        arb_init(lalb);
 
-        fmprb_randtest(a, state, 1 + n_randint(state, 400), 400);
-        fmprb_randtest(b, state, 1 + n_randint(state, 400), 400);
+        arb_randtest(a, state, 1 + n_randint(state, 400), 400);
+        arb_randtest(b, state, 1 + n_randint(state, 400), 400);
 
-        fmprb_log(la, a, prec);
-        fmprb_log(lb, b, prec);
-        fmprb_mul(ab, a, b, prec);
-        fmprb_log(lab, ab, prec);
-        fmprb_add(lalb, la, lb, prec);
+        arb_log(la, a, prec);
+        arb_log(lb, b, prec);
+        arb_mul(ab, a, b, prec);
+        arb_log(lab, ab, prec);
+        arb_add(lalb, la, lb, prec);
 
-        if (!fmprb_overlaps(lab, lalb))
+        if (!arb_overlaps(lab, lalb))
         {
             printf("FAIL: containment\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
-            printf("la = "); fmprb_print(la); printf("\n\n");
-            printf("lb = "); fmprb_print(lb); printf("\n\n");
-            printf("ab = "); fmprb_print(ab); printf("\n\n");
-            printf("lab = "); fmprb_print(lab); printf("\n\n");
-            printf("lalb = "); fmprb_print(lalb); printf("\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("la = "); arb_print(la); printf("\n\n");
+            printf("lb = "); arb_print(lb); printf("\n\n");
+            printf("ab = "); arb_print(ab); printf("\n\n");
+            printf("lab = "); arb_print(lab); printf("\n\n");
+            printf("lalb = "); arb_print(lalb); printf("\n\n");
             abort();
         }
 
-        fmprb_log(a, a, prec);
-        if (!fmprb_overlaps(a, la))
+        arb_log(a, a, prec);
+        if (!arb_overlaps(a, la))
         {
             printf("FAIL: aliasing\n\n");
             abort();
         }
 
-        fmprb_clear(a);
-        fmprb_clear(b);
-        fmprb_clear(ab);
-        fmprb_clear(lab);
-        fmprb_clear(la);
-        fmprb_clear(lb);
-        fmprb_clear(lalb);
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(ab);
+        arb_clear(lab);
+        arb_clear(la);
+        arb_clear(lb);
+        arb_clear(lalb);
     }
 
     flint_randclear(state);

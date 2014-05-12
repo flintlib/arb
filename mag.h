@@ -236,6 +236,14 @@ mag_zero(mag_t x)
     MAG_MAN(x) = 0;
 }
 
+/* TODO: document */
+static __inline__ void
+mag_one(mag_t x)
+{
+    fmpz_one(MAG_EXPREF(x));
+    MAG_MAN(x) = MAG_ONE_HALF;
+}
+
 static __inline__ int
 mag_is_special(const mag_t x)
 {
@@ -290,6 +298,7 @@ void mag_add(mag_t z, const mag_t x, const mag_t y);
 void mag_div(mag_t z, const mag_t x, const mag_t y);
 
 /* TODO: document */
+/* TODO: avoid fmpz_add_si_inline */
 static __inline__ void
 mag_mul_2exp_si(mag_t z, const mag_t x, long y)
 {
@@ -305,6 +314,7 @@ mag_mul_2exp_si(mag_t z, const mag_t x, long y)
 }
 
 /* TODO: document */
+/* TODO: avoid fmpz_add_inline */
 static __inline__ void
 mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 {
