@@ -561,6 +561,12 @@ void arb_sqrt_arf(arb_t z, const arf_t x, long prec);
 void arb_sqrt_fmpz(arb_t z, const fmpz_t x, long prec);
 void arb_sqrt_ui(arb_t z, ulong x, long prec);
 
+void arb_sqrtpos(arb_t z, const arb_t x, long prec);
+void arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec);
+
+void arb_rsqrt(arb_t z, const arb_t x, long prec);
+void arb_rsqrt_ui(arb_t z, ulong x, long prec);
+
 /* vector functions */
 
 static __inline__ void
