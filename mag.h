@@ -449,6 +449,10 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
     }
 }
 
+/* TODO: document */
+void mag_set_d_2exp_fmpz(mag_t z, double c, const fmpz_t exp);
+void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp);
+
 #include "fmpr.h"
 
 void mag_set_fmpr(mag_t x, const fmpr_t y);

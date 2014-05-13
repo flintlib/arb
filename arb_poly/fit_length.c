@@ -19,26 +19,28 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+arb_poly_fit_length(arb_poly_t poly, long len)
 {
-    if (fmpr_is_special(y))
+    long i;
+
+    if (len > poly->alloc)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        if (len < 2 * poly->alloc)
+            len = 2 * poly->alloc;
+
+        poly->coeffs = flint_realloc(poly->coeffs,
+            len * sizeof(arb_struct));
+
+        for (i = poly->alloc; i < len; i++)
+            arb_init(poly->coeffs + i);
+
+        poly->alloc = len;
     }
 }
-

@@ -19,26 +19,58 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
-void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+int
+_arb_poly_newton_step(arb_t xnew, arb_srcptr poly, long len,
+    const arb_t x,
+    const arb_t convergence_interval,
+    const arf_t convergence_factor, long prec)
 {
-    if (fmpr_is_special(y))
+    arf_t err;
+    arb_t t, u, v;
+    int result;
+
+    arf_init(err);
+    arb_init(t);
+    arb_init(u);
+    arb_init(v);
+
+    arf_set_mag(err, arb_radref(x));
+    arf_mul(err, err, err, MAG_BITS, ARF_RND_UP);
+    arf_mul(err, err, convergence_factor, MAG_BITS, ARF_RND_UP);
+
+    arf_set(arb_midref(t), arb_midref(x));
+    mag_zero(arb_radref(t));
+
+    _arb_poly_evaluate2(u, v, poly, len, t, prec);
+
+    arb_div(u, u, v, prec);
+    arb_sub(u, t, u, prec);
+
+    arb_add_error_arf(u, err);
+
+    if (arb_contains(convergence_interval, u) &&
+        (arf_cmpabs_mag(arb_radref(u), arb_radref(x)) < 0))
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        arb_swap(xnew, u);
+        result = 1;
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_set(xnew, x);
+        result = 0;
     }
+
+    arb_clear(t);
+    arb_clear(u);
+    arb_clear(v);
+    arf_clear(err);
+
+    return result;
 }
 

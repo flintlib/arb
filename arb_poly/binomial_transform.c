@@ -19,26 +19,45 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_binomial_transform(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
 {
-    if (fmpr_is_special(y))
+    if (alen < 10 || len < 10)
+        _arb_poly_binomial_transform_basecase(b, a, alen, len, prec);
+    else
+        _arb_poly_binomial_transform_convolution(b, a, alen, len, prec);
+}
+
+void
+arb_poly_binomial_transform(arb_poly_t b, const arb_poly_t a, long len, long prec)
+{
+    if (len == 0 || a->length == 0)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        arb_poly_zero(b);
+        return;
+    }
+
+    if (b == a)
+    {
+        arb_poly_t c;
+        arb_poly_init2(c, len);
+        _arb_poly_binomial_transform(c->coeffs, a->coeffs, a->length, len, prec);
+        arb_poly_swap(b, c);
+        arb_poly_clear(c);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_poly_fit_length(b, len);
+        _arb_poly_binomial_transform(b->coeffs, a->coeffs, a->length, len, prec);
     }
+
+    _arb_poly_set_length(b, len);
+    _arb_poly_normalise(b);
 }
 

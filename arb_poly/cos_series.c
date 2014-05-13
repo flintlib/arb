@@ -19,26 +19,62 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_cos_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
 {
-    if (fmpr_is_special(y))
+    hlen = FLINT_MIN(hlen, n);
+
+    if (hlen == 1)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        arb_cos(g, h, prec);
+        _arb_vec_zero(g + 1, n - 1);
+    }
+    else if (n == 2)
+    {
+        arb_t t;
+        arb_init(t);
+        arb_sin_cos(t, g, h, prec);
+        arb_neg(t, t);
+        arb_mul(g + 1, h + 1, t, prec);  /* safe since hlen >= 2 */
+        arb_clear(t);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_ptr t = _arb_vec_init(n);
+        _arb_poly_sin_cos_series(t, g, h, hlen, n, prec);
+        _arb_vec_clear(t, n);
     }
+}
+
+void
+arb_poly_cos_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+{
+    long hlen = h->length;
+
+    if (n == 0)
+    {
+        arb_poly_zero(g);
+        return;
+    }
+
+    if (hlen == 0)
+    {
+        arb_poly_one(g);
+        return;
+    }
+
+    if (hlen == 1)
+        n = 1;
+
+    arb_poly_fit_length(g, n);
+    _arb_poly_cos_series(g->coeffs, h->coeffs, hlen, n, prec);
+    _arb_poly_set_length(g, n);
+    _arb_poly_normalise(g);
 }
 

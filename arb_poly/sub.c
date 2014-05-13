@@ -19,26 +19,40 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_sub(arb_ptr res, arb_srcptr poly1, long len1,
+    arb_srcptr poly2, long len2, long prec)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+    long i, min = FLINT_MIN(len1, len2);
+
+    for (i = 0; i < min; i++)
+        arb_sub(res + i, poly1 + i, poly2 + i, prec);
+
+    for (i = min; i < len1; i++)
+        arb_set_round(res + i, poly1 + i, prec);
+
+    for (i = min; i < len2; i++)
+        arb_neg_round(res + i, poly2 + i, prec);
+}
+
+void
+arb_poly_sub(arb_poly_t res, const arb_poly_t poly1,
+              const arb_poly_t poly2, long prec)
+{
+    long max = FLINT_MAX(poly1->length, poly2->length);
+
+    arb_poly_fit_length(res, max);
+
+    _arb_poly_sub(res->coeffs, poly1->coeffs, poly1->length, poly2->coeffs,
+                   poly2->length, prec);
+
+    _arb_poly_set_length(res, max);
+    _arb_poly_normalise(res);
 }
 

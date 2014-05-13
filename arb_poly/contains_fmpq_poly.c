@@ -19,26 +19,38 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
-void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+int
+arb_poly_contains_fmpq_poly(const arb_poly_t poly1, const fmpq_poly_t poly2)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
-}
+    long i;
+    fmpq_t t;
 
+    if (poly2->length > poly1->length)
+        return 0;
+
+    fmpq_init(t);
+
+    for (i = 0; i < poly2->length; i++)
+    {
+        fmpq_poly_get_coeff_fmpq(t, poly2, i);
+        if (!arb_contains_fmpq(poly1->coeffs + i, t))
+        {
+            fmpq_clear(t);
+            return 0;
+        }
+    }
+
+    fmpq_clear(t);
+
+    for (i = poly2->length; i < poly1->length; i++)
+        if (!arb_contains_zero(poly1->coeffs + i))
+            return 0;
+
+    return 1;
+}

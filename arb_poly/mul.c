@@ -19,26 +19,49 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
+
+void _arb_poly_mul(arb_ptr C,
+    arb_srcptr A, long lenA,
+    arb_srcptr B, long lenB, long prec)
+{
+    _arb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
+}
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+arb_poly_mul(arb_poly_t res, const arb_poly_t poly1,
+              const arb_poly_t poly2, long prec)
 {
-    if (fmpr_is_special(y))
+    long len_out;
+
+    if ((poly1->length == 0) || (poly2->length == 0))
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        arb_poly_zero(res);
+        return;
+    }
+
+    len_out = poly1->length + poly2->length - 1;
+
+    if (res == poly1 || res == poly2)
+    {
+        arb_poly_t temp;
+        arb_poly_init2(temp, len_out);
+        _arb_poly_mul(temp->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
+        arb_poly_swap(res, temp);
+        arb_poly_clear(temp);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_poly_fit_length(res, len_out);
+        _arb_poly_mul(res->coeffs, poly1->coeffs, poly1->length,
+                                 poly2->coeffs, poly2->length, prec);
     }
-}
 
+    _arb_poly_set_length(res, len_out);
+    _arb_poly_normalise(res);
+}

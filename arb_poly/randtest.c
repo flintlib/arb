@@ -19,26 +19,27 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+arb_poly_randtest(arb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
+    long i;
+
+    arb_poly_fit_length(poly, len);
+
+    if (n_randint(state, 2))
+        for (i = 0; i < len; i++)
+            arb_randtest(poly->coeffs + i, state, prec, mag_bits);
     else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+        for (i = 0; i < len; i++)
+            arb_randtest_precise(poly->coeffs + i, state, prec, mag_bits);
+
+    _arb_poly_set_length(poly, len);
+    _arb_poly_normalise(poly);
 }
 

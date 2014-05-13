@@ -19,26 +19,37 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_newton_convergence_factor(arf_t convergence_factor,
+    arb_srcptr poly, long len,
+    const arb_t convergence_interval, long prec)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+    arb_ptr deriv;
+    arb_t t, u;
+
+    arb_init(t);
+    arb_init(u);
+    deriv = _arb_vec_init(len - 1);
+
+    _arb_poly_derivative(deriv, poly, len, prec);
+    _arb_poly_evaluate(t, deriv, len - 1, convergence_interval, prec);
+
+    _arb_poly_derivative(deriv, deriv, len - 1, prec);
+    _arb_poly_evaluate(u, deriv, len - 2, convergence_interval, prec);
+
+    arb_div(t, u, t, prec);
+    arb_mul_2exp_si(t, t, -1);
+
+    arb_get_abs_ubound_arf(convergence_factor, t, prec);
+
+    _arb_vec_clear(deriv, len - 1);
+    arb_clear(t);
+    arb_clear(u);
 }
 

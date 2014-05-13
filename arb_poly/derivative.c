@@ -19,26 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_derivative(arb_ptr res, arb_srcptr poly, long len, long prec)
 {
-    if (fmpr_is_special(y))
+    long i;
+
+    for (i = 1; i < len; i++)
+        arb_mul_ui(res + i - 1, poly + i, i, prec);
+}
+
+void
+arb_poly_derivative(arb_poly_t res, const arb_poly_t poly, long prec)
+{
+    long len = poly->length;
+
+    if (len < 2)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        arb_poly_zero(res);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_poly_fit_length(res, len - 1);
+        _arb_poly_derivative(res->coeffs, poly->coeffs, len, prec);
+        _arb_poly_set_length(res, len - 1);
     }
 }
-

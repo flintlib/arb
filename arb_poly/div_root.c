@@ -19,26 +19,42 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2011 William Hart
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A,
+    long len, const arb_t c, long prec)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
-}
+    arb_t r, t;
+    long i;
 
+    if (len < 2)
+    {
+        arb_zero(R);
+        return;
+    }
+
+    arb_init(r);
+    arb_init(t);
+
+    arb_set(t, A + len - 2);
+    arb_set(Q + len - 2, A + len - 1);
+    arb_set(r, Q + len - 2);
+
+    /* TODO: avoid the extra assignments (but still support aliasing)  */
+    for (i = len - 2; i > 0; i--)
+    {
+        arb_mul(r, r, c, prec);
+        arb_add(r, r, t, prec);
+        arb_set(t, A + i - 1);
+        arb_set(Q + i - 1, r);
+    }
+
+    arb_mul(r, r, c, prec);
+    arb_add(R, r, t, prec);
+}

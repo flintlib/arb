@@ -19,26 +19,48 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_revert_series(arb_ptr Qinv,
+    arb_srcptr Q, long Qlen, long n, long prec)
 {
-    if (fmpr_is_special(y))
+    _arb_poly_revert_series_lagrange_fast(Qinv, Q, Qlen, n, prec);
+}
+
+void
+arb_poly_revert_series(arb_poly_t Qinv,
+                                    const arb_poly_t Q, long n, long prec)
+{
+    long Qlen = Q->length;
+
+    if (Qlen < 2 || !arb_is_zero(Q->coeffs)
+                 || arb_contains_zero(Q->coeffs + 1))
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        printf("Exception (arb_poly_revert_series). Input must \n"
+               "have zero constant term and nonzero coefficient of x^1.\n");
+        abort();
+    }
+
+    if (Qinv != Q)
+    {
+        arb_poly_fit_length(Qinv, n);
+        _arb_poly_revert_series(Qinv->coeffs, Q->coeffs, Qlen, n, prec);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        arb_poly_t t;
+        arb_poly_init2(t, n);
+        _arb_poly_revert_series(t->coeffs, Q->coeffs, Qlen, n, prec);
+        arb_poly_swap(Qinv, t);
+        arb_poly_clear(t);
     }
+
+    _arb_poly_set_length(Qinv, n);
+    _arb_poly_normalise(Qinv);
 }
 

@@ -19,26 +19,38 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
-void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+int
+_arb_poly_overlaps(arb_srcptr poly1, long len1,
+        arb_srcptr poly2, long len2)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
+    long i;
+
+    for (i = 0; i < len2; i++)
+        if (!arb_overlaps(poly1 + i, poly2 + i))
+            return 0;
+
+    for (i = len2; i < len1; i++)
+        if (!arb_contains_zero(poly1 + i))
+            return 0;
+
+    return 1;
+}
+
+int
+arb_poly_overlaps(const arb_poly_t poly1, const arb_poly_t poly2)
+{
+    long len1 = poly1->length;
+    long len2 = poly2->length;
+
+    if (len1 >= len2)
+        return _arb_poly_overlaps(poly1->coeffs, len1, poly2->coeffs, len2);
     else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+        return _arb_poly_overlaps(poly2->coeffs, len2, poly1->coeffs, len1);
 }
 

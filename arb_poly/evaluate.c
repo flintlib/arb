@@ -19,26 +19,35 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_evaluate(arb_t res, arb_srcptr f, long len,
+                           const arb_t x, long prec)
 {
-    if (fmpr_is_special(y))
+    if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        long fbits;
+
+        fbits = _arb_vec_bits(f, len);
+
+        if (fbits <= prec / 2)
+        {
+            _arb_poly_evaluate_rectangular(res, f, len, x, prec);
+            return;
+        }
     }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+
+    _arb_poly_evaluate_horner(res, f, len, x, prec);
+}
+
+void
+arb_poly_evaluate(arb_t res, const arb_poly_t f, const arb_t a, long prec)
+{
+    _arb_poly_evaluate(res, f->coeffs, f->length, a, prec);
 }
 

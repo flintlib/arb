@@ -24,21 +24,21 @@
 ******************************************************************************/
 
 #include "mag.h"
-#include "arf.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp)
 {
-    if (fmpr_is_special(y))
+    if (fmpz_is_zero(man))
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        mag_zero(z);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        mp_limb_t m;
+        long cexp;
+
+        m = fmpz_abs_ubound_ui_2exp(&cexp, man, MAG_BITS);
+        MAG_MAN(z) = m;
+        _fmpz_add_fast(MAG_EXPREF(z), exp, cexp + MAG_BITS);
     }
 }
-

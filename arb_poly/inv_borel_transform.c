@@ -19,26 +19,39 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, long len, long prec)
 {
-    if (fmpr_is_special(y))
+    long i;
+
+    arb_t t;
+    arb_init(t);
+
+    arb_one(t);
+
+    for (i = 0; i < len; i++)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        if (i > 1)
+            arb_mul_ui(t, t, i, prec);
+
+        arb_mul(res + i, poly + i, t, prec);
     }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
+
+    arb_clear(t);
+}
+
+void
+arb_poly_inv_borel_transform(arb_poly_t res, const arb_poly_t poly, long prec)
+{
+    arb_poly_fit_length(res, poly->length);
+    _arb_poly_inv_borel_transform(res->coeffs, poly->coeffs, poly->length, prec);
+    _arb_poly_set_length(res, poly->length);
+    _arb_poly_normalise(res);
 }
 

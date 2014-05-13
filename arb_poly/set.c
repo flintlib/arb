@@ -19,26 +19,18 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+arb_poly_set(arb_poly_t dest, const arb_poly_t src)
 {
-    if (fmpr_is_special(y))
-    {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
-    }
-    else
-    {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
-    }
-}
+    long len = arb_poly_length(src);
 
+    arb_poly_fit_length(dest, len);
+    _arb_vec_set(dest->coeffs, src->coeffs, len);
+    _arb_poly_set_length(dest, len);
+}

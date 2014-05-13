@@ -19,26 +19,52 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2008, 2009 William Hart
+    Copyright (C) 2010 Sebastian Pancratz
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_shift_left(arb_ptr res, arb_srcptr poly, long len, long n)
 {
-    if (fmpr_is_special(y))
+    long i;
+
+    /* Copy in reverse to avoid writing over unshifted coefficients */
+    if (res != poly)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        for (i = len; i--; )
+            arb_set(res + n + i, poly + i);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        for (i = len; i--; )
+            arb_swap(res + n + i, res + i);
     }
+
+    for (i = 0; i < n; i++)
+        arb_zero(res + i);
+}
+
+void
+arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, long n)
+{
+    if (n == 0)
+    {
+        arb_poly_set(res, poly);
+        return;
+    }
+
+    if (poly->length == 0)
+    {
+        arb_poly_zero(res);
+        return;
+    }
+
+    arb_poly_fit_length(res, poly->length + n);
+    _arb_poly_shift_left(res->coeffs, poly->coeffs, poly->length, n);
+    _arb_poly_set_length(res, poly->length + n);
 }
 

@@ -19,26 +19,37 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+_arb_poly_reverse(arb_ptr res, arb_srcptr poly, long len, long n)
 {
-    if (fmpr_is_special(y))
+    if (res == poly)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        long i;
+
+        for (i = 0; i < n / 2; i++)
+        {
+            arb_struct t = res[i];
+            res[i] = res[n - 1 - i];
+            res[n - 1 - i] = t;
+        }
+
+        for (i = 0; i < n - len; i++)
+            arb_zero(res + i);
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        long i;
+
+        for (i = 0; i < n - len; i++)
+            arb_zero(res + i);
+
+        for (i = 0; i < len; i++)
+            arb_set(res + (n - len) + i, poly + (len - 1) - i);
     }
 }
-

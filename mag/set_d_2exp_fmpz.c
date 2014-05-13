@@ -24,21 +24,30 @@
 ******************************************************************************/
 
 #include "mag.h"
-#include "arf.h"
 
 void
-mag_set_fmpr(mag_t x, const fmpr_t y)
+mag_set_d_2exp_fmpz(mag_t z, double c, const fmpz_t exp)
 {
-    if (fmpr_is_special(y))
+    if (c == 0.0)
     {
-        if (fmpr_is_zero(y))
-            mag_zero(x);
-        else
-            mag_inf(x);
+        mag_zero(z);
+    }
+    else if (c > 1e300 || c < 0.0) /* not implemented */
+    {
+        abort();
     }
     else
     {
-        mag_set_fmpz_2exp_fmpz(x, fmpr_manref(y), fmpr_expref(y));
+        int cexp, fix;
+        mp_limb_t man;
+
+        c = frexp(c, &cexp);
+
+        man = (mp_limb_t)(c * (double)(LIMB_ONE << MAG_BITS)) + 1;
+
+        fix = man >> (MAG_BITS);
+        man = (man >> fix) + fix;  /* XXX: need +fix? */
+        MAG_MAN(z) = man;
+        _fmpz_add_fast(MAG_EXPREF(z), exp, cexp + fix);
     }
 }
-
