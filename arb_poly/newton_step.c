@@ -55,7 +55,7 @@ _arb_poly_newton_step(arb_t xnew, arb_srcptr poly, long len,
     arb_add_error_arf(u, err);
 
     if (arb_contains(convergence_interval, u) &&
-        (arf_cmpabs_mag(arb_radref(u), arb_radref(x)) < 0))
+        (mag_cmp(arb_radref(u), arb_radref(x)) < 0))
     {
         arb_swap(xnew, u);
         result = 1;
