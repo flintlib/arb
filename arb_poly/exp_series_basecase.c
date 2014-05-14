@@ -25,7 +25,7 @@
 
 #include "arb_poly.h"
 
-#define MUL_CUTOFF 24
+#define MUL_CUTOFF 60
 
 static void
 _arb_poly_exp_series_basecase_rec(arb_ptr f, arb_ptr a,
