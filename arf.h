@@ -170,11 +170,16 @@ typedef arf_struct arf_t[1];
 typedef arf_struct * arf_ptr;
 typedef const arf_struct * arf_srcptr;
 
+void _arf_promote(arf_t x, mp_size_t n);
+
+void _arf_demote(arf_t x);
+
+
 /* Warning: does not set size! -- also doesn't demote exponent. */
 #define ARF_DEMOTE(x)                 \
     do {                              \
         if (ARF_HAS_PTR(x))           \
-            flint_free(ARF_PTR_D(x)); \
+            _arf_demote(x);           \
     } while (0)
 
 /* Get mpn pointer and size (xptr, xn) for read-only use. */
@@ -209,9 +214,7 @@ typedef const arf_struct * arf_srcptr;
         {                                                   \
             if (!ARF_HAS_PTR(x))                            \
             {                                               \
-                ARF_PTR_D(x) = flint_malloc((__xn) *        \
-                        sizeof(mp_limb_t));                 \
-                ARF_PTR_ALLOC(x) = (__xn);                  \
+                _arf_promote(x, __xn);                      \
             }                                               \
             else if (ARF_PTR_ALLOC(x) < (__xn))             \
             {                                               \
