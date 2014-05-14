@@ -25,7 +25,7 @@
 
 #include "arb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 120
+#define NEWTON_EXP_CUTOFF 200
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing

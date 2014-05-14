@@ -25,7 +25,7 @@
 
 #include "arb_poly.h"
 
-#define TANGENT_CUTOFF 80
+#define TANGENT_CUTOFF 240
 
 void
 _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, const arb_srcptr h, long hlen, long n, long prec)
