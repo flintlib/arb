@@ -19,57 +19,70 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arb_poly.h"
+#include "arb_mat.h"
 
 void
-_arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, long len1,
-                            arb_srcptr poly2, long len2, long n, long prec)
+_arb_poly_compose_series_brent_kung(arb_ptr res,
+    arb_srcptr poly1, long len1,
+    arb_srcptr poly2, long len2, long n, long prec)
 {
-    if (len2 == 1)
+    arb_mat_t A, B, C;
+    arb_ptr t, h;
+    long i, m;
+
+    if (n == 1)
     {
-        arb_set_round(res, poly1, prec);
-        _arb_vec_zero(res + 1, n - 1);
+        arb_set(res, poly1);
+        return;
     }
-    else if (_arb_vec_is_zero(poly2 + 1, len2 - 2))  /* poly2 is a monomial */
+
+    m = n_sqrt(n) + 1;
+
+    arb_mat_init(A, m, n);
+    arb_mat_init(B, m, m);
+    arb_mat_init(C, m, n);
+
+    h = _arb_vec_init(n);
+    t = _arb_vec_init(n);
+
+    /* Set rows of B to the segments of poly1 */
+    for (i = 0; i < len1 / m; i++)
+        _arb_vec_set(B->rows[i], poly1 + i*m, m);
+    _arb_vec_set(B->rows[i], poly1 + i*m, len1 % m);
+
+    /* Set rows of A to powers of poly2 */
+    arb_set_ui(A->rows[0] + 0, 1UL);
+    _arb_vec_set(A->rows[1], poly2, len2);
+    for (i = 2; i < m; i++)
+        _arb_poly_mullow(A->rows[i], A->rows[(i + 1) / 2], n, A->rows[i / 2], n, n, prec);
+
+    arb_mat_mul(C, B, A, prec);
+
+    /* Evaluate block composition using the Horner scheme */
+    _arb_vec_set(res, C->rows[m - 1], n);
+    _arb_poly_mullow(h, A->rows[m - 1], n, poly2, len2, n, prec);
+
+    for (i = m - 2; i >= 0; i--)
     {
-        long i, j;
-        arb_t t;
-
-        arb_init(t);
-        arb_set(t, poly2 + len2 - 1);
-        arb_set_round(res, poly1, prec);
-
-        for (i = 1, j = len2 - 1; i < len1 && j < n; i++, j += len2 - 1)
-        {
-            arb_mul(res + j, poly1 + i, t, prec);
-
-            if (i + 1 < len1 && j + len2 - 1 < n)
-                arb_mul(t, t, poly2 + len2 - 1, prec);
-        }
-
-        if (len2 != 2)
-            for (i = 1; i < n; i++)
-                if (i % (len2 - 1) != 0)
-                    arb_zero(res + i);
-
-        arb_clear(t);
+        _arb_poly_mullow(t, res, n, h, n, n, prec);
+        _arb_poly_add(res, t, n, C->rows[i], n, prec);
     }
-    else if (len1 < 6 || n < 6)
-    {
-        _arb_poly_compose_series_horner(res, poly1, len1, poly2, len2, n, prec);
-    }
-    else
-    {
-        _arb_poly_compose_series_brent_kung(res, poly1, len1, poly2, len2, n, prec);
-    }
+
+    _arb_vec_clear(h, n);
+    _arb_vec_clear(t, n);
+
+    arb_mat_clear(A);
+    arb_mat_clear(B);
+    arb_mat_clear(C);
 }
 
 void
-arb_poly_compose_series(arb_poly_t res,
+arb_poly_compose_series_brent_kung(arb_poly_t res,
                     const arb_poly_t poly1,
                     const arb_poly_t poly2, long n, long prec)
 {
@@ -103,7 +116,7 @@ arb_poly_compose_series(arb_poly_t res,
     if ((res != poly1) && (res != poly2))
     {
         arb_poly_fit_length(res, lenr);
-        _arb_poly_compose_series(res->coeffs, poly1->coeffs, len1,
+        _arb_poly_compose_series_brent_kung(res->coeffs, poly1->coeffs, len1,
                                         poly2->coeffs, len2, lenr, prec);
         _arb_poly_set_length(res, lenr);
         _arb_poly_normalise(res);
@@ -112,7 +125,7 @@ arb_poly_compose_series(arb_poly_t res,
     {
         arb_poly_t t;
         arb_poly_init2(t, lenr);
-        _arb_poly_compose_series(t->coeffs, poly1->coeffs, len1,
+        _arb_poly_compose_series_brent_kung(t->coeffs, poly1->coeffs, len1,
                                         poly2->coeffs, len2, lenr, prec);
         _arb_poly_set_length(t, lenr);
         _arb_poly_normalise(t);

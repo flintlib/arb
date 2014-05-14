@@ -519,11 +519,6 @@ void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long pre
 
 void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, long n, long prec);
 
-/*
-TBD:
-
-must also update compose():
-
 void _arb_poly_compose_series_brent_kung(arb_ptr res, arb_srcptr poly1, long len1,
                             arb_srcptr poly2, long len2, long n, long prec);
 
@@ -531,6 +526,8 @@ void arb_poly_compose_series_brent_kung(arb_poly_t res,
                     const arb_poly_t poly1,
                     const arb_poly_t poly2, long n, long prec);
 
+/*
+TBD:
 
 void _arb_poly_evaluate_fmpcb_horner(fmpcb_t res, arb_srcptr f, long len, const fmpcb_t x, long prec);
 void arb_poly_evaluate_fmpcb_horner(fmpcb_t res, const arb_poly_t f, const fmpcb_t a, long prec);
