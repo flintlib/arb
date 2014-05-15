@@ -25,16 +25,198 @@
 
 #include "acb.h"
 
-void
-acb_mul(acb_t z, const acb_t x, const acb_t y, long prec)
-{
 #define a acb_realref(x)
 #define b acb_imagref(x)
 #define c acb_realref(y)
 #define d acb_imagref(y)
 #define e acb_realref(z)
 #define f acb_imagref(z)
+#define ar arb_radref(a)
+#define br arb_radref(b)
+#define cr arb_radref(c)
+#define dr arb_radref(d)
 
+static void
+_acb_sqr_fast(acb_t z, const acb_t x, long prec)
+{
+    int inexact;
+
+    mag_t am, bm, er, fr;
+
+    mag_fast_init_set_arf(am, arb_midref(a));
+    mag_fast_init_set_arf(bm, arb_midref(b));
+
+    mag_init(er);
+    mag_init(fr);
+
+    mag_fast_addmul(er, am, ar);
+    mag_fast_addmul(er, bm, br);
+    mag_mul_2exp_si(er, er, 1);
+    mag_fast_addmul(er, ar, ar);
+    mag_fast_addmul(er, br, br);
+
+    mag_fast_addmul(fr, bm, ar);
+    mag_fast_addmul(fr, am, br);
+    mag_fast_addmul(fr, ar, br);
+    mag_mul_2exp_si(fr, fr, 1);
+
+    inexact = arf_complex_sqr(arb_midref(e), arb_midref(f),
+                    arb_midref(a), arb_midref(b), prec, ARB_RND);
+
+    if (inexact & 1)
+        arf_mag_add_ulp(arb_radref(e), er, arb_midref(e), prec);
+    else
+        mag_set(arb_radref(e), er);
+
+    if (inexact & 2)
+        arf_mag_add_ulp(arb_radref(f), fr, arb_midref(f), prec);
+    else
+        mag_set(arb_radref(f), fr);
+}
+
+static void
+_acb_sqr_slow(acb_t z, const acb_t x, long prec)
+{
+    int inexact;
+
+    mag_t am, bm, er, fr;
+
+    mag_init_set_arf(am, arb_midref(a));
+    mag_init_set_arf(bm, arb_midref(b));
+
+    mag_init(er);
+    mag_init(fr);
+
+    mag_addmul(er, am, ar);
+    mag_addmul(er, bm, br);
+    mag_mul_2exp_si(er, er, 1);
+    mag_addmul(er, ar, ar);
+    mag_addmul(er, br, br);
+
+    mag_addmul(fr, bm, ar);
+    mag_addmul(fr, am, br);
+    mag_addmul(fr, ar, br);
+    mag_mul_2exp_si(fr, fr, 1);
+
+    inexact = arf_complex_sqr(arb_midref(e), arb_midref(f),
+                    arb_midref(a), arb_midref(b), prec, ARB_RND);
+
+    if (inexact & 1)
+        arf_mag_add_ulp(arb_radref(e), er, arb_midref(e), prec);
+    else
+        mag_swap(arb_radref(e), er);
+
+    if (inexact & 2)
+        arf_mag_add_ulp(arb_radref(f), fr, arb_midref(f), prec);
+    else
+        mag_swap(arb_radref(f), fr);
+
+    mag_clear(am);
+    mag_clear(bm);
+
+    mag_clear(er);
+    mag_clear(fr);
+}
+
+static void
+_acb_mul_fast(acb_t z, const acb_t x, const acb_t y, long prec)
+{
+    int inexact;
+
+    mag_t am, bm, cm, dm, er, fr;
+
+    mag_fast_init_set_arf(am, arb_midref(a));
+    mag_fast_init_set_arf(bm, arb_midref(b));
+    mag_fast_init_set_arf(cm, arb_midref(c));
+    mag_fast_init_set_arf(dm, arb_midref(d));
+
+    mag_init(er);
+    mag_init(fr);
+
+    mag_fast_addmul(er, am, cr);
+    mag_fast_addmul(er, bm, dr);
+    mag_fast_addmul(er, cm, ar);
+    mag_fast_addmul(er, dm, br);
+    mag_fast_addmul(er, ar, cr);
+    mag_fast_addmul(er, br, dr);
+
+    mag_fast_addmul(fr, am, dr);
+    mag_fast_addmul(fr, bm, cr);
+    mag_fast_addmul(fr, cm, br);
+    mag_fast_addmul(fr, dm, ar);
+    mag_fast_addmul(fr, br, cr);
+    mag_fast_addmul(fr, ar, dr);
+
+    inexact = arf_complex_mul(arb_midref(e), arb_midref(f),
+                    arb_midref(a), arb_midref(b),
+                    arb_midref(c), arb_midref(d), prec, ARB_RND);
+
+    if (inexact & 1)
+        arf_mag_add_ulp(arb_radref(e), er, arb_midref(e), prec);
+    else
+        mag_set(arb_radref(e), er);
+
+    if (inexact & 2)
+        arf_mag_add_ulp(arb_radref(f), fr, arb_midref(f), prec);
+    else
+        mag_set(arb_radref(f), fr);
+}
+
+static void
+_acb_mul_slow(acb_t z, const acb_t x, const acb_t y, long prec)
+{
+    int inexact;
+
+    mag_t am, bm, cm, dm, er, fr;
+
+    mag_init_set_arf(am, arb_midref(a));
+    mag_init_set_arf(bm, arb_midref(b));
+    mag_init_set_arf(cm, arb_midref(c));
+    mag_init_set_arf(dm, arb_midref(d));
+
+    mag_init(er);
+    mag_init(fr);
+
+    mag_addmul(er, am, cr);
+    mag_addmul(er, bm, dr);
+    mag_addmul(er, cm, ar);
+    mag_addmul(er, dm, br);
+    mag_addmul(er, ar, cr);
+    mag_addmul(er, br, dr);
+
+    mag_addmul(fr, am, dr);
+    mag_addmul(fr, bm, cr);
+    mag_addmul(fr, cm, br);
+    mag_addmul(fr, dm, ar);
+    mag_addmul(fr, br, cr);
+    mag_addmul(fr, ar, dr);
+
+    inexact = arf_complex_mul(arb_midref(e), arb_midref(f),
+                    arb_midref(a), arb_midref(b),
+                    arb_midref(c), arb_midref(d), prec, ARB_RND);
+
+    if (inexact & 1)
+        arf_mag_add_ulp(arb_radref(e), er, arb_midref(e), prec);
+    else
+        mag_swap(arb_radref(e), er);
+
+    if (inexact & 2)
+        arf_mag_add_ulp(arb_radref(f), fr, arb_midref(f), prec);
+    else
+        mag_swap(arb_radref(f), fr);
+
+    mag_clear(am);
+    mag_clear(bm);
+    mag_clear(cm);
+    mag_clear(dm);
+
+    mag_clear(er);
+    mag_clear(fr);
+}
+
+void
+acb_mul(acb_t z, const acb_t x, const acb_t y, long prec)
+{
     if (arb_is_zero(b))
     {
         arb_mul(f, d, a, prec);
@@ -60,87 +242,20 @@ acb_mul(acb_t z, const acb_t x, const acb_t y, long prec)
     /* squaring = a^2-b^2, 2ab */
     else if (x == y)
     {
-        /* aliasing */
-        if (z == x)
-        {
-            arb_t t;
-            arb_init(t);
-
-            arb_mul(t, a, b, prec);
-            arb_mul_2exp_si(t, t, 1);
-            arb_mul(e, a, a, prec);
-            arb_mul(f, b, b, prec);
-            arb_sub(e, e, f, prec);
-            arb_swap(f, t);
-
-            arb_clear(t);
-        }
+        if (ARB_IS_LAGOM(a) && ARB_IS_LAGOM(b))
+            _acb_sqr_fast(z, x, prec);
         else
-        {
-            arb_mul(e, a, a, prec);
-            arb_mul(f, b, b, prec);
-            arb_sub(e, e, f, prec);
-            arb_mul(f, a, b, prec);
-            arb_mul_2exp_si(f, f, 1);
-        }
+            _acb_sqr_slow(z, x, prec);
     }
     else
     {
-        /* aliasing */
-        if (z == x)
-        {
-            arb_t t, u;
-
-            arb_init(t);
-            arb_init(u);
-
-            arb_mul(t, a, c, prec);
-            arb_mul(u, a, d, prec);
-
-            arb_mul(e, b, d, prec);
-            arb_sub(e, t, e, prec);
-
-            arb_mul(f, b, c, prec);
-            arb_add(f, u, f, prec);
-
-            arb_clear(t);
-            arb_clear(u);
-        }
-        else if (z == y)
-        {
-            arb_t t, u;
-
-            arb_init(t);
-            arb_init(u);
-
-            arb_mul(t, c, a, prec);
-            arb_mul(u, c, b, prec);
-
-            arb_mul(e, d, b, prec);
-            arb_sub(e, t, e, prec);
-
-            arb_mul(f, d, a, prec);
-            arb_add(f, u, f, prec);
-
-            arb_clear(t);
-            arb_clear(u);
-        }
+        if (ARB_IS_LAGOM(a) && ARB_IS_LAGOM(b) &&
+            ARB_IS_LAGOM(c) && ARB_IS_LAGOM(d))
+            _acb_mul_fast(z, x, y, prec);
         else
-        {
-            arb_t t;
-            arb_init(t);
-
-            arb_mul(e, a, c, prec);
-            arb_mul(t, b, d, prec);
-            arb_sub(e, e, t, prec);
-
-            arb_mul(f, a, d, prec);
-            arb_mul(t, b, c, prec);
-            arb_add(f, f, t, prec);
-
-            arb_clear(t);
-        }
+            _acb_mul_slow(z, x, y, prec);
     }
+}
 
 #undef a
 #undef b
@@ -148,4 +263,8 @@ acb_mul(acb_t z, const acb_t x, const acb_t y, long prec)
 #undef d
 #undef e
 #undef f
-}
+#undef ar
+#undef br
+#undef cr
+#undef dr
+

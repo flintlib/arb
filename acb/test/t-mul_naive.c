@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter, iter2;
+    long iter;
     flint_rand_t state;
 
-    printf("mul....");
+    printf("mul_naive....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -51,8 +51,8 @@ int main()
 
         prec = 2 + n_randint(state, 200);
 
-        acb_mul(c, a, b, prec);
-        acb_mul(a, a, b, prec);
+        acb_mul_naive(c, a, b, prec);
+        acb_mul_naive(a, a, b, prec);
 
         if (!acb_equal(a, c))
         {
@@ -84,8 +84,8 @@ int main()
 
         prec = 2 + n_randint(state, 200);
 
-        acb_mul(c, a, b, prec);
-        acb_mul(b, a, b, prec);
+        acb_mul_naive(c, a, b, prec);
+        acb_mul_naive(b, a, b, prec);
 
         if (!acb_equal(b, c))
         {
@@ -119,8 +119,8 @@ int main()
         prec = 2 + n_randint(state, 200);
 
         acb_set(b, a);
-        acb_mul(c, a, a, prec);
-        acb_mul(d, a, b, prec);
+        acb_mul_naive(c, a, a, prec);
+        acb_mul_naive(d, a, b, prec);
 
         if (!acb_overlaps(c, d))
         {
@@ -155,8 +155,8 @@ int main()
         prec = 2 + n_randint(state, 200);
 
         acb_set(b, a);
-        acb_mul(c, a, b, prec);
-        acb_mul(a, a, a, prec);
+        acb_mul_naive(c, a, b, prec);
+        acb_mul_naive(a, a, a, prec);
 
         if (!acb_overlaps(a, c))
         {
@@ -189,10 +189,10 @@ int main()
         acb_randtest(c, state, 1 + n_randint(state, 200), 10);
 
         acb_add(d, b, c, 2 + n_randint(state, 200));
-        acb_mul(e, a, d, 2 + n_randint(state, 200));
+        acb_mul_naive(e, a, d, 2 + n_randint(state, 200));
 
-        acb_mul(d, a, b, 2 + n_randint(state, 200));
-        acb_mul(f, a, c, 2 + n_randint(state, 200));
+        acb_mul_naive(d, a, b, 2 + n_randint(state, 200));
+        acb_mul_naive(f, a, c, 2 + n_randint(state, 200));
         acb_add(f, d, f, 2 + n_randint(state, 200));
 
         if (!acb_overlaps(e, f))
@@ -212,107 +212,6 @@ int main()
         acb_clear(d);
         acb_clear(e);
         acb_clear(f);
-    }
-
-    /* compare with mul_naive */
-    /* main test */
-    for (iter = 0; iter < 10000; iter++)
-    {
-        acb_t x, y, z, v;
-        long prec;
-
-        acb_init(x);
-        acb_init(y);
-        acb_init(z);
-        acb_init(v);
-
-        for (iter2 = 0; iter2 < 100; iter2++)
-        {
-            acb_randtest_special(x, state, n_randint(state,2) ? 2000 : 200, 200);
-            acb_randtest_special(y, state, n_randint(state,2) ? 2000 : 200, 200);
-
-            prec = 2 + n_randint(state, 2000);
-
-            switch (n_randint(state, 5))
-            {
-            case 0:
-                acb_mul(z, x, y, prec);
-                acb_mul_naive(v, x, y, prec);
-
-                if (!acb_overlaps(z, v))
-                {
-                    printf("FAIL!\n");
-                    printf("x = "); acb_print(x); printf("\n\n");
-                    printf("y = "); acb_print(y); printf("\n\n");
-                    printf("z = "); acb_print(z); printf("\n\n");
-                    printf("v = "); acb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 1:
-                acb_set(y, x);
-                acb_mul(z, x, y, prec);
-                acb_mul(v, x, x, prec);
-
-                if (!acb_overlaps(z, v))
-                {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); acb_print(x); printf("\n\n");
-                    printf("z = "); acb_print(z); printf("\n\n");
-                    printf("v = "); acb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 2:
-                acb_mul(v, x, x, prec);
-                acb_mul(x, x, x, prec);
-
-                if (!acb_equal(v, x))
-                {
-                    printf("FAIL (aliasing 2)!\n");
-                    printf("x = "); acb_print(x); printf("\n\n");
-                    printf("z = "); acb_print(z); printf("\n\n");
-                    printf("v = "); acb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            case 3:
-                acb_mul(v, x, y, prec);
-                acb_mul(x, x, y, prec);
-
-                if (!acb_equal(v, x))
-                {
-                    printf("FAIL (aliasing 3)!\n");
-                    printf("x = "); acb_print(x); printf("\n\n");
-                    printf("y = "); acb_print(y); printf("\n\n");
-                    printf("v = "); acb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-
-            default:
-                acb_mul(v, x, y, prec);
-                acb_mul(x, y, x, prec);
-
-                if (!acb_overlaps(v, x))
-                {
-                    printf("FAIL (aliasing 4)!\n");
-                    printf("x = "); acb_print(x); printf("\n\n");
-                    printf("y = "); acb_print(y); printf("\n\n");
-                    printf("v = "); acb_print(v); printf("\n\n");
-                    abort();
-                }
-                break;
-            }
-        }
-
-        acb_clear(x);
-        acb_clear(y);
-        acb_clear(z);
-        acb_clear(v);
     }
 
     flint_randclear(state);

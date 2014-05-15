@@ -1278,6 +1278,10 @@ int arf_complex_mul_fallback(arf_t e, arf_t f,
         const arf_t c, const arf_t d,
         long prec, arf_rnd_t rnd);
 
+/* TODO: document */
+int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b,
+                                      long prec, arf_rnd_t rnd);
+
 #ifdef __cplusplus
 }
 #endif

@@ -163,8 +163,8 @@ int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
     /* Gauss multiplication
         e = ac - bd
         f = (a+b)(c+d) - ac - bd */
-    if (an >= 8 &&
-        cn >= 8 &&
+    if (an >= 20 &&
+        cn >= 20 &&
         FLINT_ABS(an - bn) <= 2 &&
         FLINT_ABS(cn - dn) <= 2 &&
         FLINT_ABS(aexp - bexp) <= 64 &&
@@ -275,5 +275,69 @@ int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
     }
 
     return inex1 | (inex2 << 1);
+}
+
+int arf_complex_sqr(arf_t e, arf_t f,
+    const arf_t a, const arf_t b, long prec, arf_rnd_t rnd)
+{
+    if (!ARF_IS_LAGOM(a) || !ARF_IS_LAGOM(b) ||
+        ARF_IS_SPECIAL(a) || ARF_IS_SPECIAL(b))
+    {
+        return arf_complex_mul_fallback(e, f, a, b, a, b, prec, rnd);
+    }
+    else
+    {
+        mp_srcptr ap, bp;
+        int inex1, inex2;
+        mp_ptr tmp, aap, bbp;
+        mp_size_t an, bn, aan, bbn, alloc;
+        long shift;
+        long aexp, bexp;
+        fmpz texp, uexp;
+        TMP_INIT;
+
+        ARF_GET_MPN_READONLY(ap, an, a);
+        aexp = ARF_EXP(a);
+
+        ARF_GET_MPN_READONLY(bp, bn, b);
+        bexp = ARF_EXP(b);
+
+        aan = 2 * an;
+        bbn = 2 * bn;
+
+        alloc = aan + bbn;
+
+        TMP_START;
+
+        tmp = TMP_ALLOC(alloc * sizeof(mp_limb_t));
+        aap = tmp;
+        bbp = tmp + aan;
+
+        ARF_MPN_MUL(aap, ap, an, ap, an)
+        aan -= (aap[0] == 0);
+        aap += (aap[0] == 0);
+
+        ARF_MPN_MUL(bbp, bp, bn, bp, bn)
+        bbn -= (bbp[0] == 0);
+        bbp += (bbp[0] == 0);
+
+        texp = aexp + aexp;
+        uexp = bexp + bexp;
+        shift = texp - uexp;
+
+        inex2 = arf_mul(f, a, b, prec, rnd);
+        ARF_EXP(f) += 1;
+
+        if (shift >= 0)
+            inex1 = _arf_add_mpn(e, aap, aan, 0, &texp,
+                                    bbp, bbn, 1, shift, prec, rnd);
+        else
+            inex1 = _arf_add_mpn(e, bbp, bbn, 1, &uexp,
+                                    aap, aan, 0, -shift, prec, rnd);
+
+        TMP_END;
+
+        return inex1 | (inex2 << 1);
+    }
 }
 

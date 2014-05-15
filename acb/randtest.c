@@ -32,3 +32,10 @@ acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits)
     arb_randtest(acb_imagref(z), state, prec, mag_bits);
 }
 
+void
+acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits)
+{
+    arb_randtest_special(acb_realref(z), state, prec, mag_bits);
+    arb_randtest_special(acb_imagref(z), state, prec, mag_bits);
+}
+

@@ -448,7 +448,7 @@ acb_mul_onei(acb_t z, const acb_t x)
 
 void acb_mul(acb_t z, const acb_t x, const acb_t y, long prec);
 
-void acb_mul_alt(acb_t z, const acb_t x, const acb_t y, long prec);
+void acb_mul_naive(acb_t z, const acb_t x, const acb_t y, long prec);
 
 static __inline__ void
 acb_mul_2exp_si(acb_t z, const acb_t x, long e)
@@ -800,6 +800,8 @@ acb_print(const acb_t x)
 void acb_printd(const acb_t z, long digits);
 
 void acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits);
+
+void acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
 static __inline__ long
 acb_bits(const acb_t x)
