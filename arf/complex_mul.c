@@ -1,0 +1,279 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ARB; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2014 Fredrik Johansson
+
+******************************************************************************/
+
+#include "arf.h"
+
+/* TODO: move to fmpz_extras, test */
+static void
+fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit,
+mp_bitcnt_t shift)
+{
+    __mpz_struct * zmpz;
+    mp_ptr zp;
+    mp_size_t zn, shift_limbs;
+    mp_bitcnt_t shift_bits;
+
+    zmpz = _fmpz_promote(z);
+
+    shift_limbs = shift / FLINT_BITS;
+    shift_bits = shift % FLINT_BITS;
+    zn = dn + shift_limbs + (shift_bits != 0);
+
+    if (zmpz->_mp_alloc < zn)
+        mpz_realloc2(zmpz, zn * FLINT_BITS);
+
+    zp = zmpz->_mp_d;
+    flint_mpn_zero(zp, shift_limbs);
+
+    if (shift_bits == 0)
+    {
+        flint_mpn_copyi(zp + shift_limbs, d, dn);
+    }
+    else
+    {
+        zp[zn - 1] = mpn_lshift(zp + shift_limbs, d, dn, shift_bits);
+        while (zp[zn - 1] == 0)
+            zn--;
+    }
+
+    zmpz->_mp_size = sgnbit ? -(long) zn : zn;
+    _fmpz_demote_val(z);
+}
+
+int arf_complex_mul_fallback(arf_t e, arf_t f,
+        const arf_t a, const arf_t b,
+        const arf_t c, const arf_t d,
+        long prec, arf_rnd_t rnd)
+{
+    int inex1, inex2;
+
+    /* here the operations are ordered to allow aliasing */
+    if (arf_is_zero(d))
+    {
+        /* (a + bi) * c */
+        inex2 = arf_mul(f, b, c, prec, rnd);
+        inex1 = arf_mul(e, a, c, prec, rnd);
+    }
+    else if (arf_is_zero(b))
+    {
+        /* a * (c + di) */
+        inex2 = arf_mul(f, a, d, prec, rnd);
+        inex1 = arf_mul(e, a, c, prec, rnd);
+    }
+    else if (arf_is_zero(c))
+    {
+        /* (a + bi) * di = -bd + adi */
+        inex2 = arf_mul(e, a, d, prec, rnd);
+        inex1 = arf_neg_mul(f, b, d, prec, rnd);
+        arf_swap(e, f);
+    }
+    else if (arf_is_zero(a))
+    {
+        /* bi * (c + di) = -bd + bci */
+        inex2 = arf_mul(e, b, c, prec, rnd);
+        inex1 = arf_neg_mul(f, b, d, prec, rnd);
+        arf_swap(e, f);
+    }
+    else
+    {
+        arf_t t, u, v, w;
+
+        arf_init(t);
+        arf_init(u);
+        arf_init(v);
+        arf_init(w);
+
+        arf_mul(t, a, c, ARF_PREC_EXACT, ARF_RND_DOWN);
+        arf_mul(u, b, d, ARF_PREC_EXACT, ARF_RND_DOWN);
+
+        arf_mul(v, b, c, ARF_PREC_EXACT, ARF_RND_DOWN);
+        arf_mul(w, a, d, ARF_PREC_EXACT, ARF_RND_DOWN);
+
+        inex1 = arf_sub(e, t, u, prec, rnd);
+        inex2 = arf_add(f, v, w, prec, rnd);
+
+        arf_clear(t);
+        arf_clear(u);
+        arf_clear(v);
+        arf_clear(w);
+    }
+
+    return inex1 | (inex2 << 1);
+}
+
+
+int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
+                                      const arf_t c, const arf_t d,
+                                      long prec, arf_rnd_t rnd)
+{
+    mp_srcptr ap, bp, cp, dp;
+    int asgn, bsgn, csgn, dsgn, inex1, inex2;
+    mp_ptr tmp, acp, bdp, adp, bcp;
+    mp_size_t an, bn, cn, dn, acn, bdn, adn, bcn, alloc;
+    long shift;
+    long aexp, bexp, cexp, dexp;
+    fmpz texp, uexp;
+
+    if (!ARF_IS_LAGOM(a) || !ARF_IS_LAGOM(b) ||
+        !ARF_IS_LAGOM(c) || !ARF_IS_LAGOM(d) ||
+        ARF_IS_SPECIAL(d) || ARF_IS_SPECIAL(a) ||
+        ARF_IS_SPECIAL(b) || ARF_IS_SPECIAL(c))
+    {
+        return arf_complex_mul_fallback(e, f, a, b, c, d, prec, rnd);
+    }
+
+    ARF_GET_MPN_READONLY(ap, an, a);
+    asgn = ARF_SGNBIT(a);
+    aexp = ARF_EXP(a);
+
+    ARF_GET_MPN_READONLY(bp, bn, b);
+    bsgn = ARF_SGNBIT(b);
+    bexp = ARF_EXP(b);
+
+    ARF_GET_MPN_READONLY(cp, cn, c);
+    csgn = ARF_SGNBIT(c);
+    cexp = ARF_EXP(c);
+
+    ARF_GET_MPN_READONLY(dp, dn, d);
+    dsgn = ARF_SGNBIT(d);
+    dexp = ARF_EXP(d);
+
+    /* Gauss multiplication
+        e = ac - bd
+        f = (a+b)(c+d) - ac - bd */
+    if (an >= 8 &&
+        cn >= 8 &&
+        FLINT_ABS(an - bn) <= 2 &&
+        FLINT_ABS(cn - dn) <= 2 &&
+        FLINT_ABS(aexp - bexp) <= 64 &&
+        FLINT_ABS(cexp - dexp) <= 64)
+    {
+        fmpz_t za, zb, zc, zd, t, u, v;
+        long abot, bbot, cbot, dbot;
+
+        abot = aexp - an * FLINT_BITS;
+        bbot = bexp - bn * FLINT_BITS;
+        cbot = cexp - cn * FLINT_BITS;
+        dbot = dexp - dn * FLINT_BITS;
+
+        texp = FLINT_MIN(abot, bbot);
+        uexp = FLINT_MIN(cbot, dbot);
+
+        fmpz_init(za);
+        fmpz_init(zb);
+        fmpz_init(zc);
+        fmpz_init(zd);
+        fmpz_init(t);
+        fmpz_init(u);
+        fmpz_init(v);
+
+        /* todo: could avoid two copies */
+        fmpz_lshift_mpn(za, ap, an, asgn, abot - texp);
+        fmpz_lshift_mpn(zb, bp, bn, bsgn, bbot - texp);
+        fmpz_lshift_mpn(zc, cp, cn, csgn, cbot - uexp);
+        fmpz_lshift_mpn(zd, dp, dn, dsgn, dbot - uexp);
+
+        fmpz_add(t, za, zb);
+        fmpz_add(v, zc, zd);
+        fmpz_mul(u, t, v);
+        fmpz_mul(t, za, zc);
+        fmpz_mul(v, zb, zd);
+        fmpz_sub(u, u, t);
+        fmpz_sub(u, u, v);
+        fmpz_sub(t, t, v);
+
+        texp += uexp;
+        inex1 = arf_set_round_fmpz_2exp(e, t, &texp, prec, rnd);
+        inex2 = arf_set_round_fmpz_2exp(f, u, &texp, prec, rnd);
+
+        fmpz_clear(za);
+        fmpz_clear(zb);
+        fmpz_clear(zc);
+        fmpz_clear(zd);
+        fmpz_clear(t);
+        fmpz_clear(u);
+        fmpz_clear(v);
+    }
+    else
+    {
+        ARF_MUL_TMP_DECL
+
+        acn = an + cn;
+        bdn = bn + dn;
+        adn = an + dn;
+        bcn = bn + cn;
+
+        alloc = acn + bdn + adn + bcn;
+
+        ARF_MUL_TMP_ALLOC(tmp, alloc)
+        acp = tmp;
+        bdp = acp + acn;
+        adp = bdp + bdn;
+        bcp = adp + adn;
+
+        ARF_MPN_MUL(acp, ap, an, cp, cn)
+        acn -= (acp[0] == 0);
+        acp += (acp[0] == 0);
+
+        ARF_MPN_MUL(bdp, bp, bn, dp, dn)
+        bdn -= (bdp[0] == 0);
+        bdp += (bdp[0] == 0);
+
+        ARF_MPN_MUL(adp, ap, an, dp, dn)
+        adn -= (adp[0] == 0);
+        adp += (adp[0] == 0);
+
+        ARF_MPN_MUL(bcp, bp, bn, cp, cn)
+        bcn -= (bcp[0] == 0);
+        bcp += (bcp[0] == 0);
+
+        texp = aexp + cexp;
+        uexp = bexp + dexp;
+        shift = texp - uexp;
+
+        if (shift >= 0)
+            inex1 = _arf_add_mpn(e, acp, acn, asgn ^ csgn, &texp,
+                                    bdp, bdn, bsgn ^ dsgn ^ 1, shift, prec, rnd);
+        else
+            inex1 = _arf_add_mpn(e, bdp, bdn, bsgn ^ dsgn ^ 1, &uexp,
+                                    acp, acn, asgn ^ csgn, -shift, prec, rnd);
+
+        texp = aexp + dexp;
+        uexp = bexp + cexp;
+        shift = texp - uexp;
+
+        if (shift >= 0)
+            inex2 = _arf_add_mpn(f, adp, adn, asgn ^ dsgn, &texp,
+                                    bcp, bcn, bsgn ^ csgn, shift, prec, rnd);
+        else
+            inex2 = _arf_add_mpn(f, bcp, bcn, bsgn ^ csgn, &uexp,
+                                    adp, adn, asgn ^ dsgn, -shift, prec, rnd);
+
+        ARF_MUL_TMP_FREE(tmp, alloc)
+    }
+
+    return inex1 | (inex2 << 1);
+}
+

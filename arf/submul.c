@@ -40,9 +40,7 @@ arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
     {
         if (arf_is_zero(z))
         {
-            /* TODO: make more efficient */
-            arf_mul(z, x, y, ARF_PREC_EXACT, rnd);
-            return arf_neg_round(z, z, prec, rnd);
+            return arf_neg_mul(z, x, y, prec, rnd);
         }
         else if (arf_is_finite(x) && arf_is_finite(y))
         {

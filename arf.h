@@ -755,6 +755,32 @@ long arf_abs_bound_lt_2exp_si(const arf_t x);
 
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
+/* TODO: document, implement properly */
+static __inline__ int
+arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
+{
+    int r;
+    fmpr_t t;
+    fmpr_init(t);
+    arf_get_fmpr(t, x);
+    r = fmpr_get_fmpz_fixed_fmpz(y, t, e);
+    fmpr_clear(t);
+    return r;
+}
+
+/* TODO: document, implement properly */
+static __inline__ int
+arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
+{
+    int r;
+    fmpr_t t;
+    fmpr_init(t);
+    arf_get_fmpr(t, x);
+    r = fmpr_get_fmpz_fixed_si(y, t, e);
+    fmpr_clear(t);
+    return r;
+}
+
 static __inline__ void
 arf_set_fmpz_2exp(arf_t x, const fmpz_t man, const fmpz_t exp)
 {
@@ -897,6 +923,24 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec);
     ((rnd == FMPR_RND_DOWN)                      \
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
+
+static __inline__ int
+arf_neg_mul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+{
+    if (arf_is_special(y))
+    {
+        arf_mul(z, x, y, prec, rnd);
+        arf_neg(z, z);
+        return 0;
+    }
+    else
+    {
+        arf_t t;
+        *t = *y;
+        ARF_NEG(t);
+        return arf_mul(z, x, t, prec, rnd);
+    }
+}
 
 static __inline__ int
 arf_mul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
@@ -1222,6 +1266,17 @@ arf_set_fmpq(arf_t y, const fmpq_t x, long prec, arf_rnd_t rnd)
 {
     return arf_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec, rnd);
 }
+
+/* TODO: document */
+int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
+                                      const arf_t c, const arf_t d,
+                                      long prec, arf_rnd_t rnd);
+
+/* TODO: document */
+int arf_complex_mul_fallback(arf_t e, arf_t f,
+        const arf_t a, const arf_t b,
+        const arf_t c, const arf_t d,
+        long prec, arf_rnd_t rnd);
 
 #ifdef __cplusplus
 }
