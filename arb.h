@@ -749,6 +749,24 @@ _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
         arb_addmul(res + i, vec + i, c, prec);
 }
 
+static __inline__ void
+_arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, long len2, long prec)
+{
+    long i;
+    arb_zero(res);
+    for (i = 0; i < len2; i++)
+        arb_addmul(res, vec1 + i, vec2 + i, prec);
+}
+
+static __inline__ void
+_arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
+{
+    long i;
+    arb_zero(res);
+    for (i = 0; i < len; i++)
+        arb_addmul(res, vec + i, vec + i, prec);
+}
+
 /* TODO: mag version? */
 static __inline__ void
 _arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
