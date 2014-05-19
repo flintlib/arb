@@ -460,21 +460,47 @@ acb_mul_2exp_si(acb_t z, const acb_t x, long e)
 static __inline__ void
 acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec)
 {
-    acb_t t;
-    acb_init(t);
-    acb_mul(t, x, y, prec);
-    acb_add(z, z, t, prec);
-    acb_clear(t);
+    if (arb_is_zero(acb_imagref(y)))
+    {
+        arb_addmul(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
+        arb_addmul(acb_realref(z), acb_realref(x), acb_realref(y), prec);
+    }
+    else if (arb_is_zero(acb_imagref(x)))
+    {
+        arb_addmul(acb_imagref(z), acb_imagref(y), acb_realref(x), prec);
+        arb_addmul(acb_realref(z), acb_realref(y), acb_realref(x), prec);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        acb_mul(t, x, y, prec);
+        acb_add(z, z, t, prec);
+        acb_clear(t);
+    }
 }
 
 static __inline__ void
 acb_submul(acb_t z, const acb_t x, const acb_t y, long prec)
 {
-    acb_t t;
-    acb_init(t);
-    acb_mul(t, x, y, prec);
-    acb_sub(z, z, t, prec);
-    acb_clear(t);
+    if (arb_is_zero(acb_imagref(y)))
+    {
+        arb_submul(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
+        arb_submul(acb_realref(z), acb_realref(x), acb_realref(y), prec);
+    }
+    else if (arb_is_zero(acb_imagref(x)))
+    {
+        arb_submul(acb_imagref(z), acb_imagref(y), acb_realref(x), prec);
+        arb_submul(acb_realref(z), acb_realref(y), acb_realref(x), prec);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        acb_mul(t, x, y, prec);
+        acb_sub(z, z, t, prec);
+        acb_clear(t);
+    }
 }
 
 static __inline__ void
@@ -681,35 +707,17 @@ _acb_vec_sub(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
 static __inline__ void
 _acb_vec_scalar_submul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
-    if (len > 0)
-    {
-        long i;
-        acb_t t;
-        acb_init(t);
-        for (i = 0; i < len; i++)
-        {
-            acb_mul(t, vec + i, c, prec);
-            acb_sub(res + i, res + i, t, prec);
-        }
-        acb_clear(t);
-    }
+    long i;
+    for (i = 0; i < len; i++)
+        acb_submul(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
 _acb_vec_scalar_addmul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
-    if (len > 0)
-    {
-        long i;
-        acb_t t;
-        acb_init(t);
-        for (i = 0; i < len; i++)
-        {
-            acb_mul(t, vec + i, c, prec);
-            acb_add(res + i, res + i, t, prec);
-        }
-        acb_clear(t);
-    }
+    long i;
+    for (i = 0; i < len; i++)
+        acb_addmul(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
