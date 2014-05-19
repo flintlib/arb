@@ -275,6 +275,8 @@ fmpz_min(fmpz_t z, const fmpz_t x, const fmpz_t y)
         (zn) = FLINT_ABS(zn); \
     }
 
+void fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, mp_bitcnt_t shift);
+
 #ifdef __cplusplus
 }
 #endif
