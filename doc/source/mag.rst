@@ -51,6 +51,10 @@ Special values
 
     Sets *x* to zero.
 
+.. function:: void mag_one(mag_t x)
+
+    Sets *x* to one.
+
 .. function:: void mag_inf(mag_t x)
 
     Sets *x* to positive infinity.
@@ -67,8 +71,36 @@ Special values
 
     Returns nonzero iff *x* is positive infinity.
 
+.. function:: int mag_is_finite(const mag_t x)
+
+    Returns nonzero iff *x* is not positive infinity (since there is no
+    NaN value, this function is exactly the negation of :func:`mag_is_inf`).
+
+Comparisons
+-------------------------------------------------------------------------------
+
+.. function:: int mag_equal(const mag_t x, const mag_t y)
+
+    Returns nonzero iff *x* and *y* have the same value.
+
+.. function:: int mag_cmp(const mag_t x, const mag_t y)
+
+    Returns negative, zero, or positive, depending on whether *x*
+    is smaller, equal, or larger than *y*.
+
+.. function:: int mag_cmp_2exp_si(const mag_t x, long y)
+
+    Returns negative, zero, or positive, depending on whether *x*
+    is smaller, equal, or larger than `2^y`.
+
 Arithmetic
 -------------------------------------------------------------------------------
+
+.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, long y)
+
+.. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets `z` to `x \times 2^y`. This operation is exact.
 
 .. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
 
@@ -130,14 +162,21 @@ Random generation
 
 .. function:: void mag_randtest(mag_t x, flint_rand_t state, long expbits)
 
-    Sets *x* to a random value, with an exponent up to *expbits* bits large.
-    The special values zero and infinity are occasionally generated.
+    Sets *x* to a random finite value, with an exponent up to *expbits* bits large.
+
+.. function:: void mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
+
+    Like :func:`mag_randtest`, but also sometimes sets *x* to
+    infinity.
 
 Conversions
 -------------------------------------------------------------------------------
 
-These functions are intended for debugging purposes: see the :doc:`arf <arf>`
-module for other conversion functions.
+.. function:: void mag_set_d_2exp_fmpz(mag_t z, double x, const fmpz_t y)
+
+.. function:: void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t x, const fmpz_t y)
+
+    Sets *z* to an upper bound for `x \times 2^y`.
 
 .. function:: void mag_set_fmpr(mag_t y, const fmpr_t x)
 
@@ -145,5 +184,9 @@ module for other conversion functions.
 
 .. function:: void mag_get_fmpr(fmpr_t y, const mag_t x)
 
-    Sets *y* to exactly *x*.
+    Sets *y* exactly to *x*.
+
+.. function:: void mag_get_fmpq(fmpq_t y, const mag_t x)
+
+    Sets *y* exactly to *x*. Assumes that no overflow occurs.
 
