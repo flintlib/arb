@@ -479,7 +479,6 @@ arf_cmpabs_ui(const arf_t x, ulong y)
     return arf_cmpabs(x, t);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_init_set_mag_shallow(arf_t y, const mag_t x)
 {
@@ -1214,14 +1213,12 @@ mag_fast_init_set_arf(mag_t y, const arf_t x)
     }
 }
 
-/* TODO: document */
 static __inline__ void
 arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
     mag_fast_add_2exp_si(z, x, ARF_EXP(y) - prec);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
