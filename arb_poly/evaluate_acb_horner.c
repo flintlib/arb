@@ -19,40 +19,55 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2010 Sebastian Pancratz
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "arb_poly.h"
 
-int
-arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+void
+_arb_poly_evaluate_acb_horner(acb_t y, arb_srcptr f, long len,
+                           const acb_t x, long prec)
 {
-    if (arf_is_special(x))
+    if (len == 0)
     {
-        arf_neg(y, x);
-        return 0;
+        acb_zero(y);
+    }
+    else if (len == 1 || acb_is_zero(x))
+    {
+        acb_set_round_arb(y, f, prec);
+    }
+    else if (len == 2)
+    {
+        acb_mul_arb(y, x, f + 1, prec);
+        acb_add_arb(y, y, f + 0, prec);
     }
     else
     {
-        int inexact;
-        long fix;
-        mp_size_t xn;
-        mp_srcptr xptr;
+        long i = len - 1;
+        acb_t t, u;
 
-        if (y == x)
+        acb_init(t);
+        acb_init(u);
+        acb_set_arb(u, f + i);
+
+        for (i = len - 2; i >= 0; i--)
         {
-            ARF_NEG(y);
-            return arf_set_round(y, y, prec, rnd);
+            acb_mul(t, u, x, prec);
+            acb_add_arb(u, t, f + i, prec);
         }
-        else
-        {
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
-                !ARF_SGNBIT(x), prec, rnd);
-            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
-            return inexact;
-        }
+
+        acb_swap(y, u);
+
+        acb_clear(t);
+        acb_clear(u);
     }
+}
+
+void
+arb_poly_evaluate_acb_horner(acb_t res, const arb_poly_t f, const acb_t a, long prec)
+{
+    _arb_poly_evaluate_acb_horner(res, f->coeffs, f->length, a, prec);
 }
 

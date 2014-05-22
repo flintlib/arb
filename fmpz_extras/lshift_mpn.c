@@ -23,36 +23,40 @@
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "fmpz_extras.h"
 
-int
-arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+void
+fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, mp_bitcnt_t shift)
 {
-    if (arf_is_special(x))
+    __mpz_struct * zmpz;
+    mp_ptr zp;
+    mp_size_t zn, shift_limbs;
+    mp_bitcnt_t shift_bits;
+
+    zmpz = _fmpz_promote(z);
+
+    shift_limbs = shift / FLINT_BITS;
+    shift_bits = shift % FLINT_BITS;
+    zn = dn + shift_limbs + (shift_bits != 0);
+
+    if (zmpz->_mp_alloc < zn)
+        mpz_realloc2(zmpz, zn * FLINT_BITS);
+
+    zp = zmpz->_mp_d;
+    flint_mpn_zero(zp, shift_limbs);
+
+    if (shift_bits == 0)
     {
-        arf_neg(y, x);
-        return 0;
+        flint_mpn_copyi(zp + shift_limbs, d, dn);
     }
     else
     {
-        int inexact;
-        long fix;
-        mp_size_t xn;
-        mp_srcptr xptr;
-
-        if (y == x)
-        {
-            ARF_NEG(y);
-            return arf_set_round(y, y, prec, rnd);
-        }
-        else
-        {
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
-                !ARF_SGNBIT(x), prec, rnd);
-            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
-            return inexact;
-        }
+        zp[zn - 1] = mpn_lshift(zp + shift_limbs, d, dn, shift_bits);
+        while (zp[zn - 1] == 0)
+            zn--;
     }
+
+    zmpz->_mp_size = sgnbit ? -(long) zn : zn;
+    _fmpz_demote_val(z);
 }
 

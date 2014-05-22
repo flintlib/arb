@@ -479,7 +479,6 @@ arf_cmpabs_ui(const arf_t x, ulong y)
     return arf_cmpabs(x, t);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_init_set_mag_shallow(arf_t y, const mag_t x)
 {
@@ -531,8 +530,10 @@ arf_set_fmpz(arf_t y, const fmpz_t x)
 
 int _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd);
 
+/* TODO: document */
+int _arf_set_round_uiui(arf_t z, long * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, long prec, arf_rnd_t rnd);
+
 /* Assumes xn > 0, x[0] != 0. */
-/* TBD: 1, 2 limb versions, top-aligned version */
 int
 _arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, long prec, arf_rnd_t rnd);
@@ -1214,14 +1215,12 @@ mag_fast_init_set_arf(mag_t y, const arf_t x)
     }
 }
 
-/* TODO: document */
 static __inline__ void
 arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
     mag_fast_add_2exp_si(z, x, ARF_EXP(y) - prec);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {

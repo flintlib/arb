@@ -19,40 +19,21 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "arb_poly.h"
 
-int
-arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+void
+_arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec)
 {
-    if (arf_is_special(x))
-    {
-        arf_neg(y, x);
-        return 0;
-    }
-    else
-    {
-        int inexact;
-        long fix;
-        mp_size_t xn;
-        mp_srcptr xptr;
+    _arb_poly_evaluate2_acb_rectangular(y, z, f, len, x, prec);
+}
 
-        if (y == x)
-        {
-            ARF_NEG(y);
-            return arf_set_round(y, y, prec, rnd);
-        }
-        else
-        {
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
-                !ARF_SGNBIT(x), prec, rnd);
-            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
-            return inexact;
-        }
-    }
+void
+arb_poly_evaluate2_acb(acb_t r, acb_t s, const arb_poly_t f, const acb_t a, long prec)
+{
+    _arb_poly_evaluate2_acb(r, s, f->coeffs, f->length, a, prec);
 }
 

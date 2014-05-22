@@ -35,24 +35,41 @@ arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
     }
     else
     {
-        /* XXX: fixme */
+        int inexact;
+        long fix;
+        mp_size_t xn;
+        mp_srcptr xptr;
+
         if (y == x)
         {
-            int inexact;
-            arf_t t;
-            arf_init(t);
-            arf_set(t, x);
-            inexact = arf_set_round(y, t, prec, rnd);
-            arf_clear(t);
+            mp_ptr xtmp;
+            TMP_INIT;
+
+            ARF_GET_MPN_READONLY(xptr, xn, x);
+
+            /* exact */
+            if (xn * FLINT_BITS <= prec)
+                return 0;
+
+            if ((xn - 1) * FLINT_BITS < prec)
+            {
+                /* exact */
+                if ((xptr[0] << (prec - (xn-1) *  FLINT_BITS)) == 0)
+                    return 0;
+            }
+
+            /* inexact */
+            TMP_START;
+            xtmp = TMP_ALLOC(xn * sizeof(mp_limb_t));
+            flint_mpn_copyi(xtmp, xptr, xn);
+            inexact = _arf_set_round_mpn(y, &fix, xtmp, xn, ARF_SGNBIT(x), prec, rnd);
+            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
+
+            TMP_END;
             return inexact;
         }
         else
         {
-            mp_srcptr xptr;
-            mp_size_t xn;
-            long fix;
-            int inexact;
-
             ARF_GET_MPN_READONLY(xptr, xn, x);
             inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
                 ARF_SGNBIT(x), prec, rnd);

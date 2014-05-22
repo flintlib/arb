@@ -270,15 +270,51 @@ Comparisons and bounds
     inclusive. If *x* is zero, -*ARF_PREC_EXACT* is returned,
     and if *x* is infinity or NaN, *ARF_PREC_EXACT* is returned.
 
+Magnitude functions
+-------------------------------------------------------------------------------
+
 .. function:: void arf_get_mag(mag_t y, const arf_t x)
+
+    Sets *y* to an upper bound for the absolute value of *x*.
 
 .. function:: void arf_get_mag_lower(mag_t y, const arf_t x)
 
+    Sets *y* to a lower bound for the absolute value of *x*.
+
 .. function:: void arf_set_mag(arf_t y, const mag_t x)
+
+    Sets *y* to *x*.
 
 .. function:: void mag_init_set_arf(mag_t y, const arf_t x)
 
+    Initializes *y* and sets it to an upper bound for *x*.
+
 .. function:: void mag_fast_init_set_arf(mag_t y, const arf_t x)
+
+    Initializes *y* and sets it to an upper bound for *x*.
+    Assumes that the exponent of *y* is small.
+
+.. function:: void arf_init_set_mag_shallow(arf_t y, const mag_t x)
+
+    Initializes *y* to a shallow copy of *x*. The variable *y* may
+    not be cleared, and may not be used after *x* has been cleared.
+
+.. function:: void arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
+
+    Sets *z* to the magnitude of the unit in the last place (ulp) of *y*
+    at precision *prec*.
+
+.. function:: void arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+
+    Sets *z* to an upper bound for the sum of *x* and the
+    magnitude of the unit in the last place (ulp) of *y*
+    at precision *prec*.
+
+.. function:: void arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+
+    Sets *z* to an upper bound for the sum of *x* and the
+    magnitude of the unit in the last place (ulp) of *y*
+    at precision *prec*. Assumes that all exponents are small.
 
 Random number generation
 -------------------------------------------------------------------------------

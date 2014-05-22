@@ -74,7 +74,7 @@ poly_roots(const fmpz_poly_t poly,
     for (prec = initial_prec; ; prec *= 2)
     {
         acb_poly_set_fmpz_poly(cpoly, poly, prec);
-        maxiter = FLINT_MIN(deg, prec);
+        maxiter = FLINT_MIN(FLINT_MAX(deg, 32), prec);
 
         TIMEIT_ONCE_START
         printf("prec=%ld: ", prec);

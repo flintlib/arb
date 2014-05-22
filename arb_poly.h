@@ -27,6 +27,7 @@
 #define ARB_POLY_H
 
 #include "arb.h"
+#include "acb.h"
 #include "fmpz_poly.h"
 #include "fmpq_poly.h"
 
@@ -526,28 +527,27 @@ void arb_poly_compose_series_brent_kung(arb_poly_t res,
                     const arb_poly_t poly1,
                     const arb_poly_t poly2, long n, long prec);
 
+
+void _arb_poly_evaluate_acb_horner(acb_t res, arb_srcptr f, long len, const acb_t x, long prec);
+void arb_poly_evaluate_acb_horner(acb_t res, const arb_poly_t f, const acb_t a, long prec);
+
+void _arb_poly_evaluate_acb_rectangular(acb_t y, arb_srcptr poly, long len, const acb_t x, long prec);
+void arb_poly_evaluate_acb_rectangular(acb_t res, const arb_poly_t f, const acb_t a, long prec);
+
+void _arb_poly_evaluate_acb(acb_t res, arb_srcptr f, long len, const acb_t x, long prec);
+void arb_poly_evaluate_acb(acb_t res, const arb_poly_t f, const acb_t a, long prec);
+
+void _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec);
+void arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec);
+
+void _arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec);
+void arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec);
+
+void _arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec);
+void arb_poly_evaluate2_acb(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec);
+
 /*
 TBD:
-
-void _arb_poly_evaluate_fmpcb_horner(fmpcb_t res, arb_srcptr f, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate_fmpcb_horner(fmpcb_t res, const arb_poly_t f, const fmpcb_t a, long prec);
-
-void _arb_poly_evaluate_fmpcb_rectangular(fmpcb_t y, arb_srcptr poly, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate_fmpcb_rectangular(fmpcb_t res, const arb_poly_t f, const fmpcb_t a, long prec);
-
-void _arb_poly_evaluate_fmpcb(fmpcb_t res, arb_srcptr f, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate_fmpcb(fmpcb_t res, const arb_poly_t f, const fmpcb_t a, long prec);
-
-void _arb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, arb_srcptr f, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate2_fmpcb_horner(fmpcb_t y, fmpcb_t z, const arb_poly_t f, const fmpcb_t x, long prec);
-
-void _arb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, arb_srcptr f, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate2_fmpcb_rectangular(fmpcb_t y, fmpcb_t z, const arb_poly_t f, const fmpcb_t x, long prec);
-
-void _arb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, arb_srcptr f, long len, const fmpcb_t x, long prec);
-void arb_poly_evaluate2_fmpcb(fmpcb_t y, fmpcb_t z, const arb_poly_t f, const fmpcb_t x, long prec);
-
-
 
 void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
 

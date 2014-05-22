@@ -23,36 +23,59 @@
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "mag.h"
 
-int
-arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+int main()
 {
-    if (arf_is_special(x))
-    {
-        arf_neg(y, x);
-        return 0;
-    }
-    else
-    {
-        int inexact;
-        long fix;
-        mp_size_t xn;
-        mp_srcptr xptr;
+    long iter;
+    flint_rand_t state;
 
-        if (y == x)
+    printf("cmp....");
+    fflush(stdout);
+
+    flint_randinit(state);
+
+    for (iter = 0; iter < 100000; iter++)
+    {
+        fmpr_t x, y;
+        mag_t xb, yb;
+        int c1, c2;
+
+        fmpr_init(x);
+        fmpr_init(y);
+
+        mag_init(xb);
+        mag_init(yb);
+
+        mag_randtest_special(xb, state, 100);
+        mag_randtest_special(yb, state, 100);
+
+        mag_get_fmpr(x, xb);
+        mag_get_fmpr(y, yb);
+
+        c1 = fmpr_cmp(x, y);
+        c2 = mag_cmp(xb, yb);
+
+        if (c1 != c2)
         {
-            ARF_NEG(y);
-            return arf_set_round(y, y, prec, rnd);
+            printf("FAIL\n\n");
+            printf("x = "); fmpr_print(x); printf("\n\n");
+            printf("y = "); fmpr_print(y); printf("\n\n");
+            printf("xb = "); mag_print(xb); printf("\n\n");
+            printf("yb = "); mag_print(yb); printf("\n\n");
+            abort();
         }
-        else
-        {
-            ARF_GET_MPN_READONLY(xptr, xn, x);
-            inexact = _arf_set_round_mpn(y, &fix, xptr, xn,
-                !ARF_SGNBIT(x), prec, rnd);
-            _fmpz_add_fast(ARF_EXPREF(y), ARF_EXPREF(x), fix);
-            return inexact;
-        }
+
+        fmpr_clear(x);
+        fmpr_clear(y);
+
+        mag_clear(xb);
+        mag_clear(yb);
     }
+
+    flint_randclear(state);
+    flint_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
 
