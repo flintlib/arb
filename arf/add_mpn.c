@@ -50,6 +50,184 @@ _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit, const fmpz_t xexp
     mp_ptr tmp;
     ARF_ADD_TMP_DECL
 
+    /* very fast case */
+    if (xn == 1 && yn == 1 && shift < FLINT_BITS - 1)
+    {
+        mp_limb_t hi, lo, xhi, xlo, yhi, ylo;
+
+        xhi = xp[0];
+        yhi = yp[0];
+
+        xlo = xhi << (FLINT_BITS - 1);
+        xhi = xhi >> 1;
+
+        ylo = yhi << (FLINT_BITS - (shift + 1));
+        yhi = yhi >> (shift + 1);
+
+        if (xsgnbit == ysgnbit)
+        {
+            add_ssaaaa(hi, lo, xhi, xlo, yhi, ylo);
+        }
+        else
+        {
+            if (xhi > yhi)
+            {
+                sub_ddmmss(hi, lo, xhi, xlo, yhi, ylo);
+            }
+            else if (xhi < yhi)
+            {
+                sub_ddmmss(hi, lo, yhi, ylo, xhi, xlo);
+                xsgnbit = ysgnbit;
+            }
+            else
+            {
+                if (xlo > ylo)
+                {
+                    sub_ddmmss(hi, lo, xhi, xlo, yhi, ylo);
+                }
+                else if (xlo < ylo)
+                {
+                    sub_ddmmss(hi, lo, yhi, ylo, xhi, xlo);
+                    xsgnbit = ysgnbit;
+                }
+                else
+                {
+                    arf_zero(z);
+                    return 0;
+                }
+            }
+        }
+
+        inexact = _arf_set_round_uiui(z, &fix, hi, lo, xsgnbit, prec, rnd);
+        _fmpz_add_fast(ARF_EXPREF(z), xexp, fix + 1);
+        return inexact;
+    }
+
+    /* somewhat fast case */
+    if (xn <= 2 && yn <= 2 && shift <= 2 * FLINT_BITS)
+    {
+        mp_limb_t t[5], xtmp[4], ytmp[4], yhi, ylo;
+        long fix2;
+
+        xtmp[0] = 0;
+        xtmp[1] = 0;
+
+        if (xn == 1)
+        {
+            xtmp[2] = 0;
+            xtmp[3] = xp[0];
+        }
+        else
+        {
+            xtmp[2] = xp[0];
+            xtmp[3] = xp[1];
+        }
+
+        ytmp[0] = 0;
+        ytmp[1] = 0;
+        ytmp[2] = 0;
+        ytmp[3] = 0;
+
+        if (yn == 1)
+        {
+            yhi = yp[0];
+            ylo = 0;
+        }
+        else
+        {
+            yhi = yp[1];
+            ylo = yp[0];
+        }
+
+        shift_limbs = shift / FLINT_BITS;
+        shift_bits = shift % FLINT_BITS;
+
+        if (shift_bits == 0)
+        {
+            ytmp[3 - shift_limbs] = yhi;
+            ytmp[2 - shift_limbs] = ylo;
+        }
+        else
+        {
+            ytmp[3 - shift_limbs] = yhi >> shift_bits;
+            ytmp[2 - shift_limbs] = (yhi << (FLINT_BITS - shift_bits)) | (ylo >> (shift_bits));
+            ytmp[1 - shift_limbs] = ylo << (FLINT_BITS - shift_bits);
+        }
+
+        if (xsgnbit == ysgnbit)
+        {
+            t[4] = cy = mpn_add_n(t, xtmp, ytmp, 4);
+            fix2 = cy * FLINT_BITS;
+            zn = 4 + cy;
+
+            while (t[zn - 1] == 0)
+            {
+                zn--;
+                fix2 -= FLINT_BITS;
+            }
+        }
+        else
+        {
+#if 1
+            cy = mpn_sub_n(t, xtmp, ytmp, 4);
+
+            if (cy)
+            {
+                mpn_neg_n(t, t, 4);
+                xsgnbit = ysgnbit;
+            }
+
+            zn = 4;
+            fix2 = 0;
+
+            while (t[zn - 1] == 0)
+            {
+                zn--;
+                fix2 -= FLINT_BITS;
+
+                if (zn == 0)
+                {
+                    arf_zero(z);
+                    return 0;
+                }
+            }
+
+#else
+            int cmp;
+
+            cmp = mpn_cmp(xtmp, ytmp, 4);
+
+            if (cmp > 0)
+            {
+                mpn_sub_n(t, xtmp, ytmp, 4);
+            }
+            else if (cmp < 0)
+            {
+                mpn_sub_n(t, ytmp, xtmp, 4);
+                xsgnbit = ysgnbit;
+            }
+            else
+            {
+                arf_zero(z);
+                return 0;
+            }
+
+            fix2 = 0;
+            zn = 4;
+
+            while (t[zn - 1] == 0)
+            {
+                zn--;
+                fix2 -= FLINT_BITS;
+            }
+#endif
+        }
+
+        inexact = _arf_set_round_mpn(z, &fix, t, zn, xsgnbit, prec, rnd);
+        _fmpz_add_fast(ARF_EXPREF(z), xexp, fix + fix2);
+        return inexact;
+    }
+
     /* x +/- eps */
     if (shift > prec + FLINT_BITS + 1 &&
         prec != ARF_PREC_EXACT &&
