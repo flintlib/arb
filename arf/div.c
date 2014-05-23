@@ -77,6 +77,7 @@ arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
             inexact = arf_set_round(z, x, prec, rnd);
 
         _fmpz_sub2_fast(ARF_EXPREF(z), ARF_EXPREF(z), t, 1);
+        fmpz_clear(t);
         return inexact;
     }
 
