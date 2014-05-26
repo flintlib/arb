@@ -26,117 +26,6 @@
 #include <math.h>
 #include "arb_poly.h"
 
-
-typedef mag_struct * mag_ptr;
-typedef const mag_struct * mag_srcptr;
-
-static __inline__ mag_ptr
-_mag_vec_init(long n)
-{
-    long i;
-    mag_ptr v = (mag_ptr) flint_malloc(sizeof(mag_struct) * n);
-
-    for (i = 0; i < n; i++)
-        mag_init(v + i);
-
-    return v;
-}
-
-static __inline__ void
-_mag_vec_clear(mag_ptr v, long n)
-{
-    long i;
-    for (i = 0; i < n; i++)
-        mag_clear(v + i);
-    flint_free(v);
-}
-
-void
-arb_get_mag(mag_t z, const arb_t x)
-{
-    mag_t t;
-    mag_init_set_arf(t, arb_midref(x));
-    mag_add(z, t, arb_radref(x));
-    mag_clear(t);
-}
-
-#if 0
-
-void
-arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec)
-{
-    arb_t t;
-    arb_init(t);
-    arb_set_fmpz(t, man);
-    arb_mul_2exp_fmpz(t, t, exp);
-    arb_add(z, x, t, prec);
-    arb_clear(t);
-}
-
-#else
-
-int
-arf_add_fmpz_2exp(arf_ptr z, arf_srcptr x, const fmpz_t y, const fmpz_t exp, long prec, arf_rnd_t rnd)
-{
-    mp_size_t xn, yn;
-    mp_srcptr xptr, yptr;
-    mp_limb_t ytmp;
-    int xsgnbit, ysgnbit, inexact;
-    fmpz_t yexp;
-    long shift;
-
-    if (fmpz_is_zero(y))
-    {
-        return arf_set_round(z, x, prec, rnd);
-    }
-    else if (arf_is_special(x))
-    {
-        if (arf_is_zero(x))
-        {
-            inexact = arf_set_round_fmpz(z, y, prec, rnd);
-            arf_mul_2exp_fmpz(z, z, exp);
-            return inexact;
-        }
-        else
-        {
-            arf_set(z, x);
-            return 0;
-        }
-    }
-
-    FMPZ_GET_MPN_READONLY(ysgnbit, yn, yptr, ytmp, *y)
-    fmpz_init(yexp);
-    fmpz_add_ui(yexp, exp, yn * FLINT_BITS);
-    shift = _fmpz_sub_small(ARF_EXPREF(x), yexp);
-
-    xsgnbit = ARF_SGNBIT(x);
-    ARF_GET_MPN_READONLY(xptr, xn, x);
-
-    if (shift >= 0)
-        inexact = _arf_add_mpn(z, xptr, xn, xsgnbit, ARF_EXPREF(x),
-                               yptr, yn, ysgnbit, shift, prec, rnd);
-    else
-        inexact = _arf_add_mpn(z, yptr, yn, ysgnbit, yexp,
-                               xptr, xn, xsgnbit, -shift, prec, rnd);
-
-    fmpz_clear(yexp);
-    return inexact;
-}
-
-void
-arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec)
-{
-    int inexact;
-    inexact = arf_add_fmpz_2exp(arb_midref(z), arb_midref(x), man, exp, prec, ARB_RND);
-    if (inexact)
-        arf_mag_add_ulp(arb_radref(z), arb_radref(x), arb_midref(z), prec);
-    else
-        mag_set(arb_radref(z), arb_radref(x));
-}
-
-#endif
-
-
 void
 _arb_poly_get_scale(fmpz_t scale, arb_srcptr x, long xlen,
                                   arb_srcptr y, long ylen)
@@ -172,18 +61,6 @@ _arb_poly_get_scale(fmpz_t scale, arb_srcptr x, long xlen,
         fmpz_add_ui(scale, scale, den);
         fmpz_fdiv_q_ui(scale, scale, 2 * den);
     }
-}
-
-static int
-_arb_vec_is_finite(arb_srcptr x, long len)
-{
-    long i;
-
-    for (i = 0; i < len; i++)
-        if (!arb_is_finite(x + i))
-            return 0;
-
-    return 1;
 }
 
 /* Break vector into same-exponent blocks where the largest block

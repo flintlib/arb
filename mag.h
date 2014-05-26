@@ -193,6 +193,8 @@ typedef struct
 mag_struct;
 
 typedef mag_struct mag_t[1];
+typedef mag_struct * mag_ptr;
+typedef const mag_struct * mag_srcptr;
 
 static __inline__ void
 mag_init(mag_t x)
@@ -607,6 +609,29 @@ mag_cmp_2exp_si(const mag_t x, long e)
 
     return (fmpz_cmp_si(MAG_EXPREF(x), e) <= 0) ? -1 : 1;
 }
+
+/* TODO: document */
+static __inline__ mag_ptr
+_mag_vec_init(long n)
+{
+    long i;
+    mag_ptr v = (mag_ptr) flint_malloc(sizeof(mag_struct) * n);
+
+    for (i = 0; i < n; i++)
+        mag_init(v + i);
+
+    return v;
+}
+
+static __inline__ void
+_mag_vec_clear(mag_ptr v, long n)
+{
+    long i;
+    for (i = 0; i < n; i++)
+        mag_clear(v + i);
+    flint_free(v);
+}
+
 
 #ifdef __cplusplus
 }

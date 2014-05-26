@@ -1017,6 +1017,9 @@ int arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
 int arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);
 int arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd);
 
+/* TODO: document/test */
+int arf_add_fmpz_2exp(arf_ptr z, arf_srcptr x, const fmpz_t y, const fmpz_t exp, long prec, arf_rnd_t rnd);
+
 int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 int arf_sub_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
 int arf_sub_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);

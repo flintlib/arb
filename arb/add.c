@@ -81,3 +81,14 @@ arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
         mag_set(arb_radref(z), arb_radref(x));
 }
 
+void
+arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec)
+{
+    int inexact;
+    inexact = arf_add_fmpz_2exp(arb_midref(z), arb_midref(x), man, exp, prec, ARB_RND);
+    if (inexact)
+        arf_mag_add_ulp(arb_radref(z), arb_radref(x), arb_midref(z), prec);
+    else
+        mag_set(arb_radref(z), arb_radref(x));
+}
+

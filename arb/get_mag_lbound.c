@@ -25,20 +25,6 @@
 
 #include "arb.h"
 
-/*
-
-arb_get_mag_upper
-arb_get_mag_lower
-
-arf_get_mag_upper
-arf_get_mag_lower
-
-
-
-max(0, |mid|-rad)
-
-*/
-
 static __inline__ void
 _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
 {

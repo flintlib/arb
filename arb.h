@@ -391,7 +391,16 @@ arb_contains_nonnegative(const arb_t x)
         || arf_is_nan(arb_midref(x));
 }
 
-/* TODO: get/set mag versions */
+void arb_get_mag_lower(mag_t z, const arb_t x);
+
+static __inline__ void
+arb_get_mag(mag_t z, const arb_t x)
+{
+    mag_t t;
+    mag_init_set_arf(t, arb_midref(x));
+    mag_add(z, t, arb_radref(x));
+    mag_clear(t);
+}
 
 static __inline__ void
 arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
@@ -511,6 +520,9 @@ void arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec);
 void arb_add_ui(arb_t z, const arb_t x, ulong y, long prec);
 void arb_add_si(arb_t z, const arb_t x, long y, long prec);
 void arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
+
+/* TODO: test */
+void arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec);
 
 void arb_sub(arb_t z, const arb_t x, const arb_t y, long prec);
 void arb_sub_arf(arb_t z, const arb_t x, const arf_t y, long prec);
@@ -648,6 +660,18 @@ _arb_vec_is_zero(arb_srcptr vec, long len)
     for (i = 0; i < len; i++)
         if (!arb_is_zero(vec + i))
             return 0;
+    return 1;
+}
+
+static __inline__ int
+_arb_vec_is_finite(arb_srcptr x, long len)
+{
+    long i;
+
+    for (i = 0; i < len; i++)
+        if (!arb_is_finite(x + i))
+            return 0;
+
     return 1;
 }
 
