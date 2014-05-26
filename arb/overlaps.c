@@ -28,20 +28,39 @@
 int
 arb_overlaps(const arb_t x, const arb_t y)
 {
-    fmprb_t t, u;
-    int ans;
+    arf_t t;
+    arf_struct u[4];
+    int result;
 
-    fmprb_init(t);
-    fmprb_init(u);
+    if (arf_is_inf(arb_radref(x)) || arf_is_inf(arb_radref(y)))
+        return 1;
 
-    arb_get_fmprb(t, x);
-    arb_get_fmprb(u, y);
+    if (arf_equal(arb_midref(x), arb_midref(y)))
+        return 1;
 
-    ans = fmprb_overlaps(t, u);
+    arf_init(t);
 
-    fmprb_clear(t);
-    fmprb_clear(u);
+    /* |xm - ym| <= xr + yr */
 
-    return ans;
+    if (arf_cmp(arb_midref(x), arb_midref(y)) >= 0)
+    {
+        arf_init_set_shallow(u + 0, arb_midref(x));
+        arf_init_neg_shallow(u + 1, arb_midref(y));
+    }
+    else
+    {
+        arf_init_neg_shallow(u + 0, arb_midref(x));
+        arf_init_set_shallow(u + 1, arb_midref(y));
+    }
+
+    arf_init_neg_mag_shallow(u + 2, arb_radref(x));
+    arf_init_neg_mag_shallow(u + 3, arb_radref(y));
+
+    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    result = arf_sgn(t) <= 0;
+
+    arf_clear(t);
+
+    return result;
 }
 

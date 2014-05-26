@@ -28,20 +28,61 @@
 int
 arb_contains(const arb_t x, const arb_t y)
 {
-    fmprb_t t, u;
-    int result;
+    arf_t t;
+    arf_t u;
+    arf_t xr, yr;
+    arf_struct tmp[4];
+    int left_ok, right_ok;
 
-    fmprb_init(t);
-    fmprb_init(u);
+    if (arb_is_exact(y))
+        return arb_contains_arf(x, arb_midref(y));
 
-    arb_get_fmprb(t, x);
-    arb_get_fmprb(u, y);
+    if (arf_is_nan(arb_midref(y)))
+        return arf_is_nan(arb_midref(x));
 
-    result = fmprb_contains(t, u);
+    arf_init(t);
+    arf_init(u);
 
-    fmprb_clear(t);
-    fmprb_clear(u);
+    arf_init_set_mag_shallow(xr, arb_radref(x));
+    arf_init_set_mag_shallow(yr, arb_radref(y));
 
-    return result;
+    /* fast check */
+    arf_sub(t, arb_midref(x), xr, 30, ARF_RND_CEIL);
+    arf_sub(u, arb_midref(y), yr, 30, ARF_RND_FLOOR);
+    left_ok = arf_cmp(t, u) <= 0;
+
+    /* exact check */
+    if (!left_ok)
+    {
+        arf_init_set_shallow(tmp + 0, arb_midref(x));
+        arf_init_neg_mag_shallow(tmp + 1, arb_radref(x));
+        arf_init_neg_shallow(tmp + 2, arb_midref(y));
+        arf_init_set_mag_shallow(tmp + 3, arb_radref(y));
+
+        arf_sum(t, tmp, 4, 30, ARF_RND_DOWN);
+        left_ok = arf_sgn(t) <= 0;
+    }
+
+    /* fast check */
+    arf_add(t, arb_midref(x), xr, 30, ARF_RND_FLOOR);
+    arf_add(u, arb_midref(y), yr, 30, ARF_RND_CEIL);
+    right_ok = (arf_cmp(t, u) >= 0);
+
+    /* exact check */
+    if (!right_ok)
+    {
+        arf_init_set_shallow(tmp + 0, arb_midref(x));
+        arf_init_set_mag_shallow(tmp + 1, arb_radref(x));
+        arf_init_neg_shallow(tmp + 2, arb_midref(y));
+        arf_init_neg_mag_shallow(tmp + 3, arb_radref(y));
+
+        arf_sum(t, tmp, 4, 30, ARF_RND_DOWN);
+        right_ok = arf_sgn(t) >= 0;
+    }
+
+    arf_clear(t);
+    arf_clear(u);
+
+    return left_ok && right_ok;
 }
 

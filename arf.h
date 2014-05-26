@@ -479,6 +479,21 @@ arf_cmpabs_ui(const arf_t x, ulong y)
     return arf_cmpabs(x, t);
 }
 
+/* TODO: document */
+static __inline__ void
+arf_init_set_shallow(arf_t z, const arf_t x)
+{
+    *z = *x;
+}
+
+/* TODO: document */
+static __inline__ void
+arf_init_neg_shallow(arf_t z, const arf_t x)
+{
+    *z = *x;
+    arf_neg(z, z);
+}
+
 static __inline__ void
 arf_init_set_mag_shallow(arf_t y, const mag_t x)
 {
@@ -486,6 +501,14 @@ arf_init_set_mag_shallow(arf_t y, const mag_t x)
     ARF_XSIZE(y) = ARF_MAKE_XSIZE(t != 0, 0);
     ARF_EXP(y) = MAG_EXP(x);
     ARF_NOPTR_D(y)[0] = t << (FLINT_BITS - MAG_BITS);
+}
+
+/* TODO: document */
+static __inline__ void
+arf_init_neg_mag_shallow(arf_t z, const mag_t x)
+{
+    arf_init_set_mag_shallow(z, x);
+    arf_neg(z, z);
 }
 
 static __inline__ int
@@ -1283,6 +1306,9 @@ int arf_complex_mul_fallback(arf_t e, arf_t f,
 /* TODO: document */
 int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b,
                                       long prec, arf_rnd_t rnd);
+
+/* TODO: document */
+int arf_sum(arf_t s, const arf_struct * terms, long len, long prec, arf_rnd_t rnd);
 
 #ifdef __cplusplus
 }
