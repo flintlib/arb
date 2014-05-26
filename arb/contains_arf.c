@@ -28,21 +28,45 @@
 int
 arb_contains_arf(const arb_t x, const arf_t y)
 {
-    fmprb_t t;
-    fmpr_t u;
-    int result;
+    if (arf_is_nan(y))
+    {
+        return arf_is_nan(arb_midref(x));
+    }
+    else if (arf_is_nan(arb_midref(x)))
+    {
+        return 1;
+    }
+    else if (arb_is_exact(x))
+    {
+        return arf_equal(arb_midref(x), y);
+    }
+    else
+    {
+        arf_t t;
+        arf_struct tmp[3];
+        int result;
 
-    fmprb_init(t);
-    fmpr_init(u);
+        arf_init(t);
 
-    arb_get_fmprb(t, x);
-    arf_get_fmpr(u, y);
+        /* y >= xm - xr  <=>  0 >= xm - xr - y */
+        arf_init_set_shallow(tmp + 0, arb_midref(x));
+        arf_init_neg_mag_shallow(tmp + 1,  arb_radref(x));
+        arf_init_neg_shallow(tmp + 2, y);
 
-    result = fmprb_contains_fmpr(t, u);
+        arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+        result = (arf_sgn(t) <= 0);
 
-    fmprb_clear(t);
-    fmpr_clear(u);
+        if (result)
+        {
+            /* y <= xm + xr  <=>  0 <= xm + xr - y */
+            arf_neg(tmp + 1, tmp + 1);
+            arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+            result = (arf_sgn(t) >= 0);
+        }
 
-    return result;
+        arf_clear(t);
+
+        return result;
+    }
 }
 
