@@ -15,42 +15,6 @@ Core arithmetic
 * Work out semantics for comparisons/overlap/containment checks
   when NaNs are involved, and write test code.
 
-* Add adjustment code for balls (when the mantissa is much more precise than
-  the error bound, it can be truncated). Also, try to work out more consistent
-  semantics for ball arithmetic (with regard to extra working precision, etc.)
-
-* Do a low-level rewrite of the fmpr type.
-
-  The mantissa should probably be changed to an unsigned, top-aligned fraction
-  (i.e. the exponent will point to the top rather than the bottom, and
-  the top bit of the array of limbs will always be set).
-
-  This requires a separate sign field, increasing the struct size from
-  2 to 3 words, but ought to lead to simpler code and slightly less overhead.
-  (Optionally, the sign could be encoded as a bit of the exponent.)
-
-  The unsigned fraction can be stored directly in a ulong when it has
-  most 64 bits. A zero top bit can be used to tag the field as a pointer.
-  The pointer could either be to an mpz struct or directly to a limb array
-  where the first two limbs encode the allocation and used size.
-  There should probably be a recycling mechanism as for fmpz.
-
-  Required work:
-    memory allocation code
-    conversions to/from various integer types
-    rounding/normalization
-    addition
-    subtraction
-    comparison
-    multiplication
-    fix any code accessing the exponent and mantissa directly as integers
-
-  Lower priority:
-    low-level division, square root (these are not as critical for
-    performance -- it is ok to do them by converting to integers and back)
-
-    direct low-level code for addmul, mul_ui etc
-
 * Native string conversion code instead of relying on mpfr (so we can have
   big exponents, etc.).
 

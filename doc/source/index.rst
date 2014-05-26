@@ -25,8 +25,8 @@ General information
    examples.rst
 
 
-Module documentation
-::::::::::::::::::::
+Module documentation (Arb 1.x types)
+::::::::::::::::::::::::::::::::::::
 
 .. toctree::
    :maxdepth: 1
