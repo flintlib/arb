@@ -32,7 +32,7 @@ arb_overlaps(const arb_t x, const arb_t y)
     arf_struct u[4];
     int result;
 
-    if (arf_is_inf(arb_radref(x)) || arf_is_inf(arb_radref(y)))
+    if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
         return 1;
 
     if (arf_equal(arb_midref(x), arb_midref(y)))
