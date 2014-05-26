@@ -59,7 +59,7 @@ arb_contains_arf(const arb_t x, const arf_t y)
         if (result)
         {
             /* y <= xm + xr  <=>  0 <= xm + xr - y */
-            arf_neg(tmp + 1, tmp + 1);
+            arf_init_set_mag_shallow(tmp + 1,  arb_radref(x));
             arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
             result = (arf_sgn(t) >= 0);
         }
