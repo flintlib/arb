@@ -64,6 +64,7 @@ int main()
 
         fmprb_init(b);
         fmprb_init(radius);
+        fmprb_init(ans);
         fmpcb_init(x);
 
         fmpcb_set_ui(x, 5);
@@ -90,6 +91,7 @@ int main()
 
         fmprb_clear(b);
         fmprb_clear(radius);
+        fmprb_clear(ans);
         fmpcb_clear(x);
     }
 
