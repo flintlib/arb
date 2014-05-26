@@ -25,7 +25,7 @@
 
 #include "arb_poly.h"
 
-#define BLOCK_CUTOFF 18
+#define BLOCK_CUTOFF 16
 
 void
 _arb_poly_mullow(arb_ptr res,
