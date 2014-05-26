@@ -31,7 +31,11 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec)
     mag_t zr, ym;
     int inexact;
 
-    if (arb_is_exact(x))
+    if (arf_is_zero(y))
+    {
+        arb_zero_pm_inf(z);
+    }
+    else if (arb_is_exact(x))
     {
         inexact = arf_div(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
 
@@ -39,6 +43,11 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec)
             arf_mag_set_ulp(arb_radref(z), arb_midref(z), prec);
         else
             mag_zero(arb_radref(z));
+    }
+    else if (mag_is_inf(arb_radref(x)))
+    {
+        arf_div(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
+        mag_inf(arb_radref(z));
     }
     else
     {
@@ -60,28 +69,6 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec)
     }
 }
 
-
-void
-mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_zero(x) || mag_is_zero(y))
-            mag_zero(z);
-        else
-            mag_inf(z);
-    }
-    else
-    {
-        long fix;
-
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y));
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
-    }
-}
-
 void
 arb_div(arb_t z, const arb_t x, const arb_t y, long prec)
 {
@@ -91,6 +78,11 @@ arb_div(arb_t z, const arb_t x, const arb_t y, long prec)
     if (arb_is_exact(y))
     {
         arb_div_arf(z, x, arb_midref(y), prec);
+    }
+    else if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
+    {
+        arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
+        mag_inf(arb_radref(z));
     }
     else
     {

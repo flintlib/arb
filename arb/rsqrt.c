@@ -30,7 +30,6 @@ void
 mag_pow_minus_three_half(mag_t z, const mag_t x)
 {
     double t;
-    fmpr_t u;
 
     if (mag_is_zero(x))
     {
@@ -58,11 +57,7 @@ mag_pow_minus_three_half(mag_t z, const mag_t x)
         t = 1.0 / (t * sqrt(t));
         t = t * (1.0 + 1e-10);
 
-        fmpr_init(u);
-        fmpr_set_d(u, t);
-        fmpr_mul_2exp_fmpz(u, u, MAG_EXPREF(z));
-        mag_set_fmpr(z, u);
-        fmpr_clear(u);
+        mag_set_d_2exp_fmpz(z, t, MAG_EXPREF(z));
     }
 }
 

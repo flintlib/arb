@@ -19,51 +19,63 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
+#include "arb.h"
 
 void
-mag_mul(mag_t z, const mag_t x, const mag_t y)
+arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
 {
-    if (mag_is_special(x) || mag_is_special(y))
+    arb_t t, u, v, w;
+
+    if (arb_contains_negative(x) || arb_contains_negative(y))
     {
-        if (mag_is_inf(x) || mag_is_inf(y))
-            mag_inf(z);
-        else
-            mag_zero(z);
+        arb_indeterminate(z);
+        return;
+    }
+
+    if (arb_is_zero(x) || arb_is_zero(y))
+    {
+        arb_zero(z);
+        return;
+    }
+
+    arb_init(t);
+    arb_init(u);
+    arb_init(v);
+    arb_init(w);
+
+    arb_set(t, x);
+    arb_set(u, y);
+
+    while (!arb_overlaps(t, u) &&
+            !arb_contains_nonpositive(t) &&
+            !arb_contains_nonpositive(u))
+    {
+        arb_add(v, t, u, prec);
+        arb_mul_2exp_si(v, v, -1);
+
+        arb_mul(w, t, u, prec);
+        arb_sqrt(w, w, prec);
+
+        arb_swap(v, t);
+        arb_swap(w, u);
+    }
+
+    if (!arb_is_finite(t) || !arb_is_finite(u))
+    {
+        arb_indeterminate(z);
     }
     else
     {
-        long fix;
-
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
+        arb_union(z, t, u, prec);
     }
-}
 
-void
-mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_zero(x) || mag_is_zero(y))
-            mag_zero(z);
-        else
-            mag_inf(z);
-    }
-    else
-    {
-        long fix;
-
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y));
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
-    }
+    arb_clear(t);
+    arb_clear(u);
+    arb_clear(v);
+    arb_clear(w);
 }
 

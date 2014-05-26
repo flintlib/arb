@@ -37,7 +37,7 @@ Polynomial and power series arithmetic
 
 * Handle all input of special form ax^n + b quickly in composition and powering.
 
-* Implemented the addition and convlution methods for Taylor shifts.
+* Implement the addition and convolution methods for Taylor shifts.
 
 * Add polynomial mulmid, and use in Newton iteration
 

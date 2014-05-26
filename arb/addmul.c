@@ -76,39 +76,39 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
     }
     else if (ARB_IS_LAGOM(x) && ARB_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
-        mag_fast_init_set_arf(xm, ARB_MIDREF(x));
-        mag_fast_init_set_arf(ym, ARB_MIDREF(y));
+        mag_fast_init_set_arf(xm, arb_midref(x));
+        mag_fast_init_set_arf(ym, arb_midref(y));
 
-        mag_fast_init_set(zr, ARB_RADREF(z));
-        mag_fast_addmul(zr, xm, ARB_RADREF(y));
-        mag_fast_addmul(zr, ym, ARB_RADREF(x));
-        mag_fast_addmul(zr, ARB_RADREF(x), ARB_RADREF(y));
+        mag_fast_init_set(zr, arb_radref(z));
+        mag_fast_addmul(zr, xm, arb_radref(y));
+        mag_fast_addmul(zr, ym, arb_radref(x));
+        mag_fast_addmul(zr, arb_radref(x), arb_radref(y));
 
-        inexact = arf_addmul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
+        inexact = arf_addmul(arb_midref(z), arb_midref(x), arb_midref(y),
             prec, ARF_RND_DOWN);
 
         if (inexact)
             arf_mag_fast_add_ulp(zr, zr, arb_midref(z), prec);
 
-        *ARB_RADREF(z) = *zr;
+        *arb_radref(z) = *zr;
     }
     else
     {
-        mag_init_set_arf(xm, ARB_MIDREF(x));
-        mag_init_set_arf(ym, ARB_MIDREF(y));
+        mag_init_set_arf(xm, arb_midref(x));
+        mag_init_set_arf(ym, arb_midref(y));
 
-        mag_init_set(zr, ARB_RADREF(z));
-        mag_addmul(zr, xm, ARB_RADREF(y));
-        mag_addmul(zr, ym, ARB_RADREF(x));
-        mag_addmul(zr, ARB_RADREF(x), ARB_RADREF(y));
+        mag_init_set(zr, arb_radref(z));
+        mag_addmul(zr, xm, arb_radref(y));
+        mag_addmul(zr, ym, arb_radref(x));
+        mag_addmul(zr, arb_radref(x), arb_radref(y));
 
-        inexact = arf_addmul(ARB_MIDREF(z), ARB_MIDREF(x), ARB_MIDREF(y),
+        inexact = arf_addmul(arb_midref(z), arb_midref(x), arb_midref(y),
             prec, ARF_RND_DOWN);
 
         if (inexact)
-            arf_mag_add_ulp(ARB_RADREF(z), zr, ARB_MIDREF(z), prec);
+            arf_mag_add_ulp(arb_radref(z), zr, arb_midref(z), prec);
         else
-            mag_set(ARB_RADREF(z), zr);
+            mag_set(arb_radref(z), zr);
 
         mag_clear(zr);
         mag_clear(xm);

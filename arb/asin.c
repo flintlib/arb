@@ -19,51 +19,60 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
+#include "arb.h"
 
 void
-mag_mul(mag_t z, const mag_t x, const mag_t y)
+arb_asin(arb_t z, const arb_t x, long prec)
 {
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_inf(x) || mag_is_inf(y))
-            mag_inf(z);
-        else
-            mag_zero(z);
-    }
-    else
-    {
-        long fix;
+    arb_t t;
 
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
-    }
-}
-
-void
-mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_special(x) || mag_is_special(y))
+    if (arb_is_exact(x))
     {
-        if (mag_is_zero(x) || mag_is_zero(y))
-            mag_zero(z);
-        else
-            mag_inf(z);
-    }
-    else
-    {
-        long fix;
+        int side;
 
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y));
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
+        if (arf_is_zero(arb_midref(x)))
+        {
+            arb_zero(z);
+            return;
+        }
+
+        side = arf_cmpabs_2exp_si(arb_midref(x), 0);
+
+        /* +/- 1 */
+        if (side == 0)
+        {
+            if (arf_is_one(arb_midref(x)))
+            {
+                arb_const_pi(z, prec);
+            }
+            else
+            {
+                arb_const_pi(z, prec);
+                arb_neg(z, z);
+            }
+
+            arb_mul_2exp_si(z, z, -1);
+            return;
+        }
+        else if (side > 0)
+        {
+            arb_indeterminate(z);
+            return;
+        }
     }
+
+    arb_init(t);
+
+    arb_one(t);
+    arb_submul(t, x, x, prec);
+    arb_rsqrt(t, t, prec);
+    arb_mul(t, x, t, prec);
+    arb_atan(z, t, prec);
+
+    arb_clear(t);
 }
 

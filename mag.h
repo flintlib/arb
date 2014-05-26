@@ -288,6 +288,9 @@ mag_equal(const mag_t x, const mag_t y)
 
 void mag_mul(mag_t z, const mag_t x, const mag_t y);
 
+/* TODO: document */
+void mag_mul_lower(mag_t z, const mag_t x, const mag_t y);
+
 void mag_addmul(mag_t z, const mag_t x, const mag_t y);
 
 void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);

@@ -45,28 +45,25 @@ typedef arb_struct arb_t[1];
 typedef arb_struct * arb_ptr;
 typedef const arb_struct * arb_srcptr;
 
-#define ARB_MIDREF(x) (&(x)->mid)
-#define ARB_RADREF(x) (&(x)->rad)
+#define arb_midref(x) (&(x)->mid)
+#define arb_radref(x) (&(x)->rad)
 
-#define arb_midref ARB_MIDREF
-#define arb_radref ARB_RADREF
-
-#define ARB_IS_LAGOM(x) (ARF_IS_LAGOM(ARB_MIDREF(x)) && MAG_IS_LAGOM(ARB_RADREF(x)))
+#define ARB_IS_LAGOM(x) (ARF_IS_LAGOM(arb_midref(x)) && MAG_IS_LAGOM(arb_radref(x)))
 
 #define ARB_RND ARF_RND_DOWN
 
 static __inline__ void
 arb_init(arb_t x)
 {
-    arf_init(ARB_MIDREF(x));
-    mag_init(ARB_RADREF(x));
+    arf_init(arb_midref(x));
+    mag_init(arb_radref(x));
 }
 
 static __inline__ void
 arb_clear(arb_t x)
 {
-    arf_clear(ARB_MIDREF(x));
-    mag_clear(ARB_RADREF(x));
+    arf_clear(arb_midref(x));
+    mag_clear(arb_radref(x));
 }
 
 static __inline__ arb_ptr
@@ -93,15 +90,15 @@ _arb_vec_clear(arb_ptr v, long n)
 static __inline__ void
 arb_set_fmprb(arb_t x, const fmprb_t y)
 {
-    arf_set_fmpr(ARB_MIDREF(x), fmprb_midref(y));
-    mag_set_fmpr(ARB_RADREF(x), fmprb_radref(y));
+    arf_set_fmpr(arb_midref(x), fmprb_midref(y));
+    mag_set_fmpr(arb_radref(x), fmprb_radref(y));
 }
 
 static __inline__ void
 arb_get_fmprb(fmprb_t x, const arb_t y)
 {
-    arf_get_fmpr(fmprb_midref(x), ARB_MIDREF(y));
-    mag_get_fmpr(fmprb_radref(x), ARB_RADREF(y));
+    arf_get_fmpr(fmprb_midref(x), arb_midref(y));
+    mag_get_fmpr(fmprb_radref(x), arb_radref(y));
 }
 
 static __inline__ int
@@ -520,8 +517,6 @@ void arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec);
 void arb_add_ui(arb_t z, const arb_t x, ulong y, long prec);
 void arb_add_si(arb_t z, const arb_t x, long y, long prec);
 void arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
-
-/* TODO: test */
 void arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec);
 
 void arb_sub(arb_t z, const arb_t x, const arb_t y, long prec);
@@ -850,7 +845,7 @@ _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
     }
 }
 
-/* TODO: mag verision ? */
+/* TODO: mag version ? */
 static __inline__ void
 _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
 {

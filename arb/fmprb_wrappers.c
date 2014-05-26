@@ -179,46 +179,6 @@ void arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, long prec)
     fmprb_clear(u);
 }
 
-void arb_tan(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_tan(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_cot(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_cot(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_tan_pi(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_tan_pi(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_cot_pi(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_cot_pi(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
 {
     fmprb_t t, u;
@@ -249,59 +209,6 @@ void arb_cos_pi_fmpq(arb_t z, const fmpq_t x, long prec)
     fmprb_clear(t);
 }
 
-void arb_sinh(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_sinh(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_cosh(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_cosh(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
-{
-    fmprb_t t, u;
-    fmprb_init(t);
-    fmprb_init(u);
-    arb_get_fmprb(t, x);
-    fmprb_sinh_cosh(t, u, t, prec);
-    arb_set_fmprb(s, t);
-    arb_set_fmprb(c, u);
-    fmprb_clear(t);
-    fmprb_clear(u);
-}
-
-void arb_tanh(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_tanh(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_coth(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_coth(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_atan(arb_t z, const arb_t x, long prec)
 {
     fmprb_t t;
@@ -323,26 +230,6 @@ void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec)
     arb_set_fmprb(z, t);
     fmprb_clear(t);
     fmprb_clear(u);
-}
-
-void arb_asin(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_asin(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_acos(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_acos(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
 }
 
 void arb_fac_ui(arb_t z, ulong n, long prec)
@@ -489,19 +376,6 @@ void arb_const_glaisher(arb_t z, long prec)
     fmprb_const_glaisher(t, prec);
     arb_set_fmprb(z, t);
     fmprb_clear(t);
-}
-
-void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
-{
-    fmprb_t t, u;
-    fmprb_init(t);
-    fmprb_init(u);
-    arb_get_fmprb(t, x);
-    arb_get_fmprb(u, y);
-    fmprb_agm(t, t, u, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-    fmprb_clear(u);
 }
 
 void arb_lgamma(arb_t z, const arb_t x, long prec)

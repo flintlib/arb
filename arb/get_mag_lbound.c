@@ -95,6 +95,6 @@ _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
 void
 arb_get_mag_lower(mag_t z, const arb_t x)
 {
-    _arb_get_mag_lower(z, ARB_MIDREF(x), ARB_RADREF(x));
+    _arb_get_mag_lower(z, arb_midref(x), arb_radref(x));
 }
 

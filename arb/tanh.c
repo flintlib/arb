@@ -19,51 +19,38 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "mag.h"
+#include "arb.h"
 
 void
-mag_mul(mag_t z, const mag_t x, const mag_t y)
+arb_tanh(arb_t y, const arb_t x, long prec)
 {
-    if (mag_is_special(x) || mag_is_special(y))
+    arb_t t, u;
+
+    arb_init(t);
+    arb_init(u);
+
+    arb_mul_2exp_si(t, x, 1);
+
+    if (arf_sgn(arb_midref(x)) >= 0)
     {
-        if (mag_is_inf(x) || mag_is_inf(y))
-            mag_inf(z);
-        else
-            mag_zero(z);
+        arb_neg(t, t);
+        arb_expm1(t, t, prec + 4);
+        arb_add_ui(y, t, 2, prec + 4);
+        arb_div(y, t, y, prec);
+        arb_neg(y, y);
     }
     else
     {
-        long fix;
-
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
+        arb_expm1(t, t, prec + 4);
+        arb_add_ui(y, t, 2, prec + 4);
+        arb_div(y, t, y, prec);
     }
-}
 
-void
-mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_zero(x) || mag_is_zero(y))
-            mag_zero(z);
-        else
-            mag_inf(z);
-    }
-    else
-    {
-        long fix;
-
-        MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y));
-        fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
-        MAG_MAN(z) <<= fix;
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), MAG_EXPREF(y), -fix);
-    }
+    arb_clear(t);
+    arb_clear(u);
 }
 
