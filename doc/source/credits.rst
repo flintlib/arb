@@ -11,6 +11,16 @@ Fredrik's work on Arb is supported by Austrian Science Fund FWF Grant Y464-N18
 Arb includes code by Bill Hart and
 Sebastian Pancratz taken from FLINT (also licensed GPL 2.0+).
 
+Contributors
+-------------------------------------------------------------------------------
+
+The following people (among others) have contributed patches or bug reports.
+
+* Jonathan Bober
+* Yuri Matiyasevich
+* Abhinav Baid
+* Ondřej Čertík
+
 Software 
 -------------------------------------------------------------------------------
 

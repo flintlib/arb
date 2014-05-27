@@ -25,7 +25,7 @@
 
 #include "arf.h"
 
-#define ARF_USE_CACHE 1
+#define ARF_USE_CACHE 0
 
 #define ARF_MAX_CACHE_LIMBS 64
 

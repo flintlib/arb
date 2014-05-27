@@ -6,6 +6,15 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-05-27 - version 2.0.0
+
+  * new modules mag, arf, arb, arb_poly, arb_mat, acb, acb_poly,
+    acb_mat for higher-performance ball arithmetic
+
+  * poly_roots2 and hilbert_matrix2 example programs
+
+  * vector dot product and norm functions (contributed by Abhinav Baid)
+
 * 2014-05-03 - version 1.1.0
 
   * faster and more accurate error bounds for polynomial multiplication

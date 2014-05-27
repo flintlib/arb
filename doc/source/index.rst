@@ -56,6 +56,11 @@ Module documentation (Arb 2.x types)
    mag.rst
    arf.rst
    arb.rst
+   arb_poly.rst
+   arb_mat.rst
+   acb.rst
+   acb_poly.rst
+   acb_mat.rst
 
 Credits and references
 ::::::::::::::::::::::::

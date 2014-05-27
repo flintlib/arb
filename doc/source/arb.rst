@@ -1,7 +1,19 @@
 .. _arb:
 
-**arb.h** -- arbitrary-precision real floating-point balls
+**arb.h** -- real numbers represented as floating-point balls
 ===============================================================================
+
+The :type:`arb_t` type is essentially identical semantically to
+the :type:`fmprb_t` type, but uses an internal representation that
+generally allows operation to be performed more efficiently.
+
+Whereas the midpoint and radius of an :type:`fmprb_t` both have the
+same type, the :type:`arb_t` type uses an :type:`arf_t` for the midpoint
+and a :type:`mag_t` for the radius.  Code designed to manipulate the
+radius of an :type:`fmprb_t` directly can be ported to the :type:`arb_t` type
+by writing the radius to a temporary :type:`arf_t` variable, manipulating
+that variable, and then converting back to the :type:`mag_t` radius.
+Alternatively, :type:`mag_t` methods can be used directly where available.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -555,6 +567,8 @@ Powers and roots
 Exponentials and logarithms
 -------------------------------------------------------------------------------
 
+The following are currently simply wrappers for the corresponding *fmprb* functions.
+
 .. function:: void arb_log(arb_t z, const arb_t x, long prec)
 
 .. function:: void arb_log_ui(arb_t z, ulong x, long prec)
@@ -577,6 +591,8 @@ Exponentials and logarithms
 
 Trigonometric functions
 -------------------------------------------------------------------------------
+
+The following are currently simply wrappers for the corresponding *fmprb* functions.
 
 .. function:: void arb_sin(arb_t s, const arb_t x, long prec)
 
@@ -630,6 +646,8 @@ Trigonometric functions
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
+The following are currently simply wrappers for the corresponding *fmprb* functions.
+
 .. function:: void arb_atan(arb_t z, const arb_t x, long prec)
 
     Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
@@ -658,9 +676,9 @@ Inverse trigonometric functions
 Hyperbolic functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_sinh(arb_t z, const arb_t x, long prec)
+.. function:: void arb_sinh(arb_t s, const arb_t x, long prec)
 
-.. function:: void arb_cosh(arb_t z, const arb_t x, long prec)
+.. function:: void arb_cosh(arb_t c, const arb_t x, long prec)
 
 .. function:: void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
 
@@ -684,20 +702,7 @@ Hyperbolic functions
 Constants
 -------------------------------------------------------------------------------
 
-
-
-
-.. function:: void arb_fac_ui(arb_t z, ulong n, long prec)
-
-.. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
-
-.. function:: void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec)
-
-.. function:: void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec)
-
-.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec)
-
-.. function:: void arb_fib_ui(arb_t z, ulong n, long prec)
+The following are currently simply wrappers for the corresponding *fmprb* functions.
 
 .. function:: void arb_const_pi(arb_t z, long prec)
 
@@ -718,6 +723,24 @@ Constants
 .. function:: void arb_const_khinchin(arb_t z, long prec)
 
 .. function:: void arb_const_glaisher(arb_t z, long prec)
+
+
+Special functions
+-------------------------------------------------------------------------------
+
+The following are currently simply wrappers for the corresponding *fmprb* functions.
+
+.. function:: void arb_fac_ui(arb_t z, ulong n, long prec)
+
+.. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
+
+.. function:: void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec)
+
+.. function:: void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec)
+
+.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec)
+
+.. function:: void arb_fib_ui(arb_t z, ulong n, long prec)
 
 .. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
 

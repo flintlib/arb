@@ -1,16 +1,25 @@
 .. _arf:
 
-**arf.h** -- arbitrary-precision real floating-point numbers
+**arf.h** -- arbitrary-precision floating-point numbers
 ===============================================================================
 
 The :type:`arf_t` type is essentially identical semantically to
 the :type:`fmpr_t` type, but uses an internal representation that
 generally allows operation to be performed more efficiently.
-The only significant difference that the user
-has to be aware of is that some :type:`arf_t` functions return an :type:`int`
-indicating whether a result is inexact, whereas the corresponding
-:type:`fmpr_t` functions return a :type:`long` encoding the relative
-exponent of the error.
+
+The most significant differences that the user
+has to be aware of are:
+
+* The mantissa is no longer represented as a FLINT :type:`fmpz`, and the
+  internal exponent points to the top of the binary expansion of the mantissa
+  instead of of the bottom. Code designed to manipulate components of an
+  :type:`fmpr_t` directly can be ported to the :type:`arf_t` type 
+  by making use of :func:`arf_get_fmpz_2exp` and :func:`arf_set_fmpz_2exp`.
+
+* Some :type:`arf_t` functions return an :type:`int`
+  indicating whether a result is inexact, whereas the corresponding
+  :type:`fmpr_t` functions return a :type:`long` encoding the relative
+  exponent of the error.
 
 Types, macros and constants
 -------------------------------------------------------------------------------

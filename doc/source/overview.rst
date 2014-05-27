@@ -12,7 +12,7 @@ and eliminating much of the need for time-consuming
 and bug-prone manual error analysis associated with
 standard floating-point arithmetic. (See for example [Hoe2009]_.)
 
-At the moment, Arb contains:
+Arb version 1.1 contains:
 
 * A module (:ref:`fmpr <fmpr>`) for correctly rounded arbitrary-precision
   floating-point arithmetic. Arb numbers have a few special features, such
@@ -38,6 +38,26 @@ At the moment, Arb contains:
   for matrices over the real and complex numbers,
   implemented using balls as coefficients.
   At the moment, only rudimentary linear algebra operations are provided.
+
+Arb 2.0 adds a new set of types designed for higher performance.
+They can be used as drop-in replacements for the types they replace
+(minor adjustments may be necessary).
+
+* :ref:`arf <arf>` - replaces :ref:`fmpr <fmpr>` for fixed-precision radii
+
+* :ref:`mag <mag>` - replaces :ref:`fmpr <fmpr>` for arbitrary-precision midpoints
+
+* :ref:`arb <arb>` - replaces :ref:`fmprb <fmprb>` for real numbers
+
+* :ref:`arb_poly <arb-poly>` - replaces :ref:`fmprb_poly <fmprb-poly>` for real polynomials
+
+* :ref:`arb_mat <arb-mat>` - replaces :ref:`fmprb_mat <fmprb-mat>` for real matrices
+
+* :ref:`acb <acb>` - replaces :ref:`fmpcb <fmpcb>` for complex numbers
+
+* :ref:`acb_poly <acb-poly>` - replaces :ref:`fmpcb_poly <fmpcb-poly>` for complex polynomials
+
+* :ref:`acb_mat <acb-mat>` - replaces :ref:`fmpcb <fmpcb>` for complex matrices
 
 Planned features include more transcendental functions and more extensive
 polynomial and matrix functionality, as well as further optimizations.

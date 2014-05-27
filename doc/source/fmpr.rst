@@ -1,6 +1,6 @@
 .. _fmpr:
 
-**fmpr.h** -- binary floating-point numbers
+**fmpr.h** -- arbitrary-precision floating-point numbers
 ===============================================================================
 
 A variable of type :type:`fmpr_t` holds an arbitrary-precision binary
