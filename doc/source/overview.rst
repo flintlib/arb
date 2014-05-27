@@ -40,8 +40,7 @@ Arb version 1.1 contains:
   At the moment, only rudimentary linear algebra operations are provided.
 
 Arb 2.0 adds a new set of types designed for higher performance.
-They can be used as drop-in replacements for the types they replace
-(minor adjustments may be necessary).
+They can generally be used as drop-in replacements (minor code changes may be necessary).
 
 * :ref:`arf <arf>` - replaces :ref:`fmpr <fmpr>` for fixed-precision radii
 
