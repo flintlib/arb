@@ -241,16 +241,6 @@ void arb_fac_ui(arb_t z, ulong n, long prec)
     fmprb_clear(t);
 }
 
-void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_rising_ui(t, t, n, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec)
 {
     fmprb_t t;

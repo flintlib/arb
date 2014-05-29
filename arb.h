@@ -612,7 +612,6 @@ void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec);
 void arb_asin(arb_t z, const arb_t x, long prec);
 void arb_acos(arb_t z, const arb_t x, long prec);
 void arb_fac_ui(arb_t z, ulong n, long prec);
-void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec);
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec);
 void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec);
 void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec);
@@ -637,6 +636,11 @@ void arb_digamma(arb_t y, const arb_t x, long prec);
 void arb_zeta(arb_t z, const arb_t s, long prec);
 void arb_zeta_ui(arb_t z, ulong n, long prec);
 void arb_bernoulli_ui(arb_t z, ulong n, long prec);
+
+void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, long prec);
+void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec);
+void arb_rising_ui_rec(arb_t y, const arb_t x, ulong n, long prec);
+void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec);
 
 /* vector functions */
 
