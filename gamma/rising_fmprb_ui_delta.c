@@ -29,35 +29,39 @@
 void
 rising_difference_polynomial(fmpz * s, fmpz * c, ulong m)
 {
-    long i, j, k;
-    fmpz_t t;
+    long i, j, v;
 
+    fmpz_t t;
     fmpz_init(t);
 
     arith_stirling_number_1u_vec(s, m, m + 1);
 
-    for (k = 0; k < m; k++)
+    /* Compute the first row */
+    for (i = 0; i < m; i++)
     {
-        for (i = 0; i <= m - k - 1; i++)
+        fmpz_set_ui(t, m);
+        fmpz_mul_ui(t, t, (i + 1));
+        fmpz_mul(c + i, s + (i + 1), t);
+
+        for (j = i + 2; j < m + 1; j++)
         {
-            fmpz_zero(c + m * k + i);
-
-            for (j = i + 1; j + k <= m; j++)
-            {
-                if (j == i + 1)
-                {
-                    fmpz_bin_uiui(t, 1+i+k, k);
-                    fmpz_mul_ui(t, t, m * (i+1));
-                }
-                else
-                {
-                    fmpz_mul_ui(t, t, m * (k + j));
-                    fmpz_divexact_ui(t, t, j - i);
-                }
-
-                fmpz_addmul(c + m * k + i, s + j + k, t);
-            }
+            fmpz_mul_ui(t, t, m * j);
+            fmpz_divexact_ui(t, t, j - i);
+            fmpz_addmul(c + i, s + j, t);
         }
+    }
+
+    /* Extend using recurrence and symmetry */
+    for (v = 1; v < m; v++)
+    {
+        for (i = v; i < m - v; i++)
+        {
+            fmpz_mul_ui(t, c + (v - 1) * m + (i + 1), i + 1);
+            fmpz_divexact_ui(c + v * m + i, t, v);
+        }
+
+        for (i = 0; i < v; i++)
+            fmpz_set(c + v * m + i, c + i * m + v);
     }
 
     fmpz_clear(t);
