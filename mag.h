@@ -639,6 +639,17 @@ _mag_vec_clear(mag_ptr v, long n)
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);
 
+/* TODO: document/test */
+void mag_pow_ui(mag_t z, const mag_t x, ulong e);
+void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
+
+/* TODO: document/test */
+void mag_fac_ui(mag_t z, ulong n);
+void mag_rfac_ui(mag_t z, ulong n);
+
+/* TODO: document/test */
+void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
+
 #ifdef __cplusplus
 }
 #endif
