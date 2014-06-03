@@ -196,7 +196,9 @@ mag_d_bad_log(double x)
 
     m = floor(t * LOG_TAB_STEP + 0.5);
     u = t * LOG_TAB_STEP - m;
-    v = -u / m; /* could multiply by inverse */
+
+    /* v = -u / m; */
+    v = -u * d_log_inverses[m];
 
     t1 = n * (-d_log_tab[0]);
     t2 = d_log_tab[m - LOG_TAB_STEP / 2];
