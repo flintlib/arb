@@ -368,16 +368,6 @@ void arb_const_glaisher(arb_t z, long prec)
     fmprb_clear(t);
 }
 
-void arb_digamma(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_digamma(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_zeta(arb_t z, const arb_t s, long prec)
 {
     fmprb_t t;
