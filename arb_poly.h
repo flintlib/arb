@@ -546,24 +546,20 @@ void arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, const arb_poly_t f, co
 void _arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec);
 void arb_poly_evaluate2_acb(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec);
 
-/*
-TBD:
-
 void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
-
 void arb_poly_gamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec);
 
 void _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
-
 void arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec);
 
 void _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
-
 void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec);
 
 void _arb_poly_rising_ui_series(arb_ptr res, arb_srcptr f, long flen, ulong r, long trunc, long prec);
-
 void arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, long trunc, long prec);
+
+/*
+TBD:
 
 void _arb_poly_zeta_series(arb_ptr res, arb_srcptr h, long hlen, const arb_t a, int deflate, long len, long prec);
 

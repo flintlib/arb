@@ -860,6 +860,19 @@ _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, long len)
 }
 
 static __inline__ void
+_acb_vec_add_error_mag_vec(acb_ptr res, mag_srcptr err, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        mag_add(arb_radref(acb_realref(res + i)),
+            arb_radref(acb_realref(res + i)), err + i);
+        mag_add(arb_radref(acb_imagref(res + i)),
+            arb_radref(acb_imagref(res + i)), err + i);
+    }
+}
+
+static __inline__ void
 _acb_vec_indeterminate(acb_ptr vec, long len)
 {
     _arb_vec_indeterminate((arb_ptr) vec, 2 * len);

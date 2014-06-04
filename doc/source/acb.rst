@@ -439,13 +439,13 @@ Rising factorials
 Rising factorials
 -------------------------------------------------------------------------------
 
-.. function:: void arb_rising_ui_bs(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void acb_rising_ui_bs(acb_t z, const acb_t x, ulong n, long prec)
 
-.. function:: void arb_rising_ui_rs(arb_t z, const arb_t x, ulong n, ulong step, long prec)
+.. function:: void acb_rising_ui_rs(acb_t z, const acb_t x, ulong n, ulong step, long prec)
 
-.. function:: void arb_rising_ui_rec(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void acb_rising_ui_rec(acb_t z, const acb_t x, ulong n, long prec)
 
-.. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void acb_rising_ui(acb_t z, const acb_t x, ulong n, long prec)
 
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
 

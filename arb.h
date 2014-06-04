@@ -854,13 +854,20 @@ _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
     }
 }
 
-/* TODO: mag version ? */
 static __inline__ void
 _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
 {
     long i;
     for (i = 0; i < len; i++)
         arb_add_error_arf(res + i, err + i);
+}
+
+static __inline__ void
+_arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        mag_add(arb_radref(res + i), arb_radref(res + i), err + i);
 }
 
 static __inline__ void

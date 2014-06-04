@@ -490,9 +490,6 @@ void _acb_poly_tan_series(acb_ptr g, acb_srcptr h, long hlen, long len, long pre
 
 void acb_poly_tan_series(acb_poly_t g, const acb_poly_t h, long n, long prec);
 
-/*
-TBD:
-
 void _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec);
 
 void acb_poly_gamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec);
@@ -508,6 +505,10 @@ void acb_poly_lgamma_series(acb_poly_t res, const acb_poly_t f, long n, long pre
 void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, long trunc, long prec);
 
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
+
+
+/*
+TBD:
 
 void _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int deflate, long len, long prec);
 

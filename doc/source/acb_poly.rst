@@ -646,6 +646,35 @@ Special functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
+.. function:: void _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_gamma_series(acb_poly_t res, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_rgamma_series(acb_poly_t res, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_lgamma_series(acb_poly_t res, const acb_poly_t h, long n, long prec)
+
+    Sets *res* to the series expansion of `\Gamma(h(x))`, `1/\Gamma(h(x))`,
+    or `\log \Gamma(h(x))`, truncated to length *n*.
+
+    These functions first generate the Taylor series at the constant
+    term of *h*, and then call :func:`_acb_poly_compose_series`.
+    The Taylor coefficients are generated using Stirling's series.
+
+    The underscore methods support aliasing of the input and output
+    arrays, and require that *hlen* and *n* are greater than zero.
+
+.. function:: void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, long trunc, long prec)
+
+.. function:: void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec)
+
+    Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
+    to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
+    are at least 1, and does not support aliasing. Uses binary splitting.
 
 Root-finding
 -------------------------------------------------------------------------------
