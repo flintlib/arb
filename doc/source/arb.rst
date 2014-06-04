@@ -747,6 +747,12 @@ Rising factorials
     The *rs* version takes an optional *step* parameter for tuning
     purposes (to use the default step length, pass zero).
 
+.. function:: void arb_rising_fmpq_ui(arb_t z, const fmpq_t x, ulong n, long prec)
+
+    Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)` using
+    binary splitting. If the denominator or numerator of *x* is large
+    compared to *prec*, it is more efficient to convert *x* to an approximation
+    and use :func:`arb_rising_ui`.
 
 Special functions
 -------------------------------------------------------------------------------
