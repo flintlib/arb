@@ -754,6 +754,17 @@ Rising factorials
     compared to *prec*, it is more efficient to convert *x* to an approximation
     and use :func:`arb_rising_ui`.
 
+.. function :: void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+
+.. function :: void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong step, long prec)
+
+.. function :: void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+
+    Letting `u(x) = x (x+1) (x+2) \cdots (x+n-1)`, simultaneously compute
+    `u(x)` and `v(x) = u'(x)`, respectively using binary splitting,
+    rectangular splitting (with optional nonzero step length *step*
+    to override the default choice), and an automatic algorithm choice.
+
 Special functions
 -------------------------------------------------------------------------------
 

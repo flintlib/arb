@@ -1,0 +1,126 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ARB; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2013 Fredrik Johansson
+
+******************************************************************************/
+
+#include "arb.h"
+
+void _gamma_rf_bsplit(fmpz * A, ulong a, ulong b);
+
+void
+arb_rising2_ui_rs(arb_t u, arb_t v,
+    const arb_t x, ulong n, ulong m, long prec)
+{
+    if (n == 0)
+    {
+        arb_zero(v);
+        arb_one(u);
+    }
+    else if (n == 1)
+    {
+        arb_set(u, x);
+        arb_one(v);
+    }
+    else
+    {
+        long wp;
+        ulong i, j, a, b;
+        arb_ptr xs;
+        arb_t S, T, U, V;
+        fmpz *A, *B;
+
+        wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+
+        if (m == 0)
+        {
+            ulong m1, m2;
+            m1 = 0.6 * pow(wp, 0.4);
+            m2 = n_sqrt(n);
+            m = FLINT_MIN(m1, m2);
+        }
+
+        m = FLINT_MAX(m, 1);
+
+        xs = _arb_vec_init(m + 1);
+        A = _fmpz_vec_init(2 * m + 1);
+        B = A + (m + 1);
+
+        arb_init(S);
+        arb_init(T);
+        arb_init(U);
+        arb_init(V);
+        _arb_vec_set_powers(xs, x, m + 1, wp);
+
+        for (i = 0; i < n; i += m)
+        {
+            a = i;
+            b = FLINT_MIN(n, a + m);
+
+            if (a == 0 || b != a + m)
+            {
+                _gamma_rf_bsplit(A, a, b);
+            }
+            else
+            {
+                fmpz tt = m;
+                _fmpz_poly_taylor_shift(A, &tt, m + 1);
+            }
+
+            _fmpz_poly_derivative(B, A, b - a + 1);
+
+            arb_set_fmpz(S, A);
+
+            for (j = 1; j <= b - a; j++)
+                arb_addmul_fmpz(S, xs + j, A + j, wp);
+
+            arb_set_fmpz(T, B);
+
+            for (j = 1; j < b - a; j++)
+                arb_addmul_fmpz(T, xs + j, B + j, wp);
+
+            if (i == 0)
+            {
+                arb_set(U, S);
+                arb_set(V, T);
+            }
+            else
+            {
+                arb_mul(V, V, S, wp);
+                arb_addmul(V, U, T, wp);
+                arb_mul(U, U, S, wp);
+            }
+        }
+
+        arb_set(u, U);
+        arb_set(v, V);
+
+        _arb_vec_clear(xs, m + 1);
+        _fmpz_vec_clear(A, 2 * m + 1);
+
+        arb_clear(S);
+        arb_clear(T);
+        arb_clear(U);
+        arb_clear(V);
+    }
+}
+
