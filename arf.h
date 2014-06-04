@@ -1310,6 +1310,10 @@ int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b,
 /* TODO: document */
 int arf_sum(arf_t s, const arf_struct * terms, long len, long prec, arf_rnd_t rnd);
 
+/* TODO: document */
+double arf_get_d(const arf_t x, arf_rnd_t rnd);
+void arf_set_d(arf_t x, double v);
+
 #ifdef __cplusplus
 }
 #endif
