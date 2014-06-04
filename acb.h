@@ -639,6 +639,11 @@ void acb_rising_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, long prec);
 void acb_rising_ui_rec(acb_t y, const acb_t x, ulong n, long prec);
 void acb_rising_ui(acb_t z, const acb_t x, ulong n, long prec);
 
+/* TODO: document */
+void acb_gamma(acb_t y, const acb_t x, long prec);
+void acb_rgamma(acb_t y, const acb_t x, long prec);
+void acb_lgamma(acb_t y, const acb_t x, long prec);
+
 /*
 TBD
 
@@ -646,10 +651,6 @@ void acb_invroot_newton(acb_t r, const acb_t a, ulong m, const acb_t r0, long st
 void acb_root_exp(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root_newton(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root(acb_t r, const acb_t a, long m, long index, long prec);
-
-void acb_gamma(acb_t y, const acb_t x, long prec);
-void acb_rgamma(acb_t y, const acb_t x, long prec);
-void acb_lgamma(acb_t y, const acb_t x, long prec);
 
 void acb_digamma(acb_t y, const acb_t x, long prec);
 

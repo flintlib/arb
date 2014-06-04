@@ -368,54 +368,6 @@ void arb_const_glaisher(arb_t z, long prec)
     fmprb_clear(t);
 }
 
-void arb_lgamma(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_lgamma(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_rgamma(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_rgamma(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_gamma(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_gamma(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_gamma_fmpq(arb_t z, const fmpq_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_gamma_fmpq(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_gamma_fmpz(arb_t z, const fmpz_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_gamma_fmpz(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_digamma(arb_t z, const arb_t x, long prec)
 {
     fmprb_t t;
