@@ -413,3 +413,26 @@ Elementary functions
     formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
     requiring one real square root and one real reciprocal square root.
 
+Rising factorials
+-------------------------------------------------------------------------------
+
+.. function:: void acb_rising_ui_bs(acb_t z, const acb_t x, ulong n, long prec)
+
+.. function:: void acb_rising_ui_rs(acb_t z, const acb_t x, ulong n, ulong step, long prec)
+
+.. function:: void acb_rising_ui_rec(acb_t z, const acb_t x, ulong n, long prec)
+
+.. function:: void acb_rising_ui(acb_t z, const acb_t x, ulong n, long prec)
+
+    Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
+
+    The *bs* version uses binary splitting. The *rs* version uses rectangular
+    splitting. The *rec* version uses either *bs* or *rs* depending
+    on the input.
+    The default version is currently identical to the *rec* version.
+    In a future version, it will use the gamma function or asymptotic
+    series when this is more efficient.
+
+    The *rs* version takes an optional *step* parameter for tuning
+    purposes (to use the default step length, pass zero).
+
