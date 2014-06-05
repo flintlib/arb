@@ -560,7 +560,7 @@ mag_fac_ui(mag_t z, ulong n)
     {
         double x = n;
 
-        x = ceil((((x+0.5)*log(x) - x) * 1.4426950408889634074 + 2) * 1.0000001);
+        x = ceil((((x+0.5)*mag_d_log_upper_bound(x) - x) * 1.4426950408889634074 + 2) * 1.0000001);
 
         /* x + 1 could round down for huge x, but this doesn't matter
            as long as the result was perturbed up above */
@@ -582,7 +582,7 @@ mag_rfac_ui(mag_t z, ulong n)
     {
         double x = n;
 
-        x = ceil((((x+0.5)*log(x) - x) * 1.4426950408889634074) * -0.9999999);
+        x = ceil((((x+0.5)*mag_d_log_lower_bound(x) - x) * 1.4426950408889634074) * -0.9999999);
 
         /* x + 1 could round down for huge x, but this doesn't matter
            as long as the value was perturbed up above */
