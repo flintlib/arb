@@ -70,9 +70,7 @@ mag_bernoulli_div_fac_ui(mag_t z, ulong n)
     else
     {
         /* upper bound for 1/(2pi) */
-        _fmpz_demote(MAG_EXPREF(z));
-        MAG_EXP(z) = -2;
-        MAG_MAN(z) = 683565276;
+        mag_set_ui_2exp_si(z, 683565276, -32);
 
         /* 2 (1/(2pi))^n */
         mag_pow_ui(z, z, n);
