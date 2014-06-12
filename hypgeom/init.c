@@ -32,7 +32,7 @@ hypgeom_init(hypgeom_t hyp)
     fmpz_poly_init(hyp->B);
     fmpz_poly_init(hyp->P);
     fmpz_poly_init(hyp->Q);
-    fmpr_init(hyp->MK);
+    mag_init(hyp->MK);
     hyp->have_precomputed = 0;
 }
 
@@ -43,5 +43,5 @@ hypgeom_clear(hypgeom_t hyp)
     fmpz_poly_clear(hyp->B);
     fmpz_poly_clear(hyp->P);
     fmpz_poly_clear(hyp->Q);
-    fmpr_clear(hyp->MK);
+    mag_clear(hyp->MK);
 }

@@ -39,13 +39,14 @@ static __inline__ double d_root(double x, int r)
     return pow(x, 1. / r);
 }
 
+double mag_get_d(const mag_t z);
+
 long
-hypgeom_estimate_terms(const fmpr_t z, int r, long prec)
+hypgeom_estimate_terms(const mag_t z, int r, long prec)
 {
     double y, t;
 
-    t = fmpr_get_d(z, FMPR_RND_UP);
-    t = fabs(t);
+    t = mag_get_d(z);
 
     if (t == 0)
         return 1;

@@ -42,3 +42,22 @@ mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp)
         _fmpz_add_fast(MAG_EXPREF(z), exp, cexp + MAG_BITS);
     }
 }
+
+void
+mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp)
+{
+    if (fmpz_is_zero(man))
+    {
+        mag_zero(z);
+    }
+    else
+    {
+        mp_limb_t m;
+        long cexp;
+
+        m = fmpz_abs_lbound_ui_2exp(&cexp, man, MAG_BITS);
+        MAG_MAN(z) = m;
+        _fmpz_add_fast(MAG_EXPREF(z), exp, cexp + MAG_BITS);
+    }
+}
+

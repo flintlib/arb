@@ -126,17 +126,15 @@ _hypgeom_precompute(hypgeom_t hyp, const fmpz_poly_t P, const fmpz_poly_t Q)
     hyp->boundD = hypgeom_root_norm(Q);
     hyp->boundK = 1 + FLINT_MAX(hyp->boundC, 2 * hyp->boundD);
 
-    fmpr_one(hyp->MK);
+    mag_one(hyp->MK);
 
     for (k = 1; k <= hyp->boundK; k++)
     {
         fmpz_poly_evaluate_si(t, P, k);
-        fmpz_abs(t, t);
-        fmpr_mul_fmpz(hyp->MK, hyp->MK, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        mag_mul_fmpz(hyp->MK, hyp->MK, t);
 
         fmpz_poly_evaluate_si(t, Q, k);
-        fmpz_abs(t, t);
-        fmpr_div_fmpz(hyp->MK, hyp->MK, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+        mag_div_fmpz(hyp->MK, hyp->MK, t);
     }
 
     fmpz_clear(t);
@@ -163,12 +161,10 @@ hypgeom_precompute(hypgeom_t hyp)
             fmpz_init(t);
 
             fmpz_poly_evaluate_si(t, hyp->A, 0);
-            fmpz_abs(t, t);
-            fmpr_mul_fmpz(hyp->MK, hyp->MK, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+            mag_mul_fmpz(hyp->MK, hyp->MK, t);
 
             fmpz_poly_evaluate_si(t, hyp->B, 0);
-            fmpz_abs(t, t);
-            fmpr_div_fmpz(hyp->MK, hyp->MK, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+            mag_div_fmpz(hyp->MK, hyp->MK, t);
 
             fmpz_clear(t);
         }

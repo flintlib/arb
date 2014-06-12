@@ -27,6 +27,8 @@
 #define HYPGEOM_H
 
 #include "fmprb.h"
+#include "arb.h"
+#include "mag.h"
 #include "fmpz_poly.h"
 
 #ifdef __cplusplus
@@ -46,7 +48,7 @@ typedef struct
     long boundC;
     long boundD;
     long boundK;
-    fmpr_t MK;
+    mag_t MK;
 }
 hypgeom_struct;
 
@@ -58,14 +60,18 @@ void hypgeom_clear(hypgeom_t hyp);
 
 void hypgeom_precompute(hypgeom_t hyp);
 
-long hypgeom_estimate_terms(const fmpr_t z, int r, long prec);
+long hypgeom_estimate_terms(const mag_t z, int r, long prec);
 
-long hypgeom_bound(fmpr_t error, int r,
-    long C, long D, long K, const fmpr_t TK, const fmpr_t z, long prec);
+long hypgeom_bound(mag_t error, int r,
+    long C, long D, long K, const mag_t TK, const mag_t z, long prec);
 
-void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const long n, long prec);
+void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, long n, long prec);
 
 void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec);
+
+void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, long n, long prec);
+
+void arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, long target_prec, long prec);
 
 #ifdef __cplusplus
 }

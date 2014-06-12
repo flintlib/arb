@@ -103,7 +103,8 @@ fmpr_gamma_ui_ubound(fmpr_t x, ulong n, long prec)
     }
 }
 
-long hypgeom_root_bound(const fmpr_t z, int r, long prec)
+long
+hypgeom_root_bound(const mag_t z, int r)
 {
     if (r == 0)
     {
@@ -114,8 +115,9 @@ long hypgeom_root_bound(const fmpr_t z, int r, long prec)
         fmpr_t t;
         long v;
         fmpr_init(t);
-        fmpr_root(t, z, r, prec, FMPR_RND_UP);
-        fmpr_add_ui(t, t, 1, prec, FMPR_RND_UP);
+        mag_get_fmpr(t, z);
+        fmpr_root(t, t, r, MAG_BITS, FMPR_RND_UP);
+        fmpr_add_ui(t, t, 1, MAG_BITS, FMPR_RND_UP);
         v = fmpr_get_si(t, FMPR_RND_UP);
         fmpr_clear(t);
         return v;
@@ -138,129 +140,204 @@ z^n *
 (K-B)! (K-A+m)! (K-2B+m)!
 */
 void
-hypgeom_term_bound(fmpr_t Tn, const fmpr_t TK, long K, long A, long B, int r, const fmpr_t z, long n, long wp)
+hypgeom_term_bound(mag_t Tn, const mag_t TK, long K, long A, long B, int r, const mag_t z, long n)
 {
-    fmpr_t t, u, num, den;
+    mag_t t, u, num;
     long m;
 
-    fmpr_init(t);
-    fmpr_init(u);
-    fmpr_init(num);
-    fmpr_init(den);
+    mag_init(t);
+    mag_init(u);
+    mag_init(num);
 
     m = n - K;
+
     if (m < 0)
+    {
+        printf("hypgeom term bound\n");
         abort();
+    }
 
     /* TK * z^n */
-    fmpr_pow_sloppy_ui(t, z, n, wp, FMPR_RND_UP);
-    fmpr_mul(num, TK, t, wp, FMPR_RND_UP);
+    mag_pow_ui(t, z, n);
+    mag_mul(num, TK, t);
 
-    /* (K+A)! (K-2B)! (K-B+m)!, upper bounding */
-    fmpr_gamma_ui_ubound(t, K+A+1, wp);
-    fmpr_mul(num, num, t, wp, FMPR_RND_UP);
-    fmpr_gamma_ui_ubound(t, K-2*B+1, wp);
-    fmpr_mul(num, num, t, wp, FMPR_RND_UP);
-    fmpr_gamma_ui_ubound(t, K-B+m, wp);
-    fmpr_mul(num, num, t, wp, FMPR_RND_UP);
+    /* numerator: (K+A)! (K-2B)! (K-B+m)! */
+    mag_fac_ui(t, K+A);
+    mag_mul(num, num, t);
 
-    /* (K-B)! (K-A+m)! (K-2B+m)!, lower bounding */
-    fmpr_gamma_ui_lbound(den, K-B+1, wp);
-    fmpr_gamma_ui_lbound(t, K-A+m+1, wp);
-    fmpr_mul(den, den, t, wp, FMPR_RND_DOWN);
-    fmpr_gamma_ui_lbound(t, K-2*B+m+1, wp);
-    fmpr_mul(den, den, t, wp, FMPR_RND_DOWN);
+    mag_fac_ui(t, K-2*B);
+    mag_mul(num, num, t);
+
+    mag_fac_ui(t, K-B+m);
+    mag_mul(num, num, t);
+
+    /* denominator: (K-B)! (K-A+m)! (K-2B+m)! */
+    mag_rfac_ui(t, K-B);
+    mag_mul(num, num, t);
+
+    mag_rfac_ui(t, K-A+m);
+    mag_mul(num, num, t);
+
+    mag_rfac_ui(t, K-2*B+m);
+    mag_mul(num, num, t);
 
     /* ((K+m)! / K!)^(1-r) */
     if (r == 0)
     {
-        fmpr_gamma_ui_ubound(t, K+m+1, wp);
-        fmpr_mul(num, num, t, wp, FMPR_RND_UP);
-        fmpr_gamma_ui_lbound(t, K+1, wp);
-        fmpr_mul(den, den, t, wp, FMPR_RND_DOWN);
+        mag_fac_ui(t, K+m);
+        mag_mul(num, num, t);
+
+        mag_rfac_ui(t, K);
+        mag_mul(num, num, t);
     }
     else if (r != 1)
     {
-        fmpr_gamma_ui_ubound(t, K+1, wp);
-        fmpr_gamma_ui_lbound(u, K+m+1, wp);
-        fmpr_div(t, t, u, wp, FMPR_RND_UP);
-        fmpr_pow_sloppy_ui(t, t, r-1, wp, FMPR_RND_UP);
-        fmpr_mul(num, num, t, wp, FMPR_RND_UP);
+        mag_fac_ui(t, K);
+        mag_rfac_ui(u, K+m);
+        mag_mul(t, t, u);
+
+        mag_pow_ui(t, t, r-1);
+        mag_mul(num, num, t);
     }
 
-    fmpr_div(Tn, num, den, wp, FMPR_RND_UP);
+    mag_set(Tn, num);
 
-    fmpr_clear(t);
-    fmpr_clear(u);
-    fmpr_clear(num);
-    fmpr_clear(den);
+    mag_clear(t);
+    mag_clear(u);
+    mag_clear(num);
+}
+
+
+/* z = max(x-y, 0), rounding down [lower bound] */
+void
+mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
+{
+    if (mag_is_special(x) || mag_is_special(y))
+    {
+        if (mag_is_zero(y))
+            mag_set(z, x);
+        else if (mag_is_zero(x) || mag_is_inf(y))
+            mag_zero(z);
+        else
+            mag_inf(z);
+    }
+    else
+    {
+        fmpr_t t, u;
+
+        fmpr_init(t);
+        fmpr_init(u);
+
+        mag_get_fmpr(t, x);
+        mag_get_fmpr(u, y);
+
+        fmpr_sub(t, t, u, MAG_BITS, FMPR_RND_DOWN);
+
+        if (fmpr_sgn(t) <= 0)
+            mag_zero(z);
+        else  /* XXX: exact? */
+            mag_set_fmpz_2exp_fmpz_lower(z, fmpr_manref(t), fmpr_expref(t));
+
+        fmpr_clear(t);
+        fmpr_clear(u);
+    }
+}
+
+void
+mag_set_ui_2exp_si(mag_t z, ulong v, long e)
+{
+    mag_set_ui(z, v);
+    mag_mul_2exp_si(z, z, e);
+}
+
+double
+mag_get_d(const mag_t z)
+{
+    long exp;
+
+    if (mag_is_zero(z))
+        return 0.0;
+    else if (mag_is_inf(z))
+        return D_INF;
+
+    /* XXX: overflow/underflow properly */
+    exp = MAG_EXP(z);
+
+    if (exp < -1000)
+        return ldexp(1.0, -1000);
+    else if (exp > 1000)
+        return D_INF;
+    else
+        return ldexp(MAG_MAN(z), exp - MAG_BITS);
 }
 
 long
-hypgeom_bound(fmpr_t error, int r,
-    long A, long B, long K, const fmpr_t TK, const fmpr_t z, long prec)
+hypgeom_bound(mag_t error, int r,
+    long A, long B, long K, const mag_t TK, const mag_t z, long tol_2exp)
 {
-    fmpr_t Tn, t, u, one, tol, num, den;
-    long wp = FMPRB_RAD_PREC;
+    mag_t Tn, t, u, one, tol, num, den;
     long n, m;
 
-    fmpr_init(Tn);
-    fmpr_init(t);
-    fmpr_init(u);
-    fmpr_init(one);
-    fmpr_init(tol);
-    fmpr_init(num);
-    fmpr_init(den);
+    mag_init(Tn);
+    mag_init(t);
+    mag_init(u);
+    mag_init(one);
+    mag_init(tol);
+    mag_init(num);
+    mag_init(den);
 
-    fmpr_one(one);
-    fmpr_set_ui_2exp_si(tol, 1UL, -prec);
+    mag_one(one);
+    mag_set_ui_2exp_si(tol, 1UL, -tol_2exp);
 
     /* approximate number of needed terms */
-    n = hypgeom_estimate_terms(z, r, prec);
+    n = hypgeom_estimate_terms(z, r, tol_2exp);
 
     /* required for 1 + O(1/k) part to be decreasing */
     n = FLINT_MAX(n, K + 1);
 
     /* required for z^k / (k!)^r to be decreasing */
-    m = hypgeom_root_bound(z, r, wp);
+    m = hypgeom_root_bound(z, r);
     n = FLINT_MAX(n, m);
 
     /*  We now have |R(k)| <= G(k) where G(k) is monotonically decreasing,
         and can bound the tail using a geometric series as soon
-        as soon as G(k) < 1.  */
+        as soon as G(k) < 1. */
 
     /* bound T(n-1) */
-    hypgeom_term_bound(Tn, TK, K, A, B, r, z, n-1, wp);
+    hypgeom_term_bound(Tn, TK, K, A, B, r, z, n-1);
 
     while (1)
     {
         /* bound R(n) */
-        fmpr_mul_ui(num, z, n, wp, FMPR_RND_UP);
-        fmpr_mul_ui(num, num, n - B, wp, FMPR_RND_UP);
-        fmpr_set_ui(den, n - A);
-        fmpr_mul_ui(den, den, n - 2*B, wp, FMPR_RND_DOWN);
+        mag_mul_ui(num, z, n);
+        mag_mul_ui(num, num, n - B);
+
+        mag_set_ui_lower(den, n - A);
+        mag_mul_ui_lower(den, den, n - 2*B);
 
         if (r != 0)
         {
-            fmpr_set_ui(u, n);
-            fmpr_pow_sloppy_ui(u, u, r, wp, FMPR_RND_DOWN);
-            fmpr_mul(den, den, u, wp, FMPR_RND_DOWN);
+            mag_set_ui_lower(u, n);
+            mag_pow_ui_lower(u, u, r);
+            mag_mul_lower(den, den, u);
         }
 
-        fmpr_div(t, num, den, wp, FMPR_RND_UP);
+        mag_div(t, num, den);
 
         /* multiply bound for T(n-1) by bound for R(n) to bound T(n) */
-        fmpr_mul(Tn, Tn, t, wp, FMPR_RND_UP);
+        mag_mul(Tn, Tn, t);
 
         /* geometric series termination check */
-        fmpr_sub(u, one, t, wp, FMPR_RND_DOWN);
-        if (fmpr_sgn(u) > 0)
-        {
-            fmpr_div(u, Tn, u, wp, FMPR_RND_UP);
+        /* u = max(1-t, 0), rounding down [lower bound] */
+        mag_sub_lower(u, one, t);
 
-            if (fmpr_cmp(u, tol) < 0)
+        if (!mag_is_zero(u))
+        {
+            mag_div(u, Tn, u);
+
+            if (mag_cmp(u, tol) < 0)
             {
-                fmpr_set(error, u);
+                mag_set(error, u);
                 break;
             }
         }
@@ -269,13 +346,14 @@ hypgeom_bound(fmpr_t error, int r,
         n++;
     }
 
-    fmpr_clear(Tn);
-    fmpr_clear(t);
-    fmpr_clear(u);
-    fmpr_clear(one);
-    fmpr_clear(tol);
-    fmpr_clear(num);
-    fmpr_clear(den);
+    mag_clear(Tn);
+    mag_clear(t);
+    mag_clear(u);
+    mag_clear(one);
+    mag_clear(tol);
+    mag_clear(num);
+    mag_clear(den);
 
     return n;
 }
+

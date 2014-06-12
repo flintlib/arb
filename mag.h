@@ -650,6 +650,105 @@ void mag_rfac_ui(mag_t z, ulong n);
 /* TODO: document/test */
 void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
 
+/* TODO: document/test */
+void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
+
+static __inline__ void
+mag_set_ui(mag_t z, ulong x)
+{
+    fmpz_t man, exp;
+    fmpz_init_set_ui(man, x);
+    *exp = 0;
+    mag_set_fmpz_2exp_fmpz(z, man, exp);
+    fmpz_clear(man);
+}
+
+static __inline__ void
+mag_set_ui_lower(mag_t z, ulong x)
+{
+    fmpz_t man, exp;
+    fmpz_init_set_ui(man, x);
+    *exp = 0;
+    mag_set_fmpz_2exp_fmpz_lower(z, man, exp);
+    fmpz_clear(man);
+}
+
+static __inline__ void
+mag_set_fmpz(mag_t z, const fmpz_t x)
+{
+    fmpz_t exp;
+    *exp = 0;
+    mag_set_fmpz_2exp_fmpz(z, x, exp);
+}
+
+static __inline__ void
+mag_set_fmpz_lower(mag_t z, const fmpz_t x)
+{
+    fmpz_t exp;
+    *exp = 0;
+    mag_set_fmpz_2exp_fmpz_lower(z, x, exp);
+}
+
+static __inline__ void
+mag_mul_ui(mag_t z, const mag_t x, ulong y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui(t, y);
+    mag_mul(z, x, t);
+    mag_clear(t);
+}
+
+static __inline__ void
+mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui_lower(t, y);
+    mag_mul_lower(z, x, t);
+    mag_clear(t);
+}
+
+static __inline__ void
+mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_fmpz(t, y);
+    mag_mul(z, x, t);
+    mag_clear(t);
+}
+
+static __inline__ void
+mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_fmpz_lower(t, y);
+    mag_mul_lower(z, x, t);
+    mag_clear(t);
+}
+
+static __inline__ void
+mag_div_ui(mag_t z, const mag_t x, ulong y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui_lower(t, y);
+    mag_div(z, x, t);
+    mag_clear(t);
+}
+
+static __inline__ void
+mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_fmpz_lower(t, y);
+    mag_div(z, x, t);
+    mag_clear(t);
+}
+
 #ifdef __cplusplus
 }
 #endif

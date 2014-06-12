@@ -49,29 +49,6 @@ acb_get_mag_lower(mag_t z, const acb_t x)
     arf_clear(t);
 }
 
-void
-mag_mul_ui(mag_t z, const mag_t x, ulong y)
-{
-    arf_t t;
-    arf_init(t);
-    arf_set_mag(t, x);
-    arf_mul_ui(t, t, y, MAG_BITS, ARF_RND_UP);
-    arf_get_mag(z, t);
-    arf_clear(t);
-}
-
-void
-mag_div_ui(mag_t z, const mag_t x, ulong y)
-{
-    arf_t t;
-    arf_init(t);
-    arf_set_mag(t, x);
-    arf_div_ui(t, t, y, MAG_BITS, ARF_RND_UP);
-    arf_get_mag(z, t);
-    arf_clear(t);
-}
-
-
 /* tuning factor */
 #define GAMMA_STIRLING_BETA 0.27
 
