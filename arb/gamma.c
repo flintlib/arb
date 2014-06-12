@@ -27,6 +27,7 @@
 #include "gamma.h"
 #include "acb.h"
 #include "bernoulli.h"
+#include "hypgeom.h"
 
 /* TODO: move helper functions to the right modules */
 void
@@ -525,6 +526,157 @@ arb_gamma_fmpq_stirling(arb_t y, const fmpq_t a, long prec)
 }
 
 void
+arb_gamma_const_1_3_eval(arb_t s, long prec)
+{
+    hypgeom_t series;
+    arb_t t, u;
+    long wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+
+    arb_init(t);
+    arb_init(u);
+
+    hypgeom_init(series);
+
+    fmpz_poly_set_str(series->A, "1  1");
+    fmpz_poly_set_str(series->B, "1  1");
+    fmpz_poly_set_str(series->P, "4  5 -46 108 -72");
+    fmpz_poly_set_str(series->Q, "4  0 0 0 512000");
+
+    prec += FLINT_CLOG2(prec);
+
+    arb_hypgeom_infsum(s, t, series, wp, wp);
+
+    arb_sqrt_ui(u, 10, wp);
+    arb_mul(t, t, u, wp);
+
+    arb_const_pi(u, wp);
+    arb_pow_ui(u, u, 4, wp);
+    arb_mul_ui(u, u, 12, wp);
+    arb_mul(s, s, u, wp);
+
+    arb_div(s, s, t, wp);
+    arb_root(s, s, 2, wp);
+    arb_root(s, s, 3, prec);
+
+    hypgeom_clear(series);
+    arb_clear(t);
+    arb_clear(u);
+}
+
+ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_3, arb_gamma_const_1_3_eval)
+
+void
+arb_gamma_const_1_4_eval(arb_t x, long prec)
+{
+    arb_t t, u;
+    long wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+
+    arb_init(t);
+    arb_init(u);
+
+    arb_one(t);
+    arb_sqrt_ui(u, 2, wp);
+    arb_agm(x, t, u, wp);
+
+    arb_const_pi(t, wp);
+    arb_mul_2exp_si(t, t, 1);
+    arb_sqrt(u, t, wp);
+    arb_mul(u, u, t, wp);
+
+    arb_div(x, u, x, wp);
+    arb_sqrt(x, x, wp);
+
+    arb_clear(t);
+    arb_clear(u);
+}
+
+ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_4, arb_gamma_const_1_4_eval)
+
+void
+arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, long prec)
+{
+    long wp = prec + 4;
+
+    if (q == 1)
+    {
+        arb_one(y);
+    }
+    else if (q == 2)  /* p = 1 */
+    {
+        arb_const_sqrt_pi(y, prec);
+    }
+    else if (q == 3)
+    {
+        if (p == 1)
+        {
+            arb_gamma_const_1_3(y, prec);
+        }
+        else  /* p = 2 */
+        {
+            arb_t t;
+            arb_init(t);
+            arb_gamma_const_1_3(y, wp);
+            arb_sqrt_ui(t, 3, wp);
+            arb_mul(y, y, t, wp);
+            arb_const_pi(t, wp);
+            arb_div(y, t, y, prec);
+            arb_mul_2exp_si(y, y, 1);
+            arb_clear(t);
+        }
+    }
+    else if (q == 4)
+    {
+        if (p == 1)
+        {
+            arb_gamma_const_1_4(y, prec);
+        }
+        else  /* p = 3 */
+        {
+            arb_t t;
+            arb_init(t);
+            arb_sqrt_ui(y, 2, wp);
+            arb_const_pi(t, wp);
+            arb_mul(y, y, t, wp);
+            arb_gamma_const_1_4(t, wp);
+            arb_div(y, y, t, prec);
+            arb_clear(t);
+        }
+    }
+    else if (q == 6)
+    {
+        arb_t t;
+        arb_init(t);
+        arb_const_pi(t, wp);
+        arb_div_ui(t, t, 3, wp);
+        arb_sqrt(t, t, wp);
+        arb_set_ui(y, 2);
+        arb_root(y, y, 3, wp);
+        arb_mul(t, t, y, wp);
+        arb_gamma_const_1_3(y, wp);
+        arb_mul(y, y, y, prec);
+
+        if (p == 1)
+        {
+            arb_div(y, y, t, prec);
+        }
+        else  /* p = 5 */
+        {
+            arb_div(y, t, y, wp);
+            arb_const_pi(t, wp);
+            arb_mul(y, y, t, prec);
+            arb_mul_2exp_si(y, y, 1);
+        }
+
+        arb_clear(t);
+    }
+    else
+    {
+        printf("small fraction not implemented!\n");
+        abort();
+    }
+}
+
+void
 arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, long prec)
 {
     fmpq_t a;
@@ -564,11 +716,7 @@ arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, long prec)
 
     if (q == 1 || q == 2 || q == 3 || q == 4 || q == 6)
     {
-        fmprb_t f;
-        fmprb_init(f);
-        gamma_small_frac(f, p, q, prec);
-        arb_set_fmprb(t, f);
-        fmprb_clear(f);
+        arb_gamma_small_frac(t, p, q, prec);
     }
     else
     {
