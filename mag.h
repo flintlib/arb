@@ -674,6 +674,13 @@ mag_set_ui_lower(mag_t z, ulong x)
 }
 
 static __inline__ void
+mag_set_ui_2exp_si(mag_t z, ulong v, long e)
+{
+    mag_set_ui(z, v);
+    mag_mul_2exp_si(z, z, e);
+}
+
+static __inline__ void
 mag_set_fmpz(mag_t z, const fmpz_t x)
 {
     fmpz_t exp;

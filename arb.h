@@ -647,6 +647,29 @@ void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong m, long p
 void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 
+#define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
+    TLS_PREFIX long name ## _cached_prec = 0; \
+    TLS_PREFIX arb_t name ## _cached_value; \
+    void name ## _cleanup(void) \
+    { \
+        arb_clear(name ## _cached_value); \
+        name ## _cached_prec = 0; \
+    } \
+    void name(arb_t x, long prec) \
+    { \
+        if (name ## _cached_prec < prec) \
+        { \
+            if (name ## _cached_prec == 0) \
+            { \
+                arb_init(name ## _cached_value); \
+                flint_register_cleanup_function(name ## _cleanup); \
+            } \
+            comp_func(name ## _cached_value, prec); \
+            name ## _cached_prec = prec; \
+        } \
+        arb_set_round(x, name ## _cached_value, prec); \
+    }
+
 /* vector functions */
 
 static __inline__ void

@@ -243,13 +243,6 @@ mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
     }
 }
 
-void
-mag_set_ui_2exp_si(mag_t z, ulong v, long e)
-{
-    mag_set_ui(z, v);
-    mag_mul_2exp_si(z, z, e);
-}
-
 double
 mag_get_d(const mag_t z)
 {
