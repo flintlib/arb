@@ -647,6 +647,9 @@ void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong m, long p
 void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 
+/* TODO: document */
+void arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec);
+
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \
     TLS_PREFIX arb_t name ## _cached_value; \

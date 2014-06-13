@@ -89,23 +89,6 @@ bsplit(acb_ptr Q, acb_ptr T, const acb_t z, long a, long b, long num, long prec)
 }
 
 void
-_acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec)
-{
-    long i;
-
-    if (len < trunc)
-        acb_set(res + len, src + len - 1);
-
-    for (i = len - 1; i > 0; i--)
-    {
-        acb_mul(res + i, src + i, c, prec);
-        acb_add(res + i, res + i, src + i - 1, prec);
-    }
-
-    acb_mul(res, src, c, prec);
-}
-
-void
 _acb_poly_log_cpx_series(acb_ptr res, const acb_t c, long num, long prec)
 {
     long i;

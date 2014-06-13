@@ -648,6 +648,9 @@ void acb_gamma(acb_t y, const acb_t x, long prec);
 void acb_rgamma(acb_t y, const acb_t x, long prec);
 void acb_lgamma(acb_t y, const acb_t x, long prec);
 void acb_digamma(acb_t y, const acb_t x, long prec);
+void acb_zeta(acb_t z, const acb_t s, long prec);
+void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec);
+
 
 /*
 TBD
@@ -656,9 +659,6 @@ void acb_invroot_newton(acb_t r, const acb_t a, ulong m, const acb_t r0, long st
 void acb_root_exp(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root_newton(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root(acb_t r, const acb_t a, long m, long index, long prec);
-
-void acb_zeta(acb_t z, const acb_t s, long prec);
-void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec);
 */
 
 static __inline__ void

@@ -558,21 +558,17 @@ void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t f, long n, long pre
 void _arb_poly_rising_ui_series(arb_ptr res, arb_srcptr f, long flen, ulong r, long trunc, long prec);
 void arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, long trunc, long prec);
 
-/*
-TBD:
-
+/* TODO: document */
 void _arb_poly_zeta_series(arb_ptr res, arb_srcptr h, long hlen, const arb_t a, int deflate, long len, long prec);
-
 void arb_poly_zeta_series(arb_poly_t res, const arb_poly_t f, const arb_t a, int deflate, long n, long prec);
 
+/* TODO: document */
 void _arb_poly_riemann_siegel_theta_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
-
 void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, long n, long prec);
 
+/* TODO: document */
 void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
-
 void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, long n, long prec);
-*/
 
 /* Root-finding */
 

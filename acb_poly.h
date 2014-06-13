@@ -506,14 +506,53 @@ void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, l
 
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
 
+/* TODO: document (all below) */
 
-/*
-TBD:
+void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec);
+
+void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec);
+
+void _acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, long prec);
+
+/* series of c^(d+x) */
+static __inline__ void
+_acb_poly_pow_cpx(acb_ptr res, const acb_t c, const acb_t d, long trunc, long prec)
+{
+    long i;
+    acb_t logc;
+
+    acb_init(logc);
+    acb_log(logc, c, prec);
+    acb_mul(res + 0, logc, d, prec);
+    acb_exp(res + 0, res + 0, prec);
+
+    for (i = 1; i < trunc; i++)
+    {
+        acb_mul(res + i, res + i - 1, logc, prec);
+        acb_div_ui(res + i, res + i, i, prec);
+    }
+
+    acb_clear(logc);
+}
+
+void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long trunc, long prec);
+void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec);
+
+void _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec);
+void _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec);
+void _acb_poly_zeta_em_bound1(arf_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp);
+void _acb_poly_zeta_em_bound(arb_ptr vec, const acb_t s, const acb_t a, ulong N, ulong M, long d, long wp);
+
+void _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, long d, long prec);
+
+void arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec);
+
+void _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec);
+void _acb_poly_zeta_em_tail_bsplit(acb_ptr z, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec);
 
 void _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int deflate, long len, long prec);
 
 void acb_poly_zeta_series(acb_poly_t res, const acb_poly_t f, const acb_t a, int deflate, long n, long prec);
-*/
 
 #ifdef __cplusplus
 }
