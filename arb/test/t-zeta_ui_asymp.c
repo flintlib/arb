@@ -23,14 +23,49 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
 
-void
-fmpr_printd(const fmpr_t x, long digits)
+int main()
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    long iter;
+    flint_rand_t state;
+
+    printf("zeta_ui_asymp....");
+    fflush(stdout);
+    flint_randinit(state);
+
+    for (iter = 0; iter < 10000; iter++)
+    {
+        arb_t r;
+        ulong n;
+        mpfr_t s;
+        long prec;
+
+        prec = 2 + n_randint(state, 1 << n_randint(state, 10));
+
+        arb_init(r);
+        mpfr_init2(s, prec + 100);
+
+        n = 2 + n_randint(state, 1 << n_randint(state, 10));
+
+        arb_zeta_ui_asymp(r, n, prec);
+        mpfr_zeta_ui(s, n, MPFR_RNDN);
+
+        if (!arb_contains_mpfr(r, s))
+        {
+            printf("FAIL: containment\n\n");
+            printf("n = %lu\n\n", n);
+            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
+            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+            abort();
+        }
+
+        arb_clear(r);
+        mpfr_clear(s);
+    }
+
+    flint_randclear(state);
+    flint_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }

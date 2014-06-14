@@ -19,18 +19,18 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    long i;
+
+    for (i = 0; i < num; i++)
+        arb_zeta_ui(x + i, start + 2 * i, prec);
 }
+

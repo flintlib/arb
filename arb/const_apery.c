@@ -23,14 +23,30 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
+#include "hypgeom.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_const_apery_eval(arb_t s, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    hypgeom_t series;
+    arb_t t;
+    arb_init(t);
+    hypgeom_init(series);
+
+    fmpz_poly_set_str(series->A, "3  77 250 205");
+    fmpz_poly_set_str(series->B, "1  1");
+    fmpz_poly_set_str(series->P, "6  0 0 0 0 0 -1");
+    fmpz_poly_set_str(series->Q, "6  32 320 1280 2560 2560 1024");
+
+    prec += 4 + FLINT_CLOG2(prec);
+    arb_hypgeom_infsum(s, t, series, prec, prec);
+    arb_mul_ui(t ,t, 64, prec);
+    arb_div(s, s, t, prec);
+
+    hypgeom_clear(series);
+    arb_clear(t);
 }
+
+ARB_DEF_CACHED_CONSTANT(arb_const_apery, arb_const_apery_eval)
+

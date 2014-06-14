@@ -278,33 +278,6 @@ void arb_fib_ui(arb_t z, ulong n, long prec)
     fmprb_clear(t);
 }
 
-void arb_const_khinchin(arb_t z, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_const_khinchin(t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_const_glaisher(arb_t z, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_const_glaisher(t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_zeta_ui(arb_t z, ulong n, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_zeta_ui(t, n, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_bernoulli_ui(arb_t z, ulong n, long prec)
 {
     fmprb_t t;

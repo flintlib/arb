@@ -23,14 +23,41 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
+#include "bernoulli.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_zeta_ui_bernoulli(arb_t x, ulong n, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    fmpq_t b;
+    arb_t t, f;
+    long wp;
+
+    if (n % 2)
+        abort();
+
+    wp = prec + FLINT_BIT_COUNT(n) + 2;
+
+    fmpq_init(b);
+    arb_init(t);
+    arb_init(f);
+
+    bernoulli_fmpq_ui(b, n);
+    arb_set_fmpq(x, b, wp);
+
+    arb_const_pi(t, wp);
+    arb_mul_2exp_si(t, t, 1);
+    arb_pow_ui(t, t, n, wp);
+
+    arb_fac_ui(f, n, wp);
+
+    arb_div(t, t, f, wp);
+    arb_mul(x, x, t, wp);
+    arb_abs(x, x);
+    arb_mul_2exp_si(x, x, -1);
+
+    arb_clear(t);
+    arb_clear(f);
+    fmpq_clear(b);
 }
+

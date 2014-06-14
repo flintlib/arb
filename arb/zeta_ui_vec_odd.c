@@ -19,18 +19,30 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    long i, num_borwein;
+    ulong cutoff;
+
+    cutoff = 40 + 0.3 * prec;
+
+    if (cutoff > start)
+    {
+        num_borwein = 1 + (cutoff - start) / 2;
+        num_borwein = FLINT_MIN(num_borwein, num);
+    }
+    else
+        num_borwein = 0;
+
+    arb_zeta_ui_vec_borwein(x, start, num_borwein, 2, prec);
+    for (i = num_borwein; i < num; i++)
+        arb_zeta_ui(x + i, start + 2 * i, prec);
 }
+

@@ -23,14 +23,24 @@
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_zeta_ui_asymp(arb_t x, ulong s, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    arb_one(x);
+
+    if (s != 2 && s > prec)
+    {
+        arb_add_error_2exp_si(x, -prec);
+    }
+    else
+    {
+        arf_t t;
+        arf_init(t);
+        arf_set_ui_2exp_si(t, 1, -s);
+        arb_add_arf(x, x, t, prec);
+        arb_add_error_2exp_si(x, 2 - (3 * s) / 2);
+        arf_clear(t);
+    }
 }

@@ -283,12 +283,9 @@ arb_print(const arb_t x)
 static __inline__ void
 arb_printd(const arb_t x, long digits)
 {
-    arf_printd(arb_midref(x), FLINT_ABS(digits));
-    if (digits > 0)
-    {
-        printf(" +/- ");
-        mag_printd(arb_radref(x), 5);
-    }
+    arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
+    printf(" +/- ");
+    mag_printd(arb_radref(x), 5);
 }
 
 static __inline__ void
@@ -649,6 +646,18 @@ void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 
 /* TODO: document */
 void arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec);
+
+/* TODO: document/test */
+void arb_const_apery(arb_t s, long prec);
+void arb_zeta_ui_asymp(arb_t x, ulong s, long prec);
+void arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec);
+void arb_zeta_ui_euler_product(arb_t z, ulong s, long prec);
+void arb_zeta_ui_bernoulli(arb_t x, ulong n, long prec);
+void arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, long num, ulong step, long prec);
+void arb_zeta_ui(arb_t x, ulong n, long prec);
+void arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec);
+void arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec);
+void arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec);
 
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \

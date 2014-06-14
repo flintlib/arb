@@ -19,18 +19,32 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2013 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmpr.h"
+#include "arb.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec)
 {
-    mpfr_t t;
-    mpfr_init2(t, digits * 3.33 + 10);
-    fmpr_get_mpfr(t, x, MPFR_RNDN);
-    mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
-    mpfr_clear(t);
+    long i, num_odd, num_even, start_odd;
+    arb_ptr tmp;
+
+    num_odd = num / 2 + (start & num & 1);
+    num_even = num - num_odd;
+
+    start_odd = start % 2;
+
+    arb_zeta_ui_vec_even(x, start + start_odd, num_even, prec);
+    arb_zeta_ui_vec_odd(x + num_even, start + !start_odd, num_odd, prec);
+
+    /* interleave */
+    tmp = flint_malloc(sizeof(arb_struct) * num);
+    for (i = 0; i < num_even; i++) tmp[i] = x[i];
+    for (i = 0; i < num_odd; i++) tmp[num_even + i] = x[num_even + i];
+    for (i = 0; i < num_even; i++) x[start_odd + 2  * i] = tmp[i];
+    for (i = 0; i < num_odd; i++) x[!start_odd + 2  * i] = tmp[num_even + i];
+    flint_free(tmp);
 }
+
