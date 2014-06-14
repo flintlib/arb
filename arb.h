@@ -658,6 +658,8 @@ void arb_zeta_ui(arb_t x, ulong n, long prec);
 void arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec);
 void arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec);
 void arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec);
+void arb_bernoulli_ui(arb_t b, ulong n, long prec);
+void arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec);
 
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \

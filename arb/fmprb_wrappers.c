@@ -278,12 +278,3 @@ void arb_fib_ui(arb_t z, ulong n, long prec)
     fmprb_clear(t);
 }
 
-void arb_bernoulli_ui(arb_t z, ulong n, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_bernoulli_ui(t, n, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-

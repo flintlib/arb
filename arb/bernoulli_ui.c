@@ -23,42 +23,36 @@
 
 ******************************************************************************/
 
-#include "bernoulli.h"
 #include "arb.h"
+#include "bernoulli.h"
 
 void
-_bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
+arb_bernoulli_ui(arb_t b, ulong n, long prec)
 {
-    long prec;
-    arb_t t;
-
-    arith_bernoulli_number_denom(den, n);
-
-    if (n % 2)
+    if (n < bernoulli_cache_num)
     {
-        fmpz_set_si(num, -(n == 1));
-        return;
+        arb_set_fmpq(b, bernoulli_cache + n, prec);
     }
-
-    if (n < BERNOULLI_SMALL_NUMER_LIMIT)
+    else
     {
-        fmpz_set_si(num, _bernoulli_numer_small[n / 2]);
-        return;
+        int use_frac;
+
+        use_frac = (n < BERNOULLI_SMALL_NUMER_LIMIT) || (n % 2 != 0);
+        if (!use_frac)
+            use_frac = (prec > global_prec(n));
+
+        if (use_frac)
+        {
+            fmpq_t t;
+            fmpq_init(t);
+            bernoulli_fmpq_ui(t, n);
+            arb_set_fmpq(b, t, prec);
+            fmpq_clear(t);
+        }
+        else
+        {
+            arb_bernoulli_ui_zeta(b, n, prec);
+        }
     }
-
-    arb_init(t);
-
-    for (prec = arith_bernoulli_number_size(n) + fmpz_bits(den) + 2; ; prec += 20)
-    {
-        arb_bernoulli_ui_zeta(t, n, prec);
-        arb_mul_fmpz(t, t, den, prec);
-
-        if (arb_get_unique_fmpz(num, t))
-            break;
-
-        printf("warning: %ld insufficient precision for Bernoulli number %lu\n", prec, n);
-    }
-
-    arb_clear(t);
 }
 
