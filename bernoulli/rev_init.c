@@ -30,7 +30,8 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
 {
     long j;
     fmpz_t t;
-    fmprb_t x;
+    arb_t x;
+    arf_t u;
     int round1, round2;
     long wp;
 
@@ -47,39 +48,42 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
     iter->alloc = iter->max_power + 1;
     iter->powers = _fmpz_vec_init(iter->alloc);
     fmpz_init(iter->pow_error);
-    fmprb_init(iter->prefactor);
-    fmprb_init(iter->two_pi_squared);
+    arb_init(iter->prefactor);
+    arb_init(iter->two_pi_squared);
 
-    fmprb_init(x);
+    arb_init(x);
     fmpz_init(t);
+    arf_init(u);
 
     /* precompute powers */
     for (j = 3; j <= iter->max_power; j += 2)
     {
-        fmprb_ui_pow_ui(x, j, nmax, power_prec(j, nmax, wp));
-        fmprb_inv(x, x, power_prec(j, nmax, wp));
-        round1 = fmpr_get_fmpz_fixed_si(t, fmprb_midref(x), -wp);
+        arb_ui_pow_ui(x, j, nmax, power_prec(j, nmax, wp));
+        arb_inv(x, x, power_prec(j, nmax, wp));
+        round1 = arf_get_fmpz_fixed_si(t, arb_midref(x), -wp);
         fmpz_set(iter->powers + j, t);
 
         /* error: the radius, plus two roundings */
-        round2 = fmpr_get_fmpz_fixed_si(t, fmprb_radref(x), -wp);
+        arf_set_mag(u, arb_radref(x));
+        round2 = arf_get_fmpz_fixed_si(t, u, -wp);
         fmpz_add_ui(t, t, (round1 != 0) + (round2 != 0));
         if (fmpz_cmp(iter->pow_error, t) < 0)
             fmpz_set(iter->pow_error, t);
     }
 
     /* precompute (2pi)^2 and 2*(n!)/(2pi)^n */
-    fmprb_fac_ui(iter->prefactor, nmax, wp);
-    fmprb_mul_2exp_si(iter->prefactor, iter->prefactor, 1);
+    arb_fac_ui(iter->prefactor, nmax, wp);
+    arb_mul_2exp_si(iter->prefactor, iter->prefactor, 1);
 
-    fmprb_const_pi(x, wp);
-    fmprb_mul_2exp_si(x, x, 1);
-    fmprb_mul(iter->two_pi_squared, x, x, wp);
+    arb_const_pi(x, wp);
+    arb_mul_2exp_si(x, x, 1);
+    arb_mul(iter->two_pi_squared, x, x, wp);
 
-    fmprb_pow_ui(x, iter->two_pi_squared, nmax / 2, wp);
-    fmprb_div(iter->prefactor, iter->prefactor, x, wp);
+    arb_pow_ui(x, iter->two_pi_squared, nmax / 2, wp);
+    arb_div(iter->prefactor, iter->prefactor, x, wp);
 
     fmpz_clear(t);
-    fmprb_clear(x);
+    arb_clear(x);
+    arf_clear(u);
 }
 

@@ -25,14 +25,24 @@
 
 #include "bernoulli.h"
 
+static __inline__ void
+mag_ui_div(mag_t z, ulong c, const mag_t x)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui(t, c);
+    mag_div(z, t, x);
+    mag_clear(t);
+}
+
 void
 bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
 {
     ulong n;
     long j, wp;
     fmpz_t sum;
-    fmpr_t err;
-    fmprb_t z, h;
+    mag_t err;
+    arb_t z, h;
 
     n = iter->n;
     wp = iter->prec;
@@ -46,42 +56,42 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     }
 
     fmpz_init(sum);
-    fmpr_init(err);
-    fmprb_init(z);
-    fmprb_init(h);
+    mag_init(err);
+    arb_init(z);
+    arb_init(h);
 
     /* add all odd powers */
     fmpz_zero(sum);
     for (j = iter->max_power; j >= 3; j -= 2)
         fmpz_add(sum, sum, iter->powers + j);
-    fmprb_set_fmpz(z, sum);
+    arb_set_fmpz(z, sum);
 
     /* bound numerical error from the powers */
     fmpz_mul_ui(sum, iter->pow_error, iter->max_power / 2);
-    fmpr_set_fmpz(err, sum);
-    fmprb_add_error_fmpr(z, err);
-    fmprb_mul_2exp_si(z, z, -wp);
+    mag_set_fmpz(err, sum);
+    mag_add(arb_radref(z), arb_radref(z), err);
+    arb_mul_2exp_si(z, z, -wp);
 
-    fmprb_add_ui(z, z, 1, wp);
+    arb_add_ui(z, z, 1, wp);
 
     /* add truncation error: sum_{k > N} 1/k^n <= 1/N^(i-1) */
-    fmpr_set_ui(err, iter->max_power);
-    fmpr_pow_sloppy_ui(err, err, n - 1, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-    fmpr_ui_div(err, 1, err, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmprb_add_error_fmpr(z, err);
+    mag_set_ui_lower(err, iter->max_power);
+    mag_pow_ui_lower(err, err, n - 1);
+    mag_ui_div(err, 1, err);
+    mag_add(arb_radref(z), arb_radref(z), err);
 
     /* convert zeta to Bernoulli number */
-    fmprb_div_2expm1_ui(h, z, n, wp);
-    fmprb_add(z, z, h, wp);
-    fmprb_mul(z, z, iter->prefactor, wp);
+    arb_div_2expm1_ui(h, z, n, wp);
+    arb_add(z, z, h, wp);
+    arb_mul(z, z, iter->prefactor, wp);
     arith_bernoulli_number_denom(denom, n);
-    fmprb_mul_fmpz(z, z, denom, wp);
+    arb_mul_fmpz(z, z, denom, wp);
     if (n % 4 == 0)
-        fmprb_neg(z, z);
+        arb_neg(z, z);
 
-    /* printf("%ld: ", n); fmprb_printd(z, 5); printf("\n"); */
+    /* printf("%ld: ", n); arb_printd(z, 5); printf("\n"); */
 
-    if (!fmprb_get_unique_fmpz(numer, z))
+    if (!arb_get_unique_fmpz(numer, z))
     {
         printf("warning: insufficient precision for B_%ld\n", n);
         _bernoulli_fmpq_ui(numer, denom, n);
@@ -90,9 +100,9 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     /* update prefactor */
     if (n > 0)
     {
-        fmprb_mul(iter->prefactor, iter->prefactor, iter->two_pi_squared, wp);
-        fmprb_div_ui(iter->prefactor, iter->prefactor, n, wp);
-        fmprb_div_ui(iter->prefactor, iter->prefactor, n - 1, wp);
+        arb_mul(iter->prefactor, iter->prefactor, iter->two_pi_squared, wp);
+        arb_div_ui(iter->prefactor, iter->prefactor, n, wp);
+        arb_div_ui(iter->prefactor, iter->prefactor, n - 1, wp);
     }
 
     /* update powers */
@@ -126,7 +136,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
             fmpz_add_ui(iter->pow_error, iter->pow_error, 1);
 
             /* speed improvement (could be skipped with better multiplication) */
-            fmprb_set_round(iter->two_pi_squared, iter->two_pi_squared, new_prec);
+            arb_set_round(iter->two_pi_squared, iter->two_pi_squared, new_prec);
 
             iter->max_power = new_max;
             iter->prec = new_prec;
@@ -136,8 +146,8 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     iter->n -= 2;
 
     fmpz_clear(sum);
-    fmpr_clear(err);
-    fmprb_clear(z);
-    fmprb_clear(h);
+    mag_clear(err);
+    arb_clear(z);
+    arb_clear(h);
 }
 

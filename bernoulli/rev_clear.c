@@ -32,8 +32,8 @@ bernoulli_rev_clear(bernoulli_rev_t iter)
     {
         _fmpz_vec_clear(iter->powers, iter->alloc);
         fmpz_clear(iter->pow_error);
-        fmprb_clear(iter->prefactor);
-        fmprb_clear(iter->two_pi_squared);
+        arb_clear(iter->prefactor);
+        arb_clear(iter->two_pi_squared);
     }
 }
 

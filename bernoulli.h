@@ -33,6 +33,7 @@
 #include "fmpq.h"
 #include "arith.h"
 #include "fmprb.h"
+#include "arb.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,8 +94,8 @@ typedef struct
     long max_power;
     fmpz * powers;
     fmpz_t pow_error;
-    fmprb_t prefactor;
-    fmprb_t two_pi_squared;
+    arb_t prefactor;
+    arb_t two_pi_squared;
     ulong n;
 }
 bernoulli_rev_struct;
