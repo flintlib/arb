@@ -113,39 +113,6 @@ void arb_expm1(arb_t z, const arb_t x, long prec)
     fmprb_clear(t);
 }
 
-void arb_sin(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_sin(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_cos(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_cos(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_sin_cos(arb_t s, arb_t c, const arb_t x, long prec)
-{
-    fmprb_t t, u;
-    fmprb_init(t);
-    fmprb_init(u);
-    arb_get_fmprb(t, x);
-    fmprb_sin_cos(t, u, t, prec);
-    arb_set_fmprb(s, t);
-    arb_set_fmprb(c, u);
-    fmprb_clear(t);
-    fmprb_clear(u);
-}
-
 void arb_sin_pi(arb_t z, const arb_t x, long prec)
 {
     fmprb_t t;
