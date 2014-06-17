@@ -779,6 +779,12 @@ long arf_abs_bound_lt_2exp_si(const arf_t x);
 
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
+/* TODO: document/test, implement properly */
+void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd);
+
+/* TODO: document */
+long arf_get_si(const arf_t x, arf_rnd_t rnd);
+
 /* TODO: document, implement properly */
 static __inline__ int
 arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)

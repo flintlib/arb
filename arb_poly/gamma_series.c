@@ -33,18 +33,6 @@ void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
 
 void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec);
 
-long
-arf_get_si(const arf_t x, arf_rnd_t rnd)
-{
-    fmpr_t t;
-    long v;
-    fmpr_init(t);
-    arf_get_fmpr(t, x);
-    v = fmpr_get_si(t, rnd);
-    fmpr_clear(t);
-    return v;
-}
-
 void
 _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec)
 {
@@ -58,7 +46,6 @@ _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec)
 
     _fmprb_vec_clear(t, len);
 }
-
 
 static void
 bsplit(arb_ptr Q, arb_ptr T, const arb_t z, long a, long b, long num, long prec)
