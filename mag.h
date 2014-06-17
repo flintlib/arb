@@ -636,7 +636,7 @@ _mag_vec_clear(mag_ptr v, long n)
 }
 
 /* TODO: document/test */
-void mag_set_d(mag_t z, double x)
+static __inline__ void mag_set_d(mag_t z, double x)
 {
     fmpz_t e;
     fmpz_init(e);

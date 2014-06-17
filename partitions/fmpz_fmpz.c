@@ -34,7 +34,7 @@ long partitions_hrr_needed_terms(double n);
 
 typedef struct
 {
-    fmprb_ptr x;
+    arb_ptr x;
     fmpz * n;
     ulong N0;
     ulong N;
@@ -46,7 +46,7 @@ static void *
 worker(void * arg_ptr)
 {
     worker_arg_t arg = *((worker_arg_t *) arg_ptr);
-    partitions_hrr_sum_fmprb(arg.x, arg.n, arg.N0, arg.N, arg.use_doubles);
+    partitions_hrr_sum_arb(arg.x, arg.n, arg.N0, arg.N, arg.use_doubles);
     flint_cleanup();
     return NULL;
 }
@@ -54,13 +54,13 @@ worker(void * arg_ptr)
 /* TODO: set number of threads in child threads, for future
    multithreaded evaluation of single terms */
 static void
-hrr_sum_threaded(fmprb_t x, const fmpz_t n, long N, int use_doubles)
+hrr_sum_threaded(arb_t x, const fmpz_t n, long N, int use_doubles)
 {
-    fmprb_t y;
+    arb_t y;
     pthread_t threads[2];
     worker_arg_t args[2];
 
-    fmprb_init(y);
+    arb_init(y);
 
     args[0].x = x;
     args[0].n = (fmpz *) n;
@@ -80,9 +80,9 @@ hrr_sum_threaded(fmprb_t x, const fmpz_t n, long N, int use_doubles)
     pthread_join(threads[0], NULL);
     pthread_join(threads[1], NULL);
 
-    fmprb_add(x, x, y, FMPR_PREC_EXACT);
+    arb_add(x, x, y, ARF_PREC_EXACT);
 
-    fmprb_clear(y);
+    arb_clear(y);
 }
 
 void
@@ -97,12 +97,12 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
     }
     else
     {
-        fmprb_t x;
-        fmpr_t bound;
+        arb_t x;
+        arf_t bound;
         long N;
 
-        fmprb_init(x);
-        fmpr_init(bound);
+        arb_init(x);
+        arf_init(bound);
 
         N = partitions_hrr_needed_terms(fmpz_get_d(n));
 
@@ -112,22 +112,22 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
         }
         else
         {
-            partitions_hrr_sum_fmprb(x, n, 1, N, use_doubles);
+            partitions_hrr_sum_arb(x, n, 1, N, use_doubles);
         }
 
         partitions_rademacher_bound(bound, n, N);
-        fmpr_add(fmprb_radref(x), fmprb_radref(x), bound, FMPRB_RAD_PREC, FMPR_RND_UP);
+        arb_add_error_arf(x, bound);
 
-        if (!fmprb_get_unique_fmpz(p, x))
+        if (!arb_get_unique_fmpz(p, x))
         {
             printf("not unique!\n");
-            fmprb_printd(x, 50);
+            arb_printd(x, 50);
             printf("\n");
             abort();
         }
 
-        fmprb_clear(x);
-        fmpr_clear(bound);
+        arb_clear(x);
+        arf_clear(bound);
     }
 }
 

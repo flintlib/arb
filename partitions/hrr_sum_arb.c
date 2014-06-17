@@ -26,7 +26,7 @@
 #include "partitions.h"
 
 #include "arith.h"
-#include "fmprb.h"
+#include "arb.h"
 #include "math.h"
 
 #define DOUBLE_CUTOFF 40
@@ -171,21 +171,21 @@ eval_trig_prod_d(trig_prod_t prod)
 }
 
 static void
-eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
+eval_trig_prod(arb_t sum, trig_prod_t prod, long prec)
 {
     int i;
     mp_limb_t v;
-    fmprb_t t;
+    arb_t t;
 
     if (prod->prefactor == 0)
     {
-        fmprb_zero(sum);
+        arb_zero(sum);
         return;
     }
 
-    fmprb_init(t);
+    arb_init(t);
 
-    fmprb_set_si(sum, prod->prefactor);
+    arb_set_si(sum, prod->prefactor);
     v = n_gcd(FLINT_MAX(prod->sqrt_p, prod->sqrt_q),
               FLINT_MIN(prod->sqrt_p, prod->sqrt_q));
     prod->sqrt_p /= v;
@@ -193,14 +193,14 @@ eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
 
     if (prod->sqrt_p != 1)
     {
-        fmprb_sqrt_ui(t, prod->sqrt_p, prec);
-        fmprb_mul(sum, sum, t, prec);
+        arb_sqrt_ui(t, prod->sqrt_p, prec);
+        arb_mul(sum, sum, t, prec);
     }
 
     if (prod->sqrt_q != 1)
     {
-        fmprb_rsqrt_ui(t, prod->sqrt_q, prec);
-        fmprb_mul(sum, sum, t, prec);
+        arb_rsqrt_ui(t, prod->sqrt_q, prec);
+        arb_mul(sum, sum, t, prec);
     }
 
     for (i = 0; i < prod->n; i++)
@@ -208,36 +208,36 @@ eval_trig_prod(fmprb_t sum, trig_prod_t prod, long prec)
         fmpq_t pq;
         *fmpq_numref(pq) = prod->cos_p[i];
         *fmpq_denref(pq) = prod->cos_q[i];
-        fmprb_cos_pi_fmpq(t, pq, prec);
-        fmprb_mul(sum, sum, t, prec);
+        arb_cos_pi_fmpq(t, pq, prec);
+        arb_mul(sum, sum, t, prec);
     }
 
-    fmprb_clear(t);
+    arb_clear(t);
 }
 
 static void
-sinh_cosh_divk_precomp(fmprb_t sh, fmprb_t ch, fmprb_t ex, long k, long prec)
+sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, long k, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_round(t, ex, prec);
-    fmprb_root(ch, t, k, prec);
+    arb_t t;
+    arb_init(t);
+    arb_set_round(t, ex, prec);
+    arb_root(ch, t, k, prec);
     /* The second term doesn't need full precision,
        but this doesn't affect performance that much... */
-    fmprb_inv(t, ch, prec);
-    fmprb_sub(sh, ch, t, prec);
-    fmprb_add(ch, ch, t, prec);
-    fmprb_mul_2exp_si(ch, ch, -1);
-    fmprb_mul_2exp_si(sh, sh, -1);
-    fmprb_clear(t);
+    arb_inv(t, ch, prec);
+    arb_sub(sh, ch, t, prec);
+    arb_add(ch, ch, t, prec);
+    arb_mul_2exp_si(ch, ch, -1);
+    arb_mul_2exp_si(sh, sh, -1);
+    arb_clear(t);
 }
 
 
 void
-partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_doubles)
+partitions_hrr_sum_arb(arb_t x, const fmpz_t n, long N0, long N, int use_doubles)
 {
     trig_prod_t prod;
-    fmprb_t acc, C, t1, t2, t3, t4, exp1;
+    arb_t acc, C, t1, t2, t3, t4, exp1;
     fmpz_t n24;
     long k, prec, res_prec, acc_prec, guard_bits;
     double nd, Cd;
@@ -255,16 +255,16 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
     prec = FLINT_MAX(prec, DOUBLE_PREC);
     res_prec = acc_prec = prec;
 
-    fmprb_init(acc);
-    fmprb_init(C);
-    fmprb_init(t1);
-    fmprb_init(t2);
-    fmprb_init(t3);
-    fmprb_init(t4);
-    fmprb_init(exp1);
+    arb_init(acc);
+    arb_init(C);
+    arb_init(t1);
+    arb_init(t2);
+    arb_init(t3);
+    arb_init(t4);
+    arb_init(exp1);
     fmpz_init(n24);
 
-    fmprb_zero(x);
+    arb_zero(x);
 
     /* n24 = 24n - 1 */
     fmpz_set(n24, n);
@@ -272,13 +272,13 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
     fmpz_sub_ui(n24, n24, 1);
 
     /* C = (pi/6) sqrt(24n-1) */
-    fmprb_const_pi(t1, prec);
-    fmprb_sqrt_fmpz(t2, n24, prec);
-    fmprb_mul(t1, t1, t2, prec);
-    fmprb_div_ui(C, t1, 6, prec);
+    arb_const_pi(t1, prec);
+    arb_sqrt_fmpz(t2, n24, prec);
+    arb_mul(t1, t1, t2, prec);
+    arb_div_ui(C, t1, 6, prec);
 
     /* exp1 = exp(C) */
-    fmprb_exp(exp1, C, prec);
+    arb_exp(exp1, C, prec);
 
     Cd = PI * sqrt(24*nd-1) / 6;
 
@@ -301,20 +301,20 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
             {
                 /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
                 eval_trig_prod(t1, prod, prec);
-                fmprb_div_fmpz(t1, t1, n24, prec);
+                arb_div_fmpz(t1, t1, n24, prec);
 
                 /* Multiply by (cosh(z) - sinh(z)/z) where z = C / k */
-                fmprb_set_round(t2, C, prec);
-                fmprb_div_ui(t2, t2, k, prec);
+                arb_set_round(t2, C, prec);
+                arb_div_ui(t2, t2, k, prec);
 
                 if (k < 35 && prec > 1000)
                     sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
                 else
-                    fmprb_sinh_cosh(t3, t4, t2, prec);
+                    arb_sinh_cosh(t3, t4, t2, prec);
 
-                fmprb_div(t3, t3, t2, prec);
-                fmprb_sub(t2, t4, t3, prec);
-                fmprb_mul(t1, t1, t2, prec);
+                arb_div(t3, t3, t2, prec);
+                arb_sub(t2, t4, t3, prec);
+                arb_mul(t1, t1, t2, prec);
             }
             else
             {
@@ -325,32 +325,32 @@ partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_dou
                 xx = xx * (cosh(zz) - sinh(zz) / zz);
 
                 xxerr = fabs(xx) * DOUBLE_ERR + DOUBLE_ERR;
-                fmpr_set_d(fmprb_midref(t1), xx);
-                fmpr_set_d(fmprb_radref(t1), xxerr);
+                arf_set_d(arb_midref(t1), xx);
+                mag_set_d(arb_radref(t1), xxerr);
             }
 
             /* Add to accumulator */
-            fmprb_add(acc, acc, t1, acc_prec);
+            arb_add(acc, acc, t1, acc_prec);
 
             if (acc_prec > 2 * prec + 32)
             {
-                fmprb_add(x, x, acc, res_prec);
-                fmprb_zero(acc);
+                arb_add(x, x, acc, res_prec);
+                arb_zero(acc);
                 acc_prec = prec + 32;
             }
         }
     }
 
-    fmprb_add(x, x, acc, res_prec);
+    arb_add(x, x, acc, res_prec);
 
     fmpz_clear(n24);
-    fmprb_clear(acc);
-    fmprb_clear(exp1);
-    fmprb_clear(C);
-    fmprb_clear(t1);
-    fmprb_clear(t2);
-    fmprb_clear(t3);
-    fmprb_clear(t4);
+    arb_clear(acc);
+    arb_clear(exp1);
+    arb_clear(C);
+    arb_clear(t1);
+    arb_clear(t2);
+    arb_clear(t3);
+    arb_clear(t4);
 }
 
 

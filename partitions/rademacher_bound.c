@@ -26,66 +26,66 @@
 #include "partitions.h"
 
 static void
-_fmpr_sinh(fmpr_t y, const fmpr_t x, long prec)
+_arf_sinh(arf_t y, const arf_t x, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_set_fmpr(t, x);
-    fmprb_sinh(t, t, prec);
-    fmpr_add(y, fmprb_midref(t), fmprb_radref(t), prec, FMPR_RND_UP);
-    fmprb_clear(t);
+    arb_t t;
+    arb_init(t);
+    arb_set_arf(t, x);
+    arb_sinh(t, t, prec);
+    arb_get_abs_ubound_arf(y, t, prec);
+    arb_clear(t);
 }
 
 /* Equation (1.8) in the paper */
 void
-partitions_rademacher_bound(fmpr_t b, const fmpz_t n, ulong N)
+partitions_rademacher_bound(arf_t b, const fmpz_t n, ulong N)
 {
-    fmpr_t A, B, C, t, u;
+    arf_t A, B, C, t, u;
     fmpz_t n1;
 
-    fmpr_init(A);
-    fmpr_init(B);
-    fmpr_init(C);
-    fmpr_init(t);
-    fmpr_init(u);
+    arf_init(A);
+    arf_init(B);
+    arf_init(C);
+    arf_init(t);
+    arf_init(u);
     fmpz_init(n1);
 
     /* bound for 44*pi^2/(225*sqrt(3)) */
-    fmpr_set_si_2exp_si(A, 18695160, -24);
+    arf_set_si_2exp_si(A, 18695160, -24);
 
     /* bound for pi*sqrt(2)/75 */
-    fmpr_set_si_2exp_si(B, 993857, -24);
+    arf_set_si_2exp_si(B, 993857, -24);
 
     /* bound for pi*sqrt(2/3) */
-    fmpr_set_si_2exp_si(C, 43035232, -24);
+    arf_set_si_2exp_si(C, 43035232, -24);
 
     /* first term: A / sqrt(N) */
-    fmpr_sqrt_ui(t, N, FMPRB_RAD_PREC, FMPR_RND_DOWN);
-    fmpr_div(b, A, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+    arf_sqrt_ui(t, N, MAG_BITS, ARF_RND_DOWN);
+    arf_div(b, A, t, MAG_BITS, ARF_RND_UP);
 
     /* B * sqrt(N/(n-1)) */
-    fmpr_set_ui(t, N);
+    arf_set_ui(t, N);
     fmpz_sub_ui(n1, n, 1);
-    fmpr_div_fmpz(t, t, n1, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_sqrt(t, t, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul(t, B, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+    arf_div_fmpz(t, t, n1, MAG_BITS, ARF_RND_UP);
+    arf_sqrt(t, t, MAG_BITS, ARF_RND_UP);
+    arf_mul(t, B, t, MAG_BITS, ARF_RND_UP);
 
     /* sinh(C*sqrt(n)/N) */
-    fmpr_sqrt_fmpz(u, n, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_div_ui(u, u, N, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_mul(u, C, u, FMPRB_RAD_PREC, FMPR_RND_UP);
+    arf_sqrt_fmpz(u, n, MAG_BITS, ARF_RND_UP);
+    arf_div_ui(u, u, N, MAG_BITS, ARF_RND_UP);
+    arf_mul(u, C, u, MAG_BITS, ARF_RND_UP);
 
-    _fmpr_sinh(u, u, FMPRB_RAD_PREC);
+    _arf_sinh(u, u, MAG_BITS);
 
     /* second term: B * ... * sinh... */
-    fmpr_mul(t, t, u, FMPRB_RAD_PREC, FMPR_RND_UP);
-    fmpr_add(b, b, t, FMPRB_RAD_PREC, FMPR_RND_UP);
+    arf_mul(t, t, u, MAG_BITS, ARF_RND_UP);
+    arf_add(b, b, t, MAG_BITS, ARF_RND_UP);
 
-    fmpr_clear(A);
-    fmpr_clear(B);
-    fmpr_clear(C);
-    fmpr_clear(t);
-    fmpr_clear(u);
+    arf_clear(A);
+    arf_clear(B);
+    arf_clear(C);
+    arf_clear(t);
+    arf_clear(u);
     fmpz_clear(n1);
 }
 

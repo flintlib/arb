@@ -29,15 +29,15 @@
 #include <math.h>
 #include "flint.h"
 #include "arith.h"
-#include "fmprb.h"
+#include "arb.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void partitions_rademacher_bound(fmpr_t b, const fmpz_t n, ulong N);
+void partitions_rademacher_bound(arf_t b, const fmpz_t n, ulong N);
 
-void partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_doubles);
+void partitions_hrr_sum_arb(arb_t x, const fmpz_t n, long N0, long N, int use_doubles);
 
 void partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles);
 
