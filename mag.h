@@ -635,6 +635,15 @@ _mag_vec_clear(mag_ptr v, long n)
     flint_free(v);
 }
 
+/* TODO: document/test */
+void mag_set_d(mag_t z, double x)
+{
+    fmpz_t e;
+    fmpz_init(e);
+    mag_set_d_2exp_fmpz(z, x, e);
+    fmpz_clear(e);
+}
+
 /* TODO: document */
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);

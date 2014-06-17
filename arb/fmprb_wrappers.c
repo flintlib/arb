@@ -113,36 +113,6 @@ void arb_expm1(arb_t z, const arb_t x, long prec)
     fmprb_clear(t);
 }
 
-void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
-{
-    fmprb_t t, u;
-    fmprb_init(t);
-    fmprb_init(u);
-    fmprb_sin_cos_pi_fmpq(t, u, x, prec);
-    arb_set_fmprb(s, t);
-    arb_set_fmprb(c, u);
-    fmprb_clear(t);
-    fmprb_clear(u);
-}
-
-void arb_sin_pi_fmpq(arb_t z, const fmpq_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_sin_pi_fmpq(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_cos_pi_fmpq(arb_t z, const fmpq_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_cos_pi_fmpq(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_atan(arb_t z, const arb_t x, long prec)
 {
     fmprb_t t;
