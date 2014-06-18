@@ -648,6 +648,9 @@ static __inline__ void mag_set_d(mag_t z, double x)
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);
 
+/* TODO: document */
+void mag_log1p(mag_t z, const mag_t x);
+
 /* TODO: document/test */
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
