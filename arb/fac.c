@@ -19,49 +19,20 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arb.h"
 
-void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, long prec)
+void
+arb_fac_ui(arb_t x, ulong n, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_div_2expm1_ui(t, t, n, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_root(arb_t z, const arb_t x, ulong k, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_root(t, t, k, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_exp(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_exp(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_expm1(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_expm1(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_set_ui(t, n);
+    fmpz_add_ui(t, t, 1);
+    arb_gamma_fmpz(x, t, prec);
+    fmpz_clear(t);
 }
 

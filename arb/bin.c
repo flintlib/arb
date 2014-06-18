@@ -19,49 +19,47 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2013 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arb.h"
 
-void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, long prec)
+void
+arb_bin_ui(arb_t x, const arb_t n, ulong k, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_div_2expm1_ui(t, t, n, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
+    if (k == 0)
+    {
+        arb_one(x);
+    }
+    else if (k == 1)
+    {
+        arb_set_round(x, n, prec);
+    }
+    else
+    {
+        arb_t t, u;
+
+        arb_init(t);
+        arb_init(u);
+
+        arb_sub_ui(t, n, k - 1, prec);
+        arb_rising_ui(t, t, k, prec);
+        arb_fac_ui(u, k, prec);
+        arb_div(x, t, u, prec);
+
+        arb_clear(t);
+        arb_clear(u);
+    }
 }
 
-void arb_root(arb_t z, const arb_t x, ulong k, long prec)
+void
+arb_bin_uiui(arb_t x, ulong n, ulong k, long prec)
 {
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_root(t, t, k, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_exp(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_exp(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_expm1(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_expm1(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
+    arb_t t;
+    arb_init(t);
+    arb_set_ui(t, n);
+    arb_bin_ui(x, t, k, prec);
+    arb_clear(t);
 }
 
