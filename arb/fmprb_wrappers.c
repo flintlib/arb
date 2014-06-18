@@ -65,34 +65,6 @@ void arb_root(arb_t z, const arb_t x, ulong k, long prec)
     fmprb_clear(t);
 }
 
-void arb_log(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_log(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_log_ui(arb_t z, ulong x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_log_ui(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_log_fmpz(arb_t z, const fmpz_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    fmprb_log_fmpz(t, x, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
 void arb_exp(arb_t z, const arb_t x, long prec)
 {
     fmprb_t t;
