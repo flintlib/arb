@@ -85,29 +85,6 @@ void arb_expm1(arb_t z, const arb_t x, long prec)
     fmprb_clear(t);
 }
 
-void arb_atan(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_atan(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec)
-{
-    fmprb_t t, u;
-    fmprb_init(t);
-    fmprb_init(u);
-    arb_get_fmprb(t, b);
-    arb_get_fmprb(u, a);
-    fmprb_atan2(t, t, u, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-    fmprb_clear(u);
-}
-
 void arb_fac_ui(arb_t z, ulong n, long prec)
 {
     fmprb_t t;

@@ -297,6 +297,9 @@ void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
 void mag_add(mag_t z, const mag_t x, const mag_t y);
 
+/* TODO: document */
+void mag_add_lower(mag_t z, const mag_t x, const mag_t y);
+
 void mag_div(mag_t z, const mag_t x, const mag_t y);
 
 static __inline__ void
