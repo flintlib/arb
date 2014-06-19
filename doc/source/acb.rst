@@ -436,29 +436,6 @@ Rising factorials
     The *rs* version takes an optional *step* parameter for tuning
     purposes (to use the default step length, pass zero).
 
-Rising factorials
--------------------------------------------------------------------------------
-
-.. function:: void acb_rising_ui_bs(acb_t z, const acb_t x, ulong n, long prec)
-
-.. function:: void acb_rising_ui_rs(acb_t z, const acb_t x, ulong n, ulong step, long prec)
-
-.. function:: void acb_rising_ui_rec(acb_t z, const acb_t x, ulong n, long prec)
-
-.. function:: void acb_rising_ui(acb_t z, const acb_t x, ulong n, long prec)
-
-    Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
-
-    The *bs* version uses binary splitting. The *rs* version uses rectangular
-    splitting. The *rec* version uses either *bs* or *rs* depending
-    on the input.
-    The default version is currently identical to the *rec* version.
-    In a future version, it will use the gamma function or asymptotic
-    series when this is more efficient.
-
-    The *rs* version takes an optional *step* parameter for tuning
-    purposes (to use the default step length, pass zero).
-
 .. function :: void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec)
 
 .. function :: void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong step, long prec)
@@ -469,4 +446,46 @@ Rising factorials
     `u(x)` and `v(x) = u'(x)`, respectively using binary splitting,
     rectangular splitting (with optional nonzero step length *step*
     to override the default choice), and an automatic algorithm choice.
+
+Gamma function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_gamma(acb_t y, const acb_t x, long prec)
+
+    Computes the gamma function `y = \Gamma(x)`.
+
+.. function:: void acb_rgamma(acb_t y, const acb_t x, long prec)
+
+    Computes the reciprocal gamma function  `y = 1/\Gamma(x)`,
+    avoiding division by zero at the poles of the gamma function.
+
+.. function:: void acb_lgamma(acb_t y, const acb_t x, long prec)
+
+    Computes the logarithmic gamma function `y = \log \Gamma(x)`.
+
+    The branch cut of the logarithmic gamma function is placed on the
+    negative half-axis, which means that
+    `\log \Gamma(z) + \log z = \log \Gamma(z+1)` holds for all `z`,
+    whereas `\log \Gamma(z) \ne \log(\Gamma(z))` in general.
+    Warning: this function does not currently use the reflection
+    formula, and gets very slow for `z` far into the left half-plane.
+
+.. function:: void acb_digamma(acb_t y, const acb_t x, long prec)
+
+    Computes the digamma function `y = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
+
+Zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_zeta(acb_t z, const acb_t s, long prec)
+
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`acb_poly_zeta_series` or related methods.
+
+.. function:: void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
+
+    Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`acb_poly_zeta_series` or related methods.
 
