@@ -24,6 +24,35 @@ General information
    history.rst
    examples.rst
 
+Module documentation (Arb 2.x types)
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   mag.rst
+   arf.rst
+   arb.rst
+   arb_poly.rst
+   arb_mat.rst
+   arb_calc.rst
+   acb.rst
+   acb_poly.rst
+   acb_mat.rst
+   acb_calc.rst
+
+Module documentation (extra modules for mathematical functions)
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   bernoulli.rst
+   hypgeom.rst
+   partitions.rst
+   elefun.rst
+   gamma.rst
+   zeta.rst
 
 Module documentation (Arb 1.x types)
 ::::::::::::::::::::::::::::::::::::
@@ -40,27 +69,6 @@ Module documentation (Arb 1.x types)
    fmpcb_poly.rst
    fmpcb_mat.rst
    fmpcb_calc.rst
-   elefun.rst
-   bernoulli.rst
-   gamma.rst
-   zeta.rst
-   hypgeom.rst
-   partitions.rst
-
-Module documentation (Arb 2.x types)
-::::::::::::::::::::::::::::::::::::
-
-.. toctree::
-   :maxdepth: 1
-
-   mag.rst
-   arf.rst
-   arb.rst
-   arb_poly.rst
-   arb_mat.rst
-   acb.rst
-   acb_poly.rst
-   acb_mat.rst
 
 Credits and references
 ::::::::::::::::::::::::
