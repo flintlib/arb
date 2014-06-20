@@ -515,7 +515,7 @@ Differentiation
     Sets *res* to the integral of *poly*.
 
 
-Special functions
+Elementary functions
 -------------------------------------------------------------------------------
 
 .. function:: void _acb_poly_sqrt_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec)
@@ -646,6 +646,9 @@ Special functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
+Gamma function
+-------------------------------------------------------------------------------
+
 .. function:: void _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void acb_poly_gamma_series(acb_poly_t res, const acb_poly_t h, long n, long prec)
@@ -675,6 +678,103 @@ Special functions
     Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
     are at least 1, and does not support aliasing. Uses binary splitting.
+
+Power sums
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec)
+
+.. function:: void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec)
+
+    Computes
+
+    .. math ::
+
+        z = S(s,a,n) = \sum_{k=0}^{n-1} \frac{1}{(k+a)^{s+t}}
+
+    as a power series in `t` truncated to length *len*. This function
+    evaluates the sum naively term by term.
+    The *threaded* version splits the computation
+    over the number of threads returned by *flint_get_num_threads()*.
+
+.. function:: void _acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, long prec)
+
+    Computes
+
+    .. math ::
+
+        z = S(s,1,n) \sum_{k=1}^n \frac{1}{k^{s+t}}
+
+    as a power series in `t` truncated to length *len*.
+    This function stores a table of powers that have already been calculated,
+    computing `(ij)^r` as `i^r j^r` whenever `k = ij` is
+    composite. As a further optimization, it groups all even `k` and
+    evaluates the sum as a polynomial in `2^{-(s+t)}`.
+    This scheme requires about `n / \log n` powers, `n / 2` multiplications,
+    and temporary storage of `n / 6` power series. Due to the extra
+    power series multiplications, it is only faster than the naive
+    algorithm when *len* is small.
+
+Zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
+
+    Chooses *N* and *M* for Euler-Maclaurin summation of the
+    Hurwitz zeta function, using a default algorithm.
+
+.. function:: void _acb_poly_zeta_em_bound1(arf_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp)
+
+.. function:: void _acb_poly_zeta_em_bound(arb_ptr vec, const acb_t s, const acb_t a, ulong N, ulong M, long d, long wp)
+
+    Compute bounds for Euler-Maclaurin evaluation of the Hurwitz zeta function
+    or its power series, using the formulas in [Joh2013]_.
+
+.. function:: void _acb_poly_zeta_em_tail_naive(acb_ptr z, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec)
+
+.. function:: void _acb_poly_zeta_em_tail_bsplit(acb_ptr z, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec)
+
+    Evaluates the tail in the Euler-Maclaurin sum for the Hurwitz zeta
+    function, respectively using the naive recurrence and binary splitting.
+
+.. function:: void _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec)
+
+    Evaluates the truncated Euler-Maclaurin sum of order `N, M` for the
+    length-*d* truncated Taylor series of the Hurwitz zeta function
+    `\zeta(s,a)` at `s`, using a working precision of *prec* bits.
+    With `a = 1`, this gives the usual Riemann zeta function.
+
+    If *deflate* is nonzero, `\zeta(s,a) - 1/(s-1)` is evaluated
+    (which permits series expansion at `s = 1`).
+
+.. function:: void _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, long d, long prec)
+
+    Computes the series expansion of `\zeta(s+x,a)` (or
+    `\zeta(s+x,a) - 1/(s+x-1)` if *deflate* is nonzero) to order *d*.
+
+    This function wraps :func:`_acb_poly_zeta_em_sum`, automatically choosing
+    default values for `N, M` using :func:`_acb_poly_zeta_em_choose_param` to
+    target an absolute truncation error of `2^{-\operatorname{prec}}`.
+
+.. function:: void _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int deflate, long len, long prec)
+
+.. function:: void acb_poly_zeta_series(acb_poly_t res, const acb_poly_t f, const acb_t a, int deflate, long n, long prec)
+
+    Sets *res* to the Hurwitz zeta function `\zeta(s,a)` where `s` a power
+    series and `a` is a constant, truncated to length *n*.
+    To evaluate the usual Riemann zeta function, set `a = 1`.
+
+    If *deflate* is nonzero, evaluates `\zeta(s,a) + 1/(1-s)`, which
+    is well-defined as a limit when the constant term of `s` is 1.
+    In particular, expanding `\zeta(s,a) + 1/(1-s)` with `s = 1+x`
+    gives the Stieltjes constants
+
+    .. math ::
+
+        \sum_{k=0}^{n-1} \frac{(-1)^k}{k!} \gamma_k(a) x^k`.
+
+    If `a = 1`, this implementation uses the reflection formula if the midpoint
+    of the constant term of `s` is negative.
 
 Root-finding
 -------------------------------------------------------------------------------

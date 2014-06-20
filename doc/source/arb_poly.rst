@@ -597,7 +597,7 @@ Transforms
     The underscore methods do not support aliasing, and assume that
     the lengths are nonzero.
 
-Powers and special functions
+Powers and elementary functions
 -------------------------------------------------------------------------------
 
 .. function:: void _arb_poly_pow_ui_trunc_binexp(arb_ptr res, arb_srcptr f, long flen, ulong exp, long len, long prec)
@@ -796,6 +796,9 @@ Powers and special functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
+Gamma function and factorials
+-------------------------------------------------------------------------------
+
 .. function:: void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void arb_poly_gamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
@@ -827,6 +830,63 @@ Powers and special functions
     Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
     are at least 1, and does not support aliasing. Uses binary splitting.
+
+Zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void arb_poly_zeta_series(arb_poly_t res, const arb_poly_t s, const arb_t a, int deflate, long n, long prec)
+
+    Sets *res* to the Hurwitz zeta function `\zeta(s,a)` where `s` a power
+    series and `a` is a constant, truncated to length *n*.
+    To evaluate the usual Riemann zeta function, set `a = 1`.
+
+    If *deflate* is nonzero, evaluates `\zeta(s,a) + 1/(1-s)`, which
+    is well-defined as a limit when the constant term of `s` is 1.
+    In particular, expanding `\zeta(s,a) + 1/(1-s)` with `s = 1+x`
+    gives the Stieltjes constants
+
+    .. math ::
+
+        \sum_{k=0}^{n-1} \frac{(-1)^k}{k!} \gamma_k(a) x^k.
+
+    If `a = 1`, this implementation uses the reflection formula if the midpoint
+    of the constant term of `s` is negative.
+
+.. function:: void _arb_poly_riemann_siegel_theta_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+
+    Sets *res* to the series expansion of the Riemann-Siegel theta
+    function
+
+    .. math ::
+
+        \theta(h) = \arg \left(\Gamma\left(\frac{2ih+1}{4}\right)\right) - \frac{\log \pi}{2} h
+
+    where the argument of the gamma function is chosen continuously
+    as the imaginary part of the log gamma function.
+
+    The underscore method does not support aliasing of the input
+    and output arrays, and requires that the lengths are greater
+    than zero.
+
+.. function:: void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+
+    Sets *res* to the series expansion of the Riemann-Siegel Z-function
+
+    .. math ::
+
+        Z(h) = e^{i\theta(h)} \zeta(1/2+ih).
+
+    The zeros of the Z-function on the real line precisely
+    correspond to the imaginary parts of the zeros of
+    the Riemann zeta function on the critical line.
+
+    The underscore method supports aliasing of the input
+    and output arrays, and requires that the lengths are greater
+    than zero.
 
 Root-finding
 -------------------------------------------------------------------------------
