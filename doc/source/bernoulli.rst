@@ -124,7 +124,7 @@ Computation of single Bernoulli numbers
     of the Bernoulli number `B_n`.
 
     This function computes the denominator `d` using von Staudt-Clausen
-    theorem, numerically approximates `B_n` using :func:`bernoulli_fmprb_ui_zeta`,
+    theorem, numerically approximates `B_n` using :func:`arb_bernoulli_ui_zeta`,
     and then rounds `d B_n` to the correct numerator.
     If the working precision is insufficient to determine the numerator,
     the function prints a warning message and retries with increased

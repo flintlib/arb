@@ -40,9 +40,23 @@ Memory management
 
 .. function:: void mag_init_set(mag_t x, const mag_t y)
 
+    Initializes *x* and sets it to the value of *y*.
+
 .. function:: void mag_swap(mag_t x, mag_t y)
 
+    Swaps *x* and *y* efficiently.
+
 .. function:: void mag_set(mag_t x, const mag_t y)
+
+    Sets *x* to the value of *y*.
+
+.. function:: mag_ptr _mag_vec_init(long n)
+
+    Allocates a vector of length *n*. All entries are set to zero.
+
+.. function:: void _mag_vec_clear(mag_ptr v, long n)
+
+    Clears a vector of length *n*.
 
 Special values
 -------------------------------------------------------------------------------
@@ -100,25 +114,57 @@ Arithmetic
 
 .. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 
-    Sets `z` to `x \times 2^y`. This operation is exact.
+    Sets *z* to `x \times 2^y`. This operation is exact.
 
 .. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `xy`.
+.. function:: void mag_mul_ui(mag_t z, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to an upper bound for `xy`.
+
+.. function:: void mag_add(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `x + y`.
 
 .. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `z + xy`.
+    Sets *z* to an upper bound for `z + xy`.
 
 .. function:: void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
 
-    Sets `z` to an upper bound for `x + 2^e`.
+    Sets *z* to an upper bound for `x + 2^e`.
 
 .. function:: void mag_div(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `x / y`.
+.. function:: void mag_div_ui(mag_t z, const mag_t x, ulong y)
 
-Fast versions
+.. function:: void mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to an upper bound for `x / y`.
+
+.. function:: void mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
+
+.. function:: void mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to a lower bound for `xy`.
+
+.. function:: void mag_add_lower(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to a lower bound for `x + y`.
+
+.. function:: void mag_pow_ui(mag_t z, const mag_t x, ulong e)
+
+    Sets *z* to an upper bound for `x^e`.
+
+.. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
+
+    Sets *z* to a lower bound for `x^e`.
+
+Fast, unsafe versions
 -------------------------------------------------------------------------------
 
 The following methods assume that all inputs are finite and that all exponents
@@ -140,15 +186,15 @@ as they will be overwritten directly (thus leaking memory).
 
 .. function:: void mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `xy`.
+    Sets *z* to an upper bound for `xy`.
 
 .. function:: void mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 
-    Sets `z` to an upper bound for `z + xy`.
+    Sets *z* to an upper bound for `z + xy`.
 
 .. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
 
-    Sets `z` to an upper bound for `x + 2^e`.
+    Sets *z* to an upper bound for `x + 2^e`.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -172,15 +218,23 @@ Random generation
 Conversions
 -------------------------------------------------------------------------------
 
+.. function:: void mag_set_d(mag_t y, double x)
+
+.. function:: void mag_set_fmpr(mag_t y, const fmpr_t x)
+
+.. function:: void mag_set_ui(mag_t y, ulong x)
+
+.. function:: void mag_set_fmpz(mag_t y, const fmpz_t x)
+
+    Sets *y* to an upper bound for `|x|`.
+
 .. function:: void mag_set_d_2exp_fmpz(mag_t z, double x, const fmpz_t y)
 
 .. function:: void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t x, const fmpz_t y)
 
-    Sets *z* to an upper bound for `x \times 2^y`.
+.. function:: void mag_set_ui_2exp_si(mag_t z, ulong x, long y)
 
-.. function:: void mag_set_fmpr(mag_t y, const fmpr_t x)
-
-    Sets *y* to an upper bound for *x*.
+    Sets *z* to an upper bound for `|x| \times 2^y`.
 
 .. function:: void mag_get_fmpr(fmpr_t y, const mag_t x)
 
@@ -189,4 +243,35 @@ Conversions
 .. function:: void mag_get_fmpq(fmpq_t y, const mag_t x)
 
     Sets *y* exactly to *x*. Assumes that no overflow occurs.
+
+.. function:: void mag_set_ui_lower(mag_t z, ulong x)
+
+.. function:: void mag_set_fmpz_lower(mag_t z, const fmpz_t x)
+
+    Sets *y* to a lower bound for `|x|`.
+
+.. function:: void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t x, const fmpz_t y)
+
+    Sets *z* to a lower bound for `|x| \times 2^y`.
+
+Special functions
+-------------------------------------------------------------------------------
+
+.. function:: void mag_log1p(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\log(1+x)`. The bound is computed
+    accurately for small *x*.
+
+.. function:: void mag_fac_ui(mag_t z, ulong n)
+
+    Sets *z* to an upper bound for `n!`.
+
+.. function:: void mag_rfac_ui(mag_t z, ulong n)
+
+    Sets *z* to an upper bound for `1/n!`.
+
+.. function:: void mag_bernoulli_div_fac_ui(mag_t z, ulong n)
+
+    Sets *z* to an upper bound for `|B_n| / n!` where `B_n` denotes
+    a Bernoulli number.
 

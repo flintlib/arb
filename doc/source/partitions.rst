@@ -19,7 +19,7 @@ a correct error bound for the numerical approximation of `p(n)`.
 Optionally, hardware double arithmetic can be used for low-precision
 terms. This gives a significant speedup for small (e.g. `n < 10^6`).
 
-.. function:: void partitions_rademacher_bound(fmpr_t b, const fmpz_t n, ulong N)
+.. function:: void partitions_rademacher_bound(arf_t b, const fmpz_t n, ulong N)
 
     Sets `b` to an upper bound for
 
@@ -33,7 +33,7 @@ terms. This gives a significant speedup for small (e.g. `n < 10^6`).
     Hardy-Ramanujan-Rademacher formula when the series is taken up
     to the term `t(n,N)` inclusive.
 
-.. function:: partitions_hrr_sum_fmprb(fmprb_t x, const fmpz_t n, long N0, long N, int use_doubles)
+.. function:: partitions_hrr_sum_arb(arb_t x, const fmpz_t n, long N0, long N, int use_doubles)
 
     Evaluates the partial sum `\sum_{k=N_0}^N t(n,k)` of the
     Hardy-Ramanujan-Rademacher series.
@@ -57,7 +57,7 @@ terms. This gives a significant speedup for small (e.g. `n < 10^6`).
     has been selected with :func:`flint_set_num_threads()`, the computation
     time will be reduced by using two threads.
 
-    See :func:`partitions_hrr_sum_fmprb` for an explanation of the
+    See :func:`partitions_hrr_sum_arb` for an explanation of the
     *use_doubles* option.
 
 .. function:: void partitions_fmpz_ui(fmpz_t p, ulong n)
@@ -71,5 +71,5 @@ terms. This gives a significant speedup for small (e.g. `n < 10^6`).
     Computes the partition function `p(n)`, enabling the use of doubles
     internally. This significantly speeds up evaluation for small `n`
     (e.g. `n < 10^6`), but the error bounds are not certified
-    (see remarks for :func:`partitions_hrr_sum_fmprb`).
+    (see remarks for :func:`partitions_hrr_sum_arb`).
 

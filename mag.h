@@ -288,7 +288,6 @@ mag_equal(const mag_t x, const mag_t y)
 
 void mag_mul(mag_t z, const mag_t x, const mag_t y);
 
-/* TODO: document */
 void mag_mul_lower(mag_t z, const mag_t x, const mag_t y);
 
 void mag_addmul(mag_t z, const mag_t x, const mag_t y);
@@ -297,7 +296,6 @@ void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
 void mag_add(mag_t z, const mag_t x, const mag_t y);
 
-/* TODO: document */
 void mag_add_lower(mag_t z, const mag_t x, const mag_t y);
 
 void mag_div(mag_t z, const mag_t x, const mag_t y);
@@ -616,7 +614,6 @@ mag_cmp_2exp_si(const mag_t x, long e)
     return (fmpz_cmp_si(MAG_EXPREF(x), e) <= 0) ? -1 : 1;
 }
 
-/* TODO: document */
 static __inline__ mag_ptr
 _mag_vec_init(long n)
 {
@@ -638,7 +635,6 @@ _mag_vec_clear(mag_ptr v, long n)
     flint_free(v);
 }
 
-/* TODO: document/test */
 static __inline__ void mag_set_d(mag_t z, double x)
 {
     fmpz_t e;
@@ -651,23 +647,23 @@ static __inline__ void mag_set_d(mag_t z, double x)
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);
 
-/* TODO: document */
 void mag_log1p(mag_t z, const mag_t x);
 
-/* TODO: document/test */
+/* TODO: test */
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 
-/* TODO: document/test */
+/* TODO: test */
 void mag_fac_ui(mag_t z, ulong n);
 void mag_rfac_ui(mag_t z, ulong n);
 
-/* TODO: document/test */
+/* TODO: test */
 void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
 
-/* TODO: document/test */
+/* TODO: test */
 void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 
+/* TODO: test functions below */
 static __inline__ void
 mag_set_ui(mag_t z, ulong x)
 {
