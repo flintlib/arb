@@ -25,6 +25,8 @@
 
 #include "arb.h"
 
+void arb_get_mag_infimum_lower(mag_t z, const arb_t x);
+
 #define BIG_EXPONENT_BITS 20
 #define BIG_EXPONENT (1L << BIG_EXPONENT_BITS)
 

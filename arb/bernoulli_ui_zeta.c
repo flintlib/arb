@@ -25,6 +25,8 @@
 
 #include "arb.h"
 
+void arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec);
+
 void
 arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec)
 {

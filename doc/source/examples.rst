@@ -117,6 +117,10 @@ Sample output::
     1000: 2.3260531616864664574065046940832238158044982041872 +/- 3.927e-08
     virt/peak/res/peak(MB): 170.18 294.69 7.51 7.51
 
+keiper_li2.c
+-------------------------------------------------------------------------------
+
+Like keiper_li.c, but uses Arb 2.x types.
 
 real_roots.c
 -------------------------------------------------------------------------------
@@ -232,6 +236,11 @@ but will never find all of them since there are infinitely many::
 
 Remark: the program always computes rigorous containing intervals
 for the roots, but the accuracy after refinement could be less than *d* digits.
+
+real_roots2.c
+-------------------------------------------------------------------------------
+
+Like real_roots.c, but uses Arb 2.x types.
 
 poly_roots.c
 -------------------------------------------------------------------------------
