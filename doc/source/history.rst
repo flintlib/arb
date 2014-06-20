@@ -6,6 +6,22 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-06-20 - version 2.1.0
+
+  * ported most of the remaining functions to the new arb/acb types,
+    including:
+
+    * elementary functions (log, atan, etc.)
+    * hypergeometric series summation
+    * the gamma function
+    * the Riemann zeta function and related functions
+    * Bernoulli numbers
+    * the partition function
+    * the calculus modules (rigorous real root isolation, rigorous numerical integration of complex-valued functions)
+    * example programs
+
+  * added several missing utility functions to the arf and mag modules
+
 * 2014-05-27 - version 2.0.0
 
   * new modules mag, arf, arb, arb_poly, arb_mat, acb, acb_poly,
