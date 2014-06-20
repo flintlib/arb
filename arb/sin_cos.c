@@ -52,6 +52,9 @@ _arf_sin(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
     zf->_mpfr_sign = 1;
     zf->_mpfr_exp = 0;
 
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
+
     mpfr_sin(zf, xf, arf_rnd_to_mpfr(rnd));
 
     val = 0;
@@ -92,6 +95,9 @@ _arf_cos(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
     zf->_mpfr_prec = prec;
     zf->_mpfr_sign = 1;
     zf->_mpfr_exp = 0;
+
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
 
     mpfr_cos(zf, xf, arf_rnd_to_mpfr(rnd));
 
@@ -139,6 +145,9 @@ _arf_sin_cos(arf_t z, arf_t w, const arf_t x, long prec, arf_rnd_t rnd)
     wf->_mpfr_prec = prec;
     wf->_mpfr_sign = 1;
     wf->_mpfr_exp = 0;
+
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
 
     mpfr_sin_cos(zf, wf, xf, arf_rnd_to_mpfr(rnd));
 

@@ -50,6 +50,9 @@ _arf_atan(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
     zf->_mpfr_sign = 1;
     zf->_mpfr_exp = 0;
 
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
+
     mpfr_atan(zf, xf, arf_rnd_to_mpfr(rnd));
 
     val = 0;
