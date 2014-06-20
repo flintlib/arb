@@ -65,7 +65,7 @@ arf_get_d(const arf_t x, arf_rnd_t rnd)
         else
             v = (double)(tp[1]) + (double)(tp[0]) * ldexp(1,-32);
 
-        v = ldexp(v, ARF_EXP(t) - 64);
+        v = ldexp(v, ARF_EXP(t) - FLINT_BITS);
 
         if (ARF_SGNBIT(t))
             v = -v;
