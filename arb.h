@@ -647,11 +647,10 @@ void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong m, long p
 void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
 
-/* TODO: document */
 void arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec);
 
-/* TODO: document/test */
 void arb_const_apery(arb_t s, long prec);
+
 void arb_zeta_ui_asymp(arb_t x, ulong s, long prec);
 void arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec);
 void arb_zeta_ui_euler_product(arb_t z, ulong s, long prec);

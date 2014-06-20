@@ -567,8 +567,6 @@ Powers and roots
 Exponentials and logarithms
 -------------------------------------------------------------------------------
 
-The following are currently simply wrappers for the corresponding *fmprb* functions.
-
 .. function:: void arb_log(arb_t z, const arb_t x, long prec)
 
 .. function:: void arb_log_ui(arb_t z, ulong x, long prec)
@@ -578,6 +576,16 @@ The following are currently simply wrappers for the corresponding *fmprb* functi
     Sets `z = \log(x)`. Error propagation is done using the following rule:
     assuming `x = m \pm r` where `m > r \ge 0`, the error is largest at
     `m - r`, and we have `\log(m) - \log(m-r) = \log(1 + r/(m-r))`.
+
+.. function:: void arb_log_ui_from_prev(arb_t log_k1, ulong k1, arb_t log_k0, ulong k0, long prec)
+
+    Computes `\log(k_1)`, given `\log(k_0)` where `k_0 < k_1`.
+    At high precision, this function uses the formula
+    `\log(k_1) = \log(k_0) + 2 \operatorname{atanh}((k_1-k_0)/(k_1+k_0))`,
+    evaluating the inverse hyperbolic tangent using binary splitting
+    (for best efficiency, `k_0` should be large and `k_1 - k_0` should
+    be small). Otherwise, it ignores `\log(k_0)` and evaluates the logarithm
+    the usual way.
 
 .. function:: void arb_exp(arb_t z, const arb_t x, long prec)
 
@@ -591,8 +599,6 @@ The following are currently simply wrappers for the corresponding *fmprb* functi
 
 Trigonometric functions
 -------------------------------------------------------------------------------
-
-The following are currently simply wrappers for the corresponding *fmprb* functions.
 
 .. function:: void arb_sin(arb_t s, const arb_t x, long prec)
 
@@ -645,8 +651,6 @@ The following are currently simply wrappers for the corresponding *fmprb* functi
 
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
-
-The following are currently simply wrappers for the corresponding *fmprb* functions.
 
 .. function:: void arb_atan(arb_t z, const arb_t x, long prec)
 
@@ -702,29 +706,122 @@ Hyperbolic functions
 Constants
 -------------------------------------------------------------------------------
 
-The following are currently simply wrappers for the corresponding *fmprb* functions.
+The following functions cache the computed values to speed up repeated
+calls at the same or lower precision.
 
 .. function:: void arb_const_pi(arb_t z, long prec)
 
+    Computes `\pi` using the Chudnovsky series
+
+    .. math ::
+
+        \frac{1}{\pi} = 12 \sum^\infty_{k=0} \frac{(-1)^k (6k)! (13591409 + 545140134k)}{(3k)!(k!)^3 640320^{3k + 3/2}}
+
 .. function:: void arb_const_sqrt_pi(arb_t z, long prec)
+
+    Computes `\sqrt{\pi}`.
 
 .. function:: void arb_const_log_sqrt2pi(arb_t z, long prec)
 
+    Computes `\log \sqrt{2 \pi}`.
+
 .. function:: void arb_const_log2(arb_t z, long prec)
+
+    Computes `\log(2)` using the hypergeometric series
+
+    .. math ::
+
+        \log 2 = \frac{3}{4} \sum_{k=0}^{\infty} \frac{(-1)^k (k!)^2}{2^k (2k+1)!}
 
 .. function:: void arb_const_log10(arb_t z, long prec)
 
+    Computes `\log 10` using the Machin-like formula
+    `\log 10 = 46 \operatorname{atanh}(1/31) + 34 \operatorname{atanh}(1/49) + 20 \operatorname{atanh}(1/161)`.
+
 .. function:: void arb_const_euler(arb_t z, long prec)
+
+    Computes Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
+    where `H_k = 1 + 1/2 + \ldots + 1/k`.
+    Uses the Brent-McMillan formula ([BM1980]_,  [MPFR2012]_)
+
+    .. math ::
+
+        \gamma = \frac{S_0(2n) - K_0(2n)}{I_0(2n)} - \log(n)
+
+    in which `n` is a free parameter and
+
+    .. math ::
+
+        S_0(x) = \sum_{k=0}^{\infty} \frac{H_k}{(k!)^2} \left(\frac{x}{2}\right)^{2k}, \quad
+        I_0(x) = \sum_{k=0}^{\infty} \frac{1}{(k!)^2} \left(\frac{x}{2}\right)^{2k}
+
+        2x I_0(x) K_0(x) \sim \sum_{k=0}^{\infty} \frac{[(2k)!]^3}{(k!)^4 8^{2k} x^{2k}}.
+
+    All series are evaluated using binary splitting.
+    The first two series are evaluated simultaneously, with the summation
+    taken up to `k = N - 1` inclusive where `N \ge \alpha n + 1` and
+    `\alpha \approx 4.9706257595442318644`
+    satisfies `\alpha (\log \alpha - 1) = 3`. The third series is taken
+    up to `k = 2n-1` inclusive. It is then shown in [BJ2013]_ that the error
+    is bounded by `24e^{-8n}`.
 
 .. function:: void arb_const_catalan(arb_t z, long prec)
 
+    Computes Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`
+    using the hypergeometric series
+
+    .. math ::
+
+        C = \sum_{k=0}^{\infty} \frac{(-1)^k 4^{4 k+1}
+            \left(40 k^2+56 k+19\right) [(k+1)!]^2 [(2k+2)!]^3}{(k+1)^3 (2 k+1) [(4k+4)!]^2}
+
 .. function:: void arb_const_e(arb_t z, long prec)
+
+    Computes Euler's number `e = \sum_{n=0}^{\infty} 1/n!` from the
+    defining series.
 
 .. function:: void arb_const_khinchin(arb_t z, long prec)
 
+    Computes Khinchin's constant `K_0` using the formula
+
+    .. math ::
+
+        \log K_0 = \frac{1}{\log 2} \left[
+        \sum_{k=2}^{N-1} \log \left(\frac{k-1}{k} \right) \log \left(\frac{k+1}{k} \right)
+        + \sum_{n=1}^\infty 
+        \frac {\zeta (2n,N)}{n} \sum_{k=1}^{2n-1} \frac{(-1)^{k+1}}{k}
+        \right]
+
+    where `N \ge 2` is a free parameter that can be used for tuning [BBC1997]_.
+    If the infinite series is truncated after `n = M`, the remainder
+    is smaller in absolute value than
+
+    .. math ::
+
+        \sum_{n=M+1}^{\infty} \zeta(2n, N) = 
+        \sum_{n=M+1}^{\infty} \sum_{k=0}^{\infty} (k+N)^{-2n} \le
+        \sum_{n=M+1}^{\infty} \left( N^{-2n} + \int_0^{\infty} (t+N)^{-2n} dt \right)
+
+        = \sum_{n=M+1}^{\infty} \frac{1}{N^{2n}} \left(1 + \frac{N}{2n-1}\right)
+        \le \sum_{n=M+1}^{\infty} \frac{N+1}{N^{2n}} = \frac{1}{N^{2M} (N-1)}
+        \le \frac{1}{N^{2M}}.
+
+    Thus, for an error of at most `2^{-p}` in the series,
+    it is sufficient to choose `M \ge p / (2 \log_2 N)`.
+
 .. function:: void arb_const_glaisher(arb_t z, long prec)
 
-Rising factorials
+    Computes the Glaisher-Kinkelin constant `A = \exp(1/12 - \zeta'(-1))`.
+
+.. function:: void arb_const_apery(arb_t z, long prec)
+
+    Computes Apery's constant `\zeta(3)` using the hypergeometric series
+
+    .. math ::
+
+        \zeta(3) = \frac{1}{64} \sum_{k=0}^\infty (-1)^k (205k^2 + 250k + 77) \frac{(k!)^{10}}{[(2k+1)!]^5}
+
+Gamma function and factorials
 -------------------------------------------------------------------------------
 
 .. function:: void arb_rising_ui_bs(arb_t z, const arb_t x, ulong n, long prec)
@@ -765,26 +862,16 @@ Rising factorials
     rectangular splitting (with optional nonzero step length *step*
     to override the default choice), and an automatic algorithm choice.
 
-Special functions
--------------------------------------------------------------------------------
-
-The following are currently simply wrappers for the corresponding *fmprb* functions.
-
 .. function:: void arb_fac_ui(arb_t z, ulong n, long prec)
+
+    Computes the factorial `z = n!` via the gamma function.
 
 .. function:: void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec)
 
 .. function:: void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec)
 
-.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec)
-
-.. function:: void arb_fib_ui(arb_t z, ulong n, long prec)
-
-.. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
-
-.. function:: void arb_lgamma(arb_t z, const arb_t x, long prec)
-
-.. function:: void arb_rgamma(arb_t z, const arb_t x, long prec)
+    Computes the binomial coefficient `z = {n \choose k}`, via the
+    rising factorial as `{n \choose k} = (n-k+1)_k / k!`.
 
 .. function:: void arb_gamma(arb_t z, const arb_t x, long prec)
 
@@ -792,11 +879,158 @@ The following are currently simply wrappers for the corresponding *fmprb* functi
 
 .. function:: void arb_gamma_fmpz(arb_t z, const fmpz_t x, long prec)
 
+    Computes the gamma function `z = \Gamma(x)`.
+
+.. function:: void arb_lgamma(arb_t z, const arb_t x, long prec)
+
+    Computes the logarithmic gamma function `z = \log \Gamma(x)`.
+    The complex branch structure is assumed, so if `x \le 0`, the
+    result is an indeterminate interval.
+
+.. function:: void arb_rgamma(arb_t z, const arb_t x, long prec)
+
+    Computes the reciprocal gamma function `z = 1/\Gamma(x)`,
+    avoiding division by zero at the poles of the gamma function.
+
 .. function:: void arb_digamma(arb_t y, const arb_t x, long prec)
+
+    Computes the digamma function `z = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
+
+
+Zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, long num, ulong step, long prec)
+
+    Evaluates `\zeta(s)` at `\mathrm{num}` consecutive integers *s* beginning
+    with *start* and proceeding in increments of *step*.
+    Uses Borwein's formula ([Bor2000]_, [GS2003]_),
+    implemented to support fast multi-evaluation
+    (but also works well for a single *s*).
+
+    Requires `\mathrm{start} \ge 2`. For efficiency, the largest *s*
+    should be at most about as
+    large as *prec*. Arguments approaching *LONG_MAX* will cause
+    overflows.
+    One should therefore only use this function for *s* up to about *prec*, and
+    then switch to the Euler product.
+
+    The algorithm for single *s* is basically identical to the one used in MPFR
+    (see [MPFR2012]_ for a detailed description).
+    In particular, we evaluate the sum backwards to avoid storing more than one
+    `d_k` coefficient, and use integer arithmetic throughout since it
+    is convenient and the terms turn out to be slightly larger than
+    `2^\mathrm{prec}`.
+    The only numerical error in the main loop comes from the division by `k^s`,
+    which adds less than 1 unit of error per term.
+    For fast multi-evaluation, we repeatedly divide by `k^{\mathrm{step}}`.
+    Each division reduces the input error and adds at most 1 unit of
+    additional rounding error, so by induction, the error per term
+    is always smaller than 2 units.
+
+.. function:: void arb_zeta_ui_asymp(arb_t x, ulong s, long prec)
+
+    Assuming `s \ge 2`, approximates `\zeta(s)` by `1 + 2^{-s}` along with
+    a correct error bound. We use the following bounds: for `s > b`,
+    `\zeta(s) - 1 < 2^{-b}`, and generally,
+    `\zeta(s) - (1 + 2^{-s}) < 2^{2-\lfloor 3 s/2 \rfloor}`.
+
+.. function:: void arb_zeta_ui_euler_product(arb_t z, ulong s, long prec)
+
+    Computes `\zeta(s)` using the Euler product. This is fast only if *s*
+    is large compared to the precision.
+
+    Writing `P(a,b) = \prod_{a \le p \le b} (1 - p^{-s})`, we have
+    `1/\zeta(s) = P(a,M) P(M+1,\infty)`.
+
+    To bound the error caused by truncating
+    the product at `M`, we write `P(M+1,\infty) = 1 - \epsilon(s,M)`.
+    Since `0 < P(a,M) \le 1`, the absolute error for `\zeta(s)` is
+    bounded by `\epsilon(s,M)`.
+
+    According to the analysis in [Fil1992]_, it holds for all `s \ge 6` and `M \ge 1`
+    that `1/P(M+1,\infty) - 1 \le f(s,M) \equiv 2 M^{1-s} / (s/2 - 1)`.
+    Thus, we have `1/(1-\epsilon(s,M)) - 1 \le f(s,M)`, and expanding
+    the geometric series allows us to conclude that
+    `\epsilon(M) \le f(s,M)`.
+
+.. function:: void arb_zeta_ui_bernoulli(arb_t x, ulong s, long prec)
+
+    Computes `\zeta(s)` for even *s* via the corresponding Bernoulli number.
+
+.. function:: void arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec)
+
+    Computes `\zeta(s)` for arbitrary `s \ge 2` using a binary splitting
+    implementation of Borwein's algorithm. This has quasilinear complexity
+    with respect to the precision (assuming that `s` is fixed).
+
+.. function:: void arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec)
+
+.. function:: void arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec)
+
+.. function:: void arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec)
+
+    Computes `\zeta(s)` at *num* consecutive integers (respectively *num*
+    even or *num* odd integers) beginning with `s = \mathrm{start} \ge 2`,
+    automatically choosing an appropriate algorithm.
+
+.. function:: void arb_zeta_ui(arb_t x, ulong s, long prec)
+
+    Computes `\zeta(s)` for nonnegative integer `s \ne 1`, automatically
+    choosing an appropriate algorithm.
 
 .. function:: void arb_zeta(arb_t z, const arb_t s, long prec)
 
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+
+    Note: the Hurwitz zeta function is also available, but takes
+    complex arguments (see :func:`acb_hurwitz_zeta`).
+    For computing derivatives with respect to `s`,
+    use :func:`arb_poly_zeta_series`.
+
 .. function:: void arb_zeta_ui(arb_t z, ulong n, long prec)
 
-.. function:: void arb_bernoulli_ui(arb_t z, ulong n, long prec)
+    Sets *b* to the Riemann zeta function value `\zeta(n)`. This function is
+    intended for numerical evaluation of isolated zeta values; for
+    multi-evaluation, the vector versions are more efficient.
+
+Bernoulli numbers
+-------------------------------------------------------------------------------
+
+.. function:: void arb_bernoulli_ui(arb_t b, ulong n, long prec)
+
+    Sets `b` to the numerical value of the Bernoulli number `B_n` accurate
+    to *prec* bits, computed by a division of the exact fraction if `B_n` is in
+    the global cache or the exact numerator roughly is larger than
+    *prec* bits, and using :func:`arb_bernoulli_ui_zeta`
+    otherwise. This function reads `B_n` from the global cache
+    if the number is already cached, but does not automatically extend
+    the cache by itself.
+
+.. function:: void arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec)
+
+    Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
+    computed using the formula `B_{2n} = (-1)^{n+1} 2 (2n)! \zeta(2n) / (2 \pi)^n`.
+
+    To avoid potential infinite recursion, we explicitly call the
+    Euler product implementation of the zeta function.
+    We therefore assume that the precision is small
+    enough and `n` large enough for the Euler product to converge
+    rapidly (otherwise this function will effectively hang).
+
+Other special functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec)
+
+.. function:: void arb_fib_ui(arb_t z, ulong n, long prec)
+
+    Computes the Fibonacci number `F_n`. Uses the binary squaring
+    algorithm described in [Tak2000]_.
+    Provided that *n* is small enough, an exact Fibonacci number can be
+    computed by setting the precision to *ARF_PREC_EXACT*.
+
+.. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
+
+    Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
