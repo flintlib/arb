@@ -779,13 +779,10 @@ long arf_abs_bound_lt_2exp_si(const arf_t x);
 
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
-/* TODO: document/test, implement properly */
 void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd);
 
-/* TODO: document */
 long arf_get_si(const arf_t x, arf_rnd_t rnd);
 
-/* TODO: document, implement properly */
 static __inline__ int
 arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
 {
@@ -798,7 +795,6 @@ arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
     return r;
 }
 
-/* TODO: document, implement properly */
 static __inline__ int
 arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
 {
@@ -1046,7 +1042,6 @@ int arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd);
 int arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd);
 int arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd);
 
-/* TODO: document/test */
 int arf_add_fmpz_2exp(arf_ptr z, arf_srcptr x, const fmpz_t y, const fmpz_t exp, long prec, arf_rnd_t rnd);
 
 int arf_sub(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
@@ -1298,25 +1293,20 @@ arf_set_fmpq(arf_t y, const fmpq_t x, long prec, arf_rnd_t rnd)
     return arf_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec, rnd);
 }
 
-/* TODO: document */
 int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
                                       const arf_t c, const arf_t d,
                                       long prec, arf_rnd_t rnd);
 
-/* TODO: document */
 int arf_complex_mul_fallback(arf_t e, arf_t f,
         const arf_t a, const arf_t b,
         const arf_t c, const arf_t d,
         long prec, arf_rnd_t rnd);
 
-/* TODO: document */
 int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b,
                                       long prec, arf_rnd_t rnd);
 
-/* TODO: document */
-int arf_sum(arf_t s, const arf_struct * terms, long len, long prec, arf_rnd_t rnd);
+int arf_sum(arf_t s, arf_srcptr terms, long len, long prec, arf_rnd_t rnd);
 
-/* TODO: document */
 double arf_get_d(const arf_t x, arf_rnd_t rnd);
 void arf_set_d(arf_t x, double v);
 

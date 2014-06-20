@@ -80,9 +80,9 @@ _arf_add_eps(arf_t s, const arf_t x, int sgn, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_sum(arf_t s, const arf_struct * terms, long len, long prec, arf_rnd_t rnd)
+arf_sum(arf_t s, arf_srcptr terms, long len, long prec, arf_rnd_t rnd)
 {
-    arf_struct * blocks;
+    arf_ptr blocks;
     long i, j, used;
     int have_merged, res;
 

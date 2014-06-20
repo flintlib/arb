@@ -643,7 +643,6 @@ void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec);
 void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, long prec);
 void acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, long prec);
 
-/* TODO: document */
 void acb_gamma(acb_t y, const acb_t x, long prec);
 void acb_rgamma(acb_t y, const acb_t x, long prec);
 void acb_lgamma(acb_t y, const acb_t x, long prec);

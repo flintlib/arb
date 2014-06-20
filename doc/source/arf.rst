@@ -151,6 +151,8 @@ Assignment, rounding and conversions
 
 .. function:: void arf_set_fmpr(arf_t y, const fmpr_t x)
 
+.. function:: void arf_set_d(arf_t y, double x)
+
     Sets *y* exactly to *x*.
 
 .. function:: void arf_swap(arf_t y, arf_t x)
@@ -197,6 +199,10 @@ Assignment, rounding and conversions
     If *x* is zero, both *m* and *e* are set to zero. If *x* is
     infinite or NaN, the result is undefined.
 
+.. function:: double arf_get_d(const arf_t x, arf_rnd_t rnd)
+
+    Returns *x* rounded to a double in the direction specified by *rnd*.
+
 .. function:: void arf_get_fmpr(fmpr_t y, const arf_t x)
 
     Sets *y* exactly to *x*.
@@ -208,6 +214,28 @@ Assignment, rounding and conversions
     the specified MPFR rounding mode. The return value (-1, 0 or 1)
     indicates the direction of rounding, following the convention
     of the MPFR library.
+
+.. function:: void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
+
+    Sets *z* to *x* rounded to the nearest integer in the direction
+    specified by *rnd*. If rnd is *ARF_RND_NEAR*, rounds to the nearest
+    even integer in case of a tie. Aborts if *x* is infinite, NaN or if the
+    exponent is unreasonably large.
+
+.. function:: long arf_get_si(const arf_t x, arf_rnd_t rnd)
+
+    Returns *x* rounded to the nearest integer in the direction specified by
+    *rnd*. If *rnd* is *ARF_RND_NEAR*, rounds to the nearest even integer
+    in case of a tie. Aborts if *x* is infinite, NaN, or the value is
+    too large to fit in a long.
+
+.. function:: int arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
+
+.. function:: int arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
+
+    Converts *x* to a mantissa with predetermined exponent, i.e. computes
+    an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
+    Returns 0 if exact and 1 if truncation occurred.
 
 Comparisons and bounds
 -------------------------------------------------------------------------------
@@ -363,7 +391,7 @@ Input and output
     This function is currently implemented using MPFR,
     and does not support large exponents.
 
-Arithmetic
+Addition and multiplication
 -------------------------------------------------------------------------------
 
 .. function:: void arf_abs(arf_t y, const arf_t x)
@@ -409,6 +437,11 @@ Arithmetic
     Sets `z = x + y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
+.. function:: int arf_add_fmpz_2exp(arf_t z, const arf_t x, const fmpz_t y, const fmpz_t e, long prec, arf_rnd_t rnd)
+
+    Sets `z = x + y 2^e`, rounded to *prec* bits in the direction specified by *rnd*,
+    returning nonzero iff the operation is inexact.
+
 .. function:: int arf_sub(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
 
 .. function:: int arf_sub_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
@@ -446,6 +479,22 @@ Arithmetic
     Sets `z = z - x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
+Summation
+-------------------------------------------------------------------------------
+
+.. function:: int arf_sum(arf_t s, arf_srcptr terms, long len, long prec, arf_rnd_t rnd)
+
+    Sets *s* to the sum of the array *terms* of length *len*, rounded to
+    *prec* bits in the direction specified by *rnd*. The sum is computed as if
+    done without any intermediate rounding error, with only a single rounding
+    applied to the final result. Unlike repeated calls to :func:`arf_add` with
+    infinite precision, this function does not overflow if the magnitudes of
+    the terms are far apart. Warning: this function is implemented naively,
+    and the running time is quadratic with respect to *len* in the worst case.
+
+Division
+-------------------------------------------------------------------------------
+
 .. function:: int arf_div(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
 
 .. function:: int arf_div_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
@@ -465,6 +514,9 @@ Arithmetic
     Sets `z = x / y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *y* is zero.
 
+Square roots
+-------------------------------------------------------------------------------
+
 .. function:: int arf_sqrt(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
 
 .. function:: int arf_sqrt_ui(arf_t z, ulong x, long prec, arf_rnd_t rnd)
@@ -479,4 +531,30 @@ Arithmetic
     Sets `z = 1/\sqrt{x}`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *x* is
     negative, and `+\infty` if *x* is zero.
+
+Complex arithmetic
+-------------------------------------------------------------------------------
+
+.. function:: int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, long prec, arf_rnd_t rnd)
+
+.. function:: int arf_complex_mul_fallback(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, long prec, arf_rnd_t rnd)
+
+    Computes the complex product `e + fi = (a + bi)(c + di)`, rounding both
+    `e` and `f` correctly to *prec* bits in the direction specified by *rnd*.
+    The first bit in the return code indicates inexactness of `e`, and the
+    second bit indicates inexactness of `f`.
+
+    If any of the components *a*, *b*, *c*, *d* is zero, two real
+    multiplications and no additions are done. This convention is used even
+    if any other part contains an infinity or NaN, and the behavior
+    with infinite/NaN input is defined accordingly.
+
+    The *fallback* version is implemented naively, for testing purposes.
+    No squaring optimization is implemented.
+
+.. function:: int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b, long prec, arf_rnd_t rnd)
+
+    Computes the complex square `e + fi = (a + bi)^2`. This function has
+    identical semantics to :func:`arf_complex_mul` (with `c = a, b = d`),
+    but is faster.
 
