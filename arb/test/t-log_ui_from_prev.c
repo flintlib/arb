@@ -34,15 +34,15 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         arb_t z1, z2, z3;
         ulong n1, n2;
         long prec, accuracy;
 
-        prec = 2 + n_randint(state, 20000);
+        prec = 2 + n_randint(state, 3000);
         n1 = n_randint(state, 100000);
-        n2 = n1 + 1 + n_randint(state, 10);
+        n2 = n1 + 1 + n_randint(state, 1000);
 
         arb_init(z1);
         arb_init(z2);
