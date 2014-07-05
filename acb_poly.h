@@ -533,8 +533,8 @@ void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long tr
 /* TODO: document */
 void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec);
 
-void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec);
-void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec);
+void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec);
+void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec);
 void _acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, long prec);
 
 void _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec);

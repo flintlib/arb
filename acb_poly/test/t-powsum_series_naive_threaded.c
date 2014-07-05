@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("powsum_one_series_sieved....");
+    printf("powsum_series_naive_threaded....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -56,8 +56,15 @@ int main()
             arb_randtest(acb_imagref(s), state, 1 + n_randint(state, 200), 4);
         }
 
-        acb_one(a);
-        acb_one(q);
+        if (n_randint(state, 2))
+            acb_one(a);
+        else
+            acb_randtest(a, state, 1 + n_randint(state, 200), 3);
+
+        if (n_randint(state, 2))
+            acb_one(q);
+        else
+            acb_randtest(q, state, 1 + n_randint(state, 200), 3);
 
         prec = 2 + n_randint(state, 200);
         n = n_randint(state, 100);
@@ -67,7 +74,8 @@ int main()
         z2 = _acb_vec_init(len);
 
         _acb_poly_powsum_series_naive(z1, s, a, q, n, len, prec);
-        _acb_poly_powsum_one_series_sieved(z2, s, n, len, prec);
+        flint_set_num_threads(1 + n_randint(state, 3));
+        _acb_poly_powsum_series_naive_threaded(z2, s, a, q, n, len, prec);
 
         for (i = 0; i < len; i++)
         {
@@ -78,6 +86,7 @@ int main()
                 printf("n = %ld, prec = %ld, len = %ld, i = %ld\n\n", n, prec, len, i);
                 printf("s = "); acb_printd(s, prec / 3.33); printf("\n\n");
                 printf("a = "); acb_printd(a, prec / 3.33); printf("\n\n");
+                printf("q = "); acb_printd(q, prec / 3.33); printf("\n\n");
                 printf("z1 = "); acb_printd(z1 + i, prec / 3.33); printf("\n\n");
                 printf("z2 = "); acb_printd(z2 + i, prec / 3.33); printf("\n\n");
                 abort();

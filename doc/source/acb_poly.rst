@@ -682,15 +682,15 @@ Gamma function
 Power sums
 -------------------------------------------------------------------------------
 
-.. function:: void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec)
+.. function:: void _acb_poly_powsum_series_naive(acb_ptr z, const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
 
-.. function:: void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, long n, long len, long prec)
+.. function:: void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
 
     Computes
 
     .. math ::
 
-        z = S(s,a,n) = \sum_{k=0}^{n-1} \frac{1}{(k+a)^{s+t}}
+        z = S(s,a,n) = \sum_{k=0}^{n-1} \frac{q^k}{(k+a)^{s+t}}
 
     as a power series in `t` truncated to length *len*. This function
     evaluates the sum naively term by term.

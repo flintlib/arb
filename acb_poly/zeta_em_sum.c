@@ -47,7 +47,7 @@ void
 _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec)
 {
     acb_ptr t, u, v, term, sum;
-    acb_t Na;
+    acb_t Na, one;
     long i;
 
     t = _acb_vec_init(d + 1);
@@ -56,16 +56,18 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     term = _acb_vec_init(d);
     sum = _acb_vec_init(d);
     acb_init(Na);
+    acb_init(one);
 
     prec += 2 * (FLINT_BIT_COUNT(N) + FLINT_BIT_COUNT(d));
+    acb_one(one);
 
     /* sum 1/(k+a)^(s+x) */
     if (acb_is_one(a) && d <= 3)
         _acb_poly_powsum_one_series_sieved(sum, s, N, d, prec);
     else if (N > 50 && flint_get_num_threads() > 1)
-        _acb_poly_powsum_series_naive_threaded(sum, s, a, N, d, prec);
+        _acb_poly_powsum_series_naive_threaded(sum, s, a, one, N, d, prec);
     else
-        _acb_poly_powsum_series_naive(sum, s, a, N, d, prec);
+        _acb_poly_powsum_series_naive(sum, s, a, one, N, d, prec);
 
     /* t = 1/(N+a)^(s+x); we might need one extra term for deflation */
     acb_add_ui(Na, a, N, prec);
@@ -140,5 +142,6 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     _acb_vec_clear(term, d);
     _acb_vec_clear(sum, d);
     acb_clear(Na);
+    acb_clear(one);
 }
 

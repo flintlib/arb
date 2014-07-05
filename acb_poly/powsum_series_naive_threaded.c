@@ -31,6 +31,7 @@ typedef struct
     acb_ptr z;
     acb_srcptr s;
     acb_srcptr a;
+    acb_srcptr q;
     long n0;
     long n1;
     long d0;
@@ -44,16 +45,23 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
 {
     powsum_arg_t arg = *((powsum_arg_t *) arg_ptr);
     long i, k;
+    int q_one;
 
-    acb_t t, u, v;
+    acb_t t, u, v, qpow;
     arb_t f;
 
     acb_init(t);
     acb_init(u);
     acb_init(v);
+    acb_init(qpow);
     arb_init(f);
 
     _acb_vec_zero(arg.z, arg.len);
+
+    q_one = acb_is_one(arg.q);
+
+    if (!q_one)
+        acb_pow_ui(qpow, arg.q, arg.n0, arg.prec);
 
     for (k = arg.n0; k < arg.n1; k++)
     {
@@ -65,6 +73,14 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
         acb_mul(u, t, arg.s, arg.prec);
         acb_neg(u, u);
         acb_exp(u, u, arg.prec);
+
+        /* u = u * q^k */
+        if (!q_one)
+        {
+            acb_mul(u, u, qpow, arg.prec);
+            if (k < arg.n1 - 1)
+                acb_mul(qpow, qpow, arg.q, arg.prec);
+        }
 
         /* forward: u *= (-1)^d * log(a+k)^d / d! */
         if (arg.d0 != 0)
@@ -91,6 +107,7 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
     acb_clear(t);
     acb_clear(u);
     acb_clear(v);
+    acb_clear(qpow);
     arb_clear(f);
 
     flint_cleanup();
@@ -100,7 +117,7 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
 
 void
 _acb_poly_powsum_series_naive_threaded(acb_ptr z,
-    const acb_t s, const acb_t a, long n, long len, long prec)
+    const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
 {
     pthread_t * threads;
     powsum_arg_t * args;
@@ -118,6 +135,7 @@ _acb_poly_powsum_series_naive_threaded(acb_ptr z,
     {
         args[i].s = s;
         args[i].a = a;
+        args[i].q = q;
 
         if (split_each_term)
         {

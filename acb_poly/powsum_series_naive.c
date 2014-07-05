@@ -47,25 +47,59 @@ void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long tr
 
 void
 _acb_poly_powsum_series_naive(acb_ptr z,
-    const acb_t s, const acb_t a, long n, long len, long prec)
+    const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
 {
-    long k;
-    acb_ptr t;
-    acb_t c;
+    long k, i;
+    int q_one;
+    acb_t ak, logak, t, qpow;
 
-    t = _acb_vec_init(len);
-    acb_init(c);
+    acb_init(ak);
+    acb_init(logak);
+    acb_init(t);
+    acb_init(qpow);
 
     _acb_vec_zero(z, len);
+    acb_one(qpow);
+
+    q_one = acb_is_one(q);
 
     for (k = 0; k < n; k++)
     {
-        acb_add_ui(c, a, k, prec);
-        _acb_poly_acb_invpow_cpx(t, c, s, len, prec);
-        _acb_vec_add(z, z, t, len, prec);
+        acb_add_ui(ak, a, k, prec);
+
+        if (len == 1)
+        {
+            acb_neg(t, s);
+            acb_pow(t, ak, t, prec);
+        }
+        else
+        {
+            acb_log(logak, ak, prec);
+            acb_mul(t, logak, s, prec);
+            acb_neg(t, t);
+            acb_exp(t, t, prec);
+        }
+
+        if (!q_one)
+        {
+            acb_mul(t, t, qpow, prec);
+            if (k < n - 1)
+                acb_mul(qpow, qpow, q, prec);
+        }
+
+        acb_add(z, z, t, prec);
+
+        for (i = 1; i < len; i++)
+        {
+            acb_mul(t, t, logak, prec);
+            acb_div_si(t, t, -i, prec);
+            acb_add(z + i, z + i, t, prec);
+        }
     }
 
-    _acb_vec_clear(t, len);
-    acb_clear(c);
+    acb_clear(ak);
+    acb_clear(logak);
+    acb_clear(t);
+    acb_clear(qpow);
 }
 
