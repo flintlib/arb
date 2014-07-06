@@ -36,6 +36,12 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
     if (d < 1)
         return;
 
+    if (!acb_is_finite(s) || !acb_is_finite(a))
+    {
+        _acb_vec_indeterminate(z, d);
+        return;
+    }
+
     arf_init(bound);
     vb = _arb_vec_init(d);
 

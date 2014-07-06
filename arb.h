@@ -489,6 +489,13 @@ void arb_add_error_2exp_fmpz(arb_t x, const fmpz_t err);
 
 void arb_add_error(arb_t x, const arb_t error);
 
+/* TODO: document */
+static __inline__ void
+arb_add_error_mag(arb_t x, const mag_t err)
+{
+    mag_add(arb_radref(x), arb_radref(x), err);
+}
+
 int arb_contains_arf(const arb_t x, const arf_t y);
 
 int arb_contains_fmpq(const arb_t x, const fmpq_t y);

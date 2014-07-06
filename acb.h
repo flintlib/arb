@@ -256,6 +256,14 @@ acb_add_error_arf(acb_t x, const arf_t err)
     arb_add_error_arf(acb_imagref(x), err);
 }
 
+/* TODO: document */
+static __inline__ void
+acb_add_error_mag(acb_t x, const mag_t err)
+{
+    arb_add_error_mag(acb_realref(x), err);
+    arb_add_error_mag(acb_imagref(x), err);
+}
+
 static __inline__ void
 acb_get_abs_ubound_arf(arf_t u, const acb_t z, long prec)
 {
@@ -659,6 +667,21 @@ void acb_root_exp(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root_newton(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root(acb_t r, const acb_t a, long m, long index, long prec);
 */
+
+/* TODO: document */
+static __inline__ int
+acb_is_finite(const acb_t x)
+{
+    return arb_is_finite(acb_realref(x)) && arb_is_finite(acb_imagref(x));
+}
+
+/* TODO: document */
+static __inline__ void
+acb_indeterminate(acb_t x)
+{
+    arb_indeterminate(acb_realref(x));
+    arb_indeterminate(acb_imagref(x));
+}
 
 static __inline__ void
 _acb_vec_zero(acb_ptr A, long n)
