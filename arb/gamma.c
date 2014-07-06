@@ -30,15 +30,7 @@
 #include "hypgeom.h"
 
 /* TODO: move helper functions to the right modules */
-void
-acb_get_mag(mag_t z, const acb_t x)
-{
-    arf_t t;
-    arf_init(t);
-    acb_get_abs_ubound_arf(t, x, MAG_BITS);
-    arf_get_mag(z, t);
-    arf_clear(t);
-}
+void acb_get_mag(mag_t z, const acb_t x);
 
 void
 acb_get_mag_lower(mag_t z, const acb_t x)

@@ -507,25 +507,32 @@ void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, l
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
 
 /* TODO: document */
-/* series of c^(d+x) */
-static __inline__ void
-_acb_poly_pow_cpx(acb_ptr res, const acb_t c, const acb_t d, long trunc, long prec)
+void
+_acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long prec)
 {
-    long i;
-    acb_t logc;
-
-    acb_init(logc);
-    acb_log(logc, c, prec);
-    acb_mul(res + 0, logc, d, prec);
-    acb_exp(res + 0, res + 0, prec);
-
-    for (i = 1; i < trunc; i++)
+    if (len == 1)
     {
-        acb_mul(res + i, res + i - 1, logc, prec);
-        acb_div_ui(res + i, res + i, i, prec);
+        acb_pow(w, a, b, prec);
     }
+    else
+    {
+        acb_t log_a;
+        long k;
 
-    acb_clear(logc);
+        acb_init(log_a);
+
+        acb_log(log_a, a, prec);
+        acb_mul(w, log_a, b, prec);
+        acb_exp(w, w, prec);
+
+        for (k = 1; k < len; k++)
+        {
+            acb_mul(w + k, w + k - 1, log_a, prec);
+            acb_div_ui(w + k, w + k, k, prec);
+        }
+
+        acb_clear(log_a);
+    }
 }
 
 /* TODO: document */
@@ -550,6 +557,10 @@ void _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int defl
 void _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int deflate, long len, long prec);
 
 void acb_poly_zeta_series(acb_poly_t res, const acb_poly_t f, const acb_t a, int deflate, long n, long prec);
+
+void _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, long len, long prec);
+void _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec);
+void _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long prec);
 
 #ifdef __cplusplus
 }
