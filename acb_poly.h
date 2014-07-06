@@ -507,7 +507,7 @@ void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, l
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
 
 /* TODO: document */
-void
+static __inline__ void
 _acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long prec)
 {
     if (len == 1)
@@ -534,6 +534,8 @@ _acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long pr
         acb_clear(log_a);
     }
 }
+
+#define _acb_poly_pow_cpx _acb_poly_acb_pow_cpx
 
 /* TODO: document */
 void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long trunc, long prec);
