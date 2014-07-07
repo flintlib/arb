@@ -41,6 +41,14 @@ Module documentation (Arb 2.x types)
    acb_mat.rst
    acb_calc.rst
 
+Algorithms and proofs
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   polylogarithms.rst
+
 Module documentation (extra modules for mathematical functions)
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
