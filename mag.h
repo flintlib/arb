@@ -663,6 +663,10 @@ void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
 /* TODO: test */
 void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 
+/* TODO: document */
+void mag_sqrt(mag_t y, const mag_t x);
+void mag_rsqrt(mag_t y, const mag_t x);
+
 /* TODO: test functions below */
 static __inline__ void
 mag_set_ui(mag_t z, ulong x)

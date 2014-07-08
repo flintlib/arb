@@ -27,25 +27,6 @@
 
 /* TODO: move and document helper functions */
 
-/* TODO: implement efficiently */
-void
-mag_sqrt(mag_t y, const mag_t x)
-{
-    if (mag_is_special(x))
-    {
-        mag_set(y, x);
-    }
-    else
-    {
-        arf_t t;
-        arf_init(t);
-        arf_set_mag(t, x);
-        arf_sqrt(t, t, MAG_BITS, ARF_RND_UP);
-        arf_get_mag(y, t);
-        arf_clear(t);
-    }
-}
-
 void
 acb_get_mag(mag_t u, const acb_t z)
 {
