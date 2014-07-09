@@ -30,6 +30,8 @@ fmpr_printd(const fmpr_t x, long digits)
 {
     mpfr_t t;
     mpfr_init2(t, digits * 3.33 + 10);
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
     fmpr_get_mpfr(t, x, MPFR_RNDN);
     mpfr_printf("%.*Rg", FLINT_MAX(digits, 1), t);
     mpfr_clear(t);
