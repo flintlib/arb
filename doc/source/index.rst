@@ -47,6 +47,7 @@ Algorithms and proofs
 .. toctree::
    :maxdepth: 1
 
+   constants.rst
    polylogarithms.rst
 
 Module documentation (extra modules for mathematical functions)

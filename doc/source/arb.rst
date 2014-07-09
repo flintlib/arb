@@ -708,14 +708,11 @@ Constants
 
 The following functions cache the computed values to speed up repeated
 calls at the same or lower precision.
+For further implementation details, see :ref:`algorithms_constants`.
 
 .. function:: void arb_const_pi(arb_t z, long prec)
 
-    Computes `\pi` using the Chudnovsky series
-
-    .. math ::
-
-        \frac{1}{\pi} = 12 \sum^\infty_{k=0} \frac{(-1)^k (6k)! (13591409 + 545140134k)}{(3k)!(k!)^3 640320^{3k + 3/2}}
+    Computes `\pi`.
 
 .. function:: void arb_const_sqrt_pi(arb_t z, long prec)
 
@@ -727,87 +724,28 @@ calls at the same or lower precision.
 
 .. function:: void arb_const_log2(arb_t z, long prec)
 
-    Computes `\log(2)` using the hypergeometric series
-
-    .. math ::
-
-        \log 2 = \frac{3}{4} \sum_{k=0}^{\infty} \frac{(-1)^k (k!)^2}{2^k (2k+1)!}
+    Computes `\log(2)`.
 
 .. function:: void arb_const_log10(arb_t z, long prec)
 
-    Computes `\log 10` using the Machin-like formula
-    `\log 10 = 46 \operatorname{atanh}(1/31) + 34 \operatorname{atanh}(1/49) + 20 \operatorname{atanh}(1/161)`.
+    Computes `\log(10)`.
 
 .. function:: void arb_const_euler(arb_t z, long prec)
 
     Computes Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
     where `H_k = 1 + 1/2 + \ldots + 1/k`.
-    Uses the Brent-McMillan formula ([BM1980]_,  [MPFR2012]_)
-
-    .. math ::
-
-        \gamma = \frac{S_0(2n) - K_0(2n)}{I_0(2n)} - \log(n)
-
-    in which `n` is a free parameter and
-
-    .. math ::
-
-        S_0(x) = \sum_{k=0}^{\infty} \frac{H_k}{(k!)^2} \left(\frac{x}{2}\right)^{2k}, \quad
-        I_0(x) = \sum_{k=0}^{\infty} \frac{1}{(k!)^2} \left(\frac{x}{2}\right)^{2k}
-
-        2x I_0(x) K_0(x) \sim \sum_{k=0}^{\infty} \frac{[(2k)!]^3}{(k!)^4 8^{2k} x^{2k}}.
-
-    All series are evaluated using binary splitting.
-    The first two series are evaluated simultaneously, with the summation
-    taken up to `k = N - 1` inclusive where `N \ge \alpha n + 1` and
-    `\alpha \approx 4.9706257595442318644`
-    satisfies `\alpha (\log \alpha - 1) = 3`. The third series is taken
-    up to `k = 2n-1` inclusive. It is then shown in [BJ2013]_ that the error
-    is bounded by `24e^{-8n}`.
 
 .. function:: void arb_const_catalan(arb_t z, long prec)
 
-    Computes Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`
-    using the hypergeometric series
-
-    .. math ::
-
-        C = \sum_{k=0}^{\infty} \frac{(-1)^k 4^{4 k+1}
-            \left(40 k^2+56 k+19\right) [(k+1)!]^2 [(2k+2)!]^3}{(k+1)^3 (2 k+1) [(4k+4)!]^2}
+    Computes Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`.
 
 .. function:: void arb_const_e(arb_t z, long prec)
 
-    Computes Euler's number `e = \sum_{n=0}^{\infty} 1/n!` from the
-    defining series.
+    Computes `e = \exp(1)`.
 
 .. function:: void arb_const_khinchin(arb_t z, long prec)
 
-    Computes Khinchin's constant `K_0` using the formula
-
-    .. math ::
-
-        \log K_0 = \frac{1}{\log 2} \left[
-        \sum_{k=2}^{N-1} \log \left(\frac{k-1}{k} \right) \log \left(\frac{k+1}{k} \right)
-        + \sum_{n=1}^\infty 
-        \frac {\zeta (2n,N)}{n} \sum_{k=1}^{2n-1} \frac{(-1)^{k+1}}{k}
-        \right]
-
-    where `N \ge 2` is a free parameter that can be used for tuning [BBC1997]_.
-    If the infinite series is truncated after `n = M`, the remainder
-    is smaller in absolute value than
-
-    .. math ::
-
-        \sum_{n=M+1}^{\infty} \zeta(2n, N) = 
-        \sum_{n=M+1}^{\infty} \sum_{k=0}^{\infty} (k+N)^{-2n} \le
-        \sum_{n=M+1}^{\infty} \left( N^{-2n} + \int_0^{\infty} (t+N)^{-2n} dt \right)
-
-        = \sum_{n=M+1}^{\infty} \frac{1}{N^{2n}} \left(1 + \frac{N}{2n-1}\right)
-        \le \sum_{n=M+1}^{\infty} \frac{N+1}{N^{2n}} = \frac{1}{N^{2M} (N-1)}
-        \le \frac{1}{N^{2M}}.
-
-    Thus, for an error of at most `2^{-p}` in the series,
-    it is sufficient to choose `M \ge p / (2 \log_2 N)`.
+    Computes Khinchin's constant `K_0`.
 
 .. function:: void arb_const_glaisher(arb_t z, long prec)
 
@@ -815,11 +753,7 @@ calls at the same or lower precision.
 
 .. function:: void arb_const_apery(arb_t z, long prec)
 
-    Computes Apery's constant `\zeta(3)` using the hypergeometric series
-
-    .. math ::
-
-        \zeta(3) = \frac{1}{64} \sum_{k=0}^\infty (-1)^k (205k^2 + 250k + 77) \frac{(k!)^{10}}{[(2k+1)!]^5}
+    Computes Apery's constant `\zeta(3)`.
 
 Gamma function and factorials
 -------------------------------------------------------------------------------
