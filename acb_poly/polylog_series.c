@@ -451,3 +451,50 @@ _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long pr
     mag_clear(zmag);
 }
 
+void
+_acb_poly_polylog_series(acb_ptr res, acb_srcptr s, long slen, const acb_t z, long len, long prec)
+{
+    acb_ptr t, u;
+
+    slen = FLINT_MIN(slen, len);
+
+    t = _acb_vec_init(len);
+    u = _acb_vec_init(len);
+
+    _acb_poly_polylog_cpx(t, s, z, len, prec);
+
+    /* compose with nonconstant part */
+    acb_zero(u);
+    _acb_vec_set(u + 1, s + 1, slen - 1);
+    _acb_poly_compose_series(res, t, len, u, slen, len, prec);
+
+    _acb_vec_clear(t, len);
+    _acb_vec_clear(u, len);
+}
+
+void
+acb_poly_polylog_series(acb_poly_t res, const acb_poly_t s, const acb_t z, long n, long prec)
+{
+    if (n == 0)
+    {
+        acb_poly_zero(res);
+        return;
+    }
+
+    acb_poly_fit_length(res, n);
+
+    if (s->length == 0)
+    {
+        acb_t t;
+        acb_init(t);
+        _acb_poly_polylog_series(res->coeffs, t, 1, z, n, prec);
+        acb_clear(t);
+    }
+    else
+    {
+        _acb_poly_polylog_series(res->coeffs, s->coeffs, s->length, z, n, prec);
+    }
+
+    _acb_poly_set_length(res, n);
+    _acb_poly_normalise(res);
+}

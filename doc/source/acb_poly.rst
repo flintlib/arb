@@ -776,6 +776,37 @@ Zeta function
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
 
+Polylogarithms
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+
+.. function:: void _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+
+.. function:: void _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+
+    Sets *w* to the Taylor series with respect to *x* of the polylogarithm
+    `\operatorname{Li}_{s+x}(z)`, where *s* and *z* are given complex
+    constants. The output is computed to length *len* which must be positive.
+    Aliasing between *w* and *s* or *z* is not permitted.
+
+    The *small* version uses the standard power series expansion with respect
+    to *z*, convergent when `|z| < 1`. The *zeta* version evaluates
+    the polylogarithm as a sum of two Hurwitz zeta functions.
+    The default version automatically delegates to the *small* version
+    when *z* is close to zero, and the *zeta* version otherwise.
+    For further details, see :ref:`algorithms_polylogarithms`.
+
+.. function:: void _acb_poly_polylog_series(acb_ptr w, acb_srcptr s, long slen, const acb_t z, long len, long prec)
+
+.. function:: void acb_poly_polylog_series(acb_poly_t w, const acb_poly_t s, const acb_t z, long len, long prec)
+
+    Sets *w* to the polylogarithm `\operatorname{Li}_{s}(z)` where *s* is a given
+    power series, truncating the output to length *len*. The underscore method
+    requires all lengths to be positive and supports aliasing between
+    all inputs and outputs.
+
+
 Root-finding
 -------------------------------------------------------------------------------
 

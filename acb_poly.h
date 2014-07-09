@@ -564,6 +564,11 @@ void _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, long le
 void _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec);
 void _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long prec);
 
+void _acb_poly_polylog_series(acb_ptr res, acb_srcptr s, long slen, const acb_t z, long len, long prec);
+void acb_poly_polylog_series(acb_poly_t res, const acb_poly_t s, const acb_t z, long n, long prec);
+
+
+
 #ifdef __cplusplus
 }
 #endif
