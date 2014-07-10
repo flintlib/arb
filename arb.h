@@ -670,6 +670,9 @@ void arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec);
 void arb_bernoulli_ui(arb_t b, ulong n, long prec);
 void arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec);
 
+void arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec);
+void arb_polylog_si(arb_t w, long s, const arb_t z, long prec);
+
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \
     TLS_PREFIX arb_t name ## _cached_value; \

@@ -489,3 +489,11 @@ Zeta function
     Note: for computing derivatives with respect to `s`,
     use :func:`acb_poly_zeta_series` or related methods.
 
+Polylogarithms
+-------------------------------------------------------------------------------
+
+.. function:: void acb_polylog(acb_t w, const acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_polylog_si(acb_t w, long s, const acb_t z, long prec)
+
+    Sets *w* to the polylogarithm `\operatorname{Li}_s(z)`.

@@ -952,6 +952,15 @@ Bernoulli numbers
     enough and `n` large enough for the Euler product to converge
     rapidly (otherwise this function will effectively hang).
 
+Polylogarithms
+-------------------------------------------------------------------------------
+
+.. function:: void arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec)
+
+.. function:: void arb_polylog_si(arb_t w, long s, const arb_t z, long prec)
+
+    Sets *w* to the polylogarithm `\operatorname{Li}_s(z)`.
+
 Other special functions
 -------------------------------------------------------------------------------
 
