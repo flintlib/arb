@@ -45,34 +45,55 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
 {
     powsum_arg_t arg = *((powsum_arg_t *) arg_ptr);
     long i, k;
-    int q_one;
+    int q_one, s_int;
 
-    acb_t t, u, v, qpow;
+    acb_t t, u, v, ak, qpow, negs;
     arb_t f;
 
     acb_init(t);
     acb_init(u);
     acb_init(v);
+    acb_init(ak);
     acb_init(qpow);
+    acb_init(negs);
     arb_init(f);
 
     _acb_vec_zero(arg.z, arg.len);
 
     q_one = acb_is_one(arg.q);
+    s_int = arb_is_int(acb_realref(arg.s)) && arb_is_zero(acb_imagref(arg.s));
 
     if (!q_one)
         acb_pow_ui(qpow, arg.q, arg.n0, arg.prec);
 
+    acb_neg(negs, arg.s);
+    arb_fac_ui(f, arg.d0, arg.prec);
+
     for (k = arg.n0; k < arg.n1; k++)
     {
-        /* t = log(a+k) */
-        acb_add_ui(t, arg.a, k, arg.prec);
-        acb_log(t, t, arg.prec);
+        acb_add_ui(ak, arg.a, k, arg.prec);
 
-        /* u = (a+k)^(-s) */
-        acb_mul(u, t, arg.s, arg.prec);
-        acb_neg(u, u);
-        acb_exp(u, u, arg.prec);
+        if (arg.d0 == 0 && arg.len == 1)
+        {
+            /* u = (a+k)^(-s) */
+            acb_pow(u, ak, negs, arg.prec);
+        }
+        else
+        {
+            /* t = log(a+k) */
+            acb_log(t, ak, arg.prec);
+
+            /* u = (a+k)^(-s) */
+            if (s_int)
+            {
+                acb_pow(u, ak, negs, arg.prec);
+            }
+            else
+            {
+                acb_mul(u, t, negs, arg.prec);
+                acb_exp(u, u, arg.prec);
+            }
+        }
 
         /* u = u * q^k */
         if (!q_one)
@@ -87,7 +108,6 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
         {
             acb_pow_ui(v, t, arg.d0, arg.prec);
             acb_mul(u, u, v, arg.prec);
-            arb_fac_ui(f, arg.d0, arg.prec);
             arb_div(acb_realref(u), acb_realref(u), f, arg.prec);
             arb_div(acb_imagref(u), acb_imagref(u), f, arg.prec);
             if (arg.d0 % 2)
@@ -107,7 +127,9 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
     acb_clear(t);
     acb_clear(u);
     acb_clear(v);
+    acb_clear(ak);
     acb_clear(qpow);
+    acb_clear(negs);
     arb_clear(f);
 
     flint_cleanup();

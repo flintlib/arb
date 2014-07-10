@@ -50,18 +50,21 @@ _acb_poly_powsum_series_naive(acb_ptr z,
     const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
 {
     long k, i;
-    int q_one;
-    acb_t ak, logak, t, qpow;
+    int q_one, s_int;
+    acb_t ak, logak, t, qpow, negs;
 
     acb_init(ak);
     acb_init(logak);
     acb_init(t);
     acb_init(qpow);
+    acb_init(negs);
 
     _acb_vec_zero(z, len);
     acb_one(qpow);
+    acb_neg(negs, s);
 
     q_one = acb_is_one(q);
+    s_int = arb_is_int(acb_realref(s)) && arb_is_zero(acb_imagref(s));
 
     for (k = 0; k < n; k++)
     {
@@ -69,15 +72,21 @@ _acb_poly_powsum_series_naive(acb_ptr z,
 
         if (len == 1)
         {
-            acb_neg(t, s);
-            acb_pow(t, ak, t, prec);
+            acb_pow(t, ak, negs, prec);
         }
         else
         {
             acb_log(logak, ak, prec);
-            acb_mul(t, logak, s, prec);
-            acb_neg(t, t);
-            acb_exp(t, t, prec);
+
+            if (s_int)
+            {
+                acb_pow(t, ak, negs, prec);
+            }
+            else
+            {
+                acb_mul(t, logak, negs, prec);
+                acb_exp(t, t, prec);
+            }
         }
 
         if (!q_one)
@@ -101,5 +110,6 @@ _acb_poly_powsum_series_naive(acb_ptr z,
     acb_clear(logak);
     acb_clear(t);
     acb_clear(qpow);
+    acb_clear(negs);
 }
 
