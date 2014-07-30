@@ -36,15 +36,18 @@ void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec);
 void
 _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec)
 {
-    fmprb_ptr t;
     long i;
 
-    t = _fmprb_vec_init(len);
-    gamma_lgamma_series_at_one(t, len, prec);
-    for (i = 0; i < len; i++)
-        arb_set_fmprb(u + i, t + i);
+    if (len > 0) arb_zero(u);
+    if (len > 1) arb_const_euler(u + 1, prec);
+    if (len > 2) arb_zeta_ui_vec(u + 2, 2, len - 2, prec);
 
-    _fmprb_vec_clear(t, len);
+
+    for (i = 2; i < len; i++)
+        arb_div_ui(u + i, u + i, i, prec);
+
+    for (i = 1; i < len; i += 2)
+        arb_neg(u + i, u + i);
 }
 
 static void
