@@ -73,3 +73,42 @@ It is also recommended to call ``flint_cleanup()`` when exiting the main
 program (this should result in a clean output when running
 `Valgrind <http://valgrind.org/>`_, and can help catching memory issues).
 
+Use of hardware floating-point arithmetic
+-------------------------------------------------------------------------------
+
+Arb uses hardware floating-point arithmetic (the ``double`` type in C) in two
+different ways.
+
+Firstly, ``double`` arithmetic as well as transcendental ``libm`` functions
+(such as ``exp``, ``log``) are used to select parameters heuristically
+in various algorithms. Such heuristic use of approximate arithmetic does not
+affect correctness: when any error bounds depend on the parameters, the error
+bounds are evaluated separately using rigorous methods. At worst, flaws
+in the floating-point arithmetic on a particular machine could cause an
+algorithm to become inefficient due to inefficient parameters being
+selected.
+
+Secondly, ``double`` arithmetic is used internally for some rigorous error bound
+calculations. To guarantee correctness, we make the following assumptions.
+With the stated exceptions, these should hold on all commonly used platforms.
+
+* A ``double`` uses the standard IEEE 754 format (with a 53-bit significand,
+  11-bit exponent, encoding of infinities and NaNs, etc.)
+* We assume that the compiler does not perform "unsafe" floating-point
+  optimizations, such as reordering of operations. Unsafe optimizations are
+  disabled by default in most modern C compilers, including GCC and Clang.
+  The exception appears to be the Intel C++ compiler, which does some
+  unsafe optimizations by default. These must be disabled by the user.
+* We do not assume that floating-point operations are correctly rounded
+  (a counterexample is the x87 FPU), or that rounding is done in any
+  particular direction (the rounding mode may have been changed by the user).
+  We assume that any floating-point operation is done with at most 1.1 ulp
+  error.
+* We do not assume that underflow or overflow behaves in a particular way (we
+  only use doubles that fit in the regular exponent range, or explicit
+  infinities).
+* We do not use transcendental ``libm`` functions, since these can have errors
+  of several ulps, and there is unfortunately no way to get guaranteed
+  bounds. However, we do use functions such as ``ldexp`` and ``sqrt``, which we
+  assume to be correctly implemented.
+
