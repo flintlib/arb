@@ -911,7 +911,9 @@ Zeta function
 .. function:: void arb_zeta_ui(arb_t x, ulong s, long prec)
 
     Computes `\zeta(s)` for nonnegative integer `s \ne 1`, automatically
-    choosing an appropriate algorithm.
+    choosing an appropriate algorithm. This function is
+    intended for numerical evaluation of isolated zeta values; for
+    multi-evaluation, the vector versions are more efficient.
 
 .. function:: void arb_zeta(arb_t z, const arb_t s, long prec)
 
@@ -921,12 +923,6 @@ Zeta function
     complex arguments (see :func:`acb_hurwitz_zeta`).
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
-
-.. function:: void arb_zeta_ui(arb_t z, ulong n, long prec)
-
-    Sets *b* to the Riemann zeta function value `\zeta(n)`. This function is
-    intended for numerical evaluation of isolated zeta values; for
-    multi-evaluation, the vector versions are more efficient.
 
 Bernoulli numbers
 -------------------------------------------------------------------------------
