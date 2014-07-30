@@ -331,11 +331,6 @@ Magnitude functions
     Initializes *y* and sets it to an upper bound for *x*.
     Assumes that the exponent of *y* is small.
 
-.. function:: void arf_init_set_mag_shallow(arf_t y, const mag_t x)
-
-    Initializes *y* to a shallow copy of *x*. The variable *y* may
-    not be cleared, and may not be used after *x* has been cleared.
-
 .. function:: void arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
 
     Sets *z* to the magnitude of the unit in the last place (ulp) of *y*
@@ -352,6 +347,27 @@ Magnitude functions
     Sets *z* to an upper bound for the sum of *x* and the
     magnitude of the unit in the last place (ulp) of *y*
     at precision *prec*. Assumes that all exponents are small.
+
+Shallow assignment
+-------------------------------------------------------------------------------
+
+.. function:: void arf_init_set_shallow(arf_t z, const arf_t x)
+
+.. function:: void arf_init_set_mag_shallow(arf_t z, const mag_t x)
+
+    Initializes *z* to a shallow copy of *x*. A shallow copy just involves
+    copying struct data (no heap allocation is performed).
+
+    The target variable *z* may not be cleared or modified in any way (it can
+    only be used as constant input to functions), and may not be used after
+    *x* has been cleared. Moreover, after *x* has been assigned shallowly
+    to *z*, no modification of *x* is permitted as long as *z* is in use.
+
+.. function:: void arf_init_neg_shallow(arf_t z, const arf_t x)
+
+.. function:: void arf_init_neg_mag_shallow(arf_t z, const mag_t x)
+
+    Initializes *z* shallowly to the negation of *x*.
 
 Random number generation
 -------------------------------------------------------------------------------

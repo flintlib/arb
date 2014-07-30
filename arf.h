@@ -479,14 +479,12 @@ arf_cmpabs_ui(const arf_t x, ulong y)
     return arf_cmpabs(x, t);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_init_set_shallow(arf_t z, const arf_t x)
 {
     *z = *x;
 }
 
-/* TODO: document */
 static __inline__ void
 arf_init_neg_shallow(arf_t z, const arf_t x)
 {
@@ -503,7 +501,6 @@ arf_init_set_mag_shallow(arf_t y, const mag_t x)
     ARF_NOPTR_D(y)[0] = t << (FLINT_BITS - MAG_BITS);
 }
 
-/* TODO: document */
 static __inline__ void
 arf_init_neg_mag_shallow(arf_t z, const mag_t x)
 {
