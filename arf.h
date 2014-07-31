@@ -218,7 +218,8 @@ void _arf_demote(arf_t x);
             }                                               \
             else if (ARF_PTR_ALLOC(x) < (__xn))             \
             {                                               \
-                ARF_PTR_D(x) = flint_realloc(ARF_PTR_D(x),  \
+                ARF_PTR_D(x) = (mp_ptr)                     \
+                        flint_realloc(ARF_PTR_D(x),         \
                         (xn) * sizeof(mp_limb_t));          \
                 ARF_PTR_ALLOC(x) = (__xn);                  \
             }                                               \
