@@ -652,7 +652,6 @@ void mag_log1p(mag_t z, const mag_t x);
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 
-/* TODO: test */
 void mag_fac_ui(mag_t z, ulong n);
 void mag_rfac_ui(mag_t z, ulong n);
 
