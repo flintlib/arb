@@ -164,6 +164,14 @@ Arithmetic
 
     Sets *z* to a lower bound for `x^e`.
 
+.. function:: void mag_sqrt(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\sqrt{x}`.
+
+.. function:: void mag_rsqrt(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `1/\sqrt{x}`.
+
 Fast, unsafe versions
 -------------------------------------------------------------------------------
 

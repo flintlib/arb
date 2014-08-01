@@ -28,7 +28,7 @@
 void
 mag_pow_ui(mag_t z, const mag_t x, ulong e)
 {
-    if (mag_is_inf(z))
+    if (mag_is_inf(x))
     {
         mag_inf(z);
     }
@@ -74,7 +74,7 @@ mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
         else
             mag_mul_lower(z, x, x);
     }
-    else if (mag_is_inf(z))
+    else if (mag_is_inf(x))
     {
         mag_inf(z);
     }
