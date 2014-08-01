@@ -6,6 +6,17 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-08-01 - version 2.2.0
+
+  * added functions for computing polylogarithms and order expansions
+    of polylogarithms, with support for real and complex s, z
+  * added a missing cast affecting C++ compatibility
+  * generalized powsum functions to allow a geometric factor
+  * improved powsum functions slightly when the exponent is an integer
+  * faster arb_log_ui_from_prev
+  * added mag_sqrt and mag_rsqrt functions
+  * fixed various minor bugs and added missing tests and documentation entries
+
 * 2014-06-20 - version 2.1.0
 
   * ported most of the remaining functions to the new arb/acb types,
