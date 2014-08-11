@@ -950,6 +950,12 @@ extern const mp_limb_t arb_atan_tab1[1 << ARB_ATAN_TAB1_BITS][ARB_ATAN_TAB1_LIMB
 extern const mp_limb_t arb_atan_tab21[1 << ARB_ATAN_TAB21_BITS][ARB_ATAN_TAB2_LIMBS];
 extern const mp_limb_t arb_atan_tab22[1 << ARB_ATAN_TAB22_BITS][ARB_ATAN_TAB2_LIMBS];
 
+void
+_arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error,
+    mp_srcptr x, mp_size_t xn, ulong N, int alternating);
+
+void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
+    mp_srcptr x, mp_size_t xn, ulong N, int alternating);
 
 #ifdef __cplusplus
 }
