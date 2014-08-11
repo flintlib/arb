@@ -935,6 +935,22 @@ _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
         arb_trim(res + i, vec + i);
 }
 
+/* arctangent implementation */
+
+#define ARB_ATAN_TAB1_BITS 8
+#define ARB_ATAN_TAB1_PREC 512
+#define ARB_ATAN_TAB1_LIMBS (ARB_ATAN_TAB1_PREC / FLINT_BITS)
+
+#define ARB_ATAN_TAB21_BITS 5
+#define ARB_ATAN_TAB22_BITS 5
+#define ARB_ATAN_TAB2_PREC 4608
+#define ARB_ATAN_TAB2_LIMBS (ARB_ATAN_TAB2_PREC / FLINT_BITS)
+
+extern const mp_limb_t arb_atan_tab1[1 << ARB_ATAN_TAB1_BITS][ARB_ATAN_TAB1_LIMBS];
+extern const mp_limb_t arb_atan_tab21[1 << ARB_ATAN_TAB21_BITS][ARB_ATAN_TAB2_LIMBS];
+extern const mp_limb_t arb_atan_tab22[1 << ARB_ATAN_TAB22_BITS][ARB_ATAN_TAB2_LIMBS];
+
+
 #ifdef __cplusplus
 }
 #endif
