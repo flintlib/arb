@@ -126,6 +126,101 @@ int main()
         arb_clear(d);
     }
 
+    /* higher precision */
+    for (iter = 0; iter < 2000; iter++)
+    {
+        arb_t a, b;
+        fmpq_t q;
+        mpfr_t t;
+        long prec = 2 + n_randint(state, 5000);
+
+        arb_init(a);
+        arb_init(b);
+        fmpq_init(q);
+        mpfr_init2(t, prec + 100);
+
+        arb_randtest(a, state, 1 + n_randint(state, 5000), 8);
+        arb_randtest(b, state, 1 + n_randint(state, 5000), 8);
+        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
+
+        fmpq_get_mpfr(t, q, MPFR_RNDN);
+        mpfr_atan(t, t, MPFR_RNDN);
+
+        arb_atan(b, a, prec);
+
+        if (!arb_contains_mpfr(b, t))
+        {
+            printf("FAIL: containment\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("a = "); arb_printd(a, 50); printf("\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_printd(b, 50); printf("\n\n");
+            abort();
+        }
+
+        arb_atan(a, a, prec);
+
+        if (!arb_equal(a, b))
+        {
+            printf("FAIL: aliasing\n\n");
+            abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        fmpq_clear(q);
+        mpfr_clear(t);
+    }
+
+    /* higher precision */
+    /* check large arguments */
+    for (iter = 0; iter < 2000; iter++)
+    {
+        arb_t a, b, c, d;
+        long prec1, prec2;
+
+        prec1 = 2 + n_randint(state, 5000);
+        prec2 = prec1 + 30;
+
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+
+        arb_randtest_precise(a, state, 1 + n_randint(state, 5000), 100);
+
+        arb_atan(b, a, prec1);
+        arb_atan(c, a, prec2);
+
+        if (!arb_overlaps(b, c))
+        {
+            printf("FAIL: overlap\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("c = "); arb_print(c); printf("\n\n");
+            abort();
+        }
+
+        /* check tan(atan(x)) = x */
+        arb_sin_cos(c, d, b, prec1);
+        arb_div(c, c, d, prec1);
+
+        if (!arb_contains(c, a))
+        {
+            printf("FAIL: functional equation\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("c = "); arb_print(c); printf("\n\n");
+            printf("d = "); arb_print(d); printf("\n\n");
+            abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     printf("PASS\n");
