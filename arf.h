@@ -525,7 +525,7 @@ arf_mag_cmpabs(const mag_t x, const arf_t y)
     return arf_cmpabs(t, y);
 }
 
-/* Assumes xn > 0, x[0] != 0. */
+/* Assumes xn > 0, x[xn-1] != 0. */
 /* TBD: 1, 2 limb versions */
 void arf_set_mpn(arf_t y, mp_srcptr x, mp_size_t xn, int sgnbit);
 
@@ -554,7 +554,7 @@ int _arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd);
 /* TODO: document */
 int _arf_set_round_uiui(arf_t z, long * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, long prec, arf_rnd_t rnd);
 
-/* Assumes xn > 0, x[0] != 0. */
+/* Assumes xn > 0, x[xn-1] != 0. */
 int
 _arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, long prec, arf_rnd_t rnd);
