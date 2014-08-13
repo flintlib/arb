@@ -458,161 +458,21 @@ void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp);
 
 void mag_set_fmpr(mag_t x, const fmpr_t y);
 
-static __inline__ void
-mag_get_fmpr(fmpr_t x, const mag_t r)
-{
-    if (mag_is_zero(r))
-    {
-        fmpr_zero(x);
-    }
-    else if (mag_is_inf(r))
-    {
-        fmpr_pos_inf(x);
-    }
-    else
-    {
-        fmpr_set_ui_2exp_si(x, MAG_MAN(r), -MAG_BITS);
-        _fmpz_add2_fast(fmpr_expref(x), fmpr_expref(x), MAG_EXPREF(r), 0);
-    }
-}
+void mag_get_fmpr(fmpr_t x, const mag_t r);
 
-static __inline__ void
-mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
-{
-    switch (n_randint(state, 32))
-    {
-        case 0:
-            mag_zero(x);
-            break;
-        case 1:
-            mag_inf(x);
-            break;
-        case 2:
-            MAG_MAN(x) = (LIMB_ONE << MAG_BITS) - 1;
-            fmpz_randtest(MAG_EXPREF(x), state, expbits);
-            break;
-        case 3:
-            MAG_MAN(x) = LIMB_ONE << (MAG_BITS - 1);
-            fmpz_randtest(MAG_EXPREF(x), state, expbits);
-            break;
-        default:
-            MAG_MAN(x) = (n_randtest(state) >> (FLINT_BITS - MAG_BITS));
-            MAG_MAN(x) |= (LIMB_ONE << (MAG_BITS - 1));
-            fmpz_randtest(MAG_EXPREF(x), state, expbits);
-    }
-}
+void mag_randtest_special(mag_t x, flint_rand_t state, long expbits);
 
-static __inline__ void
-mag_randtest(mag_t x, flint_rand_t state, long expbits)
-{
-    mag_randtest_special(x, state, expbits);
-    if (mag_is_inf(x))
-        mag_zero(x);
-}
+void mag_randtest(mag_t x, flint_rand_t state, long expbits);
 
-static __inline__ void
-mag_print(const mag_t x)
-{
-    printf("(");
-    if (mag_is_zero(x))
-        printf("0");
-    else if (mag_is_inf(x))
-        printf("inf");
-    else
-    {
-        printf("%lu * 2^", MAG_MAN(x));
-        fmpz_print(MAG_EXPREF(x));
-    }
-    printf(")");
-}
+void mag_print(const mag_t x);
 
-static __inline__ void
-mag_printd(const mag_t x, long d)
-{
-    fmpr_t t;
-    fmpr_init(t);
-    mag_get_fmpr(t, x);
-    fmpr_printd(t, d);
-    fmpr_clear(t);
-}
+void mag_printd(const mag_t x, long d);
 
-static __inline__ void
-mag_get_fmpq(fmpq_t y, const mag_t x)
-{
-    fmpr_t t;
-    fmpr_init(t);
-    mag_get_fmpr(t, x);
-    fmpr_get_fmpq(y, t);
-    fmpr_clear(t);
-}
+void mag_get_fmpq(fmpq_t y, const mag_t x);
 
-static __inline__ int
-mag_cmp(const mag_t x, const mag_t y)
-{
-    int c;
+int mag_cmp(const mag_t x, const mag_t y);
 
-    if (mag_equal(x, y))
-        return 0;
-
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_zero(x)) return -1;
-        if (mag_is_zero(y)) return 1;
-        if (mag_is_inf(x)) return 1;
-        if (mag_is_inf(y)) return -1;
-    }
-
-    c = fmpz_cmp(MAG_EXPREF(x), MAG_EXPREF(y));
-
-    if (c == 0)
-        return (MAG_MAN(x) < MAG_MAN(y)) ? -1 : 1;
-
-    return (c < 0) ? -1 : 1;
-}
-
-static __inline__ int
-mag_cmp_2exp_si(const mag_t x, long e)
-{
-    int ispow2;
-
-    if (mag_is_special(x))
-    {
-        if (mag_is_zero(x))
-            return -1;
-        return 1;
-    }
-
-    ispow2 = (MAG_MAN(x) == MAG_ONE_HALF);
-
-    /* Fast path. */
-    if (!COEFF_IS_MPZ(MAG_EXP(x)))
-    {
-        if (ispow2 && (MAG_EXP(x) - 1 == e))
-            return 0;
-        else
-            return (MAG_EXP(x) <= e) ? -1 : 1;
-    }
-
-
-    if (ispow2)
-    {
-        fmpz_t t;
-        fmpz_init(t);
-
-        fmpz_one(t);
-        fmpz_add_si(t, t, e);
-
-        if (fmpz_equal(MAG_EXPREF(x), t))
-        {
-            fmpz_clear(t);
-            return 0;
-        }
-
-        fmpz_clear(t);
-    }
-
-    return (fmpz_cmp_si(MAG_EXPREF(x), e) <= 0) ? -1 : 1;
-}
+int mag_cmp_2exp_si(const mag_t x, long e);
 
 static __inline__ mag_ptr
 _mag_vec_init(long n)
