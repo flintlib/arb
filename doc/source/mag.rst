@@ -158,7 +158,9 @@ Arithmetic
 
 .. function:: void mag_pow_ui(mag_t z, const mag_t x, ulong e)
 
-    Sets *z* to an upper bound for `x^e`.
+.. function:: void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
+
+    Sets *z* to an upper bound for `x^e`. Requires `e \ge 0`.
 
 .. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
 
