@@ -161,12 +161,7 @@ arb_is_finite(const arb_t x)
     return arf_is_finite(arb_midref(x)) && mag_is_finite(arb_radref(x));
 }
 
-static __inline__ void
-arb_set(arb_t x, const arb_t y)
-{
-    arf_set(arb_midref(x), arb_midref(y));
-    mag_set(arb_radref(x), arb_radref(y));
-}
+void arb_set(arb_t x, const arb_t y);
 
 static __inline__ void
 arb_swap(arb_t x, arb_t y)
@@ -180,26 +175,11 @@ void arb_set_round(arb_t z, const arb_t x, long prec);
 
 void arb_trim(arb_t y, const arb_t x);
 
-static __inline__ void
-arb_neg(arb_t x, const arb_t y)
-{
-    arf_neg(arb_midref(x), arb_midref(y));
-    mag_set(arb_radref(x), arb_radref(y));
-}
+void arb_neg(arb_t x, const arb_t y);
 
-static __inline__ void
-arb_neg_round(arb_t x, const arb_t y, long prec)
-{
-    arb_set_round(x, y, prec);
-    arb_neg(x, x);
-}
+void arb_neg_round(arb_t x, const arb_t y, long prec);
 
-static __inline__ void
-arb_abs(arb_t x, const arb_t y)
-{
-    arf_abs(arb_midref(x), arb_midref(y));
-    mag_set(arb_radref(x), arb_radref(y));
-}
+void arb_abs(arb_t x, const arb_t y);
 
 static __inline__ void
 arb_set_arf(arb_t x, const arf_t y)
@@ -236,29 +216,9 @@ arb_set_fmpz_2exp(arb_t x, const fmpz_t y, const fmpz_t exp)
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
-arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t exp, long prec)
-{
-    int inexact;
-    inexact = arf_set_round_fmpz_2exp(arb_midref(y), x, exp, prec, ARB_RND);
+void arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t exp, long prec);
 
-    if (inexact)
-        arf_mag_set_ulp(arb_radref(y), arb_midref(y), prec);
-    else
-        mag_zero(arb_radref(y));
-}
-
-static __inline__ void
-arb_set_round_fmpz(arb_t y, const fmpz_t x, long prec)
-{
-    int inexact;
-    inexact = arf_set_round_fmpz(arb_midref(y), x, prec, ARB_RND);
-
-    if (inexact)
-        arf_mag_set_ulp(arb_radref(y), arb_midref(y), prec);
-    else
-        mag_zero(arb_radref(y));
-}
+void arb_set_round_fmpz(arb_t y, const fmpz_t x, long prec);
 
 static __inline__ int
 arb_is_one(const arb_t f)
@@ -430,34 +390,7 @@ arb_get_abs_lbound_arf(arf_t u, const arb_t x, long prec)
         arf_zero(u);
 }
 
-static __inline__ long
-arb_rel_error_bits(const arb_t x)
-{
-    fmpz_t midmag, radmag;
-    arf_t t;
-    long result;
-
-    if (mag_is_zero(arb_radref(x)))
-        return -ARF_PREC_EXACT;
-    if (arf_is_special(arb_midref(x)) || mag_is_inf(arb_radref(x)))
-        return ARF_PREC_EXACT;
-
-    fmpz_init(midmag);
-    fmpz_init(radmag);
-
-    arf_abs_bound_lt_2exp_fmpz(midmag, arb_midref(x));
-
-    arf_init_set_mag_shallow(t, arb_radref(x)); /* no need to free */
-    arf_abs_bound_lt_2exp_fmpz(radmag, t);
-    fmpz_add_ui(radmag, radmag, 1);
-
-    result = _fmpz_sub_small(radmag, midmag);
-
-    fmpz_clear(midmag);
-    fmpz_clear(radmag);
-
-    return result;
-}
+long arb_rel_error_bits(const arb_t x);
 
 static __inline__ long
 arb_rel_accuracy_bits(const arb_t x)

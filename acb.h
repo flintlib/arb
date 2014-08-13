@@ -465,51 +465,9 @@ acb_mul_2exp_si(acb_t z, const acb_t x, long e)
     arb_mul_2exp_si(acb_imagref(z), acb_imagref(x), e);
 }
 
-static __inline__ void
-acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec)
-{
-    if (arb_is_zero(acb_imagref(y)))
-    {
-        arb_addmul(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
-        arb_addmul(acb_realref(z), acb_realref(x), acb_realref(y), prec);
-    }
-    else if (arb_is_zero(acb_imagref(x)))
-    {
-        arb_addmul(acb_imagref(z), acb_imagref(y), acb_realref(x), prec);
-        arb_addmul(acb_realref(z), acb_realref(y), acb_realref(x), prec);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        acb_mul(t, x, y, prec);
-        acb_add(z, z, t, prec);
-        acb_clear(t);
-    }
-}
+void acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec);
 
-static __inline__ void
-acb_submul(acb_t z, const acb_t x, const acb_t y, long prec)
-{
-    if (arb_is_zero(acb_imagref(y)))
-    {
-        arb_submul(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
-        arb_submul(acb_realref(z), acb_realref(x), acb_realref(y), prec);
-    }
-    else if (arb_is_zero(acb_imagref(x)))
-    {
-        arb_submul(acb_imagref(z), acb_imagref(y), acb_realref(x), prec);
-        arb_submul(acb_realref(z), acb_realref(y), acb_realref(x), prec);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        acb_mul(t, x, y, prec);
-        acb_sub(z, z, t, prec);
-        acb_clear(t);
-    }
-}
+void acb_submul(acb_t z, const acb_t x, const acb_t y, long prec);
 
 static __inline__ void
 acb_addmul_ui(acb_t z, const acb_t x, ulong y, long prec)
