@@ -107,105 +107,6 @@ Comparisons
     Returns negative, zero, or positive, depending on whether *x*
     is smaller, equal, or larger than `2^y`.
 
-Arithmetic
--------------------------------------------------------------------------------
-
-.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, long y)
-
-.. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
-
-    Sets *z* to `x \times 2^y`. This operation is exact.
-
-.. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
-
-.. function:: void mag_mul_ui(mag_t z, const mag_t x, ulong y)
-
-.. function:: void mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
-
-    Sets *z* to an upper bound for `xy`.
-
-.. function:: void mag_add(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to an upper bound for `x + y`.
-
-.. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to an upper bound for `z + xy`.
-
-.. function:: void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
-
-    Sets *z* to an upper bound for `x + 2^e`.
-
-.. function:: void mag_div(mag_t z, const mag_t x, const mag_t y)
-
-.. function:: void mag_div_ui(mag_t z, const mag_t x, ulong y)
-
-.. function:: void mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
-
-    Sets *z* to an upper bound for `x / y`.
-
-.. function:: void mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-
-.. function:: void mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
-
-.. function:: void mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
-
-    Sets *z* to a lower bound for `xy`.
-
-.. function:: void mag_add_lower(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to a lower bound for `x + y`.
-
-.. function:: void mag_pow_ui(mag_t z, const mag_t x, ulong e)
-
-.. function:: void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
-
-    Sets *z* to an upper bound for `x^e`. Requires `e \ge 0`.
-
-.. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
-
-    Sets *z* to a lower bound for `x^e`.
-
-.. function:: void mag_sqrt(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `\sqrt{x}`.
-
-.. function:: void mag_rsqrt(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `1/\sqrt{x}`.
-
-Fast, unsafe versions
--------------------------------------------------------------------------------
-
-The following methods assume that all inputs are finite and that all exponents
-(in all inputs as well as the final result) fit as *fmpz* inline values.
-They also assume that the output variables do not have promoted exponents,
-as they will be overwritten directly (thus leaking memory).
-
-.. function:: void mag_fast_init_set(mag_t x, const mag_t y)
-
-    Initialises *x* and sets it to the value of *y*.
-
-.. function:: void mag_fast_zero(mag_t x)
-
-    Sets *x* to zero.
-
-.. function:: int mag_fast_is_zero(const mag_t x)
-
-    Returns nonzero iff *x* to zero.
-
-.. function:: void mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to an upper bound for `xy`.
-
-.. function:: void mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to an upper bound for `z + xy`.
-
-.. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
-
-    Sets *z* to an upper bound for `x + 2^e`.
-
 Input and output
 -------------------------------------------------------------------------------
 
@@ -264,13 +165,119 @@ Conversions
 
     Sets *z* to a lower bound for `|x| \times 2^y`.
 
-Special functions
+Arithmetic
 -------------------------------------------------------------------------------
+
+.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, long y)
+
+.. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to `x \times 2^y`. This operation is exact.
+
+.. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
+
+.. function:: void mag_mul_ui(mag_t z, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to an upper bound for `xy`.
+
+.. function:: void mag_add(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `x + y`.
+
+.. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `z + xy`.
+
+.. function:: void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
+
+    Sets *z* to an upper bound for `x + 2^e`.
+
+.. function:: void mag_div(mag_t z, const mag_t x, const mag_t y)
+
+.. function:: void mag_div_ui(mag_t z, const mag_t x, ulong y)
+
+.. function:: void mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to an upper bound for `x / y`.
+
+.. function:: void mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
+
+.. function:: void mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
+
+    Sets *z* to a lower bound for `xy`.
+
+.. function:: void mag_add_lower(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to a lower bound for `x + y`.
+
+Fast, unsafe arithmetic
+-------------------------------------------------------------------------------
+
+The following methods assume that all inputs are finite and that all exponents
+(in all inputs as well as the final result) fit as *fmpz* inline values.
+They also assume that the output variables do not have promoted exponents,
+as they will be overwritten directly (thus leaking memory).
+
+.. function:: void mag_fast_init_set(mag_t x, const mag_t y)
+
+    Initialises *x* and sets it to the value of *y*.
+
+.. function:: void mag_fast_zero(mag_t x)
+
+    Sets *x* to zero.
+
+.. function:: int mag_fast_is_zero(const mag_t x)
+
+    Returns nonzero iff *x* to zero.
+
+.. function:: void mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `xy`.
+
+.. function:: void mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `z + xy`.
+
+.. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
+
+    Sets *z* to an upper bound for `x + 2^e`.
+
+Powers and logarithms
+-------------------------------------------------------------------------------
+
+.. function:: void mag_pow_ui(mag_t z, const mag_t x, ulong e)
+
+.. function:: void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
+
+    Sets *z* to an upper bound for `x^e`. Requires `e \ge 0`.
+
+.. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
+
+    Sets *z* to a lower bound for `x^e`.
+
+.. function:: void mag_sqrt(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\sqrt{x}`.
+
+.. function:: void mag_rsqrt(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `1/\sqrt{x}`.
 
 .. function:: void mag_log1p(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\log(1+x)`. The bound is computed
     accurately for small *x*.
+
+.. function:: void mag_exp(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\exp(x)`.
+
+Special functions
+-------------------------------------------------------------------------------
 
 .. function:: void mag_fac_ui(mag_t z, ulong n)
 
