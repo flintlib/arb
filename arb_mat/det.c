@@ -123,7 +123,7 @@ arb_mat_det_inplace(arb_t det, arb_mat_t A, long prec)
             arf_mul(d, d, t, MAG_BITS, ARF_RND_UP);
         }
 
-        arf_sqrt(d, d, MAG_BITS, FMPR_RND_UP);
+        arf_sqrt(d, d, MAG_BITS, ARF_RND_UP);
         arb_add_error_arf(b, d);
 
         arb_mul(det, det, b, prec);
