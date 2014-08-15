@@ -29,19 +29,6 @@
 #include "bernoulli.h"
 #include "hypgeom.h"
 
-/* TODO: move helper functions to the right modules */
-void acb_get_mag(mag_t z, const acb_t x);
-
-void
-acb_get_mag_lower(mag_t z, const acb_t x)
-{
-    arf_t t;
-    arf_init(t);
-    acb_get_abs_lbound_arf(t, x, MAG_BITS);
-    arf_get_mag_lower(z, t);
-    arf_clear(t);
-}
-
 /* tuning factor */
 #define GAMMA_STIRLING_BETA 0.27
 

@@ -474,6 +474,26 @@ int mag_cmp(const mag_t x, const mag_t y);
 
 int mag_cmp_2exp_si(const mag_t x, long e);
 
+/* TODO: document */
+static __inline__ void
+mag_min(mag_t z, const mag_t x, const mag_t y)
+{
+    if (mag_cmp(x, y) <= 0)
+        mag_set(z, x);
+    else
+        mag_set(z, y);
+}
+
+/* TODO: document */
+static __inline__ void
+mag_max(mag_t z, const mag_t x, const mag_t y)
+{
+    if (mag_cmp(x, y) >= 0)
+        mag_set(z, x);
+    else
+        mag_set(z, y);
+}
+
 static __inline__ mag_ptr
 _mag_vec_init(long n)
 {

@@ -182,6 +182,14 @@ Precision and comparisons
     Sets *u* to an upper bound for the error radius of *z* (the value
     is currently not computed tightly).
 
+.. function:: void acb_get_mag(mag_t u, const acb_t x)
+
+    Sets *u* to an upper bound for the absolute value of *x*.
+
+.. function:: void acb_get_mag_lower(mag_t u, const acb_t x)
+
+    Sets *u* to a lower bound for the absolute value of *x*.
+
 .. function:: int acb_contains_fmpq(const acb_t x, const fmpq_t y)
 
 .. function:: int acb_contains_fmpz(const acb_t x, const fmpz_t y)

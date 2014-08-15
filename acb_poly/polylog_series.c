@@ -26,34 +26,6 @@
 #include "acb_poly.h"
 
 /* TODO: move and document helper functions */
-
-void
-acb_get_mag(mag_t u, const acb_t z)
-{
-    if (arb_is_zero(acb_imagref(z)))
-    {
-        arb_get_mag(u, acb_realref(z));
-    }
-    else if (arb_is_zero(acb_realref(z)))
-    {
-        arb_get_mag(u, acb_imagref(z));
-    }
-    else
-    {
-        mag_t v;
-        mag_init(v);
-
-        arb_get_mag(u, acb_realref(z));
-        arb_get_mag(v, acb_imagref(z));
-
-        mag_mul(u, u, u);
-        mag_addmul(u, v, v);
-        mag_sqrt(u, u);
-
-        mag_clear(v);
-    }
-}
-
 void
 mag_log_ui(mag_t t, ulong n)
 {

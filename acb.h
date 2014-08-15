@@ -264,6 +264,10 @@ acb_add_error_mag(acb_t x, const mag_t err)
     arb_add_error_mag(acb_imagref(x), err);
 }
 
+void acb_get_mag(mag_t z, const acb_t x);
+
+void acb_get_mag_lower(mag_t z, const acb_t x);
+
 static __inline__ void
 acb_get_abs_ubound_arf(arf_t u, const acb_t z, long prec)
 {
