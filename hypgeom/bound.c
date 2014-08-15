@@ -243,27 +243,6 @@ mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
     }
 }
 
-double
-mag_get_d(const mag_t z)
-{
-    long exp;
-
-    if (mag_is_zero(z))
-        return 0.0;
-    else if (mag_is_inf(z))
-        return D_INF;
-
-    /* XXX: overflow/underflow properly */
-    exp = MAG_EXP(z);
-
-    if (exp < -1000)
-        return ldexp(1.0, -1000);
-    else if (exp > 1000)
-        return D_INF;
-    else
-        return ldexp(MAG_MAN(z), exp - MAG_BITS);
-}
-
 long
 hypgeom_bound(mag_t error, int r,
     long A, long B, long K, const mag_t TK, const mag_t z, long tol_2exp)

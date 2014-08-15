@@ -26,37 +26,37 @@
 #include "arb_mat.h"
 
 void
-arb_mat_bound_inf_norm(arf_t b, const arb_mat_t A, long prec)
+arb_mat_bound_inf_norm(mag_t b, const arb_mat_t A)
 {
     long i, j, r, c;
 
-    arf_t s, t;
+    mag_t s, t;
 
     r = arb_mat_nrows(A);
     c = arb_mat_ncols(A);
 
-    arf_zero(b);
+    mag_zero(b);
 
     if (r == 0 || c == 0)
         return;
 
-    arf_init(s);
-    arf_init(t);
+    mag_init(s);
+    mag_init(t);
 
     for (i = 0; i < r; i++)
     {
-        arf_zero(s);
+        mag_zero(s);
 
         for (j = 0; j < c; j++)
         {
-            arb_get_abs_ubound_arf(t, arb_mat_entry(A, i, j), prec);
-            arf_add(s, s, t, prec, ARF_RND_UP);
+            arb_get_mag(t, arb_mat_entry(A, i, j));
+            mag_add(s, s, t);
         }
 
-        arf_max(b, b, s);
+        mag_max(b, b, s);
     }
 
-    arf_clear(s);
-    arf_clear(t);
+    mag_clear(s);
+    mag_clear(t);
 }
 

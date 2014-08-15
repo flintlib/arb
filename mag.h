@@ -523,6 +523,9 @@ static __inline__ void mag_set_d(mag_t z, double x)
     fmpz_clear(e);
 }
 
+/* TODO: test/document */
+double mag_get_d(const mag_t z);
+
 /* TODO: document */
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);

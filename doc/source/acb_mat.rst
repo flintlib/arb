@@ -111,11 +111,10 @@ Special matrices
 Norms
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_bound_inf_norm(arf_t b, const acb_mat_t A, long prec)
+.. function:: void acb_mat_bound_inf_norm(mag_t b, const acb_mat_t A)
 
     Sets *b* to an upper bound for the infinity norm (i.e. the largest
-    absolute value row sum) of *A*, computed using floating-point arithmetic
-    at *prec* bits with all operations rounded up.
+    absolute value row sum) of *A*.
 
 
 Arithmetic

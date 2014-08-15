@@ -26,9 +26,7 @@
 #include "double_extras.h"
 #include "acb_mat.h"
 
-long _arb_mat_exp_choose_N(const arf_t norm, long prec);
-
-void _arb_mat_exp_bound(arf_t err, const arf_t norm, long N);
+long _arb_mat_exp_choose_N(const mag_t norm, long prec);
 
 /* evaluates the truncated Taylor series (assumes no aliasing) */
 void
@@ -123,7 +121,7 @@ void
 acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
 {
     long i, j, dim, wp, N, q, r;
-    arf_t norm, err;
+    mag_t norm, err;
     acb_mat_t T;
 
     dim = acb_mat_nrows(A);
@@ -146,39 +144,38 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
 
     wp = prec + 3 * FLINT_BIT_COUNT(prec);
 
-    arf_init(norm);
-    arf_init(err);
+    mag_init(norm);
+    mag_init(err);
     acb_mat_init(T, dim, dim);
 
-    acb_mat_bound_inf_norm(norm, A, MAG_BITS);
+    acb_mat_bound_inf_norm(norm, A);
 
-    if (arf_is_zero(norm))
+    if (mag_is_zero(norm))
     {
         acb_mat_one(B);
     }
     else
     {
-        r = arf_abs_bound_lt_2exp_si(norm);
         q = pow(wp, 0.25);  /* wanted magnitude */
 
-        if (r > 2 * wp)  /* too big */
+        if (mag_cmp_2exp_si(norm, 2 * wp) > 0) /* too big */
             r = 2 * wp;
-        else if (r < -q) /* tiny, no need to reduce */
+        else if (mag_cmp_2exp_si(norm, -q) < 0) /* tiny, no need to reduce */
             r = 0;
         else
-            r += q;  /* reduce to magnitude 2^(-r) */
+            r = FLINT_MAX(0, q + MAG_EXP(norm)); /* reduce to magnitude 2^(-r) */
 
         acb_mat_scalar_mul_2exp_si(T, A, -r);
-        arf_mul_2exp_si(norm, norm, -r);
+        mag_mul_2exp_si(norm, norm, -r);
 
         N = _arb_mat_exp_choose_N(norm, wp);
-        _arb_mat_exp_bound(err, norm, N);
+        mag_exp_tail(err, norm, N);
 
         _acb_mat_exp_taylor(B, T, N, wp);
 
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
-                acb_add_error_arf(acb_mat_entry(B, i, j), err);
+                acb_add_error_mag(acb_mat_entry(B, i, j), err);
 
         for (i = 0; i < r; i++)
         {
@@ -192,8 +189,8 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
                     acb_mat_entry(B, i, j), prec);
     }
 
-    arf_clear(norm);
-    arf_clear(err);
+    mag_clear(norm);
+    mag_clear(err);
     acb_mat_clear(T);
 }
 

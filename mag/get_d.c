@@ -19,58 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2014 Fredrik Johansson
 
 ******************************************************************************/
 
-#include <math.h>
 #include "double_extras.h"
-#include "hypgeom.h"
+#include "mag.h"
 
-#define LOG2 0.69314718055994530942
-#define EXP1 2.7182818284590452354
-
-static __inline__ double d_root(double x, int r)
+double
+mag_get_d(const mag_t z)
 {
-    if (r == 1)
-        return x;
-    if (r == 2)
-        return sqrt(x);
-    return pow(x, 1. / r);
-}
-
-long
-hypgeom_estimate_terms(const mag_t z, int r, long prec)
-{
-    double y, t;
-
-    t = mag_get_d(z);
-
-    if (t == 0)
-        return 1;
-
-    if (r == 0)
+    if (mag_is_zero(z))
     {
-        if (t >= 1)
-        {
-            printf("z must be smaller than 1\n");
-            abort();
-        }
-
-        y = (log(1-t) - prec * LOG2) / log(t) + 1;
+        return 0.0;
+    }
+    else if (mag_is_inf(z))
+    {
+        return D_INF;
+    }
+    else if (MAG_EXP(z) < -1000 || MAG_EXP(z) > 1000)
+    {
+        if (fmpz_sgn(MAG_EXPREF(z)) < 0)
+            return ldexp(1.0, -1000);
+        else
+            return D_INF;
     }
     else
     {
-        y = (prec * LOG2) / (d_root(t, r) * EXP1 * r);
-        y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
+        return ldexp(MAG_MAN(z), MAG_EXP(z) - MAG_BITS);
     }
-
-    if (y >= LONG_MAX / 2)
-    {
-        printf("error: series will converge too slowly\n");
-        abort();
-    }
-
-    return y;
 }
 

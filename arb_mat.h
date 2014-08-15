@@ -97,7 +97,7 @@ void arb_mat_one(arb_mat_t mat);
 
 /* Norms */
 
-void arb_mat_bound_inf_norm(arf_t b, const arb_mat_t A, long prec);
+void arb_mat_bound_inf_norm(mag_t b, const arb_mat_t A);
 
 /* Arithmetic */
 
