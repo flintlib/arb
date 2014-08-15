@@ -51,15 +51,7 @@ _arb_poly_pow_arb_series(arb_ptr h,
     {
         long e, hlen;
 
-        /* TODO: fixme */
-        {
-            fmpr_t t;
-            fmpr_init(t);
-            arf_get_fmpr(t, arb_midref(g));
-            e = fmpz_get_si(fmpr_manref(t)) << fmpz_get_ui(fmpr_expref(t));
-            fmpr_clear(t);
-        }
-
+        e = arf_get_si(arb_midref(g), ARF_RND_DOWN);
         hlen = poly_pow_length(flen, FLINT_ABS(e), len);
 
         if (e >= 0)

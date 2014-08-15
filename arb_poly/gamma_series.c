@@ -217,7 +217,7 @@ _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec
     /* use zeta values at small integers */
     if (arb_is_int(h) && (arf_cmpabs_ui(arb_midref(h), prec / 2) < 0))
     {
-        r = arf_get_si(arb_midref(h), FMPR_RND_DOWN);
+        r = arf_get_si(arb_midref(h), ARF_RND_DOWN);
 
         if (r <= 0)
         {

@@ -82,20 +82,20 @@ _acb_poly_evaluate2_rectangular(acb_t y, acb_t z, acb_srcptr poly,
 
     len -= 1;
     r = (len + m - 1) / m;
-    acb_mul_ui(z, poly + (r - 1) * m + 1, (r - 1) * m + 1, FMPR_PREC_EXACT);
+    acb_mul_ui(z, poly + (r - 1) * m + 1, (r - 1) * m + 1, ARF_PREC_EXACT);
     for (j = 1; (r - 1) * m + j < len; j++)
     {
-        acb_mul_ui(c, poly + (r - 1) * m + j + 1, (r - 1) * m + j + 1, FMPR_PREC_EXACT);
+        acb_mul_ui(c, poly + (r - 1) * m + j + 1, (r - 1) * m + j + 1, ARF_PREC_EXACT);
         acb_addmul(z, xs + j, c, prec);
     }
 
     for (i = r - 2; i >= 0; i--)
     {
-        acb_mul_ui(s, poly + i * m + 1, i * m + 1, FMPR_PREC_EXACT);
+        acb_mul_ui(s, poly + i * m + 1, i * m + 1, ARF_PREC_EXACT);
 
         for (j = 1; j < m; j++)
         {
-            acb_mul_ui(c, poly + i * m + j + 1, i * m + j + 1, FMPR_PREC_EXACT);
+            acb_mul_ui(c, poly + i * m + j + 1, i * m + j + 1, ARF_PREC_EXACT);
             acb_addmul(s, xs + j, c, prec);
         }
 

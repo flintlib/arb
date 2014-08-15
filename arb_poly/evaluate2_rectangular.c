@@ -82,20 +82,20 @@ _arb_poly_evaluate2_rectangular(arb_t y, arb_t z, arb_srcptr poly,
 
     len -= 1;
     r = (len + m - 1) / m;
-    arb_mul_ui(z, poly + (r - 1) * m + 1, (r - 1) * m + 1, FMPR_PREC_EXACT);
+    arb_mul_ui(z, poly + (r - 1) * m + 1, (r - 1) * m + 1, ARF_PREC_EXACT);
     for (j = 1; (r - 1) * m + j < len; j++)
     {
-        arb_mul_ui(c, poly + (r - 1) * m + j + 1, (r - 1) * m + j + 1, FMPR_PREC_EXACT);
+        arb_mul_ui(c, poly + (r - 1) * m + j + 1, (r - 1) * m + j + 1, ARF_PREC_EXACT);
         arb_addmul(z, xs + j, c, prec);
     }
 
     for (i = r - 2; i >= 0; i--)
     {
-        arb_mul_ui(s, poly + i * m + 1, i * m + 1, FMPR_PREC_EXACT);
+        arb_mul_ui(s, poly + i * m + 1, i * m + 1, ARF_PREC_EXACT);
 
         for (j = 1; j < m; j++)
         {
-            arb_mul_ui(c, poly + i * m + j + 1, i * m + j + 1, FMPR_PREC_EXACT);
+            arb_mul_ui(c, poly + i * m + j + 1, i * m + j + 1, ARF_PREC_EXACT);
             arb_addmul(s, xs + j, c, prec);
         }
 
