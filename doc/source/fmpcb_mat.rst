@@ -243,21 +243,3 @@ Gaussian elimination and solving
     determinant of the remaining submatrix is bounded using
     Hadamard's inequality.
 
-
-Special functions
--------------------------------------------------------------------------------
-
-.. function:: void fmpcb_mat_exp(fmpcb_mat_t B, const fmpcb_mat_t A, long prec)
-
-    Sets *B* to the exponential of the matrix *A*, defined by the Taylor series
-
-    .. math ::
-
-        \exp(A) = \sum_{k=0}^{\infty} \frac{A^k}{k!}.
-
-    The function is evaluated as `\exp(A/2^r)^{2^r}`, where `r` is chosen
-    to give rapid convergence of the Taylor series. The series is
-    evaluated using rectangular splitting.
-    If `\|A/2^r\| \le c` and `N \ge 2c`, we bound the entrywise error
-    when truncating the Taylor series before term `N` by `2 c^N / N!`.
-
