@@ -517,6 +517,8 @@ mag_exp(mag_t y, const mag_t x)
     mag_exp_maglim(y, x, 128);
 }
 
+void mag_exp_tail(mag_t z, const mag_t x, ulong N);
+
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e);

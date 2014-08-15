@@ -276,6 +276,10 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `\exp(x)`.
 
+.. function:: void mag_exp_tail(mag_t z, const mag_t x, ulong N)
+
+    Sets *z* to an upper bound for `\sum_{k=N}^{\infty} x^k / k!`.
+
 Special functions
 -------------------------------------------------------------------------------
 
