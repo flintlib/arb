@@ -72,7 +72,7 @@ arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec)
     arb_set(y, b);
 
     bits = fmpz_bits(e);
-    wp = FMPR_PREC_ADD(prec, bits);
+    wp = ARF_PREC_ADD(prec, bits);
 
     for (i = bits - 2; i >= 0; i--)
     {

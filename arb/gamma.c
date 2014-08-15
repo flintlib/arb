@@ -390,7 +390,7 @@ arb_gamma_stirling_eval(arb_t s, const arb_t z, long nterms, int digamma, long p
     {
         arb_mul(zinv2, zinv, zinv, prec);
 
-        z_mag = arf_get_d(arb_midref(logz), FMPR_RND_UP) * 1.44269504088896;
+        z_mag = arf_get_d(arb_midref(logz), ARF_RND_UP) * 1.44269504088896;
 
         for (k = nterms - 1; k >= 1; k--)
         {

@@ -39,7 +39,7 @@ acb_zeta(acb_t z, const acb_t s, long prec)
     acb_init(a);
     acb_one(a);
 
-    if (arf_sgn(fmprb_midref(acb_realref(s))) < 0)
+    if (arf_sgn(arb_midref(acb_realref(s))) < 0)
     {
         acb_t t, u, v;
         long wp = prec + 6;

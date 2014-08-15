@@ -71,7 +71,7 @@ int main()
         }
 
         if ((acc2 < FLINT_MIN(prec, acc1) - 10) &&
-                !(acc1 == -FMPR_PREC_EXACT && acc2 == -FMPR_PREC_EXACT))
+                !(acc1 == -ARF_PREC_EXACT && acc2 == -ARF_PREC_EXACT))
         {
             printf("FAIL: poor accuracy\n\n");
             printf("prec=%ld, acc1=%ld, acc2=%ld\n\n", prec, acc1, acc2);
