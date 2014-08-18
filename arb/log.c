@@ -276,7 +276,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
         p1 = w[wn-1] >> (FLINT_BITS - q1bits);
 
         /* Special case: covers logarithms of small integers */
-        if (wn == 1 && (w[wn-1] == p1 << (FLINT_BITS - q1bits)))
+        if (xn == 1 && (w[wn-1] == (p1 << (FLINT_BITS - q1bits))))
         {
             p2 = 0;
             flint_mpn_zero(t, wn);

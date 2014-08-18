@@ -116,85 +116,25 @@ atanh_bs(arb_t s, ulong p, ulong q, long prec)
     fmpz_clear(R);
 }
 
-/* Assumption: p/q <= 2 */
-static void
-atanh_rec(arb_t z, ulong p, ulong q, long prec)
+static int n_width(ulong k)
 {
-    fmpz_t u, t, s, p2, q2, r;
-    ulong k;
-    mp_limb_t err;
-
-    if (p == 0)
-    {
-        arb_zero(z);
-        return;
-    }
-
-    fmpz_init(u);
-    fmpz_init(t);
-    fmpz_init(s);
-    fmpz_init(p2);
-    fmpz_init(q2);
-    fmpz_init(r);
-
-    prec += 4 + FLINT_BIT_COUNT(prec);
-
-    /* precompute p^2, q^2 */
-    fmpz_set_ui(p2, p);
-    fmpz_mul_ui(p2, p2, p);
-    fmpz_set_ui(q2, q);
-    fmpz_mul_ui(q2, q2, q);
-
-    /* s = t = p / q */
-    fmpz_set_ui(t, p);
-    fmpz_mul_2exp(t, t, prec);
-    fmpz_tdiv_q_ui(t, t, q);
-    fmpz_set(s, t);
-
-    /* err(s) = 1 ulp */
-    err = 1;
-
-    k = 3;
-    while (!fmpz_is_zero(t))
-    {
-        /* t = t * p^2 / q^2 */
-        /* invariant: err(t) <= 2 */
-        fmpz_mul(t, t, p2);
-        fmpz_tdiv_q(t, t, q2);
-
-        /* err(u) <= 2 */
-        fmpz_tdiv_q_ui(u, t, k);
-
-        /* s = s + t, plus at most 2 ulp error */
-        fmpz_add(s, s, u);
-        err += 2;
-
-        k += 2;
-    }
-
-    /* The truncation error is less than twice
-       the first omitted term, i.e. less than 2*2 ulp */
-    err += 4;
-
-    arb_set_fmpz(z, s);
-    mag_set_ui(arb_radref(z), err);
-    arb_mul_2exp_si(z, z, -prec);
-
-    fmpz_clear(u);
-    fmpz_clear(t);
-    fmpz_clear(s);
-    fmpz_clear(p2);
-    fmpz_clear(q2);
-    fmpz_clear(r);
+    int a, b;
+    count_leading_zeros(a, k);
+    count_trailing_zeros(b, k);
+    return FLINT_BITS - a - b;
 }
 
 void
 arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec)
 {
-    if (prev >= 2 &&
-        (k + prev) > prev &&               /* no overflow */
-        (k - prev) < 0.25 * (k + prev) &&  /* rapid convergence */
-        k >= prev)
+    if (prev < 2 || prec < 600 ||
+        (prec < ARB_LOG_TAB2_PREC - 64 && n_width(k) <= ARB_LOG_TAB21_BITS + 1)
+        || k < prev || (k + prev) < prev ||
+        (k - prev) >= 0.25 * (k + prev))
+    {
+        arb_log_ui(s, k, prec);
+    }
+    else
     {
         arb_t t;
         ulong p, q;
@@ -210,19 +150,11 @@ arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec)
             q >>= 1;
         }
 
-        if (prec <= 256)
-            atanh_rec(t, p, q, prec);
-        else
-            atanh_bs(t, p, q, prec);
-
+        atanh_bs(t, p, q, prec);
         arb_mul_2exp_si(t, t, 1);
         arb_add(s, log_prev, t, prec);
 
         arb_clear(t);
-    }
-    else
-    {
-        arb_log_ui(s, k, prec);
     }
 }
 
