@@ -244,6 +244,11 @@ else
    echo "Invalid FLINT directory"
    exit 1
 fi
+
+if [ -d "${FLINT_INCLUDE_DIR}/flint" ]; then
+   FLINT_INCLUDE_DIR="${FLINT_INCLUDE_DIR}/flint"
+fi
+
 LIB_DIRS="${LIB_DIRS} ${FLINT_LIB_DIR}"
 INC_DIRS="${INC_DIRS} ${FLINT_INC_DIR}"
 LIBS="${LIBS} flint"
