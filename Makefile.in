@@ -159,14 +159,14 @@ endif
 
 install: library
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
-	mkdir -p $(DESTDIR)$(PREFIX)/include/arb
+	mkdir -p $(DESTDIR)$(PREFIX)/include
 	$(AT)if [ "$(ARB_SHARED)" -eq "1" ]; then \
 		cp $(ARB_LIB) $(DESTDIR)$(PREFIX)/lib; \
 	fi
 	$(AT)if [ "$(ARB_STATIC)" -eq "1" ]; then \
 		cp libarb.a $(DESTDIR)$(PREFIX)/lib; \
 	fi
-	cp $(HEADERS) $(DESTDIR)$(PREFIX)/include/arb
+	cp $(HEADERS) $(DESTDIR)$(PREFIX)/include
 	$(AT)if [ ! -z $(EXT_HEADERS) ]; then \
 		cp $(EXT_HEADERS) $(DESTDIR)$(PREFIX)/include; \
 	fi
