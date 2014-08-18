@@ -24,7 +24,6 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "gamma.h"
 #include "acb.h"
 #include "bernoulli.h"
 #include "hypgeom.h"

@@ -24,8 +24,6 @@
 ******************************************************************************/
 
 #include "arb_poly.h"
-#include "gamma.h"
-#include "zeta.h"
 
 long arf_get_si(const arf_t x, arf_rnd_t rnd);
 

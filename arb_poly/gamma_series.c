@@ -24,7 +24,6 @@
 ******************************************************************************/
 
 #include "arb_poly.h"
-#include "gamma.h"
 
 void arb_gamma_stirling_bound(mag_ptr err, const arb_t x, long k0, long knum, long n);
 

@@ -588,12 +588,7 @@ void _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly,
 /* Macros */
 
 
-/* FIXME: redefinition */
-#include "fmprb_poly.h"
-
-
 /* counts zero bits in the binary representation of e */
-/*
 static __inline__ int
 n_zerobits(mp_limb_t e)
 {
@@ -618,7 +613,6 @@ poly_pow_length(long poly_len, ulong exp, long trunc)
         return trunc;
     return FLINT_MIN(lo, trunc);
 }
-*/
 
 #ifndef NEWTON_INIT
 

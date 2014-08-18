@@ -27,7 +27,6 @@
 #define ELEFUN_H
 
 #include "fmprb.h"
-#include "fmprb_poly.h"
 #include "fmpz_extras.h"
 
 #ifdef __cplusplus

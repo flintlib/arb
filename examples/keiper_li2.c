@@ -4,7 +4,6 @@
 #include "arb.h"
 #include "acb.h"
 #include "arb_poly.h"
-#include "zeta.h"
 #include "profiler.h"
 
 void

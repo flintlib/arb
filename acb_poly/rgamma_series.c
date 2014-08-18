@@ -24,8 +24,6 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
-#include "gamma.h"
-#include "zeta.h"
 
 void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
     const acb_t x, int use_reflect, int digamma, long prec);

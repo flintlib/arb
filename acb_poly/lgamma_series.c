@@ -24,8 +24,6 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
-#include "gamma.h"
-#include "zeta.h"
 
 void
 _acb_log_rising_correct_branch(acb_t t,

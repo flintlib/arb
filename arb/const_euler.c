@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "zeta.h"
+#include "arb.h"
 #include "hypgeom.h"
 
 typedef struct

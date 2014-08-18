@@ -24,8 +24,6 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
-#include "gamma.h"
-#include "zeta.h"
 
 void acb_gamma_stirling_bound(mag_ptr err, const acb_t x, long k0, long knum, long n);
 

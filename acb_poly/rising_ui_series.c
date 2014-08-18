@@ -24,7 +24,6 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
-#include "gamma.h"
 
 static void
 _acb_poly_rising_ui_series_bsplit(acb_ptr res,
