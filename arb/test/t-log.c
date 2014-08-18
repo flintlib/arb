@@ -82,11 +82,58 @@ int main()
         mpfr_clear(t);
     }
 
+    /* compare with mpfr (higher precision) */
+    for (iter = 0; iter < 1000; iter++)
+    {
+        arb_t a, b;
+        fmpq_t q;
+        mpfr_t t;
+        long prec = 2 + n_randint(state, 6000);
+
+        arb_init(a);
+        arb_init(b);
+        fmpq_init(q);
+        mpfr_init2(t, prec + 7000);
+
+        do {
+            arb_randtest(a, state, 1 + n_randint(state, 6000), 10);
+        } while (arb_contains_nonpositive(a));
+
+        arb_randtest(b, state, 1 + n_randint(state, 6000), 10);
+        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
+
+        fmpq_get_mpfr(t, q, MPFR_RNDN);
+        mpfr_log(t, t, MPFR_RNDN);
+
+        arb_log(b, a, prec);
+
+        if (!arb_contains_mpfr(b, t))
+        {
+            printf("FAIL: containment\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            abort();
+        }
+
+        arb_log(a, a, prec);
+
+        if (!arb_equal(a, b))
+        {
+            printf("FAIL: aliasing\n\n");
+            abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        fmpq_clear(q);
+        mpfr_clear(t);
+    }
+
     /* test large numbers */
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, ab, lab, la, lb, lalb;
-        long prec = 2 + n_randint(state, 400);
+        long prec = 2 + n_randint(state, 6000);
 
         arb_init(a);
         arb_init(b);

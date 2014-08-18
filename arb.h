@@ -522,6 +522,7 @@ void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, long prec);
 void arb_pow(arb_t z, const arb_t x, const arb_t y, long prec);
 void arb_root(arb_t z, const arb_t x, ulong k, long prec);
 void arb_log(arb_t z, const arb_t x, long prec);
+void arb_log_arf(arb_t z, const arf_t x, long prec);
 void arb_log_ui(arb_t z, ulong x, long prec);
 void arb_log_fmpz(arb_t z, const fmpz_t x, long prec);
 void arb_exp(arb_t z, const arb_t x, long prec);
@@ -547,6 +548,7 @@ void arb_cosh(arb_t z, const arb_t x, long prec);
 void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec);
 void arb_tanh(arb_t y, const arb_t x, long prec);
 void arb_coth(arb_t y, const arb_t x, long prec);
+void arb_atan_arf(arb_t z, const arf_t x, long prec);
 void arb_atan(arb_t z, const arb_t x, long prec);
 void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec);
 void arb_asin(arb_t z, const arb_t x, long prec);
@@ -890,6 +892,22 @@ _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error,
 
 void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N, int alternating);
+
+#define ARB_LOG_TAB11_BITS 7
+#define ARB_LOG_TAB12_BITS 7
+#define ARB_LOG_TAB1_PREC 512
+#define ARB_LOG_TAB1_LIMBS (ARB_LOG_TAB1_PREC / FLINT_BITS)
+
+#define ARB_LOG_TAB21_BITS 5
+#define ARB_LOG_TAB22_BITS 5
+#define ARB_LOG_TAB2_PREC 4608
+#define ARB_LOG_TAB2_LIMBS (ARB_LOG_TAB2_PREC / FLINT_BITS)
+
+extern const mp_limb_t arb_log_tab11[1 << ARB_LOG_TAB11_BITS][ARB_LOG_TAB1_LIMBS];
+extern const mp_limb_t arb_log_tab12[1 << ARB_LOG_TAB12_BITS][ARB_LOG_TAB1_LIMBS];
+extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TAB2_LIMBS];
+extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
+extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
 
 #ifdef __cplusplus
 }

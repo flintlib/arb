@@ -112,7 +112,7 @@ arf_atan_via_mpfr(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
 
 int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
 
-static int
+int
 _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec)
 {
     long exp, exp_shift;
@@ -195,7 +195,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
         exp = ARF_EXP(x);
         negative = ARF_SGNBIT(x);
 
-        if (exp < -(prec/3) - 2 || exp > prec + 2)
+        if (exp < -(prec/2) - 2 || exp > prec + 2)
         {
             if (exp < 0)
                 arb_atan_eps(z, x, prec);
