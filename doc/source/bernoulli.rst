@@ -93,31 +93,6 @@ Bounding
     comfortably compute `B_n` exactly. It aborts if `n` is so large that
     internal overflow occurs.
 
-
-Computation of single Bernoulli numbers
--------------------------------------------------------------------------------
-
-.. function:: void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec)
-
-    Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
-    computed using the formula `B_{2n} = (-1)^{n+1} 2 (2n)! \zeta(2n) / (2 \pi)^n`.
-
-    To avoid potential infinite recursion, we explicitly call the
-    Euler product implementation of the zeta function.
-    We therefore assume that the precision is small
-    enough and `n` large enough for the Euler product to converge
-    rapidly (otherwise this function will effectively hang).
-
-.. function:: void bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec)
-
-    Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
-    computed by a division of the exact fraction if `B_n` is in
-    the global cache or the exact numerator roughly is larger than
-    *prec* bits, and using :func:`bernoulli_fmprb_ui_zeta`
-    otherwise. This function reads `B_n` from the global cache
-    if the number is already cached, but does not automatically extend
-    the cache by itself.
-
 .. function:: void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
 
     Sets *num* and *den* to the reduced numerator and denominator

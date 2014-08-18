@@ -60,8 +60,6 @@ Module documentation (extra modules for mathematical functions)
    hypgeom.rst
    partitions.rst
    elefun.rst
-   gamma.rst
-   zeta.rst
 
 Module documentation (Arb 1.x types)
 ::::::::::::::::::::::::::::::::::::
@@ -71,13 +69,6 @@ Module documentation (Arb 1.x types)
 
    fmpr.rst
    fmprb.rst
-   fmprb_poly.rst
-   fmprb_mat.rst
-   fmprb_calc.rst
-   fmpcb.rst
-   fmpcb_poly.rst
-   fmpcb_mat.rst
-   fmpcb_calc.rst
 
 Credits and references
 ::::::::::::::::::::::::

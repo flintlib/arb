@@ -23,9 +23,49 @@
 
 ******************************************************************************/
 
+#include "arith.h"
 #include "arb.h"
 
-void rising_difference_polynomial(fmpz * s, fmpz * c, ulong m);
+void
+rising_difference_polynomial(fmpz * s, fmpz * c, ulong m)
+{
+    long i, j, v;
+
+    fmpz_t t;
+    fmpz_init(t);
+
+    arith_stirling_number_1u_vec(s, m, m + 1);
+
+    /* Compute the first row */
+    for (i = 0; i < m; i++)
+    {
+        fmpz_set_ui(t, m);
+        fmpz_mul_ui(t, t, (i + 1));
+        fmpz_mul(c + i, s + (i + 1), t);
+
+        for (j = i + 2; j < m + 1; j++)
+        {
+            fmpz_mul_ui(t, t, m * j);
+            fmpz_divexact_ui(t, t, j - i);
+            fmpz_addmul(c + i, s + j, t);
+        }
+    }
+
+    /* Extend using recurrence and symmetry */
+    for (v = 1; v < m; v++)
+    {
+        for (i = v; i < m - v; i++)
+        {
+            fmpz_mul_ui(t, c + (v - 1) * m + (i + 1), i + 1);
+            fmpz_divexact_ui(c + v * m + i, t, v);
+        }
+
+        for (i = 0; i < v; i++)
+            fmpz_set(c + v * m + i, c + i * m + v);
+    }
+
+    fmpz_clear(t);
+}
 
 void
 arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec)

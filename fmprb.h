@@ -344,74 +344,15 @@ void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
 void fmprb_exp(fmprb_t z, const fmprb_t x, long prec);
 void fmprb_expm1(fmprb_t z, const fmprb_t x, long prec);
 
-void fmprb_sin(fmprb_t s, const fmprb_t x, long prec);
-void fmprb_cos(fmprb_t c, const fmprb_t x, long prec);
-void fmprb_sin_cos(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
-
-void fmprb_sin_pi(fmprb_t s, const fmprb_t x, long prec);
-void fmprb_cos_pi(fmprb_t c, const fmprb_t x, long prec);
-void fmprb_sin_cos_pi(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
-
-void fmprb_tan(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_cot(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_tan_pi(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_cot_pi(fmprb_t y, const fmprb_t x, long prec);
-
-void fmprb_sin_cos_pi_fmpq(fmprb_t s, fmprb_t c, const fmpq_t x, long prec);
-void fmprb_sin_pi_fmpq(fmprb_t s, const fmpq_t x, long prec);
-void fmprb_cos_pi_fmpq(fmprb_t c, const fmpq_t x, long prec);
-
-void _fmprb_sin_cos_pi_fmpq_algebraic(fmprb_t s, fmprb_t c, ulong p, ulong q, long prec);
-void _fmprb_sin_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec);
-void _fmprb_cos_pi_fmpq_algebraic(fmprb_t c, ulong p, ulong q, long prec);
-
-void fmprb_sinh(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_cosh(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_sinh_cosh(fmprb_t s, fmprb_t c, const fmprb_t x, long prec);
-void fmprb_tanh(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_coth(fmprb_t y, const fmprb_t x, long prec);
-
-void fmprb_atan(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_atan2(fmprb_t z, const fmprb_t b, const fmprb_t a, long prec);
-
-void fmprb_asin(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_acos(fmprb_t z, const fmprb_t x, long prec);
-
-void fmprb_fac_ui(fmprb_t x, ulong n, long prec);
-void fmprb_rising_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
-
-void fmprb_bin_ui(fmprb_t x, const fmprb_t n, ulong k, long prec);
-void fmprb_bin_uiui(fmprb_t x, ulong n, ulong k, long prec);
-
-void fmprb_fib_fmpz(fmprb_t f, const fmpz_t n, long prec);
-void fmprb_fib_ui(fmprb_t f, ulong n, long prec);
-
 void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
 void fmprb_const_pi(fmprb_t x, long prec);
 void fmprb_const_sqrt_pi(fmprb_t t, long prec);
 void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
 void fmprb_const_log2(fmprb_t s, long prec);
 void fmprb_const_log10(fmprb_t s, long prec);
-void fmprb_const_euler(fmprb_t s, long prec);
-void fmprb_const_catalan(fmprb_t s, long prec);
 void fmprb_const_e(fmprb_t s, long prec);
-void fmprb_const_khinchin(fmprb_t K, long prec);
-void fmprb_const_glaisher(fmprb_t y, long prec);
 
 void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-
-
-void fmprb_lgamma(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_rgamma(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_gamma(fmprb_t y, const fmprb_t x, long prec);
-void fmprb_gamma_fmpq(fmprb_t y, const fmpq_t x, long prec);
-void fmprb_gamma_fmpz(fmprb_t y, const fmpz_t x, long prec);
-
-void fmprb_digamma(fmprb_t y, const fmprb_t x, long prec);
-
-void fmprb_zeta(fmprb_t y, const fmprb_t s, long prec);
-void fmprb_zeta_ui(fmprb_t b, ulong n, long prec);
-void fmprb_bernoulli_ui(fmprb_t b, ulong n, long prec);
 
 static __inline__ void
 fmprb_print(const fmprb_t x)

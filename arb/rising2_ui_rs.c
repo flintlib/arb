@@ -25,7 +25,58 @@
 
 #include "arb.h"
 
-void _gamma_rf_bsplit(fmpz * A, ulong a, ulong b);
+
+
+void
+_gamma_rf_bsplit(fmpz * A, ulong a, ulong b)
+{
+    ulong n = b - a;
+
+    if (n == 0)
+    {
+        fmpz_one(A);
+    }
+    else if (n < 8)
+    {
+        ulong j, k;
+
+        fmpz_set_ui(A, a);
+        fmpz_one(A + 1);
+
+        for (j = 1; j < n; j++)
+        {
+            fmpz_one(A + j + 1);
+
+            for (k = j; k > 0; k--)
+            {
+                fmpz_mul_ui(A + k, A + k, a + j);
+                fmpz_add(A + k, A + k, A + k - 1);
+            }
+
+            fmpz_mul_ui(A, A, a + j);
+        }
+    }
+    else
+    {
+        ulong m = a + (b - a) / 2;
+        ulong w = m - a;
+        ulong v = b - m;
+
+        fmpz *t, *A1, *A2;
+
+        t = _fmpz_vec_init(w + v + 2);
+
+        A1 = t;
+        A2 = A1 + w + 1;
+
+        _gamma_rf_bsplit(A1, a, m);
+        _gamma_rf_bsplit(A2, m, b);
+
+        _fmpz_poly_mul(A, A2, v + 1, A1, w + 1);
+
+        _fmpz_vec_clear(t, w + v + 2);
+    }
+}
 
 void
 arb_rising2_ui_rs(arb_t u, arb_t v,
