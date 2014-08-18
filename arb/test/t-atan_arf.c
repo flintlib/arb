@@ -54,7 +54,7 @@ int main()
         arb_randtest_special(y2, state, 1 + n_randint(state, 9000), 200);
 
         if (n_randint(state, 2))
-            arf_add_ui(x, x, 1, 1 + n_randint(state, 9000), ARF_RND_DOWN);
+            arf_add_ui(x, x, 1, 2 + n_randint(state, 9000), ARF_RND_DOWN);
 
         arb_atan_arf(y1, x, prec1);
         arb_atan_arf(y2, x, prec2);
