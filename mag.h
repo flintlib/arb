@@ -558,27 +558,10 @@ void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 void mag_sqrt(mag_t y, const mag_t x);
 void mag_rsqrt(mag_t y, const mag_t x);
 
+void mag_set_ui(mag_t z, ulong x);
+void mag_set_ui_lower(mag_t z, ulong x);
+
 /* TODO: test functions below */
-static __inline__ void
-mag_set_ui(mag_t z, ulong x)
-{
-    fmpz_t man, exp;
-    fmpz_init_set_ui(man, x);
-    *exp = 0;
-    mag_set_fmpz_2exp_fmpz(z, man, exp);
-    fmpz_clear(man);
-}
-
-static __inline__ void
-mag_set_ui_lower(mag_t z, ulong x)
-{
-    fmpz_t man, exp;
-    fmpz_init_set_ui(man, x);
-    *exp = 0;
-    mag_set_fmpz_2exp_fmpz_lower(z, man, exp);
-    fmpz_clear(man);
-}
-
 static __inline__ void
 mag_set_ui_2exp_si(mag_t z, ulong v, long e)
 {
