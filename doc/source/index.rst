@@ -49,6 +49,7 @@ Algorithms and proofs
 
    constants.rst
    elementary.rst
+   gamma.rst
    polylogarithms.rst
 
 Module documentation (extra modules for mathematical functions)
