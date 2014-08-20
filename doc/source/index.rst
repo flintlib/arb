@@ -48,6 +48,7 @@ Algorithms and proofs
    :maxdepth: 1
 
    constants.rst
+   elementary.rst
    polylogarithms.rst
 
 Module documentation (extra modules for mathematical functions)
