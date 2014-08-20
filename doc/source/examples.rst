@@ -15,7 +15,7 @@ pi.c
 -------------------------------------------------------------------------------
 
 This program computes `\pi` to an accuracy of roughly *n* decimal digits
-by calling the :func:`fmprb_const_pi` function with a
+by calling the :func:`arb_const_pi` function with a
 working precision of roughly `n \log_2(10)` bits.
 
 Sample output, computing `\pi` to one million digits::
@@ -28,7 +28,7 @@ Sample output, computing `\pi` to one million digits::
 The program prints a decimal approximation of the computed ball,
 with the midpoint rounded to a number of decimal digits that can be
 passed as a second parameter to the program (default = 10).
-In the present implementation (see :func:`fmprb_printd`), the
+In the present implementation (see :func:`arb_printd`), the
 digits are not guaranteed to be correctly rounded.
 
 hilbert_matrix.c
@@ -41,7 +41,7 @@ entries are close to unit magnitude, the determinant `h_n`
 decreases superexponentially (nearly as `1/4^{n^2}`) as
 a function of *n*.
 This program automatically doubles the working precision
-until the ball computed for `h_n` by :func:`fmprb_mat_det`
+until the ball computed for `h_n` by :func:`arb_mat_det`
 does not contain zero.
 
 Sample output::
@@ -58,11 +58,6 @@ Sample output::
     success!
     cpu/wall(s): 9.06 9.095
     virt/peak/res/peak(MB): 55.52 55.52 35.50 35.50
-
-hilbert_matrix2.c
--------------------------------------------------------------------------------
-
-Like hilbert_matrix.c, but uses Arb 2.x types.
 
 keiper_li.c
 -------------------------------------------------------------------------------
@@ -117,17 +112,12 @@ Sample output::
     1000: 2.3260531616864664574065046940832238158044982041872 +/- 3.927e-08
     virt/peak/res/peak(MB): 170.18 294.69 7.51 7.51
 
-keiper_li2.c
--------------------------------------------------------------------------------
-
-Like keiper_li.c, but uses Arb 2.x types.
-
 real_roots.c
 -------------------------------------------------------------------------------
 
 This program isolates the roots of a function on the interval `(a,b)`
 (where *a* and *b* are input as double-precision literals)
-using the routines in the :ref:`fmprb_calc <fmprb-calc>` module.
+using the routines in the :ref:`arb_calc <arb-calc>` module.
 The program takes the following arguments::
 
     real_roots function a b [-refine d] [-verbose] [-maxdepth n] [-maxeval n] [-maxfound n] [-prec n]
@@ -237,16 +227,11 @@ but will never find all of them since there are infinitely many::
 Remark: the program always computes rigorous containing intervals
 for the roots, but the accuracy after refinement could be less than *d* digits.
 
-real_roots2.c
--------------------------------------------------------------------------------
-
-Like real_roots.c, but uses Arb 2.x types.
-
 poly_roots.c
 -------------------------------------------------------------------------------
 
 This program finds the complex roots of an integer polynomial
-by calling :func:`fmpcb_poly_find_roots` with increasing
+by calling :func:`acb_poly_find_roots` with increasing
 precision until the roots certainly have been isolated.
 The program takes the following arguments::
 
@@ -329,9 +314,4 @@ be done by verifying sign changes)::
     (1.9217732771442929056 + 1.0954360955079385542j)  +/-  (9.15e-123, 9.15e-123j)
     (1.9217732771442929056 + -1.0954360955079385542j)  +/-  (8.12e-123, 8.12e-123j)
     cpu/wall(s): 0.02 0.02
-
-poly_roots2.c
--------------------------------------------------------------------------------
-
-Like poly_roots.c, but uses Arb 2.x types.
 
