@@ -567,15 +567,22 @@ Powers and roots
 Exponentials and logarithms
 -------------------------------------------------------------------------------
 
-.. function:: void arb_log(arb_t z, const arb_t x, long prec)
-
 .. function:: void arb_log_ui(arb_t z, ulong x, long prec)
 
 .. function:: void arb_log_fmpz(arb_t z, const fmpz_t x, long prec)
 
-    Sets `z = \log(x)`. Error propagation is done using the following rule:
-    assuming `x = m \pm r` where `m > r \ge 0`, the error is largest at
-    `m - r`, and we have `\log(m) - \log(m-r) = \log(1 + r/(m-r))`.
+.. function:: void arb_log_arf(arb_t z, const arf_t x, long prec)
+
+.. function:: void arb_log(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \log(x)`.
+
+    At low to medium precision (up to about 4096 bits), :func:`arb_log_arf`
+    uses table-based argument reduction and fast Taylor series evaluation
+    via :func:`_arb_atan_taylor_rs`. At high precision, it falls back to MPFR.
+    The function :func:`arb_log` simply calls :func:`arb_log_arf` with
+    the midpoint as input, and separately adds the propagated error.
+    See :ref:`algorithmselem` for further remarks.
 
 .. function:: void arb_log_ui_from_prev(arb_t log_k1, ulong k1, arb_t log_k0, ulong k0, long prec)
 
@@ -606,7 +613,7 @@ Trigonometric functions
 
 .. function:: void arb_sin_cos(arb_t s, arb_t c, const arb_t x, long prec)
 
-    Sets `s = \sin x`, `c = \cos x`. Error propagation uses the rule
+    Sets `s = \sin(x)`, `c = \cos(x)`. Error propagation uses the rule
     `|\sin(m \pm r) - \sin(m)| \le \min(r,2)`.
 
 .. function:: void arb_sin_pi(arb_t s, const arb_t x, long prec)
@@ -615,15 +622,15 @@ Trigonometric functions
 
 .. function:: void arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, long prec)
 
-    Sets `s = \sin \pi x`, `c = \cos \pi x`.
+    Sets `s = \sin(\pi x)`, `c = \cos(\pi x)`.
 
 .. function:: void arb_tan(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \tan x = (\sin x) / (\cos y)`.
+    Sets `y = \tan(x) = \sin(x) / \cos(y)`.
 
 .. function:: void arb_cot(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \cot x = (\cos x) / (\sin y)`.
+    Sets `y = \cot(x) = \cos(x) / \sin(y)`.
 
 .. function:: void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
 
@@ -631,7 +638,7 @@ Trigonometric functions
 
 .. function:: void arb_cos_pi_fmpq(arb_t c, const fmpq_t x, long prec)
 
-    Sets `s = \sin \pi x`, `c = \cos \pi x` where `x` is a rational
+    Sets `s = \sin(\pi x)`, `c = \cos(\pi x)` where `x` is a rational
     number (whose numerator and denominator are assumed to be reduced).
     We first use trigonometric symmetries to reduce the argument to the
     octant `[0, 1/4]`. Then we either multiply by a numerical approximation
@@ -643,20 +650,27 @@ Trigonometric functions
 
 .. function:: void arb_tan_pi(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \tan \pi x`.
+    Sets `y = \tan(\pi x)`.
 
 .. function:: void arb_cot_pi(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \cot \pi x`.
+    Sets `y = \cot(\pi x)`.
 
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
+.. function:: void arb_atan_arf(arb_t z, const arf_t x, long prec)
+
 .. function:: void arb_atan(arb_t z, const arb_t x, long prec)
 
-    Sets `z = \tan^{-1} x`. Letting `d = \max(0, |m| - r)`,
-    the propagated error is bounded by `r / (1 + d^2)`
-    (this could be tightened).
+    Sets `z = \operatorname{atan}(x)`.
+
+    At low to medium precision (up to about 4096 bits), :func:`arb_atan_arf`
+    uses table-based argument reduction and fast Taylor series evaluation
+    via :func:`_arb_atan_taylor_rs`. At high precision, it falls back to MPFR.
+    The function :func:`arb_atan` simply calls :func:`arb_atan_arf` with
+    the midpoint as input, and separately adds the propagated error.
+    See :ref:`algorithmselem` for further remarks.
 
 .. function:: void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec)
 
@@ -667,13 +681,13 @@ Inverse trigonometric functions
 
 .. function:: void arb_asin(arb_t z, const arb_t x, long prec)
 
-    Sets `z = \sin^{-1} x = \tan^{-1}(x / \sqrt{1-x^2})`.
+    Sets `z = \operatorname{asin}(x) = \operatorname{atan}(x / \sqrt{1-x^2})`.
     If `x` is not contained in the domain `[-1,1]`, the result is an
     indeterminate interval.
 
 .. function:: void arb_acos(arb_t z, const arb_t x, long prec)
 
-    Sets `z = \cos^{-1} x = \pi/2 - \sin^{-1} x`.
+    Sets `z = \operatorname{acos}(x) = \pi/2 - \operatorname{asin}(x)`.
     If `x` is not contained in the domain `[-1,1]`, the result is an
     indeterminate interval.
 
@@ -686,21 +700,21 @@ Hyperbolic functions
 
 .. function:: void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
 
-    Sets `s = \sinh x`, `c = \cosh x`. If the midpoint of `x` is close
+    Sets `s = \sinh(x)`, `c = \cosh(x)`. If the midpoint of `x` is close
     to zero and the hyperbolic sine is to be computed,
     evaluates `(e^{2x}\pm1) / (2e^x)` via :func:`arb_expm1`
     to avoid loss of accuracy. Otherwise evaluates `(e^x \pm e^{-x}) / 2`.
 
 .. function:: void arb_tanh(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \tanh x = (\sinh x) / (\cosh x)`, evaluated
-    via :func:`arb_expm1` as `\tanh x = (e^{2x} - 1) / (e^{2x} + 1)` if
+    Sets `y = \tanh(x) = \sinh(x) / \cosh(x)`, evaluated
+    via :func:`arb_expm1` as `\tanh(x) = (e^{2x} - 1) / (e^{2x} + 1)` if
     the midpoint of `x` is negative and as
-    `\tanh x = (1 - e^{-2x}) / (1 + e^{-2x})` otherwise.
+    `\tanh(x) = (1 - e^{-2x}) / (1 + e^{-2x})` otherwise.
 
 .. function:: void arb_coth(arb_t y, const arb_t x, long prec)
 
-    Sets `y = \coth x = (\cosh x) / (\sinh x)`, evaluated using
+    Sets `y = \coth(x) = \cosh(x) / \sinh(x)`, evaluated using
     the same strategy as :func:`arb_tanh`.
 
 Constants
@@ -972,4 +986,21 @@ Other special functions
 .. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
 
     Sets *z* to the arithmetic-geometric mean of *x* and *y*.
+
+Internal helper functions
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int alternating)
+
+.. function:: void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int alternating)
+
+    Computes an approximation of `y = \sum_{k=0}^{N-1} x^{2k+1} / (2k+1)`
+    (if *alternating* is 0) or `y = \sum_{k=0}^{N-1} (-1)^k x^{2k+1} / (2k+1)`
+    (if *alternating* is 1). Used internally for computing arctangents
+    and logarithms. The *naive* version uses the forward recurrence, and the
+    *rs* version uses a division-avoiding rectangular splitting scheme.
+
+    Requires `N \le 255`, `0 \le x \le 1/16`, and *xn* positive.
+    The input *x* and output *y* are fixed-point numbers with *xn* fractional
+    limbs. A bound for the ulp error is written to *error*.
 

@@ -1,4 +1,4 @@
-.. _algorithms_elementary:
+.. _algorithmselem:
 
 Algorithms for elementary functions
 ===============================================================================
