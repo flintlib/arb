@@ -30,8 +30,19 @@ acb_printd(const acb_t z, long digits)
 {
     printf("(");
     arf_printd(arb_midref(acb_realref(z)), digits);
-    printf(" + ");
-    arf_printd(arb_midref(acb_imagref(z)), digits);
+
+    if (arf_sgn(arb_midref(acb_imagref(z))) < 0)
+    {
+        arf_t t;
+        arf_init_neg_shallow(t, arb_midref(acb_imagref(z)));
+        printf(" - ");
+        arf_printd(t, digits);
+    }
+    else
+    {
+        printf(" + ");
+        arf_printd(arb_midref(acb_imagref(z)), digits);
+    }
     printf("j)");
 
     printf("  +/-  ");
