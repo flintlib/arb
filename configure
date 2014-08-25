@@ -245,8 +245,8 @@ else
    exit 1
 fi
 
-if [ -d "${FLINT_INCLUDE_DIR}/flint" ]; then
-   FLINT_INCLUDE_DIR="${FLINT_INCLUDE_DIR}/flint"
+if [ -d "${FLINT_INC_DIR}/flint" ]; then
+   FLINT_INC_DIR="${FLINT_INC_DIR}/flint"
 fi
 
 LIB_DIRS="${LIB_DIRS} ${FLINT_LIB_DIR}"
