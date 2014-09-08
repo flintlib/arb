@@ -893,6 +893,8 @@ _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error,
 void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N, int alternating);
 
+/* logarithm implementation */
+
 #define ARB_LOG_TAB11_BITS 7
 #define ARB_LOG_TAB12_BITS 7
 #define ARB_LOG_TAB1_PREC 512
@@ -908,6 +910,10 @@ extern const mp_limb_t arb_log_tab12[1 << ARB_LOG_TAB12_BITS][ARB_LOG_TAB1_LIMBS
 extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TAB2_LIMBS];
 extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
 extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
+
+/* exponential implementation */
+
+void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one);
 
 #ifdef __cplusplus
 }
