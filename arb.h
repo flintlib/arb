@@ -913,6 +913,30 @@ extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
 
 /* exponential implementation */
 
+/* only goes up to log(2) * 256 */
+#define ARB_EXP_TAB1_NUM 178
+#define ARB_EXP_TAB1_BITS 8
+#define ARB_EXP_TAB1_PREC 512
+#define ARB_EXP_TAB1_LIMBS (ARB_EXP_TAB1_PREC / FLINT_BITS)
+
+/* only goes up to log(2) * 32 */
+#define ARB_EXP_TAB21_NUM 23
+#define ARB_EXP_TAB21_BITS 5
+#define ARB_EXP_TAB22_NUM (1 << ARB_EXP_TAB22_BITS)
+#define ARB_EXP_TAB22_BITS 5
+#define ARB_EXP_TAB2_PREC 4608
+#define ARB_EXP_TAB2_LIMBS (ARB_EXP_TAB2_PREC / FLINT_BITS)
+
+extern const mp_limb_t arb_exp_tab1[ARB_EXP_TAB1_NUM][ARB_EXP_TAB1_LIMBS];
+extern const mp_limb_t arb_exp_tab21[ARB_EXP_TAB21_NUM][ARB_EXP_TAB2_LIMBS];
+extern const mp_limb_t arb_exp_tab22[ARB_EXP_TAB22_NUM][ARB_EXP_TAB2_LIMBS];
+
+void _arb_exp_taylor_naive(mp_ptr y, mp_limb_t * error,
+    mp_srcptr x, mp_size_t xn, ulong N);
+
+void _arb_exp_taylor_rs(mp_ptr y, mp_limb_t * error,
+    mp_srcptr x, mp_size_t xn, ulong N);
+
 void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one);
 
 #ifdef __cplusplus
