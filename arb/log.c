@@ -281,6 +281,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
             p2 = 0;
             flint_mpn_zero(t, wn);
             used_taylor_series = 0;
+            N = r = 0; /* silence compiler warning */
         }
         else
         {
