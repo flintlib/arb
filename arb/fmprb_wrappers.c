@@ -45,23 +45,3 @@ void arb_root(arb_t z, const arb_t x, ulong k, long prec)
     fmprb_clear(t);
 }
 
-void arb_exp(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_exp(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
-void arb_expm1(arb_t z, const arb_t x, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_expm1(t, t, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-
