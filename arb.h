@@ -942,6 +942,34 @@ void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one);
 int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
                                                 const arf_t x, mp_size_t wn);
 
+/* sin/cos implementation */
+
+/* only goes up to (pi/4) * 256 */
+#define ARB_SIN_COS_TAB1_NUM 203
+#define ARB_SIN_COS_TAB1_BITS 8
+#define ARB_SIN_COS_TAB1_PREC 512
+#define ARB_SIN_COS_TAB1_LIMBS (ARB_SIN_COS_TAB1_PREC / FLINT_BITS)
+
+/* only goes up to log(2) * 32 */
+#define ARB_SIN_COS_TAB21_NUM 26
+#define ARB_SIN_COS_TAB21_BITS 5
+#define ARB_SIN_COS_TAB22_NUM (1 << ARB_SIN_COS_TAB22_BITS)
+#define ARB_SIN_COS_TAB22_BITS 5
+#define ARB_SIN_COS_TAB2_PREC 2560
+#define ARB_SIN_COS_TAB2_LIMBS (ARB_SIN_COS_TAB2_PREC / FLINT_BITS)
+
+#define ARB_PI4_TAB_LIMBS (4608 / FLINT_BITS)
+extern const mp_limb_t arb_pi4_tab[ARB_PI4_TAB_LIMBS];
+
+void _arb_sin_cos_taylor_naive(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error,
+    mp_srcptr x, mp_size_t xn, ulong N);
+
+void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
+    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N);
+
+int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
+    mp_limb_t * error, const arf_t x, mp_size_t wn);
+
 #ifdef __cplusplus
 }
 #endif
