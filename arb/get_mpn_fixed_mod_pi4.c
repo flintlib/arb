@@ -51,6 +51,37 @@ _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
             fmpz_zero(q);
         return 1;
     }
+    else if (exp == 0)
+    {
+        mp_srcptr dp;
+
+        if (wn > ARB_PI4_TAB_LIMBS)
+            return 0;
+
+        flint_mpn_zero(w, wn);
+        *error = _arf_get_integer_mpn(w, xp, xn, exp + wn * FLINT_BITS);
+
+        dp = arb_pi4_tab + ARB_PI4_TAB_LIMBS - wn;
+
+        if (mpn_cmp(w, dp, wn) < 0)
+        {
+            *octant = 0;
+            if (q != NULL)
+                fmpz_zero(q);
+        }
+        else
+        {
+            *octant = 1;
+            if (q != NULL)
+                fmpz_one(q);
+
+            mpn_sub_n(w, w, dp, wn);
+            mpn_sub_n(w, dp, w, wn);
+            *error += 2;
+        }
+
+        return 1;
+    }
     else
     {
         mp_ptr qp, rp, np;

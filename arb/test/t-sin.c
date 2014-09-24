@@ -40,16 +40,22 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec = 2 + n_randint(state, 200);
+        long prec0, prec;
+
+        prec0 = 400;
+        if (iter % 100 == 0)
+            prec0 = 8000;
+
+        prec = 2 + n_randint(state, prec0);
 
         arb_init(a);
         arb_init(b);
         fmpq_init(q);
-        mpfr_init2(t, prec + 100);
+        mpfr_init2(t, prec0 + 100);
 
-        arb_randtest(a, state, 1 + n_randint(state, 200), 3);
-        arb_randtest(b, state, 1 + n_randint(state, 200), 3);
-        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
+        arb_randtest(a, state, 1 + n_randint(state, prec0), 6);
+        arb_randtest(b, state, 1 + n_randint(state, prec0), 6);
+        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, prec0));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
         mpfr_sin(t, t, MPFR_RNDN);
@@ -79,20 +85,33 @@ int main()
     }
 
     /* check large arguments */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 1000000; iter++)
     {
         arb_t a, b, c, d;
-        long prec1, prec2;
+        long prec0, prec1, prec2, prec3;
 
-        prec1 = 2 + n_randint(state, 1000);
-        prec2 = prec1 + 30;
+        if (iter % 10 == 0)
+            prec0 = 10000;
+        else
+            prec0 = 1000;
+
+        prec1 = 2 + n_randint(state, prec0);
+        prec2 = 2 + n_randint(state, prec0);
+
+        if (iter % 10 == 0)
+            prec3 = 50000;
+        else
+            prec3 = 100;
 
         arb_init(a);
         arb_init(b);
         arb_init(c);
         arb_init(d);
 
-        arb_randtest_precise(a, state, 1 + n_randint(state, 1000), 100);
+        arb_randtest_special(a, state, 1 + n_randint(state, prec0), prec0);
+        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
+        arb_randtest_special(c, state, 1 + n_randint(state, prec0), 100);
+        arb_randtest_special(d, state, 1 + n_randint(state, prec0), 100);
 
         arb_sin(b, a, prec1);
         arb_sin(c, a, prec2);
