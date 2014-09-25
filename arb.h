@@ -445,7 +445,13 @@ int arb_contains(const arb_t x, const arb_t y);
 
 void arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x);
 int arb_get_unique_fmpz(fmpz_t z, const arb_t x);
+
 void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec);
+void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, long prec);
+
+void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, long prec);
+void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x);
+
 void arb_union(arb_t z, const arb_t x, const arb_t y, long prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, long bits);
 

@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -30,38 +30,46 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("get_interval_arf....");
+    printf("set_interval_mpfr....");
     fflush(stdout);
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        arb_t x, y;
+        arb_t x;
         arf_t a, b;
+        mpfr_t aa, bb;
 
         arb_init(x);
         arf_init(a);
         arf_init(b);
-        arb_init(y);
+        mpfr_init2(aa, 200);
+        mpfr_init2(bb, 200);
 
-        arb_randtest_special(x, state, 200, 100);
-        arb_get_interval_arf(a, b, x, 2 + n_randint(state, 200));
-        arb_set_interval_arf(y, a, b, 2 + n_randint(state, 200));
+        arf_randtest_special(a, state, 200, 10);
+        arf_randtest_special(b, state, 200, 10);
+        if (arf_cmp(a, b) > 0)
+            arf_swap(a, b);
 
-        if (!arb_contains(y, x))
+        arf_get_mpfr(aa, a, MPFR_RNDD);
+        arf_get_mpfr(bb, b, MPFR_RNDU);
+
+        arb_set_interval_mpfr(x, aa, bb, 2 + n_randint(state, 200));
+
+        if (!arb_contains_arf(x, a) || !arb_contains_arf(x, b))
         {
             printf("FAIL:\n\n");
             printf("x = "); arb_print(x); printf("\n\n");
             printf("a = "); arf_print(a); printf("\n\n");
             printf("b = "); arf_print(b); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
             abort();
         }
 
         arb_clear(x);
         arf_clear(a);
         arf_clear(b);
-        arb_clear(y);
+        mpfr_clear(aa);
+        mpfr_clear(bb);
     }
 
     flint_randclear(state);

@@ -238,8 +238,17 @@ Radius and interval operations
 
 .. function:: void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
 
+.. function:: void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, long prec)
+
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
+
+.. function:: void arb_get_interval_arf(mpfr_t a, mpfr_t b, const arb_t x, long prec)
+
+.. function:: void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x)
+
+    Constructs an interval `[a, b]` containing the ball *x*. The MPFR version
+    uses the precision of the output variables.
 
 .. function:: long arb_rel_error_bits(const arb_t x)
 

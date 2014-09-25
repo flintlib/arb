@@ -30,38 +30,38 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("get_interval_arf....");
+    printf("get_interval_mpfr....");
     fflush(stdout);
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t x, y;
-        arf_t a, b;
+        mpfr_t aa, bb;
 
         arb_init(x);
-        arf_init(a);
-        arf_init(b);
         arb_init(y);
+        mpfr_init2(aa, 2 + n_randint(state, 200));
+        mpfr_init2(bb, 2 + n_randint(state, 200));
 
-        arb_randtest_special(x, state, 200, 100);
-        arb_get_interval_arf(a, b, x, 2 + n_randint(state, 200));
-        arb_set_interval_arf(y, a, b, 2 + n_randint(state, 200));
+        arb_randtest_special(x, state, 200, 10);
+        arb_get_interval_mpfr(aa, bb, x);
+        arb_set_interval_mpfr(y, aa, bb, 2 + n_randint(state, 200));
 
         if (!arb_contains(y, x))
         {
             printf("FAIL:\n\n");
             printf("x = "); arb_print(x); printf("\n\n");
-            printf("a = "); arf_print(a); printf("\n\n");
-            printf("b = "); arf_print(b); printf("\n\n");
+            printf("aa = "); mpfr_printf("%.50Rg", aa); printf("\n\n");
+            printf("bb = "); mpfr_printf("%.50Rg", bb); printf("\n\n");
             printf("y = "); arb_print(y); printf("\n\n");
             abort();
         }
 
         arb_clear(x);
-        arf_clear(a);
-        arf_clear(b);
         arb_clear(y);
+        mpfr_clear(aa);
+        mpfr_clear(bb);
     }
 
     flint_randclear(state);

@@ -25,31 +25,16 @@
 
 #include "arb.h"
 
-/* [(a + b) +/- (b - a)] / 2 */
-
 void
-arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
+arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x)
 {
-    arf_t t;
-    int inexact;
-
+    arf_t r, t;
     arf_init(t);
-    arf_sub(t, b, a, MAG_BITS, ARF_RND_UP);
-
-    if (arf_sgn(t) < 0)
-    {
-        printf("exception: arb_set_interval_arf: endpoints not ordered\n");
-        abort();
-    }
-
-    arf_get_mag(arb_radref(x), t);
-
-    inexact = arf_add(arb_midref(x), a, b, prec, ARB_RND);
-    if (inexact)
-        arf_mag_add_ulp(arb_radref(x), arb_radref(x), arb_midref(x), prec);
-
-    arb_mul_2exp_si(x, x, -1);
-
+    arf_init_set_mag_shallow(r, arb_radref(x));
+    arf_sub(t, arb_midref(x), r, mpfr_get_prec(a), ARF_RND_FLOOR);
+    arf_get_mpfr(a, t, MPFR_RNDD);
+    arf_add(t, arb_midref(x), r, mpfr_get_prec(b), ARF_RND_CEIL);
+    arf_get_mpfr(b, t, MPFR_RNDU);
     arf_clear(t);
 }
 
