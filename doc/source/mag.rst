@@ -107,6 +107,12 @@ Comparisons
     Returns negative, zero, or positive, depending on whether *x*
     is smaller, equal, or larger than `2^y`.
 
+.. function:: void mag_min(mag_t z, const mag_t x, const mag_t y)
+
+.. function:: void mag_max(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* respectively to the smaller or the larger of *x* and *y*.
+
 Input and output
 -------------------------------------------------------------------------------
 
@@ -275,6 +281,11 @@ Powers and logarithms
 .. function:: void mag_exp(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\exp(x)`.
+
+.. function:: void mag_expm1(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\exp(x) - 1`. The bound is computed
+    accurately for small *x*.
 
 .. function:: void mag_exp_tail(mag_t z, const mag_t x, ulong N)
 

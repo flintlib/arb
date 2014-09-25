@@ -474,7 +474,6 @@ int mag_cmp(const mag_t x, const mag_t y);
 
 int mag_cmp_2exp_si(const mag_t x, long e);
 
-/* TODO: document */
 static __inline__ void
 mag_min(mag_t z, const mag_t x, const mag_t y)
 {
@@ -484,7 +483,6 @@ mag_min(mag_t z, const mag_t x, const mag_t y)
         mag_set(z, y);
 }
 
-/* TODO: document */
 static __inline__ void
 mag_max(mag_t z, const mag_t x, const mag_t y)
 {
@@ -540,9 +538,7 @@ mag_exp(mag_t y, const mag_t x)
     mag_exp_maglim(y, x, 128);
 }
 
-/* TODO: document */
 void mag_expm1(mag_t y, const mag_t x);
-
 void mag_exp_tail(mag_t z, const mag_t x, ulong N);
 
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
