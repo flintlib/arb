@@ -1013,3 +1013,40 @@ Internal helper functions
     The input *x* and output *y* are fixed-point numbers with *xn* fractional
     limbs. A bound for the ulp error is written to *error*.
 
+.. function:: long _arb_exp_taylor_bound(long mag, long prec)
+
+    Returns *n* such that
+    `\left|\sum_{k=n}^{\infty} x^k / k!\right| \le 2^{-\mathrm{prec}}`,
+    assuming `|x| \le 2^{\mathrm{mag}} \le 1/4`.
+
+.. function:: void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int m1)
+
+    Computes the exponential function using the bit-burst algorithm.
+    If *m1* is nonzero, the exponential function minus one is computed
+    accurately.
+
+    Aborts if *x* is extremely small or large (where another algorithm
+    should be used).
+
+    For large *x*, repeated halving is used. In fact, we always
+    do argument reduction until `|x|` is smaller than about `2^{-d}`
+    where `d \approx 16` to speed up convergence. If `|x| \approx 2^m`,
+    we thus need about `m+d` squarings.
+
+    Computing `\log(2)` costs roughly 100-200 multiplications, so is not
+    usually worth the effort at very high precision. However, this function
+    could be improved by using `\log(2)` based reduction at precision low
+    enough that the value can be assumed to be cached.
+
+.. function:: void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+
+.. function:: void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+
+    Computes *T*, *Q* and *Qexp* such that
+    `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (x/2^r)^k/k!` using binary splitting.
+    Note that the sum is taken to *N* inclusive and omits the constant term.
+
+    The *powtab* version precomputes a table of powers of *x*,
+    resulting in slightly higher memory usage but better speed. For best
+    efficiency, *N* should have many trailing zero bits.
+

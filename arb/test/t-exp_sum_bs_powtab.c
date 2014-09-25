@@ -23,9 +23,7 @@
 
 ******************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "elefun.h"
+#include "arb.h"
 
 int main()
 {
@@ -54,11 +52,11 @@ int main()
         r = n_randint(state, 10);
         fmpz_randtest(x, state, 80);
 
-        elefun_exp_sum_bs_simple(T, Q, &Qexp, x, r, N);
+        _arb_exp_sum_bs_simple(T, Q, &Qexp, x, r, N);
         fmpq_set_fmpz_frac(S, T, Q);
         fmpq_div_2exp(S, S, Qexp);
 
-        elefun_exp_sum_bs_powtab(T, Q, &Qexp, x, r, N);
+        _arb_exp_sum_bs_powtab(T, Q, &Qexp, x, r, N);
         fmpq_set_fmpz_frac(V, T, Q);
         fmpq_div_2exp(V, V, Qexp);
 

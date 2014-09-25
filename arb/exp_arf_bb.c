@@ -24,7 +24,6 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "elefun.h"
 
 /*
 Determine N such that the error is bounded by 2^-prec when summing the
@@ -36,7 +35,7 @@ bs_num_terms(long mag, long prec)
 {
     long N;
 
-    N = elefun_exp_taylor_bound(mag, prec);
+    N = _arb_exp_taylor_bound(mag, prec);
     /* Convert from N exclusive to N inclusive. */
     N--;
 
@@ -134,7 +133,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one)
         /* Binary splitting (+1 fixed-point ulp truncation error). */
         mag = fmpz_bits(u) - r;
         N = bs_num_terms(mag, wp);
-        elefun_exp_sum_bs_powtab(T, Q, Qexp, u, r, N);
+        _arb_exp_sum_bs_powtab(T, Q, Qexp, u, r, N);
 
         /* T = T / Q  (+1 fixed-point ulp error). */
         if (*Qexp >= wp)

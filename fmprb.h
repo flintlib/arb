@@ -327,30 +327,7 @@ void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
 void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec);
 void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
 
-void fmprb_pow_fmpz_binexp(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec);
-void fmprb_pow_fmpz(fmprb_t y, const fmprb_t b, const fmpz_t e, long prec);
-void fmprb_pow_ui(fmprb_t y, const fmprb_t b, ulong e, long prec);
-void fmprb_ui_pow_ui(fmprb_t y, ulong b, ulong e, long prec);
-void fmprb_si_pow_ui(fmprb_t y, long b, ulong e, long prec);
-
-void fmprb_pow(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec);
-void fmprb_pow_fmpq(fmprb_t y, const fmprb_t x, const fmpq_t a, long prec);
-
-void fmprb_log(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_log_ui(fmprb_t z, ulong x, long prec);
-void fmprb_log_fmpz(fmprb_t z, const fmpz_t x, long prec);
-
-void fmprb_exp(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_expm1(fmprb_t z, const fmprb_t x, long prec);
-
-void fmprb_const_pi_chudnovsky(fmprb_t x, long prec);
-void fmprb_const_pi(fmprb_t x, long prec);
-void fmprb_const_sqrt_pi(fmprb_t t, long prec);
-void fmprb_const_log_sqrt2pi(fmprb_t t, long prec);
-void fmprb_const_log2(fmprb_t s, long prec);
-void fmprb_const_log10(fmprb_t s, long prec);
-void fmprb_const_e(fmprb_t s, long prec);
 
 void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 

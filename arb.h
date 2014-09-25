@@ -948,6 +948,14 @@ void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one);
 int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
                                                 const arf_t x, mp_size_t wn);
 
+long _arb_exp_taylor_bound(long mag, long prec);
+
+void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
+void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
 /* sin/cos implementation */
 
 /* only goes up to (pi/4) * 256 */

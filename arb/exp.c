@@ -31,8 +31,6 @@ int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
 
 int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
 
-long elefun_exp_taylor_bound(long mag, long prec);
-
 void
 arb_exp_arf_huge(arb_t z, const arf_t x, long prec, long mag, int minus_one)
 {
@@ -259,7 +257,7 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
 
         /* Choose number of terms N such that Taylor series truncation
            error is <= 2^-wp */
-        N = elefun_exp_taylor_bound(-r, wp);
+        N = _arb_exp_taylor_bound(-r, wp);
 
         /* Evaluate Taylor series */
         _arb_exp_taylor_rs(t, &error2, w, wn, N);

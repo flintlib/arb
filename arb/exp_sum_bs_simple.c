@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "elefun.h"
+#include "arb.h"
 
 static void
 bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
@@ -68,7 +68,7 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
 }
 
 void
-elefun_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+_arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     const fmpz_t x, mp_bitcnt_t r, long N)
 {
     fmpz_t P;

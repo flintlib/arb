@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "elefun.h"
+#include "arb.h"
 
 /* When splitting [a,b) into [a,m), [m,b), we need the power x^(m-a).
    This function computes all the exponents (m-a) that can appear when
@@ -199,7 +199,7 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 }
 
 void
-elefun_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+_arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     const fmpz_t x, mp_bitcnt_t r, long N)
 {
     long * xexp;

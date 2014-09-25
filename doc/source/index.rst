@@ -41,6 +41,16 @@ Module documentation (Arb 2.x types)
    acb_mat.rst
    acb_calc.rst
 
+Additional modules for mathematical functions
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   bernoulli.rst
+   hypgeom.rst
+   partitions.rst
+
 Algorithms and proofs
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -51,17 +61,6 @@ Algorithms and proofs
    elementary.rst
    gamma.rst
    polylogarithms.rst
-
-Module documentation (extra modules for mathematical functions)
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-.. toctree::
-   :maxdepth: 1
-
-   bernoulli.rst
-   hypgeom.rst
-   partitions.rst
-   elefun.rst
 
 Module documentation (Arb 1.x types)
 ::::::::::::::::::::::::::::::::::::

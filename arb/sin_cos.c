@@ -31,8 +31,6 @@ int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
 
 int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
 
-long elefun_exp_taylor_bound(long mag, long prec);
-
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))
 
 static void
@@ -296,7 +294,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
 
     /* Choose number of terms N such that Taylor series truncation
        error is <= 2^-wp */
-    N = elefun_exp_taylor_bound(-r, wp);
+    N = _arb_exp_taylor_bound(-r, wp);
 
     /* the summation for sin/cos is actually done to (2N-1)! */
     N = (N + 1) / 2;
