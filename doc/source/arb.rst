@@ -1013,6 +1013,50 @@ Internal helper functions
     The input *x* and output *y* are fixed-point numbers with *xn* fractional
     limbs. A bound for the ulp error is written to *error*.
 
+.. function:: void _arb_exp_taylor_naive(mp_ptr y, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
+
+.. function:: void _arb_exp_taylor_rs(mp_ptr y, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
+
+    Computes an approximation of `y = \sum_{k=0}^{N-1} x^k / k!`. Used internally
+    for computing exponentials. The *naive* version uses the forward recurrence,
+    and the *rs* version uses a division-avoiding rectangular splitting scheme.
+
+    Requires `N \le 287`, `0 \le x \le 1/16`, and *xn* positive.
+    The input *x* is a fixed-point number with *xn* fractional
+    limbs, and the output *y* is a fixed-point number with *xn* fractional
+    limbs plus one extra limb for the integer part of the result.
+
+    A bound for the ulp error is written to *error*.
+
+.. function:: void _arb_sin_cos_taylor_naive(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
+
+.. function:: void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
+
+    Computes approximations of `y_s = \sum_{k=0}^{N-1} (-1)^k x^{2k+1} / (2k+1)!`
+    and `y_c = \sum_{k=0}^{N-1} (-1)^k x^{2k} / (2k)!`.
+    Used internally for computing sines and cosines. The *naive* version uses
+    the forward recurrence, and the *rs* version uses a division-avoiding
+    rectangular splitting scheme.
+
+    Requires `N \le 143`, `0 \le x \le 1/16`, and *xn* positive.
+    The input *x* and outputs *ysin*, *ycos* are fixed-point numbers with
+    *xn* fractional limbs. A bound for the ulp error is written to *error*.
+
+.. function:: int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error, const arf_t x, mp_size_t wn)
+
+    Attempts to write `w = x - q \log(2)` with `0 \le w < \log(2)`, where *w*
+    is a fixed-point number with *wn* limbs and ulp error *error*.
+    Returns success.
+
+.. function:: int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant, mp_limb_t * error, const arf_t x, mp_size_t wn)
+
+    Attempts to write `w = |x| - q \pi/4` with `0 \le w < \pi/4`, where *w*
+    is a fixed-point number with *wn* limbs and ulp error *error*.
+    Returns success.
+
+    The value of *q* mod 8 is written to *octant*. The output variable *q*
+    can be NULL, in which case the full value of *q* is not stored.
+
 .. function:: long _arb_exp_taylor_bound(long mag, long prec)
 
     Returns *n* such that
