@@ -61,15 +61,15 @@ Here is an example program to get started using Arb:
 
 .. code-block:: c
 
-    #include "fmprb.h"
+    #include "arb.h"
 
     int main()
     {
-        fmprb_t x;
-        fmprb_init(x);
-        fmprb_const_pi(x, 50 * 3.33);
-        fmprb_printd(x, 50); printf("\n");
-        fmprb_clear(x);
+        arb_t x;
+        arb_init(x);
+        arb_const_pi(x, 50 * 3.33);
+        arb_printd(x, 50); printf("\n");
+        arb_clear(x);
     }
 
 Compile it with::

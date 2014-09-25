@@ -6,6 +6,20 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-09-25 - version 2.3.0
+
+  * removed most of the legacy (Arb 1.x) modules
+  * updated build scripts, hopefully fixing various issues
+  * new implementations of arb_sin, arb_cos, arb_sin_cos, arb_atan, arb_log, arb_exp, arb_expm1, much faster up to a few thousand bits
+  * ported the bit-burst code for high-precision exponentials to the arb type
+  * speeded up arb_log_ui_from_prev
+  * added mag_exp, mag_expm1, mag_exp_tail, mag_pow_fmpz
+  * improved various mag functions
+  * added arb_get/set_interval_mpfr, arb_get_interval_arf, and improved arb_set_interval_arf
+  * improved arf_get_fmpz
+  * prettier printing of complex numbers with negative imaginary part
+  * changed some frequently-used functions from inline to non-inline to reduce code size
+
 * 2014-08-01 - version 2.2.0
 
   * added functions for computing polylogarithms and order expansions

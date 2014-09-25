@@ -12,7 +12,7 @@ The polylogarithm is defined for `s, z \in \mathbb{C}` with `|z| < 1` by
 and for `|z| \ge 1` by analytic continuation, except for the singular
 point `z = 1`.
 
-Computation for small `z`
+Computation for small z
 -------------------------------------------------------------------------------
 
 The power sum converges rapidly when `|z| \ll 1`.
@@ -77,7 +77,7 @@ upper bound.
 To bound `B(m,n)` when `m` is large, it is useful to note that
 `B(m,n) = \exp(n \log(1+1/m)) \le \exp(n/m)`).
 
-Expansion for general `z`
+Expansion for general z
 -------------------------------------------------------------------------------
 
 For general complex `s, z`, we write the polylogarithm as a sum of
