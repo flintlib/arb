@@ -50,6 +50,7 @@ Additional modules for mathematical functions
    bernoulli.rst
    hypgeom.rst
    partitions.rst
+   acb_modular.rst
 
 Algorithms and proofs
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
