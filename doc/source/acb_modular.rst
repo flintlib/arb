@@ -82,6 +82,55 @@ Modular transformations
 
         w = g z = \frac{az+b}{cz+d}.
 
+.. function:: void acb_modular_fundamental_domain_approx_d(psl2z_t g, double x, double y, double one_minus_eps)
+
+.. function:: void acb_modular_fundamental_domain_approx_arf(psl2z_t g, const arf_t x, const arf_t y, const arf_t one_minus_eps, long prec)
+
+    Attempts to determine a modular transformation *g* that maps the
+    complex number `x+yi` to the fundamental domain or just
+    slightly outside the fundamental domain, where the target tolerance
+    (not a strict bound) is specified by *one_minus_eps*.
+
+    The inputs are assumed to be finite numbers, with *y* positive.
+
+    Uses floating-point iteration, repeatedly applying either
+    the transformation `z \gets z + b` or `z \gets -1/z`. The iteration is
+    terminated if `|x| \le 1/2` and `x^2 + y^2 \ge 1 - \varepsilon` where
+    `1 - \varepsilon` is passed as *one_minus_eps*. It is also terminated
+    if too many steps have been taken without convergence, or if the numbers
+    end up too large or too small for the working precision.
+
+    The algorithm can fail to produce a satisfactory transformation.
+    The output *g* is always set to *some* correct modular transformation,
+    but it is up to the user to verify a posteriori that *g* maps `x+yi`
+    close enough to the fundamental domain.
+
+.. function:: void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z, const arf_t one_minus_eps, long prec)
+
+    Attempts to determine a modular transformation *g* that maps the
+    complex number `z` to the fundamental domain or just
+    slightly outside the fundamental domain, where the target tolerance
+    (not a strict bound) is specified by *one_minus_eps*. It also computes
+    the transformed value `w = gz`.
+
+    This function first tries to use
+    :func:`acb_modular_fundamental_domain_approx_d` and checks if the
+    result is acceptable. If this fails, it calls
+    :func:`acb_modular_fundamental_domain_approx_arf` with higher precision.
+    Finally, `w = gz` is evaluated by a single application of *g*.
+
+    The algorithm can fail to produce a satisfactory transformation.
+    The output *g* is always set to *some* correct modular transformation,
+    but it is up to the user to verify a posteriori that `w` is close enough
+    to the fundamental domain.
+
+.. function:: int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, long prec)
+
+    Returns nonzero if it is certainly true that `|z| \ge 1 - \varepsilon` and 
+    `|\operatorname{Re}(z)| \le 1/2 + \varepsilon` where `\varepsilon` is
+    specified by *tol*. Returns zero if this is false or cannot be determined.
+
+
 The Dedekind eta function
 -------------------------------------------------------------------------------
 

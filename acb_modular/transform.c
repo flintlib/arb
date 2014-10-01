@@ -46,6 +46,24 @@ void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, long prec)
         acb_inv(w, w, prec);
         acb_neg(w, w);
     }
+    else if (0)
+    {
+        acb_t t, u;
+
+        acb_init(t);
+        acb_init(u);
+
+        acb_set_fmpz(t, b);
+        acb_addmul_fmpz(t, z, a, prec);
+
+        acb_set_fmpz(u, d);
+        acb_addmul_fmpz(u, z, c, prec);
+
+        acb_div(w, t, u, prec);
+
+        acb_clear(t);
+        acb_clear(u);
+    }
     else
     {
         /* (az+b)/(cz+d) = (re+im*i)/den where

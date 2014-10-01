@@ -118,6 +118,17 @@ void psl2z_randtest(psl2z_t g, flint_rand_t state, long bits);
 
 void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, long prec);
 
+void acb_modular_fundamental_domain_approx_d(psl2z_t g,
+    double x, double y, double one_minus_eps);
+
+void acb_modular_fundamental_domain_approx_arf(psl2z_t g,
+    const arf_t xx, const arf_t yy, const arf_t one_minus_eps, long prec);
+
+void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z,
+        const arf_t one_minus_eps, long prec);
+
+int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, long prec);
+
 #ifdef __cplusplus
 }
 #endif
