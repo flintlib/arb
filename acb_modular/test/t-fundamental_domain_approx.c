@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         fmpq_t x, y;
         psl2z_t g;
@@ -56,13 +56,13 @@ int main()
         arb_init(t);
 
         /* pick an exact point in the upper half plane */
-        fmpq_randtest(x, state, 1 + n_randint(state, 10));
+        fmpq_randtest(x, state, 1 + n_randint(state, 500));
         do {
-            fmpq_randtest(y, state, 1 + n_randint(state, 10));
+            fmpq_randtest(y, state, 1 + n_randint(state, 500));
         } while (fmpz_sgn(fmpq_numref(y)) <= 0);
 
         /* pick a tolerance */
-        arf_set_ui_2exp_si(tol, 1, -(long) n_randint(state, 10));
+        arf_set_ui_2exp_si(tol, 1, -(long) n_randint(state, 500));
 
         /* now increase the precision until convergence */
         for (prec = 32; ; prec *= 2)
