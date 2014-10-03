@@ -569,7 +569,7 @@ acb_div_fmpz(acb_t z, const acb_t x, const fmpz_t c, long prec)
     arb_div_fmpz(acb_imagref(z), acb_imagref(x), c, prec);
 }
 
-
+void acb_cube(acb_t y, const acb_t x, long prec);
 void acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec);
 void acb_pow_ui(acb_t y, const acb_t b, ulong e, long prec);
 void acb_pow_si(acb_t y, const acb_t b, long e, long prec);

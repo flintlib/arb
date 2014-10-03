@@ -30,16 +30,33 @@ acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, long prec)
 {
     long i, wp, bits;
 
-    if (-2L <= *e && *e <= 2L)
+    if (-2L <= *e && *e <= 4L)
     {
         if (*e == 0L)
+        {
             acb_one(y);
+        }
         else if (*e == 1L)
+        {
             acb_set_round(y, b, prec);
+        }
         else if (*e == -1L)
+        {
             acb_inv(y, b, prec);
+        }
         else if (*e == 2L)
+        {
             acb_mul(y, b, b, prec);
+        }
+        else if (*e == 3L)
+        {
+            acb_cube(y, b, prec);
+        }
+        else if (*e == 4L)
+        {
+            acb_mul(y, b, b, prec);
+            acb_mul(y, y, y, prec);
+        }
         else
         {
             acb_inv(y, b, prec);
@@ -56,6 +73,14 @@ acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, long prec)
         acb_pow_fmpz_binexp(y, b, f, prec + 2);
         acb_inv(y, y, prec);
         fmpz_clear(f);
+        return;
+    }
+
+    if (!COEFF_IS_MPZ(*e) && ((*e) % 3 == 0))
+    {
+        fmpz e3 = (*e) / 3;
+        acb_pow_fmpz_binexp(y, b, &e3, prec);
+        acb_cube(y, y, prec);
         return;
     }
 

@@ -286,6 +286,11 @@ Arithmetic
 
     Sets *z* to *x* multiplied by `2^e`, without rounding.
 
+.. function:: void acb_cube(acb_t z, const acb_t x, long prec)
+
+    Sets *z* to *x* cubed, computed efficiently using two real squarings,
+    two real multiplications, and scalar operations.
+
 .. function:: void acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec)
 
 .. function:: void acb_addmul_ui(acb_t z, const acb_t x, ulong y, long prec)
