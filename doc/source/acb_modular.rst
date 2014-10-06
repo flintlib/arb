@@ -136,10 +136,20 @@ The Dedekind eta function
 
 To be done
 
+.. function:: void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num)
+
+    Constructs an addition sequence for the first *num* generalized pentagonal
+    numbers (excluding zero), i.e. 1, 2, 5, 7, 12, 15, 22, 26, 35, 40 etc.
+
 Jacobi theta functions
 -------------------------------------------------------------------------------
 
 To be done
+
+.. function:: void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num)
+
+    Constructs an addition sequence for the first *num* squares and triangular
+    numbers interleaved (excluding zero), i.e. 1, 2, 4, 6, 9, 12, 16, 20, 25, 30 etc.
 
 Eisenstein series
 -------------------------------------------------------------------------------

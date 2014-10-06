@@ -129,6 +129,10 @@ void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z,
 
 int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, long prec);
 
+void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num);
+
+void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num);
+
 #ifdef __cplusplus
 }
 #endif

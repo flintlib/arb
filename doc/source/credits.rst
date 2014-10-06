@@ -39,6 +39,7 @@ The following software has been helpful in the development of Arb.
 * Mathematica (Wolfram Research), http://www.wolfram.com/mathematica
 * HolonomicFunctions (Christoph Koutschan), http://www.risc.jku.at/research/combinat/software/HolonomicFunctions/
 * Sphinx (George Brandl and others), http://sphinx.pocoo.org
+* CM (Andreas Enge), http://www.multiprecision.org/index.php?prog=cm
 
 Citing Arb
 -------------------------------------------------------------------------------
