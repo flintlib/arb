@@ -347,6 +347,10 @@ Elementary functions
     Sets *y* to the exponential function of *z*, computed as
     `\exp(a+bi) = \exp(a) \left( \cos(b) + \sin(b) i \right)`.
 
+.. function:: void acb_exp_pi_i(acb_t y, const acb_t z, long prec)
+
+    Sets *y* to `\exp(\pi i z)`.
+
 .. function:: void acb_sin(acb_t s, const acb_t z, long prec)
 
 .. function:: void acb_cos(acb_t c, const acb_t z, long prec)

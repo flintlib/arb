@@ -26,18 +26,21 @@
 #include "acb.h"
 
 void
-acb_exp(acb_t r, const acb_t z, long prec)
+acb_exp_pi_i(acb_t r, const acb_t z, long prec)
 {
 #define a acb_realref(z)
 #define b acb_imagref(z)
     if (arb_is_zero(b))
     {
-        arb_exp(acb_realref(r), a, prec);
-        arb_zero(acb_imagref(r));
+        arb_sin_cos_pi(acb_imagref(r), acb_realref(r), a, prec);
     }
     else if (arb_is_zero(a))
     {
-        arb_sin_cos(acb_imagref(r), acb_realref(r), b, prec);
+        arb_const_pi(acb_realref(r), prec);
+        arb_mul(acb_realref(r), acb_realref(r), b, prec);
+        arb_neg(acb_realref(r), acb_realref(r));
+        arb_exp(acb_realref(r), acb_realref(r), prec);
+        arb_zero(acb_imagref(r));
     }
     else
     {
@@ -47,8 +50,12 @@ acb_exp(acb_t r, const acb_t z, long prec)
         arb_init(u);
         arb_init(v);
 
-        arb_exp(t, a, prec);
-        arb_sin_cos(u, v, b, prec);
+        arb_const_pi(t, prec);
+        arb_mul(t, t, b, prec);
+        arb_neg(t, t);
+        arb_exp(t, t, prec);
+
+        arb_sin_cos_pi(u, v, a, prec);
 
         arb_mul(acb_realref(r), t, v, prec);
         arb_mul(acb_imagref(r), t, u, prec);
