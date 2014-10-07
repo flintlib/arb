@@ -133,6 +133,12 @@ void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, lo
 
 void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num);
 
+void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
+        acb_t theta3, acb_t theta4,
+    const acb_t w, int w_is_unit, const acb_t q, long prec);
+
+void acb_modular_j(acb_t z, const acb_t tau, long prec);
+
 #ifdef __cplusplus
 }
 #endif

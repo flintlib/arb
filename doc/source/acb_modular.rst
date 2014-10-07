@@ -130,29 +130,89 @@ Modular transformations
     `|\operatorname{Re}(z)| \le 1/2 + \varepsilon` where `\varepsilon` is
     specified by *tol*. Returns zero if this is false or cannot be determined.
 
-
-The Dedekind eta function
--------------------------------------------------------------------------------
-
-To be done
-
-.. function:: void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num)
-
-    Constructs an addition sequence for the first *num* generalized pentagonal
-    numbers (excluding zero), i.e. 1, 2, 5, 7, 12, 15, 22, 26, 35, 40 etc.
-
 Jacobi theta functions
 -------------------------------------------------------------------------------
-
-To be done
 
 .. function:: void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num)
 
     Constructs an addition sequence for the first *num* squares and triangular
     numbers interleaved (excluding zero), i.e. 1, 2, 4, 6, 9, 12, 16, 20, 25, 30 etc.
 
-Eisenstein series
+.. function:: void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t w, int w_is_unit, const acb_t q, long prec)
+
+    Simultaneously evaluates
+
+    .. math ::
+
+        q^{-1/4} \theta_1 = 2 \sum_{n=0}^{\infty} (-1)^n q^{n(n+1)} \sin((2n+1) \pi z)
+
+        q^{-1/4} \theta_2 = 2 \sum_{n=0}^{\infty} q^{n(n+1)} \cos((2n+1) \pi z)
+
+        \theta_3 = 1 + 2 \sum_{n=1}^{\infty} q^{n^2} \cos(2n \pi z)
+
+        \theta_4 = 1 + 2 \sum_{n=1}^{\infty} (-1)^n q^{n^2} \cos(2n \pi z)
+
+    given `w = \exp(\pi i z)` and `q = \exp(\pi i \tau)`.
+    If *w_is_unit* is nonzero, *w* is assumed to lie on the unit circle,
+    i.e. *z* is assumed to be real.
+
+    Note that the factor `q^{1/4}` is removed from `\theta_1` and `\theta_2`.
+    To get the true theta function values, the user has to multiply
+    this factor back. This convention avoids an unnecessary root extraction,
+    since the user can compute `q^{1/4} = \exp(\pi i \tau / 4)` followed by
+    `q = (q^{1/4})^4`, and in many cases when computing products or quotients
+    of theta functions, the factor `q^{1/4}` can be eliminated entirely.
+
+    This function is intended for `|q| \ll 1`. It can be called with any
+    `q`, but will return useless intervals if convergence is not rapid.
+    For general evaluation of theta functions, the user should only call
+    this function after applying a suitable modular transformation.
+
+    We consider the sums together, alternatingly updating `(\theta_1, \theta_2)`
+    or `(\theta_3, \theta_4)`. For `k = 0, 1, 2, \ldots`, the powers of `q`
+    are `\lfloor (k+2)^2 / 4 \rfloor = 1, 2, 4, 6, 9` etc. and the powers of `w` are
+    `\pm (k+2) = \pm 2, \pm 3, \pm 4, \ldots` etc.
+    For some integer `N \ge 1`, the summation is stopped just before term
+    `k = N`. The error can then be bounded as
+
+    .. math ::
+
+        \frac{2 |q|^E \max(|w|,|w^{-1}|)^{N+2}}{1 - |q|^{\lfloor (N+1)/2 \rfloor + 1} \max(|w|,|w^{-1}|)}
+
+    where `E = \lfloor (N+2)^2 / 4 \rfloor`, assuming that the denominator
+    is positive.
+    This is simply the bound for a geometric series, with the leading
+    factor 2 coming from the fact that we sum both negative and positive
+    powers of `w`.
+
+    To actually evaluate the series, when `w \ne 1`, we write the even
+    cosine terms as `w^{2n} + w^{-2n}`, the odd cosine terms as
+    `w (w^{2n} + w^{-2n-2})`, and the sine terms as `w (w^{2n} - w^{-2n-2})`.
+    This way we only need even powers of `w` and `w^{-1}`.
+    The implementation is not yet optimized for real `z`, in which case
+    further work can be saved.
+
+    This function does not permit aliasing between input and output
+    arguments.
+
+The Dedekind eta function
 -------------------------------------------------------------------------------
 
-To be done
+.. function:: void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num)
+
+    Constructs an addition sequence for the first *num* generalized pentagonal
+    numbers (excluding zero), i.e. 1, 2, 5, 7, 12, 15, 22, 26, 35, 40 etc.
+
+Modular forms
+-------------------------------------------------------------------------------
+
+.. function:: void acb_modular_j(acb_t r, const acb_t tau, long prec)
+
+    Computes Klein's j-invariant `j(\tau)` given `\tau` in the upper
+    half-plane. The function is normalized so that `j(i) = 1728`.
+    We first move `\tau` to the fundamental domain, which does not change
+    the value of the function. Then we use the formula
+    `j(\tau) = 32 (\theta_2^8 + \theta_3^8 + \theta_4^8)^3 / (\theta_2 \theta_3 \theta_4)^8`
+    where `\theta_k` is the respective theta constant evaluated at `\tau`.
+
 

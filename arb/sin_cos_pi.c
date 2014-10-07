@@ -32,6 +32,12 @@ arb_sin_pi(arb_t y, const arb_t x, long prec)
     arb_t u;
     fmpz_t v;
 
+    if (!arb_is_finite(x))
+    {
+        arb_indeterminate(y);
+        return;
+    }
+
     if (arf_cmpabs_2exp_si(arb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
     {
         arf_zero(arb_midref(y));
@@ -81,6 +87,12 @@ arb_cos_pi(arb_t y, const arb_t x, long prec)
     arb_t u;
     fmpz_t v;
 
+    if (!arb_is_finite(x))
+    {
+        arb_indeterminate(y);
+        return;
+    }
+
     if (arf_cmpabs_2exp_si(arb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
     {
         arf_zero(arb_midref(y));
@@ -129,6 +141,13 @@ arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, long prec)
     arb_t t;
     arb_t u;
     fmpz_t v;
+
+    if (!arb_is_finite(x))
+    {
+        arb_indeterminate(s);
+        arb_indeterminate(c);
+        return;
+    }
 
     if (arf_cmpabs_2exp_si(arb_midref(x), FLINT_MAX(65536, (4*prec))) > 0)
     {
