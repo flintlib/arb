@@ -104,6 +104,8 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
 
     if (w_is_one)
         acb_one(v);
+    else if (w_is_unit)
+        acb_conj(v, w);
     else
         acb_inv(v, w, prec);
 
