@@ -203,6 +203,39 @@ The Dedekind eta function
     Constructs an addition sequence for the first *num* generalized pentagonal
     numbers (excluding zero), i.e. 1, 2, 5, 7, 12, 15, 22, 26, 35, 40 etc.
 
+.. function:: void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec)
+
+    Evaluates the series expansion of the Dedekind eta function
+    without the leading 24th root, i.e.
+
+    .. math :: \exp(-\pi i \tau/24) \eta(\tau) = \sum_{n=-\infty}^{\infty} (-1)^n q^{(3n^2-n)/2}
+
+    given `q = \exp(2 \pi i \tau)`.
+
+    This function is intended for `|q| \ll 1`. It can be called with any
+    `q`, but will return useless intervals if convergence is not rapid.
+    For general evaluation of the eta functions, the user should only call
+    this function after applying a suitable modular transformation.
+
+.. function:: acb_modular_epsilon_arg(fmpq_t t, const psl2z_t g)
+
+    Given `g = (a, b; c, d)`, computes a rational number `t` such that
+    `\varepsilon(a,b,c,d) = \exp(\pi i t)` is the root of unity in
+    the transformation formula for the Dedekind eta function,
+
+    .. math ::
+
+        \eta\left(\frac{a\tau+b}{c\tau+d}\right) = \varepsilon (a,b,c,d)
+            \sqrt{c\tau+d} \eta(\tau).
+
+.. function:: void acb_modular_eta(acb_t r, const acb_t tau, long prec)
+
+    Computes the Dedekind eta function `\eta(\tau)` given `\tau` in the upper
+    half-plane. This function applies the functional equation to move
+    `\tau` to the fundamental domain before calling
+    :func:`acb_modular_eta_sum`.
+
+
 Modular forms
 -------------------------------------------------------------------------------
 

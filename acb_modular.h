@@ -139,6 +139,12 @@ void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
 
 void acb_modular_j(acb_t z, const acb_t tau, long prec);
 
+void acb_modular_epsilon_arg(fmpq_t arg, const psl2z_t g);
+
+void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec);
+
+void acb_modular_eta(acb_t z, const acb_t tau, long prec);
+
 #ifdef __cplusplus
 }
 #endif
