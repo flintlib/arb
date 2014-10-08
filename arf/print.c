@@ -55,3 +55,21 @@ arf_print(const arf_t x)
     }
 }
 
+void
+arf_printd(const arf_t x, long d)
+{
+    if (arf_is_finite(x) && (ARF_EXP(x) <= MPFR_EMIN_MIN + 1 ||
+                             ARF_EXP(x) >= MPFR_EMAX_MAX - 1))
+    {
+        arf_print(x);
+    }
+    else
+    {
+        fmpr_t t;
+        fmpr_init(t);
+        arf_get_fmpr(t, x);
+        fmpr_printd(t, d);
+        fmpr_clear(t);
+    }
+}
+
