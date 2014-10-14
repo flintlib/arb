@@ -48,8 +48,8 @@ fmpz_kronecker(const fmpz_t a, const fmpz_t b)
     }
 }
 
-void
-acb_modular_epsilon_arg(fmpq_t arg, const psl2z_t g)
+int
+acb_modular_epsilon_arg(const psl2z_t g)
 {
 #define a (&g->a)
 #define b (&g->b)
@@ -58,11 +58,11 @@ acb_modular_epsilon_arg(fmpq_t arg, const psl2z_t g)
 
     if (fmpz_is_zero(c))
     {
-        fmpz_set(fmpq_numref(arg), b);
+        return fmpz_fdiv_ui(b, 24);
     }
     else
     {
-        long aa, bb, cc, dd;
+        int aa, bb, cc, dd;
         int u;
 
         aa = fmpz_fdiv_ui(a, 24);
@@ -101,11 +101,9 @@ acb_modular_epsilon_arg(fmpq_t arg, const psl2z_t g)
         else
             aa = aa % 24;
 
-        fmpz_set_si(fmpq_numref(arg), aa);
+        return aa;
     }
 
-    fmpz_set_ui(fmpq_denref(arg), 12);
-    fmpq_canonicalise(arg);
 #undef a
 #undef b
 #undef c

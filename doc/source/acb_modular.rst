@@ -3,6 +3,30 @@
 **acb_modular.h** -- evaluation of modular forms in the complex numbers
 ===============================================================================
 
+This module provides functions for numerical evaluation of modular
+forms as well as the closely related Jacobi theta functions (and
+hopefully in the future also elliptic functions and integrals).
+
+In the context of this module, *tau* or `\tau` always denotes an
+element of the complex upper half-plane
+`\mathbb{H} = \{z \in \mathbb{C} : \operatorname{Im}(z) > 0\}`.
+The quantity *tau* is sometimes called the *half-period ratio*,
+since it may be viewed as the ratio `\tau = \omega_2 / \omega_1` of the
+half-periods `\omega_1, \omega_2` of an elliptic function.
+
+We also often use the *nome*, variously defined as `q = e^{2 \pi i \tau}`
+(usually in relation to modular forms) or `q = e^{\pi i \tau}` (usually
+in relation to theta functions) and satisfying `|q| < 1`.
+We will clarify the local meaning of `q` every time such a quantity appears as
+a function of `\tau`.
+
+As usual, the numerical functions in this module compute strict error
+bounds: if *tau* is represented by an :type:`acb_t` whose content
+overlaps with the real line (or lies in the lower half-plane),
+and *tau* is passed to a function defined only on `\mathbb{H}`, then
+the output will have an infinite radius. The analogous behavior holds for
+functions requiring `|q| < 1`.
+
 The modular group
 -------------------------------------------------------------------------------
 
@@ -40,6 +64,10 @@ The modular group
 .. function:: void psl2z_one(psl2z_t g)
 
     Sets *g* to the identity element.
+
+.. function:: int psl2z_is_one(const psl2z_t g)
+
+    Returns nonzero iff *g* is the identity element.
 
 .. function:: void psl2z_print(const psl2z_t g)
 
@@ -133,6 +161,112 @@ Modular transformations
 Jacobi theta functions
 -------------------------------------------------------------------------------
 
+Unfortunately, there are many inconsistent notational variations for
+Jacobi theta functions in the literature. Unless otherwise noted,
+we use the functions
+
+.. math ::
+
+    \theta_1(z,\tau) = -i \sum_{n=-\infty}^{\infty} (-1)^n \exp(\pi i [(n + 1/2)^2 \tau + (2n + 1) z])
+                     = 2 q_{1/4} \sum_{n=0}^{\infty} (-1)^n q^{n(n+1)} \sin((2n+1) \pi z)
+
+    \theta_2(z,\tau) = \sum_{n=-\infty}^{\infty} \exp(\pi i [(n + 1/2)^2 \tau + (2n + 1) z])
+                     = 2 q_{1/4} \sum_{n=0}^{\infty} q^{n(n+1)} \cos((2n+1) \pi z)
+
+    \theta_3(z,\tau) = \sum_{n=-\infty}^{\infty} \exp(\pi i [n^2 \tau + 2n z])
+                     = 1 + 2 \sum_{n=1}^{\infty} q^{n^2} \cos(2n \pi z)
+
+    \theta_4(z,\tau) = \sum_{n=-\infty}^{\infty} (-1)^n \exp(\pi i [n^2 \tau + 2n z])
+                     = 1 + 2 \sum_{n=1}^{\infty} (-1)^n q^{n^2} \cos(2n \pi z)
+
+where `q = \exp(\pi i \tau)` and `q_{1/4} = \exp(\pi i \tau / 4)`.
+Note that many authors write `q_{1/4}` as `q^{1/4}`,
+but the principal fourth root `(q)^{1/4} = \exp(\frac{1}{4} \log q)`
+differs from `q_{1/4}` in general and some formulas are
+only correct if one reads "`q^{1/4} = \exp(\pi i \tau / 4)`".
+To avoid confusion, we only write `q^k` when `k` is an integer.
+
+.. function:: void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g)
+
+    We wish to write a theta function with half-period ratio `\tau` in terms
+    of a theta function with half-period ratio `\tau' = g \tau`, given
+    some `g = (a, b; c, d) \in \text{PSL}(2, \mathbb{Z})`.
+    For `i = 0, 1, 2, 3`, this function computes integers `R_i` and `S_i`
+    (*R* and *S* should be arrays of length 4)
+    and `C \in \{0, 1\}` such that
+
+    .. math ::
+
+        \theta_{1+i}(z,\tau) = \exp(\pi i R_i / 4) \cdot A \cdot B \cdot \theta_{1+S_i}(z',\tau')
+
+    where `z' = z, A = B = 1` if `C = 0`, and
+
+    .. math ::
+
+        z' = \frac{-z}{c \tau + d}, \quad
+        A = \sqrt{\frac{i}{c \tau + d}}, \quad
+        B = \exp\left(-\pi i c \frac{z^2}{c \tau + d}\right)
+
+    if `C = 1`. Note that `A` is well-defined with the principal branch
+    of the square root since `A^2 = i/(c \tau + d)` lies in the right half-plane.
+
+    Firstly, if `c = 0`, we have
+    `\theta_i(z, \tau) = \exp(-\pi i b / 4) \theta_i(z, \tau+b)`
+    for `i = 1, 2`, whereas
+    `\theta_3` and `\theta_4` remain unchanged when `b` is even
+    and swap places with each other when `b` is odd.
+    In this case we set `C = 0`.
+
+    For an arbitrary `g` with `c > 0`, we set `C = 1`. The general
+    transformations are given by Rademacher [Rad1973]_.
+    We need the function `\theta_{m,n}(z,\tau)` defined for `m, n \in \mathbb{Z}` by
+    (beware of the typos in [Rad1973]_)
+
+    .. math ::
+
+        \theta_{0,0}(z,\tau) = \theta_3(z,\tau), \quad
+        \theta_{0,1}(z,\tau) = \theta_4(z,\tau)
+
+        \theta_{1,0}(z,\tau) = \theta_2(z,\tau), \quad
+        \theta_{1,1}(z,\tau) = i \theta_1(z,\tau)
+
+        \theta_{m+2,n}(z,\tau) = (-1)^n \theta_{m,n}(z,\tau)
+
+        \theta_{m,n+2}(z,\tau) = \theta_{m,n}(z,\tau).
+
+    Then we may write
+
+    .. math ::
+
+        \theta_1(z,\tau) = \varepsilon_1 A B \theta_1(z', \tau')
+
+        \theta_2(z,\tau) = \varepsilon_2 A B \theta_{1-c,1+a}(z', \tau')
+
+        \theta_3(z,\tau) = \varepsilon_3 A B \theta_{1+d-c,1-b+a}(z', \tau')
+
+        \theta_4(z,\tau) = \varepsilon_4 A B \theta_{1+d,1-b}(z', \tau')
+
+    where `\varepsilon_i` is an 8th root of unity.
+    Specifically, if we denote the 24th root of unity
+    in the transformation formula of the Dedekind eta
+    function by `\varepsilon(a,b,c,d) = \exp(\pi i R(a,b,c,d) / 12)`
+    (see :func:`acb_modular_epsilon_arg`), then:
+
+    .. math ::
+
+        \varepsilon_1(a,b,c,d) = \exp(\pi i [R(-d,b,c,-a) + 1] / 4)
+
+        \varepsilon_2(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (5+(2-c)a)] / 4)
+
+        \varepsilon_3(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (4+(c-d-2)(b-a))] / 4)
+
+        \varepsilon_4(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (3-(2+d)b)] / 4)
+
+    These formulas are easily derived from the formulas in [Rad1973]_
+    (Rademacher has the transformed/untransformed variables exchanged,
+    and his "`\varepsilon`" differs from ours by a constant
+    offset in the phase).
+
 .. function:: void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num)
 
     Constructs an addition sequence for the first *num* squares and triangular
@@ -140,28 +274,19 @@ Jacobi theta functions
 
 .. function:: void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t w, int w_is_unit, const acb_t q, long prec)
 
-    Simultaneously evaluates
-
-    .. math ::
-
-        q^{-1/4} \theta_1 = 2 \sum_{n=0}^{\infty} (-1)^n q^{n(n+1)} \sin((2n+1) \pi z)
-
-        q^{-1/4} \theta_2 = 2 \sum_{n=0}^{\infty} q^{n(n+1)} \cos((2n+1) \pi z)
-
-        \theta_3 = 1 + 2 \sum_{n=1}^{\infty} q^{n^2} \cos(2n \pi z)
-
-        \theta_4 = 1 + 2 \sum_{n=1}^{\infty} (-1)^n q^{n^2} \cos(2n \pi z)
-
+    Simultaneously evaluates `\theta_1(z,\tau) / q_{1/4}`,
+    `\theta_2(z,\tau) / q_{1/4}`,
+    `\theta_3(z,\tau)`, `\theta_4(z,\tau)`
     given `w = \exp(\pi i z)` and `q = \exp(\pi i \tau)`.
     If *w_is_unit* is nonzero, *w* is assumed to lie on the unit circle,
     i.e. *z* is assumed to be real.
 
-    Note that the factor `q^{1/4}` is removed from `\theta_1` and `\theta_2`.
+    Note that the factor `q_{1/4}` is removed from `\theta_1` and `\theta_2`.
     To get the true theta function values, the user has to multiply
-    this factor back. This convention avoids an unnecessary root extraction,
-    since the user can compute `q^{1/4} = \exp(\pi i \tau / 4)` followed by
-    `q = (q^{1/4})^4`, and in many cases when computing products or quotients
-    of theta functions, the factor `q^{1/4}` can be eliminated entirely.
+    this factor back. This convention avoids unnecessary computations,
+    since the user can compute `q_{1/4} = \exp(\pi i \tau / 4)` followed by
+    `q = (q_{1/4})^4`, and in many cases when computing products or quotients
+    of theta functions, the factor `q_{1/4}` can be eliminated entirely.
 
     This function is intended for `|q| \ll 1`. It can be called with any
     `q`, but will return useless intervals if convergence is not rapid.
@@ -195,6 +320,20 @@ Jacobi theta functions
     This function does not permit aliasing between input and output
     arguments.
 
+.. function:: void acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+
+    Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
+    simultaneously. This function does not move `\tau` to the fundamental domain.
+    This is generally worse than :func:`acb_modular_theta_1234`, but can
+    be slightly better for moderate input.
+
+.. function:: void acb_modular_theta_1234(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+
+    Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
+    simultaneously. This function moves `\tau` to the fundamental domain
+    before calling :func:`acb_modular_theta_1234_sum`.
+
+
 The Dedekind eta function
 -------------------------------------------------------------------------------
 
@@ -214,13 +353,13 @@ The Dedekind eta function
 
     This function is intended for `|q| \ll 1`. It can be called with any
     `q`, but will return useless intervals if convergence is not rapid.
-    For general evaluation of the eta functions, the user should only call
+    For general evaluation of the eta function, the user should only call
     this function after applying a suitable modular transformation.
 
-.. function:: acb_modular_epsilon_arg(fmpq_t t, const psl2z_t g)
+.. function:: int acb_modular_epsilon_arg(const psl2z_t g)
 
-    Given `g = (a, b; c, d)`, computes a rational number `t` such that
-    `\varepsilon(a,b,c,d) = \exp(\pi i t)` is the root of unity in
+    Given `g = (a, b; c, d)`, computes an integer `R` such that
+    `\varepsilon(a,b,c,d) = \exp(\pi i R / 12)` is the 24th root of unity in
     the transformation formula for the Dedekind eta function,
 
     .. math ::

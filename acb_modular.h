@@ -112,6 +112,8 @@ void psl2z_mul(psl2z_t h, const psl2z_t f, const psl2z_t g);
 
 void psl2z_inv(psl2z_t h, const psl2z_t g);
 
+int psl2z_is_one(const psl2z_t g);
+
 int psl2z_is_correct(const psl2z_t g);
 
 void psl2z_randtest(psl2z_t g, flint_rand_t state, long bits);
@@ -133,13 +135,23 @@ void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, lo
 
 void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num);
 
+void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g);
+
 void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
         acb_t theta3, acb_t theta4,
     const acb_t w, int w_is_unit, const acb_t q, long prec);
 
+void acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
+    acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
+    long prec);
+
+void acb_modular_theta_1234(acb_t theta1, acb_t theta2,
+    acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
+    long prec);
+
 void acb_modular_j(acb_t z, const acb_t tau, long prec);
 
-void acb_modular_epsilon_arg(fmpq_t arg, const psl2z_t g);
+int acb_modular_epsilon_arg(const psl2z_t g);
 
 void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec);
 

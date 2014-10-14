@@ -53,8 +53,7 @@ acb_modular_eta(acb_t z, const acb_t tau, long prec)
     acb_mul(eta, eta, q24, prec);
 
     /* epsilon^-1 */
-    acb_modular_epsilon_arg(t, g);
-    fmpq_neg(t, t);
+    fmpq_set_si(t, -acb_modular_epsilon_arg(g), 12);
     arb_sin_cos_pi_fmpq(acb_imagref(q), acb_realref(q), t, prec);
 
     acb_mul(eta, eta, q, prec);

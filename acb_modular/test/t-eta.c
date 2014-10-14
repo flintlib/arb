@@ -69,7 +69,7 @@ int main()
         acb_modular_eta(z2, tau2, prec2);
 
         /* apply transformation */
-        acb_modular_epsilon_arg(arg, g);
+        fmpq_set_si(arg, acb_modular_epsilon_arg(g), 12);
         arb_sin_cos_pi_fmpq(acb_imagref(t), acb_realref(t), arg, prec1);
         acb_mul(z3, z1, t, prec1);
 

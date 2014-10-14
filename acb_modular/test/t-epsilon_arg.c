@@ -86,7 +86,7 @@ int main()
         fmpq_randtest(x, state, 100);
         fmpq_randtest(y, state, 100);
 
-        acb_modular_epsilon_arg(x, g);
+        fmpq_set_si(x, acb_modular_epsilon_arg(g), 12);
         acb_modular_epsilon_arg_naive(y, g);
 
         arb_sin_cos_pi_fmpq(acb_imagref(a), acb_realref(a), x, 200);

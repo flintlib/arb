@@ -113,6 +113,8 @@ Bibliography
 
 .. [Olv1997] \F. Olver, *Asymptotics and special functions*, AKP Classics, AK Peters Ltd., Wellesley, MA, 1997. Reprint of the 1974 original.
 
+.. [Rad1973] \H. Rademacher, *Topics in analytic number theory*, Springer, 1973.
+
 .. [PS1973] \M. S. Paterson and L. J. Stockmeyer, "On the number of nonscalar multiplications necessary to evaluate polynomials", SIAM J. Comput (1973)
 
 .. [Smi2001] \D. M. Smith, "Algorithm: Fortran 90 Software for Floating-Point Multiple Precision Arithmetic, Gamma and Related Functions", Transactions on Mathematical Software 27 (2001) 377-387, http://myweb.lmu.edu/dmsmith/toms2001.pdf
