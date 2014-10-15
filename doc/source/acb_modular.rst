@@ -3,9 +3,8 @@
 **acb_modular.h** -- evaluation of modular forms in the complex numbers
 ===============================================================================
 
-This module provides functions for numerical evaluation of modular
-forms as well as the closely related Jacobi theta functions (and
-hopefully in the future also elliptic functions and integrals).
+This module provides methods for numerical evaluation of modular
+forms, Jacobi theta functions, and elliptic functions.
 
 In the context of this module, *tau* or `\tau` always denotes an
 element of the complex upper half-plane
@@ -384,7 +383,28 @@ Modular forms
     half-plane. The function is normalized so that `j(i) = 1728`.
     We first move `\tau` to the fundamental domain, which does not change
     the value of the function. Then we use the formula
-    `j(\tau) = 32 (\theta_2^8 + \theta_3^8 + \theta_4^8)^3 / (\theta_2 \theta_3 \theta_4)^8`
-    where `\theta_k` is the respective theta constant evaluated at `\tau`.
+    `j(\tau) = 32 (a^8+b^8+c^8)^3 / (abc)^8` where
+    `a, b, c = \theta_2(0,\tau), \theta_3(0,\tau), \theta_4(0,\tau)`.
+
+Elliptic functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec)
+
+    Computes Weierstrass's elliptic function
+
+    .. math ::
+
+        \wp(z, \tau) = \frac{1}{z^2} + \sum_{n^2+m^2 \ne 0}
+            \left[ \frac{1}{(z+m+n\tau)^2} - \frac{1}{(m+n\tau)^2} \right]
+
+    which satisfies `\wp(z, \tau) = \wp(z + 1, \tau) = \wp(z + \tau, \tau)`.
+    To evaluate the function efficiently, we use the formula
+
+    .. math ::
+
+        \wp(z, \tau) = \pi^2 \theta_2^2(0,\tau) \theta_3^2(0,\tau)
+            \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
+            \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
 
 
