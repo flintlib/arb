@@ -65,11 +65,13 @@ arf_printd(const arf_t x, long d)
     }
     else
     {
-        fmpr_t t;
-        fmpr_init(t);
-        arf_get_fmpr(t, x);
-        fmpr_printd(t, d);
-        fmpr_clear(t);
+        mpfr_t t;
+        mpfr_init2(t, d * 3.33 + 10);
+        mpfr_set_emin(MPFR_EMIN_MIN);
+        mpfr_set_emax(MPFR_EMAX_MAX);
+        arf_get_mpfr(t, x, MPFR_RNDN);
+        mpfr_printf("%.*Rg", FLINT_MAX(d, 1), t);
+        mpfr_clear(t);
     }
 }
 

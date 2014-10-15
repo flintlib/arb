@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "mag.h"
+#include "arf.h"
 
 void
 mag_print(const mag_t x)
@@ -44,18 +45,10 @@ mag_print(const mag_t x)
 void
 mag_printd(const mag_t x, long d)
 {
-    if (mag_is_finite(x) && (MAG_EXP(x) <= MPFR_EMIN_MIN + 1 ||
-                             MAG_EXP(x) >= MPFR_EMAX_MAX - 1))
-    {
-        mag_print(x);
-    }
-    else
-    {
-        fmpr_t t;
-        fmpr_init(t);
-        mag_get_fmpr(t, x);
-        fmpr_printd(t, d);
-        fmpr_clear(t);
-    }
+    arf_t t;
+    arf_init(t);
+    arf_set_mag(t, x);
+    arf_printd(t, d);
+    arf_clear(t);
 }
 
