@@ -373,7 +373,6 @@ The Dedekind eta function
     `\tau` to the fundamental domain before calling
     :func:`acb_modular_eta_sum`.
 
-
 Modular forms
 -------------------------------------------------------------------------------
 
@@ -383,8 +382,15 @@ Modular forms
     half-plane. The function is normalized so that `j(i) = 1728`.
     We first move `\tau` to the fundamental domain, which does not change
     the value of the function. Then we use the formula
-    `j(\tau) = 32 (a^8+b^8+c^8)^3 / (abc)^8` where
-    `a, b, c = \theta_2(0,\tau), \theta_3(0,\tau), \theta_4(0,\tau)`.
+    `j(\tau) = 32 (\theta_2^8+\theta_3^8+\theta_4^8)^3 / (\theta_2 \theta_3 \theta_4)^8` where
+    `\theta_i = \theta_i(0,\tau)`.
+
+.. function:: void acb_modular_lambda(acb_t r, const acb_t tau, long prec)
+
+    Computes the lambda function
+    `\lambda(\tau) = \theta_2^4(0,\tau) / \theta_3^4(0,\tau)`, which
+    is invariant under modular transformations `(a, b; c, d)`
+    where `a, d` are odd and `b, c` are even.
 
 Elliptic functions
 -------------------------------------------------------------------------------
