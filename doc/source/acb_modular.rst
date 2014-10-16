@@ -392,6 +392,19 @@ Modular forms
     is invariant under modular transformations `(a, b; c, d)`
     where `a, d` are odd and `b, c` are even.
 
+.. function:: void acb_modular_delta(acb_t r, const acb_t tau, long prec)
+
+    Computes the modular discriminant `\Delta(\tau) = \eta(\tau)^{24}`,
+    which transforms as
+
+    .. math ::
+
+        \Delta\left(\frac{a\tau+b}{c\tau+d}\right) = (c\tau+d)^{12} \Delta(\tau).
+
+    The modular discriminant is sometimes defined with an extra factor
+    `(2\pi)^{12}`, which we omit in this implementation.
+
+
 Elliptic functions
 -------------------------------------------------------------------------------
 

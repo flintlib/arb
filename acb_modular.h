@@ -159,6 +159,8 @@ void acb_modular_eta(acb_t z, const acb_t tau, long prec);
 
 void acb_modular_lambda(acb_t r, const acb_t tau, long prec);
 
+void acb_modular_delta(acb_t r, const acb_t tau, long prec);
+
 void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec);
 
 #ifdef __cplusplus
