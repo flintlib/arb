@@ -136,7 +136,7 @@ acb_modular_theta_1234(acb_t theta1, acb_t theta2,
 
     /* evaluate theta functions of transformed variables */
     acb_modular_theta_1234_sum(thetas + 0, thetas + 1, thetas + 2, thetas + 3,
-        w, w_is_unit, q, prec);
+        w, w_is_unit, q, 1, prec);
     acb_mul(thetas + 0, thetas + 0, q4, prec);
     acb_mul(thetas + 1, thetas + 1, q4, prec);
 
@@ -194,7 +194,7 @@ acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
 
     /* evaluate theta functions */
     acb_modular_theta_1234_sum(theta1, theta2, theta3, theta4,
-        w, w_is_unit, q, prec);
+        w, w_is_unit, q, 1, prec);
     acb_mul(theta1, theta1, q4, prec);
     acb_mul(theta2, theta2, q4, prec);
 

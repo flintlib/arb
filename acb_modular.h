@@ -139,7 +139,7 @@ void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g);
 
 void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
         acb_t theta3, acb_t theta4,
-    const acb_t w, int w_is_unit, const acb_t q, long prec);
+    const acb_t w, int w_is_unit, const acb_t q, long len, long prec);
 
 void acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
@@ -162,6 +162,8 @@ void acb_modular_lambda(acb_t r, const acb_t tau, long prec);
 void acb_modular_delta(acb_t r, const acb_t tau, long prec);
 
 void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec);
+
+void acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, long prec);
 
 #ifdef __cplusplus
 }

@@ -83,8 +83,8 @@ int main()
         acb_randtest(t4a, state, prec0, e0);
         acb_randtest(t4b, state, prec0, e0);
 
-        acb_modular_theta_1234_sum(t1a, t2a, t3a, t4a, w, w_is_unit, q, prec1);
-        acb_modular_theta_1234_sum(t1b, t2b, t3b, t4b, w, w_is_unit & n_randint(state, 2), q, prec2);
+        acb_modular_theta_1234_sum(t1a, t2a, t3a, t4a, w, w_is_unit, q, 1, prec1);
+        acb_modular_theta_1234_sum(t1b, t2b, t3b, t4b, w, w_is_unit & n_randint(state, 2), q, 1, prec2);
 
         if (!acb_overlaps(t1a, t1b) || !acb_overlaps(t2a, t2b)
             || !acb_overlaps(t3a, t3b) || !acb_overlaps(t4a, t4b))

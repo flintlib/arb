@@ -78,13 +78,16 @@ mag_get_log2_d_approx(const mag_t x)
 }
 
 void
-acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
-        acb_t theta3, acb_t theta4,
-    const acb_t w, int w_is_unit, const acb_t q, long prec)
+acb_modular_theta_1234_sum(acb_ptr theta1,
+                          acb_ptr theta2,
+                          acb_ptr theta3,
+                          acb_ptr theta4,
+    const acb_t w, int w_is_unit, const acb_t q, long len, long prec)
 {
-    mag_t err, qmag, wmag, vmag;
+    mag_t qmag, wmag, vmag;
+    mag_ptr err;
     double log2q_approx, log2w_approx, log2term_approx;
-    long e, e1, e2, k, k1, k2, N, WN, term_prec;
+    long e, e1, e2, k, k1, k2, r, n, N, WN, term_prec;
     long *exponents, *aindex, *bindex;
     acb_ptr qpow, wpow, vpow;
     acb_t tmp1, tmp2, v;
@@ -93,14 +96,14 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
     q_is_real = arb_is_zero(acb_imagref(q));
     w_is_one = acb_is_one(w);
 
-    acb_init(tmp1);
-    acb_init(tmp2);
-    acb_init(v);
-    mag_init(err);
-
     mag_init(qmag);
     mag_init(wmag);
     mag_init(vmag);
+
+    acb_init(tmp1);
+    acb_init(tmp2);
+    acb_init(v);
+    err = _mag_vec_init(len);
 
     if (w_is_one)
         acb_one(v);
@@ -129,57 +132,108 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
     if (log2q_approx >= 0.0)
     {
         N = 1;
-        mag_inf(err);
+        for (r = 0; r < len; r++)
+            mag_inf(err + r);
     }
     else  /* Pick N and compute error bound */
     {
-        mag_t den;
+        mag_t den, cmag, dmag;
+
         mag_init(den);
+        mag_init(cmag);
+        mag_init(dmag);
 
         N = 1;
+
         while (0.05 * N * N < prec)
         {
             log2term_approx = log2q_approx * ((N+2)*(N+2)/4) + (N+2)*log2w_approx;
+
             if (log2term_approx < -prec - 2)
                 break;
+
             N++;
         }
 
-        if (w_is_unit)
+        if (len == 1)
         {
-            mag_one(den);
-            mag_sub_lower(den, den, qmag);  /* 1 - |q| is good enough */
-        }
-        else  /* denominator: 1 - |q|^(floor((N+1)/2)+1) * max(|w|,1/|w|) */
-        {
-            mag_pow_ui(err, qmag, (N + 1) / 2 + 1);
-            mag_mul(err, err, wmag);
-            mag_one(den);
-            mag_sub_lower(den, den, err);
-        }
+            if (w_is_unit)
+            {
+                mag_one(den);
+                mag_sub_lower(den, den, qmag);  /* 1 - |q| is good enough */
+            }
+            else  /* denominator: 1 - |q|^(floor((N+1)/2)+1) * max(|w|,1/|w|) */
+            {
+                mag_pow_ui(err, qmag, (N + 1) / 2 + 1);
+                mag_mul(err, err, wmag);
+                mag_one(den);
+                mag_sub_lower(den, den, err);
+            }
 
-        /* no convergence */
-        if (mag_is_zero(den))
-        {
-            N = 1;
-            mag_inf(err);
-        }
-        else if (w_is_unit)
-        {
-            mag_pow_ui(err, qmag, ((N + 2) * (N + 2)) / 4);
-            mag_div(err, err, den);
-            mag_mul_2exp_si(err, err, 1);
+            /* no convergence */
+            if (mag_is_zero(den))
+            {
+                N = 1;
+                mag_inf(err);
+            }
+            else if (w_is_unit)
+            {
+                mag_pow_ui(err, qmag, ((N + 2) * (N + 2)) / 4);
+                mag_div(err, err, den);
+                mag_mul_2exp_si(err, err, 1);
+            }
+            else
+            {
+                mag_pow_ui(err, qmag, ((N + 2) * (N + 2)) / 4);
+                mag_pow_ui(vmag, wmag, N + 2);
+                mag_mul(err, err, vmag);
+                mag_div(err, err, den);
+                mag_mul_2exp_si(err, err, 1);
+            }
         }
         else
         {
+            /* numerator: 2 |q|^E * max(|w|,|v|)^(N+2) * (N+2)^r */
             mag_pow_ui(err, qmag, ((N + 2) * (N + 2)) / 4);
-            mag_pow_ui(vmag, wmag, N + 2);
-            mag_mul(err, err, vmag);
-            mag_div(err, err, den);
+
+            if (!w_is_one)
+            {
+                mag_pow_ui(vmag, wmag, N + 2);
+                mag_mul(err, err, vmag);
+            }
+
             mag_mul_2exp_si(err, err, 1);
+
+            for (r = 1; r < len; r++)
+                mag_mul_ui(err + r, err + r - 1, N + 2);
+
+            /* den: 1 - |q|^floor((N+1)/2+1) * max(|w|,|v|) * exp(r/(N+2)) */
+            mag_pow_ui(cmag, qmag, (N + 1) / 2 + 1);
+            mag_mul(cmag, cmag, wmag);
+
+            for (r = 0; r < len; r++)
+            {
+                mag_set_ui(dmag, r);
+                mag_div_ui(dmag, dmag, N + 2);
+                mag_exp(dmag, dmag);
+                mag_mul(dmag, cmag, dmag);
+                mag_one(den);
+                mag_sub_lower(den, den, dmag);
+
+                if (mag_is_zero(den))
+                    mag_inf(err + r);
+                else
+                    mag_div(err + r, err + r, den);
+            }
         }
 
+        /* don't do work if we can't determine the zeroth derivative */
+        if (mag_is_inf(err))
+            N = 1;
+
         mag_clear(den);
+        mag_clear(cmag);
+        mag_clear(dmag);
     }
 
     exponents = flint_malloc(sizeof(long) * 3 * N);
@@ -191,14 +245,15 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
     acb_modular_addseq_theta(exponents, aindex, bindex, N);
     acb_set_round(qpow + 0, q, prec);
 
-    acb_zero(theta1);
-    acb_zero(theta2);
-    acb_zero(theta3);
-    acb_zero(theta4);
+    _acb_vec_zero(theta1, len);
+    _acb_vec_zero(theta2, len);
+    _acb_vec_zero(theta3, len);
+    _acb_vec_zero(theta4, len);
 
     WN = (N + 3) / 2;
 
-    /* compute powers of w^2 and v = 1/w^2 */
+    /* compute powers of w^2 and 1/w^2 */
+    /* todo: conjugates... */
     if (!w_is_one)
     {
         wpow = _acb_vec_init(WN);
@@ -245,7 +300,7 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
             }
         }
 
-        if (w_is_one)
+        if (w_is_one && len == 1)
         {
             if (k % 2 == 0)
             {
@@ -263,83 +318,219 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
         }
         else
         {
+            n = k / 2 + 1;
+
             if (k % 2 == 0)
             {
-                acb_add(tmp1, wpow + k / 2 + 1, vpow + k / 2 + 1, term_prec);
-                acb_mul(tmp1, qpow + k, tmp1, term_prec);
+                acb_ptr term;
 
-                acb_add(theta3, theta3, tmp1, prec);
-
-                if (k % 4 == 0)
-                    acb_sub(theta4, theta4, tmp1, prec);
+                if (w_is_one)
+                {
+                    acb_mul_2exp_si(tmp1, qpow + k, 1);
+                    acb_zero(tmp2);
+                }
                 else
-                    acb_add(theta4, theta4, tmp1, prec);
+                {
+                    /* tmp1 = w^(2n) + v^(2n) ~= 2 cos(2n) */
+                    acb_add(tmp1, wpow + n, vpow + n, term_prec);
+                    acb_mul(tmp1, qpow + k, tmp1, term_prec);
+
+                    /* tmp2 = w^(2n) - v^(2n) ~= 2 sin(2n) */
+                    if (len > 1)
+                    {
+                        acb_sub(tmp2, wpow + n, vpow + n, term_prec);
+                        acb_mul(tmp2, qpow + k, tmp2, term_prec);
+                    }
+                }
+
+                /* compute all the derivatives */
+                for (r = 0; r < len; r++)
+                {
+                    term = (r % 2 == 0) ? tmp1 : tmp2;
+
+                    if (r == 1)
+                        acb_mul_ui(term, term, 2 * n, term_prec);
+                    else if (r > 1)
+                        acb_mul_ui(term, term, 4 * n * n, term_prec);
+
+                    acb_add(theta3 + r, theta3 + r, term, prec);
+
+                    if (k % 4 == 0)
+                        acb_sub(theta4 + r, theta4 + r, term, prec);
+                    else
+                        acb_add(theta4 + r, theta4 + r, term, prec);
+                }
             }
             else
             {
-                if (k / 2 + 1 > WN - 1)
-                    abort();
-                if (k / 2 + 2 > WN + 1 - 1)
-                    abort();
+                acb_ptr term;
 
-                acb_add(tmp1, wpow + k / 2 + 1, vpow + k / 2 + 2, term_prec);
-                acb_mul(tmp1, qpow + k, tmp1, term_prec);
-                acb_add(theta2, theta2, tmp1, prec);
-
-                acb_sub(tmp1, wpow + k / 2 + 1, vpow + k / 2 + 2, term_prec);
-                acb_mul(tmp1, qpow + k, tmp1, term_prec);
-                if (k % 4 == 1)
-                    acb_sub(theta1, theta1, tmp1, prec);
+                if (w_is_one)
+                {
+                    acb_mul_2exp_si(tmp1, qpow + k, 1);
+                    acb_zero(tmp2);
+                }
                 else
-                    acb_add(theta1, theta1, tmp1, prec);
+                {
+                    /* tmp1 = w^(2n) + v^(2n+2) ~= 2 cos(2n+1) / w */
+                    acb_add(tmp1, wpow + n, vpow + n + 1, term_prec);
+                    acb_mul(tmp1, qpow + k, tmp1, term_prec);
+
+                    /* tmp2 = w^(2n) - v^(2n+2) ~= 2 sin(2n+1) / w */
+                    acb_sub(tmp2, wpow + n, vpow + n + 1, term_prec);
+                    acb_mul(tmp2, qpow + k, tmp2, term_prec);
+                }
+
+                /* compute all the derivatives */
+                for (r = 0; r < len; r++)
+                {
+                    if (r > 0)
+                    {
+                        acb_mul_ui(tmp1, tmp1, 2 * n + 1, term_prec);
+                        acb_mul_ui(tmp2, tmp2, 2 * n + 1, term_prec);
+                    }
+
+                    term = (r % 2 == 0) ? tmp2 : tmp1;
+
+                    if (k % 4 == 1)
+                        acb_sub(theta1 + r, theta1 + r, term, prec);
+                    else
+                        acb_add(theta1 + r, theta1 + r, term, prec);
+
+                    term = (r % 2 == 0) ? tmp1 : tmp2;
+
+                    acb_add(theta2 + r, theta2 + r, term, prec);
+                }
             }
         }
     }
 
-    if (w_is_one)
+    if (w_is_one && len == 1)
     {
         acb_mul_2exp_si(theta2, theta2, 1);
         acb_mul_2exp_si(theta3, theta3, 1);
         acb_mul_2exp_si(theta4, theta4, 1);
+    }
 
-        acb_add_ui(theta2, theta2, 2, prec);
-        acb_add_ui(theta3, theta3, 1, prec);
-        acb_add_ui(theta4, theta4, 1, prec);
+    /* theta1: w * sum + 2 sin */
+    /* theta2: w * sum + 2 cos */
+
+    if (!w_is_one)
+    {
+        _acb_vec_scalar_mul(theta1, theta1, len, w, prec);
+        _acb_vec_scalar_mul(theta2, theta2, len, w, prec);
+
+        acb_add(tmp1, w, v, prec);
+        acb_sub(tmp2, w, v, prec);
     }
     else
     {
-        /* w * [(1 - w^-2) + series] */
-        acb_sub(theta1, theta1, vpow + 1, prec);
-        acb_mul(theta1, theta1, w, prec);
-        acb_add(theta1, theta1, w, prec);
-
-        /* multiply by -i */
-        acb_mul_onei(theta1, theta1);
-        acb_neg(theta1, theta1);
-
-        /* w * [(1 + w^-2) + series] */
-        acb_add(theta2, theta2, vpow + 1, prec);
-        acb_mul(theta2, theta2, w, prec);
-        acb_add(theta2, theta2, w, prec);
-
-        acb_add_ui(theta3, theta3, 1, prec);
-        acb_add_ui(theta4, theta4, 1, prec);
+        acb_set_ui(tmp1, 2);
+        acb_zero(tmp2);
     }
 
-    if (q_is_real && w_is_unit)    /* result must be real */
+    for (r = 0; r < len; r++)
     {
-        arb_add_error_mag(acb_realref(theta1), err);
-        arb_add_error_mag(acb_realref(theta2), err);
-        arb_add_error_mag(acb_realref(theta3), err);
-        arb_add_error_mag(acb_realref(theta4), err);
+        acb_add(theta1 + r, theta1 + r, (r % 2 == 0) ? tmp2 : tmp1, prec);
+        acb_add(theta2 + r, theta2 + r, (r % 2 == 0) ? tmp1 : tmp2, prec);
     }
-    else
+
+    /* Add error bound. Note that this must be done after multiplying
+       by w above, and before scaling by pi^r / r! below. */
+    for (r = 0; r < len; r++)
     {
-        acb_add_error_mag(theta1, err);
-        acb_add_error_mag(theta2, err);
-        acb_add_error_mag(theta3, err);
-        acb_add_error_mag(theta4, err);
+        if (q_is_real && w_is_unit)    /* result must be real */
+        {
+            arb_add_error_mag(acb_realref(theta1 + r), err + r);
+            arb_add_error_mag(acb_realref(theta2 + r), err + r);
+            arb_add_error_mag(acb_realref(theta3 + r), err + r);
+            arb_add_error_mag(acb_realref(theta4 + r), err + r);
+        }
+        else
+        {
+            acb_add_error_mag(theta1 + r, err + r);
+            acb_add_error_mag(theta2 + r, err + r);
+            acb_add_error_mag(theta3 + r, err + r);
+            acb_add_error_mag(theta4 + r, err + r);
+        }
     }
+
+    /* 
+    Coefficient r in the z-expansion gains a factor: pi^r / r!
+    times a sign:
+
+        + 2 cos   =  +1 * (exp + 1/exp)
+        - 2 sin   =  +i * (exp - 1/exp)
+        - 2 cos   =  -1 * (exp + 1/exp)
+        + 2 sin   =  -i * (exp - 1/exp)
+        ...
+    */
+
+    acb_mul_onei(theta1, theta1);
+    acb_neg(theta1, theta1);
+
+    if (len > 1)
+    {
+        arb_t c, d;
+
+        arb_init(c);
+        arb_init(d);
+
+        arb_const_pi(c, prec);
+        arb_set(d, c);
+
+        for (r = 1; r < len; r++)
+        {
+            acb_mul_arb(theta1 + r, theta1 + r, d, prec);
+            acb_mul_arb(theta2 + r, theta2 + r, d, prec);
+            acb_mul_arb(theta3 + r, theta3 + r, d, prec);
+            acb_mul_arb(theta4 + r, theta4 + r, d, prec);
+
+            if (r + 1 < len)
+            {
+                arb_mul(d, d, c, prec);
+                arb_div_ui(d, d, r + 1, prec);
+            }
+
+            if (r % 4 == 0)
+            {
+                acb_mul_onei(theta1 + r, theta1 + r);
+                acb_neg(theta1 + r, theta1 + r);
+            }
+            else if (r % 4 == 1)
+            {
+                acb_mul_onei(theta2 + r, theta2 + r);
+                acb_mul_onei(theta3 + r, theta3 + r);
+                acb_mul_onei(theta4 + r, theta4 + r);
+            }
+            else if (r % 4 == 2)
+            {
+                acb_mul_onei(theta1 + r, theta1 + r);
+
+                acb_neg(theta2 + r, theta2 + r);
+                acb_neg(theta3 + r, theta3 + r);
+                acb_neg(theta4 + r, theta4 + r);
+            }
+            else
+            {
+                acb_neg(theta1 + r, theta1 + r);
+
+                acb_mul_onei(theta2 + r, theta2 + r);
+                acb_mul_onei(theta3 + r, theta3 + r);
+                acb_mul_onei(theta4 + r, theta4 + r);
+
+                acb_neg(theta2 + r, theta2 + r);
+                acb_neg(theta3 + r, theta3 + r);
+                acb_neg(theta4 + r, theta4 + r);
+            }
+        }
+
+        arb_clear(c);
+        arb_clear(d);
+    }
+
+    acb_add_ui(theta3, theta3, 1, prec);
+    acb_add_ui(theta4, theta4, 1, prec);
 
     if (!w_is_one)
     {
@@ -352,9 +543,9 @@ acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
     acb_clear(tmp1);
     acb_clear(tmp2);
     acb_clear(v);
-    mag_clear(err);
     mag_clear(qmag);
     mag_clear(wmag);
     mag_clear(vmag);
+    _mag_vec_clear(err, len);
 }
 

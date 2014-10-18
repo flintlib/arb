@@ -48,7 +48,7 @@ acb_modular_delta(acb_t z, const acb_t tau, long prec)
 
     acb_one(w);
     acb_exp_pi_i(q, tau_prime, prec);
-    acb_modular_theta_1234_sum(t1, t2, t3, t4, w, 1, q, prec);
+    acb_modular_theta_1234_sum(t1, t2, t3, t4, w, 1, q, 1, prec);
 
     /* (t2 t3 t4) ^ 8 * q^2 */
     acb_mul(t1, t2, t3, prec);
