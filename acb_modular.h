@@ -137,15 +137,15 @@ void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long
 
 void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g);
 
-void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2,
-        acb_t theta3, acb_t theta4,
+void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2,
+        acb_ptr theta3, acb_ptr theta4,
     const acb_t w, int w_is_unit, const acb_t q, long len, long prec);
 
-void acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
+void acb_modular_theta_notransform(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
     long prec);
 
-void acb_modular_theta_1234(acb_t theta1, acb_t theta2,
+void acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
     long prec);
 

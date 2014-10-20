@@ -59,7 +59,7 @@ acb_mul_4th_root(acb_t y, const acb_t x, int r, long prec)
 }
 
 void
-acb_modular_theta_1234(acb_t theta1, acb_t theta2,
+acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
     long prec)
 {
@@ -135,7 +135,7 @@ acb_modular_theta_1234(acb_t theta1, acb_t theta2,
     w_is_unit = arb_is_zero(acb_imagref(z_prime));
 
     /* evaluate theta functions of transformed variables */
-    acb_modular_theta_1234_sum(thetas + 0, thetas + 1, thetas + 2, thetas + 3,
+    acb_modular_theta_sum(thetas + 0, thetas + 1, thetas + 2, thetas + 3,
         w, w_is_unit, q, 1, prec);
     acb_mul(thetas + 0, thetas + 0, q4, prec);
     acb_mul(thetas + 1, thetas + 1, q4, prec);
@@ -172,7 +172,7 @@ acb_modular_theta_1234(acb_t theta1, acb_t theta2,
 }
 
 void
-acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
+acb_modular_theta_notransform(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
     long prec)
 {
@@ -193,7 +193,7 @@ acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2,
     w_is_unit = arb_is_zero(acb_imagref(z));
 
     /* evaluate theta functions */
-    acb_modular_theta_1234_sum(theta1, theta2, theta3, theta4,
+    acb_modular_theta_sum(theta1, theta2, theta3, theta4,
         w, w_is_unit, q, 1, prec);
     acb_mul(theta1, theta1, q4, prec);
     acb_mul(theta2, theta2, q4, prec);

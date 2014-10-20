@@ -78,7 +78,7 @@ mag_get_log2_d_approx(const mag_t x)
 }
 
 void
-acb_modular_theta_1234_sum(acb_ptr theta1,
+acb_modular_theta_sum(acb_ptr theta1,
                           acb_ptr theta2,
                           acb_ptr theta3,
                           acb_ptr theta4,

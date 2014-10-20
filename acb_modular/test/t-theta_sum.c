@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("theta_1234_sum....");
+    printf("theta_sum....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -95,10 +95,10 @@ int main()
             acb_randtest(t4b + i, state, prec0, e0);
         }
 
-        acb_modular_theta_1234_sum(t1a, t2a, t3a, t4a,
+        acb_modular_theta_sum(t1a, t2a, t3a, t4a,
             w, w_is_unit, q, len1, prec1);
 
-        acb_modular_theta_1234_sum(t1b, t2b, t3b, t4b,
+        acb_modular_theta_sum(t1b, t2b, t3b, t4b,
             w, w_is_unit & n_randint(state, 2), q, len2, prec2);
 
         for (i = 0; i < FLINT_MIN(len1, len2); i++)

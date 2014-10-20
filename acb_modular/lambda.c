@@ -53,7 +53,7 @@ acb_modular_lambda(acb_t r, const acb_t tau, long prec)
 
     acb_one(w);
     acb_exp_pi_i(q, tau_prime, prec);
-    acb_modular_theta_1234_sum(thetas + 0, thetas + 1,
+    acb_modular_theta_sum(thetas + 0, thetas + 1,
         thetas + 2, thetas + 3, w, 1, q, 1, prec);
 
     /* divide the transformation factors */

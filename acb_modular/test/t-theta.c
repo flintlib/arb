@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("theta_1234....");
+    printf("theta....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,8 +54,8 @@ int main()
         acb_randtest(tau, state, prec0, e0);
         acb_randtest(z, state, prec0, e0);
 
-        acb_modular_theta_1234(t1, t2, t3, t4, z, tau, prec1);
-        acb_modular_theta_1234_notransform(t1b, t2b, t3b, t4b, z, tau, prec2);
+        acb_modular_theta(t1, t2, t3, t4, z, tau, prec1);
+        acb_modular_theta_notransform(t1b, t2b, t3b, t4b, z, tau, prec2);
 
         if (!acb_overlaps(t1, t1b) || !acb_overlaps(t2, t2b) ||
             !acb_overlaps(t3, t3b) || !acb_overlaps(t4, t4b))

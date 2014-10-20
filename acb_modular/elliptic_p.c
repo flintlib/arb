@@ -40,9 +40,9 @@ acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec)
         acb_init(tz + i);
     }
 
-    acb_modular_theta_1234(tz + 0, tz + 1, tz + 2, tz + 3, z, tau, prec);
+    acb_modular_theta(tz + 0, tz + 1, tz + 2, tz + 3, z, tau, prec);
     acb_zero(t);
-    acb_modular_theta_1234(t0 + 0, t0 + 1, t0 + 2, t0 + 3, t, tau, prec);
+    acb_modular_theta(t0 + 0, t0 + 1, t0 + 2, t0 + 3, t, tau, prec);
 
     acb_mul(t, t0 + 1, t0 + 2, prec);
     acb_mul(t, t, tz + 3, prec);

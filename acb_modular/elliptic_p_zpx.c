@@ -48,7 +48,7 @@ acb_modular_theta_zpx_notransform(acb_ptr theta1, acb_ptr theta2,
     w_is_unit = arb_is_zero(acb_imagref(z));
 
     /* evaluate theta functions */
-    acb_modular_theta_1234_sum(theta1, theta2, theta3, theta4,
+    acb_modular_theta_sum(theta1, theta2, theta3, theta4,
         w, w_is_unit, q, len, prec);
     _acb_vec_scalar_mul(theta1, theta1, len, q4, prec);
     _acb_vec_scalar_mul(theta2, theta2, len, q4, prec);
@@ -84,7 +84,7 @@ acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, 
     _acb_poly_mullow(tz1, tz2, len, tz2, len, len, prec);
 
     acb_zero(t);
-    acb_modular_theta_1234_notransform(t01, t02, t03, t04, t, tau, prec);
+    acb_modular_theta_notransform(t01, t02, t03, t04, t, tau, prec);
 
     /* [theta_2(0) * theta_3(0)] ^2 */
     acb_mul(t, t02, t03, prec);

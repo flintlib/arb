@@ -27,7 +27,7 @@
 
 /* convert theta_{m,n} to theta_i */
 static int
-swappy1(unsigned int m, unsigned int n)
+swappy1(int m, int n)
 {
     m = m & 1;
     n = n & 1;
