@@ -290,7 +290,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     a finite truncation of the respective theta function series.
     In particular, with *len* equal to 1, computes the respective
     value of the theta function at the point *z*.
-    We require *len* to be positive
+    We require *len* to be positive.
     If *w_is_unit* is nonzero, *w* is assumed to lie on the unit circle,
     i.e. *z* is assumed to be real.
 
@@ -314,7 +314,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     .. math ::
 
-        \begin{array} \\
+        \begin{array}{llll}
                & \theta_1, \theta_2 & q^0 & (w^1 \pm w^{-1}) \\
         k = 0  & \theta_3, \theta_4 & q^1 & (w^2 \pm w^{-2}) \\
         k = 1  & \theta_1, \theta_2 & q^2 & (w^3 \pm w^{-3}) \\
@@ -370,14 +370,14 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function does not move `\tau` to the fundamental domain.
-    This is generally worse than :func:`acb_modular_theta_1234`, but can
+    This is generally worse than :func:`acb_modular_theta`, but can
     be slightly better for moderate input.
 
 .. function:: void acb_modular_theta(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function moves `\tau` to the fundamental domain
-    before calling :func:`acb_modular_theta_1234_sum`.
+    before calling :func:`acb_modular_theta_sum`.
 
 
 The Dedekind eta function
