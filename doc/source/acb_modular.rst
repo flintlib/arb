@@ -271,12 +271,26 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     Constructs an addition sequence for the first *num* squares and triangular
     numbers interleaved (excluding zero), i.e. 1, 2, 4, 6, 9, 12, 16, 20, 25, 30 etc.
 
-.. function:: void acb_modular_theta_1234_sum(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t w, int w_is_unit, const acb_t q, long prec)
+.. function:: void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2, acb_ptr theta3, acb_ptr theta4, const acb_t w, int w_is_unit, const acb_t q, long len, long prec)
 
-    Simultaneously evaluates `\theta_1(z,\tau) / q_{1/4}`,
-    `\theta_2(z,\tau) / q_{1/4}`,
-    `\theta_3(z,\tau)`, `\theta_4(z,\tau)`
-    given `w = \exp(\pi i z)` and `q = \exp(\pi i \tau)`.
+    Simultaneously computes the first *len* coefficients of each of the
+    formal power series
+
+    .. math ::
+
+        \theta_1(z+x,\tau) / q_{1/4} \in \mathbb{C}[[x]]
+
+        \theta_2(z+x,\tau) / q_{1/4} \in \mathbb{C}[[x]]
+
+        \theta_3(z+x,\tau) \in \mathbb{C}[[x]]
+
+        \theta_4(z+x,\tau) \in \mathbb{C}[[x]]
+
+    given `w = \exp(\pi i z)` and `q = \exp(\pi i \tau)`, by summing
+    a finite truncation of the respective theta function series.
+    In particular, with *len* equal to 1, computes the respective
+    value of the theta function at the point *z*.
+    We require *len* to be positive
     If *w_is_unit* is nonzero, *w* is assumed to lie on the unit circle,
     i.e. *z* is assumed to be real.
 
@@ -295,21 +309,54 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     We consider the sums together, alternatingly updating `(\theta_1, \theta_2)`
     or `(\theta_3, \theta_4)`. For `k = 0, 1, 2, \ldots`, the powers of `q`
     are `\lfloor (k+2)^2 / 4 \rfloor = 1, 2, 4, 6, 9` etc. and the powers of `w` are
-    `\pm (k+2) = \pm 2, \pm 3, \pm 4, \ldots` etc.
-    For some integer `N \ge 1`, the summation is stopped just before term
-    `k = N`. The error can then be bounded as
+    `\pm (k+2) = \pm 2, \pm 3, \pm 4, \ldots` etc. The scheme
+    is illustrated by the following table:
 
     .. math ::
 
-        \frac{2 |q|^E \max(|w|,|w^{-1}|)^{N+2}}{1 - |q|^{\lfloor (N+1)/2 \rfloor + 1} \max(|w|,|w^{-1}|)}
+        \begin{array} \\
+               & \theta_1, \theta_2 & q^0 & (w^1 \pm w^{-1}) \\
+        k = 0  & \theta_3, \theta_4 & q^1 & (w^2 \pm w^{-2}) \\
+        k = 1  & \theta_1, \theta_2 & q^2 & (w^3 \pm w^{-3}) \\
+        k = 2  & \theta_3, \theta_4 & q^4 & (w^4 \pm w^{-4}) \\
+        k = 3  & \theta_1, \theta_2 & q^6 & (w^5 \pm w^{-5}) \\
+        k = 4  & \theta_3, \theta_4 & q^9 & (w^6 \pm w^{-6}) \\
+        k = 5  & \theta_1, \theta_2 & q^{12} & (w^7 \pm w^{-7}) \\
+        \end{array}
 
-    where `E = \lfloor (N+2)^2 / 4 \rfloor`, assuming that the denominator
-    is positive.
-    This is simply the bound for a geometric series, with the leading
-    factor 2 coming from the fact that we sum both negative and positive
-    powers of `w`.
+    For some integer `N \ge 1`, the summation is stopped just before term
+    `k = N`. Let `Q = |q|`, `W = \max(|w|,|w^{-1}|)`,
+    `E = \lfloor (N+2)^2 / 4 \rfloor` and 
+    `F = \lfloor (N+1)/2 \rfloor + 1`. The error of the
+    zeroth derivative can be bounded as
 
-    To actually evaluate the series, when `w \ne 1`, we write the even
+    .. math ::
+
+        2 Q^E W^{N+2} \left[ 1 + Q^F W + Q^{2F} W^2 + \ldots \right]
+        = \frac{2 Q^E W^{N+2}}{1 - Q^F W}
+
+    provided that the denominator is positive (otherwise we set
+    the error bound to infinity).
+    When *len* is greater than 1, consider the derivative of order *r*.
+    The term of index *k* and order *r* picks up a factor of magnitude
+    `(k+2)^r` from differentiation of `w^{k+2}` (it also picks up a factor
+    `\pi^r`, but we omit this until we rescale the coefficients
+    at the end of the computation). Thus we have the error bound
+
+    .. math ::
+
+        2 Q^E W^{N+2} (N+2)^r \left[ 1 + Q^F W \frac{(N+3)^r}{(N+2)^r} + Q^{2F} W^2 \frac{(N+4)^r}{(N+2)^r} + \ldots \right]
+
+    which by the inequality `(1 + m/(N+2))^r \le \exp(k m/(N+2))`
+    can be bounded as
+
+    .. math ::
+
+        \frac{2 Q^E W^{N+2} (N+2)^r}{1 - Q^F W \exp(r/(N+2))},
+
+    again valid when the denominator is positive.
+
+    To actually evaluate the series, we write the even
     cosine terms as `w^{2n} + w^{-2n}`, the odd cosine terms as
     `w (w^{2n} + w^{-2n-2})`, and the sine terms as `w (w^{2n} - w^{-2n-2})`.
     This way we only need even powers of `w` and `w^{-1}`.
@@ -319,14 +366,14 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     This function does not permit aliasing between input and output
     arguments.
 
-.. function:: void acb_modular_theta_1234_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_theta_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function does not move `\tau` to the fundamental domain.
     This is generally worse than :func:`acb_modular_theta_1234`, but can
     be slightly better for moderate input.
 
-.. function:: void acb_modular_theta_1234(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_theta(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function moves `\tau` to the fundamental domain
