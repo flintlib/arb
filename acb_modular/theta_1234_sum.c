@@ -286,12 +286,15 @@ acb_modular_theta_1234_sum(acb_ptr theta1,
 
             if (e == e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k1, qpow + k2, term_prec, prec);
+                acb_mul_approx(qpow + k, tmp1, tmp2,
+                    qpow + k1, qpow + k2, term_prec, prec);
             }
             else if (e == 2 * e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k1, qpow + k1, term_prec, prec);
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k, qpow + k2, term_prec, prec);
+                acb_mul_approx(qpow + k, tmp1, tmp2,
+                    qpow + k1, qpow + k1, term_prec, prec);
+                acb_mul_approx(qpow + k, tmp1, tmp2,
+                    qpow + k, qpow + k2, term_prec, prec);
             }
             else
             {
@@ -435,8 +438,57 @@ acb_modular_theta_1234_sum(acb_ptr theta1,
         acb_add(theta2 + r, theta2 + r, (r % 2 == 0) ? tmp1 : tmp2, prec);
     }
 
-    /* Add error bound. Note that this must be done after multiplying
-       by w above, and before scaling by pi^r / r! below. */
+    /* 
+    Coefficient r in the z-expansion gains a factor: pi^r / r!
+    times a sign:
+
+        + 2 cos   =  +1 * (exp + 1/exp)
+        - 2 sin   =  +i * (exp - 1/exp)
+        - 2 cos   =  -1 * (exp + 1/exp)
+        + 2 sin   =  -i * (exp - 1/exp)
+        ...
+    */
+
+    acb_mul_onei(theta1, theta1);
+    acb_neg(theta1, theta1);
+
+    for (r = 1; r < len; r++)
+    {
+        if (r % 4 == 0)
+        {
+            acb_mul_onei(theta1 + r, theta1 + r);
+            acb_neg(theta1 + r, theta1 + r);
+        }
+        else if (r % 4 == 1)
+        {
+            acb_mul_onei(theta2 + r, theta2 + r);
+            acb_mul_onei(theta3 + r, theta3 + r);
+            acb_mul_onei(theta4 + r, theta4 + r);
+        }
+        else if (r % 4 == 2)
+        {
+            acb_mul_onei(theta1 + r, theta1 + r);
+
+            acb_neg(theta2 + r, theta2 + r);
+            acb_neg(theta3 + r, theta3 + r);
+            acb_neg(theta4 + r, theta4 + r);
+        }
+        else
+        {
+            acb_neg(theta1 + r, theta1 + r);
+
+            acb_mul_onei(theta2 + r, theta2 + r);
+            acb_mul_onei(theta3 + r, theta3 + r);
+            acb_mul_onei(theta4 + r, theta4 + r);
+
+            acb_neg(theta2 + r, theta2 + r);
+            acb_neg(theta3 + r, theta3 + r);
+            acb_neg(theta4 + r, theta4 + r);
+        }
+    }
+
+    /* Add error bound. Note that this must be done after the
+       rearrangements above, and before scaling by pi^r / r! below. */
     for (r = 0; r < len; r++)
     {
         if (q_is_real && w_is_unit)    /* result must be real */
@@ -454,20 +506,6 @@ acb_modular_theta_1234_sum(acb_ptr theta1,
             acb_add_error_mag(theta4 + r, err + r);
         }
     }
-
-    /* 
-    Coefficient r in the z-expansion gains a factor: pi^r / r!
-    times a sign:
-
-        + 2 cos   =  +1 * (exp + 1/exp)
-        - 2 sin   =  +i * (exp - 1/exp)
-        - 2 cos   =  -1 * (exp + 1/exp)
-        + 2 sin   =  -i * (exp - 1/exp)
-        ...
-    */
-
-    acb_mul_onei(theta1, theta1);
-    acb_neg(theta1, theta1);
 
     if (len > 1)
     {
@@ -490,38 +528,6 @@ acb_modular_theta_1234_sum(acb_ptr theta1,
             {
                 arb_mul(d, d, c, prec);
                 arb_div_ui(d, d, r + 1, prec);
-            }
-
-            if (r % 4 == 0)
-            {
-                acb_mul_onei(theta1 + r, theta1 + r);
-                acb_neg(theta1 + r, theta1 + r);
-            }
-            else if (r % 4 == 1)
-            {
-                acb_mul_onei(theta2 + r, theta2 + r);
-                acb_mul_onei(theta3 + r, theta3 + r);
-                acb_mul_onei(theta4 + r, theta4 + r);
-            }
-            else if (r % 4 == 2)
-            {
-                acb_mul_onei(theta1 + r, theta1 + r);
-
-                acb_neg(theta2 + r, theta2 + r);
-                acb_neg(theta3 + r, theta3 + r);
-                acb_neg(theta4 + r, theta4 + r);
-            }
-            else
-            {
-                acb_neg(theta1 + r, theta1 + r);
-
-                acb_mul_onei(theta2 + r, theta2 + r);
-                acb_mul_onei(theta3 + r, theta3 + r);
-                acb_mul_onei(theta4 + r, theta4 + r);
-
-                acb_neg(theta2 + r, theta2 + r);
-                acb_neg(theta3 + r, theta3 + r);
-                acb_neg(theta4 + r, theta4 + r);
             }
         }
 

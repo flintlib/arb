@@ -39,18 +39,11 @@ int main()
        that we compute the right functions */
     for (iter = 0; iter < 10000; iter++)
     {
-        acb_t t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b, w, q;
+        acb_ptr t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b;
+        acb_t w, q;
         int w_is_unit;
-        long prec0, e0, prec1, prec2;
+        long prec0, e0, prec1, prec2, len1, len2, i;
 
-        acb_init(t1a);
-        acb_init(t1b);
-        acb_init(t2a);
-        acb_init(t2b);
-        acb_init(t3a);
-        acb_init(t3b);
-        acb_init(t4a);
-        acb_init(t4b);
         acb_init(w);
         acb_init(q);
 
@@ -58,6 +51,18 @@ int main()
         prec0 = 2 + n_randint(state, 3000);
         prec1 = 2 + n_randint(state, 3000);
         prec2 = 2 + n_randint(state, 3000);
+        len1 = 1 + n_randint(state, 30);
+        len2 = 1 + n_randint(state, 30);
+
+        t1a = _acb_vec_init(len1);
+        t2a = _acb_vec_init(len1);
+        t3a = _acb_vec_init(len1);
+        t4a = _acb_vec_init(len1);
+
+        t1b = _acb_vec_init(len2);
+        t2b = _acb_vec_init(len2);
+        t3b = _acb_vec_init(len2);
+        t4b = _acb_vec_init(len2);
 
         if (n_randint(state, 2))
         {
@@ -74,43 +79,62 @@ int main()
 
         acb_randtest(q, state, prec0, e0);
 
-        acb_randtest(t1a, state, prec0, e0);
-        acb_randtest(t1b, state, prec0, e0);
-        acb_randtest(t2a, state, prec0, e0);
-        acb_randtest(t2b, state, prec0, e0);
-        acb_randtest(t3a, state, prec0, e0);
-        acb_randtest(t3b, state, prec0, e0);
-        acb_randtest(t4a, state, prec0, e0);
-        acb_randtest(t4b, state, prec0, e0);
-
-        acb_modular_theta_1234_sum(t1a, t2a, t3a, t4a, w, w_is_unit, q, 1, prec1);
-        acb_modular_theta_1234_sum(t1b, t2b, t3b, t4b, w, w_is_unit & n_randint(state, 2), q, 1, prec2);
-
-        if (!acb_overlaps(t1a, t1b) || !acb_overlaps(t2a, t2b)
-            || !acb_overlaps(t3a, t3b) || !acb_overlaps(t4a, t4b))
+        for (i = 0; i < len1; i++)
         {
-            printf("FAIL (overlap)\n");
-            printf("q = "); acb_print(q); printf("\n\n");
-            printf("w = "); acb_print(w); printf("\n\n");
-            printf("t1a = "); acb_print(t1a); printf("\n\n");
-            printf("t1b = "); acb_print(t1b); printf("\n\n");
-            printf("t2a = "); acb_print(t2a); printf("\n\n");
-            printf("t2b = "); acb_print(t2b); printf("\n\n");
-            printf("t3a = "); acb_print(t3a); printf("\n\n");
-            printf("t3b = "); acb_print(t3b); printf("\n\n");
-            printf("t4a = "); acb_print(t4a); printf("\n\n");
-            printf("t4b = "); acb_print(t4b); printf("\n\n");
-            abort();
+            acb_randtest(t1a + i, state, prec0, e0);
+            acb_randtest(t2a + i, state, prec0, e0);
+            acb_randtest(t3a + i, state, prec0, e0);
+            acb_randtest(t4a + i, state, prec0, e0);
         }
 
-        acb_clear(t1a);
-        acb_clear(t1b);
-        acb_clear(t2a);
-        acb_clear(t2b);
-        acb_clear(t3a);
-        acb_clear(t3b);
-        acb_clear(t4a);
-        acb_clear(t4b);
+        for (i = 0; i < len2; i++)
+        {
+            acb_randtest(t1b + i, state, prec0, e0);
+            acb_randtest(t2b + i, state, prec0, e0);
+            acb_randtest(t3b + i, state, prec0, e0);
+            acb_randtest(t4b + i, state, prec0, e0);
+        }
+
+        acb_modular_theta_1234_sum(t1a, t2a, t3a, t4a,
+            w, w_is_unit, q, len1, prec1);
+
+        acb_modular_theta_1234_sum(t1b, t2b, t3b, t4b,
+            w, w_is_unit & n_randint(state, 2), q, len2, prec2);
+
+        for (i = 0; i < FLINT_MIN(len1, len2); i++)
+        {
+            if (!acb_overlaps(t1a + i, t1b + i)
+                || !acb_overlaps(t2a + i, t2b + i)
+                || !acb_overlaps(t3a + i, t3b + i)
+                || !acb_overlaps(t4a + i, t4b + i))
+            {
+                printf("FAIL (overlap)  iter = %ld\n", iter);
+                printf("len1 = %ld, len2 = %ld, prec1 = %ld, prec2 = %ld\n\n",
+                    len1, len2, prec1, prec2);
+                printf("i = %ld\n\n", i);
+                printf("q = "); acb_printd(q, 50); printf("\n\n");
+                printf("w = "); acb_printd(w, 50); printf("\n\n");
+                printf("t1a = "); acb_printd(t1a + i, 50); printf("\n\n");
+                printf("t1b = "); acb_printd(t1b + i, 50); printf("\n\n");
+                printf("t2a = "); acb_printd(t2a + i, 50); printf("\n\n");
+                printf("t2b = "); acb_printd(t2b + i, 50); printf("\n\n");
+                printf("t3a = "); acb_printd(t3a + i, 50); printf("\n\n");
+                printf("t3b = "); acb_printd(t3b + i, 50); printf("\n\n");
+                printf("t4a = "); acb_printd(t4a + i, 50); printf("\n\n");
+                printf("t4b = "); acb_printd(t4b + i, 50); printf("\n\n");
+                abort();
+            }
+        }
+
+        _acb_vec_clear(t1a, len1);
+        _acb_vec_clear(t2a, len1);
+        _acb_vec_clear(t3a, len1);
+        _acb_vec_clear(t4a, len1);
+        _acb_vec_clear(t1b, len2);
+        _acb_vec_clear(t2b, len2);
+        _acb_vec_clear(t3b, len2);
+        _acb_vec_clear(t4b, len2);
+
         acb_clear(w);
         acb_clear(q);
     }
