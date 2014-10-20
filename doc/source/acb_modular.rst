@@ -347,7 +347,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
         2 Q^E W^{N+2} (N+2)^r \left[ 1 + Q^F W \frac{(N+3)^r}{(N+2)^r} + Q^{2F} W^2 \frac{(N+4)^r}{(N+2)^r} + \ldots \right]
 
-    which by the inequality `(1 + m/(N+2))^r \le \exp(m/(N+2))`
+    which by the inequality `(1 + m/(N+2))^r \le \exp(mr/(N+2))`
     can be bounded as
 
     .. math ::
