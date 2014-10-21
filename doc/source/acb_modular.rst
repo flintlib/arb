@@ -9,10 +9,6 @@ forms, Jacobi theta functions, and elliptic functions.
 In the context of this module, *tau* or `\tau` always denotes an
 element of the complex upper half-plane
 `\mathbb{H} = \{z \in \mathbb{C} : \operatorname{Im}(z) > 0\}`.
-The quantity *tau* is sometimes called the *half-period ratio*,
-since it may be viewed as the ratio `\tau = \omega_2 / \omega_1` of the
-half-periods `\omega_1, \omega_2` of an elliptic function.
-
 We also often use the variable `q`, variously defined as `q = e^{2 \pi i \tau}`
 (usually in relation to modular forms) or `q = e^{\pi i \tau}` (usually
 in relation to theta functions) and satisfying `|q| < 1`.
@@ -187,8 +183,8 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
 .. function:: void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g)
 
-    We wish to write a theta function with half-period ratio `\tau` in terms
-    of a theta function with half-period ratio `\tau' = g \tau`, given
+    We wish to write a theta function with quasiperiod `\tau` in terms
+    of a theta function with quasiperiod `\tau' = g \tau`, given
     some `g = (a, b; c, d) \in \text{PSL}(2, \mathbb{Z})`.
     For `i = 0, 1, 2, 3`, this function computes integers `R_i` and `S_i`
     (*R* and *S* should be arrays of length 4)
