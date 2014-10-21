@@ -13,7 +13,7 @@ The quantity *tau* is sometimes called the *half-period ratio*,
 since it may be viewed as the ratio `\tau = \omega_2 / \omega_1` of the
 half-periods `\omega_1, \omega_2` of an elliptic function.
 
-We also often use the *nome*, variously defined as `q = e^{2 \pi i \tau}`
+We also often use the variable `q`, variously defined as `q = e^{2 \pi i \tau}`
 (usually in relation to modular forms) or `q = e^{\pi i \tau}` (usually
 in relation to theta functions) and satisfying `|q| < 1`.
 We will clarify the local meaning of `q` every time such a quantity appears as
@@ -450,6 +450,26 @@ Modular forms
 
     The modular discriminant is sometimes defined with an extra factor
     `(2\pi)^{12}`, which we omit in this implementation.
+
+.. function:: void acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
+
+    Computes simultaneously the first *len* entries in the sequence
+    of Eisenstein series `G_4(\tau), G_6(\tau), G_8(\tau), \ldots`,
+    defined by
+
+    .. math ::
+
+        G_{2k}(\tau) = \sum_{m^2 + n^2 \ne 0} \frac{1}{(m+n\tau )^{2k}}
+
+    and satisfying
+
+    .. math ::
+
+        G_{2k} \left(\frac{a\tau+b}{c\tau+d}\right) = (c\tau+d)^{2k} G_{2k}(\tau).
+
+    We first evaluate `G_4(\tau)` and `G_6(\tau)` on the fundamental
+    domain using theta functions, and then compute the Eisenstein series
+    of higher index using a recurrence relation.
 
 
 Elliptic functions
