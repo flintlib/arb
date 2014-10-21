@@ -161,6 +161,8 @@ void acb_modular_lambda(acb_t r, const acb_t tau, long prec);
 
 void acb_modular_delta(acb_t r, const acb_t tau, long prec);
 
+void acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec);
+
 void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec);
 
 void acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, long prec);

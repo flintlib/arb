@@ -675,6 +675,14 @@ _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
 }
 
 static __inline__ void
+_acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        acb_set_round(res + i, vec + i, prec);
+}
+
+static __inline__ void
 _acb_vec_neg(acb_ptr res, acb_srcptr vec, long len)
 {
     long i;

@@ -435,6 +435,16 @@ long acb_poly_find_roots(acb_ptr roots,
 
 /* Special functions */
 
+void _acb_poly_pow_ui_trunc_binexp(acb_ptr res,
+    acb_srcptr f, long flen, ulong exp, long len, long prec);
+
+void acb_poly_pow_ui_trunc_binexp(acb_poly_t res,
+    const acb_poly_t poly, ulong exp, long len, long prec);
+
+void _acb_poly_pow_ui(acb_ptr res, acb_srcptr f, long flen, ulong exp, long prec);
+
+void acb_poly_pow_ui(acb_poly_t res, const acb_poly_t poly, ulong exp, long prec);
+
 void _acb_poly_rsqrt_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec);
 
 void acb_poly_rsqrt_series(acb_poly_t g, const acb_poly_t h, long n, long prec);

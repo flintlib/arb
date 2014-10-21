@@ -518,6 +518,30 @@ Differentiation
 Elementary functions
 -------------------------------------------------------------------------------
 
+.. function:: void _acb_poly_pow_ui_trunc_binexp(acb_ptr res, acb_srcptr f, long flen, ulong exp, long len, long prec)
+
+    Sets *{res, len}* to *{f, flen}* raised to the power *exp*, truncated
+    to length *len*. Requires that *len* is no longer than the length
+    of the power as computed without truncation (i.e. no zero-padding is performed).
+    Does not support aliasing of the input and output, and requires
+    that *flen* and *len* are positive.
+    Uses binary expontiation.
+
+.. function:: void acb_poly_pow_ui_trunc_binexp(acb_poly_t res, const acb_poly_t poly, ulong exp, long len, long prec)
+
+    Sets *res* to *poly* raised to the power *exp*, truncated to length *len*.
+    Uses binary exponentiation.
+
+.. function:: void _acb_poly_pow_ui(acb_ptr res, acb_srcptr f, long flen, ulong exp, long prec)
+
+    Sets *res* to *{f, flen}* raised to the power *exp*. Does not
+    support aliasing of the input and output, and requires that
+    *flen* is positive.
+
+.. function:: void acb_poly_pow_ui(acb_poly_t res, const acb_poly_t poly, ulong exp, long prec)
+
+    Sets *res* to *poly* raised to the power *exp*.
+
 .. function:: void _acb_poly_sqrt_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, long n, long prec)

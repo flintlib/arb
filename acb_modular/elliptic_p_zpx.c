@@ -65,6 +65,15 @@ acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, 
     acb_ptr tz1, tz2, tz3, tz4;
     acb_t t;
 
+    if (len < 1)
+        return;
+
+    if (len == 1)
+    {
+        acb_modular_elliptic_p(r, z, tau, prec);
+        return;
+    }
+
     acb_init(t);
 
     acb_init(t01);

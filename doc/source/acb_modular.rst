@@ -390,12 +390,12 @@ The Dedekind eta function
 
 .. function:: void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec)
 
-    Evaluates the series expansion of the Dedekind eta function
+    Evaluates the Dedekind eta function
     without the leading 24th root, i.e.
 
-    .. math :: \exp(-\pi i \tau/24) \eta(\tau) = \sum_{n=-\infty}^{\infty} (-1)^n q^{(3n^2-n)/2}
+    .. math :: \exp(-\pi i \tau/12) \eta(\tau) = \sum_{n=-\infty}^{\infty} (-1)^n q^{(3n^2-n)/2}
 
-    given `q = \exp(2 \pi i \tau)`.
+    given `q = \exp(2 \pi i \tau)`, by summing the defining series.
 
     This function is intended for `|q| \ll 1`. It can be called with any
     `q`, but will return useless intervals if convergence is not rapid.
@@ -455,7 +455,7 @@ Modular forms
 Elliptic functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_elliptic_p(acb_t wp, const acb_t z, const acb_t tau, long prec)
 
     Computes Weierstrass's elliptic function
 
@@ -472,5 +472,12 @@ Elliptic functions
         \wp(z, \tau) = \pi^2 \theta_2^2(0,\tau) \theta_3^2(0,\tau)
             \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
             \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
+
+.. function:: void acb_modular_elliptic_p_zpx(acb_ptr wp, const acb_t z, const acb_t tau, long len, long prec)
+
+    Computes the formal power series `\wp(z + x, \tau) \in \mathbb{C}[[x]]`,
+    truncated to length *len*. In particular, with *len* = 2, simultaneously
+    computes `\wp(z, \tau), \wp'(z, \tau)` which together generate
+    the field of elliptic functions with periods 1 and `\tau`.
 
 
