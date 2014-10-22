@@ -243,7 +243,7 @@ Radius and interval operations
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
 
-.. function:: void arb_get_interval_arf(mpfr_t a, mpfr_t b, const arb_t x, long prec)
+.. function:: void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, long prec)
 
 .. function:: void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x)
 
