@@ -303,7 +303,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
     if (N < 14)
     {
         /* Evaluate Taylor series */
-        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 0);
+        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 0, 1);
         /* Taylor series evaluation error */
         error += error2;
         /* Taylor series truncation error */
@@ -312,7 +312,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
     else  /* Compute cos(a) from sin(a) using a square root. */
     {
         /* Evaluate Taylor series */
-        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 1);
+        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 1, 1);
         error += error2;
         error += 1UL << (wprounded-wp);
 

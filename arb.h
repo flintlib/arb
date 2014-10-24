@@ -983,7 +983,8 @@ void _arb_sin_cos_taylor_naive(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N);
 
 void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
-    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int sinonly);
+    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N,
+    int sinonly, int alternating);
 
 int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
     mp_limb_t * error, const arf_t x, mp_size_t wn);

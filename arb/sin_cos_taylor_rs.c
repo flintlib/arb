@@ -33,7 +33,8 @@ extern const mp_limb_t factorial_tab_numer[FACTORIAL_TAB_SIZE];
 extern const mp_limb_t factorial_tab_denom[FACTORIAL_TAB_SIZE];
 
 void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
-    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int sinonly)
+    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N,
+    int sinonly, int alternating)
 {
     mp_ptr s, t, xpow;
     mp_limb_t new_denom, old_denom, c;
@@ -109,24 +110,22 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
                 /* change denominators */
                 if (new_denom != old_denom && k < N - 1)
                 {
-                    if (k % 2 == 0)
-                        /* mpn_neg_n(s, s, xn + 1); */
+                    if (alternating && (k % 2 == 0))
                         s[xn] += old_denom;
 
                     mpn_divrem_1(s, 0, s, xn + 1, old_denom);
 
-                    if (k % 2 == 0)
+                    if (alternating && (k % 2 == 0))
                         s[xn] -= 1;
-                        /* mpn_neg_n(s, s, xn + 1); */
                 }
 
                 if (power == 0)
                 {
                     /* add c * x^0 -- only top limb is affected */
-                    if (k % 2 == 0)
-                        s[xn] += c;
-                    else
+                    if (alternating & k)
                         s[xn] -= c;
+                    else
+                        s[xn] += c;
 
                     /* Outer polynomial evaluation: multiply by x^m */
                     if (k != 0)
@@ -139,10 +138,10 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
                 }
                 else
                 {
-                    if (k % 2 == 0)
-                        s[xn] += mpn_addmul_1(s, XPOW_READ(power), xn, c);
-                    else
+                    if (alternating & k)
                         s[xn] -= mpn_submul_1(s, XPOW_READ(power), xn, c);
+                    else
+                        s[xn] += mpn_addmul_1(s, XPOW_READ(power), xn, c);
 
                     power--;
                 }

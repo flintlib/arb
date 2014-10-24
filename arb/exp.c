@@ -259,14 +259,40 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
            error is <= 2^-wp */
         N = _arb_exp_taylor_bound(-r, wp);
 
-        /* Evaluate Taylor series */
-        _arb_exp_taylor_rs(t, &error2, w, wn, N);
+        if (N < 60)
+        {
+            /* Evaluate Taylor series */
+            _arb_exp_taylor_rs(t, &error2, w, wn, N);
+            /* Taylor series evaluation error */
+            error += error2;
+            /* Taylor series truncation error */
+            error += 1UL << (wprounded-wp);
+        }
+        else  /* Compute cosh(a) from sinh(a) using a square root. */
+        {
+            /* the summation for sinh is actually done to (2N-1)! */
+            N = (N + 1) / 2;
 
-        /* Taylor series evaluation error */
-        error += error2;
+            /* Evaluate Taylor series for sinh */
+            _arb_sin_cos_taylor_rs(t, u, &error2, w, wn, N, 1, 0);
+            error += error2;
+            error += 1UL << (wprounded-wp);
 
-        /* Taylor series truncation error */
-        error += 1UL << (wprounded-wp);
+            /* 1 + sinh^2, with wn + 1 limbs */
+            mpn_sqr(u, t, wn);
+            u[2 * wn] = 1;
+
+            /* cosh, with wn + 1 limbs */
+            mpn_sqrtrem(w, u, u, 2 * wn + 1);
+
+            /* exp = sinh + cosh */
+            t[wn] = w[wn] + mpn_add_n(t, t, w, wn);
+
+            /* When converting sinh to cosh, the error for cosh must be
+               smaller than the error for sinh; but we also get 1 ulp
+               extra error from the square root. */
+            error += 1;
+        }
 
         if (wp <= ARB_EXP_TAB1_PREC)
         {
