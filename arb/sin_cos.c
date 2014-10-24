@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "arb.h"
+#include "mpn_extras.h"
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 
@@ -299,14 +300,42 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
     /* the summation for sin/cos is actually done to (2N-1)! */
     N = (N + 1) / 2;
 
-    /* Evaluate Taylor series */
-    _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N);
+    if (N < 14)
+    {
+        /* Evaluate Taylor series */
+        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 0);
+        /* Taylor series evaluation error */
+        error += error2;
+        /* Taylor series truncation error */
+        error += 1UL << (wprounded-wp);
+    }
+    else  /* Compute cos(a) from sin(a) using a square root. */
+    {
+        /* Evaluate Taylor series */
+        _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 1);
+        error += error2;
+        error += 1UL << (wprounded-wp);
 
-    /* Taylor series evaluation error */
-    error += error2;
+        if (flint_mpn_zero_p(sina, wn))
+        {
+            flint_mpn_store(cosa, wn, LIMB_ONES);
+            error = FLINT_MAX(error, 1);
+        }
+        else
+        {
+            mpn_sqr(ta, sina, wn);
+            /* 1 - s^2 (negation guaranteed to have borrow) */
+            mpn_neg(ta, ta, 2 * wn);
+            /* top limb of ta must be nonzero, so no need to normalize
+               before calling mpn_sqrtrem */
+            mpn_sqrtrem(cosa, ta, ta, 2 * wn);
 
-    /* Taylor series truncation error */
-    error += 1UL << (wprounded-wp);
+            /* When converting sin to cos, the error for cos must be
+               smaller than the error for sin; but we also get 1 ulp
+               extra error from the square root. */
+            error += 1;
+        }
+    }
 
     /*
     sin(a+b) = sin(a)*cos(b) + cos(a)*sin(b)

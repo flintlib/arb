@@ -63,7 +63,7 @@ int main()
         x[xn - 1] &= (LIMB_ONES >> 4);
 
         _arb_sin_cos_taylor_naive(y1s, y1c, &err1, x, xn, N);
-        _arb_sin_cos_taylor_rs(y2s, y2c, &err2, x, xn, N);
+        _arb_sin_cos_taylor_rs(y2s, y2c, &err2, x, xn, N, 0);
 
         cmp = mpn_cmp(y1s, y2s, xn);
 

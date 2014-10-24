@@ -33,7 +33,7 @@ extern const mp_limb_t factorial_tab_numer[FACTORIAL_TAB_SIZE];
 extern const mp_limb_t factorial_tab_denom[FACTORIAL_TAB_SIZE];
 
 void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
-    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
+    mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int sinonly)
 {
     mp_ptr s, t, xpow;
     mp_limb_t new_denom, old_denom, c;
@@ -54,13 +54,13 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
         if (N == 0)
         {
             flint_mpn_zero(ysin, xn);
-            flint_mpn_zero(ycos, xn);
+            if (!sinonly) flint_mpn_zero(ycos, xn);
             error[0] = 0;
         }
         else if (N == 1)
         {
-            flint_mpn_store(ycos, xn, LIMB_ONES);
             flint_mpn_copyi(ysin, x, xn);
+            if (!sinonly) flint_mpn_store(ycos, xn, LIMB_ONES);
             error[0] = 1;
         }
     }
@@ -92,7 +92,7 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
             mpn_sqr(XPOW_WRITE(k), XPOW_READ(k / 2), xn);
         }
 
-        for (cosorsin = 0; cosorsin < 2; cosorsin++)
+        for (cosorsin = sinonly; cosorsin < 2; cosorsin++)
         {
             flint_mpn_zero(s, xn + 1);
 
