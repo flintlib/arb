@@ -288,10 +288,14 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
             /* exp = sinh + cosh */
             t[wn] = w[wn] + mpn_add_n(t, t, w, wn);
 
+            /* Error for cosh */
             /* When converting sinh to cosh, the error for cosh must be
                smaller than the error for sinh; but we also get 1 ulp
                extra error from the square root. */
-            error += 1;
+            error2 = error + 1;
+
+            /* Error for sinh + cosh */
+            error += error2;
         }
 
         if (wp <= ARB_EXP_TAB1_PREC)
