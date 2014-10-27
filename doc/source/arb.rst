@@ -1030,7 +1030,7 @@ Internal helper functions
 
 .. function:: void _arb_sin_cos_taylor_naive(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N)
 
-.. function:: void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int sinonly)
+.. function:: void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int sinonly, int alternating)
 
     Computes approximations of `y_s = \sum_{k=0}^{N-1} (-1)^k x^{2k+1} / (2k+1)!`
     and `y_c = \sum_{k=0}^{N-1} (-1)^k x^{2k} / (2k)!`.
@@ -1044,6 +1044,9 @@ Internal helper functions
 
     If *sinonly* is 1, only the sine is computed; if *sinonly* is 0
     both the sine and cosine are computed.
+    To compute sin and cos, *alternating* should be 1. If *alternating* is 0,
+    the hyperbolic sine is computed (this is currently only intended to
+    be used together with *sinonly*).
 
 .. function:: int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error, const arf_t x, mp_size_t wn)
 

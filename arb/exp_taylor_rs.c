@@ -25,35 +25,8 @@
 
 #include "arb.h"
 
-/*
-
-from gmpy import *
-
-def coefficients(M, bits):
-    N = 2*M+50
-    Qs = [fac(k) for k in range(N)]
-    prevstop = 0
-    for k in range(N):
-        if Qs[k] >= 2**bits-1:
-            q = Qs[k-1]
-            for i in range(k, N): Qs[i] //= q
-            for i in range(prevstop, k): Qs[i] = q
-            prevstop = k
-    Ps = Qs[:]
-    fact = 1
-    for k in range(1, N):
-        assert Qs[k] < 2**bits-1
-        if Qs[k] == Qs[k-1]:
-            fact *= k
-        else:
-            fact = k
-        Ps[k] //= fact
-    return map(int, Ps)[:N], map(int, Qs)[:N]
-
-P, Q = coefficients(288, 32)
-P, Q = coefficients(288, 64)
-
-*/
+/* See verify_taylor.py for code to generate tables and
+   proof of correctness */
 
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 

@@ -25,6 +25,9 @@
 
 #include "arb.h"
 
+/* See verify_taylor.py for code to generate tables and
+   proof of correctness */
+
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 
 #define FACTORIAL_TAB_SIZE 288
