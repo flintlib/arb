@@ -5,11 +5,19 @@ Credits and references
 
 Arb is licensed GNU General Public License version 2, or any later version.
 
-Fredrik's work on Arb is supported by Austrian Science Fund FWF Grant Y464-N18
-(Fast Computer Algebra for Special Functions).
-
 Arb includes code by Bill Hart and
 Sebastian Pancratz taken from FLINT (also licensed GPL 2.0+).
+
+From 2012 to July 2014, Fredrik's work on Arb was supported by
+Austrian Science Fund FWF Grant Y464-N18 (Fast Computer Algebra
+for Special Functions).
+During that period, he was a PhD student (and briefly a postdoc) at
+RISC, Johannes Kepler University, Linz, supervised by Manuel Kauers.
+
+From September 2014 to the present, Fredrik's work on Arb was supported by
+ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
+During that period, he was a postdoc at INRIA-Bordeaux and IMB, supervised
+by Andreas Enge.
 
 Contributors
 -------------------------------------------------------------------------------
