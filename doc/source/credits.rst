@@ -30,6 +30,7 @@ The following people (among others) have contributed patches or bug reports.
 * Ondřej Čertík
 * Andrew Booker
 * Francesco Biscani
+* Clemens Heuberger
 
 Software 
 -------------------------------------------------------------------------------
@@ -109,7 +110,13 @@ Bibliography
 
 .. [Joh2012] \F. Johansson, "Efficient implementation of the Hardy-Ramanujan-Rademacher formula", LMS Journal of Computation and Mathematics, Volume 15 (2012), 341-359, http://journals.cambridge.org/action/displayAbstract?fromPage=online&aid=8710297
 
-.. [Joh2013] \F. Johansson, "Rigorous high-precision computation of the Hurwitz zeta function and its derivatives", preprint (2013), http://arxiv.org/abs/1309.2877
+.. [Joh2013] \F. Johansson, "Rigorous high-precision computation of the Hurwitz zeta function and its derivatives", Numerical Algorithms, http://arxiv.org/abs/1309.2877 http://dx.doi.org/10.1007/s11075-014-9893-1
+
+.. [Joh2014a] \F. Johansson, *Fast and rigorous computation of special functions to high precision*, PhD thesis, RISC, Johannes Kepler University, Linz, 2014. http://fredrikj.net/thesis/
+
+.. [Joh2014b] \F. Johansson, "Evaluating parametric holonomic sequences using rectangular splitting", ISSAC 2014, 256-263. http://dx.doi.org/10.1145/2608628.2608629
+
+.. [Joh2014c] \F. Johansson, "Efficient implementation of elementary functions in the medium-precision range", http://arxiv.org/abs/1410.7176
 
 .. [Kar1998] \E. A. Karatsuba, "Fast evaluation of the Hurwitz zeta function and Dirichlet L-series", Problems of Information Transmission 34:4 (1998), 342-353, http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=ppi&paperid=425&option_lang=eng
 
