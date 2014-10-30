@@ -283,6 +283,13 @@ Radius and interval operations
     nonzero. Otherwise (if *x* represents no integers or more than one integer),
     returns zero.
 
+.. function:: void arb_floor(arb_t y, const arb_t x, long prec)
+
+.. function:: void arb_ceil(arb_t y, const arb_t x, long prec)
+
+    Sets *y* to a ball containing `\lfloor x \rfloor` and `\lceil x \rceil`
+    respectively, with the midpoint of *y* rounded to at most *prec* bits.
+
 Comparisons
 -------------------------------------------------------------------------------
 

@@ -237,6 +237,15 @@ Assignment, rounding and conversions
     an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
     Returns 0 if exact and 1 if truncation occurred.
 
+.. function:: void arf_floor(arf_t y, const arf_t x)
+
+.. function:: void arf_ceil(arf_t y, const arf_t x)
+
+    Sets *y* to `\lfloor x \rfloor` and `\lceil x \rceil` respectively.
+    The result is always represented exactly, requiring no more bits to
+    store than the input. To round the result to a floating-point number
+    with a lower precision, call :func:`arf_set_round` afterwards.
+
 Comparisons and bounds
 -------------------------------------------------------------------------------
 
