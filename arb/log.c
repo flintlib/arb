@@ -76,8 +76,6 @@ int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int 
 
 void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e);
 
-void arb_get_mag_infimum_lower(mag_t z, const arb_t x);
-
 static __inline__ mp_bitcnt_t
 _mpn_leading_zeros(mp_srcptr w, mp_size_t wn)
 {
@@ -414,7 +412,7 @@ arb_log(arb_t y, const arb_t x, long prec)
         mag_t err;
         mag_init(err);
 
-        arb_get_mag_infimum_lower(err, x);
+        arb_get_mag_lower_nonnegative(err, x);
 
         if (mag_is_zero(err))
         {
