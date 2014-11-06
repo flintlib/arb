@@ -822,6 +822,26 @@ acb_bits(const acb_t x)
     return FLINT_MAX(b1, b2);
 }
 
+static __inline__ int
+acb_is_real(const acb_t x)
+{
+    return arb_is_zero(acb_imagref(x));
+}
+
+static __inline__ int
+_acb_vec_is_real(acb_srcptr v, long len)
+{
+    long i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (!acb_is_real(v + i))
+            return 0;
+    }
+
+    return 1;
+}
+
 static __inline__ long
 _acb_vec_bits(acb_srcptr vec, long len)
 {

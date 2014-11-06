@@ -1,0 +1,155 @@
+.. _acb-hypgeom:
+
+**acb_hypgeom.h** -- evaluation of hypergeometric functions in the complex numbers
+==================================================================================
+
+The generalized hypergeometric function is formally defined by
+
+.. math ::
+
+    {}_pF_q(a_1,\ldots,a_p;b_1,\ldots,b_q;z) =
+    \sum_{k=0}^\infty \frac{(a_1)_k\dots(a_p)_k}{(b_1)_k\dots(b_q)_k} \frac {z^k} {k!}.
+
+It can be interpreted using analytic continuation or regularization
+when the sum does not converge.
+In a looser sense, we understand "hypergeometric functions" to be
+linear combinations of generalized hypergeometric functions
+with prefactors that are products of exponentials, powers, and gamma functions.
+
+Convergent series
+-------------------------------------------------------------------------------
+
+In this section, we define
+
+.. math ::
+
+    T(k) = \frac{\prod_{i=0}^{p-1} (a_i)_k}{\prod_{i=0}^{q-1} (b_i)_k} z^k
+
+and
+
+.. math ::
+
+    {}_pH_{q}(a_0,\ldots,a_{p-1}; b_0 \ldots b_{q-1}; z) = {}_{p+1}F_{q}(a_0,\ldots,a_{p-1},1; b_0 \ldots b_{q-1}; z) = \sum_{k=0}^{\infty} T(k)
+
+For the conventional generalized hypergeometric function
+`{}_pF_{q}`, compute  `{}_pH_{q+1}` with the explicit parameter `b_q = 1`,
+or remove a 1 from the `a_i` parameters if there is one.
+
+.. function:: void acb_hypgeom_pfq_bound_factor(mag_t C, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, ulong n)
+
+    Computes a factor *C* such that
+
+    .. math ::
+
+        \left|\sum_{k=n}^{\infty} T(k)\right| \le C |T(n)|.
+
+    We check that `\operatorname{Re}(b+n) > 0` for all lower
+    parameters *b*. If this does not hold, *C* is set to infinity.
+    Otherwise, we cancel out pairs of parameters
+    `a` and `b` against each other. We have
+
+    .. math ::
+
+        \left|\frac{a+k}{b+k}\right| = \left|1 + \frac{a-b}{b+k}\right| \le 1 + \frac{|a-b|}{|b+n|}
+
+    and
+
+    .. math ::
+
+        \left|\frac{1}{b+k}\right| \le \frac{1}{|b+n|}
+
+    for all `k \ge n`. This gives us a constant *D* such that
+    `T(k+1) \le D T(k)` for all `k \ge n`.
+    If `D \ge 1`, we set *C* to infinity. Otherwise, we take
+    `C = \sum_{k=0}^{\infty} D^k = (1-D)^{-1}`.
+
+    As currently implemented, the bound becomes infinite when `n` is
+    too small, even if the series converges.
+
+.. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
+    Computes `s = \sum_{k=0}^{n-1} T(k)` and `t = T(n)`.
+
+    Does not allow aliasing between input and output variables.
+    We require `n \ge 0`.
+
+.. function:: void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
+    Computes
+
+    .. math ::
+
+        {}_pH_{q}(z)
+            = \sum_{k=0}^{\infty} T(k)
+            = \sum_{k=0}^{n-1} T(k) + \varepsilon
+
+    directly from the defining series, including a rigorous bound for
+    the truncation error `\varepsilon` in the output.
+    We require `n \ge 0`.
+
+Asymptotic series
+-------------------------------------------------------------------------------
+
+Let `U(a,b,z)` denote the confluent hypergeometric function of the second
+kind with the principal branch cut (DLMF 13.2).
+We have the asymptotic expansion
+
+.. math ::
+
+    z^a U(a,b,z) \sim {}_2F_0(a, a-b+1, -1/z)
+
+where `{}_2F_0(a,b,z)` denotes a formal hypergeometric series, i.e.
+
+.. math ::
+
+    z^a U(a,b,z) = \sum_{k=0}^{n-1} \frac{(a)_k (a-b+1)_k}{k! (-z)^k} + \varepsilon_n(z).
+
+The error term `\varepsilon_n(z)` is bounded according to DLMF 13.7.
+A case distinction is made depending on whether `z` lies in one
+of three regions which we index by `R`.
+Our formula for the error bound increases with the value of `R`, so we
+can always choose the larger out of two indices if `z` lies in
+the union of two regions.
+
+Let `r = |b-2a|`.
+If `\operatorname{Re}(z) \ge r`, set `R = 1`.
+Otherwise, if `\operatorname{Im}(z) \ge r` or `\operatorname{Re}(z) \ge 0 \land |z| \ge r`, set `R = 2`.
+Otherwise, if `|z| \ge 2r`, set `R = 3`.
+Otherwise, the bound is infinite.
+If the bound is finite, we have
+
+.. math ::
+
+    |\varepsilon_n(z)| \le 2 \alpha C_n \left|\frac{(a)_n (a-b+1)_n}{n! z^n} \right| \exp(2 \alpha \rho C_1 / |z|)
+
+in terms of the following auxiliary quantities
+
+.. math ::
+
+    \sigma = |(b-2a)/z|
+
+    C_n = \begin{cases}
+    1                              & \text{if } R = 1 \\
+    \chi(n)                        & \text{if } R = 2 \\
+    (\chi(n) + \rho \nu^2 n) \nu^n & \text{if } R = 3
+    \end{cases}
+
+    \nu = \left(\tfrac{1}{2} + \tfrac{1}{2}\sqrt{1-4\sigma^2}\right)^{-1/2} \le 1 + 2 \sigma^2
+
+    \chi(n) = \sqrt{\pi} \Gamma(\tfrac{1}{2}n+1) / \Gamma(\tfrac{1}{2} n + \tfrac{1}{2})
+
+    \sigma' = \begin{cases}
+    \sigma & \text{if } R \ne 3 \\
+    \nu \sigma & \text{if } R = 3
+    \end{cases}
+
+    \alpha = (1 - \sigma')^{-1}
+
+    \rho = \tfrac{1}{2} |2a^2-2ab+b| + \sigma' (1+ \tfrac{1}{4} \sigma') (1-\sigma')^{-2}
+
+.. function:: void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, long n, long prec)
+
+    Sets *res* to `z^a U(a,b,z)` computed using *n* terms of the asymptotic series,
+    with a rigorous bound for the error included in the output.
+    We require `\ge 0`.
+

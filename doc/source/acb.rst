@@ -213,6 +213,11 @@ Precision and comparisons
     Sets *y* to a a copy of *x* with both the real and imaginary
     parts trimmed (see :func:`arb_trim`).
 
+.. function:: int acb_is_real(const acb_t x)
+
+    Returns nonzero iff the imaginary part of *x* is zero.
+    It does not test whether the real part of *x* also is finite.
+
 Complex parts
 -------------------------------------------------------------------------------
 
