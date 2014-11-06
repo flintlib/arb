@@ -207,42 +207,6 @@ hypgeom_term_bound(mag_t Tn, const mag_t TK, long K, long A, long B, int r, cons
     mag_clear(num);
 }
 
-
-/* z = max(x-y, 0), rounding down [lower bound] */
-void
-mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_special(x) || mag_is_special(y))
-    {
-        if (mag_is_zero(y))
-            mag_set(z, x);
-        else if (mag_is_zero(x) || mag_is_inf(y))
-            mag_zero(z);
-        else
-            mag_inf(z);
-    }
-    else
-    {
-        fmpr_t t, u;
-
-        fmpr_init(t);
-        fmpr_init(u);
-
-        mag_get_fmpr(t, x);
-        mag_get_fmpr(u, y);
-
-        fmpr_sub(t, t, u, MAG_BITS, FMPR_RND_DOWN);
-
-        if (fmpr_sgn(t) <= 0)
-            mag_zero(z);
-        else  /* XXX: exact? */
-            mag_set_fmpz_2exp_fmpz_lower(z, fmpr_manref(t), fmpr_expref(t));
-
-        fmpr_clear(t);
-        fmpr_clear(u);
-    }
-}
-
 long
 hypgeom_bound(mag_t error, int r,
     long A, long B, long K, const mag_t TK, const mag_t z, long tol_2exp)

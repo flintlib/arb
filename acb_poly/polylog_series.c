@@ -43,9 +43,6 @@ mag_log_ui(mag_t t, ulong n)
     }
 }
 
-/* TODO: needs reimplementing */
-void mag_sub_lower(mag_t z, const mag_t x, const mag_t y);
-
 long
 arb_get_si_lower(const arb_t x)
 {

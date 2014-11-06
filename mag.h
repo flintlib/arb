@@ -331,6 +331,8 @@ mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
     }
 }
 
+void mag_sub_lower(mag_t z, const mag_t x, const mag_t y);
+
 /* Fast versions (no infs/nans, small exponents). Note that this
    applies to outputs too! */
 

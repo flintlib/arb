@@ -220,6 +220,10 @@ Arithmetic
 
     Sets *z* to a lower bound for `x + y`.
 
+.. function:: void mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to a lower bound for `\max(x-y, 0)`.
+
 Fast, unsafe arithmetic
 -------------------------------------------------------------------------------
 

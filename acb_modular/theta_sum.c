@@ -45,8 +45,6 @@ acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, lo
     }
 }
 
-void mag_sub_lower(mag_t z, const mag_t x, const mag_t y);
-
 double
 mag_get_log2_d_approx(const mag_t x)
 {
