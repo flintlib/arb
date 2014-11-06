@@ -23,36 +23,53 @@
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb.h"
 
-void
-mag_print(const mag_t x)
+int main()
 {
-    printf("(");
-    if (mag_is_zero(x))
-        printf("0");
-    else if (mag_is_inf(x))
-        printf("inf");
-    else
+    long iter;
+    flint_rand_t state;
+
+    printf("get_mag....");
+    fflush(stdout);
+    flint_randinit(state);
+
+    for (iter = 0; iter < 100000; iter++)
     {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
-        printf("%lu * 2^", MAG_MAN(x));
-        fmpz_print(t);
-        fmpz_clear(t);
-    }
-    printf(")");
-}
+        arb_t a, b;
+        mag_t m;
 
-void
-mag_printd(const mag_t x, long d)
-{
-    arf_t t;
-    arf_init(t);
-    arf_set_mag(t, x);
-    arf_printd(t, d);
-    arf_clear(t);
+        arb_init(a);
+        arb_init(b);
+        mag_init(m);
+
+        arb_randtest_special(a, state, 200, 1 + n_randint(state, 100));
+        arb_get_mag(m, a);
+        MAG_CHECK_BITS(m)
+
+        if (arf_is_nan(arb_midref(a)))
+            arf_nan(arb_midref(b));
+        else
+            arf_zero(arb_midref(b));
+        mag_set(arb_radref(b), m);
+
+        if (!arb_contains(b, a))
+        {
+            printf("FAIL:\n\n");
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("m = "); mag_print(m); printf("\n\n");
+            abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        mag_clear(m);
+    }
+
+    flint_randclear(state);
+    flint_cleanup();
+    printf("PASS\n");
+    return EXIT_SUCCESS;
 }
 

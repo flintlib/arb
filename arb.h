@@ -347,6 +347,8 @@ arb_contains_nonnegative(const arb_t x)
 
 void arb_get_mag_lower(mag_t z, const arb_t x);
 
+void arb_get_mag_lower_nonnegative(mag_t z, const arb_t x);
+
 static __inline__ void
 arb_get_mag(mag_t z, const arb_t x)
 {
