@@ -88,7 +88,7 @@ int main()
     for (iter = 0; iter < 1000000; iter++)
     {
         arb_t a, b, c, d;
-        long prec0, prec1, prec2, prec3;
+        long prec0, prec1, prec2;
 
         if (iter % 10 == 0)
             prec0 = 10000;
@@ -97,11 +97,6 @@ int main()
 
         prec1 = 2 + n_randint(state, prec0);
         prec2 = 2 + n_randint(state, prec0);
-
-        if (iter % 10 == 0)
-            prec3 = 50000;
-        else
-            prec3 = 100;
 
         arb_init(a);
         arb_init(b);
