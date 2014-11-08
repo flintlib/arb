@@ -184,3 +184,34 @@ in terms of the following auxiliary quantities
     with a rigorous bound for the error included in the output.
     We require `\ge 0`.
 
+The error function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2)
+
+    Computes the error function respectively using
+
+    .. math ::
+
+        \operatorname{erf}(z) = \frac{2z}{\sqrt{\pi}}
+            {}_1F_1(\tfrac{1}{2}, \tfrac{3}{2}, -z^2)
+
+        \operatorname{erf}(z) = \frac{2z e^{-z^2}}{\sqrt{\pi}}
+            {}_1F_1(1, \tfrac{3}{2}, z^2)
+
+        \operatorname{erf}(z) = \frac{z}{\sqrt{z^2}}
+            \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
+            U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right).
+
+    The *asymp* version takes a second
+    precision to use for the *U* term.
+
+.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
+
+    Computes the error function `\operatorname{erf}(z)` using an
+    automatic algorithm choice.
+

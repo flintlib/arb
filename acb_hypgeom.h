@@ -53,6 +53,14 @@ void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long 
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);
 
+void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2);
+
+void acb_hypgeom_erf(acb_t res, const acb_t z, long prec);
+
 #ifdef __cplusplus
 }
 #endif
