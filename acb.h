@@ -531,15 +531,7 @@ acb_submul_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 
 void acb_inv(acb_t z, const acb_t x, long prec);
 
-static __inline__ void
-acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
-{
-    acb_t t;
-    acb_init(t);
-    acb_inv(t, y, prec);
-    acb_mul(z, x, t, prec);
-    acb_clear(t);
-}
+void acb_div(acb_t z, const acb_t x, const acb_t y, long prec);
 
 static __inline__ void
 acb_div_ui(acb_t z, const acb_t x, ulong c, long prec)
