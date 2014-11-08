@@ -66,12 +66,41 @@ or remove a 1 from the `a_i` parameters if there is one.
     As currently implemented, the bound becomes infinite when `n` is
     too small, even if the series converges.
 
+.. function:: long acb_hypgeom_pfq_choose_n(acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long prec)
+
+    Heuristically attempts to choose a number of terms *n* to
+    sum of a hypergeometric series at a working precision of *prec* bits.
+
+    Uses double precision arithmetic internally. As currently implemented,
+    it can fail to produce a good result if the parameters are extremely
+    large or extremely close to nonpositive integers.
+
+    Numerical cancellation is assumed to be significant, so truncation
+    is done when the current term is *prec* bits
+    smaller than the largest encountered term.
+
+    This function will also attempt to pick a reasonable
+    truncation point for divergent series.
+
+.. function:: void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
+.. function:: void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
 .. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
     Computes `s = \sum_{k=0}^{n-1} T(k)` and `t = T(n)`.
-
     Does not allow aliasing between input and output variables.
     We require `n \ge 0`.
+
+    The *forward* version computes the sum using forward
+    recurrence.
+
+    The *rs* version computes the sum in reverse order
+    using rectangular splitting. It only computes a
+    magnitude bound for the value of *t*.
+
+    The default version automatically chooses an algorithm
+    depending on the inputs.
 
 .. function:: void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
@@ -85,7 +114,9 @@ or remove a 1 from the `a_i` parameters if there is one.
 
     directly from the defining series, including a rigorous bound for
     the truncation error `\varepsilon` in the output.
-    We require `n \ge 0`.
+
+    If  `n < 0`, this function chooses a number of terms automatically
+    using :func:`acb_hypgeom_pfq_choose_n`.
 
 Asymptotic series
 -------------------------------------------------------------------------------

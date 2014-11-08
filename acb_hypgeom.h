@@ -35,6 +35,15 @@ extern "C" {
 void acb_hypgeom_pfq_bound_factor(mag_t C,
     acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, ulong n);
 
+long acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
+                         acb_srcptr b, long q, const acb_t z, long prec);
+
+void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
+    const acb_t z, long n, long prec);
+
+void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
+    const acb_t z, long n, long prec);
+
 void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
 

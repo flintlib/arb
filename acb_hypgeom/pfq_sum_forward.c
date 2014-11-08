@@ -26,39 +26,52 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
-    const acb_t z, long n, long prec)
+acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t,
+    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 {
-    acb_t s, t;
-    mag_t err, C;
+    acb_t u, v;
+    long k, i;
 
-    acb_init(s);
-    acb_init(t);
-    mag_init(err);
-    mag_init(C);
+    acb_init(u);
+    acb_init(v);
 
-    if (n < 0)
-        n = acb_hypgeom_pfq_choose_n(a, p, b, q, z, prec);
+    acb_zero(s);
+    acb_one(t);
 
-    acb_hypgeom_pfq_sum_rs(s, t, a, p, b, q, z, n, prec);
-
-    if (!acb_is_zero(t))
+    for (k = 0; k < n && !acb_is_zero(t); k++)
     {
-        acb_hypgeom_pfq_bound_factor(C, a, p, b, q, z, n);
-        acb_get_mag(err, t);
-        mag_mul(err, err, C);
+        acb_add(s, s, t, prec);
 
-        if (_acb_vec_is_real(a, p) && _acb_vec_is_real(b, q) && acb_is_real(z))
-            arb_add_error_mag(acb_realref(s), err);
-        else
-            acb_add_error_mag(s, err);
+        if (p > 0)
+        {
+            acb_add_ui(u, a, k, prec);
+
+            for (i = 1; i < p; i++)
+            {
+                acb_add_ui(v, a + i, k, prec);
+                acb_mul(u, u, v, prec);
+            }
+
+            acb_mul(t, t, u, prec);
+        }
+
+        if (q > 0)
+        {
+            acb_add_ui(u, b, k, prec);
+
+            for (i = 1; i < q; i++)
+            {
+                acb_add_ui(v, b + i, k, prec);
+                acb_mul(u, u, v, prec);
+            }
+
+            acb_div(t, t, u, prec);
+        }
+
+        acb_mul(t, t, z, prec);
     }
 
-    acb_set(res, s);
-
-    acb_clear(s);
-    acb_clear(t);
-    mag_clear(err);
-    mag_clear(C);
+    acb_clear(u);
+    acb_clear(v);
 }
 

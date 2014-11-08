@@ -178,6 +178,8 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec)
 {
     mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
+    acb_struct aa[3];
+    acb_t s, t, w;
     int R;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(z))
@@ -196,6 +198,24 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     mag_init(tmp);
     mag_init(err);
 
+    acb_init(aa);
+    acb_init(aa + 1);
+    acb_init(aa + 2);
+    acb_init(s);
+    acb_init(t);
+    acb_init(w);
+
+    acb_set(aa, a);
+    acb_sub(aa + 1, a, b, prec);
+    acb_add_ui(aa + 1, aa + 1, 1, prec);
+    acb_one(aa + 2);
+
+    acb_neg(w, z);
+    acb_inv(w, w, prec);
+
+    if (n < 0)
+        n = acb_hypgeom_pfq_choose_n(aa, 2, aa + 2, 1, w, prec);
+
     acb_hypgeom_u_asymp_bound_factors(&R, alpha, nu,
         sigma, rho, zinv, a, b, z);
 
@@ -205,6 +225,8 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     }
     else
     {
+        acb_hypgeom_pfq_sum(s, t, aa, 2, aa + 2, 1, w, n, prec);
+
         if (R == 1)
         {
             mag_one(C1);
@@ -239,54 +261,12 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
         mag_mul(err, err, alpha);
         mag_mul_2exp_si(err, err, 1);
 
-        /* evaluate the sum, naively for now */
-        {
-            acb_t s, t, u, v, w, ab1;
-            long k;
+        /* nth term * factor */
+        acb_get_mag(tmp, t);
+        mag_mul(err, err, tmp);
+        acb_add_error_mag(s, err);
 
-            acb_init(s);
-            acb_init(t);
-            acb_init(u);
-            acb_init(v);
-            acb_init(w);
-            acb_init(ab1);
-
-            acb_one(t);
-            acb_sub(ab1, a, b, prec);
-            acb_add_ui(ab1, ab1, 1, prec);
-
-            if (n != 0)
-            {
-                acb_neg(w, z);
-                acb_inv(w, w, prec);
-            }
-
-            for (k = 0; k < n && !acb_is_zero(t); k++)
-            {
-                acb_add(s, s, t, prec);
-
-                acb_add_ui(u, a, k, prec);
-                acb_add_ui(v, ab1, k, prec);
-                acb_mul(u, u, v, prec);
-                acb_mul(t, t, u, prec);
-                acb_mul(t, t, w, prec);
-                acb_div_ui(t, t, k + 1, prec);
-            }
-
-            /* nth term */
-            acb_get_mag(tmp, t);
-            mag_mul(err, err, tmp);
-            acb_add_error_mag(s, err);
-
-            acb_set(res, s);
-
-            acb_clear(s);
-            acb_clear(t);
-            acb_clear(u);
-            acb_clear(v);
-            acb_clear(w);
-            acb_clear(ab1);
-        }
+        acb_set(res, s);
     }
 
     mag_clear(C1);
@@ -298,5 +278,12 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     mag_clear(zinv);
     mag_clear(tmp);
     mag_clear(err);
+
+    acb_clear(aa);
+    acb_clear(aa + 1);
+    acb_clear(aa + 2);
+    acb_clear(s);
+    acb_clear(t);
+    acb_clear(w);
 }
 
