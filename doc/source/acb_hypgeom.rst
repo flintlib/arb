@@ -193,6 +193,8 @@ The error function
 
 .. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2)
 
+.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
+
     Computes the error function respectively using
 
     .. math ::
@@ -207,11 +209,6 @@ The error function
             \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
             U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right).
 
-    The *asymp* version takes a second
+    and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
-
-.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
-
-    Computes the error function `\operatorname{erf}(z)` using an
-    automatic algorithm choice.
 
