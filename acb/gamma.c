@@ -175,12 +175,26 @@ _acb_gamma(acb_t y, const acb_t x, long prec, int inverse)
 void
 acb_gamma(acb_t y, const acb_t x, long prec)
 {
+    if (acb_is_real(x))
+    {
+        arb_gamma(acb_realref(y), acb_realref(x), prec);
+        arb_zero(acb_imagref(y));
+        return;
+    }
+
     _acb_gamma(y, x, prec, 0);
 }
 
 void
 acb_rgamma(acb_t y, const acb_t x, long prec)
 {
+    if (acb_is_real(x))
+    {
+        arb_rgamma(acb_realref(y), acb_realref(x), prec);
+        arb_zero(acb_imagref(y));
+        return;
+    }
+
     _acb_gamma(y, x, prec, 1);
 }
 

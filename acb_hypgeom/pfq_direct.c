@@ -40,7 +40,7 @@ acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
     if (n < 0)
         n = acb_hypgeom_pfq_choose_n(a, p, b, q, z, prec);
 
-    acb_hypgeom_pfq_sum_rs(s, t, a, p, b, q, z, n, prec);
+    acb_hypgeom_pfq_sum(s, t, a, p, b, q, z, n, prec);
 
     if (!acb_is_zero(t))
     {

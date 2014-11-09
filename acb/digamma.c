@@ -37,6 +37,13 @@ acb_digamma(acb_t y, const acb_t x, long prec)
     long r, n, wp;
     acb_t t, u, v;
 
+    if (acb_is_real(x))
+    {
+        arb_digamma(acb_realref(y), acb_realref(x), prec);
+        arb_zero(acb_imagref(y));
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     acb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 1, wp);
