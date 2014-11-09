@@ -122,18 +122,38 @@ Asymptotic series
 -------------------------------------------------------------------------------
 
 Let `U(a,b,z)` denote the confluent hypergeometric function of the second
-kind with the principal branch cut (DLMF 13.2).
+kind with the principal branch cut, and
+let `U^{*} = z^a U(a,b,z)`.
+For all `z \ne 0` and `b \notin \mathbb{Z}` (but valid for all `b` as a limit),
+we have (DLMF 13.2.42)
+
+.. math ::
+
+    U(a,b,z)
+        = \frac{\Gamma(1-b)}{\Gamma(a-b+1)} M(a,b,z)
+        + \frac{\Gamma(b-1)}{\Gamma(a)} z^{1-b} M(a-b+1,2-b,z).
+
+Moreover, for all `z \ne 0` we have
+
+.. math ::
+
+    \frac{{}_1F_1(a,b,z)}{\Gamma(b)}
+        = \frac{(-z)^{-a}}{\Gamma(b-a)} U^{*}(a,b,z)
+        + \frac{z^{a-b} e^z}{\Gamma(a)} U^{*}(b-a,b,-z)
+
+which is equivalent to DLMF 13.2.41 (but simpler in form).
+
 We have the asymptotic expansion
 
 .. math ::
 
-    z^a U(a,b,z) \sim {}_2F_0(a, a-b+1, -1/z)
+    U^{*}(a,b,z) \sim {}_2F_0(a, a-b+1, -1/z)
 
 where `{}_2F_0(a,b,z)` denotes a formal hypergeometric series, i.e.
 
 .. math ::
 
-    z^a U(a,b,z) = \sum_{k=0}^{n-1} \frac{(a)_k (a-b+1)_k}{k! (-z)^k} + \varepsilon_n(z).
+    U^{*}(a,b,z) = \sum_{k=0}^{n-1} \frac{(a)_k (a-b+1)_k}{k! (-z)^k} + \varepsilon_n(z).
 
 The error term `\varepsilon_n(z)` is bounded according to DLMF 13.7.
 A case distinction is made depending on whether `z` lies in one
@@ -180,9 +200,9 @@ in terms of the following auxiliary quantities
 
 .. function:: void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, long n, long prec)
 
-    Sets *res* to `z^a U(a,b,z)` computed using *n* terms of the asymptotic series,
+    Sets *res* to `U^{*}(a,b,z)` computed using *n* terms of the asymptotic series,
     with a rigorous bound for the error included in the output.
-    We require `\ge 0`.
+    We require `n \ge 0`.
 
 The error function
 -------------------------------------------------------------------------------
@@ -211,4 +231,45 @@ The error function
 
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
+
+Bessel functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the Bessel function of the first kind
+    via :func:`acb_hypgeom_u_asymp`.
+    For all complex `\nu, z`, we have
+
+    .. math ::
+
+        J_{\nu}(z) = \frac{z^{\nu}}{2^{\nu} e^{iz} \Gamma(\nu+1)}
+            {}_1F_1(\nu+\tfrac{1}{2}, 2\nu+1, 2iz) = A_{+} B_{+} + A_{-} B_{-}
+
+    where
+
+    .. math ::
+
+        A_{\pm} = z^{\nu} (z^2)^{-\tfrac{1}{2}-\nu} (\mp i z)^{\tfrac{1}{2}+\nu} (2 \pi)^{-1/2} = (\pm iz)^{-1/2-\nu} z^{\nu} (2 \pi)^{-1/2}
+
+        B_{\pm} = e^{\pm i z} U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, \mp 2iz).
+
+    Nicer representations of the factors `A_{\pm}` can be given depending conditionally
+    on the parameters. If `\nu + \tfrac{1}{2} = n \in \mathbb{Z}`, we have
+    `A_{\pm} = (\pm i)^{n} (2 \pi z)^{-1/2}`.
+    And if `\operatorname{Re}(z) > 0`, we have `A_{\pm} = \exp(\mp i [(2\nu+1)/4] \pi) (2 \pi z)^{-1/2}`.
+
+.. function:: void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the Bessel function of the first kind from
+
+    .. math ::
+
+        J_{\nu}(z) = \frac{1}{\Gamma(\nu+1)} \left(\frac{z}{2}\right)^{\nu}
+                     {}_0F_1\left(\nu+1, -\frac{z^2}{4}\right).
+
+.. function:: void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the Bessel function of the first kind `J_{\nu}(z)` using
+    an automatic algorithm choice.
 

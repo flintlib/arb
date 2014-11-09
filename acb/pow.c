@@ -184,6 +184,14 @@ acb_pow_arb(acb_t z, const acb_t x, const arb_t y, long prec)
             }
             else
             {
+                /* hack: give something finite here (should fix sqrt/rsqrt etc) */
+                if (arb_contains_zero(acb_imagref(x)) && arb_contains_nonpositive(acb_realref(x)))
+                {
+                    _acb_pow_arb_exp(z, x, y, prec);
+                    fmpz_clear(e);
+                    return;
+                }
+
                 arf_get_fmpz_fixed_si(e, ymid, -1);
                 acb_sqrt(z, x, prec + fmpz_bits(e));
                 acb_pow_fmpz_binexp(z, z, e, prec);

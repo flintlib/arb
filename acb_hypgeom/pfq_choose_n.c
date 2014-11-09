@@ -96,7 +96,10 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
                 u = FLINT_ABS(u);
 
                 if (u < 1e-8 || u > 1e100 || t > 1e100)
+                {
+                    n++;
                     goto somethingstrange;
+                }
 
                 t *= u;
             }
@@ -107,7 +110,10 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
                 u = FLINT_ABS(u);
 
                 if (u < 1e-8 || u > 1e100 || t > 1e100)
+                {
+                    n++;
                     goto somethingstrange;
+                }
 
                 t /= u;
             }

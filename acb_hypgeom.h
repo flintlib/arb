@@ -61,6 +61,12 @@ void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2);
 
 void acb_hypgeom_erf(acb_t res, const acb_t z, long prec);
 
+void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec);
+
 #ifdef __cplusplus
 }
 #endif
