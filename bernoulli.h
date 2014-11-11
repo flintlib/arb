@@ -128,7 +128,7 @@ void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n);
 static __inline__ void
 _bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
 {
-    if (n < bernoulli_cache_num)
+    if (n < (ulong) bernoulli_cache_num)
     {
         fmpz_set(num, fmpq_numref(bernoulli_cache + n));
         fmpz_set(den, fmpq_denref(bernoulli_cache + n));
