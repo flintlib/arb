@@ -25,14 +25,14 @@
 
 #include "bernoulli.h"
 
-TLS_PREFIX long bernoulli_cache_num = 0;
+TLS_PREFIX ulong bernoulli_cache_num = 0;
 
 TLS_PREFIX fmpq * bernoulli_cache = NULL;
 
 void
 bernoulli_cleanup(void)
 {
-    long i;
+    ulong i;
 
     for (i = 0; i < bernoulli_cache_num; i++)
         fmpq_clear(bernoulli_cache + i);
@@ -43,11 +43,11 @@ bernoulli_cleanup(void)
 }
 
 void
-bernoulli_cache_compute(long n)
+bernoulli_cache_compute(ulong n)
 {
     if (bernoulli_cache_num < n)
     {
-        long i, new_num;
+        ulong i, new_num;
         bernoulli_rev_t iter;
 
         if (bernoulli_cache_num == 0)

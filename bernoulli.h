@@ -39,11 +39,11 @@
 extern "C" {
 #endif
 
-extern long TLS_PREFIX bernoulli_cache_num;
+extern ulong TLS_PREFIX bernoulli_cache_num;
 
 extern TLS_PREFIX fmpq * bernoulli_cache;
 
-void bernoulli_cache_compute(long n);
+void bernoulli_cache_compute(ulong n);
 
 /*
 Crude bound for the bits in d(n) = denom(B_n).
@@ -111,7 +111,7 @@ void bernoulli_rev_clear(bernoulli_rev_t iter);
 
 #define BERNOULLI_ENSURE_CACHED(n) \
   do { \
-    long __n = (n); \
+    ulong __n = (n); \
     if (__n >= bernoulli_cache_num) \
         bernoulli_cache_compute(__n + 1); \
   } while (0); \

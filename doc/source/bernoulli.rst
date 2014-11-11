@@ -63,14 +63,14 @@ Generation of Bernoulli numbers
 Caching
 -------------------------------------------------------------------------------
 
-.. var:: long bernoulli_cache_num
+.. var:: ulong bernoulli_cache_num
 
 .. var:: fmpq * bernoulli_cache
 
     Cache of Bernoulli numbers. Uses thread-local storage if enabled
     in FLINT.
 
-.. function:: void bernoulli_cache_compute(long n)
+.. function:: void bernoulli_cache_compute(ulong n)
 
     Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached.
     Calling :func:`flint_cleanup()` frees the cache.
