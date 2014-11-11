@@ -118,8 +118,8 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     {
         long new_prec, new_max;
 
-        new_prec = global_prec(n);
-        new_max = zeta_terms(n, new_prec);
+        new_prec = bernoulli_global_prec(n);
+        new_max = bernoulli_zeta_terms(n, new_prec);
 
         if (new_prec < iter->prec && new_max <= iter->max_power)
         {

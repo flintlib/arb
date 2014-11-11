@@ -42,9 +42,9 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
     if (nmax < BERNOULLI_REV_MIN)
         return;
 
-    iter->prec = wp = global_prec(nmax);
+    iter->prec = wp = bernoulli_global_prec(nmax);
 
-    iter->max_power = zeta_terms(nmax, iter->prec);
+    iter->max_power = bernoulli_zeta_terms(nmax, iter->prec);
     iter->alloc = iter->max_power + 1;
     iter->powers = _fmpz_vec_init(iter->alloc);
     fmpz_init(iter->pow_error);
@@ -58,8 +58,8 @@ bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
     /* precompute powers */
     for (j = 3; j <= iter->max_power; j += 2)
     {
-        arb_ui_pow_ui(x, j, nmax, power_prec(j, nmax, wp));
-        arb_inv(x, x, power_prec(j, nmax, wp));
+        arb_ui_pow_ui(x, j, nmax, bernoulli_power_prec(j, nmax, wp));
+        arb_inv(x, x, bernoulli_power_prec(j, nmax, wp));
         round1 = arf_get_fmpz_fixed_si(t, arb_midref(x), -wp);
         fmpz_set(iter->powers + j, t);
 

@@ -39,7 +39,7 @@ arb_bernoulli_ui(arb_t b, ulong n, long prec)
 
         use_frac = (n < BERNOULLI_SMALL_NUMER_LIMIT) || (n % 2 != 0);
         if (!use_frac)
-            use_frac = (prec > global_prec(n));
+            use_frac = (prec > bernoulli_global_prec(n));
 
         if (use_frac)
         {

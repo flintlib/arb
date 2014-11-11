@@ -55,12 +55,12 @@ We get a more accurate estimate taking the square root of this.
 Further, at least for sufficiently large n,
 sigma_0(n) < exp(1.066 log(n) / log(log(n))).
 */
-static __inline__ long denom_size(long n)
+static __inline__ long bernoulli_denom_size(long n)
 {
     return 0.5 * 1.4427 * log(n) * pow(n, 1.066 / log(log(n)));
 }
 
-static __inline__ long zeta_terms(ulong s, long prec)
+static __inline__ long bernoulli_zeta_terms(ulong s, long prec)
 {
     long N;
     N = pow(2.0, (prec + 1.0) / (s - 1.0));
@@ -68,7 +68,7 @@ static __inline__ long zeta_terms(ulong s, long prec)
     return N;
 }
 
-static __inline__ long power_prec(long i, ulong s1, long wp)
+static __inline__ long bernoulli_power_prec(long i, ulong s1, long wp)
 {
     long p = wp - s1 * log(i) * 1.44269504088896341;
     return FLINT_MAX(p, 10);
@@ -78,9 +78,9 @@ static __inline__ long power_prec(long i, ulong s1, long wp)
    in practice since the denominator estimate is quite a bit larger
    than the true denominators
  */
-static __inline__ long global_prec(ulong nmax)
+static __inline__ long bernoulli_global_prec(ulong nmax)
 {
-    return arith_bernoulli_number_size(nmax) + denom_size(nmax);
+    return arith_bernoulli_number_size(nmax) + bernoulli_denom_size(nmax);
 }
 
 
