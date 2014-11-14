@@ -41,11 +41,10 @@ arb_sinh(arb_t s, const arb_t x, long prec)
 
         if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0)
         {
-            arb_mul_2exp_si(s, x, 1);
-            arb_expm1(s, s, wp);
+            arb_expm1(s, x, wp);
             arb_add_ui(t, s, 1, wp);
-            arb_sqrt(t, t, wp);
-            arb_div(s, s, t, prec);
+            arb_div(t, s, t, wp);
+            arb_add(s, s, t, prec);
         }
         else
         {
@@ -94,33 +93,28 @@ arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
     {
         long wp = prec + 4;
 
-        arb_t t, u;
+        arb_t t;
         arb_init(t);
-        arb_init(u);
 
         if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0)
         {
-            arb_mul_2exp_si(t, x, 1);
-            arb_expm1(t, t, wp);
-            arb_add_ui(u, t, 1, wp);
-            arb_sqrt(u, u, wp);
-            arb_inv(u, u, wp);
-            arb_mul(s, t, u, prec);
-            arb_add_ui(t, t, 2, wp);
-            arb_mul(c, t, u, prec);
+            arb_expm1(s, x, wp);
+            arb_add_ui(t, s, 1, wp);
+            arb_inv(c, t, wp);
+            arb_addmul(s, s, c, prec);
+            arb_add(c, c, t, prec);
         }
         else
         {
-            arb_exp(t, x, wp);
-            arb_inv(u, t, wp);
-            arb_sub(s, t, u, prec);
-            arb_add(c, t, u, prec);
+            arb_exp(c, x, wp);
+            arb_inv(t, c, wp);
+            arb_sub(s, c, t, prec);
+            arb_add(c, c, t, prec);
         }
 
         arb_mul_2exp_si(s, s, -1);
         arb_mul_2exp_si(c, c, -1);
         arb_clear(t);
-        arb_clear(u);
     }
 }
 
