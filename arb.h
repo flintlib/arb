@@ -619,6 +619,11 @@ void arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec);
 void arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec);
 void arb_polylog_si(arb_t w, long s, const arb_t z, long prec);
 
+void arb_chebyshev_t_ui(arb_t a, ulong n, const arb_t x, long prec);
+void arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
+void arb_chebyshev_u_ui(arb_t a, ulong n, const arb_t x, long prec);
+void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
+
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \
     TLS_PREFIX arb_t name ## _cached_value; \

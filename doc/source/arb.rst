@@ -1009,6 +1009,21 @@ Other special functions
 
     Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
+.. function:: void arb_chebyshev_t_ui(arb_t a, ulong n, const arb_t x, long prec)
+
+.. function:: void arb_chebyshev_u_ui(arb_t a, ulong n, const arb_t x, long prec)
+
+    Evaluates the Chebyshev polynomial of the first kind `a = T_n(x)`
+    or the Chebyshev polynomial of the second kind `a = U_n(x)`.
+
+.. function:: void arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec)
+
+.. function:: void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec)
+
+    Simultaneously evaluates `a = T_n(x), b = T_{n-1}(x)` or
+    `a = U_n(x), b = U_{n-1}(x)`.
+    Aliasing between the intput and the outputs is not permitted.
+
 Internal helper functions
 -------------------------------------------------------------------------------
 

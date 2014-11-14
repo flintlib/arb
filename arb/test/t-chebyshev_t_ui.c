@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2014 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -30,110 +30,86 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("cos....");
+    printf("chebyshev_t_ui....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
-    {
-        arb_t a, b;
-        fmpq_t q;
-        mpfr_t t;
-        long prec0, prec;
-
-        prec0 = 400;
-        if (iter % 100 == 0)
-            prec0 = 8000;
-
-        prec = 2 + n_randint(state, prec0);
-
-        arb_init(a);
-        arb_init(b);
-        fmpq_init(q);
-        mpfr_init2(t, prec0 + 100);
-
-        arb_randtest(a, state, 1 + n_randint(state, prec0), 6);
-        arb_randtest(b, state, 1 + n_randint(state, prec0), 6);
-        arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, prec0));
-
-        fmpq_get_mpfr(t, q, MPFR_RNDN);
-        mpfr_cos(t, t, MPFR_RNDN);
-
-        arb_cos(b, a, prec);
-
-        if (!arb_contains_mpfr(b, t))
-        {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            abort();
-        }
-
-        arb_cos(a, a, prec);
-
-        if (!arb_equal(a, b))
-        {
-            printf("FAIL: aliasing\n\n");
-            abort();
-        }
-
-        arb_clear(a);
-        arb_clear(b);
-        fmpq_clear(q);
-        mpfr_clear(t);
-    }
-
-    /* check large arguments */
-    for (iter = 0; iter < 1000000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c, d;
-        long prec0, prec1, prec2;
+        ulong n;
+        long prec;
 
-        if (iter % 10 == 0)
-            prec0 = 10000;
-        else
-            prec0 = 1000;
-
-        prec1 = 2 + n_randint(state, prec0);
-        prec2 = 2 + n_randint(state, prec0);
+        n = n_randtest(state);
+        prec = 2 + n_randint(state, 300);
 
         arb_init(a);
         arb_init(b);
         arb_init(c);
         arb_init(d);
 
-        arb_randtest_special(a, state, 1 + n_randint(state, prec0), prec0);
-        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
-        arb_randtest_special(c, state, 1 + n_randint(state, prec0), 100);
-        arb_randtest_special(d, state, 1 + n_randint(state, prec0), 100);
+        arb_randtest(a, state, 1 + n_randint(state, 300), 5);
+        arb_randtest(c, state, 1 + n_randint(state, 300), 5);
 
-        arb_cos(b, a, prec1);
-        arb_cos(c, a, prec2);
+        arb_cos(b, a, prec);
+        arb_chebyshev_t_ui(c, n, b, prec);
 
-        if (!arb_overlaps(b, c))
+        arb_mul_ui(d, a, n, prec);
+        arb_cos(d, d, prec);
+
+        if (!arb_overlaps(c, d))
         {
-            printf("FAIL: overlap\n\n");
+            printf("FAIL: c = T_n(cos(a)) = d = cos(n*a)\n\n");
+            printf("n = %lu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("d = "); arb_print(c); printf("\n\n");
+            abort();
+        }
+
+        arb_chebyshev_t_ui(b, n, b, prec);
+
+        if (!arb_equal(b, c))
+        {
+            printf("FAIL: aliasing\n\n");
+            printf("n = %lu\n\n", n);
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
             abort();
         }
 
-        /* check cos(2a) = 2cos(a)^2-1 */
-        arb_mul_2exp_si(c, a, 1);
-        arb_cos(c, c, prec1);
+        arb_randtest(a, state, 1 + n_randint(state, 300), 5);
+        arb_randtest(b, state, 1 + n_randint(state, 300), 5);
+        arb_randtest(c, state, 1 + n_randint(state, 300), 5);
 
-        arb_mul(b, b, b, prec1);
-        arb_mul_2exp_si(b, b, 1);
-        arb_sub_ui(b, b, 1, prec1);
+        arb_chebyshev_t2_ui(b, c, n, a, prec);
+        arb_chebyshev_t_ui(d, n, a, prec);
 
-        if (!arb_overlaps(b, c))
+        if (!arb_overlaps(b, d))
         {
-            printf("FAIL: functional equation\n\n");
+            printf("FAIL: T_n\n\n");
+            printf("n = %lu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            abort();
+        }
+
+        if (n == 0)
+            arb_set(d, a);
+        else
+            arb_chebyshev_t_ui(d, n - 1, a, prec);
+
+        if (!arb_overlaps(c, d))
+        {
+            printf("FAIL: T_{n-1}\n\n");
+            printf("n = %lu\n\n", n);
+            printf("a = "); arb_print(a); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
+            printf("c = "); arb_print(c); printf("\n\n");
+            printf("b = "); arb_print(b); printf("\n\n");
             abort();
         }
 
@@ -148,3 +124,4 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
+
