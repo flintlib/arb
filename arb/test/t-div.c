@@ -167,6 +167,39 @@ int main()
         fmpq_clear(z);
     }
 
+    /* test special values */
+    for (iter = 0; iter < 100000; iter++)
+    {
+        arb_t a, b, c, d;
+
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+
+        arb_randtest_special(a, state, 1 + n_randint(state, 200), 1 + n_randint(state, 100));
+        arb_randtest_special(b, state, 1 + n_randint(state, 200), 1 + n_randint(state, 100));
+        arb_randtest_special(c, state, 1 + n_randint(state, 200), 1 + n_randint(state, 100));
+
+        arb_div(c, a, b, 2 + n_randint(state, 200));
+        arb_mul(d, c, b, 2 + n_randint(state, 200));
+
+        if (!arb_contains(d, a))
+        {
+            printf("FAIL: containment\n\n");
+            printf("a = "); arb_printd(a, 15); printf("\n\n");
+            printf("b = "); arb_printd(b, 15); printf("\n\n");
+            printf("c = "); arb_printd(c, 15); printf("\n\n");
+            printf("d = "); arb_printd(d, 15); printf("\n\n");
+            abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     printf("PASS\n");

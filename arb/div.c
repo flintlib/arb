@@ -33,7 +33,10 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec)
 
     if (arf_is_zero(y))
     {
-        arb_zero_pm_inf(z);
+        if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(z);
+        else
+            arb_zero_pm_inf(z);
     }
     else if (arb_is_exact(x))
     {
