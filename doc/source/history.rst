@@ -6,6 +6,44 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2014-11-15 - version 2.4.0
+
+  * arithmetic and core functions
+
+    * made evaluation of sin, cos and exp at medium precision faster using the sqrt trick
+    * optimized arb_sinh and arb_sinh_cosh
+    * optimized complex division with a small denominator
+    * optimized cubing of complex numbers
+    * added floor and ceil functions for the arf and arb types
+    * added acb_poly powering functions
+    * added acb_exp_pi_i
+    * added functions for evaluation of Chebyshev polynomials
+    * fixed arb_div to output nan for input containing nan
+
+  * added a module acb_hypgeom for hypergeometric functions
+
+    * evaluation of the generalized hypergeometric function in convergent cases
+    * evaluation of confluent hypergeometric functions using asymptotic expansions
+    * the Bessel function of the first kind for complex input
+    * the error function for complex input
+
+  * added a module acb_modular for modular forms and elliptic functions
+
+    * support for working with modular transformations
+    * mapping a point to the fundamental domain
+    * evaluation of Jacobi theta functions and their series expansions
+    * the Dedekind eta function
+    * the j-invariant and the modular lambda and delta function
+    * Eisenstein series
+    * the Weierstrass elliptic function and its series expansion
+
+  * miscellaneous
+
+    * fixed mag_print printing a too large exponent
+    * fixed printd methods to use a fallback instead of aborting when printing numbers too large for MPFR
+    * added version number string (arb_version)
+    * various additions to the documentation
+
 * 2014-09-25 - version 2.3.0
 
   * removed most of the legacy (Arb 1.x) modules

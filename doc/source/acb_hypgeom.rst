@@ -1,6 +1,6 @@
 .. _acb-hypgeom:
 
-**acb_hypgeom.h** -- evaluation of hypergeometric functions in the complex numbers
+**acb_hypgeom.h** -- hypergeometric functions in the complex numbers
 ==================================================================================
 
 The generalized hypergeometric function is formally defined by

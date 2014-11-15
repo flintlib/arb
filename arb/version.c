@@ -25,5 +25,5 @@
 
 #include "arb.h"
 
-const char * arb_version = "2.4.0-git";
+const char * arb_version = "2.4.0";
 

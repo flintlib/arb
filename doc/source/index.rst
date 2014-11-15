@@ -40,18 +40,11 @@ Module documentation (Arb 2.x types)
    acb_poly.rst
    acb_mat.rst
    acb_calc.rst
-
-Additional modules for mathematical functions
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-.. toctree::
-   :maxdepth: 1
-
+   acb_hypgeom.rst
+   acb_modular.rst
    bernoulli.rst
    hypgeom.rst
    partitions.rst
-   acb_hypgeom.rst
-   acb_modular.rst
 
 Algorithms and proofs
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
