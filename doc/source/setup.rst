@@ -11,10 +11,8 @@ Arb has the following dependencies:
 * Either MPIR (http://www.mpir.org) 2.6.0 or later, or GMP (http://www.gmplib.org) 5.1.0 or later.
   If MPIR is used instead of GMP, it must be compiled with the ``--enable-gmpcompat`` option.
 * MPFR (http://www.mpfr.org) 3.0.0 or later.
-* FLINT (http://www.flintlib.org) Currently a source checkout of FLINT from
-  https://github.com/fredrik-johansson/flint2 is required
-  (the first release version of FLINT to be compatible with Arb
-  will be FLINT 2.4).
+* FLINT (http://www.flintlib.org) version 2.4 or later. You may also
+  use a git checkout of https://github.com/fredrik-johansson/flint2
 
 
 Installation as part of FLINT
@@ -69,6 +67,7 @@ Here is an example program to get started using Arb:
         arb_init(x);
         arb_const_pi(x, 50 * 3.33);
         arb_printd(x, 50); printf("\n");
+        printf("Computed with arb-%s\n", arb_version);
         arb_clear(x);
     }
 
@@ -93,5 +92,5 @@ nonstandard location, you can for example add this path to the
 The output of the example program should be something like the following::
 
     3.1415926535897932384626433832795028841971693993751 +/- 4.2764e-50
-
+    Computed with arb-2.4.0
 

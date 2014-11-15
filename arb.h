@@ -34,6 +34,8 @@
 extern "C" {
 #endif
 
+extern const char * arb_version;
+
 typedef struct
 {
     arf_struct mid;
