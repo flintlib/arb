@@ -253,7 +253,7 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
         }
 
         /* |w| <= 2^-r */
-        r = FLINT_BITS - FLINT_BIT_COUNT(w[wn-1]);
+        r = _arb_mpn_leading_zeros(w, wn);
 
         /* Choose number of terms N such that Taylor series truncation
            error is <= 2^-wp */

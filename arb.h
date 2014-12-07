@@ -1001,6 +1001,32 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
 int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
     mp_limb_t * error, const arf_t x, mp_size_t wn);
 
+static __inline__ mp_bitcnt_t
+_arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
+{
+    mp_limb_t t;
+    mp_size_t zero_limbs;
+    mp_bitcnt_t bits;
+
+    zero_limbs = 0;
+
+    while (1)
+    {
+        t = d[n - zero_limbs - 1];
+
+        if (t != 0)
+        {
+            count_leading_zeros(bits, t);
+            return bits + FLINT_BITS * zero_limbs;
+        }
+
+        zero_limbs++;
+
+        if (zero_limbs == n)
+            return FLINT_BITS * zero_limbs;
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif

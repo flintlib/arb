@@ -76,23 +76,6 @@ int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int 
 
 void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e);
 
-static __inline__ mp_bitcnt_t
-_mpn_leading_zeros(mp_srcptr w, mp_size_t wn)
-{
-    mp_bitcnt_t r = 0;
-
-    while (wn > 0 && w[wn-1] == 0)
-    {
-        wn--;
-        r += FLINT_BITS;
-    }
-
-    if (wn > 0)
-        r += FLINT_BITS - FLINT_BIT_COUNT(w[wn-1]);
-
-    return r;
-}
-
 void
 arb_log_arf_huge(arb_t z, const arf_t x, long prec)
 {
@@ -308,7 +291,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
             error += 3;
 
             /* |w| <= 2^-r */
-            r = _mpn_leading_zeros(w, wn);
+            r = _arb_mpn_leading_zeros(w, wn);
 
             /* N >= (wp-r)/(2r) */
             N = (wp - r + (2*r-1)) / (2*r);

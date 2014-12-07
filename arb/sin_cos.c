@@ -291,7 +291,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
     }
 
     /* |w| <= 2^-r */
-    r = FLINT_BITS - FLINT_BIT_COUNT(w[wn-1]);
+    r = _arb_mpn_leading_zeros(w, wn);
 
     /* Choose number of terms N such that Taylor series truncation
        error is <= 2^-wp */

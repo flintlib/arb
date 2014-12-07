@@ -28,7 +28,7 @@
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 
 /* atan(x) = x + eps, |eps| < x^3*/
-static void
+void
 arb_atan_eps(arb_t z, const arf_t x, long prec)
 {
     fmpz_t mag;
@@ -41,7 +41,7 @@ arb_atan_eps(arb_t z, const arf_t x, long prec)
 }
 
 /* atan(x) = pi/2 - eps, eps < 1/x <= 2^(1-mag) */
-static void
+void
 arb_atan_inf_eps(arb_t z, const arf_t x, long prec)
 {
     fmpz_t mag;
@@ -140,6 +140,7 @@ _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int nega
     }
 }
 
+/* TODO: move out */
 void
 mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e)
 {
@@ -332,7 +333,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
         }
 
         /* |w| <= 2^-r */
-        r = FLINT_BITS - FLINT_BIT_COUNT(w[wn-1]);
+        r = _arb_mpn_leading_zeros(w, wn);
 
         /* N >= (wp-r)/(2r) */
         N = (wp - r + (2*r-1)) / (2*r);
