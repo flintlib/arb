@@ -30,8 +30,8 @@
    doing binary splitting with the top-level interval [0,n),
    assuming that we always choose m = a + floor((b-a)/2), and that
    the case b-a = 2 is inlined. */
-static long
-compute_bs_exponents(long * tab, long n)
+long
+_arb_compute_bs_exponents(long * tab, long n)
 {
     long a, b, aa, ab, ba, bb, length;
 
@@ -122,8 +122,8 @@ compute_bs_exponents(long * tab, long n)
 }
 
 /* just do a linear search */
-static __inline__ long
-get_exp_pos(const long * tab, long step)
+long
+_arb_get_exp_pos(const long * tab, long step)
 {
     long i;
 
@@ -188,7 +188,7 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
         fmpz_mul_2exp(T, T, *Q2exp);
 
         /* find x^step in table */
-        i = get_exp_pos(xexp, step);
+        i = _arb_get_exp_pos(xexp, step);
         fmpz_addmul(T, xpow + i, T2);  
         fmpz_clear(T2);
 
@@ -208,7 +208,7 @@ _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 
     /* compute the powers of x that will appear (at least x^1) */
     xexp = flint_calloc(2 * FLINT_BITS, sizeof(long));
-    length = compute_bs_exponents(xexp, N);
+    length = _arb_compute_bs_exponents(xexp, N);
 
     xpow = _fmpz_vec_init(length);
     xpow[0] = *x;   /* create shallow copy of x */

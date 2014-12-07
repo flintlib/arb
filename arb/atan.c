@@ -66,50 +66,6 @@ arb_atan_inf_eps(arb_t z, const arf_t x, long prec)
     fmpz_clear(mag);
 }
 
-static void
-arf_atan_via_mpfr(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
-{
-    mpfr_t xf, zf;
-    mp_ptr zptr, tmp;
-    mp_srcptr xptr;
-    mp_size_t xn, zn, val;
-    TMP_INIT;
-    TMP_START;
-
-    zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
-    tmp = TMP_ALLOC(zn * sizeof(mp_limb_t));
-
-    ARF_GET_MPN_READONLY(xptr, xn, x);
-
-    xf->_mpfr_d = (mp_ptr) xptr;
-    xf->_mpfr_prec = xn * FLINT_BITS;
-    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
-    xf->_mpfr_exp = ARF_EXP(x);
-
-    zf->_mpfr_d = tmp;
-    zf->_mpfr_prec = prec;
-    zf->_mpfr_sign = 1;
-    zf->_mpfr_exp = 0;
-
-    mpfr_set_emin(MPFR_EMIN_MIN);
-    mpfr_set_emax(MPFR_EMAX_MAX);
-
-    mpfr_atan(zf, xf, arf_rnd_to_mpfr(rnd));
-
-    val = 0;
-    while (tmp[val] == 0)
-        val++;
-
-    ARF_GET_MPN_WRITE(zptr, zn - val, z);
-    flint_mpn_copyi(zptr, tmp + val, zn - val);
-    if (zf->_mpfr_sign < 0)
-        ARF_NEG(z);
-
-    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
-
-    TMP_END;
-}
-
 int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
 
 int
@@ -223,8 +179,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
         /* Too high precision to use table */
         if (wp > ARB_ATAN_TAB2_PREC)
         {
-            arf_atan_via_mpfr(arb_midref(z), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(z), arb_midref(z), prec);
+            arb_atan_arf_bb(z, x, prec);
             return;
         }
 

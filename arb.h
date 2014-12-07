@@ -1027,6 +1027,14 @@ _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
     }
 }
 
+void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
+void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+    const fmpz_t x, mp_bitcnt_t r, long N);
+
+void arb_atan_arf_bb(arb_t z, const arf_t x, long prec);
+
 #ifdef __cplusplus
 }
 #endif
