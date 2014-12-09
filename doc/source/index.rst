@@ -53,7 +53,6 @@ Algorithms and proofs
    :maxdepth: 1
 
    constants.rst
-   elementary.rst
    gamma.rst
    polylogarithms.rst
 

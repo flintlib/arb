@@ -604,7 +604,6 @@ Exponentials and logarithms
     via :func:`_arb_atan_taylor_rs`. At high precision, it falls back to MPFR.
     The function :func:`arb_log` simply calls :func:`arb_log_arf` with
     the midpoint as input, and separately adds the propagated error.
-    See :ref:`algorithmselem` for further remarks.
 
 .. function:: void arb_log_ui_from_prev(arb_t log_k1, ulong k1, arb_t log_k0, ulong k0, long prec)
 
@@ -692,7 +691,9 @@ Inverse trigonometric functions
     via :func:`_arb_atan_taylor_rs`. At high precision, it falls back to MPFR.
     The function :func:`arb_atan` simply calls :func:`arb_atan_arf` with
     the midpoint as input, and separately adds the propagated error.
-    See :ref:`algorithmselem` for further remarks.
+
+    The function :func:`arb_atan_arf` uses lookup tables if
+    possible, and otherwise falls back to :func:`arb_atan_arf_bb`.
 
 .. function:: void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec)
 
@@ -1022,9 +1023,9 @@ Other special functions
 
     Simultaneously evaluates `a = T_n(x), b = T_{n-1}(x)` or
     `a = U_n(x), b = U_{n-1}(x)`.
-    Aliasing between the intput and the outputs is not permitted.
+    Aliasing between *a*, *b* and *x* is not permitted.
 
-Internal helper functions
+Internals for computing elementary functions
 -------------------------------------------------------------------------------
 
 .. function:: void _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error, mp_srcptr x, mp_size_t xn, ulong N, int alternating)
@@ -1127,4 +1128,42 @@ Internal helper functions
     The *powtab* version precomputes a table of powers of *x*,
     resulting in slightly higher memory usage but better speed. For best
     efficiency, *N* should have many trailing zero bits.
+
+.. function:: void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+
+.. function:: void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+
+    Computes *T*, *Q* and *Qexp* such that
+    `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (-1)^k (x/2^r)^{2k} / (2k+1)`
+    using binary splitting.
+    Note that the sum is taken to *N* inclusive, omits the linear term,
+    and requires a final multiplication by `(x/2^r)` to give the
+    true series for atan.
+
+    The *powtab* version precomputes a table of powers of *x*,
+    resulting in slightly higher memory usage but better speed. For best
+    efficiency, *N* should have many trailing zero bits.
+
+.. function:: void arb_atan_arf_bb(arb_t z, const arf_t x, long prec)
+
+    Computes the arctangent of *x*.
+    Initially, the argument-halving formula
+
+    .. math ::
+
+        \operatorname{atan}(x) = 2 \operatorname{atan}\left(\frac{x}{1+\sqrt{1+x^2}}\right)
+
+    is applied up to 8 times to get a small argument.
+    Then a version of the bit-burst algorithm is used.
+    The functional equation
+
+    .. math ::
+
+        \operatorname{atan}(x) = \operatorname{atan}(p/q) +
+            \operatorname{atan}(w),
+            \quad w = \frac{qx-p}{px+q},
+            \quad p = \lfloor qx \rfloor
+
+    is applied repeatedly instead of integrating a differential
+    equation for the arctangent, as this appears to be more efficient.
 
