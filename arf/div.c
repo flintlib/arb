@@ -26,6 +26,12 @@
 #include "arf.h"
 #include "mpn_extras.h"
 
+#ifdef mpn_tdiv
+#define USE_GMP_DIV_Q 1
+#else
+#define USE_GMP_DIV_Q 0
+#endif
+
 void
 arf_div_special(arf_t z, const arf_t x, const arf_t y)
 {
@@ -89,6 +95,10 @@ arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
     tn = xn + sn;
     zn = tn - yn + 1;
     alloc = zn + (tn + 1);
+/* need tn + 1 extra temporary limbs, which we store at the end of tptr */
+#if USE_GMP_DIV_Q
+    alloc += tn + 1;
+#endif
 
     ARF_MUL_TMP_ALLOC(tmp, alloc)
 
@@ -97,7 +107,12 @@ arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
 
     flint_mpn_zero(tptr, sn);
     flint_mpn_copyi(tptr + sn, xptr, xn);
+/* uses tn + 1 extra temporary limbs, tn limbs after tptr */
+#if USE_GMP_DIV_Q
+    mpn_div_q(zptr, tptr, tn, yptr, yn, tptr + tn);
+#else
     mpn_tdiv_q(zptr, tptr, tn, yptr, yn);
+#endif
 
     if (zptr[zn - 1] == 0)
     {
