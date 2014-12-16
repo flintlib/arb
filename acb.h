@@ -616,6 +616,9 @@ void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec);
 void acb_polylog(acb_t w, const acb_t s, const acb_t z, long prec);
 void acb_polylog_si(acb_t w, long s, const acb_t z, long prec);
 
+void acb_agm1(acb_t m, const acb_t z, long prec);
+void acb_agm1_cpx(acb_ptr m, const acb_t z, long len, long prec);
+
 /*
 TBD
 

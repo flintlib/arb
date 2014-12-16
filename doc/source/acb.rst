@@ -519,3 +519,21 @@ Polylogarithms
 .. function:: void acb_polylog_si(acb_t w, long s, const acb_t z, long prec)
 
     Sets *w* to the polylogarithm `\operatorname{Li}_s(z)`.
+
+Arithmetic-geometric mean
+-------------------------------------------------------------------------------
+
+.. function:: void acb_agm1(acb_t m, const acb_t z, long prec)
+
+    Sets *m* to the arithmetic-geometric mean `M(z) = \operatorname{agm}(1,z)`,
+    defined such that the function is continuous in the complex plane except for
+    a branch cut along the negative half axis (where it is continuous
+    from above). This corresponds to always choosing an "optimal" branch for
+    the square root in the arithmetic-geometric mean iteration.
+
+.. function:: void acb_agm1_cpx(acb_ptr m, const acb_t z, long len, long prec)
+
+    Sets the coefficients in the array *m* to the power series expansion of the
+    arithmetic-geometric mean at the point *z* truncated to length *len*, i.e.
+    `M(z+x) \in \mathbb{C}[[x]]`.
+
