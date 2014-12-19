@@ -496,4 +496,17 @@ Elliptic functions
     computes `\wp(z, \tau), \wp'(z, \tau)` which together generate
     the field of elliptic functions with periods 1 and `\tau`.
 
+Elliptic integrals
+-------------------------------------------------------------------------------
+
+.. function:: void acb_modular_elliptic_k(acb_t w, const acb_t m, long prec)
+
+    Computes the complete elliptic integral of the first kind `K(m)`,
+    using the arithmetic-geometric mean: `K(m) = \pi / (2 M(\sqrt{1-m}))`.
+
+.. function:: void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec)
+
+    Sets the coefficients in the array *w* to the power series expansion of the
+    complete elliptic integral of the first kind at the point *m* truncated to
+    length *len*, i.e. `K(m+x) \in \mathbb{C}[[x]]`.
 
