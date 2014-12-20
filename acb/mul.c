@@ -51,14 +51,14 @@ _acb_sqr_fast(acb_t z, const acb_t x, long prec)
 
     mag_fast_addmul(er, am, ar);
     mag_fast_addmul(er, bm, br);
-    mag_mul_2exp_si(er, er, 1);
+    mag_fast_mul_2exp_si(er, er, 1);
     mag_fast_addmul(er, ar, ar);
     mag_fast_addmul(er, br, br);
 
     mag_fast_addmul(fr, bm, ar);
     mag_fast_addmul(fr, am, br);
     mag_fast_addmul(fr, ar, br);
-    mag_mul_2exp_si(fr, fr, 1);
+    mag_fast_mul_2exp_si(fr, fr, 1);
 
     inexact = arf_complex_sqr(arb_midref(e), arb_midref(f),
                     arb_midref(a), arb_midref(b), prec, ARB_RND);

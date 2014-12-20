@@ -256,6 +256,10 @@ as they will be overwritten directly (thus leaking memory).
 
     Sets *z* to an upper bound for `x + 2^e`.
 
+.. function:: void mag_fast_mul_2exp_si(mag_t z, const mag_t x, long e)
+
+    Sets *z* to an upper bound for `x 2^e`.
+
 Powers and logarithms
 -------------------------------------------------------------------------------
 

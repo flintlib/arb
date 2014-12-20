@@ -372,6 +372,20 @@ mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
 }
 
 static __inline__ void
+mag_fast_mul_2exp_si(mag_t z, const mag_t x, long y)
+{
+    if (MAG_MAN(x) == 0)
+    {
+        mag_fast_zero(z);
+    }
+    else
+    {
+        MAG_MAN(z) = MAG_MAN(x);
+        MAG_EXP(z) = MAG_EXP(x) + y;
+    }
+}
+
+static __inline__ void
 mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 {
     if (MAG_MAN(z) == 0)
