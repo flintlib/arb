@@ -109,55 +109,13 @@ bound_K(arb_t C, const arb_t AN, const arb_t B, const arb_t T, long wp)
     }
 }
 
-/* Absolute value of rising factorial (could speed up once complex gamma is available). */
-void
-acb_rfac_abs_ubound2(arf_t bound, const acb_t s, ulong n, long prec)
-{
-    arf_t term, t;
-    ulong k;
-
-    /* M(k) = (a+k)^2 + b^2
-       M(0) = a^2 + b^2
-       M(k+1) = M(k) + 2*a + (2*k+1)
-    */
-    arf_init(t);
-    arf_init(term);
-
-    arf_one(bound);
-
-    /* M(0) = a^2 + b^2 */
-    arb_get_abs_ubound_arf(t, acb_realref(s), prec);
-    arf_mul(term, t, t, prec, ARF_RND_UP);
-    arb_get_abs_ubound_arf(t, acb_imagref(s), prec);
-    arf_mul(t, t, t, prec, ARF_RND_UP);
-    arf_add(term, term, t, prec, ARF_RND_UP);
-
-    /* we add t = 2*a to each term. note that this can be signed;
-       we always want the most positive value */
-    arf_set_mag(t, arb_radref(acb_realref(s)));
-    arf_add(t, arb_midref(acb_realref(s)), t, prec, ARF_RND_CEIL);
-    arf_mul_2exp_si(t, t, 1);
-
-    for (k = 0; k < n; k++)
-    {
-        arf_mul(bound, bound, term, prec, ARF_RND_UP);
-        arf_add_ui(term, term, 2 * k + 1, prec, ARF_RND_UP);
-        arf_add(term, term, t, prec, ARF_RND_UP);
-    }
-
-    arf_sqrt(bound, bound, prec, ARF_RND_UP);
-
-    arf_clear(t);
-    arf_clear(term);
-}
-
-
 static void
 bound_rfac(arb_ptr F, const acb_t s, ulong n, long len, long wp)
 {
     if (len == 1)
     {
-        acb_rfac_abs_ubound2(arb_midref(F + 0), s, n, wp);
+        acb_rising_ui_get_mag(arb_radref(F), s, n);
+        arf_set_mag(arb_midref(F), arb_radref(F));
         mag_zero(arb_radref(F + 0));
     }
     else

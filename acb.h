@@ -613,6 +613,8 @@ void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec);
 void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, long prec);
 void acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, long prec);
 
+void acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n);
+
 void acb_gamma(acb_t y, const acb_t x, long prec);
 void acb_rgamma(acb_t y, const acb_t x, long prec);
 void acb_lgamma(acb_t y, const acb_t x, long prec);

@@ -471,6 +471,12 @@ Rising factorials
     rectangular splitting (with optional nonzero step length *step*
     to override the default choice), and an automatic algorithm choice.
 
+.. function :: void acb_rising_ui_get_mag(mag_t bound, const acb_t x, ulong n)
+
+    Computes an upper bound for the absolute value of
+    the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
+    Not currently optimized for large *n*.
+
 Gamma function
 -------------------------------------------------------------------------------
 
