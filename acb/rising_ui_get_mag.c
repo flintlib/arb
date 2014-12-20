@@ -116,6 +116,7 @@ acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n)
 
         arb_clear(a);
         mag_clear(bound2);
+        mag_clear(t);
         mag_clear(u);
     }
 
