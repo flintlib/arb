@@ -469,6 +469,13 @@ acb_mul_2exp_si(acb_t z, const acb_t x, long e)
     arb_mul_2exp_si(acb_imagref(z), acb_imagref(x), e);
 }
 
+static __inline__ void
+acb_mul_2exp_fmpz(acb_t z, const acb_t x, const fmpz_t c)
+{
+    arb_mul_2exp_fmpz(acb_realref(z), acb_realref(x), c);
+    arb_mul_2exp_fmpz(acb_imagref(z), acb_imagref(x), c);
+}
+
 void acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec);
 
 void acb_submul(acb_t z, const acb_t x, const acb_t y, long prec);

@@ -289,6 +289,8 @@ Arithmetic
 
 .. function:: void acb_mul_2exp_si(acb_t z, const acb_t x, long e)
 
+.. function:: void acb_mul_2exp_fmpz(acb_t z, const acb_t x, const fmpz_t e)
+
     Sets *z* to *x* multiplied by `2^e`, without rounding.
 
 .. function:: void acb_cube(acb_t z, const acb_t x, long prec)

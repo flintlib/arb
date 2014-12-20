@@ -26,35 +26,6 @@
 #include "acb.h"
 #include "acb_poly.h"
 
-void
-mag_hypot(mag_t z, const mag_t x, const mag_t y)
-{
-    if (mag_is_zero(y))
-    {
-        mag_set(z, x);
-    }
-    else if (mag_is_zero(x))
-    {
-        mag_set(z, y);
-    }
-    else
-    {
-        mag_t t;
-        mag_init(t);
-        mag_mul(t, x, x);
-        mag_addmul(t, y, y);
-        mag_sqrt(z, t);
-        mag_clear(t);
-    }
-}
-
-static __inline__ void
-acb_mul_2exp_fmpz(acb_t z, const acb_t x, const fmpz_t c)
-{
-    arb_mul_2exp_fmpz(acb_realref(z), acb_realref(x), c);
-    arb_mul_2exp_fmpz(acb_imagref(z), acb_imagref(x), c);
-}
-
 /* Checks that |arg(z)| <= 3 pi / 4 */
 static int
 acb_check_arg(const acb_t z)
