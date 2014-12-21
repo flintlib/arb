@@ -25,24 +25,7 @@
 
 #include "acb_poly.h"
 
-/* TODO: move and document helper functions */
-void
-mag_log_ui(mag_t t, ulong n)
-{
-    if (n <= 1)
-    {
-        if (n == 1)
-            mag_zero(t);
-        else
-            mag_inf(t);
-    }
-    else
-    {
-        mag_set_ui(t, n-1);
-        mag_log1p(t, t);
-    }
-}
-
+/* note: will not return a wrong value, as arf_get_si aborts on overflow */
 long
 arb_get_si_lower(const arb_t x)
 {
@@ -58,36 +41,6 @@ arb_get_si_lower(const arb_t x)
     arf_clear(t);
 
     return v;
-}
-
-/* bound (1 + 1/m)^n, m > 0, n >= 0 */
-void
-mag_binpow_uiui(mag_t b, ulong m, ulong n)
-{
-    mag_t t;
-    mag_init(t);
-
-    /* bound by exp(n/m) <= 1 + (n/m) + (n/m)^2 */
-    if (m > n)
-    {
-        mag_set_ui(t, n);   /* x = n/m */
-        mag_div_ui(t, t, m);
-
-        mag_mul(b, t, t);   /* x^2 */
-        mag_add(b, b, t);   /* x */
-        mag_one(t);
-        mag_add(b, b, t);   /* 1 */
-    }
-    else
-    {
-        mag_one(b);
-        mag_div_ui(b, b, m);
-        mag_one(t);
-        mag_add(t, t, b);
-        mag_pow_ui(b, t, n);
-    }
-
-    mag_clear(t);
 }
 
 void

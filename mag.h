@@ -546,6 +546,8 @@ double mag_d_log_lower_bound(double x);
 
 void mag_log1p(mag_t z, const mag_t x);
 
+void mag_log_ui(mag_t t, ulong n);
+
 void mag_exp_maglim(mag_t y, const mag_t x, long maglim);
 
 static __inline__ void
@@ -574,6 +576,8 @@ void mag_sqrt(mag_t y, const mag_t x);
 void mag_rsqrt(mag_t y, const mag_t x);
 
 void mag_hypot(mag_t z, const mag_t x, const mag_t y);
+
+void mag_binpow_uiui(mag_t b, ulong m, ulong n);
 
 void mag_set_ui(mag_t z, ulong x);
 void mag_set_ui_lower(mag_t z, ulong x);

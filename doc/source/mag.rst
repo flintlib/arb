@@ -290,6 +290,10 @@ Powers and logarithms
     Sets *z* to an upper bound for `\log(1+x)`. The bound is computed
     accurately for small *x*.
 
+.. function:: void mag_log_ui(mag_t z, ulong n)
+
+    Sets *z* to an upper bound for `\log(n)`.
+
 .. function:: void mag_exp(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\exp(x)`.
@@ -302,6 +306,10 @@ Powers and logarithms
 .. function:: void mag_exp_tail(mag_t z, const mag_t x, ulong N)
 
     Sets *z* to an upper bound for `\sum_{k=N}^{\infty} x^k / k!`.
+
+.. function:: void mag_binpow_uiui(mag_t z, ulong m, ulong n)
+
+    Sets *z* to an upper bound for `(1 + 1/m)^n`.
 
 Special functions
 -------------------------------------------------------------------------------
