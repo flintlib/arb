@@ -26,6 +26,12 @@
 #ifndef ACB_H
 #define ACB_H
 
+#ifdef ACB_INLINES_C
+#define ACB_INLINE
+#else
+#define ACB_INLINE static __inline__
+#endif
+
 #include "arf.h"
 #include "arb.h"
 
@@ -48,21 +54,21 @@ typedef const acb_struct * acb_srcptr;
 #define acb_imagref(x) (&(x)->imag)
 
 
-static __inline__ void
+ACB_INLINE void
 acb_init(acb_t x)
 {
     arb_init(acb_realref(x));
     arb_init(acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_clear(acb_t x)
 {
     arb_clear(acb_realref(x));
     arb_clear(acb_imagref(x));
 }
 
-static __inline__ acb_ptr
+ACB_INLINE acb_ptr
 _acb_vec_init(long n)
 {
     long i;
@@ -74,7 +80,7 @@ _acb_vec_init(long n)
     return v;
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_clear(acb_ptr v, long n)
 {
     long i;
@@ -83,173 +89,173 @@ _acb_vec_clear(acb_ptr v, long n)
     flint_free(v);
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_is_zero(const acb_t z)
 {
     return arb_is_zero(acb_realref(z)) && arb_is_zero(acb_imagref(z));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_is_one(const acb_t z)
 {
     return arb_is_one(acb_realref(z)) && arb_is_zero(acb_imagref(z));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_is_exact(const acb_t z)
 {
     return arb_is_exact(acb_realref(z)) && arb_is_exact(acb_imagref(z));
 }
 
 
-static __inline__ void
+ACB_INLINE void
 acb_zero(acb_t z)
 {
     arb_zero(acb_realref(z));
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_one(acb_t z)
 {
     arb_one(acb_realref(z));
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_onei(acb_t z)
 {
     arb_zero(acb_realref(z));
     arb_one(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set(acb_t z, const acb_t x)
 {
     arb_set(acb_realref(z), acb_realref(x));
     arb_set(acb_imagref(z), acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_round(acb_t z, const acb_t x, long prec)
 {
     arb_set_round(acb_realref(z), acb_realref(x), prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_neg_round(acb_t z, const acb_t x, long prec)
 {
     arb_neg_round(acb_realref(z), acb_realref(x), prec);
     arb_neg_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_swap(acb_t z, acb_t x)
 {
     arb_swap(acb_realref(z), acb_realref(x));
     arb_swap(acb_imagref(z), acb_imagref(x));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_equal(const acb_t x, const acb_t y)
 {
     return arb_equal(acb_realref(x), acb_realref(y)) &&
             arb_equal(acb_imagref(x), acb_imagref(y));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_overlaps(const acb_t x, const acb_t y)
 {
     return arb_overlaps(acb_realref(x), acb_realref(y)) &&
             arb_overlaps(acb_imagref(x), acb_imagref(y));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_contains_zero(const acb_t x)
 {
     return arb_contains_zero(acb_realref(x)) &&
             arb_contains_zero(acb_imagref(x));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_contains_fmpq(const acb_t x, const fmpq_t y)
 {
     return arb_contains_fmpq(acb_realref(x), y) &&
             arb_contains_zero(acb_imagref(x));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_contains_fmpz(const acb_t x, const fmpz_t y)
 {
     return arb_contains_fmpz(acb_realref(x), y) &&
             arb_contains_zero(acb_imagref(x));
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_contains(const acb_t x, const acb_t y)
 {
     return arb_contains(acb_realref(x), acb_realref(y)) &&
             arb_contains(acb_imagref(x), acb_imagref(y));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_ui(acb_t z, ulong c)
 {
     arb_set_ui(acb_realref(z), c);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_si(acb_t z, long c)
 {
     arb_set_si(acb_realref(z), c);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_fmpz(acb_t z, const fmpz_t c)
 {
     arb_set_fmpz(acb_realref(z), c);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_round_fmpz(acb_t z, const fmpz_t y, long prec)
 {
     arb_set_round_fmpz(acb_realref(z), y, prec);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_fmpq(acb_t z, const fmpq_t c, long prec)
 {
     arb_set_fmpq(acb_realref(z), c, prec);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_arb(acb_t z, const arb_t c)
 {
     arb_set(acb_realref(z), c);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_set_round_arb(acb_t z, const arb_t x, long prec)
 {
     arb_set_round(acb_realref(z), x, prec);
     arb_zero(acb_imagref(z));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_trim(acb_t z, const acb_t x)
 {
     arb_trim(acb_realref(z), acb_realref(x));
     arb_trim(acb_imagref(z), acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_add_error_arf(acb_t x, const arf_t err)
 {
     arb_add_error_arf(acb_realref(x), err);
@@ -257,7 +263,7 @@ acb_add_error_arf(acb_t x, const arf_t err)
 }
 
 /* TODO: document */
-static __inline__ void
+ACB_INLINE void
 acb_add_error_mag(acb_t x, const mag_t err)
 {
     arb_add_error_mag(acb_realref(x), err);
@@ -268,7 +274,7 @@ void acb_get_mag(mag_t z, const acb_t x);
 
 void acb_get_mag_lower(mag_t z, const acb_t x);
 
-static __inline__ void
+ACB_INLINE void
 acb_get_abs_ubound_arf(arf_t u, const acb_t z, long prec)
 {
     if (arb_is_zero(acb_imagref(z)))
@@ -296,7 +302,7 @@ acb_get_abs_ubound_arf(arf_t u, const acb_t z, long prec)
     }
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_get_abs_lbound_arf(arf_t u, const acb_t z, long prec)
 {
     if (arb_is_zero(acb_imagref(z)))
@@ -324,7 +330,7 @@ acb_get_abs_lbound_arf(arf_t u, const acb_t z, long prec)
     }
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_get_rad_ubound_arf(arf_t u, const acb_t z, long prec)
 {
     /* fixme: this bound is very sloppy */
@@ -339,111 +345,111 @@ acb_get_rad_ubound_arf(arf_t u, const acb_t z, long prec)
 
 void acb_arg(arb_t r, const acb_t z, long prec);
 
-static __inline__ void
+ACB_INLINE void
 acb_add(acb_t z, const acb_t x, const acb_t y, long prec)
 {
     arb_add(acb_realref(z), acb_realref(x), acb_realref(y), prec);
     arb_add(acb_imagref(z), acb_imagref(x), acb_imagref(y), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_sub(acb_t z, const acb_t x, const acb_t y, long prec)
 {
     arb_sub(acb_realref(z), acb_realref(x), acb_realref(y), prec);
     arb_sub(acb_imagref(z), acb_imagref(x), acb_imagref(y), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_add_ui(acb_t z, const acb_t x, ulong c, long prec)
 {
     arb_add_ui(acb_realref(z), acb_realref(x), c, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_sub_ui(acb_t z, const acb_t x, ulong c, long prec)
 {
     arb_sub_ui(acb_realref(z), acb_realref(x), c, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_add_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 {
     arb_add_fmpz(acb_realref(z), acb_realref(x), y, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_add_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 {
     arb_add(acb_realref(z), acb_realref(x), y, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_sub_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 {
     arb_sub_fmpz(acb_realref(z), acb_realref(x), y, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_sub_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 {
     arb_sub(acb_realref(z), acb_realref(x), y, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_neg(acb_t z, const acb_t x)
 {
     arb_neg(acb_realref(z), acb_realref(x));
     arb_neg(acb_imagref(z), acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_conj(acb_t z, const acb_t x)
 {
     arb_set(acb_realref(z), acb_realref(x));
     arb_neg(acb_imagref(z), acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_abs(arb_t u, const acb_t z, long prec)
 {
     arb_hypot(u, acb_realref(z), acb_imagref(z), prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_ui(acb_t z, const acb_t x, ulong y, long prec)
 {
     arb_mul_ui(acb_realref(z), acb_realref(x), y, prec);
     arb_mul_ui(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_si(acb_t z, const acb_t x, long y, long prec)
 {
     arb_mul_si(acb_realref(z), acb_realref(x), y, prec);
     arb_mul_si(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 {
     arb_mul_fmpz(acb_realref(z), acb_realref(x), y, prec);
     arb_mul_fmpz(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 {
     arb_mul(acb_realref(z), acb_realref(x), y, prec);
     arb_mul(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_onei(acb_t z, const acb_t x)
 {
     if (z == x)
@@ -462,14 +468,14 @@ void acb_mul(acb_t z, const acb_t x, const acb_t y, long prec);
 
 void acb_mul_naive(acb_t z, const acb_t x, const acb_t y, long prec);
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_2exp_si(acb_t z, const acb_t x, long e)
 {
     arb_mul_2exp_si(acb_realref(z), acb_realref(x), e);
     arb_mul_2exp_si(acb_imagref(z), acb_imagref(x), e);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_mul_2exp_fmpz(acb_t z, const acb_t x, const fmpz_t c)
 {
     arb_mul_2exp_fmpz(acb_realref(z), acb_realref(x), c);
@@ -480,56 +486,56 @@ void acb_addmul(acb_t z, const acb_t x, const acb_t y, long prec);
 
 void acb_submul(acb_t z, const acb_t x, const acb_t y, long prec);
 
-static __inline__ void
+ACB_INLINE void
 acb_addmul_ui(acb_t z, const acb_t x, ulong y, long prec)
 {
     arb_addmul_ui(acb_realref(z), acb_realref(x), y, prec);
     arb_addmul_ui(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_addmul_si(acb_t z, const acb_t x, long y, long prec)
 {
     arb_addmul_si(acb_realref(z), acb_realref(x), y, prec);
     arb_addmul_si(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_submul_ui(acb_t z, const acb_t x, ulong y, long prec)
 {
     arb_submul_ui(acb_realref(z), acb_realref(x), y, prec);
     arb_submul_ui(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_submul_si(acb_t z, const acb_t x, long y, long prec)
 {
     arb_submul_si(acb_realref(z), acb_realref(x), y, prec);
     arb_submul_si(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_addmul_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 {
     arb_addmul_fmpz(acb_realref(z), acb_realref(x), y, prec);
     arb_addmul_fmpz(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_submul_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 {
     arb_submul_fmpz(acb_realref(z), acb_realref(x), y, prec);
     arb_submul_fmpz(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_addmul_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 {
     arb_addmul(acb_realref(z), acb_realref(x), y, prec);
     arb_addmul(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_submul_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 {
     arb_submul(acb_realref(z), acb_realref(x), y, prec);
@@ -540,28 +546,28 @@ void acb_inv(acb_t z, const acb_t x, long prec);
 
 void acb_div(acb_t z, const acb_t x, const acb_t y, long prec);
 
-static __inline__ void
+ACB_INLINE void
 acb_div_ui(acb_t z, const acb_t x, ulong c, long prec)
 {
     arb_div_ui(acb_realref(z), acb_realref(x), c, prec);
     arb_div_ui(acb_imagref(z), acb_imagref(x), c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_div_si(acb_t z, const acb_t x, long c, long prec)
 {
     arb_div_si(acb_realref(z), acb_realref(x), c, prec);
     arb_div_si(acb_imagref(z), acb_imagref(x), c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_div_arb(acb_t z, const acb_t x, const arb_t c, long prec)
 {
     arb_div(acb_realref(z), acb_realref(x), c, prec);
     arb_div(acb_imagref(z), acb_imagref(x), c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_div_fmpz(acb_t z, const acb_t x, const fmpz_t c, long prec)
 {
     arb_div_fmpz(acb_realref(z), acb_realref(x), c, prec);
@@ -573,7 +579,7 @@ void acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec);
 void acb_pow_ui(acb_t y, const acb_t b, ulong e, long prec);
 void acb_pow_si(acb_t y, const acb_t b, long e, long prec);
 
-static __inline__ void
+ACB_INLINE void
 acb_const_pi(acb_t x, long prec)
 {
     arb_const_pi(acb_realref(x), prec);
@@ -638,21 +644,21 @@ void acb_root(acb_t r, const acb_t a, long m, long index, long prec);
 */
 
 /* TODO: document */
-static __inline__ int
+ACB_INLINE int
 acb_is_finite(const acb_t x)
 {
     return arb_is_finite(acb_realref(x)) && arb_is_finite(acb_imagref(x));
 }
 
 /* TODO: document */
-static __inline__ void
+ACB_INLINE void
 acb_indeterminate(acb_t x)
 {
     arb_indeterminate(acb_realref(x));
     arb_indeterminate(acb_imagref(x));
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_zero(acb_ptr A, long n)
 {
     long i;
@@ -660,7 +666,7 @@ _acb_vec_zero(acb_ptr A, long n)
         acb_zero(A + i);
 }
 
-static __inline__ int
+ACB_INLINE int
 _acb_vec_is_zero(acb_srcptr vec, long len)
 {
     long i;
@@ -670,7 +676,7 @@ _acb_vec_is_zero(acb_srcptr vec, long len)
     return 1;
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
 {
     long i;
@@ -678,7 +684,7 @@ _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
         acb_set(res + i, vec + i);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
 {
     long i;
@@ -686,7 +692,7 @@ _acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
         acb_set_round(res + i, vec + i, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_neg(acb_ptr res, acb_srcptr vec, long len)
 {
     long i;
@@ -694,7 +700,7 @@ _acb_vec_neg(acb_ptr res, acb_srcptr vec, long len)
         acb_neg(res + i, vec + i);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_add(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
 {
     long i;
@@ -702,7 +708,7 @@ _acb_vec_add(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
         acb_add(res + i, vec1 + i, vec2 + i, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_sub(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
 {
     long i;
@@ -710,7 +716,7 @@ _acb_vec_sub(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
         acb_sub(res + i, vec1 + i, vec2 + i, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_submul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
     long i;
@@ -718,7 +724,7 @@ _acb_vec_scalar_submul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, lon
         acb_submul(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_addmul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
     long i;
@@ -726,7 +732,7 @@ _acb_vec_scalar_addmul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, lon
         acb_addmul(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_mul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
     long i;
@@ -734,7 +740,7 @@ _acb_vec_scalar_mul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long p
         acb_mul(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_mul_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec)
 {
     long i;
@@ -742,7 +748,7 @@ _acb_vec_scalar_mul_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec
         acb_mul_ui(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_mul_2exp_si(acb_ptr res, acb_srcptr vec, long len, long c)
 {
     long i;
@@ -750,7 +756,7 @@ _acb_vec_scalar_mul_2exp_si(acb_ptr res, acb_srcptr vec, long len, long c)
         acb_mul_2exp_si(res + i, vec + i, c);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_div_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec)
 {
     long i;
@@ -758,7 +764,7 @@ _acb_vec_scalar_div_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec
         acb_div_ui(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_div(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
 {
     long i;
@@ -766,7 +772,7 @@ _acb_vec_scalar_div(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long p
         acb_div(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_mul_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, long prec)
 {
     long i;
@@ -774,7 +780,7 @@ _acb_vec_scalar_mul_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, lo
         acb_mul_arb(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_div_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, long prec)
 {
     long i;
@@ -785,7 +791,7 @@ _acb_vec_scalar_div_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, lo
     }
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_mul_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, long prec)
 {
     long i;
@@ -793,7 +799,7 @@ _acb_vec_scalar_mul_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, 
         acb_mul_fmpz(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_scalar_div_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, long prec)
 {
     long i;
@@ -801,7 +807,7 @@ _acb_vec_scalar_div_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, 
         acb_div_fmpz(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ACB_INLINE void
 acb_print(const acb_t x)
 {
     printf("(");
@@ -817,7 +823,7 @@ void acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
 void acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
-static __inline__ long
+ACB_INLINE long
 acb_bits(const acb_t x)
 {
     long b1, b2;
@@ -826,13 +832,13 @@ acb_bits(const acb_t x)
     return FLINT_MAX(b1, b2);
 }
 
-static __inline__ int
+ACB_INLINE int
 acb_is_real(const acb_t x)
 {
     return arb_is_zero(acb_imagref(x));
 }
 
-static __inline__ int
+ACB_INLINE int
 _acb_vec_is_real(acb_srcptr v, long len)
 {
     long i;
@@ -846,13 +852,13 @@ _acb_vec_is_real(acb_srcptr v, long len)
     return 1;
 }
 
-static __inline__ long
+ACB_INLINE long
 _acb_vec_bits(acb_srcptr vec, long len)
 {
     return _arb_vec_bits((arb_srcptr) vec, 2 * len);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_set_powers(acb_ptr xs, const acb_t x, long len, long prec)
 {
     long i;
@@ -870,7 +876,7 @@ _acb_vec_set_powers(acb_ptr xs, const acb_t x, long len, long prec)
     }
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, long len)
 {
     long i;
@@ -878,7 +884,7 @@ _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, long len)
         acb_add_error_arf(res + i, err + i);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_add_error_mag_vec(acb_ptr res, mag_srcptr err, long len)
 {
     long i;
@@ -891,13 +897,13 @@ _acb_vec_add_error_mag_vec(acb_ptr res, mag_srcptr err, long len)
     }
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_indeterminate(acb_ptr vec, long len)
 {
     _arb_vec_indeterminate((arb_ptr) vec, 2 * len);
 }
 
-static __inline__ void
+ACB_INLINE void
 _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
 {
     long i;

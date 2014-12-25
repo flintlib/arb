@@ -29,6 +29,12 @@
 #ifndef ARF_H
 #define ARF_H
 
+#ifdef ARF_INLINES_C
+#define ARF_INLINE
+#else
+#define ARF_INLINE static __inline__
+#endif
+
 #include <math.h>
 #include "flint.h"
 #include "fmpr.h"
@@ -45,7 +51,7 @@ extern "C" {
 #define ARF_RND_CEIL FMPR_RND_CEIL
 #define ARF_RND_NEAR FMPR_RND_NEAR
 
-static __inline__ int
+ARF_INLINE int
 arf_rounds_down(arf_rnd_t rnd, int sgnbit)
 {
     if (rnd == ARF_RND_DOWN) return 1;
@@ -54,7 +60,7 @@ arf_rounds_down(arf_rnd_t rnd, int sgnbit)
     return sgnbit;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_rounds_up(arf_rnd_t rnd, int sgnbit)
 {
     if (rnd == ARF_RND_DOWN) return 0;
@@ -63,7 +69,7 @@ arf_rounds_up(arf_rnd_t rnd, int sgnbit)
     return !sgnbit;
 }
 
-static __inline__ mpfr_rnd_t
+ARF_INLINE mpfr_rnd_t
 arf_rnd_to_mpfr(arf_rnd_t rnd)
 {
     if (rnd == ARF_RND_DOWN) return MPFR_RNDZ;
@@ -228,98 +234,98 @@ void _arf_demote(arf_t x);
         ARF_XSIZE(x) = ARF_MAKE_XSIZE(__xn, 0);             \
     } while (0)
 
-static __inline__ void
+ARF_INLINE void
 arf_init(arf_t x)
 {
     fmpz_init(ARF_EXPREF(x));
     ARF_XSIZE(x) = 0;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_clear(arf_t x)
 {
     fmpz_clear(ARF_EXPREF(x));
     ARF_DEMOTE(x);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_zero(arf_t x)
 {
     ARF_MAKE_SPECIAL(x);
     ARF_EXP(x) = ARF_EXP_ZERO;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_pos_inf(arf_t x)
 {
     ARF_MAKE_SPECIAL(x);
     ARF_EXP(x) = ARF_EXP_POS_INF;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_neg_inf(arf_t x)
 {
     ARF_MAKE_SPECIAL(x);
     ARF_EXP(x) = ARF_EXP_NEG_INF;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_nan(arf_t x)
 {
     ARF_MAKE_SPECIAL(x);
     ARF_EXP(x) = ARF_EXP_NAN;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_special(const arf_t x)
 {
     return ARF_IS_SPECIAL(x);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_zero(const arf_t x)
 {
     return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_ZERO);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_pos_inf(const arf_t x)
 {
     return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_POS_INF);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_neg_inf(const arf_t x)
 {
     return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_NEG_INF);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_nan(const arf_t x)
 {
     return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_NAN);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_normal(const arf_t x)
 {
     return !ARF_IS_SPECIAL(x);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_finite(const arf_t x)
 {
     return !ARF_IS_SPECIAL(x) || (ARF_EXP(x) == ARF_EXP_ZERO);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_inf(const arf_t x)
 {
     return ARF_IS_SPECIAL(x) && (ARF_EXP(x) == ARF_EXP_POS_INF ||
                                  ARF_EXP(x) == ARF_EXP_NEG_INF);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_one(arf_t x)
 {
     fmpz_clear(ARF_EXPREF(x));
@@ -329,14 +335,14 @@ arf_one(arf_t x)
     ARF_NOPTR_D(x)[0] = LIMB_TOP;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_one(const arf_t x)
 {
     return (ARF_EXP(x) == 1) && (ARF_XSIZE(x) == ARF_MAKE_XSIZE(1, 0))
                              && ARF_NOPTR_D(x)[0] == LIMB_TOP;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_sgn(const arf_t x)
 {
     if (arf_is_special(x))
@@ -355,7 +361,7 @@ int arf_cmp(const arf_t x, const arf_t y);
 
 int arf_cmpabs(const arf_t x, const arf_t y);
 
-static __inline__ void
+ARF_INLINE void
 arf_swap(arf_t y, arf_t x)
 {
     if (x != y)
@@ -366,7 +372,7 @@ arf_swap(arf_t y, arf_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set(arf_t y, const arf_t x)
 {
     if (x != y)
@@ -399,7 +405,7 @@ arf_set(arf_t y, const arf_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_neg(arf_t y, const arf_t x)
 {
     arf_set(y, x);
@@ -417,7 +423,7 @@ arf_neg(arf_t y, const arf_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_set_ui(arf_t x, ulong v)
 {
     if (v == 0)
@@ -435,7 +441,7 @@ arf_init_set_ui(arf_t x, ulong v)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_set_si(arf_t x, long v)
 {
     arf_init_set_ui(x, FLINT_ABS(v));
@@ -443,7 +449,7 @@ arf_init_set_si(arf_t x, long v)
         ARF_NEG(x);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set_ui(arf_t x, ulong v)
 {
     ARF_DEMOTE(x);
@@ -464,7 +470,7 @@ arf_set_ui(arf_t x, ulong v)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set_si(arf_t x, long v)
 {
     arf_set_ui(x, FLINT_ABS(v));
@@ -472,7 +478,7 @@ arf_set_si(arf_t x, long v)
         ARF_NEG(x);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_cmpabs_ui(const arf_t x, ulong y)
 {
     arf_t t;
@@ -480,20 +486,20 @@ arf_cmpabs_ui(const arf_t x, ulong y)
     return arf_cmpabs(x, t);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_set_shallow(arf_t z, const arf_t x)
 {
     *z = *x;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_neg_shallow(arf_t z, const arf_t x)
 {
     *z = *x;
     arf_neg(z, z);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_set_mag_shallow(arf_t y, const mag_t x)
 {
     mp_limb_t t = MAG_MAN(x);
@@ -502,14 +508,14 @@ arf_init_set_mag_shallow(arf_t y, const mag_t x)
     ARF_NOPTR_D(y)[0] = t << (FLINT_BITS - MAG_BITS);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_init_neg_mag_shallow(arf_t z, const mag_t x)
 {
     arf_init_set_mag_shallow(z, x);
     arf_neg(z, z);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_cmpabs_mag(const arf_t x, const mag_t y)
 {
     arf_t t;
@@ -517,7 +523,7 @@ arf_cmpabs_mag(const arf_t x, const mag_t y)
     return arf_cmpabs(x, t);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_mag_cmpabs(const mag_t x, const arf_t y)
 {
     arf_t t;
@@ -529,7 +535,7 @@ arf_mag_cmpabs(const mag_t x, const arf_t y)
 /* TBD: 1, 2 limb versions */
 void arf_set_mpn(arf_t y, mp_srcptr x, mp_size_t xn, int sgnbit);
 
-static __inline__ void
+ARF_INLINE void
 arf_set_mpz(arf_t y, const mpz_t x)
 {
     long size = x->_mp_size;
@@ -540,7 +546,7 @@ arf_set_mpz(arf_t y, const mpz_t x)
         arf_set_mpn(y, x->_mp_d, FLINT_ABS(size), size < 0);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set_fmpz(arf_t y, const fmpz_t x)
 {
     if (!COEFF_IS_MPZ(*x))
@@ -559,19 +565,19 @@ int
 _arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_set_round_ui(arf_t x, ulong v, long prec, arf_rnd_t rnd)
 {
     return _arf_set_round_ui(x, v, 0, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_set_round_si(arf_t x, long v, long prec, arf_rnd_t rnd)
 {
     return _arf_set_round_ui(x, FLINT_ABS(v), v < 0, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
 {
     int inexact;
@@ -591,7 +597,7 @@ arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
     return inexact;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_set_round_fmpz(arf_t y, const fmpz_t x, long prec, arf_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*x))
@@ -614,7 +620,7 @@ void arf_set_mpfr(arf_t x, const mpfr_t y);
 
 int arf_equal(const arf_t x, const arf_t y);
 
-static __inline__ void
+ARF_INLINE void
 arf_min(arf_t z, const arf_t a, const arf_t b)
 {
     if (arf_cmp(a, b) <= 0)
@@ -623,7 +629,7 @@ arf_min(arf_t z, const arf_t a, const arf_t b)
         arf_set(z, b);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_max(arf_t z, const arf_t a, const arf_t b)
 {
     if (arf_cmp(a, b) > 0)
@@ -632,7 +638,7 @@ arf_max(arf_t z, const arf_t a, const arf_t b)
         arf_set(z, b);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_abs(arf_t y, const arf_t x)
 {
     if (arf_sgn(x) < 0)
@@ -641,7 +647,7 @@ arf_abs(arf_t y, const arf_t x)
         arf_set(y, x);
 }
 
-static __inline__ long
+ARF_INLINE long
 arf_bits(const arf_t x)
 {
     if (arf_is_special(x))
@@ -658,7 +664,7 @@ arf_bits(const arf_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_bot(fmpz_t e, const arf_t x)
 {
     if (arf_is_special(x))
@@ -667,7 +673,7 @@ arf_bot(fmpz_t e, const arf_t x)
         fmpz_sub_si(e, ARF_EXPREF(x), arf_bits(x));
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_int(const arf_t x)
 {
     if (arf_is_special(x))
@@ -684,7 +690,7 @@ arf_is_int(const arf_t x)
     }
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_is_int_2exp_si(const arf_t x, long e)
 {
     if (arf_is_special(x))
@@ -705,7 +711,7 @@ int arf_cmp_2exp_si(const arf_t x, long e);
 
 int arf_cmpabs_2exp_si(const arf_t x, long e);
 
-static __inline__ void
+ARF_INLINE void
 arf_set_si_2exp_si(arf_t x, long man, long exp)
 {
     arf_set_si(x, man);
@@ -713,7 +719,7 @@ arf_set_si_2exp_si(arf_t x, long man, long exp)
         fmpz_add_si_inline(ARF_EXPREF(x), ARF_EXPREF(x), exp);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set_ui_2exp_si(arf_t x, ulong man, long exp)
 {
     arf_set_ui(x, man);
@@ -721,7 +727,7 @@ arf_set_ui_2exp_si(arf_t x, ulong man, long exp)
         fmpz_add_si_inline(ARF_EXPREF(x), ARF_EXPREF(x), exp);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_mul_2exp_si(arf_t y, const arf_t x, long e)
 {
     arf_set(y, x);
@@ -729,7 +735,7 @@ arf_mul_2exp_si(arf_t y, const arf_t x, long e)
         fmpz_add_si_inline(ARF_EXPREF(y), ARF_EXPREF(y), e);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_mul_2exp_fmpz(arf_t y, const arf_t x, const fmpz_t e)
 {
     arf_set(y, x);
@@ -737,7 +743,7 @@ arf_mul_2exp_fmpz(arf_t y, const arf_t x, const fmpz_t e)
         fmpz_add_inline(ARF_EXPREF(y), ARF_EXPREF(y), e);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t exp, long prec, arf_rnd_t rnd)
 {
     if (fmpz_is_zero(x))
@@ -753,7 +759,7 @@ arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t exp, long prec, ar
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_abs_bound_lt_2exp_fmpz(fmpz_t b, const arf_t x)
 {
     if (arf_is_special(x))
@@ -762,7 +768,7 @@ arf_abs_bound_lt_2exp_fmpz(fmpz_t b, const arf_t x)
         fmpz_set(b, ARF_EXPREF(x));
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_abs_bound_le_2exp_fmpz(fmpz_t b, const arf_t x)
 {
     if (arf_is_special(x))
@@ -781,7 +787,7 @@ void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd);
 
 long arf_get_si(const arf_t x, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
 {
     int r;
@@ -793,7 +799,7 @@ arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
     return r;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
 {
     int r;
@@ -805,7 +811,7 @@ arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
     return r;
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_set_fmpz_2exp(arf_t x, const fmpz_t man, const fmpz_t exp)
 {
     arf_set_fmpz(x, man);
@@ -944,7 +950,7 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec);
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
 
-static __inline__ int
+ARF_INLINE int
 arf_neg_mul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
 {
     if (arf_is_special(y))
@@ -962,7 +968,7 @@ arf_neg_mul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
     }
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_mul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -970,7 +976,7 @@ arf_mul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
     return arf_mul(z, x, t, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_mul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -980,7 +986,7 @@ arf_mul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 
 int arf_mul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_mul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*y))
@@ -1045,7 +1051,7 @@ int arf_sub_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t r
 
 int arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_addmul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1053,7 +1059,7 @@ arf_addmul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
     return arf_addmul(z, x, t, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_addmul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1063,7 +1069,7 @@ arf_addmul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 
 int arf_addmul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_addmul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*y))
@@ -1074,7 +1080,7 @@ arf_addmul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rn
 
 int arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_submul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1082,7 +1088,7 @@ arf_submul_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
     return arf_submul(z, x, t, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_submul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1092,7 +1098,7 @@ arf_submul_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 
 int arf_submul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_submul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*y))
@@ -1103,7 +1109,7 @@ arf_submul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rn
 
 int arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd);
 
-static __inline__ int
+ARF_INLINE int
 arf_div_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1111,7 +1117,7 @@ arf_div_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
     return arf_div(z, x, t, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_ui_div(arf_ptr z, ulong x, arf_srcptr y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1119,7 +1125,7 @@ arf_ui_div(arf_ptr z, ulong x, arf_srcptr y, long prec, arf_rnd_t rnd)
     return arf_div(z, t, y, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_div_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1127,7 +1133,7 @@ arf_div_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
     return arf_div(z, x, t, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_si_div(arf_ptr z, long x, arf_srcptr y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1135,7 +1141,7 @@ arf_si_div(arf_ptr z, long x, arf_srcptr y, long prec, arf_rnd_t rnd)
     return arf_div(z, t, y, prec, rnd);
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_div_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1147,7 +1153,7 @@ arf_div_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
     return r;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_fmpz_div(arf_ptr z, const fmpz_t x, arf_srcptr y, long prec, arf_rnd_t rnd)
 {
     arf_t t;
@@ -1159,7 +1165,7 @@ arf_fmpz_div(arf_ptr z, const fmpz_t x, arf_srcptr y, long prec, arf_rnd_t rnd)
     return r;
 }
 
-static __inline__ int
+ARF_INLINE int
 arf_fmpz_div_fmpz(arf_ptr z, const fmpz_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
 {
     arf_t t, u;
@@ -1188,7 +1194,7 @@ void arf_get_mag(mag_t y, const arf_t x);
 
 void arf_get_mag_lower(mag_t y, const arf_t x);
 
-static __inline__ void
+ARF_INLINE void
 arf_set_mag(arf_t y, const mag_t x)
 {
     if (mag_is_zero(x))
@@ -1208,14 +1214,14 @@ arf_set_mag(arf_t y, const mag_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 mag_init_set_arf(mag_t y, const arf_t x)
 {
     mag_init(y);
     arf_get_mag(y, x);
 }
 
-static __inline__ void
+ARF_INLINE void
 mag_fast_init_set_arf(mag_t y, const arf_t x)
 {
     if (ARF_IS_SPECIAL(x))   /* x == 0 */
@@ -1236,13 +1242,13 @@ mag_fast_init_set_arf(mag_t y, const arf_t x)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
     mag_fast_add_2exp_si(z, x, ARF_EXP(y) - prec);
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
 {
     if (ARF_IS_SPECIAL(y))
@@ -1264,7 +1270,7 @@ arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
     }
 }
 
-static __inline__ void
+ARF_INLINE void
 arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
 {
     if (ARF_IS_SPECIAL(y))
@@ -1281,7 +1287,7 @@ arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
 
 void arf_get_fmpq(fmpq_t y, const arf_t x);
 
-static __inline__ int
+ARF_INLINE int
 arf_set_fmpq(arf_t y, const fmpq_t x, long prec, arf_rnd_t rnd)
 {
     return arf_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec, rnd);
