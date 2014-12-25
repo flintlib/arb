@@ -26,6 +26,12 @@
 #ifndef ARB_POLY_H
 #define ARB_POLY_H
 
+#ifdef ARB_POLY_INLINES_C
+#define ARB_POLY_INLINE
+#else
+#define ARB_POLY_INLINE static __inline__
+#endif
+
 #include "arb.h"
 #include "acb.h"
 #include "fmpz_poly.h"
@@ -60,7 +66,7 @@ void _arb_poly_set_length(arb_poly_t poly, long len);
 
 void _arb_poly_normalise(arb_poly_t poly);
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_swap(arb_poly_t poly1, arb_poly_t poly2)
 {
     arb_poly_struct t = *poly1;
@@ -72,22 +78,22 @@ void arb_poly_set(arb_poly_t poly, const arb_poly_t src);
 
 /* Basic manipulation */
 
-static __inline__ long arb_poly_length(const arb_poly_t poly)
+ARB_POLY_INLINE long arb_poly_length(const arb_poly_t poly)
 {
     return poly->length;
 }
 
-static __inline__ long arb_poly_degree(const arb_poly_t poly)
+ARB_POLY_INLINE long arb_poly_degree(const arb_poly_t poly)
 {
     return poly->length - 1;
 }
 
-static __inline__ void arb_poly_zero(arb_poly_t poly)
+ARB_POLY_INLINE void arb_poly_zero(arb_poly_t poly)
 {
     poly->length = 0;
 }
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_one(arb_poly_t poly)
 {
     arb_poly_fit_length(poly, 1);
@@ -114,7 +120,7 @@ void _arb_poly_shift_left(arb_ptr res, arb_srcptr poly, long len, long n);
 
 void arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, long n);
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_truncate(arb_poly_t poly, long newlen)
 {
     if (poly->length > newlen)
@@ -133,7 +139,7 @@ void arb_poly_set_fmpz_poly(arb_poly_t poly, const fmpz_poly_t src, long prec);
 
 void arb_poly_set_fmpq_poly(arb_poly_t poly, const fmpq_poly_t src, long prec);
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_set_arb(arb_poly_t poly, const arb_t c)
 {
     arb_poly_fit_length(poly, 1);
@@ -180,7 +186,7 @@ void _arb_poly_sub(arb_ptr res, arb_srcptr poly1, long len1,
 void arb_poly_sub(arb_poly_t res, const arb_poly_t poly1,
               const arb_poly_t poly2, long prec);
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_neg(arb_poly_t res, const arb_poly_t poly)
 {
     arb_poly_fit_length(res, poly->length);
@@ -188,7 +194,7 @@ arb_poly_neg(arb_poly_t res, const arb_poly_t poly)
     _arb_poly_set_length(res, poly->length);
 }
 
-static __inline__ void
+ARB_POLY_INLINE void
 arb_poly_scalar_mul_2exp_si(arb_poly_t res, const arb_poly_t poly, long c)
 {
     arb_poly_fit_length(res, poly->length);
@@ -233,7 +239,7 @@ void _arb_poly_mul(arb_ptr C,
 void arb_poly_mul(arb_poly_t res, const arb_poly_t poly1,
               const arb_poly_t poly2, long prec);
 
-static __inline__ void
+ARB_POLY_INLINE void
 _arb_poly_mul_monic(arb_ptr res, arb_srcptr poly1, long len1,
     arb_srcptr poly2, long len2, long prec)
 {
@@ -589,7 +595,7 @@ void _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly,
 
 
 /* counts zero bits in the binary representation of e */
-static __inline__ int
+ARB_POLY_INLINE int
 n_zerobits(mp_limb_t e)
 {
     int zeros = 0;
@@ -603,7 +609,7 @@ n_zerobits(mp_limb_t e)
     return zeros;
 }
 
-static __inline__ long
+ARB_POLY_INLINE long
 poly_pow_length(long poly_len, ulong exp, long trunc)
 {
     mp_limb_t hi, lo;

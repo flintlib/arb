@@ -26,6 +26,12 @@
 #ifndef ACB_POLY_H
 #define ACB_POLY_H
 
+#ifdef ACB_POLY_INLINES_C
+#define ACB_POLY_INLINE
+#else
+#define ACB_POLY_INLINE static __inline__
+#endif
+
 #include "acb.h"
 #include "arb_poly.h"
 
@@ -58,7 +64,7 @@ void _acb_poly_set_length(acb_poly_t poly, long len);
 
 void _acb_poly_normalise(acb_poly_t poly);
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_swap(acb_poly_t poly1, acb_poly_t poly2)
 {
     acb_poly_struct t = *poly1;
@@ -66,22 +72,22 @@ acb_poly_swap(acb_poly_t poly1, acb_poly_t poly2)
     *poly2 = t;
 }
 
-static __inline__ long acb_poly_length(const acb_poly_t poly)
+ACB_POLY_INLINE long acb_poly_length(const acb_poly_t poly)
 {
     return poly->length;
 }
 
-static __inline__ long acb_poly_degree(const acb_poly_t poly)
+ACB_POLY_INLINE long acb_poly_degree(const acb_poly_t poly)
 {
     return poly->length - 1;
 }
 
-static __inline__ void acb_poly_zero(acb_poly_t poly)
+ACB_POLY_INLINE void acb_poly_zero(acb_poly_t poly)
 {
     poly->length = 0;
 }
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_one(acb_poly_t poly)
 {
     acb_poly_fit_length(poly, 1);
@@ -106,7 +112,7 @@ void _acb_poly_shift_left(acb_ptr res, acb_srcptr poly, long len, long n);
 
 void acb_poly_shift_left(acb_poly_t res, const acb_poly_t poly, long n);
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_truncate(acb_poly_t poly, long newlen)
 {
     if (poly->length > newlen)
@@ -159,7 +165,7 @@ void acb_poly_set2_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, const fmpq_p
 
 void acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t src, long prec);
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_set_acb(acb_poly_t poly, const acb_t c)
 {
     acb_poly_fit_length(poly, 1);
@@ -196,7 +202,7 @@ void _acb_poly_sub(acb_ptr res, acb_srcptr poly1, long len1,
 void acb_poly_sub(acb_poly_t res, const acb_poly_t poly1,
               const acb_poly_t poly2, long prec);
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_neg(acb_poly_t res, const acb_poly_t poly)
 {
     acb_poly_fit_length(res, poly->length);
@@ -204,7 +210,7 @@ acb_poly_neg(acb_poly_t res, const acb_poly_t poly)
     _acb_poly_set_length(res, poly->length);
 }
 
-static __inline__ void
+ACB_POLY_INLINE void
 acb_poly_scalar_mul_2exp_si(acb_poly_t res, const acb_poly_t poly, long c)
 {
     acb_poly_fit_length(res, poly->length);
@@ -251,7 +257,7 @@ void _acb_poly_mul(acb_ptr C,
 void acb_poly_mul(acb_poly_t res, const acb_poly_t poly1,
               const acb_poly_t poly2, long prec);
 
-static __inline__ void
+ACB_POLY_INLINE void
 _acb_poly_mul_monic(acb_ptr res, acb_srcptr poly1, long len1,
     acb_srcptr poly2, long len2, long prec)
 {
@@ -517,7 +523,7 @@ void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, l
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
 
 /* TODO: document */
-static __inline__ void
+ACB_POLY_INLINE void
 _acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long prec)
 {
     if (len == 1)

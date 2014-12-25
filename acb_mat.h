@@ -26,6 +26,12 @@
 #ifndef ACB_MAT_H
 #define ACB_MAT_H
 
+#ifdef ACB_MAT_INLINES_C
+#define ACB_MAT_INLINE
+#else
+#define ACB_MAT_INLINE static __inline__
+#endif
+
 #include "arb.h"
 #include "acb.h"
 #include "fmpz_mat.h"
@@ -59,7 +65,7 @@ void acb_mat_init(acb_mat_t mat, long r, long c);
 
 void acb_mat_clear(acb_mat_t mat);
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_swap(acb_mat_t mat1, acb_mat_t mat2)
 {
     acb_mat_struct t = *mat1;
@@ -115,7 +121,7 @@ void acb_mat_pow_ui(acb_mat_t B, const acb_mat_t A, ulong exp, long prec);
 
 /* Scalar arithmetic */
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_mul_2exp_si(acb_mat_t B, const acb_mat_t A, long c)
 {
     long i, j;
@@ -125,7 +131,7 @@ acb_mat_scalar_mul_2exp_si(acb_mat_t B, const acb_mat_t A, long c)
             acb_mul_2exp_si(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_addmul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
 {
     long i, j;
@@ -135,7 +141,7 @@ acb_mat_scalar_addmul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
             acb_addmul_si(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_mul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
 {
     long i, j;
@@ -145,7 +151,7 @@ acb_mat_scalar_mul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
             acb_mul_si(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_div_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
 {
     long i, j;
@@ -155,7 +161,7 @@ acb_mat_scalar_div_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
             acb_div_si(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_addmul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
 {
     long i, j;
@@ -165,7 +171,7 @@ acb_mat_scalar_addmul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long 
             acb_addmul_fmpz(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_mul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
 {
     long i, j;
@@ -175,7 +181,7 @@ acb_mat_scalar_mul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long pre
             acb_mul_fmpz(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_div_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
 {
     long i, j;
@@ -185,7 +191,7 @@ acb_mat_scalar_div_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long pre
             acb_div_fmpz(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_addmul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
 {
     long i, j;
@@ -195,7 +201,7 @@ acb_mat_scalar_addmul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long pr
             acb_addmul(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_mul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
 {
     long i, j;
@@ -205,7 +211,7 @@ acb_mat_scalar_mul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
             acb_mul(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_div_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
 {
     long i, j;
@@ -215,7 +221,7 @@ acb_mat_scalar_div_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
             acb_div(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_addmul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
 {
     long i, j;
@@ -225,7 +231,7 @@ acb_mat_scalar_addmul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long pr
             acb_addmul_arb(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_mul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
 {
     long i, j;
@@ -235,7 +241,7 @@ acb_mat_scalar_mul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
             acb_mul_arb(acb_mat_entry(B, i, j), acb_mat_entry(A, i, j), c, prec);
 }
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_scalar_div_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
 {
     long i, j;
@@ -247,7 +253,7 @@ acb_mat_scalar_div_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
 
 /* Solving */
 
-static __inline__ void
+ACB_MAT_INLINE void
 acb_mat_swap_rows(acb_mat_t mat, long * perm, long r, long s)
 {
     if (r != s)

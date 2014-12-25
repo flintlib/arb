@@ -26,6 +26,12 @@
 #ifndef MAG_H
 #define MAG_H
 
+#ifdef MAG_INLINES_C
+#define MAG_INLINE
+#else
+#define MAG_INLINE static __inline__
+#endif
+
 #include <math.h>
 #include "flint.h"
 #include "fmpz.h"
@@ -196,27 +202,27 @@ typedef mag_struct mag_t[1];
 typedef mag_struct * mag_ptr;
 typedef const mag_struct * mag_srcptr;
 
-static __inline__ void
+MAG_INLINE void
 mag_init(mag_t x)
 {
     fmpz_init(MAG_EXPREF(x));
     MAG_MAN(x) = 0;
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_init_set(mag_t x, const mag_t y)
 {
     fmpz_init_set(MAG_EXPREF(x), MAG_EXPREF(y));
     MAG_MAN(x) = MAG_MAN(y);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_clear(mag_t x)
 {
     fmpz_clear(MAG_EXPREF(x));
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_swap(mag_t x, mag_t y)
 {
     mag_struct t = *x;
@@ -224,40 +230,40 @@ mag_swap(mag_t x, mag_t y)
     *y = t;
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_set(mag_t x, const mag_t y)
 {
     _fmpz_set_fast(MAG_EXPREF(x), MAG_EXPREF(y));
     x->man = y->man;
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_zero(mag_t x)
 {
     fmpz_zero(MAG_EXPREF(x));
     MAG_MAN(x) = 0;
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_one(mag_t x)
 {
     fmpz_one(MAG_EXPREF(x));
     MAG_MAN(x) = MAG_ONE_HALF;
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_is_special(const mag_t x)
 {
     return MAG_MAN(x) == 0;
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_is_zero(const mag_t x)
 {
     return (MAG_MAN(x) == 0) && (MAG_EXP(x) == 0);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_inf(mag_t x)
 {
     fmpz_clear(MAG_EXPREF(x));
@@ -265,19 +271,19 @@ mag_inf(mag_t x)
     MAG_MAN(x) = 0;
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_is_inf(const mag_t x)
 {
     return (MAG_MAN(x) == 0) && (MAG_EXP(x) != 0);
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_is_finite(const mag_t x)
 {
     return !mag_is_inf(x);
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_equal(const mag_t x, const mag_t y)
 {
     return (MAG_MAN(x) == MAG_MAN(y))
@@ -300,7 +306,7 @@ void mag_add_lower(mag_t z, const mag_t x, const mag_t y);
 
 void mag_div(mag_t z, const mag_t x, const mag_t y);
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_2exp_si(mag_t z, const mag_t x, long y)
 {
     if (mag_is_special(x))
@@ -317,7 +323,7 @@ mag_mul_2exp_si(mag_t z, const mag_t x, long y)
     }
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 {
     if (mag_is_special(x))
@@ -336,27 +342,27 @@ void mag_sub_lower(mag_t z, const mag_t x, const mag_t y);
 /* Fast versions (no infs/nans, small exponents). Note that this
    applies to outputs too! */
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_init_set(mag_t x, const mag_t y)
 {
     MAG_EXP(x) = MAG_EXP(y);
     MAG_MAN(x) = MAG_MAN(y);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_zero(mag_t x)
 {
     MAG_EXP(x) = 0;
     MAG_MAN(x) = 0;
 }
 
-static __inline__ int
+MAG_INLINE int
 mag_fast_is_zero(const mag_t x)
 {
     return MAG_MAN(x) == 0;
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
 {
     if (MAG_MAN(x) == 0 || MAG_MAN(y) == 0)
@@ -371,7 +377,7 @@ mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
     }
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_mul_2exp_si(mag_t z, const mag_t x, long y)
 {
     if (MAG_MAN(x) == 0)
@@ -385,7 +391,7 @@ mag_fast_mul_2exp_si(mag_t z, const mag_t x, long y)
     }
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 {
     if (MAG_MAN(z) == 0)
@@ -428,7 +434,7 @@ mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
     }
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
 {
     /* Must be zero */
@@ -490,7 +496,7 @@ int mag_cmp(const mag_t x, const mag_t y);
 
 int mag_cmp_2exp_si(const mag_t x, long e);
 
-static __inline__ void
+MAG_INLINE void
 mag_min(mag_t z, const mag_t x, const mag_t y)
 {
     if (mag_cmp(x, y) <= 0)
@@ -499,7 +505,7 @@ mag_min(mag_t z, const mag_t x, const mag_t y)
         mag_set(z, y);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_max(mag_t z, const mag_t x, const mag_t y)
 {
     if (mag_cmp(x, y) >= 0)
@@ -508,7 +514,7 @@ mag_max(mag_t z, const mag_t x, const mag_t y)
         mag_set(z, y);
 }
 
-static __inline__ mag_ptr
+MAG_INLINE mag_ptr
 _mag_vec_init(long n)
 {
     long i;
@@ -520,7 +526,7 @@ _mag_vec_init(long n)
     return v;
 }
 
-static __inline__ void
+MAG_INLINE void
 _mag_vec_clear(mag_ptr v, long n)
 {
     long i;
@@ -529,7 +535,7 @@ _mag_vec_clear(mag_ptr v, long n)
     flint_free(v);
 }
 
-static __inline__ void mag_set_d(mag_t z, double x)
+MAG_INLINE void mag_set_d(mag_t z, double x)
 {
     fmpz_t e;
     fmpz_init(e);
@@ -550,7 +556,7 @@ void mag_log_ui(mag_t t, ulong n);
 
 void mag_exp_maglim(mag_t y, const mag_t x, long maglim);
 
-static __inline__ void
+MAG_INLINE void
 mag_exp(mag_t y, const mag_t x)
 {
     mag_exp_maglim(y, x, 128);
@@ -583,14 +589,14 @@ void mag_set_ui(mag_t z, ulong x);
 void mag_set_ui_lower(mag_t z, ulong x);
 
 /* TODO: test functions below */
-static __inline__ void
+MAG_INLINE void
 mag_set_ui_2exp_si(mag_t z, ulong v, long e)
 {
     mag_set_ui(z, v);
     mag_mul_2exp_si(z, z, e);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_set_fmpz(mag_t z, const fmpz_t x)
 {
     fmpz_t exp;
@@ -598,7 +604,7 @@ mag_set_fmpz(mag_t z, const fmpz_t x)
     mag_set_fmpz_2exp_fmpz(z, x, exp);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_set_fmpz_lower(mag_t z, const fmpz_t x)
 {
     fmpz_t exp;
@@ -606,7 +612,7 @@ mag_set_fmpz_lower(mag_t z, const fmpz_t x)
     mag_set_fmpz_2exp_fmpz_lower(z, x, exp);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_ui(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
@@ -616,7 +622,7 @@ mag_mul_ui(mag_t z, const mag_t x, ulong y)
     mag_clear(t);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
@@ -626,7 +632,7 @@ mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
     mag_clear(t);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 {
     mag_t t;
@@ -636,7 +642,7 @@ mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
     mag_clear(t);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
 {
     mag_t t;
@@ -646,7 +652,7 @@ mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
     mag_clear(t);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_div_ui(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
@@ -656,7 +662,7 @@ mag_div_ui(mag_t z, const mag_t x, ulong y)
     mag_clear(t);
 }
 
-static __inline__ void
+MAG_INLINE void
 mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 {
     mag_t t;

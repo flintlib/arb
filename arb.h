@@ -26,6 +26,12 @@
 #ifndef ARB_H
 #define ARB_H
 
+#ifdef ARB_INLINES_C
+#define ARB_INLINE
+#else
+#define ARB_INLINE static __inline__
+#endif
+
 #include "fmprb.h"
 #include "mag.h"
 #include "arf.h"
@@ -54,21 +60,21 @@ typedef const arb_struct * arb_srcptr;
 
 #define ARB_RND ARF_RND_DOWN
 
-static __inline__ void
+ARB_INLINE void
 arb_init(arb_t x)
 {
     arf_init(arb_midref(x));
     mag_init(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_clear(arb_t x)
 {
     arf_clear(arb_midref(x));
     mag_clear(arb_radref(x));
 }
 
-static __inline__ arb_ptr
+ARB_INLINE arb_ptr
 _arb_vec_init(long n)
 {
     long i;
@@ -80,7 +86,7 @@ _arb_vec_init(long n)
     return v;
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_clear(arb_ptr v, long n)
 {
     long i;
@@ -89,75 +95,75 @@ _arb_vec_clear(arb_ptr v, long n)
     flint_free(v);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_fmprb(arb_t x, const fmprb_t y)
 {
     arf_set_fmpr(arb_midref(x), fmprb_midref(y));
     mag_set_fmpr(arb_radref(x), fmprb_radref(y));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_get_fmprb(fmprb_t x, const arb_t y)
 {
     arf_get_fmpr(fmprb_midref(x), arb_midref(y));
     mag_get_fmpr(fmprb_radref(x), arb_radref(y));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_exact(const arb_t x)
 {
     return mag_is_zero(arb_radref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_equal(const arb_t x, const arb_t y)
 {
     return arf_equal(arb_midref(x), arb_midref(y)) &&
            mag_equal(arb_radref(x), arb_radref(y));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_zero(arb_t x)
 {
     arf_zero(arb_midref(x));
     mag_zero(arb_radref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_zero(const arb_t x)
 {
     return arf_is_zero(arb_midref(x)) && mag_is_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_pos_inf(arb_t x)
 {
     arf_pos_inf(arb_midref(x));
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_neg_inf(arb_t x)
 {
     arf_neg_inf(arb_midref(x));
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_zero_pm_inf(arb_t x)
 {
     arf_zero(arb_midref(x));
     mag_inf(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_indeterminate(arb_t x)
 {
     arf_nan(arb_midref(x));
     mag_inf(arb_radref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_finite(const arb_t x)
 {
     return arf_is_finite(arb_midref(x)) && mag_is_finite(arb_radref(x));
@@ -165,7 +171,7 @@ arb_is_finite(const arb_t x)
 
 void arb_set(arb_t x, const arb_t y);
 
-static __inline__ void
+ARB_INLINE void
 arb_swap(arb_t x, arb_t y)
 {
     arb_struct t = *x;
@@ -183,35 +189,35 @@ void arb_neg_round(arb_t x, const arb_t y, long prec);
 
 void arb_abs(arb_t x, const arb_t y);
 
-static __inline__ void
+ARB_INLINE void
 arb_set_arf(arb_t x, const arf_t y)
 {
     arf_set(arb_midref(x), y);
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_si(arb_t x, long y)
 {
     arf_set_si(arb_midref(x), y);
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_ui(arb_t x, ulong y)
 {
     arf_set_ui(arb_midref(x), y);
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_fmpz(arb_t x, const fmpz_t y)
 {
     arf_set_fmpz(arb_midref(x), y);
     mag_zero(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_fmpz_2exp(arb_t x, const fmpz_t y, const fmpz_t exp)
 {
     arf_set_fmpz_2exp(arb_midref(x), y, exp);
@@ -222,19 +228,19 @@ void arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t exp, long pre
 
 void arb_set_round_fmpz(arb_t y, const fmpz_t x, long prec);
 
-static __inline__ int
+ARB_INLINE int
 arb_is_one(const arb_t f)
 {
     return arf_is_one(arb_midref(f)) && mag_is_zero(arb_radref(f));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_one(arb_t f)
 {
     arb_set_ui(f, 1UL);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_print(const arb_t x)
 {
     arf_print(arb_midref(x));
@@ -242,7 +248,7 @@ arb_print(const arb_t x)
     mag_print(arb_radref(x));
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_printd(const arb_t x, long digits)
 {
     arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
@@ -250,40 +256,40 @@ arb_printd(const arb_t x, long digits)
     mag_printd(arb_radref(x), 5);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_mul_2exp_si(arb_t y, const arb_t x, long e)
 {
     arf_mul_2exp_si(arb_midref(y), arb_midref(x), e);
     mag_mul_2exp_si(arb_radref(y), arb_radref(x), e);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_mul_2exp_fmpz(arb_t y, const arb_t x, const fmpz_t e)
 {
     arf_mul_2exp_fmpz(arb_midref(y), arb_midref(x), e);
     mag_mul_2exp_fmpz(arb_radref(y), arb_radref(x), e);
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_int(const arb_t x)
 {
     return mag_is_zero(arb_radref(x)) &&
            arf_is_int(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_contains_zero(const arb_t x)
 {
     return arf_cmpabs_mag(arb_midref(x), arb_radref(x)) <= 0;
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_nonzero(const arb_t x)
 {
     return !arb_contains_zero(x);
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_positive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) > 0) &&
@@ -291,7 +297,7 @@ arb_is_positive(const arb_t x)
          !arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_nonnegative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) >= 0) &&
@@ -299,7 +305,7 @@ arb_is_nonnegative(const arb_t x)
          !arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_negative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) < 0) &&
@@ -307,7 +313,7 @@ arb_is_negative(const arb_t x)
          !arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_is_nonpositive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) <= 0) &&
@@ -315,7 +321,7 @@ arb_is_nonpositive(const arb_t x)
          !arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_contains_negative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) < 0) ||
@@ -323,7 +329,7 @@ arb_contains_negative(const arb_t x)
         || arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_contains_nonpositive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) <= 0) ||
@@ -331,7 +337,7 @@ arb_contains_nonpositive(const arb_t x)
         || arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_contains_positive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) > 0) ||
@@ -339,7 +345,7 @@ arb_contains_positive(const arb_t x)
         || arf_is_nan(arb_midref(x));
 }
 
-static __inline__ int
+ARB_INLINE int
 arb_contains_nonnegative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) >= 0) ||
@@ -351,7 +357,7 @@ void arb_get_mag_lower(mag_t z, const arb_t x);
 
 void arb_get_mag_lower_nonnegative(mag_t z, const arb_t x);
 
-static __inline__ void
+ARB_INLINE void
 arb_get_mag(mag_t z, const arb_t x)
 {
     mag_t t;
@@ -360,7 +366,7 @@ arb_get_mag(mag_t z, const arb_t x)
     mag_clear(t);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
 {
     arf_t t;
@@ -374,7 +380,7 @@ arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
     arf_abs(u, u);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_get_abs_lbound_arf(arf_t u, const arb_t x, long prec)
 {
     arf_t t;
@@ -396,13 +402,13 @@ arb_get_abs_lbound_arf(arf_t u, const arb_t x, long prec)
 
 long arb_rel_error_bits(const arb_t x);
 
-static __inline__ long
+ARB_INLINE long
 arb_rel_accuracy_bits(const arb_t x)
 {
     return -arb_rel_error_bits(x);
 }
 
-static __inline__ long
+ARB_INLINE long
 arb_bits(const arb_t x)
 {
     return arf_bits(arb_midref(x));
@@ -427,7 +433,7 @@ void arb_add_error_2exp_fmpz(arb_t x, const fmpz_t err);
 void arb_add_error(arb_t x, const arb_t error);
 
 /* TODO: document */
-static __inline__ void
+ARB_INLINE void
 arb_add_error_mag(arb_t x, const mag_t err)
 {
     mag_add(arb_radref(x), arb_radref(x), err);
@@ -501,13 +507,13 @@ void arb_div_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec);
 void arb_fmpz_div_fmpz(arb_t z, const fmpz_t x, const fmpz_t y, long prec);
 void arb_ui_div(arb_t z, ulong x, const arb_t y, long prec);
 
-static __inline__ void
+ARB_INLINE void
 arb_inv(arb_t y, const arb_t x, long prec)
 {
     arb_ui_div(y, 1, x, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
 {
     arb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
@@ -651,7 +657,7 @@ void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
 
 /* vector functions */
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_zero(arb_ptr A, long n)
 {
     long i;
@@ -659,7 +665,7 @@ _arb_vec_zero(arb_ptr A, long n)
         arb_zero(A + i);
 }
 
-static __inline__ int
+ARB_INLINE int
 _arb_vec_is_zero(arb_srcptr vec, long len)
 {
     long i;
@@ -669,7 +675,7 @@ _arb_vec_is_zero(arb_srcptr vec, long len)
     return 1;
 }
 
-static __inline__ int
+ARB_INLINE int
 _arb_vec_is_finite(arb_srcptr x, long len)
 {
     long i;
@@ -681,7 +687,7 @@ _arb_vec_is_finite(arb_srcptr x, long len)
     return 1;
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
 {
     long i;
@@ -689,7 +695,7 @@ _arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
         arb_set(res + i, vec + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
 {
     long i;
@@ -697,7 +703,7 @@ _arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
         arb_set_round(res + i, vec + i, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_swap(arb_ptr res, arb_ptr vec, long len)
 {
     long i;
@@ -705,7 +711,7 @@ _arb_vec_swap(arb_ptr res, arb_ptr vec, long len)
         arb_swap(res + i, vec + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
 {
     long i;
@@ -713,7 +719,7 @@ _arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
         arb_neg(B + i, A + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_sub(arb_ptr C, arb_srcptr A,
     arb_srcptr B, long n, long prec)
 {
@@ -722,7 +728,7 @@ _arb_vec_sub(arb_ptr C, arb_srcptr A,
         arb_sub(C + i, A + i, B + i, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_add(arb_ptr C, arb_srcptr A,
     arb_srcptr B, long n, long prec)
 {
@@ -731,7 +737,7 @@ _arb_vec_add(arb_ptr C, arb_srcptr A,
         arb_add(C + i, A + i, B + i, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec,
     long len, const arb_t c, long prec)
 {
@@ -740,7 +746,7 @@ _arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec,
         arb_mul(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_scalar_div(arb_ptr res, arb_srcptr vec,
     long len, const arb_t c, long prec)
 {
@@ -749,7 +755,7 @@ _arb_vec_scalar_div(arb_ptr res, arb_srcptr vec,
         arb_div(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec,
     long len, const fmpz_t c, long prec)
 {
@@ -762,7 +768,7 @@ _arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec,
     arf_clear(t);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
 {
     long i;
@@ -770,7 +776,7 @@ _arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
         arb_mul_2exp_si(res + i, src + i, c);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
     long len, const arb_t c, long prec)
 {
@@ -779,7 +785,7 @@ _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
         arb_addmul(res + i, vec + i, c, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, long len2, long prec)
 {
     long i;
@@ -788,7 +794,7 @@ _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, long len2, long prec)
         arb_addmul(res, vec1 + i, vec2 + i, prec);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
 {
     long i;
@@ -798,7 +804,7 @@ _arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
 }
 
 /* TODO: mag version? */
-static __inline__ void
+ARB_INLINE void
 _arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
         long len, long prec)
 {
@@ -823,7 +829,7 @@ _arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
     }
 }
 
-static __inline__ long
+ARB_INLINE long
 _arb_vec_bits(arb_srcptr x, long len)
 {
     long i, b, c;
@@ -838,7 +844,7 @@ _arb_vec_bits(arb_srcptr x, long len)
     return b;
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
 {
     long i;
@@ -856,7 +862,7 @@ _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
     }
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
 {
     long i;
@@ -864,7 +870,7 @@ _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
         arb_add_error_arf(res + i, err + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, long len)
 {
     long i;
@@ -872,7 +878,7 @@ _arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, long len)
         mag_add(arb_radref(res + i), arb_radref(res + i), err + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_indeterminate(arb_ptr vec, long len)
 {
     long i;
@@ -880,7 +886,7 @@ _arb_vec_indeterminate(arb_ptr vec, long len)
         arb_indeterminate(vec + i);
 }
 
-static __inline__ void
+ARB_INLINE void
 _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
 {
     long i;
@@ -1001,7 +1007,7 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
 int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
     mp_limb_t * error, const arf_t x, mp_size_t wn);
 
-static __inline__ mp_bitcnt_t
+ARB_INLINE mp_bitcnt_t
 _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
 {
     mp_limb_t t;
