@@ -791,6 +791,10 @@ _arb_gamma(arb_t y, const arb_t x, long prec, int inverse)
                 arb_zero(y);
             return;
         }
+        else if (inverse && arf_is_int(mid) && arf_sgn(mid) < 0)
+        {
+            arb_zero(y);
+        }
         else
         {
             /* fast gamma(n), gamma(n/2) or gamma(n/4) */
