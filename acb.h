@@ -685,6 +685,64 @@ _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
 }
 
 ACB_INLINE void
+_acb_vec_set_re_arb(acb_ptr res, acb_srcptr vec, const arb_t y, long len)
+{
+    /* Set res to be a copy of vec except the real part is changed to the constant y */
+
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        arb_set(acb_realref(res + i), y);
+        arb_set(acb_imagref(res + i), acb_imagref(vec + i));
+    }
+}
+
+ACB_INLINE void
+_acb_vec_set_imag_arb(acb_ptr res, acb_srcptr vec, const arb_t y, long len)
+{
+    /* Set res to be a copy of vec except the imaginary part is changed to the constant y */
+
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        arb_set(acb_realref(res + i), acb_realref(vec + i));
+        arb_set(acb_imagref(res + i), y);
+    }
+}
+
+ACB_INLINE void
+_acb_vec_set_re_vec_arb(acb_ptr res, acb_srcptr vec, arb_srcptr y, long len)
+{
+    /* 
+       Set res to have real part specified by the vector y and imaginary part specified by the 
+       vector vec.
+    */
+
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        arb_set(acb_realref(res + i), y + i);
+        arb_set(acb_imagref(res + i), acb_imagref(vec + i));
+    }
+}
+
+ACB_INLINE void
+_acb_vec_set_imag_vec_arb(acb_ptr res, acb_srcptr vec, arb_srcptr y, long len)
+{
+    /* 
+       Set res to have real part specified by the vector vec and imaginary part specified by the 
+       vector y.
+    */
+
+    long i;
+    for (i = 0; i < len; i++)
+    {
+        arb_set(acb_realref(res + i), acb_realref(vec + i));
+        arb_set(acb_imagref(res + i), y + i);
+    }
+}
+
+ACB_INLINE void
 _acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
 {
     long i;
