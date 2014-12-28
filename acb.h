@@ -684,6 +684,7 @@ _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
         acb_set(res + i, vec + i);
 }
 
+
 ACB_INLINE void
 _acb_vec_set_re_arb(acb_ptr res, acb_srcptr vec, const arb_t y, long len)
 {
