@@ -37,8 +37,7 @@ arb_zeta_ui(arb_t x, ulong n, long prec)
     }
     else if (n == 1)
     {
-        printf("exception: zeta_ui(1)\n");
-        abort();
+        arb_indeterminate(x);
     }
     /* fast detection of asymptotic case */
     else if (n > 0.7 * prec)
