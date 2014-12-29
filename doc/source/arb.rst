@@ -956,8 +956,13 @@ Zeta function
 
     Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
 
-    Note: the Hurwitz zeta function is also available, but takes
-    complex arguments (see :func:`acb_hurwitz_zeta`).
+    For computing derivatives with respect to `s`,
+    use :func:`arb_poly_zeta_series`.
+
+.. function:: void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec)
+
+    Sets *z* to the value of the Hurwitz zeta function `\zeta(s,a)`.
+
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 
