@@ -33,7 +33,7 @@ static ulong choose_M(ulong N, long target)
 void
 _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
 {
-    ulong A, B, C;
+    ulong A, B, C, limit;
     arf_t Abound, Bbound, Cbound, tol;
 
     arf_init(Abound);
@@ -46,11 +46,17 @@ _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s,
     A = 1;
     B = 2;
 
+    /* Hack: allow evaluation very high up in the critical strip... */
+    if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(s)), 10) > 0)
+        limit = ULONG_MAX / 4;
+    else
+        limit = 100 * prec;  /* but normally, fail more quickly */
+
     _acb_poly_zeta_em_bound1(Bbound, s, a, B, choose_M(B, target), d, prec);
 
     if (arf_cmp(Bbound, tol) > 0)
     {
-        while (arf_cmp(Bbound, tol) > 0)
+        while (arf_cmp(Bbound, tol) > 0 && B <= limit)
         {
             arf_set(Abound, Bbound);
             A *= 2;
