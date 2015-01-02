@@ -296,6 +296,14 @@ Radius and interval operations
     Sets *y* to a ball containing `\lfloor x \rfloor` and `\lceil x \rceil`
     respectively, with the midpoint of *y* rounded to at most *prec* bits.
 
+.. function:: void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n)
+
+    Assuming that *x* is finite and not exactly zero, computes integers *mid*,
+    *rad*, *exp* such that `x \in [m-r, m+r] \times 10^e` and such that the
+    larger out of *mid* and *rad* has at least *n* digits plus a few guard
+    digits. If *x* is infinite or exactly zero, the outputs are all set
+    to zero.
+
 Comparisons
 -------------------------------------------------------------------------------
 

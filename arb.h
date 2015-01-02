@@ -456,6 +456,8 @@ int arb_contains(const arb_t x, const arb_t y);
 void arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x);
 int arb_get_unique_fmpz(fmpz_t z, const arb_t x);
 
+void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n);
+
 void arb_floor(arb_t z, const arb_t x, long prec);
 void arb_ceil(arb_t z, const arb_t x, long prec);
 
