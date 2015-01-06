@@ -87,22 +87,21 @@ void _arb_poly_rem(arb_ptr R,
     _arb_vec_clear(Q, lenQ);
 }
 
-void arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
+int arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
                              const arb_poly_t A, const arb_poly_t B, long prec)
 {
     const long lenA = A->length, lenB = B->length;
 
     if (lenB == 0 || arb_contains_zero(B->coeffs + lenB - 1))
     {
-        printf("Exception: division by zero in arb_poly_divrem\n");
-        abort();
+        return 0;
     }
 
     if (lenA < lenB)
     {
         arb_poly_set(R, A);
         arb_poly_zero(Q);
-        return;
+        return 1;
     }
 
     if (Q == A || Q == B)
@@ -112,7 +111,7 @@ void arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
         arb_poly_divrem(T, R, A, B, prec);
         arb_poly_swap(Q, T);
         arb_poly_clear(T);
-        return;
+        return 1;
     }
 
     if (R == A || R == B)
@@ -122,7 +121,7 @@ void arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
         arb_poly_divrem(Q, U, A, B, prec);
         arb_poly_swap(R, U);
         arb_poly_clear(U);
-        return;
+        return 1;
     }
 
     arb_poly_fit_length(Q, lenA - lenB + 1);
@@ -134,4 +133,6 @@ void arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
     _arb_poly_set_length(Q, lenA - lenB + 1);
     _arb_poly_set_length(R, lenB - 1);
     _arb_poly_normalise(R);
+
+    return 1;
 }

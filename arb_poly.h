@@ -271,7 +271,7 @@ void _arb_poly_rem(arb_ptr R,
     arb_srcptr A, long lenA,
     arb_srcptr B, long lenB, long prec);
 
-void arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
+int arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
                              const arb_poly_t A, const arb_poly_t B, long prec);
 
 void _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A,

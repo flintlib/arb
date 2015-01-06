@@ -289,7 +289,7 @@ void _acb_poly_rem(acb_ptr R,
     acb_srcptr A, long lenA,
     acb_srcptr B, long lenB, long prec);
 
-void acb_poly_divrem(acb_poly_t Q, acb_poly_t R,
+int acb_poly_divrem(acb_poly_t Q, acb_poly_t R,
                              const acb_poly_t A, const acb_poly_t B, long prec);
 
 void _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A,

@@ -299,9 +299,12 @@ Arithmetic
 .. function:: void acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, long prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
-    a remainder `R` such that `A = BQ + R`. The leading coefficient of `B` must
-    not contain zero. The implementation reverses the inputs and performs
-    power series division.
+    a remainder `R` such that `A = BQ + R`. The implementation reverses the
+    inputs and performs power series division.
+
+    If the leading coefficient of `B` contains zero (or if `B` is identically
+    zero), returns 0 indicating failure without modifying the outputs.
+    Otherwise returns nonzero.
 
 .. function:: void _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A, long len, const acb_t c, long prec)
 

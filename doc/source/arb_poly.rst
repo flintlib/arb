@@ -294,12 +294,15 @@ Arithmetic
 
 .. function:: void _arb_poly_divrem(arb_ptr Q, arb_ptr R, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
 
-.. function:: void arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: int arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, long prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
-    a remainder `R` such that `A = BQ + R`. The leading coefficient of `B` must
-    not contain zero. The implementation reverses the inputs and performs
-    power series division.
+    a remainder `R` such that `A = BQ + R`. The implementation reverses the
+    inputs and performs power series division.
+
+    If the leading coefficient of `B` contains zero (or if `B` is identically
+    zero), returns 0 indicating failure without modifying the outputs.
+    Otherwise returns nonzero.
 
 .. function:: void _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A, long len, const arb_t c, long prec)
 
