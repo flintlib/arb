@@ -11,10 +11,30 @@ is a ball which contains the result of the (mathematically exact) operation
 applied to any choice of points in the input balls.
 In general, the output ball is not the smallest possible.
 
-The precision parameter passed to each function roughly indicates the
-precision to which calculations on the midpoint are carried out
-(operations on the radius are always done using a fixed, small
-precision.)
+The precision (*prec*) parameter passed to each function roughly indicates the
+precision to which calculations on the midpoint are carried out (operations on
+the radius are always done using a fixed, small precision.) In other words, the
+*prec* parameter just specifies the internal working precision used to compute
+the midpoint. For example, if adding two balls `[x \pm r]`, `[y \pm s]`, the
+result is
+`[\operatorname{round}(x + y, \operatorname{prec}) \pm (r + s + \varepsilon)]`
+where `\varepsilon` is a bound for the error from
+`\operatorname{round}(x + y, \operatorname{prec})`.
+
+If the precision is much higher than the accuracy of the inputs, all that
+happens is that `\varepsilon` is much smaller than `r + s`, so the output
+radius is approximately `r + s`.
+
+If the precision is much lower than the accuracy of the inputs, all that
+happens is that `\varepsilon` is much larger than `r + s`, so the output radius
+is approximately `\varepsilon`.
+
+The only restrictions are that the precision has to be at least 2 bits, and not
+so large that overflow occurs (not usually an issue, at least on 64-bit
+systems).
+
+The only strict guarantee for all functions is that the output ball contains
+the mathematically exact result.
 
 For arithmetic operations, the precision parameter currently simply
 specifies the precision of the corresponding *fmpr* operation.
