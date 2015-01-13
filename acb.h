@@ -911,6 +911,8 @@ _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
         acb_trim(res + i, vec + i);
 }
 
+/* sort complex numbers in a nice-to-display order */
+void _acb_vec_sort_pretty(acb_ptr vec, long len);
 
 #ifdef __cplusplus
 }
