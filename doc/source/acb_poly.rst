@@ -545,6 +545,36 @@ Elementary functions
 
     Sets *res* to *poly* raised to the power *exp*.
 
+.. function:: void _acb_poly_pow_series(acb_ptr h, acb_srcptr f, long flen, acb_srcptr g, long glen, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* and *glen* do not exceed *len*.
+
+.. function:: void acb_poly_pow_series(acb_poly_t h, const acb_poly_t f, const acb_poly_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently.
+
+.. function:: void _acb_poly_pow_acb_series(acb_ptr h, acb_srcptr f, long flen, const acb_t g, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^g = \exp(g \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* does not exceed *len*.
+
+.. function:: void acb_poly_pow_acb_series(acb_poly_t h, const acb_poly_t f, const acb_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^g = \exp(g \log f(x))` truncated
+    to length *len*.
+
 .. function:: void _acb_poly_sqrt_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, long n, long prec)
@@ -803,7 +833,7 @@ Zeta function
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
 
-Polylogarithms
+Other special functions
 -------------------------------------------------------------------------------
 
 .. function:: void _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
@@ -832,6 +862,33 @@ Polylogarithms
     power series, truncating the output to length *len*. The underscore method
     requires all lengths to be positive and supports aliasing between
     all inputs and outputs.
+
+.. function:: void _acb_poly_erf_series(acb_ptr res, acb_srcptr z, long zlen, long n, long prec)
+
+.. function:: void acb_poly_erf_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the error function of the power series *z*, truncated to length *n*.
+
+.. function:: void _acb_poly_agm1_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
+
+.. function:: void acb_poly_agm1_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the arithmetic-geometric mean of 1 and the power series *z*,
+    truncated to length *n*.
+
+.. function:: void _acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
+
+.. function:: void acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the complete elliptic integral of the first kind of the
+    power series *z*, truncated to length *n*.
+
+.. function:: void _acb_poly_elliptic_p_series(acb_ptr res, acb_srcptr z, long zlen, const acb_t tau, long len, long prec)
+
+.. function:: void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, long n, long prec)
+
+    Sets *res* to the Weierstrass elliptic function of the power series *z*,
+    with periods 1 and *tau*, truncated to length *n*.
 
 
 Root-finding

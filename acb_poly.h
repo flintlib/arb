@@ -522,6 +522,19 @@ void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, l
 
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);
 
+void _acb_poly_pow_acb_series(acb_ptr h,
+    acb_srcptr f, long flen, const acb_t g, long len, long prec);
+
+void acb_poly_pow_acb_series(acb_poly_t h,
+    const acb_poly_t f, const acb_t g, long len, long prec);
+
+void _acb_poly_pow_series(acb_ptr h,
+    acb_srcptr f, long flen,
+    acb_srcptr g, long glen, long len, long prec);
+
+void acb_poly_pow_series(acb_poly_t h,
+    const acb_poly_t f, const acb_poly_t g, long len, long prec);
+
 /* TODO: document */
 ACB_POLY_INLINE void
 _acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long prec)
@@ -583,7 +596,15 @@ void _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, lo
 void _acb_poly_polylog_series(acb_ptr res, acb_srcptr s, long slen, const acb_t z, long len, long prec);
 void acb_poly_polylog_series(acb_poly_t res, const acb_poly_t s, const acb_t z, long n, long prec);
 
+void _acb_poly_agm1_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec);
+void acb_poly_agm1_series(acb_poly_t res, const acb_poly_t z, long n, long prec);
+void _acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec);
+void acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, long n, long prec);
+void _acb_poly_elliptic_p_series(acb_ptr res, acb_srcptr z, long zlen, const acb_t tau, long len, long prec);
+void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, long n, long prec);
 
+void _acb_poly_erf_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec);
+void acb_poly_erf_series(acb_poly_t g, const acb_poly_t h, long n, long prec);
 
 #ifdef __cplusplus
 }
