@@ -623,6 +623,10 @@ Exponentials and logarithms
     be small). Otherwise, it ignores `\log(k_0)` and evaluates the logarithm
     the usual way.
 
+.. function:: void arb_log1p(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
+
 .. function:: void arb_exp(arb_t z, const arb_t x, long prec)
 
     Sets `z = \exp(x)`. Error propagation is done using the following rule:

@@ -349,6 +349,10 @@ Elementary functions
     computed as
     `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
 
+.. function:: void acb_log1p(acb_t z, const acb_t x, long prec)
+
+    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
+
 .. function:: void acb_exp(acb_t y, const acb_t z, long prec)
 
     Sets *y* to the exponential function of *z*, computed as
@@ -402,6 +406,10 @@ Elementary functions
 
     Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
     but evaluating the sine and cosine accurately via :func:`arb_sin_cos_pi`.
+
+.. function:: void acb_atan(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
 
 .. function:: void acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec)
 

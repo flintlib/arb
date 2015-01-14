@@ -587,6 +587,8 @@ acb_const_pi(acb_t x, long prec)
 }
 
 void acb_log(acb_t r, const acb_t z, long prec);
+void acb_log1p(acb_t r, const acb_t z, long prec);
+void acb_atan(acb_t r, const acb_t z, long prec);
 
 void acb_exp(acb_t r, const acb_t z, long prec);
 void acb_exp_pi_i(acb_t r, const acb_t z, long prec);
