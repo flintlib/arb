@@ -531,6 +531,7 @@ void arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec);
 
 void arb_rsqrt(arb_t z, const arb_t x, long prec);
 void arb_rsqrt_ui(arb_t z, ulong x, long prec);
+void arb_sqrt1pm1(arb_t r, const arb_t z, long prec);
 
 void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec);
 void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, long prec);
@@ -575,6 +576,9 @@ void arb_atan(arb_t z, const arb_t x, long prec);
 void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec);
 void arb_asin(arb_t z, const arb_t x, long prec);
 void arb_acos(arb_t z, const arb_t x, long prec);
+void arb_atanh(arb_t z, const arb_t x, long prec);
+void arb_asinh(arb_t z, const arb_t x, long prec);
+void arb_acosh(arb_t z, const arb_t x, long prec);
 void arb_fac_ui(arb_t z, ulong n, long prec);
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec);
 void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec);

@@ -556,6 +556,10 @@ Powers and roots
     Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
     At high precision, this is faster than computing a square root.
 
+.. function:: void arb_sqrt1pm1(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \sqrt{1+x}-1`, computed accurately when `x \approx 0`.
+
 .. function:: void arb_root(arb_t z, const arb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
@@ -751,6 +755,23 @@ Hyperbolic functions
 
     Sets `y = \coth(x) = \cosh(x) / \sinh(x)`, evaluated using
     the same strategy as :func:`arb_tanh`.
+
+Inverse hyperbolic functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_atanh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{atanh}(x)`.
+
+.. function:: void arb_asinh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{asinh}(x)`.
+
+.. function:: void arb_acosh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{acosh}(x)`.
+    If `x < 1`, the result is an indeterminate interval.
+
 
 Constants
 -------------------------------------------------------------------------------
