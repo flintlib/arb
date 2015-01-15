@@ -535,6 +535,10 @@ void _acb_poly_pow_series(acb_ptr h,
 void acb_poly_pow_series(acb_poly_t h,
     const acb_poly_t f, const acb_poly_t g, long len, long prec);
 
+void
+_acb_poly_binomial_pow_acb_series(acb_ptr h, acb_srcptr f, long flen,
+    const acb_t g, long len, long prec);
+
 /* TODO: document */
 ACB_POLY_INLINE void
 _acb_poly_acb_pow_cpx(acb_ptr w, const acb_t a, const acb_t b, long len, long prec)

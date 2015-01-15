@@ -461,6 +461,8 @@ void _arb_poly_pow_arb_series(arb_ptr h,
 void arb_poly_pow_arb_series(arb_poly_t h,
     const arb_poly_t f, const arb_t g, long len, long prec);
 
+void _arb_poly_binomial_pow_arb_series(arb_ptr h, arb_srcptr f, long flen, const arb_t g, long len, long prec);
+
 void _arb_poly_rsqrt_series(arb_ptr g,
     arb_srcptr h, long hlen, long len, long prec);
 

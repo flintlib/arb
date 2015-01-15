@@ -25,6 +25,38 @@
 
 #include "acb_poly.h"
 
+/* (a + bx^c)^g where a = f[0] and b = f[flen-1] */
+void
+_acb_poly_binomial_pow_acb_series(acb_ptr h, acb_srcptr f, long flen, const acb_t g, long len, long prec)
+{
+    long i, j, d;
+    acb_t t;
+
+    acb_init(t);
+
+    d = flen - 1;
+    acb_pow(h, f, g, prec);
+    acb_div(t, f + d, f, prec);
+
+    for (i = 1, j = d; j < len; i++, j += d)
+    {
+        acb_sub_ui(h + j, g, i - 1, prec);
+        acb_mul(h + j, h + j, h + j - d, prec);
+        acb_mul(h + j, h + j, t, prec);
+        acb_div_ui(h + j, h + j, i, prec);
+    }
+
+    if (d > 1)
+    {
+        for (i = 1; i < len; i++)
+            if (i % d != 0)
+                acb_zero(h + i);
+    }
+
+    acb_clear(t);
+    return;
+}
+
 void
 _acb_poly_pow_acb_series(acb_ptr h,
     acb_srcptr f, long flen, const acb_t g, long len, long prec)
@@ -74,31 +106,7 @@ _acb_poly_pow_acb_series(acb_ptr h,
     /* (a + bx^c)^g */
     if (f_binomial)
     {
-        long i, j, d;
-        acb_t t;
-
-        acb_init(t);
-
-        d = flen - 1;
-        acb_pow(h, f, g, prec);
-        acb_div(t, f + d, f, prec);
-
-        for (i = 1, j = d; j < len; i++, j += d)
-        {
-            acb_sub_ui(h + j, g, i - 1, prec);
-            acb_mul(h + j, h + j, h + j - d, prec);
-            acb_mul(h + j, h + j, t, prec);
-            acb_div_ui(h + j, h + j, i, prec);
-        }
-
-        if (d > 1)
-        {
-            for (i = 1; i < len; i++)
-                if (i % d != 0)
-                    acb_zero(h + i);
-        }
-
-        acb_clear(t);
+        _acb_poly_binomial_pow_acb_series(h, f, flen, g, len, prec);
         return;
     }
 

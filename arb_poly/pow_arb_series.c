@@ -25,6 +25,38 @@
 
 #include "arb_poly.h"
 
+/* (a + bx^c)^g where a = f[0] and b = f[flen-1] */
+void
+_arb_poly_binomial_pow_arb_series(arb_ptr h, arb_srcptr f, long flen, const arb_t g, long len, long prec)
+{
+    long i, j, d;
+    arb_t t;
+
+    arb_init(t);
+
+    d = flen - 1;
+    arb_pow(h, f, g, prec);
+    arb_div(t, f + d, f, prec);
+
+    for (i = 1, j = d; j < len; i++, j += d)
+    {
+        arb_sub_ui(h + j, g, i - 1, prec);
+        arb_mul(h + j, h + j, h + j - d, prec);
+        arb_mul(h + j, h + j, t, prec);
+        arb_div_ui(h + j, h + j, i, prec);
+    }
+
+    if (d > 1)
+    {
+        for (i = 1; i < len; i++)
+            if (i % d != 0)
+                arb_zero(h + i);
+    }
+
+    arb_clear(t);
+    return;
+}
+
 void
 _arb_poly_pow_arb_series(arb_ptr h,
     arb_srcptr f, long flen, const arb_t g, long len, long prec)
@@ -72,33 +104,11 @@ _arb_poly_pow_arb_series(arb_ptr h,
     }
 
     /* (a + bx^c)^g */
+
+
     if (f_binomial)
     {
-        long i, j, d;
-        arb_t t;
-
-        arb_init(t);
-
-        d = flen - 1;
-        arb_pow(h, f, g, prec);
-        arb_div(t, f + d, f, prec);
-
-        for (i = 1, j = d; j < len; i++, j += d)
-        {
-            arb_sub_ui(h + j, g, i - 1, prec);
-            arb_mul(h + j, h + j, h + j - d, prec);
-            arb_mul(h + j, h + j, t, prec);
-            arb_div_ui(h + j, h + j, i, prec);
-        }
-
-        if (d > 1)
-        {
-            for (i = 1; i < len; i++)
-                if (i % d != 0)
-                    arb_zero(h + i);
-        }
-
-        arb_clear(t);
+        _arb_poly_binomial_pow_arb_series(h, f, flen, g, len, prec);
         return;
     }
 
