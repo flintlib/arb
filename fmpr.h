@@ -416,7 +416,7 @@ _fmpr_add_1x1(fmpr_t z,
     t = x;
     u = y;
 
-    yexp = yexp; /* unused */
+    (void) yexp; /* unused */
 
     lo = u << shift;
     hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
