@@ -585,6 +585,8 @@ void mag_hypot(mag_t z, const mag_t x, const mag_t y);
 
 void mag_binpow_uiui(mag_t b, ulong m, ulong n);
 
+void mag_polylog_tail(mag_t u, const mag_t z, long sigma, ulong d, ulong N);
+
 void mag_set_ui(mag_t z, ulong x);
 void mag_set_ui_lower(mag_t z, ulong x);
 

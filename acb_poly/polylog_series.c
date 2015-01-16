@@ -43,92 +43,6 @@ arb_get_si_lower(const arb_t x)
     return v;
 }
 
-void
-polylog_remainder_bound(mag_t u, const mag_t z, long sigma, ulong d, ulong N)
-{
-    mag_t TN, UN, t;
-
-    if (N < 2)
-    {
-        mag_inf(u);
-        return;
-    }
-
-    mag_init(TN);
-    mag_init(UN);
-    mag_init(t);
-
-    if (mag_cmp_2exp_si(z, 0) >= 0)
-    {
-        mag_inf(u);
-    }
-    else
-    {
-        /* Bound T(N) */
-        mag_pow_ui(TN, z, N);
-
-        /* multiply by log(N)^d */
-        if (d > 0)
-        {
-            mag_log_ui(t, N);
-            mag_pow_ui(t, t, d);
-            mag_mul(TN, TN, t);
-        }
-
-        /* multiply by 1/k^s */
-        if (sigma > 0)
-        {
-            mag_set_ui_lower(t, N);
-            mag_pow_ui_lower(t, t, sigma);
-            mag_div(TN, TN, t);
-        }
-        else if (sigma < 0)
-        {
-            mag_set_ui(t, N);
-            mag_pow_ui(t, t, -sigma);
-            mag_mul(TN, TN, t);
-        }
-
-        /* Bound U(N) */
-        mag_set(UN, z);
-
-        /* multiply by (1 + 1/N)**S */
-        if (sigma < 0)
-        {
-            mag_binpow_uiui(t, N, -sigma);
-            mag_mul(UN, UN, t);
-        }
-
-        /* multiply by (1 + 1/(N log(N)))^d */
-        if (d > 0)
-        {
-            ulong nl;
-
-            /* rounds down */
-            nl = mag_d_log_lower_bound(N) * N * (1 - 1e-13);
-
-            mag_binpow_uiui(t, nl, d);
-            mag_mul(UN, UN, t);
-        }
-
-        /* T(N) / (1 - U(N)) */
-        if (mag_cmp_2exp_si(UN, 0) >= 0)
-        {
-            mag_inf(u);
-        }
-        else
-        {
-            mag_one(t);
-            mag_sub_lower(t, t, UN);
-            mag_div(u, TN, t);
-        }
-    }
-
-    mag_clear(TN);
-    mag_clear(UN);
-    mag_clear(t);
-}
-
 long
 polylog_choose_terms(mag_t err, long sigma, const mag_t z, long d, long prec)
 {
@@ -136,7 +50,7 @@ polylog_choose_terms(mag_t err, long sigma, const mag_t z, long d, long prec)
 
     for (N = 3; ; N = FLINT_MAX(N+3, N*1.1))
     {
-        polylog_remainder_bound(err, z, sigma, d, N);
+        mag_polylog_tail(err, z, sigma, d, N);
 
         /* TODO: do something else when |Li_s(z)| is very small/very large? */
         if (mag_cmp_2exp_si(err, -prec) < 0)
@@ -341,7 +255,7 @@ _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, l
 
     for (k = 0; k < len; k++)
     {
-        polylog_remainder_bound(err, zmag, sigma, k, N);
+        mag_polylog_tail(err, zmag, sigma, k, N);
         mag_rfac_ui(errf, k);
         mag_mul(err, err, errf);
 

@@ -30,52 +30,8 @@ where
 
         T(k) = \frac{z^k \log^d(k)}{k^s}.
 
-Let `U(k)` be a nonincreasing bound for the magnitude of the term ratio
-
-.. math ::
-
-    \frac{T(k+1)}{T(k)} = z \left(\frac{k}{k+1}\right)^s 
-        \left( \frac{\log(k+1)}{\log(k)} \right)^d.
-
-Then the remainder after the `k = N-1` term is bounded by
-
-.. math ::
-
-    \left| \sum_{k=N}^{\infty} T(k) \right|
-        \le |T(N)| \sum_{k=0}^{\infty} U(N)^k = \frac{|T(N)|}{1 - U(N)}
-
-whenever `U(N) < 1`.
-
-If `s = \sigma + i \tau` where `\sigma, \tau \in \mathbb{R}`, we can take
-
-.. math ::
-
-    U(k) = |z| \; B(k, \max(0, -\sigma)) \; B(k \log(k), d)
-
-wherein `B(m,n) = (1 + 1/m)^n`. This follows from the bounds
-
-.. math ::
-
-    \left| \left(\frac{k}{k+1}\right)^s \right|
-    = \left(\frac{k}{k+1}\right)^{\sigma}
-    \le \begin{cases}
-        1                    & \text{if }         \sigma \ge 0 \\
-        (1 + 1/k)^{-\sigma}  & \text{if }         \sigma < 0.
-        \end{cases}
-
-and
-
-.. math ::
-
-    \left( \frac{\log(k+1)}{\log(k)} \right)^d \le
-        \left(1 + \frac{1}{k \log(k)}\right)^d.
-
-We can replace `\sigma` with any lower bound, conveniently
-the nearest integer in the direction of `-\infty`, and `|z|` with any
-upper bound.
-
-To bound `B(m,n)` when `m` is large, it is useful to note that
-`B(m,n) = \exp(n \log(1+1/m)) \le \exp(n/m)`).
+The remainder term `\left| \sum_{k=N}^{\infty} T(k) \right|` is bounded
+via :func:`mag_polylog_tail`.
 
 Expansion for general z
 -------------------------------------------------------------------------------

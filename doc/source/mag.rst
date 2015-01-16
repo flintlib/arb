@@ -327,3 +327,52 @@ Special functions
     Sets *z* to an upper bound for `|B_n| / n!` where `B_n` denotes
     a Bernoulli number.
 
+.. function:: void mag_polylog_tail(mag_t u, const mag_t z, long s, ulong d, ulong N)
+
+    Sets *u* to an upper bound for
+
+    .. math ::
+
+        \sum_{k=N}^{\infty} \frac{z^k \log^d(k)}{k^s}.
+
+    Note: in applications where `s` in this formula may be
+    real or complex, the user can simply
+    substitute any convenient integer `s'` such that `s' \le \operatorname{Re}(s)`.
+
+    Denote the terms by `T(k)`. We pick a nonincreasing function `U(k)` such that
+
+    .. math ::
+
+        \frac{T(k+1)}{T(k)} = z \left(\frac{k}{k+1}\right)^s 
+            \left( \frac{\log(k+1)}{\log(k)} \right)^d \le U(k).
+
+    Then, as soon as `U(N) < 1`,
+
+    .. math ::
+
+        \sum_{k=N}^{\infty} T(k)
+            \le T(N) \sum_{k=0}^{\infty} U(N)^k = \frac{T(N)}{1 - U(N)}.
+
+    In particular, we take
+
+    .. math ::
+
+        U(k) = z \; B(k, \max(0, -s)) \; B(k \log(k), d)
+
+    where `B(m,n) = (1 + 1/m)^n`. This follows from the bounds
+
+    .. math ::
+
+        \left(\frac{k}{k+1}\right)^{s}
+        \le \begin{cases}
+            1                    & \text{if }         s \ge 0 \\
+            (1 + 1/k)^{-s}  & \text{if }         s < 0.
+            \end{cases}
+
+    and
+
+    .. math ::
+
+        \left( \frac{\log(k+1)}{\log(k)} \right)^d \le
+            \left(1 + \frac{1}{k \log(k)}\right)^d.
+
