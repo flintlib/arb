@@ -67,12 +67,10 @@ acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec)
 void
 acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
 {
-    acb_t a, t, w;
-    acb_struct b[2];
+    acb_t a, b, t, w;
 
     acb_init(a);
     acb_init(b);
-    acb_init(b + 1);
     acb_init(t);
     acb_init(w);
 
@@ -96,7 +94,6 @@ acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
 
     acb_clear(a);
     acb_clear(b);
-    acb_clear(b + 1);
     acb_clear(t);
     acb_clear (w);
 }
