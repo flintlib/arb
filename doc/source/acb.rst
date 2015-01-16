@@ -218,6 +218,12 @@ Precision and comparisons
     Returns nonzero iff the imaginary part of *x* is zero.
     It does not test whether the real part of *x* also is finite.
 
+.. function:: int acb_get_unique_fmpz(fmpz_t z, const acb_t x)
+
+    If *x* contains a unique integer, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero.
+
 Complex parts
 -------------------------------------------------------------------------------
 

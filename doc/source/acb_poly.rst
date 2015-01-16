@@ -161,11 +161,18 @@ Comparisons
     Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
     function requires that *len1* ist at least as large as *len2*.
 
+.. function:: int acb_poly_get_unique_fmpz_poly(fmpz_poly_t z, const acb_poly_t x)
+
+    If *x* contains a unique integer polynomial, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero, possibly partially modifying *z*.
 
 Conversions
 -------------------------------------------------------------------------------
 
 .. function:: void acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, long prec)
+
+.. function:: void acb_poly_set2_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, const fmpz_poly_t im, long prec)
 
 .. function:: void acb_poly_set_arb_poly(acb_poly_t poly, const arb_poly_t re)
 

@@ -902,6 +902,16 @@ _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
         arb_trim(res + i, vec + i);
 }
 
+ARB_INLINE int
+_arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!arb_get_unique_fmpz(res + i, vec + i))
+            return 0;
+    return 1;
+}
+
 /* arctangent implementation */
 
 #define ARB_ATAN_TAB1_BITS 8

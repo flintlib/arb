@@ -165,6 +165,10 @@ void acb_poly_set2_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, const fmpq_p
 
 void acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t src, long prec);
 
+void acb_poly_set2_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, const fmpz_poly_t im, long prec);
+
+int acb_poly_get_unique_fmpz_poly(fmpz_poly_t res, const acb_poly_t src);
+
 ACB_POLY_INLINE void
 acb_poly_set_acb(acb_poly_t poly, const acb_t c)
 {

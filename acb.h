@@ -227,6 +227,8 @@ acb_set_round_fmpz(acb_t z, const fmpz_t y, long prec)
     arb_zero(acb_imagref(z));
 }
 
+int acb_get_unique_fmpz(fmpz_t z, const acb_t x);
+
 ACB_INLINE void
 acb_set_fmpq(acb_t z, const fmpq_t c, long prec)
 {
@@ -911,6 +913,16 @@ _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
     long i;
     for (i = 0; i < len; i++)
         acb_trim(res + i, vec + i);
+}
+
+ARB_INLINE int
+_acb_vec_get_unique_fmpz_vec(fmpz * res,  acb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!acb_get_unique_fmpz(res + i, vec + i))
+            return 0;
+    return 1;
 }
 
 /* sort complex numbers in a nice-to-display order */

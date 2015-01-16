@@ -166,6 +166,12 @@ Comparisons
     Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
     function requires that *len1* ist at least as large as *len2*.
 
+.. function:: int arb_poly_get_unique_fmpz_poly(fmpz_poly_t z, const arb_poly_t x)
+
+    If *x* contains a unique integer polynomial, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero, possibly partially modifying *z*.
+
 Arithmetic
 -------------------------------------------------------------------------------
 
@@ -937,4 +943,22 @@ Root-finding
     (typically, if the polynomial has large coefficients of alternating
     signs, this needs to be approximately the bit size of the coefficients).
 
+Other special polynomials
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_poly_swinnerton_dyer_ui(arb_ptr poly, ulong n, long trunc, long prec)
+
+.. function:: void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, long prec)
+
+    Computes the Swinnerton-Dyer polynomial `S_n`, which has degree `2^n`
+    and is the rational minimal polynomial of the sum
+    of the square roots of the first *n* prime numbers.
+
+    If *prec* is set to zero, a precision is chosen automatically such
+    that :func:`arb_poly_get_unique_fmpz_poly` should be successful.
+    Otherwise a working precision of *prec* bits is used.
+
+    The underscore version accepts an additional *trunc* parameter. Even
+    when computing a truncated polynomial, the array *poly* must have room for
+    `2^n + 1` coefficients, used as temporary space.
 

@@ -149,6 +149,8 @@ arb_poly_set_arb(arb_poly_t poly, const arb_t c)
 
 void arb_poly_set_si(arb_poly_t poly, long c);
 
+int arb_poly_get_unique_fmpz_poly(fmpz_poly_t res, const arb_poly_t src);
+
 /* Comparisons */
 
 int arb_poly_contains(const arb_poly_t poly1, const arb_poly_t poly2);
@@ -574,6 +576,10 @@ void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, lo
 
 void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
 void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, long n, long prec);
+
+long _arb_poly_swinnerton_dyer_ui_prec(ulong n);
+void _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, long trunc, long prec);
+void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, long prec);
 
 /* Root-finding */
 
