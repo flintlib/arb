@@ -23,26 +23,20 @@
 
 ******************************************************************************/
 
-#include "acb.h"
+#include "acb_mat.h"
 
 void
-acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits)
+acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
 {
-    arb_randtest(acb_realref(z), state, prec, mag_bits);
-    arb_randtest(acb_imagref(z), state, prec, mag_bits);
-}
+    long i, j;
 
-void
-acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits)
-{
-    arb_randtest_special(acb_realref(z), state, prec, mag_bits);
-    arb_randtest_special(acb_imagref(z), state, prec, mag_bits);
-}
-
-void
-acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits)
-{
-    arb_randtest_precise(acb_realref(z), state, prec, mag_bits);
-    arb_randtest_precise(acb_imagref(z), state, prec, mag_bits);
+    if (n_randint(state, 2))
+        for (i = 0; i < acb_mat_nrows(mat); i++)
+            for (j = 0; j < acb_mat_ncols(mat); j++)
+                acb_randtest(acb_mat_entry(mat, i, j), state, prec, mag_bits);
+    else
+        for (i = 0; i < acb_mat_nrows(mat); i++)
+            for (j = 0; j < acb_mat_ncols(mat); j++)
+                acb_randtest_precise(acb_mat_entry(mat, i, j), state, prec, mag_bits);
 }
 

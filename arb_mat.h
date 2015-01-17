@@ -36,6 +36,7 @@
 #include "fmpz_mat.h"
 #include "fmpq_mat.h"
 #include "perm.h"
+#include "arb_poly.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,6 +79,10 @@ void arb_mat_set(arb_mat_t dest, const arb_mat_t src);
 void arb_mat_set_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src);
 
 void arb_mat_set_fmpq_mat(arb_mat_t dest, const fmpq_mat_t src, long prec);
+
+/* Random generation */
+
+void arb_mat_randtest(arb_mat_t mat, flint_rand_t state, long prec, long mag_bits);
 
 /* I/O */
 
@@ -263,6 +268,10 @@ void arb_mat_det(arb_t det, const arb_mat_t A, long prec);
 /* Special functions */
 
 void arb_mat_exp(arb_mat_t B, const arb_mat_t A, long prec);
+
+void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, long prec);
+
+void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, long prec);
 
 #ifdef __cplusplus
 }

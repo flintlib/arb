@@ -37,6 +37,7 @@
 #include "fmpz_mat.h"
 #include "fmpq_mat.h"
 #include "arb_mat.h"
+#include "acb_poly.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,6 +81,10 @@ void acb_mat_set(acb_mat_t dest, const acb_mat_t src);
 void acb_mat_set_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src);
 
 void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec);
+
+/* Random generation */
+
+void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits);
 
 /* I/O */
 
@@ -291,6 +296,10 @@ void acb_mat_det(acb_t det, const acb_mat_t A, long prec);
 /* Special functions */
 
 void acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec);
+
+void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec);
+
+void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, long prec);
 
 #ifdef __cplusplus
 }

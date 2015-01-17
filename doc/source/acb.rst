@@ -148,6 +148,10 @@ Random number generation
     Generates a random complex number by generating separate random
     real and imaginary parts. Also generates NaNs and infinities.
 
+.. function:: void acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random complex number with precise real and imaginary parts.
+
 Precision and comparisons
 -------------------------------------------------------------------------------
 
