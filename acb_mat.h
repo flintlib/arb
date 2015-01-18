@@ -102,6 +102,8 @@ int acb_mat_contains_fmpq_mat(const acb_mat_t mat1, const fmpq_mat_t mat2);
 
 int acb_mat_contains_fmpz_mat(const acb_mat_t mat1, const fmpz_mat_t mat2);
 
+int acb_mat_is_real(const acb_mat_t mat);
+
 /* Special matrices */
 
 void acb_mat_zero(acb_mat_t mat);

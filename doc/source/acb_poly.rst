@@ -167,6 +167,10 @@ Comparisons
     nonzero. Otherwise (if *x* represents no integers or more than one integer),
     returns zero, possibly partially modifying *z*.
 
+.. function:: int acb_poly_is_real(const acb_poly_t poly)
+
+    Returns nonzero iff all coefficients in *poly* have zero imaginary part.
+
 Conversions
 -------------------------------------------------------------------------------
 

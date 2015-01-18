@@ -101,6 +101,9 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
 
+.. function:: int acb_mat_is_real(const acb_mat_t mat)
+
+    Returns nonzero iff all entries in *mat* have zero imaginary part.
 
 Special matrices
 -------------------------------------------------------------------------------

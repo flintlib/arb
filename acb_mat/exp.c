@@ -123,6 +123,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
     long i, j, dim, wp, N, q, r;
     mag_t norm, err;
     acb_mat_t T;
+    int is_real;
 
     dim = acb_mat_nrows(A);
 
@@ -141,6 +142,8 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
         acb_exp(acb_mat_entry(B, 0, 0), acb_mat_entry(A, 0, 0), prec);
         return;
     }
+
+    is_real = acb_mat_is_real(A);
 
     wp = prec + 3 * FLINT_BIT_COUNT(prec);
 
@@ -173,9 +176,18 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
 
         _acb_mat_exp_taylor(B, T, N, wp);
 
-        for (i = 0; i < dim; i++)
-            for (j = 0; j < dim; j++)
-                acb_add_error_mag(acb_mat_entry(B, i, j), err);
+        if (is_real)
+        {
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    arb_add_error_mag(acb_realref(acb_mat_entry(B, i, j)), err);
+        }
+        else
+        {
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    acb_add_error_mag(acb_mat_entry(B, i, j), err);
+        }
 
         for (i = 0; i < r; i++)
         {
