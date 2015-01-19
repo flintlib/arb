@@ -88,6 +88,10 @@ Basic properties and manipulation
 
     Sets *dest* to a copy of *src*.
 
+.. function:: void acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, long prec)
+
+    Sets *dest* to a copy of *src*, rounded to *prec* bits.
+
 .. function:: void acb_poly_set_coeff_si(acb_poly_t poly, long n, long c)
 
 .. function:: void acb_poly_set_coeff_acb(acb_poly_t poly, long n, const acb_t c)

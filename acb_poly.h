@@ -155,6 +155,8 @@ void acb_poly_integral(acb_poly_t res, const acb_poly_t poly, long prec);
 
 void acb_poly_set(acb_poly_t dest, const acb_poly_t src);
 
+void acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, long prec);
+
 void acb_poly_set_arb_poly(acb_poly_t poly, const arb_poly_t re);
 
 void acb_poly_set2_arb_poly(acb_poly_t poly, const arb_poly_t re, const arb_poly_t im);

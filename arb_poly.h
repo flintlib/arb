@@ -76,6 +76,8 @@ arb_poly_swap(arb_poly_t poly1, arb_poly_t poly2)
 
 void arb_poly_set(arb_poly_t poly, const arb_poly_t src);
 
+void arb_poly_set_round(arb_poly_t poly, const arb_poly_t src, long prec);
+
 /* Basic manipulation */
 
 ARB_POLY_INLINE long arb_poly_length(const arb_poly_t poly)

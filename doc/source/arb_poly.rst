@@ -63,6 +63,14 @@ Basic manipulation
 
     Sets *poly* to the constant 0 respectively 1.
 
+.. function:: void arb_poly_set(arb_poly_t dest, const arb_poly_t src)
+
+    Sets *dest* to a copy of *src*.
+
+.. function:: void arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, long prec)
+
+    Sets *dest* to a copy of *src*, rounded to *prec* bits.
+
 .. function:: void arb_poly_set_coeff_si(arb_poly_t poly, long n, long c)
 
 .. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, long n, const arb_t c)
