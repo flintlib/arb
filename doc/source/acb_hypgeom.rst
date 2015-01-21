@@ -232,6 +232,18 @@ The error function
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
 
+.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the complementary error function
+    `\operatorname{erfc}(z) = 1 - \operatorname{erf}(z)`.
+    This function avoids catastrophic cancellation for large positive *z*.
+
+.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the imaginary error function
+    `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`. This is a trivial wrapper
+    of :func:`acb_hypgeom_erf`.
+
 Bessel functions
 -------------------------------------------------------------------------------
 
@@ -307,4 +319,9 @@ Incomplete gamma functions
     assumes that *s* is not too large.
     If *modified* is set, computes the exponential integral
     `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead.
+
+.. function:: void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the exponential integral `E_s(z)`. This is a trivial wrapper
+    of :func:`acb_hypgeom_gamma_upper`.
 
