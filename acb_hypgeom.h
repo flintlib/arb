@@ -77,6 +77,12 @@ void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modi
 
 void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
 
+void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec);
+
+void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec);
+
 #ifdef __cplusplus
 }
 #endif
