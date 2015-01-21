@@ -86,6 +86,10 @@ Basic manipulation
 
     Returns nonzero iff *z* is exact.
 
+.. function:: int acb_is_int(const acb_t z)
+
+    Returns nonzero iff *z* is an exact integer.
+
 .. function:: void acb_zero(acb_t z)
 
 .. function:: void acb_one(acb_t z)

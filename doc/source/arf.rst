@@ -251,6 +251,8 @@ Comparisons and bounds
 
 .. function:: int arf_equal(const arf_t x, const arf_t y)
 
+.. function:: int arf_equal_si(const arf_t x, long y)
+
     Returns nonzero iff *x* and *y* are exactly equal. This function does
     not treat NaN specially, i.e. NaN compares as equal to itself.
 
