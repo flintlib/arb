@@ -107,6 +107,11 @@ acb_is_exact(const acb_t z)
     return arb_is_exact(acb_realref(z)) && arb_is_exact(acb_imagref(z));
 }
 
+ACB_INLINE int
+acb_is_int(const acb_t z)
+{
+    return arb_is_zero(acb_imagref(z)) && arb_is_int(acb_realref(z));
+}
 
 ACB_INLINE void
 acb_zero(acb_t z)

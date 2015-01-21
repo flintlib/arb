@@ -67,6 +67,16 @@ void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long p
 
 void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec);
 
+void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
 #ifdef __cplusplus
 }
 #endif

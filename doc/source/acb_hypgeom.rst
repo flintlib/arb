@@ -273,3 +273,38 @@ Bessel functions
     Computes the Bessel function of the first kind `J_{\nu}(z)` using
     an automatic algorithm choice.
 
+Incomplete gamma functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+    Computes the upper incomplete gamma function respectively using
+
+    .. math ::
+
+        \Gamma(s,z) = e^{-z} U(1-s,1-s,z)
+
+        \Gamma(s,z) = \Gamma(s) - \frac{z^s}{s} {}_1F_1(s, s+1, -z)
+
+        \Gamma(s,z) = \Gamma(s) - \frac{z^s e^{-z}}{s} {}_1F_1(1, s+1, z)
+
+        \Gamma(s,z) = \frac{(-1)^n}{n!} (\psi(n+1) - \log(z))
+                    + \frac{(-1)^n}{(n+1)!} z \, {}_2F_2(1,1,2,2+n,-z)
+                    - z^{-n} \sum_{k=0}^{n-1} \frac{(-z)^k}{(k-n) k!},
+                    \quad n = -s \in \mathbb{Z}_{\ge 0}
+
+    and an automatic algorithm choice. The automatic version also handles
+    other special input such as `z = 0` and `s = 1, 2, 3`.
+    The *singular* version evaluates the finite sum directly and therefore
+    assumes that *s* is not too large.
+    If *modified* is set, computes the exponential integral
+    `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead.
+
