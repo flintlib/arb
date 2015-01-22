@@ -189,6 +189,8 @@ void arb_neg_round(arb_t x, const arb_t y, long prec);
 
 void arb_abs(arb_t x, const arb_t y);
 
+int arb_set_str(arb_t res, const char * inp, long prec);
+
 ARB_INLINE void
 arb_set_arf(arb_t x, const arf_t y)
 {

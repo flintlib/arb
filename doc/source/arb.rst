@@ -89,6 +89,23 @@ Assignment and rounding
 
     Sets *y* to the value of *x* without rounding.
 
+.. function:: int arb_set_str(arb_t res, const char * inp, long prec)
+
+    Sets *res* to the value specified by the human-readable string *inp*.
+    The input may be a decimal floating-point literal,
+    such as "25", "0.001", "7e+141" or "-31.4159e-1", and may also consist
+    of two such literals separated by the symbol "+/-" and optionally
+    enclosed in brackets, e.g. "[3.25 +/- 0.0001]", or simply
+    "[+/- 10]" with an implicit zero midpoint.
+    The output is rounded to *prec* bits, and if the binary-to-decimal
+    conversion is inexact, the resulting error is added to the radius.
+
+    The symbols "inf" and "nan" are recognized (a nan midpoint results in an
+    indeterminate interval, with infinite radius).
+
+    Returns 0 if successful and nonzero if unsuccessful. If unsuccessful,
+    the result is set to an indeterminate interval
+
 .. function:: void arb_set_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e)
 
     Sets *y* to `x \cdot 2^e`.
