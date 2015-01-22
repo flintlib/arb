@@ -622,6 +622,9 @@ void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t 
 void _acb_poly_erf_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec);
 void acb_poly_erf_series(acb_poly_t g, const acb_poly_t h, long n, long prec);
 
+void _acb_poly_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, long hlen, long n, long prec);
+void acb_poly_gamma_upper_series(acb_poly_t g, const acb_t s, const acb_poly_t h, long n, long prec);
+
 #ifdef __cplusplus
 }
 #endif

@@ -884,6 +884,13 @@ Other special functions
 
     Sets *res* to the error function of the power series *z*, truncated to length *n*.
 
+.. function:: void _acb_poly_upper_gamma_series(acb_ptr res, acb_t s, acb_srcptr z, long zlen, long n, long prec)
+
+.. function:: void acb_poly_upper_gamma_series(acb_poly_t res, const acb_t s, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the upper incomplete gamma function `\Gamma(s,z)` where *s* is
+    a constant and *z* is a power series, truncated to length *n*.
+
 .. function:: void _acb_poly_agm1_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
 
 .. function:: void acb_poly_agm1_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
