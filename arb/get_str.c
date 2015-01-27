@@ -466,8 +466,8 @@ char * arb_get_str(const arb_t x, long n, ulong flags)
 
     arb_get_str_parts(&negative, &mid_digits, mid_exp, &rad_digits, rad_exp, x, n, more);
 
-    skip_rad = (rad_digits[0] == '0') || (flags & ARB_STR_NO_RADIUS);
     skip_mid = mid_digits[0] == '0';
+    skip_rad = (rad_digits[0] == '0') || ((flags & ARB_STR_NO_RADIUS) && !skip_mid);
 
     _arb_digits_as_float_str(&mid_digits, mid_exp, -4, FLINT_MAX(6, n - 1));
     _arb_digits_as_float_str(&rad_digits, rad_exp, -2, 2);
