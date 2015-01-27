@@ -189,7 +189,16 @@ void arb_neg_round(arb_t x, const arb_t y, long prec);
 
 void arb_abs(arb_t x, const arb_t y);
 
+void _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, long n, arf_rnd_t rnd);
+
 int arb_set_str(arb_t res, const char * inp, long prec);
+
+#define ARB_STR_MORE 1UL
+#define ARB_STR_NO_RADIUS 2UL
+#define ARB_STR_CONDENSE 16UL
+
+char * arb_get_str(const arb_t x, long n, ulong flags);
+
 
 ARB_INLINE void
 arb_set_arf(arb_t x, const arf_t y)
@@ -242,21 +251,11 @@ arb_one(arb_t f)
     arb_set_ui(f, 1UL);
 }
 
-ARB_INLINE void
-arb_print(const arb_t x)
-{
-    arf_print(arb_midref(x));
-    printf(" +/- ");
-    mag_print(arb_radref(x));
-}
+void arb_print(const arb_t x);
 
-ARB_INLINE void
-arb_printd(const arb_t x, long digits)
-{
-    arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
-    printf(" +/- ");
-    mag_printd(arb_radref(x), 5);
-}
+void arb_printd(const arb_t x, long digits);
+
+void arb_printn(const arb_t x, long digits, ulong flags);
 
 ARB_INLINE void
 arb_mul_2exp_si(arb_t y, const arb_t x, long e)

@@ -31,7 +31,6 @@ static int
 arb_set_float_str(arb_t res, const char * inp, long prec)
 {
     char * emarker;
-    char * fracmarker;
     char * buf;
     int error;
     long i;

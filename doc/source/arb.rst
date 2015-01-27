@@ -89,23 +89,6 @@ Assignment and rounding
 
     Sets *y* to the value of *x* without rounding.
 
-.. function:: int arb_set_str(arb_t res, const char * inp, long prec)
-
-    Sets *res* to the value specified by the human-readable string *inp*.
-    The input may be a decimal floating-point literal,
-    such as "25", "0.001", "7e+141" or "-31.4159e-1", and may also consist
-    of two such literals separated by the symbol "+/-" and optionally
-    enclosed in brackets, e.g. "[3.25 +/- 0.0001]", or simply
-    "[+/- 10]" with an implicit zero midpoint.
-    The output is rounded to *prec* bits, and if the binary-to-decimal
-    conversion is inexact, the resulting error is added to the radius.
-
-    The symbols "inf" and "nan" are recognized (a nan midpoint results in an
-    indeterminate interval, with infinite radius).
-
-    Returns 0 if successful and nonzero if unsuccessful. If unsuccessful,
-    the result is set to an indeterminate interval
-
 .. function:: void arb_set_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e)
 
     Sets *y* to `x \cdot 2^e`.
@@ -123,6 +106,48 @@ Assignment and rounding
 .. function:: void arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
 
     Sets *y* to the rational number *x*, rounded to *prec* bits.
+
+.. function:: int arb_set_str(arb_t res, const char * inp, long prec)
+
+    Sets *res* to the value specified by the human-readable string *inp*.
+    The input may be a decimal floating-point literal,
+    such as "25", "0.001", "7e+141" or "-31.4159e-1", and may also consist
+    of two such literals separated by the symbol "+/-" and optionally
+    enclosed in brackets, e.g. "[3.25 +/- 0.0001]", or simply
+    "[+/- 10]" with an implicit zero midpoint.
+    The output is rounded to *prec* bits, and if the binary-to-decimal
+    conversion is inexact, the resulting error is added to the radius.
+
+    The symbols "inf" and "nan" are recognized (a nan midpoint results in an
+    indeterminate interval, with infinite radius).
+
+    Returns 0 if successful and nonzero if unsuccessful. If unsuccessful,
+    the result is set to an indeterminate interval.
+
+.. function:: char * arb_get_str(const arb_t x, long n, ulong flags)
+
+    Returns a nice human-readable representation of *x*, with at most *n*
+    digits of the midpoint printed.
+
+    With default flags, the output can be parsed back with :func:`arb_set_str`,
+    and this is guaranteed to produce an interval containing the original
+    interval *x*.
+
+    By default, the output is rounded so that the value given for the
+    midpoint is correct up to 1 ulp (unit in the last decimal place).
+
+    If *ARB_STR_MORE* is added to *flags*, more (possibly incorrect)
+    digits may be printed.
+
+    If *ARB_STR_NO_RADIUS* is added to *flags*, the radius is not
+    included in the output if at least 1 digit of the midpoint
+    can be printed.
+
+    By adding a multiple *m* of *ARB_STR_CONDENSE* to *flags*, strings
+    of more than three times *m* consecutive digits are condensed, only
+    printing the leading and trailing *m* digits along with
+    brackets indicating the number of digits omitted
+    (useful when computing values to extremely high precision).
 
 Assignment of special values
 -------------------------------------------------------------------------------
@@ -164,6 +189,13 @@ Input and output
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
+
+.. function:: void arb_printn(const arb_t x, long digits, ulong flags)
+
+    Prints a nice decimal representation of *x*.
+    By default, the output is guaranteed to be correct to within one unit
+    in the last digit, and includes an error bound on top of that.
+    See :func:`arb_get_str` for details.
 
 Random number generation
 -------------------------------------------------------------------------------
