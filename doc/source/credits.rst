@@ -31,6 +31,8 @@ The following people (among others) have contributed patches or bug reports.
 * Andrew Booker
 * Francesco Biscani
 * Clemens Heuberger
+* Pascal Molin
+* Ricky Farr
 
 Software 
 -------------------------------------------------------------------------------
