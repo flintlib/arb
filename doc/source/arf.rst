@@ -3,10 +3,36 @@
 **arf.h** -- arbitrary-precision floating-point numbers
 ===============================================================================
 
-The :type:`arf_t` type is essentially identical semantically to
-the :type:`fmpr_t` type, but uses an internal representation that
-generally allows operation to be performed more efficiently.
+A variable of type :type:`arf_t` holds an arbitrary-precision binary
+floating-point number, i.e. a rational number of the form
+`x \times 2^y` where `x, y \in \mathbb{Z}` and `x` is odd;
+or one of the special values zero, plus infinity, minus infinity,
+or NaN (not-a-number).
 
+The *exponent* of a finite and nonzero floating-point number can be
+defined in different
+ways: for example, as the component *y* above, or as the unique
+integer *e* such that
+`x \times 2^y = m \times 2^e` where `1/2 \le |m| < 1`.
+The internal representation of an :type:`arf_t` stores the
+exponent in the latter format.
+
+The conventions for special values largely follow those of the
+IEEE floating-point standard. At the moment, there is no support
+for negative zero, unsigned infinity, or a NaN with a payload, though
+some these might be added in the future.
+
+Except where otherwise noted, the output of an operation is the
+floating-point number obtained by taking the inputs as exact numbers,
+in principle carrying out the operation exactly, and rounding the
+resulting real number to the nearest representable floating-point
+number whose mantissa has at most the specified number of bits, in
+the specified direction of rounding. Some operations are always
+or optionally done exactly.
+
+The :type:`arf_t` type is almost identical semantically to
+the legacy :type:`fmpr_t` type, but uses a more efficient
+internal representation.
 The most significant differences that the user
 has to be aware of are:
 
@@ -27,6 +53,16 @@ Types, macros and constants
 .. type:: arf_struct
 
 .. type:: arf_t
+
+    An :type:`arf_struct` contains four words: an :type:`fmpz` exponent (*exp*),
+    a *size* field tracking the number of limbs used (one bit of this
+    field is also used for the sign of the number), and two more words.
+    The last two words hold the value directly if there are at most two limbs,
+    and otherwise contain one *alloc* field (tracking the total number of
+    allocated limbs, not all of which might be used) and a pointer to
+    the actual limbs.
+    Thus, up to 128 bits on a 64-bit machine and 64 bits on a 32-bit machine,
+    no space outside of the :type:`arf_struct` is used.
 
     An :type:`arf_t` is defined as an array of length one of type
     :type:`arf_struct`, permitting an :type:`arf_t` to be passed by reference.

@@ -3,6 +3,16 @@
 Setup
 ===============================================================================
 
+Download
+-------------------------------------------------------------------------------
+
+Tarballs of released versions can be downloaded from https://github.com/fredrik-johansson/arb/releases
+
+Alternatively, you can simply install Arb from a git checkout of https://github.com/fredrik-johansson/arb/.
+The master branch is generally safe to use (the test suite should pass at all
+times), and recommended for
+keeping up with the latest changes.
+
 Dependencies
 -------------------------------------------------------------------------------
 
@@ -66,7 +76,7 @@ Here is an example program to get started using Arb:
         arb_t x;
         arb_init(x);
         arb_const_pi(x, 50 * 3.33);
-        arb_printd(x, 50); printf("\n");
+        arb_printn(x, 50); printf("\n");
         printf("Computed with arb-%s\n", arb_version);
         arb_clear(x);
     }
@@ -91,6 +101,6 @@ nonstandard location, you can for example add this path to the
 
 The output of the example program should be something like the following::
 
-    3.1415926535897932384626433832795028841971693993751 +/- 4.2764e-50
+    [3.1415926535897932384626433832795028841971693993751 +/- 6.28e-50]
     Computed with arb-2.4.0
 

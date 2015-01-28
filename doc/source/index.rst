@@ -7,24 +7,30 @@ Welcome to Arb's documentation!
     ::::::::::::
 
     Arb is a C library for arbitrary-precision floating-point ball arithmetic,
-    developed by Fredrik Johansson (fredrik.johansson@gmail.com).
-    It supports efficient high-precision computation with polynomials,
-    power series, matrices and special functions over the real and complex numbers,
-    with automatic, rigorous error control.
+    developed by `Fredrik Johansson <http://fredrikj.net/>`_
+    (fredrik.johansson@gmail.com).
+    It supports real and complex numbers, polynomials, power series, matrices,
+    and evaluation of many transcendental functions.
+    All is done with automatic, rigorous error bounds.
 
     The git repository is https://github.com/fredrik-johansson/arb/
+
+    The documentation website is http://fredrikj.net/arb/
 
 .. only:: html
 
         .. image:: _static/arbtext.png
 
     Arb is a C library for arbitrary-precision floating-point ball arithmetic,
-    developed by Fredrik Johansson (fredrik.johansson@gmail.com).
-    It supports efficient high-precision computation with polynomials,
-    power series, matrices and special functions over the real and complex numbers,
-    with automatic, rigorous error control.
+    developed by `Fredrik Johansson <http://fredrikj.net/>`_
+    (fredrik.johansson@gmail.com).
+    It supports real and complex numbers, polynomials, power series, matrices,
+    and evaluation of many transcendental functions.
+    All is done with automatic, rigorous error bounds.
 
     The git repository is https://github.com/fredrik-johansson/arb/
+
+    The documentation website is http://fredrikj.net/arb/
 
     A `PDF version <http://fredrikj.net/arb/arb.pdf>`_ of this documentation
     is available.
