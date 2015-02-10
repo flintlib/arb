@@ -40,6 +40,7 @@ int main()
         long m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A, B;
         arb_poly_t a, b, c, d, e;
+        int times_pi;
 
         qbits = 2 + n_randint(state, 200);
         rbits1 = 2 + n_randint(state, 200);
@@ -47,6 +48,7 @@ int main()
 
         m = 1 + n_randint(state, 30);
         n = 1 + n_randint(state, 30);
+        times_pi = n_randint(state, 2);
 
         fmpq_poly_init(A);
         fmpq_poly_init(B);
@@ -59,7 +61,7 @@ int main()
         fmpq_poly_randtest(A, state, m, qbits);
         arb_poly_set_fmpq_poly(a, A, rbits1);
 
-        arb_poly_sin_cos_series_basecase(b, c, a, n, rbits2);
+        arb_poly_sin_cos_series_basecase(b, c, a, n, rbits2, times_pi);
 
         /* Check sin(x)^2 + cos(x)^2 = 1 */
         arb_poly_mullow(d, b, b, n, rbits2);
@@ -82,7 +84,7 @@ int main()
         }
 
         arb_poly_set(d, a);
-        arb_poly_sin_cos_series_basecase(d, c, d, n, rbits2);
+        arb_poly_sin_cos_series_basecase(d, c, d, n, rbits2, times_pi);
         if (!arb_poly_equal(b, d))
         {
             printf("FAIL (aliasing 1)\n\n");
@@ -90,7 +92,7 @@ int main()
         }
 
         arb_poly_set(d, a);
-        arb_poly_sin_cos_series_basecase(b, d, d, n, rbits2);
+        arb_poly_sin_cos_series_basecase(b, d, d, n, rbits2, times_pi);
         if (!arb_poly_equal(c, d))
         {
             printf("FAIL (aliasing 2)\n\n");

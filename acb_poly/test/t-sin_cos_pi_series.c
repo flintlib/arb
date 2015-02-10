@@ -30,25 +30,25 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("sin_cos_series_basecase....");
+    printf("sin_cos_pi_series....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long m, n, rbits1, rbits2;
-        fmpq_poly_t B;
+        long m, n, qbits, rbits1, rbits2;
+        fmpq_poly_t A, B;
         acb_poly_t a, b, c, d, e;
-        int times_pi;
 
+        qbits = 2 + n_randint(state, 200);
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
 
         m = 1 + n_randint(state, 30);
         n = 1 + n_randint(state, 30);
-        times_pi = n_randint(state, 2);
 
+        fmpq_poly_init(A);
         fmpq_poly_init(B);
         acb_poly_init(a);
         acb_poly_init(b);
@@ -56,9 +56,10 @@ int main()
         acb_poly_init(d);
         acb_poly_init(e);
 
-        acb_poly_randtest(a, state, m, rbits1, 10);
+        fmpq_poly_randtest(A, state, m, qbits);
+        acb_poly_set_fmpq_poly(a, A, rbits1);
 
-        acb_poly_sin_cos_series_basecase(b, c, a, n, rbits2, times_pi);
+        acb_poly_sin_cos_pi_series(b, c, a, n, rbits2);
 
         /* Check sin(x)^2 + cos(x)^2 = 1 */
         acb_poly_mullow(d, b, b, n, rbits2);
@@ -71,6 +72,7 @@ int main()
             printf("FAIL\n\n");
             printf("bits2 = %ld\n", rbits2);
 
+            printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
             printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
@@ -80,7 +82,7 @@ int main()
         }
 
         acb_poly_set(d, a);
-        acb_poly_sin_cos_series_basecase(d, c, d, n, rbits2, times_pi);
+        acb_poly_sin_cos_pi_series(d, c, d, n, rbits2);
         if (!acb_poly_equal(b, d))
         {
             printf("FAIL (aliasing 1)\n\n");
@@ -88,13 +90,14 @@ int main()
         }
 
         acb_poly_set(d, a);
-        acb_poly_sin_cos_series_basecase(b, d, d, n, rbits2, times_pi);
+        acb_poly_sin_cos_pi_series(b, d, d, n, rbits2);
         if (!acb_poly_equal(c, d))
         {
             printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
+        fmpq_poly_clear(A);
         fmpq_poly_clear(B);
         acb_poly_clear(a);
         acb_poly_clear(b);

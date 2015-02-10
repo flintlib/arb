@@ -84,9 +84,9 @@ _acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long pre
             acb_neg(u + i, u + i);
 
         /* v = sin(pi x) */
-        acb_const_pi(f + 1, wp);
-        acb_mul(f, h, f + 1, wp);
-        _acb_poly_sin_series(v, f, 2, len, wp);
+        acb_set(f, h);
+        acb_one(f + 1);
+        _acb_poly_sin_pi_series(v, f, 2, len, wp);
 
         _acb_poly_mullow(t, u, len, v, len, len, wp);
 

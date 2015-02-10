@@ -23,67 +23,53 @@
 
 ******************************************************************************/
 
-#include "acb_poly.h"
-
-#define TANGENT_CUTOFF 80
+#include "arb_poly.h"
 
 void
-_acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, const acb_srcptr h, long hlen, long n, long prec)
+_arb_poly_sin_pi_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
     if (hlen == 1)
     {
-        acb_sin_cos(s, c, h, prec);
-        _acb_vec_zero(s + 1, n - 1);
-        _acb_vec_zero(c + 1, n - 1);
+        arb_sin_pi(g, h, prec);
+        _arb_vec_zero(g + 1, n - 1);
     }
     else if (n == 2)
     {
-        acb_t t;
-        acb_init(t);
-        acb_set(t, h + 1);
-        acb_sin_cos(s, c, h, prec);
-        acb_mul(s + 1, c, t, prec);
-        acb_neg(t, t);
-        acb_mul(c + 1, s, t, prec);
-        acb_clear(t);
+        arb_t t;
+        arb_init(t);
+        arb_sin_cos_pi(g, t, h, prec);
+        arb_mul(g + 1, h + 1, t, prec);  /* safe since hlen >= 2 */
+        arb_const_pi(t, prec);
+        arb_mul(g + 1, g + 1, t, prec);
+        arb_clear(t);
     }
-    else if (hlen < TANGENT_CUTOFF)
-        _acb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 0);
     else
-        _acb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 0);
+    {
+        arb_ptr t = _arb_vec_init(n);
+        _arb_poly_sin_cos_pi_series(g, t, h, hlen, n, prec);
+        _arb_vec_clear(t, n);
+    }
 }
 
 void
-acb_poly_sin_cos_series(acb_poly_t s, acb_poly_t c,
-                                    const acb_poly_t h, long n, long prec)
+arb_poly_sin_pi_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
 {
     long hlen = h->length;
 
-    if (n == 0)
+    if (hlen == 0 || n == 0)
     {
-        acb_poly_zero(s);
-        acb_poly_zero(c);
-        return;
-    }
-
-    if (hlen == 0)
-    {
-        acb_poly_zero(s);
-        acb_poly_one(c);
+        arb_poly_zero(g);
         return;
     }
 
     if (hlen == 1)
         n = 1;
 
-    acb_poly_fit_length(s, n);
-    acb_poly_fit_length(c, n);
-    _acb_poly_sin_cos_series(s->coeffs, c->coeffs, h->coeffs, hlen, n, prec);
-    _acb_poly_set_length(s, n);
-    _acb_poly_normalise(s);
-    _acb_poly_set_length(c, n);
-    _acb_poly_normalise(c);
+    arb_poly_fit_length(g, n);
+    _arb_poly_sin_pi_series(g->coeffs, h->coeffs, hlen, n, prec);
+    _arb_poly_set_length(g, n);
+    _arb_poly_normalise(g);
 }
 

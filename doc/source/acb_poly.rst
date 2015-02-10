@@ -670,13 +670,13 @@ Elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+.. function:: void _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+.. function:: void acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec, int times_pi)
 
-.. function:: void _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+.. function:: void _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+.. function:: void acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec, int times_pi)
 
 .. function:: void _acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
 
@@ -701,6 +701,9 @@ Elementary functions
     The default version automatically selects between the *basecase* and
     *tangent* algorithms depending on the input.
 
+    The *basecase* and *tangent* versions take a flag *times_pi*
+    specifying that the input is to be multiplied by `\pi`.
+
     The underscore methods support aliasing and require the lengths to be nonzero.
 
 .. function:: void _acb_poly_sin_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
@@ -714,6 +717,21 @@ Elementary functions
     Respectively evaluates the power series sine or cosine. These functions
     simply wrap :func:`_acb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
+
+.. function:: void _acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_cos_pi_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_sin_pi_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_pi_series(acb_poly_t s, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_cos_pi_series(acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_cos_pi_series(acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 .. function:: void _acb_poly_tan_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec)
 

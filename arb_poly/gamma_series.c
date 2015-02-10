@@ -266,9 +266,9 @@ _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec
                 arb_neg(u + i, u + i);
 
             /* v = 1/sin(pi x) */
-            arb_const_pi(f + 1, wp);
-            arb_mul(f, h, f + 1, wp);
-            _arb_poly_sin_series(t, f, 2, len, wp);
+            arb_set(f, h);
+            arb_one(f + 1);
+            _arb_poly_sin_pi_series(t, f, 2, len, wp);
             _arb_poly_inv_series(v, t, len, len, wp);
 
             _arb_poly_mullow(t, u, len, v, len, len, wp);

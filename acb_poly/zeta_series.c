@@ -94,11 +94,11 @@ _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int d
         acb_mul_2exp_si(pi, pi, -1);
 
         /* s2 = sin(pi*s/2) / pi */
-        acb_mul_2exp_si(pi, pi, -1);
-        acb_mul(f, pi, h, prec);
-        acb_set(f + 1, pi);
-        acb_mul_2exp_si(pi, pi, 1);
-        _acb_poly_sin_series(s2, f, 2, len, prec);
+        acb_set(f, h);
+        acb_one(f + 1);
+        acb_mul_2exp_si(f, f, -1);
+        acb_mul_2exp_si(f + 1, f + 1, -1);
+        _acb_poly_sin_pi_series(s2, f, 2, len, prec);
         _acb_vec_scalar_div(s2, s2, len, pi, prec);
 
         /* s3 = gamma(1-s) */

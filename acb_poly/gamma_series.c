@@ -221,9 +221,9 @@ _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec
             acb_neg(u + i, u + i);
 
         /* v = 1/sin(pi x) */
-        acb_const_pi(f + 1, wp);
-        acb_mul(f, h, f + 1, wp);
-        _acb_poly_sin_series(t, f, 2, len, wp);
+        acb_set(f, h);
+        acb_one(f + 1);
+        _acb_poly_sin_pi_series(t, f, 2, len, wp);
         _acb_poly_inv_series(v, t, len, len, wp);
 
         _acb_poly_mullow(t, u, len, v, len, len, wp);

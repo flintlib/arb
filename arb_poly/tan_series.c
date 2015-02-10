@@ -58,7 +58,7 @@ _arb_poly_tan_series(arb_ptr g,
         NEWTON_INIT(TAN_NEWTON_CUTOFF, len)
 
         NEWTON_BASECASE(n)
-        _arb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec);
+        _arb_poly_sin_cos_series_basecase(t, u, h, hlen, n, prec, 0);
         _arb_poly_div_series(g, t, n, u, n, n, prec);
         NEWTON_END_BASECASE
 

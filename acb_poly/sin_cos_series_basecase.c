@@ -26,14 +26,17 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_sin_cos_series_basecase(acb_ptr s,
-                                    acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+_acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen,
+        long n, long prec, int times_pi)
 {
     long j, k, alen = FLINT_MIN(n, hlen);
     acb_ptr a;
     acb_t t, u;
 
-    acb_sin_cos(s, c, h, prec);
+    if (times_pi)
+        acb_sin_cos_pi(s, c, h, prec);
+    else
+        acb_sin_cos(s, c, h, prec);
 
     if (hlen == 1)
     {
@@ -48,6 +51,12 @@ _acb_poly_sin_cos_series_basecase(acb_ptr s,
 
     for (k = 1; k < alen; k++)
         acb_mul_ui(a + k, h + k, k, prec);
+
+    if (times_pi)
+    {
+        acb_const_pi(t, prec);
+        _acb_vec_scalar_mul(a + 1, a + 1, alen - 1, t, prec);
+    }
 
     for (k = 1; k < n; k++)
     {
@@ -71,7 +80,7 @@ _acb_poly_sin_cos_series_basecase(acb_ptr s,
 
 void
 acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c,
-        const acb_poly_t h, long n, long prec)
+        const acb_poly_t h, long n, long prec, int times_pi)
 {
     long hlen = h->length;
 
@@ -91,7 +100,7 @@ acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c,
 
     acb_poly_fit_length(s, n);
     acb_poly_fit_length(c, n);
-    _acb_poly_sin_cos_series_basecase(s->coeffs, c->coeffs, h->coeffs, hlen, n, prec);
+    _acb_poly_sin_cos_series_basecase(s->coeffs, c->coeffs, h->coeffs, hlen, n, prec, times_pi);
     _acb_poly_set_length(s, n);
     _acb_poly_normalise(s);
     _acb_poly_set_length(c, n);

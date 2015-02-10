@@ -766,13 +766,13 @@ Powers and elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
 
-.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
 
 .. function:: void _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
 
@@ -797,6 +797,9 @@ Powers and elementary functions
     The default version automatically selects between the *basecase* and
     *tangent* algorithms depending on the input.
 
+    The *basecase* and *tangent* versions take a flag *times_pi*
+    specifying that the input is to be multiplied by `\pi`.
+
     The underscore methods support aliasing and require the lengths to be nonzero.
 
 .. function:: void _arb_poly_sin_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
@@ -810,6 +813,21 @@ Powers and elementary functions
     Respectively evaluates the power series sine or cosine. These functions
     simply wrap :func:`_arb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
+
+.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 .. function:: void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
 

@@ -100,11 +100,11 @@ _arb_poly_zeta_series(arb_ptr res, arb_srcptr h, long hlen, const arb_t a, int d
         arb_mul_2exp_si(pi, pi, -1);
 
         /* s2 = sin(pi*s/2) / pi */
-        arb_mul_2exp_si(pi, pi, -1);
-        arb_mul(f, pi, h, prec);
-        arb_set(f + 1, pi);
-        arb_mul_2exp_si(pi, pi, 1);
-        _arb_poly_sin_series(s2, f, 2, len, prec);
+        arb_set(f, h);
+        arb_one(f + 1);
+        arb_mul_2exp_si(f, f, -1);
+        arb_mul_2exp_si(f + 1, f + 1, -1);
+        _arb_poly_sin_pi_series(s2, f, 2, len, prec);
         _arb_vec_scalar_div(s2, s2, len, pi, prec);
 
         /* s3 = gamma(1-s) */
