@@ -199,6 +199,16 @@ Conversions
 
     Sets *poly* to *src*.
 
+Bounds
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_majorant(arb_ptr res, acb_srcptr poly, long len, long prec)
+
+.. function:: void acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, long prec)
+
+    Sets *res* to an exact real polynomial whose coefficients are
+    upper bounds for the absolute values of the coefficients in *poly*,
+    rounded to *prec* bits.
 
 Arithmetic
 -------------------------------------------------------------------------------

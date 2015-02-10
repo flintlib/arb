@@ -180,6 +180,17 @@ Comparisons
     nonzero. Otherwise (if *x* represents no integers or more than one integer),
     returns zero, possibly partially modifying *z*.
 
+Bounds
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_poly_majorant(arb_ptr res, arb_srcptr poly, long len, long prec)
+
+.. function:: void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, long prec)
+
+    Sets *res* to an exact real polynomial whose coefficients are
+    upper bounds for the absolute values of the coefficients in *poly*,
+    rounded to *prec* bits.
+
 Arithmetic
 -------------------------------------------------------------------------------
 

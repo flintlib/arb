@@ -125,6 +125,10 @@ acb_poly_truncate(acb_poly_t poly, long newlen)
     }
 }
 
+void _acb_poly_majorant(arb_ptr res, acb_srcptr vec, long len, long prec);
+
+void acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, long prec);
+
 void acb_poly_printd(const acb_poly_t poly, long digits);
 
 void _acb_poly_evaluate_horner(acb_t res, acb_srcptr f, long len, const acb_t a, long prec);

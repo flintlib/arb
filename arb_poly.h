@@ -167,6 +167,12 @@ int _arb_poly_overlaps(arb_srcptr poly1, long len1, arb_srcptr poly2, long len2)
 
 int arb_poly_overlaps(const arb_poly_t poly1, const arb_poly_t poly2);
 
+/* Bounds */
+
+void _arb_poly_majorant(arb_ptr res, arb_srcptr vec, long len, long prec);
+
+void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, long prec);
+
 /* IO */
 
 void arb_poly_printd(const arb_poly_t poly, long digits);
