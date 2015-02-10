@@ -272,6 +272,13 @@ acb_lgamma(acb_t y, const acb_t x, long prec)
     long r, n, wp;
     acb_t t, u;
 
+    if (acb_is_real(x) && arb_is_positive(acb_realref(x)))
+    {
+        arb_lgamma(acb_realref(y), acb_realref(x), prec);
+        arb_zero(acb_imagref(y));
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     acb_gamma_stirling_choose_param(&reflect, &r, &n, x, 0, 0, wp);
