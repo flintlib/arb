@@ -204,6 +204,16 @@ _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec
     arb_ptr t, u, v;
     arb_struct f[2];
 
+    if (hlen == 1)
+    {
+        arb_gamma(res, h, prec);
+        if (arb_is_finite(res))
+            _arb_vec_zero(res + 1, len - 1);
+        else
+            _arb_vec_indeterminate(res + 1, len - 1);
+        return;
+    }
+
     hlen = FLINT_MIN(hlen, len);
     wp = prec + FLINT_BIT_COUNT(prec);
 

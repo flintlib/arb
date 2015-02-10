@@ -38,12 +38,38 @@ void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num,
 void
 _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
 {
-    int reflect;
+    int reflect, isint;
     long i, rflen, r, n, wp;
     arb_ptr t, u, v;
     arb_struct f[2];
 
     hlen = FLINT_MIN(hlen, len);
+
+    if (hlen == 1)
+    {
+        arb_rgamma(res, h, prec);
+        _arb_vec_zero(res + 1, len - 1);
+        return;
+    }
+
+    isint = arb_is_int(h);
+
+    if (len <= 2 && isint && arf_sgn(arb_midref(h)) <= 0)
+    {
+        int even = arf_is_int_2exp_si(arb_midref(h), 1);
+
+        /* use res[0] as tmp to allow aliasing */
+        arb_sub_ui(res, h, 1, prec);
+        arb_neg(res, res);
+        arb_gamma(res, res, prec);
+        arb_mul(res + 1, h + 1, res, prec);
+        if (!even)
+            arb_neg(res + 1, res + 1);
+
+        arb_zero(res);
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     t = _arb_vec_init(len);
@@ -53,7 +79,7 @@ _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long pre
     arb_init(f + 1);
 
     /* use zeta values at small integers */
-    if (arb_is_int(h) && (arf_cmpabs_ui(arb_midref(h), prec / 2) < 0))
+    if (isint && (arf_cmpabs_ui(arb_midref(h), prec / 2) < 0))
     {
         r = arf_get_si(arb_midref(h), ARF_RND_DOWN);
 
