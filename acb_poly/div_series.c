@@ -37,6 +37,23 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, long Alen,
         _acb_vec_scalar_div(Q, A, Alen, B, prec);
         _acb_vec_zero(Q + Alen, n - Alen);
     }
+    else if (n == 2)
+    {
+        if (Alen == 1)
+        {
+            acb_div(Q, A, B, prec);
+            acb_div(Q + 1, Q, B, prec);
+            acb_mul(Q + 1, Q + 1, B + 1, prec);
+            acb_neg(Q + 1, Q + 1);
+        }
+        else
+        {
+            acb_div(Q, A, B, prec);
+            acb_mul(Q + 1, Q, B + 1, prec);
+            acb_sub(Q + 1, A + 1, Q + 1, prec);
+            acb_div(Q + 1, Q + 1, B, prec);
+        }
+    }
     else
     {
         acb_ptr Binv;

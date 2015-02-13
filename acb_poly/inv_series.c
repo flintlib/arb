@@ -41,6 +41,12 @@ _acb_poly_inv_series(acb_ptr Qinv,
     {
         _acb_vec_zero(Qinv + 1, len - 1);
     }
+    else if (len == 2)
+    {
+        acb_div(Qinv + 1, Qinv, Q, prec);
+        acb_mul(Qinv + 1, Qinv + 1, Q + 1, prec);
+        acb_neg(Qinv + 1, Qinv + 1);
+    }
     else
     {
         long Qnlen, Wlen, W2len;

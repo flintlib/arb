@@ -41,6 +41,12 @@ _arb_poly_inv_series(arb_ptr Qinv,
     {
         _arb_vec_zero(Qinv + 1, len - 1);
     }
+    else if (len == 2)
+    {
+        arb_div(Qinv + 1, Qinv, Q, prec);
+        arb_mul(Qinv + 1, Qinv + 1, Q + 1, prec);
+        arb_neg(Qinv + 1, Qinv + 1);
+    }
     else
     {
         long Qnlen, Wlen, W2len;
