@@ -267,6 +267,11 @@ int main(int argc, char *argv[])
     TIMEIT_ONCE_STOP
     SHOW_MEMORY_USAGE
 
+    for (i = 0; i < num; i++)
+        arf_interval_clear(blocks + i);
+    flint_free(blocks);
+    flint_free(info);
+
     arf_interval_clear(t);
     arf_interval_clear(interval);
     arf_clear(C);
