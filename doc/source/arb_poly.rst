@@ -201,6 +201,8 @@ Arithmetic
 
 .. function:: void arb_poly_add(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long prec)
 
+.. function:: void arb_poly_add_si(arb_poly_t C, const arb_poly_t A, long B, long prec)
+
     Sets *C* to the sum of *A* and *B*.
 
 .. function:: void _arb_poly_sub(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)

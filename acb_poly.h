@@ -212,6 +212,8 @@ void _acb_poly_add(acb_ptr res, acb_srcptr poly1, long len1,
 void acb_poly_add(acb_poly_t res, const acb_poly_t poly1,
               const acb_poly_t poly2, long prec);
 
+void acb_poly_add_si(acb_poly_t res, const acb_poly_t poly, long c, long prec);
+
 void _acb_poly_sub(acb_ptr res, acb_srcptr poly1, long len1,
     acb_srcptr poly2, long len2, long prec);
 

@@ -190,6 +190,8 @@ _arb_poly_add(arb_ptr res, arb_srcptr poly1, long len1,
 void arb_poly_add(arb_poly_t res, const arb_poly_t poly1,
               const arb_poly_t poly2, long prec);
 
+void arb_poly_add_si(arb_poly_t res, const arb_poly_t poly, long c, long prec);
+
 void _arb_poly_sub(arb_ptr res, arb_srcptr poly1, long len1,
     arb_srcptr poly2, long len2, long prec);
 

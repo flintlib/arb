@@ -220,6 +220,8 @@ Arithmetic
 
 .. function:: void acb_poly_add(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, long prec)
 
+.. function:: void acb_poly_add_si(acb_poly_t C, const acb_poly_t A, long B, long prec)
+
     Sets *C* to the sum of *A* and *B*.
 
 .. function:: void _acb_poly_sub(acb_ptr C, acb_srcptr A, long lenA, acb_srcptr B, long lenB, long prec)
