@@ -31,10 +31,7 @@ long
 acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
                          acb_srcptr b, long q, const acb_t z, long prec)
 {
-    long k, n, minimum_n, maximum_n;
-    mag_t zmag;
-
-    /* todo: first test for z = 0 and nonpositive integers */
+    long k, n, minimum_n, maximum_n, nint;
 
     double t, u;
     double log2_z;
@@ -47,6 +44,11 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
     double * bre;
     double * bim;
 
+    mag_t zmag;
+
+    if (acb_is_zero(z) || !acb_is_finite(z))
+        return 1;
+
     mag_init(zmag);
 
     are = flint_malloc(sizeof(double) * 2 * (p + q));
@@ -57,14 +59,32 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
     acb_get_mag(zmag, z);
     log2_z = mag_get_log2_d_approx(zmag);
 
+    minimum_n = 1;
+    maximum_n = 50 + 2 * prec;
+
+    n = 1;
+
     for (k = 0; k < p; k++)
     {
         are[k] = arf_get_d(arb_midref(acb_realref(a + k)), ARF_RND_DOWN);
         aim[k] = arf_get_d(arb_midref(acb_imagref(a + k)), ARF_RND_DOWN);
-    }
 
-    minimum_n = 1;
-    maximum_n = 50 + 2 * prec;
+        /* If the series is terminating, stop at this n. */
+        if (acb_is_int(a + k) && are[k] <= 0.0)
+        {
+            maximum_n = FLINT_MIN(maximum_n, (long) (-are[k] + 1));
+            maximum_n = FLINT_MAX(maximum_n, 1);
+        }
+        else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)
+        {
+            /* If very close to an integer, we don't want to deal with it
+               using doubles, so fast forward (todo: could work with the
+               log2 of the difference instead when this happens). */
+            nint = floor(are[k] + 0.5);
+            if (FLINT_ABS(nint - are[k]) < 0.01)
+                n = FLINT_MAX(n, 2 - nint);
+        }
+    }
 
     for (k = 0; k < q; k++)
     {
@@ -74,14 +94,24 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
         if (bre[k] <= 0.25)
         {
             minimum_n = FLINT_MAX(minimum_n, 2 - bre[k]);
+
+            /* Also avoid near-integers here (can even allow exact
+               integers when computing regularized hypergeometric functions). */
+            if (bre[k] <= 0.01 && FLINT_ABS(bim[k]) < 0.01)
+            {
+                nint = floor(bre[k] + 0.5);
+                if (FLINT_ABS(nint - bre[k]) < 0.01)
+                    n = FLINT_MAX(n, 2 - nint);
+            }
         }
     }
 
-    n = 1;
     log2_term = 0.0;
     log2_term_max = log2_term;
 
-    while (n <= maximum_n && minimum_n < maximum_n)
+    n = FLINT_MIN(n, maximum_n);
+
+    while (n < maximum_n && minimum_n < maximum_n)
     {
         if (log2_term < log2_term_max - prec - 4 && n >= minimum_n)
             break;
@@ -131,6 +161,7 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
     }
 
 somethingstrange:
+    n = FLINT_MIN(n, maximum_n);
 
     flint_free(are);
     mag_clear(zmag);
