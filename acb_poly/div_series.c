@@ -67,10 +67,18 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, long Alen,
 void
 acb_poly_div_series(acb_poly_t Q, const acb_poly_t A, const acb_poly_t B, long n, long prec)
 {
-    if (n == 0 || B->length == 0)
+    if (n == 0)
     {
-        printf("acb_poly_inv_series: require n > 0 and nonzero input\n");
-        abort();
+        acb_poly_zero(Q);
+        return;
+    }
+
+    if (B->length == 0)
+    {
+        acb_poly_fit_length(Q, n);
+        _acb_vec_indeterminate(Q->coeffs, n);
+        _acb_poly_set_length(Q, n);
+        return;
     }
 
     if (A->length == 0)
