@@ -27,6 +27,7 @@
 #define ACB_HYPGEOM_H
 
 #include "acb.h"
+#include "acb_poly.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,6 +50,12 @@ void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, l
 
 void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
+
+void acb_hypgeom_pfq_series_direct(acb_poly_t res,
+    const acb_poly_struct * a, long p,
+    const acb_poly_struct * b, long q,
+    const acb_poly_t z,
+    long n, long len, long prec, int regularized);
 
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);
