@@ -201,7 +201,7 @@ int acb_poly_overlaps(const acb_poly_t poly1, const acb_poly_t poly2);
 int acb_poly_contains(const acb_poly_t poly1, const acb_poly_t poly2);
 
 ACB_POLY_INLINE int
-acb_poly_is_real(acb_poly_t poly)
+acb_poly_is_real(const acb_poly_t poly)
 {
     return _acb_vec_is_real(poly->coeffs, poly->length);
 }
