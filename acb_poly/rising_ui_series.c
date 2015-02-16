@@ -86,7 +86,7 @@ acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trun
 {
     long len;
 
-    if (f->length == 0 && r != 0)
+    if ((f->length == 0 && r != 0) || trunc == 0)
     {
         acb_poly_zero(res);
         return;

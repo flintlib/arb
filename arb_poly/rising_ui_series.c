@@ -86,7 +86,7 @@ arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, long trun
 {
     long len;
 
-    if (f->length == 0 && r != 0)
+    if ((f->length == 0 && r != 0) || trunc == 0)
     {
         arb_poly_zero(res);
         return;
