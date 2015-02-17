@@ -285,6 +285,66 @@ Bessel functions
     Computes the Bessel function of the first kind `J_{\nu}(z)` using
     an automatic algorithm choice.
 
+Modified Bessel functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind via
+    via :func:`acb_hypgeom_u_asymp`. For all `\nu` and all `z \ne 0`, we have
+
+    .. math ::
+
+        K_{\nu}(z) = \left(\frac{\pi}{2z}\right)^{1/2} e^{-z}
+            U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
+
+.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, long len, long prec)
+
+    Computes the modified Bessel function of the second kind `K_{\nu}(z)`
+    as a power series truncated to length *len*,
+    given `\nu, z \in \mathbb{C}[[x]]`. Uses the formula
+
+    .. math ::
+
+        K_{\nu}(z) = \frac{1}{2} \frac{\pi}{\sin(\pi \nu)} \left[
+                    \left(\frac{z}{2}\right)^{-\nu}
+                        {}_0{\widetilde F}_1\left(1-\nu, \frac{z^2}{4}\right)
+                     -
+                     \left(\frac{z}{2}\right)^{\nu}
+                         {}_0{\widetilde F}_1\left(1+\nu, \frac{z^2}{4}\right)
+                    \right].
+
+    If `\nu \in \mathbb{Z}`, it computes one extra derivative and removes
+    the singularity. 
+    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind from
+
+    .. math ::
+
+        K_{\nu}(z) = \frac{1}{2} \left[
+                    \left(\frac{z}{2}\right)^{-\nu}
+                        \Gamma(\nu)
+                        {}_0F_1\left(1-\nu, \frac{z^2}{4}\right)
+                     -
+                     \left(\frac{z}{2}\right)^{\nu}
+                         \frac{\pi}{\nu \sin(\pi \nu) \Gamma(\nu)}
+                         {}_0F_1\left(\nu+1, \frac{z^2}{4}\right)
+                    \right]
+
+    if `\nu \notin \mathbb{Z}`. If `\nu \in \mathbb{Z}`, it computes
+    the limit value via :func:`acb_hypgeom_bessel_k_0f1_series`.
+    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind `K_{\nu}(z)` using
+    an automatic algorithm choice.
+
 Incomplete gamma functions
 -------------------------------------------------------------------------------
 
