@@ -27,24 +27,86 @@
 
 double mag_get_log2_d_approx(const mag_t x);
 
+int
+acb_hypgeom_pfq_choose_n_double(long * nn,
+    const double * are, const double * aim, long p,
+    const double * bre, const double * bim, long q,
+    double log2_z,
+    long n_skip, long n_min, long n_max, long prec)
+{
+    double increase, term, term_max, accuracy, accuracy_best, t, u;
+    double required_decrease;
+    long k, n, n_best;
+    int success;
+
+    if (p < q)
+        required_decrease = 0.01;
+    else if (p == q)
+        required_decrease = 0.0001;
+    else
+        required_decrease = 0.01;
+
+    term = term_max = accuracy = accuracy_best = 0.0;
+    success = 0;
+
+    for (n = n_best = n_skip; n < n_max; n++)
+    {
+        t = 1.0;
+
+        for (k = 0; k < FLINT_MAX(p, q); k++)
+        {
+            if (k < p)
+            {
+                u = (are[k]+n-1)*(are[k]+n-1) + (aim[k]*aim[k]);
+                t *= FLINT_ABS(u);
+            }
+
+            if (k < q)
+            {
+                u = (bre[k]+n-1)*(bre[k]+n-1) + (bim[k]*bim[k]);
+                u = FLINT_ABS(u);
+
+                if (u > 1e-100)
+                    t /= u;
+            }
+        }
+
+        increase = 0.5 * log(t) * 1.4426950408889634074 + log2_z;
+
+        term += increase;
+        term_max = FLINT_MAX(term_max, term);
+        accuracy = term_max - term;
+
+        if (accuracy > accuracy_best && n >= n_min && increase < -required_decrease)
+        {
+            n_best = n;
+            accuracy_best = accuracy;
+        }
+
+        if (accuracy_best > prec + 4)
+        {
+            success = 1;
+            break;
+        }
+    }
+
+    *nn = n_best;
+    return success;
+}
+
 long
 acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
                          acb_srcptr b, long q, const acb_t z, long prec)
 {
-    long k, n, minimum_n, maximum_n, nint;
-
-    double t, u;
+    long n_skip, n_min, n_max, n_terminating, nint;
+    long k, n;
     double log2_z;
-    double log2_term;
-    double log2_factor;
-    double log2_term_max;
-
     double * are;
     double * aim;
     double * bre;
     double * bim;
-
     mag_t zmag;
+    int success;
 
     if (acb_is_zero(z) || !acb_is_finite(z))
         return 1;
@@ -59,10 +121,10 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
     acb_get_mag(zmag, z);
     log2_z = mag_get_log2_d_approx(zmag);
 
-    minimum_n = 1;
-    maximum_n = 50 + 2 * prec;
-
-    n = 1;
+    n_skip = 1;
+    n_min = 1;
+    n_max = FLINT_MIN(LONG_MAX / 2, 50 + 10.0 * prec);
+    n_terminating = LONG_MAX;
 
     for (k = 0; k < p; k++)
     {
@@ -72,8 +134,8 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
         /* If the series is terminating, stop at this n. */
         if (acb_is_int(a + k) && are[k] <= 0.0)
         {
-            maximum_n = FLINT_MIN(maximum_n, (long) (-are[k] + 1));
-            maximum_n = FLINT_MAX(maximum_n, 1);
+            n_terminating = FLINT_MIN(n_terminating, (long) (-are[k] + 1));
+            n_terminating = FLINT_MAX(n_terminating, 1);
         }
         else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)
         {
@@ -82,9 +144,11 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
                log2 of the difference instead when this happens). */
             nint = floor(are[k] + 0.5);
             if (FLINT_ABS(nint - are[k]) < 0.01)
-                n = FLINT_MAX(n, 2 - nint);
+                n_skip = FLINT_MAX(n_skip, 2 - nint);
         }
     }
+
+    n_max = FLINT_MIN(n_max, n_terminating);
 
     for (k = 0; k < q; k++)
     {
@@ -93,7 +157,7 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
 
         if (bre[k] <= 0.25)
         {
-            minimum_n = FLINT_MAX(minimum_n, 2 - bre[k]);
+            n_min = FLINT_MAX(n_min, 2 - bre[k]);
 
             /* Also avoid near-integers here (can even allow exact
                integers when computing regularized hypergeometric functions). */
@@ -101,67 +165,26 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
             {
                 nint = floor(bre[k] + 0.5);
                 if (FLINT_ABS(nint - bre[k]) < 0.01)
-                    n = FLINT_MAX(n, 2 - nint);
+                    n_skip = FLINT_MAX(n_skip, 2 - nint);
             }
         }
     }
 
-    log2_term = 0.0;
-    log2_term_max = log2_term;
+    success = acb_hypgeom_pfq_choose_n_double(&n, are, aim, p, bre, bim, q,
+        log2_z, n_skip, n_min, n_max, prec);
 
-    n = FLINT_MIN(n, maximum_n);
-
-    while (n < maximum_n && minimum_n < maximum_n)
+    if (!success)
     {
-        if (log2_term < log2_term_max - prec - 4 && n >= minimum_n)
-            break;
-
-        t = 1.0;
-
-        for (k = 0; k < FLINT_MAX(p, q); k++)
+        if (n_terminating <= n_max)
         {
-            if (k < p)
-            {
-                u = (are[k] + n) * (are[k] + n) + (aim[k] * aim[k]);
-                u = FLINT_ABS(u);
-
-                if (u < 1e-8 || u > 1e100 || t > 1e100)
-                {
-                    n++;
-                    goto somethingstrange;
-                }
-
-                t *= u;
-            }
-
-            if (k < q)
-            {
-                u = (bre[k] + n) * (bre[k] + n) + (bim[k] * bim[k]);
-                u = FLINT_ABS(u);
-
-                if (u < 1e-8 || u > 1e100 || t > 1e100)
-                {
-                    n++;
-                    goto somethingstrange;
-                }
-
-                t /= u;
-            }
+            n = n_terminating;
         }
-
-        log2_factor = 0.5 * log(t) * 1.4426950408889634074 + log2_z;
-
-        /* For asymptotic series, require rapid decay */
-        if (p > q && n >= minimum_n && log2_factor > -0.2)
-            break;
-
-        log2_term += log2_factor;
-        log2_term_max = FLINT_MAX(log2_term_max, log2_term);
-        n++;
+        else
+        {
+            n = FLINT_MAX(n_min, n);
+            n = FLINT_MIN(n_max, n);
+        }
     }
-
-somethingstrange:
-    n = FLINT_MIN(n, maximum_n);
 
     flint_free(are);
     mag_clear(zmag);
