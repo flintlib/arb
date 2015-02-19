@@ -320,7 +320,7 @@ Radius and interval operations
     Sets *z* to a lower bound for the absolute value of *x*. If *x* contains
     NaN, the result is zero.
 
-.. function:: arb_get_mag_lower_nonnegative(mag_t z, const arb_t x)
+.. function:: void arb_get_mag_lower_nonnegative(mag_t z, const arb_t x)
 
     Sets *z* to a lower bound for the signed value of *x*, or zero
     if *x* overlaps with the negative half-axis. If *x* contains NaN,
