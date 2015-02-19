@@ -210,6 +210,19 @@ Precision and comparisons
 
     Returns nonzero iff zero is contained in *x*.
 
+.. function:: long acb_rel_error_bits(const acb_t x)
+
+    Returns the effective relative error of *x* measured in bits.
+    This is computed as if calling :func:`arb_rel_error_bits` on the
+    real ball whose midpoint is the larger out of the real and imaginary
+    midpoints of *x*, and whose radius is the larger out of the real
+    and imaginary radiuses of *x*.
+
+.. function:: long acb_rel_accuracy_bits(const arb_t x)
+
+    Returns the effective relative accuracy of *x* measured in bits,
+    equal to the negative of the return value from :func:`acb_rel_error_bits`.
+
 .. function:: long acb_bits(const acb_t x)
 
     Returns the maximum of *arb_bits* applied to the real
