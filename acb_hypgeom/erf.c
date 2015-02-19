@@ -171,12 +171,14 @@ acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
          arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) < 0))
     {
         acb_hypgeom_erf_1f1a(res, z, prec);
+        return;
     }
 
-    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 0) > 64 ||
-         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) > 64))
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
     {
         acb_hypgeom_erf_asymp(res, z, prec, prec);
+        return;
     }
 
     x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
@@ -196,8 +198,12 @@ acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
         acb_hypgeom_erf_asymp(res, z, prec, prec2);
     }
     else if (arf_cmpabs(arb_midref(acb_imagref(z)), arb_midref(acb_realref(z))) > 0)
+    {
         acb_hypgeom_erf_1f1a(res, z, prec);
+    }
     else
+    {
         acb_hypgeom_erf_1f1b(res, z, prec);
+    }
 }
 
