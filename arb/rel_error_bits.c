@@ -33,10 +33,10 @@ arb_rel_error_bits(const arb_t x)
 
     if (mag_is_zero(arb_radref(x)))
     {
-        if (arf_is_finite(arb_midref(x)))
-            return -ARF_PREC_EXACT;
-        else
+        if (arf_is_nan(arb_midref(x)))
             return ARF_PREC_EXACT;
+        else
+            return -ARF_PREC_EXACT;
     }
 
     if (arf_is_special(arb_midref(x)) || mag_is_inf(arb_radref(x)))

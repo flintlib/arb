@@ -34,9 +34,6 @@ acb_rel_error_bits(const acb_t x)
     const fmpz * midmag;
     fmpz_t t;
 
-    if (!acb_is_finite(x))
-        return ARF_PREC_EXACT;
-
     am = !arf_is_zero(arb_midref(acb_realref(x)));
     ar = !mag_is_zero(arb_radref(acb_realref(x)));
 
@@ -49,6 +46,9 @@ acb_rel_error_bits(const acb_t x)
 
     /* no midpoint -- infinite relative error */
     if (!am && !bm)
+        return ARF_PREC_EXACT;
+
+    if (!acb_is_finite(x))
         return ARF_PREC_EXACT;
 
 #define ame ARF_EXPREF(arb_midref(acb_realref(x)))

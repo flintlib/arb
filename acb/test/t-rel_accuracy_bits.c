@@ -80,7 +80,7 @@ int main()
             abort();
         }
 
-        acb_randtest(z, state, 1 + n_randint(state, 200), 1 + n_randint(state, 200));
+        acb_randtest_special(z, state, 1 + n_randint(state, 200), 1 + n_randint(state, 200));
 
         if (arf_cmpabs(arb_midref(acb_realref(z)), arb_midref(acb_imagref(z))) >= 0)
             arf_set(arb_midref(x), arb_midref(acb_realref(z)));
