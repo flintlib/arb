@@ -394,19 +394,37 @@ arb_exp(arb_t z, const arb_t x, long prec)
     else
     {
         /* exp(a+b) - exp(a) = exp(a) * (exp(b)-1) */
-        mag_t t, u;
+        if (mag_cmp_2exp_si(arb_radref(x), 20) < 0 || !arb_is_finite(x))
+        {
+            mag_t t, u;
 
-        mag_init_set(t, arb_radref(x));
-        mag_init(u);
+            mag_init_set(t, arb_radref(x));
+            mag_init(u);
 
-        arb_exp_arf(z, arb_midref(x), prec, 0);
+            arb_exp_arf(z, arb_midref(x), prec, 0);
+            mag_expm1(t, t);
+            arb_get_mag(u, z);
+            mag_addmul(arb_radref(z), t, u);
 
-        mag_expm1(t, t);
-        arb_get_mag(u, z);
-        mag_addmul(arb_radref(z), t, u);
+            mag_clear(t);
+            mag_clear(u);
+        }
+        else
+        {
+            /* [+/- exp(a+b)], allowing extended exponent range */
+            arf_t t;
+            arf_init(t);
+            arf_set_mag(t, arb_radref(x));
 
-        mag_clear(t);
-        mag_clear(u);
+            arf_add(t, arb_midref(x), t, MAG_BITS, ARF_RND_CEIL);
+
+            arb_exp_arf(z, t, prec, 0);
+
+            arb_get_mag(arb_radref(z), z);
+            arf_zero(arb_midref(z));
+
+            arf_clear(t);
+        }
     }
 }
 
@@ -419,24 +437,32 @@ arb_expm1(arb_t z, const arb_t x, long prec)
     }
     else
     {
-        /* [exp(a+b) - 1] - [exp(a) - 1] = exp(a) * (exp(b)-1) */
-        mag_t t, u, one;
+        if (mag_cmp_2exp_si(arb_radref(x), 20) < 0)
+        {
+            /* [exp(a+b) - 1] - [exp(a) - 1] = exp(a) * (exp(b)-1) */
+            mag_t t, u, one;
 
-        mag_init_set(t, arb_radref(x));
-        mag_init(u);
-        mag_init(one);
-        mag_one(one);
+            mag_init_set(t, arb_radref(x));
+            mag_init(u);
+            mag_init(one);
+            mag_one(one);
 
-        arb_exp_arf(z, arb_midref(x), prec, 1);
+            arb_exp_arf(z, arb_midref(x), prec, 1);
 
-        mag_expm1(t, t);
-        arb_get_mag(u, z);
-        mag_add(u, u, one);
-        mag_addmul(arb_radref(z), t, u);
+            mag_expm1(t, t);
+            arb_get_mag(u, z);
+            mag_add(u, u, one);
+            mag_addmul(arb_radref(z), t, u);
 
-        mag_clear(t);
-        mag_clear(u);
-        mag_clear(one);
+            mag_clear(t);
+            mag_clear(u);
+            mag_clear(one);
+        }
+        else
+        {
+            arb_exp(z, x, prec);
+            arb_sub_ui(z, z, 1, prec);
+        }
     }
 }
 
