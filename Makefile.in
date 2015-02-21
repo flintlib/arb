@@ -108,7 +108,6 @@ libarb.a: $(OBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | buil
 		$(MAKE) build/interfaces/NTL-interface.o; \
 		$(AR) rcs libarb.a build/interfaces/NTL-interface.o; \
 	fi
-	$(QUIET_AR) $(AR) rcs libarb.a $(OBJS);
 	$(AT)$(foreach mod, $(BUILD_DIRS), $(AR) rcs libarb.a build/$(mod)/*.o || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach mod, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), $(AR) rcs libarb.a build/$(mod)/*.o || exit $$?;))
 
