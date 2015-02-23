@@ -62,7 +62,7 @@ int main()
         arb_poly_acos_series(b, a, n, rbits2);
 
         /* Check cos(acos(x)) = x */
-        arb_poly_sin_cos_series_basecase(d, c, b, n, rbits2);
+        arb_poly_sin_cos_series_basecase(d, c, b, n, rbits2, 0);
 
         fmpq_poly_truncate(A, n);
         if (!arb_poly_contains_fmpq_poly(c, A))

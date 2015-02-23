@@ -41,6 +41,12 @@ _acb_poly_inv_series(acb_ptr Qinv,
     {
         _acb_vec_zero(Qinv + 1, len - 1);
     }
+    else if (len == 2)
+    {
+        acb_div(Qinv + 1, Qinv, Q, prec);
+        acb_mul(Qinv + 1, Qinv + 1, Q + 1, prec);
+        acb_neg(Qinv + 1, Qinv + 1);
+    }
     else
     {
         long Qnlen, Wlen, W2len;
@@ -68,10 +74,18 @@ _acb_poly_inv_series(acb_ptr Qinv,
 void
 acb_poly_inv_series(acb_poly_t Qinv, const acb_poly_t Q, long n, long prec)
 {
-    if (n == 0 || Q->length == 0)
+    if (n == 0)
     {
-        printf("acb_poly_inv_series: require n > 0 and nonzero input\n");
-        abort();
+        acb_poly_zero(Qinv);
+        return;
+    }
+
+    if (Q->length == 0)
+    {
+        acb_poly_fit_length(Qinv, n);
+        _acb_vec_indeterminate(Qinv->coeffs, n);
+        _acb_poly_set_length(Qinv, n);
+        return;
     }
 
     if (Qinv == Q)

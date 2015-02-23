@@ -96,6 +96,7 @@ void
 acb_mat_det_inplace(acb_t det, acb_mat_t A, long prec)
 {
     long i, n, sign, rank;
+    int is_real;
 
     n = acb_mat_nrows(A);
     rank = acb_mat_gauss_partial(A, prec);
@@ -119,6 +120,8 @@ acb_mat_det_inplace(acb_t det, acb_mat_t A, long prec)
 
         arf_one(d);
 
+        is_real = acb_mat_is_real(A);
+
         for (i = rank; i < n; i++)
         {
             acb_vec_get_arf_2norm_squared_bound(t, A->rows[i] + rank,  n - rank, MAG_BITS);
@@ -129,8 +132,15 @@ acb_mat_det_inplace(acb_t det, acb_mat_t A, long prec)
         arf_sqrt(d, d, MAG_BITS, ARF_RND_UP);
 
         /* multiply by disc with radius d */
-        arb_add_error_arf(acb_realref(e), d);
-        arb_add_error_arf(acb_imagref(e), d);
+        if (is_real)
+        {
+            arb_add_error_arf(acb_realref(e), d);
+        }
+        else
+        {
+            arb_add_error_arf(acb_realref(e), d);
+            arb_add_error_arf(acb_imagref(e), d);
+        }
 
         acb_mul(det, det, e, prec);
 

@@ -6,6 +6,62 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2015-01-28 - version 2.5.0
+
+  * string conversion
+
+    * added arb_set_str
+    * added arb_get_str and arb_printn for pretty-printed rigorous decimal output
+    * added helper functions for binary to decimal conversion
+
+  * core arithmetic
+
+    * improved speed of division when using GMP instead of MPIR
+    * improved complex division with a small denominator
+    * removed a little bit of overhead for complex squaring
+
+  * special functions
+
+    * faster code for atan at very high precision, used instead of mpfr_atan
+    * optimized elementary functions slightly for small input
+    * added modified error functions erfc and erfi
+    * added the generalized exponential integral
+    * added the upper incomplete gamma function
+    * implemented the complete elliptic integral of the first kind
+    * implemented the arithmetic-geometric mean of complex numbers
+    * optimized arb_digamma for small integers
+    * made mag_log_ui, mag_binpow_uiui and mag_polylog_tail proper functions
+    * added pow, agm, erf, elliptic_k, elliptic_p as functions of complex power series
+    * added incomplete gamma function of complex power series
+    * improved code for bounding complex rising factorials (the old code could
+      potentially have given wrong results in degenerate cases)
+    * added arb_sqrt1pm1, arb_atanh, arb_asinh, arb_atanh
+    * added arb_log1p, acb_log1p, acb_atan
+    * added arb_hurwitz_zeta
+    * improved parameter selection in the Hurwitz zeta function to try to
+      avoid stalling when given enormous input
+    * optimized sqrt and rsqrt of power series when given a binomial as input
+    * made arb_bernoulli_ui(2^64-2) not crash
+    * fixed rgamma of negative integers returning indeterminate
+
+  * polynomials and matrices
+
+    * added characteristic polynomial computation for real and complex matrices
+    * added polynomial set_round methods
+    * added is_real methods for more types
+    * added more get_unique_fmpz methods
+    * added code for generating Swinnerton-Dyer polynomials
+    * improved error bounding in det() and exp() of complex matrices to
+      recognize when the result is real-valued
+    * changed polynomial divrem to return success/fail instead of aborting on divide by zero
+
+  * miscellaneous
+
+    * added logo to documentation
+    * made inlined functions build as part of the library
+    * silenced a clang warning
+    * made _acb_vec_sort_pretty a library function
+
 * 2014-11-15 - version 2.4.0
 
   * arithmetic and core functions

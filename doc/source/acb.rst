@@ -86,6 +86,10 @@ Basic manipulation
 
     Returns nonzero iff *z* is exact.
 
+.. function:: int acb_is_int(const acb_t z)
+
+    Returns nonzero iff *z* is an exact integer.
+
 .. function:: void acb_zero(acb_t z)
 
 .. function:: void acb_one(acb_t z)
@@ -148,6 +152,10 @@ Random number generation
     Generates a random complex number by generating separate random
     real and imaginary parts. Also generates NaNs and infinities.
 
+.. function:: void acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random complex number with precise real and imaginary parts.
+
 Precision and comparisons
 -------------------------------------------------------------------------------
 
@@ -202,6 +210,19 @@ Precision and comparisons
 
     Returns nonzero iff zero is contained in *x*.
 
+.. function:: long acb_rel_error_bits(const acb_t x)
+
+    Returns the effective relative error of *x* measured in bits.
+    This is computed as if calling :func:`arb_rel_error_bits` on the
+    real ball whose midpoint is the larger out of the real and imaginary
+    midpoints of *x*, and whose radius is the larger out of the real
+    and imaginary radiuses of *x*.
+
+.. function:: long acb_rel_accuracy_bits(const arb_t x)
+
+    Returns the effective relative accuracy of *x* measured in bits,
+    equal to the negative of the return value from :func:`acb_rel_error_bits`.
+
 .. function:: long acb_bits(const acb_t x)
 
     Returns the maximum of *arb_bits* applied to the real
@@ -217,6 +238,12 @@ Precision and comparisons
 
     Returns nonzero iff the imaginary part of *x* is zero.
     It does not test whether the real part of *x* also is finite.
+
+.. function:: int acb_get_unique_fmpz(fmpz_t z, const acb_t x)
+
+    If *x* contains a unique integer, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero.
 
 Complex parts
 -------------------------------------------------------------------------------
@@ -349,6 +376,10 @@ Elementary functions
     computed as
     `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
 
+.. function:: void acb_log1p(acb_t z, const acb_t x, long prec)
+
+    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
+
 .. function:: void acb_exp(acb_t y, const acb_t z, long prec)
 
     Sets *y* to the exponential function of *z*, computed as
@@ -402,6 +433,10 @@ Elementary functions
 
     Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
     but evaluating the sine and cosine accurately via :func:`arb_sin_cos_pi`.
+
+.. function:: void acb_atan(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
 
 .. function:: void acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec)
 

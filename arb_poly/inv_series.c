@@ -41,6 +41,12 @@ _arb_poly_inv_series(arb_ptr Qinv,
     {
         _arb_vec_zero(Qinv + 1, len - 1);
     }
+    else if (len == 2)
+    {
+        arb_div(Qinv + 1, Qinv, Q, prec);
+        arb_mul(Qinv + 1, Qinv + 1, Q + 1, prec);
+        arb_neg(Qinv + 1, Qinv + 1);
+    }
     else
     {
         long Qnlen, Wlen, W2len;
@@ -68,10 +74,18 @@ _arb_poly_inv_series(arb_ptr Qinv,
 void
 arb_poly_inv_series(arb_poly_t Qinv, const arb_poly_t Q, long n, long prec)
 {
-    if (n == 0 || Q->length == 0)
+    if (n == 0)
     {
-        printf("arb_poly_inv_series: require n > 0 and nonzero input\n");
-        abort();
+        arb_poly_zero(Qinv);
+        return;
+    }
+
+    if (Q->length == 0)
+    {
+        arb_poly_fit_length(Qinv, n);
+        _arb_vec_indeterminate(Qinv->coeffs, n);
+        _arb_poly_set_length(Qinv, n);
+        return;
     }
 
     if (Qinv == Q)

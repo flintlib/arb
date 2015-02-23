@@ -67,12 +67,10 @@ acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec)
 void
 acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
 {
-    acb_t a, t, w;
-    acb_struct b[2];
+    acb_t a, b, t, w;
 
     acb_init(a);
     acb_init(b);
-    acb_init(b + 1);
     acb_init(t);
     acb_init(w);
 
@@ -96,7 +94,6 @@ acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
 
     acb_clear(a);
     acb_clear(b);
-    acb_clear(b + 1);
     acb_clear(t);
     acb_clear (w);
 }
@@ -174,12 +171,14 @@ acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
          arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) < 0))
     {
         acb_hypgeom_erf_1f1a(res, z, prec);
+        return;
     }
 
-    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 0) > 64 ||
-         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) > 64))
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
     {
         acb_hypgeom_erf_asymp(res, z, prec, prec);
+        return;
     }
 
     x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
@@ -199,8 +198,12 @@ acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
         acb_hypgeom_erf_asymp(res, z, prec, prec2);
     }
     else if (arf_cmpabs(arb_midref(acb_imagref(z)), arb_midref(acb_realref(z))) > 0)
+    {
         acb_hypgeom_erf_1f1a(res, z, prec);
+    }
     else
+    {
         acb_hypgeom_erf_1f1b(res, z, prec);
+    }
 }
 

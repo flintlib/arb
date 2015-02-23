@@ -232,6 +232,18 @@ The error function
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
 
+.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the complementary error function
+    `\operatorname{erfc}(z) = 1 - \operatorname{erf}(z)`.
+    This function avoids catastrophic cancellation for large positive *z*.
+
+.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the imaginary error function
+    `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`. This is a trivial wrapper
+    of :func:`acb_hypgeom_erf`.
+
 Bessel functions
 -------------------------------------------------------------------------------
 
@@ -272,4 +284,104 @@ Bessel functions
 
     Computes the Bessel function of the first kind `J_{\nu}(z)` using
     an automatic algorithm choice.
+
+Modified Bessel functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind via
+    via :func:`acb_hypgeom_u_asymp`. For all `\nu` and all `z \ne 0`, we have
+
+    .. math ::
+
+        K_{\nu}(z) = \left(\frac{\pi}{2z}\right)^{1/2} e^{-z}
+            U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
+
+.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, long len, long prec)
+
+    Computes the modified Bessel function of the second kind `K_{\nu}(z)`
+    as a power series truncated to length *len*,
+    given `\nu, z \in \mathbb{C}[[x]]`. Uses the formula
+
+    .. math ::
+
+        K_{\nu}(z) = \frac{1}{2} \frac{\pi}{\sin(\pi \nu)} \left[
+                    \left(\frac{z}{2}\right)^{-\nu}
+                        {}_0{\widetilde F}_1\left(1-\nu, \frac{z^2}{4}\right)
+                     -
+                     \left(\frac{z}{2}\right)^{\nu}
+                         {}_0{\widetilde F}_1\left(1+\nu, \frac{z^2}{4}\right)
+                    \right].
+
+    If `\nu \in \mathbb{Z}`, it computes one extra derivative and removes
+    the singularity. 
+    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind from
+
+    .. math ::
+
+        K_{\nu}(z) = \frac{1}{2} \left[
+                    \left(\frac{z}{2}\right)^{-\nu}
+                        \Gamma(\nu)
+                        {}_0F_1\left(1-\nu, \frac{z^2}{4}\right)
+                     -
+                     \left(\frac{z}{2}\right)^{\nu}
+                         \frac{\pi}{\nu \sin(\pi \nu) \Gamma(\nu)}
+                         {}_0F_1\left(\nu+1, \frac{z^2}{4}\right)
+                    \right]
+
+    if `\nu \notin \mathbb{Z}`. If `\nu \in \mathbb{Z}`, it computes
+    the limit value via :func:`acb_hypgeom_bessel_k_0f1_series`.
+    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the second kind `K_{\nu}(z)` using
+    an automatic algorithm choice.
+
+Incomplete gamma functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec)
+
+.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+
+    Computes the upper incomplete gamma function respectively using
+
+    .. math ::
+
+        \Gamma(s,z) = e^{-z} U(1-s,1-s,z)
+
+        \Gamma(s,z) = \Gamma(s) - \frac{z^s}{s} {}_1F_1(s, s+1, -z)
+
+        \Gamma(s,z) = \Gamma(s) - \frac{z^s e^{-z}}{s} {}_1F_1(1, s+1, z)
+
+        \Gamma(s,z) = \frac{(-1)^n}{n!} (\psi(n+1) - \log(z))
+                    + \frac{(-1)^n}{(n+1)!} z \, {}_2F_2(1,1,2,2+n,-z)
+                    - z^{-n} \sum_{k=0}^{n-1} \frac{(-z)^k}{(k-n) k!},
+                    \quad n = -s \in \mathbb{Z}_{\ge 0}
+
+    and an automatic algorithm choice. The automatic version also handles
+    other special input such as `z = 0` and `s = 1, 2, 3`.
+    The *singular* version evaluates the finite sum directly and therefore
+    assumes that *s* is not too large.
+    If *modified* is set, computes the exponential integral
+    `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead.
+
+.. function:: void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec)
+
+    Computes the exponential integral `E_s(z)`. This is a trivial wrapper
+    of :func:`acb_hypgeom_gamma_upper`.
 

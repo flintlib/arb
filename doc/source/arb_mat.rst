@@ -64,6 +64,13 @@ Conversions
 
     Sets *dest* to *src*. The operands must have identical dimensions.
 
+Random generation
+-------------------------------------------------------------------------------
+
+.. function:: void arb_mat_randtest(arb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
+
+    Sets *mat* to a random matrix with up to *prec* bits of precision
+    and with exponents of width up to *mag_bits*.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -245,6 +252,17 @@ Gaussian elimination and solving
     determinant of the remaining submatrix is bounded using
     Hadamard's inequality.
 
+Characteristic polynomial
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, long prec)
+
+.. function:: void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, long prec)
+
+    Sets *cp* to the characteristic polynomial of *mat* which must be
+    a square matrix. If the matrix has *n* rows, the underscore method
+    requires space for `n + 1` output coefficients.
+    Employs a division-free algorithm using `O(n^4)` operations.
 
 Special functions
 -------------------------------------------------------------------------------

@@ -63,6 +63,14 @@ Basic manipulation
 
     Sets *poly* to the constant 0 respectively 1.
 
+.. function:: void arb_poly_set(arb_poly_t dest, const arb_poly_t src)
+
+    Sets *dest* to a copy of *src*.
+
+.. function:: void arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, long prec)
+
+    Sets *dest* to a copy of *src*, rounded to *prec* bits.
+
 .. function:: void arb_poly_set_coeff_si(arb_poly_t poly, long n, long c)
 
 .. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, long n, const arb_t c)
@@ -166,6 +174,23 @@ Comparisons
     Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
     function requires that *len1* ist at least as large as *len2*.
 
+.. function:: int arb_poly_get_unique_fmpz_poly(fmpz_poly_t z, const arb_poly_t x)
+
+    If *x* contains a unique integer polynomial, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero, possibly partially modifying *z*.
+
+Bounds
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_poly_majorant(arb_ptr res, arb_srcptr poly, long len, long prec)
+
+.. function:: void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, long prec)
+
+    Sets *res* to an exact real polynomial whose coefficients are
+    upper bounds for the absolute values of the coefficients in *poly*,
+    rounded to *prec* bits.
+
 Arithmetic
 -------------------------------------------------------------------------------
 
@@ -175,6 +200,8 @@ Arithmetic
     Allows aliasing of the input and output operands.
 
 .. function:: void arb_poly_add(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long prec)
+
+.. function:: void arb_poly_add_si(arb_poly_t C, const arb_poly_t A, long B, long prec)
 
     Sets *C* to the sum of *A* and *B*.
 
@@ -294,12 +321,15 @@ Arithmetic
 
 .. function:: void _arb_poly_divrem(arb_ptr Q, arb_ptr R, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
 
-.. function:: void arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: int arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, long prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
-    a remainder `R` such that `A = BQ + R`. The leading coefficient of `B` must
-    not contain zero. The implementation reverses the inputs and performs
-    power series division.
+    a remainder `R` such that `A = BQ + R`. The implementation reverses the
+    inputs and performs power series division.
+
+    If the leading coefficient of `B` contains zero (or if `B` is identically
+    zero), returns 0 indicating failure without modifying the outputs.
+    Otherwise returns nonzero.
 
 .. function:: void _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A, long len, const arb_t c, long prec)
 
@@ -738,13 +768,13 @@ Powers and elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
 
-.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
 
 .. function:: void _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
 
@@ -769,6 +799,9 @@ Powers and elementary functions
     The default version automatically selects between the *basecase* and
     *tangent* algorithms depending on the input.
 
+    The *basecase* and *tangent* versions take a flag *times_pi*
+    specifying that the input is to be multiplied by `\pi`.
+
     The underscore methods support aliasing and require the lengths to be nonzero.
 
 .. function:: void _arb_poly_sin_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
@@ -782,6 +815,21 @@ Powers and elementary functions
     Respectively evaluates the power series sine or cosine. These functions
     simply wrap :func:`_arb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
+
+.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 .. function:: void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
 
@@ -934,4 +982,22 @@ Root-finding
     (typically, if the polynomial has large coefficients of alternating
     signs, this needs to be approximately the bit size of the coefficients).
 
+Other special polynomials
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_poly_swinnerton_dyer_ui(arb_ptr poly, ulong n, long trunc, long prec)
+
+.. function:: void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, long prec)
+
+    Computes the Swinnerton-Dyer polynomial `S_n`, which has degree `2^n`
+    and is the rational minimal polynomial of the sum
+    of the square roots of the first *n* prime numbers.
+
+    If *prec* is set to zero, a precision is chosen automatically such
+    that :func:`arb_poly_get_unique_fmpz_poly` should be successful.
+    Otherwise a working precision of *prec* bits is used.
+
+    The underscore version accepts an additional *trunc* parameter. Even
+    when computing a truncated polynomial, the array *poly* must have room for
+    `2^n + 1` coefficients, used as temporary space.
 

@@ -61,39 +61,62 @@ void
 _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec)
 {
     int reflect;
-    long r, n, wp;
+    long i, r, n, wp;
     acb_t zr;
     acb_ptr t, u;
 
     hlen = FLINT_MIN(hlen, len);
+
+    if (hlen == 1)
+    {
+        acb_lgamma(res, h, prec);
+        if (acb_is_finite(res))
+            _acb_vec_zero(res + 1, len - 1);
+        else
+            _acb_vec_indeterminate(res + 1, len - 1);
+        return;
+    }
+
+    if (len == 2)
+    {
+        acb_t v;
+        acb_init(v);
+        acb_set(v, h + 1);
+        acb_digamma(res + 1, h, prec);
+        acb_lgamma(res, h, prec);
+        acb_mul(res + 1, res + 1, v, prec);
+        acb_clear(v);
+        return;
+    }
+
+    /* use real code for real input and output */
+    if (_acb_vec_is_real(h, hlen) && arb_is_positive(acb_realref(h)))
+    {
+        arb_ptr tmp = _arb_vec_init(len);
+        for (i = 0; i < hlen; i++)
+            arb_set(tmp + i, acb_realref(h + i));
+        _arb_poly_lgamma_series(tmp, tmp, hlen, len, prec);
+        for (i = 0; i < len; i++)
+            acb_set_arb(res + i, tmp + i);
+        _arb_vec_clear(tmp, len);
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     t = _acb_vec_init(len);
     u = _acb_vec_init(len);
     acb_init(zr);
 
-    /* TODO: use real code at real numbers */
-    if (0)
-    {
-    }
-    else if (len <= 2)
-    {
-        acb_lgamma(u, h, wp);
-        if (len == 2)
-            acb_digamma(u + 1, h, wp);
-    }
-    else
-    {
-        /* otherwise use Stirling series */
-        acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 0, 0, wp);
-        acb_add_ui(zr, h, r, wp);
-        _acb_poly_gamma_stirling_eval(u, zr, n, len, wp);
+    /* use Stirling series */
+    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 0, 0, wp);
+    acb_add_ui(zr, h, r, wp);
+    _acb_poly_gamma_stirling_eval(u, zr, n, len, wp);
 
-        if (r != 0)
-        {
-            _log_rising_ui_series(t, h, r, len, wp);
-            _acb_vec_sub(u, u, t, len, wp);
-        }
+    if (r != 0)
+    {
+        _log_rising_ui_series(t, h, r, len, wp);
+        _acb_vec_sub(u, u, t, len, wp);
     }
 
     /* compose with nonconstant part */

@@ -31,7 +31,10 @@ _arb_poly_sqrt_series(arb_ptr g,
 {
     hlen = FLINT_MIN(hlen, len);
 
-    if (hlen == 1)
+    while (hlen > 0 && arb_is_zero(h + hlen - 1))
+        hlen--;
+
+    if (hlen <= 1)
     {
         arb_sqrt(g, h, prec);
         _arb_vec_zero(g + 1, len - 1);
@@ -42,6 +45,14 @@ _arb_poly_sqrt_series(arb_ptr g,
         arb_div(g + 1, h + 1, h, prec);
         arb_mul(g + 1, g + 1, g, prec);
         arb_mul_2exp_si(g + 1, g + 1, -1);
+    }
+    else if (_arb_vec_is_zero(h + 1, hlen - 2))
+    {
+        arb_t t;
+        arb_init(t);
+        arf_set_si_2exp_si(arb_midref(t), 1, -1);
+        _arb_poly_binomial_pow_arb_series(g, h, hlen, t, len, prec);
+        arb_clear(t);
     }
     else
     {

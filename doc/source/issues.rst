@@ -6,9 +6,20 @@ Potential issues
 Interface changes
 -------------------------------------------------------------------------------
 
-As this is an early version, note that any part of the interface is
-subject to change without warning! Most of the core interface should
-be stable at this point, but no guarantees are made.
+Most of the core API should be stable at this point,
+and significant compatibility-breaking changes will be specified in the
+release notes.
+
+In general, Arb does not distinguish between "private" and "public"
+parts of the API. The implementation is meant to be transparent by design.
+All methods are intended to be fully documented and tested
+(exceptions to this are mainly due to lack of time on part of the
+author).
+The user should use common sense to determine whether a function is
+concerned with implementation details, making it likely
+to change as the implementation changes in the future.
+The interface of :func:`arb_add` is probably not going to change in
+the next version, but :func:`_arb_get_mpn_fixed_mod_pi4` just might.
 
 Correctness
 -------------------------------------------------------------------------------
@@ -24,6 +35,74 @@ contains bugs, so the usual precautions are advised:
 * Read the source code to verify that it does what it is supposed to do
 
 All bug reports are highly welcome!
+
+Aliasing
+-------------------------------------------------------------------------------
+
+As a rule, Arb allows aliasing of operands. For example, in the function call
+``arb_add(z, x, y, prec)``,
+which performs `z \gets x + y`, any two (or all three) of the variables *x*,
+*y* and *z* are allowed to be the same. Exceptions to this rule are
+documented explicitly.
+
+The general rule that input and output variables can be aliased with each
+other only applies to variables *of the same type*
+(ignoring *const* qualifiers on input variables -- a special case is that
+:type:`arb_srcptr` is considered the *const* version of :type:`arb_ptr`).
+This is a natural extension of the so-called *strict aliasing rule* in C.
+
+For example, in :func:`arb_poly_evaluate` which evaluates
+`y = f(x)` for a polynomial *f*, the output variable *y* is
+not allowed to be a pointer to one of the coefficients of *f* (but
+aliasing between *x* and *y* or between *x* and the coefficients
+of *f* is allowed).
+This also applies to :func:`_arb_poly_evaluate`:
+for the purposes of aliasing,
+:type:`arb_srcptr` (the type of the coefficient array within *f*) and :type:`arb_t`
+(the type of *x*) are *not* considered
+to be the same type, and therefore must not be aliased
+with each other,
+even though an :type:`arb_ptr`/:type:`arb_srcptr` variable pointing
+to a length 1 array would otherwise be interchangeable with an :type:`arb_t`/*const* :type:`arb_t`.
+
+Moreover, in functions that allow aliasing between an input
+array and an output array, the arrays must either be identical or
+completely disjoint, never partially overlapping.
+
+There are natural exceptions to these aliasing restrictions, which may
+used internally without being documented explicitly.
+However, third party code should avoid relying on such exceptions.
+
+An important caveat applies to **aliasing of input variables**.
+Identical pointers are understood to
+give permission for **algebraic simplification**.
+This assumption is made to improve performance.
+For example, the call ``arb_mul(z, x, x, prec)``
+sets *z* to a ball enclosing the set
+
+.. math ::
+
+    \{ t^2 \,:\, t \in x \}
+
+and not the (generally larger) set
+
+.. math ::
+
+    \{ t u \,:\, t \in x, u \in x \}.
+
+If the user knows that two values *x* and *y*
+both lie in the interval `[-1,1]` and wants to compute an
+enclosure for `f(x,y)`, then it would be a mistake to 
+create an :type:`arb_t` variable *x* enclosing `[-1,1]`
+and reusing the same variable for *y*, calling `f(x,x)`.
+Instead, the user has to create a
+distinct variable *y* also enclosing `[-1,1]`.
+
+Algebraic simplification is not guaranteed to occur.
+For example, ``arb_add(z, x, x, prec)`` and ``arb_sub(z, x, x, prec)``
+currently do not implement this optimization.
+It is better to use ``arb_mul_2exp_si(z, x, 1)`` and
+``arb_zero(z)``, respectively.
 
 Integer overflow
 -------------------------------------------------------------------------------
@@ -46,7 +125,7 @@ that repeatedly increases the precision.
 
 This caveat does not apply to exponents of floating-point numbers,
 which are represented as arbitrary-precision integers, nor to
-integers used as numerical scalars (e.g. :func:`fmprb_mul_si`).
+integers used as numerical scalars (e.g. :func:`arb_mul_si`).
 However, it still applies to conversions and operations where
 the result is requested exactly and sizes become an issue.
 For example, trying to convert
@@ -59,19 +138,29 @@ Thread safety and caches
 -------------------------------------------------------------------------------
 
 Arb should be fully threadsafe, provided that both MPFR and FLINT have
-been built in threadsafe mode. Please note that thread safety is
-not currently tested, and extra caution when developing
+been built in threadsafe mode.
+Use ``flint_set_num_threads()`` to set the number of threads that
+Arb is allowed to use internally for single computations
+(this is currently only exploited by a handful of operations).
+Please note that thread safety is
+only tested minimally, and extra caution when developing
 multithreaded code is therefore recommended.
 
 Arb may cache some data (such as the value of `\pi` and
 Bernoulli numbers) to speed up various computations. In threadsafe mode,
-caches use thread-local storage (there is currently no way to save memory
-and avoid recomputation by having several threads share the same cache).
+caches use thread-local storage. There is currently no way to save memory
+and avoid recomputation by having several threads share the same cache.
 Caches can be freed by calling the ``flint_cleanup()`` function. To avoid
 memory leaks, the user should call ``flint_cleanup()`` when exiting a thread.
 It is also recommended to call ``flint_cleanup()`` when exiting the main
 program (this should result in a clean output when running
 `Valgrind <http://valgrind.org/>`_, and can help catching memory issues).
+
+There does not seem to be an obvious way to make sure that ``flint_cleanup()``
+is called when exiting a thread using OpenMP.
+A possible solution to this problem is to use OpenMP sections,
+or to use C++ and create a thread-local object whose destructor
+invokes ``flint_cleanup()``.
 
 Use of hardware floating-point arithmetic
 -------------------------------------------------------------------------------

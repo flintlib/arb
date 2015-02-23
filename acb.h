@@ -107,6 +107,11 @@ acb_is_exact(const acb_t z)
     return arb_is_exact(acb_realref(z)) && arb_is_exact(acb_imagref(z));
 }
 
+ACB_INLINE int
+acb_is_int(const acb_t z)
+{
+    return arb_is_zero(acb_imagref(z)) && arb_is_int(acb_realref(z));
+}
 
 ACB_INLINE void
 acb_zero(acb_t z)
@@ -226,6 +231,8 @@ acb_set_round_fmpz(acb_t z, const fmpz_t y, long prec)
     arb_set_round_fmpz(acb_realref(z), y, prec);
     arb_zero(acb_imagref(z));
 }
+
+int acb_get_unique_fmpz(fmpz_t z, const acb_t x);
 
 ACB_INLINE void
 acb_set_fmpq(acb_t z, const fmpq_t c, long prec)
@@ -587,6 +594,8 @@ acb_const_pi(acb_t x, long prec)
 }
 
 void acb_log(acb_t r, const acb_t z, long prec);
+void acb_log1p(acb_t r, const acb_t z, long prec);
+void acb_atan(acb_t r, const acb_t z, long prec);
 
 void acb_exp(acb_t r, const acb_t z, long prec);
 void acb_exp_pi_i(acb_t r, const acb_t z, long prec);
@@ -823,6 +832,17 @@ void acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
 void acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
+void acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits);
+
+long acb_rel_error_bits(const acb_t x);
+
+ARB_INLINE long
+acb_rel_accuracy_bits(const acb_t x)
+{
+    return -acb_rel_error_bits(x);
+}
+
+
 ACB_INLINE long
 acb_bits(const acb_t x)
 {
@@ -911,6 +931,18 @@ _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
         acb_trim(res + i, vec + i);
 }
 
+ARB_INLINE int
+_acb_vec_get_unique_fmpz_vec(fmpz * res,  acb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!acb_get_unique_fmpz(res + i, vec + i))
+            return 0;
+    return 1;
+}
+
+/* sort complex numbers in a nice-to-display order */
+void _acb_vec_sort_pretty(acb_ptr vec, long len);
 
 #ifdef __cplusplus
 }

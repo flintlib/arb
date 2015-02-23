@@ -3,6 +3,8 @@
 **fmpr.h** -- arbitrary-precision floating-point numbers
 ===============================================================================
 
+This type is now obsolete: use :type:`arf_t` instead.
+
 A variable of type :type:`fmpr_t` holds an arbitrary-precision binary
 floating-point number, i.e. a rational number of the form
 `x \times 2^y` where `x, y \in \mathbb{Z}` and `x` is odd;

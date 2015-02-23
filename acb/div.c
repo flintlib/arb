@@ -28,50 +28,54 @@
 void
 acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
 {
-    if (arb_is_zero(acb_imagref(y)))
+#define a acb_realref(x)
+#define b acb_imagref(x)
+#define c acb_realref(y)
+#define d acb_imagref(y)
+    if (arb_is_zero(d))
     {
-        if (arb_is_zero(acb_imagref(x)))
+        if (arb_is_zero(b))
         {
-            arb_div(acb_realref(z), acb_realref(x), acb_realref(y), prec);
+            arb_div(acb_realref(z), a, c, prec);
             arb_zero(acb_imagref(z));
         }
-        else if (arb_is_zero(acb_realref(x)))
+        else if (arb_is_zero(a))
         {
-            arb_div(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
+            arb_div(acb_imagref(z), b, c, prec);
             arb_zero(acb_realref(z));
         }
         else if (z != y)
         {
-            arb_div(acb_realref(z), acb_realref(x), acb_realref(y), prec);
-            arb_div(acb_imagref(z), acb_imagref(x), acb_realref(y), prec);
+            arb_div(acb_realref(z), a, c, prec);
+            arb_div(acb_imagref(z), b, c, prec);
         }
         else
         {
             arb_t t;
             arb_init(t);
-            arb_set(t, acb_realref(y));
-            arb_div(acb_realref(z), acb_realref(x), t, prec);
-            arb_div(acb_imagref(z), acb_imagref(x), t, prec);
+            arb_set(t, c);
+            arb_div(acb_realref(z), a, t, prec);
+            arb_div(acb_imagref(z), b, t, prec);
             arb_clear(t);
         }
     }
-    else if (arb_is_zero(acb_realref(y)))
+    else if (arb_is_zero(c))
     {
-        if (arb_is_zero(acb_imagref(x)))
+        if (arb_is_zero(b))
         {
-            arb_div(acb_imagref(z), acb_realref(x), acb_imagref(y), prec);
+            arb_div(acb_imagref(z), a, d, prec);
             arb_neg(acb_imagref(z), acb_imagref(z));
             arb_zero(acb_realref(z));
         }
-        else if (arb_is_zero(acb_realref(x)))
+        else if (arb_is_zero(a))
         {
-            arb_div(acb_realref(z), acb_imagref(x), acb_imagref(y), prec);
+            arb_div(acb_realref(z), b, d, prec);
             arb_zero(acb_imagref(z));
         }
         else if (z != y)
         {
-            arb_div(acb_realref(z), acb_realref(x), acb_imagref(y), prec);
-            arb_div(acb_imagref(z), acb_imagref(x), acb_imagref(y), prec);
+            arb_div(acb_realref(z), a, d, prec);
+            arb_div(acb_imagref(z), b, d, prec);
             arb_swap(acb_realref(z), acb_imagref(z));
             arb_neg(acb_imagref(z), acb_imagref(z));
         }
@@ -79,9 +83,9 @@ acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
         {
             arb_t t;
             arb_init(t);
-            arb_set(t, acb_imagref(y));
-            arb_div(acb_realref(z), acb_realref(x), t, prec);
-            arb_div(acb_imagref(z), acb_imagref(x), t, prec);
+            arb_set(t, d);
+            arb_div(acb_realref(z), a, t, prec);
+            arb_div(acb_imagref(z), b, t, prec);
             arb_swap(acb_realref(z), acb_imagref(z));
             arb_neg(acb_imagref(z), acb_imagref(z));
             arb_clear(t);
@@ -89,11 +93,42 @@ acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
     }
     else
     {
-        acb_t t;
-        acb_init(t);
-        acb_inv(t, y, prec);
-        acb_mul(z, x, t, prec);
-        acb_clear(t);
+        if (prec > 256 && acb_bits(y) <= prec / 2)
+        {
+            arb_t t, u, v;
+
+            arb_init(t);
+            arb_init(u);
+            arb_init(v);
+
+            arb_mul(t, c, c, prec);
+            arb_addmul(t, d, d, prec);
+
+            arb_mul(u, a, c, prec);
+            arb_addmul(u, b, d, prec);
+
+            arb_mul(v, b, c, prec);
+            arb_submul(v, a, d, prec);
+
+            arb_div(acb_realref(z), u, t, prec);
+            arb_div(acb_imagref(z), v, t, prec);
+
+            arb_clear(t);
+            arb_clear(u);
+            arb_clear(v);
+        }
+        else
+        {
+            acb_t t;
+            acb_init(t);
+            acb_inv(t, y, prec);
+            acb_mul(z, x, t, prec);
+            acb_clear(t);
+        }
     }
+#undef a
+#undef b
+#undef c
+#undef d
 }
 

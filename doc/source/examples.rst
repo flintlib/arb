@@ -23,13 +23,15 @@ Sample output, computing `\pi` to one million digits::
     > build/examples/pi 1000000
     computing pi with a precision of 3321933 bits... cpu/wall(s): 0.58 0.586
     virt/peak/res/peak(MB): 28.24 36.84 8.86 15.56
-    3.141592654 +/- 1.335e-1000001
+    [3.14159265358979323846{...999959 digits...}42209010610577945815 +/- 3e-1000000]
 
-The program prints a decimal approximation of the computed ball,
-with the midpoint rounded to a number of decimal digits that can be
-passed as a second parameter to the program (default = 10).
-In the present implementation (see :func:`arb_printd`), the
-digits are not guaranteed to be correctly rounded.
+The program prints an interval guaranteed to contain `\pi`, and where
+all displayed digits are correct up to an error of plus or minus
+one unit in the last place (see :func:`arb_printn`).
+By default, only the first and last few digits are printed.
+Pass 0 as a second argument to print all digits (or pass *m* to
+print *m* + 1 leading and *m* trailing digits, as above with
+the default *m* = 20).
 
 hilbert_matrix.c
 -------------------------------------------------------------------------------

@@ -6,20 +6,20 @@
 int main(int argc, char *argv[])
 {
     arb_t x;
-    long prec, digits, digits_to_print;
+    long prec, digits, condense;
 
     if (argc < 2)
     {
-        printf("usage: build/examples/pi digits [digits_to_print = 10]\n");
+        printf("usage: build/examples/pi digits [condense = 20]\n");
         return 1;
     }
 
     digits = atol(argv[1]);
 
     if (argc > 2)
-        digits_to_print = atol(argv[2]);
+        condense = atol(argv[2]);
     else
-        digits_to_print = 10;
+        condense = 20;
 
     arb_init(x);
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
     SHOW_MEMORY_USAGE
 
-    arb_printd(x, digits_to_print);
+    arb_printn(x, digits, ARB_STR_CONDENSE * condense);
 
     printf("\n");
 

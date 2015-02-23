@@ -88,6 +88,10 @@ Basic properties and manipulation
 
     Sets *dest* to a copy of *src*.
 
+.. function:: void acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, long prec)
+
+    Sets *dest* to a copy of *src*, rounded to *prec* bits.
+
 .. function:: void acb_poly_set_coeff_si(acb_poly_t poly, long n, long c)
 
 .. function:: void acb_poly_set_coeff_acb(acb_poly_t poly, long n, const acb_t c)
@@ -161,11 +165,22 @@ Comparisons
     Returns nonzero iff *poly1* overlaps with *poly2*. The underscore
     function requires that *len1* ist at least as large as *len2*.
 
+.. function:: int acb_poly_get_unique_fmpz_poly(fmpz_poly_t z, const acb_poly_t x)
+
+    If *x* contains a unique integer polynomial, sets *z* to that value and returns
+    nonzero. Otherwise (if *x* represents no integers or more than one integer),
+    returns zero, possibly partially modifying *z*.
+
+.. function:: int acb_poly_is_real(const acb_poly_t poly)
+
+    Returns nonzero iff all coefficients in *poly* have zero imaginary part.
 
 Conversions
 -------------------------------------------------------------------------------
 
 .. function:: void acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, long prec)
+
+.. function:: void acb_poly_set2_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, const fmpz_poly_t im, long prec)
 
 .. function:: void acb_poly_set_arb_poly(acb_poly_t poly, const arb_poly_t re)
 
@@ -184,6 +199,16 @@ Conversions
 
     Sets *poly* to *src*.
 
+Bounds
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_majorant(arb_ptr res, acb_srcptr poly, long len, long prec)
+
+.. function:: void acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, long prec)
+
+    Sets *res* to an exact real polynomial whose coefficients are
+    upper bounds for the absolute values of the coefficients in *poly*,
+    rounded to *prec* bits.
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -194,6 +219,8 @@ Arithmetic
     Allows aliasing of the input and output operands.
 
 .. function:: void acb_poly_add(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, long prec)
+
+.. function:: void acb_poly_add_si(acb_poly_t C, const acb_poly_t A, long B, long prec)
 
     Sets *C* to the sum of *A* and *B*.
 
@@ -299,9 +326,12 @@ Arithmetic
 .. function:: void acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, long prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
-    a remainder `R` such that `A = BQ + R`. The leading coefficient of `B` must
-    not contain zero. The implementation reverses the inputs and performs
-    power series division.
+    a remainder `R` such that `A = BQ + R`. The implementation reverses the
+    inputs and performs power series division.
+
+    If the leading coefficient of `B` contains zero (or if `B` is identically
+    zero), returns 0 indicating failure without modifying the outputs.
+    Otherwise returns nonzero.
 
 .. function:: void _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A, long len, const acb_t c, long prec)
 
@@ -542,6 +572,36 @@ Elementary functions
 
     Sets *res* to *poly* raised to the power *exp*.
 
+.. function:: void _acb_poly_pow_series(acb_ptr h, acb_srcptr f, long flen, acb_srcptr g, long glen, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* and *glen* do not exceed *len*.
+
+.. function:: void acb_poly_pow_series(acb_poly_t h, const acb_poly_t f, const acb_poly_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently.
+
+.. function:: void _acb_poly_pow_acb_series(acb_ptr h, acb_srcptr f, long flen, const acb_t g, long len, long prec)
+
+    Sets *{h, len}* to the power series `f(x)^g = \exp(g \log f(x))` truncated
+    to length *len*. This function detects special cases such as *g* being an
+    exact small integer or `\pm 1/2`, and computes such powers more
+    efficiently. This function does not support aliasing of the output
+    with either of the input operands. It requires that all lengths
+    are positive, and assumes that *flen* does not exceed *len*.
+
+.. function:: void acb_poly_pow_acb_series(acb_poly_t h, const acb_poly_t f, const acb_t g, long len, long prec)
+
+    Sets *h* to the power series `f(x)^g = \exp(g \log f(x))` truncated
+    to length *len*.
+
 .. function:: void _acb_poly_sqrt_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec)
 
 .. function:: void acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, long n, long prec)
@@ -612,13 +672,13 @@ Elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+.. function:: void _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+.. function:: void acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec, int times_pi)
 
-.. function:: void _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+.. function:: void _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec, int times_pi)
 
-.. function:: void acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+.. function:: void acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec, int times_pi)
 
 .. function:: void _acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
 
@@ -643,6 +703,9 @@ Elementary functions
     The default version automatically selects between the *basecase* and
     *tangent* algorithms depending on the input.
 
+    The *basecase* and *tangent* versions take a flag *times_pi*
+    specifying that the input is to be multiplied by `\pi`.
+
     The underscore methods support aliasing and require the lengths to be nonzero.
 
 .. function:: void _acb_poly_sin_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
@@ -656,6 +719,21 @@ Elementary functions
     Respectively evaluates the power series sine or cosine. These functions
     simply wrap :func:`_acb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
+
+.. function:: void _acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_cos_pi_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_sin_pi_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_pi_series(acb_poly_t s, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_cos_pi_series(acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_cos_pi_series(acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 .. function:: void _acb_poly_tan_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec)
 
@@ -800,7 +878,7 @@ Zeta function
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
 
-Polylogarithms
+Other special functions
 -------------------------------------------------------------------------------
 
 .. function:: void _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
@@ -829,6 +907,40 @@ Polylogarithms
     power series, truncating the output to length *len*. The underscore method
     requires all lengths to be positive and supports aliasing between
     all inputs and outputs.
+
+.. function:: void _acb_poly_erf_series(acb_ptr res, acb_srcptr z, long zlen, long n, long prec)
+
+.. function:: void acb_poly_erf_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the error function of the power series *z*, truncated to length *n*.
+
+.. function:: void _acb_poly_upper_gamma_series(acb_ptr res, acb_t s, acb_srcptr z, long zlen, long n, long prec)
+
+.. function:: void acb_poly_upper_gamma_series(acb_poly_t res, const acb_t s, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the upper incomplete gamma function `\Gamma(s,z)` where *s* is
+    a constant and *z* is a power series, truncated to length *n*.
+
+.. function:: void _acb_poly_agm1_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
+
+.. function:: void acb_poly_agm1_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the arithmetic-geometric mean of 1 and the power series *z*,
+    truncated to length *n*.
+
+.. function:: void _acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
+
+.. function:: void acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+
+    Sets *res* to the complete elliptic integral of the first kind of the
+    power series *z*, truncated to length *n*.
+
+.. function:: void _acb_poly_elliptic_p_series(acb_ptr res, acb_srcptr z, long zlen, const acb_t tau, long len, long prec)
+
+.. function:: void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, long n, long prec)
+
+    Sets *res* to the Weierstrass elliptic function of the power series *z*,
+    with periods 1 and *tau*, truncated to length *n*.
 
 
 Root-finding

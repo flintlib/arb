@@ -27,7 +27,7 @@
 
 void
 _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
-                        const acb_srcptr h, long hlen, long len, long prec)
+        const acb_srcptr h, long hlen, long len, long prec, int times_pi)
 {
     acb_ptr t, u, v;
     acb_t s0, c0;
@@ -35,7 +35,10 @@ _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
 
     if (hlen == 1)
     {
-        acb_sin_cos(s, c, h, prec);
+        if (times_pi)
+            acb_sin_cos_pi(s, c, h, prec);
+        else
+            acb_sin_cos(s, c, h, prec);
         _acb_vec_zero(s + 1, len - 1);
         _acb_vec_zero(c + 1, len - 1);
         return;
@@ -54,11 +57,20 @@ _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
     v = u + len;
 
     /* sin, cos of h0 */
-    acb_sin_cos(s0, c0, h, prec);
+    if (times_pi)
+        acb_sin_cos_pi(s0, c0, h, prec);
+    else
+        acb_sin_cos(s0, c0, h, prec);
 
     /* t = tan((h-h0)/2) */
     acb_zero(u);
     _acb_vec_scalar_mul_2exp_si(u + 1, h + 1, hlen - 1, -1);
+    if (times_pi)
+    {
+        acb_const_pi(t, prec);
+        _acb_vec_scalar_mul(u + 1, u + 1, hlen - 1, t, prec);
+    }
+
     _acb_poly_tan_series(t, u, hlen, len, prec);
 
     /* v = 1 + t^2 */
@@ -97,7 +109,7 @@ _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
 
 void
 acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c,
-                                    const acb_poly_t h, long n, long prec)
+                                    const acb_poly_t h, long n, long prec, int times_pi)
 {
     long hlen = h->length;
 
@@ -118,7 +130,7 @@ acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c,
     acb_poly_fit_length(s, n);
     acb_poly_fit_length(c, n);
     _acb_poly_sin_cos_series_tangent(s->coeffs, c->coeffs,
-        h->coeffs, hlen, n, prec);
+        h->coeffs, hlen, n, prec, times_pi);
     _acb_poly_set_length(s, n);
     _acb_poly_normalise(s);
     _acb_poly_set_length(c, n);

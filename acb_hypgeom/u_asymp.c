@@ -180,7 +180,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
     acb_struct aa[3];
     acb_t s, t, w;
-    int R;
+    int R, p, q, is_real;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(z))
     {
@@ -205,16 +205,34 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     acb_init(t);
     acb_init(w);
 
-    acb_set(aa, a);
-    acb_sub(aa + 1, a, b, prec);
-    acb_add_ui(aa + 1, aa + 1, 1, prec);
-    acb_one(aa + 2);
+    /* special case, for incomplete gamma
+      [todo: also when they happen to be exact and with difference 1...] */
+    if (a == b)
+    {
+        acb_set(aa, a);
+        p = 1;
+        q = 0;
+    }
+    else
+    {
+        acb_set(aa, a);
+        acb_sub(aa + 1, a, b, prec);
+        acb_add_ui(aa + 1, aa + 1, 1, prec);
+        acb_one(aa + 2);
+        p = 2;
+        q = 1;
+    }
+
+    is_real = acb_is_real(a) && acb_is_real(b) &&
+        acb_is_real(z) && arb_is_positive(acb_realref(z));
 
     acb_neg(w, z);
     acb_inv(w, w, prec);
 
     if (n < 0)
-        n = acb_hypgeom_pfq_choose_n(aa, 2, aa + 2, 1, w, prec);
+        n = acb_hypgeom_pfq_choose_n(aa, p, aa + p, q, w, prec);
+
+    /* todo: handle the exact polynomial case better... */
 
     acb_hypgeom_u_asymp_bound_factors(&R, alpha, nu,
         sigma, rho, zinv, a, b, z);
@@ -225,7 +243,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     }
     else
     {
-        acb_hypgeom_pfq_sum(s, t, aa, 2, aa + 2, 1, w, n, prec);
+        acb_hypgeom_pfq_sum(s, t, aa, p, aa + p, q, w, n, prec);
 
         if (R == 1)
         {
@@ -264,7 +282,11 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
         /* nth term * factor */
         acb_get_mag(tmp, t);
         mag_mul(err, err, tmp);
-        acb_add_error_mag(s, err);
+
+        if (is_real)
+            arb_add_error_mag(acb_realref(s), err);
+        else
+            acb_add_error_mag(s, err);
 
         acb_set(res, s);
     }

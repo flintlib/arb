@@ -37,6 +37,23 @@ _arb_poly_div_series(arb_ptr Q, arb_srcptr A, long Alen,
         _arb_vec_scalar_div(Q, A, Alen, B, prec);
         _arb_vec_zero(Q + Alen, n - Alen);
     }
+    else if (n == 2)
+    {
+        if (Alen == 1)
+        {
+            arb_div(Q, A, B, prec);
+            arb_div(Q + 1, Q, B, prec);
+            arb_mul(Q + 1, Q + 1, B + 1, prec);
+            arb_neg(Q + 1, Q + 1);
+        }
+        else
+        {
+            arb_div(Q, A, B, prec);
+            arb_mul(Q + 1, Q, B + 1, prec);
+            arb_sub(Q + 1, A + 1, Q + 1, prec);
+            arb_div(Q + 1, Q + 1, B, prec);
+        }
+    }
     else
     {
         arb_ptr Binv;
@@ -50,10 +67,18 @@ _arb_poly_div_series(arb_ptr Q, arb_srcptr A, long Alen,
 void
 arb_poly_div_series(arb_poly_t Q, const arb_poly_t A, const arb_poly_t B, long n, long prec)
 {
-    if (n == 0 || B->length == 0)
+    if (n == 0)
     {
-        printf("arb_poly_inv_series: require n > 0 and nonzero input\n");
-        abort();
+        arb_poly_zero(Q);
+        return;
+    }
+
+    if (B->length == 0)
+    {
+        arb_poly_fit_length(Q, n);
+        _arb_vec_indeterminate(Q->coeffs, n);
+        _arb_poly_set_length(Q, n);
+        return;
     }
 
     if (A->length == 0)

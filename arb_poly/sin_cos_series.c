@@ -50,9 +50,9 @@ _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, const arb_srcptr h, long hlen, lo
         arb_clear(t);
     }
     else if (hlen < TANGENT_CUTOFF)
-        _arb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec);
+        _arb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 0);
     else
-        _arb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec);
+        _arb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 0);
 }
 
 void

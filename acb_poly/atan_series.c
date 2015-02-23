@@ -32,10 +32,7 @@ _acb_poly_atan_series(acb_ptr g, acb_srcptr h, long hlen, long n, long prec)
     acb_t c;
     acb_init(c);
 
-    /* TODO: acb_atan(c, h, prec); */
-    if (!acb_is_zero(h))
-        abort();
-    acb_zero(g);
+    acb_atan(c, h, prec);
 
     hlen = FLINT_MIN(hlen, n);
 

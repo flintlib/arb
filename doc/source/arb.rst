@@ -3,10 +3,54 @@
 **arb.h** -- real numbers represented as floating-point balls
 ===============================================================================
 
-The :type:`arb_t` type is essentially identical semantically to
-the :type:`fmprb_t` type, but uses an internal representation that
-generally allows operation to be performed more efficiently.
+An :type:`arb_t` represents a ball over the real numbers,
+that is, an interval `[m \pm r] \equiv [m-r, m+r]` where the midpoint `m` and the
+radius `r` are (extended) real numbers and `r` is nonnegative (possibly infinite).
+The result of an (approximate) operation done on :type:`arb_t` variables
+is a ball which contains the result of the (mathematically exact) operation
+applied to any choice of points in the input balls.
+In general, the output ball is not the smallest possible.
 
+The precision parameter passed to each function roughly indicates the
+precision to which calculations on the midpoint are carried out
+(operations on the radius are always done using a fixed, small
+precision.)
+
+For arithmetic operations, the precision parameter currently simply
+specifies the precision of the corresponding :type:`arf_t` operation.
+In the future, the arithmetic might be made faster by incorporating
+sloppy rounding (typically equivalent to a loss of 1-2 bits of effective
+working precision) when the result is known to be inexact (while still
+propagating errors rigorously, of course).
+Arithmetic operations done on exact input with exactly
+representable output are always guaranteed to produce exact output.
+
+For more complex operations, the precision parameter indicates a minimum
+working precision (algorithms might allocate extra internal precision to
+attempt to produce an output accurate to the requested number of bits,
+especially when the required precision can be estimated easily, but this
+is not generally required).
+
+If the precision is increased and the inputs either are exact or are
+computed with increased accuracy as well, the output should
+converge proportionally, absent any bugs.
+The general intended strategy for using ball arithmetic is to add a few
+guard bits, and then repeat the calculation as necessary with an
+exponentially increasing number of guard bits (Ziv's strategy) until the
+result is exact
+enough for one's purposes (typically the first attempt will be successful).
+
+The following balls with an infinite or NaN component are permitted,
+and may be returned as output from functions.
+
+* The ball `[+\infty \pm c]`, where `c` is finite, represents the point at positive infinity. Such a ball can always be replaced by `[+\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
+* The ball `[-\infty \pm c]`, where `c` is finite, represents the point at negative infinity. Such a ball can always be replaced by `[-\infty \pm 0]` while preserving mathematical correctness (this is currently not done automatically by the library).
+* The ball `[c \pm \infty]`, where `c` is finite or infinite, represents the whole extended real line `[-\infty,+\infty]`. Such a ball can always be replaced by `[0 \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library). Note that there is no way to represent a half-infinite interval such as `[0,\infty]`.
+* The ball `[\operatorname{NaN} \pm c]`, where `c` is finite or infinite, represents an indeterminate value (the value could be any extended real number, or it could represent a function being evaluated outside its domain of definition, for example where the result would be complex). Such an indeterminate ball can always be replaced by `[\operatorname{NaN} \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library).
+
+The :type:`arb_t` type is almost identical semantically to
+the legacy :type:`fmprb_t` type, but uses a more efficient
+internal representation.
 Whereas the midpoint and radius of an :type:`fmprb_t` both have the
 same type, the :type:`arb_t` type uses an :type:`arf_t` for the midpoint
 and a :type:`mag_t` for the radius.  Code designed to manipulate the
@@ -107,6 +151,48 @@ Assignment and rounding
 
     Sets *y* to the rational number *x*, rounded to *prec* bits.
 
+.. function:: int arb_set_str(arb_t res, const char * inp, long prec)
+
+    Sets *res* to the value specified by the human-readable string *inp*.
+    The input may be a decimal floating-point literal,
+    such as "25", "0.001", "7e+141" or "-31.4159e-1", and may also consist
+    of two such literals separated by the symbol "+/-" and optionally
+    enclosed in brackets, e.g. "[3.25 +/- 0.0001]", or simply
+    "[+/- 10]" with an implicit zero midpoint.
+    The output is rounded to *prec* bits, and if the binary-to-decimal
+    conversion is inexact, the resulting error is added to the radius.
+
+    The symbols "inf" and "nan" are recognized (a nan midpoint results in an
+    indeterminate interval, with infinite radius).
+
+    Returns 0 if successful and nonzero if unsuccessful. If unsuccessful,
+    the result is set to an indeterminate interval.
+
+.. function:: char * arb_get_str(const arb_t x, long n, ulong flags)
+
+    Returns a nice human-readable representation of *x*, with at most *n*
+    digits of the midpoint printed.
+
+    With default flags, the output can be parsed back with :func:`arb_set_str`,
+    and this is guaranteed to produce an interval containing the original
+    interval *x*.
+
+    By default, the output is rounded so that the value given for the
+    midpoint is correct up to 1 ulp (unit in the last decimal place).
+
+    If *ARB_STR_MORE* is added to *flags*, more (possibly incorrect)
+    digits may be printed.
+
+    If *ARB_STR_NO_RADIUS* is added to *flags*, the radius is not
+    included in the output if at least 1 digit of the midpoint
+    can be printed.
+
+    By adding a multiple *m* of *ARB_STR_CONDENSE* to *flags*, strings
+    of more than three times *m* consecutive digits are condensed, only
+    printing the leading and trailing *m* digits along with
+    brackets indicating the number of digits omitted
+    (useful when computing values to extremely high precision).
+
 Assignment of special values
 -------------------------------------------------------------------------------
 
@@ -147,6 +233,13 @@ Input and output
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
+
+.. function:: void arb_printn(const arb_t x, long digits, ulong flags)
+
+    Prints a nice decimal representation of *x*.
+    By default, the output is guaranteed to be correct to within one unit
+    in the last digit. An error bound is also printed explicitly.
+    See :func:`arb_get_str` for details.
 
 Random number generation
 -------------------------------------------------------------------------------
@@ -227,7 +320,7 @@ Radius and interval operations
     Sets *z* to a lower bound for the absolute value of *x*. If *x* contains
     NaN, the result is zero.
 
-.. function:: arb_get_mag_lower_nonnegative(mag_t z, const arb_t x)
+.. function:: void arb_get_mag_lower_nonnegative(mag_t z, const arb_t x)
 
     Sets *z* to a lower bound for the signed value of *x*, or zero
     if *x* overlaps with the negative half-axis. If *x* contains NaN,
@@ -295,6 +388,14 @@ Radius and interval operations
 
     Sets *y* to a ball containing `\lfloor x \rfloor` and `\lceil x \rceil`
     respectively, with the midpoint of *y* rounded to at most *prec* bits.
+
+.. function:: void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n)
+
+    Assuming that *x* is finite and not exactly zero, computes integers *mid*,
+    *rad*, *exp* such that `x \in [m-r, m+r] \times 10^e` and such that the
+    larger out of *mid* and *rad* has at least *n* digits plus a few guard
+    digits. If *x* is infinite or exactly zero, the outputs are all set
+    to zero.
 
 Comparisons
 -------------------------------------------------------------------------------
@@ -548,6 +649,10 @@ Powers and roots
     Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
     At high precision, this is faster than computing a square root.
 
+.. function:: void arb_sqrt1pm1(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \sqrt{1+x}-1`, computed accurately when `x \approx 0`.
+
 .. function:: void arb_root(arb_t z, const arb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
@@ -614,6 +719,10 @@ Exponentials and logarithms
     (for best efficiency, `k_0` should be large and `k_1 - k_0` should
     be small). Otherwise, it ignores `\log(k_0)` and evaluates the logarithm
     the usual way.
+
+.. function:: void arb_log1p(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
 
 .. function:: void arb_exp(arb_t z, const arb_t x, long prec)
 
@@ -739,6 +848,23 @@ Hyperbolic functions
 
     Sets `y = \coth(x) = \cosh(x) / \sinh(x)`, evaluated using
     the same strategy as :func:`arb_tanh`.
+
+Inverse hyperbolic functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_atanh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{atanh}(x)`.
+
+.. function:: void arb_asinh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{asinh}(x)`.
+
+.. function:: void arb_acosh(arb_t z, const arb_t x, long prec)
+
+    Sets `z = \operatorname{acosh}(x)`.
+    If `x < 1`, the result is an indeterminate interval.
+
 
 Constants
 -------------------------------------------------------------------------------
@@ -956,8 +1082,13 @@ Zeta function
 
     Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
 
-    Note: the Hurwitz zeta function is also available, but takes
-    complex arguments (see :func:`acb_hurwitz_zeta`).
+    For computing derivatives with respect to `s`,
+    use :func:`arb_poly_zeta_series`.
+
+.. function:: void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec)
+
+    Sets *z* to the value of the Hurwitz zeta function `\zeta(s,a)`.
+
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 

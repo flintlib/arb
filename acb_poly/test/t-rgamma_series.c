@@ -54,6 +54,8 @@ int main()
         acb_poly_init(d);
 
         acb_poly_randtest(a, state, m, rbits1, 3);
+        acb_poly_randtest(b, state, m, rbits1, 3);
+        acb_poly_randtest(c, state, m, rbits1, 3);
 
         acb_poly_rgamma_series(b, a, n1, rbits2);
         acb_poly_rgamma_series(c, a, n2, rbits3);

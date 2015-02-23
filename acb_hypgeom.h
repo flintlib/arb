@@ -27,6 +27,7 @@
 #define ACB_HYPGEOM_H
 
 #include "acb.h"
+#include "acb_poly.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,6 +51,12 @@ void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, l
 void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
 
+void acb_hypgeom_pfq_series_direct(acb_poly_t res,
+    const acb_poly_struct * a, long p,
+    const acb_poly_struct * b, long q,
+    const acb_poly_t z,
+    long n, long len, long prec, int regularized);
+
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);
 
@@ -66,6 +73,30 @@ void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long pre
 void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec);
 
 void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, long len, long prec);
+
+void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec);
+
+void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
+
+void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec);
+
+void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec);
 
 #ifdef __cplusplus
 }

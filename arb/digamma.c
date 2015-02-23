@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "arb.h"
+#include "arith.h"
 
 void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
     const arb_t x, int use_reflect, int digamma, long prec);
@@ -36,6 +37,43 @@ arb_digamma(arb_t y, const arb_t x, long prec)
     int reflect;
     long r, n, wp;
     arb_t t, u, v;
+
+    if (arb_is_exact(x))
+    {
+        const arf_struct * mid = arb_midref(x);
+
+        if (arf_is_special(mid))
+        {
+            arb_indeterminate(y);
+            return;
+        }
+        else if (arf_is_int(mid))
+        {
+            if (arf_sgn(mid) < 0)
+            {
+                arb_indeterminate(y);
+                return;
+            }
+            else if (arf_cmpabs_ui(mid, 30 + prec / 2) < 0)
+            {
+                fmpq_t h;
+
+                arb_init(t);
+                fmpq_init(h);
+
+                /* should change to fmpq_harmonic_ui when flint upgrades */
+                arith_harmonic_number(h, arf_get_si(mid, ARF_RND_DOWN) - 1);
+                arb_set_fmpq(y, h, prec + 2);
+                arb_const_euler(t, prec + 2);
+                arb_sub(y, y, t, prec);
+
+                arb_clear(t);
+                fmpq_clear(h);
+
+                return;
+            }
+        }
+    }
 
     wp = prec + FLINT_BIT_COUNT(prec);
 

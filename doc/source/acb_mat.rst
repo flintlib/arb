@@ -64,6 +64,13 @@ Conversions
 
     Sets *dest* to *src*. The operands must have identical dimensions.
 
+Random generation
+-------------------------------------------------------------------------------
+
+.. function:: void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
+
+    Sets *mat* to a random matrix with up to *prec* bits of precision
+    and with exponents of width up to *mag_bits*.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -94,6 +101,9 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
 
+.. function:: int acb_mat_is_real(const acb_mat_t mat)
+
+    Returns nonzero iff all entries in *mat* have zero imaginary part.
 
 Special matrices
 -------------------------------------------------------------------------------
@@ -242,6 +252,17 @@ Gaussian elimination and solving
     determinant of the remaining submatrix is bounded using
     Hadamard's inequality.
 
+Characteristic polynomial
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec)
+
+.. function:: void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, long prec)
+
+    Sets *cp* to the characteristic polynomial of *mat* which must be
+    a square matrix. If the matrix has *n* rows, the underscore method
+    requires space for `n + 1` output coefficients.
+    Employs a division-free algorithm using `O(n^4)` operations.
 
 Special functions
 -------------------------------------------------------------------------------

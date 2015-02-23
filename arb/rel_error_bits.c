@@ -28,28 +28,24 @@
 long
 arb_rel_error_bits(const arb_t x)
 {
-    fmpz_t midmag, radmag;
-    arf_t t;
+    fmpz_t t;
     long result;
 
     if (mag_is_zero(arb_radref(x)))
-        return -ARF_PREC_EXACT;
+    {
+        if (arf_is_nan(arb_midref(x)))
+            return ARF_PREC_EXACT;
+        else
+            return -ARF_PREC_EXACT;
+    }
+
     if (arf_is_special(arb_midref(x)) || mag_is_inf(arb_radref(x)))
         return ARF_PREC_EXACT;
 
-    fmpz_init(midmag);
-    fmpz_init(radmag);
-
-    arf_abs_bound_lt_2exp_fmpz(midmag, arb_midref(x));
-
-    arf_init_set_mag_shallow(t, arb_radref(x)); /* no need to free */
-    arf_abs_bound_lt_2exp_fmpz(radmag, t);
-    fmpz_add_ui(radmag, radmag, 1);
-
-    result = _fmpz_sub_small(radmag, midmag);
-
-    fmpz_clear(midmag);
-    fmpz_clear(radmag);
+    fmpz_init(t);
+    fmpz_add_ui(t, MAG_EXPREF(arb_radref(x)), 1);
+    result = _fmpz_sub_small(t, ARF_EXPREF(arb_midref(x)));
+    fmpz_clear(t);
 
     return result;
 }

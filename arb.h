@@ -189,6 +189,17 @@ void arb_neg_round(arb_t x, const arb_t y, long prec);
 
 void arb_abs(arb_t x, const arb_t y);
 
+void _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, long n, arf_rnd_t rnd);
+
+int arb_set_str(arb_t res, const char * inp, long prec);
+
+#define ARB_STR_MORE 1UL
+#define ARB_STR_NO_RADIUS 2UL
+#define ARB_STR_CONDENSE 16UL
+
+char * arb_get_str(const arb_t x, long n, ulong flags);
+
+
 ARB_INLINE void
 arb_set_arf(arb_t x, const arf_t y)
 {
@@ -240,21 +251,11 @@ arb_one(arb_t f)
     arb_set_ui(f, 1UL);
 }
 
-ARB_INLINE void
-arb_print(const arb_t x)
-{
-    arf_print(arb_midref(x));
-    printf(" +/- ");
-    mag_print(arb_radref(x));
-}
+void arb_print(const arb_t x);
 
-ARB_INLINE void
-arb_printd(const arb_t x, long digits)
-{
-    arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
-    printf(" +/- ");
-    mag_printd(arb_radref(x), 5);
-}
+void arb_printd(const arb_t x, long digits);
+
+void arb_printn(const arb_t x, long digits, ulong flags);
 
 ARB_INLINE void
 arb_mul_2exp_si(arb_t y, const arb_t x, long e)
@@ -456,6 +457,8 @@ int arb_contains(const arb_t x, const arb_t y);
 void arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x);
 int arb_get_unique_fmpz(fmpz_t z, const arb_t x);
 
+void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n);
+
 void arb_floor(arb_t z, const arb_t x, long prec);
 void arb_ceil(arb_t z, const arb_t x, long prec);
 
@@ -529,6 +532,7 @@ void arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec);
 
 void arb_rsqrt(arb_t z, const arb_t x, long prec);
 void arb_rsqrt_ui(arb_t z, ulong x, long prec);
+void arb_sqrt1pm1(arb_t r, const arb_t z, long prec);
 
 void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec);
 void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, long prec);
@@ -544,6 +548,7 @@ void arb_log(arb_t z, const arb_t x, long prec);
 void arb_log_arf(arb_t z, const arf_t x, long prec);
 void arb_log_ui(arb_t z, ulong x, long prec);
 void arb_log_fmpz(arb_t z, const fmpz_t x, long prec);
+void arb_log1p(arb_t r, const arb_t z, long prec);
 void arb_exp(arb_t z, const arb_t x, long prec);
 void arb_expm1(arb_t z, const arb_t x, long prec);
 void arb_sin(arb_t s, const arb_t x, long prec);
@@ -572,6 +577,9 @@ void arb_atan(arb_t z, const arb_t x, long prec);
 void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec);
 void arb_asin(arb_t z, const arb_t x, long prec);
 void arb_acos(arb_t z, const arb_t x, long prec);
+void arb_atanh(arb_t z, const arb_t x, long prec);
+void arb_asinh(arb_t z, const arb_t x, long prec);
+void arb_acosh(arb_t z, const arb_t x, long prec);
 void arb_fac_ui(arb_t z, ulong n, long prec);
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec);
 void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec);
@@ -596,6 +604,7 @@ void arb_gamma_fmpz(arb_t z, const fmpz_t x, long prec);
 void arb_digamma(arb_t y, const arb_t x, long prec);
 void arb_zeta(arb_t z, const arb_t s, long prec);
 void arb_zeta_ui(arb_t z, ulong n, long prec);
+void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec);
 void arb_bernoulli_ui(arb_t z, ulong n, long prec);
 
 void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, long prec);
@@ -892,6 +901,16 @@ _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
     long i;
     for (i = 0; i < len; i++)
         arb_trim(res + i, vec + i);
+}
+
+ARB_INLINE int
+_arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        if (!arb_get_unique_fmpz(res + i, vec + i))
+            return 0;
+    return 1;
 }
 
 /* arctangent implementation */

@@ -28,12 +28,6 @@
 
 void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec);
 
-static __inline__ int
-acb_is_int(const acb_t z)
-{
-    return arb_is_zero(acb_imagref(z)) && arb_is_int(acb_realref(z));
-}
-
 void
 _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long d, long prec)
 {

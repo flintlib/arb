@@ -173,6 +173,30 @@ _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec
     acb_struct f[2];
 
     hlen = FLINT_MIN(hlen, len);
+
+    if (hlen == 1)
+    {
+        acb_gamma(res, h, prec);
+        if (acb_is_finite(res))
+            _acb_vec_zero(res + 1, len - 1);
+        else
+            _acb_vec_indeterminate(res + 1, len - 1);
+        return;
+    }
+
+    /* use real code for real input */
+    if (_acb_vec_is_real(h, hlen))
+    {
+        arb_ptr tmp = _arb_vec_init(len);
+        for (i = 0; i < hlen; i++)
+            arb_set(tmp + i, acb_realref(h + i));
+        _arb_poly_gamma_series(tmp, tmp, hlen, len, prec);
+        for (i = 0; i < len; i++)
+            acb_set_arb(res + i, tmp + i);
+        _arb_vec_clear(tmp, len);
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     t = _acb_vec_init(len);
@@ -181,80 +205,73 @@ _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec
     acb_init(f);
     acb_init(f + 1);
 
-    /* TODO: use real code at real numbers */
-    if (0)
-    {
-    }
-    else
-    {
-        /* otherwise use Stirling series */
-        acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
+    /* use Stirling series */
+    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
 
-        /* gamma(h) = (rf(1-h, r) * pi) / (gamma(1-h+r) sin(pi h)), h = h0 + t*/
-        if (reflect)
+    /* gamma(h) = (rf(1-h, r) * pi) / (gamma(1-h+r) sin(pi h)), h = h0 + t*/
+    if (reflect)
+    {
+        /* u = 1/gamma(r+1-h) */
+        acb_sub_ui(f, h, r + 1, wp);
+        acb_neg(f, f);
+        _acb_poly_gamma_stirling_eval(t, f, n, len, wp);
+        _acb_vec_neg(t, t, len);
+        _acb_poly_exp_series(u, t, len, len, wp);
+        for (i = 1; i < len; i += 2)
+            acb_neg(u + i, u + i);
+
+        /* v = 1/sin(pi x) */
+        acb_set(f, h);
+        acb_one(f + 1);
+        _acb_poly_sin_pi_series(t, f, 2, len, wp);
+        _acb_poly_inv_series(v, t, len, len, wp);
+
+        _acb_poly_mullow(t, u, len, v, len, len, wp);
+
+        /* rf(1-h,r) * pi */
+        if (r == 0)
         {
-            /* u = 1/gamma(r+1-h) */
-            acb_sub_ui(f, h, r + 1, wp);
-            acb_neg(f, f);
-            _acb_poly_gamma_stirling_eval(t, f, n, len, wp);
-            _acb_vec_neg(t, t, len);
-            _acb_poly_exp_series(u, t, len, len, wp);
-            for (i = 1; i < len; i += 2)
-                acb_neg(u + i, u + i);
-
-            /* v = 1/sin(pi x) */
-            acb_const_pi(f + 1, wp);
-            acb_mul(f, h, f + 1, wp);
-            _acb_poly_sin_series(t, f, 2, len, wp);
-            _acb_poly_inv_series(v, t, len, len, wp);
-
-            _acb_poly_mullow(t, u, len, v, len, len, wp);
-
-            /* rf(1-h,r) * pi */
-            if (r == 0)
-            {
-                rflen = 1;
-                acb_const_pi(u, wp);
-            }
-            else
-            {
-                acb_sub_ui(f, h, 1, wp);
-                acb_neg(f, f);
-                acb_set_si(f + 1, -1);
-                rflen = FLINT_MIN(len, r + 1);
-                _acb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
-                acb_const_pi(v, wp);
-                _acb_vec_scalar_mul(u, u, rflen, v, wp);
-            }
-
-            /* multiply by rising factorial */
-            _acb_poly_mullow(v, t, len, u, rflen, len, wp);
+            rflen = 1;
+            acb_const_pi(u, wp);
         }
         else
         {
-            /* gamma(h) = gamma(h+r) / rf(h,r) */
-            if (r == 0)
-            {
-                acb_add_ui(f, h, r, wp);
-                _acb_poly_gamma_stirling_eval(t, f, n, len, wp);
-                _acb_poly_exp_series(v, t, len, len, wp);
-            }
-            else
-            {
-                /* TODO: div_series may be better (once it has a good basecase),
-                         if the rising factorial is short */
-                acb_set(f, h);
-                acb_one(f + 1);
-                rflen = FLINT_MIN(len, r + 1);
-                _acb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
-                _acb_poly_inv_series(t, u, rflen, len, wp);
+            acb_sub_ui(f, h, 1, wp);
+            acb_neg(f, f);
+            acb_set_si(f + 1, -1);
+            rflen = FLINT_MIN(len, r + 1);
+            _acb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
+            acb_const_pi(v, wp);
+            _acb_vec_scalar_mul(u, u, rflen, v, wp);
+        }
 
-                acb_add_ui(f, h, r, wp);
-                _acb_poly_gamma_stirling_eval(v, f, n, len, wp);
-                _acb_poly_exp_series(u, v, len, len, wp);
+        /* multiply by rising factorial */
+        _acb_poly_mullow(v, t, len, u, rflen, len, wp);
+    }
+    else
+    {
+        /* gamma(h) = gamma(h+r) / rf(h,r) */
+        if (r == 0)
+        {
+            acb_add_ui(f, h, r, wp);
+            _acb_poly_gamma_stirling_eval(t, f, n, len, wp);
+            _acb_poly_exp_series(v, t, len, len, wp);
+        }
+        else
+        {
+            /* TODO: div_series may be better (once it has a good basecase),
+                     if the rising factorial is short */
+            acb_set(f, h);
+            acb_one(f + 1);
+            rflen = FLINT_MIN(len, r + 1);
+            _acb_poly_rising_ui_series(u, f, FLINT_MIN(2, len), r, rflen, wp);
+            _acb_poly_inv_series(t, u, rflen, len, wp);
 
-                _acb_poly_mullow(v, u, len, t, len, len, wp);
-            }
+            acb_add_ui(f, h, r, wp);
+            _acb_poly_gamma_stirling_eval(v, f, n, len, wp);
+            _acb_poly_exp_series(u, v, len, len, wp);
+
+            _acb_poly_mullow(v, u, len, t, len, len, wp);
         }
     }
 

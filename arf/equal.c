@@ -54,3 +54,11 @@ arf_equal(const arf_t x, const arf_t y)
     return mpn_cmp(ARF_PTR_D(x), ARF_PTR_D(y), n) == 0;
 }
 
+int
+arf_equal_si(const arf_t x, long y)
+{
+    arf_t t;
+    arf_init_set_si(t, y);
+    return arf_equal(x, t); /* no need to free */
+}
+
