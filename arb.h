@@ -658,7 +658,7 @@ void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
                 arb_init(name ## _cached_value); \
                 flint_register_cleanup_function(name ## _cleanup); \
             } \
-            comp_func(name ## _cached_value, prec); \
+            comp_func(name ## _cached_value, prec + 32); \
             name ## _cached_prec = prec; \
         } \
         arb_set_round(x, name ## _cached_value, prec); \
