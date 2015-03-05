@@ -118,6 +118,19 @@ or remove a 1 from the `a_i` parameters if there is one.
     If  `n < 0`, this function chooses a number of terms automatically
     using :func:`acb_hypgeom_pfq_choose_n`.
 
+.. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, long p, const acb_poly_struct * b, long q, const acb_poly_t z, long n, long len, long prec, int regularized)
+
+    Computes `{}_pH_{q}(z)` directly using the defining series, given
+    parameters and argument that are power series.
+    The result is a power series of length *len*.
+
+    An error bound is computed automatically as a function of the number
+    of terms *n*. If `n < 0`, the number of terms is chosen
+    automatically.
+
+    If *regularized* is set, the regularized hypergeometric function
+    is computed instead.
+
 Asymptotic series
 -------------------------------------------------------------------------------
 

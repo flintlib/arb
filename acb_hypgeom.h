@@ -51,6 +51,10 @@ void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, l
 void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
 
+long acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
+                                const acb_poly_struct * b, long q,
+                                const acb_poly_t z, long len, long prec);
+
 void acb_hypgeom_pfq_series_direct(acb_poly_t res,
     const acb_poly_struct * a, long p,
     const acb_poly_struct * b, long q,

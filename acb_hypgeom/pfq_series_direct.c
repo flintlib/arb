@@ -316,14 +316,7 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
     /* default algorithm to choose number of terms */
     if (n < 0)
     {
-        acb_ptr tmp = _acb_vec_init(p + q + 1);
-        for (i = 0; i < p; i++)
-            acb_poly_get_coeff_acb(tmp + i, a + i, 0);
-        for (i = 0; i < q; i++)
-            acb_poly_get_coeff_acb(tmp + p + i, b + i, 0);
-        acb_poly_get_coeff_acb(tmp + p + q, z, 0);
-        n = acb_hypgeom_pfq_choose_n(tmp, p, tmp + p, q, tmp + p + q, prec);
-        _acb_vec_clear(tmp, p + q + 1);
+        n = acb_hypgeom_pfq_series_choose_n(a, p, b, q, z, len, prec);
     }
 
     acb_poly_init(s);
