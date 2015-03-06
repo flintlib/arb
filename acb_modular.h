@@ -171,6 +171,8 @@ void acb_modular_elliptic_k(acb_t k, const acb_t m, long prec);
 
 void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec);
 
+void acb_modular_elliptic_e(acb_t res, const acb_t m, long prec);
+
 #ifdef __cplusplus
 }
 #endif

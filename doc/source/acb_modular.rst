@@ -510,3 +510,9 @@ Elliptic integrals
     complete elliptic integral of the first kind at the point *m* truncated to
     length *len*, i.e. `K(m+x) \in \mathbb{C}[[x]]`.
 
+.. function:: void acb_modular_elliptic_e(acb_t w, const acb_t m, long prec)
+
+    Computes the complete elliptic integral of the second kind `E(m)`,
+    which is given by `E(m) = (1-m)(2m K'(m) + K(m))` (where the prime
+    denotes a derivative, not a complementary integral).
+
