@@ -635,8 +635,7 @@ Powers and roots
 
     Sets *z* to the square root of *x*, assuming that *x* represents a
     nonnegative number (i.e. discarding any negative numbers in the input
-    interval), and producing an output interval not containing any
-    negative numbers (unless the radius is infinite).
+    interval).
 
 .. function:: void arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec)
 
