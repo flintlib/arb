@@ -491,6 +491,29 @@ Comparisons
     by *x* satisfying, respectively, `p = 0`, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
     If *x* contains NaN, returns nonzero.
 
+.. function:: int arb_eq(const arb_t x, const arb_t y)
+
+.. function:: int arb_ne(const arb_t x, const arb_t y)
+
+.. function:: int arb_lt(const arb_t x, const arb_t y)
+
+.. function:: int arb_le(const arb_t x, const arb_t y)
+
+.. function:: int arb_gt(const arb_t x, const arb_t y)
+
+.. function:: int arb_ge(const arb_t x, const arb_t y)
+
+    Respectively performs the comparison `x = y`, `x \ne y`,
+    `x < y`, `x \le y`, `x > y`, `x \ge y` in a mathematically meaningful way.
+    If the comparison `t \, (\operatorname{op}) \, u` holds for all
+    `t \in x` and all `u \in y`, returns 1.
+    Otherwise, returns 0.
+
+    The balls *x* and *y* are viewed as subintervals of the extended real line.
+    Note that balls that are formally different can compare as equal
+    under this definition: for example, `[-\infty \pm 3] = [-\infty \pm 0]`.
+    Also `[-\infty] \le [\infty \pm \infty]`.
+
 Arithmetic
 -------------------------------------------------------------------------------
 

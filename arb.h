@@ -122,6 +122,13 @@ arb_equal(const arb_t x, const arb_t y)
            mag_equal(arb_radref(x), arb_radref(y));
 }
 
+int arb_eq(const arb_t x, const arb_t y);
+int arb_ne(const arb_t x, const arb_t y);
+int arb_lt(const arb_t x, const arb_t y);
+int arb_le(const arb_t x, const arb_t y);
+int arb_gt(const arb_t x, const arb_t y);
+int arb_ge(const arb_t x, const arb_t y);
+
 ARB_INLINE void
 arb_zero(arb_t x)
 {
