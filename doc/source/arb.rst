@@ -514,6 +514,8 @@ Comparisons
     under this definition: for example, `[-\infty \pm 3] = [-\infty \pm 0]`.
     Also `[-\infty] \le [\infty \pm \infty]`.
 
+    The output is always 0 if either input has NaN as midpoint.
+
 Arithmetic
 -------------------------------------------------------------------------------
 
