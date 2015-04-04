@@ -34,6 +34,7 @@ void
 acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
 {
     acb_t A1, A2, B1, B2, s, t, u;
+    int is_real;
 
     acb_init(A1);
     acb_init(A2);
@@ -42,6 +43,9 @@ acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
     acb_init(s);
     acb_init(t);
     acb_init(u);
+
+    is_real = acb_is_real(nu) && acb_is_real(z)
+        && (acb_is_int(nu) || arb_is_positive(acb_realref(z)));
 
     /* s = 1/2 + nu */
     acb_one(s);
@@ -142,6 +146,9 @@ acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
         acb_set(res, A1);
     }
 
+    if (is_real)
+        arb_zero(acb_imagref(res));
+
     acb_clear(A1);
     acb_clear(A2);
     acb_clear(B1);
@@ -156,6 +163,21 @@ acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
 {
     acb_struct b[2];
     acb_t w, c, t;
+
+    if (acb_is_int(nu) && arb_is_negative(acb_realref(nu)))
+    {
+        acb_init(t);
+        acb_neg(t, nu);
+
+        acb_hypgeom_bessel_j_0f1(res, t, z, prec);
+
+        acb_mul_2exp_si(t, t, -1);
+        if (!acb_is_int(t))
+            acb_neg(res, res);
+
+        acb_clear(t);
+        return;
+    }
 
     acb_init(b + 0);
     acb_init(b + 1);
