@@ -77,8 +77,7 @@ int main()
         }
 
         /* check rgamma(a) = a gamma(a+1) */
-        acb_poly_set(d, a);
-        acb_add_ui(d->coeffs, d->coeffs, 1, rbits2);
+        acb_poly_add_si(d, a, 1, rbits2);
         acb_poly_rgamma_series(d, d, n1, rbits2);
         acb_poly_mullow(c, d, a, n1, rbits2);
 
