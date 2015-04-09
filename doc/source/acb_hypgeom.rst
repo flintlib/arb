@@ -223,6 +223,31 @@ in terms of the following auxiliary quantities
     to evaluate `U(a,b,z)` to *prec* accurate bits (assuming that *a* and *b*
     are small).
 
+.. function:: void acb_hypgeom_u_1f1_series(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t z, long len, long prec)
+
+    Computes `U(a,b,z)` as a power series truncated to length *len*,
+    given `a, b, z \in \mathbb{C}[[x]]`.
+    If `b \in \mathbb{Z}`, it computes one extra derivative and removes
+    the singularity. 
+    As currently implemented, the output is indeterminate if `b` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+
+    Computes `U(a,b,z)` as a sum of two convergent hypergeometric series.
+    If `b \in \mathbb{Z}`, it computes
+    the limit value via :func:`acb_hypgeom_u_1f1_series`.
+    As currently implemented, the output is indeterminate if `b` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+
+    Computes `U(a,b,z)` using an automatic algorithm choice. The
+    function :func:`acb_hypgeom_u_asymp` is used
+    if `a` or `a-b+1` is a nonpositive integer (in which
+    case the asymptotic series terminates), or if *z* is sufficiently large.
+    Otherwise :func:`acb_hypgeom_u_1f1` is used.
+
 The error function
 -------------------------------------------------------------------------------
 

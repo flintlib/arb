@@ -67,7 +67,7 @@ acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
 
     if (arb_is_zero(acb_realref(z)))
     {
-        /* the function is real */
+        /* the function is imaginary */
         arb_zero(acb_realref(t));
     }
     else if (arb_is_positive(acb_realref(z)))

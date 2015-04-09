@@ -64,44 +64,38 @@ void acb_hypgeom_pfq_series_direct(acb_poly_t res,
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);
 
+void acb_hypgeom_u_1f1_series(acb_poly_t res,
+    const acb_poly_t a, const acb_poly_t b, const acb_poly_t z,
+    long len, long prec);
+
+void acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec);
+void acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec);
+
 int acb_hypgeom_u_use_asymp(const acb_t z, long prec);
 
 void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec);
-
 void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec);
-
 void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2);
-
 void acb_hypgeom_erf(acb_t res, const acb_t z, long prec);
 
 void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec);
-
 void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec);
-
 void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec);
 
 void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec);
-
 void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, long len, long prec);
-
 void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec);
-
 void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec);
 
 void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
-
 void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
-
 void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
-
 void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec);
-
 void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec);
 
 void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec);
 
 void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec);
-
 void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec);
 
 void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec);
