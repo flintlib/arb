@@ -64,6 +64,8 @@ void acb_hypgeom_pfq_series_direct(acb_poly_t res,
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);
 
+int acb_hypgeom_u_use_asymp(const acb_t z, long prec);
+
 void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec);
 
 void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec);
@@ -101,6 +103,24 @@ void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec);
 void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec);
 
 void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_ei(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_si_1f2(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_si(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_ci(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_shi(acb_t res, const acb_t z, long prec);
+
+void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec);
+void acb_hypgeom_chi(acb_t res, const acb_t z, long prec);
 
 #ifdef __cplusplus
 }

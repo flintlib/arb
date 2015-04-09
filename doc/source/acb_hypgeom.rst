@@ -217,6 +217,12 @@ in terms of the following auxiliary quantities
     with a rigorous bound for the error included in the output.
     We require `n \ge 0`.
 
+.. function:: int acb_hypgeom_u_use_asymp(const acb_t z, long prec)
+
+    Heuristically determines whether the asymptotic series can be used
+    to evaluate `U(a,b,z)` to *prec* accurate bits (assuming that *a* and *b*
+    are small).
+
 The error function
 -------------------------------------------------------------------------------
 
@@ -393,8 +399,99 @@ Incomplete gamma functions
     If *modified* is set, computes the exponential integral
     `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead.
 
+Exponential and trigonometric integrals
+-------------------------------------------------------------------------------
+
+The branch cut conventions of the following functions match Mathematica.
+
 .. function:: void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec)
 
-    Computes the exponential integral `E_s(z)`. This is a trivial wrapper
-    of :func:`acb_hypgeom_gamma_upper`.
+    Computes the generalized exponential integral `E_s(z)`. This is a
+    trivial wrapper of :func:`acb_hypgeom_gamma_upper`.
+
+.. function:: void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_ei(acb_t res, const acb_t z, long prec)
+
+    Computes the exponential integral `\operatorname{Ei}(z)`, respectively
+    using
+
+    .. math ::
+
+        \operatorname{Ei}(z) = -e^z U(1,1,-z) - \log(-z)
+            + \frac{1}{2} \left(\log(z) - \log\left(\frac{1}{z}\right) \right)
+
+        \operatorname{Ei}(z) = z {}_2F_2(1, 1; 2, 2; z) + \gamma
+            + \frac{1}{2} \left(\log(z) - \log\left(\frac{1}{z}\right) \right)
+
+    and an algorithmic algorithm choice.
+
+.. function:: void acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_si_1f2(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_si(acb_t res, const acb_t z, long prec)
+
+    Computes the sine integral `\operatorname{Si}(z)`, respectively
+    using
+
+    .. math ::
+
+        \operatorname{Si}(z) = \frac{i}{2} \left[
+            e^{iz} U(1,1,-iz) - e^{-iz} U(1,1,iz) + 
+            \log(-iz) - \log(iz) \right]
+
+        \operatorname{Si}(z) = z {}_1F_2(\tfrac{1}{2}; \tfrac{3}{2}, \tfrac{3}{2}; -\tfrac{z^2}{4})
+
+    and an algorithmic algorithm choice.
+
+.. function:: void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_ci(acb_t res, const acb_t z, long prec)
+
+    Computes the cosine integral `\operatorname{Ci}(z)`, respectively
+    using
+
+    .. math ::
+
+        \operatorname{Ci}(z) = \log(z) - \frac{1}{2} \left[
+            e^{iz} U(1,1,-iz) + e^{-iz} U(1,1,iz) + 
+            \log(-iz) + \log(iz) \right]
+
+        \operatorname{Ci}(z) = -\tfrac{z^2}{4}
+            {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; -\tfrac{z^2}{4})
+            + \log(z) + \gamma
+
+    and an algorithmic algorithm choice.
+
+.. function:: void acb_hypgeom_shi(acb_t res, const acb_t z, long prec)
+
+    Computes the hyperbolic sine integral
+    `\operatorname{Shi}(z) = -i \operatorname{Si}(iz)`.
+    This is a trivial wrapper of :func:`acb_hypgeom_si`.
+
+.. function:: void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_chi(acb_t res, const acb_t z, long prec)
+
+    Computes the hyperbolic cosine integral `\operatorname{Chi}(z)`, respectively
+    using
+
+    .. math ::
+
+        \operatorname{Chi}(z) = -\frac{1}{2} \left[
+            e^{z} U(1,1,-z) + e^{-z} U(1,1,z) + 
+            \log(-z) - \log(z) \right]
+
+        \operatorname{Chi}(z) = \tfrac{z^2}{4}
+            {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; \tfrac{z^2}{4})
+            + \log(z) + \gamma
+
+    and an algorithmic algorithm choice.
 

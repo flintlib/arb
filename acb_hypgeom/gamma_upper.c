@@ -231,29 +231,6 @@ acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified,
     acb_clear(b + 1);
 }
 
-static int
-use_asymptotic(const acb_t z, long prec)
-{
-    double x, y;
-
-    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 0) < 0 &&
-         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) < 0))
-    {
-        return 0;
-    }
-
-    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 0) > 64 ||
-         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) > 64))
-    {
-        return 1;
-    }
-
-    x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
-    y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
-
-    return sqrt(x * x + y * y) > prec * 0.69314718055994530942;
-}
-
 void
 acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
 {
@@ -330,7 +307,7 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, l
             return;
         }
 
-        if (use_asymptotic(z, prec))
+        if (acb_hypgeom_u_use_asymp(z, prec))
         {
             acb_hypgeom_gamma_upper_asymp(res, s, z, modified, prec);
             return;
