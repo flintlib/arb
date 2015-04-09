@@ -426,7 +426,7 @@ The branch cut conventions of the following functions match Mathematica.
         \operatorname{Ei}(z) = z {}_2F_2(1, 1; 2, 2; z) + \gamma
             + \frac{1}{2} \left(\log(z) - \log\left(\frac{1}{z}\right) \right)
 
-    and an algorithmic algorithm choice.
+    and an automatic algorithm choice.
 
 .. function:: void acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
 
@@ -445,7 +445,7 @@ The branch cut conventions of the following functions match Mathematica.
 
         \operatorname{Si}(z) = z {}_1F_2(\tfrac{1}{2}; \tfrac{3}{2}, \tfrac{3}{2}; -\tfrac{z^2}{4})
 
-    and an algorithmic algorithm choice.
+    and an automatic algorithm choice.
 
 .. function:: void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, long prec)
 
@@ -466,7 +466,7 @@ The branch cut conventions of the following functions match Mathematica.
             {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; -\tfrac{z^2}{4})
             + \log(z) + \gamma
 
-    and an algorithmic algorithm choice.
+    and an automatic algorithm choice.
 
 .. function:: void acb_hypgeom_shi(acb_t res, const acb_t z, long prec)
 
@@ -493,5 +493,5 @@ The branch cut conventions of the following functions match Mathematica.
             {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; \tfrac{z^2}{4})
             + \log(z) + \gamma
 
-    and an algorithmic algorithm choice.
+    and an automatic algorithm choice.
 
