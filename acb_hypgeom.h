@@ -116,6 +116,8 @@ void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec);
 void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec);
 void acb_hypgeom_chi(acb_t res, const acb_t z, long prec);
 
+void acb_hypgeom_li(acb_t res, const acb_t z, int offset, long prec);
+
 #ifdef __cplusplus
 }
 #endif

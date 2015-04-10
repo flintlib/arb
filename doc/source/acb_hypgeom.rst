@@ -520,3 +520,11 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
+.. function:: void acb_hypgeom_li(acb_t res, const acb_t z, int offset, long prec)
+
+    If *offset* is zero, computes the logarithmic integral
+    `\operatorname{li}(z) = \operatorname{Ei}(\log(z))`.
+
+    If *offset* is nonzero, computes the offset logarithmic integral
+    `\operatorname{Li}(z) = \operatorname{li}(z) - \operatorname{li}(2)`.
+
