@@ -50,7 +50,7 @@ _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s,
     if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(s)), 10) > 0)
         limit = ULONG_MAX / 4;
     else
-        limit = 100 * prec;  /* but normally, fail more quickly */
+        limit = 100 * target;  /* but normally, fail more quickly */
 
     _acb_poly_zeta_em_bound1(Bbound, s, a, B, choose_M(B, target), d, prec);
 
