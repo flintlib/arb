@@ -166,7 +166,21 @@ ACB_INLINE int
 acb_equal(const acb_t x, const acb_t y)
 {
     return arb_equal(acb_realref(x), acb_realref(y)) &&
-            arb_equal(acb_imagref(x), acb_imagref(y));
+           arb_equal(acb_imagref(x), acb_imagref(y));
+}
+
+ACB_INLINE int
+acb_eq(const acb_t x, const acb_t y)
+{
+    return arb_eq(acb_realref(x), acb_realref(y)) &&
+           arb_eq(acb_imagref(x), acb_imagref(y));
+}
+
+ACB_INLINE int
+acb_ne(const acb_t x, const acb_t y)
+{
+    return arb_ne(acb_realref(x), acb_realref(y)) ||
+           arb_ne(acb_imagref(x), acb_imagref(y));
 }
 
 ACB_INLINE int

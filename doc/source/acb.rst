@@ -48,7 +48,7 @@ Types, macros and constants
 
     Macro returning a pointer to the real part of *x* as an *arb_t*.
 
-.. macro:: arb_imagref(x)
+.. macro:: acb_imagref(x)
 
     Macro returning a pointer to the imaginary part of *x* as an *arb_t*.
 
@@ -170,6 +170,17 @@ Precision and comparisons
     To test whether both operands *might* represent the same mathematical
     quantity, use :func:`acb_overlaps` or :func:`acb_contains`,
     depending on the circumstance.
+
+.. function:: int acb_eq(const acb_t x, const acb_t y)
+
+    Returns nonzero iff *x* and *y* are certainly equal, as determined
+    by testing that :func:`arb_eq` holds for both the real and imaginary
+    parts.
+
+.. function:: int acb_ne(const acb_t x, const acb_t y)
+
+    Returns nonzero iff *x* and *y* are certainly not equal, as determined
+    by testing that :func:`arb_ne` holds for either the real or imaginary parts.
 
 .. function:: int acb_overlaps(const acb_t x, const acb_t y)
 
