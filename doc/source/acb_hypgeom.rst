@@ -223,12 +223,15 @@ in terms of the following auxiliary quantities
     to evaluate `U(a,b,z)` to *prec* accurate bits (assuming that *a* and *b*
     are small).
 
+Confluent hypergeometric functions
+-------------------------------------------------------------------------------
+
 .. function:: void acb_hypgeom_u_1f1_series(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t z, long len, long prec)
 
     Computes `U(a,b,z)` as a power series truncated to length *len*,
     given `a, b, z \in \mathbb{C}[[x]]`.
-    If `b \in \mathbb{Z}`, it computes one extra derivative and removes
-    the singularity. 
+    If `b[0] \in \mathbb{Z}`, it computes one extra derivative and removes
+    the singularity (it is then assumed that `b[1] \ne 0`).
     As currently implemented, the output is indeterminate if `b` is nonexact
     and contains an integer.
 
@@ -342,7 +345,7 @@ Modified Bessel functions
         K_{\nu}(z) = \left(\frac{\pi}{2z}\right)^{1/2} e^{-z}
             U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
 
-.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, long len, long prec)
+.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, long len, long prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)`
     as a power series truncated to length *len*,
@@ -358,9 +361,9 @@ Modified Bessel functions
                          {}_0{\widetilde F}_1\left(1+\nu, \frac{z^2}{4}\right)
                     \right].
 
-    If `\nu \in \mathbb{Z}`, it computes one extra derivative and removes
-    the singularity. 
-    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    If `\nu[0] \in \mathbb{Z}`, it computes one extra derivative and removes
+    the singularity (it is then assumed that `\nu[1] \ne 0`).
+    As currently implemented, the output is indeterminate if `\nu[0]` is nonexact
     and contains an integer.
 
 .. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
