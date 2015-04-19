@@ -58,7 +58,10 @@ arf_get_mag_lower(mag_t y, const arf_t x)
     }
     else if (arf_is_special(x))
     {
-        mag_inf(y);
+        if (arf_is_nan(x))
+            mag_zero(y);
+        else
+            mag_inf(y);
     }
     else
     {
