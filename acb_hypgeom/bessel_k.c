@@ -95,12 +95,12 @@ acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
 
     acb_poly_one(b + 1);
     acb_poly_add_si(b + 0, nu, 1, prec);
-    acb_hypgeom_pfq_series_direct(s, NULL, 0, b, 2, u, -1, wlen, prec, 1);
+    acb_hypgeom_pfq_series_direct(s, NULL, 0, b, 2, u, 1, -1, wlen, prec);
     acb_poly_mullow(A, A, s, wlen, prec);
 
     acb_poly_add_si(b + 0, nu, -1, prec);
     acb_poly_neg(b + 0, b + 0);
-    acb_hypgeom_pfq_series_direct(s, NULL, 0, b, 2, u, -1, wlen, prec, 1);
+    acb_hypgeom_pfq_series_direct(s, NULL, 0, b, 2, u, 1, -1, wlen, prec);
     acb_poly_mullow(B, B, s, wlen, prec);
 
     acb_poly_sub(A, B, A, prec);
