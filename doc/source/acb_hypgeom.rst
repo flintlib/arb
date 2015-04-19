@@ -251,6 +251,17 @@ Confluent hypergeometric functions
     case the asymptotic series terminates), or if *z* is sufficiently large.
     Otherwise :func:`acb_hypgeom_u_1f1` is used.
 
+.. function:: void acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+
+.. function:: void acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+
+.. function:: void acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+
+    Computes the confluent hypergeometric function
+    `M(a,b,z) = {}_1F_1(a,b,z)`, or
+    `\mathbf{M}(a,b,z) = \frac{1}{\Gamma(b)} {}_1F_1(a,b,z)` if *regularized*
+    is set.
+
 The error function
 -------------------------------------------------------------------------------
 

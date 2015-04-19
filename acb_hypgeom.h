@@ -73,6 +73,10 @@ void acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, long 
 
 int acb_hypgeom_u_use_asymp(const acb_t z, long prec);
 
+void acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec);
+void acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec);
+void acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec);
+
 void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec);
 void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec);
 void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2);
