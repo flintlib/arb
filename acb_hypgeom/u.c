@@ -57,14 +57,14 @@ acb_hypgeom_u_1f1_series(acb_poly_t res,
     acb_poly_set(aa, a);
     acb_poly_set(aa + 1, b);
     acb_poly_one(aa + 2);
-    acb_hypgeom_pfq_series_direct(s, aa, 1, aa + 1, 2, z, -1, wlen, prec, 1);
+    acb_hypgeom_pfq_series_direct(s, aa, 1, aa + 1, 2, z, 1, -1, wlen, prec);
     acb_poly_mullow(A, A, s, wlen, prec);
 
     /* B = rgamma(a) * 1F~1(a-b+1,2-b,z) * z^(1-b) */
     acb_poly_set(aa, u);
     acb_poly_add_si(aa + 1, b, -2, prec);
     acb_poly_neg(aa + 1, aa + 1);
-    acb_hypgeom_pfq_series_direct(s, aa, 1, aa + 1, 2, z, -1, wlen, prec, 1);
+    acb_hypgeom_pfq_series_direct(s, aa, 1, aa + 1, 2, z, 1, -1, wlen, prec);
     acb_poly_rgamma_series(B, a, wlen, prec);
     acb_poly_mullow(B, B, s, wlen, prec);
 

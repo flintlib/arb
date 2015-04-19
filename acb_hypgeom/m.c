@@ -162,7 +162,7 @@ acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regula
     }
 
     /* terminating */
-    if (m <= 0 && m < n && m > -10 * prec)
+    if (m <= 0 && m < n && m > -10 * prec && (n > 0 || !regularized))
     {
         acb_hypgeom_m_1f1(res, a, b, z, regularized, prec);
         return;
@@ -199,9 +199,8 @@ acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regula
         acb_rising_ui(u, a, 1 - n, prec);
         acb_mul(t, t, u, prec);
 
-        acb_set_ui(u, 1 - n);
-        acb_rgamma(u, u, prec);
-        acb_mul(res, t, u, prec);
+        arb_fac_ui(acb_realref(u), 1 - n, prec);
+        acb_div_arb(res, t, acb_realref(u), prec);
 
         acb_clear(c);
         acb_clear(d);

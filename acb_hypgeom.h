@@ -58,8 +58,8 @@ long acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
 void acb_hypgeom_pfq_series_direct(acb_poly_t res,
     const acb_poly_struct * a, long p,
     const acb_poly_struct * b, long q,
-    const acb_poly_t z,
-    long n, long len, long prec, int regularized);
+    const acb_poly_t z, int regularized,
+    long n, long len, long prec);
 
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, long n, long prec);

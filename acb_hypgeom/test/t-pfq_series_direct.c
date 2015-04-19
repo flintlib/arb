@@ -78,8 +78,8 @@ int main()
         for (i = 0; i < q; i++)
             acb_poly_randtest(b + i, state, 1 + n_randint(state, 10), 1 + n_randint(state, 500), 3);
 
-        acb_hypgeom_pfq_series_direct(s1, a, p, b, q, z, n1, len1, prec1, regularized);
-        acb_hypgeom_pfq_series_direct(s2, a, p, b, q, z, n2, len2, prec2, regularized);
+        acb_hypgeom_pfq_series_direct(s1, a, p, b, q, z, regularized, n1, len1, prec1);
+        acb_hypgeom_pfq_series_direct(s2, a, p, b, q, z, regularized, n2, len2, prec2);
 
         acb_poly_truncate(s1, FLINT_MIN(len1, len2));
         acb_poly_truncate(s2, FLINT_MIN(len1, len2));

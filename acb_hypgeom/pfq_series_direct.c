@@ -164,8 +164,8 @@ void
 acb_hypgeom_pfq_series_sum_forward(acb_poly_t s, acb_poly_t t,
     const acb_poly_struct * a, long p,
     const acb_poly_struct * b, long q,
-    const acb_poly_t z,
-    long n, long len, long prec, int regularized)
+    const acb_poly_t z, int regularized,
+    long n, long len, long prec)
 {
     acb_poly_t u, v;
     acb_poly_t tmp;
@@ -305,8 +305,8 @@ void
 acb_hypgeom_pfq_series_direct(acb_poly_t res,
     const acb_poly_struct * a, long p,
     const acb_poly_struct * b, long q,
-    const acb_poly_t z,
-    long n, long len, long prec, int regularized)
+    const acb_poly_t z, int regularized,
+    long n, long len, long prec)
 {
     acb_poly_t s, t, err;
     arb_poly_t C, T;
@@ -325,7 +325,7 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
     arb_poly_init(C);
     arb_poly_init(T);
 
-    acb_hypgeom_pfq_series_sum_forward(s, t, a, p, b, q, z, n, len, prec, regularized);
+    acb_hypgeom_pfq_series_sum_forward(s, t, a, p, b, q, z, regularized, n, len, prec);
 
     if (acb_poly_length(t) != 0)
     {

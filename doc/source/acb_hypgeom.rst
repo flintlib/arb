@@ -118,7 +118,7 @@ or remove a 1 from the `a_i` parameters if there is one.
     If  `n < 0`, this function chooses a number of terms automatically
     using :func:`acb_hypgeom_pfq_choose_n`.
 
-.. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, long p, const acb_poly_struct * b, long q, const acb_poly_t z, long n, long len, long prec, int regularized)
+.. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, long p, const acb_poly_struct * b, long q, const acb_poly_t z, int regularized, long n, long len, long prec)
 
     Computes `{}_pH_{q}(z)` directly using the defining series, given
     parameters and argument that are power series.
