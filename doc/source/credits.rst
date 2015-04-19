@@ -33,6 +33,7 @@ The following people (among others) have contributed patches or bug reports.
 * Clemens Heuberger
 * Pascal Molin
 * Ricky Farr
+* Marcello Seri
 
 Software 
 -------------------------------------------------------------------------------

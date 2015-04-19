@@ -25,5 +25,5 @@
 
 #include "arb.h"
 
-const char * arb_version = "2.5.0";
+const char * arb_version = "2.6.0";
 

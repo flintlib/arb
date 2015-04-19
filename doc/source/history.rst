@@ -6,6 +6,44 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2015-04-19 - version 2.6.0
+
+  * special functions
+
+    * added the Bessel K function
+    * added the confluent hypergeometric functions M and U
+    * added exponential, trigonometric and logarithmic integrals ei, si, shi, ci, chi, li
+    * added the complete elliptic integral of the second kind E
+    * added support for computing hypergeometric functions with power series as parameters
+    * fixed special cases in Bessel J function returning useless output
+    * fix precision of zeta function accidentally being capped at 7000 digits (bug in 2.5)
+    * special-cased real input in the gamma functions for complex types
+    * fixed exp of huge numbers outputting unnecessarily useless intervals
+    * fixed broken code in erf that sometimes gave useless output
+    * made selection of number of terms in hypergeometric series more robust
+
+  * polynomials and power series
+
+    * added sin_pi, cos_pi and sin_cos_pi for real and complex power series
+    * speeded up series reciprocal and division for length = 2
+    * added add_si methods for polynomials
+    * made inv_series and div_series with zero input produce indeterminates instead of aborting
+    * added arb_poly_majorant, acb_poly_majorant
+
+  * basic functions
+
+    * added comparison methods arb_eq, arb_ne, arb_lt, arb_le, arb_gt, arb_ge, acb_eq, acb_ne
+    * added acb_rel_accuracy_bits and improved the real version
+    * fixed precision of constants like pi behaving more nondeterministically than necessary
+    * fixed arf_get_mag_lower(nan) to output 0 instead of inf
+
+  * other
+
+    * removed call to fmpq_dedekind_sum which only exists in the git version of flint
+    * fixed a test code bug that could cause crashes on some systems
+    * added fix for static build on OS X (thanks Marcello Seri)
+    * miscellaneous corrections to the documentation
+
 * 2015-01-28 - version 2.5.0
 
   * string conversion
