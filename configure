@@ -414,7 +414,8 @@ if [ -z "$ARB_LIB" ]; then
       CYGWIN* | MINGW*)
          ARB_LIB="libarb.dll";;
       *)
-         ARB_LIB="libarb.so";;
+         ARB_LIB="libarb.so"
+         EXTRA_SHARED_FLAGS="-Wl,-rpath,$GMP_LIB_DIR -Wl,-rpath,$MPFR_LIB_DIR -Wl,-rpath,$FLINT_LIB_DIR";;
    esac
 fi
 
