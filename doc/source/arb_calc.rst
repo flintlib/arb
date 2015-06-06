@@ -71,7 +71,7 @@ Subdivision-based root finding
 
 .. type:: arf_interval_struct
 
-.. type:: arf_interval_interval_t
+.. type:: arf_interval_t
 
     An :type:`arf_interval_struct` consists of a pair of :type:`arf_struct`,
     representing an interval used for subdivision-based root-finding.
