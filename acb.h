@@ -848,6 +848,8 @@ void acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits)
 
 void acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
+void acb_randtest_param(acb_t z, flint_rand_t state, long prec, long mag_bits);
+
 long acb_rel_error_bits(const acb_t x);
 
 ARB_INLINE long

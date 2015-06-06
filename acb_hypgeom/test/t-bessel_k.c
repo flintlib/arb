@@ -25,25 +25,6 @@
 
 #include "acb_hypgeom.h"
 
-void
-acb_randtest_maybe_half_int(acb_t x, flint_rand_t state, long prec, long size)
-{
-    if (n_randint(state, 8) == 0)
-    {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_randtest(t, state, 1 + n_randint(state, prec));
-        arb_set_fmpz(acb_realref(x), t);
-        arb_zero(acb_imagref(x));
-        acb_mul_2exp_si(x, x, -1);
-        fmpz_clear(t);
-    }
-    else
-    {
-        acb_randtest(x, state, prec, size);
-    }
-}
-
 int main()
 {
     long iter;
@@ -73,7 +54,7 @@ int main()
         prec1 = 2 + n_randint(state, 700);
         prec2 = 2 + n_randint(state, 700);
 
-        acb_randtest_maybe_half_int(nu0, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
+        acb_randtest_param(nu0, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(w0, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(w1, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));

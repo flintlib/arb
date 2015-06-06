@@ -156,6 +156,11 @@ Random number generation
 
     Generates a random complex number with precise real and imaginary parts.
 
+.. function:: void acb_randtest_param(acb_t z, flint_rand_t state, long prec, long mag_bits)
+
+    Generates a random complex number, with very high probability of
+    generating integers and half-integers.
+
 Precision and comparisons
 -------------------------------------------------------------------------------
 
