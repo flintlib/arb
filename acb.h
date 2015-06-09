@@ -613,6 +613,7 @@ void acb_atan(acb_t r, const acb_t z, long prec);
 
 void acb_exp(acb_t r, const acb_t z, long prec);
 void acb_exp_pi_i(acb_t r, const acb_t z, long prec);
+void acb_exp_invexp(acb_t r, acb_t s, const acb_t z, long prec);
 
 void acb_sin(acb_t r, const acb_t z, long prec);
 void acb_cos(acb_t r, const acb_t z, long prec);

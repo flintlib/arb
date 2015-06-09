@@ -758,6 +758,12 @@ Exponentials and logarithms
 
     Sets `z = \exp(x)-1`, computed accurately when `x \approx 0`.
 
+.. function:: void arb_exp_invexp(arb_t z, arb_t w, const arb_t x, long prec)
+
+    Sets `z = \exp(x)` and `w = \exp(-x)`. The second exponential is computed
+    from the first using a division, but propagated error bounds are
+    computed separately.
+
 Trigonometric functions
 -------------------------------------------------------------------------------
 

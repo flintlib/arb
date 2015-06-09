@@ -405,6 +405,10 @@ Elementary functions
 
     Sets *y* to `\exp(\pi i z)`.
 
+.. function:: void acb_exp_invexp(acb_t s, acb_t t, const acb_t z, long prec)
+
+    Sets `v = \exp(z)` and `w = \exp(-z)`.
+
 .. function:: void acb_sin(acb_t s, const acb_t z, long prec)
 
 .. function:: void acb_cos(acb_t c, const acb_t z, long prec)

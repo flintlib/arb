@@ -48,8 +48,7 @@ arb_sinh(arb_t s, const arb_t x, long prec)
         }
         else
         {
-            arb_exp(s, x, wp);
-            arb_inv(t, s, wp);
+            arb_exp_invexp(s, t, x, wp);
             arb_sub(s, s, t, prec);
         }
 
@@ -72,8 +71,7 @@ arb_cosh(arb_t c, const arb_t x, long prec)
 
         arb_init(t);
 
-        arb_exp(c, x, wp);
-        arb_inv(t, c, wp);
+        arb_exp_invexp(c, t, x, wp);
         arb_add(c, c, t, prec);
         arb_mul_2exp_si(c, c, -1);
 
@@ -106,8 +104,7 @@ arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
         }
         else
         {
-            arb_exp(c, x, wp);
-            arb_inv(t, c, wp);
+            arb_exp_invexp(c, t, x, wp);
             arb_sub(s, c, t, prec);
             arb_add(c, c, t, prec);
         }

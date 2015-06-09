@@ -466,3 +466,56 @@ arb_expm1(arb_t z, const arb_t x, long prec)
     }
 }
 
+void
+arb_exp_invexp(arb_t z, arb_t w, const arb_t x, long prec)
+{
+    if (arb_is_exact(x))
+    {
+        arb_exp_arf(z, arb_midref(x), prec, 0);
+        arb_inv(w, z, prec);
+    }
+    else
+    {
+        /* exp(a+b) - exp(a) = exp(a) * (exp(b)-1) */
+        if (mag_cmp_2exp_si(arb_radref(x), 20) < 0 || !arb_is_finite(x))
+        {
+            mag_t t, u;
+
+            mag_init_set(t, arb_radref(x));
+            mag_init(u);
+
+            arb_exp_arf(z, arb_midref(x), prec, 0);
+            arb_inv(w, z, prec);
+
+            mag_expm1(t, t);
+
+            arb_get_mag(u, z);
+            mag_addmul(arb_radref(z), t, u);
+            arb_get_mag(u, w);
+            mag_addmul(arb_radref(w), t, u);
+
+            mag_clear(t);
+            mag_clear(u);
+        }
+        else
+        {
+            /* [+/- exp(a+b)], allowing extended exponent range */
+            arf_t t;
+            arf_init(t);
+            arf_set_mag(t, arb_radref(x));
+
+            arf_add(t, arb_midref(x), t, MAG_BITS, ARF_RND_CEIL);
+            arb_exp_arf(z, t, prec, 0);
+            arb_inv(w, z, prec);
+
+            arb_get_mag(arb_radref(z), z);
+            arf_zero(arb_midref(z));
+
+            arb_get_mag(arb_radref(w), w);
+            arf_zero(arb_midref(w));
+
+            arf_clear(t);
+        }
+    }
+}
+
