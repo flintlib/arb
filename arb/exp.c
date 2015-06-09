@@ -499,22 +499,12 @@ arb_exp_invexp(arb_t z, arb_t w, const arb_t x, long prec)
         }
         else
         {
-            /* [+/- exp(a+b)], allowing extended exponent range */
-            arf_t t;
-            arf_init(t);
-            arf_set_mag(t, arb_radref(x));
-
-            arf_add(t, arb_midref(x), t, MAG_BITS, ARF_RND_CEIL);
-            arb_exp_arf(z, t, prec, 0);
-            arb_inv(w, z, prec);
-
-            arb_get_mag(arb_radref(z), z);
-            arf_zero(arb_midref(z));
-
-            arb_get_mag(arb_radref(w), w);
-            arf_zero(arb_midref(w));
-
-            arf_clear(t);
+            arb_t v;
+            arb_init(v);
+            arb_neg(v, x);
+            arb_exp(z, x, prec);
+            arb_exp(w, v, prec);
+            arb_clear(v);
         }
     }
 }
