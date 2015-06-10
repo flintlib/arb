@@ -60,6 +60,9 @@ int main()
         acb_randtest(w1, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(w2, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
 
+        if (n_randint(state, 4) == 0)
+            arb_zero(acb_imagref(z));
+
         acb_sub_ui(nu1, nu0, 1, prec0);
         acb_sub_ui(nu2, nu0, 2, prec0);
 

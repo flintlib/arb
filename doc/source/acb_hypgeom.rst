@@ -353,7 +353,7 @@ Modified Bessel functions
 
     .. math ::
 
-        K_{\nu}(z) = \left(\frac{\pi}{2z}\right)^{1/2} e^{-z}
+        K_{\nu}(z) = \left(\frac{2z}{\pi}\right)^{-1/2} e^{-z}
             U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
 
 .. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, long len, long prec)

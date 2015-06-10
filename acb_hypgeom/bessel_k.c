@@ -50,12 +50,12 @@ acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
     acb_exp(w, w, prec);    
     acb_mul(t, t, w, prec);
 
-    acb_const_pi(w, prec);
-    acb_div(w, w, z, prec);
-    acb_mul_2exp_si(w, w, -1);
-    acb_sqrt(w, w, prec);
-
+    acb_mul_2exp_si(w, z, 1);
+    acb_rsqrt(w, w, prec);
     acb_mul(res, t, w, prec);
+
+    arb_const_sqrt_pi(acb_realref(w), prec);
+    acb_mul_arb(res, res, acb_realref(w), prec);
 
     acb_clear(t);
     acb_clear(a);
