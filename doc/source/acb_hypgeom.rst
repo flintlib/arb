@@ -343,8 +343,43 @@ Bessel functions
     Computes the Bessel function of the first kind `J_{\nu}(z)` using
     an automatic algorithm choice.
 
-Modified Bessel functions
--------------------------------------------------------------------------------
+.. function:: void acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the Bessel function of the second kind `Y_{\nu}(z)` from the
+    formula
+
+    .. math ::
+
+        Y_{\nu}(z) = \frac{\cos(\nu \pi) J_{\nu}(z) - J_{\nu}(z)}{\sin(\nu \pi)}
+
+    unless `\nu = n` is an integer in which case the limit value
+
+    .. math ::
+
+        Y_n(z) = -\frac{2}{\pi} \left( i^n K_n(iz) +
+            \left[\log(iz)-\log(z)\right] J_n(z) \right)
+
+    is computed.
+    As currently implemented, the output is indeterminate if `\nu` is nonexact
+    and contains an integer.
+
+.. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, long prec)
+
+    Computes the modified Bessel function of the first kind
+    `I_{\nu}(z) = z^{\nu} (iz)^{-\nu} J_{\nu}(iz)` respectively using
+    asymptotic series (see :func:`acb_hypgeom_bessel_j_asymp`),
+    the convergent series
+
+    .. math ::
+
+        I_{\nu}(z) = \frac{1}{\Gamma(\nu+1)} \left(\frac{z}{2}\right)^{\nu}
+                     {}_0F_1\left(\nu+1, \frac{z^2}{4}\right),
+
+    or an automatic algorithm choice.
 
 .. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
 
