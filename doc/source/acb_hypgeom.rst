@@ -350,7 +350,7 @@ Bessel functions
 
     .. math ::
 
-        Y_{\nu}(z) = \frac{\cos(\nu \pi) J_{\nu}(z) - J_{\nu}(z)}{\sin(\nu \pi)}
+        Y_{\nu}(z) = \frac{\cos(\nu \pi) J_{\nu}(z) - J_{-\nu}(z)}{\sin(\nu \pi)}
 
     unless `\nu = n` is an integer in which case the limit value
 
