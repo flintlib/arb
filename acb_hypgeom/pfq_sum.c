@@ -34,6 +34,10 @@ acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p,
     {
         acb_hypgeom_pfq_sum_rs(s, t, a, p, b, q, z, n, prec);
     }
+    else if (prec >= 1500 && n >= 30 + 100000 / (prec - 1000))
+    {
+        acb_hypgeom_pfq_sum_fme(s, t, a, p, b, q, z, n, prec);
+    }
     else
     {
         acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);

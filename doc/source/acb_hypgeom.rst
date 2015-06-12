@@ -86,6 +86,8 @@ or remove a 1 from the `a_i` parameters if there is one.
 
 .. function:: void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
+.. function:: void acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
 .. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
     Computes `s = \sum_{k=0}^{n-1} T(k)` and `t = T(n)`.
@@ -98,6 +100,8 @@ or remove a 1 from the `a_i` parameters if there is one.
     The *rs* version computes the sum in reverse order
     using rectangular splitting. It only computes a
     magnitude bound for the value of *t*.
+
+    The *fme* version uses fast multipoint evaluation.
 
     The default version automatically chooses an algorithm
     depending on the inputs.
