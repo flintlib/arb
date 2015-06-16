@@ -701,6 +701,7 @@ void acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n);
 void acb_gamma(acb_t y, const acb_t x, long prec);
 void acb_rgamma(acb_t y, const acb_t x, long prec);
 void acb_lgamma(acb_t y, const acb_t x, long prec);
+void acb_log_sin_pi(acb_t res, const acb_t z, long prec);
 void acb_digamma(acb_t y, const acb_t x, long prec);
 void acb_zeta(acb_t z, const acb_t s, long prec);
 void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec);

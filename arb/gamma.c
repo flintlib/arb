@@ -873,6 +873,25 @@ arb_lgamma(arb_t y, const arb_t x, long prec)
     long r, n, wp;
     arb_t t, u;
 
+    if (!arb_is_positive(x))
+    {
+        arb_indeterminate(y);
+        return;
+    }
+
+    /* fast gamma(n), gamma(n/2) or gamma(n/4) */
+    if (arb_is_exact(x) && arf_is_int_2exp_si(arb_midref(x), -2) &&
+            arf_cmpabs_2exp_si(arb_midref(x), prec) < 0)
+    {
+        fmpq_t a;
+        fmpq_init(a);
+        arf_get_fmpq(a, arb_midref(x));
+        arb_gamma_fmpq(y, a, prec);
+        arb_log(y, y, prec);
+        fmpq_clear(a);
+        return;
+    }
+
     wp = prec + FLINT_BIT_COUNT(prec);
 
     arb_gamma_stirling_choose_param(&reflect, &r, &n, x, 0, 0, wp);

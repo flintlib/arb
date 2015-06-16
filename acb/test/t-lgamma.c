@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         acb_t a, b, c;
         long prec1, prec2;
@@ -47,10 +47,18 @@ int main()
         acb_init(b);
         acb_init(c);
 
-        arb_randtest_precise(acb_realref(a), state, 1 + n_randint(state, 1000), 3);
-        arb_randtest_precise(acb_imagref(a), state, 1 + n_randint(state, 1000), 3);
+        arb_randtest_precise(acb_realref(a), state, 1 + n_randint(state, 1000), 1 + n_randint(state, 10));
+        arb_randtest_precise(acb_imagref(a), state, 1 + n_randint(state, 1000), 1 + n_randint(state, 10));
 
         acb_lgamma(b, a, prec1);
+
+        if (n_randint(state, 4) == 0)
+        {
+            acb_randtest(c, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 10));
+            acb_add(a, a, c, prec1);
+            acb_sub(a, a, c, prec1);
+        }
+
         acb_lgamma(c, a, prec2);
 
         if (!acb_overlaps(b, c))

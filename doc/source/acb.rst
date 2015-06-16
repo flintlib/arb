@@ -580,12 +580,42 @@ Gamma function
     negative half-axis, which means that
     `\log \Gamma(z) + \log z = \log \Gamma(z+1)` holds for all `z`,
     whereas `\log \Gamma(z) \ne \log(\Gamma(z))` in general.
-    Warning: this function does not currently use the reflection
-    formula, and gets very slow for `z` far into the left half-plane.
+    In the left half plane, the reflection formula with correct
+    branch structure is evaluated via :func:`acb_log_sin_pi`.
 
 .. function:: void acb_digamma(acb_t y, const acb_t x, long prec)
 
     Computes the digamma function `y = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
+
+.. function:: void acb_log_sin_pi(acb_t res, const acb_t z, long prec)
+
+    Computes the logarithmic sine function defined by
+
+    .. math ::
+
+        S(z) = \log(\pi) - \log \Gamma(z) + \log \Gamma(1-z)
+
+    which is equal to
+
+    .. math ::
+
+        S(z) = \int_{1/2}^z \pi \cot(\pi t) dt
+
+    where the path of integration goes through the upper half plane
+    if `0 < \arg(z) \le \pi` and through the lower half plane
+    if `-\pi < \arg(z) \le 0`. Equivalently,
+
+    .. math ::
+
+        S(z) = \log(\sin(\pi(z-n))) \mp n \pi i, \quad n = \lfloor \operatorname{re}(z) \rfloor
+
+    where the negative sign is taken if if `0 < \arg(z) \le \pi`
+    and the positive sign is taken otherwise (if the interval `\arg(z)`
+    does not certainly satisfy either condition, the union of
+    both cases is computed).
+    This expression is evaluated at the midpoint and the propagated error
+    is computed from `S'(z)` to get a continuous change
+    when `z` is non-real and `n` spans more than one possible integer value.
 
 Zeta function
 -------------------------------------------------------------------------------

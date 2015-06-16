@@ -270,7 +270,7 @@ acb_lgamma(acb_t y, const acb_t x, long prec)
 {
     int reflect;
     long r, n, wp;
-    acb_t t, u;
+    acb_t t, u, v;
 
     if (acb_is_real(x) && arb_is_positive(acb_realref(x)))
     {
@@ -281,23 +281,50 @@ acb_lgamma(acb_t y, const acb_t x, long prec)
 
     wp = prec + FLINT_BIT_COUNT(prec);
 
-    acb_gamma_stirling_choose_param(&reflect, &r, &n, x, 0, 0, wp);
+    acb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 0, wp);
 
-    /* log(gamma(x)) = log(gamma(x+r)) - log(rf(x,r)) */
     acb_init(t);
     acb_init(u);
+    acb_init(v);
 
-    acb_add_ui(t, x, r, wp);
-    acb_gamma_stirling_eval(u, t, n, 0, wp);
+    if (reflect)
+    {
+        /* log gamma(x) = log rf(1-x, r) - log gamma(1-x+r) - log sin(pi x) + log(pi) */
+        acb_sub_ui(u, x, 1, wp);
+        acb_neg(u, u);
 
-    acb_rising_ui_rec(t, x, r, prec);
-    acb_log(t, t, prec);
+        acb_rising_ui_rec(t, u, r, prec);
+        acb_log(t, t, wp);
+        _acb_log_rising_correct_branch(t, t, u, r, wp);
 
-    _acb_log_rising_correct_branch(t, t, x, r, wp);
+        acb_add_ui(u, u, r, wp);
+        acb_gamma_stirling_eval(v, u, n, 0, wp);
+        acb_sub(t, t, v, wp);
 
-    acb_sub(y, u, t, prec);
+        acb_log_sin_pi(u, x, wp);
+        acb_sub(t, t, u, wp);
+
+        acb_const_pi(u, wp);
+        acb_log(u, u, wp);
+
+        acb_add(y, t, u, wp);
+    }
+    else
+    {
+        /* log gamma(x) = log gamma(x+r) - log rf(x,r) */
+
+        acb_add_ui(t, x, r, wp);
+        acb_gamma_stirling_eval(u, t, n, 0, wp);
+
+        acb_rising_ui_rec(t, x, r, prec);
+        acb_log(t, t, wp);
+        _acb_log_rising_correct_branch(t, t, x, r, wp);
+
+        acb_sub(y, u, t, prec);
+    }
 
     acb_clear(t);
     acb_clear(u);
+    acb_clear(v);
 }
 
