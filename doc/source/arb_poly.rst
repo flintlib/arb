@@ -816,21 +816,6 @@ Powers and elementary functions
     simply wrap :func:`_arb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
-
-.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
-
-.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
-
-    Compute the respective trigonometric functions of the input
-    multiplied by `\pi`.
-
 .. function:: void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
 
 .. function:: void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
@@ -843,6 +828,25 @@ Powers and elementary functions
 
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
+
+.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+.. function:: void _arb_poly_cot_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_cot_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 Gamma function and factorials
 -------------------------------------------------------------------------------

@@ -720,21 +720,6 @@ Elementary functions
     simply wrap :func:`_acb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
 
-.. function:: void _acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void acb_poly_sin_cos_pi_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
-
-.. function:: void _acb_poly_sin_pi_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void acb_poly_sin_pi_series(acb_poly_t s, const acb_poly_t h, long n, long prec)
-
-.. function:: void _acb_poly_cos_pi_series(acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
-
-.. function:: void acb_poly_cos_pi_series(acb_poly_t c, const acb_poly_t h, long n, long prec)
-
-    Compute the respective trigonometric functions of the input
-    multiplied by `\pi`.
-
 .. function:: void _acb_poly_tan_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec)
 
 .. function:: void acb_poly_tan_series(acb_poly_t g, const acb_poly_t h, long n, long prec)
@@ -747,6 +732,25 @@ Elementary functions
 
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
+
+.. function:: void _acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_cos_pi_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_sin_pi_series(acb_ptr s, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_sin_pi_series(acb_poly_t s, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_cos_pi_series(acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_cos_pi_series(acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+.. function:: void _acb_poly_cot_pi_series(acb_ptr c, acb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void acb_poly_cot_pi_series(acb_poly_t c, const acb_poly_t h, long n, long prec)
+
+    Compute the respective trigonometric functions of the input
+    multiplied by `\pi`.
 
 Gamma function
 -------------------------------------------------------------------------------

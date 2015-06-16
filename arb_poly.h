@@ -550,6 +550,10 @@ void _arb_poly_cos_pi_series(arb_ptr g, arb_srcptr h, long hlen, long n, long pr
 
 void arb_poly_cos_pi_series(arb_poly_t g, const arb_poly_t h, long n, long prec);
 
+void _arb_poly_cot_pi_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec);
+
+void arb_poly_cot_pi_series(arb_poly_t g, const arb_poly_t h, long n, long prec);
+
 void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec);
 
 void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, long n, long prec);

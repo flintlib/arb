@@ -834,6 +834,14 @@ _acb_vec_scalar_mul_2exp_si(acb_ptr res, acb_srcptr vec, long len, long c)
 }
 
 ACB_INLINE void
+_acb_vec_scalar_mul_onei(acb_ptr res, acb_srcptr vec, long len)
+{
+    long i;
+    for (i = 0; i < len; i++)
+        acb_mul_onei(res + i, vec + i);
+}
+
+ACB_INLINE void
 _acb_vec_scalar_div_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec)
 {
     long i;

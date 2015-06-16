@@ -534,6 +534,10 @@ void _acb_poly_cos_pi_series(acb_ptr g, acb_srcptr h, long hlen, long n, long pr
 
 void acb_poly_cos_pi_series(acb_poly_t g, const acb_poly_t h, long n, long prec);
 
+void _acb_poly_cot_pi_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec);
+
+void acb_poly_cot_pi_series(acb_poly_t res, const acb_poly_t f, long len, long prec);
+
 void _acb_poly_tan_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec);
 
 void acb_poly_tan_series(acb_poly_t g, const acb_poly_t h, long n, long prec);
