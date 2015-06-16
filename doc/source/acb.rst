@@ -313,6 +313,10 @@ Arithmetic
 
     Sets *z* to *x* multiplied by the imaginary unit.
 
+.. function:: void acb_div_onei(acb_t z, const acb_t x)
+
+    Sets *z* to *x* divided by the imaginary unit.
+
 .. function:: void acb_mul_ui(acb_t z, const acb_t x, ulong y, long prec)
 
 .. function:: void acb_mul_si(acb_t z, const acb_t x, long y, long prec)
@@ -379,84 +383,31 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
-Elementary functions
+Mathematical constants
 -------------------------------------------------------------------------------
 
 .. function:: void acb_const_pi(acb_t y, long prec)
 
     Sets *y* to the constant `\pi`.
 
-.. function:: void acb_log(acb_t y, const acb_t z, long prec)
+Powers and roots
+-------------------------------------------------------------------------------
 
-    Sets *y* to the principal branch of the natural logarithm of *z*,
-    computed as
-    `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
+.. function:: void acb_sqrt(acb_t r, const acb_t z, long prec)
 
-.. function:: void acb_log1p(acb_t z, const acb_t x, long prec)
+    Sets *r* to the square root of *z*.
+    If either the real or imaginary part is exactly zero, only
+    a single real square root is needed. Generally, we use the formula
+    `\sqrt{a+bi} = u/2 + ib/u, u = \sqrt{2(|a+bi|+a)}`,
+    requiring two real square root extractions.
 
-    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
+.. function:: void acb_rsqrt(acb_t r, const acb_t z, long prec)
 
-.. function:: void acb_exp(acb_t y, const acb_t z, long prec)
-
-    Sets *y* to the exponential function of *z*, computed as
-    `\exp(a+bi) = \exp(a) \left( \cos(b) + \sin(b) i \right)`.
-
-.. function:: void acb_exp_pi_i(acb_t y, const acb_t z, long prec)
-
-    Sets *y* to `\exp(\pi i z)`.
-
-.. function:: void acb_exp_invexp(acb_t s, acb_t t, const acb_t z, long prec)
-
-    Sets `v = \exp(z)` and `w = \exp(-z)`.
-
-.. function:: void acb_sin(acb_t s, const acb_t z, long prec)
-
-.. function:: void acb_cos(acb_t c, const acb_t z, long prec)
-
-.. function:: void acb_sin_cos(arb_t s, arb_t c, const arb_t z, long prec)
-
-    Sets `s = \sin(z)`, `c = \cos(z)`, evaluated as
-    `\sin(a+bi) = \sin(a)\cosh(b) + i \cos(a)\sinh(b)`,
-    `\cos(a+bi) = \cos(a)\cosh(b) - i \sin(a)\sinh(b)`.
-
-.. function:: void acb_tan(acb_t s, const acb_t z, long prec)
-
-    Sets `s = \tan(z) = \sin(z) / \cos(z)`, evaluated as
-    `\tan(a+bi) = \sin(2a)/(\cos(2a) + \cosh(2b)) + i\sinh(2b)/(\cos(2a) + \cosh(2b))`.
-    If `|b|` is small, the formula is evaluated as written; otherwise,
-    we rewrite the hyperbolic functions in terms of decaying exponentials
-    and evaluate the expression accurately using :func:`arb_expm1`.
-
-.. function:: void acb_cot(acb_t s, const acb_t z, long prec)
-
-    Sets `s = \cot(z) = \cos(z) / \sin(z)`, evaluated as
-    `\cot(a+bi) = -\sin(2a)/(\cos(2a) - \cosh(2b)) + i\sinh(2b)/(\cos(2a) - \cosh(2b))`
-    using the same strategy as :func:`acb_tan`.
-    If `|z|` is close to zero, however, we evaluate
-    `1 / \tan(z)` to avoid catastrophic cancellation.
-
-.. function:: void acb_sin_pi(acb_t s, const acb_t z, long prec)
-
-.. function:: void acb_cos_pi(acb_t s, const acb_t z, long prec)
-
-.. function:: void acb_sin_cos_pi(acb_t s, acb_t c, const acb_t z, long prec)
-
-    Sets `s = \sin(\pi z)`, `c = \cos(\pi z)`, evaluating the trigonometric
-    factors of the real and imaginary part accurately via :func:`arb_sin_cos_pi`.
-
-.. function:: void acb_tan_pi(acb_t s, const acb_t z, long prec)
-
-    Sets `s = \tan(\pi z)`. Uses the same algorithm as :func:`acb_tan`,
-    but evaluating the sine and cosine accurately via :func:`arb_sin_cos_pi`.
-
-.. function:: void acb_cot_pi(acb_t s, const acb_t z, long prec)
-
-    Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
-    but evaluating the sine and cosine accurately via :func:`arb_sin_cos_pi`.
-
-.. function:: void acb_atan(acb_t s, const acb_t z, long prec)
-
-    Sets `s = \operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
+    Sets *r* to the reciprocal square root of *z*.
+    If either the real or imaginary part is exactly zero, only
+    a single real reciprocal square root is needed. Generally, we use the
+    formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
+    requiring one real square root and one real reciprocal square root.
 
 .. function:: void acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec)
 
@@ -476,21 +427,98 @@ Elementary functions
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
     half-integer, and generally as `z = \exp(y \log x)`.
 
-.. function:: void acb_sqrt(acb_t r, const acb_t z, long prec)
+Exponentials and logarithms
+-------------------------------------------------------------------------------
 
-    Sets *r* to the square root of *z*.
-    If either the real or imaginary part is exactly zero, only
-    a single real square root is needed. Generally, we use the formula
-    `\sqrt{a+bi} = u/2 + ib/u, u = \sqrt{2(|a+bi|+a)}`,
-    requiring two real square root extractions.
+.. function:: void acb_exp(acb_t y, const acb_t z, long prec)
 
-.. function:: void acb_rsqrt(acb_t r, const acb_t z, long prec)
+    Sets *y* to the exponential function of *z*, computed as
+    `\exp(a+bi) = \exp(a) \left( \cos(b) + \sin(b) i \right)`.
 
-    Sets *r* to the reciprocal square root of *z*.
-    If either the real or imaginary part is exactly zero, only
-    a single real reciprocal square root is needed. Generally, we use the
-    formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
-    requiring one real square root and one real reciprocal square root.
+.. function:: void acb_exp_pi_i(acb_t y, const acb_t z, long prec)
+
+    Sets *y* to `\exp(\pi i z)`.
+
+.. function:: void acb_exp_invexp(acb_t s, acb_t t, const acb_t z, long prec)
+
+    Sets `v = \exp(z)` and `w = \exp(-z)`.
+
+.. function:: void acb_log(acb_t y, const acb_t z, long prec)
+
+    Sets *y* to the principal branch of the natural logarithm of *z*,
+    computed as
+    `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
+
+.. function:: void acb_log1p(acb_t z, const acb_t x, long prec)
+
+    Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
+
+Trigonometric functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_sin(acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_cos(acb_t c, const acb_t z, long prec)
+
+.. function:: void acb_sin_cos(arb_t s, arb_t c, const arb_t z, long prec)
+
+    Sets `s = \sin(z)`, `c = \cos(z)`, evaluated as
+    `\sin(a+bi) = \sin(a)\cosh(b) + i \cos(a)\sinh(b)`,
+    `\cos(a+bi) = \cos(a)\cosh(b) - i \sin(a)\sinh(b)`.
+
+.. function:: void acb_tan(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \tan(z) = \sin(z) / \cos(z)`. For large imaginary parts,
+    the function is evaluated in a numerically stable way as `\pm i`
+    plus a decreasing exponential factor.
+
+.. function:: void acb_cot(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \cot(z) = \cos(z) / \sin(z)`. For large imaginary parts,
+    the function is evaluated in a numerically stable way as `\pm i`
+    plus a decreasing exponential factor.
+
+.. function:: void acb_sin_pi(acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_cos_pi(acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_sin_cos_pi(acb_t s, acb_t c, const acb_t z, long prec)
+
+    Sets `s = \sin(\pi z)`, `c = \cos(\pi z)`, evaluating the trigonometric
+    factors of the real and imaginary part accurately via :func:`arb_sin_cos_pi`.
+
+.. function:: void acb_tan_pi(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \tan(\pi z)`. Uses the same algorithm as :func:`acb_tan`,
+    but evaluates the sine and cosine accurately via :func:`arb_sin_cos_pi`.
+
+.. function:: void acb_cot_pi(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
+    but evaluates the sine and cosine accurately via :func:`arb_sin_cos_pi`.
+
+Inverse trigonometric functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_atan(acb_t s, const acb_t z, long prec)
+
+    Sets `s = \operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
+
+Hyperbolic functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_sinh(acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_cosh(acb_t c, const acb_t z, long prec)
+
+.. function:: void acb_sinh_cosh(acb_t s, acb_t c, const acb_t z, long prec)
+
+.. function:: void acb_tanh(acb_t s, const acb_t z, long prec)
+
+.. function:: void acb_coth(acb_t s, const acb_t z, long prec)
+
+    Respectively computes `\sinh(z) = -i\sin(iz)`, `\cosh(z) = \cos(iz)`,
+    `\tanh(z) = -i\tan(iz)`, `\coth(z) = i\cot(iz)`.
 
 Rising factorials
 -------------------------------------------------------------------------------

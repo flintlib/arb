@@ -485,6 +485,21 @@ acb_mul_onei(acb_t z, const acb_t x)
     }
 }
 
+ACB_INLINE void
+acb_div_onei(acb_t z, const acb_t x)
+{
+    if (z == x)
+    {
+        arb_swap(acb_realref(z), acb_imagref(z));
+        arb_neg(acb_imagref(z), acb_imagref(z));
+    }
+    else
+    {
+        arb_set(acb_realref(z), acb_imagref(x));
+        arb_neg(acb_imagref(z), acb_realref(x));
+    }
+}
+
 void acb_mul(acb_t z, const acb_t x, const acb_t y, long prec);
 
 void acb_mul_naive(acb_t z, const acb_t x, const acb_t y, long prec);
@@ -621,10 +636,48 @@ void acb_sin_cos(acb_t s, acb_t c, const acb_t z, long prec);
 void acb_tan(acb_t r, const acb_t z, long prec);
 void acb_cot(acb_t r, const acb_t z, long prec);
 
+ACB_INLINE void
+acb_sinh(acb_t y, const acb_t x, long prec)
+{
+    acb_mul_onei(y, x);
+    acb_sin(y, y, prec);
+    acb_div_onei(y, y);
+}
+
+ACB_INLINE void
+acb_cosh(acb_t y, const acb_t x, long prec)
+{
+    acb_mul_onei(y, x);
+    acb_cos(y, y, prec);
+}
+
+ACB_INLINE void
+acb_sinh_cosh(acb_t y, acb_t z, const acb_t x, long prec)
+{
+    acb_mul_onei(y, x);
+    acb_sin_cos(y, z, y, prec);
+    acb_div_onei(y, y);
+}
+
+ACB_INLINE void
+acb_tanh(acb_t y, const acb_t x, long prec)
+{
+    acb_mul_onei(y, x);
+    acb_tan(y, y, prec);
+    acb_div_onei(y, y);
+}
+
+ACB_INLINE void
+acb_coth(acb_t y, const acb_t x, long prec)
+{
+    acb_mul_onei(y, x);
+    acb_cot(y, y, prec);
+    acb_mul_onei(y, y);
+}
+
 void acb_sin_pi(acb_t r, const acb_t z, long prec);
 void acb_cos_pi(acb_t r, const acb_t z, long prec);
 void acb_sin_cos_pi(acb_t s, acb_t c, const acb_t z, long prec);
-
 void acb_tan_pi(acb_t r, const acb_t z, long prec);
 void acb_cot_pi(acb_t r, const acb_t z, long prec);
 

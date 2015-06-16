@@ -870,9 +870,10 @@ Hyperbolic functions
 .. function:: void arb_tanh(arb_t y, const arb_t x, long prec)
 
     Sets `y = \tanh(x) = \sinh(x) / \cosh(x)`, evaluated
-    via :func:`arb_expm1` as `\tanh(x) = (e^{2x} - 1) / (e^{2x} + 1)` if
-    the midpoint of `x` is negative and as
-    `\tanh(x) = (1 - e^{-2x}) / (1 + e^{-2x})` otherwise.
+    via :func:`arb_expm1` as `\tanh(x) = (e^{2x} - 1) / (e^{2x} + 1)`
+    if `|x|` is small, and as
+    `\tanh(\pm x) = 1 - 2 e^{\mp 2x} / (1 + e^{\mp 2x})`
+    if `|x|` is large.
 
 .. function:: void arb_coth(arb_t y, const arb_t x, long prec)
 
