@@ -680,8 +680,23 @@ Powers and roots
 .. function:: void arb_root(arb_t z, const arb_t x, ulong k, long prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
-    As currently implemented, this function is only fast for small *k*.
-    For large *k* it is better to use :func:`arb_pow_fmpq` or :func:`arb_pow`.
+    This function selects between different algorithms. For large *k*,
+    it evaluates `\exp(\log(x)/k)`. For small *k*, it uses :func:`arf_root`
+    at the midpoint and computes a propagated error bound as follows:
+    if input interval is `[m-r, m+r]` with `r \le m`, the error is largest at
+    `m-r` where it satisfies
+
+    .. math ::
+
+        m^{1/k} - (m-r)^{1/k} = m^{1/k} [1 - (1-r/m)^{1/k}]
+
+        = m^{1/k} [1 - \exp(\log(1-r/m)/k)]
+
+        \le m^{1/k} \min(1, -\log(1-r/m)/k)
+
+        = m^{1/k} \min(1, \log(1+r/(m-r))/k).
+
+    This is evaluated using :func:`mag_log1p`.
 
 .. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec)
 

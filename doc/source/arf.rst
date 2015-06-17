@@ -595,6 +595,13 @@ Square roots
     returning nonzero iff the operation is inexact. The result is NaN if *x* is
     negative, and `+\infty` if *x* is zero.
 
+.. function:: int arf_root(arf_t z, const arf_t x, ulong k, long prec, arf_rnd_t rnd)
+
+    Sets `z = x^{1/k}`, rounded to *prec* bits in the direction specified by *rnd*,
+    returning nonzero iff the operation is inexact. The result is NaN if *x* is negative.
+    Warning: this function is a wrapper around the MPFR root function.
+    It gets slow and uses much memory for large *k*.
+
 Complex arithmetic
 -------------------------------------------------------------------------------
 

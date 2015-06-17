@@ -41,14 +41,15 @@ int main()
         ulong k;
         long prec;
 
-        prec = 2 + n_randint(state, 200);
-        k = 1 + n_randint(state, 10);
+        prec = 2 + n_randint(state, 2000);
+        k = n_randtest_not_zero(state);
 
         arb_init(a);
         arb_init(b);
         arb_init(c);
 
-        arb_randtest(a, state, 1 + n_randint(state, 200), 10);
+        arb_randtest(a, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
+        arb_randtest(b, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
 
         arb_root(b, a, k, prec);
         arb_pow_ui(c, b, k, prec);

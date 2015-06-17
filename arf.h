@@ -1190,6 +1190,8 @@ int arf_sqrt_fmpz(arf_t z, const fmpz_t x, long prec, arf_rnd_t rnd);
 
 int arf_rsqrt(arf_ptr z, arf_srcptr x, long prec, arf_rnd_t rnd);
 
+int arf_root(arf_t z, const arf_t x, ulong k, long prec, arf_rnd_t rnd);
+
 /* Magnitude bounds */
 
 void arf_get_mag(mag_t y, const arf_t x);

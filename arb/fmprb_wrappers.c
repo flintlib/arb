@@ -35,13 +35,3 @@ void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, long prec)
     fmprb_clear(t);
 }
 
-void arb_root(arb_t z, const arb_t x, ulong k, long prec)
-{
-    fmprb_t t;
-    fmprb_init(t);
-    arb_get_fmprb(t, x);
-    fmprb_root(t, t, k, prec);
-    arb_set_fmprb(z, t);
-    fmprb_clear(t);
-}
-

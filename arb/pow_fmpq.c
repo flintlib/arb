@@ -32,21 +32,30 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
     {
         arb_pow_fmpz(y, x, fmpq_numref(a), prec);
     }
-    else if (fmpz_cmp_ui(fmpq_denref(a), 36) <= 0)
-    {
-        arb_root(y, x, *fmpq_denref(a), prec);
-        arb_pow_fmpz(y, y, fmpq_numref(a), prec);
-    }
     else
     {
-        long wp;
+        int use_exp;
+        long k = *fmpq_denref(a);
 
-        wp = prec + 10;
+        if (k == 2 || k == 4)
+            use_exp = 0;
+        else if (k < 50)
+            use_exp = prec < (1L << ((k / 8) + 8));
+        else
+            use_exp = 1;
 
-        arb_log(y, x, wp);
-        arb_mul_fmpz(y, y, fmpq_numref(a), wp);
-        arb_div_fmpz(y, y, fmpq_denref(a), wp);
-        arb_exp(y, y, prec);
+        if (use_exp)
+        {
+            arb_log(y, x, prec + 10);
+            arb_mul_fmpz(y, y, fmpq_numref(a), prec + 10);
+            arb_div_fmpz(y, y, fmpq_denref(a), prec + 10);
+            arb_exp(y, y, prec);
+        }
+        else
+        {
+            arb_root(y, x, *fmpq_denref(a), prec);
+            arb_pow_fmpz(y, y, fmpq_numref(a), prec);
+        }
     }
 }
 
