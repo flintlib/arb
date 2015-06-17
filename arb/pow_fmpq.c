@@ -39,7 +39,7 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
 
         if (k == 2 || k == 4)
             use_exp = 0;
-        else if (k < 50)
+        else if (k > 1 && k < 50)
             use_exp = prec < (1L << ((k / 8) + 8));
         else
             use_exp = 1;
@@ -53,7 +53,7 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
         }
         else
         {
-            arb_root(y, x, *fmpq_denref(a), prec);
+            arb_root(y, x, k, prec);
             arb_pow_fmpz(y, y, fmpq_numref(a), prec);
         }
     }
