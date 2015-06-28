@@ -609,11 +609,18 @@ Gamma function
 
         S(z) = \log(\sin(\pi(z-n))) \mp n \pi i, \quad n = \lfloor \operatorname{re}(z) \rfloor
 
-    where the negative sign is taken if if `0 < \arg(z) \le \pi`
+    where the negative sign is taken if `0 < \arg(z) \le \pi`
     and the positive sign is taken otherwise (if the interval `\arg(z)`
     does not certainly satisfy either condition, the union of
     both cases is computed).
-    This expression is evaluated at the midpoint and the propagated error
+    After subtracting *n*, we have `0 \le \operatorname{re}(z) < 1`. In
+    this strip, we use
+    use `S(z) = \log(\sin(\pi(z)))` if the imaginary part of *z* is small.
+    Otherwise, we use `S(z) = i \pi (z-1/2) + \log((1+e^{-2i\pi z})/2)`
+    in the lower half-plane and the conjugated expression in the upper
+    half-plane to avoid exponent overflow.
+
+    The function is evaluated at the midpoint and the propagated error
     is computed from `S'(z)` to get a continuous change
     when `z` is non-real and `n` spans more than one possible integer value.
 

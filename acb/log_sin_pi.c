@@ -42,13 +42,40 @@ acb_log_sin_pi_half(acb_t res, const acb_t z, long prec, int upper)
     arf_set(arb_midref(acb_imagref(zmid)), arb_midref(acb_imagref(z)));
 
     arf_floor(n, arb_midref(acb_realref(zmid)));
-
     arb_sub_arf(acb_realref(zmid), acb_realref(zmid), n, prec);
 
-    acb_sin_pi(t, zmid, prec);
-    acb_log(t, t, prec);
-
     arb_const_pi(pi, prec);
+
+    if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(zmid)), 2) < 1)
+    {
+        acb_sin_pi(t, zmid, prec);
+        acb_log(t, t, prec);
+    }
+    else  /* i*pi*(z-0.5) + log((1-exp(-2i*pi*z))/2) */
+    {
+        acb_mul_2exp_si(t, zmid, 1);
+        acb_neg(t, t);
+
+        if (upper)
+            acb_conj(t, t);
+
+        acb_exp_pi_i(t, t, prec);
+        acb_sub_ui(t, t, 1, prec);
+        acb_neg(t, t);
+
+        acb_mul_2exp_si(t, t, -1);
+
+        acb_log(t, t, prec);
+        acb_one(u);
+        acb_mul_2exp_si(u, u, -1);
+        acb_sub(u, zmid, u, prec);
+        if (upper)
+            acb_conj(u, u);
+        acb_mul_onei(u, u);
+        acb_addmul_arb(t, u, pi, prec);
+        if (upper)
+            acb_conj(t, t);
+    }
 
     if (upper)
         arb_submul_arf(acb_imagref(t), pi, n, prec);
