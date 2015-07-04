@@ -255,7 +255,8 @@ arb_is_one(const arb_t f)
 ARB_INLINE void
 arb_one(arb_t f)
 {
-    arb_set_ui(f, 1UL);
+    arf_one(arb_midref(f));
+    mag_zero(arb_radref(f));
 }
 
 void arb_print(const arb_t x);
