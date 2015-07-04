@@ -30,7 +30,7 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
 {
     ulong M, N;
     long i;
-    arf_t bound;
+    mag_t bound;
     arb_ptr vb;
 
     if (d < 1)
@@ -42,7 +42,7 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
         return;
     }
 
-    arf_init(bound);
+    mag_init(bound);
     vb = _arb_vec_init(d);
 
     _acb_poly_zeta_em_choose_param(bound, &N, &M, s, a, FLINT_MIN(d, 2), prec, MAG_BITS);
@@ -52,12 +52,12 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
 
     for (i = 0; i < d; i++)
     {
-        arb_get_abs_ubound_arf(bound, vb + i, MAG_BITS);
-        arb_add_error_arf(acb_realref(z + i), bound);
-        arb_add_error_arf(acb_imagref(z + i), bound);
+        arb_get_mag(bound, vb + i);
+        arb_add_error_mag(acb_realref(z + i), bound);
+        arb_add_error_mag(acb_imagref(z + i), bound);
     }
 
-    arf_clear(bound);
+    mag_clear(bound);
     _arb_vec_clear(vb, d);
 }
 

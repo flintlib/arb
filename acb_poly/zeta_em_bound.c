@@ -206,12 +206,12 @@ _acb_poly_zeta_em_bound(arb_ptr bound, const acb_t s, const acb_t a, ulong N, ul
 }
 
 void
-_acb_poly_zeta_em_bound1(arf_t bound,
+_acb_poly_zeta_em_bound1(mag_t bound,
         const acb_t s, const acb_t a, long N, long M, long len, long wp)
 {
     arb_ptr vec = _arb_vec_init(len);
     _acb_poly_zeta_em_bound(vec, s, a, N, M, len, wp);
-    _arb_vec_get_abs_ubound_arf(bound, vec, len, wp);
+    _arb_vec_get_mag(bound, vec, len);
     _arb_vec_clear(vec, len);
 }
 

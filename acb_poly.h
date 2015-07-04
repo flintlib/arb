@@ -616,8 +616,8 @@ void _acb_poly_powsum_series_naive_threaded(acb_ptr z, const acb_t s, const acb_
 void _acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, long prec);
 
 void _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec);
-void _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec);
-void _acb_poly_zeta_em_bound1(arf_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp);
+void _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec);
+void _acb_poly_zeta_em_bound1(mag_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp);
 void _acb_poly_zeta_em_bound(arb_ptr vec, const acb_t s, const acb_t a, ulong N, ulong M, long d, long wp);
 
 void _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec);

@@ -820,29 +820,25 @@ _arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
         arb_addmul(res, vec + i, vec + i, prec);
 }
 
-/* TODO: mag version? */
 ARB_INLINE void
-_arb_vec_get_abs_ubound_arf(arf_t bound, arb_srcptr vec,
-        long len, long prec)
+_arb_vec_get_mag(mag_t bound, arb_srcptr vec, long len)
 {
-    arf_t t;
-    long i;
-
     if (len < 1)
     {
-        arf_zero(bound);
+        mag_zero(bound);
     }
     else
     {
-        arb_get_abs_ubound_arf(bound, vec, prec);
-        arf_init(t);
+        mag_t t;
+        long i;
+        arb_get_mag(bound, vec);
+        mag_init(t);
         for (i = 1; i < len; i++)
         {
-            arb_get_abs_ubound_arf(t, vec + i, prec);
-            if (arf_cmp(t, bound) > 0)
-                arf_set(bound, t);
+            arb_get_mag(t, vec + i);
+            mag_max(bound, bound, t);
         }
-        arf_clear(t);
+        mag_clear(t);
     }
 }
 

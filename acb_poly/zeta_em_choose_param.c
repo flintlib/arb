@@ -31,17 +31,18 @@ static ulong choose_M(ulong N, long target)
 }
 
 void
-_acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
+_acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
 {
     ulong A, B, C, limit;
-    arf_t Abound, Bbound, Cbound, tol;
+    mag_t Abound, Bbound, Cbound, tol;
 
-    arf_init(Abound);
-    arf_init(Bbound);
-    arf_init(Cbound);
-    arf_init(tol);
+    mag_init(Abound);
+    mag_init(Bbound);
+    mag_init(Cbound);
+    mag_init(tol);
 
-    arf_set_si_2exp_si(tol, 1, -target);
+    mag_one(tol);
+    mag_mul_2exp_si(tol, tol, -target);
 
     A = 1;
     B = 2;
@@ -54,11 +55,11 @@ _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s,
 
     _acb_poly_zeta_em_bound1(Bbound, s, a, B, choose_M(B, target), d, prec);
 
-    if (arf_cmp(Bbound, tol) > 0)
+    if (mag_cmp(Bbound, tol) > 0)
     {
-        while (arf_cmp(Bbound, tol) > 0 && B <= limit)
+        while (mag_cmp(Bbound, tol) > 0 && B <= limit)
         {
-            arf_set(Abound, Bbound);
+            mag_set(Abound, Bbound);
             A *= 2;
             B *= 2;
 
@@ -74,26 +75,26 @@ _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s,
 
             _acb_poly_zeta_em_bound1(Cbound, s, a, C, choose_M(C, target), d, prec);
 
-            if (arf_cmp(Cbound, tol) < 0)
+            if (mag_cmp(Cbound, tol) < 0)
             {
                 B = C;
-                arf_set(Bbound, Cbound);
+                mag_set(Bbound, Cbound);
             }
             else
             {
                 A = C;
-                arf_set(Abound, Cbound);
+                mag_set(Abound, Cbound);
             }
         }
     }
 
-    arf_set(bound, Bbound);
+    mag_set(bound, Bbound);
     *N = B;
     *M = choose_M(B, target);
 
-    arf_clear(Abound);
-    arf_clear(Bbound);
-    arf_clear(Cbound);
-    arf_clear(tol);
+    mag_clear(Abound);
+    mag_clear(Bbound);
+    mag_clear(Cbound);
+    mag_clear(tol);
 }
 
