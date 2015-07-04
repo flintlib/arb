@@ -1344,3 +1344,89 @@ Internals for computing elementary functions
     is applied repeatedly instead of integrating a differential
     equation for the arctangent, as this appears to be more efficient.
 
+Vector functions
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_vec_zero(arb_ptr vec, long n)
+
+    Sets all entries in *vec* to zero.
+
+.. function:: int _arb_vec_is_zero(arb_srcptr vec, long len)
+
+    Returns nonzero iff all entries in *x* are zero.
+
+.. function:: int _arb_vec_is_finite(arb_srcptr x, long len)
+
+    Returns nonzero iff all entries in *x* certainly are finite.
+
+.. function:: void _arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
+
+    Sets *res* to a copy of *vec*.
+
+.. function:: void _arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
+
+    Sets *res* to a copy of *vec*, rounding each entry to *prec* bits.
+
+.. function:: void _arb_vec_swap(arb_ptr vec1, arb_ptr vec2, long len)
+
+    Swaps the entries of *vec1* and *vec2*.
+
+.. function:: void _arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
+
+.. function:: void _arb_vec_sub(arb_ptr C, arb_srcptr A, arb_srcptr B, long n, long prec)
+
+.. function:: void _arb_vec_add(arb_ptr C, arb_srcptr A, arb_srcptr B, long n, long prec)
+
+.. function:: void _arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+
+.. function:: void _arb_vec_scalar_div(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+
+.. function:: void _arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec, long len, const fmpz_t c, long prec)
+
+.. function:: void _arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
+
+.. function:: void _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+
+   Performs the respective scalar operation elementwise.
+
+.. function:: void _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, long len2, long prec)
+
+    Sets *res* to the dot product of *vec1* and *vec2*.
+
+.. function:: void _arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
+
+    Sets *res* to the dot product of *vec* with itself.
+
+.. function:: void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, long len, long prec)
+
+    Sets *bound* to an upper bound for the entries in *vec*.
+
+.. function:: long _arb_vec_bits(arb_srcptr x, long len)
+
+    Returns the maximum of :func:`arb_bits` for all entries in *vec*.
+
+.. function:: void _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
+
+    Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
+
+.. function:: void _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
+
+.. function:: void _arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, long len)
+
+    Adds the magnitude of each entry in *err* to the radius of the
+    corresponding entry in *res*.
+
+.. function:: void _arb_vec_indeterminate(arb_ptr vec, long len)
+
+    Applies :func:`arb_indeterminate` elementwise.
+
+.. function:: void _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
+
+    Applies :func:`arb_trim` elementwise.
+
+.. function:: int _arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, long len)
+
+    Calls :func:`arb_get_unique_fmpz` elementwise and returns nonzero if
+    all entries can be rounded uniquely to integers. If any entry in *vec*
+    cannot be rounded uniquely to an integer, returns zero.
+

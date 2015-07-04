@@ -721,14 +721,12 @@ void acb_root_newton(acb_t r, const acb_t a, long m, long index, long prec);
 void acb_root(acb_t r, const acb_t a, long m, long index, long prec);
 */
 
-/* TODO: document */
 ACB_INLINE int
 acb_is_finite(const acb_t x)
 {
     return arb_is_finite(acb_realref(x)) && arb_is_finite(acb_imagref(x));
 }
 
-/* TODO: document */
 ACB_INLINE void
 acb_indeterminate(acb_t x)
 {

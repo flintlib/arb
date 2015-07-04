@@ -82,6 +82,10 @@ Basic manipulation
 
     Returns nonzero iff *z* is exactly 1.
 
+.. function:: int acb_is_finite(const acb_t z)
+
+    Returns nonzero iff *z* certainly is finite.
+
 .. function:: int acb_is_exact(const acb_t z)
 
     Returns nonzero iff *z* is exact.
@@ -244,6 +248,12 @@ Precision and comparisons
     Returns the maximum of *arb_bits* applied to the real
     and imaginary parts of *x*, i.e. the minimum precision sufficient
     to represent *x* exactly.
+
+.. function:: void acb_indeterminate(acb_t x)
+
+    Sets *x* to
+    `[\operatorname{NaN} \pm \infty] + [\operatorname{NaN} \pm \infty]i`,
+    representing an indeterminate result.
 
 .. function:: void acb_trim(acb_t y, const acb_t x)
 
@@ -664,4 +674,94 @@ Arithmetic-geometric mean
     Sets the coefficients in the array *m* to the power series expansion of the
     arithmetic-geometric mean at the point *z* truncated to length *len*, i.e.
     `M(z+x) \in \mathbb{C}[[x]]`.
+
+Vector functions
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_vec_zero(acb_ptr A, long n)
+
+    Sets all entries in *vec* to zero.
+
+.. function:: int _acb_vec_is_zero(acb_srcptr vec, long len)
+
+    Returns nonzero iff all entries in *x* are zero.
+
+.. function:: int _acb_vec_is_real(acb_srcptr v, long len)
+
+    Returns nonzero iff all entries in *x* have zero imaginary part.
+
+.. function:: void _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
+
+    Sets *res* to a copy of *vec*.
+
+.. function:: void _acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
+
+    Sets *res* to a copy of *vec*, rounding each entry to *prec* bits.
+
+.. function:: void _acb_vec_neg(acb_ptr res, acb_srcptr vec, long len)
+
+.. function:: void _acb_vec_add(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
+
+.. function:: void _acb_vec_sub(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, long len, long prec)
+
+.. function:: void _acb_vec_scalar_submul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_addmul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_mul(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_mul_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec)
+
+.. function:: void _acb_vec_scalar_mul_2exp_si(acb_ptr res, acb_srcptr vec, long len, long c)
+
+.. function:: void _acb_vec_scalar_mul_onei(acb_ptr res, acb_srcptr vec, long len)
+
+.. function:: void _acb_vec_scalar_div_ui(acb_ptr res, acb_srcptr vec, long len, ulong c, long prec)
+
+.. function:: void _acb_vec_scalar_div(acb_ptr res, acb_srcptr vec, long len, const acb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_mul_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_div_arb(acb_ptr res, acb_srcptr vec, long len, const arb_t c, long prec)
+
+.. function:: void _acb_vec_scalar_mul_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, long prec)
+
+.. function:: void _acb_vec_scalar_div_fmpz(acb_ptr res, acb_srcptr vec, long len, const fmpz_t c, long prec)
+
+   Performs the respective scalar operation elementwise.
+
+.. function:: long _acb_vec_bits(acb_srcptr vec, long len)
+
+    Returns the maximum of :func:`arb_bits` for all entries in *vec*.
+
+.. function:: void _acb_vec_set_powers(acb_ptr xs, const acb_t x, long len, long prec)
+
+    Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
+
+.. function:: void _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, long len)
+
+.. function:: void _acb_vec_add_error_mag_vec(acb_ptr res, mag_srcptr err, long len)
+
+    Adds the magnitude of each entry in *err* to the radius of the
+    corresponding entry in *res*.
+
+.. function:: void _acb_vec_indeterminate(acb_ptr vec, long len)
+
+    Applies :func:`acb_indeterminate` elementwise.
+
+.. function:: void _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
+
+    Applies :func:`acb_trim` elementwise.
+
+.. function:: int _acb_vec_get_unique_fmpz_vec(fmpz * res,  acb_srcptr vec, long len)
+
+    Calls :func:`acb_get_unique_fmpz` elementwise and returns nonzero if
+    all entries can be rounded uniquely to integers. If any entry in *vec*
+    cannot be rounded uniquely to an integer, returns zero.
+
+.. function:: void _acb_vec_sort_pretty(acb_ptr vec, long len)
+
+    Sorts the vector of complex numbers based on the real and imaginary parts.
+    This is intended to reveal structure when printing a set of complex numbers,
+    not to apply an order relation in a rigorous way.
 
