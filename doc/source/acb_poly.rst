@@ -824,12 +824,12 @@ Power sums
 Zeta function
 -------------------------------------------------------------------------------
 
-.. function:: void _acb_poly_zeta_em_choose_param(arf_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
+.. function:: void _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
 
     Chooses *N* and *M* for Euler-Maclaurin summation of the
     Hurwitz zeta function, using a default algorithm.
 
-.. function:: void _acb_poly_zeta_em_bound1(arf_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp)
+.. function:: void _acb_poly_zeta_em_bound1(mag_t bound, const acb_t s, const acb_t a, long N, long M, long d, long wp)
 
 .. function:: void _acb_poly_zeta_em_bound(arb_ptr vec, const acb_t s, const acb_t a, ulong N, ulong M, long d, long wp)
 
