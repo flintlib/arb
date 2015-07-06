@@ -61,6 +61,12 @@ _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long pre
     arb_t zr;
     arb_ptr t, u;
 
+    if (!arb_is_positive(h))
+    {
+        _arb_vec_indeterminate(res, len);
+        return;
+    }
+
     hlen = FLINT_MIN(hlen, len);
     wp = prec + FLINT_BIT_COUNT(prec);
 

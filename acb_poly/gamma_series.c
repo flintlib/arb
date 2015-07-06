@@ -45,7 +45,7 @@ bsplit(acb_ptr Q, acb_ptr T, const acb_t z, long a, long b, long num, long prec)
             acb_set(Q, z);
             if (num > 1) acb_one(Q + 1);
             if (num > 2) acb_zero(Q + 2);
-        }             
+        }
         else
         {   /* (z + t)^2 */
             acb_mul(Q, z, z, prec);  /* TODO: precompute */

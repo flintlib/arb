@@ -35,6 +35,35 @@ int main()
 
     flint_randinit(state);
 
+    /* special accuracy test case */
+    {
+        acb_poly_t a;
+        acb_t c;
+
+        acb_init(c);
+        acb_poly_init(a);
+
+        arb_set_str(acb_realref(c), "-20.25", 53);
+        arb_set_str(acb_imagref(c), "1e1000", 53);
+
+        acb_poly_set_coeff_acb(a, 0, c);
+        acb_poly_set_coeff_si(a, 1, 1);
+
+        acb_poly_lgamma_series(a, a, 3, 53);
+
+        if (acb_rel_accuracy_bits(a->coeffs) < 40 ||
+            acb_rel_accuracy_bits(a->coeffs + 1) < 40 ||
+            acb_rel_accuracy_bits(a->coeffs + 2) < 40)
+        {
+            printf("FAIL: accuracy (reflection formula)\n\n");
+            acb_poly_printd(a, 15); printf("\n\n");
+            abort();
+        }
+
+        acb_poly_clear(a);
+        acb_clear(c);
+    }
+
     for (iter = 0; iter < 500; iter++)
     {
         long m, n1, n2, rbits1, rbits2, rbits3;
@@ -53,9 +82,9 @@ int main()
         acb_poly_init(c);
         acb_poly_init(d);
 
-        acb_poly_randtest(a, state, m, rbits1, 3);
-        acb_poly_randtest(b, state, m, rbits1, 3);
-        acb_poly_randtest(c, state, m, rbits1, 3);
+        acb_poly_randtest(a, state, m, rbits1, 10);
+        acb_poly_randtest(b, state, m, rbits1, 10);
+        acb_poly_randtest(c, state, m, rbits1, 10);
 
         acb_poly_lgamma_series(b, a, n1, rbits2);
         acb_poly_lgamma_series(c, a, n2, rbits3);

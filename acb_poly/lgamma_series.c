@@ -109,14 +109,57 @@ _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long pre
     acb_init(zr);
 
     /* use Stirling series */
-    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 0, 0, wp);
-    acb_add_ui(zr, h, r, wp);
-    _acb_poly_gamma_stirling_eval(u, zr, n, len, wp);
+    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
 
-    if (r != 0)
+    if (reflect)
     {
-        _log_rising_ui_series(t, h, r, len, wp);
-        _acb_vec_sub(u, u, t, len, wp);
+        /* log gamma(h+x) = log rf(1-(h+x), r) - log gamma(1-(h+x)+r) - log sin(pi (h+x)) + log(pi) */
+        if (r != 0) /* otherwise t = 0 */
+        {
+            acb_sub_ui(u, h, 1, wp);
+            acb_neg(u, u);
+            _log_rising_ui_series(t, u, r, len, wp);
+            for (i = 1; i < len; i += 2)
+                acb_neg(t + i, t + i);
+        }
+
+        acb_sub_ui(u, h, 1, wp);
+        acb_neg(u, u);
+        acb_add_ui(zr, u, r, wp);
+        _acb_poly_gamma_stirling_eval(u, zr, n, len, wp);
+        for (i = 1; i < len; i += 2)
+            acb_neg(u + i, u + i);
+
+        _acb_vec_sub(t, t, u, len, wp);
+
+        /* log(sin) is unstable with large imaginary parts;
+           cot_pi is implemented in a numerically stable way */
+        acb_set(u, h);
+        acb_one(u + 1);
+        _acb_poly_cot_pi_series(u, u, 2, len - 1, wp);
+        _acb_poly_integral(u, u, len, wp);
+        acb_const_pi(u, wp);
+        _acb_vec_scalar_mul(u + 1, u + 1, len - 1, u, wp);
+        acb_log_sin_pi(u, h, wp);
+
+        _acb_vec_sub(u, t, u, len, wp);
+
+        acb_const_pi(t, wp); /* todo: constant for log pi */
+        acb_log(t, t, wp);
+        acb_add(u, u, t, wp);
+    }
+    else
+    {
+        /* log gamma(x) = log gamma(x+r) - log rf(x,r) */
+
+        acb_add_ui(zr, h, r, wp);
+        _acb_poly_gamma_stirling_eval(u, zr, n, len, wp);
+
+        if (r != 0)
+        {
+            _log_rising_ui_series(t, h, r, len, wp);
+            _acb_vec_sub(u, u, t, len, wp);
+        }
     }
 
     /* compose with nonconstant part */
