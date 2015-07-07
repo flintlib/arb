@@ -144,9 +144,9 @@ _arb_poly_log_cpx_series(arb_ptr res, const arb_t c, long num, long prec)
 }
 
 void
-_arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long prec)
+_arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, long n, long num, int diff, long prec)
 {
-    long tlen, qlen;
+    long k, tlen, qlen;
     arb_ptr T, Q;
     mag_ptr err;
     arb_t c;
@@ -170,30 +170,70 @@ _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long
         _arb_poly_div_series(res, T, tlen, Q, qlen, num, prec);
     }
 
-    /* ((z-1/2) + t) * log(z+t) */
-    _arb_poly_log_cpx_series(T, z, num, prec);
-    arb_one(c);
-    arb_mul_2exp_si(c, c, -1);
-    arb_sub(c, z, c, prec);
-    _arb_poly_mullow_cpx(T, T, num, c, num, prec);
+    if (diff)
+    {
+        _arb_vec_add_error_mag_vec(res, err, num);
+        _arb_poly_derivative(res, res, num, prec);
 
-    /* constant term */
-    arb_const_log_sqrt2pi(c, prec);
-    arb_add(T, T, c, prec);
+        if (num > 1)
+        {
+            /* add log(z+x) - 1/(2(z+x)) */
+            arb_inv(c, z, prec);
+            _arb_vec_set_powers(T, c, num, prec);
 
-    /* subtract (z+t) */
-    arb_sub(T, T, z, prec);
-    if (num > 1)
-        arb_sub_ui(T + 1, T + 1, 1, prec);
+            for (k = 1; k < num - 1; k++)
+            {
+                arb_mul_2exp_si(T, z, 1);
+                arb_div_ui(T, T, k, prec);
+                arb_add_ui(T, T, 1, prec);
+                arb_mul_2exp_si(T, T, -1);
 
-    _arb_vec_add(res, res, T, num, prec);
+                if (k % 2 == 0)
+                    arb_submul(res + k, T, T + k + 1, prec);
+                else
+                    arb_addmul(res + k, T, T + k + 1, prec);
+            }
 
-    _arb_vec_add_error_mag_vec(res, err, num);
+            arb_mul_2exp_si(c, c, -1);
+            arb_sub(res, res, c, prec);
+
+            arb_log(c, z, prec);
+            arb_add(res, res, c, prec);
+        }
+    }
+    else
+    {
+        /* ((z-1/2) + t) * log(z+t) */
+        _arb_poly_log_cpx_series(T, z, num, prec);
+        arb_one(c);
+        arb_mul_2exp_si(c, c, -1);
+        arb_sub(c, z, c, prec);
+        _arb_poly_mullow_cpx(T, T, num, c, num, prec);
+
+        /* constant term */
+        arb_const_log_sqrt2pi(c, prec);
+        arb_add(T, T, c, prec);
+
+        /* subtract (z+t) */
+        arb_sub(T, T, z, prec);
+        if (num > 1)
+            arb_sub_ui(T + 1, T + 1, 1, prec);
+
+        _arb_vec_add(res, res, T, num, prec);
+
+        _arb_vec_add_error_mag_vec(res, err, num);
+    }
 
     _arb_vec_clear(T, num);
     _arb_vec_clear(Q, num);
     _mag_vec_clear(err, num);
     arb_clear(c);
+}
+
+void
+_arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long prec)
+{
+    _arb_poly_gamma_stirling_eval2(res, z, n, num, 0, prec);
 }
 
 void

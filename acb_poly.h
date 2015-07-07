@@ -554,6 +554,10 @@ void _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, lon
 
 void acb_poly_lgamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec);
 
+void _acb_poly_digamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec);
+
+void acb_poly_digamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec);
+
 void _acb_poly_rising_ui_series(acb_ptr res, acb_srcptr f, long flen, ulong r, long trunc, long prec);
 
 void acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec);

@@ -863,8 +863,12 @@ Gamma function and factorials
 
 .. function:: void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
 
+.. function:: void _arb_poly_digamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+
+.. function:: void arb_poly_digamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+
     Sets *res* to the series expansion of `\Gamma(h(x))`, `1/\Gamma(h(x))`,
-    or `\log \Gamma(h(x))`, truncated to length *n*.
+    or `\log \Gamma(h(x))`, `\psi(h(x))`, truncated to length *n*.
 
     These functions first generate the Taylor series at the constant
     term of *h*, and then call :func:`_arb_poly_compose_series`.

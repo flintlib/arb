@@ -111,9 +111,9 @@ _acb_poly_log_cpx_series(acb_ptr res, const acb_t c, long num, long prec)
 }
 
 void
-_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec)
+_acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, long n, long num, int diff, long prec)
 {
-    long tlen, qlen;
+    long k, tlen, qlen;
     acb_ptr T, Q;
     mag_ptr err;
     acb_t c;
@@ -137,31 +137,71 @@ _acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long
         _acb_poly_div_series(res, T, tlen, Q, qlen, num, prec);
     }
 
-    /* ((z-1/2) + t) * log(z+t) */
-    _acb_poly_log_cpx_series(T, z, num, prec);
-    acb_one(c);
-    acb_mul_2exp_si(c, c, -1);
-    acb_sub(c, z, c, prec);
-    _acb_poly_mullow_cpx(T, T, num, c, num, prec);
+    if (diff)
+    {
+        _acb_vec_add_error_mag_vec(res, err, num);
+        _acb_poly_derivative(res, res, num, prec);
 
-    /* constant term */
-    arb_const_log_sqrt2pi(acb_realref(c), prec);
-    arb_zero(acb_imagref(c));
-    acb_add(T, T, c, prec);
+        if (num > 1)
+        {
+            /* add log(z+x) - 1/(2(z+x)) */
+            acb_inv(c, z, prec);
+            _acb_vec_set_powers(T, c, num, prec);
 
-    /* subtract (z+t) */
-    acb_sub(T, T, z, prec);
-    if (num > 1)
-        acb_sub_ui(T + 1, T + 1, 1, prec);
+            for (k = 1; k < num - 1; k++)
+            {
+                acb_mul_2exp_si(T, z, 1);
+                acb_div_ui(T, T, k, prec);
+                acb_add_ui(T, T, 1, prec);
+                acb_mul_2exp_si(T, T, -1);
 
-    _acb_vec_add(res, res, T, num, prec);
+                if (k % 2 == 0)
+                    acb_submul(res + k, T, T + k + 1, prec);
+                else
+                    acb_addmul(res + k, T, T + k + 1, prec);
+            }
 
-    _acb_vec_add_error_mag_vec(res, err, num);
+            acb_mul_2exp_si(c, c, -1);
+            acb_sub(res, res, c, prec);
+
+            acb_log(c, z, prec);
+            acb_add(res, res, c, prec);
+        }
+    }
+    else
+    {
+        /* ((z-1/2) + t) * log(z+t) */
+        _acb_poly_log_cpx_series(T, z, num, prec);
+        acb_one(c);
+        acb_mul_2exp_si(c, c, -1);
+        acb_sub(c, z, c, prec);
+        _acb_poly_mullow_cpx(T, T, num, c, num, prec);
+
+        /* constant term */
+        arb_const_log_sqrt2pi(acb_realref(c), prec);
+        arb_zero(acb_imagref(c));
+        acb_add(T, T, c, prec);
+
+        /* subtract (z+t) */
+        acb_sub(T, T, z, prec);
+        if (num > 1)
+            acb_sub_ui(T + 1, T + 1, 1, prec);
+
+        _acb_vec_add(res, res, T, num, prec);
+
+        _acb_vec_add_error_mag_vec(res, err, num);
+    }
 
     _acb_vec_clear(T, num);
     _acb_vec_clear(Q, num);
     _mag_vec_clear(err, num);
     acb_clear(c);
+}
+
+void
+_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec)
+{
+    _acb_poly_gamma_stirling_eval2(res, z, n, num, 0, prec);
 }
 
 void

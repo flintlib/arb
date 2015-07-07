@@ -593,6 +593,9 @@ void arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t f, long n, long pre
 void _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
 void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec);
 
+void _arb_poly_digamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec);
+void arb_poly_digamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec);
+
 void _arb_poly_rising_ui_series(arb_ptr res, arb_srcptr f, long flen, ulong r, long trunc, long prec);
 void arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, long trunc, long prec);
 
