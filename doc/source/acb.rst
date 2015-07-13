@@ -634,21 +634,6 @@ Gamma function
     is computed from `S'(z)` to get a continuous change
     when `z` is non-real and `n` spans more than one possible integer value.
 
-Zeta function
--------------------------------------------------------------------------------
-
-.. function:: void acb_zeta(acb_t z, const acb_t s, long prec)
-
-    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
-    Note: for computing derivatives with respect to `s`,
-    use :func:`acb_poly_zeta_series` or related methods.
-
-.. function:: void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
-
-    Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
-    Note: for computing derivatives with respect to `s`,
-    use :func:`acb_poly_zeta_series` or related methods.
-
 .. function:: void acb_polygamma(acb_t z, const acb_t s, const acb_t z, long prec)
 
     Sets *res* to the value of the generalized polygamma function `\psi(s,z)`.
@@ -666,6 +651,45 @@ Zeta function
     .. math ::
 
         \psi(s,z) = \frac{\zeta'(s+1,z) + (\gamma + \psi(-s)) \zeta(s+1,z)}{\Gamma(-s)}
+
+.. function:: void acb_barnes_g(acb_t res, const acb_t z, long prec)
+
+.. function:: void acb_log_barnes_g(acb_t res, const acb_t z, long prec)
+
+    Computes Barnes *G*-function or the logarithmic Barnes *G*-function,
+    respectively. The logarithmic version has branch cuts on the negative
+    real axis and is continuous elsewhere in the complex plane,
+    in analogy with the logarithmic gamma function. The functional
+    equation
+
+    .. math ::
+
+        \log G(z+1) = \log \Gamma(z) + \log G(z).
+
+    holds for all *z*.
+
+    For small integers, we directly use the recurrence
+    relation `G(z+1) = \Gamma(z) G(z)` together with the initial value
+    `G(1) = 1`. For general *z*, we use the formula
+
+    .. math ::
+
+        \log G(z) = (z-1) \log \Gamma(z) - \zeta'(-1,z) + \zeta'(-1).
+
+Zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_zeta(acb_t z, const acb_t s, long prec)
+
+    Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`acb_poly_zeta_series` or related methods.
+
+.. function:: void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
+
+    Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
+    Note: for computing derivatives with respect to `s`,
+    use :func:`acb_poly_zeta_series` or related methods.
 
 Polylogarithms
 -------------------------------------------------------------------------------
