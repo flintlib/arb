@@ -32,6 +32,7 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
     long i;
     mag_t bound;
     arb_ptr vb;
+    int is_real, const_is_real;
 
     if (d < 1)
         return;
@@ -40,6 +41,22 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
     {
         _acb_vec_indeterminate(z, d);
         return;
+    }
+
+    is_real = const_is_real = 0;
+
+    if (acb_is_real(s) && acb_is_real(a))
+    {
+        if (arb_is_positive(acb_realref(a)))
+        {
+            is_real = const_is_real = 1;
+        }
+        else if (arb_is_int(acb_realref(a)) &&
+             arb_is_int(acb_realref(s)) &&
+             arb_is_nonpositive(acb_realref(s)))
+        {
+            const_is_real = 1;
+        }
     }
 
     mag_init(bound);
@@ -54,7 +71,9 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
     {
         arb_get_mag(bound, vb + i);
         arb_add_error_mag(acb_realref(z + i), bound);
-        arb_add_error_mag(acb_imagref(z + i), bound);
+
+        if (!is_real && !(i == 0 && const_is_real))
+            arb_add_error_mag(acb_imagref(z + i), bound);
     }
 
     mag_clear(bound);
