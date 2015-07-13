@@ -649,6 +649,24 @@ Zeta function
     Note: for computing derivatives with respect to `s`,
     use :func:`acb_poly_zeta_series` or related methods.
 
+.. function:: void acb_polygamma(acb_t z, const acb_t s, const acb_t z, long prec)
+
+    Sets *res* to the value of the generalized polygamma function `\psi(s,z)`.
+
+    If *s* is a nonnegative order, this is simply the *s*-order derivative
+    of the digamma function. If `s = 0`, this function simply
+    calls the digamma function internally. For integers `s \ge 1`,
+    it calls the Hurwitz zeta function. Note that for small integers
+    `s \ge 1`, it can be faster to use
+    :func:`acb_poly_digamma_series` and read off the coefficients.
+
+    The generalization to other values of *s* is due to
+    Espinosa and Moll [EM2004]_:
+
+    .. math ::
+
+        \psi(s,z) = \frac{\zeta'(s+1,z) + (\gamma + \psi(-s)) \zeta(s+1,z)}{\Gamma(-s)}
+
 Polylogarithms
 -------------------------------------------------------------------------------
 

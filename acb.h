@@ -705,6 +705,7 @@ void acb_log_sin_pi(acb_t res, const acb_t z, long prec);
 void acb_digamma(acb_t y, const acb_t x, long prec);
 void acb_zeta(acb_t z, const acb_t s, long prec);
 void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec);
+void acb_polygamma(acb_t res, const acb_t s, const acb_t z, long prec);
 
 void acb_polylog(acb_t w, const acb_t s, const acb_t z, long prec);
 void acb_polylog_si(acb_t w, long s, const acb_t z, long prec);
