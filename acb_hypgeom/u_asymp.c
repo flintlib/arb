@@ -179,7 +179,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
 {
     mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
     acb_struct aa[3];
-    acb_t s, t, w;
+    acb_t s, t, w, winv;
     int R, p, q, is_real;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(z))
@@ -204,6 +204,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     acb_init(s);
     acb_init(t);
     acb_init(w);
+    acb_init(winv);
 
     /* special case, for incomplete gamma
       [todo: also when they happen to be exact and with difference 1...] */
@@ -228,6 +229,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
 
     acb_neg(w, z);
     acb_inv(w, w, prec);
+    acb_neg(winv, z);
 
     if (n < 0)
         n = acb_hypgeom_pfq_choose_n(aa, p, aa + p, q, w, prec);
@@ -243,7 +245,7 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     }
     else
     {
-        acb_hypgeom_pfq_sum(s, t, aa, p, aa + p, q, w, n, prec);
+        acb_hypgeom_pfq_sum_invz(s, t, aa, p, aa + p, q, w, winv, n, prec);
 
         if (R == 1)
         {
@@ -307,5 +309,6 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     acb_clear(s);
     acb_clear(t);
     acb_clear(w);
+    acb_clear(winv);
 }
 

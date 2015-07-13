@@ -86,6 +86,8 @@ or remove a 1 from the `a_i` parameters if there is one.
 
 .. function:: void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
+.. function:: void acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+
 .. function:: void acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 
 .. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
@@ -97,6 +99,8 @@ or remove a 1 from the `a_i` parameters if there is one.
     The *forward* version computes the sum using forward
     recurrence.
 
+    The *bs* version computes the sum using binary splitting.
+
     The *rs* version computes the sum in reverse order
     using rectangular splitting. It only computes a
     magnitude bound for the value of *t*.
@@ -105,6 +109,13 @@ or remove a 1 from the `a_i` parameters if there is one.
 
     The default version automatically chooses an algorithm
     depending on the inputs.
+
+.. function:: void acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t w, long n, long prec)
+
+.. function:: void acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, const acb_t w, long n, long prec)
+
+    Like :func:`acb_hypgeom_pfq_sum`, but taking advantage of
+    `w = 1/z` possibly having few bits.
 
 .. function:: void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
 

@@ -45,11 +45,20 @@ void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, long p, acb_src
 void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
 
+void acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
+    const acb_t z, long n, long prec);
+
 void acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
 
 void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
+
+void acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t,
+    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec);
+
+void acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, long p,
+    acb_srcptr b, long q, const acb_t z, const acb_t zinv, long n, long prec);
 
 void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q,
     const acb_t z, long n, long prec);
