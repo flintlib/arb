@@ -6,6 +6,38 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2015-07-14 - version 2.7.0
+
+  * hypergeometric functions
+
+    * implemented Bessel I and Y functions (acb_hypgeom_bessel_i, acb_hypgeom_bessel_y)
+    * fixed bug in Bessel K function giving the wrong branch for negative real arguments
+    * added code for evaluating complex hypergeometric series binary splitting
+    * added code for evaluating complex hypergeometric series using fast multipoint evaluation
+
+  * gamma related functions
+
+    * implemented the Barnes G-function and its continuous logarithm (acb_barnes_g, acb_log_barnes_g)
+    * implemented the generalized polygamma function (acb_polygamma)
+    * implemented the reflection formula for the logarithmic gamma function (acb_lgamma, acb_poly_lgamma_series)
+    * implemented the digamma function of power series (arb_poly_digamma_series, acb_poly_digamma_series)
+    * improved acb_poly_zeta_series to produce exact zero imaginary parts in most cases when the result should be real-valued
+    * made the real logarithmic gamma function (arb_lgamma, arb_poly_lgamma_series) abort more quickly for negative input
+
+  * elementary functions
+
+    * added arb_exp_expinv and acb_exp_expinv functions for simultaneously computing exp(x), exp(-x)
+    * improved acb_tan, acb_tan_pi, acb_cot and acb_cot_pi for input with large imaginary parts
+    * added complex hyperbolic functions (acb_sinh, acb_cosh, acb_sinh_cosh, acb_tanh, acb_coth)
+    * added acb_log_sin_pi for computing the logarithmic sine function without branch cuts away from the real line
+    * added arb_poly_cot_pi_series, acb_poly_cot_pi_series
+    * added arf_root and improved speed of arb_root
+    * tuned algorithm selection in arb_pow_fmpq
+
+  * other
+
+    * added documentation for arb and acb vector functions
+
 * 2015-04-19 - version 2.6.0
 
   * special functions
