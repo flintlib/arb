@@ -49,6 +49,48 @@ evaluate(acb_poly_t A, acb_srcptr a, long p, const acb_t z, long n, long prec)
             acb_mul(A->coeffs + 1, A->coeffs + 1, z, prec);
         }
     }
+    else if (p == 3)
+    {
+        acb_t t, u;
+        acb_init(t);
+        acb_init(u);
+
+        acb_add(t, a + 0, a + 1, prec);
+        acb_add(t, t, a + 2, prec);
+
+        acb_mul(u, a + 0, a + 1, prec);
+        acb_mul(A->coeffs, u, a + 2, prec);
+
+        acb_addmul(u, a + 0, a + 2, prec);
+        acb_addmul(u, a + 1, a + 2, prec);
+
+        /*
+        (a0 + n)(a1 + n)(a2 + n) = a0 a1 a2 + (a0 a1 + a0 a2 + a1 a2) n + (a0 + a1 + a2) n^2 + n^3
+        (a0 a1 + a0 a2 + a1 a2) + 2 (a0 + a1 + a2) n + 3 n^2
+        (a0 + a1 + a2) + 3n
+        1
+        */
+
+        acb_addmul_ui(A->coeffs, u, n, prec);
+        acb_addmul_ui(A->coeffs, t, n * n, prec);
+        acb_add_ui(A->coeffs, A->coeffs, n * n * n, prec);
+
+        acb_set(A->coeffs + 1, u);
+        acb_addmul_ui(A->coeffs + 1, t, 2 * n, prec);
+        acb_add_ui(A->coeffs + 1, A->coeffs + 1, 3 * n * n, prec);
+
+        acb_add_ui(A->coeffs + 2, t, 3 * n, prec);
+
+        if (z != NULL)
+        {
+            acb_mul(A->coeffs + 0, A->coeffs + 0, z, prec);
+            acb_mul(A->coeffs + 1, A->coeffs + 1, z, prec);
+            acb_mul(A->coeffs + 2, A->coeffs + 2, z, prec);
+        }
+
+        acb_clear(t);
+        acb_clear(u);
+    }
     else if (p != 0)
     {
         abort();
@@ -140,7 +182,7 @@ acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t,
     m = n_sqrt(n) / 4;  /* tuning parameter */
     w = n / FLINT_MAX(m, 1);
 
-    if (m < 1 || w < 1 || p > 2 || q > 2)
+    if (m < 1 || w < 1 || p > 3 || q > 3)
     {
         acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);
         return;

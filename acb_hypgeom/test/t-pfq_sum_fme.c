@@ -41,8 +41,8 @@ int main()
         acb_t z, s1, s2, t1, t2;
         long i, p, q, n, prec1, prec2;
 
-        p = n_randint(state, 3);
-        q = n_randint(state, 3);
+        p = n_randint(state, 4);
+        q = n_randint(state, 4);
         n = n_randint(state, 100);
         prec1 = 2 + n_randint(state, 500);
         prec2 = 2 + n_randint(state, 500);
