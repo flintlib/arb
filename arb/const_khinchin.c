@@ -38,7 +38,7 @@ arb_const_khinchin_eval_param(arb_t s, ulong N, ulong M, long prec)
     arb_init(h);
 
     if (N < 2) abort();
-    if (M < 0) abort();
+    /* if (M < 0) abort(); */
 
     pows = _arb_vec_init(N - 2);
 
@@ -121,4 +121,3 @@ arb_const_khinchin_eval(arb_t K, long prec)
 }
 
 ARB_DEF_CACHED_CONSTANT(arb_const_khinchin, arb_const_khinchin_eval)
-
