@@ -19,61 +19,64 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "fmprb.h"
+#include "arb.h"
 
-
-
-/* TODO: fix/optimize for n > prec */
 void
-fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec)
+arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, long prec)
 {
     if (n < FLINT_BITS)
     {
-        fmprb_div_ui(y, x, (1UL << n) - 1, prec);
+        arb_div_ui(y, x, (1UL << n) - 1, prec);
     }
-    else if (n < 1024 + prec / 32 || n > LONG_MAX / 2)
+    else if (n < 1024 + prec / 32 || n > LONG_MAX / 4)
     {
-        fmprb_t t;
-        fmprb_init(t);
-        fmprb_one(t);
-        fmpz_set_ui(fmpr_expref(fmprb_midref(t)), n);
-        fmprb_sub_ui(t, t, 1, prec);
-        fmprb_div(y, x, t, prec);
-        fmprb_clear(t);
+        arb_t t;
+        fmpz_t e;
+
+        arb_init(t);
+        fmpz_init_set_ui(e, n);
+
+        arb_one(t);
+        arb_mul_2exp_fmpz(t, t, e);
+        arb_sub_ui(t, t, 1, prec);
+        arb_div(y, x, t, prec);
+
+        arb_clear(t);
+        fmpz_clear(e);
     }
     else
     {
-        fmprb_t s, t;
+        arb_t s, t;
         long i, b;
 
-        fmprb_init(s);
-        fmprb_init(t);
+        arb_init(s);
+        arb_init(t);
 
         /* x / (2^n - 1) = sum_{k>=1} x * 2^(-k*n)*/
-
-        fmprb_mul_2exp_si(s, x, -n);
-        fmprb_set(t, s);
+        arb_mul_2exp_si(s, x, -n);
+        arb_set(t, s);
         b = 1;
 
         for (i = 2; i <= prec / n + 1; i++)
         {
-            fmprb_mul_2exp_si(t, t, -n);
-            fmprb_add(s, s, t, prec);
+            arb_mul_2exp_si(t, t, -n);
+            arb_add(s, s, t, prec);
             b = i;
         }
 
         /* error bound: sum_{k>b} x * 2^(-k*n) <= x * 2^(-b*n - (n-1)) */
-        fmprb_mul_2exp_si(t, x, -b*n - (n-1));
-        fmprb_abs(t, t);
-        fmprb_add_error(s, t);
+        arb_mul_2exp_si(t, x, -b*n - (n-1));
+        arb_abs(t, t);
+        arb_add_error(s, t);
 
-        fmprb_set(y, s);
+        arb_set(y, s);
 
-        fmprb_clear(s);
-        fmprb_clear(t);
+        arb_clear(s);
+        arb_clear(t);
     }
 }
+

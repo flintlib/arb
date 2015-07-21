@@ -292,9 +292,6 @@ fmprb_inv(fmprb_t y, const fmprb_t x, long prec)
     fmprb_ui_div(y, 1, x, prec);
 }
 
-void fmprb_div_2expm1_ui(fmprb_t y, const fmprb_t x, ulong n, long prec);
-
-
 void fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
 void fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
 void fmprb_mul_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);

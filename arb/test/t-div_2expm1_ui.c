@@ -49,12 +49,26 @@ int main()
 
         prec = 2 + n_randint(state, 10000);
         arb_randtest(a, state, 1 + n_randint(state, 10000), 10);
-        n = 1 + (n_randtest(state) % (10 * prec));
+
+        if (n_randint(state, 2))
+            n = 1 + (n_randtest(state) % (10 * prec));
+        else
+            n = n_randtest(state);
 
         arb_div_2expm1_ui(b, a, n, prec);
 
         arb_one(c);
-        arb_mul_2exp_si(c, c, n);
+        if (n >= (1UL << (FLINT_BITS-1)))
+        {
+            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, n - (1UL << (FLINT_BITS-1)));
+        }
+        else
+        {
+            arb_mul_2exp_si(c, c, n);
+        }
+
         arb_sub_ui(c, c, 1, prec);
         arb_div(c, a, c, prec);
 
@@ -64,13 +78,14 @@ int main()
         if (!arb_overlaps(b, c))
         {
             printf("FAIL: containment\n\n");
+            printf("n = %lu\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
             abort();
         }
 
-        if ((acc2 < FLINT_MIN(prec, acc1) - 10) &&
+        if (n > 0 && (acc2 < FLINT_MIN(prec, acc1) - 10) &&
                 !(acc1 == -ARF_PREC_EXACT && acc2 == -ARF_PREC_EXACT))
         {
             printf("FAIL: poor accuracy\n\n");
