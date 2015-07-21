@@ -581,6 +581,8 @@ void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 void mag_sqrt(mag_t y, const mag_t x);
 void mag_rsqrt(mag_t y, const mag_t x);
 
+void mag_root(mag_t y, const mag_t x, ulong n);
+
 void mag_hypot(mag_t z, const mag_t x, const mag_t y);
 
 void mag_binpow_uiui(mag_t b, ulong m, ulong n);

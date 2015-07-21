@@ -285,6 +285,12 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `\sqrt{x^2 + y^2}`.
 
+.. function:: void mag_root(mag_t z, const mag_t x, ulong n)
+
+    Sets *z* to an upper bound for `x^{1/n}`. 
+    We evaluate `\exp(\log(1+2^{kn}x)/n) 2^{-n}`, where *k* is chosen
+    so that `2^{kn}x \approx 2^{30}`.
+
 .. function:: void mag_log1p(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\log(1+x)`. The bound is computed
