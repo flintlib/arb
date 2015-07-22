@@ -457,6 +457,10 @@ long acb_poly_find_roots(acb_ptr roots,
     const acb_poly_t poly, acb_srcptr initial,
     long maxiter, long prec);
 
+void _acb_poly_root_bound_fujiwara(mag_t bound, acb_srcptr poly, long len);
+
+void acb_poly_root_bound_fujiwara(mag_t bound, acb_poly_t poly);
+
 /* Special functions */
 
 void _acb_poly_pow_ui_trunc_binexp(acb_ptr res,

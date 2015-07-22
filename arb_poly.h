@@ -630,6 +630,10 @@ void _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly,
     long eval_extra_prec,
     long prec);
 
+void _arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, long len);
+
+void arb_poly_root_bound_fujiwara(mag_t bound, arb_poly_t poly);
+
 /* Macros */
 
 

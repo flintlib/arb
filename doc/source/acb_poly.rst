@@ -954,6 +954,24 @@ Other special functions
 Root-finding
 -------------------------------------------------------------------------------
 
+.. function:: void _acb_poly_root_bound_fujiwara(mag_t bound, acb_srcptr poly, long len)
+
+.. function:: void acb_poly_root_bound_fujiwara(mag_t bound, acb_poly_t poly)
+
+    Sets *bound* to an upper bound for the magnitude of all the complex
+    roots of *poly*. Uses Fujiwara's bound
+
+    .. math ::
+
+        2 \max \left\{\left|\frac{a_{n-1}}{a_n}\right|,
+                      \left|\frac{a_{n-2}}{a_n}\right|^{1/2},
+                      \cdots,
+                      \left|\frac{a_1}{a_n}\right|^{1/(n-1)},
+                      \left|\frac{a_0}{2a_n}\right|^{1/n}
+               \right\}
+
+    where `a_0, \ldots, a_n` are the coefficients of *poly*.
+
 .. function:: void _acb_poly_root_inclusion(acb_t r, const acb_t m, acb_srcptr poly, acb_srcptr polyder, long len, long prec)
 
     Given any complex number `m`, and a nonconstant polynomial `f` and its

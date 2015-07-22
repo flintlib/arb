@@ -947,6 +947,24 @@ Zeta function
 Root-finding
 -------------------------------------------------------------------------------
 
+.. function:: void _arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, long len)
+
+.. function:: void arb_poly_root_bound_fujiwara(mag_t bound, arb_poly_t poly)
+
+    Sets *bound* to an upper bound for the magnitude of all the complex
+    roots of *poly*. Uses Fujiwara's bound
+
+    .. math ::
+
+        2 \max \left\{\left|\frac{a_{n-1}}{a_n}\right|,
+                      \left|\frac{a_{n-2}}{a_n}\right|^{1/2},
+                      \cdots,
+                      \left|\frac{a_1}{a_n}\right|^{1/(n-1)},
+                      \left|\frac{a_0}{2a_n}\right|^{1/n}
+               \right\}
+
+    where `a_0, \ldots, a_n` are the coefficients of *poly*.
+
 .. function:: void _arb_poly_newton_convergence_factor(arf_t convergence_factor, arb_srcptr poly, long len, const arb_t convergence_interval, long prec)
 
     Given an interval `I` specified by *convergence_interval*, evaluates a bound
