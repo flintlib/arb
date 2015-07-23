@@ -190,11 +190,11 @@ void arb_set_round(arb_t z, const arb_t x, long prec);
 
 void arb_trim(arb_t y, const arb_t x);
 
-void arb_neg(arb_t x, const arb_t y);
+void arb_neg(arb_t y, const arb_t x);
 
 void arb_neg_round(arb_t x, const arb_t y, long prec);
 
-void arb_abs(arb_t x, const arb_t y);
+void arb_abs(arb_t y, const arb_t x);
 
 void _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, long n, arf_rnd_t rnd);
 
@@ -1070,4 +1070,3 @@ void arb_atan_arf_bb(arb_t z, const arf_t x, long prec);
 #endif
 
 #endif
-

@@ -26,9 +26,8 @@
 #include "arb.h"
 
 void
-arb_neg(arb_t x, const arb_t y)
+arb_neg(arb_t y, const arb_t x)
 {
-    arf_neg(arb_midref(x), arb_midref(y));
-    mag_set(arb_radref(x), arb_radref(y));
+    arf_neg(arb_midref(y), arb_midref(x));
+    mag_set(arb_radref(y), arb_radref(x));
 }
-

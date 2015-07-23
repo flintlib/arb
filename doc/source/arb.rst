@@ -525,7 +525,7 @@ Arithmetic
 
     Sets *y* to the negation of *x*.
 
-.. function:: void arb_abs(arb_t x, const arb_t y)
+.. function:: void arb_abs(arb_t y, const arb_t x)
 
     Sets *y* to the absolute value of *x*. No attempt is made to improve the
     interval represented by *x* if it contains zero.
@@ -1429,4 +1429,3 @@ Vector functions
     Calls :func:`arb_get_unique_fmpz` elementwise and returns nonzero if
     all entries can be rounded uniquely to integers. If any entry in *vec*
     cannot be rounded uniquely to an integer, returns zero.
-
