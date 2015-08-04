@@ -1162,6 +1162,23 @@ Bernoulli numbers
     enough and `n` large enough for the Euler product to converge
     rapidly (otherwise this function will effectively hang).
 
+.. function:: void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec)
+
+    For *n* from 0 to *len* - 1, sets entry *n* in the output vector *res* to
+
+    .. math ::
+
+        S_n(a,b) = \frac{1}{n+1}\left(B_{n+1}(b) - B_{n+1}(a)\right)
+
+    where `B_n(x)` is a Bernoulli polynomial. If *a* and *b* are integers
+    and `b \ge a`, this is equivalent to
+
+    .. math ::
+
+        S_n(a,b) = \sum_{k=a}^{b-1} k^n.
+
+    The computation uses the generating function for Bernoulli polynomials.
+
 Polylogarithms
 -------------------------------------------------------------------------------
 

@@ -616,6 +616,8 @@ void arb_zeta_ui(arb_t z, ulong n, long prec);
 void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec);
 void arb_bernoulli_ui(arb_t z, ulong n, long prec);
 
+void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec);
+
 void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, long prec);
 void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec);
 void arb_rising_ui_rec(arb_t y, const arb_t x, ulong n, long prec);
