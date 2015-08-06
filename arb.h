@@ -616,8 +616,6 @@ void arb_zeta_ui(arb_t z, ulong n, long prec);
 void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec);
 void arb_bernoulli_ui(arb_t z, ulong n, long prec);
 
-void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec);
-
 void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, long prec);
 void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec);
 void arb_rising_ui_rec(arb_t y, const arb_t x, ulong n, long prec);
@@ -651,6 +649,11 @@ void arb_chebyshev_t_ui(arb_t a, ulong n, const arb_t x, long prec);
 void arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
 void arb_chebyshev_u_ui(arb_t a, ulong n, const arb_t x, long prec);
 void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec);
+
+void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec);
+void arb_bell_sum_taylor(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec);
+void arb_bell_sum_bsplit(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec);
+void arb_bell_fmpz(arb_t res, const fmpz_t n, long prec);
 
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX long name ## _cached_prec = 0; \

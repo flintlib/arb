@@ -1219,6 +1219,23 @@ Other special functions
     `a = U_n(x), b = U_{n-1}(x)`.
     Aliasing between *a*, *b* and *x* is not permitted.
 
+.. function:: void arb_bell_sum_bsplit(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+
+.. function:: void arb_bell_sum_taylor(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+
+    Helper functions for Bell numbers, evaluating the sum
+    `\sum_{k=a}^{b-1} k^n / k!`. If *mmag* is non-NULL, it may be used
+    to indicate that the target error tolerance should be
+    `2^{mmag - prec}`.
+
+.. function:: void arb_bell_fmpz(arb_t res, const fmpz_t n, long prec)
+
+.. function:: void arb_bell_ui(arb_t res, ulong n, long prec)
+
+    Sets *res* to the Bell number `B_n`. If the number is too large to
+    fit exactly in *prec* bits, a numerical approximation is computed
+    efficiently.
+
 Internals for computing elementary functions
 -------------------------------------------------------------------------------
 
