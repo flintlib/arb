@@ -32,7 +32,7 @@ int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
 int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
 
 void
-arb_exp_arf_huge(arb_t z, const arf_t x, long prec, long mag, int minus_one)
+arb_exp_arf_huge(arb_t z, const arf_t x, long mag, long prec, int minus_one)
 {
     arb_t ln2, t, u;
     fmpz_t q;
