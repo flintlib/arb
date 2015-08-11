@@ -236,16 +236,26 @@ acb_set_si(acb_t z, long c)
     arb_zero(acb_imagref(z));
 }
 
+ACB_INLINE void
+acb_set_si_si(acb_t z, long x, long y)
+{
+    arb_set_si(arb_realref(z), x);
+    arb_set_si(arb_imagref(z), y);
+}
+
 #define acb_init_set_si(z, c) \
     acb_init(z);              \
     acb_set_si(z, c)
 
-ACB_INLINE void acb_set_d_d(acb_t z, double x, double y)
+#define acb_init_set_si_si(z, x, y) \
+    acb_init(z)                     \
+    acb_set_si_si(z, x, y)
+
+ACB_INLINE void 
+acb_set_d_d(acb_t z, double x, double y)
 {
-    arf_set_d(arb_midref(acb_realref(z)), x);
-    arf_set_d(arb_midref(acb_imagref(z)), y);
-    mag_zero(arb_radref(acb_realref(z)));
-    mag_zero(arb_radref(acb_imagref(z)));
+    arb_set_d(acb_realref(z), x);
+    arb_set_d(acb_imagref(z), y);
 }
 
 #define acb_init_set_d_d(z, x, y) \
@@ -280,6 +290,17 @@ acb_set_arb(acb_t z, const arb_t c)
 {
     arb_set(acb_realref(z), c);
     arb_zero(acb_imagref(z));
+}
+
+#define acb_init_set_arb(z, c) \
+    acb_init(z);               \
+    acb_set_arb(z, c)
+
+ACB_INLINE void
+acb_set_arb_arb(acb_t z, const arb_t x, const arb_t y)
+{
+    arb_set(acb_realref(z), x);
+    arb_set(acb_imagref(z), y);
 }
 
 ACB_INLINE void
