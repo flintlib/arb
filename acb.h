@@ -225,9 +225,20 @@ acb_set_ui(acb_t z, ulong c)
     arb_zero(acb_imagref(z));
 }
 
+ACB_INLINE void
+acb_set_d(acb_t z, double c)
+{
+    arb_set_d(acb_realref(z), c);
+    arb_zero(acb_imagref(z));
+}
+
 #define acb_init_set_ui(z, c) \
     acb_init(z);              \
     acb_set_ui(z, c)
+
+#define acb_init_set_d(z, c) \
+    acb_init(z);             \
+    acb_set_d(z, c)
 
 ACB_INLINE void
 acb_set_si(acb_t z, long c)
@@ -267,6 +278,13 @@ acb_set_fmpz(acb_t z, const fmpz_t c)
 {
     arb_set_fmpz(acb_realref(z), c);
     arb_zero(acb_imagref(z));
+}
+
+ACB_INLINE void
+acb_set_fmpz_fmpz(acb_t z, const fmpz_t x, const fmpz_t y)
+{
+    arb_set_fmpz(acb_realref(z), x);
+    arb_set_fmpz(acb_imagref(z), y);
 }
 
 ACB_INLINE void
