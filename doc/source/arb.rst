@@ -127,23 +127,9 @@ Assignment and rounding
 
 .. function:: void arb_set_si(arb_t y, long x)
 
-.. macro:: arb_init_set_si(arb_t y, long x)
-
-    Macro that initializes *y* and sets the value to *x*
-
 .. function:: void arb_set_ui(arb_t y, ulong x)
 
-.. macro:: arb_init_set_ui(arb_t y, long x)
-
-    Macro that initializes *y* and sets the value to *x*
-
 .. function:: void arb_set_d(arb_t y, double x)
-
-    Sets *y* to be exactly value of *x*
-
-.. macro:: arb_init_set_d(arb_t y, double x)
-
-    Macro that initializes *y* and sets the value to *x*
 
 .. function:: void arb_set_fmpz(arb_t y, const fmpz_t x)
 
