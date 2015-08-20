@@ -55,7 +55,7 @@ Types, macros and constants
 Memory management
 -------------------------------------------------------------------------------
 
-.. function:: void acb_init(arb_t x)
+.. function:: void acb_init(acb_t x)
 
     Initializes the variable *x* for use, and sets its value to zero.
 
