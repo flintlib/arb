@@ -108,11 +108,23 @@ Basic manipulation
 
 .. function:: void acb_set_si(acb_t z, long x)
 
+.. function:: void acb_set_d(acb_t z, double x)
+
 .. function:: void acb_set_fmpz(acb_t z, const fmpz_t x)
 
 .. function:: void acb_set_arb(acb_t z, const arb_t c)
 
     Sets *z* to the value of *x*.
+
+.. function:: void acb_set_si_si(acb_t z, long x, long y)
+
+.. function:: void acb_set_d_d(acb_t z, double x, double y)
+
+.. function:: void acb_set_fmpz_fmpz(acb_t z, const fmpz_t x, const fmpz_t y)
+
+.. function:: void acb_set_arb_arb(acb_t z, const arb_t x, const arb_t y)
+
+    Sets the real and imaginary part of *z* to the values *x* and *y* respectively
 
 .. function:: void acb_set_fmpq(acb_t z, const fmpq_t x, long prec)
 

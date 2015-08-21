@@ -229,6 +229,13 @@ arb_set_ui(arb_t x, ulong y)
 }
 
 ARB_INLINE void
+arb_set_d(arb_t x, double y)
+{
+    arf_set_d(arb_midref(x), y);
+    mag_zero(arb_radref(x));
+}
+
+ARB_INLINE void
 arb_set_fmpz(arb_t x, const fmpz_t y)
 {
     arf_set_fmpz(arb_midref(x), y);

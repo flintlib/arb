@@ -226,6 +226,13 @@ acb_set_ui(acb_t z, ulong c)
 }
 
 ACB_INLINE void
+acb_set_d(acb_t z, double c)
+{
+    arb_set_d(acb_realref(z), c);
+    arb_zero(acb_imagref(z));
+}
+
+ACB_INLINE void
 acb_set_si(acb_t z, long c)
 {
     arb_set_si(acb_realref(z), c);
@@ -233,10 +240,31 @@ acb_set_si(acb_t z, long c)
 }
 
 ACB_INLINE void
+acb_set_si_si(acb_t z, long x, long y)
+{
+    arb_set_si(arb_realref(z), x);
+    arb_set_si(arb_imagref(z), y);
+}
+
+ACB_INLINE void 
+acb_set_d_d(acb_t z, double x, double y)
+{
+    arb_set_d(acb_realref(z), x);
+    arb_set_d(acb_imagref(z), y);
+}
+
+ACB_INLINE void
 acb_set_fmpz(acb_t z, const fmpz_t c)
 {
     arb_set_fmpz(acb_realref(z), c);
     arb_zero(acb_imagref(z));
+}
+
+ACB_INLINE void
+acb_set_fmpz_fmpz(acb_t z, const fmpz_t x, const fmpz_t y)
+{
+    arb_set_fmpz(acb_realref(z), x);
+    arb_set_fmpz(acb_imagref(z), y);
 }
 
 ACB_INLINE void
@@ -260,6 +288,13 @@ acb_set_arb(acb_t z, const arb_t c)
 {
     arb_set(acb_realref(z), c);
     arb_zero(acb_imagref(z));
+}
+
+ACB_INLINE void
+acb_set_arb_arb(acb_t z, const arb_t x, const arb_t y)
+{
+    arb_set(acb_realref(z), x);
+    arb_set(acb_imagref(z), y);
 }
 
 ACB_INLINE void

@@ -129,6 +129,8 @@ Assignment and rounding
 
 .. function:: void arb_set_ui(arb_t y, ulong x)
 
+.. function:: void arb_set_d(arb_t y, double x)
+
 .. function:: void arb_set_fmpz(arb_t y, const fmpz_t x)
 
     Sets *y* to the value of *x* without rounding.
