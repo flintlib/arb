@@ -55,6 +55,15 @@ arb_pow(arb_t z, const arb_t x, const arb_t y, long prec)
         return;
     }
 
+    if (arb_is_zero(x))
+    {
+        if (arb_is_positive(y))
+            arb_zero(z);
+        else
+            arb_indeterminate(z);
+        return;
+    }
+
     if (arb_is_exact(y) && !arf_is_special(arb_midref(x)))
     {
         const arf_struct * ymid = arb_midref(y);
