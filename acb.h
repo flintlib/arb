@@ -242,8 +242,8 @@ acb_set_si(acb_t z, long c)
 ACB_INLINE void
 acb_set_si_si(acb_t z, long x, long y)
 {
-    arb_set_si(arb_realref(z), x);
-    arb_set_si(arb_imagref(z), y);
+    arb_set_si(acb_realref(z), x);
+    arb_set_si(acb_imagref(z), y);
 }
 
 ACB_INLINE void 
