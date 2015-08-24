@@ -250,7 +250,7 @@ Precision and comparisons
     midpoints of *x*, and whose radius is the larger out of the real
     and imaginary radiuses of *x*.
 
-.. function:: long acb_rel_accuracy_bits(const arb_t x)
+.. function:: long acb_rel_accuracy_bits(const acb_t x)
 
     Returns the effective relative accuracy of *x* measured in bits,
     equal to the negative of the return value from :func:`acb_rel_error_bits`.
@@ -482,7 +482,7 @@ Trigonometric functions
 
 .. function:: void acb_cos(acb_t c, const acb_t z, long prec)
 
-.. function:: void acb_sin_cos(arb_t s, arb_t c, const arb_t z, long prec)
+.. function:: void acb_sin_cos(acb_t s, acb_t c, const acb_t z, long prec)
 
     Sets `s = \sin(z)`, `c = \cos(z)`, evaluated as
     `\sin(a+bi) = \sin(a)\cosh(b) + i \cos(a)\sinh(b)`,

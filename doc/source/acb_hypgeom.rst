@@ -305,13 +305,13 @@ The error function
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
 
-.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t s, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec)
 
     Computes the complementary error function
     `\operatorname{erfc}(z) = 1 - \operatorname{erf}(z)`.
     This function avoids catastrophic cancellation for large positive *z*.
 
-.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t s, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec)
 
     Computes the imaginary error function
     `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`. This is a trivial wrapper
