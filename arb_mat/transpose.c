@@ -1,0 +1,57 @@
+/*=============================================================================
+
+    This file is part of ARB.
+
+    ARB is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    ARB is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with FLINT; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2015 Tommy Hofmann
+
+******************************************************************************/
+
+#include "arb_mat.h"
+
+void
+arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
+{
+    arb_struct tmp;
+    slong i, j;
+
+    if (B->r != A->c || B->c != A->r)
+    {
+        flint_printf("Exception (arb_mat_transpose). Incompatible dimensions.\n");
+        abort();
+    }
+
+    if (A == B)  /* In-place, guaranteed to be square */
+    {
+        for (i = 0; i < A->r - 1; i++)
+            for (j = i + 1; j < A->c; j++)
+            {
+                tmp = A->rows[i][j];
+                A->rows[i][j] = A->rows[j][i];
+                A->rows[j][i] = tmp;
+            }
+    }
+    else  /* Not aliased; general case */
+    {
+        for (i = 0; i < B->r; i++)
+            for (j = 0; j < B->c; j++)
+                arb_set(&B->rows[i][j], &A->rows[j][i]);
+    }
+}
+
