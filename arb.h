@@ -754,6 +754,21 @@ _arb_vec_swap(arb_ptr res, arb_ptr vec, long len)
 }
 
 ARB_INLINE void
+_arb_vec_reverse(arb_ptr res, arb_srcptr vec, long len)
+{
+    long i;
+
+    arb_ptr L = _arb_vec_init(len);
+
+    for(i=len-1;i!=-1;i--)
+        arb_set(L+i, vec + len-i-1);
+
+    _arb_vec_set(res, L, len); 
+
+    _arb_vec_clear(L, len);
+}
+
+ARB_INLINE void
 _arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
 {
     long i;
