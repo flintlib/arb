@@ -232,20 +232,12 @@ arb_set_ui(arb_t x, ulong y)
     mag_zero(arb_radref(x));
 }
 
-#define arb_init_set_ui(x, y) \
-    arb_init(x);              \
-    arb_set_ui(x, y)
-
 ARB_INLINE void
 arb_set_d(arb_t x, double y)
 {
     arf_set_d(arb_midref(x), y);
     mag_zero(arb_radref(x));
 }
-
-#define arb_init_set_d(x, y)  \
-   arb_init(x);               \
-   arb_set_d(x, y)
 
 ARB_INLINE void
 arb_set_fmpz(arb_t x, const fmpz_t y)
