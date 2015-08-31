@@ -221,10 +221,6 @@ arb_set_si(arb_t x, long y)
     mag_zero(arb_radref(x));
 }
 
-#define arb_init_set(x, y)   \
-    arb_init(x);             \
-    arb_set_si(x, y)
-
 ARB_INLINE void
 arb_set_ui(arb_t x, ulong y)
 {
