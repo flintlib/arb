@@ -516,3 +516,22 @@ Elliptic integrals
     which is given by `E(m) = (1-m)(2m K'(m) + K(m))` (where the prime
     denotes a derivative, not a complementary integral).
 
+Class polynomials
+-------------------------------------------------------------------------------
+
+.. function:: void acb_modular_hilbert_class_poly(fmpz_poly_t res, long D)
+
+    Sets *res* to the Hilbert class polynomial of discriminant *D*,
+    defined as
+
+    .. math ::
+
+        H_D(x) = \prod_{(a,b,c)} \left(x - j\left(\frac{-b+\sqrt{D}}{2a}\right)\right)
+
+    where `(a,b,c)` ranges over the primitive reduced positive
+    definite binary quadratic forms of discriminant `b^2 - 4ac = D`.
+
+    The Hilbert class polynomial is only defined if `D < 0` and *D*
+    is congruent to 0 or 1 mod 4. If some other value of *D* is passed as
+    input, *res* is set to the zero polynomial.
+
