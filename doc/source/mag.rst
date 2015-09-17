@@ -317,6 +317,10 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `(1 + 1/m)^n`.
 
+.. function:: void mag_geom_series(mag_t res, const mag_t x, ulong N)
+
+    Sets *res* to an upper bound for `\sum_{k=N}^{\infty} x^k`.
+
 Special functions
 -------------------------------------------------------------------------------
 
