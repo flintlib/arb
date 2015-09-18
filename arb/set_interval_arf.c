@@ -33,6 +33,14 @@ arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
     arf_t t;
     int inexact;
 
+    if (arf_is_inf(a) && arf_equal(a, b))
+    {
+        /* [-inf, -inf] or [+inf, +inf] */
+        arf_set(arb_midref(x), a);
+        mag_zero(arb_radref(x));
+        return;
+    }
+
     arf_init(t);
     arf_sub(t, b, a, MAG_BITS, ARF_RND_UP);
 
