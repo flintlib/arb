@@ -285,18 +285,18 @@ Radius and interval operations
 
 .. function:: void arb_add_error_arf(arb_t x, const arf_t err)
 
-    Adds *err*, which is assumed to be nonnegative, to the radius of *x*.
+.. function:: void arb_add_error_mag(arb_t x, const mag_t err)
+
+.. function:: void arb_add_error(arb_t x, const arb_t err)
+
+    Adds the absolute value of *err* to the radius of *x* (the operation
+    is done in-place).
 
 .. function:: void arb_add_error_2exp_si(arb_t x, long e)
 
 .. function:: void arb_add_error_2exp_fmpz(arb_t x, const fmpz_t e)
 
     Adds `2^e` to the radius of *x*.
-
-.. function:: void arb_add_error(arb_t x, const arb_t error)
-
-    Adds the supremum of *err*, which is assumed to be nonnegative, to the
-    radius of *x*.
 
 .. function:: void arb_union(arb_t z, const arb_t x, const arb_t y, long prec)
 

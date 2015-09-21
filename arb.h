@@ -448,7 +448,6 @@ void arb_add_error_2exp_fmpz(arb_t x, const fmpz_t err);
 
 void arb_add_error(arb_t x, const arb_t error);
 
-/* TODO: document */
 ARB_INLINE void
 arb_add_error_mag(arb_t x, const mag_t err)
 {

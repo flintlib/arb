@@ -19,18 +19,26 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012-2014 Fredrik Johansson
+    Copyright (C) 2012-2015 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arb.h"
 
-/* TODO: improve these */
-
 void
 arb_add_error_arf(arb_t x, const arf_t err)
 {
     mag_t t;
+
+    if (arf_is_zero(err))
+        return;
+
+    if (mag_is_zero(arb_radref(x)))
+    {
+        arf_get_mag(arb_radref(x), err);
+        return;
+    }
+
     mag_init(t);
     arf_get_mag(t, err);
     mag_add(arb_radref(x), arb_radref(x), t);
@@ -41,6 +49,14 @@ void
 arb_add_error_2exp_si(arb_t x, long err)
 {
     fmpz_t t;
+
+    if (mag_is_zero(arb_radref(x)))
+    {
+        mag_one(arb_radref(x));
+        mag_mul_2exp_si(arb_radref(x), arb_radref(x), err);
+        return;
+    }
+
     fmpz_init(t);
     fmpz_set_si(t, err);
     mag_add_2exp_fmpz(arb_radref(x), arb_radref(x), t);
@@ -50,31 +66,33 @@ arb_add_error_2exp_si(arb_t x, long err)
 void
 arb_add_error_2exp_fmpz(arb_t x, const fmpz_t err)
 {
+    if (mag_is_zero(arb_radref(x)))
+    {
+        mag_one(arb_radref(x));
+        mag_mul_2exp_fmpz(arb_radref(x), arb_radref(x), err);
+        return;
+    }
+
     mag_add_2exp_fmpz(arb_radref(x), arb_radref(x), err);
 }
 
 void
-arb_add_error(arb_t x, const arb_t error)
+arb_add_error(arb_t x, const arb_t err)
 {
-    arf_t t;
     mag_t u;
 
-    arf_init(t);
-    mag_init(u);
+    if (arb_is_zero(err))
+        return;
 
-    arf_set_mag(t, arb_radref(error));
-    arf_add(t, arb_midref(error), t, MAG_BITS, ARF_RND_UP);
-
-    if (arf_sgn(t) < 0)
+    if (mag_is_zero(arb_radref(x)))
     {
-        printf("arb_add_error: error must be nonnegative!\n");
-        abort();
+        arb_get_mag(arb_radref(x), err);
+        return;
     }
 
-    arf_get_mag(u, t);
+    mag_init(u);
+    arb_get_mag(u, err);
     mag_add(arb_radref(x), arb_radref(x), u);
-
-    arf_clear(t);
     mag_clear(u);
 }
 
