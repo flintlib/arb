@@ -383,6 +383,20 @@ arb_get_mag(mag_t z, const arb_t x)
 }
 
 ARB_INLINE void
+arb_get_mid_arb(arb_t z, const arb_t x)
+{
+    arf_set(arb_midref(z), arb_midref(x));
+    mag_zero(arb_radref(z));
+}
+
+ARB_INLINE void
+arb_get_rad_arb(arb_t z, const arb_t x)
+{
+    arf_set_mag(arb_midref(z), arb_radref(x));
+    mag_zero(arb_radref(z));
+}
+
+ARB_INLINE void
 arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
 {
     arf_t t;

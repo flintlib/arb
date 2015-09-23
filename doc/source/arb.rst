@@ -283,6 +283,14 @@ Random number generation
 Radius and interval operations
 -------------------------------------------------------------------------------
 
+.. function:: void arb_get_mid_arb(arb_t m, const arb_t x)
+
+    Sets *m* to the midpoint of *x*.
+
+.. function:: void arb_get_rad_arb(arb_t r, const arb_t x)
+
+    Sets *m* to the radius of *x*.
+
 .. function:: void arb_add_error_arf(arb_t x, const arf_t err)
 
 .. function:: void arb_add_error_mag(arb_t x, const mag_t err)
