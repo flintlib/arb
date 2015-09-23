@@ -125,25 +125,9 @@ void bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec);
 
 void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n);
 
-static __inline__ void
-_bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
-{
-    if (n < (ulong) bernoulli_cache_num)
-    {
-        fmpz_set(num, fmpq_numref(bernoulli_cache + n));
-        fmpz_set(den, fmpq_denref(bernoulli_cache + n));
-    }
-    else
-    {
-        _bernoulli_fmpq_ui_zeta(num, den, n);
-    }
-}
+void _bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n);
 
-static __inline__ void
-bernoulli_fmpq_ui(fmpq_t b, ulong n)
-{
-    _bernoulli_fmpq_ui(fmpq_numref(b), fmpq_denref(b), n);
-}
+void bernoulli_fmpq_ui(fmpq_t b, ulong n);
 
 #ifdef __cplusplus
 }
