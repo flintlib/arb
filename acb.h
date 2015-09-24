@@ -89,6 +89,20 @@ _acb_vec_clear(acb_ptr v, long n)
     flint_free(v);
 }
 
+/* todo: document */
+ACB_INLINE void
+acb_get_real(arb_t re, const acb_t z)
+{
+    arb_set(re, acb_realref(z));
+}
+
+/* todo: document */
+ACB_INLINE void
+acb_get_imag(arb_t im, const acb_t z)
+{
+    arb_set(im, acb_imagref(z));
+}
+
 ACB_INLINE int
 acb_is_zero(const acb_t z)
 {
@@ -415,10 +429,26 @@ acb_sub(acb_t z, const acb_t x, const acb_t y, long prec)
     arb_sub(acb_imagref(z), acb_imagref(x), acb_imagref(y), prec);
 }
 
+/* TODO: document */
+ACB_INLINE void
+acb_add_si(acb_t z, const acb_t x, ulong c, long prec)
+{
+    arb_add_si(acb_realref(z), acb_realref(x), c, prec);
+    arb_set_round(acb_imagref(z), acb_imagref(x), prec);
+}
+
 ACB_INLINE void
 acb_add_ui(acb_t z, const acb_t x, ulong c, long prec)
 {
     arb_add_ui(acb_realref(z), acb_realref(x), c, prec);
+    arb_set_round(acb_imagref(z), acb_imagref(x), prec);
+}
+
+/* TODO: document */
+ACB_INLINE void
+acb_sub_si(acb_t z, const acb_t x, ulong c, long prec)
+{
+    arb_sub_si(acb_realref(z), acb_realref(x), c, prec);
     arb_set_round(acb_imagref(z), acb_imagref(x), prec);
 }
 
@@ -631,6 +661,7 @@ acb_div_si(acb_t z, const acb_t x, long c, long prec)
     arb_div_si(acb_imagref(z), acb_imagref(x), c, prec);
 }
 
+/* TODO: document */
 ACB_INLINE void
 acb_div_arb(acb_t z, const acb_t x, const arb_t c, long prec)
 {
