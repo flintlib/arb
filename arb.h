@@ -902,6 +902,14 @@ _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
 }
 
 ARB_INLINE void
+_arb_vec_pow_ui(arb_ptr res, arb_srcptr vec, ulong p, long len, long prec)
+{
+    long i;
+    for(i = 0; i < len; i++)
+        arb_pow_ui(res + i, vec + i, p, prec);
+}
+
+ARB_INLINE void
 _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
 {
     long i;
