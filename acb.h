@@ -831,6 +831,22 @@ _acb_vec_set(acb_ptr res, acb_srcptr vec, long len)
 }
 
 ACB_INLINE void
+_acb_vec_reverse(acb_ptr res, acb_srcptr vec, long len)
+{
+    long i;
+
+    acb_ptr L = _acb_vec_init(len);
+
+    for(i=len-1;i!=-1;i--)
+        acb_set(L+i, vec + len-i-1);
+
+    _acb_vec_set(res, L, len); 
+
+    _acb_vec_clear(L, len);
+}
+
+
+ACB_INLINE void
 _acb_vec_set_round(acb_ptr res, acb_srcptr vec, long len, long prec)
 {
     long i;
