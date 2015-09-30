@@ -140,6 +140,10 @@ Basic manipulation
 
     Swaps *z* and *x* efficiently.
 
+.. function:: void acb_add_error_mag(acb_t x, const mag_t err)
+
+    Adds *err* to the error bounds of both the real and imaginary
+    parts of *x*, modifying *x* in-place.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -286,6 +290,14 @@ Precision and comparisons
 Complex parts
 -------------------------------------------------------------------------------
 
+.. function:: void acb_get_real(arb_t re, const acb_t z)
+
+    Sets *re* to the real part of *z*.
+
+.. function:: void acb_get_imag(arb_t im, const acb_t z)
+
+    Sets *im* to the imaginary part of *z*.
+
 .. function:: void acb_arg(arb_t r, const acb_t z, long prec)
 
     Sets *r* to a real interval containing the complex argument (phase) of *z*.
@@ -298,7 +310,6 @@ Complex parts
 .. function:: void acb_abs(arb_t r, const acb_t z, long prec)
 
     Sets *r* to the absolute value of *z*.
-
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -313,6 +324,8 @@ Arithmetic
 
 .. function:: void acb_add_ui(acb_t z, const acb_t x, ulong y, long prec)
 
+.. function:: void acb_add_si(acb_t z, const acb_t x, long y, long prec)
+
 .. function:: void acb_add_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 
 .. function:: void acb_add_arb(acb_t z, const acb_t x, const arb_t y, long prec)
@@ -322,6 +335,8 @@ Arithmetic
     Sets *z* to the sum of *x* and *y*.
 
 .. function:: void acb_sub_ui(acb_t z, const acb_t x, ulong y, long prec)
+
+.. function:: void acb_sub_si(acb_t z, const acb_t x, long y, long prec)
 
 .. function:: void acb_sub_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
 
@@ -400,6 +415,8 @@ Arithmetic
 .. function:: void acb_div_si(acb_t z, const acb_t x, long y, long prec)
 
 .. function:: void acb_div_fmpz(acb_t z, const acb_t x, const fmpz_t y, long prec)
+
+.. function:: void acb_div_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 
 .. function:: void acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
 
