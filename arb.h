@@ -109,6 +109,9 @@ arb_get_fmprb(fmprb_t x, const arb_t y)
     mag_get_fmpr(fmprb_radref(x), arb_radref(y));
 }
 
+ARB_INLINE arf_ptr arb_mid_ptr(arb_t z) { return arb_midref(z); }
+ARB_INLINE mag_ptr arb_rad_ptr(arb_t z) { return arb_radref(z); }
+
 ARB_INLINE int
 arb_is_exact(const arb_t x)
 {

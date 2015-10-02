@@ -89,6 +89,9 @@ _acb_vec_clear(acb_ptr v, long n)
     flint_free(v);
 }
 
+ACB_INLINE arb_ptr acb_real_ptr(acb_t z) { return acb_realref(z); }
+ACB_INLINE arb_ptr acb_imag_ptr(acb_t z) { return acb_imagref(z); }
+
 ACB_INLINE void
 acb_get_real(arb_t re, const acb_t z)
 {
@@ -977,7 +980,7 @@ void acb_randtest_param(acb_t z, flint_rand_t state, long prec, long mag_bits);
 
 long acb_rel_error_bits(const acb_t x);
 
-ARB_INLINE long
+ACB_INLINE long
 acb_rel_accuracy_bits(const acb_t x)
 {
     return -acb_rel_error_bits(x);
@@ -1072,7 +1075,7 @@ _acb_vec_trim(acb_ptr res, acb_srcptr vec, long len)
         acb_trim(res + i, vec + i);
 }
 
-ARB_INLINE int
+ACB_INLINE int
 _acb_vec_get_unique_fmpz_vec(fmpz * res,  acb_srcptr vec, long len)
 {
     long i;
