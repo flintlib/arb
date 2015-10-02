@@ -23,37 +23,37 @@
 
 ******************************************************************************/
 
-#include "arb_mat.h"
+#include "acb_mat.h"
 
 void
-arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
+acb_mat_transpose(acb_mat_t B, const acb_mat_t A)
 {
-    arb_struct tmp;
+    acb_struct tmp;
     slong i, j;
 
-    if (arb_mat_nrows(B) != arb_mat_ncols(A) || arb_mat_ncols(B) != arb_mat_nrows(A))
+    if (acb_mat_nrows(B) != acb_mat_ncols(A) || acb_mat_ncols(B) != acb_mat_nrows(A))
     {
-        flint_printf("Exception (arb_mat_transpose). Incompatible dimensions.\n");
+        flint_printf("Exception (acb_mat_transpose). Incompatible dimensions.\n");
         abort();
     }
 
     if (A == B)  /* In-place, guaranteed to be square */
     {
-        for (i = 0; i < arb_mat_nrows(A) - 1; i++)
+        for (i = 0; i < acb_mat_nrows(A) - 1; i++)
         {
-            for (j = i + 1; j < arb_mat_ncols(A); j++)
+            for (j = i + 1; j < acb_mat_ncols(A); j++)
             {
-                tmp = *arb_mat_entry(A, i, j);
-                *arb_mat_entry(A, i, j) = *arb_mat_entry(A, j, i);
-                *arb_mat_entry(A, j, i) = tmp;
+                tmp = *acb_mat_entry(A, i, j);
+                *acb_mat_entry(A, i, j) = *acb_mat_entry(A, j, i);
+                *acb_mat_entry(A, j, i) = tmp;
             }
         }
     }
     else  /* Not aliased; general case */
     {
-        for (i = 0; i < arb_mat_nrows(B); i++)
-            for (j = 0; j < arb_mat_ncols(B); j++)
-                arb_set(arb_mat_entry(B, i, j), arb_mat_entry(A, j, i));
+        for (i = 0; i < acb_mat_nrows(B); i++)
+            for (j = 0; j < acb_mat_ncols(B); j++)
+                acb_set(acb_mat_entry(B, i, j), acb_mat_entry(A, j, i));
     }
 }
 

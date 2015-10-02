@@ -801,6 +801,12 @@ acb_indeterminate(acb_t x)
     arb_indeterminate(acb_imagref(x));
 }
 
+ACB_INLINE acb_ptr
+_acb_vec_entry_ptr(acb_ptr vec, long i)
+{
+    return vec + i;
+}
+
 ACB_INLINE void
 _acb_vec_zero(acb_ptr A, long n)
 {

@@ -59,6 +59,11 @@ typedef acb_mat_struct acb_mat_t[1];
 #define acb_mat_nrows(mat) ((mat)->r)
 #define acb_mat_ncols(mat) ((mat)->c)
 
+ACB_MAT_INLINE acb_ptr
+acb_mat_entry_ptr(acb_mat_t mat, long i, long j)
+{
+    return acb_mat_entry(mat, i, j);
+}
 
 /* Memory management */
 
@@ -79,6 +84,8 @@ acb_mat_swap(acb_mat_t mat1, acb_mat_t mat2)
 void acb_mat_set(acb_mat_t dest, const acb_mat_t src);
 
 void acb_mat_set_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src);
+
+void acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, long prec);
 
 void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec);
 
@@ -109,6 +116,8 @@ int acb_mat_is_real(const acb_mat_t mat);
 void acb_mat_zero(acb_mat_t mat);
 
 void acb_mat_one(acb_mat_t mat);
+
+void acb_mat_transpose(acb_mat_t mat1, const acb_mat_t mat2);
 
 /* Norms */
 

@@ -60,6 +60,8 @@ Conversions
 
 .. function:: void arb_mat_set_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src)
 
+.. function:: void arb_mat_set_round_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src, long prec)
+
 .. function:: void arb_mat_set_fmpq_mat(arb_mat_t dest, const fmpq_mat_t src, long prec)
 
     Sets *dest* to *src*. The operands must have identical dimensions.
@@ -114,6 +116,13 @@ Special matrices
     Sets the entries on the main diagonal to ones,
     and all other entries to zero.
 
+Transpose
+-------------------------------------------------------------------------------
+
+.. function:: void arb_mat_transpose(arb_mat_t dest, const arb_mat_t src)
+
+    Sets *dest* to the exact transpose *src*. The operands must have
+    compatible dimensions. Aliasing is allowed.
 
 Norms
 -------------------------------------------------------------------------------

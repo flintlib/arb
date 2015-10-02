@@ -34,6 +34,7 @@ The following people (among others) have contributed patches or bug reports.
 * Pascal Molin
 * Ricky Farr
 * Marcello Seri
+* Tommy Hofmann
 
 Software 
 -------------------------------------------------------------------------------

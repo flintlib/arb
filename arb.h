@@ -703,6 +703,12 @@ void arb_bell_fmpz(arb_t res, const fmpz_t n, long prec);
 
 /* vector functions */
 
+ARB_INLINE arb_ptr
+_arb_vec_entry_ptr(arb_ptr vec, long i)
+{
+    return vec + i;
+}
+
 ARB_INLINE void
 _arb_vec_zero(arb_ptr A, long n)
 {

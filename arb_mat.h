@@ -57,6 +57,11 @@ typedef arb_mat_struct arb_mat_t[1];
 #define arb_mat_nrows(mat) ((mat)->r)
 #define arb_mat_ncols(mat) ((mat)->c)
 
+ARB_MAT_INLINE arb_ptr
+arb_mat_entry_ptr(arb_mat_t mat, long i, long j)
+{
+    return arb_mat_entry(mat, i, j);
+}
 
 /* Memory management */
 
@@ -77,6 +82,8 @@ arb_mat_swap(arb_mat_t mat1, arb_mat_t mat2)
 void arb_mat_set(arb_mat_t dest, const arb_mat_t src);
 
 void arb_mat_set_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src);
+
+void arb_mat_set_round_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src, long prec);
 
 void arb_mat_set_fmpq_mat(arb_mat_t dest, const fmpq_mat_t src, long prec);
 
@@ -105,6 +112,8 @@ int arb_mat_contains_fmpz_mat(const arb_mat_t mat1, const fmpz_mat_t mat2);
 void arb_mat_zero(arb_mat_t mat);
 
 void arb_mat_one(arb_mat_t mat);
+
+void arb_mat_transpose(arb_mat_t mat1, const arb_mat_t mat2);
 
 /* Norms */
 
