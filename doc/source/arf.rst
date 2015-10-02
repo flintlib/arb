@@ -238,6 +238,9 @@ Assignment, rounding and conversions
 .. function:: double arf_get_d(const arf_t x, arf_rnd_t rnd)
 
     Returns *x* rounded to a double in the direction specified by *rnd*.
+    This method supports rounding to nearest with *ARF_RND_NEAR*.
+    It also rounds correctly when overflowing or underflowing
+    the double exponent range (this was not the case in an earlier version).
 
 .. function:: void arf_get_fmpr(fmpr_t y, const arf_t x)
 

@@ -26,6 +26,36 @@
 #include "arf.h"
 #include "double_extras.h"
 
+/* most double: (2^53-1) * 2^971 */
+/* least normal: 2^-1022 */
+/* least subnormal: 2^-1074 */
+
+static double
+huge_double(arf_rnd_t rnd, int negative)
+{
+    double v;
+
+    if (rnd == ARF_RND_NEAR || rounds_up(rnd, negative))
+        v = D_INF;
+    else
+        v = ldexp(9007199254740991.0, 971);
+
+    return negative ? -v : v;
+}
+
+static double
+tiny_double(arf_rnd_t rnd, int negative)
+{
+    double v;
+
+    if (rnd == ARF_RND_NEAR || !rounds_up(rnd, negative))
+        v = 0.0;
+    else
+        v = ldexp(1.0, -1074);
+
+    return negative ? -v : v;
+}
+
 double
 arf_get_d(const arf_t x, arf_rnd_t rnd)
 {
@@ -48,12 +78,26 @@ arf_get_d(const arf_t x, arf_rnd_t rnd)
         double v;
 
         /* also catches bignum exponents */
-        if (ARF_EXP(x) > 2000 || ARF_EXP(x) < -2000)
+        if (ARF_EXP(x) > 1030 || ARF_EXP(x) < -1080)
         {
             if (fmpz_sgn(ARF_EXPREF(x)) > 0)
-                return ARF_SGNBIT(x) ? -D_INF : D_INF;
+                return huge_double(rnd, ARF_SGNBIT(x));
             else
-                return 0.0;
+                return tiny_double(rnd, ARF_SGNBIT(x));
+        }
+
+        /* allow mpfr to take care of corner cases for now */
+        if (ARF_EXP(x) > 1020 || ARF_EXP(x) <= -1020 || rnd == ARF_RND_NEAR)
+        {
+            mpfr_t xx;
+            ARF_GET_MPN_READONLY(tp, tn, x);
+
+            xx->_mpfr_d = (mp_ptr) tp;
+            xx->_mpfr_prec = tn * FLINT_BITS;
+            xx->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
+            xx->_mpfr_exp = ARF_EXP(x);
+
+            return mpfr_get_d(xx, rnd_to_mpfr(rnd));
         }
 
         arf_init(t);
