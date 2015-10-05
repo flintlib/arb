@@ -191,7 +191,7 @@ acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
     {
         /* If the asymptotic term is small, we can
            compute with reduced precision */
-        prec2 = prec + 4 + (y*y - x*x - logz) * 1.4426950408889634074;
+        prec2 = FLINT_MIN(prec + 4 + (y*y - x*x - logz) * 1.4426950408889634074, (double) prec);
         prec2 = FLINT_MAX(8, prec2);
         prec2 = FLINT_MIN(prec2, prec);
 
