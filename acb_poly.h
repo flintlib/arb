@@ -461,6 +461,10 @@ void _acb_poly_root_bound_fujiwara(mag_t bound, acb_srcptr poly, long len);
 
 void acb_poly_root_bound_fujiwara(mag_t bound, acb_poly_t poly);
 
+int _acb_poly_validate_real_roots(acb_srcptr roots, acb_srcptr poly, long len, long prec);
+
+int acb_poly_validate_real_roots(acb_srcptr roots, const acb_poly_t poly, long prec);
+
 /* Special functions */
 
 void _acb_poly_pow_ui_trunc_binexp(acb_ptr res,
