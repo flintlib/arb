@@ -1039,3 +1039,19 @@ Root-finding
     roots, the iteration is likely to find them (with low numerical accuracy),
     but the error bounds will not converge as the precision increases.
 
+.. function:: int _acb_poly_validate_real_roots(acb_srcptr roots, acb_srcptr poly, long len, long prec)
+
+.. function:: int acb_poly_validate_real_roots(acb_srcptr roots, const acb_poly_t poly, long prec)
+
+    Given a strictly real polynomial *poly* (of length *len*) and isolating
+    intervals for all its complex roots, determines if all the real roots
+    are separated from the non-real roots. If this function returns nonzero,
+    every root enclosure that touches the real axis (as tested by applying
+    :func:`arb_contains_zero` to the imaginary part) corresponds to a real root
+    (its imaginary part can be set to zero), and every other root enclosure
+    corresponds to a non-real root (with known sign for the imaginary part).
+
+    If this function returns zero, then the signs of the imaginary parts
+    are not known for certain, based on the accuracy of the inputs
+    and the working precision *prec*.
+
