@@ -103,6 +103,14 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
 
+.. function:: int acb_mat_eq(const acb_mat_t mat1, const acb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly represent the same matrix.
+
+.. function:: int acb_mat_ne(const acb_mat_t mat1, const acb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
+
 .. function:: int acb_mat_is_real(const acb_mat_t mat)
 
     Returns nonzero iff all entries in *mat* have zero imaginary part.
