@@ -89,6 +89,10 @@ void acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, long prec)
 
 void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec);
 
+void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src);
+
+void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, long prec);
+
 /* Random generation */
 
 void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits);
@@ -98,6 +102,10 @@ void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bit
 void acb_mat_printd(const acb_mat_t mat, long digits);
 
 /* Comparisons */
+
+int acb_mat_eq(const acb_mat_t mat1, const acb_mat_t mat2);
+
+int acb_mat_ne(const acb_mat_t mat1, const acb_mat_t mat2);
 
 int acb_mat_equal(const acb_mat_t mat1, const acb_mat_t mat2);
 

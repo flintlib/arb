@@ -97,6 +97,10 @@ void arb_mat_printd(const arb_mat_t mat, long digits);
 
 /* Comparisons */
 
+int arb_mat_eq(const arb_mat_t mat1, const arb_mat_t mat2);
+
+int arb_mat_ne(const arb_mat_t mat1, const arb_mat_t mat2);
+
 int arb_mat_equal(const arb_mat_t mat1, const arb_mat_t mat2);
 
 int arb_mat_overlaps(const arb_mat_t mat1, const arb_mat_t mat2);

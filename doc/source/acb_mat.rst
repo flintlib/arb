@@ -64,6 +64,10 @@ Conversions
 
 .. function:: void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec)
 
+.. function:: void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src)
+
+.. function:: void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, long prec)
+
     Sets *dest* to *src*. The operands must have identical dimensions.
 
 Random generation
@@ -102,6 +106,14 @@ Comparisons
 
     Returns nonzero iff the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
+
+.. function:: int acb_mat_eq(const acb_mat_t mat1, const acb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly represent the same matrix.
+
+.. function:: int acb_mat_ne(const acb_mat_t mat1, const acb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
 
 .. function:: int acb_mat_is_real(const acb_mat_t mat)
 

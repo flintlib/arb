@@ -103,6 +103,13 @@ Comparisons
     Returns nonzero iff the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
 
+.. function:: int arb_mat_eq(const arb_mat_t mat1, const arb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly represent the same matrix.
+
+.. function:: int arb_mat_ne(const arb_mat_t mat1, const arb_mat_t mat2)
+
+    Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
 
 Special matrices
 -------------------------------------------------------------------------------
