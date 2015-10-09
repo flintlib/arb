@@ -64,6 +64,10 @@ Conversions
 
 .. function:: void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec)
 
+.. function:: void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src)
+
+.. function:: void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, long prec)
+
     Sets *dest* to *src*. The operands must have identical dimensions.
 
 Random generation
