@@ -165,7 +165,7 @@ Addition sequences
     that index is to be part of the addition sequence, and to 0 otherwise.
     On output, entry *i* in *tab* will either be zero (if the number is
     not part of the sequence), or a value *j* such that both
-    *j* and `j - k` are also marked.
+    *j* and `i - j` are also marked.
     The first two entries in *tab* are ignored (the number 1 is always
     assumed to be part of the sequence).
 
