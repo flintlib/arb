@@ -30,7 +30,7 @@ acb_modular_lambda(acb_t r, const acb_t tau, long prec)
 {
     psl2z_t g;
     arf_t one_minus_eps;
-    acb_t tau_prime, q, w;
+    acb_t tau_prime, q;
     acb_struct thetas[4];
     int R[4], S[4], C;
     int Rsum, qpower;
@@ -39,7 +39,6 @@ acb_modular_lambda(acb_t r, const acb_t tau, long prec)
     arf_init(one_minus_eps);
     acb_init(tau_prime);
     acb_init(q);
-    acb_init(w);
     acb_init(thetas + 0);
     acb_init(thetas + 1);
     acb_init(thetas + 2);
@@ -51,10 +50,9 @@ acb_modular_lambda(acb_t r, const acb_t tau, long prec)
 
     acb_modular_theta_transform(R, S, &C, g);
 
-    acb_one(w);
     acb_exp_pi_i(q, tau_prime, prec);
-    acb_modular_theta_sum(thetas + 0, thetas + 1,
-        thetas + 2, thetas + 3, w, 1, q, 1, prec);
+    acb_modular_theta_const_sum(thetas + 1, thetas + 2, thetas + 3, q, prec);
+    acb_zero(thetas + 0);
 
     /* divide the transformation factors */
     Rsum = 4 * (R[1] - R[2]);
@@ -77,7 +75,6 @@ acb_modular_lambda(acb_t r, const acb_t tau, long prec)
     arf_clear(one_minus_eps);
     acb_clear(tau_prime);
     acb_clear(q);
-    acb_clear(w);
     acb_clear(thetas + 0);
     acb_clear(thetas + 1);
     acb_clear(thetas + 2);

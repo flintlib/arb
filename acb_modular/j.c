@@ -30,25 +30,22 @@ acb_modular_j(acb_t z, const acb_t tau, long prec)
 {
     psl2z_t g;
     arf_t one_minus_eps;
-    acb_t tau_prime, t1, t2, t3, t4, w, q;
+    acb_t tau_prime, t2, t3, t4, q;
 
     psl2z_init(g);
     arf_init(one_minus_eps);
     acb_init(tau_prime);
-    acb_init(t1);
     acb_init(t2);
     acb_init(t3);
     acb_init(t4);
-    acb_init(w);
     acb_init(q);
 
     arf_set_ui_2exp_si(one_minus_eps, 63, -6);
     acb_modular_fundamental_domain_approx(tau_prime, g, tau,
         one_minus_eps, prec);
 
-    acb_one(w);
     acb_exp_pi_i(q, tau_prime, prec);
-    acb_modular_theta_sum(t1, t2, t3, t4, w, 1, q, 1, prec);
+    acb_modular_theta_const_sum(t2, t3, t4, q, prec);
 
     /* theta2 ^ 8 */
     acb_mul(t2, t2, t2, prec);
@@ -79,11 +76,9 @@ acb_modular_j(acb_t z, const acb_t tau, long prec)
     psl2z_clear(g);
     arf_clear(one_minus_eps);
     acb_clear(tau_prime);
-    acb_clear(t1);
     acb_clear(t2);
     acb_clear(t3);
     acb_clear(t4);
-    acb_clear(w);
     acb_clear(q);
 }
 

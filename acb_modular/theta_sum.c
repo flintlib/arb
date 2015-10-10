@@ -25,26 +25,6 @@
 
 #include "acb_modular.h"
 
-static void
-acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, long wprec, long prec)
-{
-    if (prec <= 1024)
-    {
-        acb_mul(z, x, y, wprec);
-    }
-    else if (x == y)
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_mul(z, tmp1, tmp1, wprec);
-    }
-    else
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_set_round(tmp2, y, wprec);
-        acb_mul(z, tmp1, tmp2, wprec);
-    }
-}
-
 double
 mag_get_log2_d_approx(const mag_t x)
 {
@@ -93,6 +73,13 @@ acb_modular_theta_sum(acb_ptr theta1,
 
     q_is_real = arb_is_zero(acb_imagref(q));
     w_is_one = acb_is_one(w);
+
+    if (w_is_one && len == 1)
+    {
+        acb_modular_theta_const_sum(theta2, theta3, theta4, q, prec);
+        acb_zero(theta1);
+        return;
+    }
 
     mag_init(qmag);
     mag_init(wmag);

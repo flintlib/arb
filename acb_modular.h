@@ -135,7 +135,18 @@ void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, lo
 
 void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num);
 
+void acb_modular_fill_addseq(long * tab, long len);
+
 void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g);
+
+void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4,
+    const acb_t q, long prec);
+
+void acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
+    const acb_t q, long N, long prec);
+
+void acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
+    const acb_t q, long N, long prec);
 
 void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2,
         acb_ptr theta3, acb_ptr theta4,
@@ -174,6 +185,27 @@ void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec);
 void acb_modular_elliptic_e(acb_t res, const acb_t m, long prec);
 
 void acb_modular_hilbert_class_poly(fmpz_poly_t res, long D);
+
+/* this is a performance hack until the main arb/acb functions improve */
+static __inline__ void
+acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, long wprec, long prec)
+{
+    if (prec <= 1024)
+    {
+        acb_mul(z, x, y, wprec);
+    }
+    else if (x == y)
+    {
+        acb_set_round(tmp1, x, wprec);
+        acb_mul(z, tmp1, tmp1, wprec);
+    }
+    else
+    {
+        acb_set_round(tmp1, x, wprec);
+        acb_set_round(tmp2, y, wprec);
+        acb_mul(z, tmp1, tmp2, wprec);
+    }
+}
 
 #ifdef __cplusplus
 }

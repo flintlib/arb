@@ -30,7 +30,7 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
 {
     psl2z_t g;
     arf_t one_minus_eps;
-    acb_t tau_prime, t1, t2, t3, t4, w, q;
+    acb_t tau_prime, t1, t2, t3, t4, q;
     long m, n;
 
     if (len < 1)
@@ -43,16 +43,14 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
     acb_init(t2);
     acb_init(t3);
     acb_init(t4);
-    acb_init(w);
     acb_init(q);
 
     arf_set_ui_2exp_si(one_minus_eps, 63, -6);
     acb_modular_fundamental_domain_approx(tau_prime, g, tau,
         one_minus_eps, prec);
 
-    acb_one(w);
     acb_exp_pi_i(q, tau_prime, prec);
-    acb_modular_theta_sum(t1, t2, t3, t4, w, 1, q, 1, prec);
+    acb_modular_theta_const_sum(t2, t3, t4, q, prec);
 
     /* fourth powers of the theta functions (a, b, c) */
     acb_mul(t2, t2, t2, prec);
@@ -155,7 +153,6 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
     acb_clear(t2);
     acb_clear(t3);
     acb_clear(t4);
-    acb_clear(w);
     acb_clear(q);
 }
 

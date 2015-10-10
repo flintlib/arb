@@ -153,6 +153,22 @@ Modular transformations
     `|\operatorname{Re}(z)| \le 1/2 + \varepsilon` where `\varepsilon` is
     specified by *tol*. Returns zero if this is false or cannot be determined.
 
+Addition sequences
+-------------------------------------------------------------------------------
+
+.. function:: void acb_modular_fill_addseq(long * tab, long len)
+
+    Builds a near-optimal addition sequence for a sequence of integers
+    which is assumed to be reasonably dense.
+
+    As input, the caller should set each entry in *tab* to `-1` if
+    that index is to be part of the addition sequence, and to 0 otherwise.
+    On output, entry *i* in *tab* will either be zero (if the number is
+    not part of the sequence), or a value *j* such that both
+    *j* and `j - k` are also marked.
+    The first two entries in *tab* are ignored (the number 1 is always
+    assumed to be part of the sequence).
+
 Jacobi theta functions
 -------------------------------------------------------------------------------
 
@@ -361,6 +377,26 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     This function does not permit aliasing between input and output
     arguments.
+
+.. function:: void acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long N, long prec)
+
+.. function:: void acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long N, long prec)
+
+    Computes the truncated theta constant sums
+    `\theta_2 = \sum_{k(k+1) < N} q^{k(k+1)}`,
+    `\theta_3 = \sum_{k^2 < N} q^{k^2}`,
+    `\theta_4 = \sum_{k^2 < N} (-1)^k q^{k^2}`.
+    The *basecase* version uses a minimal addition sequence.
+    The *rs* version uses rectangular splitting.
+
+.. function:: void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long prec)
+
+    Computes the respective theta constants by direct summation
+    (without applying modular transformations). This function
+    selects an appropriate *N*, calls either
+    :func:`acb_modular_theta_const_sum_basecase` or
+    :func:`acb_modular_theta_const_sum_rs` or depending on *N*,
+    and adds a bound for the truncation error.
 
 .. function:: void acb_modular_theta_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
 

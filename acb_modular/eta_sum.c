@@ -25,26 +25,6 @@
 
 #include "acb_modular.h"
 
-static void
-acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, long wprec, long prec)
-{
-    if (prec <= 1024)
-    {
-        acb_mul(z, x, y, wprec);
-    }
-    else if (x == y)
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_mul(z, tmp1, tmp1, wprec);
-    }
-    else
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_set_round(tmp2, y, wprec);
-        acb_mul(z, tmp1, tmp2, wprec);
-    }
-}
-
 double mag_get_log2_d_approx(const mag_t x);
 
 #define PENTAGONAL(N) ((((N)+2)/2) * ((3*(N)+5)/2)/2)
