@@ -173,17 +173,21 @@ acb_modular_hilbert_class_poly(fmpz_poly_t res, long D)
             lgh += 1.0 / qbf[3 * i];
     }
 
-    lgh = 3.012 * h + 3.141593 * sqrt(-D) * lgh;
+    lgh = 3.141593 * sqrt(-D) * lgh;
+#if 0
+    lgh += 3.012 * h;
     prec = lgh * 1.442696;
     prec = prec + 10;
+#else
+    prec = lgh * 1.442696;     /* heuristic, but more accurate */
+    prec = prec * 1.005 + 20;
+#endif
 
     while (!_acb_modular_hilbert_class_poly(res, D, qbf, qbf_len, prec))
     {
         printf("hilbert_class_poly failed at %ld bits of precision\n", prec);
-        prec = prec * 1.5 + 10;
+        prec = prec * 1.2 + 10;
     }
-
-    /* printf("%ld  prec %ld  height %ld\n", D, prec, fmpz_poly_max_bits(res)); */
 
     flint_free(qbf);
 }
