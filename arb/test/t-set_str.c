@@ -184,7 +184,7 @@ int main()
 
         error = arb_set_str(t, testdata_floats[i], 53);
 
-        x = atof(testdata_floats[i]);
+        x = strtod(testdata_floats[i], NULL);
 
         if (x != x)
         {
@@ -230,7 +230,7 @@ int main()
 
                 error = arb_set_str(t, tmp, 53);
 
-                x = atof((i == 0) ? "0" : testdata_floats[i]);
+                x = strtod((i == 0) ? "0" : testdata_floats[i], NULL);
 
                 if (x != x)
                 {
@@ -242,7 +242,7 @@ int main()
                     mag_zero(arb_radref(u));
                 }
 
-                x = atof(testdata_floats[j]);
+                x = strtod(testdata_floats[j], NULL);
                 arf_set_d(arb_midref(v), x);
                 mag_zero(arb_radref(v));
 
@@ -316,4 +316,3 @@ int main()
     printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
