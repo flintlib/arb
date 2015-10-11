@@ -40,8 +40,8 @@ acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
 
     if (N < 2)
     {
-        acb_set_ui(theta2, 2 * (N != 0));
-        acb_set_ui(theta3, N != 0);
+        acb_set_ui(theta2, 2 * (N > 0));
+        acb_set_ui(theta3, N > 0);
         acb_set(theta4, theta3);
         return;
     }
