@@ -5,31 +5,6 @@
 # (C) 2012, William Hart, Jean-Pierre Flori, Thomas DuBuisson
 # (C) 2012, Jan Engelhardt
 
-# soname version
-#
-# Bill Hart says those numbers (in FLINT) are updated like this:
-#
-# I don't understand it particularly well myself.
-#
-# But basically flint 1.0 would have major number 1, version 1.1 would
-# have major number 2, etc. We've had 13 versions so far, up to 2.5.
-#
-# The minor number gets incremented every release where something gets
-# added to Flint, and the patch number gets set to 0.
-#
-# If no changes are made to the interface, but say a function is sped
-# up or fixed, then only the patch number goes up.
-#
-# If Flint breaks backwards compatibility in any way, both minor and
-# patch numbers get set to 0.
-#
-#
-# arb     => soname
-# 2.7.0   => 0.0.0
-ARB_MAJOR=0
-ARB_MINOR=0
-ARB_PATCH=0
-
 PREFIX="/usr/local"
 GMP_DIR="/usr/local"
 MPFR_DIR="/usr/local"
@@ -433,18 +408,14 @@ echo "Configuring...${MACHINE}-${OS}"
 
 if [ -z "$ARB_LIB" ]; then
    case "$OS" in
-       Darwin)
-         ARB_LIBNAME="libarb.dylib"
- 	 ARB_LIB="libarb-$ARB_MAJOR.$ARB_MINOR.$ARB_PATH.dylib"
-         EXTRA_SHARED_FLAGS="-install_name $PREFIX/lib/$ARB_LIB -compatibility_version $ARB_MAJOR.$ARB_MINOR -current_version $ARB_MAJOR.$ARB_MINOR.$ARB_PATCH";;
+      Darwin)
+         ARB_LIB="libarb.dylib"
+         EXTRA_SHARED_FLAGS="-install_name $PREFIX/lib/$ARB_LIB";;
       CYGWIN* | MINGW*)
-         ARB_LIBNAME="libarb.dll"
-	 ARB_LIB="libarb-$ARB_MAJOR.dll"
-	 EXTRA_SHARED_FLAGS="-static-libgcc -shared -Wl,--export-all-symbols -Wl,-soname,libarb-$ARB_MAJOR.dll.$ARB_MINOR.$ARB_PATCH";;
+         ARB_LIB="libarb.dll";;
       *)
-         ARB_LIBNAME="libarb.so"
-	 ARB_LIB="libarb.so.$ARB_MAJOR.$ARB_MINOR.$ARB_PATCH" 
-         EXTRA_SHARED_FLAGS="-Wl,-rpath,$GMP_LIB_DIR -Wl,-rpath,$MPFR_LIB_DIR -Wl,-rpath,$FLINT_LIB_DIR -Wl,-soname,libarb.so.$ARB_MAJOR";;
+         ARB_LIB="libarb.so"
+         EXTRA_SHARED_FLAGS="-Wl,-rpath,$GMP_LIB_DIR -Wl,-rpath,$MPFR_LIB_DIR -Wl,-rpath,$FLINT_LIB_DIR";;
    esac
 fi
 
@@ -644,7 +615,6 @@ echo "" >> Makefile
 echo "ARB_STATIC=$STATIC" >> Makefile
 echo "ARB_SHARED=$SHARED" >> Makefile
 echo "ARB_LIB=$ARB_LIB" >> Makefile
-echo "ARB_LIBNAME=$ARB_LIBNAME" >> Makefile
 echo "EXEEXT=$EXEEXT" >> Makefile
 echo "PREFIX=$PREFIX" >> Makefile
 echo "" >> Makefile
