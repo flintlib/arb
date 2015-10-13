@@ -124,7 +124,7 @@ int main()
         arb_init(t);
         arb_init(u);
 
-        prec = 2 + n_randint(state, 2000);
+        prec = 2 + n_randint(state, 10000);
 
         acb_randtest(z, state, prec, 10);
 

@@ -34,7 +34,7 @@ acb_modular_fill_addseq(long * tab, long len)
     {
         if (tab[i] == -1)
         {
-            /* prefer doubling (squaring)square */
+            /* prefer doubling (squaring) */
             if ((i % 2) == 0 && tab[i / 2] != 0)
             {
                 tab[i] = i / 2;

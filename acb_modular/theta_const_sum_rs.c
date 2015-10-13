@@ -88,8 +88,8 @@ acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, long N)
         }
     }
 
-    /* printf("best_m = %ld, best_cost = %ld, s(m) = %d\n",
-        best_m, best_cost, num_residues[best_i]); */
+    /* printf("N = %ld, best_m = %ld, best_cost = %ld, s(m) = %d\n",
+        N, best_m, best_cost, num_residues[best_i]); */
     i = best_i;
 
     return best_m;
