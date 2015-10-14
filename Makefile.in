@@ -4,6 +4,8 @@ else
   $(DLPATH):=$(DLPATH_ADD)
 endif
 
+LIBDIR=lib
+
 QUIET_CC  = @echo '   ' CC  ' ' $@;
 QUIET_CXX = @echo '   ' CXX ' ' $@;
 QUIET_AR  = @echo '   ' AR  ' ' $@;
@@ -59,7 +61,7 @@ verbose:
 clean:
 	$(AT)$(foreach dir, $(BUILD_DIRS), BUILD_DIR=../build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f ../Makefile.subdirs -C $(dir) clean || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) clean || exit $$?;))
-	rm -f $(OBJS) $(LOBJS) $(TESTS) $(PROFS) $(EXMPS) $(ARB_LIB) libarb.a
+	rm -f $(OBJS) $(LOBJS) $(TESTS) $(PROFS) $(EXMPS) $(wildcard $(ARB_LIBNAME)*) libarb.a
 	rm -rf build
 
 distclean: clean
@@ -95,6 +97,10 @@ $(ARB_LIB): $(LOBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | b
 	$(AT)if [ "$(WANT_NTL)" -ne "1" ]; then \
 	  $(CC) $(ABI_FLAG) -shared $(EXTRA_SHARED_FLAGS) $(LOBJS) $(MOD_LOBJS) $(EXT_OBJS) $(LIBS2) -o $(ARB_LIB); \
 	fi
+	-$(AT)if [ "$(ARB_SOLIB)" -eq "1" ]; then \
+		$(LDCONFIG) -n "$(CURDIR)"; \
+	fi
+	ln -sf "$(ARB_LIB)" "$(ARB_LIBNAME)"; \
 
 libarb.a: $(OBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | build build/interfaces
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), mkdir -p build/$(dir); BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) static || exit $$?;))
@@ -156,10 +162,11 @@ else
 endif
 
 install: library
-	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	mkdir -p $(DESTDIR)$(PREFIX)/$(LIBDIR)
 	mkdir -p $(DESTDIR)$(PREFIX)/include
 	$(AT)if [ "$(ARB_SHARED)" -eq "1" ]; then \
-		cp $(ARB_LIB) $(DESTDIR)$(PREFIX)/lib; \
+		cp $(ARB_LIB) "$(DESTDIR)$(PREFIX)/$(LIBDIR)"; \
+		cp -a $(shell ls $(ARB_LIBNAME)*) "$(DESTDIR)$(PREFIX)/$(LIBDIR)"; \
 	fi
 	$(AT)if [ "$(ARB_STATIC)" -eq "1" ]; then \
 		cp libarb.a $(DESTDIR)$(PREFIX)/lib; \

@@ -5,6 +5,14 @@
 # (C) 2012, William Hart, Jean-Pierre Flori, Thomas DuBuisson
 # (C) 2012, Jan Engelhardt
 
+# soname version
+#
+# arb     => soname
+# 2.7.0   => 0.0.0
+ARB_MAJOR=0
+ARB_MINOR=0
+ARB_PATCH=0
+
 PREFIX="/usr/local"
 GMP_DIR="/usr/local"
 MPFR_DIR="/usr/local"
@@ -406,18 +414,41 @@ echo "Configuring...${MACHINE}-${OS}"
 
 #name for ARB shared library
 
+ARB_SOLIB=0
 if [ -z "$ARB_LIB" ]; then
    case "$OS" in
       Darwin)
-         ARB_LIB="libarb.dylib"
-         EXTRA_SHARED_FLAGS="-install_name $PREFIX/lib/$ARB_LIB";;
+         ARB_LIBNAME="libarb.dylib"
+	 ARB_LIB="libarb-$ARB_MAJOR.$ARB_MINOR.$ARB_PATCH.dylib"
+         EXTRA_SHARED_FLAGS="-install_name $PREFIX/lib/$ARB_LIB -compatibility_version $ARB_MAJOR.$ARB_MINOR -current_version $ARB_MAJOR.$ARB_MINOR.$ARB_PATCH";;
       CYGWIN* | MINGW*)
-         ARB_LIB="libarb.dll";;
+         ARB_LIBNAME="libarb.dll"
+	 ARB_LIB="libarb-$ARB_MAJOR.dll"
+	 EXTRA_SHARED_FLAGS="-static-libgcc -shared -Wl,--export-all-symbols -Wl,-soname,libarb-$ARB_MAJOR.dll.$ARB_MINOR.$ARB_PATCH";;
       *)
-         ARB_LIB="libarb.so"
-         EXTRA_SHARED_FLAGS="-Wl,-rpath,$GMP_LIB_DIR -Wl,-rpath,$MPFR_LIB_DIR -Wl,-rpath,$FLINT_LIB_DIR";;
+         ARB_LIBNAME="libarb.so"
+	 ARB_LIB="libarb.so.$ARB_MAJOR.$ARB_MINOR.$ARB_PATCH"
+	 EXTRA_SHARED_FLAGS="-Wl,-soname,libarb.so.$ARB_MAJOR"
+	 ARB_SOLIB=1;;
    esac
 fi
+
+# sometimes LDCONFIG is not to be found in the path. Look at some common places.
+case "$OS" in
+    MINGW*|CYGWIN*|Darwin)
+	LDCONFIG="true";;
+    *)
+	if [ -z "$LDCONFIG" ]; then
+	    LDCONFIG="true"
+	    if [ "$ARB_SOLIB" = "1" ]; then
+		if command -v ldconfig > /dev/null; then
+		    LDCONFIG="ldconfig"
+		elif [ -x /sbin/ldconfig ]; then
+		    LDCONFIG="/sbin/ldconfig"
+		fi
+	    fi
+	fi;;
+esac
 
 #extension for executables
 
@@ -615,6 +646,8 @@ echo "" >> Makefile
 echo "ARB_STATIC=$STATIC" >> Makefile
 echo "ARB_SHARED=$SHARED" >> Makefile
 echo "ARB_LIB=$ARB_LIB" >> Makefile
+echo "ARB_LIBNAME=$ARB_LIBNAME" >> Makefile
+echo "ARB_SOLIB=$ARB_SOLIB" >> Makefile
 echo "EXEEXT=$EXEEXT" >> Makefile
 echo "PREFIX=$PREFIX" >> Makefile
 echo "" >> Makefile
@@ -627,6 +660,7 @@ echo "" >> Makefile
 echo "CC=$CC" >> Makefile
 echo "CXX=$CXX" >> Makefile
 echo "AR=$AR" >> Makefile
+echo "LDCONFIG=$LDCONFIG" >> Makefile
 echo "" >> Makefile
 echo "CFLAGS=$CFLAGS" >> Makefile
 echo "ABI_FLAG=$ABI_FLAG" >> Makefile
