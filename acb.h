@@ -754,6 +754,7 @@ void acb_rising_ui_bs(acb_t y, const acb_t x, ulong n, long prec);
 void acb_rising_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, long prec);
 void acb_rising_ui_rec(acb_t y, const acb_t x, ulong n, long prec);
 void acb_rising_ui(acb_t z, const acb_t x, ulong n, long prec);
+void acb_rising(acb_t z, const acb_t x, const acb_t n, long prec);
 
 void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec);
 void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, long prec);

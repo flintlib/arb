@@ -985,14 +985,14 @@ Gamma function and factorials
 
 .. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
 
+.. function:: void arb_rising(arb_t z, const arb_t x, const arb_t n, long prec)
+
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
 
     The *bs* version uses binary splitting. The *rs* version uses rectangular
     splitting. The *rec* version uses either *bs* or *rs* depending
-    on the input.
-    The default version is currently identical to the *rec* version.
-    In a future version, it will use the gamma function or asymptotic
-    series when this is more efficient.
+    on the input. The default version uses the gamma function unless
+    *n* is a small integer.
 
     The *rs* version takes an optional *step* parameter for tuning
     purposes (to use the default step length, pass zero).

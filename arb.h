@@ -644,6 +644,7 @@ void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec);
 void arb_rising_ui_rec(arb_t y, const arb_t x, ulong n, long prec);
 void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec);
 void arb_rising_fmpq_ui(arb_t y, const fmpq_t x, ulong n, long prec);
+void arb_rising(arb_t z, const arb_t x, const arb_t n, long prec);
 
 void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong m, long prec);
 void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec);
