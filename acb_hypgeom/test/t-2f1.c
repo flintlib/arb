@@ -68,8 +68,8 @@ int main()
         reg1 = n_randint(state, 2);
         reg2 = n_randint(state, 2);
 
-        alg1 = n_randint(state, 4);
-        alg2 = n_randint(state, 4);
+        alg1 = n_randint(state, 5);
+        alg2 = n_randint(state, 5);
 
         switch (alg1)
         {
@@ -81,6 +81,9 @@ int main()
                 break;
             case 2:
                 acb_hypgeom_2f1_inf(w1, a, b, c, z, reg1, prec1);
+                break;
+            case 3:
+                acb_hypgeom_2f1_corner(w1, a, b, c, z, reg1, prec1);
                 break;
             default:
                 acb_hypgeom_2f1(w1, a, b, c, z, reg1, prec1);
@@ -97,7 +100,7 @@ int main()
             case 2:
                 acb_hypgeom_2f1_inf(w2, a, b, c, z, reg2, prec2);
                 break;
-            default:
+            default:  /* favor this */
                 acb_hypgeom_2f1(w2, a, b, c, z, reg2, prec2);
         }
 
