@@ -140,6 +140,10 @@ void acb_hypgeom_chi(acb_t res, const acb_t z, long prec);
 
 void acb_hypgeom_li(acb_t res, const acb_t z, int offset, long prec);
 
+void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1,
+    const acb_t a, const acb_t b, const acb_t c, const acb_t z0,
+    const acb_t z1, const acb_t f0, const acb_t f1, long prec);
+
 void acb_hypgeom_2f1_series_direct(acb_poly_t res, const acb_poly_t a, const acb_poly_t b,
     const acb_poly_t c, const acb_poly_t z, int regularized, long len, long prec);
 void acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
