@@ -107,7 +107,7 @@ int main()
 
         acb_hypgeom_2f1_continuation(h1, h2, a, b, c, z1, z2, f1, f2, prec);
 
-        if (acb_is_finite(h1) && acb_is_finite(h2))
+        if (acb_is_finite(h1) || acb_is_finite(h2))
         {
             acb_hypgeom_2f1(g1, a, b, c, z2, regularized, prec);
             acb_hypgeom_2f1(g2, aa, bb, cc, z2, regularized, prec);
