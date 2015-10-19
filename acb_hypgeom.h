@@ -147,10 +147,16 @@ void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1,
 void acb_hypgeom_2f1_series_direct(acb_poly_t res, const acb_poly_t a, const acb_poly_t b,
     const acb_poly_t c, const acb_poly_t z, int regularized, long len, long prec);
 void acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
-void acb_hypgeom_2f1_pfaff(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
-void acb_hypgeom_2f1_inf(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
-void acb_hypgeom_2f1_inf_limit(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
+
+void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
+    const acb_t c, const acb_t z, int regularized, int which, long prec);
+
+void acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
+    const acb_t c, const acb_t z, int regularized, int which, long prec);
+
 void acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
+
+int acb_hypgeom_2f1_choose(const acb_t z);
 
 void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec);
 

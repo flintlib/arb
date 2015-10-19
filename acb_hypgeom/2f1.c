@@ -29,7 +29,7 @@ void
 acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
         const acb_t c, const acb_t z, int regularized, long prec)
 {
-    double x, y;
+    int algorithm;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(c) || !acb_is_finite(z))
     {
@@ -103,30 +103,19 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
         return;
     }
 
-    x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
-    y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
+    algorithm = acb_hypgeom_2f1_choose(z);
 
-    x = FLINT_MAX(FLINT_MIN(x, 1e10), -1e10);
-    y = FLINT_MAX(FLINT_MIN(y, 1e10), -1e10);
-
-    if (x*x + y*y < 0.7)   /* series in z */
+    if (algorithm == 0)
     {
         acb_hypgeom_2f1_direct(res, a, b, c, z, regularized, prec);
     }
-    else if (x < 0.7 && (x*x + y*y)/((x-1)*(x-1) + y*y) < 0.7)  /* series in z/(z-1) */
+    else if (algorithm >= 1 && algorithm <= 5)
     {
-        acb_hypgeom_2f1_pfaff(res, a, b, c, z, regularized, prec);
-    }
-    else if (x*x + y*y > 1.1)  /* series in 1/z */
-    {
-        acb_hypgeom_2f1_inf(res, a, b, c, z, regularized, prec);
+        acb_hypgeom_2f1_transform(res, a, b, c, z, regularized, algorithm, prec);
     }
     else
     {
-        if (x*x + y*y < 1.0)
-            acb_hypgeom_2f1_direct(res, a, b, c, z, regularized, prec);
-        else
-            acb_hypgeom_2f1_inf(res, a, b, c, z, regularized, prec);
+        acb_hypgeom_2f1_corner(res, a, b, c, z, regularized, prec);
     }
 }
 

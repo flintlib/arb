@@ -42,11 +42,17 @@ acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b,
     upper = arb_is_positive(acb_imagref(z));
 
     /* 0 -> 0.5 +/- 0.5i -> 0.5 +/- 0.75i -> z */
+#if 0
     acb_set_d_d(z1, 0.5, upper ? 0.5 : -0.5);
     acb_set_d_d(z2, 0.5, upper ? 0.75 : -0.75);
+#else
+    acb_set_d_d(z1, 0.375, upper ? 0.625 : -0.625);
+    acb_set_d_d(z2, 0.5, upper ? 0.8125 : -0.8125);
+#endif
 
-    acb_hypgeom_2f1(f1, a, b, c, z1, regularized, prec);
-    acb_hypgeom_2f1(f2, aa, bb, cc, z1, regularized, prec);
+    acb_hypgeom_2f1_direct(f1, a, b, c, z1, regularized, prec);
+
+    acb_hypgeom_2f1_direct(f2, aa, bb, cc, z1, regularized, prec);
     acb_mul(f2, f2, a, prec);
     acb_mul(f2, f2, b, prec);
     if (!regularized)

@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 4000; iter++)
+    for (iter = 0; iter < 3000; iter++)
     {
         acb_t a, b, c, z, w1, w2, t;
         long prec1, prec2;
@@ -68,8 +68,8 @@ int main()
         reg1 = n_randint(state, 2);
         reg2 = n_randint(state, 2);
 
-        alg1 = n_randint(state, 5);
-        alg2 = n_randint(state, 5);
+        alg1 = n_randint(state, 10);
+        alg2 = n_randint(state, 10);
 
         switch (alg1)
         {
@@ -77,12 +77,13 @@ int main()
                 acb_hypgeom_2f1_direct(w1, a, b, c, z, reg1, prec1);
                 break;
             case 1:
-                acb_hypgeom_2f1_pfaff(w1, a, b, c, z, reg1, prec1);
-                break;
             case 2:
-                acb_hypgeom_2f1_inf(w1, a, b, c, z, reg1, prec1);
-                break;
             case 3:
+            case 4:
+            case 5:
+                acb_hypgeom_2f1_transform(w1, a, b, c, z, reg1, alg1, prec1);
+                break;
+            case 6:
                 acb_hypgeom_2f1_corner(w1, a, b, c, z, reg1, prec1);
                 break;
             default:
@@ -95,12 +96,16 @@ int main()
                 acb_hypgeom_2f1_direct(w2, a, b, c, z, reg2, prec2);
                 break;
             case 1:
-                acb_hypgeom_2f1_pfaff(w2, a, b, c, z, reg2, prec2);
-                break;
             case 2:
-                acb_hypgeom_2f1_inf(w2, a, b, c, z, reg2, prec2);
+            case 3:
+            case 4:
+            case 5:
+                acb_hypgeom_2f1_transform(w2, a, b, c, z, reg2, alg2, prec2);
                 break;
-            default:  /* favor this */
+            case 6:
+                acb_hypgeom_2f1_corner(w2, a, b, c, z, reg2, prec2);
+                break;
+            default:
                 acb_hypgeom_2f1(w2, a, b, c, z, reg2, prec2);
         }
 
