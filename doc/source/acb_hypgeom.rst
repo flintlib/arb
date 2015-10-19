@@ -592,3 +592,62 @@ The branch cut conventions of the following functions match Mathematica.
     If *offset* is nonzero, computes the offset logarithmic integral
     `\operatorname{Li}(z) = \operatorname{li}(z) - \operatorname{li}(2)`.
 
+Gauss hypergeometric function
+-------------------------------------------------------------------------------
+
+The following methods compute the Gauss hypergeometric function
+
+.. math ::
+
+    F(z) = {}_2F_1(a,b,c,z) = \sum_{k=0}^{\infty} \frac{(a)_k (b)_k}{(c)_k} \frac{z^k}{k!}
+
+or the regularized version
+`\operatorname{\mathbf{F}}(z) = \operatorname{\mathbf{F}}(a,b,c,z) = {}_2F_1(a,b,c,z) / \Gamma(c)`
+if the flag *regularized* is set.
+
+.. function:: void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1, const acb_t a, const acb_t b, const acb_t c, const acb_t z0, const acb_t z1, const acb_t f0, const acb_t f1, long prec)
+
+    Given `F(z_0), F'(z_0)` in *f0*, *f1*, sets *res0* and *res1* to `F(z_1), F'(z_1)`
+    by integrating the hypergeometric differential equation along a straight-line path.
+    The evaluation points should be well-isolated from the singular points 0 and 1.
+
+.. function:: void acb_hypgeom_2f1_series_direct(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t c, const acb_poly_t z, int regularized, long len, long prec)
+
+    Computes `F(z)` of the given power series truncated to length *len*, using
+    direct summation of the hypergeometric series.
+
+.. function:: void acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+
+    Computes `F(z)` using direct summation of the hypergeometric series.
+
+.. function:: void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, long prec)
+
+.. function:: void acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, long prec)
+
+    Computes `F(z)` using an argument transformation determined by the flag *which*.
+    Legal values are 1 for `z/(z-1)`,
+    2 for `1/z`, 3 for `1/(1-z)`, 4 for `1-z`, and 5 for `1-1/z`.
+
+    The *limit* version assumes that *which* is not 1.
+    If *which* is 2 or 3, it assumes that `b-a` represents an exact integer.
+    If *which* is 4 or 5, it assumes that `c-a-b` represents an exact integer.
+    In these cases, it computes the correct limit value.
+
+.. function:: void acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+
+    Computes `F(z)` near the corner cases `\exp(\pm \pi i \sqrt{3})`
+    by analytic continuation.
+
+.. function:: int acb_hypgeom_2f1_choose(const acb_t z)
+
+    Chooses a method to compute the function based on the location of *z*
+    in the complex plane. If the return value is 0, direct summation should be used.
+    If the return value is 1 to 5, the transformation with this index in
+    :func:`acb_hypgeom_2f1_transform` should be used.
+    If the return value is 6, the corner case algorithm should be used.
+
+.. function:: void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+
+    Computes `F(z)` (or `\operatorname{\mathbf{F}}(z)` if *regularized* is set)
+    using an automatic algorithm choice.
+
