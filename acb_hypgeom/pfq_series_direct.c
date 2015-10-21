@@ -312,11 +312,35 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
     arb_poly_t C, T;
     long i;
     int is_real;
+    int terminating;
 
     /* default algorithm to choose number of terms */
     if (n < 0)
     {
         n = acb_hypgeom_pfq_series_choose_n(a, p, b, q, z, len, prec);
+    }
+
+    terminating = 0;
+
+    /* check if it terminates due to a root of the numerator */
+    /* todo: check if terminating due to the valuation stabilizing (tricky
+       because of corner cases) */
+    for (i = 0; i < p; i++)
+    {
+        if (acb_poly_length(a + i) == 0 && n > 0)
+        {
+            terminating = 1;
+        }
+        else if (acb_poly_length(a + i) == 1)
+        {
+            acb_srcptr c = acb_poly_get_coeff_ptr(a + i, 0);
+
+            if (acb_is_int(c) && arb_is_negative(acb_realref(c)) &&
+                arf_cmpabs_ui(arb_midref(acb_realref(c)), n) < 0)
+            {
+                terminating = 1;
+            }
+        }
     }
 
     acb_poly_init(s);
@@ -327,7 +351,7 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
 
     acb_hypgeom_pfq_series_sum_forward(s, t, a, p, b, q, z, regularized, n, len, prec);
 
-    if (acb_poly_length(t) != 0)
+    if (!terminating)
     {
         is_real = acb_poly_is_real(z);
         for (i = 0; i < p; i++)
@@ -338,7 +362,16 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
         acb_poly_majorant(T, t, MAG_BITS);
         acb_hypgeom_pfq_series_bound_factor(C, a, p, b, q, z, n, len, MAG_BITS);
 
-        arb_poly_mullow(T, T, C, len, MAG_BITS);
+        /* XXX */
+        if (arb_poly_length(C) && !arb_is_finite(C->coeffs))
+        {
+            for (i = 0; i < len; i++)
+                arb_poly_set_coeff_arb(T, i, C->coeffs);
+        }
+        else
+        {
+            arb_poly_mullow(T, T, C, len, MAG_BITS);
+        }
 
         /* create polynomial of errors */
         acb_poly_fit_length(err, len);

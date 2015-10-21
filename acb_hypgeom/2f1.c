@@ -25,6 +25,25 @@
 
 #include "acb_hypgeom.h"
 
+static void 
+_acb_hypgeom_2f1r_reduced(acb_t res,
+    const acb_t b, const acb_t c, const acb_t z, long prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    acb_sub_ui(t, z, 1, prec);
+    acb_neg(t, t);
+    acb_neg(u, b);
+    acb_pow(t, t, u, prec);
+    acb_rgamma(u, c, prec);
+    acb_mul(t, t, u, prec);
+    acb_set(res, t);
+    acb_clear(t);
+    acb_clear(u);
+    return;
+}
+
 void
 acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
         const acb_t c, const acb_t z, int regularized, long prec)
@@ -43,6 +62,30 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
             acb_rgamma(res, c, prec);
         else
             acb_one(res);
+        return;
+    }
+
+    if (regularized && acb_is_int(c) && arb_is_nonpositive(acb_realref(c)))
+    {
+        if ((acb_is_int(a) && arb_is_nonpositive(acb_realref(a)) &&
+            arf_cmp(arb_midref(acb_realref(a)), arb_midref(acb_realref(c))) >= 0) ||
+            (acb_is_int(b) && arb_is_nonpositive(acb_realref(b)) &&
+            arf_cmp(arb_midref(acb_realref(b)), arb_midref(acb_realref(c))) >= 0))
+        {
+            acb_zero(res);
+            return;
+        }
+    }
+
+    if (regularized && acb_eq(a, c))
+    {
+        _acb_hypgeom_2f1r_reduced(res, b, c, z, prec);
+        return;
+    }
+
+    if (regularized && acb_eq(b, c))
+    {
+        _acb_hypgeom_2f1r_reduced(res, a, c, z, prec);
         return;
     }
 

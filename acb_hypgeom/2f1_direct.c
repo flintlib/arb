@@ -34,64 +34,73 @@ acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b,
     if (regularized && acb_is_int(c)
             && arf_sgn(arb_midref(acb_realref(c))) <= 0)
     {
-        acb_t n, n1, t, u, v;
-        acb_ptr aa;
-        int p, q;
-
-        acb_init(n);
-        acb_init(n1);
-        acb_init(t);
-        acb_init(u);
-        acb_init(v);
-        aa = _acb_vec_init(4);
-
-        acb_neg(n, c);
-        acb_add_ui(n1, n, 1, prec);
-
-        acb_add(aa, a, n1, prec);
-        acb_add(aa + 1, b, n1, prec);
-        acb_add_ui(aa + 2, n1, 1, prec);
-
-        if (acb_is_one(aa))
+        if ((acb_is_int(a) && arb_is_nonpositive(acb_realref(a)) &&
+            arf_cmp(arb_midref(acb_realref(a)), arb_midref(acb_realref(c))) >= 0) ||
+            (acb_is_int(b) && arb_is_nonpositive(acb_realref(b)) &&
+            arf_cmp(arb_midref(acb_realref(b)), arb_midref(acb_realref(c))) >= 0))
         {
-            p = q = 1;
-            acb_swap(aa, aa + 1);
-        }
-        else if (acb_is_one(aa + 1))
-        {
-            p = q = 1;
+            acb_zero(res);
         }
         else
         {
-            p = q = 2;
-            acb_one(aa + 3);
+            acb_t n, n1, t, u, v;
+            acb_ptr aa;
+            int p, q;
+
+            acb_init(n);
+            acb_init(n1);
+            acb_init(t);
+            acb_init(u);
+            acb_init(v);
+            aa = _acb_vec_init(4);
+
+            acb_neg(n, c);
+            acb_add_ui(n1, n, 1, prec);
+
+            acb_add(aa, a, n1, prec);
+            acb_add(aa + 1, b, n1, prec);
+            acb_add_ui(aa + 2, n1, 1, prec);
+
+            if (acb_is_one(aa))
+            {
+                p = q = 1;
+                acb_swap(aa, aa + 1);
+            }
+            else if (acb_is_one(aa + 1))
+            {
+                p = q = 1;
+            }
+            else
+            {
+                p = q = 2;
+                acb_one(aa + 3);
+            }
+
+            acb_hypgeom_pfq_direct(t, aa, p, aa + 2, q, z, -1, prec);
+
+            /* z^(n+1) */
+            acb_pow(u, z, n1, prec);
+            acb_mul(t, t, u, prec);
+
+            acb_rising(u, a, n1, prec);
+            acb_mul(t, t, u, prec);
+
+            acb_rising(u, b, n1, prec);
+            acb_mul(t, t, u, prec);
+
+            /* 1/(n+1)! */
+            acb_rgamma(u, aa + 2, prec);
+            acb_mul(t, t, u, prec);
+
+            acb_set(res, t);
+
+            acb_clear(n);
+            acb_clear(n1);
+            acb_clear(t);
+            acb_clear(u);
+            acb_clear(v);
+            _acb_vec_clear(aa, 4);
         }
-
-        acb_hypgeom_pfq_direct(t, aa, p, aa + 2, q, z, -1, prec);
-
-        /* z^(n+1) */
-        acb_pow(u, z, n1, prec);
-        acb_mul(t, t, u, prec);
-
-        /* todo: totally wrong??? */
-        acb_rising(u, a, n1, prec);
-        acb_mul(t, t, u, prec);
-
-        acb_rising(u, b, n1, prec);
-        acb_mul(t, t, u, prec);
-
-        /* 1/(n+1)! */
-        acb_rgamma(u, aa + 2, prec);
-        acb_mul(t, t, u, prec);
-
-        acb_set(res, t);
-
-        acb_clear(n);
-        acb_clear(n1);
-        acb_clear(t);
-        acb_clear(u);
-        acb_clear(v);
-        _acb_vec_clear(aa, 4);
     }
     else
     {
@@ -130,5 +139,8 @@ acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b,
 
         _acb_vec_clear(aa, 4);
     }
+
+    if (!acb_is_finite(res))
+        acb_indeterminate(res);
 }
 

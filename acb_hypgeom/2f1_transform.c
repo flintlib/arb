@@ -178,6 +178,7 @@ acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
     const acb_t c, const acb_t z, int regularized, int which, long prec)
 {
     acb_poly_t aa, bb, cc, zz;
+    acb_t t;
 
     if (acb_contains_zero(z) || !acb_is_finite(z))
     {
@@ -185,9 +186,14 @@ acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
         return;
     }
 
+    if (arb_contains_si(acb_realref(z), 1) && arb_contains_zero(acb_imagref(z)))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
     if (!regularized)
     {
-        acb_t t;
         acb_init(t);
         acb_gamma(t, c, prec);
         acb_hypgeom_2f1_transform_limit(res, a, b, c, z, 1, which, prec);
@@ -200,20 +206,36 @@ acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
     acb_poly_init(bb);
     acb_poly_init(cc);
     acb_poly_init(zz);
+    acb_init(t);
 
     acb_poly_set_acb(aa, a);
     acb_poly_set_acb(bb, b);
     acb_poly_set_acb(cc, c);
     acb_poly_set_acb(zz, z);
 
-    acb_poly_set_coeff_si(aa, 1, 1);
+    if (which == 2 || which == 3)
+    {
+        acb_sub(t, b, a, prec);
+        acb_poly_set_coeff_si(aa, 1, 1);
 
-    _acb_hypgeom_2f1_transform_limit(res, aa, bb, cc, zz, which, prec);
+        /* prefer b-a nonnegative (either is correct) to avoid
+           expensive operations in the hypergeometric series */
+        if (arb_is_nonnegative(acb_realref(t)))
+            _acb_hypgeom_2f1_transform_limit(res, aa, bb, cc, zz, which, prec);
+        else
+            _acb_hypgeom_2f1_transform_limit(res, bb, aa, cc, zz, which, prec);
+    }
+    else
+    {
+        acb_poly_set_coeff_si(aa, 1, 1);
+        _acb_hypgeom_2f1_transform_limit(res, aa, bb, cc, zz, which, prec);
+    }
 
     acb_poly_clear(aa);
     acb_poly_clear(bb);
     acb_poly_clear(cc);
     acb_poly_clear(zz);
+    acb_clear(t);
 }
 
 void
@@ -223,6 +245,12 @@ acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
     acb_t ba, ca, cb, cab, ac1, bc1, ab1, ba1, w, t, u, v, s;
 
     if (acb_contains_zero(z) || !acb_is_finite(z))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    if (arb_contains_si(acb_realref(z), 1) && arb_contains_zero(acb_imagref(z)))
     {
         acb_indeterminate(res);
         return;
@@ -386,8 +414,18 @@ acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
         acb_pow(t, t, v, prec); /* t = (1-z)^-a */
         acb_sub(v, c, b, prec); /* v = c-b */
 
-        acb_hypgeom_2f1_direct(res, a, v, c, u, regularized, prec);
-        acb_mul(res, res, t, prec);
+        /* We cannot use regularized=1 directly, since if c is a nonnegative
+           integer, the transformation formula reads (lhs) * 0 = (rhs) * 0. */
+        acb_hypgeom_2f1_direct(u, a, v, c, u, 1, prec);
+
+        if (!regularized)
+        {
+            acb_gamma(v, c, prec);
+            acb_mul(u, u, v, prec);
+        }
+
+        acb_mul(res, u, t, prec);
+
 
         acb_clear(t);
         acb_clear(u);
@@ -415,5 +453,8 @@ acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
 
         acb_clear(d);
     }
+
+    if (!acb_is_finite(res))
+        acb_indeterminate(res);
 }
 
