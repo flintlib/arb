@@ -105,6 +105,33 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
         return;
     }
 
+    /* Try to reduce to a polynomial case using the Pfaff transformation */
+    if (acb_is_exact(c))
+    {
+        acb_t t;
+        acb_init(t);
+
+        acb_sub(t, c, b, prec);
+
+        if (acb_is_int(t) && arb_is_nonpositive(acb_realref(t)))
+        {
+            acb_hypgeom_2f1_transform(res, a, b, c, z, regularized, 1, prec);
+            acb_clear(t);
+            return;
+        }
+
+        acb_sub(t, c, a, prec);
+
+        if (acb_is_int(t) && arb_is_nonpositive(acb_realref(t)))
+        {
+            acb_hypgeom_2f1_transform(res, b, a, c, z, regularized, 1, prec);
+            acb_clear(t);
+            return;
+        }
+
+        acb_clear(t);
+    }
+
     /* special value at z = 1 */
     if (acb_is_one(z))
     {
