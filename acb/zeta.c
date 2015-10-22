@@ -27,8 +27,33 @@
 #include "acb_poly.h"
 
 void
+acb_zeta_si(acb_t z, long s, long prec)
+{
+    if (s >= 0)
+    {
+        arb_zeta_ui(acb_realref(z), s, prec);
+    }
+    else
+    {
+        arb_bernoulli_ui(acb_realref(z), 1-s, prec);
+        arb_div_ui(acb_realref(z), acb_realref(z), 1-s, prec);
+        arb_neg(acb_realref(z), acb_realref(z));
+    }
+
+    arb_zero(acb_imagref(z));
+    return;
+}
+
+void
 acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
 {
+    if (acb_is_one(a) && acb_is_int(s) &&
+        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), FLINT_BITS - 1) < 0)
+    {
+        acb_zeta_si(z, arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN), prec);
+        return;
+    }
+
     _acb_poly_zeta_cpx_series(z, s, a, 0, 1, prec);
 }
 
@@ -38,6 +63,13 @@ acb_zeta(acb_t z, const acb_t s, long prec)
     acb_t a;
     acb_init(a);
     acb_one(a);
+
+    if (acb_is_int(s) &&
+        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), FLINT_BITS - 1) < 0)
+    {
+        acb_zeta_si(z, arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN), prec);
+        return;
+    }
 
     if (arf_sgn(arb_midref(acb_realref(s))) < 0)
     {
