@@ -292,9 +292,17 @@ Special functions
         \exp(A) = \sum_{k=0}^{\infty} \frac{A^k}{k!}.
 
     The function is evaluated as `\exp(A/2^r)^{2^r}`, where `r` is chosen
-    to give rapid convergence of the Taylor series. The series is
+    to give rapid convergence. The series is
     evaluated using rectangular splitting.
-    If `\|A/2^r\| \le c` and `N \ge 2c`, we bound the entrywise error
-    when truncating the Taylor series before term `N` by `2 c^N / N!`.
 
+    The elementwise error when truncating the Taylor series after *N*
+    terms is bounded by the error in the infinity norm, for which we have
+
+    .. math ::
+        \left\|\exp(2^{-r}A) - \sum_{k=0}^{N-1}
+            \frac{\left(2^{-r} A\right)^k}{k!} \right\|_{\infty} =
+        \left\|\sum_{k=N}^{\infty} \frac{\left(2^{-r} A\right)^k}{k!}\right\|_{\infty} \le
+          \sum_{k=N}^{\infty} \frac{(2^{-r} \|A\|_{\infty})^k}{k!}.
+
+    We bound the sum on the right using :func:`mag_exp_tail`.
 
