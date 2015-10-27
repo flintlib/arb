@@ -651,3 +651,67 @@ if the flag *regularized* is set.
     Computes `F(z)` (or `\operatorname{\mathbf{F}}(z)` if *regularized* is set)
     using an automatic algorithm choice.
 
+Orthogonal polynomials and functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, long prec)
+
+    Sets *res* to the associated Legendre function of the first kind
+    evaluated for degree *n*, order *m*, and argument *z*.
+    When *m* is zero, this reduces to the Legendre polynomial `P_n(z)`.
+
+    Many different branch cut conventions appear in the literature.
+    If *type* is 0, the version
+
+    .. math ::
+
+        P_n^m(z) = \frac{(1+z)^{m/2}}{(1-z)^{m/2}}
+            \mathbf{F}\left(-n, n+1, 1-m, \frac{1-z}{2}\right)
+
+    is computed, and if *type* is 1, the alternative version
+
+    .. math ::
+
+        {\mathcal P}_n^m(z) = \frac{(z+1)^{m/2}}{(z-1)^{m/2}}
+            \mathbf{F}\left(-n, n+1, 1-m, \frac{1-z}{2}\right).
+
+    is computed. Type 0 and type 1 respectively correspond to
+    type 2 and type 3 in *Mathematica* and *mpmath*.
+
+.. function:: void acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, long prec)
+
+    Sets *res* to the associated Legendre function of the second kind
+    evaluated for degree *n*, order *m*, and argument *z*.
+    When *m* is zero, this reduces to the Legendre function `Q_n(z)`.
+
+    Many different branch cut conventions appear in the literature.
+    If *type* is 0, the version
+
+    .. math ::
+
+        Q_n^m(z) = \frac{\pi}{2 \sin(\pi m)}
+            \left( \cos(\pi m) P_n^m(z) -
+            \frac{\Gamma(1+m+n)}{\Gamma(1-m+n)} P_n^{-m}(z)\right)
+
+    is computed, and if *type* is 1, the alternative version
+
+    .. math ::
+
+        \mathcal{Q}_n^m(z) = \frac{\pi}{2 \sin(\pi m)} e^{\pi i m}
+            \left( \mathcal{P}_n^m(z) -
+            \frac{\Gamma(1+m+n)}{\Gamma(1-m+n)} \mathcal{P}_n^{-m}(z)\right)
+
+    is computed. Type 0 and type 1 respectively correspond to
+    type 2 and type 3 in *Mathematica* and *mpmath*.
+
+    When *m* is an integer, either expression is interpreted as a limit.
+    We make use of the connection formulas [WQ3a]_, [WQ3b]_ and [WQ3c]_
+    to allow computing the function even in the limiting case.
+    (The formula [WQ3d]_ would be useful, but is incorrect in the lower
+    half plane.)
+
+    .. [WQ3a] http://functions.wolfram.com/07.11.26.0033.01
+    .. [WQ3b] http://functions.wolfram.com/07.12.27.0014.01
+    .. [WQ3c] http://functions.wolfram.com/07.12.26.0003.01
+    .. [WQ3d] http://functions.wolfram.com/07.12.26.0088.01
+
