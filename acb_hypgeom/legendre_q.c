@@ -42,6 +42,7 @@ _acb_hypgeom_legendre_q_single_valid(const acb_t z)
     arb_one(t);
     arb_neg(t, t);
     ok = arb_lt(acb_realref(z), t);
+    arb_clear(t);
     return ok;
 }
 

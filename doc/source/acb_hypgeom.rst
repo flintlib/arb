@@ -715,3 +715,38 @@ Orthogonal polynomials and functions
     .. [WQ3c] http://functions.wolfram.com/07.12.26.0003.01
     .. [WQ3d] http://functions.wolfram.com/07.12.26.0088.01
 
+.. function:: void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b, const acb_t z, long prec)
+
+    Computes the Jacobi polynomial (or Jacobi function)
+
+    .. math ::
+
+        P_n^{(a,b)}(z)=\frac{(a+1)_n}{\Gamma(n+1)} {}_2F_1\left(-n,n+a+b+1,a+1,\frac{1-z}{2}\right).
+
+.. function:: void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+
+    Computes the Gegenbauer polynomial (or Gegenbauer function)
+
+    .. math ::
+
+        C_n^{m}(z)=\frac{(2m)_n}{\Gamma(n+1)} {}_2F_1\left(-n,2m+n,m+\frac{1}{2},\frac{1-z}{2}\right).
+
+.. function:: void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+
+    Computes the Laguerre polynomial (or Laguerre function)
+
+    .. math ::
+
+        L_n^{m}(z)=\frac{(m+1)_n}{\Gamma(n+1)} {}_1F_1\left(-n,m+1,z\right).
+
+.. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec)
+
+    Computes the Hermite polynomial (or Hermite function)
+
+    .. math ::
+
+        H_n(z) = 2^n \sqrt{\pi} \left(
+            \frac{1}{\Gamma((1-n)/2)} {}_1F_1\left(-\frac{n}{2},\frac{1}{2},z^2\right)
+            - 
+            \frac{2z}{\Gamma(-n/2)} {}_1F_1\left(\frac{1-n}{2},\frac{3}{2},z^2\right)\right).
+
