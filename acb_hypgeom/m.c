@@ -72,6 +72,11 @@ acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int 
         acb_mul(t, t, v, prec);
     }
 
+    if (acb_is_real(a) && acb_is_real(b) && acb_is_real(z))
+    {
+        arb_zero(acb_imagref(t));
+    }
+
     acb_swap(res, t);
 
     acb_clear(t);
