@@ -613,6 +613,7 @@ void arb_atanh(arb_t z, const arb_t x, long prec);
 void arb_asinh(arb_t z, const arb_t x, long prec);
 void arb_acosh(arb_t z, const arb_t x, long prec);
 void arb_fac_ui(arb_t z, ulong n, long prec);
+void arb_fac2_ui(arb_t z, ulong n, long prec);
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec);
 void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec);
 void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec);
