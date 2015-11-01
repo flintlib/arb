@@ -28,18 +28,35 @@
 void
 acb_asin(acb_t res, const acb_t z, long prec)
 {
-    acb_t t;
-    acb_init(t);
+    if (arb_is_zero(acb_realref(z)))
+    {
+        arb_asinh(acb_imagref(res), acb_imagref(z), prec);
+        arb_zero(acb_realref(res));
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
 
-    acb_mul(t, z, z, prec);
-    acb_sub_ui(t, t, 1, prec);
-    acb_neg(t, t);
-    acb_sqrt(t, t, prec);
-    acb_mul_onei(res, z);
-    acb_add(res, res, t, prec);
-    acb_log(res, res, prec);
-    acb_div_onei(res, res);
+        acb_mul(t, z, z, prec);
+        acb_sub_ui(t, t, 1, prec);
+        acb_neg(t, t);
+        acb_sqrt(t, t, prec);
 
-    acb_clear(t);
+        if (acb_is_real(z) && acb_is_real(t))
+        {
+            arb_atan2(acb_realref(res), acb_realref(z), acb_realref(t), prec);
+            arb_zero(acb_imagref(res));
+        }
+        else
+        {
+            acb_mul_onei(res, z);
+            acb_add(res, res, t, prec);
+            acb_log(res, res, prec);
+            acb_div_onei(res, res);
+        }
+
+        acb_clear(t);
+    }
 }
 

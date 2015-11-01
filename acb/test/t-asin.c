@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         acb_t x, a, b;
         long prec1, prec2;

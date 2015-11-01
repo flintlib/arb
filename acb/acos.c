@@ -28,14 +28,19 @@
 void
 acb_acos(acb_t res, const acb_t z, long prec)
 {
-    acb_t t;
-    acb_init(t);
-
-    acb_asin(res, z, prec);
-    acb_const_pi(t, prec);
-    acb_mul_2exp_si(t, t, -1);
-    acb_sub(res, t, res, prec);
-
-    acb_clear(t);
+    if (acb_is_one(z))
+    {
+        acb_zero(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        acb_asin(res, z, prec);
+        acb_const_pi(t, prec);
+        acb_mul_2exp_si(t, t, -1);
+        acb_sub(res, t, res, prec);
+        acb_clear(t);
+    }
 }
 
