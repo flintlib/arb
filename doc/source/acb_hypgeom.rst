@@ -654,6 +654,73 @@ if the flag *regularized* is set.
 Orthogonal polynomials and functions
 -------------------------------------------------------------------------------
 
+.. function:: void acb_hypgeom_chebyshev_t(acb_t res, const acb_t n, const acb_t z, long prec)
+
+.. function:: void acb_hypgeom_chebyshev_u(acb_t res, const acb_t n, const acb_t z, long prec)
+
+    Computes the Chebyshev polynomial (or Chebyshev function) of first or second kind
+
+    .. math ::
+
+        T_n(z) = {}_2F_1\left(-n,n,\frac{1}{2},\frac{1-z}{2}\right)
+
+        U_n(z) = (n+1) {}_2F_1\left(-n,n+2,\frac{3}{2},\frac{1-z}{2}\right).
+
+    The hypergeometric series definitions are only used for computation
+    near the point 1. In general, trigonometric representations are used.
+    For word-size integer *n*, :func:`acb_chebyshev_t_ui` and
+    :func:`acb_chebyshev_u_ui` are called.
+
+.. function:: void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b, const acb_t z, long prec)
+
+    Computes the Jacobi polynomial (or Jacobi function)
+
+    .. math ::
+
+        P_n^{(a,b)}(z)=\frac{(a+1)_n}{\Gamma(n+1)} {}_2F_1\left(-n,n+a+b+1,a+1,\frac{1-z}{2}\right).
+
+    For nonnegative integer *n*, this is a polynomial in *a*, *b* and *z*,
+    even when the parameters are such that the hypergeometric series
+    is undefined. In such cases, the polynomial is evaluated using
+    direct methods.
+
+.. function:: void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+
+    Computes the Gegenbauer polynomial (or Gegenbauer function)
+
+    .. math ::
+
+        C_n^{m}(z)=\frac{(2m)_n}{\Gamma(n+1)} {}_2F_1\left(-n,2m+n,m+\frac{1}{2},\frac{1-z}{2}\right).
+
+    For nonnegative integer *n*, this is a polynomial in *m* and *z*,
+    even when the parameters are such that the hypergeometric series
+    is undefined. In such cases, the polynomial is evaluated using
+    direct methods.
+
+.. function:: void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+
+    Computes the Laguerre polynomial (or Laguerre function)
+
+    .. math ::
+
+        L_n^{m}(z)=\frac{(m+1)_n}{\Gamma(n+1)} {}_1F_1\left(-n,m+1,z\right).
+
+    For nonnegative integer *n*, this is a polynomial in *m* and *z*,
+    even when the parameters are such that the hypergeometric series
+    is undefined. In such cases, the polynomial is evaluated using
+    direct methods.
+
+.. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec)
+
+    Computes the Hermite polynomial (or Hermite function)
+
+    .. math ::
+
+        H_n(z) = 2^n \sqrt{\pi} \left(
+            \frac{1}{\Gamma((1-n)/2)} {}_1F_1\left(-\frac{n}{2},\frac{1}{2},z^2\right)
+            - 
+            \frac{2z}{\Gamma(-n/2)} {}_1F_1\left(\frac{1-n}{2},\frac{3}{2},z^2\right)\right).
+
 .. function:: void acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, long prec)
 
     Sets *res* to the associated Legendre function of the first kind
@@ -714,39 +781,4 @@ Orthogonal polynomials and functions
     .. [WQ3b] http://functions.wolfram.com/07.12.27.0014.01
     .. [WQ3c] http://functions.wolfram.com/07.12.26.0003.01
     .. [WQ3d] http://functions.wolfram.com/07.12.26.0088.01
-
-.. function:: void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b, const acb_t z, long prec)
-
-    Computes the Jacobi polynomial (or Jacobi function)
-
-    .. math ::
-
-        P_n^{(a,b)}(z)=\frac{(a+1)_n}{\Gamma(n+1)} {}_2F_1\left(-n,n+a+b+1,a+1,\frac{1-z}{2}\right).
-
-.. function:: void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
-
-    Computes the Gegenbauer polynomial (or Gegenbauer function)
-
-    .. math ::
-
-        C_n^{m}(z)=\frac{(2m)_n}{\Gamma(n+1)} {}_2F_1\left(-n,2m+n,m+\frac{1}{2},\frac{1-z}{2}\right).
-
-.. function:: void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
-
-    Computes the Laguerre polynomial (or Laguerre function)
-
-    .. math ::
-
-        L_n^{m}(z)=\frac{(m+1)_n}{\Gamma(n+1)} {}_1F_1\left(-n,m+1,z\right).
-
-.. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec)
-
-    Computes the Hermite polynomial (or Hermite function)
-
-    .. math ::
-
-        H_n(z) = 2^n \sqrt{\pi} \left(
-            \frac{1}{\Gamma((1-n)/2)} {}_1F_1\left(-\frac{n}{2},\frac{1}{2},z^2\right)
-            - 
-            \frac{2z}{\Gamma(-n/2)} {}_1F_1\left(\frac{1-n}{2},\frac{3}{2},z^2\right)\right).
 

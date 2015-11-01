@@ -769,6 +769,24 @@ Arithmetic-geometric mean
     arithmetic-geometric mean at the point *z* truncated to length *len*, i.e.
     `M(z+x) \in \mathbb{C}[[x]]`.
 
+Other special functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_chebyshev_t_ui(acb_t a, ulong n, const acb_t x, long prec)
+
+.. function:: void acb_chebyshev_u_ui(acb_t a, ulong n, const acb_t x, long prec)
+
+    Evaluates the Chebyshev polynomial of the first kind `a = T_n(x)`
+    or the Chebyshev polynomial of the second kind `a = U_n(x)`.
+
+.. function:: void acb_chebyshev_t2_ui(acb_t a, acb_t b, ulong n, const acb_t x, long prec)
+
+.. function:: void acb_chebyshev_u2_ui(acb_t a, acb_t b, ulong n, const acb_t x, long prec)
+
+    Simultaneously evaluates `a = T_n(x), b = T_{n-1}(x)` or
+    `a = U_n(x), b = U_{n-1}(x)`.
+    Aliasing between *a*, *b* and *x* is not permitted.
+
 Vector functions
 -------------------------------------------------------------------------------
 

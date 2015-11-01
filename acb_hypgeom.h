@@ -166,6 +166,8 @@ void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b
 void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec);
 void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec);
 void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec);
+void acb_hypgeom_chebyshev_t(acb_t res, const acb_t n, const acb_t z, long prec);
+void acb_hypgeom_chebyshev_u(acb_t res, const acb_t n, const acb_t z, long prec);
 
 #ifdef __cplusplus
 }
