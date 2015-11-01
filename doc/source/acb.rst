@@ -539,9 +539,17 @@ Trigonometric functions
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_atan(acb_t s, const acb_t z, long prec)
+.. function:: void acb_asin(acb_t res, const acb_t z, long prec)
 
-    Sets `s = \operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
+    Sets *res* to `\operatorname{asin}(z) = -i \log(iz + \sqrt{1-z^2})`.
+
+.. function:: void acb_acos(acb_t res, const acb_t z, long prec)
+
+    Sets *res* to `\operatorname{acos}(z) = \tfrac{1}{2} \pi - \operatorname{asin}(z)`.
+
+.. function:: void acb_atan(acb_t res, const acb_t z, long prec)
+
+    Sets *res* to `\operatorname{atan}(z) = \tfrac{1}{2} i (\log(1-iz)-\log(1+iz))`.
 
 Hyperbolic functions
 -------------------------------------------------------------------------------
@@ -558,6 +566,21 @@ Hyperbolic functions
 
     Respectively computes `\sinh(z) = -i\sin(iz)`, `\cosh(z) = \cos(iz)`,
     `\tanh(z) = -i\tan(iz)`, `\coth(z) = i\cot(iz)`.
+
+Inverse hyperbolic functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_asinh(acb_t res, const acb_t z, long prec)
+
+    Sets *res* to `\operatorname{asinh}(z) = -i \operatorname{asin}(iz)`.
+
+.. function:: void acb_acosh(acb_t res, const acb_t z, long prec)
+
+    Sets *res* to `\operatorname{acosh}(z) = \log(z + \sqrt{z+1} \sqrt{z-1})`.
+
+.. function:: void acb_atanh(acb_t res, const acb_t z, long prec)
+
+    Sets *res* to `\operatorname{atanh}(z) = -i \operatorname{atan}(iz)`.
 
 Rising factorials
 -------------------------------------------------------------------------------

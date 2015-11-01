@@ -687,7 +687,6 @@ acb_const_pi(acb_t x, long prec)
 
 void acb_log(acb_t r, const acb_t z, long prec);
 void acb_log1p(acb_t r, const acb_t z, long prec);
-void acb_atan(acb_t r, const acb_t z, long prec);
 
 void acb_exp(acb_t r, const acb_t z, long prec);
 void acb_exp_pi_i(acb_t r, const acb_t z, long prec);
@@ -698,6 +697,13 @@ void acb_cos(acb_t r, const acb_t z, long prec);
 void acb_sin_cos(acb_t s, acb_t c, const acb_t z, long prec);
 void acb_tan(acb_t r, const acb_t z, long prec);
 void acb_cot(acb_t r, const acb_t z, long prec);
+
+void acb_asin(acb_t r, const acb_t z, long prec);
+void acb_acos(acb_t r, const acb_t z, long prec);
+void acb_atan(acb_t r, const acb_t z, long prec);
+void acb_asinh(acb_t r, const acb_t z, long prec);
+void acb_acosh(acb_t r, const acb_t z, long prec);
+void acb_atanh(acb_t r, const acb_t z, long prec);
 
 ACB_INLINE void
 acb_sinh(acb_t y, const acb_t x, long prec)
