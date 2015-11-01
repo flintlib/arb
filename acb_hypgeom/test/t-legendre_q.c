@@ -91,7 +91,7 @@ int main()
         acb_clear(res2);
     }
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, m, z, res1, res2, t, u;
         long prec1, prec2, ebits;
@@ -109,8 +109,17 @@ int main()
         prec2 = 2 + n_randint(state, 300);
         ebits = 1 + n_randint(state, 10);
 
-        acb_randtest_param(n, state, 1 + n_randint(state, 400), ebits);
-        acb_randtest_param(m, state, 1 + n_randint(state, 400), ebits);
+        if (n_randint(state, 2))
+        {
+            acb_set_si(m, n_randint(state, 20) - 10);
+            acb_set_si(n, n_randint(state, 20) - 10);
+        }
+        else
+        {
+            acb_randtest_param(n, state, 1 + n_randint(state, 400), ebits);
+            acb_randtest_param(m, state, 1 + n_randint(state, 400), ebits);
+        }
+
         acb_randtest_param(z, state, 1 + n_randint(state, 400), ebits);
 
         type = n_randint(state, 2);

@@ -782,3 +782,8 @@ Orthogonal polynomials and functions
     .. [WQ3c] http://functions.wolfram.com/07.12.26.0003.01
     .. [WQ3d] http://functions.wolfram.com/07.12.26.0088.01
 
+.. function:: void acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, long prec)
+
+    For nonnegative integer *n* and *m*, uses recurrence relations to evaluate
+    `(1-z^2)^{-m/2} P_n^m(z)` which is a polynomial in *z*.
+

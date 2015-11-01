@@ -31,6 +31,65 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
 {
     acb_t a, b, c, w;
 
+    if (!acb_is_finite(z))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    if (acb_is_int(n) && acb_is_int(m) && arb_is_nonnegative(acb_realref(n))
+        && arb_is_nonnegative(acb_realref(m)) && type == 0)
+    {
+        arf_srcptr nn = arb_midref(acb_realref(n));
+        arf_srcptr mm = arb_midref(acb_realref(m));
+
+        if (arf_cmpabs(mm, nn) > 0)
+        {
+            acb_zero(res);
+            return;
+        }
+
+        if (arf_cmpabs_2exp_si(nn, FLINT_BITS - 1) < 0 && 
+            arf_cmpabs_2exp_si(mm, FLINT_BITS - 1) < 0)
+        {
+            long nnn, mmm;
+
+            nnn = arf_get_si(nn, ARF_RND_DOWN);
+            mmm = arf_get_si(mm, ARF_RND_DOWN);
+
+            /* we will probably lose all accuracy... */
+            if (nnn - mmm > 2 * prec)
+            {
+                acb_indeterminate(res);
+            }  /* hypergeometric series is faster at high precision, but avoid at 1 */
+            else if (prec < 500 + nnn * 10.0 || (nnn - mmm) < 10 ||
+                (arb_contains_si(acb_realref(z), 1) &&
+                 arb_contains_zero(acb_imagref(z))))
+            {
+                if (mmm == 0)
+                {
+                    acb_hypgeom_legendre_p_uiui_rec(res, nnn, mmm, z, prec);
+                }
+                else
+                {
+                    acb_init(a);
+                    acb_init(b);
+                    acb_mul(a, z, z, prec);
+                    acb_sub_ui(a, a, 1, prec);
+                    acb_neg(a, a);
+                    acb_mul_2exp_si(b, m, -1);
+                    acb_pow(a, a, b, prec);
+                    acb_hypgeom_legendre_p_uiui_rec(res, nnn, mmm, z, prec);
+                    acb_mul(res, res, a, prec);
+                    acb_clear(a);
+                    acb_clear(b);
+                }
+
+                return;
+            }
+        }
+    }
+
     acb_init(a);
     acb_init(b);
     acb_init(c);
