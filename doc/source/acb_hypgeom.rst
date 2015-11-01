@@ -787,3 +787,17 @@ Orthogonal polynomials and functions
     For nonnegative integer *n* and *m*, uses recurrence relations to evaluate
     `(1-z^2)^{-m/2} P_n^m(z)` which is a polynomial in *z*.
 
+.. function:: void acb_hypgeom_spherical_y(acb_t res, long n, long m, const acb_t theta, const acb_t phi, long prec)
+
+    Computes the spherical harmonic of degree *n*, order *m*,
+    latitude angle *theta*, and longitude angle *phi*, normalized
+    such that
+
+    .. math ::
+
+        Y_n^m(\theta, \phi) = \sqrt{\frac{2n+1}{4\pi} \frac{(n-m)!}{(n+m)!}} e^{im\phi} P_n^m(\cos(\theta)).
+
+    The definition is extended to negative *m* and *n* by symmetry.
+    This function is a polynomial in `\cos(\theta)` and `\sin(\theta)`.
+    We evaluate it using :func:`acb_hypgeom_legendre_p_uiui_rec`.
+
