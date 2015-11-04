@@ -246,6 +246,11 @@ Precision and comparisons
 
     Returns nonzero iff zero is contained in *x*.
 
+.. function:: int acb_contains_int(const acb_t x)
+
+    Returns nonzero iff the complex interval represented by *x* contains
+    an integer.
+
 .. function:: long acb_rel_error_bits(const acb_t x)
 
     Returns the effective relative error of *x* measured in bits.

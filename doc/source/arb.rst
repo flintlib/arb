@@ -487,6 +487,10 @@ Comparisons
     the points included in *y*).
     If *y* contains NaN and *x* does not, it always returns zero.
 
+.. function:: int arb_contains_int(const arb_t x)
+
+    Returns nonzero iff the interval represented by *x* contains an integer.
+
 .. function:: int arb_contains_zero(const arb_t x)
 
 .. function:: int arb_contains_negative(const arb_t x)

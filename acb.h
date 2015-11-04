@@ -289,6 +289,8 @@ acb_set_round_fmpz(acb_t z, const fmpz_t y, long prec)
     arb_zero(acb_imagref(z));
 }
 
+int acb_contains_int(const acb_t x);
+
 int acb_get_unique_fmpz(fmpz_t z, const acb_t x);
 
 ACB_INLINE void
