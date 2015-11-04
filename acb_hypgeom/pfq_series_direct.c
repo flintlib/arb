@@ -323,8 +323,6 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
     terminating = 0;
 
     /* check if it terminates due to a root of the numerator */
-    /* todo: check if terminating due to the valuation stabilizing (tricky
-       because of corner cases) */
     for (i = 0; i < p; i++)
     {
         if (acb_poly_length(a + i) == 0 && n > 0)
@@ -339,6 +337,32 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
                 arf_cmpabs_ui(arb_midref(acb_realref(c)), n) < 0)
             {
                 terminating = 1;
+            }
+        }
+    }
+
+    /* check if it terminates (to order n) due to z */
+    /* the following tests could be made stronger... */
+    if (z->length == 0 && n >= 1)
+    {
+        terminating = 1;
+    }
+    else if (!terminating && z->length > 0 && acb_is_zero(z->coeffs) && n >= len)
+    {
+        if (regularized)
+        {
+            terminating = 1;
+        }
+        else
+        {
+            terminating = 1;
+
+            for (i = 0; i < q; i++)
+            {
+                acb_srcptr c = acb_poly_get_coeff_ptr(b + i, 0);
+
+                if (!arb_is_positive(acb_realref(c)) && acb_contains_int(c))
+                    terminating = 0;
             }
         }
     }
@@ -362,11 +386,12 @@ acb_hypgeom_pfq_series_direct(acb_poly_t res,
         acb_poly_majorant(T, t, MAG_BITS);
         acb_hypgeom_pfq_series_bound_factor(C, a, p, b, q, z, n, len, MAG_BITS);
 
-        /* XXX */
-        if (arb_poly_length(C) && !arb_is_finite(C->coeffs))
+        if (!_arb_vec_is_finite(T->coeffs, T->length) ||
+            !_arb_vec_is_finite(C->coeffs, C->length))
         {
-            for (i = 0; i < len; i++)
-                arb_poly_set_coeff_arb(T, i, C->coeffs);
+            arb_poly_fit_length(T, len);
+            _arb_vec_indeterminate(T->coeffs, len);
+            _arb_poly_set_length(T, len);
         }
         else
         {
