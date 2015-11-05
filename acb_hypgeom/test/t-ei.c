@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_ei_fallback(acb_t res, const acb_t z, long prec)
+acb_hypgeom_ei_fallback(acb_t res, const acb_t z, slong prec)
 {
     acb_t t, u;
 
@@ -59,7 +59,7 @@ acb_hypgeom_ei_fallback(acb_t res, const acb_t z, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("ei....");
@@ -70,7 +70,7 @@ int main()
     for (iter = 0; iter < 3000; iter++)
     {
         acb_t z0, z1, w0, w1;
-        long prec0, prec1;
+        slong prec0, prec1;
 
         acb_init(z0);
         acb_init(z1);

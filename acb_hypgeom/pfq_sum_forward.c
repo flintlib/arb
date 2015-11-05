@@ -27,10 +27,10 @@
 
 void
 acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t,
-    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+    acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
     acb_t u, v;
-    long k, i;
+    slong k, i;
 
     acb_init(u);
     acb_init(v);

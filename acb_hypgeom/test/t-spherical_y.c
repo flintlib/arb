@@ -116,7 +116,7 @@ int main()
     fflush(stdout);
 
     {
-        long i, n, m;
+        slong i, n, m;
         acb_t z, w, x, y;
 
         acb_init(z);

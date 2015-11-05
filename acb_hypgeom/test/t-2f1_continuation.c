@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("2f1_continuation....");
@@ -40,7 +40,7 @@ int main()
         acb_t a, b, c, z1, z2, f1, f2, g1, g2, h1, h2, aa, bb, cc;
         mag_t d0, d1, dt;
 
-        long prec;
+        slong prec;
         int regularized, ebits;
 
         acb_init(a); acb_init(b); acb_init(c);

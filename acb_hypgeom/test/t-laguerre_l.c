@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("laguerre_l....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t n, m, n1, m1, z, res1, res2, res3, s;
-        long prec;
+        slong prec;
 
         acb_init(n);
         acb_init(m);

@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 int
-acb_hypgeom_u_use_asymp(const acb_t z, long prec)
+acb_hypgeom_u_use_asymp(const acb_t z, slong prec)
 {
     double x, y;
 

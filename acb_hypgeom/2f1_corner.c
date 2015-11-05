@@ -27,7 +27,7 @@
 
 void
 acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, long prec)
+    const acb_t c, const acb_t z, int regularized, slong prec)
 {
     acb_t aa, bb, cc, z1, z2, f1, f2;
     int upper;

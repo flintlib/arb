@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("legendre_p....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, na, nb, m, z, res1, res2, res3, t, u;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
         int type;
 
         acb_init(n);

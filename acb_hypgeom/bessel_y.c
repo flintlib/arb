@@ -47,7 +47,7 @@ phase(acb_t res, const arb_t re, const arb_t im)
 }
 
 void
-acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_t t, u, v;
 

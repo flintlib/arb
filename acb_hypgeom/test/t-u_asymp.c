@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("u_asymp....");
@@ -40,7 +40,7 @@ int main()
         acb_t a, b, a2, b2, z, U1, U2, t, u, M1, M2, am;
         acb_struct bm[2];
         ulong n1, n2;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         acb_init(a);
         acb_init(b);

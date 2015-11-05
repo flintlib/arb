@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pfq_series_direct....");
@@ -39,7 +39,7 @@ int main()
     {
         acb_poly_struct a[4], b[4];
         acb_poly_t z, s1, s2;
-        long i, p, q, len1, len2, n1, n2, prec1, prec2;
+        slong i, p, q, len1, len2, n1, n2, prec1, prec2;
         int regularized;
 
         p = n_randint(state, 3);

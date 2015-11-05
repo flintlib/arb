@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("chi....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t z0, z1, w0, w1;
-        long prec0, prec1;
+        slong prec0, prec1;
 
         acb_init(z0);
         acb_init(z1);

@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_t t, a, b, w;
 
@@ -66,12 +66,12 @@ acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
 void
 acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
     const acb_poly_t nu, const acb_poly_t z,
-    long len, long prec)
+    slong len, slong prec)
 {
     acb_poly_t s, u, A, B;
     acb_poly_struct b[2];
     arb_t c;
-    long wlen;
+    slong wlen;
     int singular;
 
     acb_poly_init(s);
@@ -130,7 +130,7 @@ acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
 }
 
 void
-acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     if (acb_is_int(nu))
     {
@@ -203,7 +203,7 @@ acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     mag_t zmag;
 

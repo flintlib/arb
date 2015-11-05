@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec)
+acb_hypgeom_ei_asymp(acb_t res, const acb_t z, slong prec)
 {
     acb_t t, u;
 
@@ -72,7 +72,7 @@ acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec)
 Ei(z) = z 2F2(1,1,2,2,z) + 0.5[log(z)-log(1/z)] + gamma
 */
 void
-acb_hypgeom_ei_2f2(acb_t res, const acb_t z, long prec)
+acb_hypgeom_ei_2f2(acb_t res, const acb_t z, slong prec)
 {
     acb_t a, t;
     acb_struct b[2];
@@ -134,7 +134,7 @@ acb_hypgeom_ei_2f2(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_ei(acb_t res, const acb_t z, long prec)
+acb_hypgeom_ei(acb_t res, const acb_t z, slong prec)
 {
     if (acb_hypgeom_u_use_asymp(z, prec))
         acb_hypgeom_ei_asymp(res, z, prec);

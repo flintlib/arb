@@ -28,15 +28,15 @@
 double mag_get_log2_d_approx(const mag_t x);
 
 int
-acb_hypgeom_pfq_choose_n_double(long * nn,
-    const double * are, const double * aim, long p,
-    const double * bre, const double * bim, long q,
+acb_hypgeom_pfq_choose_n_double(slong * nn,
+    const double * are, const double * aim, slong p,
+    const double * bre, const double * bim, slong q,
     double log2_z,
-    long n_skip, long n_min, long n_max, long prec)
+    slong n_skip, slong n_min, slong n_max, slong prec)
 {
     double increase, term, term_max, accuracy, accuracy_best, t, u;
     double required_decrease;
-    long k, n, n_best;
+    slong k, n, n_best;
     int success;
 
     if (p < q)
@@ -95,11 +95,11 @@ acb_hypgeom_pfq_choose_n_double(long * nn,
 }
 
 long
-acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
-                         acb_srcptr b, long q, const acb_t z, long prec)
+acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
+                         acb_srcptr b, slong q, const acb_t z, slong prec)
 {
-    long n_skip, n_min, n_max, n_terminating, nint;
-    long k, n;
+    slong n_skip, n_min, n_max, n_terminating, nint;
+    slong k, n;
     double log2_z;
     double * are;
     double * aim;
@@ -134,7 +134,7 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
         /* If the series is terminating, stop at this n. */
         if (acb_is_int(a + k) && are[k] <= 0.0)
         {
-            n_terminating = FLINT_MIN(n_terminating, (long) (-are[k] + 1));
+            n_terminating = FLINT_MIN(n_terminating, (slong) (-are[k] + 1));
             n_terminating = FLINT_MAX(n_terminating, 1);
         }
         else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)
@@ -193,12 +193,12 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
 }
 
 long
-acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
-                                const acb_poly_struct * b, long q,
-                                const acb_poly_t z, long len, long prec)
+acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
+                                const acb_poly_struct * b, slong q,
+                                const acb_poly_t z, slong len, slong prec)
 {
-    long n_skip, n_min, n_max, n_terminating, nint;
-    long k, n;
+    slong n_skip, n_min, n_max, n_terminating, nint;
+    slong k, n;
     double log2_z;
     double * are;
     double * aim;
@@ -243,7 +243,7 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
         /* If the series is terminating, stop at this n. */
         if (acb_is_int(t) && are[k] <= 0.0 && acb_poly_length(a + k) <= 1)
         {
-            n_terminating = FLINT_MIN(n_terminating, (long) (-are[k] + 1));
+            n_terminating = FLINT_MIN(n_terminating, (slong) (-are[k] + 1));
             n_terminating = FLINT_MAX(n_terminating, 1);
         }
         else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)

@@ -27,7 +27,7 @@
 
 /* this can be improved */
 static int
-use_recurrence(const acb_t n, const acb_t m, long prec)
+use_recurrence(const acb_t n, const acb_t m, slong prec)
 {
     if (!acb_is_int(n) || !arb_is_nonnegative(acb_realref(n)))
         return 0;
@@ -43,7 +43,7 @@ use_recurrence(const acb_t n, const acb_t m, long prec)
 
 void
 acb_hypgeom_laguerre_l_ui_recurrence(acb_t res, ulong n, const acb_t m,
-    const acb_t z, long prec)
+    const acb_t z, slong prec)
 {
     acb_t t, u, v;
     ulong k;
@@ -92,7 +92,7 @@ acb_hypgeom_laguerre_l_ui_recurrence(acb_t res, ulong n, const acb_t m,
 }
 
 void
-acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, slong prec)
 {
     acb_t t, u, v;
 

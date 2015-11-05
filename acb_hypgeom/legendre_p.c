@@ -27,7 +27,7 @@
 
 void
 acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, int type, long prec)
+    const acb_t z, int type, slong prec)
 {
     acb_t a, b, c, w;
 
@@ -52,7 +52,7 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
         if (arf_cmpabs_2exp_si(nn, FLINT_BITS - 1) < 0 && 
             arf_cmpabs_2exp_si(mm, FLINT_BITS - 1) < 0)
         {
-            long nnn, mmm;
+            slong nnn, mmm;
 
             nnn = arf_get_si(nn, ARF_RND_DOWN);
             mmm = arf_get_si(mm, ARF_RND_DOWN);

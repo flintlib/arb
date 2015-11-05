@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_hermite_h_ui_recurrence(acb_t res, ulong n, const acb_t z, long prec)
+acb_hypgeom_hermite_h_ui_recurrence(acb_t res, ulong n, const acb_t z, slong prec)
 {
     acb_t t, u, v;
     ulong k;
@@ -68,7 +68,7 @@ acb_hypgeom_hermite_h_ui_recurrence(acb_t res, ulong n, const acb_t z, long prec
 }
 
 void
-acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec)
+acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, slong prec)
 {
     acb_t a, b, c, t, u, v;
     int use_asymp;

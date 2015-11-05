@@ -48,7 +48,7 @@ _acb_hypgeom_legendre_q_single_valid(const acb_t z)
 
 void
 _acb_hypgeom_legendre_q_double(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec)
+    const acb_t z, slong prec)
 {
     acb_t t, u, v;
 
@@ -119,7 +119,7 @@ _acb_hypgeom_legendre_q_double(acb_t res, const acb_t n, const acb_t m,
 
 void
 _acb_hypgeom_legendre_q_single(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec)
+    const acb_t z, slong prec)
 {
     acb_t a, b, c, z2, t, u;
 
@@ -200,7 +200,7 @@ _acb_hypgeom_legendre_q_single(acb_t res, const acb_t n, const acb_t m,
 
 void
 acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, int type, long prec)
+    const acb_t z, int type, slong prec)
 {
     if (type == 0)
     {

@@ -175,7 +175,7 @@ acb_hypgeom_mag_chi(mag_t chi, ulong n)
 }
 
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
-    const acb_t z, long n, long prec)
+    const acb_t z, slong n, slong prec)
 {
     mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
     acb_struct aa[3];

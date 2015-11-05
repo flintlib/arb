@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec)
+acb_hypgeom_chi_asymp(acb_t res, const acb_t z, slong prec)
 {
     acb_t t, u, v, one;
 
@@ -115,7 +115,7 @@ acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec)
+acb_hypgeom_chi_2f3(acb_t res, const acb_t z, slong prec)
 {
     acb_t a, t, u;
     acb_struct b[3];
@@ -155,7 +155,7 @@ acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_chi(acb_t res, const acb_t z, long prec)
+acb_hypgeom_chi(acb_t res, const acb_t z, slong prec)
 {
     if (acb_hypgeom_u_use_asymp(z, prec))
         acb_hypgeom_chi_asymp(res, z, prec);

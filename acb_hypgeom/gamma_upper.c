@@ -27,7 +27,7 @@
 
 void
 acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s,
-        const acb_t z, int modified, long prec)
+        const acb_t z, int modified, slong prec)
 {
     acb_t t, u;
 
@@ -60,7 +60,7 @@ acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s,
 
 void
 acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s,
-        const acb_t z, int modified, long prec)
+        const acb_t z, int modified, slong prec)
 {
     acb_t a, t, w;
     acb_struct b[2];
@@ -104,7 +104,7 @@ acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s,
 
 void
 acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s,
-        const acb_t z, int modified, long prec)
+        const acb_t z, int modified, slong prec)
 {
     acb_t a, b, t;
 
@@ -143,13 +143,13 @@ acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s,
 
 /* requires n <= 0 */
 void
-acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec)
+acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int modified, slong prec)
 {
     acb_t A, B, C, t, u;
     acb_struct a[2];
     acb_struct b[2];
     arb_t f;
-    long n;
+    slong n;
 
     n = -s;
 
@@ -232,7 +232,7 @@ acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified,
 }
 
 void
-acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
 {
     if (acb_is_zero(z))
     {
@@ -258,7 +258,7 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, l
     }
     else
     {
-        long n = LONG_MAX;
+        slong n = LONG_MAX;
 
         if (acb_is_int(s) &&
                 arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)

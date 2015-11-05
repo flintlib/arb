@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 static void
-evaluate(acb_poly_t A, acb_srcptr a, long p, const acb_t z, long n, long prec)
+evaluate(acb_poly_t A, acb_srcptr a, slong p, const acb_t z, slong n, slong prec)
 {
     acb_poly_fit_length(A, p + 1);
 
@@ -108,8 +108,8 @@ evaluate(acb_poly_t A, acb_srcptr a, long p, const acb_t z, long n, long prec)
 /* todo: do this using underscore methods */
 static void
 bsplit(acb_poly_t A, acb_poly_t B, acb_poly_t C,
-    acb_srcptr a, long p, acb_srcptr b, long q,
-    const acb_t z, long an, long bn, long prec)
+    acb_srcptr a, slong p, acb_srcptr b, slong q,
+    const acb_t z, slong an, slong bn, slong prec)
 {
     if (bn - an == 1)
     {
@@ -141,7 +141,7 @@ bsplit(acb_poly_t A, acb_poly_t B, acb_poly_t C,
     }
     else
     {
-        long m = an + (bn - an) / 2;
+        slong m = an + (bn - an) / 2;
 
         acb_poly_t A2, B2, C2, T;
 
@@ -170,14 +170,14 @@ bsplit(acb_poly_t A, acb_poly_t B, acb_poly_t C,
 
 void
 acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t,
-    acb_srcptr a, long p, acb_srcptr b, long q,
-    const acb_t z, long n, long prec)
+    acb_srcptr a, slong p, acb_srcptr b, slong q,
+    const acb_t z, slong n, slong prec)
 {
     acb_poly_t A, B, C;
     acb_ptr ks, As, Bs, Cs;
     acb_t u, v;
     acb_ptr * tree;
-    long i, k, m, w;
+    slong i, k, m, w;
 
     m = n_sqrt(n) / 4;  /* tuning parameter */
     w = n / FLINT_MAX(m, 1);

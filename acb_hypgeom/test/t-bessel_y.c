@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("bessel_y....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t nu, nu1, z, jv, jv1, yv, yv1, r, s;
-        long prec, n;
+        slong prec, n;
 
         acb_init(nu);
         acb_init(nu1);

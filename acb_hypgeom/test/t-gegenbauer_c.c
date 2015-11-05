@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("gegenbauer_c....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t n, m, z, t, u, res1, res2;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         acb_init(n);
         acb_init(m);

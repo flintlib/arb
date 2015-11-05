@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("m....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t a0, a1, a2, b, z, w0, w1, w2, t, u;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
         int regularized, ebits;
 
         acb_init(a0);

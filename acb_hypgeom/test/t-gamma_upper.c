@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("gamma_upper....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t a0, a1, b, z, w0, w1, t, u;
-        long prec0, prec1;
+        slong prec0, prec1;
         int modified;
 
         acb_init(a0);

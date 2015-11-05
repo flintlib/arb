@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("chebyshev_u....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, z, a, b, c, t, res1, res2;
-        long prec;
+        slong prec;
 
         acb_init(n);
         acb_init(z);

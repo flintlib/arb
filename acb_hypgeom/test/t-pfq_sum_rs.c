@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pfq_sum_rs....");
@@ -39,7 +39,7 @@ int main()
     {
         acb_ptr a, b;
         acb_t z, s1, s2, t1, t2;
-        long i, p, q, n, prec1, prec2;
+        slong i, p, q, n, prec1, prec2;
 
         p = n_randint(state, 5);
         q = n_randint(state, 5);

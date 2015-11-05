@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_u_asymp_proper(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+acb_hypgeom_u_asymp_proper(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_t t;
     acb_init(t);
@@ -38,7 +38,7 @@ acb_hypgeom_u_asymp_proper(acb_t res, const acb_t a, const acb_t b, const acb_t 
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("u....");
@@ -49,7 +49,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t a0, a1, a2, b, z, w0, w1, w2, t, u;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         acb_init(a0);
         acb_init(a1);

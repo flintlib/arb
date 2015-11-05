@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("hermite_h....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t n, n1, n2, z, res1, res2, res3, s;
-        long prec1, prec2, prec3;
+        slong prec1, prec2, prec3;
 
         acb_init(n);
         acb_init(n1);

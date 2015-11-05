@@ -26,8 +26,8 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_spherical_y(acb_t res, long n, long m,
-    const acb_t theta, const acb_t phi, long prec)
+acb_hypgeom_spherical_y(acb_t res, slong n, slong m,
+    const acb_t theta, const acb_t phi, slong prec)
 {
     acb_t t, u;
 

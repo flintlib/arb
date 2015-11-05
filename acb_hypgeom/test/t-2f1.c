@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("2f1....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 3000; iter++)
     {
         acb_t a, b, c, z, w1, w2, t;
-        long prec1, prec2;
+        slong prec1, prec2;
         int reg1, reg2, ebits;
         int alg1, alg2;
 

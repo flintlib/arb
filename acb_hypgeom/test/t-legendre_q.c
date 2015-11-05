@@ -27,13 +27,13 @@
 
 /* these functions are not public for now */
 void _acb_hypgeom_legendre_q_single(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec);
+    const acb_t z, slong prec);
 void _acb_hypgeom_legendre_q_double(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec);
+    const acb_t z, slong prec);
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("legendre_q....");
@@ -44,7 +44,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t n, m, z, res1, res2;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
 
         acb_init(n);
         acb_init(m);
@@ -94,7 +94,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, m, z, res1, res2, t, u;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
         int type;
 
         acb_init(n);

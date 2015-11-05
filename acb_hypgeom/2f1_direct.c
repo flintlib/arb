@@ -27,7 +27,7 @@
 
 void
 acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, long prec)
+    const acb_t c, const acb_t z, int regularized, slong prec)
 {
     /* 2F1R(a,b,-n,z) = (a)_(n+1) * (b)_(n+1) * z^(n+1) / (n+1)!
                            * 2F1(a+n+1, b+n+1, n+2, z) */

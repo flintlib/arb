@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_erfc(acb_t res, const acb_t z, long prec)
+acb_hypgeom_erfc(acb_t res, const acb_t z, slong prec)
 {
     if (arb_is_positive(acb_realref(z)))
     {
