@@ -28,12 +28,12 @@
 void
 bernoulli_rev_init(bernoulli_rev_t iter, ulong nmax)
 {
-    long j;
+    slong j;
     fmpz_t t;
     arb_t x;
     arf_t u;
     int round1, round2;
-    long wp;
+    slong wp;
 
     nmax -= (nmax % 2);
     iter->n = nmax;

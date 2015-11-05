@@ -29,7 +29,7 @@
 void
 _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
 {
-    long prec;
+    slong prec;
     arb_t t;
 
     arith_bernoulli_number_denom(den, n);

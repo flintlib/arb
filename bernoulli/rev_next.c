@@ -39,7 +39,7 @@ void
 bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
 {
     ulong n;
-    long j, wp;
+    slong j, wp;
     fmpz_t sum;
     mag_t err;
     arb_t z, h;
@@ -116,7 +116,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     /* readjust precision */
     if (n % 64 == 0 && n > BERNOULLI_REV_MIN)
     {
-        long new_prec, new_max;
+        slong new_prec, new_max;
 
         new_prec = bernoulli_global_prec(n);
         new_max = bernoulli_zeta_terms(n, new_prec);

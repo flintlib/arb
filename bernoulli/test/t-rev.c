@@ -33,7 +33,7 @@
 int main()
 {
     flint_rand_t state;
-    long nmax, n, bound, count;
+    slong nmax, n, bound, count;
     mp_limb_t p, pinv, m1, m2;
     nmod_poly_t A;
 

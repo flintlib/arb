@@ -35,7 +35,7 @@ int main()
     fmpz * den1;
     fmpz_t num2;
     fmpz_t den2;
-    long n, N;
+    slong n, N;
 
     printf("fmpq_ui....");
     fflush(stdout);

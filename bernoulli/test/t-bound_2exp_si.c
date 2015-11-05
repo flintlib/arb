@@ -34,7 +34,7 @@ double log2bern_approx(double n)
 
 int main()
 {
-    long i, bound;
+    slong i, bound;
     double a, b;
     fmpq_t q;
     fmpr_t t;
