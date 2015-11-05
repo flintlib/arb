@@ -56,7 +56,7 @@ fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, mp_bitcnt_t shi
             zn--;
     }
 
-    zmpz->_mp_size = sgnbit ? -(long) zn : zn;
+    zmpz->_mp_size = sgnbit ? -(slong) zn : zn;
     _fmpz_demote_val(z);
 }
 

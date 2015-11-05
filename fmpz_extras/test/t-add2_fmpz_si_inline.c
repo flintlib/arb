@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("add2_fmpz_si_inline....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmpz_t a, b, c, d;
-        long e;
+        slong e;
 
         fmpz_init(a);
         fmpz_init(b);
