@@ -284,7 +284,7 @@ Confluent hypergeometric functions
 .. function:: void acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
 
     Computes the confluent hypergeometric function
-    `{}_0F_1(a,z)`, or `\frac{1}{\Gamma(a)} {}_0F_1(a,z)` is *regularized*
+    `{}_0F_1(a,z)`, or `\frac{1}{\Gamma(a)} {}_0F_1(a,z)` if *regularized*
     is set, using asymptotic expansions, direct summation,
     or an automatic algorithm choice.
     The *asymp* version uses the asymptotic expansions of Bessel
