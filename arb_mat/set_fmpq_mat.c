@@ -26,9 +26,9 @@
 #include "arb_mat.h"
 
 void
-arb_mat_set_fmpq_mat(arb_mat_t dest, const fmpq_mat_t src, long prec)
+arb_mat_set_fmpq_mat(arb_mat_t dest, const fmpq_mat_t src, slong prec)
 {
-    long i, j;
+    slong i, j;
 
     if (arb_mat_ncols(dest) != 0)
     {

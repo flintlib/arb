@@ -26,9 +26,9 @@
 #include "arb_mat.h"
 
 void
-arb_mat_randtest(arb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
+arb_mat_randtest(arb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits)
 {
-    long i, j;
+    slong i, j;
 
     if (n_randint(state, 2))
         for (i = 0; i < arb_mat_nrows(mat); i++)

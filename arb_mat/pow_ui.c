@@ -26,9 +26,9 @@
 #include "arb_mat.h"
 
 void
-arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, long prec)
+arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec)
 {
-    long d = arb_mat_nrows(A);
+    slong d = arb_mat_nrows(A);
 
     if (exp <= 2 || d <= 1)
     {
@@ -53,13 +53,13 @@ arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, long prec)
     else
     {
         arb_mat_t T, U;
-        long i;
+        slong i;
 
         arb_mat_init(T, d, d);
         arb_mat_set(T, A);
         arb_mat_init(U, d, d);
 
-        for (i = ((long) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
+        for (i = ((slong) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
         {
             arb_mat_mul(U, T, T, prec);   /* todo: sqr */
 

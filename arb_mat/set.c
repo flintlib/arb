@@ -28,7 +28,7 @@
 void
 arb_mat_set(arb_mat_t dest, const arb_mat_t src)
 {
-    long i, j;
+    slong i, j;
 
     if (dest != src && arb_mat_ncols(src) != 0)
     {

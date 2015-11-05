@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp....");
@@ -41,7 +41,7 @@ int main()
         arb_mat_t A, E, F, EF, G;
         fmpq_mat_t Q;
         arb_t c, d;
-        long n, qbits, prec;
+        slong n, qbits, prec;
 
         n = n_randint(state, 5);
         qbits = 2 + n_randint(state, 300);

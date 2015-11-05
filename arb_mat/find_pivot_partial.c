@@ -27,9 +27,9 @@
 
 long
 arb_mat_find_pivot_partial(const arb_mat_t mat,
-                                    long start_row, long end_row, long c)
+                                    slong start_row, slong end_row, slong c)
 {
-    long best_row, i;
+    slong best_row, i;
 
     best_row = -1;
 

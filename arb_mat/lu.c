@@ -26,11 +26,11 @@
 #include "arb_mat.h"
 
 int
-arb_mat_lu(long * P, arb_mat_t LU, const arb_mat_t A, long prec)
+arb_mat_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
 {
     arb_t d, e;
     arb_ptr * a;
-    long i, j, m, n, r, row, col;
+    slong i, j, m, n, r, row, col;
     int result;
 
     m = arb_mat_nrows(A);

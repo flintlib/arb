@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("solve....");
@@ -39,7 +39,7 @@ int main()
     {
         fmpq_mat_t Q, QX, QB;
         arb_mat_t A, X, B;
-        long n, m, qbits, prec;
+        slong n, m, qbits, prec;
         int q_invertible, r_invertible, r_invertible2;
 
         n = n_randint(state, 8);

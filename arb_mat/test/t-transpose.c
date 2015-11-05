@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("transpose....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n;
+        slong m, n;
         arb_mat_t a, b, c;
 
         m = n_randint(state, 10);

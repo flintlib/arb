@@ -28,7 +28,7 @@
 int
 arb_mat_ne(const arb_mat_t mat1, const arb_mat_t mat2)
 {
-    long i, j;
+    slong i, j;
 
     if ((arb_mat_nrows(mat1) != arb_mat_nrows(mat2)) ||
         (arb_mat_ncols(mat1) != arb_mat_ncols(mat2)))

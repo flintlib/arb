@@ -26,9 +26,9 @@
 #include "arb_mat.h"
 
 void
-arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, long prec)
+arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    long ar, ac, br, bc, i, j, k;
+    slong ar, ac, br, bc, i, j, k;
 
     ar = arb_mat_nrows(A);
     ac = arb_mat_ncols(A);

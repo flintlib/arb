@@ -26,9 +26,9 @@
 #include "arb_mat.h"
 
 void
-arb_mat_printd(const arb_mat_t mat, long digits)
+arb_mat_printd(const arb_mat_t mat, slong digits)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < arb_mat_nrows(mat); i++)
     {

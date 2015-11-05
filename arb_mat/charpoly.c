@@ -25,9 +25,9 @@
 
 #include "arb_mat.h"
 
-void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, long prec)
+void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec)
 {
-    const long n = mat->r;
+    const slong n = mat->r;
 
     if (n == 0)
     {
@@ -40,7 +40,7 @@ void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, long prec)
     }
     else
     {
-        long i, j, k, t;
+        slong i, j, k, t;
         arb_ptr a, A, s;
 
         a = _arb_vec_init(n * n);
@@ -94,7 +94,7 @@ void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, long prec)
     }
 }
 
-void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, long prec)
+void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec)
 {
     if (mat->r != mat->c)
     {

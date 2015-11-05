@@ -27,9 +27,9 @@
 
 void
 arb_mat_sub(arb_mat_t res,
-        const arb_mat_t mat1, const arb_mat_t mat2, long prec)
+        const arb_mat_t mat1, const arb_mat_t mat2, slong prec)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < arb_mat_nrows(mat1); i++)
         for (j = 0; j < arb_mat_ncols(mat1); j++)

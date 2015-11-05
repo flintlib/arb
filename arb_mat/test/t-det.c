@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("det....");
@@ -41,7 +41,7 @@ int main()
         fmpq_t Qdet;
         arb_mat_t A;
         arb_t Adet;
-        long n, qbits, prec;
+        slong n, qbits, prec;
 
         n = n_randint(state, 8);
         qbits = 1 + n_randint(state, 100);

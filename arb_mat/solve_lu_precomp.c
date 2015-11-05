@@ -26,10 +26,10 @@
 #include "arb_mat.h"
 
 void
-arb_mat_solve_lu_precomp(arb_mat_t X, const long * perm,
-    const arb_mat_t A, const arb_mat_t B, long prec)
+arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm,
+    const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    long i, j, c, n, m;
+    slong i, j, c, n, m;
 
     n = arb_mat_nrows(X);
     m = arb_mat_ncols(X);

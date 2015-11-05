@@ -26,7 +26,7 @@
 #include "arb_mat.h"
 
 void
-arb_mat_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, long prec)
+arb_mat_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     if (flint_get_num_threads() > 1 &&
         ((double) arb_mat_nrows(A) *
