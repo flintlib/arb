@@ -26,9 +26,9 @@
 #include "fmprb.h"
 
 void
-fmprb_set_round(fmprb_t z, const fmprb_t x, long prec)
+fmprb_set_round(fmprb_t z, const fmprb_t x, slong prec)
 {
-    long r;
+    slong r;
 
     r = fmpr_set_round(fmprb_midref(z), fmprb_midref(x), prec, FMPR_RND_DOWN);
     fmpr_add_error_result(fmprb_radref(z), fmprb_radref(x),

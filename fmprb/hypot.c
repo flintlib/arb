@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     if (fmprb_is_zero(y))
     {

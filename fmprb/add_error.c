@@ -32,7 +32,7 @@ fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err)
 }
 
 void
-fmprb_add_error_2exp_si(fmprb_t x, long err)
+fmprb_add_error_2exp_si(fmprb_t x, slong err)
 {
     fmpr_t t;
     fmpr_init(t);

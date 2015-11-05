@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("union....");
@@ -37,7 +37,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmprb_t x, y, z;
-        long prec;
+        slong prec;
         int alias;
 
         fmprb_init(x);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("trim....");
@@ -37,7 +37,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmprb_t x, y;
-        long acc1, acc2;
+        slong acc1, acc2;
         int accuracy_ok;
 
         fmprb_init(x);

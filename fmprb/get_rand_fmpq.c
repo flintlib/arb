@@ -105,7 +105,7 @@ cause overflows.
 */
 
 void
-fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits)
+fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, slong bits)
 {
     /* there is only one rational */
     if (fmprb_is_exact(x))

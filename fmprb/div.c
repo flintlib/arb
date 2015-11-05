@@ -34,9 +34,9 @@ fmprb_div_zero(fmprb_t z)
 }
 
 void
-fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec)
 {
-    long r;
+    slong r;
 
     if (fmpr_is_zero(y))
     {
@@ -66,9 +66,9 @@ fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
 }
 
 void
-fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
-    long r;
+    slong r;
 
     if (fmprb_is_exact(y))
     {
@@ -126,7 +126,7 @@ fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 }
 
 void
-fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
@@ -136,7 +136,7 @@ fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 }
 
 void
-fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)
+fmprb_div_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
@@ -146,7 +146,7 @@ fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)
 }
 
 void
-fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
@@ -156,10 +156,10 @@ fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
 }
 
 void
-fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
+fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, slong prec)
 {
     fmpr_t p, q;
-    long r;
+    slong r;
 
     fmpr_init(p);
     fmpr_init(q);
@@ -175,7 +175,7 @@ fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
 }
 
 void
-fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec)
+fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, slong prec)
 {
     fmprb_t t;
     fmprb_init(t);

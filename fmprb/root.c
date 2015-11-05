@@ -26,9 +26,9 @@
 #include "fmprb.h"
 
 void
-fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
+fmprb_root(fmprb_t z, const fmprb_t x, ulong k, slong prec)
 {
-    long r;
+    slong r;
 
     if (k == 1)
     {

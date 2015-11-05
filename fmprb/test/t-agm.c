@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("agm....");
@@ -40,7 +40,7 @@ int main()
         fmprb_t a, b, c;
         fmpq_t q, r;
         mpfr_t t, u;
-        long prec = 2 + n_randint(state, 200);
+        slong prec = 2 + n_randint(state, 200);
 
         fmprb_init(a);
         fmprb_init(b);

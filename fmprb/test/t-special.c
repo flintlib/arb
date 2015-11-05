@@ -579,7 +579,7 @@ int main()
 
     {
         fmpr_t b;
-        long wp = 30;
+        slong wp = 30;
 
         fmpr_init(b);
 

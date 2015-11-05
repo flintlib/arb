@@ -26,14 +26,14 @@
 #include "fmprb.h"
 
 void
-fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest_exact(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
     fmpr_zero(fmprb_radref(x));
 }
 
 void
-fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest_wide(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
     fmpr_randtest(fmprb_radref(x), state, FMPRB_RAD_PREC, mag_bits);
@@ -41,7 +41,7 @@ fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 }
 
 void
-fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest_precise(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     fmpr_randtest(fmprb_midref(x), state, prec, mag_bits);
 
@@ -58,7 +58,7 @@ fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 }
 
 void
-fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     switch (n_randint(state, 8))
     {
@@ -74,7 +74,7 @@ fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
 }
 
 void
-fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+fmprb_randtest_special(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     fmprb_randtest(x, state, prec, mag_bits);
 

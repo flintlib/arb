@@ -56,7 +56,7 @@ without overflow.
 static __inline__ void
 _rad_bound(mp_limb_t * m, fmpz_t exp, const fmpr_t t)
 {
-    long e;
+    slong e;
     *m = fmpz_abs_ubound_ui_2exp(&e, fmpr_manref(t), FMPRB_RAD_PREC);
     fmpz_add_si_inline(exp, fmpr_expref(t), e);
 }
@@ -64,7 +64,7 @@ _rad_bound(mp_limb_t * m, fmpz_t exp, const fmpr_t t)
 static __inline__ mp_limb_t
 _rad_add(mp_limb_t a, fmpz_t aexp, mp_limb_t b, fmpz_t bexp)
 {
-    long shift;
+    slong shift;
 
     shift = _fmpz_sub_small(aexp, bexp);
 
@@ -92,11 +92,11 @@ _rad_add(mp_limb_t a, fmpz_t aexp, mp_limb_t b, fmpz_t bexp)
 
 void _fmprb_mul_main(fmpr_t z, fmpr_t c,
     const fmpr_t x, const fmpr_t a,
-    const fmpr_t y, const fmpr_t b, long prec)
+    const fmpr_t y, const fmpr_t b, slong prec)
 {
     mp_limb_t xm, am, ym, bm;
     fmpz_t xe, ae, ye, be;
-    long r, shift;
+    slong r, shift;
 
     fmpz_init(xe);
     fmpz_init(ae);
@@ -146,11 +146,11 @@ void _fmprb_mul_main(fmpr_t z, fmpr_t c,
 
 void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
     const fmpr_t x, const fmpr_t a,
-    const fmpr_t y, long prec)
+    const fmpr_t y, slong prec)
 {
     mp_limb_t ym, am;
     fmpz_t ye, ae;
-    long r, shift;
+    slong r, shift;
 
     fmpz_init(ye);
     fmpz_init(ae);
@@ -187,11 +187,11 @@ void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
 }
 
 void
-fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec)
 {
     if (fmprb_is_exact(x))
     {
-        long r;
+        slong r;
         r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
@@ -211,7 +211,7 @@ fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
 }
 
 void
-fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     if (fmprb_is_exact(x))
     {
@@ -240,7 +240,7 @@ fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 }
 
 void
-fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
@@ -250,7 +250,7 @@ fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 }
 
 void
-fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+fmprb_mul_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
@@ -260,7 +260,7 @@ fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)
 }
 
 void
-fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);
