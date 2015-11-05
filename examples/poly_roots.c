@@ -6,9 +6,9 @@
 #include "arith.h"
 #include "profiler.h"
 
-int check_accuracy(acb_ptr vec, long len, long prec)
+int check_accuracy(acb_ptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len; i++)
     {
@@ -22,11 +22,11 @@ int check_accuracy(acb_ptr vec, long len, long prec)
 
 void
 poly_roots(const fmpz_poly_t poly,
-    long initial_prec,
-    long target_prec,
-    long print_digits)
+    slong initial_prec,
+    slong target_prec,
+    slong print_digits)
 {
-    long i, prec, deg, isolated, maxiter;
+    slong i, prec, deg, isolated, maxiter;
     acb_poly_t cpoly;
     acb_ptr roots;
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 {
     fmpz_poly_t f;
     fmpz_t t;
-    long compd, printd, i, j;
+    slong compd, printd, i, j;
 
     if (argc < 2)
     {
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "a"))
         {
-            long n = atol(argv[i+1]);
+            slong n = atol(argv[i+1]);
             for (j = 0; j <= n; j++)
                 fmpz_poly_set_coeff_ui(f, j, j+1);
             break;
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "w"))
         {
-            long n = atol(argv[i+1]);
+            slong n = atol(argv[i+1]);
             fmpz_poly_fit_length(f, n+2);
             arith_stirling_number_1_vec(f->coeffs, n+1, n+2);
             _fmpz_poly_set_length(f, n+2);

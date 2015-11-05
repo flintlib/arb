@@ -7,7 +7,7 @@
 long eval_count = 0;
 
 int
-z_function(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+z_function(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_struct x[2];
 
@@ -27,7 +27,7 @@ z_function(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     int xlen = FLINT_MIN(2, order);
 
@@ -42,7 +42,7 @@ sin_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_x2(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_x2(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
 
@@ -65,7 +65,7 @@ sin_x2(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_1x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_1x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
     int xlen = FLINT_MIN(2, order);
@@ -90,8 +90,8 @@ int main(int argc, char *argv[])
     arf_interval_ptr blocks;
     arb_calc_func_t function;
     int * info;
-    long digits, low_prec, high_prec, i, num, found_roots, found_unknown;
-    long maxdepth, maxeval, maxfound;
+    slong digits, low_prec, high_prec, i, num, found_roots, found_unknown;
+    slong maxdepth, maxeval, maxfound;
     int refine;
     double a, b;
     arf_t C;

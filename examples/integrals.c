@@ -4,7 +4,7 @@
 #include "profiler.h"
 
 int
-sinx(acb_ptr out, const acb_t inp, void * params, long order, long prec)
+sinx(acb_ptr out, const acb_t inp, void * params, slong order, slong prec)
 {
     int xlen = FLINT_MIN(2, order);
     acb_set(out, inp);
@@ -15,7 +15,7 @@ sinx(acb_ptr out, const acb_t inp, void * params, long order, long prec)
 }
 
 int
-elliptic(acb_ptr out, const acb_t inp, void * params, long order, long prec)
+elliptic(acb_ptr out, const acb_t inp, void * params, slong order, slong prec)
 {
     acb_ptr t;
     t = _acb_vec_init(order);
@@ -33,7 +33,7 @@ elliptic(acb_ptr out, const acb_t inp, void * params, long order, long prec)
 }
 
 int
-bessel(acb_ptr out, const acb_t inp, void * params, long order, long prec)
+bessel(acb_ptr out, const acb_t inp, void * params, slong order, slong prec)
 {
     acb_ptr t;
     acb_t z;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 {
     acb_t r, s, a, b;
     arf_t inr, outr;
-    long digits, prec;
+    slong digits, prec;
 
     if (argc < 2)
     {

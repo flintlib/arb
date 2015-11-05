@@ -7,7 +7,7 @@
 #include "profiler.h"
 
 void
-keiper_li_series(arb_ptr z, long len, long prec)
+keiper_li_series(arb_ptr z, slong len, slong prec)
 {
     arb_ptr t, u, v;
 
@@ -70,7 +70,7 @@ keiper_li_series(arb_ptr z, long len, long prec)
 
 int main(int argc, char *argv[])
 {
-    long i, len, prec, num_threads;
+    slong i, len, prec, num_threads;
     char * out_file;
     arb_ptr z;
 

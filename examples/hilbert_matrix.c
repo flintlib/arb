@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     arb_mat_t A;
     arb_t det;
-    long i, j, prec, n;
+    slong i, j, prec, n;
 
     if (argc < 2)
     {

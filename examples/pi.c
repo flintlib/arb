@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     arb_t x;
-    long prec, digits, condense;
+    slong prec, digits, condense;
 
     if (argc < 2)
     {
