@@ -26,9 +26,9 @@
 #include "arb.h"
 
 void
-arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec)
+arb_zeta_ui_vec_even(arb_ptr x, ulong start, slong num, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < num; i++)
         arb_zeta_ui(x + i, start + 2 * i, prec);

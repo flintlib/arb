@@ -54,7 +54,7 @@ mag_close(const mag_t am, const mag_t bm)
 }
 
 void
-arb_addmul_naive(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_addmul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     arb_t t;
     arb_init(t);
@@ -65,7 +65,7 @@ arb_addmul_naive(arb_t z, const arb_t x, const arb_t y, long prec)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("addmul....");
@@ -206,7 +206,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t x, y, z, v;
-        long prec;
+        slong prec;
 
         arb_init(x);
         arb_init(y);

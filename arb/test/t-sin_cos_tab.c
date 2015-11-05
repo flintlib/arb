@@ -27,7 +27,7 @@
 
 int main()
 {
-    long i, which;
+    slong i, which;
 
     mpfr_t tabx, sinx, y1, y2;
     mpz_t tt;
@@ -36,7 +36,7 @@ int main()
     fflush(stdout);
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB1_BITS;
@@ -101,7 +101,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB21_BITS;
@@ -166,7 +166,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB21_BITS + ARB_SIN_COS_TAB22_BITS;

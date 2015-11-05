@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-bsplit(arb_t y, const fmpz_t p, const fmpz_t q, ulong a, ulong b, long prec)
+bsplit(arb_t y, const fmpz_t p, const fmpz_t q, ulong a, ulong b, slong prec)
 {
     if (b - a <= 8)
     {
@@ -66,7 +66,7 @@ bsplit(arb_t y, const fmpz_t p, const fmpz_t q, ulong a, ulong b, long prec)
 }
 
 void
-arb_rising_fmpq_ui(arb_t y, const fmpq_t x, ulong n, long prec)
+arb_rising_fmpq_ui(arb_t y, const fmpq_t x, ulong n, slong prec)
 {
     if (n == 0)
     {
@@ -78,7 +78,7 @@ arb_rising_fmpq_ui(arb_t y, const fmpq_t x, ulong n, long prec)
     }
     else
     {
-        long wp;
+        slong wp;
 
         wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 

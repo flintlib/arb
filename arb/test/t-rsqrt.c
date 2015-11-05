@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rsqrt....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t a, b, c;
-        long prec = 2 + n_randint(state, 200);
+        slong prec = 2 + n_randint(state, 200);
 
         arb_init(a);
         arb_init(b);

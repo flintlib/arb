@@ -29,7 +29,7 @@
 int polylog_is_real(const acb_t s, const acb_t z);
 
 void
-arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec)
+arb_polylog(arb_t w, const arb_t s, const arb_t z, slong prec)
 {
     acb_t ss, zz;
     acb_init(ss);
@@ -50,7 +50,7 @@ arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec)
 }
 
 void
-arb_polylog_si(arb_t w, long s, const arb_t z, long prec)
+arb_polylog_si(arb_t w, slong s, const arb_t z, slong prec)
 {
     arb_t t;
     arb_init(t);

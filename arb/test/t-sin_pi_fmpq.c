@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sin_pi_fmpq....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t s1, s2;
         fmpq_t x;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 5000);
 

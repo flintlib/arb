@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("add_fmpz_2exp....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c, d;
         fmpz_t x, e;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);
@@ -83,7 +83,7 @@ int main()
     {
         arb_t a, c;
         fmpz_t x, e;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(c);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("power_sum_vec....");
@@ -39,8 +39,8 @@ int main()
     {
         arb_t a, b, s, t;
         arb_ptr res;
-        long aa, bb, k, n, len;
-        long prec;
+        slong aa, bb, k, n, len;
+        slong prec;
 
         len = n_randint(state, 30);
         prec = 2 + n_randint(state, 500);

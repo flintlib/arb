@@ -579,7 +579,7 @@ int main()
 
     {
         arf_t b;
-        long wp = 30;
+        slong wp = 30;
 
         arf_init(b);
 

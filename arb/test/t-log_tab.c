@@ -27,7 +27,7 @@
 
 int main()
 {
-    long i;
+    slong i;
 
     mpfr_t tabx, logx, y1, y2;
     mpz_t tt;
@@ -36,7 +36,7 @@ int main()
     fflush(stdout);
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB11_BITS;
@@ -88,7 +88,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB11_BITS + ARB_LOG_TAB12_BITS;
@@ -140,7 +140,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB21_BITS;
@@ -192,7 +192,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB21_BITS + ARB_LOG_TAB22_BITS;

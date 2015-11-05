@@ -26,16 +26,16 @@
 #include "arb.h"
 #include "arith.h"
 
-void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec);
+void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec);
 
-void arb_gamma_stirling_eval(arb_t s, const arb_t z, long nterms, int digamma, long prec);
+void arb_gamma_stirling_eval(arb_t s, const arb_t z, slong nterms, int digamma, slong prec);
 
 void
-arb_digamma(arb_t y, const arb_t x, long prec)
+arb_digamma(arb_t y, const arb_t x, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     arb_t t, u, v;
 
     if (arb_is_exact(x))

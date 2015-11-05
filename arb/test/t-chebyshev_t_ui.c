@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("chebyshev_t_ui....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c, d;
         ulong n;
-        long prec;
+        slong prec;
 
         n = n_randtest(state);
         prec = 2 + n_randint(state, 300);

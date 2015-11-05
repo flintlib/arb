@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("submul_ui....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t a, b, c, d;
         ulong x;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);
@@ -80,7 +80,7 @@ int main()
     {
         arb_t a, b, c;
         ulong x;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);

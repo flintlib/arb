@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_zeta_ui_asymp(arb_t x, ulong s, long prec)
+arb_zeta_ui_asymp(arb_t x, ulong s, slong prec)
 {
     arb_one(x);
 

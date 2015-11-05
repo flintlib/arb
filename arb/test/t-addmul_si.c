@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("addmul_si....");
@@ -39,8 +39,8 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c, d;
-        long x;
-        long prec;
+        slong x;
+        slong prec;
 
         arb_init(a);
         arb_init(b);
@@ -79,8 +79,8 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c;
-        long x;
-        long prec;
+        slong x;
+        slong prec;
 
         arb_init(a);
         arb_init(b);

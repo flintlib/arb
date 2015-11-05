@@ -32,10 +32,10 @@ D. Takahashi, "A fast algorithm for computing large Fibonacci numbers",
 Information Processing Letters 75 (2000) 243–246
 */
 
-void arb_fib_fmpz(arb_t f, const fmpz_t n, long prec)
+void arb_fib_fmpz(arb_t f, const fmpz_t n, slong prec)
 {
     arb_t t, u;
-    long wp, sign, i;
+    slong wp, sign, i;
 
     if (fmpz_sgn(n) < 0)
     {
@@ -104,7 +104,7 @@ void arb_fib_fmpz(arb_t f, const fmpz_t n, long prec)
     arb_clear(t);
 }
 
-void arb_fib_ui(arb_t f, ulong n, long prec)
+void arb_fib_ui(arb_t f, ulong n, slong prec)
 {
     fmpz_t t;
     fmpz_init_set_ui(t, n);

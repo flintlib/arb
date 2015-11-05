@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, long prec)
+arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, slong prec)
 {
     arf_t r;
     arf_init_set_mag_shallow(r, arb_radref(x));

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sqrt1pm1....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 20000; iter++)
     {
         arb_t a, b, c, d;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         if (iter % 10 == 0)
             prec0 = 10000;

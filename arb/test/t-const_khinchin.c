@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("const_khinchin....");
@@ -37,7 +37,7 @@ int main()
     for (iter = 0; iter < 250; iter++)
     {
         arb_t r, s;
-        long accuracy, prec;
+        slong accuracy, prec;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 14));
 

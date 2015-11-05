@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp_sum_bs_powtab....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long N;
+        slong N;
         fmpz_t x, T, Q;
         fmpq_t S, V;
         mp_bitcnt_t Qexp, r;

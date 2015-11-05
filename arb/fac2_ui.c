@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_fac2_ui(arb_t res, ulong n, long prec)
+arb_fac2_ui(arb_t res, ulong n, slong prec)
 {
     if (n % 2 == 0)
     {

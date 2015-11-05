@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("hurwitz_zeta....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t a, b, c;
         acb_t d, e, f;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 300);
 

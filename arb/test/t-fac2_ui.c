@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("fac2_ui....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c;
         ulong n;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 300);
         prec2 = 2 + n_randint(state, 300);

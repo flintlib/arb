@@ -28,7 +28,7 @@
 #define BINEXP_LIMIT 64
 
 void
-_arb_pow_exp(arb_t z, const arb_t x, int negx, const arb_t y, long prec)
+_arb_pow_exp(arb_t z, const arb_t x, int negx, const arb_t y, slong prec)
 {
     arb_t t;
     arb_init(t);
@@ -47,7 +47,7 @@ _arb_pow_exp(arb_t z, const arb_t x, int negx, const arb_t y, long prec)
 }
 
 void
-arb_pow(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_pow(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     if (arb_is_zero(y))
     {

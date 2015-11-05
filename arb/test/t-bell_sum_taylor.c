@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("bell_sum_taylor....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t s1, s2;
         fmpz_t a, b, n;
-        long prec;
+        slong prec;
 
         arb_init(s1);
         arb_init(s2);

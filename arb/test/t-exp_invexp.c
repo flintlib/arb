@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp_invexp....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c, d;
-        long prec;
+        slong prec;
 
         if (iter % 10 == 0)
             prec = 10000;

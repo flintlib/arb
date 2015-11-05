@@ -284,7 +284,7 @@ arb_fmpz_poly_cos_minpoly(fmpz_poly_t f, ulong n)
 
 
 void
-_arb_cos_pi_fmpq_algebraic(arb_t c, ulong p, ulong q, long prec)
+_arb_cos_pi_fmpq_algebraic(arb_t c, ulong p, ulong q, slong prec)
 {
     /* handle simple angles using exact formulas */
     if (q <= 6)
@@ -322,7 +322,7 @@ _arb_cos_pi_fmpq_algebraic(arb_t c, ulong p, ulong q, long prec)
     /* reduce even denominator */
     else if (q % 2 == 0)
     {
-        long extra = 2 * FLINT_BIT_COUNT(q) + 2;
+        slong extra = 2 * FLINT_BIT_COUNT(q) + 2;
 
         if (4 * p <= q)
         {
@@ -342,7 +342,7 @@ _arb_cos_pi_fmpq_algebraic(arb_t c, ulong p, ulong q, long prec)
     else
     {
         /* compute root of the minimal polynomial */
-        long start_prec, eval_extra_prec;
+        slong start_prec, eval_extra_prec;
         fmpz_poly_t poly;
         arb_poly_t fpoly;
         arf_t interval_bound;
@@ -390,7 +390,7 @@ _arb_cos_pi_fmpq_algebraic(arb_t c, ulong p, ulong q, long prec)
 }
 
 void
-_arb_sin_pi_fmpq_algebraic(arb_t s, ulong p, ulong q, long prec)
+_arb_sin_pi_fmpq_algebraic(arb_t s, ulong p, ulong q, slong prec)
 {
     if (q % 2 == 0)
     {
@@ -411,9 +411,9 @@ _arb_sin_pi_fmpq_algebraic(arb_t s, ulong p, ulong q, long prec)
 }
 
 void
-_arb_sin_cos_pi_fmpq_algebraic(arb_t s, arb_t c, ulong p, ulong q, long prec)
+_arb_sin_cos_pi_fmpq_algebraic(arb_t s, arb_t c, ulong p, ulong q, slong prec)
 {
-    long wp;
+    slong wp;
 
     if (q <= 6)
     {

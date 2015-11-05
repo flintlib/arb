@@ -26,9 +26,9 @@
 #include "arb.h"
 
 void
-arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec)
+arb_zeta_ui_vec_odd(arb_ptr x, ulong start, slong num, slong prec)
 {
-    long i, num_borwein;
+    slong i, num_borwein;
     ulong cutoff;
 
     cutoff = 40 + 0.3 * prec;

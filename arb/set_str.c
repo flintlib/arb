@@ -28,15 +28,15 @@
 #include "arb.h"
 
 static int
-arb_set_float_str(arb_t res, const char * inp, long prec)
+arb_set_float_str(arb_t res, const char * inp, slong prec)
 {
     char * emarker;
     char * buf;
     int error;
-    long i;
+    slong i;
     fmpz_t exp;
     fmpz_t man;
-    long num_int, num_frac;
+    slong num_int, num_frac;
     int after_radix;
 
     if (inp[0] == '+')
@@ -172,13 +172,13 @@ cleanup:
 }
 
 int
-arb_set_str(arb_t res, const char * inp, long prec)
+arb_set_str(arb_t res, const char * inp, slong prec)
 {
     char * buf;
     char * split;
     char * first;
     char * last;
-    long i, len;
+    slong i, len;
     int error;
 
     error = 0;

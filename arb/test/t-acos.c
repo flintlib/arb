@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("acos....");
@@ -40,7 +40,7 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec = 2 + n_randint(state, 200);
+        slong prec = 2 + n_randint(state, 200);
 
         arb_init(a);
         arb_init(b);
@@ -82,7 +82,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;

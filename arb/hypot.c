@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_hypot(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     if (arb_is_zero(y))
     {

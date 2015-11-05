@@ -29,7 +29,7 @@
 int main()
 {
     flint_rand_t state;
-    long iter;
+    slong iter;
 
     printf("get_str....");
     fflush(stdout);
@@ -40,7 +40,7 @@ int main()
     {
         arb_t x;
         char * s;
-        long n;
+        slong n;
 
         arb_init(x);
 
@@ -60,7 +60,7 @@ int main()
     {
         arb_t x, y;
         char * s;
-        long n, prec;
+        slong n, prec;
         int conversion_error;
 
         arb_init(x);

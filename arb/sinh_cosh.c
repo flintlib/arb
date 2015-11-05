@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_sinh(arb_t s, const arb_t x, long prec)
+arb_sinh(arb_t s, const arb_t x, slong prec)
 {
     if (arb_is_zero(x))
     {
@@ -35,7 +35,7 @@ arb_sinh(arb_t s, const arb_t x, long prec)
     else
     {
         arb_t t;
-        long wp = prec + 4;
+        slong wp = prec + 4;
 
         arb_init(t);
 
@@ -58,7 +58,7 @@ arb_sinh(arb_t s, const arb_t x, long prec)
 }
 
 void
-arb_cosh(arb_t c, const arb_t x, long prec)
+arb_cosh(arb_t c, const arb_t x, slong prec)
 {
     if (arb_is_zero(x))
     {
@@ -67,7 +67,7 @@ arb_cosh(arb_t c, const arb_t x, long prec)
     else
     {
         arb_t t;
-        long wp = prec + 4;
+        slong wp = prec + 4;
 
         arb_init(t);
 
@@ -80,7 +80,7 @@ arb_cosh(arb_t c, const arb_t x, long prec)
 }
 
 void
-arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
+arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, slong prec)
 {
     if (arb_is_zero(x))
     {
@@ -89,7 +89,7 @@ arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
     }
     else
     {
-        long wp = prec + 4;
+        slong wp = prec + 4;
 
         arb_t t;
         arb_init(t);

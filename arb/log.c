@@ -29,7 +29,7 @@
 
 /* requires x != 1 */
 static void
-arf_log_via_mpfr(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
+arf_log_via_mpfr(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
 {
     mpfr_t xf, zf;
     mp_ptr zptr, tmp;
@@ -72,17 +72,17 @@ arf_log_via_mpfr(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
     TMP_END;
 }
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
-void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e);
+void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e);
 
 void
-arb_log_arf_huge(arb_t z, const arf_t x, long prec)
+arb_log_arf_huge(arb_t z, const arf_t x, slong prec)
 {
     arf_t t;
     arb_t c;
     fmpz_t exp;
-    long wp;
+    slong wp;
 
     arf_init(t);
     arb_init(c);
@@ -104,7 +104,7 @@ arb_log_arf_huge(arb_t z, const arf_t x, long prec)
 }
 
 void
-arb_log_arf(arb_t z, const arf_t x, long prec)
+arb_log_arf(arb_t z, const arf_t x, slong prec)
 {
     if (arf_is_special(x))
     {
@@ -139,7 +139,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
     }
     else
     {
-        long exp, wp, wn, N, r, closeness_to_one;
+        slong exp, wp, wn, N, r, closeness_to_one;
         mp_srcptr xp;
         mp_size_t xn, tn;
         mp_ptr tmp, w, t, u;
@@ -157,7 +157,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
 
         if (exp == 0)
         {
-            long i;
+            slong i;
 
             closeness_to_one = FLINT_BITS - FLINT_BIT_COUNT(~xp[xn - 1]);
 
@@ -175,7 +175,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
 
             if (closeness_to_one == FLINT_BITS)
             {
-                long i;
+                slong i;
 
                 for (i = xn - 2; xp[i] == 0; i--)
                     closeness_to_one += FLINT_BITS;
@@ -377,7 +377,7 @@ arb_log_arf(arb_t z, const arf_t x, long prec)
 }
 
 void
-arb_log(arb_t y, const arb_t x, long prec)
+arb_log(arb_t y, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
@@ -415,7 +415,7 @@ arb_log(arb_t y, const arb_t x, long prec)
 }
 
 void
-arb_log_ui(arb_t z, ulong x, long prec)
+arb_log_ui(arb_t z, ulong x, slong prec)
 {
     arf_t t;
     arf_init(t);
@@ -425,7 +425,7 @@ arb_log_ui(arb_t z, ulong x, long prec)
 }
 
 void
-arb_log_fmpz(arb_t z, const fmpz_t x, long prec)
+arb_log_fmpz(arb_t z, const fmpz_t x, slong prec)
 {
     arf_t t;
     arf_init(t);

@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_tanh(arb_t y, const arb_t x, long prec)
+arb_tanh(arb_t y, const arb_t x, slong prec)
 {
     arb_t t, u;
     int sign = arf_sgn(arb_midref(x)) < 0;

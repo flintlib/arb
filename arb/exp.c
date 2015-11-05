@@ -27,16 +27,16 @@
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 void
-arb_exp_arf_huge(arb_t z, const arf_t x, long mag, long prec, int minus_one)
+arb_exp_arf_huge(arb_t z, const arf_t x, slong mag, slong prec, int minus_one)
 {
     arb_t ln2, t, u;
     fmpz_t q;
-    long wp;
+    slong wp;
 
     arb_init(ln2);
     arb_init(t);
@@ -65,7 +65,7 @@ arb_exp_arf_huge(arb_t z, const arf_t x, long mag, long prec, int minus_one)
 
 /* |x| >= 2^expbound */
 static void
-arb_exp_arf_overflow(arb_t z, long expbound, int negative, int minus_one, long prec)
+arb_exp_arf_overflow(arb_t z, slong expbound, int negative, int minus_one, slong prec)
 {
     if (!negative)
     {
@@ -93,7 +93,7 @@ arb_exp_arf_overflow(arb_t z, long expbound, int negative, int minus_one, long p
 }
 
 static void
-arb_exp_arf_fallback(arb_t z, const arf_t x, long mag, long prec, int minus_one)
+arb_exp_arf_fallback(arb_t z, const arf_t x, slong mag, slong prec, int minus_one)
 {
     if (mag > 64)
         arb_exp_arf_huge(z, x, mag, prec, minus_one);
@@ -102,9 +102,9 @@ arb_exp_arf_fallback(arb_t z, const arf_t x, long mag, long prec, int minus_one)
 }
 
 static void
-arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
+arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one)
 {
-    long maglim = FLINT_MAX(128, 2 * prec);
+    slong maglim = FLINT_MAX(128, 2 * prec);
 
     if (arf_is_special(x))
     {
@@ -155,7 +155,7 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
     }
     else
     {
-        long exp, wp, wn, N, r, wprounded, finaln;
+        slong exp, wp, wn, N, r, wprounded, finaln;
         fmpz_t n;
         mp_ptr tmp, w, t, u, finalvalue;
         mp_limb_t p1, q1bits, p2, q2bits, error, error2;
@@ -385,7 +385,7 @@ arb_exp_arf(arb_t z, const arf_t x, long prec, int minus_one)
 }
 
 void
-arb_exp(arb_t z, const arb_t x, long prec)
+arb_exp(arb_t z, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
@@ -429,7 +429,7 @@ arb_exp(arb_t z, const arb_t x, long prec)
 }
 
 void
-arb_expm1(arb_t z, const arb_t x, long prec)
+arb_expm1(arb_t z, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
@@ -467,7 +467,7 @@ arb_expm1(arb_t z, const arb_t x, long prec)
 }
 
 void
-arb_exp_invexp(arb_t z, arb_t w, const arb_t x, long prec)
+arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {

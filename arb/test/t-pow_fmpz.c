@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pow_fmpz....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t a, b, c, d;
         fmpz_t e1, e2, e3;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;

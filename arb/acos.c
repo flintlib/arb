@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_acos(arb_t z, const arb_t x, long prec)
+arb_acos(arb_t z, const arb_t x, slong prec)
 {
     arb_t t, u;
 

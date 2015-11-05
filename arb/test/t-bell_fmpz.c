@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("bell_fmpz....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t b1, b2;
         fmpz_t n;
-        long prec1, prec2, acc1, acc2;
+        slong prec1, prec2, acc1, acc2;
 
         fmpz_init(n);
         arb_init(b1);

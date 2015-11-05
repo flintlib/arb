@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("floor....");
@@ -40,7 +40,7 @@ int main()
         arb_t a, b;
         fmpq_t x;
         fmpz_t y;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);

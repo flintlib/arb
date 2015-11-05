@@ -62,7 +62,7 @@ mag_pow_minus_three_half(mag_t z, const mag_t x)
 }
 
 void
-arb_rsqrt(arb_t z, const arb_t x, long prec)
+arb_rsqrt(arb_t z, const arb_t x, slong prec)
 {
     int inexact;
 
@@ -104,7 +104,7 @@ arb_rsqrt(arb_t z, const arb_t x, long prec)
 }
 
 void
-arb_rsqrt_ui(arb_t z, ulong x, long prec)
+arb_rsqrt_ui(arb_t z, ulong x, slong prec)
 {
     arb_t t;
     arb_init(t);

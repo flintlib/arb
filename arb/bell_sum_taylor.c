@@ -31,12 +31,12 @@
 
 void
 _arb_bell_sum_taylor(arb_t res, const fmpz_t n,
-        const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long tol)
+        const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong tol)
 {
     fmpz_t m, r, R, tmp;
     mag_t B, C, D, bound;
     arb_t t, u;
-    long wp, k, N;
+    slong wp, k, N;
 
     if (_fmpz_sub_small(b, a) < 5)
     {
@@ -223,7 +223,7 @@ _arb_bell_sum_taylor(arb_t res, const fmpz_t n,
 
 void
 arb_bell_sum_taylor(arb_t res, const fmpz_t n,
-        const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+        const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong prec)
 {
     _arb_bell_sum_taylor(res, n, a, b, mmag, prec + 5);
 }

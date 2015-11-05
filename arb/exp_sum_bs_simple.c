@@ -27,7 +27,7 @@
 
 static void
 bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
-    long r, long a, long b, int cont)
+    slong r, slong a, slong b, int cont)
 {
     if (b - a == 1)
     {
@@ -38,7 +38,7 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
     }
     else
     {
-        long m;
+        slong m;
         mp_bitcnt_t Q2exp[1];
         fmpz_t P2, Q2, T2;
 
@@ -69,7 +69,7 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
 
 void
 _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, long N)
+    const fmpz_t x, mp_bitcnt_t r, slong N)
 {
     fmpz_t P;
     fmpz_init(P);

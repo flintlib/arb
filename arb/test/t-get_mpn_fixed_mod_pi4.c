@@ -25,11 +25,11 @@
 
 #include "arb.h"
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("get_mpn_fixed_mod_pi4....");
@@ -46,7 +46,7 @@ int main()
         mp_ptr w;
         arb_t wb, t, u;
         mp_size_t wn;
-        long prec, prec2;
+        slong prec, prec2;
         int success;
         mp_limb_t error;
 

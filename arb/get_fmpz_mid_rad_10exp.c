@@ -26,12 +26,12 @@
 #include "arb.h"
 
 void
-arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n)
+arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, slong n)
 {
     fmpz_t e, m;
     arb_t t, u;
     arf_t r;
-    long prec;
+    slong prec;
     int roundmid, roundrad;
 
     if (!arb_is_finite(x) || arb_is_zero(x))

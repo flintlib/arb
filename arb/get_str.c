@@ -30,9 +30,9 @@
 #define RADIUS_DIGITS 3
 
 char * 
-_arb_condense_digits(char * s, long n)
+_arb_condense_digits(char * s, slong n)
 {
-    long i, j, run, out;
+    slong i, j, run, out;
     char * res;
 
     res = flint_malloc(strlen(s) + 128); /* space for some growth */
@@ -92,9 +92,9 @@ _arb_condense_digits(char * s, long n)
 /* Format (digits=d, exponent=e) as floating-point or fixed-point.
    Reallocates the input and mutates the exponent. */
 void
-_arb_digits_as_float_str(char ** d, fmpz_t e, long minfix, long maxfix)
+_arb_digits_as_float_str(char ** d, fmpz_t e, slong minfix, slong maxfix)
 {
-    long i, n, alloc, dotpos;
+    slong i, n, alloc, dotpos;
 
     /* do nothing with 0 or something non-numerical */
     if (!((*d)[0] >= '1' && (*d)[0] <= '9'))
@@ -110,7 +110,7 @@ _arb_digits_as_float_str(char ** d, fmpz_t e, long minfix, long maxfix)
     if (fmpz_cmp_si(e, minfix) >= 0 && fmpz_cmp_si(e, maxfix) <= 0 &&
         fmpz_cmp_si(e, n - 1) < 0)
     {
-        long exp = *e;
+        slong exp = *e;
 
         /* 0.000xxx */
         if (exp < 0)
@@ -187,9 +187,9 @@ _arb_digits_as_float_str(char ** d, fmpz_t e, long minfix, long maxfix)
    exactly.
 */
 void
-_arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, long n, arf_rnd_t rnd)
+_arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, arf_rnd_t rnd)
 {
-    long i, m;
+    slong i, m;
     int up;
 
     if (n < 1)
@@ -310,10 +310,10 @@ _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, long n, a
 void
 arb_get_str_parts(int * negative, char **mid_digits, fmpz_t mid_exp,
                                   char **rad_digits, fmpz_t rad_exp,
-                                  const arb_t x, long n, int more)
+                                  const arb_t x, slong n, int more)
 {
     fmpz_t mid, rad, exp, err;
-    long good;
+    slong good;
     mp_bitcnt_t shift;
 
     if (!arb_is_finite(x))
@@ -357,7 +357,7 @@ arb_get_str_parts(int * negative, char **mid_digits, fmpz_t mid_exp,
        Note: mid cannot be zero here if n >= 1 and rad != 0. */
     if (n >= 1 && !(more || fmpz_is_zero(rad)))
     {
-        long lenmid, lenrad, rem;
+        slong lenmid, lenrad, rem;
 
         *rad_digits = fmpz_get_str(NULL, 10, rad);
 
@@ -429,7 +429,7 @@ arb_get_str_parts(int * negative, char **mid_digits, fmpz_t mid_exp,
     fmpz_clear(err);
 }
 
-char * arb_get_str(const arb_t x, long n, ulong flags)
+char * arb_get_str(const arb_t x, slong n, ulong flags)
 {
     char * res;
     char * mid_digits;
@@ -437,7 +437,7 @@ char * arb_get_str(const arb_t x, long n, ulong flags)
     int negative, more, skip_rad, skip_mid;
     fmpz_t mid_exp;
     fmpz_t rad_exp;
-    long condense;
+    slong condense;
 
     if (arb_is_zero(x))
     {

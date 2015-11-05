@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("zeta_ui....");
@@ -39,7 +39,7 @@ int main()
         arb_t r;
         ulong n;
         mpfr_t s;
-        long prec, accuracy;
+        slong prec, accuracy;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 14));
 

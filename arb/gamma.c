@@ -34,10 +34,10 @@
 #define PI 3.1415926535897932385
 
 static long
-choose_n(double log2z, double argz, int digamma, long prec)
+choose_n(double log2z, double argz, int digamma, slong prec)
 {
     double argf, boundn;
-    long n;
+    slong n;
 
     argf = 1.0 / cos(0.5 * argz);
     argf = log(argf) * (1. / log(2));
@@ -63,11 +63,11 @@ choose_n(double log2z, double argz, int digamma, long prec)
 }
 
 static void
-choose_small(int * reflect, long * r, long * n,
-    double x, double y, int use_reflect, int digamma, long prec)
+choose_small(int * reflect, slong * r, slong * n,
+    double x, double y, int use_reflect, int digamma, slong prec)
 {
     double w, argz, log2z;
-    long rr;
+    slong rr;
 
     /* use reflection formula if very negative */
     if (x < -5.0 && use_reflect)
@@ -98,8 +98,8 @@ choose_small(int * reflect, long * r, long * n,
 }
 
 static void
-choose_large(int * reflect, long * r, long * n,
-    const arf_t a, const arf_t b, int use_reflect, int digamma, long prec)
+choose_large(int * reflect, slong * r, slong * n,
+    const arf_t a, const arf_t b, int use_reflect, int digamma, slong prec)
 {
     if (use_reflect && arf_sgn(a) < 0)
         *reflect = 1;
@@ -116,7 +116,7 @@ choose_large(int * reflect, long * r, long * n,
     }
     else
     {
-        long ab, bb;
+        slong ab, bb;
         double log2z, argz;
 
         ab = arf_abs_bound_lt_2exp_si(a);
@@ -155,8 +155,8 @@ choose_large(int * reflect, long * r, long * n,
 
 
 void
-acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t z, int use_reflect, int digamma, long prec)
+acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t z, int use_reflect, int digamma, slong prec)
 {
     const arf_struct * a = arb_midref(acb_realref(z));
     const arf_struct * b = arb_midref(acb_imagref(z));
@@ -178,8 +178,8 @@ acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
 }
 
 void
-arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec)
+arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec)
 {
     const arf_struct * a = arb_midref(x);
 
@@ -206,7 +206,7 @@ acb_gamma_bound_phase(mag_t bound, const acb_t z)
 {
     arf_t x, y, t, u;
     int xsign;
-    long prec;
+    slong prec;
 
     arf_init(x);
     arf_init(y);
@@ -277,10 +277,10 @@ acb_gamma_bound_phase(mag_t bound, const acb_t z)
   TODO: CHECK n >= 1 ?
 */
 void
-acb_gamma_stirling_bound(mag_ptr err, const acb_t z, long k0, long knum, long n)
+acb_gamma_stirling_bound(mag_ptr err, const acb_t z, slong k0, slong knum, slong n)
 {
     mag_t c, t, u, v;
-    long i, k;
+    slong i, k;
 
     if (arb_contains_zero(acb_imagref(z)) &&
         arb_contains_nonpositive(acb_realref(z)))
@@ -335,7 +335,7 @@ acb_gamma_stirling_bound(mag_ptr err, const acb_t z, long k0, long knum, long n)
 }
 
 void
-arb_gamma_stirling_bound(mag_ptr err, const arb_t x, long k0, long knum, long n)
+arb_gamma_stirling_bound(mag_ptr err, const arb_t x, slong k0, slong knum, slong n)
 {
     acb_t z;
     acb_init(z);
@@ -345,7 +345,7 @@ arb_gamma_stirling_bound(mag_ptr err, const arb_t x, long k0, long knum, long n)
 }
 
 void
-arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec)
+arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec)
 {
     fmpz_t d;
     fmpz_init(d);
@@ -364,12 +364,12 @@ arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec)
 }
 
 void
-arb_gamma_stirling_eval(arb_t s, const arb_t z, long nterms, int digamma, long prec)
+arb_gamma_stirling_eval(arb_t s, const arb_t z, slong nterms, int digamma, slong prec)
 {
     arb_t b, t, logz, zinv, zinv2;
     mag_t err;
 
-    long k, term_prec;
+    slong k, term_prec;
     double z_mag, term_mag;
 
     arb_init(b);
@@ -451,10 +451,10 @@ arb_gamma_stirling_eval(arb_t s, const arb_t z, long nterms, int digamma, long p
 }
 
 void
-arb_gamma_fmpq_stirling(arb_t y, const fmpq_t a, long prec)
+arb_gamma_fmpq_stirling(arb_t y, const fmpq_t a, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     arb_t x, t, u, v;
 
     wp = prec + FLINT_BIT_COUNT(prec);
@@ -504,11 +504,11 @@ arb_gamma_fmpq_stirling(arb_t y, const fmpq_t a, long prec)
 }
 
 void
-arb_gamma_const_1_3_eval(arb_t s, long prec)
+arb_gamma_const_1_3_eval(arb_t s, slong prec)
 {
     hypgeom_t series;
     arb_t t, u;
-    long wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+    slong wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
 
     arb_init(t);
     arb_init(u);
@@ -544,10 +544,10 @@ arb_gamma_const_1_3_eval(arb_t s, long prec)
 ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_3, arb_gamma_const_1_3_eval)
 
 void
-arb_gamma_const_1_4_eval(arb_t x, long prec)
+arb_gamma_const_1_4_eval(arb_t x, slong prec)
 {
     arb_t t, u;
-    long wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+    slong wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
 
     arb_init(t);
     arb_init(u);
@@ -571,9 +571,9 @@ arb_gamma_const_1_4_eval(arb_t x, long prec)
 ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_4, arb_gamma_const_1_4_eval)
 
 void
-arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, long prec)
+arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, slong prec)
 {
-    long wp = prec + 4;
+    slong wp = prec + 4;
 
     if (q == 1)
     {
@@ -655,12 +655,12 @@ arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, long prec)
 }
 
 void
-arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, long prec)
+arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, slong prec)
 {
     fmpq_t a;
     fmpz_t n;
     fmpz p, q;
-    long m;
+    slong m;
     arb_t t, u;
 
     fmpq_init(a);
@@ -721,7 +721,7 @@ arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, long prec)
 }
 
 void
-arb_gamma_fmpq(arb_t y, const fmpq_t x, long prec)
+arb_gamma_fmpq(arb_t y, const fmpq_t x, slong prec)
 {
     fmpz p, q;
 
@@ -762,7 +762,7 @@ arb_gamma_fmpq(arb_t y, const fmpq_t x, long prec)
 }
 
 void
-arb_gamma_fmpz(arb_t y, const fmpz_t x, long prec)
+arb_gamma_fmpz(arb_t y, const fmpz_t x, slong prec)
 {
     fmpq_t t;
     *fmpq_numref(t) = *x;
@@ -771,10 +771,10 @@ arb_gamma_fmpz(arb_t y, const fmpz_t x, long prec)
 }
 
 static void
-_arb_gamma(arb_t y, const arb_t x, long prec, int inverse)
+_arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     arb_t t, u, v;
 
     if (arb_is_exact(x))
@@ -855,22 +855,22 @@ _arb_gamma(arb_t y, const arb_t x, long prec, int inverse)
 }
 
 void
-arb_gamma(arb_t y, const arb_t x, long prec)
+arb_gamma(arb_t y, const arb_t x, slong prec)
 {
     _arb_gamma(y, x, prec, 0);
 }
 
 void
-arb_rgamma(arb_t y, const arb_t x, long prec)
+arb_rgamma(arb_t y, const arb_t x, slong prec)
 {
     _arb_gamma(y, x, prec, 1);
 }
 
 void
-arb_lgamma(arb_t y, const arb_t x, long prec)
+arb_lgamma(arb_t y, const arb_t x, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     arb_t t, u;
 
     if (!arb_is_positive(x))

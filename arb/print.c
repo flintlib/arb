@@ -34,7 +34,7 @@ arb_print(const arb_t x)
 }
 
 void
-arb_printd(const arb_t x, long digits)
+arb_printd(const arb_t x, slong digits)
 {
     arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
     printf(" +/- ");
@@ -42,7 +42,7 @@ arb_printd(const arb_t x, long digits)
 }
 
 void
-arb_printn(const arb_t x, long digits, ulong flags)
+arb_printn(const arb_t x, slong digits, ulong flags)
 {
     char * s = arb_get_str(x, digits, flags);
     printf("%s", s);

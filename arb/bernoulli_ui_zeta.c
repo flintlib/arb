@@ -25,12 +25,12 @@
 
 #include "arb.h"
 
-void arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec);
+void arb_zeta_inv_ui_euler_product(arb_t z, ulong s, slong prec);
 
 void
-arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec)
+arb_bernoulli_ui_zeta(arb_t b, ulong n, slong prec)
 {
-    long wp, piwp;
+    slong wp, piwp;
 
     arb_t t, u;
 

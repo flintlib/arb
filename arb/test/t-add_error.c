@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("add_error....");
@@ -189,7 +189,7 @@ int main()
     {
         arb_t a, b, c;
         arf_t t;
-        long e;
+        slong e;
 
         arb_init(a);
         arb_init(b);

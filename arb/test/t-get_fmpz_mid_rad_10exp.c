@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("get_fmpz_mid_rad_10exp....");
@@ -38,7 +38,7 @@ int main()
     {
         arb_t x, y, t;
         fmpz_t mid, rad, exp;
-        long n, prec;
+        slong n, prec;
 
         arb_init(x);
         arb_init(y);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("log_ui_from_prev....");
@@ -38,7 +38,7 @@ int main()
     {
         arb_t z1, z2, z3;
         ulong n1, n2;
-        long prec, accuracy;
+        slong prec, accuracy;
 
         prec = 2 + n_randint(state, 3000);
         n1 = n_randint(state, 100000);

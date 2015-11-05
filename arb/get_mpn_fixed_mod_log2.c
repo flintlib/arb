@@ -77,9 +77,9 @@ for a total of 3 ulp.
 */
 
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 int
 _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
@@ -88,7 +88,7 @@ _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
     mp_srcptr xp;
     mp_size_t xn;
     int negative;
-    long exp;
+    slong exp;
 
     ARF_GET_MPN_READONLY(xp, xn, x);
     exp = ARF_EXP(x);

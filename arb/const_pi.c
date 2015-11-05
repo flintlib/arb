@@ -27,7 +27,7 @@
 #include "hypgeom.h"
 
 void
-arb_const_pi_eval(arb_t s, long prec)
+arb_const_pi_eval(arb_t s, slong prec)
 {
     hypgeom_t series;
     arb_t t, u;

@@ -25,14 +25,14 @@
 
 #include "arb.h"
 
-long _arb_compute_bs_exponents(long * tab, long n);
+long _arb_compute_bs_exponents(slong * tab, slong n);
 
-long _arb_get_exp_pos(const long * tab, long step);
+long _arb_get_exp_pos(const slong * tab, slong step);
 
 static void
 bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const long * xexp,
-    const fmpz * xpow, mp_bitcnt_t r, long a, long b)
+    const slong * xexp,
+    const fmpz * xpow, mp_bitcnt_t r, slong a, slong b)
 {
     if (b - a == 1)
     {
@@ -60,7 +60,7 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     }
     else
     {
-        long step, m, i;
+        slong step, m, i;
         mp_bitcnt_t Q2exp[1];
         fmpz_t Q2, T2;
 
@@ -90,14 +90,14 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 
 void
 _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, long N)
+    const fmpz_t x, mp_bitcnt_t r, slong N)
 {
-    long * xexp;
-    long length, i;
+    slong * xexp;
+    slong length, i;
     fmpz * xpow;
 
     /* compute the powers of x^2 that will appear (at least x^2) */
-    xexp = flint_calloc(2 * FLINT_BITS, sizeof(long));
+    xexp = flint_calloc(2 * FLINT_BITS, sizeof(slong));
     length = _arb_compute_bs_exponents(xexp, N);
 
     xpow = _fmpz_vec_init(length);

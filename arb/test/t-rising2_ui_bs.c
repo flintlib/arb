@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rising2_ui_bs....");
@@ -42,7 +42,7 @@ int main()
         fmpz *f;
         arb_ptr g;
         ulong n;
-        long i, prec;
+        slong i, prec;
 
         arb_init(a);
         arb_init(u);

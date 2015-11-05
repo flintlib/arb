@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
+arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec)
 {
     if (fmpz_is_one(fmpq_denref(a)))
     {
@@ -35,7 +35,7 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
     else
     {
         int use_exp;
-        long k = *fmpq_denref(a);
+        slong k = *fmpq_denref(a);
 
         if (k == 2 || k == 4)
             use_exp = 0;

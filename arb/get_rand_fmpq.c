@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, long bits)
+arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits)
 {
     fmprb_t t;
     fmprb_init(t);

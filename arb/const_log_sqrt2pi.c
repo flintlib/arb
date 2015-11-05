@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-_arb_const_log_sqrt2pi(arb_t t, long prec)
+_arb_const_log_sqrt2pi(arb_t t, slong prec)
 {
     arb_const_pi(t, prec + 2);
     arb_mul_2exp_si(t, t, 1);

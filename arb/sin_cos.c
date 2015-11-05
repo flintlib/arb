@@ -28,14 +28,14 @@
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))
 
 static void
-_arf_sin(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
+_arf_sin(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
 {
     mpfr_t xf, zf;
     mp_ptr zptr, tmp;
@@ -79,7 +79,7 @@ _arf_sin(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
 }
 
 static void
-_arf_cos(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
+_arf_cos(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
 {
     mpfr_t xf, zf;
     mp_ptr zptr, tmp;
@@ -123,7 +123,7 @@ _arf_cos(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
 }
 
 static void
-_arf_sin_cos(arf_t z, arf_t w, const arf_t x, long prec, arf_rnd_t rnd)
+_arf_sin_cos(arf_t z, arf_t w, const arf_t x, slong prec, arf_rnd_t rnd)
 {
     mpfr_t xf, zf, wf;
     mp_ptr zptr, wptr, tmp, tmp2;
@@ -180,10 +180,10 @@ _arf_sin_cos(arf_t z, arf_t w, const arf_t x, long prec, arf_rnd_t rnd)
 }
 
 void
-arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
+arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
 {
     int want_sin, want_cos;
-    long exp, wp, wn, N, r, wprounded;
+    slong exp, wp, wn, N, r, wprounded;
     mp_ptr tmp, w, sina, cosa, sinb, cosb, ta, tb;
     mp_ptr sinptr, cosptr;
     mp_limb_t p1, q1bits, p2, q2bits, error, error2;
@@ -482,7 +482,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, long prec)
 
 
 void
-arb_sin_arf(arb_t s, const arf_t x, long prec, long maglim)
+arb_sin_arf(arb_t s, const arf_t x, slong prec, slong maglim)
 {
     if (arf_is_special(x))
     {
@@ -502,7 +502,7 @@ arb_sin_arf(arb_t s, const arf_t x, long prec, long maglim)
     }
     else
     {
-        long xmag;
+        slong xmag;
 
         /* 2^(xmag-1) <= |x| < 2^xmag */
         xmag = ARF_EXP(x);
@@ -532,7 +532,7 @@ arb_sin_arf(arb_t s, const arf_t x, long prec, long maglim)
 }
 
 void
-arb_cos_arf(arb_t c, const arf_t x, long prec, long maglim)
+arb_cos_arf(arb_t c, const arf_t x, slong prec, slong maglim)
 {
     if (arf_is_special(x))
     {
@@ -552,7 +552,7 @@ arb_cos_arf(arb_t c, const arf_t x, long prec, long maglim)
     }
     else
     {
-        long xmag;
+        slong xmag;
 
         /* 2^(xmag-1) <= |x| < 2^xmag */
         xmag = ARF_EXP(x);
@@ -581,7 +581,7 @@ arb_cos_arf(arb_t c, const arf_t x, long prec, long maglim)
 }
 
 void
-arb_sin_cos_arf(arb_t s, arb_t c, const arf_t x, long prec, long maglim)
+arb_sin_cos_arf(arb_t s, arb_t c, const arf_t x, slong prec, slong maglim)
 {
     if (arf_is_special(x))
     {
@@ -604,7 +604,7 @@ arb_sin_cos_arf(arb_t s, arb_t c, const arf_t x, long prec, long maglim)
     }
     else
     {
-        long xmag;
+        slong xmag;
 
         /* 2^(xmag-1) <= |x| < 2^xmag */
         xmag = ARF_EXP(x);
@@ -640,7 +640,7 @@ arb_sin_cos_arf(arb_t s, arb_t c, const arf_t x, long prec, long maglim)
 }
 
 void
-arb_sin(arb_t s, const arb_t x, long prec)
+arb_sin(arb_t s, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
@@ -664,7 +664,7 @@ arb_sin(arb_t s, const arb_t x, long prec)
 }
 
 void
-arb_cos(arb_t s, const arb_t x, long prec)
+arb_cos(arb_t s, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
@@ -688,7 +688,7 @@ arb_cos(arb_t s, const arb_t x, long prec)
 }
 
 void
-arb_sin_cos(arb_t s, arb_t c, const arb_t x, long prec)
+arb_sin_cos(arb_t s, arb_t c, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {

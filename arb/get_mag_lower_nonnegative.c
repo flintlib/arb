@@ -38,7 +38,7 @@ _arb_get_mag_lower_nonnegative(mag_t z, const arf_t mid, const mag_t rad)
     }
     else
     {
-        long shift, fix;
+        slong shift, fix;
 
         shift = _fmpz_sub_small(MAG_EXPREF(mid), MAG_EXPREF(rad));
 

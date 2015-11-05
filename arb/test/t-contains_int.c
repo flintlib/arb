@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("contains_int....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t a;
-        long c;
+        slong c;
         int r, ok;
 
         arb_init(a);

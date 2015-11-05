@@ -26,9 +26,9 @@
 #include "arb.h"
 
 void
-arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec)
+arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 {
-    long i, wp, bits;
+    slong i, wp, bits;
 
     if (-2L <= *e && *e <= 2L)
     {

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("div_2expm1_ui....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c;
         ulong n;
-        long prec, acc1, acc2;
+        slong prec, acc1, acc2;
         fmpz_t t;
 
         arb_init(a);

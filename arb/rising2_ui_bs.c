@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-bsplit(arb_t p, arb_t q, const arb_t x, ulong a, ulong b, long prec)
+bsplit(arb_t p, arb_t q, const arb_t x, ulong a, ulong b, slong prec)
 {
     if (b - a < 8)
     {
@@ -71,7 +71,7 @@ bsplit(arb_t p, arb_t q, const arb_t x, ulong a, ulong b, long prec)
 }
 
 void
-arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 {
     if (n == 0)
     {
@@ -86,7 +86,7 @@ arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
     else
     {
         arb_t t;
-        long wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+        slong wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 
         arb_init(t);  /* support aliasing */
         arb_set(t, x);

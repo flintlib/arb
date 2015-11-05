@@ -57,7 +57,7 @@ static const int rec_fac_bound_2exp_si_tab[TABSIZE] =
 };
 
 static __inline__ long
-rec_fac_bound_2exp_si(long n)
+rec_fac_bound_2exp_si(slong n)
 {
     if (n < TABSIZE)
     {
@@ -73,9 +73,9 @@ rec_fac_bound_2exp_si(long n)
 }
 
 long
-_arb_exp_taylor_bound(long mag, long prec)
+_arb_exp_taylor_bound(slong mag, slong prec)
 {
-    long i;
+    slong i;
 
     /* assume x <= 1/4 */
     if (mag > -2)

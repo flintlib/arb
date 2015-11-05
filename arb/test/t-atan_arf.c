@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("atan_arf....");
@@ -40,7 +40,7 @@ int main()
     {
         arf_t x;
         arb_t y1, y2;
-        long prec1, prec2, acc1, acc2;
+        slong prec1, prec2, acc1, acc2;
 
         prec1 = 2 + n_randint(state, 9000);
         prec2 = 2 + n_randint(state, 9000);

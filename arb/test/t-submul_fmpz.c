@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("submul_fmpz....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c, d;
         fmpz_t x;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);
@@ -81,7 +81,7 @@ int main()
     {
         arb_t a, b, c;
         fmpz_t x;
-        long prec;
+        slong prec;
 
         arb_init(a);
         arb_init(b);

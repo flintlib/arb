@@ -133,7 +133,7 @@ arb_richcmp_fallback(const arb_t x, const arb_t y, int op)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("richcmp....");

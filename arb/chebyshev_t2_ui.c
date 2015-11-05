@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec)
+arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, slong prec)
 {
     int i;
 

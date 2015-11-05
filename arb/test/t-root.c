@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("root....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c;
         ulong k;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 2000);
         k = n_randtest_not_zero(state);

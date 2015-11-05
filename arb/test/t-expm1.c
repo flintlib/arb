@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("expm1....");
@@ -40,7 +40,7 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec0, prec;
+        slong prec0, prec;
 
         prec0 = 400;
         if (iter % 100 == 0)
@@ -92,7 +92,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t a, b, c, d;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         if (iter % 10 == 0)
             prec0 = 10000;

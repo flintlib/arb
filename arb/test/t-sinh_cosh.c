@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sinh_cosh....");
@@ -40,7 +40,7 @@ int main()
         arb_t a, b, c;
         fmpq_t q;
         mpfr_t t, u;
-        long prec = 2 + n_randint(state, 200);
+        slong prec = 2 + n_randint(state, 200);
 
         arb_init(a);
         arb_init(b);

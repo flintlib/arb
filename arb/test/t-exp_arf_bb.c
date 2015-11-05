@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_exp_arf_via_mpfr(arb_t z, const arf_t x, long prec)
+arb_exp_arf_via_mpfr(arb_t z, const arf_t x, slong prec)
 {
     mpfr_t t, u;
     int exact;
@@ -50,7 +50,7 @@ arb_exp_arf_via_mpfr(arb_t z, const arf_t x, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp_arf_bb....");
@@ -61,7 +61,7 @@ int main()
     for (iter = 0; iter < 5000; iter++)
     {
         arb_t x, y, z;
-        long prec = 2 + n_randint(state, 8000);
+        slong prec = 2 + n_randint(state, 8000);
 
         arb_init(x);
         arb_init(y);

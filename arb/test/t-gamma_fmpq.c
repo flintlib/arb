@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("gamma_fmpq....");
@@ -38,7 +38,7 @@ int main()
     {
         arb_t r, s;
         fmpq_t q;
-        long accuracy, prec, pp, qq;
+        slong accuracy, prec, pp, qq;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 12));
         prec += 20;

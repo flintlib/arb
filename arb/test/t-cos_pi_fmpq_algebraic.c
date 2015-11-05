@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cos_pi_fmpq_algebraic....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t c1, c2;
         ulong p, q, g;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 5000);
         q = 1 + n_randint(state, 500);

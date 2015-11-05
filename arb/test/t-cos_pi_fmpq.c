@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cos_pi_fmpq....");
@@ -39,7 +39,7 @@ int main()
     {
         arb_t c1, c2;
         fmpq_t x;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 5000);
 

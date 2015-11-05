@@ -167,7 +167,7 @@ int main()
     double x;
     int error, bracket;
     char tmp[256];
-    long i, j;
+    slong i, j;
 
     printf("set_str....");
     fflush(stdout);

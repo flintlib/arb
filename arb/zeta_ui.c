@@ -28,7 +28,7 @@
 #include "arb.h"
 
 void
-arb_zeta_ui(arb_t x, ulong n, long prec)
+arb_zeta_ui(arb_t x, ulong n, slong prec)
 {
     if (n == 0)
     {

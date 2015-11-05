@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("bernoulli_ui....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t b1, b2;
         ulong n;
-        long prec1, prec2, acc1, acc2;
+        slong prec1, prec2, acc1, acc2;
 
         n = n_randint(state, 10000);
         prec1 = 2 + n_randint(state, 10000);

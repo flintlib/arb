@@ -29,12 +29,12 @@
 #define ERROR_A 1.5849625007211561815 /* log2(3) */
 #define ERROR_B 2.5431066063272239453 /* log2(3+sqrt(8)) */
 
-void mag_borwein_error(mag_t err, long n);
+void mag_borwein_error(mag_t err, slong n);
 
 void
-arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, long num, ulong step, long prec)
+arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, slong num, ulong step, slong prec)
 {
-    long j, k, s, n, wp;
+    slong j, k, s, n, wp;
     fmpz_t c, d, t, u;
     fmpz * zeta;
     mag_t err;

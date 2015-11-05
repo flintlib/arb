@@ -41,7 +41,7 @@ arb_trim(arb_t y, const arb_t x)
     }
     else
     {
-        long bits, accuracy;
+        slong bits, accuracy;
 
         bits = arb_bits(x);
         accuracy = arb_rel_accuracy_bits(x);

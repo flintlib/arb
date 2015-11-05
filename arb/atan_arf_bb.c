@@ -25,7 +25,7 @@
 
 #include "arb.h"
 
-void mag_add_ui_2exp_si(mag_t, const mag_t, ulong, long);
+void mag_add_ui_2exp_si(mag_t, const mag_t, ulong, slong);
 
 /*
 Determine N such that the error is bounded by 2^-prec.
@@ -36,9 +36,9 @@ With N = 0, 1, 2, ... the highest included term is x, x^3, x^5, ...
 so the error is bounded by x^3, x^5, x^7, ... = x^(2N+3)
 */
 static long
-bs_num_terms(long mag, long prec)
+bs_num_terms(slong mag, slong prec)
 {
-    long N;
+    slong N;
 
     if (mag >= 0)
         abort();
@@ -69,7 +69,7 @@ bs_num_terms(long mag, long prec)
    if xmag > 0.
 */
 void
-arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, long xmag, long r, long prec)
+arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, slong xmag, slong r, slong prec)
 {
     int inexact;
 
@@ -82,7 +82,7 @@ arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, long xmag, long r, long
         }
         else
         {
-            long wp;
+            slong wp;
             arb_t t;
 
             wp = FLINT_MAX(8, prec - xmag);
@@ -101,7 +101,7 @@ arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, long xmag, long r, long
     }
     else
     {
-        long k;
+        slong k;
         arb_t p, p2, q, q2;
 
         arb_init(p);
@@ -165,10 +165,10 @@ arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, long xmag, long r, long
 }
 
 void
-arb_atan_arf_bb(arb_t z, const arf_t x, long prec)
+arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 {
-    long iter, bits, r, mag, q, wp, N;
-    long argred_bits, start_bits;
+    slong iter, bits, r, mag, q, wp, N;
+    slong argred_bits, start_bits;
     mp_bitcnt_t Qexp[1];
     int inverse;
     mag_t inp_err;

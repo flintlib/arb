@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("zeta_ui_vec_borwein....");
@@ -38,9 +38,9 @@ int main()
     {
         arb_ptr r;
         ulong n;
-        long i, num, step;
+        slong i, num, step;
         mpfr_t s;
-        long prec, accuracy;
+        slong prec, accuracy;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 13));
         num = 1 + n_randint(state, 20);

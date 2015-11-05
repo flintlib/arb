@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static __inline__ void
-arb_nonnegative_part(arb_t z, const arb_t x, long prec)
+arb_nonnegative_part(arb_t z, const arb_t x, slong prec)
 {
     if (arb_contains_negative(x))
     {
@@ -58,7 +58,7 @@ arb_nonnegative_part(arb_t z, const arb_t x, long prec)
 }
 
 void
-arb_sqrtpos(arb_t z, const arb_t x, long prec)
+arb_sqrtpos(arb_t z, const arb_t x, slong prec)
 {
     if (!arb_is_finite(x))
     {

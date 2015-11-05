@@ -27,7 +27,7 @@
 #include "bernoulli.h"
 
 void
-arb_bernoulli_ui(arb_t b, ulong n, long prec)
+arb_bernoulli_ui(arb_t b, ulong n, slong prec)
 {
     if (n < bernoulli_cache_num)
     {

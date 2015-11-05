@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("const_log2....");
@@ -38,7 +38,7 @@ int main()
     {
         arb_t r;
         mpfr_t s;
-        long accuracy, prec;
+        slong accuracy, prec;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 16));
 

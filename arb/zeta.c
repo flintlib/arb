@@ -27,7 +27,7 @@
 #include "acb.h"
 
 void
-arb_zeta(arb_t y, const arb_t s, long prec)
+arb_zeta(arb_t y, const arb_t s, slong prec)
 {
     acb_t t;
     acb_init(t);

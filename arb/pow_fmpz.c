@@ -26,13 +26,13 @@
 #include "arb.h"
 
 void
-arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, long prec)
+arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 {
     arb_pow_fmpz_binexp(y, b, e, prec);
 }
 
 void
-arb_pow_ui(arb_t y, const arb_t b, ulong e, long prec)
+arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
 {
     fmpz_t f;
     fmpz_init_set_ui(f, e);
@@ -41,7 +41,7 @@ arb_pow_ui(arb_t y, const arb_t b, ulong e, long prec)
 }
 
 void
-arb_ui_pow_ui(arb_t y, ulong b, ulong e, long prec)
+arb_ui_pow_ui(arb_t y, ulong b, ulong e, slong prec)
 {
     arb_t t;
     arb_init(t);
@@ -51,7 +51,7 @@ arb_ui_pow_ui(arb_t y, ulong b, ulong e, long prec)
 }
 
 void
-arb_si_pow_ui(arb_t y, long b, ulong e, long prec)
+arb_si_pow_ui(arb_t y, slong b, ulong e, slong prec)
 {
     arb_t t;
     arb_init(t);

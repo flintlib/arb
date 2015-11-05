@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, long prec)
+arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, slong prec)
 {
     if (n < FLINT_BITS)
     {
@@ -51,7 +51,7 @@ arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, long prec)
     else
     {
         arb_t s, t;
-        long i, b;
+        slong i, b;
 
         arb_init(s);
         arb_init(t);

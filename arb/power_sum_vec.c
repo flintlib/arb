@@ -30,10 +30,10 @@
 /* todo: don't use exact bernoulli numbers for large len */
 /* todo: output exact integers when precise enough */
 void
-arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec)
+arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, slong len, slong prec)
 {
     arb_ptr t, u, v;
-    long k;
+    slong k;
 
     if (len < 1)
         return;

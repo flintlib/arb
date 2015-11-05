@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sin_cos....");
@@ -40,7 +40,7 @@ int main()
         arb_t a, b, c;
         fmpq_t q;
         mpfr_t t, u;
-        long prec0, prec;
+        slong prec0, prec;
 
         prec0 = 400;
         if (iter % 100 == 0)
@@ -93,7 +93,7 @@ int main()
     for (iter = 0; iter < 1000000; iter++)
     {
         arb_t a, b, c, d, e;
-        long prec0, prec1, prec2, prec3;
+        slong prec0, prec1, prec2, prec3;
 
         if (iter % 10 == 0)
             prec0 = 10000;

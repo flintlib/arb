@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 {
     mag_t ym;
     int inexact;
@@ -61,7 +61,7 @@ arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
 }
 
 void
-arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_addmul(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     mag_t zr, xm, ym;
     int inexact;
@@ -117,7 +117,7 @@ arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
 }
 
 void
-arb_addmul_si(arb_t z, const arb_t x, long y, long prec)
+arb_addmul_si(arb_t z, const arb_t x, slong y, slong prec)
 {
     arf_t t;
     arf_init_set_si(t, y); /* no need to free */
@@ -125,7 +125,7 @@ arb_addmul_si(arb_t z, const arb_t x, long y, long prec)
 }
 
 void
-arb_addmul_ui(arb_t z, const arb_t x, ulong y, long prec)
+arb_addmul_ui(arb_t z, const arb_t x, ulong y, slong prec)
 {
     arf_t t;
     arf_init_set_ui(t, y); /* no need to free */
@@ -133,7 +133,7 @@ arb_addmul_ui(arb_t z, const arb_t x, ulong y, long prec)
 }
 
 void
-arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 {
     arf_t t;
 
