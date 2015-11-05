@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("tan_series....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 2000; iter++)
     {
-        long m, n, rbits1, rbits2;
+        slong m, n, rbits1, rbits2;
         acb_poly_t a, b, c, d, e;
 
         rbits1 = 2 + n_randint(state, 200);

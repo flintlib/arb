@@ -28,7 +28,7 @@
 #define TANGENT_CUTOFF 80
 
 void
-_acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, const acb_srcptr h, long hlen, long n, long prec)
+_acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, const acb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
@@ -57,9 +57,9 @@ _acb_poly_sin_cos_series(acb_ptr s, acb_ptr c, const acb_srcptr h, long hlen, lo
 
 void
 acb_poly_sin_cos_series(acb_poly_t s, acb_poly_t c,
-                                    const acb_poly_t h, long n, long prec)
+                                    const acb_poly_t h, slong n, slong prec)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

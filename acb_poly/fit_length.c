@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_fit_length(acb_poly_t poly, long len)
+acb_poly_fit_length(acb_poly_t poly, slong len)
 {
-    long i;
+    slong i;
 
     if (len > poly->alloc)
     {

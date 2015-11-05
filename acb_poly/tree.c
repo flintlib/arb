@@ -25,13 +25,13 @@
 
 #include "acb_poly.h"
 
-acb_ptr * _acb_poly_tree_alloc(long len)
+acb_ptr * _acb_poly_tree_alloc(slong len)
 {
     acb_ptr * tree = NULL;
 
     if (len)
     {
-        long i, height = FLINT_CLOG2(len);
+        slong i, height = FLINT_CLOG2(len);
 
         tree = flint_malloc(sizeof(acb_ptr) * (height + 1));
         for (i = 0; i <= height; i++)
@@ -41,11 +41,11 @@ acb_ptr * _acb_poly_tree_alloc(long len)
     return tree;
 }
 
-void _acb_poly_tree_free(acb_ptr * tree, long len)
+void _acb_poly_tree_free(acb_ptr * tree, slong len)
 {
     if (len)
     {
-        long i, height = FLINT_CLOG2(len);
+        slong i, height = FLINT_CLOG2(len);
 
         for (i = 0; i <= height; i++)
             _acb_vec_clear(tree[i], len + (len >> i) + 1);
@@ -55,9 +55,9 @@ void _acb_poly_tree_free(acb_ptr * tree, long len)
 }
 
 void
-_acb_poly_tree_build(acb_ptr * tree, acb_srcptr roots, long len, long prec)
+_acb_poly_tree_build(acb_ptr * tree, acb_srcptr roots, slong len, slong prec)
 {
-    long height, pow, left, i;
+    slong height, pow, left, i;
     acb_ptr pa, pb;
     acb_srcptr a, b;
 

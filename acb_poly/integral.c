@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_integral(acb_ptr res, acb_srcptr poly, long len, long prec)
+_acb_poly_integral(acb_ptr res, acb_srcptr poly, slong len, slong prec)
 {
-    long k = len - 1;
+    slong k = len - 1;
 
     for (k = len - 1; k > 0; k--)
         acb_div_ui(res + k, poly + k - 1, k, prec);
@@ -37,7 +37,7 @@ _acb_poly_integral(acb_ptr res, acb_srcptr poly, long len, long prec)
 }
 
 void
-acb_poly_integral(acb_poly_t res, const acb_poly_t poly, long prec)
+acb_poly_integral(acb_poly_t res, const acb_poly_t poly, slong prec)
 {
     acb_poly_fit_length(res, poly->length + 1);
     _acb_poly_integral(res->coeffs, poly->coeffs, poly->length + 1, prec);

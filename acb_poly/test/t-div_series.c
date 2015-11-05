@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("div_series....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, p, qbits, rbits1, rbits2;
+        slong m, n, p, qbits, rbits1, rbits2;
         fmpq_poly_t A, B, C;
         acb_poly_t a, b, c, d;
 

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("lgamma_series....");
@@ -66,7 +66,7 @@ int main()
 
     for (iter = 0; iter < 500; iter++)
     {
-        long m, n1, n2, rbits1, rbits2, rbits3;
+        slong m, n1, n2, rbits1, rbits2, rbits3;
         acb_poly_t a, b, c, d;
 
         rbits1 = 2 + n_randint(state, 200);

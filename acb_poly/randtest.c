@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_randtest(acb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+acb_poly_randtest(acb_poly_t poly, flint_rand_t state, slong len, slong prec, slong mag_bits)
 {
-    long i;
+    slong i;
 
     acb_poly_fit_length(poly, len);
 

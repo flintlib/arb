@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 static void
-_interpolate_newton(acb_ptr ys, acb_srcptr xs, long n, long prec)
+_interpolate_newton(acb_ptr ys, acb_srcptr xs, slong n, slong prec)
 {
     acb_t p, q, t;
-    long i, j;
+    slong i, j;
 
     acb_init(p);
     acb_init(q);
@@ -54,10 +54,10 @@ _interpolate_newton(acb_ptr ys, acb_srcptr xs, long n, long prec)
 }
 
 static void
-_newton_to_monomial(acb_ptr ys, acb_srcptr xs, long n, long prec)
+_newton_to_monomial(acb_ptr ys, acb_srcptr xs, slong n, slong prec)
 {
     acb_t t, u;
-    long i, j;
+    slong i, j;
 
     acb_init(t);
     acb_init(u);
@@ -85,7 +85,7 @@ _newton_to_monomial(acb_ptr ys, acb_srcptr xs, long n, long prec)
 
 void
 _acb_poly_interpolate_newton(acb_ptr poly, acb_srcptr xs,
-    acb_srcptr ys, long n, long prec)
+    acb_srcptr ys, slong n, slong prec)
 {
     if (n == 1)
     {
@@ -102,7 +102,7 @@ _acb_poly_interpolate_newton(acb_ptr poly, acb_srcptr xs,
 
 void
 acb_poly_interpolate_newton(acb_poly_t poly,
-    acb_srcptr xs, acb_srcptr ys, long n, long prec)
+    acb_srcptr xs, acb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

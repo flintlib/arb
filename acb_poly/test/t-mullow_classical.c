@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("mullow_classical....");
@@ -39,7 +39,7 @@ int main()
     /* compare with fmpq_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
+        slong qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
         fmpq_poly_t A, B, C;
         acb_poly_t a, b, c, d;
 
@@ -140,7 +140,7 @@ int main()
     /* check a*(b+c) = a*b+a*c */
     for (iter = 0; iter < 10000; iter++)
     {
-        long bits, trunc;
+        slong bits, trunc;
         acb_poly_t a, b, c, bc, abc, ab, ac, abac;
 
         bits = 2 + n_randint(state, 200);

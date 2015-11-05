@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("add_si....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_poly_t a, b, c, d;
-        long v;
+        slong v;
 
         acb_poly_init(a);
         acb_poly_init(b);

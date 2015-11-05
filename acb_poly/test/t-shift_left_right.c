@@ -41,7 +41,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -67,7 +67,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -93,7 +93,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b, c;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);

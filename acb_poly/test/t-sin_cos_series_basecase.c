@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sin_cos_series_basecase....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long m, n, rbits1, rbits2;
+        slong m, n, rbits1, rbits2;
         fmpq_poly_t B;
         acb_poly_t a, b, c, d, e;
         int times_pi;

@@ -26,18 +26,18 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_derivative(acb_ptr res, acb_srcptr poly, long len, long prec)
+_acb_poly_derivative(acb_ptr res, acb_srcptr poly, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 1; i < len; i++)
         acb_mul_ui(res + i - 1, poly + i, i, prec);
 }
 
 void
-acb_poly_derivative(acb_poly_t res, const acb_poly_t poly, long prec)
+acb_poly_derivative(acb_poly_t res, const acb_poly_t poly, slong prec)
 {
-    long len = poly->length;
+    slong len = poly->length;
 
     if (len < 2)
     {

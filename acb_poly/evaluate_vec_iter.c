@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_evaluate_vec_iter(acb_ptr ys, acb_srcptr poly, long plen,
-    acb_srcptr xs, long n, long prec)
+_acb_poly_evaluate_vec_iter(acb_ptr ys, acb_srcptr poly, slong plen,
+    acb_srcptr xs, slong n, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < n; i++)
         _acb_poly_evaluate(ys + i, poly, plen, xs + i, prec);
@@ -37,7 +37,7 @@ _acb_poly_evaluate_vec_iter(acb_ptr ys, acb_srcptr poly, long plen,
 
 void
 acb_poly_evaluate_vec_iter(acb_ptr ys,
-        const acb_poly_t poly, acb_srcptr xs, long n, long prec)
+        const acb_poly_t poly, acb_srcptr xs, slong n, slong prec)
 {
     _acb_poly_evaluate_vec_iter(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

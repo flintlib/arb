@@ -27,11 +27,11 @@
 
 void
 _acb_poly_interpolate_barycentric(acb_ptr poly,
-    acb_srcptr xs, acb_srcptr ys, long n, long prec)
+    acb_srcptr xs, acb_srcptr ys, slong n, slong prec)
 {
     acb_ptr P, Q, w;
     acb_t t;
-    long i, j;
+    slong i, j;
 
     if (n == 1)
     {
@@ -79,7 +79,7 @@ _acb_poly_interpolate_barycentric(acb_ptr poly,
 
 void
 acb_poly_interpolate_barycentric(acb_poly_t poly,
-    acb_srcptr xs, acb_srcptr ys, long n, long prec)
+    acb_srcptr xs, acb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

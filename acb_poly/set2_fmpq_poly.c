@@ -26,7 +26,7 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, long prec)
+acb_poly_set_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, slong prec)
 {
     arb_poly_t t;
     arb_poly_init(t);
@@ -36,7 +36,7 @@ acb_poly_set_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, long prec)
 }
 
 void
-acb_poly_set2_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, long prec)
+acb_poly_set2_fmpq_poly(acb_poly_t poly, const fmpq_poly_t re, const fmpq_poly_t im, slong prec)
 {
     arb_poly_t t, u;
     arb_poly_init(t);

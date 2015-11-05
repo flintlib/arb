@@ -258,7 +258,7 @@ const double polylog_testdata[NUM_TESTS][10] = {
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("polylog_cpx....");
@@ -270,7 +270,7 @@ int main()
     {
         acb_t s, z, t;
         acb_ptr w1, w2;
-        long i, j, prec;
+        slong i, j, prec;
 
         acb_init(s);
         acb_init(z);
@@ -326,7 +326,7 @@ int main()
     {
         acb_t s, z;
         acb_ptr w1, w2;
-        long i, len1, len2, prec1, prec2;
+        slong i, len1, len2, prec1, prec2;
 
         acb_init(s);
         acb_init(z);

@@ -28,11 +28,11 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_compose_divconquer(acb_ptr res, acb_srcptr poly1, long len1,
-                                          acb_srcptr poly2, long len2, long prec)
+_acb_poly_compose_divconquer(acb_ptr res, acb_srcptr poly1, slong len1,
+                                          acb_srcptr poly2, slong len2, slong prec)
 {
-    long i, j, k, n;
-    long *hlen, alloc, powlen;
+    slong i, j, k, n;
+    slong *hlen, alloc, powlen;
     acb_ptr v, pow, temp;
     acb_ptr * h;
 
@@ -54,14 +54,14 @@ _acb_poly_compose_divconquer(acb_ptr res, acb_srcptr poly1, long len1,
 
     /* Initialisation */
     
-    hlen = (long *) flint_malloc(((len1 + 1) / 2) * sizeof(long));
+    hlen = (slong *) flint_malloc(((len1 + 1) / 2) * sizeof(slong));
     
     for (k = 1; (2 << k) < len1; k++) ;
     
     hlen[0] = hlen[1] = ((1 << k) - 1) * (len2 - 1) + 1;
     for (i = k - 1; i > 0; i--)
     {
-        long hi = (len1 + (1 << i) - 1) / (1 << i);
+        slong hi = (len1 + (1 << i) - 1) / (1 << i);
         for (n = (hi + 1) / 2; n < hi; n++)
             hlen[n] = ((1 << i) - 1) * (len2 - 1) + 1;
     }
@@ -115,7 +115,7 @@ _acb_poly_compose_divconquer(acb_ptr res, acb_srcptr poly1, long len1,
     {
         if (hlen[1] > 0)
         {
-            long templen = powlen + hlen[1] - 1;
+            slong templen = powlen + hlen[1] - 1;
             _acb_poly_mul(temp, pow, powlen, h[1], hlen[1], prec);
             _acb_poly_add(h[0], temp, templen, h[0], hlen[0], prec);
             hlen[0] = FLINT_MAX(hlen[0], templen);
@@ -157,10 +157,10 @@ _acb_poly_compose_divconquer(acb_ptr res, acb_srcptr poly1, long len1,
 
 void
 acb_poly_compose_divconquer(acb_poly_t res,
-                             const acb_poly_t poly1, const acb_poly_t poly2, long prec)
+                             const acb_poly_t poly1, const acb_poly_t poly2, slong prec)
 {
-    const long len1 = poly1->length;
-    const long len2 = poly2->length;
+    const slong len1 = poly1->length;
+    const slong len2 = poly2->length;
     
     if (len1 == 0)
     {
@@ -172,7 +172,7 @@ acb_poly_compose_divconquer(acb_poly_t res,
     }
     else
     {
-        const long lenr = (len1 - 1) * (len2 - 1) + 1;
+        const slong lenr = (len1 - 1) * (len2 - 1) + 1;
         
         if (res != poly1 && res != poly2)
         {

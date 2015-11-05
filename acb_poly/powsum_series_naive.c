@@ -25,9 +25,9 @@
 
 #include "acb_poly.h"
 
-void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long trunc, long prec)
+void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, slong trunc, slong prec)
 {
-    long i;
+    slong i;
     acb_t logN;
 
     acb_init(logN);
@@ -47,9 +47,9 @@ void _acb_poly_acb_invpow_cpx(acb_ptr res, const acb_t N, const acb_t c, long tr
 
 void
 _acb_poly_powsum_series_naive(acb_ptr z,
-    const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
+    const acb_t s, const acb_t a, const acb_t q, slong n, slong len, slong prec)
 {
-    long k, i;
+    slong k, i;
     int q_one, s_int;
     acb_t ak, logak, t, qpow, negs;
 

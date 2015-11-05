@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("gamma_upper_series....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long m, n1, n2, bits1, bits2, bits3;
+        slong m, n1, n2, bits1, bits2, bits3;
         acb_poly_t S, A, B, C;
         acb_t s, t;
 

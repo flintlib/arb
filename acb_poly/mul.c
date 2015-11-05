@@ -26,17 +26,17 @@
 #include "acb_poly.h"
 
 void _acb_poly_mul(acb_ptr C,
-    acb_srcptr A, long lenA,
-    acb_srcptr B, long lenB, long prec)
+    acb_srcptr A, slong lenA,
+    acb_srcptr B, slong lenB, slong prec)
 {
     _acb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
 }
 
 void
 acb_poly_mul(acb_poly_t res, const acb_poly_t poly1,
-              const acb_poly_t poly2, long prec)
+              const acb_poly_t poly2, slong prec)
 {
-    long len_out;
+    slong len_out;
 
     if ((poly1->length == 0) || (poly2->length == 0))
     {

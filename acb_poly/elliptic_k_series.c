@@ -27,7 +27,7 @@
 #include "acb_modular.h"
 
 void
-_acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, long zlen, long len, long prec)
+_acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
 {
     acb_ptr t, u;
 
@@ -48,7 +48,7 @@ _acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, long zlen, long len, long
 }
 
 void
-acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, long n, long prec)
+acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, slong n, slong prec)
 {
     if (n == 0)
     {

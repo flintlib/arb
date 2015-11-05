@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, long d, long prec)
+_acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, slong d, slong prec)
 {
     ulong M, N;
-    long i;
+    slong i;
     mag_t bound;
     arb_ptr vb;
     int is_real, const_is_real;
@@ -81,9 +81,9 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
 }
 
 void
-_acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int deflate, long len, long prec)
+_acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int deflate, slong len, slong prec)
 {
-    long i;
+    slong i;
     acb_ptr t, u;
 
     hlen = FLINT_MIN(hlen, len);
@@ -170,7 +170,7 @@ _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, long hlen, const acb_t a, int d
 }
 
 void
-acb_poly_zeta_series(acb_poly_t res, const acb_poly_t f, const acb_t a, int deflate, long n, long prec)
+acb_poly_zeta_series(acb_poly_t res, const acb_poly_t f, const acb_t a, int deflate, slong n, slong prec)
 {
     if (n == 0)
     {

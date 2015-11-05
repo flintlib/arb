@@ -27,12 +27,12 @@
 
 void
 _acb_poly_mullow_transpose(acb_ptr res,
-    acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long n, long prec)
+    acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong n, slong prec)
 {
     arb_ptr a, b, c, d, e, f, w;
     arb_ptr t;
-    long i;
+    slong i;
 
     len1 = FLINT_MIN(len1, n);
     len2 = FLINT_MIN(len2, n);
@@ -95,9 +95,9 @@ _acb_poly_mullow_transpose(acb_ptr res,
 void
 acb_poly_mullow_transpose(acb_poly_t res, const acb_poly_t poly1,
                                             const acb_poly_t poly2,
-                                                long n, long prec)
+                                                slong n, slong prec)
 {
-    long len1, len2;
+    slong len1, len2;
 
     len1 = poly1->length;
     len2 = poly2->length;

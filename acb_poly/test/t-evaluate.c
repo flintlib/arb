@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("evaluate....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t F;
         fmpq_t X, Y;
         acb_poly_t f;

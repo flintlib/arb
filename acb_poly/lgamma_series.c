@@ -27,19 +27,19 @@
 
 void
 _acb_log_rising_correct_branch(acb_t t,
-        const acb_t t_wrong, const acb_t z, ulong r, long prec);
+        const acb_t t_wrong, const acb_t z, ulong r, slong prec);
 
-void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t x, int use_reflect, int digamma, long prec);
+void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
-_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec);
+_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, slong n, slong num, slong prec);
 
 static __inline__ void
-_log_rising_ui_series(acb_ptr t, const acb_t x, long r, long len, long prec)
+_log_rising_ui_series(acb_ptr t, const acb_t x, slong r, slong len, slong prec)
 {
     acb_struct f[2];
-    long rflen;
+    slong rflen;
 
     acb_init(f);
     acb_init(f + 1);
@@ -58,10 +58,10 @@ _log_rising_ui_series(acb_ptr t, const acb_t x, long r, long len, long prec)
 }
 
 void
-_acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec)
+_acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, r, n, wp;
+    slong i, r, n, wp;
     acb_t zr;
     acb_ptr t, u;
 
@@ -173,7 +173,7 @@ _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long pre
 }
 
 void
-acb_poly_lgamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec)
+acb_poly_lgamma_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
 {
     acb_poly_fit_length(res, n);
 

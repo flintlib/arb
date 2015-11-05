@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp_series....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, bits1, bits2, bits3;
+        slong m, n, bits1, bits2, bits3;
         acb_poly_t a, b, c, d;
 
         bits1 = 2 + n_randint(state, 200);

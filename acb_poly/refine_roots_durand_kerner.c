@@ -29,7 +29,7 @@
    functions that ignore the radii */
 
 static __inline__ void
-acb_sub_mid(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_sub_mid(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     arf_sub(arb_midref(acb_realref(z)),
         arb_midref(acb_realref(x)),
@@ -40,7 +40,7 @@ acb_sub_mid(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 static __inline__ void
-acb_add_mid(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_add_mid(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     arf_add(arb_midref(acb_realref(z)),
         arb_midref(acb_realref(x)),
@@ -51,7 +51,7 @@ acb_add_mid(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 static __inline__ void
-acb_mul_mid(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_mul_mid(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
 #define a arb_midref(acb_realref(x))
 #define b arb_midref(acb_imagref(x))
@@ -71,7 +71,7 @@ acb_mul_mid(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 static __inline__ void
-acb_inv_mid(acb_t z, const acb_t x, long prec)
+acb_inv_mid(acb_t z, const acb_t x, slong prec)
 {
     arf_t t;
     arf_init(t);
@@ -98,10 +98,10 @@ acb_inv_mid(acb_t z, const acb_t x, long prec)
 }
 
 void
-_acb_poly_evaluate_mid(acb_t res, acb_srcptr f, long len,
-                           const acb_t a, long prec)
+_acb_poly_evaluate_mid(acb_t res, acb_srcptr f, slong len,
+                           const acb_t a, slong prec)
 {
-    long i = len - 1;
+    slong i = len - 1;
     acb_t t;
 
     acb_init(t);
@@ -118,9 +118,9 @@ _acb_poly_evaluate_mid(acb_t res, acb_srcptr f, long len,
 
 void
 _acb_poly_refine_roots_durand_kerner(acb_ptr roots,
-        acb_srcptr poly, long len, long prec)
+        acb_srcptr poly, slong len, slong prec)
 {
-    long i, j;
+    slong i, j;
 
     acb_t x, y, t;
 

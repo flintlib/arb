@@ -25,17 +25,17 @@
 
 #include "acb_poly.h"
 
-void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t x, int use_reflect, int digamma, long prec);
+void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
-_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec);
+_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, slong n, slong num, slong prec);
 
 void
-_acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec)
+_acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, rflen, r, n, wp;
+    slong i, rflen, r, n, wp;
     acb_ptr t, u, v;
     acb_struct f[2];
 
@@ -151,7 +151,7 @@ _acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long pre
 }
 
 void
-acb_poly_rgamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec)
+acb_poly_rgamma_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
 {
     if (f->length == 0 || n == 0)
     {

@@ -26,7 +26,7 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set_coeff_si(acb_poly_t poly, long n, long x)
+acb_poly_set_coeff_si(acb_poly_t poly, slong n, slong x)
 {
     acb_poly_fit_length(poly, n + 1);
 

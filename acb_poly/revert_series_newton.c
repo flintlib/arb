@@ -28,9 +28,9 @@
 #define CUTOFF 5
 
 void
-_acb_poly_revert_series_newton(acb_ptr Qinv, acb_srcptr Q, long Qlen, long n, long prec)
+_acb_poly_revert_series_newton(acb_ptr Qinv, acb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    long i, k, a[FLINT_BITS];
+    slong i, k, a[FLINT_BITS];
     acb_ptr T, U, V;
 
     if (n <= 2)
@@ -74,9 +74,9 @@ _acb_poly_revert_series_newton(acb_ptr Qinv, acb_srcptr Q, long Qlen, long n, lo
 
 void
 acb_poly_revert_series_newton(acb_poly_t Qinv,
-                                    const acb_poly_t Q, long n, long prec)
+                                    const acb_poly_t Q, slong n, slong prec)
 {
-    long Qlen = Q->length;
+    slong Qlen = Q->length;
 
     if (Qlen < 2 || !acb_is_zero(Q->coeffs)
                  || acb_contains_zero(Q->coeffs + 1))

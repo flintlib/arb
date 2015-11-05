@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_printd(const acb_poly_t poly, long digits)
+acb_poly_printd(const acb_poly_t poly, slong digits)
 {
-    long i;
+    slong i;
 
     printf("[");
 

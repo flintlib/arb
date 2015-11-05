@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("find_roots....");
@@ -43,8 +43,8 @@ int main()
         acb_poly_t C;
         acb_t t;
         acb_ptr roots;
-        long i, deg, isolated;
-        long prec = 10 + n_randint(state, 400);
+        slong i, deg, isolated;
+        slong prec = 10 + n_randint(state, 400);
 
         acb_init(t);
         acb_poly_init(A);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("get_unique_fmpz_poly....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long prec, c;
+        slong prec, c;
         fmpz_poly_t A, B, C;
         acb_poly_t a, b;
 

@@ -26,8 +26,8 @@
 #include "acb_poly.h"
 
 void 
-_acb_poly_div_series(acb_ptr Q, acb_srcptr A, long Alen,
-    acb_srcptr B, long Blen, long n, long prec)
+_acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen,
+    acb_srcptr B, slong Blen, slong n, slong prec)
 {
     Alen = FLINT_MIN(Alen, n);
     Blen = FLINT_MIN(Blen, n);
@@ -65,7 +65,7 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, long Alen,
 }
 
 void
-acb_poly_div_series(acb_poly_t Q, const acb_poly_t A, const acb_poly_t B, long n, long prec)
+acb_poly_div_series(acb_poly_t Q, const acb_poly_t A, const acb_poly_t B, slong n, slong prec)
 {
     if (n == 0)
     {

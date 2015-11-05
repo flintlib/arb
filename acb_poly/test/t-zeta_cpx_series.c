@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("zeta_cpx_series....");
@@ -39,7 +39,7 @@ int main()
     {
         acb_t s, a;
         acb_ptr z1, z2;
-        long i, len, prec1, prec2;
+        slong i, len, prec1, prec2;
         int deflate;
 
         acb_init(s);

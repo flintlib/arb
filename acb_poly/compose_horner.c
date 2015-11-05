@@ -29,8 +29,8 @@
 
 void
 _acb_poly_compose_horner(acb_ptr res,
-    acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long prec)
+    acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong prec)
 {
     if (len1 == 1)
     {
@@ -47,8 +47,8 @@ _acb_poly_compose_horner(acb_ptr res,
     }
     else
     {
-        const long alloc = (len1 - 1) * (len2 - 1) + 1;
-        long i = len1 - 1, lenr = len2;
+        const slong alloc = (len1 - 1) * (len2 - 1) + 1;
+        slong i = len1 - 1, lenr = len2;
         acb_ptr t, t1, t2;
         t = _acb_vec_init(alloc);
 
@@ -86,10 +86,10 @@ _acb_poly_compose_horner(acb_ptr res,
 }
 
 void acb_poly_compose_horner(acb_poly_t res,
-              const acb_poly_t poly1, const acb_poly_t poly2, long prec)
+              const acb_poly_t poly1, const acb_poly_t poly2, slong prec)
 {
-    const long len1 = poly1->length;
-    const long len2 = poly2->length;
+    const slong len1 = poly1->length;
+    const slong len2 = poly2->length;
     
     if (len1 == 0)
     {
@@ -101,7 +101,7 @@ void acb_poly_compose_horner(acb_poly_t res,
     }
     else
     {
-        const long lenr = (len1 - 1) * (len2 - 1) + 1;
+        const slong lenr = (len1 - 1) * (len2 - 1) + 1;
         
         if (res != poly1 && res != poly2)
         {

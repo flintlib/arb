@@ -28,7 +28,7 @@
 void
 acb_poly_clear(acb_poly_t poly)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < poly->alloc; i++)
         acb_clear(poly->coeffs + i);

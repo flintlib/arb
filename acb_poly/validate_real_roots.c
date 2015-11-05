@@ -34,15 +34,15 @@ int arb_cmp_mid(const arb_t a, const arb_t b)
     return arf_cmp(arb_midref(a), arb_midref(b));
 }
 
-void _arb_vec_sort_mid(arb_ptr vec, long len)
+void _arb_vec_sort_mid(arb_ptr vec, slong len)
 {
     qsort(vec, len, sizeof(arb_struct), (__compar_fn_t) arb_cmp_mid);
 }
 
 int
-_acb_poly_validate_real_roots(acb_srcptr roots, acb_srcptr poly, long len, long prec)
+_acb_poly_validate_real_roots(acb_srcptr roots, acb_srcptr poly, slong len, slong prec)
 {
-    long i, deg, num_real;
+    slong i, deg, num_real;
     arb_ptr real;
     int result;
 
@@ -131,7 +131,7 @@ _acb_poly_validate_real_roots(acb_srcptr roots, acb_srcptr poly, long len, long 
 }
 
 int
-acb_poly_validate_real_roots(acb_srcptr roots, const acb_poly_t poly, long prec)
+acb_poly_validate_real_roots(acb_srcptr roots, const acb_poly_t poly, slong prec)
 {
     return _acb_poly_validate_real_roots(roots, poly->coeffs, poly->length, prec);
 }

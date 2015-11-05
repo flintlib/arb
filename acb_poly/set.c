@@ -28,7 +28,7 @@
 void
 acb_poly_set(acb_poly_t dest, const acb_poly_t src)
 {
-    long len = acb_poly_length(src);
+    slong len = acb_poly_length(src);
 
     acb_poly_fit_length(dest, len);
     _acb_vec_set(dest->coeffs, src->coeffs, len);

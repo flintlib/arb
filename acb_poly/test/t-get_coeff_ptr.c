@@ -41,7 +41,7 @@ main(void)
     {
         acb_poly_t A;
         acb_t a;
-        long n = n_randint(state, 100);
+        slong n = n_randint(state, 100);
 
         acb_poly_init(A);
         acb_poly_randtest(A, state, n_randint(state, 100), 100, 10);

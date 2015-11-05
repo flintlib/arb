@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("log_series....");
@@ -39,7 +39,7 @@ int main()
     /* compare with fmpq_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A, B;
         acb_poly_t a, b;
 
@@ -88,7 +88,7 @@ int main()
     /* test aliasing */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A;
         acb_poly_t a, b;
 
@@ -133,7 +133,7 @@ int main()
     /* test that exp(log(f)) contains f */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2, rbits3;
+        slong m, n, qbits, rbits1, rbits2, rbits3;
         fmpq_poly_t A;
         acb_poly_t a, b, c;
 

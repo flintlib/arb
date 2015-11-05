@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("interpolate_fast....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t P;
         acb_poly_t R, S;
         fmpq_t t, u;

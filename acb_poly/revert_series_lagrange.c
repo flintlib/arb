@@ -27,9 +27,9 @@
 
 void
 _acb_poly_revert_series_lagrange(acb_ptr Qinv,
-    acb_srcptr Q, long Qlen, long n, long prec)
+    acb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    long i;
+    slong i;
     acb_ptr R, S, T, tmp;
 
     if (n <= 2)
@@ -65,9 +65,9 @@ _acb_poly_revert_series_lagrange(acb_ptr Qinv,
 
 void
 acb_poly_revert_series_lagrange(acb_poly_t Qinv,
-                                    const acb_poly_t Q, long n, long prec)
+                                    const acb_poly_t Q, slong n, slong prec)
 {
-    long Qlen = Q->length;
+    slong Qlen = Q->length;
 
     if (Qlen < 2 || !acb_is_zero(Q->coeffs)
                  || acb_contains_zero(Q->coeffs + 1))

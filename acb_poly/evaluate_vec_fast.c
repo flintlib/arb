@@ -27,8 +27,8 @@
 
 /* This gives some speedup for small lengths. */
 static __inline__ void
-_acb_poly_rem_2(acb_ptr r, acb_srcptr a, long al,
-    acb_srcptr b, long bl, long prec)
+_acb_poly_rem_2(acb_ptr r, acb_srcptr a, slong al,
+    acb_srcptr b, slong bl, slong prec)
 {
     if (al == 2)
     {
@@ -43,11 +43,11 @@ _acb_poly_rem_2(acb_ptr r, acb_srcptr a, long al,
 
 void
 _acb_poly_evaluate_vec_fast_precomp(acb_ptr vs, acb_srcptr poly,
-    long plen, acb_ptr * tree, long len, long prec)
+    slong plen, acb_ptr * tree, slong len, slong prec)
 {
-    long height, i, j, pow, left;
-    long tree_height;
-    long tlen;
+    slong height, i, j, pow, left;
+    slong tree_height;
+    slong tlen;
     acb_ptr t, u, swap, pa, pb, pc;
 
     /* avoid worrying about some degenerate cases */
@@ -129,8 +129,8 @@ _acb_poly_evaluate_vec_fast_precomp(acb_ptr vs, acb_srcptr poly,
     _acb_vec_clear(u, len);
 }
 
-void _acb_poly_evaluate_vec_fast(acb_ptr ys, acb_srcptr poly, long plen,
-    acb_srcptr xs, long n, long prec)
+void _acb_poly_evaluate_vec_fast(acb_ptr ys, acb_srcptr poly, slong plen,
+    acb_srcptr xs, slong n, slong prec)
 {
     acb_ptr * tree;
 
@@ -142,7 +142,7 @@ void _acb_poly_evaluate_vec_fast(acb_ptr ys, acb_srcptr poly, long plen,
 
 void
 acb_poly_evaluate_vec_fast(acb_ptr ys,
-        const acb_poly_t poly, acb_srcptr xs, long n, long prec)
+        const acb_poly_t poly, acb_srcptr xs, slong n, slong prec)
 {
     _acb_poly_evaluate_vec_fast(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

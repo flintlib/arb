@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_majorant(arb_ptr res, acb_srcptr vec, long len, long prec)
+_acb_poly_majorant(arb_ptr res, acb_srcptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len; i++)
     {
@@ -38,7 +38,7 @@ _acb_poly_majorant(arb_ptr res, acb_srcptr vec, long len, long prec)
 }
 
 void
-acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, long prec)
+acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, slong prec)
 {
     arb_poly_fit_length(res, poly->length);
     _acb_poly_majorant(res->coeffs, poly->coeffs, poly->length, prec);

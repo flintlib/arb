@@ -27,9 +27,9 @@
 
 void
 _acb_poly_evaluate_rectangular(acb_t y, acb_srcptr poly,
-    long len, const acb_t x, long prec)
+    slong len, const acb_t x, slong prec)
 {
-    long i, j, m, r;
+    slong i, j, m, r;
     acb_ptr xs;
     acb_t s, t, c;
 
@@ -82,7 +82,7 @@ _acb_poly_evaluate_rectangular(acb_t y, acb_srcptr poly,
 }
 
 void
-acb_poly_evaluate_rectangular(acb_t res, const acb_poly_t f, const acb_t a, long prec)
+acb_poly_evaluate_rectangular(acb_t res, const acb_poly_t f, const acb_t a, slong prec)
 {
     _acb_poly_evaluate_rectangular(res, f->coeffs, f->length, a, prec);
 }

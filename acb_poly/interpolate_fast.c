@@ -27,10 +27,10 @@
 
 void
 _acb_poly_interpolation_weights(acb_ptr w,
-    acb_ptr * tree, long len, long prec)
+    acb_ptr * tree, slong len, slong prec)
 {
     acb_ptr tmp;
-    long i, n, height;
+    slong i, n, height;
 
     if (len == 0)
         return;
@@ -60,10 +60,10 @@ _acb_poly_interpolation_weights(acb_ptr w,
 void
 _acb_poly_interpolate_fast_precomp(acb_ptr poly,
     acb_srcptr ys, acb_ptr * tree, acb_srcptr weights,
-    long len, long prec)
+    slong len, slong prec)
 {
     acb_ptr t, u, pa, pb;
-    long i, pow, left;
+    slong i, pow, left;
 
     if (len == 0)
         return;
@@ -106,7 +106,7 @@ _acb_poly_interpolate_fast_precomp(acb_ptr poly,
 
 void
 _acb_poly_interpolate_fast(acb_ptr poly,
-    acb_srcptr xs, acb_srcptr ys, long len, long prec)
+    acb_srcptr xs, acb_srcptr ys, slong len, slong prec)
 {
     acb_ptr * tree;
     acb_ptr w;
@@ -125,7 +125,7 @@ _acb_poly_interpolate_fast(acb_ptr poly,
 
 void
 acb_poly_interpolate_fast(acb_poly_t poly,
-        acb_srcptr xs, acb_srcptr ys, long n, long prec)
+        acb_srcptr xs, acb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

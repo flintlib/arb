@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("powsum_one_series_sieved....");
@@ -39,7 +39,7 @@ int main()
     {
         acb_t s, a, q;
         acb_ptr z1, z2;
-        long i, n, len, prec;
+        slong i, n, len, prec;
 
         acb_init(s);
         acb_init(a);

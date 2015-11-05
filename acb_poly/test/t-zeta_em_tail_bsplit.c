@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("zeta_em_tail_bsplit....");
@@ -39,7 +39,7 @@ int main()
     {
         acb_t Na, s;
         acb_ptr z1, z2, Nasx;
-        long i, M, len, prec;
+        slong i, M, len, prec;
 
         prec = 2 + n_randint(state, 400);
         len = 1 + n_randint(state, 30);

@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_add_si(acb_poly_t res, const acb_poly_t x, long y, long prec)
+acb_poly_add_si(acb_poly_t res, const acb_poly_t x, slong y, slong prec)
 {
-    long len = x->length;
+    slong len = x->length;
 
     if (len == 0)
     {

@@ -27,7 +27,7 @@
 
 void
 _acb_poly_sqrt_series(acb_ptr g,
-    acb_srcptr h, long hlen, long len, long prec)
+    acb_srcptr h, slong hlen, slong len, slong prec)
 {
     hlen = FLINT_MIN(hlen, len);
 
@@ -65,7 +65,7 @@ _acb_poly_sqrt_series(acb_ptr g,
 }
 
 void
-acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, long n, long prec)
+acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec)
 {
     if (n == 0)
     {

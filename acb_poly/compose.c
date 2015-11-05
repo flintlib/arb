@@ -29,8 +29,8 @@
 
 void
 _acb_poly_compose(acb_ptr res,
-    acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long prec)
+    acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong prec)
 {
     if (len2 == 1)
     {
@@ -38,7 +38,7 @@ _acb_poly_compose(acb_ptr res,
     }
     else if (_acb_vec_is_zero(poly2, len2 - 1)) /* poly2 is a monomial */
     {
-        long i;
+        slong i;
         acb_t t;
 
         acb_init(t);
@@ -67,10 +67,10 @@ _acb_poly_compose(acb_ptr res,
 }
 
 void acb_poly_compose(acb_poly_t res,
-              const acb_poly_t poly1, const acb_poly_t poly2, long prec)
+              const acb_poly_t poly1, const acb_poly_t poly2, slong prec)
 {
-    const long len1 = poly1->length;
-    const long len2 = poly2->length;
+    const slong len1 = poly1->length;
+    const slong len2 = poly2->length;
     
     if (len1 == 0)
     {
@@ -82,7 +82,7 @@ void acb_poly_compose(acb_poly_t res,
     }
     else
     {
-        const long lenr = (len1 - 1) * (len2 - 1) + 1;
+        const slong lenr = (len1 - 1) * (len2 - 1) + 1;
         
         if (res != poly1 && res != poly2)
         {

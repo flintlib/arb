@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, long prec)
+acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, slong prec)
 {
-    long len = acb_poly_length(src);
+    slong len = acb_poly_length(src);
 
     acb_poly_fit_length(dest, len);
     _acb_vec_set_round(dest->coeffs, src->coeffs, len, prec);

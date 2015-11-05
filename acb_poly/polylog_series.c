@@ -30,7 +30,7 @@ long
 arb_get_si_lower(const arb_t x)
 {
     arf_t t;
-    long v;
+    slong v;
 
     arf_init(t);
     arf_set_mag(t, arb_radref(x));
@@ -44,9 +44,9 @@ arb_get_si_lower(const arb_t x)
 }
 
 long
-polylog_choose_terms(mag_t err, long sigma, const mag_t z, long d, long prec)
+polylog_choose_terms(mag_t err, slong sigma, const mag_t z, slong d, slong prec)
 {
-    long N;
+    slong N;
 
     for (N = 3; ; N = FLINT_MAX(N+3, N*1.1))
     {
@@ -98,11 +98,11 @@ polylog_is_real(const acb_t s, const acb_t z)
 }
 
 void
-_acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+_acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, slong len, slong prec)
 {
     acb_ptr e1, e2, z1, z2, e1z1, e2z2;
     acb_t t, u, v;
-    long k, len2;
+    slong k, len2;
     int deflate_zeta, deflate_gamma;
 
     if (!acb_is_finite(s) || !acb_is_finite(z))
@@ -230,9 +230,9 @@ _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, long len, lo
 }
 
 void
-_acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+_acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, slong len, slong prec)
 {
-    long k, N, sigma;
+    slong k, N, sigma;
     int is_real;
     mag_t zmag, err, errf;
     acb_t a;
@@ -272,7 +272,7 @@ _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, long len, l
 }
 
 void
-_acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long prec)
+_acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, slong len, slong prec)
 {
     mag_t zmag;
 
@@ -288,7 +288,7 @@ _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, long len, long pr
 }
 
 void
-_acb_poly_polylog_series(acb_ptr res, acb_srcptr s, long slen, const acb_t z, long len, long prec)
+_acb_poly_polylog_series(acb_ptr res, acb_srcptr s, slong slen, const acb_t z, slong len, slong prec)
 {
     acb_ptr t, u;
 
@@ -309,7 +309,7 @@ _acb_poly_polylog_series(acb_ptr res, acb_srcptr s, long slen, const acb_t z, lo
 }
 
 void
-acb_poly_polylog_series(acb_poly_t res, const acb_poly_t s, const acb_t z, long n, long prec)
+acb_poly_polylog_series(acb_poly_t res, const acb_poly_t s, const acb_t z, slong n, slong prec)
 {
     if (n == 0)
     {

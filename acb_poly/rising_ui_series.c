@@ -27,8 +27,8 @@
 
 static void
 _acb_poly_rising_ui_series_bsplit(acb_ptr res,
-    acb_srcptr f, long flen, ulong a, ulong b,
-        long trunc, long prec)
+    acb_srcptr f, slong flen, ulong a, ulong b,
+        slong trunc, slong prec)
 {
     flen = FLINT_MIN(flen, trunc);
 
@@ -40,9 +40,9 @@ _acb_poly_rising_ui_series_bsplit(acb_ptr res,
     else
     {
         acb_ptr L, R;
-        long len1, len2;
+        slong len1, len2;
 
-        long m = a + (b - a) / 2;
+        slong m = a + (b - a) / 2;
 
         len1 = poly_pow_length(flen, m - a, trunc);
         len2 = poly_pow_length(flen, b - m, trunc);
@@ -62,8 +62,8 @@ _acb_poly_rising_ui_series_bsplit(acb_ptr res,
 
 void
 _acb_poly_rising_ui_series(acb_ptr res,
-    acb_srcptr f, long flen, ulong r,
-        long trunc, long prec)
+    acb_srcptr f, slong flen, ulong r,
+        slong trunc, slong prec)
 {
     if (trunc == 1 || flen == 1)
     {
@@ -82,9 +82,9 @@ _acb_poly_rising_ui_series(acb_ptr res,
 }
 
 void
-acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, long trunc, long prec)
+acb_poly_rising_ui_series(acb_poly_t res, const acb_poly_t f, ulong r, slong trunc, slong prec)
 {
-    long len;
+    slong len;
 
     if ((f->length == 0 && r != 0) || trunc == 0)
     {
