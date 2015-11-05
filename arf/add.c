@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_add_special(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+arf_add_special(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 {
     if (arf_is_zero(x))
     {
@@ -62,11 +62,11 @@ arf_add_special(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
+arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
     mp_srcptr xptr, yptr;
-    long shift;
+    slong shift;
 
     if (arf_is_special(x) || arf_is_special(y))
     {
@@ -90,14 +90,14 @@ arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
+arf_add_si(arf_ptr z, arf_srcptr x, slong y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
     mp_srcptr xptr, yptr;
     mp_limb_t ytmp;
     int xsgnbit, ysgnbit;
     fmpz yexp;
-    long shift;
+    slong shift;
 
     if (y == 0)
     {
@@ -138,14 +138,14 @@ arf_add_si(arf_ptr z, arf_srcptr x, long y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
+arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
     mp_srcptr xptr, yptr;
     mp_limb_t ytmp;
     int xsgnbit, ysgnbit;
     fmpz yexp;
-    long shift;
+    slong shift;
 
     if (y == 0)
     {
@@ -182,14 +182,14 @@ arf_add_ui(arf_ptr z, arf_srcptr x, ulong y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
+arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
     mp_srcptr xptr, yptr;
     mp_limb_t ytmp;
     int xsgnbit, ysgnbit;
     fmpz yexp;
-    long shift;
+    slong shift;
 
     if (fmpz_is_zero(y))
     {
@@ -222,14 +222,14 @@ arf_add_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_add_fmpz_2exp(arf_ptr z, arf_srcptr x, const fmpz_t y, const fmpz_t exp, long prec, arf_rnd_t rnd)
+arf_add_fmpz_2exp(arf_ptr z, arf_srcptr x, const fmpz_t y, const fmpz_t exp, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
     mp_srcptr xptr, yptr;
     mp_limb_t ytmp;
     int xsgnbit, ysgnbit, inexact;
     fmpz_t yexp;
-    long shift;
+    slong shift;
 
     if (fmpz_is_zero(y))
     {

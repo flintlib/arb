@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("complex_mul....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arf_t e1, f1, e2, f2, a, b, c, d;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(a);

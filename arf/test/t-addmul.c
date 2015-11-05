@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_addmul_naive(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+arf_addmul_naive(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 {
     arf_t t;
     int inexact;
@@ -43,7 +43,7 @@ arf_addmul_naive(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("addmul....");
@@ -54,7 +54,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         arf_t x, y, z, v;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(x);

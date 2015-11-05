@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cmpabs....");
@@ -92,7 +92,7 @@ int main()
     /* compare with mpfr */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         arf_t x, y;
         mpfr_t X, Y;
         int cmp1, cmp2;

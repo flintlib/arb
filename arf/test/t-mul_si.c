@@ -27,7 +27,7 @@
 #include "long_extras.h"
 
 int
-arf_mul_si_naive(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+arf_mul_si_naive(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 {
     arf_t t;
     int r;
@@ -40,7 +40,7 @@ arf_mul_si_naive(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("mul_si....");
@@ -51,8 +51,8 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arf_t x, z, v;
-        long y;
-        long prec, r1, r2;
+        slong y;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(x);

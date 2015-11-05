@@ -56,7 +56,7 @@ arf_print(const arf_t x)
 }
 
 void
-arf_printd(const arf_t x, long d)
+arf_printd(const arf_t x, slong d)
 {
     if (arf_is_finite(x) && (ARF_EXP(x) <= MPFR_EMIN_MIN + 1 ||
                              ARF_EXP(x) >= MPFR_EMAX_MAX - 1))

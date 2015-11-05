@@ -40,7 +40,7 @@ arf_get_fmpq(fmpq_t y, const arf_t x)
     else
     {
         fmpz_t man, exp;
-        long e;
+        slong e;
 
         fmpz_init(man);
         fmpz_init(exp);

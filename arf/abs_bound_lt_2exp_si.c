@@ -28,7 +28,7 @@
 long
 arf_abs_bound_lt_2exp_si(const arf_t x)
 {
-    long res;
+    slong res;
 
     if (arf_is_special(x))
     {

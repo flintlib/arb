@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sum....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 1000000; iter++)
     {
-        long i, len, prec, bits, expbits;
+        slong i, len, prec, bits, expbits;
         int res1, res2;
         arf_t s1, s2, s3, err;
         mag_t err_bound;

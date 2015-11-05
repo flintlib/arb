@@ -27,7 +27,7 @@
 
 int
 arf_mul_via_mpfr(arf_ptr z, arf_srcptr x, arf_srcptr y,
-        long prec, arf_rnd_t rnd)
+        slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn, zn, val;
     mp_srcptr xptr, yptr;

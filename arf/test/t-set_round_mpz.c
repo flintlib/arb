@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_round_mpz....");
@@ -43,7 +43,7 @@ int main()
 
         for (iter = 0; iter < 100000; iter++)
         {
-            long bits1, bits2;
+            slong bits1, bits2;
             int ret1, ret2;
             fmpz_t a;
             mpz_t b;

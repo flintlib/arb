@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("get_mpfr....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         arf_t x, z;
         mpfr_t y;
 

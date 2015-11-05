@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_add_fmpz_naive(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+arf_add_fmpz_naive(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 {
     arf_t t;
     int r;
@@ -39,7 +39,7 @@ arf_add_fmpz_naive(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t 
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("add_fmpz....");
@@ -51,7 +51,7 @@ int main()
     {
         arf_t x, z, v;
         fmpz_t y;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(x);

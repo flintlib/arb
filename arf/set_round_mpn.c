@@ -36,8 +36,8 @@ _arf_set_mpn_roundup_power_two(arf_t y, int sgnbit)
 }
 
 int
-_arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
-    int sgnbit, long prec, arf_rnd_t rnd)
+_arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
+    int sgnbit, slong prec, arf_rnd_t rnd)
 {
     unsigned int leading;
     mp_bitcnt_t exp, bc, val, val_bits;
@@ -51,7 +51,7 @@ _arf_set_round_mpn(arf_t y, long * exp_shift, mp_srcptr x, mp_size_t xn,
     exp = xn * FLINT_BITS - leading;
 
     /* Set exponent. */
-    *exp_shift = -(long) leading;
+    *exp_shift = -(slong) leading;
 
     /* Find first nonzero bit. */
     val_limbs = 0;

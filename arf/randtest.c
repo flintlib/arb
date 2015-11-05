@@ -26,7 +26,7 @@
 #include "arf.h"
 
 void
-arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits)
+arf_randtest(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     fmpz_t t;
     fmpz_init(t);
@@ -38,7 +38,7 @@ arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits)
 }
 
 void
-arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits)
+arf_randtest_not_zero(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     fmpz_t t;
     fmpz_init(t);
@@ -49,7 +49,7 @@ arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits)
 }
 
 void
-arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits)
+arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     switch (n_randint(state, 32))
     {

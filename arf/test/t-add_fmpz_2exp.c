@@ -27,7 +27,7 @@
 
 int
 arf_add_fmpz_2exp_naive(arf_t z, const arf_t x,
-    const fmpz_t y, const fmpz_t e, long prec, arf_rnd_t rnd)
+    const fmpz_t y, const fmpz_t e, slong prec, arf_rnd_t rnd)
 {
     arf_t t;
     int r;
@@ -40,7 +40,7 @@ arf_add_fmpz_2exp_naive(arf_t z, const arf_t x,
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("add_fmpz_2exp_fmpz....");
@@ -52,7 +52,7 @@ int main()
     {
         arf_t x, z, v;
         fmpz_t y, e;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(x);

@@ -55,7 +55,7 @@
     while (0)
 
 int
-_arf_set_round_ui(arf_t x, ulong v, int sgnbit, long prec, arf_rnd_t rnd)
+_arf_set_round_ui(arf_t x, ulong v, int sgnbit, slong prec, arf_rnd_t rnd)
 {
     if (v == 0)
     {

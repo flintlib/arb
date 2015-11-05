@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_round_uiui....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000000; iter++)
     {
         arf_t x, y;
-        long prec, fix1, fix2;
+        slong prec, fix1, fix2;
         int ret1, ret2, sgnbit;
         mp_limb_t t[2];
         arf_rnd_t rnd;

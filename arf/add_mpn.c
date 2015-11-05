@@ -26,7 +26,7 @@
 #include "arf.h"
 
 TLS_PREFIX mp_ptr __arf_add_tmp = NULL;
-TLS_PREFIX long __arf_add_alloc = 0;
+TLS_PREFIX slong __arf_add_alloc = 0;
 
 void _arf_add_tmp_cleanup(void)
 {
@@ -39,13 +39,13 @@ void _arf_add_tmp_cleanup(void)
 int
 _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit, const fmpz_t xexp,
                       mp_srcptr yp, mp_size_t yn, int ysgnbit, mp_bitcnt_t shift,
-                      long prec, arf_rnd_t rnd)
+                      slong prec, arf_rnd_t rnd)
 {
     mp_size_t wn, zn, zn_original, alloc, xbase, wbase;
     mp_size_t shift_limbs;
     mp_bitcnt_t shift_bits;
     int inexact;
-    long fix;
+    slong fix;
     mp_limb_t cy;
     mp_ptr tmp;
     ARF_ADD_TMP_DECL
@@ -107,7 +107,7 @@ _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit, const fmpz_t xexp
     if (xn <= 2 && yn <= 2 && shift <= 2 * FLINT_BITS)
     {
         mp_limb_t t[5], xtmp[4], ytmp[4], yhi, ylo;
-        long fix2;
+        slong fix2;
 
         xtmp[0] = 0;
         xtmp[1] = 0;

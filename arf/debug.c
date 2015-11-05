@@ -30,7 +30,7 @@ arf_debug(const arf_t x)
 {
     mp_srcptr d;
     mp_size_t n;
-    long i;
+    slong i;
 
     printf("{exp=");
     fmpz_print(&x->exp);

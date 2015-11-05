@@ -26,10 +26,10 @@
 #include "arf.h"
 
 int
-arf_root_naive(arf_t z, const arf_t x, ulong k, long prec, arf_rnd_t rnd)
+arf_root_naive(arf_t z, const arf_t x, ulong k, slong prec, arf_rnd_t rnd)
 {
     fmpr_t a;
-    long r;
+    slong r;
 
     fmpr_init(a);
 
@@ -46,7 +46,7 @@ arf_root_naive(arf_t z, const arf_t x, ulong k, long prec, arf_rnd_t rnd)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("root....");
@@ -57,7 +57,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         arf_t x, z, v;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         ulong k;
         arf_rnd_t rnd;
 

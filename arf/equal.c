@@ -55,7 +55,7 @@ arf_equal(const arf_t x, const arf_t y)
 }
 
 int
-arf_equal_si(const arf_t x, long y)
+arf_equal_si(const arf_t x, slong y)
 {
     arf_t t;
     arf_init_set_si(t, y);

@@ -29,12 +29,12 @@ long
 arf_get_si(const arf_t x, arf_rnd_t rnd)
 {
     fmpz_t t;
-    long v;
+    slong v;
     fmpz_init(t);
     arf_get_fmpz(t, x, rnd);
     if (!fmpz_fits_si(t))
     {
-        printf("arf_get_si: result does not fit in a signed long\n");
+        printf("arf_get_si: result does not fit in a signed slong\n");
         abort();
     }
     v = fmpz_get_si(t);

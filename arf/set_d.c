@@ -31,7 +31,7 @@ arf_set_d(arf_t x, double v)
 {
 #if FLINT_BITS == 64
     mp_limb_t h, sign, exp, frac;
-    long real_exp, real_man;
+    slong real_exp, real_man;
     union { double uf; mp_limb_t ul; } u;
 
     u.uf = v;
