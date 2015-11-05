@@ -28,7 +28,7 @@
 void
 acb_mat_neg(acb_mat_t dest, const acb_mat_t src)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < acb_mat_nrows(src); i++)
         for (j = 0; j < acb_mat_ncols(src); j++)

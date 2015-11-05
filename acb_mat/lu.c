@@ -26,11 +26,11 @@
 #include "acb_mat.h"
 
 int
-acb_mat_lu(long * P, acb_mat_t LU, const acb_mat_t A, long prec)
+acb_mat_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
 {
     acb_t d, e;
     acb_ptr * a;
-    long i, j, m, n, r, row, col;
+    slong i, j, m, n, r, row, col;
     int result;
 
     m = acb_mat_nrows(A);

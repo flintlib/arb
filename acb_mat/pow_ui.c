@@ -26,9 +26,9 @@
 #include "acb_mat.h"
 
 void
-acb_mat_pow_ui(acb_mat_t B, const acb_mat_t A, ulong exp, long prec)
+acb_mat_pow_ui(acb_mat_t B, const acb_mat_t A, ulong exp, slong prec)
 {
-    long d = acb_mat_nrows(A);
+    slong d = acb_mat_nrows(A);
 
     if (exp <= 2 || d <= 1)
     {
@@ -53,13 +53,13 @@ acb_mat_pow_ui(acb_mat_t B, const acb_mat_t A, ulong exp, long prec)
     else
     {
         acb_mat_t T, U;
-        long i;
+        slong i;
 
         acb_mat_init(T, d, d);
         acb_mat_set(T, A);
         acb_mat_init(U, d, d);
 
-        for (i = ((long) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
+        for (i = ((slong) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
         {
             acb_mat_mul(U, T, T, prec);   /* todo: sqr */
 

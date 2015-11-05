@@ -25,9 +25,9 @@
 
 #include "acb_mat.h"
 
-void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec)
+void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec)
 {
-    const long n = mat->r;
+    const slong n = mat->r;
 
     if (n == 0)
     {
@@ -40,7 +40,7 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec)
     }
     else
     {
-        long i, j, k, t;
+        slong i, j, k, t;
         acb_ptr a, A, s;
 
         a = _acb_vec_init(n * n);
@@ -94,7 +94,7 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec)
     }
 }
 
-void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, long prec)
+void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec)
 {
     if (mat->r != mat->c)
     {

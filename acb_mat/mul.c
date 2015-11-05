@@ -26,9 +26,9 @@
 #include "acb_mat.h"
 
 void
-acb_mat_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, long prec)
+acb_mat_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
 {
-    long ar, ac, br, bc, i, j, k;
+    slong ar, ac, br, bc, i, j, k;
 
     ar = acb_mat_nrows(A);
     ac = acb_mat_ncols(A);

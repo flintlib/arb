@@ -26,9 +26,9 @@
 #include "acb_mat.h"
 
 void
-acb_mat_printd(const acb_mat_t mat, long digits)
+acb_mat_printd(const acb_mat_t mat, slong digits)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < acb_mat_nrows(mat); i++)
     {

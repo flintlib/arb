@@ -26,9 +26,9 @@
 #include "acb_mat.h"
 
 void
-acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, long prec)
+acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, slong prec)
 {
-    long i, j;
+    slong i, j;
 
     if (acb_mat_ncols(dest) != 0)
     {

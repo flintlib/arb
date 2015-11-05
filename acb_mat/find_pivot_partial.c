@@ -45,9 +45,9 @@ acb_cmpabs_approx(const acb_t x, const acb_t y)
 
 long
 acb_mat_find_pivot_partial(const acb_mat_t mat,
-                                    long start_row, long end_row, long c)
+                                    slong start_row, slong end_row, slong c)
 {
-    long best_row, i;
+    slong best_row, i;
 
     best_row = -1;
 

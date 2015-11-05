@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("inv....");
@@ -39,7 +39,7 @@ int main()
     {
         fmpq_mat_t Q, Qinv;
         acb_mat_t A, Ainv;
-        long n, qbits, prec;
+        slong n, qbits, prec;
         int q_invertible, r_invertible, r_invertible2;
 
         n = n_randint(state, 8);

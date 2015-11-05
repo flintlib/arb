@@ -28,7 +28,7 @@
 void
 acb_mat_zero(acb_mat_t mat)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < acb_mat_nrows(mat); i++)
         for (j = 0; j < acb_mat_ncols(mat); j++)

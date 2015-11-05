@@ -38,7 +38,7 @@ int fmpq_mat_is_invertible(const fmpq_mat_t A)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("lu....");
@@ -50,7 +50,7 @@ int main()
     {
         fmpq_mat_t Q;
         acb_mat_t A, LU, P, L, U, T;
-        long i, j, n, qbits, prec, *perm;
+        slong i, j, n, qbits, prec, *perm;
         int q_invertible, r_invertible;
 
         n = n_randint(state, 8);
