@@ -27,7 +27,7 @@
 
 /* sin(x) */
 int
-sin_x(acb_ptr out, const acb_t inp, void * params, long order, long prec)
+sin_x(acb_ptr out, const acb_t inp, void * params, slong order, slong prec)
 {
     int xlen = FLINT_MIN(2, order);
 
@@ -48,7 +48,7 @@ static const double answers[10] = {
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cauchy_bound....");
@@ -60,7 +60,7 @@ int main()
     {
         arb_t b, radius, ans;
         acb_t x;
-        long r, prec, maxdepth;
+        slong r, prec, maxdepth;
 
         arb_init(b);
         arb_init(radius);

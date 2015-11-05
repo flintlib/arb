@@ -32,9 +32,9 @@ acb_calc_integrate_taylor(acb_t res,
     const acb_t a, const acb_t b,
     const arf_t inner_radius,
     const arf_t outer_radius,
-    long accuracy_goal, long prec)
+    slong accuracy_goal, slong prec)
 {
-    long num_steps, step, N, bp;
+    slong num_steps, step, N, bp;
     int result;
 
     acb_t delta, m, x, y1, y2, sum;
@@ -61,7 +61,7 @@ acb_calc_integrate_taylor(acb_t res,
         acb_get_abs_ubound_arf(t, delta, bp);
         arf_div(t, t, inner_radius, bp, ARF_RND_UP);
         arf_mul_2exp_si(t, t, -1);
-        num_steps = (long) (arf_get_d(t, ARF_RND_UP) + 1.0);
+        num_steps = (slong) (arf_get_d(t, ARF_RND_UP) + 1.0);
         /* make sure it's not something absurd */
         num_steps = FLINT_MIN(num_steps, 10 * prec);
         num_steps = FLINT_MAX(num_steps, 1);

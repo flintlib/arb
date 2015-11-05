@@ -27,7 +27,7 @@
 
 /* sin(x) */
 int
-sin_x(acb_ptr out, const acb_t inp, void * params, long order, long prec)
+sin_x(acb_ptr out, const acb_t inp, void * params, slong order, slong prec)
 {
     int xlen = FLINT_MIN(2, order);
 
@@ -41,7 +41,7 @@ sin_x(acb_ptr out, const acb_t inp, void * params, long order, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("integrate_taylor....");
@@ -54,7 +54,7 @@ int main()
         acb_t ans, res, a, b;
         arf_t inr, outr;
         double t;
-        long goal, prec;
+        slong goal, prec;
 
         acb_init(ans);
         acb_init(res);
