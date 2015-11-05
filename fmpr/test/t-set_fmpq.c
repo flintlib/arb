@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_fmpq....");
@@ -39,7 +39,7 @@ int main()
     /* test exact roundtrip R -> Q -> R */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res;
+        slong bits, res;
         fmpr_t x, z;
         fmpq_t y;
 

@@ -29,7 +29,7 @@
 #define MUL_TLS_ALLOC 1000
 
 TLS_PREFIX mp_ptr __mul_tmp = NULL;
-TLS_PREFIX long __mul_alloc = 0;
+TLS_PREFIX slong __mul_alloc = 0;
 
 void _mul_tmp_cleanup(void)
 {
@@ -69,9 +69,9 @@ long
 _fmpr_mul_mpn(fmpr_t z,
     mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
-    int negative, long prec, fmpr_rnd_t rnd)
+    int negative, slong prec, fmpr_rnd_t rnd)
 {
-    long zn, alloc, ret, shift;
+    slong zn, alloc, ret, shift;
     mp_limb_t tmp_stack[MUL_STACK_ALLOC];
     mp_ptr tmp;
 

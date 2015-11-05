@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 long
-fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv, yv;
 
@@ -66,7 +66,7 @@ fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long xn, yn;
+        slong xn, yn;
         int xsign, ysign;
         mp_limb_t xtmp, ytmp;
         mp_ptr xptr, yptr;

@@ -27,9 +27,9 @@
 
 static long
 fmpr_mul_fmpz_naive(fmpr_t z, const fmpr_t x, const fmpz_t y,
-    long prec, fmpr_rnd_t rnd)
+    slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_fmpz(t, y);
     r = fmpr_mul(z, x, t, prec, rnd);
@@ -39,7 +39,7 @@ fmpr_mul_fmpz_naive(fmpr_t z, const fmpr_t x, const fmpz_t y,
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("mul_fmpz....");
@@ -51,7 +51,7 @@ int main()
     {
         fmpr_t x, z, v;
         fmpz_t y;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);

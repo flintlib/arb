@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 void
-fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec)
+fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y) || fmpz_is_pm1(fmpr_manref(y)))
     {
@@ -36,7 +36,7 @@ fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec)
     else
     {
         fmpz_t t, u;
-        long xbits, ybits, tbits, ubits, shift;
+        slong xbits, ybits, tbits, ubits, shift;
 
         xbits = fmpz_bits(fmpr_manref(x));
         ybits = fmpz_bits(fmpr_manref(y));

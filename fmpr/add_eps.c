@@ -25,9 +25,9 @@
 
 #include "fmpr.h"
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)
+long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, slong prec, fmpr_rnd_t rnd)
 {
-    long bits, shift;
+    slong bits, shift;
     int xsign;
 
     xsign = fmpz_sgn(fmpr_manref(x));
@@ -52,7 +52,7 @@ long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd
     }
     else
     {
-        long ret = fmpr_set_round(z, x, prec, rnd);
+        slong ret = fmpr_set_round(z, x, prec, rnd);
 
         if (ret == FMPR_RESULT_EXACT)
             return prec - fmpz_bits(fmpr_manref(z));

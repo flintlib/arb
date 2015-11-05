@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 long
-fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
+fmpr_set_fmpq(fmpr_t x, const fmpq_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_one(fmpq_denref(y)))
     {
@@ -34,7 +34,7 @@ fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long res;
+        slong res;
 
         fmpr_t t, u;
         fmpr_init(t);

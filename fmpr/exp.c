@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 long
-fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+fmpr_exp(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -43,14 +43,14 @@ fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long r;
+        slong r;
         CALL_MPFR_FUNC(r, mpfr_exp, y, x, prec, rnd);
         return r;
     }
 }
 
 long
-fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+fmpr_expm1(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -67,7 +67,7 @@ fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long r;
+        slong r;
         CALL_MPFR_FUNC(r, mpfr_expm1, y, x, prec, rnd);
         return r;
     }

@@ -26,9 +26,9 @@
 #include "fmpr.h"
 
 long
-fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_fmpz(t, y);
     r = fmpr_add(z, x, t, prec, rnd);

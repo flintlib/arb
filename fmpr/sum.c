@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-int are_close(const fmpr_t x, const fmpr_t y, long prec)
+int are_close(const fmpr_t x, const fmpr_t y, slong prec)
 {
     fmpz_t xb, yb;
     fmpz_t delta;
@@ -54,10 +54,10 @@ int are_close(const fmpr_t x, const fmpr_t y, long prec)
 }
 
 long
-fmpr_sum(fmpr_t s, const fmpr_struct * terms, long len, long prec, fmpr_rnd_t rnd)
+fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_struct * blocks;
-    long i, j, used, res;
+    slong i, j, used, res;
     int have_merged;
 
     /* first check if the result is inf or nan */

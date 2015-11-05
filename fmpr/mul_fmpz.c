@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 long
-fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv, yv;
     fmpz yexp;
@@ -73,7 +73,7 @@ fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rn
     }
     else
     {
-        long xn, yn;
+        slong xn, yn;
         int xsign, ysign;
         mp_limb_t xtmp, ytmp;
         mp_ptr xptr, yptr;
@@ -92,11 +92,11 @@ fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rn
 }
 
 long
-fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+fmpr_mul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv;
     fmpz yexp;
-    long xn;
+    slong xn;
     int xsign, ysign;
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr;
@@ -152,11 +152,11 @@ fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
 
 
 long
-fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv;
     fmpz yexp;
-    long xn;
+    slong xn;
     int xsign;
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr;

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("mul....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         fmpr_t x, y, z, v;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);

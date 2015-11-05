@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_round_mpn....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 1000000; iter++)
     {
-        long prec, bits, shift, ret1, ret2;
+        slong prec, bits, shift, ret1, ret2;
         fmpz_t man, exp;
         fmpr_t y;
         mpz_t x;

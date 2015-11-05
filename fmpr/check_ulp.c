@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 int
-fmpr_check_ulp(const fmpr_t result, long r, long prec)
+fmpr_check_ulp(const fmpr_t result, slong r, slong prec)
 {
     if (r == FMPR_RESULT_EXACT)
     {

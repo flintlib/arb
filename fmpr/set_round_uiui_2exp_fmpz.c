@@ -28,7 +28,7 @@
 long
 fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
     mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative,
-    long prec, fmpr_rnd_t rnd)
+    slong prec, fmpr_rnd_t rnd)
 {
     if (hi == 0)
     {
@@ -37,7 +37,7 @@ fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
     else
     {
         /* 2 limbs */
-        long lead, trail, bc, shift, ret;
+        slong lead, trail, bc, shift, ret;
 
         if ((lo & 1) == 0)
         {

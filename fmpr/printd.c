@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 void
-fmpr_printd(const fmpr_t x, long digits)
+fmpr_printd(const fmpr_t x, slong digits)
 {
     mpfr_t t;
     mpfr_init2(t, digits * 3.33 + 10);

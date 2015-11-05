@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("get_fmpz....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         fmpr_t x;
         mpfr_t y;
         fmpz_t z, z2;

@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rsqrt....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res;
+        slong bits, res;
         fmpr_t x, z, w;
         mpfr_t X, Z;
 

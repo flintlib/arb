@@ -27,9 +27,9 @@
 #include "long_extras.h"
 
 static long
-fmpr_mul_si_naive(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+fmpr_mul_si_naive(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_si(t, y);
     r = fmpr_mul(z, x, t, prec, rnd);
@@ -39,7 +39,7 @@ fmpr_mul_si_naive(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("mul_si....");
@@ -50,8 +50,8 @@ int main()
     for (iter = 0; iter < 3000; iter++)
     {
         fmpr_t x, z, v;
-        long y;
-        long prec, r1, r2;
+        slong y;
+        slong prec, r1, r2;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);

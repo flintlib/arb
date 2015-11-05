@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("mul_naive....");
@@ -38,10 +38,10 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
-        long r;
+        slong r;
 
         bits = 2 + n_randint(state, 200);
 

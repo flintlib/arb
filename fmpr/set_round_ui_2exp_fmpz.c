@@ -28,9 +28,9 @@
 long
 fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
         mp_limb_t lo, const fmpz_t exp, int negative,
-        long prec, fmpr_rnd_t rnd)
+        slong prec, fmpr_rnd_t rnd)
 {
-    long lead, trail, bc, shift, shift2, ret;
+    slong lead, trail, bc, shift, shift2, ret;
 
     shift = 0;
 

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("abs_bound_lt_2exp_si....");
@@ -39,7 +39,7 @@ int main()
     {
         fmpr_t x;
         fmpz_t b;
-        long c;
+        slong c;
 
         fmpr_init(x);
         fmpz_init(b);

@@ -27,9 +27,9 @@
 
 long
 _fmpr_mul_1x1(fmpr_t z, mp_limb_t u, const fmpz_t xexp, mp_limb_t v,
-    const fmpz_t yexp, int negative, long prec, fmpr_rnd_t rnd)
+    const fmpz_t yexp, int negative, slong prec, fmpr_rnd_t rnd)
 {
-    long lead, trail, bc, shift, ret;
+    slong lead, trail, bc, shift, ret;
     mp_limb_t hi, lo;
 
     umul_ppmm(hi, lo, u, v);

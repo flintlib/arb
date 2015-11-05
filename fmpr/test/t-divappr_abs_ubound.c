@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("divappr_abs_ubound....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         fmpr_t a, b, c, d;
-        long prec;
+        slong prec;
 
         fmpr_init(a);
         fmpr_init(b);

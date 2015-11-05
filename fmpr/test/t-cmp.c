@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cmp....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         fmpr_t x, y;
         mpfr_t X, Y;
         int cmp1, cmp2;

@@ -29,9 +29,9 @@
 
 void
 fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
-    long prec, fmpr_rnd_t rnd)
+    slong prec, fmpr_rnd_t rnd)
 {
-    long i, wp, bits;
+    slong i, wp, bits;
 
     if (fmpz_is_zero(e))
     {
@@ -75,7 +75,7 @@ fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
 }
 
 void
-fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, long prec, fmpr_rnd_t rnd)
+fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, slong prec, fmpr_rnd_t rnd)
 {
     fmpz_t f;
     fmpz_init_set_ui(f, e);
@@ -84,7 +84,7 @@ fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, long prec, fmpr_rnd_t rnd)
 }
 
 void
-fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e, long prec, fmpr_rnd_t rnd)
+fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, slong e, slong prec, fmpr_rnd_t rnd)
 {
     fmpz_t f;
     fmpz_init(f);

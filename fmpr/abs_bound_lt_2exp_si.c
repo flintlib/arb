@@ -37,7 +37,7 @@ fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
     }
     else
     {
-        long res;
+        slong res;
         fmpz_t t;
         fmpz_init(t);
         fmpr_abs_bound_lt_2exp_fmpz(t, x);

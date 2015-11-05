@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("normalise....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 1000000; iter++)
     {
         fmpr_t x, xcopy, y, err_bound, err;
-        long prec, ret1, ret2, bits, ebits;
+        slong prec, ret1, ret2, bits, ebits;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);

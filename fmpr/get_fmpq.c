@@ -39,7 +39,7 @@ fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
     }
     else
     {
-        long exp = *fmpr_expref(x);
+        slong exp = *fmpr_expref(x);
 
         fmpz_set_ui(fmpq_denref(y), 1UL);
 

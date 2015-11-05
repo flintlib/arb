@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("ulp....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmpr_t x, ulp, a, b;
-        long prec;
+        slong prec;
 
         fmpr_init(x);
         fmpr_init(ulp);

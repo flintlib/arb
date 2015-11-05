@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("div....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, r1, r2;
+        slong bits, r1, r2;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
 

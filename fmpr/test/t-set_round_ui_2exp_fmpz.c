@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_round_ui_2exp_fmpz....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long prec, ret1, ret2;
+        slong prec, ret1, ret2;
         fmpz_t man, exp;
         fmpr_t x, y;
         mp_limb_t lo;

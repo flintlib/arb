@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sub....");
@@ -39,7 +39,7 @@ int main()
     /* test exact subtraction: (x - y) - z == (x - z) - y */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res1, res2, res3, res4;
+        slong bits, res1, res2, res3, res4;
         fmpr_t x, y, z, t, u;
 
         bits = 2 + n_randint(state, 200);
@@ -85,7 +85,7 @@ int main()
     /* compare rounding with mpfr */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res;
+        slong bits, res;
         int mpfr_res;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;

@@ -28,7 +28,7 @@
 void
 fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
 {
-    long exp;
+    slong exp;
 
     if (fmpr_is_special(x))
     {

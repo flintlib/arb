@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("root....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         ulong k;
         fmpr_t x, z, w;
         mpfr_t X, Z;
