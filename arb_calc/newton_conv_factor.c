@@ -27,7 +27,7 @@
 
 void arb_calc_newton_conv_factor(arf_t conv_factor,
     arb_calc_func_t func, void * param,
-    const arb_t conv_region, long prec)
+    const arb_t conv_region, slong prec)
 {
     arb_struct t[3];
 

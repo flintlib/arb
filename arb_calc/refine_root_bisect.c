@@ -40,7 +40,7 @@ _arb_sign(const arb_t t)
 }
 
 int arb_calc_partition(arf_interval_t L, arf_interval_t R,
-    arb_calc_func_t func, void * param, const arf_interval_t block, long prec)
+    arb_calc_func_t func, void * param, const arf_interval_t block, slong prec)
 {
     arb_t t, m;
     arf_t u;
@@ -73,10 +73,10 @@ int arb_calc_partition(arf_interval_t L, arf_interval_t R,
 }
 
 int arb_calc_refine_root_bisect(arf_interval_t r, arb_calc_func_t func,
-    void * param, const arf_interval_t start, long iter, long prec)
+    void * param, const arf_interval_t start, slong iter, slong prec)
 {
     int asign, bsign, msign, result;
-    long i;
+    slong i;
     arf_interval_t t, u;
     arb_t m, v;
 

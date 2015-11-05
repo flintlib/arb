@@ -27,7 +27,7 @@
 
 /* sin((pi/2)x) */
 static int
-sin_pi2_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_pi2_x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
 
@@ -48,7 +48,7 @@ sin_pi2_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("isolate_roots....");
@@ -58,7 +58,7 @@ int main()
 
     for (iter = 0; iter < 40; iter++)
     {
-        long m, r, a, b, maxdepth, maxeval, maxfound, prec, i, j, num;
+        slong m, r, a, b, maxdepth, maxeval, maxfound, prec, i, j, num;
         arf_interval_ptr blocks;
         int * info;
         arf_interval_t interval;

@@ -27,10 +27,10 @@
 
 int arb_calc_refine_root_newton(arb_t r, arb_calc_func_t func,
     void * param, const arb_t start, const arb_t conv_region,
-    const arf_t conv_factor, long eval_extra_prec, long prec)
+    const arf_t conv_factor, slong eval_extra_prec, slong prec)
 {
-    long precs[FLINT_BITS];
-    long i, iters, wp, padding, start_prec;
+    slong precs[FLINT_BITS];
+    slong i, iters, wp, padding, start_prec;
     int result;
 
     start_prec = arb_rel_accuracy_bits(start);
