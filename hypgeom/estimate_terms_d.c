@@ -40,7 +40,7 @@ static __inline__ double d_root(double x, int r)
 }
 
 long
-hypgeom_estimate_terms(const mag_t z, int r, long prec)
+hypgeom_estimate_terms(const mag_t z, int r, slong prec)
 {
     double y, t;
 

@@ -37,7 +37,7 @@ hypgeom_root_bound(const mag_t z, int r)
     else
     {
         fmpr_t t;
-        long v;
+        slong v;
         fmpr_init(t);
         mag_get_fmpr(t, z);
         fmpr_root(t, t, r, MAG_BITS, FMPR_RND_UP);
@@ -64,10 +64,10 @@ z^n *
 (K-B)! (K-A+m)! (K-2B+m)!
 */
 void
-hypgeom_term_bound(mag_t Tn, const mag_t TK, long K, long A, long B, int r, const mag_t z, long n)
+hypgeom_term_bound(mag_t Tn, const mag_t TK, slong K, slong A, slong B, int r, const mag_t z, slong n)
 {
     mag_t t, u, num;
-    long m;
+    slong m;
 
     mag_init(t);
     mag_init(u);
@@ -133,10 +133,10 @@ hypgeom_term_bound(mag_t Tn, const mag_t TK, long K, long A, long B, int r, cons
 
 long
 hypgeom_bound(mag_t error, int r,
-    long A, long B, long K, const mag_t TK, const mag_t z, long tol_2exp)
+    slong A, slong B, slong K, const mag_t TK, const mag_t z, slong tol_2exp)
 {
     mag_t Tn, t, u, one, tol, num, den;
-    long n, m;
+    slong n, m;
 
     mag_init(Tn);
     mag_init(t);

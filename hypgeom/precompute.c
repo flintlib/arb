@@ -74,7 +74,7 @@ fmpz_cdiv_abs_q(fmpz_t q, const fmpz_t x, const fmpz_t y)
 long
 hypgeom_root_norm(const fmpz_poly_t P)
 {
-    long res, i, p;
+    slong res, i, p;
     fmpz_t t, A;
 
     fmpz_init(A);
@@ -107,7 +107,7 @@ hypgeom_root_norm(const fmpz_poly_t P)
 
 
 static __inline__ void
-fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, long x)
+fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, slong x)
 {
     fmpz_set_si(y, x);
     fmpz_poly_evaluate_fmpz(y, poly, y);
@@ -116,7 +116,7 @@ fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, long x)
 void
 _hypgeom_precompute(hypgeom_t hyp, const fmpz_poly_t P, const fmpz_poly_t Q)
 {
-    long k;
+    slong k;
 
     fmpz_t t;
     fmpz_init(t);
