@@ -72,7 +72,7 @@ partitions_remainder_bound_log2(double n, double N)
 long
 partitions_hrr_needed_terms(double n)
 {
-    long N;
+    slong N;
     for (N = 1; partitions_remainder_bound_log2(n, N) > 10; N++);
     for ( ; partitions_remainder_bound(n, N) > 0.4; N++);
     return N;
@@ -111,13 +111,13 @@ log2_ceil(double x)
 {
     /* ceil(log2(n)) = bitcount(n-1);
        this is too large if x is a power of two */
-    return FLINT_BIT_COUNT((long) x);
+    return FLINT_BIT_COUNT((slong) x);
 }
 
 static long
-partitions_prec_bound(double n, long k, long N)
+partitions_prec_bound(double n, slong k, slong N)
 {
-    long prec;
+    slong prec;
 
     prec = partitions_term_bound(n, k);
     prec += log2_ceil(8 * N * (26 * (sqrt(n) / k) + 7 * bound_primes(k) + 22));
@@ -171,7 +171,7 @@ eval_trig_prod_d(trig_prod_t prod)
 }
 
 static void
-eval_trig_prod(arb_t sum, trig_prod_t prod, long prec)
+eval_trig_prod(arb_t sum, trig_prod_t prod, slong prec)
 {
     int i;
     mp_limb_t v;
@@ -216,7 +216,7 @@ eval_trig_prod(arb_t sum, trig_prod_t prod, long prec)
 }
 
 static void
-sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, long k, long prec)
+sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, slong k, slong prec)
 {
     arb_t t;
     arb_init(t);
@@ -234,12 +234,12 @@ sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, long k, long prec)
 
 
 void
-partitions_hrr_sum_arb(arb_t x, const fmpz_t n, long N0, long N, int use_doubles)
+partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles)
 {
     trig_prod_t prod;
     arb_t acc, C, t1, t2, t3, t4, exp1;
     fmpz_t n24;
-    long k, prec, res_prec, acc_prec, guard_bits;
+    slong k, prec, res_prec, acc_prec, guard_bits;
     double nd, Cd;
 
     if (fmpz_cmp_ui(n, 2) <= 0)

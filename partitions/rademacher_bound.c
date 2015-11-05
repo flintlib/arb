@@ -26,7 +26,7 @@
 #include "partitions.h"
 
 static void
-_arf_sinh(arf_t y, const arf_t x, long prec)
+_arf_sinh(arf_t y, const arf_t x, slong prec)
 {
     arb_t t;
     arb_init(t);

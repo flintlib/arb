@@ -102,7 +102,7 @@ static const ulong testdata[][2] =
 int main(void)
 {
     flint_rand_t state;
-    long i;
+    slong i;
 
     printf("partitions_fmpz_ui....");
     fflush(stdout);
