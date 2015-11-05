@@ -27,7 +27,7 @@
 #include "acb_poly.h"
 
 void
-_arb_const_zeta_minus_one_eval(arb_t y, long prec)
+_arb_const_zeta_minus_one_eval(arb_t y, slong prec)
 {
     acb_struct z[2];
     acb_t s, a;
@@ -51,7 +51,7 @@ ARB_DEF_CACHED_CONSTANT(_arb_const_zeta_minus_one, _arb_const_zeta_minus_one_eva
    LogG'(z) = (1/2)(-2z + 1 + log(2pi)) + (z-1) digamma(z) */
 
 void
-_acb_log_barnes_g_zeta(acb_t res, const acb_t z, long prec)
+_acb_log_barnes_g_zeta(acb_t res, const acb_t z, slong prec)
 {
     acb_struct t[3];
     acb_init(t + 0);
@@ -77,7 +77,7 @@ _acb_log_barnes_g_zeta(acb_t res, const acb_t z, long prec)
 }
 
 void
-_acb_barnes_g_ui_rec(acb_t res, ulong n, long prec)
+_acb_barnes_g_ui_rec(acb_t res, ulong n, slong prec)
 {
     acb_t t;
     ulong k;
@@ -97,7 +97,7 @@ _acb_barnes_g_ui_rec(acb_t res, ulong n, long prec)
 }
 
 void
-acb_log_barnes_g(acb_t res, const acb_t z, long prec)
+acb_log_barnes_g(acb_t res, const acb_t z, slong prec)
 {
     if (acb_is_int(z))
     {
@@ -120,7 +120,7 @@ acb_log_barnes_g(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_barnes_g(acb_t res, const acb_t z, long prec)
+acb_barnes_g(acb_t res, const acb_t z, slong prec)
 {
     if (acb_is_int(z))
     {

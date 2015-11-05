@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_acos(acb_t res, const acb_t z, long prec)
+acb_acos(acb_t res, const acb_t z, slong prec)
 {
     if (acb_is_one(z))
     {

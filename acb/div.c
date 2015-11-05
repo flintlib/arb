@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_div(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_div(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
 #define a acb_realref(x)
 #define b acb_imagref(x)

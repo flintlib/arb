@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_chebyshev_t_ui(acb_t y, ulong n, const acb_t x, long prec)
+acb_chebyshev_t_ui(acb_t y, ulong n, const acb_t x, slong prec)
 {
     int i, r;
 

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("log_sin_pi....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t s, s1, r, r1, t;
-        long prec;
+        slong prec;
 
         acb_init(s);
         acb_init(s1);

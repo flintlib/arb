@@ -25,7 +25,7 @@
 
 #include "acb.h"
 
-void mag_add_ui_2exp_si(mag_t, const mag_t, ulong, long);
+void mag_add_ui_2exp_si(mag_t, const mag_t, ulong, slong);
 
 static void
 acb_rising_get_mag2_right(mag_t bound, const arb_t a, const arb_t b, ulong n)
@@ -83,7 +83,7 @@ acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n)
     else
     {
         arb_t a;
-        long k;
+        slong k;
         mag_t bound2, t, u;
 
         arb_init(a);

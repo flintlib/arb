@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_mul_naive(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_mul_naive(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
 #define a acb_realref(x)
 #define b acb_imagref(x)

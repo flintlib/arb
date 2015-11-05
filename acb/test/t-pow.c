@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pow....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 20000; iter++)
     {
         acb_t a, b, c, d, e, f;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;

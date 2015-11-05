@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_submul(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_submul(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     if (arb_is_zero(acb_imagref(y)))
     {

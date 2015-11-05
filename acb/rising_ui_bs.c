@@ -27,7 +27,7 @@
 
 /* assumes y and x are not aliased */
 static void
-bsplit(acb_t y, const acb_t x, ulong a, ulong b, long prec)
+bsplit(acb_t y, const acb_t x, ulong a, ulong b, slong prec)
 {
     if (b - a == 1)
     {
@@ -35,7 +35,7 @@ bsplit(acb_t y, const acb_t x, ulong a, ulong b, long prec)
     }
     else if (b - a <= 10)
     {
-        long i;
+        slong i;
         acb_t t;
         acb_init(t);
 
@@ -70,7 +70,7 @@ bsplit(acb_t y, const acb_t x, ulong a, ulong b, long prec)
 }
 
 void
-acb_rising_ui_bs(acb_t y, const acb_t x, ulong n, long prec)
+acb_rising_ui_bs(acb_t y, const acb_t x, ulong n, slong prec)
 {
     if (n == 0)
     {
@@ -83,7 +83,7 @@ acb_rising_ui_bs(acb_t y, const acb_t x, ulong n, long prec)
     else
     {
         acb_t t;
-        long wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+        slong wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 
         acb_init(t);
         bsplit(t, x, 0, n, wp);

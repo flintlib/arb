@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("sinh_cosh....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t a, b, c, d, cosa, sina, cosb, sinb;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -88,7 +88,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t a, b, c, d, cosa, sina, cosb, sinb;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);

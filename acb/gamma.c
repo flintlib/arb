@@ -27,21 +27,21 @@
 #include "acb.h"
 
 void
-acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t z, int use_reflect, int digamma, long prec);
+acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t z, int use_reflect, int digamma, slong prec);
 
-void acb_gamma_stirling_bound(mag_ptr err, const acb_t z, long k0, long knum, long n);
+void acb_gamma_stirling_bound(mag_ptr err, const acb_t z, slong k0, slong knum, slong n);
 
-void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec);
+void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec);
 
 void
-acb_gamma_stirling_eval(acb_t s, const acb_t z, long nterms, int digamma, long prec)
+acb_gamma_stirling_eval(acb_t s, const acb_t z, slong nterms, int digamma, slong prec)
 {
     acb_t t, logz, zinv, zinv2;
     arb_t b;
     mag_t err;
 
-    long k, term_prec;
+    slong k, term_prec;
     double z_mag, term_mag;
 
     acb_init(t);
@@ -125,10 +125,10 @@ acb_gamma_stirling_eval(acb_t s, const acb_t z, long nterms, int digamma, long p
 }
 
 static void
-_acb_gamma(acb_t y, const acb_t x, long prec, int inverse)
+_acb_gamma(acb_t y, const acb_t x, slong prec, int inverse)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     acb_t t, u, v;
 
     wp = prec + FLINT_BIT_COUNT(prec);
@@ -173,7 +173,7 @@ _acb_gamma(acb_t y, const acb_t x, long prec, int inverse)
 }
 
 void
-acb_gamma(acb_t y, const acb_t x, long prec)
+acb_gamma(acb_t y, const acb_t x, slong prec)
 {
     if (acb_is_real(x))
     {
@@ -186,7 +186,7 @@ acb_gamma(acb_t y, const acb_t x, long prec)
 }
 
 void
-acb_rgamma(acb_t y, const acb_t x, long prec)
+acb_rgamma(acb_t y, const acb_t x, slong prec)
 {
     if (acb_is_real(x))
     {
@@ -202,12 +202,12 @@ acb_rgamma(acb_t y, const acb_t x, long prec)
    logarithm of the product */
 void
 _acb_log_rising_correct_branch(acb_t t,
-        const acb_t t_wrong, const acb_t z, ulong r, long prec)
+        const acb_t t_wrong, const acb_t z, ulong r, slong prec)
 {
     acb_t f;
     arb_t pi, u, v;
     fmpz_t pi_mult;
-    long i, argprec;
+    slong i, argprec;
 
     acb_init(f);
 
@@ -266,10 +266,10 @@ _acb_log_rising_correct_branch(acb_t t,
 }
 
 void
-acb_lgamma(acb_t y, const acb_t x, long prec)
+acb_lgamma(acb_t y, const acb_t x, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     acb_t t, u, v;
 
     if (acb_is_real(x) && arb_is_positive(acb_realref(x)))

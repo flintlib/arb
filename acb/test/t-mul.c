@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
     printf("mul....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         acb_t a, b, c;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -72,7 +72,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         acb_t a, b, c;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -105,7 +105,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         acb_t a, b, c, d;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -142,7 +142,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         acb_t a, b, c;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -219,7 +219,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t x, y, z, v;
-        long prec;
+        slong prec;
 
         acb_init(x);
         acb_init(y);

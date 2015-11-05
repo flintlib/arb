@@ -27,7 +27,7 @@
 #include "acb_poly.h"
 
 void
-acb_polylog(acb_t w, const acb_t s, const acb_t z, long prec)
+acb_polylog(acb_t w, const acb_t s, const acb_t z, slong prec)
 {
     acb_t t;
     acb_init(t);
@@ -37,7 +37,7 @@ acb_polylog(acb_t w, const acb_t s, const acb_t z, long prec)
 }
 
 void
-acb_polylog_si(acb_t w, long s, const acb_t z, long prec)
+acb_polylog_si(acb_t w, slong s, const acb_t z, slong prec)
 {
     acb_t t;
     acb_init(t);

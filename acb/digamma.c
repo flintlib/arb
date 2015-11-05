@@ -25,16 +25,16 @@
 
 #include "acb.h"
 
-void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t x, int use_reflect, int digamma, long prec);
+void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t x, int use_reflect, int digamma, slong prec);
 
-void acb_gamma_stirling_eval(acb_t s, const acb_t z, long nterms, int digamma, long prec);
+void acb_gamma_stirling_eval(acb_t s, const acb_t z, slong nterms, int digamma, slong prec);
 
 void
-acb_digamma(acb_t y, const acb_t x, long prec)
+acb_digamma(acb_t y, const acb_t x, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     acb_t t, u, v;
 
     if (acb_is_real(x))

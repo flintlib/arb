@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_exp_invexp(acb_t r, acb_t s, const acb_t z, long prec)
+acb_exp_invexp(acb_t r, acb_t s, const acb_t z, slong prec)
 {
 #define a acb_realref(z)
 #define b acb_imagref(z)

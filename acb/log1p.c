@@ -26,7 +26,7 @@
 #include "acb.h"
 
 static void
-acb_log1p_tiny(acb_t r, const acb_t z, long prec)
+acb_log1p_tiny(acb_t r, const acb_t z, slong prec)
 {
     mag_t b, c;
     acb_t t;
@@ -60,9 +60,9 @@ acb_log1p_tiny(acb_t r, const acb_t z, long prec)
 }
 
 void
-acb_log1p(acb_t r, const acb_t z, long prec)
+acb_log1p(acb_t r, const acb_t z, slong prec)
 {
-    long magz, magx, magy;
+    slong magz, magx, magy;
 
     if (acb_is_zero(z))
     {

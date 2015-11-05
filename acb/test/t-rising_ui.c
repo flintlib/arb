@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rising_ui....");
@@ -80,7 +80,7 @@ int main()
     {
         acb_t x, y;
         ulong n;
-        long prec;
+        slong prec;
 
         acb_init(x);
         acb_init(y);

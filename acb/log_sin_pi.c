@@ -26,7 +26,7 @@
 #include "acb.h"
 
 static void
-acb_log_sin_pi_half(acb_t res, const acb_t z, long prec, int upper)
+acb_log_sin_pi_half(acb_t res, const acb_t z, slong prec, int upper)
 {
     acb_t t, u, zmid;
     arf_t n;
@@ -113,7 +113,7 @@ acb_log_sin_pi_half(acb_t res, const acb_t z, long prec, int upper)
 }
 
 void
-acb_log_sin_pi(acb_t res, const acb_t z, long prec)
+acb_log_sin_pi(acb_t res, const acb_t z, slong prec)
 {
     if (!acb_is_finite(z))
     {

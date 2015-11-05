@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, long prec)
+acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
 {
     if (prec < 256 || n < 8 || acb_bits(x) < prec / 8)
         acb_rising2_ui_bs(u, v, x, n, prec);

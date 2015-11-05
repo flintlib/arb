@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("barnes_g....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t a, b, c, d;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 200);
         prec2 = prec1 + 30;

@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_printd(const acb_t z, long digits)
+acb_printd(const acb_t z, slong digits)
 {
     printf("(");
     arf_printd(arb_midref(acb_realref(z)), digits);

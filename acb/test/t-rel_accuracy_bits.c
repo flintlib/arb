@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rel_accuracy_bits....");
@@ -40,7 +40,7 @@ int main()
     {
         arb_t x;
         acb_t z;
-        long a1, a2;
+        slong a1, a2;
 
         arb_init(x);
         acb_init(z);

@@ -35,7 +35,7 @@ static const char *testdata[5] = {
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("polygamma....");
@@ -46,7 +46,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t a, s, b, c;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 500);
         prec2 = prec1 + 30;
@@ -58,7 +58,7 @@ int main()
 
         if (iter < 200)
         {
-            long i = n_randint(state, 5);
+            slong i = n_randint(state, 5);
 
             acb_set_si(s, -2 + i);
             acb_one(a);
