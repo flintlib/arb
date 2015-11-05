@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_fit_length(arb_poly_t poly, long len)
+arb_poly_fit_length(arb_poly_t poly, slong len)
 {
-    long i;
+    slong i;
 
     if (len > poly->alloc)
     {

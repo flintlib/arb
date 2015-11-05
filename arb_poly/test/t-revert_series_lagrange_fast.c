@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("revert_series_lagrange_fast....");
@@ -38,7 +38,7 @@ int main()
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long qbits1, rbits1, rbits2, n;
+        slong qbits1, rbits1, rbits2, n;
         fmpq_poly_t A, B;
         arb_poly_t a, b, c;
 

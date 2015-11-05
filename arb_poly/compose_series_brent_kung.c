@@ -28,12 +28,12 @@
 
 void
 _arb_poly_compose_series_brent_kung(arb_ptr res,
-    arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long n, long prec)
+    arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong n, slong prec)
 {
     arb_mat_t A, B, C;
     arb_ptr t, h;
-    long i, m;
+    slong i, m;
 
     if (n == 1)
     {
@@ -84,11 +84,11 @@ _arb_poly_compose_series_brent_kung(arb_ptr res,
 void
 arb_poly_compose_series_brent_kung(arb_poly_t res,
                     const arb_poly_t poly1,
-                    const arb_poly_t poly2, long n, long prec)
+                    const arb_poly_t poly2, slong n, slong prec)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
-    long lenr;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
+    slong lenr;
 
     if (len2 != 0 && !arb_is_zero(poly2->coeffs))
     {

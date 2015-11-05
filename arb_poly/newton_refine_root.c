@@ -25,22 +25,22 @@
 
 #include "arb_poly.h"
 
-static __inline__ long _arf_mag(const arf_t c)
+static __inline__ slong _arf_mag(const arf_t c)
 {
-    long m = arf_abs_bound_lt_2exp_si(c);
+    slong m = arf_abs_bound_lt_2exp_si(c);
     return FLINT_MAX(m, 0);
 }
 
 void
-_arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, long len,
+_arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, slong len,
     const arb_t start,
     const arb_t convergence_interval,
     const arf_t convergence_factor,
-    long eval_extra_prec,
-    long prec)
+    slong eval_extra_prec,
+    slong prec)
 {
-    long precs[FLINT_BITS];
-    long i, iters, wp, padding, start_prec;
+    slong precs[FLINT_BITS];
+    slong i, iters, wp, padding, start_prec;
 
     start_prec = arb_rel_accuracy_bits(start);
 

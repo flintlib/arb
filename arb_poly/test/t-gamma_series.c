@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("gamma_series....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 2000; iter++)
     {
-        long m, n1, n2, qbits, rbits1, rbits2, rbits3;
+        slong m, n1, n2, qbits, rbits1, rbits2, rbits3;
         fmpq_poly_t A;
         arb_poly_t a, b, c, d;
 

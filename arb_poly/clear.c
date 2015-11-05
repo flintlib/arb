@@ -28,7 +28,7 @@
 void
 arb_poly_clear(arb_poly_t poly)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < poly->alloc; i++)
         arb_clear(poly->coeffs + i);

@@ -26,16 +26,16 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_pow_ui(arb_ptr res, arb_srcptr f, long flen, ulong exp, long prec)
+_arb_poly_pow_ui(arb_ptr res, arb_srcptr f, slong flen, ulong exp, slong prec)
 {
     _arb_poly_pow_ui_trunc_binexp(res, f, flen, exp, exp * (flen - 1) + 1, prec);
 }
 
 void
 arb_poly_pow_ui(arb_poly_t res,
-    const arb_poly_t poly, ulong exp, long prec)
+    const arb_poly_t poly, ulong exp, slong prec)
 {
-    long flen, rlen;
+    slong flen, rlen;
 
     flen = poly->length;
 

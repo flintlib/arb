@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-arb_poly_set_coeff_arb(arb_poly_t poly, long n, const arb_t x)
+arb_poly_set_coeff_arb(arb_poly_t poly, slong n, const arb_t x)
 {
     arb_poly_fit_length(poly, n + 1);
 

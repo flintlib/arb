@@ -26,11 +26,11 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_evaluate2(arb_t y, arb_t z, arb_srcptr f, long len, const arb_t x, long prec)
+_arb_poly_evaluate2(arb_t y, arb_t z, arb_srcptr f, slong len, const arb_t x, slong prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
-        long fbits;
+        slong fbits;
 
         fbits = _arb_vec_bits(f, len);
 
@@ -45,7 +45,7 @@ _arb_poly_evaluate2(arb_t y, arb_t z, arb_srcptr f, long len, const arb_t x, lon
 }
 
 void
-arb_poly_evaluate2(arb_t r, arb_t s, const arb_poly_t f, const arb_t a, long prec)
+arb_poly_evaluate2(arb_t r, arb_t s, const arb_poly_t f, const arb_t a, slong prec)
 {
     _arb_poly_evaluate2(r, s, f->coeffs, f->length, a, prec);
 }

@@ -27,7 +27,7 @@
 
 void
 _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c,
-        const arb_srcptr h, long hlen, long len, long prec, int times_pi)
+        const arb_srcptr h, slong hlen, slong len, slong prec, int times_pi)
 {
     arb_ptr t, u, v;
     arb_t s0, c0;
@@ -109,9 +109,9 @@ _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c,
 
 void
 arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c,
-                                    const arb_poly_t h, long n, long prec, int times_pi)
+                                    const arb_poly_t h, slong n, slong prec, int times_pi)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

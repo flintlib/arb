@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_majorant(arb_ptr res, arb_srcptr vec, long len, long prec)
+_arb_poly_majorant(arb_ptr res, arb_srcptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len; i++)
     {
@@ -38,7 +38,7 @@ _arb_poly_majorant(arb_ptr res, arb_srcptr vec, long len, long prec)
 }
 
 void
-arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, long prec)
+arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, slong prec)
 {
     arb_poly_fit_length(res, poly->length);
     _arb_poly_majorant(res->coeffs, poly->coeffs, poly->length, prec);

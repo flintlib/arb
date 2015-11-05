@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, long prec)
+arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, slong prec)
 {
-    long len = arb_poly_length(src);
+    slong len = arb_poly_length(src);
 
     arb_poly_fit_length(dest, len);
     _arb_vec_set_round(dest->coeffs, src->coeffs, len, prec);

@@ -27,8 +27,8 @@
 
 void
 _arb_poly_pow_series(arb_ptr h,
-    arb_srcptr f, long flen,
-    arb_srcptr g, long glen, long len, long prec)
+    arb_srcptr f, slong flen,
+    arb_srcptr g, slong glen, slong len, slong prec)
 {
     if (glen == 1)
     {
@@ -60,9 +60,9 @@ _arb_poly_pow_series(arb_ptr h,
 
 void
 arb_poly_pow_series(arb_poly_t h,
-    const arb_poly_t f, const arb_poly_t g, long len, long prec)
+    const arb_poly_t f, const arb_poly_t g, slong len, slong prec)
 {
-    long flen, glen;
+    slong flen, glen;
 
     flen = f->length;
     glen = g->length;

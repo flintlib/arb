@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("root_bound_fujiwara....");
@@ -41,7 +41,7 @@ int main()
         arb_ptr roots;
         arb_t t;
         mag_t mag1, mag2;
-        long i, deg, prec;
+        slong i, deg, prec;
 
         prec = 10 + n_randint(state, 400);
         deg = n_randint(state, 10);

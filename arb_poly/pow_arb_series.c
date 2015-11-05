@@ -27,9 +27,9 @@
 
 /* (a + bx^c)^g where a = f[0] and b = f[flen-1] */
 void
-_arb_poly_binomial_pow_arb_series(arb_ptr h, arb_srcptr f, long flen, const arb_t g, long len, long prec)
+_arb_poly_binomial_pow_arb_series(arb_ptr h, arb_srcptr f, slong flen, const arb_t g, slong len, slong prec)
 {
-    long i, j, d;
+    slong i, j, d;
     arb_t t;
 
     arb_init(t);
@@ -59,7 +59,7 @@ _arb_poly_binomial_pow_arb_series(arb_ptr h, arb_srcptr f, long flen, const arb_
 
 void
 _arb_poly_pow_arb_series(arb_ptr h,
-    arb_srcptr f, long flen, const arb_t g, long len, long prec)
+    arb_srcptr f, slong flen, const arb_t g, slong len, slong prec)
 {
     int f_binomial, g_exact, g_int;
 
@@ -81,7 +81,7 @@ _arb_poly_pow_arb_series(arb_ptr h,
     if (g_exact && g_int &&
             arf_cmpabs_2exp_si(arb_midref(g), FLINT_BITS - 1) < 0)
     {
-        long e, hlen;
+        slong e, hlen;
 
         e = arf_get_si(arb_midref(g), ARF_RND_DOWN);
         hlen = poly_pow_length(flen, FLINT_ABS(e), len);
@@ -131,9 +131,9 @@ _arb_poly_pow_arb_series(arb_ptr h,
 
 void
 arb_poly_pow_arb_series(arb_poly_t h,
-    const arb_poly_t f, const arb_t g, long len, long prec)
+    const arb_poly_t f, const arb_t g, slong len, slong prec)
 {
-    long flen;
+    slong flen;
 
     flen = f->length;
     flen = FLINT_MIN(flen, len);

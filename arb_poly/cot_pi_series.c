@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_cot_pi_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_cot_pi_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec)
 {
     hlen = FLINT_MIN(hlen, len);
 
@@ -51,7 +51,7 @@ _arb_poly_cot_pi_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
 }
 
 void
-arb_poly_cot_pi_series(arb_poly_t res, const arb_poly_t f, long len, long prec)
+arb_poly_cot_pi_series(arb_poly_t res, const arb_poly_t f, slong len, slong prec)
 {
     arb_poly_fit_length(res, len);
 

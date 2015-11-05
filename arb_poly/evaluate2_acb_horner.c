@@ -27,7 +27,7 @@
 
 void
 _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z,
-    arb_srcptr poly, long len, const acb_t x, long prec)
+    arb_srcptr poly, slong len, const acb_t x, slong prec)
 {
     if (len == 0)
     {
@@ -53,7 +53,7 @@ _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z,
     else
     {
         acb_t t, u, v;
-        long i;
+        slong i;
 
         acb_init(t);
         acb_init(u);
@@ -80,7 +80,7 @@ _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z,
 }
 
 void
-arb_poly_evaluate2_acb_horner(acb_t r, acb_t s, const arb_poly_t f, const acb_t a, long prec)
+arb_poly_evaluate2_acb_horner(acb_t r, acb_t s, const arb_poly_t f, const acb_t a, slong prec)
 {
     _arb_poly_evaluate2_acb_horner(r, s, f->coeffs, f->length, a, prec);
 }

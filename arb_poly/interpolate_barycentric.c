@@ -27,11 +27,11 @@
 
 void
 _arb_poly_interpolate_barycentric(arb_ptr poly,
-    arb_srcptr xs, arb_srcptr ys, long n, long prec)
+    arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 {
     arb_ptr P, Q, w;
     arb_t t;
-    long i, j;
+    slong i, j;
 
     if (n == 1)
     {
@@ -79,7 +79,7 @@ _arb_poly_interpolate_barycentric(arb_ptr poly,
 
 void
 arb_poly_interpolate_barycentric(arb_poly_t poly,
-    arb_srcptr xs, arb_srcptr ys, long n, long prec)
+    arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

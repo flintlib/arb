@@ -27,8 +27,8 @@
 
 void
 _arb_poly_newton_convergence_factor(arf_t convergence_factor,
-    arb_srcptr poly, long len,
-    const arb_t convergence_interval, long prec)
+    arb_srcptr poly, slong len,
+    const arb_t convergence_interval, slong prec)
 {
     arb_ptr deriv;
     arb_t t, u;

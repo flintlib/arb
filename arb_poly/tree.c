@@ -25,13 +25,13 @@
 
 #include "arb_poly.h"
 
-arb_ptr * _arb_poly_tree_alloc(long len)
+arb_ptr * _arb_poly_tree_alloc(slong len)
 {
     arb_ptr * tree = NULL;
 
     if (len)
     {
-        long i, height = FLINT_CLOG2(len);
+        slong i, height = FLINT_CLOG2(len);
 
         tree = flint_malloc(sizeof(arb_ptr) * (height + 1));
         for (i = 0; i <= height; i++)
@@ -41,11 +41,11 @@ arb_ptr * _arb_poly_tree_alloc(long len)
     return tree;
 }
 
-void _arb_poly_tree_free(arb_ptr * tree, long len)
+void _arb_poly_tree_free(arb_ptr * tree, slong len)
 {
     if (len)
     {
-        long i, height = FLINT_CLOG2(len);
+        slong i, height = FLINT_CLOG2(len);
 
         for (i = 0; i <= height; i++)
             _arb_vec_clear(tree[i], len + (len >> i) + 1);
@@ -55,9 +55,9 @@ void _arb_poly_tree_free(arb_ptr * tree, long len)
 }
 
 void
-_arb_poly_tree_build(arb_ptr * tree, arb_srcptr roots, long len, long prec)
+_arb_poly_tree_build(arb_ptr * tree, arb_srcptr roots, slong len, slong prec)
 {
-    long height, pow, left, i;
+    slong height, pow, left, i;
     arb_ptr pa, pb;
     arb_srcptr a, b;
 

@@ -26,8 +26,8 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, long len1,
-                            arb_srcptr poly2, long len2, long n, long prec)
+_arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, slong len1,
+                            arb_srcptr poly2, slong len2, slong n, slong prec)
 {
     if (len2 == 1)
     {
@@ -36,7 +36,7 @@ _arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, long len1,
     }
     else if (_arb_vec_is_zero(poly2 + 1, len2 - 2))  /* poly2 is a monomial */
     {
-        long i, j;
+        slong i, j;
         arb_t t;
 
         arb_init(t);
@@ -71,11 +71,11 @@ _arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, long len1,
 void
 arb_poly_compose_series(arb_poly_t res,
                     const arb_poly_t poly1,
-                    const arb_poly_t poly2, long n, long prec)
+                    const arb_poly_t poly2, slong n, slong prec)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
-    long lenr;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
+    slong lenr;
 
     if (len2 != 0 && !arb_is_zero(poly2->coeffs))
     {

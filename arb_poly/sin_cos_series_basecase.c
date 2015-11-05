@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen,
-        long n, long prec, int times_pi)
+_arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen,
+        slong n, slong prec, int times_pi)
 {
-    long j, k, alen = FLINT_MIN(n, hlen);
+    slong j, k, alen = FLINT_MIN(n, hlen);
     arb_ptr a;
     arb_t t, u;
 
@@ -80,9 +80,9 @@ _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen,
 
 void
 arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c,
-        const arb_poly_t h, long n, long prec, int times_pi)
+        const arb_poly_t h, slong n, slong prec, int times_pi)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

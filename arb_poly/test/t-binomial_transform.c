@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("binomial_transform....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 5000; iter++)
     {
         arb_poly_t a, b, c, d;
-        long j, n, prec;
+        slong j, n, prec;
 
         arb_poly_init(a);
         arb_poly_init(b);

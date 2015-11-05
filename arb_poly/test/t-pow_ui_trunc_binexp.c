@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pow_ui_trunc_binexp....");
@@ -38,7 +38,7 @@ int main()
     /* compare with fmpz_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long zbits1, rbits1, rbits2, trunc;
+        slong zbits1, rbits1, rbits2, trunc;
         ulong e;
         fmpz_poly_t A, B;
         arb_poly_t a, b;

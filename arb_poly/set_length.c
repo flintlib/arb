@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_set_length(arb_poly_t poly, long len)
+_arb_poly_set_length(arb_poly_t poly, slong len)
 {
-    long i;
+    slong i;
 
     if (poly->length > len)
     {

@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 int
-_arb_poly_overlaps(arb_srcptr poly1, long len1,
-        arb_srcptr poly2, long len2)
+_arb_poly_overlaps(arb_srcptr poly1, slong len1,
+        arb_srcptr poly2, slong len2)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len2; i++)
         if (!arb_overlaps(poly1 + i, poly2 + i))
@@ -45,8 +45,8 @@ _arb_poly_overlaps(arb_srcptr poly1, long len1,
 int
 arb_poly_overlaps(const arb_poly_t poly1, const arb_poly_t poly2)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
 
     if (len1 >= len2)
         return _arb_poly_overlaps(poly1->coeffs, len1, poly2->coeffs, len2);

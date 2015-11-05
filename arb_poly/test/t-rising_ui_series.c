@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("rising_ui_series....");
@@ -39,7 +39,7 @@ int main()
     /* check rf(f, a) * rf(f + a, b) = rf(f, a + b) */
     for (iter = 0; iter < 1000; iter++)
     {
-        long bits, trunc;
+        slong bits, trunc;
         ulong a, b;
         arb_poly_t f, g, h1, h2, h1h2, h3;
 

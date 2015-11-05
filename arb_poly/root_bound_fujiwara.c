@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, long len)
+_arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, slong len)
 {
     mag_t t, u, v;
-    long i;
+    slong i;
 
     if (len <= 1)
     {

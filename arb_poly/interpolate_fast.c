@@ -27,10 +27,10 @@
 
 void
 _arb_poly_interpolation_weights(arb_ptr w,
-    arb_ptr * tree, long len, long prec)
+    arb_ptr * tree, slong len, slong prec)
 {
     arb_ptr tmp;
-    long i, n, height;
+    slong i, n, height;
 
     if (len == 0)
         return;
@@ -60,10 +60,10 @@ _arb_poly_interpolation_weights(arb_ptr w,
 void
 _arb_poly_interpolate_fast_precomp(arb_ptr poly,
     arb_srcptr ys, arb_ptr * tree, arb_srcptr weights,
-    long len, long prec)
+    slong len, slong prec)
 {
     arb_ptr t, u, pa, pb;
-    long i, pow, left;
+    slong i, pow, left;
 
     if (len == 0)
         return;
@@ -106,7 +106,7 @@ _arb_poly_interpolate_fast_precomp(arb_ptr poly,
 
 void
 _arb_poly_interpolate_fast(arb_ptr poly,
-    arb_srcptr xs, arb_srcptr ys, long len, long prec)
+    arb_srcptr xs, arb_srcptr ys, slong len, slong prec)
 {
     arb_ptr * tree;
     arb_ptr w;
@@ -125,7 +125,7 @@ _arb_poly_interpolate_fast(arb_ptr poly,
 
 void
 arb_poly_interpolate_fast(arb_poly_t poly,
-        arb_srcptr xs, arb_srcptr ys, long n, long prec)
+        arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

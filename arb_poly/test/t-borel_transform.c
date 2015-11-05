@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("borel_transform....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_poly_t a, b, c, d;
-        long n, prec;
+        slong n, prec;
 
         arb_poly_init(a);
         arb_poly_init(b);

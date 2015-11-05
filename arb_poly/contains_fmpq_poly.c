@@ -28,7 +28,7 @@
 int
 arb_poly_contains_fmpq_poly(const arb_poly_t poly1, const fmpq_poly_t poly2)
 {
-    long i;
+    slong i;
     fmpq_t t;
 
     if (poly2->length > poly1->length)

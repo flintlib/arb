@@ -26,8 +26,8 @@
 #include "arb_poly.h"
 
 void 
-_arb_poly_div_series(arb_ptr Q, arb_srcptr A, long Alen,
-    arb_srcptr B, long Blen, long n, long prec)
+_arb_poly_div_series(arb_ptr Q, arb_srcptr A, slong Alen,
+    arb_srcptr B, slong Blen, slong n, slong prec)
 {
     Alen = FLINT_MIN(Alen, n);
     Blen = FLINT_MIN(Blen, n);
@@ -65,7 +65,7 @@ _arb_poly_div_series(arb_ptr Q, arb_srcptr A, long Alen,
 }
 
 void
-arb_poly_div_series(arb_poly_t Q, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+arb_poly_div_series(arb_poly_t Q, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 {
     if (n == 0)
     {

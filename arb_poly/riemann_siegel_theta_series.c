@@ -28,11 +28,11 @@
 
 void
 _arb_poly_riemann_siegel_theta_series(arb_ptr res,
-    arb_srcptr h, long hlen, long len, long prec)
+    arb_srcptr h, slong hlen, slong len, slong prec)
 {
     acb_ptr s;
     arb_t u;
-    long i;
+    slong i;
 
     hlen = FLINT_MIN(hlen, len);
 
@@ -68,7 +68,7 @@ _arb_poly_riemann_siegel_theta_series(arb_ptr res,
 
 void
 arb_poly_riemann_siegel_theta_series(arb_poly_t res,
-    const arb_poly_t f, long n, long prec)
+    const arb_poly_t f, slong n, slong prec)
 {
     if (n == 0 || f->length == 0)
     {

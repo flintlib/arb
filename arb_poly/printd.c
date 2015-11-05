@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_printd(const arb_poly_t poly, long digits)
+arb_poly_printd(const arb_poly_t poly, slong digits)
 {
-    long i;
+    slong i;
 
     printf("[");
 

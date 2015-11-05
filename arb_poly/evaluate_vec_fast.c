@@ -27,8 +27,8 @@
 
 /* This gives some speedup for small lengths. */
 static __inline__ void
-_arb_poly_rem_2(arb_ptr r, arb_srcptr a, long al,
-    arb_srcptr b, long bl, long prec)
+_arb_poly_rem_2(arb_ptr r, arb_srcptr a, slong al,
+    arb_srcptr b, slong bl, slong prec)
 {
     if (al == 2)
     {
@@ -43,11 +43,11 @@ _arb_poly_rem_2(arb_ptr r, arb_srcptr a, long al,
 
 void
 _arb_poly_evaluate_vec_fast_precomp(arb_ptr vs, arb_srcptr poly,
-    long plen, arb_ptr * tree, long len, long prec)
+    slong plen, arb_ptr * tree, slong len, slong prec)
 {
-    long height, i, j, pow, left;
-    long tree_height;
-    long tlen;
+    slong height, i, j, pow, left;
+    slong tree_height;
+    slong tlen;
     arb_ptr t, u, swap, pa, pb, pc;
 
     /* avoid worrying about some degenerate cases */
@@ -129,8 +129,8 @@ _arb_poly_evaluate_vec_fast_precomp(arb_ptr vs, arb_srcptr poly,
     _arb_vec_clear(u, len);
 }
 
-void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, long plen,
-    arb_srcptr xs, long n, long prec)
+void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, slong plen,
+    arb_srcptr xs, slong n, slong prec)
 {
     arb_ptr * tree;
 
@@ -142,7 +142,7 @@ void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, long plen,
 
 void
 arb_poly_evaluate_vec_fast(arb_ptr ys,
-        const arb_poly_t poly, arb_srcptr xs, long n, long prec)
+        const arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 {
     _arb_poly_evaluate_vec_fast(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

@@ -28,7 +28,7 @@
 
 /* hack: avoid overflow since exp currently uses mpfr */
 void
-fmpq_poly_randtest_small(fmpq_poly_t A, flint_rand_t state, long len, long bits)
+fmpq_poly_randtest_small(fmpq_poly_t A, flint_rand_t state, slong len, slong bits)
 {
     fmpq_poly_randtest(A, state, len, bits);
     if (A->length > 0)
@@ -42,7 +42,7 @@ fmpq_poly_randtest_small(fmpq_poly_t A, flint_rand_t state, long len, long bits)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("exp_series....");
@@ -53,7 +53,7 @@ int main()
     /* compare with fmpq_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A, B;
         arb_poly_t a, b;
 
@@ -102,7 +102,7 @@ int main()
     /* test aliasing */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A;
         arb_poly_t a, b;
 
@@ -154,7 +154,7 @@ int main()
     /* test that log(exp(f)) contains f */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2, rbits3;
+        slong m, n, qbits, rbits1, rbits2, rbits3;
         fmpq_poly_t A;
         arb_poly_t a, b, c;
 

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("swinnerton_dyer_ui....");
@@ -40,7 +40,7 @@ int main()
         arb_poly_t a, b;
         arb_t x, y;
         fmpz_poly_t c;
-        long i, n, prec;
+        slong i, n, prec;
 
         arb_poly_init(a);
         arb_poly_init(b);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pow_arb_series....");
@@ -38,7 +38,7 @@ int main()
     /* compare with exp/log */
     for (iter = 0; iter < 10000; iter++)
     {
-        long prec, trunc;
+        slong prec, trunc;
         arb_poly_t f, g, h1, h2;
         arb_t c;
 

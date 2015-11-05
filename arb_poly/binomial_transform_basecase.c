@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_binomial_transform_basecase(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
+_arb_poly_binomial_transform_basecase(arb_ptr b, arb_srcptr a, slong alen, slong len, slong prec)
 {
-    long n, k;
+    slong n, k;
 
     fmpz_t t;
     fmpz_init(t);
@@ -57,7 +57,7 @@ _arb_poly_binomial_transform_basecase(arb_ptr b, arb_srcptr a, long alen, long l
 }
 
 void
-arb_poly_binomial_transform_basecase(arb_poly_t b, const arb_poly_t a, long len, long prec)
+arb_poly_binomial_transform_basecase(arb_poly_t b, const arb_poly_t a, slong len, slong prec)
 {
     if (len == 0 || a->length == 0)
     {

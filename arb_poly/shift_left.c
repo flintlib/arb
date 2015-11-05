@@ -28,9 +28,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_shift_left(arb_ptr res, arb_srcptr poly, long len, long n)
+_arb_poly_shift_left(arb_ptr res, arb_srcptr poly, slong len, slong n)
 {
-    long i;
+    slong i;
 
     /* Copy in reverse to avoid writing over unshifted coefficients */
     if (res != poly)
@@ -49,7 +49,7 @@ _arb_poly_shift_left(arb_ptr res, arb_srcptr poly, long len, long n)
 }
 
 void
-arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, long n)
+arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, slong n)
 {
     if (n == 0)
     {

@@ -29,7 +29,7 @@
 long
 _arb_poly_swinnerton_dyer_ui_prec(ulong n)
 {
-    long i;
+    slong i;
     double u, N;
 
     N = 1UL << n;
@@ -48,11 +48,11 @@ _arb_poly_swinnerton_dyer_ui_prec(ulong n)
 }
 
 void
-_arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, long trunc, long prec)
+_arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, slong trunc, slong prec)
 {
     arb_ptr square_roots, tmp1, tmp2, tmp3;
     arb_t one;
-    long i, j, k, N;
+    slong i, j, k, N;
 
     if (n == 0)
     {
@@ -95,7 +95,7 @@ _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, long trunc, long prec)
     /* For each level... */
     for (i = 0; i < n; i++)
     {
-        long stride = 1UL << i;
+        slong stride = 1UL << i;
 
         for (j = 0; j < N; j += 2*stride)
         {
@@ -123,9 +123,9 @@ _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, long trunc, long prec)
 }
 
 void
-arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, long prec)
+arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, slong prec)
 {
-    long N = 1L << n;
+    slong N = 1L << n;
 
     arb_poly_fit_length(poly, N + 1);
     _arb_poly_swinnerton_dyer_ui(poly->coeffs, n, N + 1, prec);

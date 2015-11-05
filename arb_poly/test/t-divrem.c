@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("divrem....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long m, n, qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong m, n, qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t A, B, Q, R;
         arb_poly_t a, b, q, r;
 

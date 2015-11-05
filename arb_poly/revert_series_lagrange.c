@@ -27,9 +27,9 @@
 
 void
 _arb_poly_revert_series_lagrange(arb_ptr Qinv,
-    arb_srcptr Q, long Qlen, long n, long prec)
+    arb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    long i;
+    slong i;
     arb_ptr R, S, T, tmp;
 
     if (n <= 2)
@@ -65,9 +65,9 @@ _arb_poly_revert_series_lagrange(arb_ptr Qinv,
 
 void
 arb_poly_revert_series_lagrange(arb_poly_t Qinv,
-                                    const arb_poly_t Q, long n, long prec)
+                                    const arb_poly_t Q, slong n, slong prec)
 {
-    long Qlen = Q->length;
+    slong Qlen = Q->length;
 
     if (Qlen < 2 || !arb_is_zero(Q->coeffs)
                  || arb_contains_zero(Q->coeffs + 1))

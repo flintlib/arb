@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("pow_series....");
@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 50000; iter++)
     {
-        long rbits1, rbits2, len;
+        slong rbits1, rbits2, len;
         arb_poly_t a, b, c, d;
 
         rbits1 = 2 + n_randint(state, 200);

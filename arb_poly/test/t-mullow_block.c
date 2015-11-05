@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("mullow_block....");
@@ -38,7 +38,7 @@ int main()
     /* compare with fmpq_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
+        slong qbits1, qbits2, rbits1, rbits2, rbits3, trunc;
         fmpq_poly_t A, B, C;
         arb_poly_t a, b, c, d;
 
@@ -138,7 +138,7 @@ int main()
 
     for (iter = 0; iter < 3000; iter++)
     {
-        long rbits1, rbits2, rbits3, trunc;
+        slong rbits1, rbits2, rbits3, trunc;
         arb_poly_t a, b, c, ab, ac, bc, abc, abc2;
 
         rbits1 = 2 + n_randint(state, 300);

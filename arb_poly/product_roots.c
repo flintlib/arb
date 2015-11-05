@@ -27,7 +27,7 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, long n, long prec)
+_arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, slong n, slong prec)
 {
     if (n == 0)
     {
@@ -47,7 +47,7 @@ _arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, long n, long prec)
     }
     else
     {
-        const long m = (n + 1) / 2;
+        const slong m = (n + 1) / 2;
         arb_ptr tmp;
 
         tmp = _arb_vec_init(n + 2);
@@ -61,7 +61,7 @@ _arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, long n, long prec)
 }
 
 void
-arb_poly_product_roots(arb_poly_t poly, arb_srcptr xs, long n, long prec)
+arb_poly_product_roots(arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 {
     arb_poly_fit_length(poly, n + 1);
     _arb_poly_product_roots(poly->coeffs, xs, n, prec);

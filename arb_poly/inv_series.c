@@ -33,7 +33,7 @@
 
 void
 _arb_poly_inv_series(arb_ptr Qinv,
-    arb_srcptr Q, long Qlen, long len, long prec)
+    arb_srcptr Q, slong Qlen, slong len, slong prec)
 {
     arb_inv(Qinv, Q, prec);
 
@@ -49,7 +49,7 @@ _arb_poly_inv_series(arb_ptr Qinv,
     }
     else
     {
-        long Qnlen, Wlen, W2len;
+        slong Qnlen, Wlen, W2len;
         arb_ptr W;
 
         W = _arb_vec_init(len);
@@ -72,7 +72,7 @@ _arb_poly_inv_series(arb_ptr Qinv,
 }
 
 void
-arb_poly_inv_series(arb_poly_t Qinv, const arb_poly_t Q, long n, long prec)
+arb_poly_inv_series(arb_poly_t Qinv, const arb_poly_t Q, slong n, slong prec)
 {
     if (n == 0)
     {
