@@ -29,10 +29,10 @@ double mag_get_log2_d_approx(const mag_t x);
 
 void
 acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long N, long prec)
+    const acb_t q, slong N, slong prec)
 {
-    long * tab;
-    long k, term_prec;
+    slong * tab;
+    slong k, term_prec;
     double log2q_approx, log2term_approx;
     mag_t qmag;
     acb_ptr qpow;
@@ -127,7 +127,7 @@ acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
     acb_init(t1);
     acb_init(t2);
 
-    tab = flint_calloc(N, sizeof(long));
+    tab = flint_calloc(N, sizeof(slong));
     qpow = _acb_vec_init(N);
 
     for (k = 0; k*(k+1) < N; k++) tab[k*(k+1)] = -1;

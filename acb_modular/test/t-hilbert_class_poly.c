@@ -132,7 +132,7 @@ int main()
     fflush(stdout);
 
     {
-        long i;
+        slong i;
         mp_limb_t c;
         fmpz_poly_t hd;
         nmod_poly_t hdp;

@@ -53,7 +53,7 @@ acb_set_dddd(acb_t z, double a, double ar, double b, double br)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("elliptic_p....");
@@ -64,7 +64,7 @@ int main()
     /* check test values */
     for (iter = 0; iter < 100; iter++)
     {
-        long i;
+        slong i;
 
         acb_t z, tau, p1, p2;
 
@@ -102,7 +102,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t tau, z1, z2, p1, p2;
-        long m, n, e0, prec0, prec1, prec2;
+        slong m, n, e0, prec0, prec1, prec2;
 
         acb_init(tau);
         acb_init(z1);

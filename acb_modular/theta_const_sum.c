@@ -29,12 +29,12 @@ double mag_get_log2_d_approx(const mag_t x);
 
 void
 acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long prec)
+    const acb_t q, slong prec)
 {
     mag_t qmag, err;
     double log2q_approx;
     int is_real, is_real_or_imag;
-    long N;
+    slong N;
 
     mag_init(qmag);
     mag_init(err);

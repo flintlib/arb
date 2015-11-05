@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("eisenstein....");
@@ -40,7 +40,7 @@ int main()
     {
         acb_t tau1, tau2, t;
         acb_ptr r1, r2;
-        long e0, prec0, prec1, prec2, len1, len2, i;
+        slong e0, prec0, prec1, prec2, len1, len2, i;
         psl2z_t g;
 
         psl2z_init(g);

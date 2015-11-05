@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-acb_modular_eta(acb_t z, const acb_t tau, long prec)
+acb_modular_eta(acb_t z, const acb_t tau, slong prec)
 {
     psl2z_t g;
     fmpq_t t;

@@ -28,7 +28,7 @@
 
 static void
 bsplit(arb_poly_t pol, const arb_t sqrtD,
-            const long * qbf, long a, long b, long prec)
+            const slong * qbf, slong a, slong b, slong prec)
 {
     if (b - a == 0)
     {
@@ -79,8 +79,8 @@ bsplit(arb_poly_t pol, const arb_t sqrtD,
 }
 
 int
-_acb_modular_hilbert_class_poly(fmpz_poly_t res, long D,
-        const long * qbf, long qbf_len, long prec)
+_acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D,
+        const slong * qbf, slong qbf_len, slong prec)
 {
     arb_t sqrtD;
     arb_poly_t pol;
@@ -101,10 +101,10 @@ _acb_modular_hilbert_class_poly(fmpz_poly_t res, long D,
 }
 
 void
-acb_modular_hilbert_class_poly(fmpz_poly_t res, long D)
+acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D)
 {
-    long i, a, b, c, ac, h, qbf_alloc, qbf_len, prec;
-    long * qbf;
+    slong i, a, b, c, ac, h, qbf_alloc, qbf_len, prec;
+    slong * qbf;
     double lgh;
 
     if (D >= 0 || ((D & 3) > 1))
@@ -133,7 +133,7 @@ acb_modular_hilbert_class_poly(fmpz_poly_t res, long D)
                 if (qbf_len >= qbf_alloc)
                 {
                     qbf_alloc = FLINT_MAX(4, FLINT_MAX(qbf_len + 1, qbf_alloc * 2));
-                    qbf = flint_realloc(qbf, qbf_alloc * 3 * sizeof(long));
+                    qbf = flint_realloc(qbf, qbf_alloc * 3 * sizeof(slong));
                 }
 
                 if (a == b || a*a == ac || b == 0)

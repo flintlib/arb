@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("j....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t tau1, tau2, z1, z2;
-        long e0, prec0, prec1, prec2;
+        slong e0, prec0, prec1, prec2;
         psl2z_t g;
 
         psl2z_init(g);
@@ -98,7 +98,7 @@ int main()
     for (iter = 0; iter < 100; iter++)
     {
         acb_t tau, z;
-        long prec;
+        slong prec;
 
         acb_init(tau);
         acb_init(z);

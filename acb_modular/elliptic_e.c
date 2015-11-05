@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-acb_modular_elliptic_e(acb_t res, const acb_t m, long prec)
+acb_modular_elliptic_e(acb_t res, const acb_t m, slong prec)
 {
     if (acb_is_zero(m))
     {

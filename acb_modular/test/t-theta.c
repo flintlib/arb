@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("theta....");
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t t1, t2, t3, t4, t1b, t2b, t3b, t4b, z, tau;
-        long prec0, prec1, prec2, e0;
+        slong prec0, prec1, prec2, e0;
 
         acb_init(t1); acb_init(t2); acb_init(t3); acb_init(t4);
         acb_init(t1b); acb_init(t2b); acb_init(t3b); acb_init(t4b);

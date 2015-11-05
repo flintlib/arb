@@ -26,9 +26,9 @@
 #include "acb_modular.h"
 
 void
-acb_modular_fill_addseq(long * tab, long len)
+acb_modular_fill_addseq(slong * tab, slong len)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 2; i < len; i++)
     {

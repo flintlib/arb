@@ -27,9 +27,9 @@
 
 void
 acb_modular_fundamental_domain_approx_arf(psl2z_t g,
-    const arf_t xx, const arf_t yy, const arf_t one_minus_eps, long prec)
+    const arf_t xx, const arf_t yy, const arf_t one_minus_eps, slong prec)
 {
-    long i;
+    slong i;
     arf_t x, y, t;
     fmpz_t n;
 

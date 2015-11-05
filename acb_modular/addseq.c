@@ -26,9 +26,9 @@
 #include "acb_modular.h"
 
 static long
-bisect(long needle, const long * haystack, long len)
+bisect(slong needle, const slong * haystack, slong len)
 {
-    long a, b, mid;
+    slong a, b, mid;
 
     a = 0;
     b = len - 1;
@@ -53,11 +53,11 @@ bisect(long needle, const long * haystack, long len)
 
 /* write p = 2a with a in P */
 static int
-write_as_2a(long * i1, long * i2, long p, const long * P, long Plen)
+write_as_2a(slong * i1, slong * i2, slong p, const slong * P, slong Plen)
 {
     if (p % 2 == 0)
     {
-        long i = bisect(p / 2, P, Plen);
+        slong i = bisect(p / 2, P, Plen);
 
         if (i != -1)
         {
@@ -71,9 +71,9 @@ write_as_2a(long * i1, long * i2, long p, const long * P, long Plen)
 
 /* write p = a + b with a, b in P */
 static int
-write_as_a_b(long * i1, long * i2, long p, const long * P, long Plen)
+write_as_a_b(slong * i1, slong * i2, slong p, const slong * P, slong Plen)
 {
-    long i, j, pi;
+    slong i, j, pi;
 
     for (i = 0; i < Plen; i++)
     {
@@ -94,9 +94,9 @@ write_as_a_b(long * i1, long * i2, long p, const long * P, long Plen)
 
 /* write p = 2a + b with a, b in P */
 static int
-write_as_2a_b(long * i1, long * i2, long p, const long * P, long Plen)
+write_as_2a_b(slong * i1, slong * i2, slong p, const slong * P, slong Plen)
 {
-    long i, j, pi;
+    slong i, j, pi;
 
     for (i = 0; i < Plen; i++)
     {
@@ -119,10 +119,10 @@ write_as_2a_b(long * i1, long * i2, long p, const long * P, long Plen)
 }
 
 void
-acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num)
+acb_modular_addseq_theta(slong * exponents, slong * aindex, slong * bindex, slong num)
 {
-    long i;
-    long c;
+    slong i;
+    slong c;
 
     for (i = 0; i < num; i++)
     {
@@ -155,10 +155,10 @@ acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long nu
 }
 
 void
-acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num)
+acb_modular_addseq_eta(slong * exponents, slong * aindex, slong * bindex, slong num)
 {
-    long i;
-    long c;
+    slong i;
+    slong c;
 
     for (i = 0; i < num; i++)
     {

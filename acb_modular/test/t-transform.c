@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("transform....");
@@ -39,7 +39,7 @@ int main()
     {
         psl2z_t g;
         acb_t z, w1, w2, t;
-        long prec;
+        slong prec;
 
         psl2z_init(g);
         acb_init(z);

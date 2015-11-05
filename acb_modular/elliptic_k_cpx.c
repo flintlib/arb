@@ -26,10 +26,10 @@
 #include "acb_modular.h"
 
 void
-acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec)
+acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, slong len, slong prec)
 {
     acb_t t, u, msub1m, m2sub1;
-    long k, n;
+    slong k, n;
 
     if (len < 1)
         return;

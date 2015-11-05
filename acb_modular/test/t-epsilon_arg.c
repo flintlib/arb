@@ -63,7 +63,7 @@ acb_modular_epsilon_arg_naive(fmpq_t arg, const psl2z_t g)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("eta_epsilon_arg....");

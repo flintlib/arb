@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("lambda....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t tau1, tau2, z1, z2, z3, t;
-        long e0, prec0, prec1, prec2, step;
+        slong e0, prec0, prec1, prec2, step;
 
         acb_init(tau1);
         acb_init(tau2);

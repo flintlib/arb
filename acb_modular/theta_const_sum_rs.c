@@ -68,9 +68,9 @@ static const int trigonal_best_m_residues[] = {
 };
 
 long
-acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, long N)
+acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N)
 {
-    long i, m, cost, best_i, best_m, best_cost;
+    slong i, m, cost, best_i, best_m, best_cost;
 
     best_i = 0;
     best_m = best_ms[0];
@@ -97,11 +97,11 @@ acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, long N)
 
 void
 acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long N, long prec)
+    const acb_t q, slong N, slong prec)
 {
-    long * tab;
-    long k, term_prec, i, e, eprev;
-    long M, m2, m3, num_square, num_trigonal;
+    slong * tab;
+    slong k, term_prec, i, e, eprev;
+    slong M, m2, m3, num_square, num_trigonal;
     double log2q_approx, log2term_approx;
     acb_ptr qpow;
     acb_t tmp1, tmp2;
@@ -121,7 +121,7 @@ acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
     M = FLINT_MAX(m2, m3) + 1;
 
     /* build addition sequence */
-    tab = flint_calloc(M, sizeof(long));
+    tab = flint_calloc(M, sizeof(slong));
 
     for (k = 0; k*(k+1) < N; k++)
         tab[(k*(k+1)) % m2] = -1;

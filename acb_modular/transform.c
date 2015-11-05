@@ -25,7 +25,7 @@
 
 #include "acb_modular.h"
 
-void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, long prec)
+void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, slong prec)
 {
 #define a (&g->a)
 #define b (&g->b)

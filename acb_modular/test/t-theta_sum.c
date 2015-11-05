@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("theta_sum....");
@@ -42,7 +42,7 @@ int main()
         acb_ptr t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b;
         acb_t w, q;
         int w_is_unit;
-        long prec0, e0, prec1, prec2, len1, len2, i;
+        slong prec0, e0, prec1, prec2, len1, len2, i;
 
         acb_init(w);
         acb_init(q);

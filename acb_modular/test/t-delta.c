@@ -29,7 +29,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("delta....");
@@ -40,7 +40,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t tau, z1, z2;
-        long e0, prec0, prec1, prec2;
+        slong e0, prec0, prec1, prec2;
 
         acb_init(tau);
         acb_init(z1);

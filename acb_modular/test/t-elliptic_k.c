@@ -51,7 +51,7 @@ const double k_testdata[NUM_TESTS][10] = {
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("elliptic_k....");
@@ -63,7 +63,7 @@ int main()
     {
         acb_t z, t;
         acb_ptr w1;
-        long i, j, prec, cnj;
+        slong i, j, prec, cnj;
 
         acb_init(z);
         acb_init(t);
@@ -116,7 +116,7 @@ int main()
     {
         acb_ptr m1, m2;
         acb_t z1, z2, t;
-        long i, len1, len2, prec1, prec2;
+        slong i, len1, len2, prec1, prec2;
 
         len1 = n_randint(state, 10);
         len2 = n_randint(state, 10);

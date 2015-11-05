@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec)
+acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec)
 {
     acb_struct t0[4], tz[4];
     acb_t t;

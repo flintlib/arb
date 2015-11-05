@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("elliptic_p_zpx....");
@@ -41,7 +41,7 @@ int main()
     {
         acb_t tau, z;
         acb_ptr g, wp, wp3, wpd, wpd2;
-        long prec, len, i;
+        slong prec, len, i;
 
         len = 1 + n_randint(state, 15);
         prec = 2 + n_randint(state, 1000);
@@ -98,7 +98,7 @@ int main()
     {
         acb_t tau, z;
         acb_ptr wp1, wp2;
-        long prec1, prec2, len1, len2, i;
+        slong prec1, prec2, len1, len2, i;
 
         len1 = n_randint(state, 15);
         len2 = n_randint(state, 15);

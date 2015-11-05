@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("elliptic_e....");
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 500; iter++)
     {
         acb_t m, w, K, Kp, E, Ep, r, pi2;
-        long prec;
+        slong prec;
 
         acb_init(m);
         acb_init(w);

@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("fundamental_domain_approx....");
@@ -42,7 +42,7 @@ int main()
         arf_t one_minus_eps, tol;
         acb_t z, w, w2;
         arb_t t;
-        long prec;
+        slong prec;
 
         fmpq_init(x);
         fmpq_init(y);
@@ -62,7 +62,7 @@ int main()
         } while (fmpz_sgn(fmpq_numref(y)) <= 0);
 
         /* pick a tolerance */
-        arf_set_ui_2exp_si(tol, 1, -(long) n_randint(state, 500));
+        arf_set_ui_2exp_si(tol, 1, -(slong) n_randint(state, 500));
 
         /* now increase the precision until convergence */
         for (prec = 32; ; prec *= 2)

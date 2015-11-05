@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("eta....");
@@ -40,7 +40,7 @@ int main()
     {
         acb_t tau1, tau2, z1, z2, z3, t;
         fmpq_t arg;
-        long e0, prec0, prec1, prec2;
+        slong e0, prec0, prec1, prec2;
         psl2z_t g;
 
         psl2z_init(g);
@@ -117,7 +117,7 @@ int main()
     {
         acb_t tau, z;
         arb_t t, u;
-        long prec;
+        slong prec;
 
         acb_init(tau);
         acb_init(z);

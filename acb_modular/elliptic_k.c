@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-acb_modular_elliptic_k(acb_t k, const acb_t m, long prec)
+acb_modular_elliptic_k(acb_t k, const acb_t m, slong prec)
 {
     acb_t t;
     acb_init(t);
