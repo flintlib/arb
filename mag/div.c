@@ -38,7 +38,7 @@ mag_div(mag_t z, const mag_t x, const mag_t y)
     else
     {
         mp_limb_t q;
-        long fix;
+        slong fix;
 
 #if FLINT_BITS == 64
         q = (MAG_MAN(x) << MAG_BITS) / MAG_MAN(y) + 1;

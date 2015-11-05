@@ -47,7 +47,7 @@ mag_print(const mag_t x)
 }
 
 void
-mag_printd(const mag_t x, long d)
+mag_printd(const mag_t x, slong d)
 {
     arf_t t;
     arf_init(t);

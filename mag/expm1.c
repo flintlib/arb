@@ -50,7 +50,7 @@ mag_expm1(mag_t y, const mag_t x)
     }
     else
     {
-        long e = MAG_EXP(x);
+        slong e = MAG_EXP(x);
 
         if (e <= -16)
         {
@@ -70,7 +70,7 @@ mag_expm1(mag_t y, const mag_t x)
             /* subtract 1 */
             if (e < 6)
             {
-                long e2 = MAG_EXP(y);
+                slong e2 = MAG_EXP(y);
                 unsigned int c;
 
                 if (e2 < MAG_BITS)

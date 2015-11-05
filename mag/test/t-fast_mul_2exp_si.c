@@ -27,7 +27,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("fast_mul_2exp_si....");
@@ -39,7 +39,7 @@ int main()
     {
         fmpr_t x, y, z;
         mag_t xb, yb;
-        long e;
+        slong e;
 
         fmpr_init(x);
         fmpr_init(y);

@@ -40,7 +40,7 @@ mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
     }
     else
     {
-        long shift, fix;
+        slong shift, fix;
 
         shift = _fmpz_sub_small(MAG_EXPREF(x), MAG_EXPREF(y));
 

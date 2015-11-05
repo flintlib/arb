@@ -57,7 +57,7 @@ d_randtest2(flint_rand_t state)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("set_d....");

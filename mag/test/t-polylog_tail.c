@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("polylog_tail....");
@@ -40,7 +40,7 @@ int main()
     {
         mag_t xb, yb;
         ulong N, k, d;
-        long s, prec;
+        slong s, prec;
         arb_t z, t, u, r;
 
         mag_init(xb);

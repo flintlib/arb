@@ -40,7 +40,7 @@ mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
     {
         mag_t y;
         mp_srcptr elimbs;
-        long i, bits;
+        slong i, bits;
 
         mag_init_set(y, x);
         bits = fmpz_bits(e);

@@ -37,7 +37,7 @@ mag_mul(mag_t z, const mag_t x, const mag_t y)
     }
     else
     {
-        long fix;
+        slong fix;
 
         MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
         fix = !(MAG_MAN(z) >> (MAG_BITS - 1));
@@ -58,7 +58,7 @@ mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
     }
     else
     {
-        long fix;
+        slong fix;
 
         MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y));
         fix = !(MAG_MAN(z) >> (MAG_BITS - 1));

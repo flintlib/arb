@@ -55,7 +55,7 @@ _mag_d_exp_upper_reduced(double u)
 }
 
 void
-mag_exp_maglim(mag_t y, const mag_t x, long maglim)
+mag_exp_maglim(mag_t y, const mag_t x, slong maglim)
 {
     if (mag_is_special(x))
     {
@@ -78,7 +78,7 @@ mag_exp_maglim(mag_t y, const mag_t x, long maglim)
     }
     else
     {
-        long e = MAG_EXP(x);
+        slong e = MAG_EXP(x);
 
         if (e <= -MAG_BITS) /* assumes MAG_BITS == 30 */
         {

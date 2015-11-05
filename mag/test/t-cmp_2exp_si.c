@@ -28,7 +28,7 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
     printf("cmp....");
@@ -40,7 +40,7 @@ int main()
     {
         fmpr_t x;
         mag_t xb;
-        long y;
+        slong y;
         int c1, c2;
 
         fmpr_init(x);

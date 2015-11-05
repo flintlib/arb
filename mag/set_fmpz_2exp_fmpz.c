@@ -35,7 +35,7 @@ mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp)
     else
     {
         mp_limb_t m;
-        long cexp;
+        slong cexp;
 
         m = fmpz_abs_ubound_ui_2exp(&cexp, man, MAG_BITS);
         MAG_MAN(z) = m;
@@ -53,7 +53,7 @@ mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp)
     else
     {
         mp_limb_t m;
-        long cexp;
+        slong cexp;
 
         m = fmpz_abs_lbound_ui_2exp(&cexp, man, MAG_BITS);
         MAG_MAN(z) = m;

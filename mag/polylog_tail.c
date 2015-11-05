@@ -26,7 +26,7 @@
 #include "mag.h"
 
 void
-mag_polylog_tail(mag_t u, const mag_t z, long sigma, ulong d, ulong N)
+mag_polylog_tail(mag_t u, const mag_t z, slong sigma, ulong d, ulong N)
 {
     mag_t TN, UN, t;
 
