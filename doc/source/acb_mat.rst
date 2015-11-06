@@ -43,7 +43,7 @@ Types, macros and constants
 Memory management
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_init(acb_mat_t mat, long r, long c)
+.. function:: void acb_mat_init(acb_mat_t mat, slong r, slong c)
 
     Initializes the matrix, setting it to the zero matrix with *r* rows
     and *c* columns.
@@ -60,20 +60,20 @@ Conversions
 
 .. function:: void acb_mat_set_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src)
 
-.. function:: void acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, long prec)
+.. function:: void acb_mat_set_round_fmpz_mat(acb_mat_t dest, const fmpz_mat_t src, slong prec)
 
-.. function:: void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, long prec)
+.. function:: void acb_mat_set_fmpq_mat(acb_mat_t dest, const fmpq_mat_t src, slong prec)
 
 .. function:: void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src)
 
-.. function:: void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, long prec)
+.. function:: void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, slong prec)
 
     Sets *dest* to *src*. The operands must have identical dimensions.
 
 Random generation
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
+.. function:: void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits)
 
     Sets *mat* to a random matrix with up to *prec* bits of precision
     and with exponents of width up to *mag_bits*.
@@ -81,7 +81,7 @@ Random generation
 Input and output
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_printd(const acb_mat_t mat, long digits)
+.. function:: void acb_mat_printd(const acb_mat_t mat, slong digits)
 
     Prints each entry in the matrix with the specified number of decimal digits.
 
@@ -156,21 +156,21 @@ Arithmetic
     Sets *dest* to the exact negation of *src*. The operands must have
     the same dimensions.
 
-.. function:: void acb_mat_add(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, long prec)
+.. function:: void acb_mat_add(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
     Sets res to the sum of *mat1* and *mat2*. The operands must have the same dimensions.
 
-.. function:: void acb_mat_sub(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, long prec)
+.. function:: void acb_mat_sub(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
     Sets *res* to the difference of *mat1* and *mat2*. The operands must have
     the same dimensions.
 
-.. function:: void acb_mat_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, long prec)
+.. function:: void acb_mat_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
 
-.. function:: void acb_mat_pow_ui(acb_mat_t res, const acb_mat_t mat, ulong exp, long prec)
+.. function:: void acb_mat_pow_ui(acb_mat_t res, const acb_mat_t mat, ulong exp, slong prec)
 
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
     is a square matrix.
@@ -179,37 +179,37 @@ Arithmetic
 Scalar arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_scalar_mul_2exp_si(acb_mat_t B, const acb_mat_t A, long c)
+.. function:: void acb_mat_scalar_mul_2exp_si(acb_mat_t B, const acb_mat_t A, slong c)
 
     Sets *B* to *A* multiplied by `2^c`.
 
-.. function:: void acb_mat_scalar_addmul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
+.. function:: void acb_mat_scalar_addmul_si(acb_mat_t B, const acb_mat_t A, slong c, slong prec)
 
-.. function:: void acb_mat_scalar_addmul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
+.. function:: void acb_mat_scalar_addmul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, slong prec)
 
-.. function:: void acb_mat_scalar_addmul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
+.. function:: void acb_mat_scalar_addmul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, slong prec)
 
-.. function:: void acb_mat_scalar_addmul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
+.. function:: void acb_mat_scalar_addmul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, slong prec)
 
     Sets *B* to `B + A \times c`.
 
-.. function:: void acb_mat_scalar_mul_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
+.. function:: void acb_mat_scalar_mul_si(acb_mat_t B, const acb_mat_t A, slong c, slong prec)
 
-.. function:: void acb_mat_scalar_mul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
+.. function:: void acb_mat_scalar_mul_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, slong prec)
 
-.. function:: void acb_mat_scalar_mul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
+.. function:: void acb_mat_scalar_mul_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, slong prec)
 
-.. function:: void acb_mat_scalar_mul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
+.. function:: void acb_mat_scalar_mul_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, slong prec)
 
     Sets *B* to `A \times c`.
 
-.. function:: void acb_mat_scalar_div_si(acb_mat_t B, const acb_mat_t A, long c, long prec)
+.. function:: void acb_mat_scalar_div_si(acb_mat_t B, const acb_mat_t A, slong c, slong prec)
 
-.. function:: void acb_mat_scalar_div_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, long prec)
+.. function:: void acb_mat_scalar_div_fmpz(acb_mat_t B, const acb_mat_t A, const fmpz_t c, slong prec)
 
-.. function:: void acb_mat_scalar_div_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, long prec)
+.. function:: void acb_mat_scalar_div_arb(acb_mat_t B, const acb_mat_t A, const arb_t c, slong prec)
 
-.. function:: void acb_mat_scalar_div_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, long prec)
+.. function:: void acb_mat_scalar_div_acb(acb_mat_t B, const acb_mat_t A, const acb_t c, slong prec)
 
     Sets *B* to `A / c`.
 
@@ -217,7 +217,7 @@ Scalar arithmetic
 Gaussian elimination and solving
 -------------------------------------------------------------------------------
 
-.. function:: int acb_mat_lu(long * perm, acb_mat_t LU, const acb_mat_t A, long prec)
+.. function:: int acb_mat_lu(slong * perm, acb_mat_t LU, const acb_mat_t A, slong prec)
 
     Given an `n \times n` matrix `A`, computes an LU decomposition `PLU = A`
     using Gaussian elimination with partial pivoting.
@@ -237,13 +237,13 @@ Gaussian elimination and solving
     computed to insufficient precision, or the LU decomposition was
     attempted at insufficient precision.
 
-.. function:: void acb_mat_solve_lu_precomp(acb_mat_t X, const long * perm, const acb_mat_t LU, const acb_mat_t B, long prec)
+.. function:: void acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t LU, const acb_mat_t B, slong prec)
 
     Solves `AX = B` given the precomputed nonsingular LU decomposition `A = PLU`.
     The matrices `X` and `B` are allowed to be aliased with each other,
     but `X` is not allowed to be aliased with `LU`.
 
-.. function:: int acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, long prec)
+.. function:: int acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 
     Solves `AX = B` where `A` is a nonsingular `n \times n` matrix
     and `X` and `B` are `n \times m` matrices, using LU decomposition.
@@ -254,7 +254,7 @@ Gaussian elimination and solving
     value guarantees that `A` is invertible and that the exact solution
     matrix is contained in the output.
 
-.. function:: int acb_mat_inv(acb_mat_t X, const acb_mat_t A, long prec)
+.. function:: int acb_mat_inv(acb_mat_t X, const acb_mat_t A, slong prec)
 
     Sets `X = A^{-1}` where `A` is a square matrix, computed by solving
     the system `AX = I`.
@@ -265,7 +265,7 @@ Gaussian elimination and solving
     A nonzero return value guarantees that the matrix is invertible
     and that the exact inverse is contained in the output.
 
-.. function:: void acb_mat_det(acb_t det, const acb_mat_t A, long prec)
+.. function:: void acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
 
     Computes the determinant of the matrix, using Gaussian elimination
     with partial pivoting. If at some point an invertible pivot element
@@ -276,9 +276,9 @@ Gaussian elimination and solving
 Characteristic polynomial
 -------------------------------------------------------------------------------
 
-.. function:: void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, long prec)
+.. function:: void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec)
 
-.. function:: void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, long prec)
+.. function:: void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec)
 
     Sets *cp* to the characteristic polynomial of *mat* which must be
     a square matrix. If the matrix has *n* rows, the underscore method
@@ -288,7 +288,7 @@ Characteristic polynomial
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
+.. function:: void acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 
     Sets *B* to the exponential of the matrix *A*, defined by the Taylor series
 
