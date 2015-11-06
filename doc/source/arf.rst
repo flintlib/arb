@@ -44,7 +44,7 @@ has to be aware of are:
 
 * Some :type:`arf_t` functions return an :type:`int`
   indicating whether a result is inexact, whereas the corresponding
-  :type:`fmpr_t` functions return a :type:`long` encoding the relative
+  :type:`fmpr_t` functions return an :type:`slong` encoding the relative
   exponent of the error.
 
 Types, macros and constants
@@ -181,7 +181,7 @@ Assignment, rounding and conversions
 
 .. function:: void arf_set_ui(arf_t y, ulong x)
 
-.. function:: void arf_set_si(arf_t y, long x)
+.. function:: void arf_set_si(arf_t y, slong x)
 
 .. function:: void arf_set_mpfr(arf_t y, const mpfr_t x)
 
@@ -197,32 +197,32 @@ Assignment, rounding and conversions
 
 .. function:: void arf_init_set_ui(arf_t y, ulong x)
 
-.. function:: void arf_init_set_si(arf_t y, long x)
+.. function:: void arf_init_set_si(arf_t y, slong x)
 
     Initialises *y* and sets it to *x* in a single operation.
 
-.. function:: int arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round(arf_t y, const arf_t x, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_set_round_si(arf_t x, long v, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round_si(arf_t x, slong v, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_set_round_ui(arf_t x, ulong v, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round_ui(arf_t x, ulong v, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_set_round_mpz(arf_t y, const mpz_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round_mpz(arf_t y, const mpz_t x, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_set_round_fmpz(arf_t y, const fmpz_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round_fmpz(arf_t y, const fmpz_t x, slong prec, arf_rnd_t rnd)
 
     Sets *y* to *x*, rounded to *prec* bits in the direction
     specified by *rnd*.
 
-.. function:: void arf_set_si_2exp_si(arf_t y, long m, long e)
+.. function:: void arf_set_si_2exp_si(arf_t y, slong m, slong e)
 
-.. function:: void arf_set_ui_2exp_si(arf_t y, ulong m, long e)
+.. function:: void arf_set_ui_2exp_si(arf_t y, ulong m, slong e)
 
 .. function:: void arf_set_fmpz_2exp(arf_t y, const fmpz_t m, const fmpz_t e)
 
     Sets *y* to `m \times 2^e`.
 
-.. function:: int arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t e, long prec, arf_rnd_t rnd)
+.. function:: int arf_set_round_fmpz_2exp(arf_t y, const fmpz_t x, const fmpz_t e, slong prec, arf_rnd_t rnd)
 
     Sets *y* to `x \times 2^e`, rounded to *prec* bits in the direction
     specified by *rnd*.
@@ -261,16 +261,16 @@ Assignment, rounding and conversions
     even integer in case of a tie. Aborts if *x* is infinite, NaN or if the
     exponent is unreasonably large.
 
-.. function:: long arf_get_si(const arf_t x, arf_rnd_t rnd)
+.. function:: slong arf_get_si(const arf_t x, arf_rnd_t rnd)
 
     Returns *x* rounded to the nearest integer in the direction specified by
     *rnd*. If *rnd* is *ARF_RND_NEAR*, rounds to the nearest even integer
     in case of a tie. Aborts if *x* is infinite, NaN, or the value is
-    too large to fit in a long.
+    too large to fit in a slong.
 
 .. function:: int arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)
 
-.. function:: int arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, long e)
+.. function:: int arf_get_fmpz_fixed_si(fmpz_t y, const arf_t x, slong e)
 
     Converts *x* to a mantissa with predetermined exponent, i.e. computes
     an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
@@ -290,7 +290,7 @@ Comparisons and bounds
 
 .. function:: int arf_equal(const arf_t x, const arf_t y)
 
-.. function:: int arf_equal_si(const arf_t x, long y)
+.. function:: int arf_equal_si(const arf_t x, slong y)
 
     Returns nonzero iff *x* and *y* are exactly equal. This function does
     not treat NaN specially, i.e. NaN compares as equal to itself.
@@ -309,9 +309,9 @@ Comparisons and bounds
 
     Compares the absolute values of *x* and *y*.
 
-.. function:: int arf_cmp_2exp_si(const arf_t x, long e)
+.. function:: int arf_cmp_2exp_si(const arf_t x, slong e)
 
-.. function:: int arf_cmpabs_2exp_si(const arf_t x, long e)
+.. function:: int arf_cmpabs_2exp_si(const arf_t x, slong e)
 
     Compares *x* (respectively its absolute value) with `2^e`.
 
@@ -326,7 +326,7 @@ Comparisons and bounds
 
     Sets *z* respectively to the minimum and the maximum of *a* and *b*.
 
-.. function:: long arf_bits(const arf_t x)
+.. function:: slong arf_bits(const arf_t x)
 
     Returns the number of bits needed to represent the absolute value
     of the mantissa of *x*, i.e. the minimum precision sufficient to represent
@@ -336,7 +336,7 @@ Comparisons and bounds
 
     Returns nonzero iff *x* is integer-valued.
 
-.. function:: int arf_is_int_2exp_si(const arf_t x, long e)
+.. function:: int arf_is_int_2exp_si(const arf_t x, slong e)
 
     Returns nonzero iff *x* equals `n 2^e` for some integer *n*.
 
@@ -350,7 +350,7 @@ Comparisons and bounds
     Sets *b* to the smallest integer such that `|x| \le 2^b`.
     If *x* is zero, infinity or NaN, the result is undefined.
 
-.. function:: long arf_abs_bound_lt_2exp_si(const arf_t x)
+.. function:: slong arf_abs_bound_lt_2exp_si(const arf_t x)
 
     Returns the smallest integer *b* such that `|x| < 2^b`, clamping
     the result to lie between -*ARF_PREC_EXACT* and *ARF_PREC_EXACT*
@@ -381,18 +381,18 @@ Magnitude functions
     Initializes *y* and sets it to an upper bound for *x*.
     Assumes that the exponent of *y* is small.
 
-.. function:: void arf_mag_set_ulp(mag_t z, const arf_t y, long prec)
+.. function:: void arf_mag_set_ulp(mag_t z, const arf_t y, slong prec)
 
     Sets *z* to the magnitude of the unit in the last place (ulp) of *y*
     at precision *prec*.
 
-.. function:: void arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+.. function:: void arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, slong prec)
 
     Sets *z* to an upper bound for the sum of *x* and the
     magnitude of the unit in the last place (ulp) of *y*
     at precision *prec*.
 
-.. function:: void arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, long prec)
+.. function:: void arf_mag_fast_add_ulp(mag_t z, const mag_t x, const arf_t y, slong prec)
 
     Sets *z* to an upper bound for the sum of *x* and the
     magnitude of the unit in the last place (ulp) of *y*
@@ -411,7 +411,7 @@ Shallow assignment
     The target variable *z* may not be cleared or modified in any way (it can
     only be used as constant input to functions), and may not be used after
     *x* has been cleared. Moreover, after *x* has been assigned shallowly
-    to *z*, no modification of *x* is permitted as long as *z* is in use.
+    to *z*, no modification of *x* is permitted as slong as *z* is in use.
 
 .. function:: void arf_init_neg_shallow(arf_t z, const arf_t x)
 
@@ -422,7 +422,7 @@ Shallow assignment
 Random number generation
 -------------------------------------------------------------------------------
 
-.. function:: void arf_randtest(arf_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void arf_randtest(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Generates a finite random number whose mantissa has precision at most
     *bits* and whose exponent has at most *mag_bits* bits. The
@@ -430,12 +430,12 @@ Random number generation
     with high probability in order to allow the test code to exercise corner
     cases.
 
-.. function:: void arf_randtest_not_zero(arf_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void arf_randtest_not_zero(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Identical to :func:`arf_randtest`, except that zero is never produced
     as an output.
 
-.. function:: void arf_randtest_special(arf_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Indentical to :func:`arf_randtest`, except that the output occasionally
     is set to an infinity or NaN.
@@ -451,7 +451,7 @@ Input and output
 
     Prints *x* as an integer mantissa and exponent.
 
-.. function:: void arf_printd(const arf_t y, long d)
+.. function:: void arf_printd(const arf_t y, slong d)
 
     Prints *x* as a decimal floating-point number, rounding to *d* digits.
     This function is currently implemented using MPFR,
@@ -468,79 +468,79 @@ Addition and multiplication
 
     Sets `y = -x` exactly.
 
-.. function:: int arf_neg_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_neg_round(arf_t y, const arf_t x, slong prec, arf_rnd_t rnd)
 
     Sets `y = -x`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: void arf_mul_2exp_si(arf_t y, const arf_t x, long e)
+.. function:: void arf_mul_2exp_si(arf_t y, const arf_t x, slong e)
 
 .. function:: void arf_mul_2exp_fmpz(arf_t y, const arf_t x, const fmpz_t e)
 
     Sets `y = x 2^e` exactly.
 
-.. function:: int arf_mul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_mul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_mul_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_mul_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_mul_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_mul_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_mul_mpz(arf_t z, const arf_t x, const mpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_mul_mpz(arf_t z, const arf_t x, const mpz_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_mul_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_mul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: int arf_add(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_add(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_add_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_add_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_add_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_add_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_add_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_add_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = x + y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: int arf_add_fmpz_2exp(arf_t z, const arf_t x, const fmpz_t y, const fmpz_t e, long prec, arf_rnd_t rnd)
+.. function:: int arf_add_fmpz_2exp(arf_t z, const arf_t x, const fmpz_t y, const fmpz_t e, slong prec, arf_rnd_t rnd)
 
     Sets `z = x + y 2^e`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: int arf_sub(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_sub(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_sub_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_sub_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_sub_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_sub_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_sub_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_sub_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = x - y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: int arf_addmul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_addmul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_addmul_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_addmul_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_addmul_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_addmul_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_addmul_mpz(arf_t z, const arf_t x, const mpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_addmul_mpz(arf_t z, const arf_t x, const mpz_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_addmul_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_addmul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = z + x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
-.. function:: int arf_submul(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_submul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_submul_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_submul_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_submul_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_submul_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_submul_mpz(arf_t z, const arf_t x, const mpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_submul_mpz(arf_t z, const arf_t x, const mpz_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_submul_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_submul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = z - x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
@@ -548,7 +548,7 @@ Addition and multiplication
 Summation
 -------------------------------------------------------------------------------
 
-.. function:: int arf_sum(arf_t s, arf_srcptr terms, long len, long prec, arf_rnd_t rnd)
+.. function:: int arf_sum(arf_t s, arf_srcptr terms, slong len, slong prec, arf_rnd_t rnd)
 
     Sets *s* to the sum of the array *terms* of length *len*, rounded to
     *prec* bits in the direction specified by *rnd*. The sum is computed as if
@@ -561,21 +561,21 @@ Summation
 Division
 -------------------------------------------------------------------------------
 
-.. function:: int arf_div(arf_t z, const arf_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_div(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_div_ui(arf_t z, const arf_t x, ulong y, long prec, arf_rnd_t rnd)
+.. function:: int arf_div_ui(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_ui_div(arf_t z, ulong x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_ui_div(arf_t z, ulong x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_div_si(arf_t z, const arf_t x, long y, long prec, arf_rnd_t rnd)
+.. function:: int arf_div_si(arf_t z, const arf_t x, slong y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_si_div(arf_t z, long x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_si_div(arf_t z, slong x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_div_fmpz(arf_t z, const arf_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_div_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_fmpz_div(arf_t z, const fmpz_t x, const arf_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_fmpz_div(arf_t z, const fmpz_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_fmpz_div_fmpz(arf_t z, const fmpz_t x, const fmpz_t y, long prec, arf_rnd_t rnd)
+.. function:: int arf_fmpz_div_fmpz(arf_t z, const fmpz_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Sets `z = x / y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *y* is zero.
@@ -583,22 +583,22 @@ Division
 Square roots
 -------------------------------------------------------------------------------
 
-.. function:: int arf_sqrt(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_sqrt(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_sqrt_ui(arf_t z, ulong x, long prec, arf_rnd_t rnd)
+.. function:: int arf_sqrt_ui(arf_t z, ulong x, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_sqrt_fmpz(arf_t z, const fmpz_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_sqrt_fmpz(arf_t z, const fmpz_t x, slong prec, arf_rnd_t rnd)
 
     Sets `z = \sqrt{x}`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *x* is negative.
 
-.. function:: int arf_rsqrt(arf_t z, const arf_t x, long prec, arf_rnd_t rnd)
+.. function:: int arf_rsqrt(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
 
     Sets `z = 1/\sqrt{x}`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *x* is
     negative, and `+\infty` if *x* is zero.
 
-.. function:: int arf_root(arf_t z, const arf_t x, ulong k, long prec, arf_rnd_t rnd)
+.. function:: int arf_root(arf_t z, const arf_t x, ulong k, slong prec, arf_rnd_t rnd)
 
     Sets `z = x^{1/k}`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact. The result is NaN if *x* is negative.
@@ -608,9 +608,9 @@ Square roots
 Complex arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, long prec, arf_rnd_t rnd)
+.. function:: int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, slong prec, arf_rnd_t rnd)
 
-.. function:: int arf_complex_mul_fallback(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, long prec, arf_rnd_t rnd)
+.. function:: int arf_complex_mul_fallback(arf_t e, arf_t f, const arf_t a, const arf_t b, const arf_t c, const arf_t d, slong prec, arf_rnd_t rnd)
 
     Computes the complex product `e + fi = (a + bi)(c + di)`, rounding both
     `e` and `f` correctly to *prec* bits in the direction specified by *rnd*.
@@ -625,7 +625,7 @@ Complex arithmetic
     The *fallback* version is implemented naively, for testing purposes.
     No squaring optimization is implemented.
 
-.. function:: int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b, long prec, arf_rnd_t rnd)
+.. function:: int arf_complex_sqr(arf_t e, arf_t f, const arf_t a, const arf_t b, slong prec, arf_rnd_t rnd)
 
     Computes the complex square `e + fi = (a + bi)^2`. This function has
     identical semantics to :func:`arf_complex_mul` (with `c = a, b = d`),
