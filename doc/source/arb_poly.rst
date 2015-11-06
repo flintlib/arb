@@ -40,12 +40,12 @@ Memory management
     Clears the polynomial, deallocating all coefficients and the
     coefficient array.
 
-.. function:: void arb_poly_fit_length(arb_poly_t poly, long len)
+.. function:: void arb_poly_fit_length(arb_poly_t poly, slong len)
 
     Makes sures that the coefficient array of the polynomial contains at
     least *len* initialized coefficients.
 
-.. function:: void _arb_poly_set_length(arb_poly_t poly, long len)
+.. function:: void _arb_poly_set_length(arb_poly_t poly, slong len)
 
     Directly changes the length of the polynomial, without allocating or
     deallocating coefficients. The value shold not exceed the allocation length.
@@ -67,18 +67,18 @@ Basic manipulation
 
     Sets *dest* to a copy of *src*.
 
-.. function:: void arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, long prec)
+.. function:: void arb_poly_set_round(arb_poly_t dest, const arb_poly_t src, slong prec)
 
     Sets *dest* to a copy of *src*, rounded to *prec* bits.
 
-.. function:: void arb_poly_set_coeff_si(arb_poly_t poly, long n, long c)
+.. function:: void arb_poly_set_coeff_si(arb_poly_t poly, slong n, slong c)
 
-.. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, long n, const arb_t c)
+.. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, slong n, const arb_t c)
 
     Sets the coefficient with index *n* in *poly* to the value *c*.
     We require that *n* is nonnegative.
 
-.. function:: void arb_poly_get_coeff_arb(arb_t v, const arb_poly_t poly, long n)
+.. function:: void arb_poly_get_coeff_arb(arb_t v, const arb_poly_t poly, slong n)
 
     Sets *v* to the value of the coefficient with index *n* in *poly*.
     We require that *n* is nonnegative.
@@ -88,32 +88,32 @@ Basic manipulation
     Given `n \ge 0`, returns a pointer to coefficient *n* of *poly*,
     or *NULL* if *n* exceeds the length of *poly*.
 
-.. function:: void _arb_poly_shift_right(arb_ptr res, arb_srcptr poly, long len, long n)
+.. function:: void _arb_poly_shift_right(arb_ptr res, arb_srcptr poly, slong len, slong n)
 
-.. function:: void arb_poly_shift_right(arb_poly_t res, const arb_poly_t poly, long n)
+.. function:: void arb_poly_shift_right(arb_poly_t res, const arb_poly_t poly, slong n)
 
     Sets *res* to *poly* divided by `x^n`, throwing away the lower coefficients.
     We require that *n* is nonnegative.
 
-.. function:: void _arb_poly_shift_left(arb_ptr res, arb_srcptr poly, long len, long n)
+.. function:: void _arb_poly_shift_left(arb_ptr res, arb_srcptr poly, slong len, slong n)
 
-.. function:: void arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, long n)
+.. function:: void arb_poly_shift_left(arb_poly_t res, const arb_poly_t poly, slong n)
 
     Sets *res* to *poly* multiplied by `x^n`.
     We require that *n* is nonnegative.
 
-.. function:: void arb_poly_truncate(arb_poly_t poly, long n)
+.. function:: void arb_poly_truncate(arb_poly_t poly, slong n)
 
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
 
-.. function:: long arb_poly_length(const arb_poly_t poly)
+.. function:: slong arb_poly_length(const arb_poly_t poly)
 
     Returns the length of *poly*, i.e. zero if *poly* is
     identically zero, and otherwise one more than the index
     of the highest term that is not identically zero.
 
-.. function:: long arb_poly_degree(const arb_poly_t poly)
+.. function:: slong arb_poly_degree(const arb_poly_t poly)
 
     Returns the degree of *poly*, defined as one less than its length.
     Note that if one or several leading coefficients are balls
@@ -125,11 +125,11 @@ Basic manipulation
 Conversions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_poly_set_fmpz_poly(arb_poly_t poly, const fmpz_poly_t src, long prec)
+.. function:: void arb_poly_set_fmpz_poly(arb_poly_t poly, const fmpz_poly_t src, slong prec)
 
-.. function:: void arb_poly_set_fmpq_poly(arb_poly_t poly, const fmpq_poly_t src, long prec)
+.. function:: void arb_poly_set_fmpq_poly(arb_poly_t poly, const fmpq_poly_t src, slong prec)
 
-.. function:: void arb_poly_set_si(arb_poly_t poly, long src)
+.. function:: void arb_poly_set_si(arb_poly_t poly, slong src)
 
     Sets *poly* to *src*, rounding the coefficients to *prec* bits.
 
@@ -137,7 +137,7 @@ Conversions
 Input and output
 -------------------------------------------------------------------------------
 
-.. function:: void arb_poly_printd(const arb_poly_t poly, long digits)
+.. function:: void arb_poly_printd(const arb_poly_t poly, slong digits)
 
     Prints the polynomial as an array of coefficients, printing each
     coefficient using *arb_printd*.
@@ -146,7 +146,7 @@ Input and output
 Random generation
 -------------------------------------------------------------------------------
 
-.. function:: void arb_poly_randtest(arb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+.. function:: void arb_poly_randtest(arb_poly_t poly, flint_rand_t state, slong len, slong prec, slong mag_bits)
 
     Creates a random polynomial with length at most *len*.
 
@@ -167,7 +167,7 @@ Comparisons
     Returns nonzero iff *A* and *B* are equal as polynomial balls, i.e. all
     coefficients have equal midpoint and radius.
 
-.. function:: int _arb_poly_overlaps(arb_srcptr poly1, long len1, arb_srcptr poly2, long len2)
+.. function:: int _arb_poly_overlaps(arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2)
 
 .. function:: int arb_poly_overlaps(const arb_poly_t poly1, const arb_poly_t poly2)
 
@@ -183,9 +183,9 @@ Comparisons
 Bounds
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_majorant(arb_ptr res, arb_srcptr poly, long len, long prec)
+.. function:: void _arb_poly_majorant(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 
-.. function:: void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, long prec)
+.. function:: void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, slong prec)
 
     Sets *res* to an exact real polynomial whose coefficients are
     upper bounds for the absolute values of the coefficients in *poly*,
@@ -194,23 +194,23 @@ Bounds
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_add(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_add(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
     Sets *{C, max(lenA, lenB)}* to the sum of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
 
-.. function:: void arb_poly_add(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: void arb_poly_add(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong prec)
 
-.. function:: void arb_poly_add_si(arb_poly_t C, const arb_poly_t A, long B, long prec)
+.. function:: void arb_poly_add_si(arb_poly_t C, const arb_poly_t A, slong B, slong prec)
 
     Sets *C* to the sum of *A* and *B*.
 
-.. function:: void _arb_poly_sub(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_sub(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
     Sets *{C, max(lenA, lenB)}* to the difference of *{A, lenA}* and *{B, lenB}*.
     Allows aliasing of the input and output operands.
 
-.. function:: void arb_poly_sub(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: void arb_poly_sub(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong prec)
 
     Sets *C* to the difference of *A* and *B*.
 
@@ -218,15 +218,15 @@ Arithmetic
 
     Sets *C* to the negation of *A*.
 
-.. function:: void arb_poly_scalar_mul_2exp_si(arb_poly_t C, const arb_poly_t A, long c)
+.. function:: void arb_poly_scalar_mul_2exp_si(arb_poly_t C, const arb_poly_t A, slong c)
 
     Sets *C* to *A* multiplied by `2^c`.
 
-.. function:: void _arb_poly_mullow_classical(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long n, long prec)
+.. function:: void _arb_poly_mullow_classical(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong n, slong prec)
 
-.. function:: void _arb_poly_mullow_block(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long n, long prec)
+.. function:: void _arb_poly_mullow_block(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong n, slong prec)
 
-.. function:: void _arb_poly_mullow(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long n, long prec)
+.. function:: void _arb_poly_mullow(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong n, slong prec)
 
     Sets *{C, n}* to the product of *{A, lenA}* and *{B, lenB}*, truncated to
     length *n*. The output is not allowed to be aliased with either of the
@@ -263,25 +263,25 @@ Arithmetic
     multiplying two power series with a similar decay rate.
 
     The default algorithm chooses the *classical* algorithm for
-    short polynomials and the *block* algorithm for long polynomials.
+    short polynomials and the *block* algorithm for slong polynomials.
 
     If the input pointers are identical (and the lengths are the same),
     they are assumed to represent the same polynomial, and its
     square is computed.
 
-.. function:: void arb_poly_mullow_classical(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+.. function:: void arb_poly_mullow_classical(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 
-.. function:: void arb_poly_mullow_ztrunc(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+.. function:: void arb_poly_mullow_ztrunc(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 
-.. function:: void arb_poly_mullow_block(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+.. function:: void arb_poly_mullow_block(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 
-.. function:: void arb_poly_mullow(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+.. function:: void arb_poly_mullow(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 
     Sets *C* to the product of *A* and *B*, truncated to length *n*.
     If the same variable is passed for *A* and *B*, sets *C* to the square
     of *A* truncated to length *n*.
 
-.. function:: void _arb_poly_mul(arb_ptr C, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_mul(arb_ptr C, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
     Sets *{C, lenA + lenB - 1}* to the product of *{A, lenA}* and *{B, lenB}*.
     The output is not allowed to be aliased with either of the
@@ -292,36 +292,36 @@ Arithmetic
     they are assumed to represent the same polynomial, and its
     square is computed.
 
-.. function:: void arb_poly_mul(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: void arb_poly_mul(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong prec)
 
     Sets *C* to the product of *A* and *B*.
     If the same variable is passed for *A* and *B*, sets *C* to the
     square of *A*.
 
-.. function:: void _arb_poly_inv_series(arb_ptr Q, arb_srcptr A, long Alen, long len, long prec)
+.. function:: void _arb_poly_inv_series(arb_ptr Q, arb_srcptr A, slong Alen, slong len, slong prec)
 
     Sets *{Q, len}* to the power series inverse of *{A, Alen}*. Uses Newton iteration.
 
-.. function:: void arb_poly_inv_series(arb_poly_t Q, const arb_poly_t A, long n, long prec)
+.. function:: void arb_poly_inv_series(arb_poly_t Q, const arb_poly_t A, slong n, slong prec)
 
     Sets *Q* to the power series inverse of *A*, truncated to length *n*.
 
-.. function:: void  _arb_poly_div_series(arb_ptr Q, arb_srcptr A, long Alen, arb_srcptr B, long Blen, long n, long prec)
+.. function:: void  _arb_poly_div_series(arb_ptr Q, arb_srcptr A, slong Alen, arb_srcptr B, slong Blen, slong n, slong prec)
 
     Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
     Uses Newton iteration followed by multiplication.
 
-.. function:: void arb_poly_div_series(arb_poly_t Q, const arb_poly_t A, const arb_poly_t B, long n, long prec)
+.. function:: void arb_poly_div_series(arb_poly_t Q, const arb_poly_t A, const arb_poly_t B, slong n, slong prec)
 
     Sets *Q* to the power series quotient *A* divided by *B*, truncated to length *n*.
 
-.. function:: void _arb_poly_div(arb_ptr Q, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_div(arb_ptr Q, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
-.. function:: void _arb_poly_rem(arb_ptr R, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_rem(arb_ptr R, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
-.. function:: void _arb_poly_divrem(arb_ptr Q, arb_ptr R, arb_srcptr A, long lenA, arb_srcptr B, long lenB, long prec)
+.. function:: void _arb_poly_divrem(arb_ptr Q, arb_ptr R, arb_srcptr A, slong lenA, arb_srcptr B, slong lenB, slong prec)
 
-.. function:: int arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, long prec)
+.. function:: int arb_poly_divrem(arb_poly_t Q, arb_poly_t R, const arb_poly_t A, const arb_poly_t B, slong prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
     a remainder `R` such that `A = BQ + R`. The implementation reverses the
@@ -331,7 +331,7 @@ Arithmetic
     zero), returns 0 indicating failure without modifying the outputs.
     Otherwise returns nonzero.
 
-.. function:: void _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A, long len, const arb_t c, long prec)
+.. function:: void _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A, slong len, const arb_t c, slong prec)
 
     Divides `A` by the polynomial `x - c`, computing the quotient `Q` as well
     as the remainder `R = f(c)`.
@@ -340,17 +340,17 @@ Arithmetic
 Composition
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_compose_horner(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long prec)
+.. function:: void _arb_poly_compose_horner(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong prec)
 
-.. function:: void arb_poly_compose_horner(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long prec)
+.. function:: void arb_poly_compose_horner(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong prec)
 
-.. function:: void _arb_poly_compose_divconquer(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long prec)
+.. function:: void _arb_poly_compose_divconquer(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong prec)
 
-.. function:: void arb_poly_compose_divconquer(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long prec)
+.. function:: void arb_poly_compose_divconquer(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong prec)
 
-.. function:: void _arb_poly_compose(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long prec)
+.. function:: void _arb_poly_compose(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong prec)
 
-.. function:: void arb_poly_compose(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long prec)
+.. function:: void arb_poly_compose(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong prec)
 
     Sets *res* to the composition `h(x) = f(g(x))` where `f` is given by
     *poly1* and `g` is given by *poly2*, respectively using Horner's rule,
@@ -358,17 +358,17 @@ Composition
     The underscore methods do not support aliasing of the output
     with either input polynomial.
 
-.. function:: void _arb_poly_compose_series_horner(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long n, long prec)
+.. function:: void _arb_poly_compose_series_horner(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong n, slong prec)
 
-.. function:: void arb_poly_compose_series_horner(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long n, long prec)
+.. function:: void arb_poly_compose_series_horner(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong n, slong prec)
 
-.. function:: void _arb_poly_compose_series_brent_kung(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long n, long prec)
+.. function:: void _arb_poly_compose_series_brent_kung(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong n, slong prec)
 
-.. function:: void arb_poly_compose_series_brent_kung(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long n, long prec)
+.. function:: void arb_poly_compose_series_brent_kung(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong n, slong prec)
 
-.. function:: void _arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, long len1, arb_srcptr poly2, long len2, long n, long prec)
+.. function:: void _arb_poly_compose_series(arb_ptr res, arb_srcptr poly1, slong len1, arb_srcptr poly2, slong len2, slong n, slong prec)
 
-.. function:: void arb_poly_compose_series(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, long n, long prec)
+.. function:: void arb_poly_compose_series(arb_poly_t res, const arb_poly_t poly1, const arb_poly_t poly2, slong n, slong prec)
 
     Sets *res* to the power series composition `h(x) = f(g(x))` truncated
     to order `O(x^n)` where `f` is given by *poly1* and `g` is given by *poly2*,
@@ -379,21 +379,21 @@ Composition
     with either input polynomial.
 
 
-.. function:: void _arb_poly_revert_series_lagrange(arb_ptr h, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_revert_series_lagrange(arb_ptr h, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_revert_series_lagrange(arb_poly_t h, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_revert_series_lagrange(arb_poly_t h, const arb_poly_t f, slong n, slong prec)
 
-.. function:: void _arb_poly_revert_series_newton(arb_ptr h, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_revert_series_newton(arb_ptr h, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_revert_series_newton(arb_poly_t h, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_revert_series_newton(arb_poly_t h, const arb_poly_t f, slong n, slong prec)
 
-.. function:: void _arb_poly_revert_series_lagrange_fast(arb_ptr h, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_revert_series_lagrange_fast(arb_ptr h, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_revert_series_lagrange_fast(arb_poly_t h, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_revert_series_lagrange_fast(arb_poly_t h, const arb_poly_t f, slong n, slong prec)
 
-.. function:: void _arb_poly_revert_series(arb_ptr h, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_revert_series(arb_ptr h, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_revert_series(arb_poly_t h, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_revert_series(arb_poly_t h, const arb_poly_t f, slong n, slong prec)
 
     Sets `h` to the power series reversion of `f`, i.e. the expansion
     of the compositional inverse function `f^{-1}(x)`,
@@ -408,48 +408,48 @@ Composition
 Evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_evaluate_horner(arb_t y, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate_horner(arb_t y, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate_horner(arb_t y, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate_horner(arb_t y, const arb_poly_t f, const arb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate_rectangular(arb_t y, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate_rectangular(arb_t y, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate_rectangular(arb_t y, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate_rectangular(arb_t y, const arb_poly_t f, const arb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate(arb_t y, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate(arb_t y, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate(arb_t y, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate(arb_t y, const arb_poly_t f, const arb_t x, slong prec)
 
     Sets `y = f(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
-.. function:: void _arb_poly_evaluate_acb_horner(acb_t y, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate_acb_horner(acb_t y, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate_acb_horner(acb_t y, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate_acb_horner(acb_t y, const arb_poly_t f, const acb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate_acb_rectangular(acb_t y, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate_acb_rectangular(acb_t y, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate_acb_rectangular(acb_t y, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate_acb_rectangular(acb_t y, const arb_poly_t f, const acb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate_acb(acb_t y, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate_acb(acb_t y, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate_acb(acb_t y, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate_acb(acb_t y, const arb_poly_t f, const acb_t x, slong prec)
 
     Sets `y = f(x)` where `x` is a complex number, evaluating the
     polynomial respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
-.. function:: void _arb_poly_evaluate2_horner(arb_t y, arb_t z, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate2_horner(arb_t y, arb_t z, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2_horner(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate2_horner(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate2_rectangular(arb_t y, arb_t z, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate2_rectangular(arb_t y, arb_t z, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2_rectangular(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate2_rectangular(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate2(arb_t y, arb_t z, arb_srcptr f, long len, const arb_t x, long prec)
+.. function:: void _arb_poly_evaluate2(arb_t y, arb_t z, arb_srcptr f, slong len, const arb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, long prec)
+.. function:: void arb_poly_evaluate2(arb_t y, arb_t z, const arb_poly_t f, const arb_t x, slong prec)
 
     Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
@@ -460,17 +460,17 @@ Evaluation
     With the rectangular splitting algorithm, the powers can be reused,
     making simultaneous evaluation slightly faster.
 
-.. function:: void _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate2_acb_horner(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, slong prec)
 
-.. function:: void _arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec)
+.. function:: void _arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, slong len, const acb_t x, slong prec)
 
-.. function:: void arb_poly_evaluate2_acb(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, long prec)
+.. function:: void arb_poly_evaluate2_acb(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, slong prec)
 
     Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
@@ -479,22 +479,22 @@ Evaluation
 Product trees
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, long n, long prec)
+.. function:: void _arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, slong n, slong prec)
 
-.. function:: void arb_poly_product_roots(arb_poly_t poly, arb_srcptr xs, long n, long prec)
+.. function:: void arb_poly_product_roots(arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 
     Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
 
-.. function:: arb_ptr * _arb_poly_tree_alloc(long len)
+.. function:: arb_ptr * _arb_poly_tree_alloc(slong len)
 
     Returns an initialized data structured capable of representing a
     remainder tree (product tree) of *len* roots.
 
-.. function:: void _arb_poly_tree_free(arb_ptr * tree, long len)
+.. function:: void _arb_poly_tree_free(arb_ptr * tree, slong len)
 
     Deallocates a tree structure as allocated using *_arb_poly_tree_alloc*.
 
-.. function:: void _arb_poly_tree_build(arb_ptr * tree, arb_srcptr roots, long len, long prec)
+.. function:: void _arb_poly_tree_build(arb_ptr * tree, arb_srcptr roots, slong len, slong prec)
 
     Constructs a product tree from a given array of *len* roots. The tree
     structure must be pre-allocated to the specified length using
@@ -504,18 +504,18 @@ Product trees
 Multipoint evaluation
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_evaluate_vec_iter(arb_ptr ys, arb_srcptr poly, long plen, arb_srcptr xs, long n, long prec)
+.. function:: void _arb_poly_evaluate_vec_iter(arb_ptr ys, arb_srcptr poly, slong plen, arb_srcptr xs, slong n, slong prec)
 
-.. function:: void arb_poly_evaluate_vec_iter(arb_ptr ys, const arb_poly_t poly, arb_srcptr xs, long n, long prec)
+.. function:: void arb_poly_evaluate_vec_iter(arb_ptr ys, const arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 
     Evaluates the polynomial simultaneously at *n* given points, calling
     :func:`_arb_poly_evaluate` repeatedly.
 
-.. function:: void _arb_poly_evaluate_vec_fast_precomp(arb_ptr vs, arb_srcptr poly, long plen, arb_ptr * tree, long len, long prec)
+.. function:: void _arb_poly_evaluate_vec_fast_precomp(arb_ptr vs, arb_srcptr poly, slong plen, arb_ptr * tree, slong len, slong prec)
 
-.. function:: void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, long plen, arb_srcptr xs, long n, long prec)
+.. function:: void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, slong plen, arb_srcptr xs, slong n, slong prec)
 
-.. function:: void arb_poly_evaluate_vec_fast(arb_ptr ys, const arb_poly_t poly, arb_srcptr xs, long n, long prec)
+.. function:: void arb_poly_evaluate_vec_fast(arb_ptr ys, const arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 
     Evaluates the polynomial simultaneously at *n* given points, using
     fast multipoint evaluation.
@@ -523,29 +523,29 @@ Multipoint evaluation
 Interpolation
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_interpolate_newton(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, long n, long prec)
+.. function:: void _arb_poly_interpolate_newton(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 
-.. function:: void arb_poly_interpolate_newton(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, long n, long prec)
+.. function:: void arb_poly_interpolate_newton(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation first interpolates in the
     Newton basis and then converts back to the monomial basis.
 
-.. function:: void _arb_poly_interpolate_barycentric(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, long n, long prec)
+.. function:: void _arb_poly_interpolate_barycentric(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 
-.. function:: void arb_poly_interpolate_barycentric(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, long n, long prec)
+.. function:: void arb_poly_interpolate_barycentric(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values. This implementation uses the barycentric
     form of Lagrange interpolation.
 
-.. function:: void _arb_poly_interpolation_weights(arb_ptr w, arb_ptr * tree, long len, long prec)
+.. function:: void _arb_poly_interpolation_weights(arb_ptr w, arb_ptr * tree, slong len, slong prec)
 
-.. function:: void _arb_poly_interpolate_fast_precomp(arb_ptr poly, arb_srcptr ys, arb_ptr * tree, arb_srcptr weights, long len, long prec)
+.. function:: void _arb_poly_interpolate_fast_precomp(arb_ptr poly, arb_srcptr ys, arb_ptr * tree, arb_srcptr weights, slong len, slong prec)
 
-.. function:: void _arb_poly_interpolate_fast(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, long len, long prec)
+.. function:: void _arb_poly_interpolate_fast(arb_ptr poly, arb_srcptr xs, arb_srcptr ys, slong len, slong prec)
 
-.. function:: void arb_poly_interpolate_fast(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, long n, long prec)
+.. function:: void arb_poly_interpolate_fast(arb_poly_t poly, arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 
     Recovers the unique polynomial of length at most *n* that interpolates
     the given *x* and *y* values, using fast Lagrange interpolation.
@@ -556,21 +556,21 @@ Interpolation
 Differentiation
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_derivative(arb_ptr res, arb_srcptr poly, long len, long prec)
+.. function:: void _arb_poly_derivative(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 
     Sets *{res, len - 1}* to the derivative of *{poly, len}*.
     Allows aliasing of the input and output.
 
-.. function:: void arb_poly_derivative(arb_poly_t res, const arb_poly_t poly, long prec)
+.. function:: void arb_poly_derivative(arb_poly_t res, const arb_poly_t poly, slong prec)
 
     Sets *res* to the derivative of *poly*.
 
-.. function:: void _arb_poly_integral(arb_ptr res, arb_srcptr poly, long len, long prec)
+.. function:: void _arb_poly_integral(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 
     Sets *{res, len}* to the integral of *{poly, len - 1}*.
     Allows aliasing of the input and output.
 
-.. function:: void arb_poly_integral(arb_poly_t res, const arb_poly_t poly, long prec)
+.. function:: void arb_poly_integral(arb_poly_t res, const arb_poly_t poly, slong prec)
 
     Sets *res* to the integral of *poly*.
 
@@ -578,31 +578,31 @@ Differentiation
 Transforms
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_borel_transform(arb_ptr res, arb_srcptr poly, long len, long prec)
+.. function:: void _arb_poly_borel_transform(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 
-.. function:: void arb_poly_borel_transform(arb_poly_t res, const arb_poly_t poly, long prec)
+.. function:: void arb_poly_borel_transform(arb_poly_t res, const arb_poly_t poly, slong prec)
 
     Computes the Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
     to `\sum_k (a_k / k!) x^k`. The underscore method allows aliasing.
 
-.. function:: void _arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, long len, long prec)
+.. function:: void _arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 
-.. function:: void arb_poly_inv_borel_transform(arb_poly_t res, const arb_poly_t poly, long prec)
+.. function:: void arb_poly_inv_borel_transform(arb_poly_t res, const arb_poly_t poly, slong prec)
 
     Computes the inverse Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
     to `\sum_k a_k k! x^k`. The underscore method allows aliasing.
 
-.. function:: void _arb_poly_binomial_transform_basecase(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
+.. function:: void _arb_poly_binomial_transform_basecase(arb_ptr b, arb_srcptr a, slong alen, slong len, slong prec)
 
-.. function:: void arb_poly_binomial_transform_basecase(arb_poly_t b, const arb_poly_t a, long len, long prec)
+.. function:: void arb_poly_binomial_transform_basecase(arb_poly_t b, const arb_poly_t a, slong len, slong prec)
 
-.. function:: void _arb_poly_binomial_transform_convolution(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
+.. function:: void _arb_poly_binomial_transform_convolution(arb_ptr b, arb_srcptr a, slong alen, slong len, slong prec)
 
-.. function:: void arb_poly_binomial_transform_convolution(arb_poly_t b, const arb_poly_t a, long len, long prec)
+.. function:: void arb_poly_binomial_transform_convolution(arb_poly_t b, const arb_poly_t a, slong len, slong prec)
 
-.. function:: void _arb_poly_binomial_transform(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
+.. function:: void _arb_poly_binomial_transform(arb_ptr b, arb_srcptr a, slong alen, slong len, slong prec)
 
-.. function:: void arb_poly_binomial_transform(arb_poly_t b, const arb_poly_t a, long len, long prec)
+.. function:: void arb_poly_binomial_transform(arb_poly_t b, const arb_poly_t a, slong len, slong prec)
 
     Computes the binomial transform of the input polynomial, truncating
     the output to length *len*.
@@ -630,7 +630,7 @@ Transforms
 Powers and elementary functions
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_pow_ui_trunc_binexp(arb_ptr res, arb_srcptr f, long flen, ulong exp, long len, long prec)
+.. function:: void _arb_poly_pow_ui_trunc_binexp(arb_ptr res, arb_srcptr f, slong flen, ulong exp, slong len, slong prec)
 
     Sets *{res, len}* to *{f, flen}* raised to the power *exp*, truncated
     to length *len*. Requires that *len* is no longer than the length
@@ -639,22 +639,22 @@ Powers and elementary functions
     that *flen* and *len* are positive.
     Uses binary expontiation.
 
-.. function:: void arb_poly_pow_ui_trunc_binexp(arb_poly_t res, const arb_poly_t poly, ulong exp, long len, long prec)
+.. function:: void arb_poly_pow_ui_trunc_binexp(arb_poly_t res, const arb_poly_t poly, ulong exp, slong len, slong prec)
 
     Sets *res* to *poly* raised to the power *exp*, truncated to length *len*.
     Uses binary exponentiation.
 
-.. function:: void _arb_poly_pow_ui(arb_ptr res, arb_srcptr f, long flen, ulong exp, long prec)
+.. function:: void _arb_poly_pow_ui(arb_ptr res, arb_srcptr f, slong flen, ulong exp, slong prec)
 
     Sets *res* to *{f, flen}* raised to the power *exp*. Does not
     support aliasing of the input and output, and requires that
     *flen* is positive.
 
-.. function:: void arb_poly_pow_ui(arb_poly_t res, const arb_poly_t poly, ulong exp, long prec)
+.. function:: void arb_poly_pow_ui(arb_poly_t res, const arb_poly_t poly, ulong exp, slong prec)
 
     Sets *res* to *poly* raised to the power *exp*.
 
-.. function:: void _arb_poly_pow_series(arb_ptr h, arb_srcptr f, long flen, arb_srcptr g, long glen, long len, long prec)
+.. function:: void _arb_poly_pow_series(arb_ptr h, arb_srcptr f, slong flen, arb_srcptr g, slong glen, slong len, slong prec)
 
     Sets *{h, len}* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
     to length *len*. This function detects special cases such as *g* being an
@@ -663,14 +663,14 @@ Powers and elementary functions
     with either of the input operands. It requires that all lengths
     are positive, and assumes that *flen* and *glen* do not exceed *len*.
 
-.. function:: void arb_poly_pow_series(arb_poly_t h, const arb_poly_t f, const arb_poly_t g, long len, long prec)
+.. function:: void arb_poly_pow_series(arb_poly_t h, const arb_poly_t f, const arb_poly_t g, slong len, slong prec)
 
     Sets *h* to the power series `f(x)^{g(x)} = \exp(g(x) \log f(x))` truncated
     to length *len*. This function detects special cases such as *g* being an
     exact small integer or `\pm 1/2`, and computes such powers more
     efficiently.
 
-.. function:: void _arb_poly_pow_arb_series(arb_ptr h, arb_srcptr f, long flen, const arb_t g, long len, long prec)
+.. function:: void _arb_poly_pow_arb_series(arb_ptr h, arb_srcptr f, slong flen, const arb_t g, slong len, slong prec)
 
     Sets *{h, len}* to the power series `f(x)^g = \exp(g \log f(x))` truncated
     to length *len*. This function detects special cases such as *g* being an
@@ -679,14 +679,14 @@ Powers and elementary functions
     with either of the input operands. It requires that all lengths
     are positive, and assumes that *flen* does not exceed *len*.
 
-.. function:: void arb_poly_pow_arb_series(arb_poly_t h, const arb_poly_t f, const arb_t g, long len, long prec)
+.. function:: void arb_poly_pow_arb_series(arb_poly_t h, const arb_poly_t f, const arb_t g, slong len, slong prec)
 
     Sets *h* to the power series `f(x)^g = \exp(g \log f(x))` truncated
     to length *len*.
 
-.. function:: void _arb_poly_sqrt_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sqrt_series(arb_ptr g, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_sqrt_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sqrt_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec)
 
     Sets *g* to the power series square root of *h*, truncated to length *n*.
     Uses division-free Newton iteration for the reciprocal square root,
@@ -695,9 +695,9 @@ Powers and elementary functions
     The underscore method does not support aliasing of the input and output
     arrays. It requires that *hlen* and *n* are greater than zero.
 
-.. function:: void _arb_poly_rsqrt_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_rsqrt_series(arb_ptr g, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_rsqrt_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_rsqrt_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec)
 
     Sets *g* to the reciprocal power series square root of *h*, truncated to length *n*.
     Uses division-free Newton iteration.
@@ -705,9 +705,9 @@ Powers and elementary functions
     The underscore method does not support aliasing of the input and output
     arrays. It requires that *hlen* and *n* are greater than zero.
 
-.. function:: void _arb_poly_log_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_log_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_log_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_log_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 
     Sets *res* to the power series logarithm of *f*, truncated to length *n*.
     Uses the formula `\log(f(x)) = \int f'(x) / f(x) dx`, adding the logarithm of the
@@ -716,17 +716,17 @@ Powers and elementary functions
     The underscore method supports aliasing of the input and output
     arrays. It requires that *flen* and *n* are greater than zero.
 
-.. function:: void _arb_poly_atan_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_atan_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_atan_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_atan_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 
-.. function:: void _arb_poly_asin_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_asin_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_asin_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_asin_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 
-.. function:: void _arb_poly_acos_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
+.. function:: void _arb_poly_acos_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec)
 
-.. function:: void arb_poly_acos_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+.. function:: void arb_poly_acos_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 
     Sets *res* respectively to the power series inverse tangent,
     inverse sine and inverse cosine of *f*, truncated to length *n*.
@@ -747,13 +747,13 @@ Powers and elementary functions
     The underscore methods supports aliasing of the input and output
     arrays. They require that *flen* and *n* are greater than zero.
 
-.. function:: void _arb_poly_exp_series_basecase(arb_ptr f, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_exp_series_basecase(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_exp_series_basecase(arb_poly_t f, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_exp_series_basecase(arb_poly_t f, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_exp_series(arb_ptr f, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_exp_series(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_exp_series(arb_poly_t f, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_exp_series(arb_poly_t f, const arb_poly_t h, slong n, slong prec)
 
     Sets `f` to the power series exponential of `h`, truncated to length `n`.
 
@@ -768,17 +768,17 @@ Powers and elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
+.. function:: void _arb_poly_sin_cos_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
+.. function:: void arb_poly_sin_cos_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec, int times_pi)
 
-.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec, int times_pi)
+.. function:: void _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec, int times_pi)
 
-.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec, int times_pi)
+.. function:: void arb_poly_sin_cos_series_tangent(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec, int times_pi)
 
-.. function:: void _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_sin_cos_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec)
 
     Sets *s* and *c* to the power series sine and cosine of *h*, computed
     simultaneously.
@@ -804,21 +804,21 @@ Powers and elementary functions
 
     The underscore methods support aliasing and require the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_series(arb_ptr s, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_sin_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_series(arb_poly_t s, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_cos_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_cos_series(arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_cos_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_cos_series(arb_poly_t c, const arb_poly_t h, slong n, slong prec)
 
     Respectively evaluates the power series sine or cosine. These functions
     simply wrap :func:`_arb_poly_sin_cos_series`. The underscore methods
     support aliasing and require the lengths to be nonzero.
 
-.. function:: void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, long hlen, long len, long prec)
+.. function:: void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec)
 
-.. function:: void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec)
 
     Sets *g* to the power series tangent of *h*.
 
@@ -829,21 +829,21 @@ Powers and elementary functions
     The underscore version does not support aliasing, and requires
     the lengths to be nonzero.
 
-.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_cos_pi_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_sin_pi_series(arb_ptr s, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_sin_pi_series(arb_poly_t s, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_cos_pi_series(arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_cos_pi_series(arb_poly_t c, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_cot_pi_series(arb_ptr c, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_cot_pi_series(arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_cot_pi_series(arb_poly_t c, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_cot_pi_series(arb_poly_t c, const arb_poly_t h, slong n, slong prec)
 
     Compute the respective trigonometric functions of the input
     multiplied by `\pi`.
@@ -851,21 +851,21 @@ Powers and elementary functions
 Gamma function and factorials
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_gamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_gamma_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
-.. function:: void _arb_poly_digamma_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_digamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_digamma_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_digamma_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
     Sets *res* to the series expansion of `\Gamma(h(x))`, `1/\Gamma(h(x))`,
     or `\log \Gamma(h(x))`, `\psi(h(x))`, truncated to length *n*.
@@ -879,9 +879,9 @@ Gamma function and factorials
     The underscore methods support aliasing of the input and output
     arrays, and require that *hlen* and *n* are greater than zero.
 
-.. function:: void _arb_poly_rising_ui_series(arb_ptr res, arb_srcptr f, long flen, ulong r, long trunc, long prec)
+.. function:: void _arb_poly_rising_ui_series(arb_ptr res, arb_srcptr f, slong flen, ulong r, slong trunc, slong prec)
 
-.. function:: void arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, long trunc, long prec)
+.. function:: void arb_poly_rising_ui_series(arb_poly_t res, const arb_poly_t f, ulong r, slong trunc, slong prec)
 
     Sets *res* to the rising factorial `(f) (f+1) (f+2) \cdots (f+r-1)`, truncated
     to length *trunc*. The underscore method assumes that *flen*, *r* and *trunc*
@@ -890,7 +890,7 @@ Gamma function and factorials
 Zeta function
 -------------------------------------------------------------------------------
 
-.. function:: void arb_poly_zeta_series(arb_poly_t res, const arb_poly_t s, const arb_t a, int deflate, long n, long prec)
+.. function:: void arb_poly_zeta_series(arb_poly_t res, const arb_poly_t s, const arb_t a, int deflate, slong n, slong prec)
 
     Sets *res* to the Hurwitz zeta function `\zeta(s,a)` where `s` a power
     series and `a` is a constant, truncated to length *n*.
@@ -908,9 +908,9 @@ Zeta function
     If `a = 1`, this implementation uses the reflection formula if the midpoint
     of the constant term of `s` is negative.
 
-.. function:: void _arb_poly_riemann_siegel_theta_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_riemann_siegel_theta_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
     Sets *res* to the series expansion of the Riemann-Siegel theta
     function
@@ -926,9 +926,9 @@ Zeta function
     and output arrays, and requires that the lengths are greater
     than zero.
 
-.. function:: void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long n, long prec)
+.. function:: void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, slong hlen, slong n, slong prec)
 
-.. function:: void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, long n, long prec)
+.. function:: void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec)
 
     Sets *res* to the series expansion of the Riemann-Siegel Z-function
 
@@ -947,7 +947,7 @@ Zeta function
 Root-finding
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, long len)
+.. function:: void _arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, slong len)
 
 .. function:: void arb_poly_root_bound_fujiwara(mag_t bound, arb_poly_t poly)
 
@@ -965,7 +965,7 @@ Root-finding
 
     where `a_0, \ldots, a_n` are the coefficients of *poly*.
 
-.. function:: void _arb_poly_newton_convergence_factor(arf_t convergence_factor, arb_srcptr poly, long len, const arb_t convergence_interval, long prec)
+.. function:: void _arb_poly_newton_convergence_factor(arf_t convergence_factor, arb_srcptr poly, slong len, const arb_t convergence_interval, slong prec)
 
     Given an interval `I` specified by *convergence_interval*, evaluates a bound
     for `C = \sup_{t,u \in I} \frac{1}{2} |f''(t)| / |f'(u)|`,
@@ -974,7 +974,7 @@ Root-finding
     If `f` has large coefficients, `I` must be extremely precise in order to
     get a finite factor.
 
-.. function:: int _arb_poly_newton_step(arb_t xnew, arb_srcptr poly, long len, const arb_t x, const arb_t convergence_interval, const arf_t convergence_factor, long prec)
+.. function:: int _arb_poly_newton_step(arb_t xnew, arb_srcptr poly, slong len, const arb_t x, const arb_t convergence_interval, const arf_t convergence_factor, slong prec)
 
     Performs a single step with Newton's method.
 
@@ -995,7 +995,7 @@ Root-finding
     If either condition fails, we set *xnew* to `x` and return zero,
     indicating that no progress was made.
 
-.. function:: void _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, long len, const arb_t start, const arb_t convergence_interval, const arf_t convergence_factor, long eval_extra_prec, long prec)
+.. function:: void _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, slong len, const arb_t start, const arb_t convergence_interval, const arf_t convergence_factor, slong eval_extra_prec, slong prec)
 
     Refines a precise estimate of a polynomial root to high precision
     by performing several Newton steps, using nearly optimally
@@ -1011,9 +1011,9 @@ Root-finding
 Other special polynomials
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_poly_swinnerton_dyer_ui(arb_ptr poly, ulong n, long trunc, long prec)
+.. function:: void _arb_poly_swinnerton_dyer_ui(arb_ptr poly, ulong n, slong trunc, slong prec)
 
-.. function:: void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, long prec)
+.. function:: void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, slong prec)
 
     Computes the Swinnerton-Dyer polynomial `S_n`, which has degree `2^n`
     and is the rational minimal polynomial of the sum
