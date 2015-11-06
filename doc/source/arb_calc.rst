@@ -30,7 +30,7 @@ Types, macros and constants
 
     Typedef for a pointer to a function with signature::
 
-        int func(arb_ptr out, const arb_t inp, void * param, long order, long prec)
+        int func(arb_ptr out, const arb_t inp, void * param, slong order, slong prec)
 
     implementing a univariate real function `f(x)`.
     When called, *func* should write to *out* the first *order*
@@ -91,21 +91,21 @@ Subdivision-based root finding
 
 .. function:: void arf_interval_clear(arf_interval_t v)
 
-.. function:: arf_interval_ptr _arf_interval_vec_init(long n)
+.. function:: arf_interval_ptr _arf_interval_vec_init(slong n)
 
-.. function:: void _arf_interval_vec_clear(arf_interval_ptr v, long n)
+.. function:: void _arf_interval_vec_clear(arf_interval_ptr v, slong n)
 
 .. function:: void arf_interval_set(arf_interval_t v, const arf_interval_t u)
 
 .. function:: void arf_interval_swap(arf_interval_t v, arf_interval_t u)
 
-.. function:: void arf_interval_get_arb(arb_t x, const arf_interval_t v, long prec)
+.. function:: void arf_interval_get_arb(arb_t x, const arf_interval_t v, slong prec)
 
-.. function:: void arf_interval_printd(const arf_interval_t v, long n)
+.. function:: void arf_interval_printd(const arf_interval_t v, slong n)
 
     Helper functions for endpoint-based intervals.
 
-.. function:: long arb_calc_isolate_roots(arf_interval_ptr * found, int ** flags, arb_calc_func_t func, void * param, const arf_interval_t interval, long maxdepth, long maxeval, long maxfound, long prec)
+.. function:: slong arb_calc_isolate_roots(arf_interval_ptr * found, int ** flags, arb_calc_func_t func, void * param, const arf_interval_t interval, slong maxdepth, slong maxeval, slong maxfound, slong prec)
 
     Rigorously isolates single roots of a real analytic function
     on the interior of an interval.
@@ -161,7 +161,7 @@ Subdivision-based root finding
     represented exactly as floating-point numbers in memory.
     Do not pass `1 \pm 2^{-10^{100}}` as input.
 
-.. function:: int arb_calc_refine_root_bisect(arf_interval_t r, arb_calc_func_t func, void * param, const arf_interval_t start, long iter, long prec)
+.. function:: int arb_calc_refine_root_bisect(arf_interval_t r, arb_calc_func_t func, void * param, const arf_interval_t start, slong iter, slong prec)
 
     Given an interval *start* known to contain a single root of *func*,
     refines it using *iter* bisection steps. The algorithm can
@@ -172,7 +172,7 @@ Subdivision-based root finding
 Newton-based root finding
 -------------------------------------------------------------------------------
 
-.. function:: void arb_calc_newton_conv_factor(arf_t conv_factor, arb_calc_func_t func, void * param, const arb_t conv_region, long prec)
+.. function:: void arb_calc_newton_conv_factor(arf_t conv_factor, arb_calc_func_t func, void * param, const arb_t conv_region, slong prec)
 
     Given an interval `I` specified by *conv_region*, evaluates a bound
     for `C = \sup_{t,u \in I} \frac{1}{2} |f''(t)| / |f'(u)|`,
@@ -181,7 +181,7 @@ Newton-based root finding
     If `f` is ill-conditioned, `I` may need to be extremely precise in
     order to get an effective, finite bound for *C*.
 
-.. function:: int arb_calc_newton_step(arb_t xnew, arb_calc_func_t func, void * param, const arb_t x, const arb_t conv_region, const arf_t conv_factor, long prec)
+.. function:: int arb_calc_newton_step(arb_t xnew, arb_calc_func_t func, void * param, const arb_t x, const arb_t conv_region, const arf_t conv_factor, slong prec)
 
     Performs a single step with an interval version of Newton's method.
     The input consists of the function `f` specified
@@ -202,7 +202,7 @@ Newton-based root finding
     *ARB_CALC_NO_CONVERGENCE*, indicating that no progress
     is made.
 
-.. function:: int arb_calc_refine_root_newton(arb_t r, arb_calc_func_t func, void * param, const arb_t start, const arb_t conv_region, const arf_t conv_factor, long eval_extra_prec, long prec)
+.. function:: int arb_calc_refine_root_newton(arb_t r, arb_calc_func_t func, void * param, const arb_t start, const arb_t conv_region, const arf_t conv_factor, slong eval_extra_prec, slong prec)
 
     Refines a precise estimate of a single root of a function
     to high precision by performing several Newton steps, using
