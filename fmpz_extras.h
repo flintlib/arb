@@ -49,7 +49,7 @@ fmpz_add_inline(fmpz_t z, const fmpz_t x, const fmpz_t y)
 }
 
 static __inline__ void
-fmpz_add_si(fmpz_t z, const fmpz_t x, long y)
+fmpz_add_si(fmpz_t z, const fmpz_t x, slong y)
 {
     if (y >= 0)
         fmpz_add_ui(z, x, y);
@@ -58,7 +58,7 @@ fmpz_add_si(fmpz_t z, const fmpz_t x, long y)
 }
 
 static __inline__ void
-fmpz_sub_si(fmpz_t z, const fmpz_t x, long y)
+fmpz_sub_si(fmpz_t z, const fmpz_t x, slong y)
 {
     if (y >= 0)
         fmpz_sub_ui(z, x, y);
@@ -67,7 +67,7 @@ fmpz_sub_si(fmpz_t z, const fmpz_t x, long y)
 }
 
 static __inline__ void
-fmpz_add_si_inline(fmpz_t z, const fmpz_t x, long y)
+fmpz_add_si_inline(fmpz_t z, const fmpz_t x, slong y)
 {
     fmpz f;
 
@@ -80,7 +80,7 @@ fmpz_add_si_inline(fmpz_t z, const fmpz_t x, long y)
 }
 
 static __inline__ void
-fmpz_sub_si_inline(fmpz_t z, const fmpz_t x, long y)
+fmpz_sub_si_inline(fmpz_t z, const fmpz_t x, slong y)
 {
     fmpz f;
 
@@ -104,7 +104,7 @@ fmpz_add_ui_inline(fmpz_t z, const fmpz_t x, ulong y)
 }
 
 static __inline__ void
-fmpz_add2_fmpz_si_inline(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+fmpz_add2_fmpz_si_inline(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
 {
     fmpz f, g, h;
 
