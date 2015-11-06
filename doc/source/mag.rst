@@ -50,11 +50,11 @@ Memory management
 
     Sets *x* to the value of *y*.
 
-.. function:: mag_ptr _mag_vec_init(long n)
+.. function:: mag_ptr _mag_vec_init(slong n)
 
     Allocates a vector of length *n*. All entries are set to zero.
 
-.. function:: void _mag_vec_clear(mag_ptr v, long n)
+.. function:: void _mag_vec_clear(mag_ptr v, slong n)
 
     Clears a vector of length *n*.
 
@@ -102,7 +102,7 @@ Comparisons
     Returns negative, zero, or positive, depending on whether *x*
     is smaller, equal, or larger than *y*.
 
-.. function:: int mag_cmp_2exp_si(const mag_t x, long y)
+.. function:: int mag_cmp_2exp_si(const mag_t x, slong y)
 
     Returns negative, zero, or positive, depending on whether *x*
     is smaller, equal, or larger than `2^y`.
@@ -123,11 +123,11 @@ Input and output
 Random generation
 -------------------------------------------------------------------------------
 
-.. function:: void mag_randtest(mag_t x, flint_rand_t state, long expbits)
+.. function:: void mag_randtest(mag_t x, flint_rand_t state, slong expbits)
 
     Sets *x* to a random finite value, with an exponent up to *expbits* bits large.
 
-.. function:: void mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
+.. function:: void mag_randtest_special(mag_t x, flint_rand_t state, slong expbits)
 
     Like :func:`mag_randtest`, but also sometimes sets *x* to
     infinity.
@@ -149,7 +149,7 @@ Conversions
 
 .. function:: void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t x, const fmpz_t y)
 
-.. function:: void mag_set_ui_2exp_si(mag_t z, ulong x, long y)
+.. function:: void mag_set_ui_2exp_si(mag_t z, ulong x, slong y)
 
     Sets *z* to an upper bound for `|x| \times 2^y`.
 
@@ -174,7 +174,7 @@ Conversions
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, long y)
+.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
 
 .. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
 
@@ -252,11 +252,11 @@ as they will be overwritten directly (thus leaking memory).
 
     Sets *z* to an upper bound for `z + xy`.
 
-.. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
+.. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, slong e)
 
     Sets *z* to an upper bound for `x + 2^e`.
 
-.. function:: void mag_fast_mul_2exp_si(mag_t z, const mag_t x, long e)
+.. function:: void mag_fast_mul_2exp_si(mag_t z, const mag_t x, slong e)
 
     Sets *z* to an upper bound for `x 2^e`.
 
@@ -337,7 +337,7 @@ Special functions
     Sets *z* to an upper bound for `|B_n| / n!` where `B_n` denotes
     a Bernoulli number.
 
-.. function:: void mag_polylog_tail(mag_t u, const mag_t z, long s, ulong d, ulong N)
+.. function:: void mag_polylog_tail(mag_t u, const mag_t z, slong s, ulong d, ulong N)
 
     Sets *u* to an upper bound for
 
