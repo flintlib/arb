@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("ulp....");
+    flint_printf("ulp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -58,12 +58,12 @@ int main()
 
         if (!((fmpr_cmp(a, ulp) < 0) && (fmpr_cmp(ulp, b) <= 0)))
         {
-            printf("FAIL!\n");
-            printf("prec = %wd\n", prec);
-            printf("x = "); fmpr_print(x); printf("\n");
-            printf("ulp = "); fmpr_print(ulp); printf("\n");
-            printf("a = "); fmpr_print(a); printf("\n");
-            printf("b = "); fmpr_print(b); printf("\n");
+            flint_printf("FAIL!\n");
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n");
+            flint_printf("ulp = "); fmpr_print(ulp); flint_printf("\n");
+            flint_printf("a = "); fmpr_print(a); flint_printf("\n");
+            flint_printf("b = "); fmpr_print(b); flint_printf("\n");
             abort();
         }
 
@@ -75,7 +75,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

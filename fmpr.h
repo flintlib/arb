@@ -736,7 +736,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         r = func(__u, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
@@ -762,7 +762,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         r = func(__u, __t, k, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
@@ -788,7 +788,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         func(__u, __v, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y1, __u); \

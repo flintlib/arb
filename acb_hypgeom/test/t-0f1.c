@@ -30,7 +30,7 @@ int main()
     long iter;
     flint_rand_t state;
 
-    printf("0f1....");
+    flint_printf("0f1....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -86,12 +86,12 @@ int main()
 
         if (!acb_overlaps(w1, w2))
         {
-            printf("FAIL: consistency\n\n");
-            printf("regularized = %d\n\n", regularized);
-            printf("a = "); acb_printd(a, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("w1 = "); acb_printd(w1, 30); printf("\n\n");
-            printf("w2 = "); acb_printd(w2, 30); printf("\n\n");
+            flint_printf("FAIL: consistency\n\n");
+            flint_printf("regularized = %d\n\n", regularized);
+            flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
+            flint_printf("w2 = "); acb_printd(w2, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -103,7 +103,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("evaluate_horner....");
+    flint_printf("evaluate_horner....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -67,15 +67,15 @@ int main()
 
         if (!arb_contains_fmpq(y, Y))
         {
-            printf("FAIL\n\n");
+            flint_printf("FAIL\n\n");
 
-            printf("F = "); fmpq_poly_print(F); printf("\n\n");
-            printf("X = "); fmpq_print(X); printf("\n\n");
-            printf("Y = "); fmpq_print(Y); printf("\n\n");
+            flint_printf("F = "); fmpq_poly_print(F); flint_printf("\n\n");
+            flint_printf("X = "); fmpq_print(X); flint_printf("\n\n");
+            flint_printf("Y = "); fmpq_print(Y); flint_printf("\n\n");
 
-            printf("f = "); arb_poly_printd(f, 15); printf("\n\n");
-            printf("x = "); arb_printd(x, 15); printf("\n\n");
-            printf("y = "); arb_printd(y, 15); printf("\n\n");
+            flint_printf("f = "); arb_poly_printd(f, 15); flint_printf("\n\n");
+            flint_printf("x = "); arb_printd(x, 15); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -84,7 +84,7 @@ int main()
         arb_poly_evaluate_horner(x, f, x, rbits3);
         if (!arb_contains_fmpq(x, Y))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -99,6 +99,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

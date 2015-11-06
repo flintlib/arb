@@ -85,7 +85,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
        the main exp wrapper). */
     if (mag > 200 || mag < -2 * prec - 100)
     {
-        printf("arb_exp_arf_bb: unexpectedly large/small input\n");
+        flint_printf("arb_exp_arf_bb: unexpectedly large/small input\n");
         abort();
     }
 

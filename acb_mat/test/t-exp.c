@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("exp....");
+    flint_printf("exp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -73,16 +73,16 @@ int main()
 
         if (!acb_mat_overlaps(EF, G))
         {
-            printf("FAIL\n\n");
-            printf("n = %wd, prec = %wd\n", n, prec);
+            flint_printf("FAIL\n\n");
+            flint_printf("n = %wd, prec = %wd\n", n, prec);
 
-            printf("c = \n"); acb_printd(c, 15); printf("\n\n");
+            flint_printf("c = \n"); acb_printd(c, 15); flint_printf("\n\n");
 
-            printf("A = \n"); acb_mat_printd(A, 15); printf("\n\n");
-            printf("E   = \n"); acb_mat_printd(E, 15); printf("\n\n");
-            printf("F   = \n"); acb_mat_printd(F, 15); printf("\n\n");
-            printf("E*F = \n"); acb_mat_printd(EF, 15); printf("\n\n");
-            printf("G   = \n"); acb_mat_printd(G, 15); printf("\n\n");
+            flint_printf("A = \n"); acb_mat_printd(A, 15); flint_printf("\n\n");
+            flint_printf("E   = \n"); acb_mat_printd(E, 15); flint_printf("\n\n");
+            flint_printf("F   = \n"); acb_mat_printd(F, 15); flint_printf("\n\n");
+            flint_printf("E*F = \n"); acb_mat_printd(EF, 15); flint_printf("\n\n");
+            flint_printf("G   = \n"); acb_mat_printd(G, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -99,7 +99,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

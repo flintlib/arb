@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("coth....");
+    flint_printf("coth....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -59,10 +59,10 @@ int main()
         /* check consistency */
         if (!acb_overlaps(a, b))
         {
-            printf("FAIL: overlap\n\n");
-            printf("x = "); acb_print(x); printf("\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("x = "); acb_print(x); flint_printf("\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -78,11 +78,11 @@ int main()
 
         if (!acb_overlaps(b, d))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("x = "); acb_print(x); printf("\n\n");
-            printf("y = "); acb_print(y); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("x = "); acb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); acb_print(y); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -90,9 +90,9 @@ int main()
 
         if (!acb_overlaps(a, x))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("x = "); acb_print(x); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); acb_print(x); flint_printf("\n\n");
             abort();
         }
 
@@ -106,7 +106,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

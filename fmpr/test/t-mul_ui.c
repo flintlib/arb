@@ -42,7 +42,7 @@ int main()
     slong iter, iter2;
     flint_rand_t state;
 
-    printf("mul_ui....");
+    flint_printf("mul_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -79,12 +79,12 @@ int main()
                 r2 = fmpr_mul_ui_naive(v, x, y, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %wu\n\n", y);
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = %wu\n\n", y);
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -96,12 +96,12 @@ int main()
                 r2 = fmpr_mul_ui_naive(v, v, y, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %wu\n\n", y);
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL (aliasing 1)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = %wu\n\n", y);
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -115,6 +115,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

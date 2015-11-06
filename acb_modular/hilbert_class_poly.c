@@ -185,7 +185,7 @@ acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D)
 
     while (!_acb_modular_hilbert_class_poly(res, D, qbf, qbf_len, prec))
     {
-        printf("hilbert_class_poly failed at %wd bits of precision\n", prec);
+        flint_printf("hilbert_class_poly failed at %wd bits of precision\n", prec);
         prec = prec * 1.2 + 10;
     }
 

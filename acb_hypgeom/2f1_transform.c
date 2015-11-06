@@ -98,7 +98,7 @@ _acb_hypgeom_2f1_transform_limit(acb_t res, const acb_poly_t a, const acb_poly_t
     }
     else
     {
-        printf("invalid transformation!\n");
+        flint_printf("invalid transformation!\n");
         abort();
     }
 
@@ -322,7 +322,7 @@ acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
     }
     else
     {
-        printf("invalid transformation!\n");
+        flint_printf("invalid transformation!\n");
         abort();
     }
 

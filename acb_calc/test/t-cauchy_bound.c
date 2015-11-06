@@ -51,7 +51,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("cauchy_bound....");
+    flint_printf("cauchy_bound....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -82,10 +82,10 @@ int main()
 
         if (!arb_overlaps(b, ans))
         {
-            printf("FAIL\n");
-            printf("r = %wd, prec = %wd, maxdepth = %wd\n\n", r, prec, maxdepth);
-            arb_printd(b, 15); printf("\n\n");
-            arb_printd(ans, 15); printf("\n\n");
+            flint_printf("FAIL\n");
+            flint_printf("r = %wd, prec = %wd, maxdepth = %wd\n\n", r, prec, maxdepth);
+            arb_printd(b, 15); flint_printf("\n\n");
+            arb_printd(ans, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -97,7 +97,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

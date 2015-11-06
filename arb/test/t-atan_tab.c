@@ -32,7 +32,7 @@ int main()
     mpfr_t tabx, atanx, y1, y2;
     mpz_t tt;
 
-    printf("atan_tab....");
+    flint_printf("atan_tab....");
     fflush(stdout);
 
     {
@@ -73,7 +73,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -124,7 +124,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -175,7 +175,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -189,7 +189,7 @@ int main()
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

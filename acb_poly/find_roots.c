@@ -142,7 +142,7 @@ _acb_poly_find_roots(acb_ptr roots,
         /* estimate the correction relative to the whole set of roots */
         max_correction -= max_rootmag;
 
-        /* printf("ITER %wd MAX CORRECTION: %wd\n", iter, max_correction); */
+        /* flint_printf("ITER %wd MAX CORRECTION: %wd\n", iter, max_correction); */
 
         if (max_correction < -prec / 2)
             maxiter = FLINT_MIN(maxiter, iter + 2);
@@ -165,7 +165,7 @@ acb_poly_find_roots(acb_ptr roots,
 
     if (len == 0)
     {
-        printf("find_roots: expected a nonzero polynomial");
+        flint_printf("find_roots: expected a nonzero polynomial");
         abort();
     }
 

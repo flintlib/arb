@@ -28,28 +28,28 @@
 void
 acb_printd(const acb_t z, slong digits)
 {
-    printf("(");
+    flint_printf("(");
     arf_printd(arb_midref(acb_realref(z)), digits);
 
     if (arf_sgn(arb_midref(acb_imagref(z))) < 0)
     {
         arf_t t;
         arf_init_neg_shallow(t, arb_midref(acb_imagref(z)));
-        printf(" - ");
+        flint_printf(" - ");
         arf_printd(t, digits);
     }
     else
     {
-        printf(" + ");
+        flint_printf(" + ");
         arf_printd(arb_midref(acb_imagref(z)), digits);
     }
-    printf("j)");
+    flint_printf("j)");
 
-    printf("  +/-  ");
+    flint_printf("  +/-  ");
 
-    printf("(");
+    flint_printf("(");
     mag_printd(arb_radref(acb_realref(z)), 3);
-    printf(", ");
+    flint_printf(", ");
     mag_printd(arb_radref(acb_imagref(z)), 3);
-    printf("j)");
+    flint_printf("j)");
 }

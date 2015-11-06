@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_unique_fmpz_poly....");
+    flint_printf("get_unique_fmpz_poly....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -64,10 +64,10 @@ int main()
             {
                 if (!fmpz_poly_equal(A, B))
                 {
-                    printf("FAIL\n\n");
-                    printf("A = "); fmpz_poly_print(A); printf("\n\n");
-                    printf("B = "); fmpz_poly_print(B); printf("\n\n");
-                    printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
+                    flint_printf("FAIL\n\n");
+                    flint_printf("A = "); fmpz_poly_print(A); flint_printf("\n\n");
+                    flint_printf("B = "); fmpz_poly_print(B); flint_printf("\n\n");
+                    flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
                     abort();
                 }
 
@@ -87,7 +87,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

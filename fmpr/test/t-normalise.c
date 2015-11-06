@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("normalise....");
+    flint_printf("normalise....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -74,10 +74,10 @@ int main()
 
         if (!fmpr_equal(x, y) || ret1 != ret2)
         {
-            printf("FAIL!\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
+            flint_printf("FAIL!\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
             abort();
         }
 
@@ -87,12 +87,12 @@ int main()
 
         if (fmpr_cmp(err, err_bound) > 0)
         {
-            printf("FAIL (error bound)!\n");
-            printf("x (original) = "); fmpr_print(xcopy); printf("\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("error: "); fmpr_print(err); printf("\n\n");
-            printf("error bound: "); fmpr_print(err_bound); printf("\n\n");
-            printf("ret = %wd\n", ret1);
+            flint_printf("FAIL (error bound)!\n");
+            flint_printf("x (original) = "); fmpr_print(xcopy); flint_printf("\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("error: "); fmpr_print(err); flint_printf("\n\n");
+            flint_printf("error bound: "); fmpr_print(err_bound); flint_printf("\n\n");
+            flint_printf("ret = %wd\n", ret1);
             abort();
         }
 
@@ -105,7 +105,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

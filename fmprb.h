@@ -66,7 +66,7 @@ fmprb_clear(fmprb_t x)
 #if FMPRB_DEBUG
     if (fmpr_is_nan(fmprb_radref(x)) || fmpr_sgn(fmprb_radref(x)) < 0)
     {
-        printf("ABORT: nan or negative radius!\n");
+        flint_printf("ABORT: nan or negative radius!\n");
         abort();
     }
 #endif
@@ -332,7 +332,7 @@ static __inline__ void
 fmprb_print(const fmprb_t x)
 {
     fmpr_print(fmprb_midref(x));
-    printf(" +/- ");
+    flint_printf(" +/- ");
     fmpr_print(fmprb_radref(x));
 }
 
@@ -342,7 +342,7 @@ fmprb_printd(const fmprb_t x, slong digits)
     fmpr_printd(fmprb_midref(x), FLINT_ABS(digits));
     if (digits > 0)
     {
-        printf(" +/- ");
+        flint_printf(" +/- ");
         fmpr_printd(fmprb_radref(x), 5);
     }
 }

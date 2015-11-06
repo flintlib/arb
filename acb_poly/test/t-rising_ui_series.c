@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rising_ui_series....");
+    flint_printf("rising_ui_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -80,18 +80,18 @@ int main()
 
         if (!acb_poly_overlaps(h1h2, h3))
         {
-            printf("FAIL\n\n");
-            printf("bits = %wd\n", bits);
-            printf("trunc = %wd\n", trunc);
-            printf("a = %wu\n", a);
-            printf("b = %wu\n", a);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits = %wd\n", bits);
+            flint_printf("trunc = %wd\n", trunc);
+            flint_printf("a = %wu\n", a);
+            flint_printf("b = %wu\n", a);
 
-            printf("f = "); acb_poly_printd(f, 15); printf("\n\n");
-            printf("g = "); acb_poly_printd(g, 15); printf("\n\n");
-            printf("h1 = "); acb_poly_printd(h1, 15); printf("\n\n");
-            printf("h2 = "); acb_poly_printd(h2, 15); printf("\n\n");
-            printf("h1h2 = "); acb_poly_printd(h1h2, 15); printf("\n\n");
-            printf("h3 = "); acb_poly_printd(h3, 15); printf("\n\n");
+            flint_printf("f = "); acb_poly_printd(f, 15); flint_printf("\n\n");
+            flint_printf("g = "); acb_poly_printd(g, 15); flint_printf("\n\n");
+            flint_printf("h1 = "); acb_poly_printd(h1, 15); flint_printf("\n\n");
+            flint_printf("h2 = "); acb_poly_printd(h2, 15); flint_printf("\n\n");
+            flint_printf("h1h2 = "); acb_poly_printd(h1h2, 15); flint_printf("\n\n");
+            flint_printf("h3 = "); acb_poly_printd(h3, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -100,15 +100,15 @@ int main()
 
         if (!acb_poly_equal(f, h1))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
 
-            printf("bits = %wd\n", bits);
-            printf("trunc = %wd\n", trunc);
-            printf("a = %wu\n", a);
-            printf("b = %wu\n", a);
+            flint_printf("bits = %wd\n", bits);
+            flint_printf("trunc = %wd\n", trunc);
+            flint_printf("a = %wu\n", a);
+            flint_printf("b = %wu\n", a);
 
-            printf("f = "); acb_poly_printd(f, 15); printf("\n\n");
-            printf("h1 = "); acb_poly_printd(h1, 15); printf("\n\n");
+            flint_printf("f = "); acb_poly_printd(f, 15); flint_printf("\n\n");
+            flint_printf("h1 = "); acb_poly_printd(h1, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -123,6 +123,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

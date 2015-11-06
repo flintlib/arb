@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("zeta_series....");
+    flint_printf("zeta_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -80,11 +80,11 @@ int main()
 
         if (!arb_poly_overlaps(B, C))
         {
-            printf("FAIL\n\n");
-            printf("S = "); arb_poly_printd(S, 15); printf("\n\n");
-            printf("a = "); arb_printd(a, 15); printf("\n\n");
-            printf("A = "); arb_poly_printd(A, 15); printf("\n\n");
-            printf("B = "); arb_poly_printd(B, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
+            flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
+            flint_printf("B = "); arb_poly_printd(B, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -101,18 +101,18 @@ int main()
 
         if (!arb_poly_overlaps(A, E))
         {
-            printf("FAIL (functional equation)\n\n");
-            printf("S = "); arb_poly_printd(S, 15); printf("\n\n");
-            printf("a = "); arb_printd(a, 15); printf("\n\n");
-            printf("A = "); arb_poly_printd(A, 15); printf("\n\n");
-            printf("E = "); arb_poly_printd(A, 15); printf("\n\n");
+            flint_printf("FAIL (functional equation)\n\n");
+            flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
+            flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
+            flint_printf("E = "); arb_poly_printd(A, 15); flint_printf("\n\n");
             abort();
         }
 
         arb_poly_zeta_series(S, S, a, deflate, n1, bits2);
         if (!arb_poly_overlaps(A, S))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -129,7 +129,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

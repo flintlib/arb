@@ -55,7 +55,7 @@ _arb_condense_digits(char * s, slong n)
                     out++;
                 }
 
-                out += sprintf(res + out, "{...%wd digits...}", run - 2 * n);
+                out += flint_sprintf(res + out, "{...%wd digits...}", run - 2 * n);
 
                 for (j = run - n; j < run; j++)
                 {
@@ -194,7 +194,7 @@ _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, 
 
     if (n < 1)
     {
-        printf("_arb_digits_round_inplace: require n >= 1\n");
+        flint_printf("_arb_digits_round_inplace: require n >= 1\n");
         abort();
     }
 
@@ -264,7 +264,7 @@ _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, 
 
         if (!borrow)
         {
-            printf("expected borrow!\n");
+            flint_printf("expected borrow!\n");
             abort();
         }
 

@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("zeta_em_tail_bsplit....");
+    flint_printf("zeta_em_tail_bsplit....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -64,13 +64,13 @@ int main()
         {
             if (!acb_overlaps(z1 + i, z2 + i))
             {
-                printf("FAIL: overlap\n\n");
-                printf("iter = %wd\n", iter);
-                printf("prec = %wd, len = %wd, M = %wd\n", prec, len, M);
-                printf("s = "); acb_printd(s, prec / 3.33); printf("\n\n");
-                printf("Na = "); acb_printd(Na, prec / 3.33); printf("\n\n");
-                printf("z1 = "); acb_printd(z1 + i, prec / 3.33); printf("\n\n");
-                printf("z2 = "); acb_printd(z2 + i, prec / 3.33); printf("\n\n");
+                flint_printf("FAIL: overlap\n\n");
+                flint_printf("iter = %wd\n", iter);
+                flint_printf("prec = %wd, len = %wd, M = %wd\n", prec, len, M);
+                flint_printf("s = "); acb_printd(s, prec / 3.33); flint_printf("\n\n");
+                flint_printf("Na = "); acb_printd(Na, prec / 3.33); flint_printf("\n\n");
+                flint_printf("z1 = "); acb_printd(z1 + i, prec / 3.33); flint_printf("\n\n");
+                flint_printf("z2 = "); acb_printd(z2 + i, prec / 3.33); flint_printf("\n\n");
                 abort();
             }
         }
@@ -83,7 +83,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

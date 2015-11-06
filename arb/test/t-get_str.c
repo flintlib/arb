@@ -31,7 +31,7 @@ int main()
     flint_rand_t state;
     slong iter;
 
-    printf("get_str....");
+    flint_printf("get_str....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -77,10 +77,10 @@ int main()
 
         if (conversion_error || !arb_contains(y, x))
         {
-            printf("FAIL (roundtrip)  iter = %wd\n", iter);
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("s = %s", s); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
+            flint_printf("FAIL (roundtrip)  iter = %wd\n", iter);
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("s = %s", s); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
             abort();
         }
 
@@ -91,7 +91,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

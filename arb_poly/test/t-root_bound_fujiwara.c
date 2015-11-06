@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("root_bound_fujiwara....");
+    flint_printf("root_bound_fujiwara....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -73,11 +73,11 @@ int main()
 
             if (mag_cmp(mag2, mag1) > 0)
             {
-                printf("FAIL\n");
-                printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-                printf("root = "); arb_printd(roots + i, 15); printf("\n\n");
-                printf("mag1 = "); mag_printd(mag1, 10); printf("\n\n");
-                printf("mag2 = "); mag_printd(mag2, 10); printf("\n\n");
+                flint_printf("FAIL\n");
+                flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+                flint_printf("root = "); arb_printd(roots + i, 15); flint_printf("\n\n");
+                flint_printf("mag1 = "); mag_printd(mag1, 10); flint_printf("\n\n");
+                flint_printf("mag2 = "); mag_printd(mag2, 10); flint_printf("\n\n");
                 abort();
             }
         }
@@ -91,7 +91,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

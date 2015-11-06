@@ -32,7 +32,7 @@ main(void)
     int i, result;
     flint_rand_t state;
 
-    printf("get_coeff_ptr....");
+    flint_printf("get_coeff_ptr....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,10 +54,10 @@ main(void)
                      acb_poly_get_coeff_ptr(A, n) == NULL;
         if (!result)
         {
-            printf("FAIL:\n");
-            printf("A = "), acb_poly_printd(A, 10), printf("\n\n");
-            printf("a = "), acb_print(a), printf("\n\n");
-            printf("n = %wd\n\n", n);
+            flint_printf("FAIL:\n");
+            flint_printf("A = "), acb_poly_printd(A, 10), flint_printf("\n\n");
+            flint_printf("a = "), acb_print(a), flint_printf("\n\n");
+            flint_printf("n = %wd\n\n", n);
             abort();
         }
 
@@ -67,7 +67,7 @@ main(void)
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return 0;
 }
 

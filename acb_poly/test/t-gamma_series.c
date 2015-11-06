@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("gamma_series....");
+    flint_printf("gamma_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -66,12 +66,12 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL\n\n");
-            printf("n1 = %wd, n2 = %wd, bits2 = %wd, bits3 = %wd\n", n1, n2, rbits2, rbits3);
+            flint_printf("FAIL\n\n");
+            flint_printf("n1 = %wd, n2 = %wd, bits2 = %wd, bits3 = %wd\n", n1, n2, rbits2, rbits3);
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -85,12 +85,12 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL (functional equation, n1 = %wd)\n\n", n1);
+            flint_printf("FAIL (functional equation, n1 = %wd)\n\n", n1);
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
-            printf("d = "); acb_poly_printd(d, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -98,7 +98,7 @@ int main()
         acb_poly_gamma_series(a, a, n1, rbits2);
         if (!acb_poly_overlaps(a, b))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -110,7 +110,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

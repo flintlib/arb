@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("compose_series....");
+    flint_printf("compose_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -71,16 +71,16 @@ int main()
 
         if (!acb_poly_contains_fmpq_poly(c, C))
         {
-            printf("FAIL\n\n");
-            printf("n = %wd, bits3 = %wd\n", n, rbits3);
+            flint_printf("FAIL\n\n");
+            flint_printf("n = %wd, bits3 = %wd\n", n, rbits3);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
-            printf("C = "); fmpq_poly_print(C); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
+            flint_printf("C = "); fmpq_poly_print(C); flint_printf("\n\n");
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -89,7 +89,7 @@ int main()
         acb_poly_compose_series(d, d, b, n, rbits3);
         if (!acb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 1)\n\n");
+            flint_printf("FAIL (aliasing 1)\n\n");
             abort();
         }
 
@@ -97,7 +97,7 @@ int main()
         acb_poly_compose_series(d, a, d, n, rbits3);
         if (!acb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 2)\n\n");
+            flint_printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
@@ -113,6 +113,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -66,7 +66,7 @@ _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_src
 
     for (r = 1; r <= M; r++)
     {
-        /* printf("sum 2: %wd %wd\n", r, M); */
+        /* flint_printf("sum 2: %wd %wd\n", r, M); */
 
         /* sum += bernoulli number * term */
         arb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);

@@ -30,17 +30,17 @@ fmpr_print(const fmpr_t x)
 {
     if (fmpr_is_normal(x))
     {
-        printf("(");
+        flint_printf("(");
         fmpz_print(fmpr_manref(x));
-        printf(" * 2^");
+        flint_printf(" * 2^");
         fmpz_print(fmpr_expref(x));
-        printf(")");
+        flint_printf(")");
     }
     else
     {
-        if (fmpr_is_zero(x)) printf("(0)");
-        else if (fmpr_is_pos_inf(x)) printf("(+inf)");
-        else if (fmpr_is_neg_inf(x)) printf("(-inf)");
-        else printf("(nan)");
+        if (fmpr_is_zero(x)) flint_printf("(0)");
+        else if (fmpr_is_pos_inf(x)) flint_printf("(+inf)");
+        else if (fmpr_is_neg_inf(x)) flint_printf("(-inf)");
+        else flint_printf("(nan)");
     }
 }

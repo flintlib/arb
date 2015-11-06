@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("mul_lower....");
+    flint_printf("mul_lower....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -72,11 +72,11 @@ int main()
 
         if (!(fmpr_cmpabs(z, w) <= 0 && fmpr_cmpabs(w, z2) <= 0))
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+            flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             abort();
         }
 
@@ -93,7 +93,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

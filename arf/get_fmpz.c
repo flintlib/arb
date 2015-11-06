@@ -94,7 +94,7 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         }
         else
         {
-            printf("arf_get_fmpz: cannot convert infinity or nan to integer\n");
+            flint_printf("arf_get_fmpz: cannot convert infinity or nan to integer\n");
             abort();
         }
     }
@@ -119,7 +119,7 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         }
         else
         {
-            printf("arf_get_fmpz: number too large to convert to integer\n");
+            flint_printf("arf_get_fmpz: number too large to convert to integer\n");
             abort();
         }
     }

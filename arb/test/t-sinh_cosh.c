@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("sinh_cosh....");
+    flint_printf("sinh_cosh....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,17 +61,17 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment (sin)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: containment (sin)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
         if (!arb_contains_mpfr(c, u))
         {
-            printf("FAIL: containment (cos)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment (cos)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -85,6 +85,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -66,7 +66,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("eta_epsilon_arg....");
+    flint_printf("eta_epsilon_arg....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -95,10 +95,10 @@ int main()
 
         if (!acb_overlaps(a, b))
         {
-            printf("FAIL\n");
-            printf("g = "); psl2z_print(g); printf("\n");
-            printf("x = "); fmpq_print(x); printf("\n");
-            printf("y = "); fmpq_print(y); printf("\n");
+            flint_printf("FAIL\n");
+            flint_printf("g = "); psl2z_print(g); flint_printf("\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n");
             abort();
         }
 
@@ -111,7 +111,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

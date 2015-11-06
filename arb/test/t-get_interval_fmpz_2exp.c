@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_interval_fmpz_2exp....");
+    flint_printf("get_interval_fmpz_2exp....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -53,20 +53,20 @@ int main()
         arf_set_fmpz_2exp(y, a, exp);
         if (!arb_contains_arf(x, y))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("a = "); fmpz_print(a);
-            printf(" exp = "); fmpz_print(exp); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("a = "); fmpz_print(a);
+            flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
 
         arf_set_fmpz_2exp(y, b, exp);
         if (!arb_contains_arf(x, y))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("b = "); fmpz_print(b);
-            printf(" exp = "); fmpz_print(exp); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("b = "); fmpz_print(b);
+            flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
 
@@ -79,6 +79,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

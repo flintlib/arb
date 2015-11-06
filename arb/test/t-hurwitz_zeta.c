@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("hurwitz_zeta....");
+    flint_printf("hurwitz_zeta....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -64,13 +64,13 @@ int main()
         if (!arb_overlaps(c, acb_realref(f)) ||
             (arb_is_finite(c) && !arb_contains_zero(acb_imagref(f))))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_printd(c, 15); printf("\n\n");
-            printf("d = "); acb_printd(d, 15); printf("\n\n");
-            printf("e = "); acb_printd(e, 15); printf("\n\n");
-            printf("f = "); acb_printd(f, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); acb_printd(d, 15); flint_printf("\n\n");
+            flint_printf("e = "); acb_printd(e, 15); flint_printf("\n\n");
+            flint_printf("f = "); acb_printd(f, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -84,6 +84,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

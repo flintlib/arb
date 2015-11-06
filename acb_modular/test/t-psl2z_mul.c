@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("psl2z_mul....");
+    flint_printf("psl2z_mul....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,12 +61,12 @@ int main()
 
         if (!psl2z_equal(u, v) || !psl2z_is_correct(u) || !psl2z_is_correct(v))
         {
-            printf("FAIL\n");
-            printf("f = "); psl2z_print(f); printf("\n");
-            printf("g = "); psl2z_print(g); printf("\n");
-            printf("h = "); psl2z_print(h); printf("\n");
-            printf("u = "); psl2z_print(u); printf("\n");
-            printf("v = "); psl2z_print(v); printf("\n");
+            flint_printf("FAIL\n");
+            flint_printf("f = "); psl2z_print(f); flint_printf("\n");
+            flint_printf("g = "); psl2z_print(g); flint_printf("\n");
+            flint_printf("h = "); psl2z_print(h); flint_printf("\n");
+            flint_printf("u = "); psl2z_print(u); flint_printf("\n");
+            flint_printf("v = "); psl2z_print(v); flint_printf("\n");
             abort();
         }
 
@@ -79,7 +79,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -981,11 +981,11 @@ _acb_vec_scalar_div_fmpz(acb_ptr res, acb_srcptr vec, slong len, const fmpz_t c,
 ACB_INLINE void
 acb_print(const acb_t x)
 {
-    printf("(");
+    flint_printf("(");
     arb_print(acb_realref(x));
-    printf(", ");
+    flint_printf(", ");
     arb_print(acb_imagref(x));
-    printf(")");
+    flint_printf(")");
 }
 
 void acb_printd(const acb_t z, slong digits);

@@ -31,7 +31,7 @@ main(void)
     slong iter;
     flint_rand_t state;
 
-    printf("charpoly....");
+    flint_printf("charpoly....");
     fflush(stdout);
 
     flint_randinit(state);

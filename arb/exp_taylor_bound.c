@@ -80,7 +80,7 @@ _arb_exp_taylor_bound(slong mag, slong prec)
     /* assume x <= 1/4 */
     if (mag > -2)
     {
-        printf("_arb_exp_taylor_bound: too large input %wd\n", mag);
+        flint_printf("_arb_exp_taylor_bound: too large input %wd\n", mag);
         abort();
     }
 

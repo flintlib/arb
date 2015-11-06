@@ -77,7 +77,7 @@ hypgeom_term_bound(mag_t Tn, const mag_t TK, slong K, slong A, slong B, int r, c
 
     if (m < 0)
     {
-        printf("hypgeom term bound\n");
+        flint_printf("hypgeom term bound\n");
         abort();
     }
 

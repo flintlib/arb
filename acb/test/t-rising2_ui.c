@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rising2_ui....");
+    flint_printf("rising2_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -71,13 +71,13 @@ int main()
 
         if (!acb_overlaps(u, u2) || !acb_overlaps(v, v2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("n = %wu\n", n);
-            printf("a = "); acb_printd(a, 15); printf("\n\n");
-            printf("u = "); acb_printd(u, 15); printf("\n\n");
-            printf("u2 = "); acb_printd(u2, 15); printf("\n\n");
-            printf("v = "); acb_printd(v, 15); printf("\n\n");
-            printf("v2 = "); acb_printd(v2, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("n = %wu\n", n);
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("u = "); acb_printd(u, 15); flint_printf("\n\n");
+            flint_printf("u2 = "); acb_printd(u2, 15); flint_printf("\n\n");
+            flint_printf("v = "); acb_printd(v, 15); flint_printf("\n\n");
+            flint_printf("v2 = "); acb_printd(v2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -86,11 +86,11 @@ int main()
 
         if (!acb_equal(u2, u))
         {
-            printf("FAIL: aliasing 1\n\n");
-            printf("a = "); acb_printd(a, 15); printf("\n\n");
-            printf("u = "); acb_printd(u, 15); printf("\n\n");
-            printf("u2 = "); acb_printd(u2, 15); printf("\n\n");
-            printf("n = %wu\n", n);
+            flint_printf("FAIL: aliasing 1\n\n");
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("u = "); acb_printd(u, 15); flint_printf("\n\n");
+            flint_printf("u2 = "); acb_printd(u2, 15); flint_printf("\n\n");
+            flint_printf("n = %wu\n", n);
             abort();
         }
 
@@ -99,11 +99,11 @@ int main()
 
         if (!acb_equal(v2, v))
         {
-            printf("FAIL: aliasing 2\n\n");
-            printf("a = "); acb_printd(a, 15); printf("\n\n");
-            printf("v = "); acb_printd(v, 15); printf("\n\n");
-            printf("v2 = "); acb_printd(v2, 15); printf("\n\n");
-            printf("n = %wu\n", n);
+            flint_printf("FAIL: aliasing 2\n\n");
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("v = "); acb_printd(v, 15); flint_printf("\n\n");
+            flint_printf("v2 = "); acb_printd(v2, 15); flint_printf("\n\n");
+            flint_printf("n = %wu\n", n);
             abort();
         }
 
@@ -118,7 +118,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

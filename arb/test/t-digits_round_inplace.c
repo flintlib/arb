@@ -30,7 +30,7 @@ int main()
 {
     flint_rand_t state;
 
-    printf("digits_round_inplace....");
+    flint_printf("digits_round_inplace....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -83,12 +83,12 @@ int main()
 
             if (!fmpz_equal(t, inp) || (rnd == ARF_RND_UP && fmpz_sgn(err) > 0))
             {
-                printf("FAIL!\n");
-                printf("inp = "); fmpz_print(inp); printf("\n\n");
-                printf("shift = %wd\n\n", shift);
-                printf("err = "); fmpz_print(err); printf("\n\n");
-                printf("out = "); fmpz_print(out); printf("\n\n");
-                printf(" t  = "); fmpz_print(t); printf("\n\n");
+                flint_printf("FAIL!\n");
+                flint_printf("inp = "); fmpz_print(inp); flint_printf("\n\n");
+                flint_printf("shift = %wd\n\n", shift);
+                flint_printf("err = "); fmpz_print(err); flint_printf("\n\n");
+                flint_printf("out = "); fmpz_print(out); flint_printf("\n\n");
+                flint_printf(" t  = "); fmpz_print(t); flint_printf("\n\n");
                 abort();
             }
         }
@@ -101,7 +101,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

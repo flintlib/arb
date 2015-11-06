@@ -92,11 +92,11 @@ psl2z_one(psl2z_t g)
 static __inline__ void
 psl2z_print(const psl2z_t g)
 {
-    printf("[");
-    fmpz_print(&g->a); printf(" ");
-    fmpz_print(&g->b); printf("; ");
-    fmpz_print(&g->c); printf(" ");
-    fmpz_print(&g->d); printf("]");
+    flint_printf("[");
+    fmpz_print(&g->a); flint_printf(" ");
+    fmpz_print(&g->b); flint_printf("; ");
+    fmpz_print(&g->c); flint_printf(" ");
+    fmpz_print(&g->d); flint_printf("]");
 }
 
 static __inline__ int

@@ -54,7 +54,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("elliptic_k....");
+    flint_printf("elliptic_k....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -94,11 +94,11 @@ int main()
 
                         if (!acb_overlaps(w1 + j, t))
                         {
-                            printf("FAIL\n\n");
-                            printf("j = %wd\n\n", j);
-                            printf("z = "); acb_printd(z, 15); printf("\n\n");
-                            printf("t = "); acb_printd(t, 15); printf("\n\n");
-                            printf("w1 = "); acb_printd(w1 + j, 15); printf("\n\n");
+                            flint_printf("FAIL\n\n");
+                            flint_printf("j = %wd\n\n", j);
+                            flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
+                            flint_printf("t = "); acb_printd(t, 15); flint_printf("\n\n");
+                            flint_printf("w1 = "); acb_printd(w1 + j, 15); flint_printf("\n\n");
                             abort();
                         }
                     }
@@ -151,14 +151,14 @@ int main()
         {
             if (!acb_overlaps(m1 + i, m2 + i))
             {
-                printf("FAIL (overlap)\n\n");
-                printf("iter = %wd, i = %wd, len1 = %wd, len2 = %wd, prec1 = %wd, prec2 = %wd\n\n",
+                flint_printf("FAIL (overlap)\n\n");
+                flint_printf("iter = %wd, i = %wd, len1 = %wd, len2 = %wd, prec1 = %wd, prec2 = %wd\n\n",
                     iter, i, len1, len2, prec1, prec2);
 
-                printf("z1 = "); acb_printd(z1, 30); printf("\n\n");
-                printf("z2 = "); acb_printd(z2, 30); printf("\n\n");
-                printf("m1 = "); acb_printd(m1, 30); printf("\n\n");
-                printf("m2 = "); acb_printd(m2, 30); printf("\n\n");
+                flint_printf("z1 = "); acb_printd(z1, 30); flint_printf("\n\n");
+                flint_printf("z2 = "); acb_printd(z2, 30); flint_printf("\n\n");
+                flint_printf("m1 = "); acb_printd(m1, 30); flint_printf("\n\n");
+                flint_printf("m2 = "); acb_printd(m2, 30); flint_printf("\n\n");
                 abort();
             }
         }
@@ -173,7 +173,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

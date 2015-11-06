@@ -31,7 +31,7 @@ _arb_vec_printd(arb_srcptr vec, slong len, slong digits)
 {
     slong i;
     for (i = 0; i < len; i++)
-        arb_printd(vec + i, digits), printf("\n");
+        arb_printd(vec + i, digits), flint_printf("\n");
 }
 
 

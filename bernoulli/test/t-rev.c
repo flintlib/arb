@@ -37,7 +37,7 @@ int main()
     mp_limb_t p, pinv, m1, m2;
     nmod_poly_t A;
 
-    printf("rev....");
+    flint_printf("rev....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -76,7 +76,7 @@ int main()
         else
             count = 100;
 
-        /* printf("nmax = %wd, count = %wd\n", nmax, count); */
+        /* flint_printf("nmax = %wd, count = %wd\n", nmax, count); */
 
         for (n = nmax; n >= 0 && count > 0; n -= 2, count--)
         {
@@ -90,10 +90,10 @@ int main()
 
             if (m1 != m2)
             {
-                printf("FAIL:\n");
-                printf("nmax = %wd, n = %wd\n", nmax, n);
-                printf("m1 = %wu mod %wu\n", m1, p);
-                printf("m2 = %wu mod %wu\n", m2, p);
+                flint_printf("FAIL:\n");
+                flint_printf("nmax = %wd, n = %wd\n", nmax, n);
+                flint_printf("m1 = %wu mod %wu\n", m1, p);
+                flint_printf("m2 = %wu mod %wu\n", m2, p);
                 abort();
             }
         }
@@ -106,7 +106,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

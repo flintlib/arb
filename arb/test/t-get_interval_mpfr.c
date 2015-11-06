@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_interval_mpfr....");
+    flint_printf("get_interval_mpfr....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -50,11 +50,11 @@ int main()
 
         if (!arb_contains(y, x))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("aa = "); mpfr_printf("%.50Rg", aa); printf("\n\n");
-            printf("bb = "); mpfr_printf("%.50Rg", bb); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("aa = "); mpfr_printf("%.50Rg", aa); flint_printf("\n\n");
+            flint_printf("bb = "); mpfr_printf("%.50Rg", bb); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
             abort();
         }
 
@@ -66,7 +66,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

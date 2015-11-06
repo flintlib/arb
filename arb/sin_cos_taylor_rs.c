@@ -49,7 +49,7 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
 
     if (2 * N >= FACTORIAL_TAB_SIZE - 1)
     {
-        printf("_arb_sin_cos_taylor_rs: N too large!\n");
+        flint_printf("_arb_sin_cos_taylor_rs: N too large!\n");
         abort();
     }
 

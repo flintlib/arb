@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("atan2....");
+    flint_printf("atan2....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -65,10 +65,10 @@ int main()
 
         if (!arb_contains_mpfr(c, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -83,6 +83,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

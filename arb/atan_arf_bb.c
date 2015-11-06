@@ -201,7 +201,7 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
        the main atan wrapper). */
     if (FLINT_ABS(mag) > 2 * prec + 100)
     {
-        printf("arb_atan_arf_bb: unexpectedly large/small input\n");
+        flint_printf("arb_atan_arf_bb: unexpectedly large/small input\n");
         abort();
     }
 

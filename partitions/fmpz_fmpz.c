@@ -120,9 +120,9 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
 
         if (!arb_get_unique_fmpz(p, x))
         {
-            printf("not unique!\n");
+            flint_printf("not unique!\n");
             arb_printd(x, 50);
-            printf("\n");
+            flint_printf("\n");
             abort();
         }
 

@@ -92,7 +92,7 @@ bernoulli_bound_2exp_si(ulong n)
 
         if (hi || n > (UWORD(1) << (FLINT_BITS - 6)))
         {
-            printf("bernoulli_bound_2exp_si: n too large\n");
+            flint_printf("bernoulli_bound_2exp_si: n too large\n");
             abort();
         }
 

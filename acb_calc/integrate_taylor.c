@@ -81,8 +81,8 @@ acb_calc_integrate_taylor(acb_t res,
 
         if (arb_calc_verbose)
         {
-            printf("integration point %wd/%wd: ", 2 * step + 1, 2 * num_steps);
-            acb_printd(m, 15); printf("\n");
+            flint_printf("integration point %wd/%wd: ", 2 * step + 1, 2 * num_steps);
+            acb_printd(m, 15); flint_printf("\n");
         }
 
         /* evaluate at +/- x */
@@ -165,10 +165,10 @@ acb_calc_integrate_taylor(acb_t res,
 
             if (arb_calc_verbose)
             {
-                printf("N = %wd; bound: ", N); arf_printd(err, 15); printf("\n");
-                printf("R: "); arf_printd(R, 15); printf("\n");
-                printf("C: "); arf_printd(C, 15); printf("\n");
-                printf("X: "); arf_printd(X, 15); printf("\n");
+                flint_printf("N = %wd; bound: ", N); arf_printd(err, 15); flint_printf("\n");
+                flint_printf("R: "); arf_printd(R, 15); flint_printf("\n");
+                flint_printf("C: "); arf_printd(C, 15); flint_printf("\n");
+                flint_printf("X: "); arf_printd(X, 15); flint_printf("\n");
             }
 
             arb_clear(cbound);
@@ -201,9 +201,9 @@ acb_calc_integrate_taylor(acb_t res,
 
         if (arb_calc_verbose)
         {
-            printf("values:  ");
-            acb_printd(y1, 15); printf("  ");
-            acb_printd(y2, 15); printf("\n");
+            flint_printf("values:  ");
+            acb_printd(y1, 15); flint_printf("  ");
+            acb_printd(y2, 15); flint_printf("\n");
         }
 
         _acb_vec_clear(taylor_poly, N + 1);

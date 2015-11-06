@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("sum....");
+    flint_printf("sum....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -78,16 +78,16 @@ int main()
 
         if (!arf_equal(s1, s3) || res1 != res2)
         {
-            printf("FAIL (%wd)\n\n", iter);
-            printf("prec = %wd\n\n", prec);
+            flint_printf("FAIL (%wd)\n\n", iter);
+            flint_printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%wd] = ", i); arf_print(terms + i); printf("\n\n");
+                flint_printf("terms[%wd] = ", i); arf_print(terms + i); flint_printf("\n\n");
             }
-            printf("s1 = "); arf_print(s1); printf("\n\n");
-            printf("s2 = "); arf_print(s2); printf("\n\n");
-            printf("s3 = "); arf_print(s3); printf("\n\n");
-            printf("res1 = %d, res2 = %d\n\n", res1, res2);
+            flint_printf("s1 = "); arf_print(s1); flint_printf("\n\n");
+            flint_printf("s2 = "); arf_print(s2); flint_printf("\n\n");
+            flint_printf("s3 = "); arf_print(s3); flint_printf("\n\n");
+            flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
             abort();
         }
 
@@ -101,18 +101,18 @@ int main()
 
         if (arf_cmpabs_mag(err, err_bound) > 0)
         {
-            printf("FAIL (error bound)!\n");
-            printf("prec = %wd\n\n", prec);
+            flint_printf("FAIL (error bound)!\n");
+            flint_printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%wd] = ", i); arf_print(terms + i); printf("\n\n");
+                flint_printf("terms[%wd] = ", i); arf_print(terms + i); flint_printf("\n\n");
             }
-            printf("s1 = "); arf_print(s1); printf("\n\n");
-            printf("s2 = "); arf_print(s2); printf("\n\n");
-            printf("s3 = "); arf_print(s3); printf("\n\n");
-            printf("error: "); arf_print(err); printf("\n\n");
-            printf("error bound: "); mag_print(err_bound); printf("\n\n");
-            printf("res1 = %d, res2 = %d\n\n", res1, res2);
+            flint_printf("s1 = "); arf_print(s1); flint_printf("\n\n");
+            flint_printf("s2 = "); arf_print(s2); flint_printf("\n\n");
+            flint_printf("s3 = "); arf_print(s3); flint_printf("\n\n");
+            flint_printf("error: "); arf_print(err); flint_printf("\n\n");
+            flint_printf("error bound: "); mag_print(err_bound); flint_printf("\n\n");
+            flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
             abort();
         }
 
@@ -128,7 +128,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

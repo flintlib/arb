@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("bell_fmpz....");
+    flint_printf("bell_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -66,10 +66,10 @@ int main()
 
         if (!arb_overlaps(b1, b2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("n = "); fmpz_print(n); printf("\n\n");
-            printf("b1 = "); arb_printn(b1, 50, 0); printf("\n\n");
-            printf("b2 = "); arb_printn(b2, 50, 0); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
+            flint_printf("b1 = "); arb_printn(b1, 50, 0); flint_printf("\n\n");
+            flint_printf("b2 = "); arb_printn(b2, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -78,12 +78,12 @@ int main()
 
         if (acc1 < prec1 - 4 || acc2 < prec2 - 4)
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec1 = %wd, acc1 = %wd\n", prec1, acc1);
-            printf("prec2 = %wd, acc2 = %wd\n", prec2, acc2);
-            printf("n = "); fmpz_print(n); printf("\n\n");
-            printf("b1 = "); arb_printn(b1, 50, 0); printf("\n\n");
-            printf("b2 = "); arb_printn(b2, 50, 0); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec1 = %wd, acc1 = %wd\n", prec1, acc1);
+            flint_printf("prec2 = %wd, acc2 = %wd\n", prec2, acc2);
+            flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
+            flint_printf("b1 = "); arb_printn(b1, 50, 0); flint_printf("\n\n");
+            flint_printf("b2 = "); arb_printn(b2, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -94,7 +94,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

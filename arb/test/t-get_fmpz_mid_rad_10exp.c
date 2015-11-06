@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_fmpz_mid_rad_10exp....");
+    flint_printf("get_fmpz_mid_rad_10exp....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -62,23 +62,23 @@ int main()
         if (arb_is_finite(x) && !arb_is_zero(x) &&
             fmpz_sizeinbase(mid, 10) < n && fmpz_sizeinbase(rad, 10) < n)
         {
-            printf("FAIL (too few digits):\n\n");
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
-            printf("mid = "); fmpz_print(mid); printf("\n\n");
-            printf("rad = "); fmpz_print(rad); printf("\n\n");
-            printf("exp = "); fmpz_print(exp); printf("\n\n");
+            flint_printf("FAIL (too few digits):\n\n");
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
+            flint_printf("mid = "); fmpz_print(mid); flint_printf("\n\n");
+            flint_printf("rad = "); fmpz_print(rad); flint_printf("\n\n");
+            flint_printf("exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
 
         if (arb_is_finite(x) && !arb_contains(y, x))
         {
-            printf("FAIL (containment):\n\n");
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
-            printf("mid = "); fmpz_print(mid); printf("\n\n");
-            printf("rad = "); fmpz_print(rad); printf("\n\n");
-            printf("exp = "); fmpz_print(exp); printf("\n\n");
+            flint_printf("FAIL (containment):\n\n");
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
+            flint_printf("mid = "); fmpz_print(mid); flint_printf("\n\n");
+            flint_printf("rad = "); fmpz_print(rad); flint_printf("\n\n");
+            flint_printf("exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
 
@@ -92,6 +92,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

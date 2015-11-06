@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     if (argc < 2)
     {
-        printf("usage: build/examples/pi digits [condense = 20]\n");
+        flint_printf("usage: build/examples/pi digits [condense = 20]\n");
         return 1;
     }
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     prec = digits * 3.3219280948873623 + 5;
 
-    printf("computing pi with a precision of %wd bits... ", prec);
+    flint_printf("computing pi with a precision of %wd bits... ", prec);
 
     TIMEIT_ONCE_START
     arb_const_pi(x, prec);
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     arb_printn(x, digits, ARB_STR_CONDENSE * condense);
 
-    printf("\n");
+    flint_printf("\n");
 
     arb_clear(x);
     flint_cleanup();

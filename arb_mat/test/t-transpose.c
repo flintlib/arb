@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("transpose....");
+    flint_printf("transpose....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -56,8 +56,8 @@ int main()
 
         if (!arb_mat_equal(c, a))
         {
-            printf("FAIL\n\n");
-            printf("m = %wd, n = %wd\n", m, n);
+            flint_printf("FAIL\n\n");
+            flint_printf("m = %wd, n = %wd\n", m, n);
             abort();
         }
 
@@ -68,7 +68,7 @@ int main()
 
             if (!arb_mat_equal(a, c))
             {
-                printf("FAIL (aliasing)\n\n");
+                flint_printf("FAIL (aliasing)\n\n");
                 abort();
             }
         }
@@ -80,6 +80,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -45,7 +45,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("exp_series_basecase....");
+    flint_printf("exp_series_basecase....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -79,14 +79,14 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(b, B))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %wd\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -125,13 +125,13 @@ int main()
 
         if (!arb_poly_equal(a, b))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %wd\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -173,15 +173,15 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(c, A))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %wd\n", rbits2);
-            printf("bits3 = %wd\n", rbits3);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
+            flint_printf("bits3 = %wd\n", rbits3);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -194,6 +194,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

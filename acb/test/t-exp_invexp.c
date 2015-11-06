@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("exp_invexp....");
+    flint_printf("exp_invexp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -59,9 +59,9 @@ int main()
 
         if (!acb_contains(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -74,6 +74,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

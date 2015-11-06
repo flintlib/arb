@@ -37,7 +37,7 @@ acb_mat_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
 
     if (ac != br || ar != acb_mat_nrows(C) || bc != acb_mat_ncols(C))
     {
-        printf("acb_mat_mul: incompatible dimensions\n");
+        flint_printf("acb_mat_mul: incompatible dimensions\n");
         abort();
     }
 

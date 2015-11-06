@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("sum....");
+    flint_printf("sum....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -76,16 +76,16 @@ int main()
         if (!fmpr_equal(s1, s3) || res1 != res2 ||
             !fmpr_check_ulp(s1, res1, prec) || !fmpr_check_ulp(s3, res2, prec))
         {
-            printf("FAIL (%wd)\n\n", iter);
-            printf("prec = %wd\n\n", prec);
+            flint_printf("FAIL (%wd)\n\n", iter);
+            flint_printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%wd] = ", i); fmpr_print(terms + i); printf("\n\n");
+                flint_printf("terms[%wd] = ", i); fmpr_print(terms + i); flint_printf("\n\n");
             }
-            printf("s1 = "); fmpr_print(s1); printf("\n\n");
-            printf("s2 = "); fmpr_print(s2); printf("\n\n");
-            printf("s3 = "); fmpr_print(s3); printf("\n\n");
-            printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
+            flint_printf("s1 = "); fmpr_print(s1); flint_printf("\n\n");
+            flint_printf("s2 = "); fmpr_print(s2); flint_printf("\n\n");
+            flint_printf("s3 = "); fmpr_print(s3); flint_printf("\n\n");
+            flint_printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
             abort();
         }
 
@@ -95,18 +95,18 @@ int main()
 
         if (fmpr_cmp(err, err_bound) > 0)
         {
-            printf("FAIL (error bound)!\n");
-            printf("prec = %wd\n\n", prec);
+            flint_printf("FAIL (error bound)!\n");
+            flint_printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%wd] = ", i); fmpr_print(terms + i); printf("\n\n");
+                flint_printf("terms[%wd] = ", i); fmpr_print(terms + i); flint_printf("\n\n");
             }
-            printf("s1 = "); fmpr_print(s1); printf("\n\n");
-            printf("s2 = "); fmpr_print(s2); printf("\n\n");
-            printf("s3 = "); fmpr_print(s3); printf("\n\n");
-            printf("error: "); fmpr_print(err); printf("\n\n");
-            printf("error bound: "); fmpr_print(err_bound); printf("\n\n");
-            printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
+            flint_printf("s1 = "); fmpr_print(s1); flint_printf("\n\n");
+            flint_printf("s2 = "); fmpr_print(s2); flint_printf("\n\n");
+            flint_printf("s3 = "); fmpr_print(s3); flint_printf("\n\n");
+            flint_printf("error: "); fmpr_print(err); flint_printf("\n\n");
+            flint_printf("error bound: "); fmpr_print(err_bound); flint_printf("\n\n");
+            flint_printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
             abort();
         }
 
@@ -121,7 +121,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

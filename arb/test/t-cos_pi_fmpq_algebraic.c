@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("cos_pi_fmpq_algebraic....");
+    flint_printf("cos_pi_fmpq_algebraic....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,20 +61,20 @@ int main()
 
         if (!arb_overlaps(c1, c2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("p/q = %wu/%wu", p, q); printf("\n\n");
-            printf("c1 = "); arb_printd(c1, 15); printf("\n\n");
-            printf("c2 = "); arb_printd(c2, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("p/q = %wu/%wu", p, q); flint_printf("\n\n");
+            flint_printf("c1 = "); arb_printd(c1, 15); flint_printf("\n\n");
+            flint_printf("c2 = "); arb_printd(c2, 15); flint_printf("\n\n");
             abort();
         }
 
         if (arb_rel_accuracy_bits(c1) < prec - 2)
         {
-            printf("FAIL: accuracy\n\n");
-            printf("p/q = %wu/%wu", p, q); printf("\n\n");
-            printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(c1));
-            printf("c1 = "); arb_printd(c1, 15); printf("\n\n");
-            printf("c2 = "); arb_printd(c2, 15); printf("\n\n");
+            flint_printf("FAIL: accuracy\n\n");
+            flint_printf("p/q = %wu/%wu", p, q); flint_printf("\n\n");
+            flint_printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(c1));
+            flint_printf("c1 = "); arb_printd(c1, 15); flint_printf("\n\n");
+            flint_printf("c2 = "); arb_printd(c2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -84,7 +84,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

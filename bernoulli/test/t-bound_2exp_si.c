@@ -39,7 +39,7 @@ int main()
     fmpq_t q;
     fmpr_t t;
 
-    printf("bound_2exp_si....");
+    flint_printf("bound_2exp_si....");
     fflush(stdout);
 
     fmpq_init(q);
@@ -55,9 +55,9 @@ int main()
 
         if (fmpr_cmpabs_2exp_si(t, bound) > 0)
         {
-            printf("FAIL: %wd\n", i);
-            fmpr_print(t); printf("\n\n");
-            printf("%wd\n", bound); printf("\n\n");
+            flint_printf("FAIL: %wd\n", i);
+            fmpr_print(t); flint_printf("\n\n");
+            flint_printf("%wd\n", bound); flint_printf("\n\n");
             abort();
         }
     }
@@ -73,14 +73,14 @@ int main()
 
         if (a < b || a > 1.01 * b)
         {
-            printf("FAIL: %wd\n", i);
-            printf("%wd: %f %f %f\n", i, a, b, (float) a / b);
+            flint_printf("FAIL: %wd\n", i);
+            flint_printf("%wd: %f %f %f\n", i, a, b, (float) a / b);
             abort();
         }
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -29,21 +29,21 @@
 void
 mag_print(const mag_t x)
 {
-    printf("(");
+    flint_printf("(");
     if (mag_is_zero(x))
-        printf("0");
+        flint_printf("0");
     else if (mag_is_inf(x))
-        printf("inf");
+        flint_printf("inf");
     else
     {
         fmpz_t t;
         fmpz_init(t);
         fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
-        printf("%wu * 2^", MAG_MAN(x));
+        flint_printf("%wu * 2^", MAG_MAN(x));
         fmpz_print(t);
         fmpz_clear(t);
     }
-    printf(")");
+    flint_printf(")");
 }
 
 void

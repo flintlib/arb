@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("swinnerton_dyer_ui....");
+    flint_printf("swinnerton_dyer_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,7 +54,7 @@ int main()
 
         if (!arb_poly_get_unique_fmpz_poly(c, a))
         {
-            printf("FAIL (uniqueness)\n\n");
+            flint_printf("FAIL (uniqueness)\n\n");
             abort();
         }
 
@@ -74,7 +74,7 @@ int main()
 
         if (!arb_contains_zero(y))
         {
-            printf("FAIL (containment)\n\n");
+            flint_printf("FAIL (containment)\n\n");
             abort();
         }
 
@@ -82,7 +82,7 @@ int main()
 
         if (!arb_poly_overlaps(a, b))
         {
-            printf("FAIL (overlap)\n\n");
+            flint_printf("FAIL (overlap)\n\n");
             abort();
         }
 
@@ -95,7 +95,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

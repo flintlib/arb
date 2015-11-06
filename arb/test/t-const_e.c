@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("const_e....");
+    flint_printf("const_e....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -51,9 +51,9 @@ int main()
 
         if (!arb_contains_mpfr(r, s))
         {
-            printf("FAIL: containment\n\n");
-            printf("prec = %wd\n", prec);
-            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
             abort();
         }
 
@@ -61,9 +61,9 @@ int main()
 
         if (accuracy < prec - 4)
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec = %wd\n", prec);
-            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
             abort();
         }
 
@@ -73,6 +73,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

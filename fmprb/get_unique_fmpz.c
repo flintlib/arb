@@ -39,7 +39,7 @@ fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
         {
             if (!fmpz_fits_si(fmpr_expref(fmprb_midref(x))))
             {
-                printf("fmprb_get_unique_fmpz: too large shift\n");
+                flint_printf("fmprb_get_unique_fmpz: too large shift\n");
                 abort();
             }
 
@@ -66,7 +66,7 @@ fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
         {
             if (!fmpz_fits_si(fmpr_expref(fmprb_midref(x))))
             {
-                printf("fmprb_get_unique_fmpz: too large shift\n");
+                flint_printf("fmprb_get_unique_fmpz: too large shift\n");
                 abort();
             }
 

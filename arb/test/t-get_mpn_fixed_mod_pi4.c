@@ -32,7 +32,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_mpn_fixed_mod_pi4....");
+    flint_printf("get_mpn_fixed_mod_pi4....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -82,7 +82,7 @@ int main()
             /* could round differently */
             if (fmpz_fdiv_ui(q, 8) != octant)
             {
-                printf("bad octant\n");
+                flint_printf("bad octant\n");
                 abort();
             }
 
@@ -98,11 +98,11 @@ int main()
 
             if (!arb_contains_arf(t, x))
             {
-                printf("FAIL (containment)\n");
-                printf("x = "); arf_printd(x, 50); printf("\n\n");
-                printf("q = "); fmpz_print(q); printf("\n\n");
-                printf("w = "); arb_printd(wb, 50); printf("\n\n");
-                printf("t = "); arb_printd(t, 50); printf("\n\n");
+                flint_printf("FAIL (containment)\n");
+                flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
+                flint_printf("q = "); fmpz_print(q); flint_printf("\n\n");
+                flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
+                flint_printf("t = "); arb_printd(t, 50); flint_printf("\n\n");
                 abort();
             }
 
@@ -112,9 +112,9 @@ int main()
             if (arf_sgn(arb_midref(wb)) < 0 ||
                 arf_cmp(arb_midref(wb), arb_midref(t)) >= 0)
             {
-                printf("FAIL (expected 0 <= w < pi/4)\n");
-                printf("x = "); arf_printd(x, 50); printf("\n\n");
-                printf("w = "); arb_printd(wb, 50); printf("\n\n");
+                flint_printf("FAIL (expected 0 <= w < pi/4)\n");
+                flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
+                flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
                 abort();
             }
         }
@@ -129,7 +129,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

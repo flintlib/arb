@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_fmpz....");
+    flint_printf("get_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -84,10 +84,10 @@ int main()
 
         if (!fmpz_equal(z, z2))
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("z = "); fmpz_print(z); printf("\n\n");
-            printf("z2 = "); fmpz_print(z2); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("z = "); fmpz_print(z); flint_printf("\n\n");
+            flint_printf("z2 = "); fmpz_print(z2); flint_printf("\n\n");
             abort();
         }
 
@@ -100,6 +100,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

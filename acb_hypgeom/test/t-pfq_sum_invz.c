@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("pfq_sum_invz....");
+    flint_printf("pfq_sum_invz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -79,13 +79,13 @@ int main()
 
         if (!acb_overlaps(s1, s2) || !acb_overlaps(t1, t2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("n = %wd\n\n", n);
-            printf("z = "); acb_printd(z, 15); printf("\n\n");
-            printf("s1 = "); acb_printd(s1, 15); printf("\n\n");
-            printf("s2 = "); acb_printd(s2, 15); printf("\n\n");
-            printf("t1 = "); acb_printd(t1, 15); printf("\n\n");
-            printf("t2 = "); acb_printd(t2, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("n = %wd\n\n", n);
+            flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
+            flint_printf("s1 = "); acb_printd(s1, 15); flint_printf("\n\n");
+            flint_printf("s2 = "); acb_printd(s2, 15); flint_printf("\n\n");
+            flint_printf("t1 = "); acb_printd(t1, 15); flint_printf("\n\n");
+            flint_printf("t2 = "); acb_printd(t2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -102,6 +102,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

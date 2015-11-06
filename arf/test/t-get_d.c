@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_d....");
+    flint_printf("get_d....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -60,10 +60,10 @@ int main()
 
         if (!arf_equal(x, z))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = %.17g\n\n", y);
-            printf("z = "); arf_print(z); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = %.17g\n\n", y);
+            flint_printf("z = "); arf_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -99,11 +99,11 @@ int main()
 
         if (!arf_equal(w, z))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = %.17g\n\n", y);
-            printf("z = "); arf_print(z); printf("\n\n");
-            printf("w = "); arf_print(w); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = %.17g\n\n", y);
+            flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+            flint_printf("w = "); arf_print(w); flint_printf("\n\n");
             abort();
         }
 
@@ -145,13 +145,13 @@ int main()
 
         if (!arf_equal(r1, r2))
         {
-            printf("FAIL:\n\n");
-            printf("rnd = %i\n\n", rnd);
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("d1 = %.17g\n\n", d1);
-            printf("d2 = %.17g\n\n", d2);
-            printf("r1 = "); arf_print(r1); printf("\n\n");
-            printf("r2 = "); arf_print(r2); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("rnd = %i\n\n", rnd);
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("d1 = %.17g\n\n", d1);
+            flint_printf("d2 = %.17g\n\n", d2);
+            flint_printf("r1 = "); arf_print(r1); flint_printf("\n\n");
+            flint_printf("r2 = "); arf_print(r2); flint_printf("\n\n");
             abort();
         }
 
@@ -163,7 +163,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

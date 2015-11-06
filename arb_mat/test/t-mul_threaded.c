@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("mul_threaded....");
+    flint_printf("mul_threaded....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -73,17 +73,17 @@ int main()
 
         if (!arb_mat_contains_fmpq_mat(c, C))
         {
-            printf("FAIL\n\n");
-            printf("threads = %d, m = %wd, n = %wd, k = %wd, bits3 = %wd\n",
+            flint_printf("FAIL\n\n");
+            flint_printf("threads = %d, m = %wd, n = %wd, k = %wd, bits3 = %wd\n",
                 flint_get_num_threads(), m, n, k, rbits3);
 
-            printf("A = "); fmpq_mat_print(A); printf("\n\n");
-            printf("B = "); fmpq_mat_print(B); printf("\n\n");
-            printf("C = "); fmpq_mat_print(C); printf("\n\n");
+            flint_printf("A = "); fmpq_mat_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_mat_print(B); flint_printf("\n\n");
+            flint_printf("C = "); fmpq_mat_print(C); flint_printf("\n\n");
 
-            printf("a = "); arb_mat_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_mat_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_mat_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_mat_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_mat_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_mat_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -96,7 +96,7 @@ int main()
             arb_mat_mul_threaded(d, d, b, rbits3);
             if (!arb_mat_equal(d, c))
             {
-                printf("FAIL (aliasing 1)\n\n");
+                flint_printf("FAIL (aliasing 1)\n\n");
                 abort();
             }
         }
@@ -109,7 +109,7 @@ int main()
             arb_mat_mul_threaded(d, a, d, rbits3);
             if (!arb_mat_equal(d, c))
             {
-                printf("FAIL (aliasing 2)\n\n");
+                flint_printf("FAIL (aliasing 2)\n\n");
                 abort();
             }
         }
@@ -126,6 +126,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

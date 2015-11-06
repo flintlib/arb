@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("interpolate_barycentric....");
+    flint_printf("interpolate_barycentric....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -84,10 +84,10 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(S, P))
         {
-            printf("FAIL:\n");
-            printf("P = "); fmpq_poly_print(P); printf("\n\n");
-            printf("R = "); arb_poly_printd(R, 15); printf("\n\n");
-            printf("S = "); arb_poly_printd(S, 15); printf("\n\n");
+            flint_printf("FAIL:\n");
+            flint_printf("P = "); fmpq_poly_print(P); flint_printf("\n\n");
+            flint_printf("R = "); arb_poly_printd(R, 15); flint_printf("\n\n");
+            flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -102,6 +102,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -32,15 +32,15 @@ arf_debug(const arf_t x)
     mp_size_t n;
     slong i;
 
-    printf("{exp=");
+    flint_printf("{exp=");
     fmpz_print(&x->exp);
-    printf("; size=%wu; sgnbit=%wd; digits=[", ARF_SIZE(x), ARF_SGNBIT(x));
+    flint_printf("; size=%wu; sgnbit=%wd; digits=[", ARF_SIZE(x), ARF_SGNBIT(x));
 
     ARF_GET_MPN_READONLY(d, n, x);
 
     for (i = 0; i < n; i++)
-        printf(" %wu", d[i]);
+        flint_printf(" %wu", d[i]);
 
-    printf("]}");
+    flint_printf("]}");
 }
 

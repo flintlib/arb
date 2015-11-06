@@ -32,16 +32,16 @@ acb_mat_printd(const acb_mat_t mat, slong digits)
 
     for (i = 0; i < acb_mat_nrows(mat); i++)
     {
-        printf("[");
+        flint_printf("[");
 
         for (j = 0; j < acb_mat_ncols(mat); j++)
         {
             acb_printd(acb_mat_entry(mat, i, j), digits);
 
             if (j < acb_mat_ncols(mat) - 1)
-                printf(", ");
+                flint_printf(", ");
         }
 
-        printf("]\n");
+        flint_printf("]\n");
     }
 }

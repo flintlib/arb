@@ -34,7 +34,7 @@ arf_get_fmpq(fmpq_t y, const arf_t x)
     }
     else if (arf_is_special(x) || !ARF_IS_LAGOM(x))
     {
-        printf("exception: arf_get_fmpq: cannot convert to rational\n");
+        flint_printf("exception: arf_get_fmpq: cannot convert to rational\n");
         abort();
     }
     else

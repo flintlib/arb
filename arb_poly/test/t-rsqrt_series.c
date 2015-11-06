@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rsqrt_series....");
+    flint_printf("rsqrt_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -67,13 +67,13 @@ int main()
         fmpq_poly_truncate(A, n);
         if (!arb_poly_contains_fmpq_poly(c, A))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %wd\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -81,7 +81,7 @@ int main()
         arb_poly_rsqrt_series(a, a, n, rbits2);
         if (!arb_poly_equal(a, b))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -93,7 +93,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

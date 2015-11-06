@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("add_naive....");
+    flint_printf("add_naive....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -65,13 +65,13 @@ int main()
             res1 != FMPR_RESULT_EXACT || res2 != FMPR_RESULT_EXACT ||
             res3 != FMPR_RESULT_EXACT || res4 != FMPR_RESULT_EXACT)
         {
-            printf("FAIL\n\n");
-            printf("bits = %wd\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("t = "); fmpr_print(t); printf("\n\n");
-            printf("u = "); fmpr_print(u); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("bits = %wd\n", bits);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+            flint_printf("t = "); fmpr_print(t); flint_printf("\n\n");
+            flint_printf("u = "); fmpr_print(u); flint_printf("\n\n");
             abort();
         }
 
@@ -133,13 +133,13 @@ int main()
         if (!fmpr_equal(z, w) || (res == FMPR_RESULT_EXACT) != (mpfr_res == 0)
             || !fmpr_check_ulp(z, res, bits))
         {
-            printf("FAIL\n\n");
-            printf("bits = %wd\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
-            printf("returned: %wd, %d\n", res, mpfr_res);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits = %wd\n", bits);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+            flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
+            flint_printf("returned: %wd, %d\n", res, mpfr_res);
             abort();
         }
 
@@ -161,14 +161,14 @@ int main()
             if (fmpr_is_zero(error_bound) != fmpr_is_zero(true_error) ||
                 fmpr_cmp(true_error, error_bound) > 0)
             {
-                printf("FAIL: error bound\n\n");
-                printf("bits = %wd\n", bits);
-                printf("x = "); fmpr_print(x); printf("\n\n");
-                printf("y = "); fmpr_print(y); printf("\n\n");
-                printf("z = "); fmpr_print(z); printf("\n\n");
-                printf("z_exact = "); fmpr_print(z_exact); printf("\n\n");
-                printf("true_error = "); fmpr_print(true_error); printf("\n\n");
-                printf("error_bound = "); fmpr_print(error_bound); printf("\n\n");
+                flint_printf("FAIL: error bound\n\n");
+                flint_printf("bits = %wd\n", bits);
+                flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+                flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                flint_printf("z_exact = "); fmpr_print(z_exact); flint_printf("\n\n");
+                flint_printf("true_error = "); fmpr_print(true_error); flint_printf("\n\n");
+                flint_printf("error_bound = "); fmpr_print(error_bound); flint_printf("\n\n");
                 abort();
             }
 
@@ -189,6 +189,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

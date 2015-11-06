@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rising_ui_get_mag....");
+    flint_printf("rising_ui_get_mag....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -56,11 +56,11 @@ int main()
 
         if (!acb_overlaps(y, z))
         {
-            printf("FAIL: overlap\n\n");
-            printf("n = %wu\n", n);
-            printf("x = "); acb_printd(x, 15); printf("\n\n");
-            printf("y = "); acb_printd(y, 15); printf("\n\n");
-            printf("z = "); acb_printd(z, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("n = %wu\n", n);
+            flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
+            flint_printf("y = "); acb_printd(y, 15); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -72,6 +72,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

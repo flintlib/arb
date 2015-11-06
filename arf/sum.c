@@ -63,7 +63,7 @@ _arf_add_eps(arf_t s, const arf_t x, int sgn, slong prec, arf_rnd_t rnd)
 
     if (bits == 0)
     {
-        printf("_arf_add_eps\n");
+        flint_printf("_arf_add_eps\n");
         abort();
     }
 

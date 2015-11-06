@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("divappr_abs_ubound....");
+    flint_printf("divappr_abs_ubound....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -58,11 +58,11 @@ int main()
 
         if (fmpr_cmp(c, d) > 0)
         {
-            printf("FAIL:\n");
-            fmpr_printd(a, prec / 3.32); printf("\n");
-            fmpr_printd(b, prec / 3.32); printf("\n");
-            fmpr_printd(c, prec / 3.32); printf("\n");
-            fmpr_printd(d, prec / 3.32); printf("\n");
+            flint_printf("FAIL:\n");
+            fmpr_printd(a, prec / 3.32); flint_printf("\n");
+            fmpr_printd(b, prec / 3.32); flint_printf("\n");
+            fmpr_printd(c, prec / 3.32); flint_printf("\n");
+            fmpr_printd(d, prec / 3.32); flint_printf("\n");
             abort();
         }
 
@@ -74,7 +74,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

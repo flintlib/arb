@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rsqrt....");
+    flint_printf("rsqrt....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -53,10 +53,10 @@ int main()
 
         if (!fmprb_contains(c, a))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmprb_print(b); printf("\n\n");
-            printf("c = "); fmprb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); fmprb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmprb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); fmprb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -64,7 +64,7 @@ int main()
 
         if (!fmprb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -75,6 +75,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

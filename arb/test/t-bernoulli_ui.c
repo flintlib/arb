@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("bernoulli_ui....");
+    flint_printf("bernoulli_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -54,10 +54,10 @@ int main()
 
         if (!arb_overlaps(b1, b2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("n = %wu\n\n", n);
-            printf("b1 = "); arb_print(b1); printf("\n\n");
-            printf("b2 = "); arb_print(b2); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("b1 = "); arb_print(b1); flint_printf("\n\n");
+            flint_printf("b2 = "); arb_print(b2); flint_printf("\n\n");
             abort();
         }
 
@@ -66,11 +66,11 @@ int main()
 
         if (acc1 < prec1 - 2 || acc2 < prec2 - 2)
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec1 = %wd\n", prec1);
-            printf("prec2 = %wd\n", prec2);
-            printf("b1 = "); arb_printd(b1, prec1 / 3.33); printf("\n\n");
-            printf("b2 = "); arb_printd(b2, prec2 / 3.33); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec1 = %wd\n", prec1);
+            flint_printf("prec2 = %wd\n", prec2);
+            flint_printf("b1 = "); arb_printd(b1, prec1 / 3.33); flint_printf("\n\n");
+            flint_printf("b2 = "); arb_printd(b2, prec2 / 3.33); flint_printf("\n\n");
             abort();
         }
 
@@ -80,7 +80,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

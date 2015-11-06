@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("chebyshev_u_ui....");
+    flint_printf("chebyshev_u_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -66,13 +66,13 @@ int main()
 
         if (!arb_overlaps(d, e))
         {
-            printf("FAIL: sin(a)*U_n(cos(a)) = sin((n+1)a)\n\n");
-            printf("n = %wu\n\n", n);
-            printf("a = "); arb_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_printd(c, 15); printf("\n\n");
-            printf("d = "); arb_printd(d, 15); printf("\n\n");
-            printf("e = "); arb_printd(e, 15); printf("\n\n");
+            flint_printf("FAIL: sin(a)*U_n(cos(a)) = sin((n+1)a)\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); arb_printd(d, 15); flint_printf("\n\n");
+            flint_printf("e = "); arb_printd(e, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -80,11 +80,11 @@ int main()
 
         if (!arb_equal(b, c))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("n = %wu\n\n", n);
-            printf("a = "); arb_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_printd(c, 15); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -97,12 +97,12 @@ int main()
 
         if (!arb_overlaps(b, d))
         {
-            printf("FAIL: U_n\n\n");
-            printf("n = %wu\n\n", n);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: U_n\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -113,12 +113,12 @@ int main()
 
         if (!arb_overlaps(c, d))
         {
-            printf("FAIL: U_{n-1}\n\n");
-            printf("n = %wu\n\n", n);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: U_{n-1}\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -131,7 +131,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

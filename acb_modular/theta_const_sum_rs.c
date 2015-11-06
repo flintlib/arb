@@ -88,7 +88,7 @@ acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N)
         }
     }
 
-    /* printf("N = %wd, best_m = %wd, best_cost = %wd, s(m) = %d\n",
+    /* flint_printf("N = %wd, best_m = %wd, best_cost = %wd, s(m) = %d\n",
         N, best_m, best_cost, num_residues[best_i]); */
     i = best_i;
 

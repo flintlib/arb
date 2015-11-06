@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("rel_accuracy_bits....");
+    flint_printf("rel_accuracy_bits....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -53,10 +53,10 @@ int main()
 
         if (a1 != a2)
         {
-            printf("FAIL: acb != arb\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
+            flint_printf("FAIL: acb != arb\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("z = "); acb_print(z); flint_printf("\n\n");
+            flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 
@@ -74,9 +74,9 @@ int main()
 
         if (a1 != a2)
         {
-            printf("FAIL: swapping\n\n");
-            printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
+            flint_printf("FAIL: swapping\n\n");
+            flint_printf("z = "); acb_print(z); flint_printf("\n\n");
+            flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 
@@ -97,10 +97,10 @@ int main()
 
         if (a1 != a2)
         {
-            printf("FAIL: acb != arb (2)\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
+            flint_printf("FAIL: acb != arb (2)\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("z = "); acb_print(z); flint_printf("\n\n");
+            flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 
@@ -110,7 +110,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

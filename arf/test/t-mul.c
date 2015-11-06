@@ -52,7 +52,7 @@ int main()
     slong iter, iter2;
     flint_rand_t state;
 
-    printf("mul....");
+    flint_printf("mul....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -92,13 +92,13 @@ int main()
                 r2 = arf_mul_naive(v, x, y, prec, rnd);
                 if (!arf_equal(z, v) || r1 != r2)
                 {
-                    printf("FAIL!\n");
-                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("x = "); arf_print(x); printf("\n\n");
-                    printf("y = "); arf_print(y); printf("\n\n");
-                    printf("z = "); arf_print(z); printf("\n\n");
-                    printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+                    flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -108,12 +108,12 @@ int main()
                 r2 = arf_mul_naive(v, x, x, prec, rnd);
                 if (!arf_equal(z, v) || r1 != r2)
                 {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("x = "); arf_print(x); printf("\n\n");
-                    printf("z = "); arf_print(z); printf("\n\n");
-                    printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL (aliasing 1)!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -123,12 +123,12 @@ int main()
                 r1 = arf_mul(x, x, x, prec, rnd);
                 if (!arf_equal(v, x) || r1 != r2)
                 {
-                    printf("FAIL (aliasing 2)!\n");
-                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("x = "); arf_print(x); printf("\n\n");
-                    printf("z = "); arf_print(z); printf("\n\n");
-                    printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL (aliasing 2)!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -138,12 +138,12 @@ int main()
                 r1 = arf_mul(x, x, y, prec, rnd);
                 if (!arf_equal(x, v) || r1 != r2)
                 {
-                    printf("FAIL (aliasing 3)!\n");
-                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("x = "); arf_print(x); printf("\n\n");
-                    printf("y = "); arf_print(y); printf("\n\n");
-                    printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL (aliasing 3)!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -153,12 +153,12 @@ int main()
                 r1 = arf_mul(x, y, x, prec, rnd);
                 if (!arf_equal(x, v) || r1 != r2)
                 {
-                    printf("FAIL (aliasing 4)!\n");
-                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("x = "); arf_print(x); printf("\n\n");
-                    printf("y = "); arf_print(y); printf("\n\n");
-                    printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    flint_printf("FAIL (aliasing 4)!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -173,6 +173,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

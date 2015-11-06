@@ -114,11 +114,11 @@ arf_interval_get_arb(arb_t x, const arf_interval_t v, slong prec)
 static __inline__ void
 arf_interval_printd(const arf_interval_t v, slong n)
 {
-    printf("[");
+    flint_printf("[");
     arf_printd(&v->a, n);
-    printf(", ");
+    flint_printf(", ");
     arf_printd(&v->b, n);
-    printf("]");
+    flint_printf("]");
 }
 
 /* bisection */

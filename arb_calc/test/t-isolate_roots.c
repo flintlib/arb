@@ -51,7 +51,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("isolate_roots....");
+    flint_printf("isolate_roots....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -106,14 +106,14 @@ int main()
 
                 if (!found)
                 {
-                    printf("FAIL: missing root %wd\n", i);
-                    printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
+                    flint_printf("FAIL: missing root %wd\n", i);
+                    flint_printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)
                     {
                         arf_interval_printd(blocks + j, 15);
-                        printf("   %d \n", info[i]);
+                        flint_printf("   %d \n", info[i]);
                     }
 
                     abort();
@@ -132,14 +132,14 @@ int main()
 
                 if (!arb_get_unique_fmpz(nn, t))
                 {
-                    printf("FAIL: bad root %wd\n", i);
-                    printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
+                    flint_printf("FAIL: bad root %wd\n", i);
+                    flint_printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)
                     {
                         arf_interval_printd(blocks + j, 15);
-                        printf("   %d \n", info[i]);
+                        flint_printf("   %d \n", info[i]);
                     }
 
                     abort();
@@ -157,7 +157,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

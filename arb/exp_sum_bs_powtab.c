@@ -131,7 +131,7 @@ _arb_get_exp_pos(const slong * tab, slong step)
 
         if (tab[i] == 0)
         {
-            printf("ERROR: exponent %wd not in table!\n", step);
+            flint_printf("ERROR: exponent %wd not in table!\n", step);
             abort();
         }
     }
@@ -233,7 +233,7 @@ _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
         }
         else
         {
-            printf("power table has the wrong structure!\n");
+            flint_printf("power table has the wrong structure!\n");
             abort();
         }
     }

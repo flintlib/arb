@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("binpow_uiui....");
+    flint_printf("binpow_uiui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -60,11 +60,11 @@ int main()
 
         if (!(fmpr_cmpabs(x, y) <= 0))
         {
-            printf("FAIL\n\n");
-            printf("m = %wu\n\n", m);
-            printf("n = %wu\n\n", n);
-            printf("x = "); fmpr_printd(x, 10); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 10); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("m = %wu\n\n", m);
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("x = "); fmpr_printd(x, 10); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_printd(y, 10); flint_printf("\n\n");
             abort();
         }
 
@@ -75,7 +75,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

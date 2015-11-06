@@ -53,7 +53,7 @@ hypgeom_estimate_terms(const mag_t z, int r, slong prec)
     {
         if (t >= 1)
         {
-            printf("z must be smaller than 1\n");
+            flint_printf("z must be smaller than 1\n");
             abort();
         }
 
@@ -67,7 +67,7 @@ hypgeom_estimate_terms(const mag_t z, int r, slong prec)
 
     if (y >= LONG_MAX / 2)
     {
-        printf("error: series will converge too slowly\n");
+        flint_printf("error: series will converge too slowly\n");
         abort();
     }
 

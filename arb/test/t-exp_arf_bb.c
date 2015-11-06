@@ -53,7 +53,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("exp_arf_bb....");
+    flint_printf("exp_arf_bb....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -88,21 +88,21 @@ int main()
 
         if (!arb_contains(z, y))
         {
-            printf("FAIL: containment\n\n");
-            printf("prec = %wd\n\n", prec);
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
-            printf("z = "); arb_printd(z, 50); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("prec = %wd\n\n", prec);
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
+            flint_printf("z = "); arb_printd(z, 50); flint_printf("\n\n");
             abort();
         }
 
         if (arb_rel_accuracy_bits(z) < prec - 2)
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec = %wd,  acc = %wd\n\n", prec, arb_rel_accuracy_bits(z));
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
-            printf("z = "); arb_print(z); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec = %wd,  acc = %wd\n\n", prec, arb_rel_accuracy_bits(z));
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+            flint_printf("z = "); arb_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -110,7 +110,7 @@ int main()
 
         if (!arb_overlaps(x, z))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -121,7 +121,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

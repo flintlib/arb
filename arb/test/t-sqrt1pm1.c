@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("sqrt1pm1....");
+    flint_printf("sqrt1pm1....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -62,10 +62,10 @@ int main()
 
         if (!arb_overlaps(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -76,11 +76,11 @@ int main()
 
         if (!arb_overlaps(c, d))
         {
-            printf("FAIL: comparison with log\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(d); printf("\n\n");
+            flint_printf("FAIL: comparison with log\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -88,9 +88,9 @@ int main()
 
         if (!arb_overlaps(a, b))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -102,6 +102,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

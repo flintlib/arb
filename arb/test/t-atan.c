@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("atan....");
+    flint_printf("atan....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -58,9 +58,9 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -68,7 +68,7 @@ int main()
 
         if (!arb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -99,10 +99,10 @@ int main()
 
         if (!arb_overlaps(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -112,11 +112,11 @@ int main()
 
         if (!arb_contains(c, a))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(d); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -150,11 +150,11 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("a = "); arb_printd(a, 50); printf("\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_printd(b, 50); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("a = "); arb_printd(a, 50); flint_printf("\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 50); flint_printf("\n\n");
             abort();
         }
 
@@ -162,7 +162,7 @@ int main()
 
         if (!arb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -194,10 +194,10 @@ int main()
 
         if (!arb_overlaps(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -207,11 +207,11 @@ int main()
 
         if (!arb_contains(c, a))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(d); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -223,6 +223,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

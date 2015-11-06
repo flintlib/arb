@@ -70,7 +70,7 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s, slong prec)
 
     if (s < 6)
     {
-        printf("too small s!\n");
+        flint_printf("too small s!\n");
         abort();
     }
 

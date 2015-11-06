@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("pow_acb_series....");
+    flint_printf("pow_acb_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -79,15 +79,15 @@ int main()
 
         if (!acb_poly_overlaps(h1, h2))
         {
-            printf("FAIL\n\n");
+            flint_printf("FAIL\n\n");
 
-            printf("prec = %wd\n", prec);
-            printf("trunc = %wd\n", trunc);
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("trunc = %wd\n", trunc);
 
-            printf("f = "); acb_poly_printd(f, 15); printf("\n\n");
-            printf("c = "); acb_printd(c, 15); printf("\n\n");
-            printf("h1 = "); acb_poly_printd(h1, 15); printf("\n\n");
-            printf("h2 = "); acb_poly_printd(h2, 15); printf("\n\n");
+            flint_printf("f = "); acb_poly_printd(f, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_printd(c, 15); flint_printf("\n\n");
+            flint_printf("h1 = "); acb_poly_printd(h1, 15); flint_printf("\n\n");
+            flint_printf("h2 = "); acb_poly_printd(h2, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -96,7 +96,7 @@ int main()
 
         if (!acb_poly_overlaps(f, h1))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -109,7 +109,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

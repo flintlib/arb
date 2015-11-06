@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("get_mag_lower....");
+    flint_printf("get_mag_lower....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -72,9 +72,9 @@ int main()
 
         if (!result)
         {
-            printf("FAIL:\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("m = "); mag_print(m); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("m = "); mag_print(m); flint_printf("\n\n");
             abort();
         }
 
@@ -85,7 +85,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

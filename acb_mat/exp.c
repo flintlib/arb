@@ -129,7 +129,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 
     if (dim != acb_mat_ncols(A))
     {
-        printf("acb_mat_exp: a square matrix is required!\n");
+        flint_printf("acb_mat_exp: a square matrix is required!\n");
         abort();
     }
 

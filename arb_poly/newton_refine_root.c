@@ -54,7 +54,7 @@ _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, slong len,
 
         if (iters == FLINT_BITS)
         {
-            printf("newton_refine_root: initial value too imprecise\n");
+            flint_printf("newton_refine_root: initial value too imprecise\n");
             abort();
         }
     }
@@ -68,7 +68,7 @@ _arb_poly_newton_refine_root(arb_t r, arb_srcptr poly, slong len,
         if (!_arb_poly_newton_step(r, poly, len, r, convergence_interval,
             convergence_factor, wp))
         {
-            printf("warning: newton_refine_root: improvement failed\n");
+            flint_printf("warning: newton_refine_root: improvement failed\n");
             break;
         }
 

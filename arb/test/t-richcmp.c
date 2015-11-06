@@ -136,7 +136,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("richcmp....");
+    flint_printf("richcmp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -159,14 +159,14 @@ int main()
 
         if (res1 != res2)
         {
-            printf("FAIL:\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("a = "); arb_printd(a, 30); printf("\n\n");
-            printf("b = "); arb_printd(b, 30); printf("\n\n");
-            printf("op = %d\n\n", op);
-            printf("res1 (cmp)      = %d\n\n", res1);
-            printf("res2 (fallback) = %d\n\n", res2);
+            flint_printf("FAIL:\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("a = "); arb_printd(a, 30); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 30); flint_printf("\n\n");
+            flint_printf("op = %d\n\n", op);
+            flint_printf("res1 (cmp)      = %d\n\n", res1);
+            flint_printf("res2 (fallback) = %d\n\n", res2);
             abort();
         }
 
@@ -176,7 +176,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

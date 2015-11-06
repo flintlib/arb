@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     if (argc < 2)
     {
-        printf("usage: build/examples/hilbert_matrix n\n");
+        flint_printf("usage: build/examples/hilbert_matrix n\n");
         return 1;
     }
 
@@ -34,16 +34,16 @@ int main(int argc, char *argv[])
             }
         }
 
-        printf("prec=%wd: ", prec);
+        flint_printf("prec=%wd: ", prec);
 
         arb_mat_det(det, A, prec);
 
         arb_printd(det, 10);
-        printf("\n");
+        flint_printf("\n");
 
         if (!arb_contains_zero(det))
         {
-            printf("success!\n");
+            flint_printf("success!\n");
             break;
         }
     }

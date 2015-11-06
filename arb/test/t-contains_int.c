@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("contains_int....");
+    flint_printf("contains_int....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -58,9 +58,9 @@ int main()
 
         if (!ok)
         {
-            printf("FAIL:\n\n");
-            printf("a = "); arb_printd(a, 30); printf("\n\n");
-            printf("r = %d\n\n", r);
+            flint_printf("FAIL:\n\n");
+            flint_printf("a = "); arb_printd(a, 30); flint_printf("\n\n");
+            flint_printf("r = %d\n\n", r);
             abort();
         }
 
@@ -69,6 +69,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

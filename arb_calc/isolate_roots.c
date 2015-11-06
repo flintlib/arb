@@ -125,9 +125,9 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
                 {
                     if (arb_calc_verbose)
                     {
-                        printf("found isolated root in: ");
+                        flint_printf("found isolated root in: ");
                         arf_interval_printd(block, 15);
-                        printf("\n");
+                        flint_printf("\n");
                     }
 
                     *found_count -= 1;
@@ -147,9 +147,9 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
 
                 if (msign == 0 && arb_calc_verbose)
                 {
-                    printf("possible zero at midpoint: ");
+                    flint_printf("possible zero at midpoint: ");
                     arf_interval_printd(block, 15);
-                    printf("\n");
+                    flint_printf("\n");
                 }
 
                 isolate_roots_recursive(blocks, flags, length, alloc,

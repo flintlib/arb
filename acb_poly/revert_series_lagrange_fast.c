@@ -97,7 +97,7 @@ acb_poly_revert_series_lagrange_fast(acb_poly_t Qinv,
     if (Qlen < 2 || !acb_is_zero(Q->coeffs)
                  || acb_contains_zero(Q->coeffs + 1))
     {
-        printf("Exception (acb_poly_revert_series_lagrange_fast). Input \n"
+        flint_printf("Exception (acb_poly_revert_series_lagrange_fast). Input \n"
                "must have zero constant term and nonzero coefficient of x^1.\n");
         abort();
     }

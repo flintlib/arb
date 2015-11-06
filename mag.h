@@ -151,7 +151,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #define MAG_CHECK_BITS(rr) \
     if (MAG_MAN(rr) != 0 && FLINT_BIT_COUNT(MAG_MAN(rr)) != MAG_BITS) \
     { \
-        printf("FAIL: wrong number of bits in mantissa!\n"); \
+        flint_printf("FAIL: wrong number of bits in mantissa!\n"); \
         abort(); \
     }
 

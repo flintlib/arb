@@ -44,7 +44,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("integrate_taylor....");
+    flint_printf("integrate_taylor....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -82,14 +82,14 @@ int main()
 
         if (!acb_overlaps(res, ans))
         {
-            printf("FAIL! (iter = %wd)\n", iter);
-            printf("prec = %wd, goal = %wd\n", prec, goal);
-            printf("inr = "); arf_printd(inr, 15); printf("\n");
-            printf("outr = "); arf_printd(outr, 15); printf("\n");
-            printf("a = "); acb_printd(a, 15); printf("\n");
-            printf("b = "); acb_printd(b, 15); printf("\n");
-            printf("res = "); acb_printd(res, 15); printf("\n\n");
-            printf("ans = "); acb_printd(ans, 15); printf("\n\n");
+            flint_printf("FAIL! (iter = %wd)\n", iter);
+            flint_printf("prec = %wd, goal = %wd\n", prec, goal);
+            flint_printf("inr = "); arf_printd(inr, 15); flint_printf("\n");
+            flint_printf("outr = "); arf_printd(outr, 15); flint_printf("\n");
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n");
+            flint_printf("b = "); acb_printd(b, 15); flint_printf("\n");
+            flint_printf("res = "); acb_printd(res, 15); flint_printf("\n\n");
+            flint_printf("ans = "); acb_printd(ans, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -103,7 +103,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

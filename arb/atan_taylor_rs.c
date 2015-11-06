@@ -576,7 +576,7 @@ void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
 
     if (N >= ODD_RECIPROCAL_TAB_SIZE)
     {
-        printf("_arb_atan_taylor_rs: N too large!\n");
+        flint_printf("_arb_atan_taylor_rs: N too large!\n");
         abort();
     }
 
@@ -670,7 +670,7 @@ void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
 
                 if (s[xn + 1] != 0)
                 {
-                    printf("bad division!\n");
+                    flint_printf("bad division!\n");
                     abort();
                 }
 

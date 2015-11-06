@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("bessel_y....");
+    flint_printf("bessel_y....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -74,14 +74,14 @@ int main()
 
         if (!acb_contains_zero(r))
         {
-            printf("FAIL: wronskian\n\n");
-            printf("nu = "); acb_printd(nu, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("yv = "); acb_printd(yv, 30); printf("\n\n");
-            printf("yv1 = "); acb_printd(yv1, 30); printf("\n\n");
-            printf("jv = "); acb_printd(jv, 30); printf("\n\n");
-            printf("jv1 = "); acb_printd(jv1, 30); printf("\n\n");
-            printf("r = "); acb_printd(r, 30); printf("\n\n");
+            flint_printf("FAIL: wronskian\n\n");
+            flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("yv = "); acb_printd(yv, 30); flint_printf("\n\n");
+            flint_printf("yv1 = "); acb_printd(yv1, 30); flint_printf("\n\n");
+            flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
+            flint_printf("jv1 = "); acb_printd(jv1, 30); flint_printf("\n\n");
+            flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -110,13 +110,13 @@ int main()
 
         if (!acb_overlaps(r, yv1))
         {
-            printf("FAIL: reflection formula\n\n");
-            printf("nu = "); acb_printd(nu, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("yv = "); acb_printd(yv, 30); printf("\n\n");
-            printf("yv1 = "); acb_printd(yv1, 30); printf("\n\n");
-            printf("jv = "); acb_printd(jv, 30); printf("\n\n");
-            printf("r = "); acb_printd(r, 30); printf("\n\n");
+            flint_printf("FAIL: reflection formula\n\n");
+            flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("yv = "); acb_printd(yv, 30); flint_printf("\n\n");
+            flint_printf("yv1 = "); acb_printd(yv1, 30); flint_printf("\n\n");
+            flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
+            flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -133,7 +133,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("borel_transform....");
+    flint_printf("borel_transform....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -57,7 +57,7 @@ int main()
 
         if (!arb_poly_contains(c, a))
         {
-            printf("FAIL (containment)\n\n");
+            flint_printf("FAIL (containment)\n\n");
             abort();
         }
 
@@ -65,7 +65,7 @@ int main()
         arb_poly_borel_transform(d, d, prec);
         if (!arb_poly_equal(d, b))
         {
-            printf("FAIL (aliasing 1)\n\n");
+            flint_printf("FAIL (aliasing 1)\n\n");
             abort();
         }
 
@@ -73,7 +73,7 @@ int main()
         arb_poly_inv_borel_transform(d, d, prec);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 2)\n\n");
+            flint_printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
@@ -85,7 +85,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

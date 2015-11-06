@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    printf("set_round_uiui_2exp_fmpz....");
+    flint_printf("set_round_uiui_2exp_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -78,14 +78,14 @@ int main()
         if (!fmpr_equal(x, y) || ret1 != ret2 ||
             !fmpr_check_ulp(x, ret1, prec) || !fmpr_check_ulp(y, ret2, prec))
         {
-            printf("FAIL\n\n");
-            printf("prec: %wd\n", prec);
-            printf("hi = %wu, lo = %wu\n", hi, lo);
-            printf("man = "); fmpz_print(man); printf("\n\n");
-            printf("exp = "); fmpz_print(exp); printf("\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("ret1 = %wd, ret2 = %wd\n\n", ret1, ret2);
+            flint_printf("FAIL\n\n");
+            flint_printf("prec: %wd\n", prec);
+            flint_printf("hi = %wu, lo = %wu\n", hi, lo);
+            flint_printf("man = "); fmpz_print(man); flint_printf("\n\n");
+            flint_printf("exp = "); fmpz_print(exp); flint_printf("\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("ret1 = %wd, ret2 = %wd\n\n", ret1, ret2);
             abort();
         }
 
@@ -97,7 +97,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

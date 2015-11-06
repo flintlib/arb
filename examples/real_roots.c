@@ -100,13 +100,13 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
-        printf("real_roots function a b [-refine d] [-verbose] "
+        flint_printf("real_roots function a b [-refine d] [-verbose] "
             "[-maxdepth n] [-maxeval n] [-maxfound n] [-prec n]\n");
-        printf("available functions:\n");
-        printf("  0  Z(x), Riemann-Siegel Z-function\n");
-        printf("  1  sin(x)\n");
-        printf("  2  sin(x^2)\n");
-        printf("  3  sin(1/x)\n");
+        flint_printf("available functions:\n");
+        flint_printf("  0  Z(x), Riemann-Siegel Z-function\n");
+        flint_printf("  1  sin(x)\n");
+        flint_printf("  2  sin(x^2)\n");
+        flint_printf("  3  sin(1/x)\n");
         return 1;
     }
 
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
             function = sin_1x;
             break;
         default:
-            printf("require a function 0-3\n");
+            flint_printf("require a function 0-3\n");
             return 1;
     }
 
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 
     if (a >= b)
     {
-        printf("require a < b!\n");
+        flint_printf("require a < b!\n");
         return 1;
     }
 
@@ -188,8 +188,8 @@ int main(int argc, char *argv[])
     arf_set_d(&interval->a, a);
     arf_set_d(&interval->b, b);
 
-    printf("interval: "); arf_interval_printd(interval, 15); printf("\n");
-    printf("maxdepth = %wd, maxeval = %wd, maxfound = %wd, low_prec = %wd\n",
+    flint_printf("interval: "); arf_interval_printd(interval, 15); flint_printf("\n");
+    flint_printf("maxdepth = %wd, maxeval = %wd, maxfound = %wd, low_prec = %wd\n",
         maxdepth, maxeval, maxfound, low_prec);
 
     TIMEIT_ONCE_START
@@ -203,9 +203,9 @@ int main(int argc, char *argv[])
         {
             if (arb_calc_verbose)
             {
-                printf("unable to count roots in ");
+                flint_printf("unable to count roots in ");
                 arf_interval_printd(blocks + i, 15);
-                printf("\n");
+                flint_printf("\n");
             }
             found_unknown++;
             continue;
@@ -220,28 +220,28 @@ int main(int argc, char *argv[])
             function, NULL, blocks + i, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
-            printf("warning: some bisection steps failed!\n");
+            flint_printf("warning: some bisection steps failed!\n");
         }
 
         if (arb_calc_verbose)
         {
-            printf("after bisection 1: ");
+            flint_printf("after bisection 1: ");
             arf_interval_printd(t, 15);
-            printf("\n");
+            flint_printf("\n");
         }
 
         if (arb_calc_refine_root_bisect(blocks + i,
             function, NULL, t, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
-            printf("warning: some bisection steps failed!\n");
+            flint_printf("warning: some bisection steps failed!\n");
         }
 
         if (arb_calc_verbose)
         {
-            printf("after bisection 2: ");
+            flint_printf("after bisection 2: ");
             arf_interval_printd(blocks + i, 15);
-            printf("\n");
+            flint_printf("\n");
         }
 
         arf_interval_get_arb(v, t, high_prec);
@@ -251,18 +251,18 @@ int main(int argc, char *argv[])
         if (arb_calc_refine_root_newton(z, function, NULL,
             w, v, C, 10, high_prec) != ARB_CALC_SUCCESS)
         {
-            printf("warning: some newton steps failed!\n");
+            flint_printf("warning: some newton steps failed!\n");
         }
 
-        printf("refined root:\n");
+        flint_printf("refined root:\n");
         arb_printd(z, digits + 2);
-        printf("\n\n");
+        flint_printf("\n\n");
     }
 
-    printf("---------------------------------------------------------------\n");
-    printf("Found roots: %wd\n", found_roots);
-    printf("Subintervals possibly containing undetected roots: %wd\n", found_unknown);
-    printf("Function evaluations: %wd\n", eval_count);
+    flint_printf("---------------------------------------------------------------\n");
+    flint_printf("Found roots: %wd\n", found_roots);
+    flint_printf("Subintervals possibly containing undetected roots: %wd\n", found_unknown);
+    flint_printf("Function evaluations: %wd\n", eval_count);
 
     TIMEIT_ONCE_STOP
     SHOW_MEMORY_USAGE
