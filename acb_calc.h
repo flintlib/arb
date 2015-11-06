@@ -36,13 +36,13 @@ extern "C" {
 #endif
 
 typedef int (*acb_calc_func_t)(acb_ptr out,
-    const acb_t inp, void * param, long order, long prec);
+    const acb_t inp, void * param, slong order, slong prec);
 
 /* Bounds */
 
 void acb_calc_cauchy_bound(arb_t bound, acb_calc_func_t func,
     void * param, const acb_t x, const arb_t radius,
-    long maxdepth, long prec);
+    slong maxdepth, slong prec);
 
 /* Integration */
 
@@ -51,7 +51,7 @@ int acb_calc_integrate_taylor(acb_t res,
     const acb_t a, const acb_t b,
     const arf_t inner_radius,
     const arf_t outer_radius,
-    long accuracy_goal, long prec);
+    slong accuracy_goal, slong prec);
 
 #ifdef __cplusplus
 }
