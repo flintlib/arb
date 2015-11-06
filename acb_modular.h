@@ -116,79 +116,79 @@ int psl2z_is_one(const psl2z_t g);
 
 int psl2z_is_correct(const psl2z_t g);
 
-void psl2z_randtest(psl2z_t g, flint_rand_t state, long bits);
+void psl2z_randtest(psl2z_t g, flint_rand_t state, slong bits);
 
-void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, long prec);
+void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, slong prec);
 
 void acb_modular_fundamental_domain_approx_d(psl2z_t g,
     double x, double y, double one_minus_eps);
 
 void acb_modular_fundamental_domain_approx_arf(psl2z_t g,
-    const arf_t xx, const arf_t yy, const arf_t one_minus_eps, long prec);
+    const arf_t xx, const arf_t yy, const arf_t one_minus_eps, slong prec);
 
 void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z,
-        const arf_t one_minus_eps, long prec);
+        const arf_t one_minus_eps, slong prec);
 
-int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, long prec);
+int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, slong prec);
 
-void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num);
+void acb_modular_addseq_theta(slong * exponents, slong * aindex, slong * bindex, slong num);
 
-void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num);
+void acb_modular_addseq_eta(slong * exponents, slong * aindex, slong * bindex, slong num);
 
-void acb_modular_fill_addseq(long * tab, long len);
+void acb_modular_fill_addseq(slong * tab, slong len);
 
 void acb_modular_theta_transform(int * R, int * S, int * C, const psl2z_t g);
 
 void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long prec);
+    const acb_t q, slong prec);
 
 void acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long N, long prec);
+    const acb_t q, slong N, slong prec);
 
 void acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
-    const acb_t q, long N, long prec);
+    const acb_t q, slong N, slong prec);
 
 void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2,
         acb_ptr theta3, acb_ptr theta4,
-    const acb_t w, int w_is_unit, const acb_t q, long len, long prec);
+    const acb_t w, int w_is_unit, const acb_t q, slong len, slong prec);
 
 void acb_modular_theta_notransform(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
-    long prec);
+    slong prec);
 
 void acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
-    long prec);
+    slong prec);
 
-void acb_modular_j(acb_t z, const acb_t tau, long prec);
+void acb_modular_j(acb_t z, const acb_t tau, slong prec);
 
 int acb_modular_epsilon_arg(const psl2z_t g);
 
-void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec);
+void acb_modular_eta_sum(acb_t eta, const acb_t q, slong prec);
 
-void acb_modular_eta(acb_t z, const acb_t tau, long prec);
+void acb_modular_eta(acb_t z, const acb_t tau, slong prec);
 
-void acb_modular_lambda(acb_t r, const acb_t tau, long prec);
+void acb_modular_lambda(acb_t r, const acb_t tau, slong prec);
 
-void acb_modular_delta(acb_t r, const acb_t tau, long prec);
+void acb_modular_delta(acb_t r, const acb_t tau, slong prec);
 
-void acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec);
+void acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec);
 
-void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, long prec);
+void acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec);
 
-void acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, long prec);
+void acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong prec);
 
-void acb_modular_elliptic_k(acb_t k, const acb_t m, long prec);
+void acb_modular_elliptic_k(acb_t k, const acb_t m, slong prec);
 
-void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec);
+void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, slong len, slong prec);
 
-void acb_modular_elliptic_e(acb_t res, const acb_t m, long prec);
+void acb_modular_elliptic_e(acb_t res, const acb_t m, slong prec);
 
-void acb_modular_hilbert_class_poly(fmpz_poly_t res, long D);
+void acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D);
 
 /* this is a performance hack until the main arb/acb functions improve */
 static __inline__ void
-acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, long wprec, long prec)
+acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, slong wprec, slong prec)
 {
     if (prec <= 1024)
     {
