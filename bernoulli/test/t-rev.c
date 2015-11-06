@@ -92,8 +92,8 @@ int main()
             {
                 printf("FAIL:\n");
                 printf("nmax = %wd, n = %wd\n", nmax, n);
-                printf("m1 = %lu mod %lu\n", m1, p);
-                printf("m2 = %lu mod %lu\n", m2, p);
+                printf("m1 = %wu mod %wu\n", m1, p);
+                printf("m2 = %wu mod %wu\n", m2, p);
                 abort();
             }
         }

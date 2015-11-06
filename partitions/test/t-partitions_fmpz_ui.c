@@ -142,8 +142,8 @@ int main(void)
                 printf("FAIL:\n");
                 printf("p(%wd) does not agree with known value mod 10^9\n",
                     testdata[i][0]);
-                printf("Computed: %lu\n", fmpz_fdiv_ui(p, 1000000000));
-                printf("Expected: %lu\n", testdata[i][1]);
+                printf("Computed: %wu\n", fmpz_fdiv_ui(p, 1000000000));
+                printf("Expected: %wu\n", testdata[i][1]);
                 abort();
             }
         }

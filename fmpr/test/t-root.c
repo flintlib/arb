@@ -88,7 +88,7 @@ int main()
         if (!fmpr_equal(z, w))
         {
             printf("FAIL\n\n");
-            printf("bits = %wd, k = %lu\n", bits, k);
+            printf("bits = %wd, k = %wu\n", bits, k);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
             printf("w = "); fmpr_print(w); printf("\n\n");

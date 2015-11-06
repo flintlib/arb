@@ -67,7 +67,7 @@ int main()
         if (!acb_overlaps(d, e))
         {
             printf("FAIL: sin(a)*U_n(cos(a)) = sin((n+1)a)\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); acb_printd(a, 15); printf("\n\n");
             printf("b = "); acb_printd(b, 15); printf("\n\n");
             printf("c = "); acb_printd(c, 15); printf("\n\n");
@@ -81,7 +81,7 @@ int main()
         if (!acb_equal(b, c))
         {
             printf("FAIL: aliasing\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); acb_printd(a, 15); printf("\n\n");
             printf("b = "); acb_printd(b, 15); printf("\n\n");
             printf("c = "); acb_printd(c, 15); printf("\n\n");
@@ -98,7 +98,7 @@ int main()
         if (!acb_overlaps(b, d))
         {
             printf("FAIL: U_n\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); acb_print(a); printf("\n\n");
             printf("b = "); acb_print(b); printf("\n\n");
             printf("c = "); acb_print(c); printf("\n\n");
@@ -114,7 +114,7 @@ int main()
         if (!acb_overlaps(c, d))
         {
             printf("FAIL: U_{n-1}\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); acb_print(a); printf("\n\n");
             printf("b = "); acb_print(b); printf("\n\n");
             printf("c = "); acb_print(c); printf("\n\n");

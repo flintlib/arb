@@ -55,7 +55,7 @@ int main()
         if (!arb_overlaps(b1, b2))
         {
             printf("FAIL: overlap\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("b1 = "); arb_print(b1); printf("\n\n");
             printf("b2 = "); arb_print(b2); printf("\n\n");
             abort();

@@ -78,7 +78,7 @@ int main()
         if (!arb_overlaps(b, c))
         {
             printf("FAIL: containment\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
@@ -90,7 +90,7 @@ int main()
         {
             printf("FAIL: poor accuracy\n\n");
             printf("prec=%wd, acc1=%wd, acc2=%wd\n\n", prec, acc1, acc2);
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");

@@ -62,7 +62,7 @@ int main()
         if (!arb_overlaps(s1, s2))
         {
             printf("FAIL: overlap\n\n");
-            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("p/q = %wu/%wu", p, q); printf("\n\n");
             printf("s1 = "); arb_printd(s1, 15); printf("\n\n");
             printf("s2 = "); arb_printd(s2, 15); printf("\n\n");
             abort();
@@ -71,7 +71,7 @@ int main()
         if (arb_rel_accuracy_bits(s1) < prec - 2)
         {
             printf("FAIL: accuracy\n\n");
-            printf("p/q = %lu/%lu", p, q); printf("\n\n");
+            printf("p/q = %wu/%wu", p, q); printf("\n\n");
             printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(s1));
             printf("s1 = "); arb_printd(s1, 15); printf("\n\n");
             printf("s2 = "); arb_printd(s2, 15); printf("\n\n");

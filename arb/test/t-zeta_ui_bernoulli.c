@@ -55,7 +55,7 @@ int main()
         if (!arb_contains_mpfr(r, s))
         {
             printf("FAIL: containment\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
             printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
             abort();

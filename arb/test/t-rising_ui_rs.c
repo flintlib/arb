@@ -70,7 +70,7 @@ int main()
         if (!arb_contains_fmpq(b, y))
         {
             printf("FAIL: containment\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("x = "); fmpq_print(x); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
@@ -111,7 +111,7 @@ int main()
             printf("FAIL: aliasing\n\n");
             printf("x = "); arb_print(x); printf("\n\n");
             printf("y = "); arb_print(y); printf("\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             abort();
         }
 

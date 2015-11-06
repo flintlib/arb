@@ -148,7 +148,7 @@ acb_modular_addseq_theta(slong * exponents, slong * aindex, slong * bindex, slon
             if (write_as_2a_b(aindex + i, bindex + i, c, exponents, i))
                 continue;
 
-            printf("i = %wd, c = %lu: bad addition sequence!\n", i, c);
+            printf("i = %wd, c = %wu: bad addition sequence!\n", i, c);
             abort();
         }
     }
@@ -184,7 +184,7 @@ acb_modular_addseq_eta(slong * exponents, slong * aindex, slong * bindex, slong 
             if (write_as_2a_b(aindex + i, bindex + i, c, exponents, i))
                 continue;
 
-            printf("i = %wd, c = %lu: bad addition sequence!\n", i, c);
+            printf("i = %wd, c = %wu: bad addition sequence!\n", i, c);
             abort();
         }
     }

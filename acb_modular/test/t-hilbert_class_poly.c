@@ -150,7 +150,7 @@ int main()
             {
                 printf("FAIL!\n");
                 printf("D = %wd\n", -i);
-                printf("c = %lu\n", c);
+                printf("c = %wu\n", c);
                 printf("expected = %d\n", (int) hilbert_poly_values[i]);
                 abort();
             }
@@ -166,7 +166,7 @@ int main()
             {
                 printf("FAIL!\n");
                 printf("D = %wd\n", -i);
-                printf("c = %lu\n", c);
+                printf("c = %wu\n", c);
                 printf("expected = %d\n", (int) hilbert_poly_values_2[2*i+1]);
                 abort();
             }

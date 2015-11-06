@@ -84,7 +84,7 @@ int main()
         {
             printf("FAIL\n\n");
             printf("prec = %wd", prec); printf("\n\n");
-            printf("hi = %lu, lo = %lu\n\n", t[1], t[0]);
+            printf("hi = %wu, lo = %wu\n\n", t[1], t[0]);
             printf("x = "); arf_print(x); printf("\n\n");
             printf("y = "); arf_print(y); printf("\n\n");
             printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);

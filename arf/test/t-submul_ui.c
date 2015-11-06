@@ -96,7 +96,7 @@ int main()
                     printf("FAIL!\n");
                     printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
-                    printf("y = %lu", y); printf("\n\n");
+                    printf("y = %wu", y); printf("\n\n");
                     printf("z = "); arf_debug(z); printf("\n\n");
                     printf("v = "); arf_debug(v); printf("\n\n");
                     printf("r1 = %wd, r2 = %wd\n", r1, r2);
@@ -111,7 +111,7 @@ int main()
                 {
                     printf("FAIL (aliasing)!\n");
                     printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    printf("y = %lu", y); printf("\n\n");
+                    printf("y = %wu", y); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
                     printf("z = "); arf_print(z); printf("\n\n");
                     printf("r1 = %wd, r2 = %wd\n", r1, r2);

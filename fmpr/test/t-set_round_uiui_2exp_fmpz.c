@@ -80,7 +80,7 @@ int main()
         {
             printf("FAIL\n\n");
             printf("prec: %wd\n", prec);
-            printf("hi = %lu, lo = %lu\n", hi, lo);
+            printf("hi = %wu, lo = %wu\n", hi, lo);
             printf("man = "); fmpz_print(man); printf("\n\n");
             printf("exp = "); fmpz_print(exp); printf("\n\n");
             printf("x = "); fmpr_print(x); printf("\n\n");

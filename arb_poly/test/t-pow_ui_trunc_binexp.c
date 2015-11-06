@@ -65,7 +65,7 @@ int main()
         {
             printf("FAIL\n\n");
             printf("bits2 = %wd\n", rbits2);
-            printf("e = %lu\n", e);
+            printf("e = %wu\n", e);
             printf("trunc = %wd\n", trunc);
 
             printf("A = "); fmpz_poly_print(A); printf("\n\n");

@@ -72,7 +72,7 @@ int main()
         if (!arb_overlaps(u, u2) || !arb_overlaps(v, v2))
         {
             printf("FAIL: overlap\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             printf("a = "); arb_printd(a, 15); printf("\n\n");
             printf("u = "); arb_printd(u, 15); printf("\n\n");
             printf("u2 = "); arb_printd(u2, 15); printf("\n\n");
@@ -90,7 +90,7 @@ int main()
             printf("a = "); arb_printd(a, 15); printf("\n\n");
             printf("u = "); arb_printd(u, 15); printf("\n\n");
             printf("u2 = "); arb_printd(u2, 15); printf("\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             abort();
         }
 
@@ -103,7 +103,7 @@ int main()
             printf("a = "); arb_printd(a, 15); printf("\n\n");
             printf("v = "); arb_printd(v, 15); printf("\n\n");
             printf("v2 = "); arb_printd(v2, 15); printf("\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             abort();
         }
 

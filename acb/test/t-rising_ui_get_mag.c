@@ -57,7 +57,7 @@ int main()
         if (!acb_overlaps(y, z))
         {
             printf("FAIL: overlap\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             printf("x = "); acb_printd(x, 15); printf("\n\n");
             printf("y = "); acb_printd(y, 15); printf("\n\n");
             printf("z = "); acb_printd(z, 15); printf("\n\n");

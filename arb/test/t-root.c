@@ -57,7 +57,7 @@ int main()
         if (!arb_contains(c, a))
         {
             printf("FAIL: containment\n\n");
-            printf("k = %lu\n", k);
+            printf("k = %wu\n", k);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");

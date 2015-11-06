@@ -64,8 +64,8 @@ int main()
         if (!acb_overlaps(y, z))
         {
             printf("FAIL: overlap\n\n");
-            printf("n = %lu\n", n);
-            printf("m = %lu\n", m);
+            printf("n = %wu\n", n);
+            printf("m = %wu\n", m);
             printf("x = "); acb_print(x); printf("\n\n");
             printf("xn = "); acb_print(xn); printf("\n\n");
             printf("y = "); acb_print(y); printf("\n\n");
@@ -105,7 +105,7 @@ int main()
             printf("FAIL: aliasing\n\n");
             printf("x = "); acb_print(x); printf("\n\n");
             printf("y = "); acb_print(y); printf("\n\n");
-            printf("n = %lu\n", n);
+            printf("n = %wu\n", n);
             abort();
         }
 

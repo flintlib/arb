@@ -67,7 +67,7 @@ int main()
         if (!(fmpr_cmpabs(y, w) <= 0))
         {
             printf("FAIL\n\n");
-            printf("e = %lu\n\n", e);
+            printf("e = %wu\n\n", e);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("w = "); fmpr_print(w); printf("\n\n");
@@ -79,7 +79,7 @@ int main()
         if (!mag_equal(xb, yb))
         {
             printf("FAIL (aliasing)\n\n");
-            printf("e = %lu\n\n", e);
+            printf("e = %wu\n\n", e);
             mag_print(xb); printf("\n\n");
             mag_print(yb); printf("\n\n");
             abort();

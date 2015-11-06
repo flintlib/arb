@@ -61,8 +61,8 @@ int main()
         if (!(fmpr_cmpabs(x, y) <= 0))
         {
             printf("FAIL\n\n");
-            printf("m = %lu\n\n", m);
-            printf("n = %lu\n\n", n);
+            printf("m = %wu\n\n", m);
+            printf("n = %wu\n\n", n);
             printf("x = "); fmpr_printd(x, 10); printf("\n\n");
             printf("y = "); fmpr_printd(y, 10); printf("\n\n");
             abort();

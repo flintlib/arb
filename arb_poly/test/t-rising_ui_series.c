@@ -83,8 +83,8 @@ int main()
             printf("FAIL\n\n");
             printf("bits = %wd\n", bits);
             printf("trunc = %wd\n", trunc);
-            printf("a = %lu\n", a);
-            printf("b = %lu\n", a);
+            printf("a = %wu\n", a);
+            printf("b = %wu\n", a);
 
             printf("f = "); arb_poly_printd(f, 15); printf("\n\n");
             printf("g = "); arb_poly_printd(g, 15); printf("\n\n");
@@ -104,8 +104,8 @@ int main()
 
             printf("bits = %wd\n", bits);
             printf("trunc = %wd\n", trunc);
-            printf("a = %lu\n", a);
-            printf("b = %lu\n", a);
+            printf("a = %wu\n", a);
+            printf("b = %wu\n", a);
 
             printf("f = "); arb_poly_printd(f, 15); printf("\n\n");
             printf("h1 = "); arb_poly_printd(h1, 15); printf("\n\n");

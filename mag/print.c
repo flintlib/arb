@@ -39,7 +39,7 @@ mag_print(const mag_t x)
         fmpz_t t;
         fmpz_init(t);
         fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
-        printf("%lu * 2^", MAG_MAN(x));
+        printf("%wu * 2^", MAG_MAN(x));
         fmpz_print(t);
         fmpz_clear(t);
     }

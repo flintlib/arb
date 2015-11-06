@@ -56,7 +56,7 @@ _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
         if (arb_get_unique_fmpz(num, t))
             break;
 
-        printf("warning: %wd insufficient precision for Bernoulli number %lu\n", prec, n);
+        printf("warning: %wd insufficient precision for Bernoulli number %wu\n", prec, n);
     }
 
     arb_clear(t);

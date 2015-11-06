@@ -81,7 +81,7 @@ int main()
                 {
                     printf("FAIL!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %lu\n\n", y);
+                    printf("y = %wu\n\n", y);
                     printf("z = "); fmpr_print(z); printf("\n\n");
                     printf("v = "); fmpr_print(v); printf("\n\n");
                     printf("r1 = %wd, r2 = %wd\n", r1, r2);
@@ -98,7 +98,7 @@ int main()
                 {
                     printf("FAIL (aliasing 1)!\n");
                     printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %lu\n\n", y);
+                    printf("y = %wu\n\n", y);
                     printf("z = "); fmpr_print(z); printf("\n\n");
                     printf("v = "); fmpr_print(v); printf("\n\n");
                     printf("r1 = %wd, r2 = %wd\n", r1, r2);

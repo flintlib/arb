@@ -61,7 +61,7 @@ int main()
         if (!arb_overlaps(c, d))
         {
             printf("FAIL: c = T_n(cos(a)) = d = cos(n*a)\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("d = "); arb_print(c); printf("\n\n");
@@ -73,7 +73,7 @@ int main()
         if (!arb_equal(b, c))
         {
             printf("FAIL: aliasing\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
             abort();
@@ -89,7 +89,7 @@ int main()
         if (!arb_overlaps(b, d))
         {
             printf("FAIL: T_n\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");
@@ -105,7 +105,7 @@ int main()
         if (!arb_overlaps(c, d))
         {
             printf("FAIL: T_{n-1}\n\n");
-            printf("n = %lu\n\n", n);
+            printf("n = %wu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             printf("c = "); arb_print(c); printf("\n\n");

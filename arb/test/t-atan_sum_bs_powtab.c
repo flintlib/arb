@@ -64,7 +64,7 @@ int main()
         {
             printf("FAIL\n\n");
             printf("N = %wd\n\n", N);
-            printf("r = %lu\n\n", r);
+            printf("r = %wu\n\n", r);
             printf("x = "); fmpz_print(x); printf("\n\n");
             printf("T = "); fmpz_print(T); printf("\n\n");
             printf("Q = "); fmpz_print(T); printf("\n\n");
