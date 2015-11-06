@@ -137,7 +137,7 @@ Memory management
 Error bounding
 -------------------------------------------------------------------------------
 
-.. function:: long hypgeom_estimate_terms(const mag_t z, int r, long d)
+.. function:: slong hypgeom_estimate_terms(const mag_t z, int r, slong d)
 
     Computes an approximation of the largest `n` such
     that `|z|^n/(n!)^r = 2^{-d}`, giving a first-order estimate of the
@@ -154,7 +154,7 @@ Error bounding
     The function aborts if the computed value of `n` is greater
     than or equal to LONG_MAX / 2.
 
-.. function:: long hypgeom_bound(mag_t error, int r, long C, long D, long K, const mag_t TK, const mag_t z, long prec)
+.. function:: slong hypgeom_bound(mag_t error, int r, slong C, slong D, slong K, const mag_t TK, const mag_t z, slong prec)
 
     Computes a truncation parameter sufficient to achieve *prec* bits
     of absolute accuracy, according to the strategy described above.
@@ -179,13 +179,13 @@ Error bounding
 Summation
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const long n, long prec)
+.. function:: void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const slong n, slong prec)
 
     Computes `P, Q` such that `P / Q = \sum_{k=0}^{n-1} T(k)` where `T(k)`
     is defined by *hyp*,
     using binary splitting and a working precision of *prec* bits.
 
-.. function:: void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long tol, long prec)
+.. function:: void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, slong tol, slong prec)
 
     Computes `P, Q` such that `P / Q = \sum_{k=0}^{\infty} T(k)` where `T(k)`
     is defined by *hyp*, using binary splitting and
@@ -195,13 +195,13 @@ Summation
     The bound for the truncation error is included in the output
     as part of *P*.
 
-.. function:: void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, const long n, long prec)
+.. function:: void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, const slong n, slong prec)
 
     Computes `P, Q` such that `P / Q = \sum_{k=0}^{n-1} T(k)` where `T(k)`
     is defined by *hyp*,
     using binary splitting and a working precision of *prec* bits.
 
-.. function:: void arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, long tol, long prec)
+.. function:: void arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, slong tol, slong prec)
 
     Computes `P, Q` such that `P / Q = \sum_{k=0}^{\infty} T(k)` where `T(k)`
     is defined by *hyp*, using binary splitting and
