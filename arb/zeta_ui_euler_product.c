@@ -81,12 +81,12 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s, slong prec)
     arb_init(u);
 
     /* z = 1 - 2^(-s) */
-    arb_set_ui(z, 1UL);
+    arb_set_ui(z, UWORD(1));
     arf_set_ui_2exp_si(arb_midref(t), 1, -s);
     arb_sub(z, z, t, wp);
 
     M = 2;
-    p = 3UL;
+    p = UWORD(3);
     while (1)
     {
         /* approximate magnitude of p^s */

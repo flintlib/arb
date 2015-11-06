@@ -116,7 +116,7 @@ arb_root(arb_t res, const arb_t x, ulong k, slong prec)
     }
     else
     {
-        if (k > 50 || prec < (1L << ((k / 8) + 8)))
+        if (k > 50 || prec < (WORD(1) << ((k / 8) + 8)))
             arb_root_exp(res, x, k, prec);
         else
             arb_root_algebraic(res, x, k, prec);

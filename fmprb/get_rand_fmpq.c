@@ -63,7 +63,7 @@ _fmprb_get_rand_fmpq(fmpz_t num, fmpz_t den, flint_rand_t state,
     /* generate random integer in [a*den, b*den] */
     fmpz_mul(a, a, den_mult);
     fmpz_mul(b, b, den_mult);
-    fmpz_add_ui(b, b, 1UL);
+    fmpz_add_ui(b, b, UWORD(1));
     fmpz_sub(b, b, a);
 
     /* return one endpoint with high probability (used for stress
@@ -73,7 +73,7 @@ _fmprb_get_rand_fmpq(fmpz_t num, fmpz_t den, flint_rand_t state,
         if (n_randint(state, 2))
             fmpz_zero(num);
         else
-            fmpz_sub_ui(num, b, 1UL);
+            fmpz_sub_ui(num, b, UWORD(1));
     }
     else
     {

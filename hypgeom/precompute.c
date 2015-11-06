@@ -39,7 +39,7 @@ hypgeom_standardize(fmpz_poly_t P2, fmpz_poly_t Q2,
     fmpz_init(s);
     fmpz_poly_init(T);
 
-    fmpz_set_si(s, -1L);
+    fmpz_set_si(s, -WORD(1));
 
     /* P = A * B(k-1) * P */
     fmpz_poly_taylor_shift(T, B, s);

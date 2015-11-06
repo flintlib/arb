@@ -60,11 +60,11 @@ void arb_fib_fmpz(arb_t f, const fmpz_t n, slong prec)
 
     arb_init(u);
     arb_init(t);
-    arb_set_ui(f, 1UL);
-    arb_set_ui(u, 1UL);
+    arb_set_ui(f, UWORD(1));
+    arb_set_ui(u, UWORD(1));
     sign = -1;
 
-    for (i = fmpz_flog_ui(n, 2UL) - 1; i > 0; i--)
+    for (i = fmpz_flog_ui(n, UWORD(2)) - 1; i > 0; i--)
     {
         arb_mul(t, f, f, wp);
         arb_add(f, f, u, wp);

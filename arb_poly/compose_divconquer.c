@@ -99,7 +99,7 @@ _arb_poly_compose_divconquer(arb_ptr res, arb_srcptr poly1, slong len1,
             hlen[i] = 1;
         }
     }
-    if ((len1 & 1L))
+    if ((len1 & WORD(1)))
     {
         if (!arb_is_zero(poly1 + j))
         {
@@ -132,7 +132,7 @@ _arb_poly_compose_divconquer(arb_ptr res, arb_srcptr poly1, slong len1,
             _arb_poly_add(h[i], h[i], hlen[i], h[2*i], hlen[2*i], prec);
             hlen[i] = FLINT_MAX(hlen[i], hlen[2*i]);
         }
-        if ((n & 1L))
+        if ((n & WORD(1)))
         {
             _arb_vec_set(h[i], h[2*i], hlen[2*i]);
             hlen[i] = hlen[2*i];

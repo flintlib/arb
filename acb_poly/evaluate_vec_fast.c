@@ -84,7 +84,7 @@ _acb_poly_evaluate_vec_fast_precomp(acb_ptr vs, acb_srcptr poly,
     tree_height = FLINT_CLOG2(len);
     while (height >= tree_height)
         height--;
-    pow = 1L << height;
+    pow = WORD(1) << height;
 
     for (i = j = 0; i < len; i += pow, j += (pow + 1))
     {
@@ -94,7 +94,7 @@ _acb_poly_evaluate_vec_fast_precomp(acb_ptr vs, acb_srcptr poly,
 
     for (i = height - 1; i >= 0; i--)
     {
-        pow = 1L << i;
+        pow = WORD(1) << i;
         left = len;
         pa = tree[i];
         pb = t;

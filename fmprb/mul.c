@@ -119,7 +119,7 @@ void _fmprb_mul_main(fmpr_t z, fmpr_t c,
 
     if (r != FMPR_RESULT_EXACT)
     {
-        am = 1UL << FMPRB_RAD_PREC;
+        am = UWORD(1) << FMPRB_RAD_PREC;
         fmpz_add_si_inline(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
         xm = _rad_add(xm, xe, am, ae);
     }
@@ -128,7 +128,7 @@ void _fmprb_mul_main(fmpr_t z, fmpr_t c,
 
     /* make the radius mantissa odd and small */
     xm += !(xm & 1);
-    while (xm >= (1UL << FMPRB_RAD_PREC))
+    while (xm >= (UWORD(1) << FMPRB_RAD_PREC))
     {
         xm = (xm >> 1) + 1;
         xm += !(xm & 1);
@@ -163,7 +163,7 @@ void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
 
     if (r != FMPR_RESULT_EXACT)
     {
-        am = 1UL << FMPRB_RAD_PREC;
+        am = UWORD(1) << FMPRB_RAD_PREC;
         fmpz_add_si_inline(ae, fmpr_expref(z), -r - 2*FMPRB_RAD_PREC);
         ym = _rad_add(ym, ye, am, ae);
     }
@@ -172,7 +172,7 @@ void _fmprb_mul_fmpr_main(fmpr_t z, fmpr_t c,
 
     /* make the radius mantissa odd and small */
     ym += !(ym & 1);
-    while (ym >= (1UL << FMPRB_RAD_PREC))
+    while (ym >= (UWORD(1) << FMPRB_RAD_PREC))
     {
         ym = (ym >> 1) + 1;
         ym += !(ym & 1);

@@ -231,7 +231,7 @@ fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
 {
     if (e <= 1)
     {
-        fmpz_set_ui(x, e == 0 ? 1UL : b);
+        fmpz_set_ui(x, e == 0 ? UWORD(1) : b);
     }
     else
     {

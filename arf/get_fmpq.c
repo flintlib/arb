@@ -49,7 +49,7 @@ arf_get_fmpq(fmpq_t y, const arf_t x)
 
         e = *exp;
 
-        fmpz_set_ui(fmpq_denref(y), 1UL);
+        fmpz_set_ui(fmpq_denref(y), UWORD(1));
 
         if (e >= 0)
         {

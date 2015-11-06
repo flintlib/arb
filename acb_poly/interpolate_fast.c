@@ -43,7 +43,7 @@ _acb_poly_interpolation_weights(acb_ptr w,
 
     tmp = _acb_vec_init(len + 1);
     height = FLINT_CLOG2(len);
-    n = 1L << (height - 1);
+    n = WORD(1) << (height - 1);
 
     _acb_poly_mul_monic(tmp, tree[height-1], n + 1,
                         tree[height-1] + (n + 1), (len - n + 1), prec);
@@ -76,7 +76,7 @@ _acb_poly_interpolate_fast_precomp(acb_ptr poly,
 
     for (i = 0; i < FLINT_CLOG2(len); i++)
     {
-        pow = (1L << i);
+        pow = (WORD(1) << i);
         pa = tree[i];
         pb = poly;
         left = len;

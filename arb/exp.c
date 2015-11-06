@@ -266,7 +266,7 @@ arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one)
             /* Taylor series evaluation error */
             error += error2;
             /* Taylor series truncation error */
-            error += 1UL << (wprounded-wp);
+            error += UWORD(1) << (wprounded-wp);
         }
         else  /* Compute cosh(a) from sinh(a) using a square root. */
         {
@@ -276,7 +276,7 @@ arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one)
             /* Evaluate Taylor series for sinh */
             _arb_sin_cos_taylor_rs(t, u, &error2, w, wn, N, 1, 0);
             error += error2;
-            error += 1UL << (wprounded-wp);
+            error += UWORD(1) << (wprounded-wp);
 
             /* 1 + sinh^2, with wn + 1 limbs */
             mpn_sqr(u, t, wn);

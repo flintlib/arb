@@ -40,7 +40,7 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec)
         if (k == 2 || k == 4)
             use_exp = 0;
         else if (k > 1 && k < 50)
-            use_exp = prec < (1L << ((k / 8) + 8));
+            use_exp = prec < (WORD(1) << ((k / 8) + 8));
         else
             use_exp = 1;
 

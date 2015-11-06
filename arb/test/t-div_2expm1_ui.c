@@ -58,11 +58,11 @@ int main()
         arb_div_2expm1_ui(b, a, n, prec);
 
         arb_one(c);
-        if (n >= (1UL << (FLINT_BITS-1)))
+        if (n >= (UWORD(1) << (FLINT_BITS-1)))
         {
-            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
-            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
-            arb_mul_2exp_si(c, c, n - (1UL << (FLINT_BITS-1)));
+            arb_mul_2exp_si(c, c, (UWORD(1) << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, (UWORD(1) << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, n - (UWORD(1) << (FLINT_BITS-1)));
         }
         else
         {

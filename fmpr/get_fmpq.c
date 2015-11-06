@@ -41,7 +41,7 @@ fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
     {
         slong exp = *fmpr_expref(x);
 
-        fmpz_set_ui(fmpq_denref(y), 1UL);
+        fmpz_set_ui(fmpq_denref(y), UWORD(1));
 
         if (exp >= 0)
         {

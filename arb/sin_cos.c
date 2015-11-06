@@ -307,14 +307,14 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
         /* Taylor series evaluation error */
         error += error2;
         /* Taylor series truncation error */
-        error += 1UL << (wprounded-wp);
+        error += UWORD(1) << (wprounded-wp);
     }
     else  /* Compute cos(a) from sin(a) using a square root. */
     {
         /* Evaluate Taylor series */
         _arb_sin_cos_taylor_rs(sina, cosa, &error2, w, wn, N, 1, 1);
         error += error2;
-        error += 1UL << (wprounded-wp);
+        error += UWORD(1) << (wprounded-wp);
 
         if (flint_mpn_zero_p(sina, wn))
         {

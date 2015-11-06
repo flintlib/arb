@@ -255,7 +255,7 @@ fmprb_is_one(const fmprb_t f)
 static __inline__ void
 fmprb_one(fmprb_t f)
 {
-    fmprb_set_ui(f, 1UL);
+    fmprb_set_ui(f, UWORD(1));
 }
 
 static __inline__ void

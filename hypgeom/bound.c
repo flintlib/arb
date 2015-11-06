@@ -147,7 +147,7 @@ hypgeom_bound(mag_t error, int r,
     mag_init(den);
 
     mag_one(one);
-    mag_set_ui_2exp_si(tol, 1UL, -tol_2exp);
+    mag_set_ui_2exp_si(tol, UWORD(1), -tol_2exp);
 
     /* approximate number of needed terms */
     n = hypgeom_estimate_terms(z, r, tol_2exp);

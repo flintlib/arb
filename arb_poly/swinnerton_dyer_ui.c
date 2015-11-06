@@ -32,7 +32,7 @@ _arb_poly_swinnerton_dyer_ui_prec(ulong n)
     slong i;
     double u, N;
 
-    N = 1UL << n;
+    N = UWORD(1) << n;
 
     /* u = (sum of square roots)^(2^n) */
     u = 0;
@@ -64,7 +64,7 @@ _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, slong trunc, slong prec)
     if (prec == 0)
         prec = _arb_poly_swinnerton_dyer_ui_prec(n);
 
-    N = 1L << n;
+    N = WORD(1) << n;
     trunc = FLINT_MIN(trunc, N + 1);
 
     arb_init(one);
@@ -95,7 +95,7 @@ _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, slong trunc, slong prec)
     /* For each level... */
     for (i = 0; i < n; i++)
     {
-        slong stride = 1UL << i;
+        slong stride = UWORD(1) << i;
 
         for (j = 0; j < N; j += 2*stride)
         {
@@ -118,14 +118,14 @@ _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, slong trunc, slong prec)
     _arb_vec_clear(square_roots, n);
     flint_free(tmp1);
     flint_free(tmp2);
-    _arb_vec_clear(tmp3, 1UL << n);
+    _arb_vec_clear(tmp3, UWORD(1) << n);
     arb_clear(one);
 }
 
 void
 arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, slong prec)
 {
-    slong N = 1L << n;
+    slong N = WORD(1) << n;
 
     arb_poly_fit_length(poly, N + 1);
     _arb_poly_swinnerton_dyer_ui(poly->coeffs, n, N + 1, prec);

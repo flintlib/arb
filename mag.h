@@ -132,7 +132,7 @@ _fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
 
 #define MAG_BITS 30
 
-#define MAG_ONE_HALF (1UL << (MAG_BITS - 1))
+#define MAG_ONE_HALF (UWORD(1) << (MAG_BITS - 1))
 
 static __inline__ mp_limb_t
 __mag_fixmul32(mp_limb_t x, mp_limb_t y)

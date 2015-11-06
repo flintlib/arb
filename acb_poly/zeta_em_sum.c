@@ -125,7 +125,7 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     }
 
     /* sum += u = 1/2 * t */
-    _acb_vec_scalar_mul_2exp_si(u, t, d, -1L);
+    _acb_vec_scalar_mul_2exp_si(u, t, d, -WORD(1));
     _acb_vec_add(sum, sum, u, d, prec);
 
     /* Euler-Maclaurin formula tail */

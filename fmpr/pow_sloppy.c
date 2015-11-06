@@ -35,7 +35,7 @@ fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
 
     if (fmpz_is_zero(e))
     {
-        fmpr_set_ui(y, 1UL);
+        fmpr_set_ui(y, UWORD(1));
         return;
     }
 
@@ -47,7 +47,7 @@ fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
         fmpr_pow_sloppy_fmpz(y, b, f, prec + 2,
             (rnd == FMPR_RND_FLOOR || rnd == FMPR_RND_DOWN)
             ? FMPR_RND_UP : FMPR_RND_DOWN);
-        fmpr_ui_div(y, 1UL, y, prec, rnd);
+        fmpr_ui_div(y, UWORD(1), y, prec, rnd);
         fmpz_clear(f);
     }
 

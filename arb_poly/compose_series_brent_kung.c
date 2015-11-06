@@ -56,7 +56,7 @@ _arb_poly_compose_series_brent_kung(arb_ptr res,
     _arb_vec_set(B->rows[i], poly1 + i*m, len1 % m);
 
     /* Set rows of A to powers of poly2 */
-    arb_set_ui(A->rows[0] + 0, 1UL);
+    arb_set_ui(A->rows[0] + 0, UWORD(1));
     _arb_vec_set(A->rows[1], poly2, len2);
     for (i = 2; i < m; i++)
         _arb_poly_mullow(A->rows[i], A->rows[(i + 1) / 2], n, A->rows[i / 2], n, n, prec);

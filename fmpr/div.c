@@ -55,7 +55,7 @@ low_bits_are_zero(const fmpz_t u, int bits)
     else
         low = COEFF_TO_PTR(f)->_mp_d[0];
 
-    return (low & ((1UL << bits) - 1)) == 0;
+    return (low & ((UWORD(1) << bits) - 1)) == 0;
 }
 
 long

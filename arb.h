@@ -203,9 +203,9 @@ void _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slon
 
 int arb_set_str(arb_t res, const char * inp, slong prec);
 
-#define ARB_STR_MORE 1UL
-#define ARB_STR_NO_RADIUS 2UL
-#define ARB_STR_CONDENSE 16UL
+#define ARB_STR_MORE UWORD(1)
+#define ARB_STR_NO_RADIUS UWORD(2)
+#define ARB_STR_CONDENSE UWORD(16)
 
 char * arb_get_str(const arb_t x, slong n, ulong flags);
 

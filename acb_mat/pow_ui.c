@@ -63,7 +63,7 @@ acb_mat_pow_ui(acb_mat_t B, const acb_mat_t A, ulong exp, slong prec)
         {
             acb_mat_mul(U, T, T, prec);   /* todo: sqr */
 
-            if (exp & (1L << i))
+            if (exp & (WORD(1) << i))
                 acb_mat_mul(T, U, A, prec);
             else
                 acb_mat_swap(T, U);

@@ -81,7 +81,7 @@ _arb_poly_pow_ui_trunc_binexp(arb_ptr res,
     }
 
     v = _arb_vec_init(len);
-    bit = 1UL << (FLINT_BIT_COUNT(exp) - 2);
+    bit = UWORD(1) << (FLINT_BIT_COUNT(exp) - 2);
     
     if (n_zerobits(exp) % 2)
     {

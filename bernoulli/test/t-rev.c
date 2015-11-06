@@ -43,7 +43,7 @@ int main()
 
     bound = 100000;
 
-    p = n_nextprime(1UL << (FLINT_BITS - 1), 0);
+    p = n_nextprime(UWORD(1) << (FLINT_BITS - 1), 0);
     pinv = n_preinvert_limb(p);
 
     nmod_poly_init(A, p);

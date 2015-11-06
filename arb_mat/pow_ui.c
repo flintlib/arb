@@ -63,7 +63,7 @@ arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec)
         {
             arb_mat_mul(U, T, T, prec);   /* todo: sqr */
 
-            if (exp & (1L << i))
+            if (exp & (WORD(1) << i))
                 arb_mat_mul(T, U, A, prec);
             else
                 arb_mat_swap(T, U);

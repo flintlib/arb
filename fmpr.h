@@ -121,9 +121,9 @@ fmpr_clear(fmpr_t x)
   Zero is encoded with a zero exponent.
 */
 
-#define FMPR_EXP_POS_INF 1L
-#define FMPR_EXP_NEG_INF 2L
-#define FMPR_EXP_NAN 3L
+#define FMPR_EXP_POS_INF WORD(1)
+#define FMPR_EXP_NEG_INF WORD(2)
+#define FMPR_EXP_NAN WORD(3)
 
 static __inline__ void fmpr_zero(fmpr_t x) {
     fmpz_zero(fmpr_manref(x));

@@ -30,29 +30,29 @@ acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, slong prec)
 {
     slong i, wp, bits;
 
-    if (-2L <= *e && *e <= 4L)
+    if (-WORD(2) <= *e && *e <= WORD(4))
     {
-        if (*e == 0L)
+        if (*e == WORD(0))
         {
             acb_one(y);
         }
-        else if (*e == 1L)
+        else if (*e == WORD(1))
         {
             acb_set_round(y, b, prec);
         }
-        else if (*e == -1L)
+        else if (*e == -WORD(1))
         {
             acb_inv(y, b, prec);
         }
-        else if (*e == 2L)
+        else if (*e == WORD(2))
         {
             acb_mul(y, b, b, prec);
         }
-        else if (*e == 3L)
+        else if (*e == WORD(3))
         {
             acb_cube(y, b, prec);
         }
-        else if (*e == 4L)
+        else if (*e == WORD(4))
         {
             acb_mul(y, b, b, prec);
             acb_mul(y, y, y, prec);

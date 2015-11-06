@@ -99,7 +99,7 @@ _arb_poly_tree_build(arb_ptr * tree, arb_srcptr roots, slong len, slong prec)
     for (i = 1; i < height - 1; i++)
     {
         left = len;
-        pow = 1L << i;
+        pow = WORD(1) << i;
         pa = tree[i];
         pb = tree[i + 1];
 

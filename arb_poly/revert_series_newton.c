@@ -47,7 +47,7 @@ _arb_poly_revert_series_newton(arb_ptr Qinv, arb_srcptr Q, slong Qlen, slong n, 
     V = _arb_vec_init(n);
 
     k = n;
-    for (i = 1; (1L << i) < k; i++);
+    for (i = 1; (WORD(1) << i) < k; i++);
     a[i = 0] = k;
     while (k >= CUTOFF)
         a[++i] = (k = (k + 1) / 2);

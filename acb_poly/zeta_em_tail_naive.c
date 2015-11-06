@@ -51,7 +51,7 @@ _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_src
     _acb_vec_zero(sum, d);
 
     /* u = 1/2 * Nasx */
-    _acb_vec_scalar_mul_2exp_si(u, Nasx, d, -1L);
+    _acb_vec_scalar_mul_2exp_si(u, Nasx, d, -WORD(1));
 
     /* term = u * (s+x) / (N+a) */
     _acb_poly_mullow_cpx(u, u, d, s, d, prec);

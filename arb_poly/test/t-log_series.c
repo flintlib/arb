@@ -57,7 +57,7 @@ int main()
         arb_poly_init(b);
 
         fmpq_poly_randtest_not_zero(A, state, m, qbits);
-        fmpq_poly_set_coeff_ui(A, 0, 1UL);
+        fmpq_poly_set_coeff_ui(A, 0, UWORD(1));
 
         fmpq_poly_log_series(B, A, n);
         arb_poly_set_fmpq_poly(a, A, rbits1);

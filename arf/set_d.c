@@ -63,7 +63,7 @@ arf_set_d(arf_t x, double v)
     {
         real_exp = exp - 1023 - 52;
 
-        frac |= (1UL << 52);
+        frac |= (UWORD(1) << 52);
         real_man = sign ? (-frac) : frac;
 
         arf_set_si_2exp_si(x, real_man, real_exp);

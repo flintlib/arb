@@ -766,7 +766,7 @@ arb_gamma_fmpz(arb_t y, const fmpz_t x, slong prec)
 {
     fmpq_t t;
     *fmpq_numref(t) = *x;
-    *fmpq_denref(t) = 1L;
+    *fmpq_denref(t) = WORD(1);
     arb_gamma_fmpq(y, t, prec);
 }
 
