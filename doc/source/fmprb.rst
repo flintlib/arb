@@ -54,11 +54,11 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
-.. function:: fmprb_ptr _fmprb_vec_init(long n)
+.. function:: fmprb_ptr _fmprb_vec_init(slong n)
 
     Returns a pointer to an array of *n* initialized *fmprb_struct*:s.
 
-.. function:: void _fmprb_vec_clear(fmprb_ptr v, long n)
+.. function:: void _fmprb_vec_clear(fmprb_ptr v, slong n)
 
     Clears an array of *n* initialized *fmprb_struct*:s.
 
@@ -70,13 +70,13 @@ Assignment and rounding
 
     Sets *y* to a copy of *x*.
 
-.. function:: void fmprb_set_round(fmprb_t y, const fmprb_t x, long prec)
+.. function:: void fmprb_set_round(fmprb_t y, const fmprb_t x, slong prec)
 
     Sets *y* to a copy of *x*, rounded to *prec* bits.
 
 .. function:: void fmprb_set_fmpr(fmprb_t y, const fmpr_t x)
 
-.. function:: void fmprb_set_si(fmprb_t y, long x)
+.. function:: void fmprb_set_si(fmprb_t y, slong x)
 
 .. function:: void fmprb_set_ui(fmprb_t y, ulong x)
 
@@ -84,7 +84,7 @@ Assignment and rounding
 
     Sets *y* exactly to *x*.
 
-.. function:: void fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
+.. function:: void fmprb_set_fmpq(fmprb_t y, const fmpq_t x, slong prec)
 
     Sets *y* to the rational number *x*, rounded to *prec* bits.
 
@@ -92,7 +92,7 @@ Assignment and rounding
 
     Sets *x* to *y* multiplied by 2 raised to the power *exp*.
 
-.. function:: void fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, long prec)
+.. function:: void fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, slong prec)
 
     Sets *x* to *y* multiplied by 2 raised to the power *exp*, rounding
     the result to *prec* bits.
@@ -134,7 +134,7 @@ Input and output
 
     Prints the internal representation of *x*.
 
-.. function:: void fmprb_printd(const fmprb_t x, long digits)
+.. function:: void fmprb_printd(const fmprb_t x, slong digits)
 
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
@@ -144,30 +144,30 @@ Input and output
 Random number generation
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void fmprb_randtest(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random ball. The midpoint and radius will both be finite.
 
-.. function:: void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with zero radius.
 
-.. function:: void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with radius at most `2^{-\mathrm{prec}}`
     the magnitude of the midpoint.
 
-.. function:: void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with midpoint and radius chosen independently,
     possibly giving a very large interval.
 
-.. function:: void fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void fmprb_randtest_special(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random interval, possibly having NaN or an infinity
     as the midpoint and possibly having an infinite radius.
 
-.. function:: void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits)
+.. function:: void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, slong bits)
 
     Sets *q* to a random rational number from the interval represented by *x*.
     A denominator is chosen by multiplying the binary denominator of *x*
@@ -186,7 +186,7 @@ Radius and interval operations
 
     Adds *err*, which is assumed to be nonnegative, to the radius of *x*.
 
-.. function:: void fmprb_add_error_2exp_si(fmprb_t x, long e)
+.. function:: void fmprb_add_error_2exp_si(fmprb_t x, slong e)
 
 .. function:: void fmprb_add_error_2exp_fmpz(fmprb_t x, const fmpz_t e)
 
@@ -197,16 +197,16 @@ Radius and interval operations
     Adds the supremum of *err*, which is assumed to be nonnegative, to the
     radius of *x*.
 
-.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
     Sets *z* to a ball containing both *x* and *y*.
 
-.. function:: void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+.. function:: void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, slong prec)
 
     Sets *u* to the upper bound of the absolute value of *x*,
     rounded up to *prec* bits. If *x* contains NaN, the result is NaN.
 
-.. function:: void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+.. function:: void fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, slong prec)
 
     Sets *u* to the lower bound of the absolute value of *x*,
     rounded down to *prec* bits. If *x* contains NaN, the result is NaN.
@@ -220,24 +220,24 @@ Radius and interval operations
     or if the difference in magnitude between the midpoint and radius
     is so large that representing the endpoints exactly would cause overflows.
 
-.. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
+.. function:: void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, slong prec)
 
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
 
-.. function:: long fmprb_rel_error_bits(const fmprb_t x)
+.. function:: slong fmprb_rel_error_bits(const fmprb_t x)
 
     Returns the effective relative error of *x* measured in bits, defined as
     the difference between the position of the top bit in the radius
     and the top bit in the midpoint, plus one.
     The result is clamped between plus/minus *FMPR_PREC_EXACT*.
 
-.. function:: long fmprb_rel_accuracy_bits(const fmprb_t x)
+.. function:: slong fmprb_rel_accuracy_bits(const fmprb_t x)
 
     Returns the effective relative accuracy of *x* measured in bits,
     equal to the negative of the return value from *fmprb_rel_error_bits*.
 
-.. function:: long fmprb_bits(const fmprb_t x)
+.. function:: slong fmprb_bits(const fmprb_t x)
 
     Returns the number of bits needed to represent the absolute value
     of the mantissa of the midpoint of *x*, i.e. the minimum precision
@@ -325,7 +325,7 @@ Comparisons
 
 .. function:: int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y)
 
-.. function:: int fmprb_contains_si(const fmprb_t x, long y)
+.. function:: int fmprb_contains_si(const fmprb_t x, slong y)
 
 .. function:: int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y)
 
@@ -366,64 +366,64 @@ Arithmetic
     Sets *y* to the absolute value of *x*. No attempt is made to improve the
     interval represented by *x* if it contains zero.
 
-.. function:: void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_add_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
-.. function:: void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+.. function:: void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec)
 
     Sets `z = x + y`, rounded to *prec* bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_sub_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
     Sets `z = x - y`, rounded to *prec* bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_mul_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
     Sets `z = x \times y`, rounded to *prec* bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
+.. function:: void fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, slong e)
 
 .. function:: void fmprb_mul_2exp_fmpz(fmprb_t y, const fmprb_t x, const fmpz_t e)
 
     Sets *y* to *x* multiplied by `2^e`.
 
-.. function:: void fmprb_inv(fmprb_t z, const fmprb_t x, long prec)
+.. function:: void fmprb_inv(fmprb_t z, const fmprb_t x, slong prec)
 
     Sets *z* to the multiplicative inverse of *x*.
 
-.. function:: void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_div_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
-.. function:: void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+.. function:: void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec)
 
-.. function:: void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec)
+.. function:: void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, slong prec)
 
-.. function:: void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec)
+.. function:: void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, slong prec)
 
     Sets `z = x / y`, rounded to *prec* bits. If *y* contains zero, *z* is
     set to `0 \pm \infty`. Otherwise, error propagation uses the rule
@@ -437,24 +437,24 @@ Arithmetic
     where the triangle inequality has been applied to the numerator and
     the reverse triangle inequality has been applied to the denominator.
 
-.. function:: void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_addmul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_addmul_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
     Sets `z = z + x \times y`, rounded to prec bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
-.. function:: void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+.. function:: void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 
-.. function:: void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+.. function:: void fmprb_submul_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 
-.. function:: void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+.. function:: void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 
     Sets `z = z - x \times y`, rounded to *prec* bits. The precision can be
     *FMPR_PREC_EXACT* provided that the result fits in memory.
@@ -462,43 +462,43 @@ Arithmetic
 Powers and roots
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec)
+.. function:: void fmprb_sqrt(fmprb_t z, const fmprb_t x, slong prec)
 
-.. function:: void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec)
+.. function:: void fmprb_sqrt_ui(fmprb_t z, ulong x, slong prec)
 
-.. function:: void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec)
+.. function:: void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, slong prec)
 
     Sets *z* to the square root of *x*, rounded to *prec* bits.
     Error propagation is done using the following rule:
     assuming `m > r \ge 0`, the error is largest at `m - r`, and we have
     `\sqrt{m} - \sqrt{m-r} \le r / (2 \sqrt{m-r})`.
 
-.. function:: void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec)
+.. function:: void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, slong prec)
 
     Sets *z* to the square root of *x*, assuming that *x* represents a
     nonnegative number (i.e. discarding any negative numbers in the input
     interval), and producing an output interval not containing any
     negative numbers (unless the radius is infinite).
 
-.. function:: void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
     Sets *z* to `\sqrt{x^2 + y^2}`.
 
-.. function:: void fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
+.. function:: void fmprb_rsqrt(fmprb_t z, const fmprb_t x, slong prec)
 
-.. function:: void fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec)
+.. function:: void fmprb_rsqrt_ui(fmprb_t z, ulong x, slong prec)
 
     Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
     At high precision, this is faster than computing a square root.
 
-.. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec)
+.. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, slong prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
     As currently implemented, this function is only fast for small
     fixed *k*. For large *k* it is better to use :func:`fmprb_pow_fmpq`
     or :func:`fmprb_pow`.
 
-.. function:: void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+.. function:: void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 
     Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
