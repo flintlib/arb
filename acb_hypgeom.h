@@ -109,6 +109,10 @@ void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec);
 
 void acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, slong prec);
 
+void acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec);
+void acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec);
+void acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec);
+
 void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
 void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
 void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);

@@ -277,6 +277,28 @@ Confluent hypergeometric functions
     `\mathbf{M}(a,b,z) = \frac{1}{\Gamma(b)} {}_1F_1(a,b,z)` if *regularized*
     is set.
 
+.. function:: void acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+
+.. function:: void acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+
+.. function:: void acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+
+    Computes the confluent hypergeometric function
+    `{}_0F_1(a,z)`, or `\frac{1}{\Gamma(a)} {}_0F_1(a,z)` if *regularized*
+    is set, using asymptotic expansions, direct summation,
+    or an automatic algorithm choice.
+    The *asymp* version uses the asymptotic expansions of Bessel
+    functions, together with the connection formulas
+
+    .. math ::
+
+        \frac{{}_0F_1(a,z)}{\Gamma(a)} = (-z)^{(1-b)/2} J_{b-1}(2 \sqrt{-z}) = 
+                                         z^{(1-b)/2} I_{b-1}(2 \sqrt{z}).
+
+    The Bessel-*J* function is used in the left half-plane and the
+    Bessel-*I* function is used in the right half-plane, to avoid loss
+    of accuracy due to evaluating the square root on the branch cut.
+
 The error function
 -------------------------------------------------------------------------------
 
