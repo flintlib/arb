@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     {
         if (i <= 10 || len - i <= 10)
         {
-            printf("%ld: ", i); arb_printd(z + i, 50); printf("\n");
+            printf("%wd: ", i); arb_printd(z + i, 50); printf("\n");
         }
     }
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
         {
             arf_get_fmpz_2exp(man, exp, arb_midref(z + i));
 
-            fprintf(fp, "%ld ", i);
+            fprintf(fp, "%wd ", i);
             fmpz_fprint(fp, man);
             fprintf(fp, " ");
             fmpz_fprint(fp, exp);

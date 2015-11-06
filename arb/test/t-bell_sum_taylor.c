@@ -60,7 +60,7 @@ int main()
             || (arb_rel_accuracy_bits(s2) < prec - 4))
         {
             printf("FAIL: overlap or accuracy\n\n");
-            printf("prec = %ld\n\n", prec);
+            printf("prec = %wd\n\n", prec);
             printf("n = "); fmpz_print(n); printf("\n\n");
             printf("a = "); fmpz_print(a); printf("\n\n");
             printf("b = "); fmpz_print(b); printf("\n\n");

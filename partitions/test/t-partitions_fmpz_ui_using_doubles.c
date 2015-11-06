@@ -124,8 +124,8 @@ int main(void)
             if (!fmpz_equal(p, v + i))
             {
                 printf("FAIL:\n");
-                printf("p(%ld) does not agree with power series\n", i);
-                printf("Computed p(%ld): ", i); fmpz_print(p); printf("\n");
+                printf("p(%wd) does not agree with power series\n", i);
+                printf("Computed p(%wd): ", i); fmpz_print(p); printf("\n");
                 printf("Expected: "); fmpz_print(v + i); printf("\n");
                 abort();
             }
@@ -140,7 +140,7 @@ int main(void)
             if (fmpz_fdiv_ui(p, 1000000000) != testdata[i][1])
             {
                 printf("FAIL:\n");
-                printf("p(%ld) does not agree with known value mod 10^9\n",
+                printf("p(%wd) does not agree with known value mod 10^9\n",
                     testdata[i][0]);
                 printf("Computed: %lu\n", fmpz_fdiv_ui(p, 1000000000));
                 printf("Expected: %lu\n", testdata[i][1]);

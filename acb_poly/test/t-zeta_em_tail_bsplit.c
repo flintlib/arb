@@ -65,8 +65,8 @@ int main()
             if (!acb_overlaps(z1 + i, z2 + i))
             {
                 printf("FAIL: overlap\n\n");
-                printf("iter = %ld\n", iter);
-                printf("prec = %ld, len = %ld, M = %ld\n", prec, len, M);
+                printf("iter = %wd\n", iter);
+                printf("prec = %wd, len = %wd, M = %wd\n", prec, len, M);
                 printf("s = "); acb_printd(s, prec / 3.33); printf("\n\n");
                 printf("Na = "); acb_printd(Na, prec / 3.33); printf("\n\n");
                 printf("z1 = "); acb_printd(z1 + i, prec / 3.33); printf("\n\n");

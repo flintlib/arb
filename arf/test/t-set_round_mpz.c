@@ -96,8 +96,8 @@ int main()
             if (!arf_equal(x, y) || ((ret1 == ARF_RESULT_EXACT) != (ret2 == 0)))
             {
                 printf("FAIL\n\n");
-                printf("bits1: %ld\n", bits1);
-                printf("bits2: %ld\n", bits2);
+                printf("bits1: %wd\n", bits1);
+                printf("bits2: %wd\n", bits2);
                 printf("a = "); fmpz_print(a); printf("\n\n");
                 printf("x = "); arf_print(x); printf("\n\n");
                 printf("y = "); arf_print(y); printf("\n\n");

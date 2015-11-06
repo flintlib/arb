@@ -131,7 +131,7 @@ _arb_get_exp_pos(const slong * tab, slong step)
 
         if (tab[i] == 0)
         {
-            printf("ERROR: exponent %ld not in table!\n", step);
+            printf("ERROR: exponent %wd not in table!\n", step);
             abort();
         }
     }

@@ -61,7 +61,7 @@ int main()
             fmpz_print(b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            printf("%wd\n\n", e);
             abort();
         }
 
@@ -73,7 +73,7 @@ int main()
             fmpz_print(b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            printf("%wd\n\n", e);
             abort();
         }
         fmpz_randtest(a, state, 1 + n_randint(state, 200));
@@ -88,7 +88,7 @@ int main()
             fmpz_print(b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            printf("%wd\n\n", e);
             abort();
         }
 
@@ -102,7 +102,7 @@ int main()
             fmpz_print(b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            printf("%wd\n\n", e);
             abort();
         }
 
@@ -116,7 +116,7 @@ int main()
             fmpz_print(b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            printf("%wd\n\n", e);
             abort();
         }
 

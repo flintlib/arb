@@ -61,7 +61,7 @@ main(void)
                 printf("FAIL:\n");
                 printf("x1 = "), arb_print(x1), printf("\n");
                 printf("x2 = "), arb_print(x2), printf("\n");
-                printf("coeff = %ld, length = %ld\n", coeff, len);
+                printf("coeff = %wd, length = %wd\n", coeff, len);
                 abort();
             }
         }

@@ -85,7 +85,7 @@ int main()
             {
                 printf("FAIL!\n");
                 printf("inp = "); fmpz_print(inp); printf("\n\n");
-                printf("shift = %ld\n\n", shift);
+                printf("shift = %wd\n\n", shift);
                 printf("err = "); fmpz_print(err); printf("\n\n");
                 printf("out = "); fmpz_print(out); printf("\n\n");
                 printf(" t  = "); fmpz_print(t); printf("\n\n");

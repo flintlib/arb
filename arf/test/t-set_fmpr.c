@@ -57,7 +57,7 @@ int main()
         if (!arf_equal(x, z))
         {
             printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
+            printf("bits: %wd\n", bits);
             printf("x = "); arf_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); arf_print(z); printf("\n\n");
@@ -91,7 +91,7 @@ int main()
         if (!fmpr_equal(x, z))
         {
             printf("FAIL (2)\n\n");
-            printf("bits: %ld\n", bits);
+            printf("bits: %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); arf_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");

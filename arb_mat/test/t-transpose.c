@@ -57,7 +57,7 @@ int main()
         if (!arb_mat_equal(c, a))
         {
             printf("FAIL\n\n");
-            printf("m = %ld, n = %ld\n", m, n);
+            printf("m = %wd, n = %wd\n", m, n);
             abort();
         }
 

@@ -77,7 +77,7 @@ int main()
         if (!acb_overlaps(res1, s))
         {
             printf("FAIL: consistency\n\n");
-            printf("iter = %ld\n\n", iter);
+            printf("iter = %wd\n\n", iter);
             printf("n = "); acb_printd(n, 30); printf("\n\n");
             printf("m = "); acb_printd(m, 30); printf("\n\n");
             printf("z = "); acb_printd(z, 30); printf("\n\n");

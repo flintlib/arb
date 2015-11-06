@@ -119,7 +119,7 @@ int main()
             if (!acb_overlaps(g1, h1) || !acb_overlaps(g2, h2))
             {
                 printf("FAIL: consistency\n\n");
-                printf("regularized = %d, prec = %ld\n\n", regularized, prec);
+                printf("regularized = %d, prec = %wd\n\n", regularized, prec);
                 printf("a = "); acb_printd(a, 30); printf("\n\n");
                 printf("b = "); acb_printd(b, 30); printf("\n\n");
                 printf("c = "); acb_printd(c, 30); printf("\n\n");

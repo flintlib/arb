@@ -59,7 +59,7 @@ int main()
         if (!fmpr_equal(x, z))
         {
             printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
+            printf("bits: %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpz_print(y); printf("\n\n");
             printf("e = "); fmpz_print(e); printf("\n\n");

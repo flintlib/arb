@@ -57,7 +57,7 @@ main(void)
             printf("FAIL:\n");
             printf("A = "), acb_poly_printd(A, 10), printf("\n\n");
             printf("a = "), acb_print(a), printf("\n\n");
-            printf("n = %ld\n\n", n);
+            printf("n = %wd\n\n", n);
             abort();
         }
 

@@ -68,7 +68,7 @@ int main()
         if (!arb_poly_contains_fmpq_poly(c, A))
         {
             printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            printf("bits2 = %wd\n", rbits2);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("a = "); arb_poly_printd(a, 15); printf("\n\n");

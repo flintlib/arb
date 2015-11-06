@@ -55,7 +55,7 @@ int main()
 
         if (!fmpz_equal(num1 + n, num2))
         {
-            printf("FAIL: n = %ld, numerator\n", n);
+            printf("FAIL: n = %wd, numerator\n", n);
             printf("vec:    "); fmpz_print(num1 + n); printf("\n");
             printf("single: "); fmpz_print(num2); printf("\n");
             abort();
@@ -63,7 +63,7 @@ int main()
 
         if (!fmpz_equal(den1 + n, den2))
         {
-            printf("FAIL: n = %ld, denominator\n", n);
+            printf("FAIL: n = %wd, denominator\n", n);
             printf("vec:    "); fmpz_print(den1 + n); printf("\n");
             printf("single: "); fmpz_print(den2); printf("\n");
             abort();

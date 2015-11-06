@@ -83,7 +83,7 @@ int main()
         {
             printf("FAIL: accuracy\n\n");
             printf("p/q = %lu/%lu", p, q); printf("\n\n");
-            printf("prec=%ld eff=%ld\n", prec, arb_rel_accuracy_bits(s1));
+            printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(s1));
             printf("s1 = "); arb_printd(s1, 15); printf("\n\n");
             printf("s2 = "); arb_printd(s2, 15); printf("\n\n");
             abort();
@@ -93,7 +93,7 @@ int main()
         {
             printf("FAIL: accuracy\n\n");
             printf("p/q = %lu/%lu", p, q); printf("\n\n");
-            printf("prec=%ld eff=%ld\n", prec, arb_rel_accuracy_bits(c1));
+            printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(c1));
             printf("c1 = "); arb_printd(c1, 15); printf("\n\n");
             printf("c2 = "); arb_printd(c2, 15); printf("\n\n");
             abort();

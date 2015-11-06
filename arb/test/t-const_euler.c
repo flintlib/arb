@@ -51,7 +51,7 @@ int main()
         if (!arb_contains_mpfr(r, s))
         {
             printf("FAIL: containment\n\n");
-            printf("prec = %ld\n", prec);
+            printf("prec = %wd\n", prec);
             printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
             abort();
         }
@@ -61,7 +61,7 @@ int main()
         if (accuracy < prec - 4)
         {
             printf("FAIL: poor accuracy\n\n");
-            printf("prec = %ld\n", prec);
+            printf("prec = %wd\n", prec);
             printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
             abort();
         }

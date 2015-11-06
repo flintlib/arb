@@ -81,7 +81,7 @@ int main()
         if (!result)
         {
             printf("FAIL\n");
-            printf("N = %ld xn = %ld\n", N, xn);
+            printf("N = %wd xn = %wd\n", N, xn);
             printf("x =");
             flint_mpn_debug(x, xn);
             printf("y1 =");

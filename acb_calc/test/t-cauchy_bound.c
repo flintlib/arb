@@ -83,7 +83,7 @@ int main()
         if (!arb_overlaps(b, ans))
         {
             printf("FAIL\n");
-            printf("r = %ld, prec = %ld, maxdepth = %ld\n\n", r, prec, maxdepth);
+            printf("r = %wd, prec = %wd, maxdepth = %wd\n\n", r, prec, maxdepth);
             arb_printd(b, 15); printf("\n\n");
             arb_printd(ans, 15); printf("\n\n");
             abort();

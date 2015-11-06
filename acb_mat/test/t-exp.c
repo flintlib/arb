@@ -74,7 +74,7 @@ int main()
         if (!acb_mat_overlaps(EF, G))
         {
             printf("FAIL\n\n");
-            printf("n = %ld, prec = %ld\n", n, prec);
+            printf("n = %wd, prec = %wd\n", n, prec);
 
             printf("c = \n"); acb_printd(c, 15); printf("\n\n");
 

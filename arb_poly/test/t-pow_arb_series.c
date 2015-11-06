@@ -81,8 +81,8 @@ int main()
         {
             printf("FAIL\n\n");
 
-            printf("prec = %ld\n", prec);
-            printf("trunc = %ld\n", trunc);
+            printf("prec = %wd\n", prec);
+            printf("trunc = %wd\n", trunc);
 
             printf("f = "); arb_poly_printd(f, 15); printf("\n\n");
             printf("c = "); arb_printd(c, 15); printf("\n\n");

@@ -93,7 +93,7 @@ int main()
         if (!acb_overlaps(t, u))
         {
             printf("FAIL: consistency\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
+            printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
             printf("type = %d\n\n", type);
             printf("n = "); acb_printd(n, 30); printf("\n\n");
             printf("m = "); acb_printd(m, 30); printf("\n\n");

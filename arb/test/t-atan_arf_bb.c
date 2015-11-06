@@ -88,7 +88,7 @@ int main()
         if (!arb_contains(z, y))
         {
             printf("FAIL: containment\n\n");
-            printf("prec = %ld\n\n", prec);
+            printf("prec = %wd\n\n", prec);
             printf("x = "); arb_printd(x, 50); printf("\n\n");
             printf("y = "); arb_printd(y, 50); printf("\n\n");
             printf("z = "); arb_printd(z, 50); printf("\n\n");
@@ -98,7 +98,7 @@ int main()
         if (arb_rel_accuracy_bits(z) < prec - 2)
         {
             printf("FAIL: poor accuracy\n\n");
-            printf("prec = %ld,  acc = %ld\n\n", prec, arb_rel_accuracy_bits(z));
+            printf("prec = %wd,  acc = %wd\n\n", prec, arb_rel_accuracy_bits(z));
             printf("x = "); arb_printd(x, 50); printf("\n\n");
             printf("y = "); arb_printd(y, 50); printf("\n\n");
             printf("z = "); arb_printd(z, 50); printf("\n\n");

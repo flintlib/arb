@@ -63,7 +63,7 @@ int main()
         if (!fmpq_equal(S, V))
         {
             printf("FAIL\n\n");
-            printf("N = %ld\n\n", N);
+            printf("N = %wd\n\n", N);
             printf("r = %lu\n\n", r);
             printf("x = "); fmpz_print(x); printf("\n\n");
             printf("T = "); fmpz_print(T); printf("\n\n");

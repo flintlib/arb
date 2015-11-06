@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     prec = digits * 3.3219280948873623 + 5;
 
-    printf("computing pi with a precision of %ld bits... ", prec);
+    printf("computing pi with a precision of %wd bits... ", prec);
 
     TIMEIT_ONCE_START
     arb_const_pi(x, prec);

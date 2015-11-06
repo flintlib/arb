@@ -83,7 +83,7 @@ int main()
         if (!arf_equal(x, y) || (ret1 != ret2))
         {
             printf("FAIL\n\n");
-            printf("prec = %ld", prec); printf("\n\n");
+            printf("prec = %wd", prec); printf("\n\n");
             printf("hi = %lu, lo = %lu\n\n", t[1], t[0]);
             printf("x = "); arf_print(x); printf("\n\n");
             printf("y = "); arf_print(y); printf("\n\n");

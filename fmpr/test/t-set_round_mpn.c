@@ -78,13 +78,13 @@ int main()
             !fmpr_check_ulp(y, ret2, prec))
         {
             printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
-            printf("prec: %ld\n", prec);
+            printf("bits: %wd\n", bits);
+            printf("prec: %wd\n", prec);
             printf("x = "); fmpz_print(fx); printf("\n\n");
             printf("man = "); fmpz_print(man); printf("\n\n");
             printf("exp = "); fmpz_print(exp); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("ret1 = %ld, ret2 = %ld\n\n", ret1, ret2);
+            printf("ret1 = %wd, ret2 = %wd\n\n", ret1, ret2);
             abort();
         }
 

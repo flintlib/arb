@@ -65,7 +65,7 @@ int main()
         if (!arb_contains_mpfr(b, t))
         {
             printf("FAIL: containment\n\n");
-            printf("iter = %ld, prec = %ld\n\n", iter, prec);
+            printf("iter = %wd, prec = %wd\n\n", iter, prec);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             abort();
@@ -76,7 +76,7 @@ int main()
         if (!arb_equal(a, b))
         {
             printf("FAIL: aliasing\n\n");
-            printf("iter = %ld, prec = %ld\n\n", iter, prec);
+            printf("iter = %wd, prec = %wd\n\n", iter, prec);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");
             abort();

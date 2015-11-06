@@ -67,7 +67,7 @@ int main()
         if (!acb_poly_overlaps(c, d))
         {
             printf("FAIL\n\n");
-            printf("n1 = %ld, n2 = %ld, bits2 = %ld, bits3 = %ld\n", n1, n2, rbits2, rbits3);
+            printf("n1 = %wd, n2 = %wd, bits2 = %wd, bits3 = %wd\n", n1, n2, rbits2, rbits3);
 
             printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
@@ -83,7 +83,7 @@ int main()
 
         if (!acb_poly_overlaps(b, c))
         {
-            printf("FAIL (functional equation, n1 = %ld)\n\n", n1);
+            printf("FAIL (functional equation, n1 = %wd)\n\n", n1);
 
             printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); acb_poly_printd(b, 15); printf("\n\n");

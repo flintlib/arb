@@ -74,7 +74,7 @@ int main()
                 if (!arf_equal(e1, e2) || !arf_equal(f1, f2) || r1 != r2)
                 {
                     printf("FAIL!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("a = "); arf_print(a); printf("\n\n");
                     printf("b = "); arf_print(b); printf("\n\n");
                     printf("c = "); arf_print(c); printf("\n\n");
@@ -83,7 +83,7 @@ int main()
                     printf("f1 = "); arf_print(f1); printf("\n\n");
                     printf("e2 = "); arf_print(e2); printf("\n\n");
                     printf("f2 = "); arf_print(f2); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -96,7 +96,7 @@ int main()
                 if (!arf_equal(e1, e2) || !arf_equal(f1, f2) || r1 != r2)
                 {
                     printf("FAIL! (aliasing 1)\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("a = "); arf_print(a); printf("\n\n");
                     printf("b = "); arf_print(b); printf("\n\n");
                     printf("c = "); arf_print(c); printf("\n\n");
@@ -105,7 +105,7 @@ int main()
                     printf("f1 = "); arf_print(f1); printf("\n\n");
                     printf("e2 = "); arf_print(e2); printf("\n\n");
                     printf("f2 = "); arf_print(f2); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -116,12 +116,12 @@ int main()
                 if (!arf_equal(e1, a) || !arf_equal(f1, b) || r1 != r2)
                 {
                     printf("FAIL! (aliasing 2)\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("a = "); arf_print(a); printf("\n\n");
                     printf("b = "); arf_print(b); printf("\n\n");
                     printf("e1 = "); arf_print(e1); printf("\n\n");
                     printf("f1 = "); arf_print(f1); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -133,14 +133,14 @@ int main()
                 if (!arf_equal(e1, a) || !arf_equal(f1, b) || r1 != r2)
                 {
                     printf("FAIL! (aliasing 3)\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("a = "); arf_print(a); printf("\n\n");
                     printf("b = "); arf_print(b); printf("\n\n");
                     printf("c = "); arf_print(c); printf("\n\n");
                     printf("d = "); arf_print(d); printf("\n\n");
                     printf("e1 = "); arf_print(e1); printf("\n\n");
                     printf("f1 = "); arf_print(f1); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -152,14 +152,14 @@ int main()
                 if (!arf_equal(e1, c) || !arf_equal(f1, d) || r1 != r2)
                 {
                     printf("FAIL! (aliasing 4)\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("a = "); arf_print(a); printf("\n\n");
                     printf("b = "); arf_print(b); printf("\n\n");
                     printf("c = "); arf_print(c); printf("\n\n");
                     printf("d = "); arf_print(d); printf("\n\n");
                     printf("e1 = "); arf_print(e1); printf("\n\n");
                     printf("f1 = "); arf_print(f1); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;

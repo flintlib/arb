@@ -76,7 +76,7 @@ int main()
         else
             count = 100;
 
-        /* printf("nmax = %ld, count = %ld\n", nmax, count); */
+        /* printf("nmax = %wd, count = %wd\n", nmax, count); */
 
         for (n = nmax; n >= 0 && count > 0; n -= 2, count--)
         {
@@ -91,7 +91,7 @@ int main()
             if (m1 != m2)
             {
                 printf("FAIL:\n");
-                printf("nmax = %ld, n = %ld\n", nmax, n);
+                printf("nmax = %wd, n = %wd\n", nmax, n);
                 printf("m1 = %lu mod %lu\n", m1, p);
                 printf("m2 = %lu mod %lu\n", m2, p);
                 abort();

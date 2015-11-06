@@ -73,7 +73,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -124,7 +124,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -175,7 +175,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();

@@ -55,7 +55,7 @@ _arb_condense_digits(char * s, slong n)
                     out++;
                 }
 
-                out += sprintf(res + out, "{...%ld digits...}", run - 2 * n);
+                out += sprintf(res + out, "{...%wd digits...}", run - 2 * n);
 
                 for (j = run - n; j < run; j++)
                 {

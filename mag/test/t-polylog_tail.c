@@ -98,7 +98,7 @@ int main()
             printf("FAIL\n\n");
             printf("N = %lu\n\n", N);
             printf("d = %lu\n\n", d);
-            printf("s = %ld\n\n", s);
+            printf("s = %wd\n\n", s);
             printf("xb = "); mag_printd(xb, 15); printf("\n\n");
             printf("yb = "); mag_printd(yb, 15); printf("\n\n");
             printf("z = "); arb_printd(z, 15); printf("\n\n");

@@ -106,8 +106,8 @@ int main()
 
                 if (!found)
                 {
-                    printf("FAIL: missing root %ld\n", i);
-                    printf("a = %ld, b = %ld, maxdepth = %ld, maxeval = %ld, maxfound = %ld, prec = %ld\n",
+                    printf("FAIL: missing root %wd\n", i);
+                    printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)
@@ -132,8 +132,8 @@ int main()
 
                 if (!arb_get_unique_fmpz(nn, t))
                 {
-                    printf("FAIL: bad root %ld\n", i);
-                    printf("a = %ld, b = %ld, maxdepth = %ld, maxeval = %ld, maxfound = %ld, prec = %ld\n",
+                    printf("FAIL: bad root %wd\n", i);
+                    printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)

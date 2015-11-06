@@ -41,10 +41,10 @@ poly_roots(const fmpz_poly_t poly,
         maxiter = FLINT_MIN(FLINT_MAX(deg, 32), prec);
 
         TIMEIT_ONCE_START
-        printf("prec=%ld: ", prec);
+        printf("prec=%wd: ", prec);
         isolated = acb_poly_find_roots(roots, cpoly,
             prec == initial_prec ? NULL : roots, maxiter, prec);
-        printf("%ld isolated roots | ", isolated);
+        printf("%wd isolated roots | ", isolated);
         TIMEIT_ONCE_STOP
 
         if (isolated == deg && check_accuracy(roots, deg, target_prec))

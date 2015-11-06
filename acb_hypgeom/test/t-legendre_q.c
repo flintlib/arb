@@ -75,7 +75,7 @@ int main()
         if (!acb_overlaps(res1, res2))
         {
             printf("FAIL: consistency 1\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
+            printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
             printf("m = "); acb_printd(m, 30); printf("\n\n");
             printf("n = "); acb_printd(n, 30); printf("\n\n");
             printf("z = "); acb_printd(z, 30); printf("\n\n");
@@ -166,7 +166,7 @@ int main()
         if (!acb_overlaps(res1, res2))
         {
             printf("FAIL: consistency 2\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
+            printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
             printf("type = %d\n\n", type);
             printf("m = "); acb_printd(m, 30); printf("\n\n");
             printf("n = "); acb_printd(n, 30); printf("\n\n");

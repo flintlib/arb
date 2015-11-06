@@ -72,7 +72,7 @@ int main()
                 printf("FAIL (normal)\n\n");
                 printf("x = "); fmpr_print(x); printf("\n\n");
                 printf("b = "); fmpz_print(b); printf("\n\n");
-                printf("c = %ld\n\n", c);
+                printf("c = %wd\n\n", c);
                 abort();
             }
         }

@@ -74,7 +74,7 @@ int main()
         if (!arb_mat_contains_fmpq_mat(c, C))
         {
             printf("FAIL\n\n");
-            printf("threads = %d, m = %ld, n = %ld, k = %ld, bits3 = %ld\n",
+            printf("threads = %d, m = %wd, n = %wd, k = %wd, bits3 = %wd\n",
                 flint_get_num_threads(), m, n, k, rbits3);
 
             printf("A = "); fmpq_mat_print(A); printf("\n\n");

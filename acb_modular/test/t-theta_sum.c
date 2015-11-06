@@ -108,10 +108,10 @@ int main()
                 || !acb_overlaps(t3a + i, t3b + i)
                 || !acb_overlaps(t4a + i, t4b + i))
             {
-                printf("FAIL (overlap)  iter = %ld\n", iter);
-                printf("len1 = %ld, len2 = %ld, prec1 = %ld, prec2 = %ld\n\n",
+                printf("FAIL (overlap)  iter = %wd\n", iter);
+                printf("len1 = %wd, len2 = %wd, prec1 = %wd, prec2 = %wd\n\n",
                     len1, len2, prec1, prec2);
-                printf("i = %ld\n\n", i);
+                printf("i = %wd\n\n", i);
                 printf("q = "); acb_printd(q, 50); printf("\n\n");
                 printf("w = "); acb_printd(w, 50); printf("\n\n");
                 printf("t1a = "); acb_printd(t1a + i, 50); printf("\n\n");

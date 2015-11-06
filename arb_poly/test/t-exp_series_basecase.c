@@ -80,7 +80,7 @@ int main()
         if (!arb_poly_contains_fmpq_poly(b, B))
         {
             printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            printf("bits2 = %wd\n", rbits2);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("B = "); fmpq_poly_print(B); printf("\n\n");
@@ -126,7 +126,7 @@ int main()
         if (!arb_poly_equal(a, b))
         {
             printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            printf("bits2 = %wd\n", rbits2);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
 
@@ -174,8 +174,8 @@ int main()
         if (!arb_poly_contains_fmpq_poly(c, A))
         {
             printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
-            printf("bits3 = %ld\n", rbits3);
+            printf("bits2 = %wd\n", rbits2);
+            printf("bits3 = %wd\n", rbits3);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
 

@@ -144,7 +144,7 @@ int main()
                 if (!acb_overlaps(z, w))
                 {
                     printf("FAIL: value\n\n");
-                    printf("n = %ld, m = %ld\n", n, m);
+                    printf("n = %wd, m = %wd\n", n, m);
                     printf("z = "); acb_printd(z, 20); printf("\n\n");
                     printf("w = "); acb_printd(w, 20); printf("\n\n");
                     abort();

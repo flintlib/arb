@@ -66,7 +66,7 @@ int main()
             res3 != FMPR_RESULT_EXACT || res4 != FMPR_RESULT_EXACT)
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
+            printf("bits = %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
@@ -134,12 +134,12 @@ int main()
             || !fmpr_check_ulp(z, res, bits))
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
+            printf("bits = %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
             printf("w = "); fmpr_print(w); printf("\n\n");
-            printf("returned: %ld, %d\n", res, mpfr_res);
+            printf("returned: %wd, %d\n", res, mpfr_res);
             abort();
         }
 
@@ -162,7 +162,7 @@ int main()
                 fmpr_cmp(true_error, error_bound) > 0)
             {
                 printf("FAIL: error bound\n\n");
-                printf("bits = %ld\n", bits);
+                printf("bits = %wd\n", bits);
                 printf("x = "); fmpr_print(x); printf("\n\n");
                 printf("y = "); fmpr_print(y); printf("\n\n");
                 printf("z = "); fmpr_print(z); printf("\n\n");

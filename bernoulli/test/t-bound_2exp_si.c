@@ -55,9 +55,9 @@ int main()
 
         if (fmpr_cmpabs_2exp_si(t, bound) > 0)
         {
-            printf("FAIL: %ld\n", i);
+            printf("FAIL: %wd\n", i);
             fmpr_print(t); printf("\n\n");
-            printf("%ld\n", bound); printf("\n\n");
+            printf("%wd\n", bound); printf("\n\n");
             abort();
         }
     }
@@ -73,8 +73,8 @@ int main()
 
         if (a < b || a > 1.01 * b)
         {
-            printf("FAIL: %ld\n", i);
-            printf("%ld: %f %f %f\n", i, a, b, (float) a / b);
+            printf("FAIL: %wd\n", i);
+            printf("%wd: %f %f %f\n", i, a, b, (float) a / b);
             abort();
         }
     }

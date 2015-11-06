@@ -70,9 +70,9 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL (iter %ld)\n\n", iter);
-            printf("bits2 = %ld\n", rbits2);
-            printf("len = %ld\n", len);
+            printf("FAIL (iter %wd)\n\n", iter);
+            printf("bits2 = %wd\n", rbits2);
+            printf("len = %wd\n", len);
 
             printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); acb_poly_printd(b, 15); printf("\n\n");

@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
     arf_set_d(&interval->b, b);
 
     printf("interval: "); arf_interval_printd(interval, 15); printf("\n");
-    printf("maxdepth = %ld, maxeval = %ld, maxfound = %ld, low_prec = %ld\n",
+    printf("maxdepth = %wd, maxeval = %wd, maxfound = %wd, low_prec = %wd\n",
         maxdepth, maxeval, maxfound, low_prec);
 
     TIMEIT_ONCE_START
@@ -260,9 +260,9 @@ int main(int argc, char *argv[])
     }
 
     printf("---------------------------------------------------------------\n");
-    printf("Found roots: %ld\n", found_roots);
-    printf("Subintervals possibly containing undetected roots: %ld\n", found_unknown);
-    printf("Function evaluations: %ld\n", eval_count);
+    printf("Found roots: %wd\n", found_roots);
+    printf("Subintervals possibly containing undetected roots: %wd\n", found_unknown);
+    printf("Function evaluations: %wd\n", eval_count);
 
     TIMEIT_ONCE_STOP
     SHOW_MEMORY_USAGE

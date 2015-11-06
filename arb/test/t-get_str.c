@@ -77,7 +77,7 @@ int main()
 
         if (conversion_error || !arb_contains(y, x))
         {
-            printf("FAIL (roundtrip)  iter = %ld\n", iter);
+            printf("FAIL (roundtrip)  iter = %wd\n", iter);
             printf("x = "); arb_printd(x, 50); printf("\n\n");
             printf("s = %s", s); printf("\n\n");
             printf("y = "); arb_printd(y, 50); printf("\n\n");

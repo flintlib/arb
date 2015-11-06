@@ -67,8 +67,8 @@ int main()
         if (acc1 < prec1 - 2 || acc2 < prec2 - 2)
         {
             printf("FAIL: poor accuracy\n\n");
-            printf("prec1 = %ld\n", prec1);
-            printf("prec2 = %ld\n", prec2);
+            printf("prec1 = %wd\n", prec1);
+            printf("prec2 = %wd\n", prec2);
             printf("b1 = "); arb_printd(b1, prec1 / 3.33); printf("\n\n");
             printf("b2 = "); arb_printd(b2, prec2 / 3.33); printf("\n\n");
             abort();

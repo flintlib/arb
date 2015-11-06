@@ -56,7 +56,7 @@ int main()
         if (!arb_overlaps(z2, z3))
         {
             printf("FAIL: overlap\n\n");
-            printf("prec = %ld, n1 = %lu, n2 = %lu\n\n", prec, n1, n2);
+            printf("prec = %wd, n1 = %lu, n2 = %lu\n\n", prec, n1, n2);
             printf("z1 = "); arb_printd(z1, prec / 3.33); printf("\n\n");
             printf("z2 = "); arb_printd(z2, prec / 3.33); printf("\n\n");
             printf("z3 = "); arb_printd(z3, prec / 3.33); printf("\n\n");
@@ -67,7 +67,7 @@ int main()
 
         if (accuracy < prec - 4)
         {
-            printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
+            printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
             printf("n1 = %lu, n2 = %lu\n\n", n1, n2);
             printf("z3 = "); arb_printd(z3, prec / 3.33); printf("\n\n");
             abort();

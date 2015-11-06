@@ -87,19 +87,19 @@ int main()
         if (!acb_poly_overlaps(s1, s2))
         {
             printf("FAIL: overlap\n\n");
-            printf("iter = %ld\n", iter);
-            printf("n1 = %ld, n2 = %ld    prec1 = %ld, prec2 = %ld\n\n", n1, n2, prec1, prec2);
-            printf("p = %ld, q = %ld\n\n", p, q);
+            printf("iter = %wd\n", iter);
+            printf("n1 = %wd, n2 = %wd    prec1 = %wd, prec2 = %wd\n\n", n1, n2, prec1, prec2);
+            printf("p = %wd, q = %wd\n\n", p, q);
             printf("z = "); acb_poly_printd(z, 15); printf("\n\n");
 
             for (i = 0; i < p; i++)
             {
-                printf("a[%ld] = ", i); acb_poly_printd(a + i, 15); printf("\n\n");
+                printf("a[%wd] = ", i); acb_poly_printd(a + i, 15); printf("\n\n");
             }
 
             for (i = 0; i < q; i++)
             {
-                printf("b[%ld] = ", i); acb_poly_printd(b + i, 15); printf("\n\n");
+                printf("b[%wd] = ", i); acb_poly_printd(b + i, 15); printf("\n\n");
             }
 
             printf("s1 = "); acb_poly_printd(s1, 15); printf("\n\n");

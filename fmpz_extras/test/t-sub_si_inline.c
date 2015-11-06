@@ -56,7 +56,7 @@ int main()
         {
             printf("FAIL\n");
             fmpz_print(a); printf("\n\n");
-            printf("%ld", b); printf("\n\n");
+            printf("%wd", b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
             abort();
@@ -67,7 +67,7 @@ int main()
         {
             printf("FAIL (aliasing)\n");
             fmpz_print(a); printf("\n\n");
-            printf("%ld", b); printf("\n\n");
+            printf("%wd", b); printf("\n\n");
             fmpz_print(c); printf("\n\n");
             fmpz_print(d); printf("\n\n");
             abort();

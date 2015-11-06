@@ -78,11 +78,11 @@ int main()
 
         if (!arf_equal(s1, s3) || res1 != res2)
         {
-            printf("FAIL (%ld)\n\n", iter);
-            printf("prec = %ld\n\n", prec);
+            printf("FAIL (%wd)\n\n", iter);
+            printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%ld] = ", i); arf_print(terms + i); printf("\n\n");
+                printf("terms[%wd] = ", i); arf_print(terms + i); printf("\n\n");
             }
             printf("s1 = "); arf_print(s1); printf("\n\n");
             printf("s2 = "); arf_print(s2); printf("\n\n");
@@ -102,10 +102,10 @@ int main()
         if (arf_cmpabs_mag(err, err_bound) > 0)
         {
             printf("FAIL (error bound)!\n");
-            printf("prec = %ld\n\n", prec);
+            printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%ld] = ", i); arf_print(terms + i); printf("\n\n");
+                printf("terms[%wd] = ", i); arf_print(terms + i); printf("\n\n");
             }
             printf("s1 = "); arf_print(s1); printf("\n\n");
             printf("s2 = "); arf_print(s2); printf("\n\n");

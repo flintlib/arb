@@ -74,7 +74,7 @@ int main()
             if (!acb_overlaps(wpd2 + i, wp3 + i))
             {
                 printf("FAIL (overlap)\n");
-                printf("i = %ld  len = %ld  prec = %ld\n\n", i, len, prec);
+                printf("i = %wd  len = %wd  prec = %wd\n\n", i, len, prec);
                 printf("z = "); acb_printd(z, 15); printf("\n\n");
                 printf("tau = "); acb_printd(tau, 15); printf("\n\n");
                 printf("wp = "); acb_printd(wp + i, 15); printf("\n\n");
@@ -121,7 +121,7 @@ int main()
             if (!acb_overlaps(wp1 + i, wp2 + i))
             {
                 printf("FAIL (overlap)\n");
-                printf("i = %ld len1 = %ld len2 = %ld\n\n", i, len1, len2);
+                printf("i = %wd len1 = %wd len2 = %wd\n\n", i, len1, len2);
                 printf("tau = "); acb_printd(tau, 15); printf("\n\n");
                 printf("z = "); acb_printd(z, 15); printf("\n\n");
                 printf("wp1 = "); acb_printd(wp1 + i, 15); printf("\n\n");

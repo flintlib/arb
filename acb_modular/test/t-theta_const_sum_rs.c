@@ -66,8 +66,8 @@ int main()
 
         if (!acb_overlaps(t2a, t2b) || !acb_overlaps(t3a, t3b) || !acb_overlaps(t4a, t4b))
         {
-            printf("FAIL (overlap)  iter = %ld\n", iter);
-            printf("N = %ld\n", N);
+            printf("FAIL (overlap)  iter = %wd\n", iter);
+            printf("N = %wd\n", N);
             printf("q = "); acb_printd(q, 50); printf("\n\n");
             printf("t2a = "); acb_printd(t2a, 50); printf("\n\n");
             printf("t2b = "); acb_printd(t2b, 50); printf("\n\n");

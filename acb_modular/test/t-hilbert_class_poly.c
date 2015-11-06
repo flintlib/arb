@@ -149,7 +149,7 @@ int main()
             if (c != hilbert_poly_values[i])
             {
                 printf("FAIL!\n");
-                printf("D = %ld\n", -i);
+                printf("D = %wd\n", -i);
                 printf("c = %lu\n", c);
                 printf("expected = %d\n", (int) hilbert_poly_values[i]);
                 abort();
@@ -165,7 +165,7 @@ int main()
             if (c != hilbert_poly_values_2[2 * i + 1])
             {
                 printf("FAIL!\n");
-                printf("D = %ld\n", -i);
+                printf("D = %wd\n", -i);
                 printf("c = %lu\n", c);
                 printf("expected = %d\n", (int) hilbert_poly_values_2[2*i+1]);
                 abort();

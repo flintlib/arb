@@ -81,8 +81,8 @@ int main()
         if (!arb_poly_overlaps(h1h2, h3))
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
-            printf("trunc = %ld\n", trunc);
+            printf("bits = %wd\n", bits);
+            printf("trunc = %wd\n", trunc);
             printf("a = %lu\n", a);
             printf("b = %lu\n", a);
 
@@ -102,8 +102,8 @@ int main()
         {
             printf("FAIL (aliasing)\n\n");
 
-            printf("bits = %ld\n", bits);
-            printf("trunc = %ld\n", trunc);
+            printf("bits = %wd\n", bits);
+            printf("trunc = %wd\n", trunc);
             printf("a = %lu\n", a);
             printf("b = %lu\n", a);
 

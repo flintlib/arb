@@ -66,7 +66,7 @@ int main()
             res3 != FMPR_RESULT_EXACT || res4 != FMPR_RESULT_EXACT)
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
+            printf("bits = %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
@@ -119,13 +119,13 @@ int main()
             !fmpr_check_ulp(z, ret1, prec) || !fmpr_check_ulp(w, ret2, prec))
         {
             printf("FAIL\n\n");
-            printf("iter %ld\n", iter);
-            printf("prec = %ld\n", prec);
+            printf("iter %wd\n", iter);
+            printf("prec = %wd\n", prec);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
             printf("w = "); fmpr_print(w); printf("\n\n");
-            printf("ret1 = %ld, ret2 = %ld\n", ret1, ret2);
+            printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
             abort();
         }
 
@@ -187,13 +187,13 @@ int main()
             || !fmpr_check_ulp(z, res, bits))
         {
             printf("FAIL\n\n");
-            printf("iter %ld\n", iter);
-            printf("bits = %ld\n", bits);
+            printf("iter %wd\n", iter);
+            printf("bits = %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");
             printf("w = "); fmpr_print(w); printf("\n\n");
-            printf("returned: %ld, %d\n", res, mpfr_res);
+            printf("returned: %wd, %d\n", res, mpfr_res);
             abort();
         }
 
@@ -216,7 +216,7 @@ int main()
                 fmpr_cmp(true_error, error_bound) > 0)
             {
                 printf("FAIL: error bound\n\n");
-                printf("bits = %ld\n", bits);
+                printf("bits = %wd\n", bits);
                 printf("x = "); fmpr_print(x); printf("\n\n");
                 printf("y = "); fmpr_print(y); printf("\n\n");
                 printf("z = "); fmpr_print(z); printf("\n\n");

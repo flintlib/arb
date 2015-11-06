@@ -59,7 +59,7 @@ int main()
         if (!((fmpr_cmp(a, ulp) < 0) && (fmpr_cmp(ulp, b) <= 0)))
         {
             printf("FAIL!\n");
-            printf("prec = %ld\n", prec);
+            printf("prec = %wd\n", prec);
             printf("x = "); fmpr_print(x); printf("\n");
             printf("ulp = "); fmpr_print(ulp); printf("\n");
             printf("a = "); fmpr_print(a); printf("\n");

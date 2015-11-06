@@ -80,7 +80,7 @@ int main()
         if (!result)
         {
             printf("FAIL\n");
-            printf("N = %ld xn = %ld alternating = %d\n", N, xn, alternating);
+            printf("N = %wd xn = %wd alternating = %d\n", N, xn, alternating);
             printf("x =");
             flint_mpn_debug(x, xn);
             printf("y1 =");

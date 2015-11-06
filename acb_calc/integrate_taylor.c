@@ -81,7 +81,7 @@ acb_calc_integrate_taylor(acb_t res,
 
         if (arb_calc_verbose)
         {
-            printf("integration point %ld/%ld: ", 2 * step + 1, 2 * num_steps);
+            printf("integration point %wd/%wd: ", 2 * step + 1, 2 * num_steps);
             acb_printd(m, 15); printf("\n");
         }
 
@@ -165,7 +165,7 @@ acb_calc_integrate_taylor(acb_t res,
 
             if (arb_calc_verbose)
             {
-                printf("N = %ld; bound: ", N); arf_printd(err, 15); printf("\n");
+                printf("N = %wd; bound: ", N); arf_printd(err, 15); printf("\n");
                 printf("R: "); arf_printd(R, 15); printf("\n");
                 printf("C: "); arf_printd(C, 15); printf("\n");
                 printf("X: "); arf_printd(X, 15); printf("\n");

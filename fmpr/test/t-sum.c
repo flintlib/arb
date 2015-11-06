@@ -76,16 +76,16 @@ int main()
         if (!fmpr_equal(s1, s3) || res1 != res2 ||
             !fmpr_check_ulp(s1, res1, prec) || !fmpr_check_ulp(s3, res2, prec))
         {
-            printf("FAIL (%ld)\n\n", iter);
-            printf("prec = %ld\n\n", prec);
+            printf("FAIL (%wd)\n\n", iter);
+            printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%ld] = ", i); fmpr_print(terms + i); printf("\n\n");
+                printf("terms[%wd] = ", i); fmpr_print(terms + i); printf("\n\n");
             }
             printf("s1 = "); fmpr_print(s1); printf("\n\n");
             printf("s2 = "); fmpr_print(s2); printf("\n\n");
             printf("s3 = "); fmpr_print(s3); printf("\n\n");
-            printf("res1 = %ld, res2 = %ld\n\n", res1, res2);
+            printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
             abort();
         }
 
@@ -96,17 +96,17 @@ int main()
         if (fmpr_cmp(err, err_bound) > 0)
         {
             printf("FAIL (error bound)!\n");
-            printf("prec = %ld\n\n", prec);
+            printf("prec = %wd\n\n", prec);
             for (i = 0; i < len; i++)
             {
-                printf("terms[%ld] = ", i); fmpr_print(terms + i); printf("\n\n");
+                printf("terms[%wd] = ", i); fmpr_print(terms + i); printf("\n\n");
             }
             printf("s1 = "); fmpr_print(s1); printf("\n\n");
             printf("s2 = "); fmpr_print(s2); printf("\n\n");
             printf("s3 = "); fmpr_print(s3); printf("\n\n");
             printf("error: "); fmpr_print(err); printf("\n\n");
             printf("error bound: "); fmpr_print(err_bound); printf("\n\n");
-            printf("res1 = %ld, res2 = %ld\n\n", res1, res2);
+            printf("res1 = %wd, res2 = %wd\n\n", res1, res2);
             abort();
         }
 

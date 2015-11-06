@@ -70,8 +70,8 @@ int main()
         if (!acb_poly_contains_fmpq_poly(c, C))
         {
             printf("FAIL\n\n");
-            printf("bits3 = %ld\n", rbits3);
-            printf("trunc = %ld\n", trunc);
+            printf("bits3 = %wd\n", rbits3);
+            printf("trunc = %wd\n", trunc);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("B = "); fmpq_poly_print(B); printf("\n\n");
@@ -169,8 +169,8 @@ int main()
         if (!acb_poly_overlaps(abc, abac))
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
-            printf("trunc = %ld\n", trunc);
+            printf("bits = %wd\n", bits);
+            printf("trunc = %wd\n", trunc);
 
             printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); acb_poly_printd(b, 15); printf("\n\n");

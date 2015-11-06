@@ -70,7 +70,7 @@ int main()
             if (!arb_overlaps(res + n, s))
             {
                 printf("FAIL: overlap\n\n");
-                printf("a = %ld, b = %ld, n = %ld\n\n", aa, bb, n);
+                printf("a = %wd, b = %wd, n = %wd\n\n", aa, bb, n);
                 printf("res = "); arb_printd(res + n, 30); printf("\n\n");
                 printf("s = "); arb_printd(s, 30); printf("\n\n");
                 abort();

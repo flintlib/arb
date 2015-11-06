@@ -72,8 +72,8 @@ int main()
         if (!acb_poly_contains_fmpq_poly(c, C))
         {
             printf("FAIL\n\n");
-            printf("bits3 = %ld\n", rbits3);
-            printf("trunc = %ld\n", trunc);
+            printf("bits3 = %wd\n", rbits3);
+            printf("trunc = %wd\n", trunc);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("B = "); fmpq_poly_print(B); printf("\n\n");

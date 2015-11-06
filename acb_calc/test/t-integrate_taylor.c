@@ -82,8 +82,8 @@ int main()
 
         if (!acb_overlaps(res, ans))
         {
-            printf("FAIL! (iter = %ld)\n", iter);
-            printf("prec = %ld, goal = %ld\n", prec, goal);
+            printf("FAIL! (iter = %wd)\n", iter);
+            printf("prec = %wd, goal = %wd\n", prec, goal);
             printf("inr = "); arf_printd(inr, 15); printf("\n");
             printf("outr = "); arf_printd(outr, 15); printf("\n");
             printf("a = "); acb_printd(a, 15); printf("\n");

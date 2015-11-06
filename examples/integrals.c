@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
     digits = atol(argv[1]);
     prec = digits * 3.32193;
-    printf("Digits: %ld\n", digits);
+    printf("Digits: %wd\n", digits);
 
     printf("----------------------------------------------------------------\n");
     printf("Integral of sin(t) from 0 to 100.\n");

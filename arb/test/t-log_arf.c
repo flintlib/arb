@@ -61,7 +61,7 @@ int main()
         if (!arb_overlaps(y1, y2))
         {
             printf("FAIL: overlap\n\n");
-            printf("prec1 = %ld, prec2 = %ld\n\n", prec1, prec2);
+            printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
             printf("x = "); arf_print(x); printf("\n\n");
             printf("y1 = "); arb_print(y1); printf("\n\n");
             printf("y2 = "); arb_print(y2); printf("\n\n");
@@ -76,8 +76,8 @@ int main()
             if (acc1 < prec1 - 2 || acc2 < prec2 - 2)
             {
                 printf("FAIL: accuracy\n\n");
-                printf("prec1 = %ld, prec2 = %ld\n\n", prec1, prec2);
-                printf("acc1 = %ld, acc2 = %ld\n\n", acc1, acc2);
+                printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
+                printf("acc1 = %wd, acc2 = %wd\n\n", acc1, acc2);
                 printf("x = "); arf_print(x); printf("\n\n");
                 printf("y1 = "); arb_print(y1); printf("\n\n");
                 printf("y2 = "); arb_print(y2); printf("\n\n");

@@ -97,12 +97,12 @@ int main()
                 if (!arf_equal(z, v) || r1 != r2)
                 {
                     printf("FAIL!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
                     printf("y = "); arf_print(y); printf("\n\n");
                     printf("z = "); arf_print(z); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -113,11 +113,11 @@ int main()
                 if (!arf_equal(z, v) || r1 != r2)
                 {
                     printf("FAIL (aliasing 1)!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
                     printf("z = "); arf_print(z); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -128,11 +128,11 @@ int main()
                 if (!arf_equal(v, x) || r1 != r2)
                 {
                     printf("FAIL (aliasing 2)!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
                     printf("z = "); arf_print(z); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -143,11 +143,11 @@ int main()
                 if (!arf_equal(x, v) || r1 != r2)
                 {
                     printf("FAIL (aliasing 3)!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
                     printf("y = "); arf_print(y); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -158,11 +158,11 @@ int main()
                 if (!arf_equal(x, v) || r1 != r2)
                 {
                     printf("FAIL (aliasing 4)!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
+                    printf("prec = %wd, rnd = %d\n\n", prec, rnd);
                     printf("x = "); arf_print(x); printf("\n\n");
                     printf("y = "); arf_print(y); printf("\n\n");
                     printf("v = "); arf_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;

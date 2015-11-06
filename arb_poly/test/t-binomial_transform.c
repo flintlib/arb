@@ -62,7 +62,7 @@ int main()
         if (!arb_poly_contains(c, d))
         {
             printf("FAIL (containment)\n\n");
-            printf("n = %ld, prec = %ld\n\n", n, prec);
+            printf("n = %wd, prec = %wd\n\n", n, prec);
 
             printf("a: "); arb_poly_printd(a, 15); printf("\n\n");
             printf("b: "); arb_poly_printd(b, 15); printf("\n\n");

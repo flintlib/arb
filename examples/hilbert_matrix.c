@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        printf("prec=%ld: ", prec);
+        printf("prec=%wd: ", prec);
 
         arb_mat_det(det, A, prec);
 

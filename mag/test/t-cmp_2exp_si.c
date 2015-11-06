@@ -58,7 +58,7 @@ int main()
         {
             printf("FAIL\n\n");
             printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = %ld", y);  printf("\n\n");
+            printf("y = %wd", y);  printf("\n\n");
             printf("xb = "); mag_print(xb); printf("\n\n");
             abort();
         }

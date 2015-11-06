@@ -89,11 +89,11 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     if (n % 4 == 0)
         arb_neg(z, z);
 
-    /* printf("%ld: ", n); arb_printd(z, 5); printf("\n"); */
+    /* printf("%wd: ", n); arb_printd(z, 5); printf("\n"); */
 
     if (!arb_get_unique_fmpz(numer, z))
     {
-        printf("warning: insufficient precision for B_%ld\n", n);
+        printf("warning: insufficient precision for B_%wd\n", n);
         _bernoulli_fmpq_ui(numer, denom, n);
     }
 

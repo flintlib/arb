@@ -72,7 +72,7 @@ int main()
         if (!arb_mat_contains_fmpq_mat(c, C))
         {
             printf("FAIL\n\n");
-            printf("m = %ld, n = %ld, k = %ld, bits3 = %ld\n", m, n, k, rbits3);
+            printf("m = %wd, n = %wd, k = %wd, bits3 = %wd\n", m, n, k, rbits3);
 
             printf("A = "); fmpq_mat_print(A); printf("\n\n");
             printf("B = "); fmpq_mat_print(B); printf("\n\n");

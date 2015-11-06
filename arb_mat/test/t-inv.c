@@ -62,7 +62,7 @@ int main()
             if (r_invertible)
             {
                 printf("FAIL: matrix is singular over Q but not over R\n");
-                printf("n = %ld, prec = %ld\n", n, prec);
+                printf("n = %wd, prec = %wd\n", n, prec);
                 printf("\n");
 
                 printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
@@ -98,8 +98,8 @@ int main()
 
             if (!arb_mat_contains_fmpq_mat(Ainv, Qinv))
             {
-                printf("FAIL (containment, iter = %ld)\n", iter);
-                printf("n = %ld, prec = %ld\n", n, prec);
+                printf("FAIL (containment, iter = %wd)\n", iter);
+                printf("n = %wd, prec = %wd\n", n, prec);
                 printf("\n");
 
                 printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");

@@ -70,7 +70,7 @@ int main()
 
             if (accuracy < prec - 4)
             {
-                printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
+                printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
                 printf("n = %lu\n\n", n + i * step);
                 printf("r = "); arb_printd(r + i, prec / 3.33); printf("\n\n");
                 abort();

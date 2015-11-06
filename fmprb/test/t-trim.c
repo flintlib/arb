@@ -63,7 +63,7 @@ int main()
         if (!accuracy_ok)
         {
             printf("FAIL (accuracy):\n\n");
-            printf("x: %ld, y = %ld\n\n", acc1, acc2);
+            printf("x: %wd, y = %wd\n\n", acc1, acc2);
             printf("x = "); fmprb_print(x); printf("\n\n");
             printf("y = "); fmprb_print(y); printf("\n\n");
             abort();

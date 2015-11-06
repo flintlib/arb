@@ -91,8 +91,8 @@ int main()
             || !fmpr_check_ulp(z, r2, bits))
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
-            printf("r1 = %ld, r2 = %ld\n", r1, r2);
+            printf("bits = %wd\n", bits);
+            printf("r1 = %wd, r2 = %wd\n", r1, r2);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");

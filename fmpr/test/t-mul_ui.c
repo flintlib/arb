@@ -84,7 +84,7 @@ int main()
                     printf("y = %lu\n\n", y);
                     printf("z = "); fmpr_print(z); printf("\n\n");
                     printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -101,7 +101,7 @@ int main()
                     printf("y = %lu\n\n", y);
                     printf("z = "); fmpr_print(z); printf("\n\n");
                     printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;

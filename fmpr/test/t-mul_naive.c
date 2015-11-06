@@ -86,7 +86,7 @@ int main()
         if (!fmpr_equal(z, w) || !fmpr_check_ulp(z, r, bits))
         {
             printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
+            printf("bits = %wd\n", bits);
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
             printf("z = "); fmpr_print(z); printf("\n\n");

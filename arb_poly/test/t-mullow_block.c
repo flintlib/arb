@@ -69,8 +69,8 @@ int main()
         if (!arb_poly_contains_fmpq_poly(c, C))
         {
             printf("FAIL\n\n");
-            printf("bits3 = %ld\n", rbits3);
-            printf("trunc = %ld\n", trunc);
+            printf("bits3 = %wd\n", rbits3);
+            printf("trunc = %wd\n", trunc);
 
             printf("A = "); fmpq_poly_print(A); printf("\n\n");
             printf("B = "); fmpq_poly_print(B); printf("\n\n");
@@ -170,8 +170,8 @@ int main()
         if (!arb_poly_overlaps(abc, abc2))
         {
             printf("FAIL (a*(b+c) = a*b + a*c) \n\n");
-            printf("bits3 = %ld\n", rbits3);
-            printf("trunc = %ld\n", trunc);
+            printf("bits3 = %wd\n", rbits3);
+            printf("trunc = %wd\n", trunc);
 
             printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
             printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
@@ -193,8 +193,8 @@ int main()
         if (!arb_poly_overlaps(abc, abc2))
         {
             printf("FAIL ((b+c)^2 = b^2 + 2bc + c^2) \n\n");
-            printf("bits3 = %ld\n", rbits3);
-            printf("trunc = %ld\n", trunc);
+            printf("bits3 = %wd\n", rbits3);
+            printf("trunc = %wd\n", trunc);
 
             printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
             printf("c = "); arb_poly_printd(c, 15); printf("\n\n");

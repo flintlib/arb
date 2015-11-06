@@ -77,7 +77,7 @@ int main()
             printf("FAIL!\n");
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("ret1 = %ld, ret2 = %ld\n", ret1, ret2);
+            printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
             abort();
         }
 
@@ -92,7 +92,7 @@ int main()
             printf("x = "); fmpr_print(x); printf("\n\n");
             printf("error: "); fmpr_print(err); printf("\n\n");
             printf("error bound: "); fmpr_print(err_bound); printf("\n\n");
-            printf("ret = %ld\n", ret1);
+            printf("ret = %wd\n", ret1);
             abort();
         }
 

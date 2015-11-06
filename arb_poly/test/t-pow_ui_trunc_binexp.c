@@ -64,9 +64,9 @@ int main()
         if (!arb_poly_contains_fmpz_poly(b, B))
         {
             printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            printf("bits2 = %wd\n", rbits2);
             printf("e = %lu\n", e);
-            printf("trunc = %ld\n", trunc);
+            printf("trunc = %wd\n", trunc);
 
             printf("A = "); fmpz_poly_print(A); printf("\n\n");
             printf("B = "); fmpz_poly_print(B); printf("\n\n");

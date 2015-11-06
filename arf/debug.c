@@ -34,7 +34,7 @@ arf_debug(const arf_t x)
 
     printf("{exp=");
     fmpz_print(&x->exp);
-    printf("; size=%lu; sgnbit=%ld; digits=[", ARF_SIZE(x), ARF_SGNBIT(x));
+    printf("; size=%lu; sgnbit=%wd; digits=[", ARF_SIZE(x), ARF_SGNBIT(x));
 
     ARF_GET_MPN_READONLY(d, n, x);
 

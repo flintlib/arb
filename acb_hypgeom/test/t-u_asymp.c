@@ -95,11 +95,11 @@ int main()
         if (!acb_overlaps(U1, U2))
         {
             printf("FAIL (Kummer transformation)\n");
-            printf("iter = %ld\n", iter);
+            printf("iter = %wd\n", iter);
             printf("a = "); acb_printd(a, 50); printf("\n");
             printf("b = "); acb_printd(b, 50); printf("\n");
             printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
+            printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             printf("U1 = "); acb_printd(U1, 100); printf("\n");
             printf("U2 = "); acb_printd(U2, 100); printf("\n");
             abort();
@@ -126,11 +126,11 @@ int main()
         if (!acb_contains_zero(t))
         {
             printf("FAIL (contiguous relation)\n");
-            printf("iter = %ld\n", iter);
+            printf("iter = %wd\n", iter);
             printf("a = "); acb_printd(a, 50); printf("\n");
             printf("b = "); acb_printd(b, 50); printf("\n");
             printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
+            printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             printf("U1 = "); acb_printd(U1, 100); printf("\n");
             printf("t = "); acb_printd(t, 100); printf("\n");
             abort();
@@ -178,11 +178,11 @@ int main()
         if (!acb_overlaps(U1, U2))
         {
             printf("FAIL (U in terms of M)\n");
-            printf("iter = %ld\n", iter);
+            printf("iter = %wd\n", iter);
             printf("a = "); acb_printd(a, 50); printf("\n");
             printf("b = "); acb_printd(b, 50); printf("\n");
             printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
+            printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             printf("U1 = "); acb_printd(U1, 100); printf("\n");
             printf("U2 = "); acb_printd(U2, 100); printf("\n");
             abort();
@@ -196,11 +196,11 @@ int main()
         if (!acb_overlaps(U1, U2))
         {
             printf("FAIL (special value)\n");
-            printf("iter = %ld\n", iter);
+            printf("iter = %wd\n", iter);
             printf("a = "); acb_printd(a, 50); printf("\n");
             printf("b = "); acb_printd(b, 50); printf("\n");
             printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
+            printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             printf("U1 = "); acb_printd(U1, 100); printf("\n");
             printf("U2 = "); acb_printd(U2, 100); printf("\n");
             abort();

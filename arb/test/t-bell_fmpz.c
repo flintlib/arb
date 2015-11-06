@@ -79,8 +79,8 @@ int main()
         if (acc1 < prec1 - 4 || acc2 < prec2 - 4)
         {
             printf("FAIL: poor accuracy\n\n");
-            printf("prec1 = %ld, acc1 = %ld\n", prec1, acc1);
-            printf("prec2 = %ld, acc2 = %ld\n", prec2, acc2);
+            printf("prec1 = %wd, acc1 = %wd\n", prec1, acc1);
+            printf("prec2 = %wd, acc2 = %wd\n", prec2, acc2);
             printf("n = "); fmpz_print(n); printf("\n\n");
             printf("b1 = "); arb_printn(b1, 50, 0); printf("\n\n");
             printf("b2 = "); arb_printn(b2, 50, 0); printf("\n\n");

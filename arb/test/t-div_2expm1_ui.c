@@ -89,7 +89,7 @@ int main()
                 !(acc1 == -ARF_PREC_EXACT && acc2 == -ARF_PREC_EXACT))
         {
             printf("FAIL: poor accuracy\n\n");
-            printf("prec=%ld, acc1=%ld, acc2=%ld\n\n", prec, acc1, acc2);
+            printf("prec=%wd, acc1=%wd, acc2=%wd\n\n", prec, acc1, acc2);
             printf("n = %lu\n\n", n);
             printf("a = "); arb_print(a); printf("\n\n");
             printf("b = "); arb_print(b); printf("\n\n");

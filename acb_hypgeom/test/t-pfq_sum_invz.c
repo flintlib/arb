@@ -80,7 +80,7 @@ int main()
         if (!acb_overlaps(s1, s2) || !acb_overlaps(t1, t2))
         {
             printf("FAIL: overlap\n\n");
-            printf("n = %ld\n\n", n);
+            printf("n = %wd\n\n", n);
             printf("z = "); acb_printd(z, 15); printf("\n\n");
             printf("s1 = "); acb_printd(s1, 15); printf("\n\n");
             printf("s2 = "); acb_printd(s2, 15); printf("\n\n");

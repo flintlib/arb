@@ -59,7 +59,7 @@ int main()
         if (!arb_overlaps(r, s))
         {
             printf("FAIL: containment\n\n");
-            printf("prec = %ld\n", prec);
+            printf("prec = %wd\n", prec);
             printf("q = "); fmpq_print(q); printf("\n\n");
             printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
             printf("s = "); arb_printd(s, prec / 3.33); printf("\n\n");
@@ -74,7 +74,7 @@ int main()
             if (accuracy < prec - 6)
             {
                 printf("FAIL: poor accuracy\n\n");
-                printf("prec = %ld\n", prec);
+                printf("prec = %wd\n", prec);
                 printf("q = "); fmpq_print(q); printf("\n\n");
                 printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
                 abort();

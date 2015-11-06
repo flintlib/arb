@@ -74,7 +74,7 @@ int main()
         {
             if (!acb_contains_fmpq(y + i, Y + i))
             {
-                printf("FAIL (%ld of %ld)\n\n", i, n);
+                printf("FAIL (%wd of %wd)\n\n", i, n);
 
                 printf("F = "); fmpq_poly_print(F); printf("\n\n");
                 printf("X = "); fmpq_print(X + i); printf("\n\n");

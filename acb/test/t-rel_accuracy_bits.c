@@ -56,7 +56,7 @@ int main()
             printf("FAIL: acb != arb\n\n");
             printf("x = "); arb_print(x); printf("\n\n");
             printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %ld, a2 = %ld\n\n", a1, a2);
+            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 
@@ -76,7 +76,7 @@ int main()
         {
             printf("FAIL: swapping\n\n");
             printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %ld, a2 = %ld\n\n", a1, a2);
+            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 
@@ -100,7 +100,7 @@ int main()
             printf("FAIL: acb != arb (2)\n\n");
             printf("x = "); arb_print(x); printf("\n\n");
             printf("z = "); acb_print(z); printf("\n\n");
-            printf("a1 = %ld, a2 = %ld\n\n", a1, a2);
+            printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
             abort();
         }
 

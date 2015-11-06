@@ -61,8 +61,8 @@ int main()
 
         if (!arb_contains_fmpq(Adet, Qdet))
         {
-            printf("FAIL (containment, iter = %ld)\n", iter);
-            printf("n = %ld, prec = %ld\n", n, prec);
+            printf("FAIL (containment, iter = %wd)\n", iter);
+            printf("n = %wd, prec = %wd\n", n, prec);
             printf("\n");
 
             printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");

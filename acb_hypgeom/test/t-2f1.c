@@ -137,7 +137,7 @@ int main()
         if (!acb_overlaps(w1, w2))
         {
             printf("FAIL: consistency\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
+            printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
             printf("alg1 = %d, alg2 = %d\n\n", alg1, alg2);
             printf("reg1 = %d, reg2 = %d\n\n", reg1, reg2);
             printf("a = "); acb_printd(a, 30); printf("\n\n");
