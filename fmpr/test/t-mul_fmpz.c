@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-static long
+static slong
 fmpr_mul_fmpz_naive(fmpr_t z, const fmpr_t x, const fmpz_t y,
     slong prec, fmpr_rnd_t rnd)
 {
