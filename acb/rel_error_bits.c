@@ -25,7 +25,7 @@
 
 #include "acb.h"
 
-long
+slong
 acb_rel_error_bits(const acb_t x)
 {
     int am, ar, bm, br;

@@ -58,7 +58,7 @@ low_bits_are_zero(const fmpz_t u, int bits)
     return (low & ((UWORD(1) << bits) - 1)) == 0;
 }
 
-long
+slong
 fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y))
@@ -131,7 +131,7 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-long
+slong
 fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -142,7 +142,7 @@ fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -153,7 +153,7 @@ fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_div_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -164,7 +164,7 @@ fmpr_div_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -175,7 +175,7 @@ fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -186,7 +186,7 @@ fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t r
     return r;
 }
 
-long
+slong
 fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -197,7 +197,7 @@ fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t r
     return r;
 }
 
-long
+slong
 fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t, u; slong r;

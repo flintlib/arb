@@ -66,7 +66,7 @@ void _add_tmp_cleanup(void)
         flint_free(tmp);
 
 /* computes x + y * 2^shift (optionally negated) */
-long
+slong
 _fmpr_add_mpn(fmpr_t z,
         mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
         mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,

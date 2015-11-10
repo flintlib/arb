@@ -25,7 +25,7 @@
 
 #include "arb_mat.h"
 
-long
+slong
 arb_mat_gauss_partial(arb_mat_t A, slong prec)
 {
     arb_t e;

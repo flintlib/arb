@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     /* TODO: this should perhaps raise an exception to avoid ambiguity */

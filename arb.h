@@ -433,7 +433,7 @@ arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec)
         arf_zero(u);
 }
 
-long arb_rel_error_bits(const arb_t x);
+slong arb_rel_error_bits(const arb_t x);
 
 ARB_INLINE long
 arb_rel_accuracy_bits(const arb_t x)
@@ -1028,7 +1028,7 @@ void arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one);
 int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
                                                 const arf_t x, mp_size_t wn);
 
-long _arb_exp_taylor_bound(slong mag, slong prec);
+slong _arb_exp_taylor_bound(slong mag, slong prec);
 
 void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     const fmpz_t x, mp_bitcnt_t r, slong N);

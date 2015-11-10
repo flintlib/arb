@@ -65,7 +65,7 @@ void _mul_tmp_cleanup(void)
     if (alloc > MUL_TLS_ALLOC) \
         flint_free(tmp);
 
-long
+slong
 _fmpr_mul_mpn(fmpr_t z,
     mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,

@@ -54,7 +54,7 @@ static slong _fmpr_sub_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong p
     }
 }
 
-long
+slong
 fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     slong shift, xn, yn;
@@ -107,7 +107,7 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 }
 
 
-long
+slong
 fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -118,7 +118,7 @@ fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -129,7 +129,7 @@ fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;

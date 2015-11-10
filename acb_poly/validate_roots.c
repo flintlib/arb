@@ -25,7 +25,7 @@
 
 #include "acb_poly.h"
 
-long
+slong
 _acb_poly_validate_roots(acb_ptr roots,
         acb_srcptr poly, slong len, slong prec)
 {

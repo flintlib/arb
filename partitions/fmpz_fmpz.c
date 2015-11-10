@@ -30,7 +30,7 @@
 #define NUMBER_OF_SMALL_PARTITIONS 128
 extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
 
-long partitions_hrr_needed_terms(double n);
+slong partitions_hrr_needed_terms(double n);
 
 typedef struct
 {

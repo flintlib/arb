@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, slong prec, fmpr_rnd_t rnd)
+slong _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, slong prec, fmpr_rnd_t rnd)
 {
     slong bits, shift;
     int xsign;

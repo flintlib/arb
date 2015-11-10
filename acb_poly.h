@@ -443,17 +443,17 @@ void _acb_poly_root_inclusion(acb_t r, const acb_t m,
     acb_srcptr poly,
     acb_srcptr polyder, slong len, slong prec);
 
-long _acb_poly_validate_roots(acb_ptr roots,
+slong _acb_poly_validate_roots(acb_ptr roots,
         acb_srcptr poly, slong len, slong prec);
 
 void _acb_poly_refine_roots_durand_kerner(acb_ptr roots,
         acb_srcptr poly, slong len, slong prec);
 
-long _acb_poly_find_roots(acb_ptr roots,
+slong _acb_poly_find_roots(acb_ptr roots,
     acb_srcptr poly,
     acb_srcptr initial, slong len, slong maxiter, slong prec);
 
-long acb_poly_find_roots(acb_ptr roots,
+slong acb_poly_find_roots(acb_ptr roots,
     const acb_poly_t poly, acb_srcptr initial,
     slong maxiter, slong prec);
 

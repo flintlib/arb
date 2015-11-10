@@ -25,7 +25,7 @@
 
 #include "arf.h"
 
-long
+slong
 arf_get_si(const arf_t x, arf_rnd_t rnd)
 {
     fmpz_t t;

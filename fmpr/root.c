@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_root(fmpr_t y, const fmpr_t x, ulong k, slong prec, fmpr_rnd_t rnd)
 {
     slong r;

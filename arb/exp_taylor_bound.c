@@ -72,7 +72,7 @@ rec_fac_bound_2exp_si(slong n)
     }
 }
 
-long
+slong
 _arb_exp_taylor_bound(slong mag, slong prec)
 {
     slong i;

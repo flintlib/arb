@@ -67,7 +67,7 @@ static const int trigonal_best_m_residues[] = {
   9504, 10560, 11088, 12320, 14784, 0,
 };
 
-long
+slong
 acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N)
 {
     slong i, m, cost, best_i, best_m, best_cost;

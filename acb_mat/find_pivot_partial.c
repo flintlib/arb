@@ -43,7 +43,7 @@ acb_cmpabs_approx(const acb_t x, const acb_t y)
     return arf_cmpabs(xm, ym);
 }
 
-long
+slong
 acb_mat_find_pivot_partial(const acb_mat_t mat,
                                     slong start_row, slong end_row, slong c)
 {

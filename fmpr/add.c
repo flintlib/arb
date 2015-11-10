@@ -61,7 +61,7 @@ _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd
     }
 }
 
-long
+slong
 fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     slong shift, xn, yn;

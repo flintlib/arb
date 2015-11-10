@@ -27,7 +27,7 @@
 #include "double_extras.h"
 #include "hypgeom.h"
 
-long
+slong
 hypgeom_root_bound(const mag_t z, int r)
 {
     if (r == 0)
@@ -131,7 +131,7 @@ hypgeom_term_bound(mag_t Tn, const mag_t TK, slong K, slong A, slong B, int r, c
     mag_clear(num);
 }
 
-long
+slong
 hypgeom_bound(mag_t error, int r,
     slong A, slong B, slong K, const mag_t TK, const mag_t z, slong tol_2exp)
 {

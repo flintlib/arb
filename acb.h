@@ -998,7 +998,7 @@ void acb_randtest_precise(acb_t z, flint_rand_t state, slong prec, slong mag_bit
 
 void acb_randtest_param(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
 
-long acb_rel_error_bits(const acb_t x);
+slong acb_rel_error_bits(const acb_t x);
 
 ACB_INLINE long
 acb_rel_accuracy_bits(const acb_t x)

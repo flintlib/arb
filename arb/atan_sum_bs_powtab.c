@@ -25,9 +25,9 @@
 
 #include "arb.h"
 
-long _arb_compute_bs_exponents(slong * tab, slong n);
+slong _arb_compute_bs_exponents(slong * tab, slong n);
 
-long _arb_get_exp_pos(const slong * tab, slong step);
+slong _arb_get_exp_pos(const slong * tab, slong step);
 
 static void
 bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,

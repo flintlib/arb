@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv, yv;
@@ -91,7 +91,7 @@ fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t r
     }
 }
 
-long
+slong
 fmpr_mul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv;
@@ -151,7 +151,7 @@ fmpr_mul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 }
 
 
-long
+slong
 fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
     fmpz xv;

@@ -28,7 +28,7 @@
 
 #define LOG2_OVER_E 0.25499459743395350926
 
-long
+slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
 {
     if (mag_is_special(norm) || mag_cmp_2exp_si(norm, 30) > 0 ||

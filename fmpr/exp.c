@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_exp(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
@@ -49,7 +49,7 @@ fmpr_exp(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-long
+slong
 fmpr_expm1(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))

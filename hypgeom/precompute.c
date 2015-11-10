@@ -71,7 +71,7 @@ fmpz_cdiv_abs_q(fmpz_t q, const fmpz_t x, const fmpz_t y)
     }
 }
 
-long
+slong
 hypgeom_root_norm(const fmpz_poly_t P)
 {
     slong res, i, p;

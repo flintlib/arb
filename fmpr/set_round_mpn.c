@@ -49,7 +49,7 @@ mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
     return (i * FLINT_BITS) + c;
 }
 
-long
+slong
 _fmpr_set_round_mpn(slong * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, slong prec, fmpr_rnd_t rnd)
 {
     slong bc, val, val_bits, val_limbs, ret;

@@ -25,7 +25,7 @@
 
 #include "acb_mat.h"
 
-long
+slong
 acb_mat_gauss_partial(acb_mat_t A, slong prec)
 {
     acb_t e;

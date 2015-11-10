@@ -36,7 +36,7 @@ extern "C" {
 void acb_hypgeom_pfq_bound_factor(mag_t C,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n);
 
-long acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
+slong acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
                          acb_srcptr b, slong q, const acb_t z, slong prec);
 
 void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q,
@@ -63,7 +63,7 @@ void acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, slong p,
 void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, slong p, acb_srcptr b, slong q,
     const acb_t z, slong n, slong prec);
 
-long acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
+slong acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
                                 const acb_poly_struct * b, slong q,
                                 const acb_poly_t z, slong len, slong prec);
 

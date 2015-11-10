@@ -39,7 +39,7 @@ static __inline__ double d_root(double x, int r)
     return pow(x, 1. / r);
 }
 
-long
+slong
 hypgeom_estimate_terms(const mag_t z, int r, slong prec)
 {
     double y, t;

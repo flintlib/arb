@@ -53,7 +53,7 @@ int are_close(const fmpr_t x, const fmpr_t y, slong prec)
     return result;
 }
 
-long
+slong
 fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_struct * blocks;

@@ -4,7 +4,7 @@
 #include "arb_calc.h"
 #include "profiler.h"
 
-long eval_count = 0;
+slong eval_count = 0;
 
 int
 z_function(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)

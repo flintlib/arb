@@ -25,7 +25,7 @@
 
 #include "acb_poly.h"
 
-long
+slong
 _acb_get_mid_mag(const acb_t z)
 {
     slong rm, im;
@@ -36,7 +36,7 @@ _acb_get_mid_mag(const acb_t z)
     return FLINT_MAX(rm, im);
 }
 
-long
+slong
 _acb_get_rad_mag(const acb_t z)
 {
     slong rm, im;
@@ -81,7 +81,7 @@ _acb_poly_roots_initial_values(acb_ptr roots, slong deg, slong prec)
     }
 }
 
-long
+slong
 _acb_poly_find_roots(acb_ptr roots,
     acb_srcptr poly,
     acb_srcptr initial, slong len, slong maxiter, slong prec)
@@ -156,7 +156,7 @@ _acb_poly_find_roots(acb_ptr roots,
 }
 
 
-long
+slong
 acb_poly_find_roots(acb_ptr roots,
     const acb_poly_t poly, acb_srcptr initial,
     slong maxiter, slong prec)

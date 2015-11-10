@@ -608,7 +608,7 @@ void arb_poly_riemann_siegel_theta_series(arb_poly_t res, const arb_poly_t h, sl
 void _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t h, slong n, slong prec);
 
-long _arb_poly_swinnerton_dyer_ui_prec(ulong n);
+slong _arb_poly_swinnerton_dyer_ui_prec(ulong n);
 void _arb_poly_swinnerton_dyer_ui(arb_ptr T, ulong n, slong trunc, slong prec);
 void arb_poly_swinnerton_dyer_ui(arb_poly_t poly, ulong n, slong prec);
 

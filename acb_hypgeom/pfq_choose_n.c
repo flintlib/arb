@@ -94,7 +94,7 @@ acb_hypgeom_pfq_choose_n_double(slong * nn,
     return success;
 }
 
-long
+slong
 acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
                          acb_srcptr b, slong q, const acb_t z, slong prec)
 {
@@ -192,7 +192,7 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
     return n;
 }
 
-long
+slong
 acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
                                 const acb_poly_struct * b, slong q,
                                 const acb_poly_t z, slong len, slong prec)

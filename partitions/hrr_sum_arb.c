@@ -69,7 +69,7 @@ partitions_remainder_bound_log2(double n, double N)
     return (FLINT_MAX(t1, t2) + 1) * INV_LOG2;
 }
 
-long
+slong
 partitions_hrr_needed_terms(double n)
 {
     slong N;

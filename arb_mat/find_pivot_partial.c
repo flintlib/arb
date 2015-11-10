@@ -25,7 +25,7 @@
 
 #include "arb_mat.h"
 
-long
+slong
 arb_mat_find_pivot_partial(const arb_mat_t mat,
                                     slong start_row, slong end_row, slong c)
 {

@@ -781,13 +781,13 @@ arf_abs_bound_le_2exp_fmpz(fmpz_t b, const arf_t x)
         fmpz_set(b, ARF_EXPREF(x));
 }
 
-long arf_abs_bound_lt_2exp_si(const arf_t x);
+slong arf_abs_bound_lt_2exp_si(const arf_t x);
 
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
 void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd);
 
-long arf_get_si(const arf_t x, arf_rnd_t rnd);
+slong arf_get_si(const arf_t x, arf_rnd_t rnd);
 
 ARF_INLINE int
 arf_get_fmpz_fixed_fmpz(fmpz_t y, const arf_t x, const fmpz_t e)

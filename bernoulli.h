@@ -116,7 +116,7 @@ void bernoulli_rev_clear(bernoulli_rev_t iter);
         bernoulli_cache_compute(__n + 1); \
   } while (0); \
 
-long bernoulli_bound_2exp_si(ulong n);
+slong bernoulli_bound_2exp_si(ulong n);
 
 
 void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, slong prec);

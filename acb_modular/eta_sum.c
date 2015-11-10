@@ -51,7 +51,7 @@ static const int pentagonal_best_m_residues[] = {
   27720, 27720, 31680, 33264, 36960, 0
 };
 
-long acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N);
+slong acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N);
 
 #define PENTAGONAL(N) ((((N)+2)/2) * ((3*(N)+5)/2)/2)
 

@@ -169,7 +169,7 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
     }
 }
 
-long
+slong
 arb_calc_isolate_roots(arf_interval_ptr * blocks, int ** flags,
     arb_calc_func_t func, void * param,
     const arf_interval_t block, slong maxdepth, slong maxeval, slong maxfound,

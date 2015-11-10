@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd)
 {
     fmpz_t t;

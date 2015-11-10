@@ -30,7 +30,7 @@
    doing binary splitting with the top-level interval [0,n),
    assuming that we always choose m = a + floor((b-a)/2), and that
    the case b-a = 2 is inlined. */
-long
+slong
 _arb_compute_bs_exponents(slong * tab, slong n)
 {
     slong a, b, aa, /* ab, */ ba, bb, length;
@@ -119,7 +119,7 @@ _arb_compute_bs_exponents(slong * tab, slong n)
 }
 
 /* just do a linear search */
-long
+slong
 _arb_get_exp_pos(const slong * tab, slong step)
 {
     slong i;

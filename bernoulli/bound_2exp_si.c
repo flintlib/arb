@@ -61,7 +61,7 @@ const unsigned char log_tab[] = {
     56, 57, 58, 59, 59, 60, 61, 62, 62, 63, 64, 64
 };
 
-long
+slong
 bernoulli_bound_2exp_si(ulong n)
 {
     if (n % 2)

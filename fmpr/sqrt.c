@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     slong r;
@@ -82,7 +82,7 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-long
+slong
 fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;
@@ -93,7 +93,7 @@ fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
+slong
 fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_t t; slong r;

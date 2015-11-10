@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 /* Bound based on binomial theorem */
-long
+slong
 _arb_poly_swinnerton_dyer_ui_prec(ulong n)
 {
     slong i;

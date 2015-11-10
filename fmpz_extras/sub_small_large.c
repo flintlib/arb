@@ -25,7 +25,7 @@
 
 #include "fmpz_extras.h"
 
-long
+slong
 _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y)
 {
     fmpz_t t;

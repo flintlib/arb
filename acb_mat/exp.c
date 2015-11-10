@@ -26,7 +26,7 @@
 #include "double_extras.h"
 #include "acb_mat.h"
 
-long _arb_mat_exp_choose_N(const mag_t norm, slong prec);
+slong _arb_mat_exp_choose_N(const mag_t norm, slong prec);
 
 /* evaluates the truncated Taylor series (assumes no aliasing) */
 void

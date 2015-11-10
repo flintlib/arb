@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
 {
     if (fmpr_is_special(x))

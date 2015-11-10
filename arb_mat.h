@@ -264,7 +264,7 @@ arb_mat_swap_rows(arb_mat_t mat, slong * perm, slong r, slong s)
     }
 }
 
-long arb_mat_find_pivot_partial(const arb_mat_t mat,
+slong arb_mat_find_pivot_partial(const arb_mat_t mat,
                                     slong start_row, slong end_row, slong c);
 
 int arb_mat_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec);

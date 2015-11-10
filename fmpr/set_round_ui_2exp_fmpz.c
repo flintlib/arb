@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
         mp_limb_t lo, const fmpz_t exp, int negative,
         slong prec, fmpr_rnd_t rnd)

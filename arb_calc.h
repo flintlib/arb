@@ -126,7 +126,7 @@ arf_interval_printd(const arf_interval_t v, slong n)
 int arb_calc_partition(arf_interval_t L, arf_interval_t R,
     arb_calc_func_t func, void * param, const arf_interval_t block, slong prec);
 
-long arb_calc_isolate_roots(arf_interval_ptr * blocks, int ** flags,
+slong arb_calc_isolate_roots(arf_interval_ptr * blocks, int ** flags,
     arb_calc_func_t func, void * param,
     const arf_interval_t block, slong maxdepth, slong maxeval, slong maxfound,
     slong prec);

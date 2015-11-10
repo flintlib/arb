@@ -60,9 +60,9 @@ void hypgeom_clear(hypgeom_t hyp);
 
 void hypgeom_precompute(hypgeom_t hyp);
 
-long hypgeom_estimate_terms(const mag_t z, int r, slong prec);
+slong hypgeom_estimate_terms(const mag_t z, int r, slong prec);
 
-long hypgeom_bound(mag_t error, int r,
+slong hypgeom_bound(mag_t error, int r,
     slong C, slong D, slong K, const mag_t TK, const mag_t z, slong prec);
 
 void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, slong n, slong prec);
