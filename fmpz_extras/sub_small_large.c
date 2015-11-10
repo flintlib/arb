@@ -40,6 +40,6 @@ _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y)
     {
         int sign = fmpz_sgn(t);
         fmpz_clear(t);
-        return (sign > 0) ? LONG_MAX : -LONG_MAX;
+        return (sign > 0) ? WORD_MAX : -WORD_MAX;
     }
 }

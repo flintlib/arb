@@ -80,7 +80,7 @@ arf_rnd_to_mpfr(arf_rnd_t rnd)
 }
 
 /* Allow 'infinite' precision for operations where a result can be computed exactly. */
-#define ARF_PREC_EXACT LONG_MAX
+#define ARF_PREC_EXACT WORD_MAX
 
 #define ARF_PREC_ADD(prec,extra) ((prec) == ARF_PREC_EXACT ? ARF_PREC_EXACT : (prec) + (extra))
 

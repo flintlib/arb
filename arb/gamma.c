@@ -109,8 +109,8 @@ choose_large(int * reflect, slong * r, slong * n,
     *r = 0;
 
     /* so big that we will certainly have n = 0 */
-    if (arf_cmpabs_2exp_si(a, LONG_MAX / 8) >= 0 ||
-        arf_cmpabs_2exp_si(b, LONG_MAX / 8) >= 0)
+    if (arf_cmpabs_2exp_si(a, WORD_MAX / 8) >= 0 ||
+        arf_cmpabs_2exp_si(b, WORD_MAX / 8) >= 0)
     {
         *n = 0;
     }

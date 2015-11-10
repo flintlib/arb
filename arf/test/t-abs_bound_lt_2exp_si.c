@@ -51,7 +51,7 @@ int main()
         }
         else if (iter < 10)
         {
-            arf_set_ui_2exp_si(x, 1, LONG_MAX - 2);
+            arf_set_ui_2exp_si(x, 1, WORD_MAX - 2);
             arf_mul_2exp_si(x, x, iter - 5);
         }
         else

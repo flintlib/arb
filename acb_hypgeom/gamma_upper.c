@@ -258,7 +258,7 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, s
     }
     else
     {
-        slong n = LONG_MAX;
+        slong n = WORD_MAX;
 
         if (acb_is_int(s) &&
                 arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)

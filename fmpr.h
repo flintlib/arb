@@ -106,10 +106,10 @@ fmpr_clear(fmpr_t x)
 
 
 /* The return value encodes an error bound, or FMPR_RESULT_EXACT if exact */
-#define FMPR_RESULT_EXACT LONG_MAX
+#define FMPR_RESULT_EXACT WORD_MAX
 
 /* Allow 'infinite' precision for operations where a result can be computed exactly */
-#define FMPR_PREC_EXACT LONG_MAX
+#define FMPR_PREC_EXACT WORD_MAX
 
 #define FMPR_PREC_ADD(prec,extra) ((prec) == FMPR_PREC_EXACT ? FMPR_PREC_EXACT : (prec) + (extra))
 

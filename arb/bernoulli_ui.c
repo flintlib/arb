@@ -38,7 +38,7 @@ arb_bernoulli_ui(arb_t b, ulong n, slong prec)
         int use_frac;
 
         use_frac = (n < BERNOULLI_SMALL_NUMER_LIMIT) || (n % 2 != 0);
-        if (!use_frac && n < ULONG_MAX / 1000)
+        if (!use_frac && n < UWORD_MAX / 1000)
             use_frac = (prec > bernoulli_global_prec(n));
 
         if (use_frac)

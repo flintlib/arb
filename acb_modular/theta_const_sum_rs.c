@@ -74,7 +74,7 @@ acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N)
 
     best_i = 0;
     best_m = best_ms[0];
-    best_cost = LONG_MAX;
+    best_cost = WORD_MAX;
 
     for (i = 0; (m = best_ms[i]) != 0; i++)
     {

@@ -48,7 +48,7 @@ acb_hypgeom_spherical_y(acb_t res, slong n, slong m,
         return;
     }
 
-    if (n > LONG_MAX / 4)
+    if (n > WORD_MAX / 4)
     {
         acb_indeterminate(res);
         return;

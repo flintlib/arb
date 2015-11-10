@@ -658,7 +658,7 @@ poly_pow_length(slong poly_len, ulong exp, slong trunc)
     mp_limb_t hi, lo;
     umul_ppmm(hi, lo, poly_len - 1, exp);
     add_ssaaaa(hi, lo, hi, lo, 0, 1);
-    if (hi != 0 || lo > (mp_limb_t) LONG_MAX)
+    if (hi != 0 || lo > (mp_limb_t) WORD_MAX)
         return trunc;
     return FLINT_MIN(lo, trunc);
 }

@@ -151,8 +151,8 @@ acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int re
 void
 acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
 {
-    slong m = LONG_MAX;
-    slong n = LONG_MAX;
+    slong m = WORD_MAX;
+    slong n = WORD_MAX;
 
     if (acb_is_int(a) &&
             arf_cmpabs_2exp_si(arb_midref(acb_realref(a)), 30) < 0)

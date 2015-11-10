@@ -123,8 +123,8 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
 
     n_skip = 1;
     n_min = 1;
-    n_max = FLINT_MIN(LONG_MAX / 2, 50 + 10.0 * prec);
-    n_terminating = LONG_MAX;
+    n_max = FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec);
+    n_terminating = WORD_MAX;
 
     for (k = 0; k < p; k++)
     {
@@ -224,8 +224,8 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
 
     n_skip = 1;
     n_min = 1;
-    n_max = FLINT_MIN(LONG_MAX / 2, 50 + 10.0 * prec);
-    n_terminating = LONG_MAX;
+    n_max = FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec);
+    n_terminating = WORD_MAX;
 
     /* e.g. for exp(x + O(x^100)), make sure that we actually
        run the recurrence up to order 100.
