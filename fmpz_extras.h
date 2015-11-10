@@ -202,7 +202,7 @@ static __inline__ void fmpz_sub_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y
 
 slong _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y);
 
-static __inline__ long
+static __inline__ slong
 _fmpz_sub_small(const fmpz_t x, const fmpz_t y)
 {
     if (!COEFF_IS_MPZ(*x) && !COEFF_IS_MPZ(*y))

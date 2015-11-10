@@ -491,7 +491,7 @@ void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, slong pr
 
 void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
 
-static __inline__ long
+static __inline__ slong
 fmprb_rel_error_bits(const fmprb_t x)
 {
     fmpz_t midmag, radmag;
@@ -517,13 +517,13 @@ fmprb_rel_error_bits(const fmprb_t x)
     return result;
 }
 
-static __inline__ long
+static __inline__ slong
 fmprb_rel_accuracy_bits(const fmprb_t x)
 {
     return -fmprb_rel_error_bits(x);
 }
 
-static __inline__ long
+static __inline__ slong
 fmprb_bits(const fmprb_t x)
 {
     return fmpr_bits(fmprb_midref(x));
@@ -708,7 +708,7 @@ _fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, fmprb_srcptr vec,
     }
 }
 
-static __inline__ long
+static __inline__ slong
 _fmprb_vec_bits(fmprb_srcptr x, slong len)
 {
     slong i, b, c;

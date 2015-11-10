@@ -217,7 +217,7 @@ fmpr_swap(fmpr_t x, fmpr_t y)
 slong _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
     const fmpz_t man, const fmpz_t exp, slong prec, fmpr_rnd_t rnd);
 
-static __inline__ long
+static __inline__ slong
 _fmpr_normalise(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(man))
@@ -232,7 +232,7 @@ _fmpr_normalise(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_set_round_naive(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_set(y, x);
@@ -242,7 +242,7 @@ fmpr_set_round_naive(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
         return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_set_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
@@ -257,7 +257,7 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(x))
@@ -271,7 +271,7 @@ fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, slong prec,
     }
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(x))
@@ -404,7 +404,7 @@ slong _fmpr_add_mpn(fmpr_t z,
         mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
         slong shift, slong prec, fmpr_rnd_t rnd);
 
-static __inline__ long
+static __inline__ slong
 _fmpr_add_1x1(fmpr_t z,
         mp_limb_t x, int xsign, const fmpz_t xexp,
         mp_limb_t y, int ysign, const fmpz_t yexp,
@@ -534,7 +534,7 @@ fmpr_neg(fmpr_t y, const fmpr_t x)
     }
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_neg_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_neg(y, x);
@@ -696,7 +696,7 @@ fmpr_max(fmpr_t z, const fmpr_t a, const fmpr_t b)
         fmpr_set(z, b);
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_bits(const fmpr_t x)
 {
     if (fmpr_is_special(x))
