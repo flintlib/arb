@@ -26,6 +26,9 @@
 #ifndef FMPR_H
 #define FMPR_H
 
+#if defined(__MINGW64__)
+#include "stdint.h"
+#endif
 #include <stdio.h>
 #include <limits.h>
 #include <gmp.h>
