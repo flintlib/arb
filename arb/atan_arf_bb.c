@@ -35,7 +35,7 @@ of the binary splitting.
 With N = 0, 1, 2, ... the highest included term is x, x^3, x^5, ...
 so the error is bounded by x^3, x^5, x^7, ... = x^(2N+3)
 */
-static long
+static slong
 bs_num_terms(slong mag, slong prec)
 {
     slong N;

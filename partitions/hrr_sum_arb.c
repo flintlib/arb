@@ -114,7 +114,7 @@ log2_ceil(double x)
     return FLINT_BIT_COUNT((slong) x);
 }
 
-static long
+static slong
 partitions_prec_bound(double n, slong k, slong N)
 {
     slong prec;

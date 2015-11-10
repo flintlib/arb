@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-static long
+static slong
 _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))

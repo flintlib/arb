@@ -33,7 +33,7 @@
 
 #define PI 3.1415926535897932385
 
-static long
+static slong
 choose_n(double log2z, double argz, int digamma, slong prec)
 {
     double argf, boundn;

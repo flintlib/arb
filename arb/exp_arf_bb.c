@@ -30,7 +30,7 @@ Determine N such that the error is bounded by 2^-prec when summing the
 Taylor series of exp(x) up to term x^N inclusive. We choose an N with
 many trailing zeros to improve efficiency of the binary splitting.
 */
-static long
+static slong
 bs_num_terms(slong mag, slong prec)
 {
     slong N;

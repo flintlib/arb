@@ -25,7 +25,7 @@
 
 #include "acb_modular.h"
 
-static long
+static slong
 bisect(slong needle, const slong * haystack, slong len)
 {
     slong a, b, mid;
