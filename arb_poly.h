@@ -652,7 +652,7 @@ n_zerobits(mp_limb_t e)
     return zeros;
 }
 
-ARB_POLY_INLINE long
+ARB_POLY_INLINE slong
 poly_pow_length(slong poly_len, ulong exp, slong trunc)
 {
     mp_limb_t hi, lo;

@@ -435,13 +435,13 @@ arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec)
 
 slong arb_rel_error_bits(const arb_t x);
 
-ARB_INLINE long
+ARB_INLINE slong
 arb_rel_accuracy_bits(const arb_t x)
 {
     return -arb_rel_error_bits(x);
 }
 
-ARB_INLINE long
+ARB_INLINE slong
 arb_bits(const arb_t x)
 {
     return arf_bits(arb_midref(x));
@@ -881,7 +881,7 @@ _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len)
     }
 }
 
-ARB_INLINE long
+ARB_INLINE slong
 _arb_vec_bits(arb_srcptr x, slong len)
 {
     slong i, b, c;

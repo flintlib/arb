@@ -1000,14 +1000,14 @@ void acb_randtest_param(acb_t z, flint_rand_t state, slong prec, slong mag_bits)
 
 slong acb_rel_error_bits(const acb_t x);
 
-ACB_INLINE long
+ACB_INLINE slong
 acb_rel_accuracy_bits(const acb_t x)
 {
     return -acb_rel_error_bits(x);
 }
 
 
-ACB_INLINE long
+ACB_INLINE slong
 acb_bits(const acb_t x)
 {
     slong b1, b2;
@@ -1036,7 +1036,7 @@ _acb_vec_is_real(acb_srcptr v, slong len)
     return 1;
 }
 
-ACB_INLINE long
+ACB_INLINE slong
 _acb_vec_bits(acb_srcptr vec, slong len)
 {
     return _arb_vec_bits((arb_srcptr) vec, 2 * len);

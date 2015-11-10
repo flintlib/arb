@@ -649,7 +649,7 @@ arf_abs(arf_t y, const arf_t x)
         arf_set(y, x);
 }
 
-ARF_INLINE long
+ARF_INLINE slong
 arf_bits(const arf_t x)
 {
     if (arf_is_special(x))
