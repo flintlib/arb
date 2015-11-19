@@ -475,6 +475,148 @@ Bessel functions
     Computes the modified Bessel function of the second kind `K_{\nu}(z)` using
     an automatic algorithm choice.
 
+Airy functions
+-------------------------------------------------------------------------------
+
+The Airy functions are linearly independent solutions of the
+differential equation `y'' - zy = 0`. All solutions are entire functions.
+The standard solutions are denoted `\operatorname{Ai}(z), \operatorname{Bi}(z)`.
+For negative *z*, both functions are oscillatory. For positive *z*,
+the first function decreases exponentially while the second increases
+exponentially.
+
+The Airy functions can be expressed in terms of Bessel functions of fractional
+order, but this is inconvenient since such formulas
+only hold piecewise (due to the Stokes phenomenon). Computation of the
+Airy functions can also be optimized more than Bessel functions in general.
+We therefore provide a dedicated interface for evaluating Airy functions.
+
+The following functions optionally compute
+`(\operatorname{Ai}(z), \operatorname{Ai}'(z), \operatorname{Bi}(z), \operatorname{Bi}'(z))`
+simultaneously. Any of the four functions can be omitted by passing
+*NULL* for the unwanted output variables.
+Note that higher derivatives of the Airy functions can be computed
+via recurrence relations.
+
+.. function:: void acb_hypgeom_airy_direct(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong n, slong prec)
+
+    Computes the Airy functions using direct series expansions truncated at *n* terms.
+    Error bounds are included in the output.
+
+.. function:: void acb_hypgeom_airy_asymp(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong n, slong prec)
+
+    Computes the Airy functions using asymptotic expansions truncated at *n* terms.
+    Error bounds, based on Olver (DLMF section 9.7), are included in the output.
+    For `\arg(z) < \pi` and `\zeta = (2/3) z^{3/2}`, we have
+
+    .. math ::
+
+        \operatorname{Ai}(z) = \frac{e^{-\zeta}}{2 \sqrt{\pi} z^{1/4}} \left[S_n(\zeta) + R_n(\zeta)\right], \quad
+        \operatorname{Ai}'(z) = -\frac{z^{1/4} e^{-\zeta}}{2 \sqrt{\pi}} \left[(S'_n(\zeta) + R'_n(\zeta)\right]
+
+        S_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{u(k)}{\zeta^k}, \quad
+        S'_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{v(k)}{\zeta^k}
+
+        u(k) = \frac{(1/6)_k (5/6)_k}{2^k k!}, \quad
+        v(k) = \frac{6k+1}{1-6k} u(k).
+
+    Assuming that *n* is positive, the error terms are bounded by
+
+    .. math ::
+
+        |R_n(\zeta)|  \le C |u(n)| |\zeta|^{-n}, \quad |R'_n(\zeta)| \le C |v(n)| |\zeta|^{-n}
+
+    where
+
+    .. math ::
+
+        C = \begin{cases}
+            2 \exp(7 / (36 |\zeta|)) & |\arg(z)| \le \pi/3 \\
+            2 \chi(n) \exp(7 \pi / (72 |\zeta|)) & \pi/3 \le |\arg(z)| \le 2\pi/3 \\
+            4 \chi(n) \exp(7 \pi / (36 |\operatorname{re}(\zeta)|)) |\cos(\arg(\zeta))|^{-n} & 2\pi/3 \le |\arg(z)| < \pi.
+            \end{cases}
+
+    For computing Bi when *z* is roughly in the positive half-plane, we use the
+    connection formulas
+
+    .. math ::
+
+        \operatorname{Bi}(z) = -i (2 w^{+1} \operatorname{Ai}(z w^{-2}) - \operatorname{Ai}(z))
+
+        \operatorname{Bi}(z) = +i (2 w^{-1} \operatorname{Ai}(z w^{+2}) - \operatorname{Ai}(z))
+
+    where `w = \exp(\pi i/3)`. Combining roots of unity gives
+
+    .. math ::
+
+        \operatorname{Bi}(z) = \frac{1}{2 \sqrt{\pi} z^{1/4}} [2X + iY]
+
+        \operatorname{Bi}(z) = \frac{1}{2 \sqrt{\pi} z^{1/4}} [2X - iY]
+
+        X = \exp(+\zeta) [S_n(-\zeta) + R_n(-\zeta)], \quad Y = \exp(-\zeta) [S_n(\zeta) + R_n(\zeta)]
+
+    where the upper formula is valid
+    for `-\pi/3 < \arg(z) < \pi` and the lower formula is valid for `-\pi < \arg(z) < \pi/3`.
+    We proceed analogously for the derivative of Bi.
+
+    In the negative half-plane, we use the connection formulas
+
+    .. math ::
+
+        \operatorname{Ai}(z) = e^{+\pi i/3} \operatorname{Ai}(z_1)  +  e^{-\pi i/3} \operatorname{Ai}(z_2)
+
+        \operatorname{Bi}(z) = e^{-\pi i/6} \operatorname{Ai}(z_1)  +  e^{+\pi i/6} \operatorname{Ai}(z_2)
+
+    where `z_1 = -z e^{+\pi i/3}`, `z_2 = -z e^{-\pi i/3}`.
+    Provided that `|\arg(-z)| < 2 \pi / 3`, we have
+    `|\arg(z_1)|, |\arg(z_2)| < \pi`, and thus the asymptotic expansion
+    for Ai can be used. As before, we collect roots of unity to obtain
+
+    .. math ::
+
+        \operatorname{Ai}(z) = A_1 [S_n(i \zeta)  + R_n(i \zeta)]
+                             + A_2 [S_n(-i \zeta) + R_n(-i \zeta)]
+
+        \operatorname{Bi}(z) = A_3 [S_n(i \zeta)  + R_n(i \zeta)]
+                             + A_4 [S_n(-i \zeta) + R_n(-i \zeta)]
+
+    where `\zeta = (2/3) (-z)^{3/2}` and
+
+    .. math ::
+
+        A_1 = \frac{\exp(-i (\zeta - \pi/4))}{2 \sqrt{\pi} (-z)^{1/4}}, \quad
+        A_2 = \frac{\exp(+i (\zeta - \pi/4))}{2 \sqrt{\pi} (-z)^{1/4}}, \quad
+        A_3 = -i A_1, \quad
+        A_4 = +i A_2.
+
+    The differentiated formulas are analogous.
+
+.. function:: void acb_hypgeom_airy_bound(mag_t ai, mag_t aip, mag_t bi, mag_t bip, const acb_t z)
+
+    Computes bounds for the Airy functions using first-order asymptotic
+    expansions together with error bounds. This function uses some
+    shortcuts to make it slightly faster than calling
+    :func:`acb_hypgeom_airy_asymp` with `n = 1`.
+
+.. function:: void acb_hypgeom_airy(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong prec)
+
+    Computes Airy functions using an automatic algorithm choice.
+
+    We use :func:`acb_hypgeom_airy_asymp` whenever this gives full accuracy
+    and :func:`acb_hypgeom_airy_direct` otherwise.
+
+    In the latter case, we first use double precision arithmetic to
+    determine an accurate estimate of the working precision needed
+    to compute the Airy functions accurately for given *z*. This estimate is
+    obtained by comparing the leading-order asymptotic estimate of the Airy
+    functions with the magnitude of the largest term in the power series.
+    The estimate is generic in the sense that it does not take into account
+    vanishing near the roots of the functions.
+
+    We subsequently evaluate the power series at the midpoint of *z* and
+    bound the propagated error using derivatives. Derivatives are
+    bounded using :func:`acb_hypgeom_airy_bound`.
+
 Incomplete gamma functions
 -------------------------------------------------------------------------------
 
