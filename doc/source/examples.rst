@@ -130,6 +130,10 @@ The following functions (specified by an integer code) are implemented:
   * 1 - `\sin(x)`
   * 2 - `\sin(x^2)`
   * 3 - `\sin(1/x)`
+  * 4 - `\operatorname{Ai}(x)` (Airy function)
+  * 5 - `\operatorname{Ai}'(x)` (Airy function)
+  * 6 - `\operatorname{Bi}(x)` (Airy function)
+  * 7 - `\operatorname{Bi}'(x)` (Airy function)
 
 The following options are available:
 
@@ -153,78 +157,108 @@ on the critical line, and guarantees that no roots are missed
 (there are more efficient ways to do this, but it is a nice example)::
 
     > build/examples/real_roots 0 0.0 50.0 -verbose
-    interval: 25 +/- 25
+    interval: [0, 50]
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
-    found isolated root in: 14.12353515625 +/- 0.012207
-    found isolated root in: 21.0205078125 +/- 0.024414
-    found isolated root in: 25.0244140625 +/- 0.024414
-    found isolated root in: 30.43212890625 +/- 0.012207
-    found isolated root in: 32.9345703125 +/- 0.024414
-    found isolated root in: 37.5732421875 +/- 0.024414
-    found isolated root in: 40.9423828125 +/- 0.024414
-    found isolated root in: 43.32275390625 +/- 0.012207
-    found isolated root in: 48.01025390625 +/- 0.012207
-    found isolated root in: 49.76806640625 +/- 0.012207
+    found isolated root in: [14.111328125, 14.16015625]
+    found isolated root in: [20.99609375, 21.044921875]
+    found isolated root in: [25, 25.048828125]
+    found isolated root in: [30.419921875, 30.4443359375]
+    found isolated root in: [32.91015625, 32.958984375]
+    found isolated root in: [37.548828125, 37.59765625]
+    found isolated root in: [40.91796875, 40.966796875]
+    found isolated root in: [43.310546875, 43.3349609375]
+    found isolated root in: [47.998046875, 48.0224609375]
+    found isolated root in: [49.755859375, 49.7802734375]
     ---------------------------------------------------------------
     Found roots: 10
     Subintervals possibly containing undetected roots: 0
-    Function evaluations: 3425
-    cpu/wall(s): 1.22 1.229
-    virt/peak/res/peak(MB): 20.63 20.66 2.23 2.23
+    Function evaluations: 3058
+    cpu/wall(s): 0.202 0.202
+    virt/peak/res/peak(MB): 26.12 26.14 2.76 2.76
 
 Find just one root and refine it to approximately 75 digits::
 
     > build/examples/real_roots 0 0.0 50.0 -maxfound 1 -refine 75
-    interval: 25 +/- 25
+    interval: [0, 50]
     maxdepth = 30, maxeval = 100000, maxfound = 1, low_prec = 30
-    refined root:
-    14.134725141734693790457251983562470270784257115699243175685567460149963429809 +/- 8.4532e-81
+    refined root (0/8):
+    [14.134725141734693790457251983562470270784257115699243175685567460149963429809 +/- 2.57e-76]
 
     ---------------------------------------------------------------
     Found roots: 1
-    Subintervals possibly containing undetected roots: 8
-    Function evaluations: 992
-    cpu/wall(s): 0.41 0.415
-    virt/peak/res/peak(MB): 20.76 20.76 2.23 2.23
+    Subintervals possibly containing undetected roots: 7
+    Function evaluations: 761
+    cpu/wall(s): 0.055 0.056
+    virt/peak/res/peak(MB): 26.12 26.14 2.75 2.75
+
+Find the first few roots of an Airy function and refine them to 50 digits each::
+
+    > build/examples/real_roots 4 -10 0 -refine 50
+    interval: [-10, 0]
+    maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
+    refined root (0/6):
+    [-9.022650853340980380158190839880089256524677535156083 +/- 4.85e-52]
+
+    refined root (1/6):
+    [-7.944133587120853123138280555798268532140674396972215 +/- 1.92e-52]
+
+    refined root (2/6):
+    [-6.786708090071758998780246384496176966053882477393494 +/- 3.84e-52]
+
+    refined root (3/6):
+    [-5.520559828095551059129855512931293573797214280617525 +/- 1.05e-52]
+
+    refined root (4/6):
+    [-4.087949444130970616636988701457391060224764699108530 +/- 2.46e-52]
+
+    refined root (5/6):
+    [-2.338107410459767038489197252446735440638540145672388 +/- 1.48e-52]
+
+    ---------------------------------------------------------------
+    Found roots: 6
+    Subintervals possibly containing undetected roots: 0
+    Function evaluations: 200
+    cpu/wall(s): 0.003 0.003
+    virt/peak/res/peak(MB): 26.12 26.14 2.24 2.24
 
 Find roots of `\sin(x^2)` on `(0,100)`. The algorithm cannot isolate
 the root at `x = 0` (it is at the endpoint of the interval, and in any
 case a root of multiplicity higher than one). The failure is reported::
 
     > build/examples/real_roots 2 0 100
-    interval: 50 +/- 50
+    interval: [0, 100]
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
     Found roots: 3183
     Subintervals possibly containing undetected roots: 1
     Function evaluations: 34058
-    cpu/wall(s): 0.26 0.263
-    virt/peak/res/peak(MB): 20.73 20.76 1.72 1.72
+    cpu/wall(s): 0.032 0.032
+    virt/peak/res/peak(MB): 26.32 26.37 2.04 2.04
 
 This does not miss any roots::
 
     > build/examples/real_roots 2 1 100
-    interval: 50.5 +/- 49.5
+    interval: [1, 100]
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
     Found roots: 3183
     Subintervals possibly containing undetected roots: 0
     Function evaluations: 34039
-    cpu/wall(s): 0.26 0.266
-    virt/peak/res/peak(MB): 20.73 20.76 1.70 1.70
+    cpu/wall(s): 0.023 0.023
+    virt/peak/res/peak(MB): 26.32 26.37 2.01 2.01
 
 Looking for roots of `\sin(1/x)` on `(0,1)`, the algorithm finds many roots,
 but will never find all of them since there are infinitely many::
 
     > build/examples/real_roots 3 0.0 1.0
-    interval: 0.5 +/- 0.5
+    interval: [0, 1]
     maxdepth = 30, maxeval = 100000, maxfound = 100000, low_prec = 30
     ---------------------------------------------------------------
     Found roots: 10198
     Subintervals possibly containing undetected roots: 24695
     Function evaluations: 202587
-    cpu/wall(s): 1.73 1.731
-    virt/peak/res/peak(MB): 21.84 22.89 2.76 2.76
+    cpu/wall(s): 0.171 0.171
+    virt/peak/res/peak(MB): 28.39 30.38 4.05 4.05
 
 Remark: the program always computes rigorous containing intervals
 for the roots, but the accuracy after refinement could be less than *d* digits.
