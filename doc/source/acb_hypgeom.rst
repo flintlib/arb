@@ -511,8 +511,8 @@ via recurrence relations.
 
     .. math ::
 
-        \operatorname{Ai}(z) = \frac{e^{-\zeta}}{2 \sqrt{\pi} z^{1/4}} \left[S_n(\zeta) + R_n(\zeta)\right], \quad
-        \operatorname{Ai}'(z) = -\frac{z^{1/4} e^{-\zeta}}{2 \sqrt{\pi}} \left[(S'_n(\zeta) + R'_n(\zeta)\right]
+        \operatorname{Ai}(z) = \frac{e^{-\zeta}}{2 \sqrt{\pi} z^{1/4}} \left[S_n(\zeta) + R_n(z)\right], \quad
+        \operatorname{Ai}'(z) = -\frac{z^{1/4} e^{-\zeta}}{2 \sqrt{\pi}} \left[(S'_n(\zeta) + R'_n(z)\right]
 
         S_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{u(k)}{\zeta^k}, \quad
         S'_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{v(k)}{\zeta^k}
@@ -524,7 +524,7 @@ via recurrence relations.
 
     .. math ::
 
-        |R_n(\zeta)|  \le C |u(n)| |\zeta|^{-n}, \quad |R'_n(\zeta)| \le C |v(n)| |\zeta|^{-n}
+        |R_n(z)|  \le C |u(n)| |\zeta|^{-n}, \quad |R'_n(z)| \le C |v(n)| |\zeta|^{-n}
 
     where
 
@@ -553,7 +553,7 @@ via recurrence relations.
 
         \operatorname{Bi}(z) = \frac{1}{2 \sqrt{\pi} z^{1/4}} [2X - iY]
 
-        X = \exp(+\zeta) [S_n(-\zeta) + R_n(-\zeta)], \quad Y = \exp(-\zeta) [S_n(\zeta) + R_n(\zeta)]
+        X = \exp(+\zeta) [S_n(-\zeta) + R_n(z w^{\mp 2})], \quad Y = \exp(-\zeta) [S_n(\zeta) + R_n(z)]
 
     where the upper formula is valid
     for `-\pi/3 < \arg(z) < \pi` and the lower formula is valid for `-\pi < \arg(z) < \pi/3`.
@@ -574,11 +574,11 @@ via recurrence relations.
 
     .. math ::
 
-        \operatorname{Ai}(z) = A_1 [S_n(i \zeta)  + R_n(i \zeta)]
-                             + A_2 [S_n(-i \zeta) + R_n(-i \zeta)]
+        \operatorname{Ai}(z) = A_1 [S_n(i \zeta)  + R_n(z_1)]
+                             + A_2 [S_n(-i \zeta) + R_n(z_2)]
 
-        \operatorname{Bi}(z) = A_3 [S_n(i \zeta)  + R_n(i \zeta)]
-                             + A_4 [S_n(-i \zeta) + R_n(-i \zeta)]
+        \operatorname{Bi}(z) = A_3 [S_n(i \zeta)  + R_n(z_1)]
+                             + A_4 [S_n(-i \zeta) + R_n(z_2)]
 
     where `\zeta = (2/3) (-z)^{3/2}` and
 
