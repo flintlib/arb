@@ -351,3 +351,46 @@ be done by verifying sign changes)::
     (1.9217732771442929056 + -1.0954360955079385542j)  +/-  (8.12e-123, 8.12e-123j)
     cpu/wall(s): 0.02 0.02
 
+complex_plot.c
+-------------------------------------------------------------------------------
+
+This program plots one of the predefined functions over a complex
+interval `[x_a, x_b] + [y_a, y_b]i` using domain coloring, at
+a resolution of *xn* times *yn* pixels.
+
+The program takes the parameters::
+
+    complex_plot [-range xa xb ya yb] [-size xn yn] <func>
+
+Defaults parameters are `[-10,10] + [-10,10]i` and *xn* = *yn* = 512.
+
+The output is written to ``arbplot.ppm``. If you have ImageMagick,
+run ``convert arbplot.ppm arbplot.png`` to get a PNG.
+
+Function codes ``<func>`` are:
+
+  * ``gamma``   - Gamma function
+  * ``digamma`` - Digamma function
+  * ``lgamma``  - Logarithmic gamma function
+  * ``zeta``    - Riemann zeta function
+  * ``erf``     - Error function
+  * ``ai``      - Airy function Ai
+  * ``bi``      - Airy function Bi
+  * ``besselj`` - Bessel function `J_0`
+  * ``bessely`` - Bessel function `Y_0`
+  * ``besseli`` - Bessel function `I_0`
+  * ``besselk`` - Bessel function `K_0`
+  * ``modj``    - Modular j-function
+  * ``modeta``  - Dedekind eta function
+  * ``barnesg`` - Barnes G-function
+  * ``agm``     - Arithmetic geometric mean
+
+The function is just sampled at point values; no attempt is made to resolve
+small features by adaptive subsampling.
+
+For example, the following plots the Riemann zeta function around
+a portion of the critical strip with imaginary part between 100 and 140::
+
+    > build/examples/complex_plot zeta -range -10 10 100 140 -size 256 512
+
+
