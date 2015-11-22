@@ -292,8 +292,8 @@ Confluent hypergeometric functions
 
     .. math ::
 
-        \frac{{}_0F_1(a,z)}{\Gamma(a)} = (-z)^{(1-b)/2} J_{b-1}(2 \sqrt{-z}) = 
-                                         z^{(1-b)/2} I_{b-1}(2 \sqrt{z}).
+        \frac{{}_0F_1(a,z)}{\Gamma(a)} = (-z)^{(1-a)/2} J_{a-1}(2 \sqrt{-z}) =
+                                         z^{(1-a)/2} I_{a-1}(2 \sqrt{z}).
 
     The Bessel-*J* function is used in the left half-plane and the
     Bessel-*I* function is used in the right half-plane, to avoid loss
