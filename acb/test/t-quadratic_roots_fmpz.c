@@ -76,7 +76,7 @@ int main()
             acb_rel_accuracy_bits(r2) < prec - 4)
         {
             flint_printf("FAIL: containment / accuracy\n\n");
-            flint_printf("kprec = %wd\n", prec);
+            flint_printf("prec = %wd\n", prec);
             flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
             flint_printf("c = "); fmpz_print(c); flint_printf("\n\n");
