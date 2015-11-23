@@ -453,6 +453,13 @@ Powers and roots
     formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
     requiring one real square root and one real reciprocal square root.
 
+.. function:: void acb_quadratic_roots_fmpz(acb_t r1, acb_t r2, const fmpz_t a, const fmpz_t b, const fmpz_t c, slong prec)
+
+    Sets *r1* and *r2* to the roots of the quadratic polynomial
+    `ax^2 + bx + c`. Requires that *a* is nonzero.
+    This function is implemented so that both roots are computed accurately
+    even when direct use of the quadratic formula would lose accuracy.
+
 .. function:: void acb_root_ui(acb_t r, const acb_t z, ulong k, slong prec)
 
     Sets *r* to the principal *k*-th root of *z*.

@@ -760,6 +760,9 @@ void acb_rsqrt(acb_t y, const acb_t x, slong prec);
 
 void acb_root_ui(acb_t y, const acb_t x, ulong k, slong prec);
 
+void acb_quadratic_roots_fmpz(acb_t r1, acb_t r2,
+    const fmpz_t a, const fmpz_t b, const fmpz_t c, slong prec);
+
 void acb_chebyshev_t_ui(acb_t a, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_t2_ui(acb_t a, acb_t b, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_u_ui(acb_t a, ulong n, const acb_t x, slong prec);
