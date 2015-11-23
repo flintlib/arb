@@ -19,59 +19,24 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
 #include "arb_mat.h"
 
 void
-arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec)
+arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec)
 {
-    slong d = arb_mat_nrows(A);
+    double d = (double) arb_mat_nrows(A);
 
-    if (exp <= 2 || d <= 1)
+    if (flint_get_num_threads() > 1 && d*d*d * (double) prec > 100000)
     {
-        if (exp == 0 || d == 0)
-        {
-            arb_mat_one(B);
-        }
-        else if (d == 1)
-        {
-            arb_pow_ui(arb_mat_entry(B, 0, 0),
-                 arb_mat_entry(A, 0, 0), exp, prec);
-        }
-        else if (exp == 1)
-        {
-            arb_mat_set(B, A);
-        }
-        else if (exp == 2)
-        {
-            arb_mat_sqr(B, A, prec);
-        }
+        arb_mat_mul_threaded(B, A, A, prec);   /* todo: sqr threaded */
     }
     else
     {
-        arb_mat_t T, U;
-        slong i;
-
-        arb_mat_init(T, d, d);
-        arb_mat_set(T, A);
-        arb_mat_init(U, d, d);
-
-        for (i = ((slong) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
-        {
-            arb_mat_sqr(U, T, prec);
-
-            if (exp & (WORD(1) << i))
-                arb_mat_mul(T, U, A, prec);
-            else
-                arb_mat_swap(T, U);
-        }
-
-        arb_mat_swap(B, T);
-        arb_mat_clear(T);
-        arb_mat_clear(U);
+        arb_mat_sqr_classical(B, A, prec);
     }
 }
 

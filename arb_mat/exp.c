@@ -69,7 +69,7 @@ _arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
     {
         arb_mat_t T;
         arb_mat_init(T, arb_mat_nrows(A), arb_mat_nrows(A));
-        arb_mat_mul(T, A, A, prec);
+        arb_mat_sqr(T, A, prec);
         arb_mat_scalar_mul_2exp_si(T, T, -1);
         arb_mat_add(S, A, T, prec);
         arb_mat_one(T);
@@ -203,7 +203,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
         for (i = 0; i < r; i++)
         {
-            arb_mat_mul(T, B, B, wp);
+            arb_mat_sqr(T, B, wp);
             arb_mat_swap(T, B);
         }
 

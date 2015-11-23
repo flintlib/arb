@@ -171,6 +171,13 @@ Arithmetic
     if the matrices are sufficiently large and more than one thread
     can be used.
 
+.. function:: void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec)
+
+.. function:: void arb_mat_sqr(arb_mat_t res, const arb_mat_t mat, slong prec)
+
+   Sets *res* to the matrix square of *mat*. The operands must both be square
+   with the same dimensions.
+
 .. function:: void arb_mat_pow_ui(arb_mat_t res, const arb_mat_t mat, ulong exp, slong prec)
 
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
