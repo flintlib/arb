@@ -758,6 +758,8 @@ void acb_pow(acb_t r, const acb_t x, const acb_t y, slong prec);
 void acb_sqrt(acb_t y, const acb_t x, slong prec);
 void acb_rsqrt(acb_t y, const acb_t x, slong prec);
 
+void acb_root_ui(acb_t y, const acb_t x, ulong k, slong prec);
+
 void acb_chebyshev_t_ui(acb_t a, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_t2_ui(acb_t a, acb_t b, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_u_ui(acb_t a, ulong n, const acb_t x, slong prec);
