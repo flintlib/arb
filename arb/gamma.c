@@ -533,8 +533,8 @@ arb_gamma_const_1_3_eval(arb_t s, slong prec)
     arb_mul(s, s, u, wp);
 
     arb_div(s, s, t, wp);
-    arb_root(s, s, 2, wp);
-    arb_root(s, s, 3, prec);
+    arb_root_ui(s, s, 2, wp);
+    arb_root_ui(s, s, 3, prec);
 
     hypgeom_clear(series);
     arb_clear(t);
@@ -628,7 +628,7 @@ arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, slong prec)
         arb_div_ui(t, t, 3, wp);
         arb_sqrt(t, t, wp);
         arb_set_ui(y, 2);
-        arb_root(y, y, 3, wp);
+        arb_root_ui(y, y, 3, wp);
         arb_mul(t, t, y, wp);
         arb_gamma_const_1_3(y, wp);
         arb_mul(y, y, y, prec);

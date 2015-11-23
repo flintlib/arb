@@ -221,7 +221,7 @@ sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, slong k, slong prec)
     arb_t t;
     arb_init(t);
     arb_set_round(t, ex, prec);
-    arb_root(ch, t, k, prec);
+    arb_root_ui(ch, t, k, prec);
     /* The second term doesn't need full precision,
        but this doesn't affect performance that much... */
     arb_inv(t, ch, prec);

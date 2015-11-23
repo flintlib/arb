@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("root....");
+    flint_printf("root_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -51,7 +51,7 @@ int main()
         arb_randtest(a, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
         arb_randtest(b, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
 
-        arb_root(b, a, k, prec);
+        arb_root_ui(b, a, k, prec);
         arb_pow_ui(c, b, k, prec);
 
         if (!arb_contains(c, a))
@@ -64,7 +64,7 @@ int main()
             abort();
         }
 
-        arb_root(a, a, k, prec);
+        arb_root_ui(a, a, k, prec);
 
         if (!arb_equal(a, b))
         {

@@ -135,7 +135,7 @@ int main()
         arb_mul_2exp_si(t, t, -2);
         arb_gamma(t, t, prec);
         arb_const_pi(u, prec);
-        arb_root(u, u, 4, prec);
+        arb_root_ui(u, u, 4, prec);
         arb_pow_ui(u, u, 3, prec);
         arb_div(t, t, u, prec);
         arb_mul_2exp_si(t, t, -1);

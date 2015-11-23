@@ -691,7 +691,7 @@ Powers and roots
 
     Sets `z = \sqrt{1+x}-1`, computed accurately when `x \approx 0`.
 
-.. function:: void arb_root(arb_t z, const arb_t x, ulong k, slong prec)
+.. function:: void arb_root_ui(arb_t z, const arb_t x, ulong k, slong prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
     This function selects between different algorithms. For large *k*,
@@ -711,6 +711,10 @@ Powers and roots
         = m^{1/k} \min(1, \log(1+r/(m-r))/k).
 
     This is evaluated using :func:`mag_log1p`.
+
+.. function:: void arb_root(arb_t z, const arb_t x, ulong k, slong prec)
+
+    Alias for :func:`arb_root_ui`, provided for backwards compatibility.
 
 .. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 

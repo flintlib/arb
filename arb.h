@@ -576,7 +576,8 @@ void arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec);
 
 void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, slong prec);
 void arb_pow(arb_t z, const arb_t x, const arb_t y, slong prec);
-void arb_root(arb_t z, const arb_t x, ulong k, slong prec);
+void arb_root_ui(arb_t z, const arb_t x, ulong k, slong prec);
+void arb_root(arb_t z, const arb_t x, ulong k, slong prec); /* back compat */
 void arb_log(arb_t z, const arb_t x, slong prec);
 void arb_log_arf(arb_t z, const arf_t x, slong prec);
 void arb_log_ui(arb_t z, ulong x, slong prec);

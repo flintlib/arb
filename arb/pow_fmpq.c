@@ -53,7 +53,7 @@ arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec)
         }
         else
         {
-            arb_root(y, x, k, prec);
+            arb_root_ui(y, x, k, prec);
             arb_pow_fmpz(y, y, fmpq_numref(a), prec);
         }
     }
