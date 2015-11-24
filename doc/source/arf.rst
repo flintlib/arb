@@ -20,7 +20,7 @@ exponent in the latter format.
 The conventions for special values largely follow those of the
 IEEE floating-point standard. At the moment, there is no support
 for negative zero, unsigned infinity, or a NaN with a payload, though
-some these might be added in the future.
+some of these might be added in the future.
 
 Except where otherwise noted, the output of an operation is the
 floating-point number obtained by taking the inputs as exact numbers,
