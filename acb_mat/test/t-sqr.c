@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "arb_mat.h"
+#include "acb_mat.h"
 
 
 int main()
@@ -40,7 +40,7 @@ int main()
     {
         slong n, qbits1, rbits1, rbits2;
         fmpq_mat_t A, B;
-        arb_mat_t a, b, c;
+        acb_mat_t a, b, c;
 
         qbits1 = 2 + n_randint(state, 200);
         rbits1 = 2 + n_randint(state, 200);
@@ -51,17 +51,17 @@ int main()
         fmpq_mat_init(A, n, n);
         fmpq_mat_init(B, n, n);
 
-        arb_mat_init(a, n, n);
-        arb_mat_init(b, n, n);
-        arb_mat_init(c, n, n);
+        acb_mat_init(a, n, n);
+        acb_mat_init(b, n, n);
+        acb_mat_init(c, n, n);
 
         fmpq_mat_randtest(A, state, qbits1);
         fmpq_mat_mul(B, A, A);
 
-        arb_mat_set_fmpq_mat(a, A, rbits1);
-        arb_mat_sqr(b, a, rbits2);
+        acb_mat_set_fmpq_mat(a, A, rbits1);
+        acb_mat_sqr(b, a, rbits2);
 
-        if (!arb_mat_contains_fmpq_mat(b, B))
+        if (!acb_mat_contains_fmpq_mat(b, B))
         {
             flint_printf("FAIL\n\n");
             flint_printf("n = %wd, bits2 = %wd\n", n, rbits2);
@@ -69,16 +69,16 @@ int main()
             flint_printf("A = "); fmpq_mat_print(A); flint_printf("\n\n");
             flint_printf("B = "); fmpq_mat_print(B); flint_printf("\n\n");
 
-            flint_printf("a = "); arb_mat_printd(a, 15); flint_printf("\n\n");
-            flint_printf("b = "); arb_mat_printd(b, 15); flint_printf("\n\n");
+            flint_printf("a = "); acb_mat_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_mat_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
 
         /* test aliasing */
-        arb_mat_set(c, a);
-        arb_mat_sqr(c, c, rbits2);
-        if (!arb_mat_equal(c, b))
+        acb_mat_set(c, a);
+        acb_mat_sqr(c, c, rbits2);
+        if (!acb_mat_equal(c, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
             abort();
@@ -87,9 +87,9 @@ int main()
         fmpq_mat_clear(A);
         fmpq_mat_clear(B);
 
-        arb_mat_clear(a);
-        arb_mat_clear(b);
-        arb_mat_clear(c);
+        acb_mat_clear(a);
+        acb_mat_clear(b);
+        acb_mat_clear(c);
     }
 
     flint_randclear(state);
