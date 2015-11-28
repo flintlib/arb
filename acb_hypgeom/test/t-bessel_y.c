@@ -60,10 +60,25 @@ int main()
 
         acb_add_ui(nu1, nu, 1, prec);
 
-        acb_hypgeom_bessel_j(jv, nu, z, prec);
-        acb_hypgeom_bessel_j(jv1, nu1, z, prec);
-        acb_hypgeom_bessel_y(yv, nu, z, prec);
-        acb_hypgeom_bessel_y(yv1, nu1, z, prec);
+        if (n_randint(state, 2))
+        {
+            acb_hypgeom_bessel_j(jv, nu, z, prec);
+            acb_hypgeom_bessel_y(yv, nu, z, prec);
+        }
+        else
+        {
+            acb_hypgeom_bessel_jy(jv, yv, nu, z, prec);
+        }
+
+        if (n_randint(state, 2))
+        {
+            acb_hypgeom_bessel_j(jv1, nu1, z, prec);
+            acb_hypgeom_bessel_y(yv1, nu1, z, prec);
+        }
+        else
+        {
+            acb_hypgeom_bessel_jy(jv1, yv1, nu1, z, prec);
+        }
 
         acb_mul(r, jv1, yv, prec);
         acb_submul(r, jv, yv1, prec);

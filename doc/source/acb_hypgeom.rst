@@ -400,6 +400,13 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu` is nonexact
     and contains an integer.
 
+.. function:: void acb_hypgeom_bessel_jy(acb_t res1, acb_t res2, const acb_t nu, const acb_t z, slong prec)
+
+    Sets *res1* to `J_{\nu}(z)` and *res2* to `Y_{\nu}(z)`, computed
+    simultaneously. From these values, the user can easily
+    construct the Bessel functions of the third kind (Hankel functions)
+    `H_{\nu}^{(1)}(z), H_{\nu}^{(2)}(z) = J_{\nu}(z) \pm i Y_{\nu}(z)`.
+
 .. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
 .. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
