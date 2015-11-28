@@ -170,6 +170,11 @@ Arithmetic
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
 
+.. function:: void acb_mat_sqr(acb_mat_t res, const acb_mat_t mat, slong prec)
+
+    Sets *res* to the matrix square of *mat*. The operands must both be square
+    with the same dimensions.
+
 .. function:: void acb_mat_pow_ui(acb_mat_t res, const acb_mat_t mat, ulong exp, slong prec)
 
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*

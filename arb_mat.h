@@ -137,6 +137,10 @@ void arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, sl
 
 void arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec);
 
+void arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec);
+
+void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec);
+
 void arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec);
 
 /* Scalar arithmetic */

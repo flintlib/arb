@@ -47,7 +47,7 @@ arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec)
         }
         else if (exp == 2)
         {
-            arb_mat_mul(B, A, A, prec);   /* todo: sqr */
+            arb_mat_sqr(B, A, prec);
         }
     }
     else
@@ -61,7 +61,7 @@ arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec)
 
         for (i = ((slong) FLINT_BIT_COUNT(exp)) - 2; i >= 0; i--)
         {
-            arb_mat_mul(U, T, T, prec);   /* todo: sqr */
+            arb_mat_sqr(U, T, prec);
 
             if (exp & (WORD(1) << i))
                 arb_mat_mul(T, U, A, prec);

@@ -45,7 +45,7 @@ _acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, slong N, slong prec)
     {
         acb_mat_t T;
         acb_mat_init(T, acb_mat_nrows(A), acb_mat_nrows(A));
-        acb_mat_mul(T, A, A, prec);
+        acb_mat_sqr(T, A, prec);
         acb_mat_scalar_mul_2exp_si(T, T, -1);
         acb_mat_add(S, A, T, prec);
         acb_mat_one(T);
@@ -191,7 +191,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 
         for (i = 0; i < r; i++)
         {
-            acb_mat_mul(T, B, B, wp);
+            acb_mat_sqr(T, B, wp);
             acb_mat_swap(T, B);
         }
 
