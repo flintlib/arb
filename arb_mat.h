@@ -290,6 +290,8 @@ void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec);
 
 void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec);
 
+void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

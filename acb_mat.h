@@ -322,6 +322,8 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec);
 
 void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec);
 
+void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

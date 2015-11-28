@@ -313,3 +313,7 @@ Special functions
 
     We bound the sum on the right using :func:`mag_exp_tail`.
 
+.. function:: void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec)
+
+    Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
+    main diagonal of *mat*. The matrix is required to be square.
