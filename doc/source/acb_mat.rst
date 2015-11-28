@@ -306,3 +306,7 @@ Special functions
     evaluated using rectangular splitting.
     Error bounds are computed as for :func:`arb_mat_exp`.
 
+.. function:: void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec)
+
+    Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
+    main diagonal of *mat*. The matrix is required to be square.
