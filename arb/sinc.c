@@ -53,7 +53,7 @@ _arb_sinc_0f1(arb_t res, const arb_t x, slong prec)
     /* res = 0F1(a, z) */
     acb_one(bb + 1);
     acb_hypgeom_pfq_direct(w, NULL, 0, bb, 2, z, -1, prec);
-    arb_set(res, acb_realref(w));
+    acb_get_real(res, w);
 
     arb_clear(y);
     acb_clear(bb+0);
@@ -65,31 +65,31 @@ _arb_sinc_0f1(arb_t res, const arb_t x, slong prec)
 void
 _arb_sinc_dbound(arb_t res, const arb_t x, slong prec)
 {
-    mag_t r;
-    arb_t a;
-
-    mag_init(r);
-    arb_init(a);
-
     /* compute sinc of the midpoint, with error due to inexact sin and div */
     if (arf_is_zero(arb_midref(x)))
     {
-        arb_one(a);
+        arb_one(res);
     }
     else
     {
-        arb_set_arf(a, arb_midref(x));
+        arb_t a;
+        arb_init(a);
+        arb_get_mid_arb(a, x);
         arb_sin(res, a, prec);
         arb_div(res, res, a, prec);
+        arb_clear(a);
     }
 
     /* add radius error using a global bound of the derivative of sinc */
     /* |sinc(x)'| < 1/2 */
-    mag_mul_2exp_si(r, arb_radref(x), -1);
-    mag_add(arb_radref(res), arb_radref(res), r);
-
-    mag_clear(r);
-    arb_clear(a);
+    if (!mag_is_zero(arb_radref(x)))
+    {
+        mag_t r;
+        mag_init(r);
+        mag_mul_2exp_si(r, arb_radref(x), -1);
+        mag_add(arb_radref(res), arb_radref(res), r);
+        mag_clear(r);
+    }
 }
 
 int
