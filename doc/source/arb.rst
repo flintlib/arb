@@ -849,6 +849,10 @@ Trigonometric functions
 
     Sets `y = \cot(\pi x)`.
 
+.. function:: void arb_sinc(arb_t z, const arb_t x, slong prec)
+
+    Sets `z = \sinc(x) = \sin(x) / x`.
+
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
