@@ -121,6 +121,21 @@ int main()
             arb_clear(c);
         }
 
+        /* aliasing */
+        {
+            arb_t b;
+            arb_init(b);
+            arb_set(b, x);
+            arb_sinc(b, b, prec);
+            if (!arb_equal(a, b))
+            {
+                flint_printf("FAIL: aliasing\n\n");
+                abort();
+            }
+            arb_clear(b);
+        }
+
+        arb_clear(x);
         arb_clear(a);
     }
 

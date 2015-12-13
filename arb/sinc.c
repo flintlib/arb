@@ -24,140 +24,83 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "acb.h"
-#include "acb_hypgeom.h"
 
 void
-_arb_sinc_0f1(arb_t res, const arb_t x, slong prec)
+_arb_sinc_derivative_bound(mag_t d, const arb_t x)
 {
-    acb_struct bb[2];
+    /* |f'(x)| < min(arb_get_mag(x), 1) / 2 */
+    mag_t r, one;
+    mag_init(r);
+    mag_init(one);
+    arb_get_mag(r, x);
+    mag_one(one);
+    mag_min(d, r, one);
+    mag_mul_2exp_si(d, d, -1);
+    mag_clear(r);
+    mag_clear(one);
+}
+
+void
+_arb_sinc_direct(arb_t z, const arb_t x, slong prec)
+{
+    /* z = sin(x) / x */
+    slong wp;
     arb_t y;
-    acb_t z, w;
-
+    wp = prec + 2;
     arb_init(y);
-    acb_init(bb + 0);
-    acb_init(bb + 1);
-    acb_init(z);
-    acb_init(w);
-
-    /* a = 3/2 */
-    acb_set_ui(bb + 0, 3);
-    acb_mul_2exp_si(bb + 0, bb + 0, -1);
-
-    /* z = -(x/2)^2 */
-    arb_mul_2exp_si(y, x, -1);
-    arb_mul(y, y, y, prec);
-    arb_neg(y, y);
-    acb_set_arb(z, y);
-
-    /* res = 0F1(a, z) */
-    acb_one(bb + 1);
-    acb_hypgeom_pfq_direct(w, NULL, 0, bb, 2, z, -1, prec);
-    acb_get_real(res, w);
-
+    arb_sin(y, x, wp);
+    arb_div(z, y, x, prec);
     arb_clear(y);
-    acb_clear(bb+0);
-    acb_clear(bb+1);
-    acb_clear(z);
-    acb_clear(w);
 }
 
 void
-_arb_sinc_dbound(arb_t res, const arb_t x, slong prec)
+arb_sinc(arb_t z, const arb_t x, slong prec)
 {
-    /* compute sinc of the midpoint, with error due to inexact sin and div */
-    if (arf_is_zero(arb_midref(x)))
+    mag_t c, r;
+    mag_init(c);
+    mag_init(r);
+    mag_set_ui_2exp_si(c, 5, -1);
+    arb_get_mag_lower(r, x);
+    if (mag_cmp(c, r) < 0)
     {
-        arb_one(res);
+        _arb_sinc_direct(z, x, prec);
     }
-    else
+    else if (mag_cmp_2exp_si(arb_radref(x), 1) < 0)
     {
-        arb_t a;
-        arb_init(a);
-        arb_get_mid_arb(a, x);
-        arb_sin(res, a, prec);
-        arb_div(res, res, a, prec);
-        arb_clear(a);
-    }
+        arb_t u;
+        arb_init(u);
 
-    /* add radius error using a global bound of the derivative of sinc */
-    /* |sinc(x)'| < 1/2 */
-    if (!mag_is_zero(arb_radref(x)))
-    {
-        mag_t r;
-        mag_init(r);
-        mag_mul_2exp_si(r, arb_radref(x), -1);
-        mag_add(arb_radref(res), arb_radref(res), r);
-        mag_clear(r);
-    }
-}
-
-int
-_mag_cmp_ui(const mag_t x, ulong y)
-{
-    int res;
-    mag_t z;
-    mag_init(z);
-    mag_set_ui(z, y);
-    res = mag_cmp(x, z);
-    mag_clear(z);
-    return res;
-}
-
-void
-_mag_addmul_ui(mag_t z, const mag_t x, ulong y)
-{
-    mag_t w;
-    mag_init(w);
-    mag_mul_ui(w, x, y);
-    mag_add(z, z, w);
-    mag_clear(w);
-}
-
-int
-_arb_sinc_use_0f1(const arb_t x)
-{
-    /* 8|m| + 5r < 10 */
-    int res;
-
-    mag_t lhs;
-    mag_init(lhs);
-    arf_get_mag(lhs, arb_midref(x));
-    mag_mul_ui(lhs, lhs, 8);
-    _mag_addmul_ui(lhs, arb_radref(x), 5);
-
-    res = (_mag_cmp_ui(lhs, 10) < 0);
-
-    mag_clear(lhs);
-    return res;
-}
-
-void
-arb_sinc(arb_t res, const arb_t x, slong prec)
-{
-    arb_t b;
-    arb_init(b);
-    mag_set_ui_2exp_si(arb_radref(b), 5, -1);
-    if (arb_overlaps(b, x))
-    {
-        if (_arb_sinc_use_0f1(x))
+        /* evaluate sinc of the midpoint of x */
+        if (arf_is_zero(arb_midref(x)))
         {
-            _arb_sinc_0f1(res, x, prec);
-        }
-        else if (mag_cmp_2exp_si(arb_radref(x), 1) < 0)
-        {
-            _arb_sinc_dbound(res, x, prec);
+            arb_one(u);
         }
         else
         {
-            arf_zero(arb_midref(res));
-            mag_one(arb_radref(res));
+            arb_get_mid_arb(u, x);
+            _arb_sinc_direct(u, u, prec);
         }
+
+        /* account for the radius using the derivative bound */
+        if (!arb_is_exact(x))
+        {
+            mag_t d;
+            mag_init(d);
+            _arb_sinc_derivative_bound(d, x);
+            mag_addmul(arb_radref(u), arb_radref(x), d);
+            mag_clear(d);
+        }
+
+        arb_set(z, u);
+        arb_clear(u);
     }
     else
     {
-        arb_sin(res, x, prec);
-        arb_div(res, res, x, prec);
+        /* x has a large radius and includes points near the origin */
+        arf_zero(arb_midref(z));
+        mag_one(arb_radref(z));
     }
-    arb_clear(b);
+
+    mag_clear(c);
+    mag_clear(r);
 }
