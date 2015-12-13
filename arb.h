@@ -639,9 +639,7 @@ void arb_gamma_fmpq(arb_t z, const fmpq_t x, slong prec);
 void arb_gamma_fmpz(arb_t z, const fmpz_t x, slong prec);
 void arb_digamma(arb_t y, const arb_t x, slong prec);
 void arb_zeta(arb_t z, const arb_t s, slong prec);
-void arb_zeta_ui(arb_t z, ulong n, slong prec);
 void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, slong prec);
-void arb_bernoulli_ui(arb_t z, ulong n, slong prec);
 
 void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, slong prec);
 void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, slong prec);
