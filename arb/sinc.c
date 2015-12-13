@@ -63,36 +63,35 @@ arb_sinc(arb_t z, const arb_t x, slong prec)
     arb_get_mag_lower(r, x);
     if (mag_cmp(c, r) < 0)
     {
+        /* x is not near the origin */
         _arb_sinc_direct(z, x, prec);
     }
     else if (mag_cmp_2exp_si(arb_radref(x), 1) < 0)
     {
-        arb_t u;
-        arb_init(u);
-
-        /* evaluate sinc of the midpoint of x */
-        if (arf_is_zero(arb_midref(x)))
+        /* determine error magnitude using the derivative bound */
+        if (arb_is_exact(x))
         {
-            arb_one(u);
+            mag_zero(c);
         }
         else
         {
-            arb_get_mid_arb(u, x);
-            _arb_sinc_direct(u, u, prec);
+            _arb_sinc_derivative_bound(r, x);
+            mag_mul(c, arb_radref(x), r);
         }
 
-        /* account for the radius using the derivative bound */
-        if (!arb_is_exact(x))
+        /* evaluate sinc at the midpoint of x */
+        if (arf_is_zero(arb_midref(x)))
         {
-            mag_t d;
-            mag_init(d);
-            _arb_sinc_derivative_bound(d, x);
-            mag_addmul(arb_radref(u), arb_radref(x), d);
-            mag_clear(d);
+            arb_one(z);
+        }
+        else
+        {
+            arb_get_mid_arb(z, x);
+            _arb_sinc_direct(z, z, prec);
         }
 
-        arb_set(z, u);
-        arb_clear(u);
+        /* add the error */
+        mag_add(arb_radref(z), arb_radref(z), c);
     }
     else
     {

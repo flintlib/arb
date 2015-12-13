@@ -69,56 +69,25 @@ int main()
             arb_clear(b);
         }
 
-        /* sinc(x) = sin(x) / x */
+        /* sinc(x) * x = sin(x) */
         {
-            arb_t b;
-            arb_init(b);
-
-            arb_sin(b, x, prec);
-            arb_div(b, b, x, prec);
-
-            if (!arb_overlaps(a, b))
-            {
-                flint_printf("FAIL: overlap (sin)\n\n");
-                flint_printf("x = "); arb_print(x); flint_printf("\n\n");
-                flint_printf("a = "); arb_print(a); flint_printf("\n\n");
-                flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-                abort();
-            }
-
-            arb_clear(b);
-        }
-
-        /* sinc(x) = rgamma(1+x/pi) * rgamma(1-x/pi) */
-        {
-            arb_t pi, y, b, c;
-            arb_init(pi);
-            arb_init(y);
+            arb_t b, c;
             arb_init(b);
             arb_init(c);
 
-            arb_const_pi(pi, prec);
-            arb_div(y, x, pi, prec);
-            arb_add_ui(b, y, 1, prec);
-            arb_sub_ui(c, y, 1, prec);
-            arb_neg(c, c);
-            arb_rgamma(b, b, prec);
-            arb_rgamma(c, c, prec);
-            arb_mul(b, b, c, prec);
+            arb_mul(b, a, x, prec);
+            arb_sin(c, x, prec);
 
-            if (!arb_overlaps(a, b))
+            if (!arb_overlaps(b, c))
             {
-                flint_printf("FAIL: overlap (rgamma)\n\n");
+                flint_printf("FAIL: overlap (sin)\n\n");
                 flint_printf("x = "); arb_print(x); flint_printf("\n\n");
-                flint_printf("a = "); arb_print(a); flint_printf("\n\n");
                 flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+                flint_printf("c = "); arb_print(c); flint_printf("\n\n");
                 abort();
             }
 
-            arb_clear(pi);
-            arb_clear(y);
             arb_clear(b);
-            arb_clear(c);
         }
 
         /* aliasing */
