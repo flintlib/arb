@@ -88,6 +88,7 @@ int main()
             }
 
             arb_clear(b);
+            arb_clear(c);
         }
 
         /* aliasing */
