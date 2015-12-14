@@ -39,8 +39,18 @@ arb_asinh(arb_t z, const arb_t x, slong prec)
 
         arb_mul(t, x, x, prec + 4);
         arb_sqrt1pm1(t, t, prec + 4);
-        arb_add(t, t, x, prec + 4);
-        arb_log1p(z, t, prec);
+
+        if (arf_sgn(arb_midref(x)) >= 0)
+        {
+            arb_add(t, t, x, prec + 4);
+            arb_log1p(z, t, prec);
+        }
+        else
+        {
+            arb_sub(t, t, x, prec + 4);
+            arb_log1p(z, t, prec);
+            arb_neg(z, z);
+        }
 
         arb_clear(t);
     }
