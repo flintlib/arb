@@ -660,7 +660,7 @@ poly_pow_length(slong poly_len, ulong exp, slong trunc)
     add_ssaaaa(hi, lo, hi, lo, 0, 1);
     if (hi != 0 || lo > (mp_limb_t) WORD_MAX)
         return trunc;
-    return FLINT_MIN(lo, trunc);
+    return FLINT_MIN((slong) lo, trunc);
 }
 
 #ifndef NEWTON_INIT
