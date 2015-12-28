@@ -851,7 +851,7 @@ Trigonometric functions
 
 .. function:: void arb_sinc(arb_t z, const arb_t x, slong prec)
 
-    Sets `z = \sinc(x) = \sin(x) / x`.
+    Sets `z = \operatorname{sinc}(x) = \sin(x) / x`.
 
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
