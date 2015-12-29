@@ -1031,7 +1031,7 @@ Gamma function and factorials
 
     Computes the factorial `z = n!` via the gamma function.
 
-.. function:: void arb_fac2_ui(arb_t z, ulong n, slong prec)
+.. function:: void arb_doublefac_ui(arb_t z, ulong n, slong prec)
 
     Computes the double factorial `z = n!!` via the gamma function.
 
