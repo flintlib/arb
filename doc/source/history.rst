@@ -6,6 +6,78 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2015-12-29 - version 2.8.0
+
+  * Compatibility and build system
+
+    * Windows64 support (contributed by Bill Hart).
+    * Fixed a bug that broke basic arithmetic on targets where FLINT uses fallback code instead of assembly code, such as PPC64 (contributed by Jeroen Demeyer).
+    * Fixed configure to use EXTRA_SHARED_FLAGS/LDFLAGS, and other build system fixes (contributed by Tommy Hofmann, Bill Hart).
+    * Added soname versioning (contributed by Julien Puydt).
+    * Fixed test code on MinGW (contributed by Hrvoje Abraham).
+    * Miscellaneous fixes to simplify interfacing Arb from Julia.
+
+  * Arithmetic and elementary functions
+
+    * Fixed arf_get_d to handle underflow/overflow correctly and to support round-to-nearest.
+    * Added more complex inverse hyperbolic functions (acb_asin, acb_acos, acb_asinh, acb_acosh, acb_atanh).
+    * Added arb_contains_int and acb_contains_int for testing whether an interval contains any integer.
+    * Added acb_quadratic_roots_fmpz.
+    * Improved arb_sinh to use a more accurate formula for x < 0.
+    * Added sinc function (arb_sinc) (contributed by Alex Griffing).
+    * Fixed bug in arb_exp affecting convergence for huge input.
+    * Faster implementation of arb_div_2expm1_ui.
+    * Added mag_root, mag_geom_series.
+    * Improved and added test code for arb_add_error functions.
+    * Changed arb_pow and acb_pow to make pow(0,positive) = 0 instead of nan.
+    * Improved acb_sqrt to return finite output for finite input straddling the branch cut.
+    * Improved arb_set_interval_arf so that [inf,inf] = inf instead of an infinite interval.
+    * Added computation of Bell numbers (arb_bell_fmpz).
+    * Added arb_power_sum_vec for computing power sums using Bernoulli numbers.
+    * Added computation of the Fujiwara root bound for acb_poly.
+    * Added code to identify all the real roots of a real polynomial (acb_poly_validate_real_roots).
+    * Added several convenient assignment functions, including arb_set_d, acb_set_d, acb_set_d_d, acb_set_fmpz_fmpz (contributed by Ricky Farr).
+    * Added many accessor functions (_arb/acb_vec_entry_ptr, arb_get_mid/rad_arb, acb_real/imag_ptr, arb_mid/rad_ptr, acb_get_real/imag).
+    * Added missing functions acb_add_si, acb_sub_si.
+    * Renamed arb_root to arb_root_ui (keeping alias) and added acb_root_ui.
+
+  * Special functions
+
+    * Implemented the Gauss hypergeometric function 2F1 and its regularized version.
+    * Fixed two bugs in acb_hypgeom_pfq_series_direct discovered while implementing 2F1. In rare cases, these could lead to incorrect values for functions depending on parameter derivatives of hypergeometric series.
+
+      * The first bug involved incorrect handling of negative integer parameters. The bug only affected 2F1 and higher functions; it did not affect correctness of any previously implemented functions that relied on acb_hypgeom_pfq_series_direct (such as Bessel Y and K functions of integer order).
+      * The second bug involved a too small bound being computed for the sum of a geometric series. The geometric series bound is nearly tight for 2F1, and the incorrect version caused immediate test failures for that function. Theoretically, this bug affected correctness of some previously-implemented functions that relied on acb_hypgeom_pfq_series_direct (such as Bessel Y and K functions of integer order), but since the geometric bound is not as tight in those cases, those functions were still reliable in practice (no failing test case has been found).
+
+    * Implemented Airy functions and their derivatives (acb_hypgeom_airy).
+    * Implemented the confluent hypergeometric function 0F1 (acb_hypgeom_0f1).
+    * Implemented associated Legendre functions P and Q.
+    * Implemented Chebyshev, Jacobi, Gegenbauer, Laguerre, Hermite functions.
+    * Implemented spherical harmonics.
+    * Added function for computing Bessel J and Y functions simultaneously.
+    * Added rising factorials for non-integer n (arb_rising, acb_rising).
+    * Made rising factorials use gamma function for large integer n.
+    * Faster algorithm for theta constants and Dedekind eta function at very high precision.
+    * Fixed erf to give finite values instead of +/-inf for big imaginary input.
+    * Improved acb_zeta (and arb_zeta) to automatically use fast code for integer zeta values.
+    * Added double factorial (arb_doublefac_ui).
+    * Added code for generating Hilbert class polynomials (acb_modular_hilbert_class_poly).
+
+  * Matrices
+
+    * Added faster matrix squaring (arb/acb_mat_sqr) (contributed by Alex Griffing).
+    * Added matrix trace (arb/acb_mat_trace) (contributed by Alex Griffing).
+    * Added arb/acb_mat_set_round_fmpz_mat, acb_mat_set(_round)_arb_mat (contributed by Tommy Hofmann).
+    * Added arb/acb_mat_transpose (contributed by Tommy Hofmann).
+    * Added comparison methods arb/acb_mat_eq/ne (contributed by Tommy Hofmann).
+
+  * Other
+
+    * Added complex_plot example program.
+    * Added Airy functions to real_roots example program.
+    * Other minor patches were contributed by Alexander Kobel, Marc Mezzarobba, Julien Puydt.
+    * Removed obsolete file config.h.
+
 * 2015-07-14 - version 2.7.0
 
   * hypergeometric functions
