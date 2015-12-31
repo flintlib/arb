@@ -490,6 +490,10 @@ void mag_print(const mag_t x);
 
 void mag_printd(const mag_t x, slong d);
 
+void mag_fprint(FILE * file, const mag_t x);
+
+void mag_fprintd(FILE * file, const mag_t x, slong d);
+
 void mag_get_fmpq(fmpq_t y, const mag_t x);
 
 int mag_cmp(const mag_t x, const mag_t y);

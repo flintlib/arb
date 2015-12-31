@@ -831,6 +831,10 @@ void arf_print(const arf_t x);
 
 void arf_printd(const arf_t y, slong d);
 
+void arf_fprint(FILE * file, const arf_t x);
+
+void arf_fprintd(FILE * file, const arf_t y, slong d);
+
 void arf_randtest(arf_t x, flint_rand_t state, slong bits, slong mag_bits);
 
 void arf_randtest_not_zero(arf_t x, flint_rand_t state, slong bits, slong mag_bits);

@@ -101,6 +101,8 @@ void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_b
 
 void acb_mat_printd(const acb_mat_t mat, slong digits);
 
+void acb_mat_fprintd(FILE * file, const acb_mat_t mat, slong digits);
+
 /* Comparisons */
 
 int acb_mat_eq(const acb_mat_t mat1, const acb_mat_t mat2);

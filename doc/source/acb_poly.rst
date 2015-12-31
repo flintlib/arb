@@ -134,7 +134,12 @@ Input and output
 .. function:: void acb_poly_printd(const acb_poly_t poly, slong digits)
 
     Prints the polynomial as an array of coefficients, printing each
-    coefficient using *arb_printd*.
+    coefficient using *acb_printd*.
+
+.. function:: void acb_poly_fprintd(FILE * file, const acb_poly_t poly, slong digits)
+
+    Prints the polynomial as an array of coefficients to the stream *file*,
+    printing each coefficient using *acb_fprintd*.
 
 Random generation
 -------------------------------------------------------------------------------

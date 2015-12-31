@@ -457,6 +457,16 @@ Input and output
     This function is currently implemented using MPFR,
     and does not support large exponents.
 
+.. function:: void arf_fprint(FILE * file, const arf_t x)
+
+    Prints *x* as an integer mantissa and exponent to the stream *file*.
+
+.. function:: void arf_fprintd(FILE * file, const arf_t y, slong d)
+
+    Prints *x* as a decimal floating-point number to the stream *file*,
+    rounding to *d* digits. This function is currently implemented using MPFR,
+    and does not support large exponents.
+
 Addition and multiplication
 -------------------------------------------------------------------------------
 

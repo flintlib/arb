@@ -95,6 +95,8 @@ void arb_mat_randtest(arb_mat_t mat, flint_rand_t state, slong prec, slong mag_b
 
 void arb_mat_printd(const arb_mat_t mat, slong digits);
 
+void arb_mat_fprintd(FILE * file, const arb_mat_t mat, slong digits);
+
 /* Comparisons */
 
 int arb_mat_eq(const arb_mat_t mat1, const arb_mat_t mat2);

@@ -243,6 +243,24 @@ Input and output
     in the last digit. An error bound is also printed explicitly.
     See :func:`arb_get_str` for details.
 
+.. function:: void arb_fprint(FILE * file, const arb_t x)
+
+    Prints the internal representation of *x* to the stream *file*.
+
+.. function:: void arb_fprintd(FILE * file, const arb_t x, slong digits)
+
+    Prints *x* in decimal to the stream *file*.
+    The printed value of the radius is not adjusted
+    to compensate for the fact that the binary-to-decimal conversion
+    of both the midpoint and the radius introduces additional error.
+
+.. function:: void arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags)
+
+    Prints a nice decimal representation of *x* to the stream *file*.
+    By default, the output is guaranteed to be correct to within one unit
+    in the last digit. An error bound is also printed explicitly.
+    See :func:`arb_get_str` for details.
+
 Random number generation
 -------------------------------------------------------------------------------
 

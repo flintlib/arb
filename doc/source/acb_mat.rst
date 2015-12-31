@@ -85,6 +85,11 @@ Input and output
 
     Prints each entry in the matrix with the specified number of decimal digits.
 
+.. function:: void acb_mat_fprintd(FILE * file, const acb_mat_t mat, slong digits)
+
+    Prints each entry in the matrix with the specified number of decimal
+    digits to the stream *file*.
+
 Comparisons
 -------------------------------------------------------------------------------
 

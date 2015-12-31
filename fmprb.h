@@ -337,6 +337,14 @@ fmprb_print(const fmprb_t x)
 }
 
 static __inline__ void
+fmprb_fprint(FILE * file, const fmprb_t x)
+{
+    fmpr_fprint(file, fmprb_midref(x));
+    flint_fprintf(file, " +/- ");
+    fmpr_fprint(file, fmprb_radref(x));
+}
+
+static __inline__ void
 fmprb_printd(const fmprb_t x, slong digits)
 {
     fmpr_printd(fmprb_midref(x), FLINT_ABS(digits));
@@ -344,6 +352,17 @@ fmprb_printd(const fmprb_t x, slong digits)
     {
         flint_printf(" +/- ");
         fmpr_printd(fmprb_radref(x), 5);
+    }
+}
+
+static __inline__ void
+fmprb_fprintd(FILE * file, const fmprb_t x, slong digits)
+{
+    fmpr_fprintd(file, fmprb_midref(x), FLINT_ABS(digits));
+    if (digits > 0)
+    {
+        flint_fprintf(file, " +/- ");
+        fmpr_fprintd(file, fmprb_radref(x), 5);
     }
 }
 

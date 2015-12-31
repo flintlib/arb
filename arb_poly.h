@@ -177,6 +177,8 @@ void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, slong prec);
 
 void arb_poly_printd(const arb_poly_t poly, slong digits);
 
+void arb_poly_fprintd(FILE * file, const arb_poly_t poly, slong digits);
+
 /* Random generation */
 
 void arb_poly_randtest(arb_poly_t poly, flint_rand_t state, slong len, slong prec, slong mag_bits);

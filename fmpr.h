@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <gmp.h>
+#define MPFR_USE_FILE /* required(?) for mpfr_fprintf */
 #include <mpfr.h>
 #include "flint.h"
 #include "fmpz.h"
@@ -600,6 +601,10 @@ fmpr_add_error_result(fmpr_t err, const fmpr_t err_in,
 void fmpr_print(const fmpr_t x);
 
 void fmpr_printd(const fmpr_t x, slong digits);
+
+void fmpr_fprint(FILE * file, const fmpr_t x);
+
+void fmpr_fprintd(FILE * file, const fmpr_t x, slong digits);
 
 
 static __inline__ void

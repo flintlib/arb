@@ -275,6 +275,12 @@ void arb_printd(const arb_t x, slong digits);
 
 void arb_printn(const arb_t x, slong digits, ulong flags);
 
+void arb_fprint(FILE * file, const arb_t x);
+
+void arb_fprintd(FILE * file, const arb_t x, slong digits);
+
+void arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags);
+
 ARB_INLINE void
 arb_mul_2exp_si(arb_t y, const arb_t x, slong e)
 {

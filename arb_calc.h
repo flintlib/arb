@@ -121,6 +121,16 @@ arf_interval_printd(const arf_interval_t v, slong n)
     flint_printf("]");
 }
 
+static __inline__ void
+arf_interval_fprintd(FILE * file, const arf_interval_t v, slong n)
+{
+    flint_fprintf(file, "[");
+    arf_fprintd(file, &v->a, n);
+    flint_fprintf(file, ", ");
+    arf_fprintd(file, &v->b, n);
+    flint_fprintf(file, "]");
+}
+
 /* bisection */
 
 int arb_calc_partition(arf_interval_t L, arf_interval_t R,

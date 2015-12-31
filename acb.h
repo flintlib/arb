@@ -993,7 +993,19 @@ acb_print(const acb_t x)
     flint_printf(")");
 }
 
+ACB_INLINE void
+acb_fprint(FILE * file, const acb_t x)
+{
+    flint_fprintf(file, "(");
+    arb_fprint(file, acb_realref(x));
+    flint_fprintf(file, ", ");
+    arb_fprint(file, acb_imagref(x));
+    flint_fprintf(file, ")");
+}
+
 void acb_printd(const acb_t z, slong digits);
+
+void acb_fprintd(FILE * file, const acb_t z, slong digits);
 
 void acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
 
