@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, m, n1, m1, z, res1, res2, res3, s;
         slong prec;
@@ -50,7 +50,7 @@ int main()
         acb_init(res3);
         acb_init(s);
 
-        prec = 2 + n_randint(state, 300);
+        prec = 2 + n_randint(state, 200);
 
         if (n_randint(state, 2))
         {
@@ -69,12 +69,12 @@ int main()
         acb_sub_ui(m1, m, 1, prec);
 
         acb_hypgeom_laguerre_l(res1, n, m, z, prec);
-        acb_hypgeom_laguerre_l(res2, n1, m, z, 2 + n_randint(state, 300));
-        acb_hypgeom_laguerre_l(res3, n, m1, z, 2 + n_randint(state, 300));
+        acb_hypgeom_laguerre_l(res2, n1, m, z, 2 + n_randint(state, 200));
+        acb_hypgeom_laguerre_l(res3, n, m1, z, 2 + n_randint(state, 200));
 
         acb_add(s, res2, res3, prec);
 
-        if (!acb_overlaps(res1, s))
+        if (acb_is_finite(res1) && acb_is_finite(s) && !acb_overlaps(res1, s))
         {
             flint_printf("FAIL: consistency\n\n");
             flint_printf("iter = %wd\n\n", iter);

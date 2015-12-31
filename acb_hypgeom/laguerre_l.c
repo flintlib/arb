@@ -103,6 +103,13 @@ acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, s
         return;
     }
 
+    /* todo: should be a test of whether n contains any negative integer */
+    if (acb_contains_int(n) && !arb_is_nonnegative(acb_realref(n)))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
     acb_init(t);
     acb_init(u);
     acb_init(v);

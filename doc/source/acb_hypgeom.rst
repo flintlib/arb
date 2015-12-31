@@ -881,6 +881,12 @@ Orthogonal polynomials and functions
     is undefined. In such cases, the polynomial is evaluated using
     direct methods.
 
+    There are at least two incompatible ways to define the Laguerre function when
+    *n* is a negative integer.  One possibility when `m = 0` is to define
+    `L_{-n}^0(z) = e^z L_{n-1}^0(-z)`. Another possibility is to cover this
+    case with the recurrence relation `L_{n-1}^m(z) + L_n^{m-1}(z) = L_n^m(z)`.
+    Currently, we leave this case undefined (returning indeterminate).
+
 .. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, slong prec)
 
     Computes the Hermite polynomial (or Hermite function)
