@@ -6,6 +6,11 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+* 2015-12-31 - version 2.8.1
+
+  * Fixed 32-bit test failure for the Laguerre function.
+  * Made the Laguerre function indeterminate at negative integer orders, to be consistent with the test code.
+
 * 2015-12-29 - version 2.8.0
 
   * Compatibility and build system
