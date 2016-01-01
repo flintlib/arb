@@ -140,17 +140,6 @@ Input and output
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
 
-.. function:: void fmprb_fprint(FILE * file, const fmprb_t x)
-
-    Prints the internal representation of *x* to the stream *file*.
-
-.. function:: void fmprb_fprintd(FILE * file, const fmprb_t x, slong digits)
-
-    Prints *x* in decimal to the stream *file*.
-    The printed value of the radius is not adjusted
-    to compensate for the fact that the binary-to-decimal conversion
-    of both the midpoint and the radius introduces additional error.
-
 
 Random number generation
 -------------------------------------------------------------------------------

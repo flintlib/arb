@@ -419,17 +419,6 @@ Input and output
     number of digits. This function is currently implemented using MPFR,
     and does not support large exponents.
 
-.. function:: void fmpr_fprint(FILE * file, const fmpr_t x)
-
-    Prints the mantissa and exponent of *x* as integers to the stream *file*,
-    precisely showing the internal representation.
-
-.. function:: void fmpr_fprintd(FILE * file, const fmpr_t x, slong digits)
-
-    Prints *x* as a decimal floating-point number to the stream *file*,
-    rounding to the specified number of digits. This function is currently
-    implemented using MPFR, and does not support large exponents.
-
 
 Arithmetic
 -------------------------------------------------------------------------------
