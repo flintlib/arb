@@ -19,59 +19,40 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
+#include "mag.h"
 #include "arf.h"
 
 void
-arf_print(const arf_t x)
+mag_fprint(FILE * file, const mag_t x)
 {
-    if (arf_is_normal(x))
-    {
-        fmpz_t man, exp;
-
-        fmpz_init(man);
-        fmpz_init(exp);
-
-        arf_get_fmpz_2exp(man, exp, x);
-
-        flint_printf("(");
-        fmpz_print(man);
-        flint_printf(" * 2^");
-        fmpz_print(exp);
-        flint_printf(")");
-
-        fmpz_clear(man);
-        fmpz_clear(exp);
-    }
+    flint_fprintf(file, "(");
+    if (mag_is_zero(x))
+        flint_fprintf(file, "0");
+    else if (mag_is_inf(x))
+        flint_fprintf(file, "inf");
     else
     {
-        if (arf_is_zero(x)) flint_printf("(0)");
-        else if (arf_is_pos_inf(x)) flint_printf("(+inf)");
-        else if (arf_is_neg_inf(x)) flint_printf("(-inf)");
-        else flint_printf("(nan)");
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
+        flint_fprintf(file, "%wu * 2^", MAG_MAN(x));
+        fmpz_fprint(file, t);
+        fmpz_clear(t);
     }
+    flint_fprintf(file, ")");
 }
 
 void
-arf_printd(const arf_t x, slong d)
+mag_fprintd(FILE * file, const mag_t x, slong d)
 {
-    if (arf_is_finite(x) && (ARF_EXP(x) <= MPFR_EMIN_MIN + 1 ||
-                             ARF_EXP(x) >= MPFR_EMAX_MAX - 1))
-    {
-        arf_print(x);
-    }
-    else
-    {
-        mpfr_t t;
-        mpfr_init2(t, d * 3.33 + 10);
-        mpfr_set_emin(MPFR_EMIN_MIN);
-        mpfr_set_emax(MPFR_EMAX_MAX);
-        arf_get_mpfr(t, x, MPFR_RNDN);
-        mpfr_printf("%.*Rg", FLINT_MAX(d, 1), t);
-        mpfr_clear(t);
-    }
+    arf_t t;
+    arf_init(t);
+    arf_set_mag(t, x);
+    arf_fprintd(file, t, d);
+    arf_clear(t);
 }
-

@@ -105,6 +105,10 @@ Subdivision-based root finding
 
     Helper functions for endpoint-based intervals.
 
+.. function:: void arf_interval_fprintd(FILE * file, const arf_interval_t v, slong n)
+
+    Helper functions for endpoint-based intervals.
+
 .. function:: slong arb_calc_isolate_roots(arf_interval_ptr * found, int ** flags, arb_calc_func_t func, void * param, const arf_interval_t interval, slong maxdepth, slong maxeval, slong maxfound, slong prec)
 
     Rigorously isolates single roots of a real analytic function

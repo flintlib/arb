@@ -32,6 +32,7 @@
 #define MAG_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include <math.h>
 #include "flint.h"
 #include "fmpz.h"
@@ -486,9 +487,21 @@ void mag_randtest_special(mag_t x, flint_rand_t state, slong expbits);
 
 void mag_randtest(mag_t x, flint_rand_t state, slong expbits);
 
-void mag_print(const mag_t x);
+void mag_fprint(FILE * file, const mag_t x);
 
-void mag_printd(const mag_t x, slong d);
+void mag_fprintd(FILE * file, const mag_t x, slong d);
+
+MAG_INLINE void
+mag_print(const mag_t x)
+{
+    mag_fprint(stdout, x);
+}
+
+MAG_INLINE void
+mag_printd(const mag_t x, slong d)
+{
+    mag_fprintd(stdout, x, d);
+}
 
 void mag_get_fmpq(fmpq_t y, const mag_t x);
 

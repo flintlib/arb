@@ -68,6 +68,10 @@ The modular group
 
     Prints *g* to standard output.
 
+.. function:: void psl2z_fprint(FILE * file, const psl2z_t g)
+
+    Prints *g* to the stream *file*.
+
 .. function:: int psl2z_equal(const psl2z_t f, const psl2z_t g)
 
     Returns nonzero iff *f* and *g* are equal.

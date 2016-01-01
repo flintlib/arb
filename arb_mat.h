@@ -32,6 +32,7 @@
 #define ARB_MAT_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include "arb.h"
 #include "fmpz_mat.h"
 #include "fmpq_mat.h"
@@ -93,7 +94,13 @@ void arb_mat_randtest(arb_mat_t mat, flint_rand_t state, slong prec, slong mag_b
 
 /* I/O */
 
-void arb_mat_printd(const arb_mat_t mat, slong digits);
+void arb_mat_fprintd(FILE * file, const arb_mat_t mat, slong digits);
+
+ARB_MAT_INLINE void
+arb_mat_printd(const arb_mat_t mat, slong digits)
+{
+    arb_mat_fprintd(stdout, mat, digits);
+}
 
 /* Comparisons */
 

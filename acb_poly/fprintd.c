@@ -20,36 +20,25 @@
 /******************************************************************************
 
     Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "acb.h"
+#include "acb_poly.h"
 
 void
-acb_printd(const acb_t z, slong digits)
+acb_poly_fprintd(FILE * file, const acb_poly_t poly, slong digits)
 {
-    flint_printf("(");
-    arf_printd(arb_midref(acb_realref(z)), digits);
+    slong i;
 
-    if (arf_sgn(arb_midref(acb_imagref(z))) < 0)
+    flint_fprintf(file, "[");
+
+    for (i = 0; i < poly->length; i++)
     {
-        arf_t t;
-        arf_init_neg_shallow(t, arb_midref(acb_imagref(z)));
-        flint_printf(" - ");
-        arf_printd(t, digits);
+        acb_fprintd(file, poly->coeffs + i, digits);
+        if (i + 1 < poly->length)
+            flint_fprintf(file, "\n");
     }
-    else
-    {
-        flint_printf(" + ");
-        arf_printd(arb_midref(acb_imagref(z)), digits);
-    }
-    flint_printf("j)");
 
-    flint_printf("  +/-  ");
-
-    flint_printf("(");
-    mag_printd(arb_radref(acb_realref(z)), 3);
-    flint_printf(", ");
-    mag_printd(arb_radref(acb_imagref(z)), 3);
-    flint_printf("j)");
+    flint_fprintf(file, "]");
 }

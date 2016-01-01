@@ -20,28 +20,29 @@
 /******************************************************************************
 
     Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
 #include "arb_mat.h"
 
 void
-arb_mat_printd(const arb_mat_t mat, slong digits)
+arb_mat_fprintd(FILE * file, const arb_mat_t mat, slong digits)
 {
     slong i, j;
 
     for (i = 0; i < arb_mat_nrows(mat); i++)
     {
-        flint_printf("[");
+        flint_fprintf(file, "[");
 
         for (j = 0; j < arb_mat_ncols(mat); j++)
         {
-            arb_printd(arb_mat_entry(mat, i, j), digits);
+            arb_fprintd(file, arb_mat_entry(mat, i, j), digits);
 
             if (j < arb_mat_ncols(mat) - 1)
-                flint_printf(", ");
+                flint_fprintf(file, ", ");
         }
 
-        flint_printf("]\n");
+        flint_fprintf(file, "]\n");
     }
 }

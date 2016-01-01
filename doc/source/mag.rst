@@ -120,6 +120,10 @@ Input and output
 
     Prints *x* to standard output.
 
+.. function:: void mag_fprint(FILE * file, const mag_t x)
+
+    Prints *x* to the stream *file*.
+
 Random generation
 -------------------------------------------------------------------------------
 

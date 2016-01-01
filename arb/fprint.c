@@ -19,40 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2015 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb.h"
 
 void
-mag_print(const mag_t x)
+arb_fprint(FILE * file, const arb_t x)
 {
-    flint_printf("(");
-    if (mag_is_zero(x))
-        flint_printf("0");
-    else if (mag_is_inf(x))
-        flint_printf("inf");
-    else
-    {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
-        flint_printf("%wu * 2^", MAG_MAN(x));
-        fmpz_print(t);
-        fmpz_clear(t);
-    }
-    flint_printf(")");
+    arf_fprint(file, arb_midref(x));
+    flint_fprintf(file, " +/- ");
+    mag_fprint(file, arb_radref(x));
 }
 
 void
-mag_printd(const mag_t x, slong d)
+arb_fprintd(FILE * file, const arb_t x, slong digits)
 {
-    arf_t t;
-    arf_init(t);
-    arf_set_mag(t, x);
-    arf_printd(t, d);
-    arf_clear(t);
+    arf_fprintd(file, arb_midref(x), FLINT_MAX(digits, 1));
+    flint_fprintf(file, " +/- ");
+    mag_fprintd(file, arb_radref(x), 5);
+}
+
+void
+arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags)
+{
+    char * s = arb_get_str(x, digits, flags);
+    flint_fprintf(file, "%s", s);
+    flint_free(s);
 }
 

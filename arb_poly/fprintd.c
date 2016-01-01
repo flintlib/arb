@@ -20,28 +20,28 @@
 /******************************************************************************
 
     Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "acb_mat.h"
+#include "arb_poly.h"
 
 void
-acb_mat_printd(const acb_mat_t mat, slong digits)
+arb_poly_fprintd(FILE * file, const arb_poly_t poly, slong digits)
 {
-    slong i, j;
+    slong i;
 
-    for (i = 0; i < acb_mat_nrows(mat); i++)
+    flint_fprintf(file, "[");
+
+    for (i = 0; i < poly->length; i++)
     {
-        flint_printf("[");
-
-        for (j = 0; j < acb_mat_ncols(mat); j++)
-        {
-            acb_printd(acb_mat_entry(mat, i, j), digits);
-
-            if (j < acb_mat_ncols(mat) - 1)
-                flint_printf(", ");
-        }
-
-        flint_printf("]\n");
+        flint_fprintf(file, "(");
+        arb_fprintd(file, poly->coeffs + i, digits);
+        flint_fprintf(file, ")");
+        
+        if (i + 1 < poly->length)
+            flint_fprintf(file, ", ");
     }
+
+    flint_fprintf(file, "]");
 }

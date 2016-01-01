@@ -142,6 +142,11 @@ Input and output
     Prints the polynomial as an array of coefficients, printing each
     coefficient using *arb_printd*.
 
+.. function:: void arb_poly_fprintd(FILE * file, const arb_poly_t poly, slong digits)
+
+    Prints the polynomial as an array of coefficients to the stream *file*,
+    printing each coefficient using *arb_fprintd*.
+
 
 Random generation
 -------------------------------------------------------------------------------

@@ -35,6 +35,7 @@
 #define ARF_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include <math.h>
 #include "flint.h"
 #include "fmpr.h"
@@ -827,9 +828,21 @@ void arf_ceil(arf_t z, const arf_t x);
 
 void arf_debug(const arf_t x);
 
-void arf_print(const arf_t x);
+void arf_fprint(FILE * file, const arf_t x);
 
-void arf_printd(const arf_t y, slong d);
+void arf_fprintd(FILE * file, const arf_t y, slong d);
+
+ARF_INLINE void
+arf_print(const arf_t x)
+{
+    arf_fprint(stdout, x);
+}
+
+ARF_INLINE void
+arf_printd(const arf_t y, slong d)
+{
+    arf_fprintd(stdout, y, d);
+}
 
 void arf_randtest(arf_t x, flint_rand_t state, slong bits, slong mag_bits);
 

@@ -32,6 +32,7 @@
 #define ACB_POLY_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include "acb.h"
 #include "arb_poly.h"
 
@@ -129,7 +130,13 @@ void _acb_poly_majorant(arb_ptr res, acb_srcptr vec, slong len, slong prec);
 
 void acb_poly_majorant(arb_poly_t res, const acb_poly_t poly, slong prec);
 
-void acb_poly_printd(const acb_poly_t poly, slong digits);
+void acb_poly_fprintd(FILE * file, const acb_poly_t poly, slong digits);
+
+ACB_POLY_INLINE void
+acb_poly_printd(const acb_poly_t poly, slong digits)
+{
+    acb_poly_fprintd(stdout, poly, digits);
+}
 
 void _acb_poly_evaluate_horner(acb_t res, acb_srcptr f, slong len, const acb_t a, slong prec);
 void acb_poly_evaluate_horner(acb_t res, const acb_poly_t f, const acb_t a, slong prec);
