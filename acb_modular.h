@@ -26,6 +26,7 @@
 #ifndef ACB_MODULAR_H
 #define ACB_MODULAR_H
 
+#include <stdio.h>
 #include "acb.h"
 
 #ifdef __cplusplus
@@ -90,16 +91,6 @@ psl2z_one(psl2z_t g)
 }
 
 static __inline__ void
-psl2z_print(const psl2z_t g)
-{
-    flint_printf("[");
-    fmpz_print(&g->a); flint_printf(" ");
-    fmpz_print(&g->b); flint_printf("; ");
-    fmpz_print(&g->c); flint_printf(" ");
-    fmpz_print(&g->d); flint_printf("]");
-}
-
-static __inline__ void
 psl2z_fprint(FILE * file, const psl2z_t g)
 {
     flint_fprintf(file, "[");
@@ -107,6 +98,12 @@ psl2z_fprint(FILE * file, const psl2z_t g)
     fmpz_fprint(file, &g->b); flint_fprintf(file, "; ");
     fmpz_fprint(file, &g->c); flint_fprintf(file, " ");
     fmpz_fprint(file, &g->d); flint_fprintf(file, "]");
+}
+
+static __inline__ void
+psl2z_print(const psl2z_t g)
+{
+    psl2z_fprint(stdout, g);
 }
 
 static __inline__ int

@@ -26,6 +26,7 @@
 #ifndef ARB_CALC_H
 #define ARB_CALC_H
 
+#include <stdio.h>
 #include "arb.h"
 #include "arb_poly.h"
 #include "arb_mat.h"
@@ -112,16 +113,6 @@ arf_interval_get_arb(arb_t x, const arf_interval_t v, slong prec)
 }
 
 static __inline__ void
-arf_interval_printd(const arf_interval_t v, slong n)
-{
-    flint_printf("[");
-    arf_printd(&v->a, n);
-    flint_printf(", ");
-    arf_printd(&v->b, n);
-    flint_printf("]");
-}
-
-static __inline__ void
 arf_interval_fprintd(FILE * file, const arf_interval_t v, slong n)
 {
     flint_fprintf(file, "[");
@@ -129,6 +120,12 @@ arf_interval_fprintd(FILE * file, const arf_interval_t v, slong n)
     flint_fprintf(file, ", ");
     arf_fprintd(file, &v->b, n);
     flint_fprintf(file, "]");
+}
+
+static __inline__ void
+arf_interval_printd(const arf_interval_t v, slong n)
+{
+    arf_interval_fprintd(stdout, v, n);
 }
 
 /* bisection */

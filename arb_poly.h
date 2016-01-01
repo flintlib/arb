@@ -32,6 +32,7 @@
 #define ARB_POLY_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include "arb.h"
 #include "acb.h"
 #include "fmpz_poly.h"
@@ -175,9 +176,13 @@ void arb_poly_majorant(arb_poly_t res, const arb_poly_t poly, slong prec);
 
 /* IO */
 
-void arb_poly_printd(const arb_poly_t poly, slong digits);
-
 void arb_poly_fprintd(FILE * file, const arb_poly_t poly, slong digits);
+
+ARB_POLY_INLINE void
+arb_poly_printd(const arb_poly_t poly, slong digits)
+{
+    arb_poly_fprintd(stdout, poly, digits);
+}
 
 /* Random generation */
 

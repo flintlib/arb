@@ -32,6 +32,7 @@
 #define ACB_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include "arf.h"
 #include "arb.h"
 
@@ -984,16 +985,6 @@ _acb_vec_scalar_div_fmpz(acb_ptr res, acb_srcptr vec, slong len, const fmpz_t c,
 }
 
 ACB_INLINE void
-acb_print(const acb_t x)
-{
-    flint_printf("(");
-    arb_print(acb_realref(x));
-    flint_printf(", ");
-    arb_print(acb_imagref(x));
-    flint_printf(")");
-}
-
-ACB_INLINE void
 acb_fprint(FILE * file, const acb_t x)
 {
     flint_fprintf(file, "(");
@@ -1003,9 +994,19 @@ acb_fprint(FILE * file, const acb_t x)
     flint_fprintf(file, ")");
 }
 
-void acb_printd(const acb_t z, slong digits);
+ACB_INLINE void
+acb_print(const acb_t x)
+{
+    acb_fprint(stdout, x);
+}
 
 void acb_fprintd(FILE * file, const acb_t z, slong digits);
+
+ACB_INLINE void
+acb_printd(const acb_t z, slong digits)
+{
+    acb_fprintd(stdout, z, digits);
+}
 
 void acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
 

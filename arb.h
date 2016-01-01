@@ -32,6 +32,7 @@
 #define ARB_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include "fmprb.h"
 #include "mag.h"
 #include "arf.h"
@@ -269,17 +270,29 @@ arb_one(arb_t f)
     mag_zero(arb_radref(f));
 }
 
-void arb_print(const arb_t x);
-
-void arb_printd(const arb_t x, slong digits);
-
-void arb_printn(const arb_t x, slong digits, ulong flags);
-
 void arb_fprint(FILE * file, const arb_t x);
 
 void arb_fprintd(FILE * file, const arb_t x, slong digits);
 
 void arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags);
+
+ARB_INLINE void
+arb_print(const arb_t x)
+{
+    arb_fprint(stdout, x);
+}
+
+ARB_INLINE void
+arb_printd(const arb_t x, slong digits)
+{
+    arb_fprintd(stdout, x, digits);
+}
+
+ARB_INLINE void
+arb_printn(const arb_t x, slong digits, ulong flags)
+{
+    arb_fprintn(stdout, x, digits, flags);
+}
 
 ARB_INLINE void
 arb_mul_2exp_si(arb_t y, const arb_t x, slong e)
