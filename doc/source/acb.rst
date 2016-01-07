@@ -563,6 +563,10 @@ Trigonometric functions
     Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
     but evaluates the sine and cosine accurately via :func:`arb_sin_cos_pi`.
 
+.. function:: void acb_sinc(acb_t s, const acb_t z, slong prec)
+
+    Sets `s = \operatorname{sinc}(x) = \sin(z) / z`.
+
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
