@@ -149,3 +149,7 @@ Nemo <http://nemocas.org/> is a computer algebra package for
 the Julia programming language which includes a high-level
 Julia interface to Arb. The Nemo installation script will
 create a local installation of Arb along with other dependencies.
+
+A separate wrapper of transcendental functions for use with the
+C99 `complex double` type is available
+(<https://github.com/fredrik-johansson/arbcmath>).
