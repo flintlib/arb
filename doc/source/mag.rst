@@ -397,7 +397,7 @@ Special functions
 
     .. math ::
 
-        \zeta(s,a) \le \frac{1}{a} + \frac{1}{(s-1) a^{s-1}}
+        \zeta(s,a) \le \frac{1}{a^s} + \frac{1}{(s-1) a^{s-1}}
 
     which is obtained by estimating the sum by an integral.
     If `s \le 1` or `a = 0`, the bound is infinite.
