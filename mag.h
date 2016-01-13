@@ -604,6 +604,8 @@ void mag_polylog_tail(mag_t u, const mag_t z, slong sigma, ulong d, ulong N);
 
 void mag_geom_series(mag_t res, const mag_t x, ulong n);
 
+void mag_hurwitz_zeta_uiui(mag_t res, ulong s, ulong a);
+
 void mag_set_ui(mag_t z, ulong x);
 void mag_set_ui_lower(mag_t z, ulong x);
 

@@ -390,3 +390,15 @@ Special functions
         \left( \frac{\log(k+1)}{\log(k)} \right)^d \le
             \left(1 + \frac{1}{k \log(k)}\right)^d.
 
+.. function:: void mag_hurwitz_zeta_uiui(mag_t res, ulong s, ulong a)
+
+    Sets *res* to an upper bound for `\zeta(s,a) = \sum_{k=0}^{\infty} (k+a)^{-s}`.
+    We use the formula
+
+    .. math ::
+
+        \zeta(s,a) \le \frac{1}{a} + \frac{1}{(s-1) a^{s-1}}
+
+    which is obtained by estimating the sum by an integral.
+    If `s \le 1` or `a = 0`, the bound is infinite.
+
