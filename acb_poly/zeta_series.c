@@ -29,7 +29,7 @@ void
 _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, slong d, slong prec)
 {
     ulong M, N;
-    slong i;
+    slong i, bound_prec;
     mag_t bound;
     arb_ptr vb;
     int is_real, const_is_real;
@@ -62,8 +62,10 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
     mag_init(bound);
     vb = _arb_vec_init(d);
 
-    _acb_poly_zeta_em_choose_param(bound, &N, &M, s, a, FLINT_MIN(d, 2), prec, MAG_BITS);
-    _acb_poly_zeta_em_bound(vb, s, a, N, M, d, MAG_BITS);
+    bound_prec = 40 + prec / 20;
+
+    _acb_poly_zeta_em_choose_param(bound, &N, &M, s, a, FLINT_MIN(d, 2), prec, bound_prec);
+    _acb_poly_zeta_em_bound(vb, s, a, N, M, d, bound_prec);
 
     _acb_poly_zeta_em_sum(z, s, a, deflate, N, M, d, prec);
 
