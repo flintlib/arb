@@ -126,6 +126,12 @@ arb_equal(const arb_t x, const arb_t y)
            mag_equal(arb_radref(x), arb_radref(y));
 }
 
+ARB_INLINE int
+arb_equal_si(const arb_t x, slong y)
+{
+    return arf_equal_si(arb_midref(x), y) && mag_is_zero(arb_radref(x));
+}
+
 int arb_eq(const arb_t x, const arb_t y);
 int arb_ne(const arb_t x, const arb_t y);
 int arb_lt(const arb_t x, const arb_t y);

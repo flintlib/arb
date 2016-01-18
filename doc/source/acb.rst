@@ -207,6 +207,10 @@ Precision and comparisons
     quantity, use :func:`acb_overlaps` or :func:`acb_contains`,
     depending on the circumstance.
 
+.. function:: int acb_equal_si(const acb_t x, slong y)
+
+    Returns nonzero iff *x* is equal to the integer *y*.
+
 .. function:: int acb_eq(const acb_t x, const acb_t y)
 
     Returns nonzero iff *x* and *y* are certainly equal, as determined

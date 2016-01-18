@@ -186,6 +186,12 @@ acb_equal(const acb_t x, const acb_t y)
 }
 
 ACB_INLINE int
+acb_equal_si(const acb_t x, slong y)
+{
+    return arb_equal_si(acb_realref(x), y) && arb_is_zero(acb_imagref(x));
+}
+
+ACB_INLINE int
 acb_eq(const acb_t x, const acb_t y)
 {
     return arb_eq(acb_realref(x), acb_realref(y)) &&

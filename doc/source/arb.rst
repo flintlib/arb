@@ -466,6 +466,10 @@ Comparisons
     quantity, use :func:`arb_overlaps` or :func:`arb_contains`,
     depending on the circumstance.
 
+.. function:: int arb_equal_si(const arb_t x, slong y)
+
+    Returns nonzero iff *x* is equal to the integer *y*.
+
 .. function:: int arb_is_positive(const arb_t x)
 
 .. function:: int arb_is_nonnegative(const arb_t x)
