@@ -346,6 +346,24 @@ Arithmetic
 Composition
 -------------------------------------------------------------------------------
 
+.. function:: void _acb_poly_taylor_shift_horner(acb_ptr g, const acb_t c, slong n, slong prec)
+
+.. function:: void acb_poly_taylor_shift_horner(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec)
+
+.. function:: void _acb_poly_taylor_shift_divconquer(acb_ptr g, const acb_t c, slong n, slong prec)
+
+.. function:: void acb_poly_taylor_shift_divconquer(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec)
+
+.. function:: void _acb_poly_taylor_shift(acb_ptr g, const acb_t c, slong n, slong prec)
+
+.. function:: void acb_poly_taylor_shift(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec)
+
+    Sets *g* to the Taylor shift `f(x+c)`, computed respectively using
+    an optimized form of Horner's rule, divide-and-conquer, and an automatic
+    choice between the two algorithms.
+
+    The underscore methods act in-place on *g* = *f* which has length *n*.
+
 .. function:: void _acb_poly_compose_horner(acb_ptr res, acb_srcptr poly1, slong len1, acb_srcptr poly2, slong len2, slong prec)
 
 .. function:: void acb_poly_compose_horner(acb_poly_t res, const acb_poly_t poly1, const acb_poly_t poly2, slong prec)
@@ -361,6 +379,10 @@ Composition
     Sets *res* to the composition `h(x) = f(g(x))` where `f` is given by
     *poly1* and `g` is given by *poly2*, respectively using Horner's rule,
     divide-and-conquer, and an automatic choice between the two algorithms.
+
+    The default algorithm also handles special-form input `g = ax^n + c`
+    efficiently by performing a Taylor shift followed by a rescaling.
+
     The underscore methods do not support aliasing of the output
     with either input polynomial.
 
@@ -380,10 +402,12 @@ Composition
     to order `O(x^n)` where `f` is given by *poly1* and `g` is given by *poly2*,
     respectively using Horner's rule, the Brent-Kung baby step-giant step
     algorithm, and an automatic choice between the two algorithms.
+
+    The default algorithm also handles special-form input `g = ax^n` efficiently.
+
     We require that the constant term in `g(x)` is exactly zero.
     The underscore methods do not support aliasing of the output
     with either input polynomial.
-
 
 .. function:: void _acb_poly_revert_series_lagrange(acb_ptr h, acb_srcptr f, slong flen, slong n, slong prec)
 

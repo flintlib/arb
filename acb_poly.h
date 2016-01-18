@@ -322,6 +322,18 @@ void _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A,
 
 /* Composition */
 
+void _acb_poly_taylor_shift_horner(acb_ptr poly, const acb_t c, slong n, slong prec);
+
+void acb_poly_taylor_shift_horner(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);
+
+void _acb_poly_taylor_shift_divconquer(acb_ptr poly, const acb_t c, slong n, slong prec);
+
+void acb_poly_taylor_shift_divconquer(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);
+
+void _acb_poly_taylor_shift(acb_ptr poly, const acb_t c, slong n, slong prec);
+
+void acb_poly_taylor_shift(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);
+
 void _acb_poly_compose(acb_ptr res,
     acb_srcptr poly1, slong len1,
     acb_srcptr poly2, slong len2, slong prec);
