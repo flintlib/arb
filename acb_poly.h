@@ -330,6 +330,10 @@ void _acb_poly_taylor_shift_divconquer(acb_ptr poly, const acb_t c, slong n, slo
 
 void acb_poly_taylor_shift_divconquer(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);
 
+void _acb_poly_taylor_shift_convolution(acb_ptr poly, const acb_t c, slong n, slong prec);
+
+void acb_poly_taylor_shift_convolution(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);
+
 void _acb_poly_taylor_shift(acb_ptr poly, const acb_t c, slong n, slong prec);
 
 void acb_poly_taylor_shift(acb_poly_t g, const acb_poly_t f, const acb_t c, slong prec);

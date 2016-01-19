@@ -353,13 +353,17 @@ Composition
 
 .. function:: void arb_poly_taylor_shift_divconquer(arb_poly_t g, const arb_poly_t f, const arb_t c, slong prec)
 
+.. function:: void _arb_poly_taylor_shift_convolution(arb_ptr g, const arb_t c, slong n, slong prec)
+
+.. function:: void arb_poly_taylor_shift_convolution(arb_poly_t g, const arb_poly_t f, const arb_t c, slong prec)
+
 .. function:: void _arb_poly_taylor_shift(arb_ptr g, const arb_t c, slong n, slong prec)
 
 .. function:: void arb_poly_taylor_shift(arb_poly_t g, const arb_poly_t f, const arb_t c, slong prec)
 
     Sets *g* to the Taylor shift `f(x+c)`, computed respectively using
-    an optimized form of Horner's rule, divide-and-conquer, and an automatic
-    choice between the two algorithms.
+    an optimized form of Horner's rule, divide-and-conquer, a single
+    convolution, and an automatic choice between the three algorithms.
 
     The underscore methods act in-place on *g* = *f* which has length *n*.
 

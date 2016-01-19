@@ -28,11 +28,19 @@
 void
 _acb_poly_taylor_shift(acb_ptr poly, const acb_t c, slong n, slong prec)
 {
-    if (n <= 30 || (n <= 1000 && acb_bits(c) == 1 && n < 30 + 3 * sqrt(prec))
-            || (n <= 100 && acb_bits(c) < 0.01 * prec))
+    if (n <= 30 || (n <= 500 && acb_bits(c) == 1 && n < 30 + 3 * sqrt(prec))
+                || (n <= 100 && acb_bits(c) < 0.01 * prec))
+    {
         _acb_poly_taylor_shift_horner(poly, c, n, prec);
+    }
+    else if (prec > 2 * n)
+    {
+        _acb_poly_taylor_shift_convolution(poly, c, n, prec);
+    }
     else
+    {
         _acb_poly_taylor_shift_divconquer(poly, c, n, prec);
+    }
 }
 
 void
