@@ -529,6 +529,9 @@ void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x);
 void arb_union(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits);
 
+int arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd);
+int arb_can_round_mpfr(const arb_t x, slong prec, mpfr_rnd_t rnd);
+
 void arb_add(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_add_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
 void arb_add_ui(arb_t z, const arb_t x, ulong y, slong prec);

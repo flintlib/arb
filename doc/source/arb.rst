@@ -425,6 +425,32 @@ Radius and interval operations
     digits. If *x* is infinite or exactly zero, the outputs are all set
     to zero.
 
+.. function:: int arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd)
+
+.. function:: int arb_can_round_mpfr(const arb_t x, slong prec, mpfr_rnd_t rnd)
+
+    Returns nonzero if rounding the midpoint of *x* to *prec* bits in
+    the direction *rnd* is guaranteed to give the unique correctly
+    rounded floating-point approximation for the real number represented by *x*.
+
+    In other words, if this function returns nonzero, applying
+    :func:`arf_set_round`, or :func:`arf_get_mpfr`, or :func:`arf_get_d`
+    to the midpoint of *x* is guaranteed to return a correctly rounded *arf_t*,
+    *mpfr_t* (provided that *prec* is the precision of the output variable),
+    or *double* (provided that *prec* is 53).
+    Moreover, :func:`arf_get_mpfr` is guaranteed to return the correct ternary
+    value according to MPFR semantics.
+
+    Note that the *mpfr* version of this function takes an MPFR rounding mode
+    symbol as input, while the *arf* version takes an *arf* rounding mode
+    symbol. Otherwise, the functions are identical.
+
+    This function may perform a fast, inexact test; that is, it may return
+    zero in some cases even when correct rounding actually is possible.
+
+    To be conservative, zero is returned when *x* is non-finite, even if it
+    is an "exact" infinity.
+
 Comparisons
 -------------------------------------------------------------------------------
 
