@@ -24,8 +24,8 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "arith.h"
-#include "double_extras.h"
+#include "flint/arith.h"
+#include "flint/double_extras.h"
 
 /* \sum_{k=0}^{a-1} \frac{k^n}{k!} */
 /* b = a * \frac{(a-1)^n}{(a-1)!} */

@@ -3,7 +3,7 @@
 #include <string.h>
 #include "arb_calc.h"
 #include "acb_hypgeom.h"
-#include "profiler.h"
+#include "flint/profiler.h"
 
 slong eval_count = 0;
 

@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "arf.h"
-#include "double_extras.h"
+#include "flint/double_extras.h"
 
 /* most double: (2^53-1) * 2^971 */
 /* least normal: 2^-1022 */

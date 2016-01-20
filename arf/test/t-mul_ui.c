@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "arf.h"
-#include "ulong_extras.h"
+#include "flint/ulong_extras.h"
 
 int
 arf_mul_ui_naive(arf_t z, const arf_t x, ulong y, slong prec, arf_rnd_t rnd)

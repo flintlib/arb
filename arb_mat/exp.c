@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "double_extras.h"
+#include "flint/double_extras.h"
 #include "arb_mat.h"
 
 #define LOG2_OVER_E 0.25499459743395350926

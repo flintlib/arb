@@ -25,7 +25,7 @@
 
 #include "partitions.h"
 
-#include "arith.h"
+#include "flint/arith.h"
 #include "arb.h"
 #include "math.h"
 
