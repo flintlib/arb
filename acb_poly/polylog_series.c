@@ -111,6 +111,21 @@ _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, slong len, s
         return;
     }
 
+    if (acb_is_one(z))
+    {
+        if (arb_gt(acb_realref(s), acb_realref(z))) /* Re(s) > 1 */
+        {
+            acb_zeta(w, s, prec);
+            _acb_vec_indeterminate(w + 1, len - 1);
+        }
+        else
+        {
+            _acb_vec_indeterminate(w, len);
+        }
+
+        return;
+    }
+
     acb_init(t);
     acb_init(u);
     acb_init(v);
