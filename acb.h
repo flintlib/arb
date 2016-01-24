@@ -798,6 +798,8 @@ void acb_zeta(acb_t z, const acb_t s, slong prec);
 void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, slong prec);
 void acb_polygamma(acb_t res, const acb_t s, const acb_t z, slong prec);
 
+void acb_bernoulli_poly_ui(acb_t res, ulong n, const acb_t x, slong prec);
+
 void acb_log_barnes_g(acb_t res, const acb_t z, slong prec);
 void acb_barnes_g(acb_t res, const acb_t z, slong prec);
 

@@ -697,6 +697,8 @@ void arb_zeta_ui_vec(arb_ptr x, ulong start, slong num, slong prec);
 void arb_bernoulli_ui(arb_t b, ulong n, slong prec);
 void arb_bernoulli_ui_zeta(arb_t b, ulong n, slong prec);
 
+void arb_bernoulli_poly_ui(arb_t res, ulong n, const arb_t x, slong prec);
+
 void arb_polylog(arb_t w, const arb_t s, const arb_t z, slong prec);
 void arb_polylog_si(arb_t w, slong s, const arb_t z, slong prec);
 
