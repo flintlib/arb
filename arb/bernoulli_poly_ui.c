@@ -47,7 +47,7 @@ arb_bernoulli_poly_ui(arb_t res, ulong n, const arb_t x, slong prec)
     }
 
     /* small integer x */
-    if (arb_is_int(x) && arf_cmpabs_ui(arb_midref(x), n) < 0)
+    if (arb_is_int(x) && arf_cmpabs_ui(arb_midref(x), n) < 0 && n < WORD_MAX)
     {
         if (arf_sgn(arb_midref(x)) >= 0)
         {
