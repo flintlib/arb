@@ -778,6 +778,15 @@ Zeta function
     Note: for computing derivatives with respect to `s`,
     use :func:`acb_poly_zeta_series` or related methods.
 
+.. function:: void acb_bernoulli_poly_ui(acb_t res, ulong n, const acb_t x, slong prec)
+
+    Sets *res* to the value of the Bernoulli polynomial `B_n(x)`.
+
+    Warning: this function is only fast if either *n* or *x* is a small integer.
+
+    This function reads Bernoulli numbers from the global cache if they
+    are already cached, but does not automatically extend the cache by itself.
+
 Polylogarithms
 -------------------------------------------------------------------------------
 

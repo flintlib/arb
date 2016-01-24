@@ -1212,7 +1212,7 @@ Zeta function
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 
-Bernoulli numbers
+Bernoulli numbers and polynomials
 -------------------------------------------------------------------------------
 
 .. function:: void arb_bernoulli_ui(arb_t b, ulong n, slong prec)
@@ -1235,6 +1235,15 @@ Bernoulli numbers
     We therefore assume that the precision is small
     enough and `n` large enough for the Euler product to converge
     rapidly (otherwise this function will effectively hang).
+
+.. function:: void arb_bernoulli_poly_ui(arb_t res, ulong n, const arb_t x, slong prec)
+
+    Sets *res* to the value of the Bernoulli polynomial `B_n(x)`.
+
+    Warning: this function is only fast if either *n* or *x* is a small integer.
+
+    This function reads Bernoulli numbers from the global cache if they
+    are already cached, but does not automatically extend the cache by itself.
 
 .. function:: void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, slong len, slong prec)
 
