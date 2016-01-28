@@ -1,7 +1,7 @@
 /* This file is public domain. Author: Fredrik Johansson. */
 
 #include "arb.h"
-#include "profiler.h"
+#include "flint/profiler.h"
 
 int main(int argc, char *argv[])
 {

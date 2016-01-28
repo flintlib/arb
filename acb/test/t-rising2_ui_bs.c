@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "arith.h"
+#include "flint/arith.h"
 #include "acb_poly.h"
 
 int main()

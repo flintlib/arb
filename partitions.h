@@ -27,8 +27,8 @@
 #define PARTITIONS_H
 
 #include <math.h>
-#include "flint.h"
-#include "arith.h"
+#include "flint/flint.h"
+#include "flint/arith.h"
 #include "arb.h"
 
 #ifdef __cplusplus

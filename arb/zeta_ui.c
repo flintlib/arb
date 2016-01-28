@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include <math.h>
-#include "arith.h"
+#include "flint/arith.h"
 #include "arb.h"
 
 void

@@ -25,7 +25,7 @@
 
 #include "acb_modular.h"
 
-#include "profiler.h"
+#include "flint/profiler.h"
 
 int main()
 {

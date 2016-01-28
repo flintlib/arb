@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "double_extras.h"
+#include "flint/double_extras.h"
 #include "acb_mat.h"
 
 slong _arb_mat_exp_choose_N(const mag_t norm, slong prec);

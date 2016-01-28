@@ -27,7 +27,7 @@
 #define FMPRB_H
 
 #include "fmpr.h"
-#include "fmpz_poly.h"
+#include "flint/fmpz_poly.h"
 
 #ifdef __cplusplus
 extern "C" {

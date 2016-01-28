@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "double_extras.h"
+#include "flint/double_extras.h"
 #include "mag.h"
 
 /* XXX: d_randtest is not good enough */

@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "arith.h"
+#include "flint/arith.h"
 #include "partitions.h"
 
 /* Values mod 10^9 */

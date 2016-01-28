@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "arf.h"
-#include "mpn_extras.h"
+#include "flint/mpn_extras.h"
 
 #if !defined(__MPIR_VERSION)
 #define USE_GMP_DIV_Q 1

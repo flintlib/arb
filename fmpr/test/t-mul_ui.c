@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "fmpr.h"
-#include "ulong_extras.h"
+#include "flint/ulong_extras.h"
 
 static slong
 fmpr_mul_ui_naive(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)

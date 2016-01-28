@@ -26,9 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bernoulli.h"
-#include "ulong_extras.h"
-#include "nmod_poly.h"
-#include "nmod_vec.h"
+#include "flint/ulong_extras.h"
+#include "flint/nmod_poly.h"
+#include "flint/nmod_vec.h"
 
 int main()
 {
