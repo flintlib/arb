@@ -607,6 +607,28 @@ int main()
         arb_get_abs_lbound_arf(b, indet_pos_rad, wp); ASSERT(arf_is_nan(b));
         arb_get_abs_lbound_arf(b, indet_inf_rad, wp); ASSERT(arf_is_nan(b));
 
+        arb_get_ubound_arf(b, zero, wp); ASSERT(arf_is_zero(b));
+        arb_get_ubound_arf(b, pos, wp); ASSERT(arf_sgn(b) > 0);
+        arb_get_ubound_arf(b, pos_inf, wp); ASSERT(arf_is_pos_inf(b));
+        arb_get_ubound_arf(b, neg_inf, wp); ASSERT(arf_is_neg_inf(b));
+        arb_get_ubound_arf(b, pos_inf_err, wp); ASSERT(arf_is_pos_inf(b));
+        arb_get_ubound_arf(b, neg_inf_err, wp); ASSERT(arf_is_neg_inf(b));
+        arb_get_ubound_arf(b, zero_pm_inf, wp); ASSERT(arf_is_pos_inf(b));
+        arb_get_ubound_arf(b, indet_exact, wp); ASSERT(arf_is_nan(b));
+        arb_get_ubound_arf(b, indet_pos_rad, wp); ASSERT(arf_is_nan(b));
+        arb_get_ubound_arf(b, indet_inf_rad, wp); ASSERT(arf_is_nan(b));
+
+        arb_get_lbound_arf(b, zero, wp); ASSERT(arf_is_zero(b));
+        arb_get_lbound_arf(b, neg, wp); ASSERT(arf_sgn(b) < 0);
+        arb_get_lbound_arf(b, pos_inf, wp); ASSERT(arf_is_pos_inf(b));
+        arb_get_lbound_arf(b, neg_inf, wp); ASSERT(arf_is_neg_inf(b));
+        arb_get_lbound_arf(b, pos_inf_err, wp); ASSERT(arf_is_pos_inf(b));
+        arb_get_lbound_arf(b, neg_inf_err, wp); ASSERT(arf_is_neg_inf(b));
+        arb_get_lbound_arf(b, zero_pm_inf, wp); ASSERT(arf_is_neg_inf(b));
+        arb_get_lbound_arf(b, indet_exact, wp); ASSERT(arf_is_nan(b));
+        arb_get_lbound_arf(b, indet_pos_rad, wp); ASSERT(arf_is_nan(b));
+        arb_get_lbound_arf(b, indet_inf_rad, wp); ASSERT(arf_is_nan(b));
+
         arf_clear(b);
     }
 
