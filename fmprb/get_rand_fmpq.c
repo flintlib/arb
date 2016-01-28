@@ -50,7 +50,7 @@ _fmprb_get_rand_fmpq(fmpz_t num, fmpz_t den, flint_rand_t state,
 
     if (COEFF_IS_MPZ(*exp))
     {
-        printf("exception: fmprb_get_rand_fmpq: too large exponent\n");
+        flint_printf("exception: fmprb_get_rand_fmpq: too large exponent\n");
         abort();
     }
 
@@ -63,7 +63,7 @@ _fmprb_get_rand_fmpq(fmpz_t num, fmpz_t den, flint_rand_t state,
     /* generate random integer in [a*den, b*den] */
     fmpz_mul(a, a, den_mult);
     fmpz_mul(b, b, den_mult);
-    fmpz_add_ui(b, b, 1UL);
+    fmpz_add_ui(b, b, UWORD(1));
     fmpz_sub(b, b, a);
 
     /* return one endpoint with high probability (used for stress
@@ -73,7 +73,7 @@ _fmprb_get_rand_fmpq(fmpz_t num, fmpz_t den, flint_rand_t state,
         if (n_randint(state, 2))
             fmpz_zero(num);
         else
-            fmpz_sub_ui(num, b, 1UL);
+            fmpz_sub_ui(num, b, UWORD(1));
     }
     else
     {
@@ -105,7 +105,7 @@ cause overflows.
 */
 
 void
-fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits)
+fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, slong bits)
 {
     /* there is only one rational */
     if (fmprb_is_exact(x))

@@ -26,28 +26,28 @@
 #include "acb.h"
 
 void
-acb_randtest(acb_t z, flint_rand_t state, long prec, long mag_bits)
+acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits)
 {
     arb_randtest(acb_realref(z), state, prec, mag_bits);
     arb_randtest(acb_imagref(z), state, prec, mag_bits);
 }
 
 void
-acb_randtest_special(acb_t z, flint_rand_t state, long prec, long mag_bits)
+acb_randtest_special(acb_t z, flint_rand_t state, slong prec, slong mag_bits)
 {
     arb_randtest_special(acb_realref(z), state, prec, mag_bits);
     arb_randtest_special(acb_imagref(z), state, prec, mag_bits);
 }
 
 void
-acb_randtest_precise(acb_t z, flint_rand_t state, long prec, long mag_bits)
+acb_randtest_precise(acb_t z, flint_rand_t state, slong prec, slong mag_bits)
 {
     arb_randtest_precise(acb_realref(z), state, prec, mag_bits);
     arb_randtest_precise(acb_imagref(z), state, prec, mag_bits);
 }
 
 void
-acb_randtest_param(acb_t x, flint_rand_t state, long prec, long size)
+acb_randtest_param(acb_t x, flint_rand_t state, slong prec, slong size)
 {
     if (n_randint(state, 8) == 0)
     {

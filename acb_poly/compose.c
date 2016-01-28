@@ -21,40 +21,76 @@
 
     Copyright (C) 2010 William Hart
     Copyright (C) 2012 Sebastian Pancratz
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2016 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "acb_poly.h"
 
+/* compose by poly2 = a*x^n + c, no aliasing; n >= 1 */
+void
+_acb_poly_compose_axnc(acb_ptr res, acb_srcptr poly1, slong len1,
+    const acb_t c, const acb_t a, slong n, slong prec)
+{
+    slong i;
+
+    _acb_vec_set_round(res, poly1, len1, prec);
+    /* shift by c (c = 0 case will be fast) */
+    _acb_poly_taylor_shift(res, c, len1, prec);
+
+    /* multiply by powers of a */
+    if (!acb_is_one(a))
+    {
+        if (acb_equal_si(a, -1))
+        {
+            for (i = 1; i < len1; i += 2)
+                acb_neg(res + i, res + i);
+        }
+        else if (len1 == 2)
+        {
+            acb_mul(res + 1, res + 1, a, prec);
+        }
+        else
+        {
+            acb_t t;
+            acb_init(t);
+            acb_set(t, a);
+
+            for (i = 1; i < len1; i++)
+            {
+                acb_mul(res + i, res + i, t, prec);
+                if (i + 1 < len1)
+                    acb_mul(t, t, a, prec);
+            }
+
+            acb_clear(t);
+        }
+    }
+
+    /* stretch */
+    for (i = len1 - 1; i >= 1 && n > 1; i--)
+    {
+        acb_swap(res + i * n, res + i);
+        _acb_vec_zero(res + (i - 1) * n + 1, n - 1);
+    }
+}
+
 void
 _acb_poly_compose(acb_ptr res,
-    acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long prec)
+    acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong prec)
 {
-    if (len2 == 1)
+    if (len1 == 1)
+    {
+        acb_set_round(res, poly1, prec);
+    }
+    else if (len2 == 1)
     {
         _acb_poly_evaluate(res, poly1, len1, poly2, prec);
     }
-    else if (_acb_vec_is_zero(poly2, len2 - 1)) /* poly2 is a monomial */
+    else if (_acb_vec_is_zero(poly2 + 1, len2 - 2))
     {
-        long i;
-        acb_t t;
-
-        acb_init(t);
-        acb_set(t, poly2 + len2 - 1);
-        acb_set_round(res, poly1, prec);
-
-        for (i = 1; i < len1; i++)
-        {
-            acb_mul(res + i * (len2 - 1), poly1 + i, t, prec);
-            if (i + 1 < len1)
-                acb_mul(t, t, poly2 + len2 - 1, prec);
-
-            _acb_vec_zero(res + (i - 1) * (len2 - 1) + 1, len2 - 2);
-        }
-
-        acb_clear(t);
+        _acb_poly_compose_axnc(res, poly1, len1, poly2, poly2 + len2 - 1, len2 - 1, prec);
     }
     else if (len1 <= 7)
     {
@@ -67,10 +103,10 @@ _acb_poly_compose(acb_ptr res,
 }
 
 void acb_poly_compose(acb_poly_t res,
-              const acb_poly_t poly1, const acb_poly_t poly2, long prec)
+              const acb_poly_t poly1, const acb_poly_t poly2, slong prec)
 {
-    const long len1 = poly1->length;
-    const long len2 = poly2->length;
+    const slong len1 = poly1->length;
+    const slong len2 = poly2->length;
     
     if (len1 == 0)
     {
@@ -82,7 +118,7 @@ void acb_poly_compose(acb_poly_t res,
     }
     else
     {
-        const long lenr = (len1 - 1) * (len2 - 1) + 1;
+        const slong lenr = (len1 - 1) * (len2 - 1) + 1;
         
         if (res != poly1 && res != poly2)
         {
@@ -104,3 +140,4 @@ void acb_poly_compose(acb_poly_t res,
         _acb_poly_normalise(res);
     }
 }
+

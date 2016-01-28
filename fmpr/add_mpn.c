@@ -29,7 +29,7 @@
 #define ADD_TLS_ALLOC 1000
 
 TLS_PREFIX mp_ptr __add_tmp = NULL;
-TLS_PREFIX long __add_alloc = 0;
+TLS_PREFIX slong __add_alloc = 0;
 
 void _add_tmp_cleanup(void)
 {
@@ -66,13 +66,13 @@ void _add_tmp_cleanup(void)
         flint_free(tmp);
 
 /* computes x + y * 2^shift (optionally negated) */
-long
+slong
 _fmpr_add_mpn(fmpr_t z,
         mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
         mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
-        long shift, long prec, fmpr_rnd_t rnd)
+        slong shift, slong prec, fmpr_rnd_t rnd)
 {
-    long tn, zn, alloc, ret, shift_bits, shift_limbs;
+    slong tn, zn, alloc, ret, shift_bits, shift_limbs;
     int negative;
     mp_limb_t tmp_stack[ADD_STACK_ALLOC];
     mp_limb_t cy;
@@ -154,7 +154,7 @@ _fmpr_add_mpn(fmpr_t z,
         }
         else /* may have overlap between x and y * 2^shift */
         {
-            long alloc1, alloc2;
+            slong alloc1, alloc2;
 
             alloc2 = yn + 1;   /* shifted value of y */
             alloc1 = FLINT_MAX(alloc2 + shift_limbs, xn) + 1; /* space for sum */
@@ -248,7 +248,7 @@ _fmpr_add_mpn(fmpr_t z,
         }
         else /* may have overlap between x and y * 2^shift */
         {
-            long alloc1, alloc2;
+            slong alloc1, alloc2;
 
             alloc2 = yn + 1;   /* shifted value of y */
             alloc1 = FLINT_MAX(alloc2 + shift_limbs, xn); /* space for difference */
@@ -281,7 +281,7 @@ _fmpr_add_mpn(fmpr_t z,
 
                 if (comp == 0)
                 {
-                    long i;
+                    slong i;
 
                     for (i = 0; i < shift_limbs; i++)
                     {

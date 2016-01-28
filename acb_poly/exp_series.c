@@ -33,9 +33,9 @@ with inverse=0 uses g as scratch space, computing
 g = exp(-x) only to length (n+1)/2 */
 static void
 _acb_poly_exp_series_newton(acb_ptr f, acb_ptr g,
-    acb_srcptr h, long len, long prec, int inverse, long cutoff)
+    acb_srcptr h, slong len, slong prec, int inverse, slong cutoff)
 {
-    long alloc;
+    slong alloc;
     acb_ptr T, U, hprime;
 
     alloc = 3 * len;
@@ -57,8 +57,8 @@ _acb_poly_exp_series_newton(acb_ptr f, acb_ptr g,
     /* extend from length m to length n */
     NEWTON_LOOP(m, n)
 
-    long m2 = (m + 1) / 2;
-    long l = m - 1; /* shifted for derivative */
+    slong m2 = (m + 1) / 2;
+    slong l = m - 1; /* shifted for derivative */
 
     /* g := exp(-h) + O(x^m) */
     _acb_poly_mullow(T, f, m, g, m2, m, prec);
@@ -96,7 +96,7 @@ _acb_poly_exp_series_newton(acb_ptr f, acb_ptr g,
 }
 
 void
-_acb_poly_exp_series(acb_ptr f, acb_srcptr h, long hlen, long n, long prec)
+_acb_poly_exp_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
@@ -112,7 +112,7 @@ _acb_poly_exp_series(acb_ptr f, acb_srcptr h, long hlen, long n, long prec)
     }
     else if (_acb_vec_is_zero(h + 1, hlen - 2)) /* h = a + bx^d */
     {
-        long i, j, d = hlen - 1;
+        slong i, j, d = hlen - 1;
         acb_t t;
         acb_init(t);
         acb_set(t, h + d);
@@ -163,9 +163,9 @@ _acb_poly_exp_series(acb_ptr f, acb_srcptr h, long hlen, long n, long prec)
 }
 
 void
-acb_poly_exp_series(acb_poly_t f, const acb_poly_t h, long n, long prec)
+acb_poly_exp_series(acb_poly_t f, const acb_poly_t h, slong n, slong prec)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

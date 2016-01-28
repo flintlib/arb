@@ -19,40 +19,29 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "mag.h"
-#include "arf.h"
+#include "arb_poly.h"
 
 void
-mag_print(const mag_t x)
+arb_poly_fprintd(FILE * file, const arb_poly_t poly, slong digits)
 {
-    printf("(");
-    if (mag_is_zero(x))
-        printf("0");
-    else if (mag_is_inf(x))
-        printf("inf");
-    else
+    slong i;
+
+    flint_fprintf(file, "[");
+
+    for (i = 0; i < poly->length; i++)
     {
-        fmpz_t t;
-        fmpz_init(t);
-        fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
-        printf("%lu * 2^", MAG_MAN(x));
-        fmpz_print(t);
-        fmpz_clear(t);
+        flint_fprintf(file, "(");
+        arb_fprintd(file, poly->coeffs + i, digits);
+        flint_fprintf(file, ")");
+        
+        if (i + 1 < poly->length)
+            flint_fprintf(file, ", ");
     }
-    printf(")");
-}
 
-void
-mag_printd(const mag_t x, long d)
-{
-    arf_t t;
-    arf_init(t);
-    arf_set_mag(t, x);
-    arf_printd(t, d);
-    arf_clear(t);
+    flint_fprintf(file, "]");
 }
-

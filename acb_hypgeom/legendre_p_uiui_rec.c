@@ -26,10 +26,10 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, long prec)
+acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, slong prec)
 {
     acb_t t, u, v;
-    long k;
+    slong k;
 
     if (!acb_is_finite(z))
     {
@@ -57,7 +57,7 @@ acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, long
     if (m == 0)
         arb_one(acb_realref(t));
     else
-        arb_fac2_ui(acb_realref(t), 2 * m - 1, prec);
+        arb_doublefac_ui(acb_realref(t), 2 * m - 1, prec);
 
     if (m % 2)
         arb_neg(acb_realref(t), acb_realref(t));

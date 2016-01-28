@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("2f1_continuation....");
+    flint_printf("2f1_continuation....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
         acb_t a, b, c, z1, z2, f1, f2, g1, g2, h1, h2, aa, bb, cc;
         mag_t d0, d1, dt;
 
-        long prec;
+        slong prec;
         int regularized, ebits;
 
         acb_init(a); acb_init(b); acb_init(c);
@@ -118,22 +118,22 @@ int main()
 
             if (!acb_overlaps(g1, h1) || !acb_overlaps(g2, h2))
             {
-                printf("FAIL: consistency\n\n");
-                printf("regularized = %d, prec = %ld\n\n", regularized, prec);
-                printf("a = "); acb_printd(a, 30); printf("\n\n");
-                printf("b = "); acb_printd(b, 30); printf("\n\n");
-                printf("c = "); acb_printd(c, 30); printf("\n\n");
-                printf("z1 = "); acb_printd(z1, 30); printf("\n\n");
-                printf("z2 = "); acb_printd(z2, 30); printf("\n\n");
-                printf("F(a,b,c,z1) and F'(a,b,c,z1):\n");
-                printf("f1 = "); acb_printd(f1, 30); printf("\n\n");
-                printf("f2 = "); acb_printd(f2, 30); printf("\n\n");
-                printf("F(a,b,c,z2) and F'(a,b,c,z2):\n");
-                printf("g1 = "); acb_printd(g1, 30); printf("\n\n");
-                printf("g2 = "); acb_printd(g2, 30); printf("\n\n");
-                printf("Computed F and F':\n");
-                printf("h1 = "); acb_printd(h1, 30); printf("\n\n");
-                printf("h2 = "); acb_printd(h2, 30); printf("\n\n");
+                flint_printf("FAIL: consistency\n\n");
+                flint_printf("regularized = %d, prec = %wd\n\n", regularized, prec);
+                flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
+                flint_printf("b = "); acb_printd(b, 30); flint_printf("\n\n");
+                flint_printf("c = "); acb_printd(c, 30); flint_printf("\n\n");
+                flint_printf("z1 = "); acb_printd(z1, 30); flint_printf("\n\n");
+                flint_printf("z2 = "); acb_printd(z2, 30); flint_printf("\n\n");
+                flint_printf("F(a,b,c,z1) and F'(a,b,c,z1):\n");
+                flint_printf("f1 = "); acb_printd(f1, 30); flint_printf("\n\n");
+                flint_printf("f2 = "); acb_printd(f2, 30); flint_printf("\n\n");
+                flint_printf("F(a,b,c,z2) and F'(a,b,c,z2):\n");
+                flint_printf("g1 = "); acb_printd(g1, 30); flint_printf("\n\n");
+                flint_printf("g2 = "); acb_printd(g2, 30); flint_printf("\n\n");
+                flint_printf("Computed F and F':\n");
+                flint_printf("h1 = "); acb_printd(h1, 30); flint_printf("\n\n");
+                flint_printf("h2 = "); acb_printd(h2, 30); flint_printf("\n\n");
                 abort();
             }
         }
@@ -149,7 +149,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

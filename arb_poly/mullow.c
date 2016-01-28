@@ -29,8 +29,8 @@
 
 void
 _arb_poly_mullow(arb_ptr res,
-    arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long n, long prec)
+    arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong n, slong prec)
 {
     if (n == 1)
     {
@@ -48,9 +48,9 @@ _arb_poly_mullow(arb_ptr res,
 void
 arb_poly_mullow(arb_poly_t res, const arb_poly_t poly1,
                                             const arb_poly_t poly2,
-                                                long n, long prec)
+                                                slong n, slong prec)
 {
-    long len_out;
+    slong len_out;
 
     if (poly1->length == 0 || poly2->length == 0 || n == 0)
     {

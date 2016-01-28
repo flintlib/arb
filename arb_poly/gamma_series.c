@@ -25,17 +25,17 @@
 
 #include "arb_poly.h"
 
-void arb_gamma_stirling_bound(mag_ptr err, const arb_t x, long k0, long knum, long n);
+void arb_gamma_stirling_bound(mag_ptr err, const arb_t x, slong k0, slong knum, slong n);
 
-void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec);
+void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec);
 
-void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec);
+void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec);
 
 void
-_arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec)
+_arb_poly_lgamma_series_at_one(arb_ptr u, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     if (len > 0) arb_zero(u);
     if (len > 1) arb_const_euler(u + 1, prec);
@@ -50,7 +50,7 @@ _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec)
 }
 
 static void
-bsplit(arb_ptr Q, arb_ptr T, const arb_t z, long a, long b, long num, long prec)
+bsplit(arb_ptr Q, arb_ptr T, const arb_t z, slong a, slong b, slong num, slong prec)
 {
     if (b - a == 1)
     {
@@ -71,7 +71,7 @@ bsplit(arb_ptr Q, arb_ptr T, const arb_t z, long a, long b, long num, long prec)
     }
     else
     {
-        long m, n1, n2, q1len, q2len, t1len, t2len, qlen, tlen, alloc;
+        slong m, n1, n2, q1len, q2len, t1len, t2len, qlen, tlen, alloc;
         arb_ptr Q1, T1, Q2, T2;
 
         m = a + (b - a) / 2;
@@ -103,9 +103,9 @@ bsplit(arb_ptr Q, arb_ptr T, const arb_t z, long a, long b, long num, long prec)
 }
 
 void
-_arb_poly_mullow_cpx(arb_ptr res, arb_srcptr src, long len, const arb_t c, long trunc, long prec)
+_arb_poly_mullow_cpx(arb_ptr res, arb_srcptr src, slong len, const arb_t c, slong trunc, slong prec)
 {
-    long i;
+    slong i;
 
     if (len < trunc)
         arb_set(res + len, src + len - 1);
@@ -120,9 +120,9 @@ _arb_poly_mullow_cpx(arb_ptr res, arb_srcptr src, long len, const arb_t c, long 
 }
 
 void
-_arb_poly_log_cpx_series(arb_ptr res, const arb_t c, long num, long prec)
+_arb_poly_log_cpx_series(arb_ptr res, const arb_t c, slong num, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < num; i++)
     {
@@ -144,9 +144,9 @@ _arb_poly_log_cpx_series(arb_ptr res, const arb_t c, long num, long prec)
 }
 
 void
-_arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, long n, long num, int diff, long prec)
+_arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, slong n, slong num, int diff, slong prec)
 {
-    long k, tlen, qlen;
+    slong k, tlen, qlen;
     arb_ptr T, Q;
     mag_ptr err;
     arb_t c;
@@ -231,16 +231,16 @@ _arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, long n, long num, int
 }
 
 void
-_arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long prec)
+_arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, slong n, slong num, slong prec)
 {
     _arb_poly_gamma_stirling_eval2(res, z, n, num, 0, prec);
 }
 
 void
-_arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_gamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, rflen, r, n, wp;
+    slong i, rflen, r, n, wp;
     arb_ptr t, u, v;
     arb_struct f[2];
 
@@ -374,7 +374,7 @@ _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec
 }
 
 void
-arb_poly_gamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_gamma_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     arb_poly_fit_length(res, n);
 

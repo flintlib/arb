@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_ceil(arb_t z, const arb_t x, long prec)
+arb_ceil(arb_t z, const arb_t x, slong prec)
 {
     if (!arb_is_finite(x))
     {

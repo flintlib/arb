@@ -28,8 +28,8 @@
 
 #define LOG2_OVER_E 0.25499459743395350926
 
-long
-_arb_mat_exp_choose_N(const mag_t norm, long prec)
+slong
+_arb_mat_exp_choose_N(const mag_t norm, slong prec)
 {
     if (mag_is_special(norm) || mag_cmp_2exp_si(norm, 30) > 0 ||
         mag_cmp_2exp_si(norm, -prec) < 0)
@@ -38,7 +38,7 @@ _arb_mat_exp_choose_N(const mag_t norm, long prec)
     }
     else if (mag_cmp_2exp_si(norm, -300) < 0)
     {
-        long N = -MAG_EXP(norm);
+        slong N = -MAG_EXP(norm);
         return (prec + N - 1) / N;
     }
     else
@@ -48,13 +48,13 @@ _arb_mat_exp_choose_N(const mag_t norm, long prec)
         c = mag_get_d(norm);
         t = d_lambertw(prec * LOG2_OVER_E / c);
         t = c * exp(t + 1.0);
-        return FLINT_MIN((long) (t + 1.0), 2 * prec);
+        return FLINT_MIN((slong) (t + 1.0), 2 * prec);
     }
 }
 
 /* evaluates the truncated Taylor series (assumes no aliasing) */
 void
-_arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, long N, long prec)
+_arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
 {
     if (N == 1)
     {
@@ -69,7 +69,7 @@ _arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, long N, long prec)
     {
         arb_mat_t T;
         arb_mat_init(T, arb_mat_nrows(A), arb_mat_nrows(A));
-        arb_mat_mul(T, A, A, prec);
+        arb_mat_sqr(T, A, prec);
         arb_mat_scalar_mul_2exp_si(T, T, -1);
         arb_mat_add(S, A, T, prec);
         arb_mat_one(T);
@@ -78,7 +78,7 @@ _arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, long N, long prec)
     }
     else
     {
-        long i, lo, hi, m, w, dim;
+        slong i, lo, hi, m, w, dim;
         arb_mat_struct * pows;
         arb_mat_t T, U;
         fmpz_t c, f;
@@ -142,9 +142,9 @@ _arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, long N, long prec)
 }
 
 void
-arb_mat_exp(arb_mat_t B, const arb_mat_t A, long prec)
+arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 {
-    long i, j, dim, wp, N, q, r;
+    slong i, j, dim, wp, N, q, r;
     mag_t norm, err;
     arb_mat_t T;
 
@@ -152,7 +152,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, long prec)
 
     if (dim != arb_mat_ncols(A))
     {
-        printf("arb_mat_exp: a square matrix is required!\n");
+        flint_printf("arb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
@@ -203,7 +203,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, long prec)
 
         for (i = 0; i < r; i++)
         {
-            arb_mat_mul(T, B, B, wp);
+            arb_mat_sqr(T, B, wp);
             arb_mat_swap(T, B);
         }
 

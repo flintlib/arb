@@ -28,7 +28,7 @@
 void
 acb_hypgeom_2f1_series_direct(acb_poly_t res,
     const acb_poly_t a, const acb_poly_t b,
-    const acb_poly_t c, const acb_poly_t z, int regularized, long len, long prec)
+    const acb_poly_t c, const acb_poly_t z, int regularized, slong len, slong prec)
 {
     acb_poly_struct aa[4];
 

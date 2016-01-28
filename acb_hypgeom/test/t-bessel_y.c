@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("bessel_y....");
+    flint_printf("bessel_y....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t nu, nu1, z, jv, jv1, yv, yv1, r, s;
-        long prec, n;
+        slong prec, n;
 
         acb_init(nu);
         acb_init(nu1);
@@ -60,10 +60,25 @@ int main()
 
         acb_add_ui(nu1, nu, 1, prec);
 
-        acb_hypgeom_bessel_j(jv, nu, z, prec);
-        acb_hypgeom_bessel_j(jv1, nu1, z, prec);
-        acb_hypgeom_bessel_y(yv, nu, z, prec);
-        acb_hypgeom_bessel_y(yv1, nu1, z, prec);
+        if (n_randint(state, 2))
+        {
+            acb_hypgeom_bessel_j(jv, nu, z, prec);
+            acb_hypgeom_bessel_y(yv, nu, z, prec);
+        }
+        else
+        {
+            acb_hypgeom_bessel_jy(jv, yv, nu, z, prec);
+        }
+
+        if (n_randint(state, 2))
+        {
+            acb_hypgeom_bessel_j(jv1, nu1, z, prec);
+            acb_hypgeom_bessel_y(yv1, nu1, z, prec);
+        }
+        else
+        {
+            acb_hypgeom_bessel_jy(jv1, yv1, nu1, z, prec);
+        }
 
         acb_mul(r, jv1, yv, prec);
         acb_submul(r, jv, yv1, prec);
@@ -74,14 +89,14 @@ int main()
 
         if (!acb_contains_zero(r))
         {
-            printf("FAIL: wronskian\n\n");
-            printf("nu = "); acb_printd(nu, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("yv = "); acb_printd(yv, 30); printf("\n\n");
-            printf("yv1 = "); acb_printd(yv1, 30); printf("\n\n");
-            printf("jv = "); acb_printd(jv, 30); printf("\n\n");
-            printf("jv1 = "); acb_printd(jv1, 30); printf("\n\n");
-            printf("r = "); acb_printd(r, 30); printf("\n\n");
+            flint_printf("FAIL: wronskian\n\n");
+            flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("yv = "); acb_printd(yv, 30); flint_printf("\n\n");
+            flint_printf("yv1 = "); acb_printd(yv1, 30); flint_printf("\n\n");
+            flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
+            flint_printf("jv1 = "); acb_printd(jv1, 30); flint_printf("\n\n");
+            flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -110,13 +125,13 @@ int main()
 
         if (!acb_overlaps(r, yv1))
         {
-            printf("FAIL: reflection formula\n\n");
-            printf("nu = "); acb_printd(nu, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("yv = "); acb_printd(yv, 30); printf("\n\n");
-            printf("yv1 = "); acb_printd(yv1, 30); printf("\n\n");
-            printf("jv = "); acb_printd(jv, 30); printf("\n\n");
-            printf("r = "); acb_printd(r, 30); printf("\n\n");
+            flint_printf("FAIL: reflection formula\n\n");
+            flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("yv = "); acb_printd(yv, 30); flint_printf("\n\n");
+            flint_printf("yv1 = "); acb_printd(yv1, 30); flint_printf("\n\n");
+            flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
+            flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -133,7 +148,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -28,17 +28,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("div_series....");
+    flint_printf("div_series....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, p, qbits, rbits1, rbits2;
+        slong m, n, p, qbits, rbits1, rbits2;
         fmpq_poly_t A, B, C;
         arb_poly_t a, b, c, d;
 
@@ -72,16 +72,16 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(c, C))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
-            printf("C = "); fmpq_poly_print(C); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
+            flint_printf("C = "); fmpq_poly_print(C); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -90,7 +90,7 @@ int main()
         arb_poly_div_series(d, d, b, p, rbits2);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 1)\n\n");
+            flint_printf("FAIL (aliasing 1)\n\n");
             abort();
         }
 
@@ -98,7 +98,7 @@ int main()
         arb_poly_div_series(d, a, d, p, rbits2);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 2)\n\n");
+            flint_printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
@@ -107,7 +107,7 @@ int main()
         arb_poly_div_series(d, d, d, p, rbits2);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 3)\n\n");
+            flint_printf("FAIL (aliasing 3)\n\n");
             abort();
         }
 
@@ -123,6 +123,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -25,13 +25,30 @@
 
 #include "acb_poly.h"
 
-static ulong choose_M(ulong N, long target)
+static ulong choose_M(ulong N, slong target)
 {
     return FLINT_MIN(N, target + N / 100);
 }
 
+static void
+estimate_mag(mag_t m, const acb_t s, const acb_t a, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+
+    acb_neg(t, s);
+    acb_pow(t, a, t, prec);
+
+    if (acb_is_finite(t))
+        acb_get_mag(m, t);
+    else
+        mag_one(m);
+
+    acb_clear(t);
+}
+
 void
-_acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, long d, long target, long prec)
+_acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s, const acb_t a, slong d, slong target, slong prec)
 {
     ulong A, B, C, limit;
     mag_t Abound, Bbound, Cbound, tol;
@@ -41,15 +58,23 @@ _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s,
     mag_init(Cbound);
     mag_init(tol);
 
-    mag_one(tol);
-    mag_mul_2exp_si(tol, tol, -target);
+    if (!acb_is_one(a) && arf_cmp_2exp_si(arb_midref(acb_realref(s)), 3) > 0)
+    {
+        /* estimate zeta(s,a) ~= a^-s */
+        estimate_mag(tol, s, a, prec);
+        mag_mul_2exp_si(tol, tol, -target);
+    }
+    else
+    {
+        mag_set_ui_2exp_si(tol, 1, -target);
+    }
 
     A = 1;
     B = 2;
 
     /* Hack: allow evaluation very high up in the critical strip... */
     if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(s)), 10) > 0)
-        limit = ULONG_MAX / 4;
+        limit = UWORD_MAX / 4;
     else
         limit = 100 * target;  /* but normally, fail more quickly */
 

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_ui....");
+    flint_printf("set_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,11 +61,11 @@ int main()
 
         if (!(fmpr_cmpabs(a, b) <= 0 && fmpr_cmpabs(b, c) <= 0))
         {
-            printf("FAIL\n\n");
-            printf("x = %lu\n\n", x);
-            printf("a = "); fmpr_print(a); printf("\n\n");
-            printf("b = "); fmpr_print(b); printf("\n\n");
-            printf("c = "); fmpr_print(c); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = %wu\n\n", x);
+            flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
+            flint_printf("c = "); fmpr_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -77,7 +77,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_set_round_fmpz(arb_t y, const fmpz_t x, long prec)
+arb_set_round_fmpz(arb_t y, const fmpz_t x, slong prec)
 {
     int inexact;
     inexact = arf_set_round_fmpz(arb_midref(y), x, prec, ARB_RND);

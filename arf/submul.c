@@ -26,13 +26,13 @@
 #include "arf.h"
 
 int
-arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
+arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn, zn, tn, alloc;
     mp_srcptr xptr, yptr, zptr;
     mp_ptr tptr, tptr2;
     fmpz_t texp;
-    long shift;
+    slong shift;
     int tsgnbit, inexact;
     ARF_MUL_TMP_DECL
 
@@ -91,13 +91,13 @@ arf_submul(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_submul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd)
+arf_submul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn, zn, tn, alloc;
     mp_srcptr xptr, yptr, zptr;
     mp_ptr tptr, tptr2;
     fmpz_t texp, yexp;
-    long shift;
+    slong shift;
     int tsgnbit, ysgnbit, inexact;
     ARF_MUL_TMP_DECL
 

@@ -27,19 +27,19 @@
 #include "acb_poly.h"
 
 static __inline__ void
-_arb_vec_printd(arb_srcptr vec, long len, long digits)
+_arb_vec_printd(arb_srcptr vec, slong len, slong digits)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
-        arb_printd(vec + i, digits), printf("\n");
+        arb_printd(vec + i, digits), flint_printf("\n");
 }
 
 
 /* series of c^(d+x) */
 static __inline__ void
-_arb_poly_pow_cpx(arb_ptr res, const arb_t c, const arb_t d, long trunc, long prec)
+_arb_poly_pow_cpx(arb_ptr res, const arb_t c, const arb_t d, slong trunc, slong prec)
 {
-    long i;
+    slong i;
     arb_t logc;
 
     arb_init(logc);
@@ -57,9 +57,9 @@ _arb_poly_pow_cpx(arb_ptr res, const arb_t c, const arb_t d, long trunc, long pr
 }
 
 void
-_arb_poly_zeta_series(arb_ptr res, arb_srcptr h, long hlen, const arb_t a, int deflate, long len, long prec)
+_arb_poly_zeta_series(arb_ptr res, arb_srcptr h, slong hlen, const arb_t a, int deflate, slong len, slong prec)
 {
-    long i;
+    slong i;
     acb_t cs, ca;
     acb_ptr z;
     arb_ptr t, u;
@@ -168,7 +168,7 @@ _arb_poly_zeta_series(arb_ptr res, arb_srcptr h, long hlen, const arb_t a, int d
 }
 
 void
-arb_poly_zeta_series(arb_poly_t res, const arb_poly_t f, const arb_t a, int deflate, long n, long prec)
+arb_poly_zeta_series(arb_poly_t res, const arb_poly_t f, const arb_t a, int deflate, slong n, slong prec)
 {
     if (n == 0)
     {

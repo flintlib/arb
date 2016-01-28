@@ -27,7 +27,7 @@
 
 static void 
 _acb_hypgeom_2f1r_reduced(acb_t res,
-    const acb_t b, const acb_t c, const acb_t z, long prec)
+    const acb_t b, const acb_t c, const acb_t z, slong prec)
 {
     acb_t t, u;
     acb_init(t);
@@ -46,7 +46,7 @@ _acb_hypgeom_2f1r_reduced(acb_t res,
 
 void
 acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
-        const acb_t c, const acb_t z, int regularized, long prec)
+        const acb_t c, const acb_t z, int regularized, slong prec)
 {
     int algorithm;
 

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("exp_invexp....");
+    flint_printf("exp_invexp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, c, d;
-        long prec;
+        slong prec;
 
         if (iter % 10 == 0)
             prec = 10000;
@@ -62,11 +62,11 @@ int main()
 
         if (!arb_overlaps(b, d))
         {
-            printf("FAIL: overlap 1\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap 1\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -75,11 +75,11 @@ int main()
 
         if (!arb_overlaps(c, d))
         {
-            printf("FAIL: overlap 2\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap 2\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -91,7 +91,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_sqrt_ui(arb_t z, ulong x, long prec)
+arb_sqrt_ui(arb_t z, ulong x, slong prec)
 {
     arf_t t;
     arf_init_set_ui(t, x); /* no need to free */
@@ -34,7 +34,7 @@ arb_sqrt_ui(arb_t z, ulong x, long prec)
 }
 
 void
-arb_sqrt_fmpz(arb_t z, const fmpz_t x, long prec)
+arb_sqrt_fmpz(arb_t z, const fmpz_t x, slong prec)
 {
     arf_t t;
     arf_init(t);
@@ -44,7 +44,7 @@ arb_sqrt_fmpz(arb_t z, const fmpz_t x, long prec)
 }
 
 void
-arb_sqrt_arf(arb_t z, const arf_t x, long prec)
+arb_sqrt_arf(arb_t z, const arf_t x, slong prec)
 {
     if (arf_sgn(x) < 0)
     {
@@ -64,7 +64,7 @@ arb_sqrt_arf(arb_t z, const arf_t x, long prec)
 }
 
 void
-arb_sqrt(arb_t z, const arb_t x, long prec)
+arb_sqrt(arb_t z, const arb_t x, slong prec)
 {
     mag_t rx, zr;
     int inexact;

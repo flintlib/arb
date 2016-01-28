@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("abs_bound_lt_2exp_si....");
+    flint_printf("abs_bound_lt_2exp_si....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         fmpr_t x;
         fmpz_t b;
-        long c;
+        slong c;
 
         fmpr_init(x);
         fmpz_init(b);
@@ -52,7 +52,7 @@ int main()
         {
             if (!(fmpr_is_zero(x) || fmpz_cmp_si(b, -FMPR_PREC_EXACT) <= 0))
             {
-                printf("FAIL (small/zero)\n\n");
+                flint_printf("FAIL (small/zero)\n\n");
                 abort();
             }
         }
@@ -61,7 +61,7 @@ int main()
             if (!(fmpr_is_inf(x) || fmpr_is_nan(x) ||
                 fmpz_cmp_si(b, FMPR_PREC_EXACT) >= 0))
             {
-                printf("FAIL (large/inf/nan)\n\n");
+                flint_printf("FAIL (large/inf/nan)\n\n");
                 abort();
             }
         }
@@ -69,10 +69,10 @@ int main()
         {
             if (fmpz_cmp_si(b, c) != 0)
             {
-                printf("FAIL (normal)\n\n");
-                printf("x = "); fmpr_print(x); printf("\n\n");
-                printf("b = "); fmpz_print(b); printf("\n\n");
-                printf("c = %ld\n\n", c);
+                flint_printf("FAIL (normal)\n\n");
+                flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
+                flint_printf("c = %wd\n\n", c);
                 abort();
             }
         }
@@ -83,7 +83,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

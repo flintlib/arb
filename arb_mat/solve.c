@@ -26,10 +26,10 @@
 #include "arb_mat.h"
 
 int
-arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, long prec)
+arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     int result;
-    long n, m, *perm;
+    slong n, m, *perm;
     arb_mat_t LU;
 
     n = arb_mat_nrows(A);

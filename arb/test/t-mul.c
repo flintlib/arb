@@ -54,7 +54,7 @@ mag_close(const mag_t am, const mag_t bm)
 }
 
 void
-arb_mul_naive(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_mul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     fmprb_t c, a, b;
 
@@ -76,10 +76,10 @@ arb_mul_naive(arb_t z, const arb_t x, const arb_t y, long prec)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
-    printf("mul....");
+    flint_printf("mul....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -109,13 +109,13 @@ int main()
 
         if (!arb_contains_fmpq(c, z))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -152,12 +152,12 @@ int main()
 
         if (!arb_contains_fmpq(a, z))
         {
-            printf("FAIL: aliasing (c, a)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: aliasing (c, a)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -193,12 +193,12 @@ int main()
 
         if (!arb_contains_fmpq(b, z))
         {
-            printf("FAIL: aliasing (c, b)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: aliasing (c, b)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -214,7 +214,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t x, y, z, v;
-        long prec;
+        slong prec;
 
         arb_init(x);
         arb_init(y);
@@ -237,11 +237,11 @@ int main()
                 if (!arf_equal(arb_midref(z), arb_midref(v))
                     || !mag_close(arb_radref(z), arb_radref(v)))
                 {
-                    printf("FAIL!\n");
-                    printf("x = "); arb_print(x); printf("\n\n");
-                    printf("y = "); arb_print(y); printf("\n\n");
-                    printf("z = "); arb_print(z); printf("\n\n");
-                    printf("v = "); arb_print(v); printf("\n\n");
+                    flint_printf("FAIL!\n");
+                    flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+                    flint_printf("z = "); arb_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     abort();
                 }
                 break;
@@ -254,10 +254,10 @@ int main()
                 if (!arf_equal(arb_midref(z), arb_midref(v))
                     || !mag_close(arb_radref(z), arb_radref(v)))
                 {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); arb_print(x); printf("\n\n");
-                    printf("z = "); arb_print(z); printf("\n\n");
-                    printf("v = "); arb_print(v); printf("\n\n");
+                    flint_printf("FAIL (aliasing 1)!\n");
+                    flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); arb_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     abort();
                 }
                 break;
@@ -268,10 +268,10 @@ int main()
 
                 if (!arb_equal(v, x))
                 {
-                    printf("FAIL (aliasing 2)!\n");
-                    printf("x = "); arb_print(x); printf("\n\n");
-                    printf("z = "); arb_print(z); printf("\n\n");
-                    printf("v = "); arb_print(v); printf("\n\n");
+                    flint_printf("FAIL (aliasing 2)!\n");
+                    flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); arb_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     abort();
                 }
                 break;
@@ -282,10 +282,10 @@ int main()
 
                 if (!arb_equal(v, x))
                 {
-                    printf("FAIL (aliasing 3)!\n");
-                    printf("x = "); arb_print(x); printf("\n\n");
-                    printf("y = "); arb_print(y); printf("\n\n");
-                    printf("v = "); arb_print(v); printf("\n\n");
+                    flint_printf("FAIL (aliasing 3)!\n");
+                    flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     abort();
                 }
                 break;
@@ -297,10 +297,10 @@ int main()
                 if (!arf_equal(arb_midref(x), arb_midref(v))
                     || !mag_close(arb_radref(x), arb_radref(v)))
                 {
-                    printf("FAIL (aliasing 4)!\n");
-                    printf("x = "); arb_print(x); printf("\n\n");
-                    printf("y = "); arb_print(y); printf("\n\n");
-                    printf("v = "); arb_print(v); printf("\n\n");
+                    flint_printf("FAIL (aliasing 4)!\n");
+                    flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     abort();
                 }
                 break;
@@ -315,6 +315,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

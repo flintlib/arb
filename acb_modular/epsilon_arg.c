@@ -87,7 +87,7 @@ acb_modular_epsilon_arg(const psl2z_t g)
         }
         else if (u != 1)
         {
-            printf("bad kronecker input\n");
+            flint_printf("bad kronecker input\n");
             abort();
         }
 

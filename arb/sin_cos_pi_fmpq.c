@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static int
-use_algebraic(const fmpz_t v, const fmpz_t w, long prec)
+use_algebraic(const fmpz_t v, const fmpz_t w, slong prec)
 {
     fmpz q = *w;
     int r;
@@ -54,7 +54,7 @@ use_algebraic(const fmpz_t v, const fmpz_t w, long prec)
 
 void
 _arb_sin_cos_pi_fmpq_oct(arb_t s, arb_t c,
-            const fmpz_t v, const fmpz_t w, long prec)
+            const fmpz_t v, const fmpz_t w, slong prec)
 {
     if (use_algebraic(v, w, prec))
     {
@@ -70,7 +70,7 @@ _arb_sin_cos_pi_fmpq_oct(arb_t s, arb_t c,
 }
 
 void
-_arb_sin_pi_fmpq_oct(arb_t s, const fmpz_t v, const fmpz_t w, long prec)
+_arb_sin_pi_fmpq_oct(arb_t s, const fmpz_t v, const fmpz_t w, slong prec)
 {
     if (use_algebraic(v, w, prec))
     {
@@ -86,7 +86,7 @@ _arb_sin_pi_fmpq_oct(arb_t s, const fmpz_t v, const fmpz_t w, long prec)
 }
 
 void
-_arb_cos_pi_fmpq_oct(arb_t c, const fmpz_t v, const fmpz_t w, long prec)
+_arb_cos_pi_fmpq_oct(arb_t c, const fmpz_t v, const fmpz_t w, slong prec)
 {
     if (use_algebraic(v, w, prec))
     {
@@ -114,7 +114,7 @@ reduce_octant(fmpz_t v, fmpz_t w, const fmpq_t x)
         *q > 0             &&
         *q < COEFF_MAX / 4)
     {
-        long pp, qq, ww, vv, tt;
+        slong pp, qq, ww, vv, tt;
 
         pp = *p;
         qq = *q;
@@ -171,7 +171,7 @@ reduce_octant(fmpz_t v, fmpz_t w, const fmpq_t x)
 }
 
 void
-arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
+arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, slong prec)
 {
     fmpz_t v, w;
     unsigned int octant;
@@ -194,7 +194,7 @@ arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
 }
 
 void
-arb_sin_pi_fmpq(arb_t s, const fmpq_t x, long prec)
+arb_sin_pi_fmpq(arb_t s, const fmpq_t x, slong prec)
 {
     fmpz_t v, w;
     unsigned int octant;
@@ -217,7 +217,7 @@ arb_sin_pi_fmpq(arb_t s, const fmpq_t x, long prec)
 }
 
 void
-arb_cos_pi_fmpq(arb_t c, const fmpq_t x, long prec)
+arb_cos_pi_fmpq(arb_t c, const fmpq_t x, slong prec)
 {
     fmpz_t v, w;
     unsigned int octant;

@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_sub(acb_ptr res, acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long prec)
+_acb_poly_sub(acb_ptr res, acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong prec)
 {
-    long i, min = FLINT_MIN(len1, len2);
+    slong i, min = FLINT_MIN(len1, len2);
 
     for (i = 0; i < min; i++)
         acb_sub(res + i, poly1 + i, poly2 + i, prec);
@@ -43,9 +43,9 @@ _acb_poly_sub(acb_ptr res, acb_srcptr poly1, long len1,
 
 void
 acb_poly_sub(acb_poly_t res, const acb_poly_t poly1,
-              const acb_poly_t poly2, long prec)
+              const acb_poly_t poly2, slong prec)
 {
-    long max = FLINT_MAX(poly1->length, poly2->length);
+    slong max = FLINT_MAX(poly1->length, poly2->length);
 
     acb_poly_fit_length(res, max);
 

@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_add_si(arb_poly_t res, const arb_poly_t x, long y, long prec)
+arb_poly_add_si(arb_poly_t res, const arb_poly_t x, slong y, slong prec)
 {
-    long len = x->length;
+    slong len = x->length;
 
     if (len == 0)
     {

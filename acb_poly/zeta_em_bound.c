@@ -27,9 +27,9 @@
 
 
 static void
-bound_I(arb_ptr I, const arb_t A, const arb_t B, const arb_t C, long len, long wp)
+bound_I(arb_ptr I, const arb_t A, const arb_t B, const arb_t C, slong len, slong wp)
 {
-    long k;
+    slong k;
 
     arb_t D, Dk, L, T, Bm1;
 
@@ -77,7 +77,7 @@ bound_I(arb_ptr I, const arb_t A, const arb_t B, const arb_t C, long len, long w
 
 /* 0.5*(B/AN)^2 + |B|/AN */
 static void
-bound_C(arb_t C, const arb_t AN, const arb_t B, long wp)
+bound_C(arb_t C, const arb_t AN, const arb_t B, slong wp)
 {
     arb_t t;
     arb_init(t);
@@ -90,7 +90,7 @@ bound_C(arb_t C, const arb_t AN, const arb_t B, long wp)
 }
 
 static void
-bound_K(arb_t C, const arb_t AN, const arb_t B, const arb_t T, long wp)
+bound_K(arb_t C, const arb_t AN, const arb_t B, const arb_t T, slong wp)
 {
     if (arb_is_zero(B) || arb_is_zero(T))
     {
@@ -110,7 +110,7 @@ bound_K(arb_t C, const arb_t AN, const arb_t B, const arb_t T, long wp)
 }
 
 static void
-bound_rfac(arb_ptr F, const acb_t s, ulong n, long len, long wp)
+bound_rfac(arb_ptr F, const acb_t s, ulong n, slong len, slong wp)
 {
     if (len == 1)
     {
@@ -133,11 +133,11 @@ bound_rfac(arb_ptr F, const acb_t s, ulong n, long len, long wp)
 }
 
 void
-_acb_poly_zeta_em_bound(arb_ptr bound, const acb_t s, const acb_t a, ulong N, ulong M, long len, long wp)
+_acb_poly_zeta_em_bound(arb_ptr bound, const acb_t s, const acb_t a, ulong N, ulong M, slong len, slong wp)
 {
     arb_t K, C, AN, S2M;
     arb_ptr F, R;
-    long k;
+    slong k;
 
     arb_srcptr alpha = acb_realref(a);
     arb_srcptr beta  = acb_imagref(a);
@@ -207,7 +207,7 @@ _acb_poly_zeta_em_bound(arb_ptr bound, const acb_t s, const acb_t a, ulong N, ul
 
 void
 _acb_poly_zeta_em_bound1(mag_t bound,
-        const acb_t s, const acb_t a, long N, long M, long len, long wp)
+        const acb_t s, const acb_t a, slong N, slong M, slong len, slong wp)
 {
     arb_ptr vec = _arb_vec_init(len);
     _acb_poly_zeta_em_bound(vec, s, a, N, M, len, wp);

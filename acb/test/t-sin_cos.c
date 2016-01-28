@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("sin_cos....");
+    flint_printf("sin_cos....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t a, b, c, d, cosa, sina, cosb, sinb;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -66,11 +66,11 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: sin(a+b) = cos(b)*sin(a) + cos(a)*sin(b)\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: sin(a+b) = cos(b)*sin(a) + cos(a)*sin(b)\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -88,7 +88,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t a, b, c, d, cosa, sina, cosb, sinb;
-        long prec;
+        slong prec;
 
         acb_init(a);
         acb_init(b);
@@ -115,11 +115,11 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: cos(a+b) = cos(b)*cos(a) - sin(a)*sin(b)\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: cos(a+b) = cos(b)*cos(a) - sin(a)*sin(b)\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -135,6 +135,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -25,8 +25,8 @@
 
 #include "fmpr.h"
 
-static long
-_fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+static slong
+_fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))
     {
@@ -61,10 +61,10 @@ _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_
     }
 }
 
-long
-fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    long shift, xn, yn;
+    slong shift, xn, yn;
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr, yptr;
     fmpz xv, yv;

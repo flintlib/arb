@@ -30,9 +30,9 @@
    (no zero-extension is done) */
 /* truncates, returns inexact */
 int
-_arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp)
+_arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp)
 {
-    long bot_exp = exp - xn * FLINT_BITS;
+    slong bot_exp = exp - xn * FLINT_BITS;
 
     if (bot_exp >= 0)
     {
@@ -94,7 +94,7 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         }
         else
         {
-            printf("arf_get_fmpz: cannot convert infinity or nan to integer\n");
+            flint_printf("arf_get_fmpz: cannot convert infinity or nan to integer\n");
             abort();
         }
     }
@@ -119,13 +119,13 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         }
         else
         {
-            printf("arf_get_fmpz: number too large to convert to integer\n");
+            flint_printf("arf_get_fmpz: number too large to convert to integer\n");
             abort();
         }
     }
     else
     {
-        long exp;
+        slong exp;
         int negative, inexact;
         mp_size_t xn, zn;
         mp_srcptr xp;

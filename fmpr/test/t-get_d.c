@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("get_d....");
+    flint_printf("get_d....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -50,10 +50,10 @@ int main()
 
         if (!fmpr_equal(x, z))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = %.17g\n\n", y);
-            printf("z = "); fmpr_print(z); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = %.17g\n\n", y);
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -63,7 +63,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

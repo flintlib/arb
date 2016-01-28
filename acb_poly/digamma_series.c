@@ -25,19 +25,19 @@
 
 #include "acb_poly.h"
 
-void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t x, int use_reflect, int digamma, long prec);
+void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
-_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec);
+_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, slong n, slong num, slong prec);
 
-void _acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, long n, long num, int diff, long prec);
+void _acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, slong n, slong num, int diff, slong prec);
 
 void
-_acb_poly_digamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec)
+_acb_poly_digamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, r, n, rflen, wp;
+    slong i, r, n, rflen, wp;
     acb_t zr;
     acb_ptr t, u, v;
 
@@ -143,7 +143,7 @@ _acb_poly_digamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long pr
 }
 
 void
-acb_poly_digamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec)
+acb_poly_digamma_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
 {
     acb_poly_fit_length(res, n);
 

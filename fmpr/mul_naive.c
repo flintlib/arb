@@ -59,8 +59,8 @@ _fmpr_mul_special(fmpr_t z, const fmpr_t x, const fmpr_t y)
     fmpr_nan(z);
 }
 
-long
-fmpr_mul_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_mul_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {

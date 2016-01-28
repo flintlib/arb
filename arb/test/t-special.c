@@ -25,7 +25,7 @@
 
 #include "arb.h"
 
-#define ASSERT(cond) if (!(cond)) { printf("FAIL: %d\n", __LINE__); abort(); }
+#define ASSERT(cond) if (!(cond)) { flint_printf("FAIL: %d\n", __LINE__); abort(); }
 
 int main()
 {
@@ -33,7 +33,7 @@ int main()
       zero_pm_inf, pos_pm_inf, neg_pm_inf,
       indet_exact, indet_pos_rad, indet_inf_rad;
 
-    printf("special....");
+    flint_printf("special....");
     fflush(stdout);
 
     arb_init(zero);
@@ -579,7 +579,7 @@ int main()
 
     {
         arf_t b;
-        long wp = 30;
+        slong wp = 30;
 
         arf_init(b);
 
@@ -647,7 +647,7 @@ int main()
     arb_clear(indet_inf_rad);
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

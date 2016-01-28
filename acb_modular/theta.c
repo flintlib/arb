@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 static void
-acb_mul_4th_root(acb_t y, const acb_t x, int r, long prec)
+acb_mul_4th_root(acb_t y, const acb_t x, int r, slong prec)
 {
     r &= 7;
 
@@ -61,7 +61,7 @@ acb_mul_4th_root(acb_t y, const acb_t x, int r, long prec)
 void
 acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
-    long prec)
+    slong prec)
 {
     fmpq_t t;
     psl2z_t g;
@@ -174,7 +174,7 @@ acb_modular_theta(acb_t theta1, acb_t theta2,
 void
 acb_modular_theta_notransform(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
-    long prec)
+    slong prec)
 {
     acb_t q, q4, w;
     int w_is_unit;

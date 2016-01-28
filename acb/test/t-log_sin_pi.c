@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("log_sin_pi....");
+    flint_printf("log_sin_pi....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t s, s1, r, r1, t;
-        long prec;
+        slong prec;
 
         acb_init(s);
         acb_init(s1);
@@ -73,11 +73,11 @@ int main()
 
         if (!acb_overlaps(r, r1))
         {
-            printf("FAIL: overlap\n\n");
-            printf("s  = "); acb_printd(s, 30); printf("\n\n");
-            printf("s1 = "); acb_printd(s1, 30); printf("\n\n");
-            printf("r  = "); acb_printd(r, 30); printf("\n\n");
-            printf("r1 = "); acb_printd(r1, 30); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("s  = "); acb_printd(s, 30); flint_printf("\n\n");
+            flint_printf("s1 = "); acb_printd(s1, 30); flint_printf("\n\n");
+            flint_printf("r  = "); acb_printd(r, 30); flint_printf("\n\n");
+            flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -90,7 +90,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

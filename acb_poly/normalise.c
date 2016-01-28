@@ -28,7 +28,7 @@
 void
 _acb_poly_normalise(acb_poly_t poly)
 {
-    long i;
+    slong i;
 
     for (i = poly->length - 1;
         (i >= 0) && acb_is_zero(poly->coeffs + i); i--);

@@ -168,7 +168,7 @@ Special values
 Assignment, rounding and conversions
 -------------------------------------------------------------------------------
 
-.. function:: long _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+.. function:: slong _fmpr_normalise(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 
     Rounds the mantissa and exponent in-place.
 
@@ -180,14 +180,14 @@ Assignment, rounding and conversions
 
     Swaps *x* and *y* efficiently.
 
-.. function:: long fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_set_round_fmpz(fmpr_t x, const fmpz_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round_fmpz(fmpr_t x, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to a copy of *x* rounded in the direction specified by rnd to the
     number of bits specified by prec.
 
-.. function:: long _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd)
+.. function:: slong _fmpr_set_round_mpn(slong * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, slong prec, fmpr_rnd_t rnd)
 
     Given an integer represented by a pointer *x* to a raw array of
     *xn* limbs (negated if *negative* is nonzero), sets *man* to
@@ -195,36 +195,36 @@ Assignment, rounding and conversions
     direction *rnd*, sets *shift* to the exponent, and returns the error bound.
     We require that *xn* is positive and that the leading limb of *x* is nonzero.
 
-.. function:: long fmpr_set_round_ui_2exp_fmpz(fmpr_t z, mp_limb_t lo, const fmpz_t exp, int negative, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round_ui_2exp_fmpz(fmpr_t z, mp_limb_t lo, const fmpz_t exp, int negative, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the unsigned integer *lo* times two to the power *exp*,
     negating the value if *negative* is nonzero, and rounding the result
     to *prec* bits in direction *rnd*.
 
-.. function:: long fmpr_set_round_uiui_2exp_fmpz(fmpr_t z, mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round_uiui_2exp_fmpz(fmpr_t z, mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the unsigned two-limb integer *{hi, lo}* times two to the
     power *exp*, negating the value if *negative* is nonzero, and rounding the result
     to *prec* bits in direction *rnd*.
 
-.. function:: void fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
+.. function:: void fmpr_set_error_result(fmpr_t err, const fmpr_t result, slong rret)
 
     Given the return value *rret* and output variable *result* from a
     function performing a rounding (e.g. *fmpr_set_round* or *fmpr_add*), sets
     *err* to a bound for the absolute error.
 
-.. function:: void fmpr_add_error_result(fmpr_t err, const fmpr_t err_in, const fmpr_t result, long rret, long prec, fmpr_rnd_t rnd)
+.. function:: void fmpr_add_error_result(fmpr_t err, const fmpr_t err_in, const fmpr_t result, slong rret, slong prec, fmpr_rnd_t rnd)
 
     Like *fmpr_set_error_result*, but adds *err_in* to the error.
 
-.. function:: void fmpr_ulp(fmpr_t u, const fmpr_t x, long prec)
+.. function:: void fmpr_ulp(fmpr_t u, const fmpr_t x, slong prec)
 
     Sets *u* to the floating-point unit in the last place (ulp) of *x*.
     The ulp is defined as in the MPFR documentation and satisfies
     `2^{-n} |x| < u \le 2^{-n+1} |x|` for any finite nonzero *x*.
     If *x* is a special value, *u* is set to the absolute value of *x*.
 
-.. function:: int fmpr_check_ulp(const fmpr_t x, long r, long prec)
+.. function:: int fmpr_check_ulp(const fmpr_t x, slong r, slong prec)
 
     Assume that *r* is the return code and *x* is the floating-point result
     from a single floating-point rounding. Then this function returns nonzero
@@ -254,7 +254,7 @@ Assignment, rounding and conversions
 
 .. function:: void fmpr_set_ui(fmpr_t x, ulong c)
 
-.. function:: void fmpr_set_si(fmpr_t x, long c)
+.. function:: void fmpr_set_si(fmpr_t x, slong c)
 
 .. function:: void fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
 
@@ -267,32 +267,32 @@ Assignment, rounding and conversions
     nearest even integer in case of a tie.
     Aborts if *x* is infinite, NaN or if the exponent is unreasonably large.
 
-.. function:: long fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd)
+.. function:: slong fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd)
 
     Returns *x* rounded to the nearest integer in the direction
     specified by *rnd*. If *rnd* is *FMPR_RND_NEAR*, rounds to the
     nearest even integer in case of a tie.
     Aborts if *x* is infinite, NaN, or the
-    value is too large to fit in a *long*.
+    value is too large to fit in an *slong*.
 
 .. function:: void fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
 
     Sets *y* to the exact value of *x*. The result is undefined
     if *x* is not a finite fraction.
 
-.. function:: long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_fmpq(fmpr_t x, const fmpq_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets *x* to the value of *y*, rounded according to *prec* and *rnd*.
 
 .. function:: void fmpr_set_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp)
 
-.. function:: void fmpr_set_si_2exp_si(fmpr_t x, long man, long exp)
+.. function:: void fmpr_set_si_2exp_si(fmpr_t x, slong man, slong exp)
 
-.. function:: void fmpr_set_ui_2exp_si(fmpr_t x, ulong man, long exp)
+.. function:: void fmpr_set_ui_2exp_si(fmpr_t x, ulong man, slong exp)
 
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`.
 
-.. function:: long fmpr_set_round_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 
     Sets *x* to `\mathrm{man} \times 2^{\mathrm{exp}}`, rounded according
     to *prec* and *rnd*.
@@ -307,7 +307,7 @@ Assignment, rounding and conversions
 
 .. function:: int fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t e)
 
-.. function:: int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, long e)
+.. function:: int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, slong e)
 
     Converts *x* to a mantissa with predetermined exponent, i.e. computes
     an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
@@ -334,9 +334,9 @@ Comparisons
 
     Compares the absolute values of *x* and *y*.
 
-.. function:: int fmpr_cmp_2exp_si(const fmpr_t x, long e)
+.. function:: int fmpr_cmp_2exp_si(const fmpr_t x, slong e)
 
-.. function:: int fmpr_cmpabs_2exp_si(const fmpr_t x, long e)
+.. function:: int fmpr_cmpabs_2exp_si(const fmpr_t x, slong e)
 
     Compares *x* (respectively its absolute value) with `2^e`.
 
@@ -351,7 +351,7 @@ Comparisons
 
     Sets *z* respectively to the minimum and the maximum of *a* and *b*.
 
-.. function:: long fmpr_bits(const fmpr_t x)
+.. function:: slong fmpr_bits(const fmpr_t x)
 
     Returns the number of bits needed to represent the absolute value
     of the mantissa of *x*, i.e. the minimum precision sufficient to represent
@@ -361,7 +361,7 @@ Comparisons
 
     Returns nonzero iff *x* is integer-valued.
 
-.. function:: int fmpr_is_int_2exp_si(const fmpr_t x, long e)
+.. function:: int fmpr_is_int_2exp_si(const fmpr_t x, slong e)
 
     Returns nonzero iff *x* equals `n 2^e` for some integer *n*.
 
@@ -375,7 +375,7 @@ Comparisons
     Sets *b* to the smallest integer such that `|x| < 2^b`.
     If *x* is zero, infinity or NaN, the result is undefined.
 
-.. function:: long fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
+.. function:: slong fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
 
     Returns the smallest integer *b* such that `|x| < 2^b`, clamping
     the result to lie between -*FMPR_PREC_EXACT* and *FMPR_PREC_EXACT*
@@ -386,7 +386,7 @@ Comparisons
 Random number generation
 -------------------------------------------------------------------------------
 
-.. function:: void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void fmpr_randtest(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Generates a finite random number whose mantissa has precision at most
     *bits* and whose exponent has at most *mag_bits* bits. The
@@ -394,12 +394,12 @@ Random number generation
     with high probability in order to allow the test code to exercise corner
     cases.
 
-.. function:: void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Identical to *fmpr_randtest*, except that zero is never produced
     as an output.
 
-.. function:: void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+.. function:: void fmpr_randtest_special(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 
     Indentical to *fmpr_randtest*, except that the output occasionally
     is set to an infinity or NaN.
@@ -413,7 +413,7 @@ Input and output
     Prints the mantissa and exponent of *x* as integers, precisely showing
     the internal representation.
 
-.. function:: void fmpr_printd(const fmpr_t x, long digits)
+.. function:: void fmpr_printd(const fmpr_t x, slong digits)
 
     Prints *x* as a decimal floating-point number, rounding to the specified
     number of digits. This function is currently implemented using MPFR,
@@ -427,7 +427,7 @@ Arithmetic
 
     Sets *y* to the negation of *x*.
 
-.. function:: long fmpr_neg_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_neg_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to the negation of *x*, rounding the result.
 
@@ -435,37 +435,37 @@ Arithmetic
 
     Sets *y* to the absolute value of *x*.
 
-.. function:: long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_add_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = x + y`, rounded according to *prec* and *rnd*. The precision
     can be *FMPR_PREC_EXACT* to perform an exact addition, provided that the
     result fits in memory.
 
-.. function:: long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd)
+.. function:: slong _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the value that results by adding an infinitesimal quantity
     of the given sign to *x*, and rounding. The result is undefined
     if *x* is zero.
 
-.. function:: long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = x - y`, rounded according to *prec* and *rnd*. The precision
     can be  *FMPR_PREC_EXACT* to perform an exact addition, provided that the
     result fits in memory.
 
-.. function:: long fmpr_sum(fmpr_t s, const fmpr_struct * terms, long len, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd)
 
     Sets *s* to the sum of the array *terms* of length *len*, rounded to *prec* bits
     in the direction *rnd*. The sum is computed as if done without any intermediate
@@ -474,100 +474,100 @@ Arithmetic
     magnitudes of the terms are far apart. Warning: this function is implemented
     naively, and the running time is quadratic with respect to *len* in the worst case.
 
-.. function:: long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_mul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = x \times y`, rounded according to prec and rnd. The precision
     can be *FMPR_PREC_EXACT* to perform an exact multiplication, provided that the
     result fits in memory.
 
-.. function:: void fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)
+.. function:: void fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, slong e)
 
 .. function:: void fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)
 
     Sets *y* to *x* multiplied by `2^e` without rounding.
 
-.. function:: long fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_div_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = x / y`, rounded according to *prec* and *rnd*. If *y* is zero,
     *z* is set to NaN.
 
-.. function:: void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec)
+.. function:: void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec)
 
     Sets `z` to an upper bound for `|x| / |y|`, computed to a precision
     of approximately *prec* bits. The error can be a few ulp.
 
-.. function:: long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_addmul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_addmul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = z + x \times y`, rounded according to *prec* and *rnd*. The
     intermediate multiplication is always performed without roundoff. The
     precision can be *FMPR_PREC_EXACT* to perform an exact addition, provided
     that the result fits in memory.
 
-.. function:: long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_submul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 
     Sets `z = z - x \times y`, rounded according to *prec* and *rnd*. The
     intermediate multiplication is always performed without roundoff. The
     precision can be *FMPR_PREC_EXACT* to perform an exact subtraction, provided
     that the result fits in memory.
 
-.. function:: long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd)
 
-.. function:: long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the square root of *x*, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
 
-.. function:: long fmpr_rsqrt(fmpr_t z, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_rsqrt(fmpr_t z, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the reciprocal square root of *x*, rounded according to
     *prec* and *rnd*. The result is NaN if *x* is negative.
     At high precision, this is faster than computing a square root.
 
-.. function:: long fmpr_root(fmpr_t z, const fmpr_t x, ulong k, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_root(fmpr_t z, const fmpr_t x, ulong k, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits
     in the direction *rnd*.
     Warning: this function wraps MPFR, and is currently only fast for small *k*.
 
-.. function:: void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e, long prec, fmpr_rnd_t rnd)
+.. function:: void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e, slong prec, fmpr_rnd_t rnd)
 
-.. function:: void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, long prec, fmpr_rnd_t rnd)
+.. function:: void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e, slong prec, fmpr_rnd_t rnd)
 
-.. function:: void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e, long prec, fmpr_rnd_t rnd)
+.. function:: void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, slong e, slong prec, fmpr_rnd_t rnd)
 
     Sets `y = b^e`, computed using without guaranteeing correct (optimal)
     rounding, but guaranteeing that the result is a correct upper or lower
@@ -577,14 +577,14 @@ Arithmetic
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_log(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to `\log(x)`, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
     This function is currently implemented using MPFR and does not
     support large exponents.
 
-.. function:: long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_log1p(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to `\log(1+x)`, rounded according to *prec* and *rnd*.
     This function
@@ -593,13 +593,13 @@ Special functions
     This function is currently implemented using MPFR and does not
     support large exponents.
 
-.. function:: long fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_exp(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to `\exp(x)`, rounded according to *prec* and *rnd*.
     This function is currently implemented using MPFR and does not
     support large exponents.
 
-.. function:: long fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_expm1(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to `\exp(x)-1`, rounded according to *prec* and *rnd*.
     This function computes an accurate value when *x* is small.

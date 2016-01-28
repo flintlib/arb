@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("log....");
+    flint_printf("log....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -41,7 +41,7 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec = 2 + n_randint(state, 200);
+        slong prec = 2 + n_randint(state, 200);
 
         arb_init(a);
         arb_init(b);
@@ -62,9 +62,9 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -72,7 +72,7 @@ int main()
 
         if (!arb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -88,7 +88,7 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec = 2 + n_randint(state, 6000);
+        slong prec = 2 + n_randint(state, 6000);
 
         arb_init(a);
         arb_init(b);
@@ -109,9 +109,9 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -119,7 +119,7 @@ int main()
 
         if (!arb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -133,7 +133,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t a, b, ab, lab, la, lb, lalb;
-        long prec = 2 + n_randint(state, 6000);
+        slong prec = 2 + n_randint(state, 6000);
 
         arb_init(a);
         arb_init(b);
@@ -154,21 +154,21 @@ int main()
 
         if (!arb_overlaps(lab, lalb))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("la = "); arb_print(la); printf("\n\n");
-            printf("lb = "); arb_print(lb); printf("\n\n");
-            printf("ab = "); arb_print(ab); printf("\n\n");
-            printf("lab = "); arb_print(lab); printf("\n\n");
-            printf("lalb = "); arb_print(lalb); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("la = "); arb_print(la); flint_printf("\n\n");
+            flint_printf("lb = "); arb_print(lb); flint_printf("\n\n");
+            flint_printf("ab = "); arb_print(ab); flint_printf("\n\n");
+            flint_printf("lab = "); arb_print(lab); flint_printf("\n\n");
+            flint_printf("lalb = "); arb_print(lalb); flint_printf("\n\n");
             abort();
         }
 
         arb_log(a, a, prec);
         if (!arb_overlaps(a, la))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -183,7 +183,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

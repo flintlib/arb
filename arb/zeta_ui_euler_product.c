@@ -60,9 +60,9 @@ add_error(arb_t z, ulong M, ulong s)
 }
 
 void
-arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec)
+arb_zeta_inv_ui_euler_product(arb_t z, ulong s, slong prec)
 {
-    long wp, powprec;
+    slong wp, powprec;
     double powmag;
     arb_t t, u;
     ulong M;
@@ -70,7 +70,7 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec)
 
     if (s < 6)
     {
-        printf("too small s!\n");
+        flint_printf("too small s!\n");
         abort();
     }
 
@@ -81,12 +81,12 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec)
     arb_init(u);
 
     /* z = 1 - 2^(-s) */
-    arb_set_ui(z, 1UL);
+    arb_set_ui(z, UWORD(1));
     arf_set_ui_2exp_si(arb_midref(t), 1, -s);
     arb_sub(z, z, t, wp);
 
     M = 2;
-    p = 3UL;
+    p = UWORD(3);
     while (1)
     {
         /* approximate magnitude of p^s */
@@ -114,7 +114,7 @@ arb_zeta_inv_ui_euler_product(arb_t z, ulong s, long prec)
 }
 
 void
-arb_zeta_ui_euler_product(arb_t z, ulong s, long prec)
+arb_zeta_ui_euler_product(arb_t z, ulong s, slong prec)
 {
     arb_zeta_inv_ui_euler_product(z, s, prec);
     arb_inv(z, z, prec);

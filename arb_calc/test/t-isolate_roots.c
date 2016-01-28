@@ -27,7 +27,7 @@
 
 /* sin((pi/2)x) */
 static int
-sin_pi2_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_pi2_x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
 
@@ -48,17 +48,17 @@ sin_pi2_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("isolate_roots....");
+    flint_printf("isolate_roots....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 40; iter++)
     {
-        long m, r, a, b, maxdepth, maxeval, maxfound, prec, i, j, num;
+        slong m, r, a, b, maxdepth, maxeval, maxfound, prec, i, j, num;
         arf_interval_ptr blocks;
         int * info;
         arf_interval_t interval;
@@ -106,14 +106,14 @@ int main()
 
                 if (!found)
                 {
-                    printf("FAIL: missing root %ld\n", i);
-                    printf("a = %ld, b = %ld, maxdepth = %ld, maxeval = %ld, maxfound = %ld, prec = %ld\n",
+                    flint_printf("FAIL: missing root %wd\n", i);
+                    flint_printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)
                     {
                         arf_interval_printd(blocks + j, 15);
-                        printf("   %d \n", info[i]);
+                        flint_printf("   %d \n", info[i]);
                     }
 
                     abort();
@@ -132,14 +132,14 @@ int main()
 
                 if (!arb_get_unique_fmpz(nn, t))
                 {
-                    printf("FAIL: bad root %ld\n", i);
-                    printf("a = %ld, b = %ld, maxdepth = %ld, maxeval = %ld, maxfound = %ld, prec = %ld\n",
+                    flint_printf("FAIL: bad root %wd\n", i);
+                    flint_printf("a = %wd, b = %wd, maxdepth = %wd, maxeval = %wd, maxfound = %wd, prec = %wd\n",
                         a, b, maxdepth, maxeval, maxfound, prec);
 
                     for (j = 0; j < num; j++)
                     {
                         arf_interval_printd(blocks + j, 15);
-                        printf("   %d \n", info[i]);
+                        flint_printf("   %d \n", info[i]);
                     }
 
                     abort();
@@ -157,7 +157,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

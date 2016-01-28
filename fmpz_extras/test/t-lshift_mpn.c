@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("lshift_mpn....");
+    flint_printf("lshift_mpn....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,10 +61,10 @@ int main()
 
         if (!fmpz_equal(b, c))
         {
-            printf("FAIL\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
+            flint_printf("FAIL\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -75,7 +75,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

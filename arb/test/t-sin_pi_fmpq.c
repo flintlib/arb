@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("sin_pi_fmpq....");
+    flint_printf("sin_pi_fmpq....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         arb_t s1, s2;
         fmpq_t x;
-        long prec;
+        slong prec;
 
         prec = 2 + n_randint(state, 5000);
 
@@ -58,10 +58,10 @@ int main()
 
         if (!arb_overlaps(s1, s2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("s1 = "); arb_printd(s1, 15); printf("\n\n");
-            printf("s2 = "); arb_printd(s2, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("s1 = "); arb_printd(s1, 15); flint_printf("\n\n");
+            flint_printf("s2 = "); arb_printd(s2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -72,7 +72,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

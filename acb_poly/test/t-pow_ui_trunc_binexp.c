@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pow_ui_trunc_binexp....");
+    flint_printf("pow_ui_trunc_binexp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     /* compare with fmpz_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long zbits1, rbits1, rbits2, trunc;
+        slong zbits1, rbits1, rbits2, trunc;
         ulong e;
         fmpz_poly_t A, B;
         acb_poly_t a, b;
@@ -63,16 +63,16 @@ int main()
 
         if (!acb_poly_contains_fmpz_poly(b, B))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
-            printf("e = %lu\n", e);
-            printf("trunc = %ld\n", trunc);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
+            flint_printf("e = %wu\n", e);
+            flint_printf("trunc = %wd\n", trunc);
 
-            printf("A = "); fmpz_poly_print(A); printf("\n\n");
-            printf("B = "); fmpz_poly_print(B); printf("\n\n");
+            flint_printf("A = "); fmpz_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpz_poly_print(B); flint_printf("\n\n");
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -80,7 +80,7 @@ int main()
         acb_poly_pow_ui_trunc_binexp(a, a, e, trunc, rbits2);
         if (!acb_poly_equal(a, b))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -93,6 +93,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

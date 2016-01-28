@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_round_uiui....");
+    flint_printf("set_round_uiui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 1000000; iter++)
     {
         arf_t x, y;
-        long prec, fix1, fix2;
+        slong prec, fix1, fix2;
         int ret1, ret2, sgnbit;
         mp_limb_t t[2];
         arf_rnd_t rnd;
@@ -82,12 +82,12 @@ int main()
 
         if (!arf_equal(x, y) || (ret1 != ret2))
         {
-            printf("FAIL\n\n");
-            printf("prec = %ld", prec); printf("\n\n");
-            printf("hi = %lu, lo = %lu\n\n", t[1], t[0]);
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = "); arf_print(y); printf("\n\n");
-            printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
+            flint_printf("FAIL\n\n");
+            flint_printf("prec = %wd", prec); flint_printf("\n\n");
+            flint_printf("hi = %wu, lo = %wu\n\n", t[1], t[0]);
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+            flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
             abort();
         }
 
@@ -97,7 +97,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -23,63 +23,63 @@
 
 ******************************************************************************/
 
-#include "arb.h"
+#include "acb.h"
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("root....");
+    flint_printf("root_ui....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 1000; iter++)
     {
-        arb_t a, b, c;
+        acb_t a, b, c;
         ulong k;
-        long prec;
+        slong prec;
 
-        prec = 2 + n_randint(state, 2000);
+        prec = 2 + n_randint(state, 1000);
         k = n_randtest_not_zero(state);
 
-        arb_init(a);
-        arb_init(b);
-        arb_init(c);
+        acb_init(a);
+        acb_init(b);
+        acb_init(c);
 
-        arb_randtest(a, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
-        arb_randtest(b, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
+        acb_randtest(a, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
+        acb_randtest(b, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
 
-        arb_root(b, a, k, prec);
-        arb_pow_ui(c, b, k, prec);
+        acb_root_ui(b, a, k, prec);
+        acb_pow_ui(c, b, k, prec);
 
-        if (!arb_contains(c, a))
+        if (!acb_contains(c, a))
         {
-            printf("FAIL: containment\n\n");
-            printf("k = %lu\n", k);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("k = %wu\n", k);
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             abort();
         }
 
-        arb_root(a, a, k, prec);
+        acb_root_ui(a, a, k, prec);
 
-        if (!arb_equal(a, b))
+        if (!acb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
-        arb_clear(a);
-        arb_clear(b);
-        arb_clear(c);
+        acb_clear(a);
+        acb_clear(b);
+        acb_clear(c);
     }
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

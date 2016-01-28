@@ -40,19 +40,23 @@ fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
     }
     else if (COEFF_IS_MPZ(*fmpr_expref(y)))
     {
-        printf("exception: exponent too large to convert to mpfr");
+        flint_printf("exception: exponent too large to convert to mpfr");
         abort();
     }
     else
     {
         if (!COEFF_IS_MPZ(*fmpr_manref(y)))
+#if defined(__MINGW64__) 
+            r = mpfr_set_sj_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);
+#else
             r = mpfr_set_si_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);
+#endif
         else
             r = mpfr_set_z_2exp(x, COEFF_TO_PTR(*fmpr_manref(y)), *fmpr_expref(y), rnd);
 
         if (!mpfr_regular_p(x))
         {
-            printf("exception: exponent too large to convert to mpfr");
+            flint_printf("exception: exponent too large to convert to mpfr");
             abort();
         }
     }

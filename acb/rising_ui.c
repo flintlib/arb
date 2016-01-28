@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_rising_ui(acb_t y, const acb_t x, ulong n, long prec)
+acb_rising_ui(acb_t y, const acb_t x, ulong n, slong prec)
 {
     if (n < FLINT_MAX(prec, 100))
     {
@@ -45,7 +45,7 @@ acb_rising_ui(acb_t y, const acb_t x, ulong n, long prec)
 }
 
 void
-acb_rising(acb_t y, const acb_t x, const acb_t n, long prec)
+acb_rising(acb_t y, const acb_t x, const acb_t n, slong prec)
 {
     if (acb_is_int(n) && arf_sgn(arb_midref(acb_realref(n))) >= 0 &&
         arf_cmpabs_ui(arb_midref(acb_realref(n)), FLINT_MAX(prec, 100)) < 0)

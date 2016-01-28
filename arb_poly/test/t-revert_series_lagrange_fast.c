@@ -28,17 +28,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("revert_series_lagrange_fast....");
+    flint_printf("revert_series_lagrange_fast....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long qbits1, rbits1, rbits2, n;
+        slong qbits1, rbits1, rbits2, n;
         fmpq_poly_t A, B;
         arb_poly_t a, b, c;
 
@@ -66,14 +66,14 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(b, B))
         {
-            printf("FAIL\n\n");
-            printf("n = %ld, bits2 = %ld\n", n, rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("n = %wd, bits2 = %wd\n", n, rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -82,7 +82,7 @@ int main()
         arb_poly_revert_series_lagrange_fast(c, c, n, rbits2);
         if (!arb_poly_equal(c, b))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -96,6 +96,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

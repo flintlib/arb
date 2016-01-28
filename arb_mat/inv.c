@@ -26,7 +26,7 @@
 #include "arb_mat.h"
 
 int
-arb_mat_inv(arb_mat_t X, const arb_mat_t A, long prec)
+arb_mat_inv(arb_mat_t X, const arb_mat_t A, slong prec)
 {
     if (X == A)
     {

@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("union....");
+    flint_printf("union....");
     fflush(stdout);
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t x, y, z;
-        long prec;
+        slong prec;
         int alias;
 
         arb_init(x);
@@ -54,10 +54,10 @@ int main()
 
         if (!arb_contains(z, x) || !arb_contains(z, y))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
-            printf("z = "); arb_print(z); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+            flint_printf("z = "); arb_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -74,10 +74,10 @@ int main()
 
         if (!alias)
         {
-            printf("FAIL (aliasing):\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
-            printf("z = "); arb_print(z); printf("\n\n");
+            flint_printf("FAIL (aliasing):\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+            flint_printf("z = "); arb_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -88,7 +88,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

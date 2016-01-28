@@ -46,7 +46,7 @@ arb_add_error_arf(arb_t x, const arf_t err)
 }
 
 void
-arb_add_error_2exp_si(arb_t x, long err)
+arb_add_error_2exp_si(arb_t x, slong err)
 {
     fmpz_t t;
 

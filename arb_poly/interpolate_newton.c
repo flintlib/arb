@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 static void
-_interpolate_newton(arb_ptr ys, arb_srcptr xs, long n, long prec)
+_interpolate_newton(arb_ptr ys, arb_srcptr xs, slong n, slong prec)
 {
     arb_t p, q, t;
-    long i, j;
+    slong i, j;
 
     arb_init(p);
     arb_init(q);
@@ -54,10 +54,10 @@ _interpolate_newton(arb_ptr ys, arb_srcptr xs, long n, long prec)
 }
 
 static void
-_newton_to_monomial(arb_ptr ys, arb_srcptr xs, long n, long prec)
+_newton_to_monomial(arb_ptr ys, arb_srcptr xs, slong n, slong prec)
 {
     arb_t t, u;
-    long i, j;
+    slong i, j;
 
     arb_init(t);
     arb_init(u);
@@ -85,7 +85,7 @@ _newton_to_monomial(arb_ptr ys, arb_srcptr xs, long n, long prec)
 
 void
 _arb_poly_interpolate_newton(arb_ptr poly, arb_srcptr xs,
-    arb_srcptr ys, long n, long prec)
+    arb_srcptr ys, slong n, slong prec)
 {
     if (n == 1)
     {
@@ -102,7 +102,7 @@ _arb_poly_interpolate_newton(arb_ptr poly, arb_srcptr xs,
 
 void
 arb_poly_interpolate_newton(arb_poly_t poly,
-    arb_srcptr xs, arb_srcptr ys, long n, long prec)
+    arb_srcptr xs, arb_srcptr ys, slong n, slong prec)
 {
     if (n == 0)
     {

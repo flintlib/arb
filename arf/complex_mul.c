@@ -28,7 +28,7 @@
 int arf_complex_mul_fallback(arf_t e, arf_t f,
         const arf_t a, const arf_t b,
         const arf_t c, const arf_t d,
-        long prec, arf_rnd_t rnd)
+        slong prec, arf_rnd_t rnd)
 {
     int inex1, inex2;
 
@@ -89,14 +89,14 @@ int arf_complex_mul_fallback(arf_t e, arf_t f,
 
 int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
                                       const arf_t c, const arf_t d,
-                                      long prec, arf_rnd_t rnd)
+                                      slong prec, arf_rnd_t rnd)
 {
     mp_srcptr ap, bp, cp, dp;
     int asgn, bsgn, csgn, dsgn, inex1, inex2;
     mp_ptr tmp, acp, bdp, adp, bcp;
     mp_size_t an, bn, cn, dn, acn, bdn, adn, bcn, alloc;
-    long shift;
-    long aexp, bexp, cexp, dexp;
+    slong shift;
+    slong aexp, bexp, cexp, dexp;
     fmpz texp, uexp;
 
     if (!ARF_IS_LAGOM(a) || !ARF_IS_LAGOM(b) ||
@@ -134,7 +134,7 @@ int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
         FLINT_ABS(cexp - dexp) <= 64)
     {
         fmpz_t za, zb, zc, zd, t, u, v;
-        long abot, bbot, cbot, dbot;
+        slong abot, bbot, cbot, dbot;
 
         abot = aexp - an * FLINT_BITS;
         bbot = bexp - bn * FLINT_BITS;
@@ -241,7 +241,7 @@ int arf_complex_mul(arf_t e, arf_t f, const arf_t a, const arf_t b,
 }
 
 int arf_complex_sqr(arf_t e, arf_t f,
-    const arf_t a, const arf_t b, long prec, arf_rnd_t rnd)
+    const arf_t a, const arf_t b, slong prec, arf_rnd_t rnd)
 {
     if (!ARF_IS_LAGOM(a) || !ARF_IS_LAGOM(b) ||
         ARF_IS_SPECIAL(a) || ARF_IS_SPECIAL(b))
@@ -254,8 +254,8 @@ int arf_complex_sqr(arf_t e, arf_t f,
         int inex1, inex2;
         mp_ptr tmp, aap, bbp;
         mp_size_t an, bn, aan, bbn, alloc;
-        long shift;
-        long aexp, bexp;
+        slong shift;
+        slong aexp, bexp;
         fmpz texp, uexp;
         TMP_INIT;
 

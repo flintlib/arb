@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-static long _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+static slong _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))
     {
@@ -60,10 +60,10 @@ static long _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long pre
     }
 }
 
-long
-fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    long shift, xsize, ysize;
+    slong shift, xsize, ysize;
 
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {
@@ -85,7 +85,7 @@ fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t r
         if (shift > ysize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
-            if (ysize + prec - (long) fmpz_bits(fmpr_manref(x)) < shift)
+            if (ysize + prec - (slong) fmpz_bits(fmpr_manref(x)) < shift)
             {
                 return _fmpr_add_eps(z, x, fmpz_sgn(fmpr_manref(y)), prec, rnd);
             }
@@ -104,7 +104,7 @@ fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t r
         if (shift > xsize && prec != FMPR_PREC_EXACT)
         {
             /* y does not overlap with result */
-            if (xsize + prec - (long) fmpz_bits(fmpr_manref(y)) < shift)
+            if (xsize + prec - (slong) fmpz_bits(fmpr_manref(y)) < shift)
             {
                 return _fmpr_add_eps(z, y, fmpz_sgn(fmpr_manref(x)), prec, rnd);
             }

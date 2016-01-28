@@ -28,7 +28,7 @@
 int
 acb_mat_equal(const acb_mat_t mat1, const acb_mat_t mat2)
 {
-    long i, j;
+    slong i, j;
 
     if ((acb_mat_nrows(mat1) != acb_mat_nrows(mat2)) ||
         (acb_mat_ncols(mat1) != acb_mat_ncols(mat2)))

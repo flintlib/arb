@@ -27,17 +27,17 @@
 
 #define MUL(z, zlen, x, xlen, y, ylen, trunc, prec) \
     do { \
-        long slen = FLINT_MIN(xlen + ylen - 1, trunc); \
+        slong slen = FLINT_MIN(xlen + ylen - 1, trunc); \
         _arb_poly_mullow(z, x, xlen, y, ylen, slen, prec); \
         zlen = slen; \
     } while (0)
 
 void
 _arb_poly_pow_ui_trunc_binexp(arb_ptr res,
-    arb_srcptr f, long flen, ulong exp, long len, long prec)
+    arb_srcptr f, slong flen, ulong exp, slong len, slong prec)
 {
     arb_ptr v, R, S, T;
-    long rlen;
+    slong rlen;
     ulong bit;
 
     if (exp <= 1)
@@ -81,7 +81,7 @@ _arb_poly_pow_ui_trunc_binexp(arb_ptr res,
     }
 
     v = _arb_vec_init(len);
-    bit = 1UL << (FLINT_BIT_COUNT(exp) - 2);
+    bit = UWORD(1) << (FLINT_BIT_COUNT(exp) - 2);
     
     if (n_zerobits(exp) % 2)
     {
@@ -125,9 +125,9 @@ _arb_poly_pow_ui_trunc_binexp(arb_ptr res,
 
 void
 arb_poly_pow_ui_trunc_binexp(arb_poly_t res,
-    const arb_poly_t poly, ulong exp, long len, long prec)
+    const arb_poly_t poly, ulong exp, slong len, slong prec)
 {
-    long flen, rlen;
+    slong flen, rlen;
 
     flen = poly->length;
 

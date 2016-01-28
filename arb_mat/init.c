@@ -26,11 +26,11 @@
 #include "arb_mat.h"
 
 void
-arb_mat_init(arb_mat_t mat, long r, long c)
+arb_mat_init(arb_mat_t mat, slong r, slong c)
 {
     if (r != 0 && c != 0)
     {
-        long i;
+        slong i;
 
         mat->entries = _arb_vec_init(r * c);
         mat->rows = (arb_ptr *) flint_malloc(r * sizeof(arb_ptr));

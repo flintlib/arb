@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_interval_fmpr....");
+    flint_printf("set_interval_fmpr....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -52,10 +52,10 @@ int main()
 
         if (!fmprb_contains_fmpr(x, a) || !fmprb_contains_fmpr(x, b))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); fmprb_print(x); printf("\n\n");
-            printf("a = "); fmpr_print(a); printf("\n\n");
-            printf("b = "); fmpr_print(b); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); fmprb_print(x); flint_printf("\n\n");
+            flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -66,7 +66,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

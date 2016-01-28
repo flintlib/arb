@@ -28,9 +28,9 @@
 #define CUTOFF 5
 
 void
-_arb_poly_revert_series_newton(arb_ptr Qinv, arb_srcptr Q, long Qlen, long n, long prec)
+_arb_poly_revert_series_newton(arb_ptr Qinv, arb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    long i, k, a[FLINT_BITS];
+    slong i, k, a[FLINT_BITS];
     arb_ptr T, U, V;
 
     if (n <= 2)
@@ -47,7 +47,7 @@ _arb_poly_revert_series_newton(arb_ptr Qinv, arb_srcptr Q, long Qlen, long n, lo
     V = _arb_vec_init(n);
 
     k = n;
-    for (i = 1; (1L << i) < k; i++);
+    for (i = 1; (WORD(1) << i) < k; i++);
     a[i = 0] = k;
     while (k >= CUTOFF)
         a[++i] = (k = (k + 1) / 2);
@@ -74,14 +74,14 @@ _arb_poly_revert_series_newton(arb_ptr Qinv, arb_srcptr Q, long Qlen, long n, lo
 
 void
 arb_poly_revert_series_newton(arb_poly_t Qinv,
-                                    const arb_poly_t Q, long n, long prec)
+                                    const arb_poly_t Q, slong n, slong prec)
 {
-    long Qlen = Q->length;
+    slong Qlen = Q->length;
 
     if (Qlen < 2 || !arb_is_zero(Q->coeffs)
                  || arb_contains_zero(Q->coeffs + 1))
     {
-        printf("Exception (arb_poly_revert_series_newton). Input must \n"
+        flint_printf("Exception (arb_poly_revert_series_newton). Input must \n"
                "have zero constant term and nonzero coefficient of x^1.\n");
         abort();
     }

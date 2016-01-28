@@ -27,16 +27,16 @@
 
 /* these functions are not public for now */
 void _acb_hypgeom_legendre_q_single(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec);
+    const acb_t z, slong prec);
 void _acb_hypgeom_legendre_q_double(acb_t res, const acb_t n, const acb_t m,
-    const acb_t z, long prec);
+    const acb_t z, slong prec);
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("legendre_q....");
+    flint_printf("legendre_q....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -44,7 +44,7 @@ int main()
     for (iter = 0; iter < 1000; iter++)
     {
         acb_t n, m, z, res1, res2;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
 
         acb_init(n);
         acb_init(m);
@@ -74,13 +74,13 @@ int main()
 
         if (!acb_overlaps(res1, res2))
         {
-            printf("FAIL: consistency 1\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
-            printf("m = "); acb_printd(m, 30); printf("\n\n");
-            printf("n = "); acb_printd(n, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("res1 = "); acb_printd(res1, 30); printf("\n\n");
-            printf("res2 = "); acb_printd(res2, 30); printf("\n\n");
+            flint_printf("FAIL: consistency 1\n\n");
+            flint_printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
+            flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
+            flint_printf("n = "); acb_printd(n, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("res1 = "); acb_printd(res1, 30); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -94,7 +94,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, m, z, res1, res2, t, u;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
         int type;
 
         acb_init(n);
@@ -165,14 +165,14 @@ int main()
 
         if (!acb_overlaps(res1, res2))
         {
-            printf("FAIL: consistency 2\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
-            printf("type = %d\n\n", type);
-            printf("m = "); acb_printd(m, 30); printf("\n\n");
-            printf("n = "); acb_printd(n, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("res1 = "); acb_printd(res1, 30); printf("\n\n");
-            printf("res2 = "); acb_printd(res2, 30); printf("\n\n");
+            flint_printf("FAIL: consistency 2\n\n");
+            flint_printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
+            flint_printf("type = %d\n\n", type);
+            flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
+            flint_printf("n = "); acb_printd(n, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("res1 = "); acb_printd(res1, 30); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -187,7 +187,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("expm1....");
+    flint_printf("expm1....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -75,11 +75,11 @@ int main()
 
         if (!(fmpr_cmpabs(z, y) <= 0 && fmpr_cmpabs(y, z2) <= 0))
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 15); printf("\n\n");
-            printf("z = "); fmpr_printd(z, 15); printf("\n\n");
-            printf("z2 = "); fmpr_printd(z2, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); fmpr_printd(x, 15); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_printd(y, 15); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_printd(z, 15); flint_printf("\n\n");
+            flint_printf("z2 = "); fmpr_printd(z2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -87,7 +87,7 @@ int main()
 
         if (!mag_equal(xb, yb))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -102,7 +102,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

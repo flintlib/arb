@@ -25,16 +25,16 @@
 
 #include "fmpr.h"
 
-long
+slong
 fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd)
 {
     fmpz_t t;
-    long v;
+    slong v;
     fmpz_init(t);
     fmpr_get_fmpz(t, x, rnd);
     if (!fmpz_fits_si(t))
     {
-        printf("fmpr_get_si: result does not fit in a signed long\n");
+        flint_printf("fmpr_get_si: result does not fit in a signed slong\n");
         abort();
     }
     v = fmpz_get_si(t);

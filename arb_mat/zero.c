@@ -28,7 +28,7 @@
 void
 arb_mat_zero(arb_mat_t mat)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < arb_mat_nrows(mat); i++)
         for (j = 0; j < arb_mat_ncols(mat); j++)

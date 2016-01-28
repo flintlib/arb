@@ -26,7 +26,7 @@
 #include "arf.h"
 
 TLS_PREFIX mp_ptr __arf_mul_tmp = NULL;
-TLS_PREFIX long __arf_mul_alloc = 0;
+TLS_PREFIX slong __arf_mul_alloc = 0;
 
 void _arf_mul_tmp_cleanup(void)
 {
@@ -37,10 +37,10 @@ void _arf_mul_tmp_cleanup(void)
 
 int
 arf_mul_rnd_any(arf_ptr z, arf_srcptr x, arf_srcptr y,
-        long prec, arf_rnd_t rnd)
+        slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
-    long fix;
+    slong fix;
     int sgnbit, inexact;
 
     xn = ARF_XSIZE(x);

@@ -26,19 +26,19 @@
 #include "arb.h"
 
 void
-arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec)
+arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 {
-    long i, wp, bits;
+    slong i, wp, bits;
 
-    if (-2L <= *e && *e <= 2L)
+    if (-WORD(2) <= *e && *e <= WORD(2))
     {
-        if (*e == 0L)
+        if (*e == WORD(0))
             arb_one(y);
-        else if (*e == 1L)
+        else if (*e == WORD(1))
             arb_set_round(y, b, prec);
-        else if (*e == -1L)
+        else if (*e == -WORD(1))
             arb_inv(y, b, prec);
-        else if (*e == 2L)
+        else if (*e == WORD(2))
             arb_mul(y, b, b, prec);
         else
         {

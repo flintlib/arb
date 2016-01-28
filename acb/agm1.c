@@ -51,7 +51,7 @@ acb_check_arg(const acb_t z)
 }
 
 static void
-sqrtmul(acb_t c, const acb_t a, const acb_t b, long prec)
+sqrtmul(acb_t c, const acb_t a, const acb_t b, slong prec)
 {
     if (arb_is_positive(acb_realref(a)) &&
         arb_is_positive(acb_realref(b)))
@@ -88,7 +88,7 @@ sqrtmul(acb_t c, const acb_t a, const acb_t b, long prec)
 }
 
 void
-acb_agm1_basecase(acb_t res, const acb_t z, long prec)
+acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
 {
     acb_t a, b, t, u;
     mag_t err;
@@ -167,11 +167,11 @@ acb_agm1_basecase(acb_t res, const acb_t z, long prec)
     Assumes z exact, |arg(z)| <= 3 pi / 4.
 */
 void
-acb_agm1_deriv_diff(acb_t Mz, acb_t Mzp, const acb_t z, long prec)
+acb_agm1_deriv_diff(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 {
     mag_t err, t;
     fmpz_t rexp, hexp;
-    long wp;
+    slong wp;
     int isreal;
 
     if (!acb_is_exact(z) || !acb_is_finite(z) ||
@@ -262,7 +262,7 @@ does not cross the negative half axis, which we check.
 */
 
 void
-acb_agm1_deriv_right(acb_t Mz, acb_t Mzp, const acb_t z, long prec)
+acb_agm1_deriv_right(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 {
     if (acb_is_exact(z))
     {
@@ -345,7 +345,7 @@ acb_agm1_deriv_right(acb_t Mz, acb_t Mzp, const acb_t z, long prec)
 }
 
 void
-acb_agm1(acb_t m, const acb_t z, long prec)
+acb_agm1(acb_t m, const acb_t z, slong prec)
 {
     if (arf_sgn(arb_midref(acb_realref(z))) >= 0)
     {
@@ -368,7 +368,7 @@ acb_agm1(acb_t m, const acb_t z, long prec)
 }
 
 void
-acb_agm1_deriv(acb_t Mz, acb_t Mzp, const acb_t z, long prec)
+acb_agm1_deriv(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 {
     /*
        u = 2 sqrt(z) / (1+z)
@@ -416,7 +416,7 @@ acb_agm1_deriv(acb_t Mz, acb_t Mzp, const acb_t z, long prec)
 }
 
 void
-acb_agm1_cpx(acb_ptr m, const acb_t z, long len, long prec)
+acb_agm1_cpx(acb_ptr m, const acb_t z, slong len, slong prec)
 {
     if (len < 1)
         return;
@@ -437,7 +437,7 @@ acb_agm1_cpx(acb_ptr m, const acb_t z, long len, long prec)
     {
         acb_t t, u, v;
         acb_ptr w;
-        long k, n;
+        slong k, n;
 
         acb_init(t);
         acb_init(u);

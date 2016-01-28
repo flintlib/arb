@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("gamma_fmpq....");
+    flint_printf("gamma_fmpq....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -38,7 +38,7 @@ int main()
     {
         arb_t r, s;
         fmpq_t q;
-        long accuracy, prec, pp, qq;
+        slong accuracy, prec, pp, qq;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 12));
         prec += 20;
@@ -58,11 +58,11 @@ int main()
 
         if (!arb_overlaps(r, s))
         {
-            printf("FAIL: containment\n\n");
-            printf("prec = %ld\n", prec);
-            printf("q = "); fmpq_print(q); printf("\n\n");
-            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
-            printf("s = "); arb_printd(s, prec / 3.33); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
+            flint_printf("s = "); arb_printd(s, prec / 3.33); flint_printf("\n\n");
             abort();
         }
 
@@ -73,10 +73,10 @@ int main()
 
             if (accuracy < prec - 6)
             {
-                printf("FAIL: poor accuracy\n\n");
-                printf("prec = %ld\n", prec);
-                printf("q = "); fmpq_print(q); printf("\n\n");
-                printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
+                flint_printf("FAIL: poor accuracy\n\n");
+                flint_printf("prec = %wd\n", prec);
+                flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
+                flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
                 abort();
             }
         }
@@ -88,7 +88,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

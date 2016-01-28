@@ -25,15 +25,15 @@
 
 #include "acb_poly.h"
 
-void acb_gamma_stirling_bound(mag_ptr err, const acb_t x, long k0, long knum, long n);
+void acb_gamma_stirling_bound(mag_ptr err, const acb_t x, slong k0, slong knum, slong n);
 
-void acb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const acb_t x, int use_reflect, int digamma, long prec);
+void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const acb_t x, int use_reflect, int digamma, slong prec);
 
-void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, long prec);
+void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec);
 
 static void
-bsplit(acb_ptr Q, acb_ptr T, const acb_t z, long a, long b, long num, long prec)
+bsplit(acb_ptr Q, acb_ptr T, const acb_t z, slong a, slong b, slong num, slong prec)
 {
     if (b - a == 1)
     {
@@ -55,7 +55,7 @@ bsplit(acb_ptr Q, acb_ptr T, const acb_t z, long a, long b, long num, long prec)
     }
     else
     {
-        long m, n1, n2, q1len, q2len, t1len, t2len, qlen, tlen, alloc;
+        slong m, n1, n2, q1len, q2len, t1len, t2len, qlen, tlen, alloc;
         acb_ptr Q1, T1, Q2, T2;
 
         m = a + (b - a) / 2;
@@ -87,9 +87,9 @@ bsplit(acb_ptr Q, acb_ptr T, const acb_t z, long a, long b, long num, long prec)
 }
 
 void
-_acb_poly_log_cpx_series(acb_ptr res, const acb_t c, long num, long prec)
+_acb_poly_log_cpx_series(acb_ptr res, const acb_t c, slong num, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < num; i++)
     {
@@ -111,9 +111,9 @@ _acb_poly_log_cpx_series(acb_ptr res, const acb_t c, long num, long prec)
 }
 
 void
-_acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, long n, long num, int diff, long prec)
+_acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, slong n, slong num, int diff, slong prec)
 {
-    long k, tlen, qlen;
+    slong k, tlen, qlen;
     acb_ptr T, Q;
     mag_ptr err;
     acb_t c;
@@ -199,16 +199,16 @@ _acb_poly_gamma_stirling_eval2(acb_ptr res, const acb_t z, long n, long num, int
 }
 
 void
-_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, long n, long num, long prec)
+_acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, slong n, slong num, slong prec)
 {
     _acb_poly_gamma_stirling_eval2(res, z, n, num, 0, prec);
 }
 
 void
-_acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec)
+_acb_poly_gamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, rflen, r, n, wp;
+    slong i, rflen, r, n, wp;
     acb_ptr t, u, v;
     acb_struct f[2];
 
@@ -328,7 +328,7 @@ _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, long hlen, long len, long prec
 }
 
 void
-acb_poly_gamma_series(acb_poly_t res, const acb_poly_t f, long n, long prec)
+acb_poly_gamma_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
 {
     acb_poly_fit_length(res, n);
 

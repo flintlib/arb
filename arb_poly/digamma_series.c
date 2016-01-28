@@ -25,16 +25,16 @@
 
 #include "arb_poly.h"
 
-void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec);
+void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec);
 
-void _arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, long n, long num, int diff, long prec);
+void _arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, slong n, slong num, int diff, slong prec);
 
 void
-_arb_poly_digamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_digamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long i, r, n, rflen, wp;
+    slong i, r, n, rflen, wp;
     arb_t zr;
     arb_ptr t, u, v;
 
@@ -165,7 +165,7 @@ cleanup:
 }
 
 void
-arb_poly_digamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_digamma_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     arb_poly_fit_length(res, n);
 

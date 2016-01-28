@@ -19,25 +19,41 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "acb_poly.h"
+#include "arb_poly.h"
 
 void
-acb_poly_printd(const acb_poly_t poly, long digits)
+_arb_poly_taylor_shift_divconquer(arb_ptr poly, const arb_t c, slong len, slong prec)
 {
-    long i;
+    arb_struct d[2];
 
-    printf("[");
+    if (len <= 1 || arb_is_zero(c))
+        return;
 
-    for (i = 0; i < poly->length; i++)
+    if (len == 2)
     {
-        acb_printd(poly->coeffs + i, digits);
-        if (i + 1 < poly->length)
-            printf("\n");
+        arb_addmul(poly, poly + 1, c, prec);
+        return;
     }
 
-    printf("]");
+    d[0] = *c;
+
+    arb_init(d + 1);
+    arb_one(d + 1); /* no need to free */
+
+    _arb_poly_compose_divconquer(poly, poly, len, d, 2, prec);
 }
+
+void
+arb_poly_taylor_shift_divconquer(arb_poly_t g, const arb_poly_t f,
+    const arb_t c, slong prec)
+{
+    if (f != g)
+        arb_poly_set_round(g, f, prec);
+
+    _arb_poly_taylor_shift_divconquer(g->coeffs, c, g->length, prec);
+}
+

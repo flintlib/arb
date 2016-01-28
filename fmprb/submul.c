@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     fmprb_t t;
 
@@ -37,7 +37,7 @@ fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 }
 
 void
-fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
+fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec)
 {
     fmprb_t t;
 
@@ -48,7 +48,7 @@ fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec)
 }
 
 void
-fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec)
+fmprb_submul_si(fmprb_t z, const fmprb_t x, slong y, slong prec)
 {
     fmprb_t t;
 
@@ -59,7 +59,7 @@ fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec)
 }
 
 void
-fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec)
+fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec)
 {
     fmprb_t t;
 

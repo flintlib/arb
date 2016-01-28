@@ -7,7 +7,7 @@
 #include "profiler.h"
 
 void
-keiper_li_series(arb_ptr z, long len, long prec)
+keiper_li_series(arb_ptr z, slong len, slong prec)
 {
     arb_ptr t, u, v;
 
@@ -16,7 +16,7 @@ keiper_li_series(arb_ptr z, long len, long prec)
     v = _arb_vec_init(len);
 
     /* -zeta(s) */
-    printf("zeta: ");
+    flint_printf("zeta: ");
     TIMEIT_ONCE_START
     arb_zero(t + 0);
     arb_one(t + 1);
@@ -28,13 +28,13 @@ keiper_li_series(arb_ptr z, long len, long prec)
     SHOW_MEMORY_USAGE
 
     /* logarithm */
-    printf("log: ");
+    flint_printf("log: ");
     TIMEIT_ONCE_START
     _arb_poly_log_series(t, v, len, len, prec);
     TIMEIT_ONCE_STOP
 
     /* add log(gamma(1+s/2)) */
-    printf("gamma: ");
+    flint_printf("gamma: ");
     TIMEIT_ONCE_START
     arb_one(u);
     arb_one(u + 1);
@@ -56,7 +56,7 @@ keiper_li_series(arb_ptr z, long len, long prec)
     _arb_vec_add(t, t, v, len, prec);
 
     /* binomial transform */
-    printf("binomial transform: ");
+    flint_printf("binomial transform: ");
     TIMEIT_ONCE_START
     arb_set(z, t);
     _arb_vec_neg(t + 1, t + 1, len - 1);
@@ -70,13 +70,13 @@ keiper_li_series(arb_ptr z, long len, long prec)
 
 int main(int argc, char *argv[])
 {
-    long i, len, prec, num_threads;
+    slong i, len, prec, num_threads;
     char * out_file;
     arb_ptr z;
 
     if (argc < 2)
     {
-        printf("keiper_li n [-prec prec] [-threads num_threads] [-out out_file]\n");
+        flint_printf("keiper_li n [-prec prec] [-threads num_threads] [-out out_file]\n");
         return 1;
     }
 
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     {
         if (i <= 10 || len - i <= 10)
         {
-            printf("%ld: ", i); arb_printd(z + i, 50); printf("\n");
+            flint_printf("%wd: ", i); arb_printd(z + i, 50); flint_printf("\n");
         }
     }
 
@@ -126,19 +126,19 @@ int main(int argc, char *argv[])
         {
             arf_get_fmpz_2exp(man, exp, arb_midref(z + i));
 
-            fprintf(fp, "%ld ", i);
+            flint_fprintf(fp, "%wd ", i);
             fmpz_fprint(fp, man);
-            fprintf(fp, " ");
+            flint_fprintf(fp, " ");
             fmpz_fprint(fp, exp);
-            fprintf(fp, " ");
+            flint_fprintf(fp, " ");
 
             arf_set_mag(t, arb_radref(z + i));
             arf_get_fmpz_2exp(man, exp, t);
 
             fmpz_fprint(fp, man);
-            fprintf(fp, " ");
+            flint_fprintf(fp, " ");
             fmpz_fprint(fp, exp);
-            fprintf(fp, "\n");
+            flint_fprintf(fp, "\n");
         }
 
         fclose(fp);

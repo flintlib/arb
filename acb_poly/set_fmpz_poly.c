@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t src, long prec)
+acb_poly_set_fmpz_poly(acb_poly_t poly, const fmpz_poly_t src, slong prec)
 {
-    long i, len = fmpz_poly_length(src);
+    slong i, len = fmpz_poly_length(src);
 
     acb_poly_fit_length(poly, len);
     _acb_poly_set_length(poly, len);

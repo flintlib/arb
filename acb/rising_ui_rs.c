@@ -28,14 +28,14 @@
 void rising_difference_polynomial(fmpz * s, fmpz * c, ulong m);
 
 void
-acb_rising_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, long prec)
+acb_rising_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, slong prec)
 {
     acb_ptr xs;
     acb_t t, u, v;
     ulong i, k, rem;
     fmpz_t c, h;
     fmpz *s, *d;
-    long wp;
+    slong wp;
 
     if (n == 0)
     {

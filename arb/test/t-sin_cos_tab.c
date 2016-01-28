@@ -27,16 +27,16 @@
 
 int main()
 {
-    long i, which;
+    slong i, which;
 
     mpfr_t tabx, sinx, y1, y2;
     mpz_t tt;
 
-    printf("sin_cos_tab....");
+    flint_printf("sin_cos_tab....");
     fflush(stdout);
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB1_BITS;
@@ -86,7 +86,7 @@ int main()
 
                 if (!mpfr_equal_p(y1, y2))
                 {
-                    printf("FAIL: which = %ld, i = %ld, bits = %ld, prec = %ld\n", which, i, bits, prec);
+                    flint_printf("FAIL: which = %wd, i = %wd, bits = %wd, prec = %wd\n", which, i, bits, prec);
                     mpfr_printf("y1 = %.1500Rg\n", y1);
                     mpfr_printf("y2 = %.1500Rg\n", y2);
                     abort();
@@ -101,7 +101,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB21_BITS;
@@ -151,7 +151,7 @@ int main()
 
                 if (!mpfr_equal_p(y1, y2))
                 {
-                    printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                    flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                     mpfr_printf("y1 = %.1500Rg\n", y1);
                     mpfr_printf("y2 = %.1500Rg\n", y2);
                     abort();
@@ -166,7 +166,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_SIN_COS_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_SIN_COS_TAB21_BITS + ARB_SIN_COS_TAB22_BITS;
@@ -216,7 +216,7 @@ int main()
 
                 if (!mpfr_equal_p(y1, y2))
                 {
-                    printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                    flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                     mpfr_printf("y1 = %.1500Rg\n", y1);
                     mpfr_printf("y2 = %.1500Rg\n", y2);
                     abort();
@@ -231,7 +231,7 @@ int main()
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

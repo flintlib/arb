@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_add(arb_t z, const arb_t x, const arb_t y, long prec)
+arb_add(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     int inexact;
 
@@ -38,7 +38,7 @@ arb_add(arb_t z, const arb_t x, const arb_t y, long prec)
 }
 
 void
-arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+arb_add_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 {
     int inexact;
     inexact = arf_add(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
@@ -49,7 +49,7 @@ arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec)
 }
 
 void
-arb_add_ui(arb_t z, const arb_t x, ulong y, long prec)
+arb_add_ui(arb_t z, const arb_t x, ulong y, slong prec)
 {
     int inexact;
     inexact = arf_add_ui(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
@@ -60,7 +60,7 @@ arb_add_ui(arb_t z, const arb_t x, ulong y, long prec)
 }
 
 void
-arb_add_si(arb_t z, const arb_t x, long y, long prec)
+arb_add_si(arb_t z, const arb_t x, slong y, slong prec)
 {
     int inexact;
     inexact = arf_add_si(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
@@ -71,7 +71,7 @@ arb_add_si(arb_t z, const arb_t x, long y, long prec)
 }
 
 void
-arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 {
     int inexact;
     inexact = arf_add_fmpz(arb_midref(z), arb_midref(x), y, prec, ARB_RND);
@@ -82,7 +82,7 @@ arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
 }
 
 void
-arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, long prec)
+arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t man, const fmpz_t exp, slong prec)
 {
     int inexact;
     inexact = arf_add_fmpz_2exp(arb_midref(z), arb_midref(x), man, exp, prec, ARB_RND);

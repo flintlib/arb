@@ -29,10 +29,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("delta....");
+    flint_printf("delta....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t tau, z1, z2;
-        long e0, prec0, prec1, prec2;
+        slong e0, prec0, prec1, prec2;
 
         acb_init(tau);
         acb_init(z1);
@@ -63,10 +63,10 @@ int main()
 
         if (!acb_overlaps(z1, z2))
         {
-            printf("FAIL (overlap)\n");
-            printf("tau = "); acb_printd(tau, 15); printf("\n\n");
-            printf("z1 = "); acb_printd(z1, 15); printf("\n\n");
-            printf("z2 = "); acb_printd(z2, 15); printf("\n\n");
+            flint_printf("FAIL (overlap)\n");
+            flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
+            flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
+            flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -74,10 +74,10 @@ int main()
 
         if (!acb_overlaps(z1, tau))
         {
-            printf("FAIL (aliasing)\n");
-            printf("tau = "); acb_printd(tau, 15); printf("\n\n");
-            printf("z1 = "); acb_printd(z1, 15); printf("\n\n");
-            printf("z2 = "); acb_printd(z2, 15); printf("\n\n");
+            flint_printf("FAIL (aliasing)\n");
+            flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
+            flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
+            flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -88,7 +88,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

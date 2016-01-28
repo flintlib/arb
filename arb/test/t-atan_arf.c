@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("atan_arf....");
+    flint_printf("atan_arf....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
     {
         arf_t x;
         arb_t y1, y2;
-        long prec1, prec2, acc1, acc2;
+        slong prec1, prec2, acc1, acc2;
 
         prec1 = 2 + n_randint(state, 9000);
         prec2 = 2 + n_randint(state, 9000);
@@ -61,11 +61,11 @@ int main()
 
         if (!arb_overlaps(y1, y2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("prec1 = %ld, prec2 = %ld\n\n", prec1, prec2);
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y1 = "); arb_print(y1); printf("\n\n");
-            printf("y2 = "); arb_print(y2); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y1 = "); arb_print(y1); flint_printf("\n\n");
+            flint_printf("y2 = "); arb_print(y2); flint_printf("\n\n");
             abort();
         }
 
@@ -76,12 +76,12 @@ int main()
         {
             if (acc1 < prec1 - 2 || acc2 < prec2 - 2)
             {
-                printf("FAIL: accuracy\n\n");
-                printf("prec1 = %ld, prec2 = %ld\n\n", prec1, prec2);
-                printf("acc1 = %ld, acc2 = %ld\n\n", acc1, acc2);
-                printf("x = "); arf_printd(x, 50); printf("\n\n");
-                printf("y1 = "); arb_printd(y1, 50); printf("\n\n");
-                printf("y2 = "); arb_printd(y2, 50); printf("\n\n");
+                flint_printf("FAIL: accuracy\n\n");
+                flint_printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
+                flint_printf("acc1 = %wd, acc2 = %wd\n\n", acc1, acc2);
+                flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
+                flint_printf("y1 = "); arb_printd(y1, 50); flint_printf("\n\n");
+                flint_printf("y2 = "); arb_printd(y2, 50); flint_printf("\n\n");
                 abort();
             }
         }
@@ -93,7 +93,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

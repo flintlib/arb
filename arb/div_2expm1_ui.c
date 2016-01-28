@@ -26,13 +26,13 @@
 #include "arb.h"
 
 void
-arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, long prec)
+arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, slong prec)
 {
     if (n < FLINT_BITS)
     {
-        arb_div_ui(y, x, (1UL << n) - 1, prec);
+        arb_div_ui(y, x, (UWORD(1) << n) - 1, prec);
     }
-    else if (n < 1024 + prec / 32 || n > LONG_MAX / 4)
+    else if (n < 1024 + prec / 32 || n > WORD_MAX / 4)
     {
         arb_t t;
         fmpz_t e;
@@ -51,7 +51,7 @@ arb_div_2expm1_ui(arb_t y, const arb_t x, ulong n, long prec)
     else
     {
         arb_t s, t;
-        long i, b;
+        slong i, b;
 
         arb_init(s);
         arb_init(t);

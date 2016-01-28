@@ -26,9 +26,9 @@
 #include "acb_mat.h"
 
 void
-acb_mat_randtest(acb_mat_t mat, flint_rand_t state, long prec, long mag_bits)
+acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits)
 {
-    long i, j;
+    slong i, j;
 
     if (n_randint(state, 2))
         for (i = 0; i < acb_mat_nrows(mat); i++)

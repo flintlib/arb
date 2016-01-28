@@ -26,10 +26,10 @@
 #include "acb.h"
 
 void
-acb_sqrt(acb_t y, const acb_t x, long prec)
+acb_sqrt(acb_t y, const acb_t x, slong prec)
 {
     arb_t r, t, u;
-    long wp;
+    slong wp;
 
 #define a acb_realref(x)
 #define b acb_imagref(x)

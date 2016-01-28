@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("div....");
+    flint_printf("div....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, r1, r2;
+        slong bits, r1, r2;
         fmpr_t x, y, z, w;
         mpfr_t X, Y, Z;
 
@@ -90,13 +90,13 @@ int main()
         if (!fmpr_equal(z, w) || ((r1 == 0) != (r2 == FMPR_RESULT_EXACT))
             || !fmpr_check_ulp(z, r2, bits))
         {
-            printf("FAIL\n\n");
-            printf("bits = %ld\n", bits);
-            printf("r1 = %ld, r2 = %ld\n", r1, r2);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("bits = %wd\n", bits);
+            flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+            flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             abort();
         }
 
@@ -112,6 +112,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

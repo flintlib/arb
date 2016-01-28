@@ -114,10 +114,10 @@ mag_add_ui(mag_t y, const mag_t x, ulong k)
 static void
 evaluate_sum(acb_t res, acb_t res1,
     const acb_t a, const acb_t b, const acb_t c, const acb_t y,
-    const acb_t x, const acb_t f0, const acb_t f1, long num, long prec)
+    const acb_t x, const acb_t f0, const acb_t f1, slong num, slong prec)
 {
     acb_t s, s2, w, d, e, xpow, ck, cknext;
-    long k;
+    slong k;
 
     acb_init(s);
     acb_init(s2);
@@ -187,11 +187,11 @@ evaluate_sum(acb_t res, acb_t res1,
 void
 acb_hypgeom_2f1_continuation(acb_t res, acb_t res1,
     const acb_t a, const acb_t b, const acb_t c, const acb_t y,
-    const acb_t z, const acb_t f0, const acb_t f1, long prec)
+    const acb_t z, const acb_t f0, const acb_t f1, slong prec)
 {
     mag_t A, nu, N, w, err, err1, R, T, goal;
     acb_t x;
-    long j, k;
+    slong j, k;
 
     mag_init(A);
     mag_init(nu);

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("elliptic_e....");
+    flint_printf("elliptic_e....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 500; iter++)
     {
         acb_t m, w, K, Kp, E, Ep, r, pi2;
-        long prec;
+        slong prec;
 
         acb_init(m);
         acb_init(w);
@@ -68,15 +68,15 @@ int main()
 
         if (!acb_overlaps(r, pi2))
         {
-            printf("FAIL (overlap)\n\n");
+            flint_printf("FAIL (overlap)\n\n");
 
-            printf("m = "); acb_printd(m, 30); printf("\n\n");
-            printf("w = "); acb_printd(w, 30); printf("\n\n");
-            printf("K = "); acb_printd(K, 30); printf("\n\n");
-            printf("Kp = "); acb_printd(Kp, 30); printf("\n\n");
-            printf("E = "); acb_printd(E, 30); printf("\n\n");
-            printf("Ep = "); acb_printd(Ep, 30); printf("\n\n");
-            printf("r = "); acb_printd(r, 30); printf("\n\n");
+            flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
+            flint_printf("w = "); acb_printd(w, 30); flint_printf("\n\n");
+            flint_printf("K = "); acb_printd(K, 30); flint_printf("\n\n");
+            flint_printf("Kp = "); acb_printd(Kp, 30); flint_printf("\n\n");
+            flint_printf("E = "); acb_printd(E, 30); flint_printf("\n\n");
+            flint_printf("Ep = "); acb_printd(Ep, 30); flint_printf("\n\n");
+            flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -92,7 +92,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

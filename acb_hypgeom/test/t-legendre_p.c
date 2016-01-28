@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("legendre_p....");
+    flint_printf("legendre_p....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, na, nb, m, z, res1, res2, res3, t, u;
-        long prec1, prec2, ebits;
+        slong prec1, prec2, ebits;
         int type;
 
         acb_init(n);
@@ -92,17 +92,17 @@ int main()
 
         if (!acb_overlaps(t, u))
         {
-            printf("FAIL: consistency\n\n");
-            printf("iter = %ld, prec1 = %ld, prec2 = %ld\n\n", iter, prec1, prec2);
-            printf("type = %d\n\n", type);
-            printf("n = "); acb_printd(n, 30); printf("\n\n");
-            printf("m = "); acb_printd(m, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("res1 = "); acb_printd(res1, 30); printf("\n\n");
-            printf("res2 = "); acb_printd(res2, 30); printf("\n\n");
-            printf("res3 = "); acb_printd(res3, 30); printf("\n\n");
-            printf("t = "); acb_printd(t, 30); printf("\n\n");
-            printf("u = "); acb_printd(u, 30); printf("\n\n");
+            flint_printf("FAIL: consistency\n\n");
+            flint_printf("iter = %wd, prec1 = %wd, prec2 = %wd\n\n", iter, prec1, prec2);
+            flint_printf("type = %d\n\n", type);
+            flint_printf("n = "); acb_printd(n, 30); flint_printf("\n\n");
+            flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("res1 = "); acb_printd(res1, 30); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 30); flint_printf("\n\n");
+            flint_printf("res3 = "); acb_printd(res3, 30); flint_printf("\n\n");
+            flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
+            flint_printf("u = "); acb_printd(u, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -120,7 +120,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

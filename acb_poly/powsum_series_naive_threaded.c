@@ -32,11 +32,11 @@ typedef struct
     acb_srcptr s;
     acb_srcptr a;
     acb_srcptr q;
-    long n0;
-    long n1;
-    long d0;
-    long len;
-    long prec;
+    slong n0;
+    slong n1;
+    slong d0;
+    slong len;
+    slong prec;
 }
 powsum_arg_t;
 
@@ -44,7 +44,7 @@ void *
 _acb_zeta_powsum_evaluator(void * arg_ptr)
 {
     powsum_arg_t arg = *((powsum_arg_t *) arg_ptr);
-    long i, k;
+    slong i, k;
     int q_one, s_int;
 
     acb_t t, u, v, ak, qpow, negs;
@@ -139,11 +139,11 @@ _acb_zeta_powsum_evaluator(void * arg_ptr)
 
 void
 _acb_poly_powsum_series_naive_threaded(acb_ptr z,
-    const acb_t s, const acb_t a, const acb_t q, long n, long len, long prec)
+    const acb_t s, const acb_t a, const acb_t q, slong n, slong len, slong prec)
 {
     pthread_t * threads;
     powsum_arg_t * args;
-    long i, num_threads;
+    slong i, num_threads;
     int split_each_term;
 
     num_threads = flint_get_num_threads();
@@ -161,7 +161,7 @@ _acb_poly_powsum_series_naive_threaded(acb_ptr z,
 
         if (split_each_term)
         {
-            long n0, n1;
+            slong n0, n1;
             n0 = (len * i) / num_threads;
             n1 = (len * (i + 1)) / num_threads;
             args[i].z = z + n0;

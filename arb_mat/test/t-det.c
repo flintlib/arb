@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("det....");
+    flint_printf("det....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -41,7 +41,7 @@ int main()
         fmpq_t Qdet;
         arb_mat_t A;
         arb_t Adet;
-        long n, qbits, prec;
+        slong n, qbits, prec;
 
         n = n_randint(state, 8);
         qbits = 1 + n_randint(state, 100);
@@ -61,16 +61,16 @@ int main()
 
         if (!arb_contains_fmpq(Adet, Qdet))
         {
-            printf("FAIL (containment, iter = %ld)\n", iter);
-            printf("n = %ld, prec = %ld\n", n, prec);
-            printf("\n");
+            flint_printf("FAIL (containment, iter = %wd)\n", iter);
+            flint_printf("n = %wd, prec = %wd\n", n, prec);
+            flint_printf("\n");
 
-            printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-            printf("Qdet = \n"); fmpq_print(Qdet); printf("\n\n");
+            flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+            flint_printf("Qdet = \n"); fmpq_print(Qdet); flint_printf("\n\n");
 
-            printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-            printf("Adet = \n"); arb_printd(Adet, 15); printf("\n\n");
-            printf("Adet = \n"); arb_print(Adet); printf("\n\n");
+            flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+            flint_printf("Adet = \n"); arb_printd(Adet, 15); flint_printf("\n\n");
+            flint_printf("Adet = \n"); arb_print(Adet); flint_printf("\n\n");
 
             abort();
         }
@@ -83,6 +83,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen,
-        long n, long prec, int times_pi)
+_acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen,
+        slong n, slong prec, int times_pi)
 {
-    long j, k, alen = FLINT_MIN(n, hlen);
+    slong j, k, alen = FLINT_MIN(n, hlen);
     acb_ptr a;
     acb_t t, u;
 
@@ -80,9 +80,9 @@ _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, long hlen,
 
 void
 acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c,
-        const acb_poly_t h, long n, long prec, int times_pi)
+        const acb_poly_t h, slong n, slong prec, int times_pi)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

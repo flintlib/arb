@@ -41,7 +41,7 @@ fmprb_trim(fmprb_t y, const fmprb_t x)
     }
     else
     {
-        long bits, accuracy;
+        slong bits, accuracy;
 
         bits = fmprb_bits(x);
         accuracy = fmprb_rel_accuracy_bits(x);

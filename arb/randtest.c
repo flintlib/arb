@@ -26,21 +26,21 @@
 #include "arb.h"
 
 void
-arb_randtest_exact(arb_t x, flint_rand_t state, long prec, long mag_bits)
+arb_randtest_exact(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     arf_randtest(arb_midref(x), state, prec, mag_bits);
     mag_zero(arb_radref(x));
 }
 
 void
-arb_randtest_wide(arb_t x, flint_rand_t state, long prec, long mag_bits)
+arb_randtest_wide(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     arf_randtest(arb_midref(x), state, prec, mag_bits);
     mag_randtest(arb_radref(x), state, mag_bits);
 }
 
 void
-arb_randtest_precise(arb_t x, flint_rand_t state, long prec, long mag_bits)
+arb_randtest_precise(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     arf_randtest(arb_midref(x), state, prec, mag_bits);
 
@@ -62,7 +62,7 @@ arb_randtest_precise(arb_t x, flint_rand_t state, long prec, long mag_bits)
 }
 
 void
-arb_randtest(arb_t x, flint_rand_t state, long prec, long mag_bits)
+arb_randtest(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     switch (n_randint(state, 8))
     {
@@ -78,7 +78,7 @@ arb_randtest(arb_t x, flint_rand_t state, long prec, long mag_bits)
 }
 
 void
-arb_randtest_special(arb_t x, flint_rand_t state, long prec, long mag_bits)
+arb_randtest_special(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 {
     arb_randtest(x, state, prec, mag_bits);
 

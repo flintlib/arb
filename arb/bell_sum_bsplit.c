@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-bsplit(arb_t P, arb_t Q, const fmpz_t n, const fmpz_t a, const fmpz_t b, long prec)
+bsplit(arb_t P, arb_t Q, const fmpz_t n, const fmpz_t a, const fmpz_t b, slong prec)
 {
     fmpz_t t;
     fmpz_init(t);
@@ -39,7 +39,7 @@ bsplit(arb_t P, arb_t Q, const fmpz_t n, const fmpz_t a, const fmpz_t b, long pr
     }
     else if (fmpz_cmp_ui(t, 20) < 0)
     {
-        long steps, k;
+        slong steps, k;
         arb_t u;
         arb_init(u);
 
@@ -90,7 +90,7 @@ bsplit(arb_t P, arb_t Q, const fmpz_t n, const fmpz_t a, const fmpz_t b, long pr
 
 void
 arb_bell_sum_bsplit(arb_t res, const fmpz_t n,
-    const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+    const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong prec)
 {
     if (fmpz_cmp(a, b) >= 0)
     {
@@ -98,7 +98,7 @@ arb_bell_sum_bsplit(arb_t res, const fmpz_t n,
     }
     else
     {
-        long wp;
+        slong wp;
         arb_t P, Q;
 
         wp = _fmpz_sub_small(b, a);

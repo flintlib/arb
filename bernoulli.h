@@ -39,11 +39,11 @@
 extern "C" {
 #endif
 
-extern long TLS_PREFIX bernoulli_cache_num;
+extern slong TLS_PREFIX bernoulli_cache_num;
 
 extern TLS_PREFIX fmpq * bernoulli_cache;
 
-void bernoulli_cache_compute(long n);
+void bernoulli_cache_compute(slong n);
 
 /*
 Crude bound for the bits in d(n) = denom(B_n).
@@ -55,22 +55,22 @@ We get a more accurate estimate taking the square root of this.
 Further, at least for sufficiently large n,
 sigma_0(n) < exp(1.066 log(n) / log(log(n))).
 */
-static __inline__ long bernoulli_denom_size(long n)
+static __inline__ slong bernoulli_denom_size(slong n)
 {
     return 0.5 * 1.4427 * log(n) * pow(n, 1.066 / log(log(n)));
 }
 
-static __inline__ long bernoulli_zeta_terms(ulong s, long prec)
+static __inline__ slong bernoulli_zeta_terms(ulong s, slong prec)
 {
-    long N;
+    slong N;
     N = pow(2.0, (prec + 1.0) / (s - 1.0));
     N += ((N % 2) == 0);
     return N;
 }
 
-static __inline__ long bernoulli_power_prec(long i, ulong s1, long wp)
+static __inline__ slong bernoulli_power_prec(slong i, ulong s1, slong wp)
 {
-    long p = wp - s1 * log(i) * 1.44269504088896341;
+    slong p = wp - s1 * log(i) * 1.44269504088896341;
     return FLINT_MAX(p, 10);
 }
 
@@ -78,7 +78,7 @@ static __inline__ long bernoulli_power_prec(long i, ulong s1, long wp)
    in practice since the denominator estimate is quite a bit larger
    than the true denominators
  */
-static __inline__ long bernoulli_global_prec(ulong nmax)
+static __inline__ slong bernoulli_global_prec(ulong nmax)
 {
     return arith_bernoulli_number_size(nmax) + bernoulli_denom_size(nmax);
 }
@@ -89,9 +89,9 @@ static __inline__ long bernoulli_global_prec(ulong nmax)
 
 typedef struct
 {
-    long alloc;
-    long prec;
-    long max_power;
+    slong alloc;
+    slong prec;
+    slong max_power;
     fmpz * powers;
     fmpz_t pow_error;
     arb_t prefactor;
@@ -111,17 +111,17 @@ void bernoulli_rev_clear(bernoulli_rev_t iter);
 
 #define BERNOULLI_ENSURE_CACHED(n) \
   do { \
-    long __n = (n); \
+    slong __n = (n); \
     if (__n >= bernoulli_cache_num) \
         bernoulli_cache_compute(__n + 1); \
   } while (0); \
 
-long bernoulli_bound_2exp_si(ulong n);
+slong bernoulli_bound_2exp_si(ulong n);
 
 
-void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, long prec);
+void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, slong prec);
 
-void bernoulli_fmprb_ui(fmprb_t b, ulong n, long prec);
+void bernoulli_fmprb_ui(fmprb_t b, ulong n, slong prec);
 
 void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n);
 

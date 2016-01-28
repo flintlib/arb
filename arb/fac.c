@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_fac_ui(arb_t x, ulong n, long prec)
+arb_fac_ui(arb_t x, ulong n, slong prec)
 {
     fmpz_t t;
     fmpz_init(t);

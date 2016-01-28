@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("mul_more....");
+    flint_printf("mul_more....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -60,13 +60,13 @@ int main()
 
         if (!arb_contains_fmpq(c, z))
         {
-            printf("FAIL: containment\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -103,12 +103,12 @@ int main()
 
         if (!arb_contains_fmpq(a, z))
         {
-            printf("FAIL: aliasing (c, a)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: aliasing (c, a)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -144,12 +144,12 @@ int main()
 
         if (!arb_contains_fmpq(b, z))
         {
-            printf("FAIL: aliasing (c, b)\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpq_print(z); printf("\n\n");
+            flint_printf("FAIL: aliasing (c, b)\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpq_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -163,6 +163,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

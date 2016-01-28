@@ -26,7 +26,7 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_cot_pi_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec)
+_acb_poly_cot_pi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec)
 {
     hlen = FLINT_MIN(hlen, len);
 
@@ -86,7 +86,7 @@ _acb_poly_cot_pi_series(acb_ptr g, acb_srcptr h, long hlen, long len, long prec)
 }
 
 void
-acb_poly_cot_pi_series(acb_poly_t res, const acb_poly_t f, long len, long prec)
+acb_poly_cot_pi_series(acb_poly_t res, const acb_poly_t f, slong len, slong prec)
 {
     acb_poly_fit_length(res, len);
 

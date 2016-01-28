@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("transform....");
+    flint_printf("transform....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         psl2z_t g;
         acb_t z, w1, w2, t;
-        long prec;
+        slong prec;
 
         psl2z_init(g);
         acb_init(z);
@@ -66,11 +66,11 @@ int main()
 
         if (!acb_overlaps(w1, w2))
         {
-            printf("FAIL\n");
-            printf("g = "); psl2z_print(g); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("w1 = "); acb_printd(w1, 30); printf("\n\n");
-            printf("w2 = "); acb_printd(w2, 30); printf("\n\n");
+            flint_printf("FAIL\n");
+            flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
+            flint_printf("w2 = "); acb_printd(w2, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -83,7 +83,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

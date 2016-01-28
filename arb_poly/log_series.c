@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_log_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
+_arb_poly_log_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec)
 {
     flen = FLINT_MIN(flen, n);
 
@@ -42,7 +42,7 @@ _arb_poly_log_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
     }
     else if (_arb_vec_is_zero(f + 1, flen - 2))  /* f = a + bx^d */
     {
-        long i, j, d = flen - 1;
+        slong i, j, d = flen - 1;
 
         for (i = 1, j = d; j < n; j += d, i++)
         {
@@ -63,7 +63,7 @@ _arb_poly_log_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
     {
         arb_ptr f_diff, f_inv;
         arb_t a;
-        long alloc;
+        slong alloc;
 
         alloc = n + flen - 1;
         f_inv = _arb_vec_init(alloc);
@@ -84,7 +84,7 @@ _arb_poly_log_series(arb_ptr res, arb_srcptr f, long flen, long n, long prec)
 }
 
 void
-arb_poly_log_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_log_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     if (n == 0)
     {

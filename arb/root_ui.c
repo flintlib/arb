@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-arb_root_arf(arb_t z, const arf_t x, ulong k, long prec)
+arb_root_arf(arb_t z, const arf_t x, ulong k, slong prec)
 {
     int inexact = arf_root(arb_midref(z), x, k, prec, ARB_RND);
 
@@ -37,7 +37,7 @@ arb_root_arf(arb_t z, const arf_t x, ulong k, long prec)
 }
 
 void
-arb_root_algebraic(arb_t res, const arb_t x, ulong k, long prec)
+arb_root_ui_algebraic(arb_t res, const arb_t x, ulong k, slong prec)
 {
     mag_t r, msubr, m1k, t;
 
@@ -87,7 +87,7 @@ arb_root_algebraic(arb_t res, const arb_t x, ulong k, long prec)
 }
 
 void
-arb_root_exp(arb_t res, const arb_t x, ulong k, long prec)
+arb_root_ui_exp(arb_t res, const arb_t x, ulong k, slong prec)
 {
     arb_log(res, x, prec + 4);
     arb_div_ui(res, res, k, prec + 4);
@@ -95,7 +95,7 @@ arb_root_exp(arb_t res, const arb_t x, ulong k, long prec)
 }
 
 void
-arb_root(arb_t res, const arb_t x, ulong k, long prec)
+arb_root_ui(arb_t res, const arb_t x, ulong k, slong prec)
 {
     if (k == 0)
     {
@@ -116,10 +116,17 @@ arb_root(arb_t res, const arb_t x, ulong k, long prec)
     }
     else
     {
-        if (k > 50 || prec < (1L << ((k / 8) + 8)))
-            arb_root_exp(res, x, k, prec);
+        if (k > 50 || prec < (WORD(1) << ((k / 8) + 8)))
+            arb_root_ui_exp(res, x, k, prec);
         else
-            arb_root_algebraic(res, x, k, prec);
+            arb_root_ui_algebraic(res, x, k, prec);
     }
+}
+
+/* backwards compatible alias */
+void
+arb_root(arb_t res, const arb_t x, ulong k, slong prec)
+{
+    arb_root_ui(res, x, k, prec);
 }
 

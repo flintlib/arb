@@ -32,6 +32,7 @@
 #define MAG_INLINE static __inline__
 #endif
 
+#include <stdio.h>
 #include <math.h>
 #include "flint.h"
 #include "fmpz.h"
@@ -64,7 +65,7 @@ _fmpz_set_fast(fmpz_t f, const fmpz_t g)
 }
 
 static __inline__ void
-_fmpz_add_fast(fmpz_t z, const fmpz_t x, long c)
+_fmpz_add_fast(fmpz_t z, const fmpz_t x, slong c)
 {
     fmpz ze, xe;
 
@@ -78,7 +79,7 @@ _fmpz_add_fast(fmpz_t z, const fmpz_t x, long c)
 }
 
 static __inline__ void
-_fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+_fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
 {
     fmpz ze, xe, ye;
 
@@ -99,7 +100,7 @@ _fmpz_add2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
 }
 
 static __inline__ void
-_fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
+_fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
 {
     fmpz ze, xe, ye;
 
@@ -132,7 +133,7 @@ _fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, long c)
 
 #define MAG_BITS 30
 
-#define MAG_ONE_HALF (1UL << (MAG_BITS - 1))
+#define MAG_ONE_HALF (UWORD(1) << (MAG_BITS - 1))
 
 static __inline__ mp_limb_t
 __mag_fixmul32(mp_limb_t x, mp_limb_t y)
@@ -151,7 +152,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #define MAG_CHECK_BITS(rr) \
     if (MAG_MAN(rr) != 0 && FLINT_BIT_COUNT(MAG_MAN(rr)) != MAG_BITS) \
     { \
-        printf("FAIL: wrong number of bits in mantissa!\n"); \
+        flint_printf("FAIL: wrong number of bits in mantissa!\n"); \
         abort(); \
     }
 
@@ -307,7 +308,7 @@ void mag_add_lower(mag_t z, const mag_t x, const mag_t y);
 void mag_div(mag_t z, const mag_t x, const mag_t y);
 
 MAG_INLINE void
-mag_mul_2exp_si(mag_t z, const mag_t x, long y)
+mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
 {
     if (mag_is_special(x))
     {
@@ -378,7 +379,7 @@ mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
 }
 
 MAG_INLINE void
-mag_fast_mul_2exp_si(mag_t z, const mag_t x, long y)
+mag_fast_mul_2exp_si(mag_t z, const mag_t x, slong y)
 {
     if (MAG_MAN(x) == 0)
     {
@@ -404,7 +405,7 @@ mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
     }
     else
     {
-        long shift, e;
+        slong shift, e;
 
         /* x*y < 2^e */
         e = MAG_EXP(x) + MAG_EXP(y);
@@ -435,7 +436,7 @@ mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 }
 
 MAG_INLINE void
-mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
+mag_fast_add_2exp_si(mag_t z, const mag_t x, slong e)
 {
     /* Must be zero */
     if (mag_is_special(x))
@@ -445,7 +446,7 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, long e)
     }
     else
     {
-        long shift;
+        slong shift;
         shift = MAG_EXP(x) - e;
 
         if (shift > 0)
@@ -482,19 +483,31 @@ void mag_set_fmpr(mag_t x, const fmpr_t y);
 
 void mag_get_fmpr(fmpr_t x, const mag_t r);
 
-void mag_randtest_special(mag_t x, flint_rand_t state, long expbits);
+void mag_randtest_special(mag_t x, flint_rand_t state, slong expbits);
 
-void mag_randtest(mag_t x, flint_rand_t state, long expbits);
+void mag_randtest(mag_t x, flint_rand_t state, slong expbits);
 
-void mag_print(const mag_t x);
+void mag_fprint(FILE * file, const mag_t x);
 
-void mag_printd(const mag_t x, long d);
+void mag_fprintd(FILE * file, const mag_t x, slong d);
+
+MAG_INLINE void
+mag_print(const mag_t x)
+{
+    mag_fprint(stdout, x);
+}
+
+MAG_INLINE void
+mag_printd(const mag_t x, slong d)
+{
+    mag_fprintd(stdout, x, d);
+}
 
 void mag_get_fmpq(fmpq_t y, const mag_t x);
 
 int mag_cmp(const mag_t x, const mag_t y);
 
-int mag_cmp_2exp_si(const mag_t x, long e);
+int mag_cmp_2exp_si(const mag_t x, slong e);
 
 MAG_INLINE void
 mag_min(mag_t z, const mag_t x, const mag_t y)
@@ -515,9 +528,9 @@ mag_max(mag_t z, const mag_t x, const mag_t y)
 }
 
 MAG_INLINE mag_ptr
-_mag_vec_init(long n)
+_mag_vec_init(slong n)
 {
-    long i;
+    slong i;
     mag_ptr v = (mag_ptr) flint_malloc(sizeof(mag_struct) * n);
 
     for (i = 0; i < n; i++)
@@ -527,9 +540,9 @@ _mag_vec_init(long n)
 }
 
 MAG_INLINE void
-_mag_vec_clear(mag_ptr v, long n)
+_mag_vec_clear(mag_ptr v, slong n)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         mag_clear(v + i);
     flint_free(v);
@@ -554,7 +567,7 @@ void mag_log1p(mag_t z, const mag_t x);
 
 void mag_log_ui(mag_t t, ulong n);
 
-void mag_exp_maglim(mag_t y, const mag_t x, long maglim);
+void mag_exp_maglim(mag_t y, const mag_t x, slong maglim);
 
 MAG_INLINE void
 mag_exp(mag_t y, const mag_t x)
@@ -587,16 +600,18 @@ void mag_hypot(mag_t z, const mag_t x, const mag_t y);
 
 void mag_binpow_uiui(mag_t b, ulong m, ulong n);
 
-void mag_polylog_tail(mag_t u, const mag_t z, long sigma, ulong d, ulong N);
+void mag_polylog_tail(mag_t u, const mag_t z, slong sigma, ulong d, ulong N);
 
 void mag_geom_series(mag_t res, const mag_t x, ulong n);
+
+void mag_hurwitz_zeta_uiui(mag_t res, ulong s, ulong a);
 
 void mag_set_ui(mag_t z, ulong x);
 void mag_set_ui_lower(mag_t z, ulong x);
 
 /* TODO: test functions below */
 MAG_INLINE void
-mag_set_ui_2exp_si(mag_t z, ulong v, long e)
+mag_set_ui_2exp_si(mag_t z, ulong v, slong e)
 {
     mag_set_ui(z, v);
     mag_mul_2exp_si(z, z, e);

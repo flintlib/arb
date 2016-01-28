@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_evaluate_vec_iter(arb_ptr ys, arb_srcptr poly, long plen,
-    arb_srcptr xs, long n, long prec)
+_arb_poly_evaluate_vec_iter(arb_ptr ys, arb_srcptr poly, slong plen,
+    arb_srcptr xs, slong n, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < n; i++)
         _arb_poly_evaluate(ys + i, poly, plen, xs + i, prec);
@@ -37,7 +37,7 @@ _arb_poly_evaluate_vec_iter(arb_ptr ys, arb_srcptr poly, long plen,
 
 void
 arb_poly_evaluate_vec_iter(arb_ptr ys,
-        const arb_poly_t poly, arb_srcptr xs, long n, long prec)
+        const arb_poly_t poly, arb_srcptr xs, slong n, slong prec)
 {
     _arb_poly_evaluate_vec_iter(ys, poly->coeffs,
                                         poly->length, xs, n, prec);

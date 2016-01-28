@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("theta_const_sum_rs....");
+    flint_printf("theta_const_sum_rs....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 5000; iter++)
     {
         acb_t q, t2a, t2b, t3a, t3b, t4a, t4b;
-        long prec1, prec2, N;
+        slong prec1, prec2, N;
 
         acb_init(q);
         acb_init(t2a);
@@ -66,15 +66,15 @@ int main()
 
         if (!acb_overlaps(t2a, t2b) || !acb_overlaps(t3a, t3b) || !acb_overlaps(t4a, t4b))
         {
-            printf("FAIL (overlap)  iter = %ld\n", iter);
-            printf("N = %ld\n", N);
-            printf("q = "); acb_printd(q, 50); printf("\n\n");
-            printf("t2a = "); acb_printd(t2a, 50); printf("\n\n");
-            printf("t2b = "); acb_printd(t2b, 50); printf("\n\n");
-            printf("t3a = "); acb_printd(t3a, 50); printf("\n\n");
-            printf("t3b = "); acb_printd(t3b, 50); printf("\n\n");
-            printf("t4a = "); acb_printd(t4a, 50); printf("\n\n");
-            printf("t4b = "); acb_printd(t4b, 50); printf("\n\n");
+            flint_printf("FAIL (overlap)  iter = %wd\n", iter);
+            flint_printf("N = %wd\n", N);
+            flint_printf("q = "); acb_printd(q, 50); flint_printf("\n\n");
+            flint_printf("t2a = "); acb_printd(t2a, 50); flint_printf("\n\n");
+            flint_printf("t2b = "); acb_printd(t2b, 50); flint_printf("\n\n");
+            flint_printf("t3a = "); acb_printd(t3a, 50); flint_printf("\n\n");
+            flint_printf("t3b = "); acb_printd(t3b, 50); flint_printf("\n\n");
+            flint_printf("t4a = "); acb_printd(t4a, 50); flint_printf("\n\n");
+            flint_printf("t4b = "); acb_printd(t4b, 50); flint_printf("\n\n");
             abort();
         }
 
@@ -89,7 +89,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

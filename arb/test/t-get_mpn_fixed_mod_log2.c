@@ -25,14 +25,14 @@
 
 #include "arb.h"
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec);
+int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("get_mpn_fixed_mod_log2....");
+    flint_printf("get_mpn_fixed_mod_log2....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -45,7 +45,7 @@ int main()
         mp_ptr w;
         arb_t wb, t;
         mp_size_t wn;
-        long prec, prec2;
+        slong prec, prec2;
         int success;
         mp_limb_t error;
 
@@ -84,11 +84,11 @@ int main()
 
             if (!arb_contains_arf(t, x))
             {
-                printf("FAIL (containment)\n");
-                printf("x = "); arf_printd(x, 50); printf("\n\n");
-                printf("q = "); fmpz_print(q); printf("\n\n");
-                printf("w = "); arb_printd(wb, 50); printf("\n\n");
-                printf("t = "); arb_printd(t, 50); printf("\n\n");
+                flint_printf("FAIL (containment)\n");
+                flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
+                flint_printf("q = "); fmpz_print(q); flint_printf("\n\n");
+                flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
+                flint_printf("t = "); arb_printd(t, 50); flint_printf("\n\n");
                 abort();
             }
 
@@ -97,9 +97,9 @@ int main()
             if (arf_sgn(arb_midref(wb)) < 0 ||
                 arf_cmp(arb_midref(wb), arb_midref(t)) >= 0)
             {
-                printf("FAIL (expected 0 <= w < log(2))\n");
-                printf("x = "); arf_printd(x, 50); printf("\n\n");
-                printf("w = "); arb_printd(wb, 50); printf("\n\n");
+                flint_printf("FAIL (expected 0 <= w < log(2))\n");
+                flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
+                flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
                 abort();
             }
         }
@@ -113,7 +113,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

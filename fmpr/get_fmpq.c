@@ -34,14 +34,14 @@ fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
     }
     else if (fmpr_is_special(x) || COEFF_IS_MPZ(*fmpr_expref(x)))
     {
-        printf("exception: fmpr_get_fmpq: cannot convert to rational\n");
+        flint_printf("exception: fmpr_get_fmpq: cannot convert to rational\n");
         abort();
     }
     else
     {
-        long exp = *fmpr_expref(x);
+        slong exp = *fmpr_expref(x);
 
-        fmpz_set_ui(fmpq_denref(y), 1UL);
+        fmpz_set_ui(fmpq_denref(y), UWORD(1));
 
         if (exp >= 0)
         {

@@ -25,21 +25,21 @@
 
 #include "arb_poly.h"
 
-long arf_get_si(const arf_t x, arf_rnd_t rnd);
+slong arf_get_si(const arf_t x, arf_rnd_t rnd);
 
-void _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec);
+void _arb_poly_lgamma_series_at_one(arb_ptr u, slong len, slong prec);
 
-void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec);
+void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec);
 
-void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long prec);
+void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, slong n, slong num, slong prec);
 
 
 void
-_arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect, isint;
-    long i, rflen, r, n, wp;
+    slong i, rflen, r, n, wp;
     arb_ptr t, u, v;
     arb_struct f[2];
 
@@ -197,7 +197,7 @@ _arb_poly_rgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long pre
 }
 
 void
-arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_rgamma_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     if (f->length == 0 || n == 0)
     {

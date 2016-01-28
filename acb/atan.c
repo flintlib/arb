@@ -50,7 +50,7 @@ acb_atan_on_branch_cut(const acb_t z)
 }
 
 void
-acb_atan(acb_t r, const acb_t z, long prec)
+acb_atan(acb_t r, const acb_t z, slong prec)
 {
     if (arb_is_zero(acb_imagref(z)))
     {

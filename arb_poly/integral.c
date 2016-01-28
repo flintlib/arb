@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_integral(arb_ptr res, arb_srcptr poly, long len, long prec)
+_arb_poly_integral(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 {
-    long k = len - 1;
+    slong k = len - 1;
 
     for (k = len - 1; k > 0; k--)
         arb_div_ui(res + k, poly + k - 1, k, prec);
@@ -37,7 +37,7 @@ _arb_poly_integral(arb_ptr res, arb_srcptr poly, long len, long prec)
 }
 
 void
-arb_poly_integral(arb_poly_t res, const arb_poly_t poly, long prec)
+arb_poly_integral(arb_poly_t res, const arb_poly_t poly, slong prec)
 {
     arb_poly_fit_length(res, poly->length + 1);
     _arb_poly_integral(res->coeffs, poly->coeffs, poly->length + 1, prec);

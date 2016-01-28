@@ -27,10 +27,10 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_get_scale(fmpz_t scale, arb_srcptr x, long xlen,
-                                  arb_srcptr y, long ylen)
+_arb_poly_get_scale(fmpz_t scale, arb_srcptr x, slong xlen,
+                                  arb_srcptr y, slong ylen)
 {
-    long xa, xb, ya, yb, den;
+    slong xa, xb, ya, yb, den;
 
     fmpz_zero(scale);
 
@@ -99,11 +99,11 @@ _arb_poly_get_scale(fmpz_t scale, arb_srcptr x, long xlen,
 
 static __inline__ void
 _mag_vec_get_fmpz_2exp_blocks(fmpz * coeffs,
-    double * dblcoeffs, fmpz * exps, long * blocks, const fmpz_t scale,
-    arb_srcptr x, mag_srcptr xm, long len)
+    double * dblcoeffs, fmpz * exps, slong * blocks, const fmpz_t scale,
+    arb_srcptr x, mag_srcptr xm, slong len)
 {
     fmpz_t top, bot, t, b, v, block_top, block_bot;
-    long i, j, s, block, bits, maxheight;
+    slong i, j, s, block, bits, maxheight;
     int in_zero;
     mag_srcptr cur;
 
@@ -229,10 +229,10 @@ _mag_vec_get_fmpz_2exp_blocks(fmpz * coeffs,
 
 static __inline__ void
 _arb_vec_get_fmpz_2exp_blocks(fmpz * coeffs, fmpz * exps,
-    long * blocks, const fmpz_t scale, arb_srcptr x, long len, long prec)
+    slong * blocks, const fmpz_t scale, arb_srcptr x, slong len, slong prec)
 {
     fmpz_t top, bot, t, b, v, block_top, block_bot;
-    long i, j, s, block, bits, maxheight;
+    slong i, j, s, block, bits, maxheight;
     int in_zero;
 
     fmpz_init(top);
@@ -340,11 +340,11 @@ _arb_vec_get_fmpz_2exp_blocks(fmpz * coeffs, fmpz * exps,
 static __inline__ void
 _arb_poly_addmullow_rad(arb_ptr z, fmpz * zz,
     const fmpz * xz, const double * xdbl, const fmpz * xexps,
-    const long * xblocks, long xlen,
+    const slong * xblocks, slong xlen,
     const fmpz * yz, const double * ydbl, const fmpz * yexps,
-    const long * yblocks, long ylen, long n)
+    const slong * yblocks, slong ylen, slong n)
 {
-    long i, j, k, ii, xp, yp, xl, yl, bn;
+    slong i, j, k, ii, xp, yp, xl, yl, bn;
     fmpz_t zexp;
     mag_t t;
 
@@ -413,11 +413,11 @@ _arb_poly_addmullow_rad(arb_ptr z, fmpz * zz,
 
 static __inline__ void
 _arb_poly_addmullow_block(arb_ptr z, fmpz * zz,
-    const fmpz * xz, const fmpz * xexps, const long * xblocks, long xlen,
-    const fmpz * yz, const fmpz * yexps, const long * yblocks, long ylen,
-    long n, long prec, int squaring)
+    const fmpz * xz, const fmpz * xexps, const slong * xblocks, slong xlen,
+    const fmpz * yz, const fmpz * yexps, const slong * yblocks, slong ylen,
+    slong n, slong prec, int squaring)
 {
-    long i, j, k, xp, yp, xl, yl, bn;
+    slong i, j, k, xp, yp, xl, yl, bn;
     fmpz_t zexp;
 
     fmpz_init(zexp);
@@ -470,13 +470,13 @@ _arb_poly_addmullow_block(arb_ptr z, fmpz * zz,
 }
 
 void
-_arb_poly_mullow_block(arb_ptr z, arb_srcptr x, long xlen,
-                                arb_srcptr y, long ylen, long n, long prec)
+_arb_poly_mullow_block(arb_ptr z, arb_srcptr x, slong xlen,
+                                arb_srcptr y, slong ylen, slong n, slong prec)
 {
-    long xmlen, xrlen, ymlen, yrlen, i;
+    slong xmlen, xrlen, ymlen, yrlen, i;
     fmpz *xz, *yz, *zz;
     fmpz *xe, *ye;
-    long *xblocks, *yblocks;
+    slong *xblocks, *yblocks;
     int squaring;
     fmpz_t scale, t;
 
@@ -529,8 +529,8 @@ _arb_poly_mullow_block(arb_ptr z, arb_srcptr x, long xlen,
     zz = _fmpz_vec_init(n);
     xe = _fmpz_vec_init(xlen);
     ye = _fmpz_vec_init(ylen);
-    xblocks = flint_malloc(sizeof(long) * (xlen + 1));
-    yblocks = flint_malloc(sizeof(long) * (ylen + 1));
+    xblocks = flint_malloc(sizeof(slong) * (xlen + 1));
+    yblocks = flint_malloc(sizeof(slong) * (ylen + 1));
 
     _arb_poly_get_scale(scale, x, xlen, y, ylen);
 
@@ -641,9 +641,9 @@ _arb_poly_mullow_block(arb_ptr z, arb_srcptr x, long xlen,
 
 void
 arb_poly_mullow_block(arb_poly_t res, const arb_poly_t poly1,
-              const arb_poly_t poly2, long n, long prec)
+              const arb_poly_t poly2, slong n, slong prec)
 {
-    long xlen, ylen, zlen;
+    slong xlen, ylen, zlen;
 
     xlen = poly1->length;
     ylen = poly2->length;

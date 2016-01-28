@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("exp_sum_bs_powtab....");
+    flint_printf("exp_sum_bs_powtab....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long N;
+        slong N;
         fmpz_t x, T, Q;
         fmpq_t S, V;
         mp_bitcnt_t Qexp, r;
@@ -62,14 +62,14 @@ int main()
 
         if (!fmpq_equal(S, V))
         {
-            printf("FAIL\n\n");
-            printf("N = %ld\n\n", N);
-            printf("r = %lu\n\n", r);
-            printf("x = "); fmpz_print(x); printf("\n\n");
-            printf("T = "); fmpz_print(T); printf("\n\n");
-            printf("Q = "); fmpz_print(T); printf("\n\n");
-            printf("V = "); fmpq_print(V); printf("\n\n");
-            printf("S = "); fmpq_print(S); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("N = %wd\n\n", N);
+            flint_printf("r = %wu\n\n", r);
+            flint_printf("x = "); fmpz_print(x); flint_printf("\n\n");
+            flint_printf("T = "); fmpz_print(T); flint_printf("\n\n");
+            flint_printf("Q = "); fmpz_print(T); flint_printf("\n\n");
+            flint_printf("V = "); fmpq_print(V); flint_printf("\n\n");
+            flint_printf("S = "); fmpq_print(S); flint_printf("\n\n");
             abort();
         }
 
@@ -82,7 +82,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

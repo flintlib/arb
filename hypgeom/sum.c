@@ -26,7 +26,7 @@
 #include "hypgeom.h"
 
 static __inline__ void
-fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, long x)
+fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, slong x)
 {
     fmpz_set_si(y, x);
     fmpz_poly_evaluate_fmpz(y, poly, y);
@@ -34,7 +34,7 @@ fmpz_poly_evaluate_si(fmpz_t y, const fmpz_poly_t poly, long x)
 
 static void
 bsplit_recursive_fmpz(fmpz_t P, fmpz_t Q, fmpz_t B, fmpz_t T,
-    const hypgeom_t hyp, long a, long b, int cont)
+    const hypgeom_t hyp, slong a, slong b, int cont)
 {
     if (b - a == 1)
     {
@@ -55,7 +55,7 @@ bsplit_recursive_fmpz(fmpz_t P, fmpz_t Q, fmpz_t B, fmpz_t T,
     }
     else
     {
-        long m;
+        slong m;
         fmpz_t P2, Q2, B2, T2;
 
         m = (a + b) / 2;
@@ -95,7 +95,7 @@ bsplit_recursive_fmpz(fmpz_t P, fmpz_t Q, fmpz_t B, fmpz_t T,
 
 static void
 bsplit_recursive_fmprb(fmprb_t P, fmprb_t Q, fmprb_t B, fmprb_t T,
-    const hypgeom_t hyp, long a, long b, int cont, long prec)
+    const hypgeom_t hyp, slong a, slong b, int cont, slong prec)
 {
     if (b - a < 4)
     {
@@ -120,7 +120,7 @@ bsplit_recursive_fmprb(fmprb_t P, fmprb_t Q, fmprb_t B, fmprb_t T,
     }
     else
     {
-        long m;
+        slong m;
         fmprb_t P2, Q2, B2, T2;
 
         m = (a + b) / 2;
@@ -159,7 +159,7 @@ bsplit_recursive_fmprb(fmprb_t P, fmprb_t Q, fmprb_t B, fmprb_t T,
 }
 
 void
-fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, long n, long prec)
+fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, slong n, slong prec)
 {
     if (n < 1)
     {
@@ -181,10 +181,10 @@ fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, long n, long prec)
 }
 
 void
-fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec)
+fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, slong target_prec, slong prec)
 {
     mag_t err, z;
-    long n;
+    slong n;
 
     mag_init(err);
     mag_init(z);
@@ -228,7 +228,7 @@ fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long
 
 static void
 bsplit_recursive_arb(arb_t P, arb_t Q, arb_t B, arb_t T,
-    const hypgeom_t hyp, long a, long b, int cont, long prec)
+    const hypgeom_t hyp, slong a, slong b, int cont, slong prec)
 {
     if (b - a < 4)
     {
@@ -253,7 +253,7 @@ bsplit_recursive_arb(arb_t P, arb_t Q, arb_t B, arb_t T,
     }
     else
     {
-        long m;
+        slong m;
         arb_t P2, Q2, B2, T2;
 
         m = (a + b) / 2;
@@ -292,7 +292,7 @@ bsplit_recursive_arb(arb_t P, arb_t Q, arb_t B, arb_t T,
 }
 
 void
-arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, long n, long prec)
+arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, slong n, slong prec)
 {
     if (n < 1)
     {
@@ -314,10 +314,10 @@ arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, long n, long prec)
 }
 
 void
-arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, long target_prec, long prec)
+arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, slong target_prec, slong prec)
 {
     mag_t err, z;
-    long n;
+    slong n;
 
     mag_init(err);
     mag_init(z);

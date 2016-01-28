@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pow....");
+    flint_printf("pow....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 20000; iter++)
     {
         acb_t a, b, c, d, e, f;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;
@@ -64,11 +64,11 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -84,12 +84,12 @@ int main()
 
         if (!acb_overlaps(d, e))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
-            printf("e = "); acb_print(e); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
+            flint_printf("e = "); acb_print(e); flint_printf("\n\n");
             abort();
         }
 
@@ -99,11 +99,11 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: aliasing 1\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: aliasing 1\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -112,11 +112,11 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: aliasing 2\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
+            flint_printf("FAIL: aliasing 2\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -130,6 +130,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

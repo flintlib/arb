@@ -27,7 +27,7 @@
 #include "acb_poly.h"
 
 void
-acb_polygamma(acb_t res, const acb_t s, const acb_t z, long prec)
+acb_polygamma(acb_t res, const acb_t s, const acb_t z, slong prec)
 {
     if (acb_is_zero(s))
     {

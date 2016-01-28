@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, long prec)
+arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, slong prec)
 {
     arf_t aa, bb;
 

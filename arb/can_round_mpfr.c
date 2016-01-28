@@ -19,59 +19,54 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "arf.h"
+#include "arb.h"
 
-void
-arf_print(const arf_t x)
+int mpfr_round_p(mp_srcptr, mp_size_t, mpfr_exp_t, mpfr_prec_t);
+
+int
+arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd)
 {
-    if (arf_is_normal(x))
-    {
-        fmpz_t man, exp;
-
-        fmpz_init(man);
-        fmpz_init(exp);
-
-        arf_get_fmpz_2exp(man, exp, x);
-
-        printf("(");
-        fmpz_print(man);
-        printf(" * 2^");
-        fmpz_print(exp);
-        printf(")");
-
-        fmpz_clear(man);
-        fmpz_clear(exp);
-    }
-    else
-    {
-        if (arf_is_zero(x)) printf("(0)");
-        else if (arf_is_pos_inf(x)) printf("(+inf)");
-        else if (arf_is_neg_inf(x)) printf("(-inf)");
-        else printf("(nan)");
-    }
+    return arb_can_round_mpfr(x, prec, arf_rnd_to_mpfr(rnd));
 }
 
-void
-arf_printd(const arf_t x, long d)
+int
+arb_can_round_mpfr(const arb_t x, slong prec, mpfr_rnd_t rnd)
 {
-    if (arf_is_finite(x) && (ARF_EXP(x) <= MPFR_EMIN_MIN + 1 ||
-                             ARF_EXP(x) >= MPFR_EMAX_MAX - 1))
+    if (!arb_is_finite(x))
     {
-        arf_print(x);
+        return 0;
+    }
+    else if (mag_is_zero(arb_radref(x)))
+    {
+        return 1;
+    }
+    else if (arf_is_zero(arb_midref(x)))
+    {
+        return 0;
     }
     else
     {
-        mpfr_t t;
-        mpfr_init2(t, d * 3.33 + 10);
-        mpfr_set_emin(MPFR_EMIN_MIN);
-        mpfr_set_emax(MPFR_EMAX_MAX);
-        arf_get_mpfr(t, x, MPFR_RNDN);
-        mpfr_printf("%.*Rg", FLINT_MAX(d, 1), t);
-        mpfr_clear(t);
+        slong e, bits;
+        mp_size_t n;
+        mp_srcptr d;
+
+        e = _fmpz_sub_small(ARF_EXPREF(arb_midref(x)), MAG_EXPREF(arb_radref(x)));
+
+        if (e < prec)
+            return 0;
+
+        /* The relative exponent could be tiny (in which case _fmpz_sub_small
+           has clamped it). Looking just past the end will be enough. */
+        bits = arb_bits(x);
+        e = FLINT_MIN(e, FLINT_MAX(bits, prec) + 10);
+
+        ARF_GET_MPN_READONLY(d, n, arb_midref(x));
+
+        return mpfr_round_p(d, n, e, prec + (rnd == MPFR_RNDN));
     }
 }
 

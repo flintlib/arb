@@ -25,10 +25,10 @@
 
 #include "fmpr.h"
 
-long
-fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_add_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_si(t, y);
     r = fmpr_add(z, x, t, prec, rnd);

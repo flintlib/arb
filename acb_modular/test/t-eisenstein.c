@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("eisenstein....");
+    flint_printf("eisenstein....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
     {
         acb_t tau1, tau2, t;
         acb_ptr r1, r2;
-        long e0, prec0, prec1, prec2, len1, len2, i;
+        slong e0, prec0, prec1, prec2, len1, len2, i;
         psl2z_t g;
 
         psl2z_init(g);
@@ -76,13 +76,13 @@ int main()
 
             if (!acb_overlaps(t, r2 + i))
             {
-                printf("FAIL (overlap)\n");
-                printf("tau1 = "); acb_printd(tau1, 15); printf("\n\n");
-                printf("tau2 = "); acb_printd(tau2, 15); printf("\n\n");
-                printf("g = "); psl2z_print(g); printf("\n\n");
-                printf("r1 = "); acb_printd(r1 + i, 15); printf("\n\n");
-                printf("r2 = "); acb_printd(r2 + i, 15); printf("\n\n");
-                printf("t = "); acb_printd(t, 15); printf("\n\n");
+                flint_printf("FAIL (overlap)\n");
+                flint_printf("tau1 = "); acb_printd(tau1, 15); flint_printf("\n\n");
+                flint_printf("tau2 = "); acb_printd(tau2, 15); flint_printf("\n\n");
+                flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
+                flint_printf("r1 = "); acb_printd(r1 + i, 15); flint_printf("\n\n");
+                flint_printf("r2 = "); acb_printd(r2 + i, 15); flint_printf("\n\n");
+                flint_printf("t = "); acb_printd(t, 15); flint_printf("\n\n");
                 abort();
             }
         }
@@ -97,7 +97,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

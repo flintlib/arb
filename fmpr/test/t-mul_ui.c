@@ -26,10 +26,10 @@
 #include "fmpr.h"
 #include "ulong_extras.h"
 
-static long
-fmpr_mul_ui_naive(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+static slong
+fmpr_mul_ui_naive(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_ui(t, y);
     r = fmpr_mul(z, x, t, prec, rnd);
@@ -39,10 +39,10 @@ fmpr_mul_ui_naive(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
-    printf("mul_ui....");
+    flint_printf("mul_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -51,7 +51,7 @@ int main()
     {
         fmpr_t x, z, v;
         ulong y;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);
@@ -79,12 +79,12 @@ int main()
                 r2 = fmpr_mul_ui_naive(v, x, y, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %lu\n\n", y);
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = %wu\n\n", y);
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -96,12 +96,12 @@ int main()
                 r2 = fmpr_mul_ui_naive(v, v, y, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = %lu\n\n", y);
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL (aliasing 1)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = %wu\n\n", y);
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -115,6 +115,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

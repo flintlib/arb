@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
+acb_hypgeom_si_asymp(acb_t res, const acb_t z, slong prec)
 {
     acb_t t, u, w, v, one;
 
@@ -100,7 +100,7 @@ acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_si_1f2(acb_t res, const acb_t z, long prec)
+acb_hypgeom_si_1f2(acb_t res, const acb_t z, slong prec)
 {
     acb_t a, t;
     acb_struct b[3];
@@ -134,7 +134,7 @@ acb_hypgeom_si_1f2(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_si(acb_t res, const acb_t z, long prec)
+acb_hypgeom_si(acb_t res, const acb_t z, slong prec)
 {
     if (acb_hypgeom_u_use_asymp(z, prec))
         acb_hypgeom_si_asymp(res, z, prec);

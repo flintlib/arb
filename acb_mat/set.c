@@ -28,7 +28,7 @@
 void
 acb_mat_set(acb_mat_t dest, const acb_mat_t src)
 {
-    long i, j;
+    slong i, j;
 
     if (dest != src && acb_mat_ncols(src) != 0)
     {

@@ -29,8 +29,8 @@
 
 void
 _arb_poly_mullow_classical(arb_ptr res,
-    arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long n, long prec)
+    arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong n, slong prec)
 {
     len1 = FLINT_MIN(len1, n);
     len2 = FLINT_MIN(len2, n);
@@ -41,7 +41,7 @@ _arb_poly_mullow_classical(arb_ptr res,
     }
     else if (poly1 == poly2 && len1 == len2)
     {
-        long i;
+        slong i;
 
         _arb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly1, prec);
         _arb_vec_scalar_mul(res + len1, poly1 + 1, n - len1, poly1 + len1 - 1, prec);
@@ -58,7 +58,7 @@ _arb_poly_mullow_classical(arb_ptr res,
     }
     else
     {
-        long i;
+        slong i;
 
         _arb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly2, prec);
 
@@ -76,9 +76,9 @@ _arb_poly_mullow_classical(arb_ptr res,
 void
 arb_poly_mullow_classical(arb_poly_t res, const arb_poly_t poly1,
                                             const arb_poly_t poly2,
-                                                long n, long prec)
+                                                slong n, slong prec)
 {
-    long len_out;
+    slong len_out;
 
     if (poly1->length == 0 || poly2->length == 0 || n == 0)
     {

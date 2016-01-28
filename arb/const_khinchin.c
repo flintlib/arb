@@ -27,11 +27,11 @@
 #include "arb.h"
 
 void
-arb_const_khinchin_eval_param(arb_t s, ulong N, ulong M, long prec)
+arb_const_khinchin_eval_param(arb_t s, ulong N, ulong M, slong prec)
 {
     arb_t t, u, h;
     arb_ptr pows;
-    long k, n;
+    slong k, n;
 
     arb_init(t);
     arb_init(u);
@@ -106,7 +106,7 @@ arb_const_khinchin_eval_param(arb_t s, ulong N, ulong M, long prec)
 }
 
 void
-arb_const_khinchin_eval(arb_t K, long prec)
+arb_const_khinchin_eval(arb_t K, slong prec)
 {
     ulong N, M;
 

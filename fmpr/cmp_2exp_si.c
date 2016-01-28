@@ -31,9 +31,9 @@ static __inline__ int sgn(int x)
 }
 
 int
-fmpr_cmp_2exp_si(const fmpr_t x, long e)
+fmpr_cmp_2exp_si(const fmpr_t x, slong e)
 {
-    long bc;
+    slong bc;
     int ret;
     fmpz_t t;
 

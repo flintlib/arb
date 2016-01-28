@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 /* res = src * (c + x) */
-void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec)
+void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, slong len, const acb_t c, slong trunc, slong prec)
 {
-    long i;
+    slong i;
 
     if (len < trunc)
         acb_set(res + len, src + len - 1);
@@ -44,11 +44,11 @@ void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, 
 
 
 void
-_acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, long d, long prec)
+_acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, slong d, slong prec)
 {
     acb_ptr t, u, v, term, sum;
     acb_t Na, one;
-    long i;
+    slong i;
 
     t = _acb_vec_init(d + 1);
     u = _acb_vec_init(d);
@@ -125,7 +125,7 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     }
 
     /* sum += u = 1/2 * t */
-    _acb_vec_scalar_mul_2exp_si(u, t, d, -1L);
+    _acb_vec_scalar_mul_2exp_si(u, t, d, -WORD(1));
     _acb_vec_add(sum, sum, u, d, prec);
 
     /* Euler-Maclaurin formula tail */

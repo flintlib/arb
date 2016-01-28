@@ -34,7 +34,7 @@ acb_poly_init(acb_poly_t poly)
 }
 
 void
-acb_poly_init2(acb_poly_t poly, long len)
+acb_poly_init2(acb_poly_t poly, slong len)
 {
     acb_poly_init(poly);
     acb_poly_fit_length(poly, len);

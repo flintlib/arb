@@ -26,17 +26,17 @@
 #include "acb_poly.h"
 #include "bernoulli.h"
 
-void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, long len, const acb_t c, long trunc, long prec);
+void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, slong len, const acb_t c, slong trunc, slong prec);
 
 void
-_acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long d, long prec)
+_acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_srcptr Nasx, slong M, slong d, slong prec)
 {
     acb_ptr u, term;
     acb_t Na2, splus, rec;
     arb_t x;
     fmpz_t c;
     int aint;
-    long r;
+    slong r;
 
     BERNOULLI_ENSURE_CACHED(2 * M);
 
@@ -51,7 +51,7 @@ _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_src
     _acb_vec_zero(sum, d);
 
     /* u = 1/2 * Nasx */
-    _acb_vec_scalar_mul_2exp_si(u, Nasx, d, -1L);
+    _acb_vec_scalar_mul_2exp_si(u, Nasx, d, -WORD(1));
 
     /* term = u * (s+x) / (N+a) */
     _acb_poly_mullow_cpx(u, u, d, s, d, prec);
@@ -66,7 +66,7 @@ _acb_poly_zeta_em_tail_naive(acb_ptr sum, const acb_t s, const acb_t Na, acb_src
 
     for (r = 1; r <= M; r++)
     {
-        /* printf("sum 2: %ld %ld\n", r, M); */
+        /* flint_printf("sum 2: %wd %wd\n", r, M); */
 
         /* sum += bernoulli number * term */
         arb_set_round_fmpz(x, fmpq_numref(bernoulli_cache + 2 * r), prec);

@@ -28,7 +28,7 @@
 /* See verify_taylor.py for code to generate tables and
    proof of correctness */
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
 
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 
@@ -569,14 +569,14 @@ void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
 {
     mp_ptr s, t, xpow;
     mp_limb_t new_denom, old_denom, c;
-    long power, k, m;
+    slong power, k, m;
 
     TMP_INIT;
     TMP_START;
 
     if (N >= ODD_RECIPROCAL_TAB_SIZE)
     {
-        printf("_arb_atan_taylor_rs: N too large!\n");
+        flint_printf("_arb_atan_taylor_rs: N too large!\n");
         abort();
     }
 
@@ -670,7 +670,7 @@ void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
 
                 if (s[xn + 1] != 0)
                 {
-                    printf("bad division!\n");
+                    flint_printf("bad division!\n");
                     abort();
                 }
 

@@ -80,7 +80,7 @@ _gamma_rf_bsplit(fmpz * A, ulong a, ulong b)
 
 void
 arb_rising2_ui_rs(arb_t u, arb_t v,
-    const arb_t x, ulong n, ulong m, long prec)
+    const arb_t x, ulong n, ulong m, slong prec)
 {
     if (n == 0)
     {
@@ -94,7 +94,7 @@ arb_rising2_ui_rs(arb_t u, arb_t v,
     }
     else
     {
-        long wp;
+        slong wp;
         ulong i, j, a, b;
         arb_ptr xs;
         arb_t S, T, U, V;

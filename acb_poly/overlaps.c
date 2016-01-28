@@ -26,10 +26,10 @@
 #include "acb_poly.h"
 
 int
-_acb_poly_overlaps(acb_srcptr poly1, long len1,
-        acb_srcptr poly2, long len2)
+_acb_poly_overlaps(acb_srcptr poly1, slong len1,
+        acb_srcptr poly2, slong len2)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len2; i++)
         if (!acb_overlaps(poly1 + i, poly2 + i))
@@ -45,8 +45,8 @@ _acb_poly_overlaps(acb_srcptr poly1, long len1,
 int
 acb_poly_overlaps(const acb_poly_t poly1, const acb_poly_t poly2)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
 
     if (len1 >= len2)
         return _acb_poly_overlaps(poly1->coeffs, len1, poly2->coeffs, len2);

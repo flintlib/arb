@@ -51,15 +51,15 @@ static const int pentagonal_best_m_residues[] = {
   27720, 27720, 31680, 33264, 36960, 0
 };
 
-long acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, long N);
+slong acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, slong N);
 
 #define PENTAGONAL(N) ((((N)+2)/2) * ((3*(N)+5)/2)/2)
 
 void
-_acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, long N, long prec)
+_acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, slong N, slong prec)
 {
-    long e, e1, e2, k, k1, k2, num, term_prec;
-    long *exponents, *aindex, *bindex;
+    slong e, e1, e2, k, k1, k2, num, term_prec;
+    slong *exponents, *aindex, *bindex;
     acb_ptr qpow;
     acb_t tmp1, tmp2;
     double log2term_approx;
@@ -92,7 +92,7 @@ _acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, lon
     acb_init(tmp1);
     acb_init(tmp2);
 
-    exponents = flint_malloc(sizeof(long) * 3 * num);
+    exponents = flint_malloc(sizeof(slong) * 3 * num);
     aindex = exponents + num;
     bindex = aindex + num;
 
@@ -128,7 +128,7 @@ _acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, lon
             }
             else
             {
-                printf("exponent not in addition sequence!\n");
+                flint_printf("exponent not in addition sequence!\n");
                 abort();
             }
         }
@@ -148,11 +148,11 @@ _acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, lon
 }
 
 void
-_acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, long N, long prec)
+_acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, slong N, slong prec)
 {
-    long * tab;
-    long k, term_prec, i, e, eprev;
-    long m, num_pentagonal;
+    slong * tab;
+    slong k, term_prec, i, e, eprev;
+    slong m, num_pentagonal;
     double log2term_approx;
     acb_ptr qpow;
     acb_t tmp1, tmp2;
@@ -164,7 +164,7 @@ _acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, long N, l
     m = acb_modular_rs_optimal_m(pentagonal_best_m, pentagonal_best_m_residues, N);
 
     /* build addition sequence */
-    tab = flint_calloc(m + 1, sizeof(long));
+    tab = flint_calloc(m + 1, sizeof(slong));
 
     for (k = 0; PENTAGONAL(k) < N; k++)
         tab[PENTAGONAL(k) % m] = -1;
@@ -228,12 +228,12 @@ _acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, long N, l
 }
 
 void
-acb_modular_eta_sum(acb_t eta, const acb_t q, long prec)
+acb_modular_eta_sum(acb_t eta, const acb_t q, slong prec)
 {
     mag_t err, qmag;
     double log2q_approx;
     int q_is_real;
-    long N;
+    slong N;
 
     mag_init(err);
     mag_init(qmag);

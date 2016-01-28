@@ -26,7 +26,7 @@
 #include "arb.h"
 
 int
-arb_contains_si(const arb_t x, long y)
+arb_contains_si(const arb_t x, slong y)
 {
     int ans;
     arf_t t;

@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_cot(arb_t y, const arb_t x, long prec)
+arb_cot(arb_t y, const arb_t x, slong prec)
 {
     arb_t u;
     arb_init(u);

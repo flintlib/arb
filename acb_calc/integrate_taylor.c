@@ -32,9 +32,9 @@ acb_calc_integrate_taylor(acb_t res,
     const acb_t a, const acb_t b,
     const arf_t inner_radius,
     const arf_t outer_radius,
-    long accuracy_goal, long prec)
+    slong accuracy_goal, slong prec)
 {
-    long num_steps, step, N, bp;
+    slong num_steps, step, N, bp;
     int result;
 
     acb_t delta, m, x, y1, y2, sum;
@@ -61,7 +61,7 @@ acb_calc_integrate_taylor(acb_t res,
         acb_get_abs_ubound_arf(t, delta, bp);
         arf_div(t, t, inner_radius, bp, ARF_RND_UP);
         arf_mul_2exp_si(t, t, -1);
-        num_steps = (long) (arf_get_d(t, ARF_RND_UP) + 1.0);
+        num_steps = (slong) (arf_get_d(t, ARF_RND_UP) + 1.0);
         /* make sure it's not something absurd */
         num_steps = FLINT_MIN(num_steps, 10 * prec);
         num_steps = FLINT_MAX(num_steps, 1);
@@ -81,8 +81,8 @@ acb_calc_integrate_taylor(acb_t res,
 
         if (arb_calc_verbose)
         {
-            printf("integration point %ld/%ld: ", 2 * step + 1, 2 * num_steps);
-            acb_printd(m, 15); printf("\n");
+            flint_printf("integration point %wd/%wd: ", 2 * step + 1, 2 * num_steps);
+            acb_printd(m, 15); flint_printf("\n");
         }
 
         /* evaluate at +/- x */
@@ -165,10 +165,10 @@ acb_calc_integrate_taylor(acb_t res,
 
             if (arb_calc_verbose)
             {
-                printf("N = %ld; bound: ", N); arf_printd(err, 15); printf("\n");
-                printf("R: "); arf_printd(R, 15); printf("\n");
-                printf("C: "); arf_printd(C, 15); printf("\n");
-                printf("X: "); arf_printd(X, 15); printf("\n");
+                flint_printf("N = %wd; bound: ", N); arf_printd(err, 15); flint_printf("\n");
+                flint_printf("R: "); arf_printd(R, 15); flint_printf("\n");
+                flint_printf("C: "); arf_printd(C, 15); flint_printf("\n");
+                flint_printf("X: "); arf_printd(X, 15); flint_printf("\n");
             }
 
             arb_clear(cbound);
@@ -201,9 +201,9 @@ acb_calc_integrate_taylor(acb_t res,
 
         if (arb_calc_verbose)
         {
-            printf("values:  ");
-            acb_printd(y1, 15); printf("  ");
-            acb_printd(y2, 15); printf("\n");
+            flint_printf("values:  ");
+            acb_printd(y1, 15); flint_printf("  ");
+            acb_printd(y2, 15); flint_printf("\n");
         }
 
         _acb_vec_clear(taylor_poly, N + 1);

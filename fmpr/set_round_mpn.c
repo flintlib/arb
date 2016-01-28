@@ -30,7 +30,7 @@ static __inline__ mp_bitcnt_t
 mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
 {
     mp_limb_t t;
-    long i, c;
+    slong i, c;
 
     i = from_bit / GMP_NUMB_BITS;
     c = from_bit % FLINT_BITS;
@@ -49,10 +49,10 @@ mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
     return (i * FLINT_BITS) + c;
 }
 
-long
-_fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd)
+slong
+_fmpr_set_round_mpn(slong * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, slong prec, fmpr_rnd_t rnd)
 {
-    long bc, val, val_bits, val_limbs, ret;
+    slong bc, val, val_bits, val_limbs, ret;
     int increment;
 
     /* compute the total bit length of x */
@@ -149,7 +149,7 @@ _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int neg
     else
     {
         mp_ptr dest;
-        long res_limbs, res_alloc;
+        slong res_limbs, res_alloc;
         __mpz_struct * zptr = _fmpz_promote(man);
 
         res_limbs = ((bc - val) + FLINT_BITS - 1) / FLINT_BITS;

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pfq_series_direct....");
+    flint_printf("pfq_series_direct....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         acb_poly_struct a[4], b[4];
         acb_poly_t z, s1, s2;
-        long i, p, q, len1, len2, n1, n2, prec1, prec2;
+        slong i, p, q, len1, len2, n1, n2, prec1, prec2;
         int regularized;
 
         p = n_randint(state, 3);
@@ -86,26 +86,26 @@ int main()
 
         if (!acb_poly_overlaps(s1, s2))
         {
-            printf("FAIL: overlap\n\n");
-            printf("iter = %ld\n", iter);
-            printf("n1 = %ld, n2 = %ld    prec1 = %ld, prec2 = %ld\n\n", n1, n2, prec1, prec2);
-            printf("p = %ld, q = %ld\n\n", p, q);
-            printf("z = "); acb_poly_printd(z, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("iter = %wd\n", iter);
+            flint_printf("n1 = %wd, n2 = %wd    prec1 = %wd, prec2 = %wd\n\n", n1, n2, prec1, prec2);
+            flint_printf("p = %wd, q = %wd\n\n", p, q);
+            flint_printf("z = "); acb_poly_printd(z, 15); flint_printf("\n\n");
 
             for (i = 0; i < p; i++)
             {
-                printf("a[%ld] = ", i); acb_poly_printd(a + i, 15); printf("\n\n");
+                flint_printf("a[%wd] = ", i); acb_poly_printd(a + i, 15); flint_printf("\n\n");
             }
 
             for (i = 0; i < q; i++)
             {
-                printf("b[%ld] = ", i); acb_poly_printd(b + i, 15); printf("\n\n");
+                flint_printf("b[%wd] = ", i); acb_poly_printd(b + i, 15); flint_printf("\n\n");
             }
 
-            printf("s1 = "); acb_poly_printd(s1, 15); printf("\n\n");
-            printf("s2 = "); acb_poly_printd(s2, 15); printf("\n\n");
+            flint_printf("s1 = "); acb_poly_printd(s1, 15); flint_printf("\n\n");
+            flint_printf("s2 = "); acb_poly_printd(s2, 15); flint_printf("\n\n");
             acb_poly_sub(s1, s1, s2, prec1);
-            printf("diff = "); acb_poly_printd(s1, 15); printf("\n\n");
+            flint_printf("diff = "); acb_poly_printd(s1, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -120,7 +120,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

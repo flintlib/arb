@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 static int
-good_enough(const acb_t z, const arf_t one_minus_eps, long prec)
+good_enough(const acb_t z, const arf_t one_minus_eps, slong prec)
 {
     arf_t m;
     int res;
@@ -48,7 +48,7 @@ good_enough(const acb_t z, const arf_t one_minus_eps, long prec)
 
 void
 acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z,
-        const arf_t one_minus_eps, long prec)
+        const arf_t one_minus_eps, slong prec)
 {
     acb_t t;
 

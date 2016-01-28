@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("theta....");
+    flint_printf("theta....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t t1, t2, t3, t4, t1b, t2b, t3b, t4b, z, tau;
-        long prec0, prec1, prec2, e0;
+        slong prec0, prec1, prec2, e0;
 
         acb_init(t1); acb_init(t2); acb_init(t3); acb_init(t4);
         acb_init(t1b); acb_init(t2b); acb_init(t3b); acb_init(t4b);
@@ -60,21 +60,21 @@ int main()
         if (!acb_overlaps(t1, t1b) || !acb_overlaps(t2, t2b) ||
             !acb_overlaps(t3, t3b) || !acb_overlaps(t4, t4b))
         {
-            printf("FAIL (overlap)\n");
-            printf("z = "); acb_printd(z, 25); printf("\n\n");
-            printf("tau = "); acb_printd(tau, 25); printf("\n\n");
+            flint_printf("FAIL (overlap)\n");
+            flint_printf("z = "); acb_printd(z, 25); flint_printf("\n\n");
+            flint_printf("tau = "); acb_printd(tau, 25); flint_printf("\n\n");
 
-            printf("t1  = "); acb_printd(t1, 15); printf("\n\n");
-            printf("t1b = "); acb_printd(t1b, 15); printf("\n\n");
+            flint_printf("t1  = "); acb_printd(t1, 15); flint_printf("\n\n");
+            flint_printf("t1b = "); acb_printd(t1b, 15); flint_printf("\n\n");
 
-            printf("t2  = "); acb_printd(t2, 15); printf("\n\n");
-            printf("t2b = "); acb_printd(t2b, 15); printf("\n\n");
+            flint_printf("t2  = "); acb_printd(t2, 15); flint_printf("\n\n");
+            flint_printf("t2b = "); acb_printd(t2b, 15); flint_printf("\n\n");
 
-            printf("t3  = "); acb_printd(t3, 15); printf("\n\n");
-            printf("t3b = "); acb_printd(t3b, 15); printf("\n\n");
+            flint_printf("t3  = "); acb_printd(t3, 15); flint_printf("\n\n");
+            flint_printf("t3b = "); acb_printd(t3b, 15); flint_printf("\n\n");
 
-            printf("t4  = "); acb_printd(t4, 15); printf("\n\n");
-            printf("t4b = "); acb_printd(t4b, 15); printf("\n\n");
+            flint_printf("t4  = "); acb_printd(t4, 15); flint_printf("\n\n");
+            flint_printf("t4b = "); acb_printd(t4b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -87,7 +87,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

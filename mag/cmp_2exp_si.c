@@ -26,7 +26,7 @@
 #include "mag.h"
 
 int
-mag_cmp_2exp_si(const mag_t x, long e)
+mag_cmp_2exp_si(const mag_t x, slong e)
 {
     int ispow2;
 

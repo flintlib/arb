@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_round_fmpz....");
+    flint_printf("set_round_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -43,7 +43,7 @@ int main()
 
         for (iter = 0; iter < 100000; iter++)
         {
-            long bits1, bits2;
+            slong bits1, bits2;
             int ret1, ret2;
             fmpz_t a;
             mpz_t b;
@@ -95,13 +95,13 @@ int main()
 
             if (!arf_equal(x, y) || ((ret1 == ARF_RESULT_EXACT) != (ret2 == 0)))
             {
-                printf("FAIL\n\n");
-                printf("bits1: %ld\n", bits1);
-                printf("bits2: %ld\n", bits2);
-                printf("a = "); fmpz_print(a); printf("\n\n");
-                printf("x = "); arf_print(x); printf("\n\n");
-                printf("y = "); arf_print(y); printf("\n\n");
-                printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
+                flint_printf("FAIL\n\n");
+                flint_printf("bits1: %wd\n", bits1);
+                flint_printf("bits2: %wd\n", bits2);
+                flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
+                flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+                flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
                 abort();
             }
 
@@ -116,7 +116,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

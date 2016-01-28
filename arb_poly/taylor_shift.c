@@ -19,37 +19,37 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
-#include "acb.h"
+#include "arb_poly.h"
 
 void
-acb_printd(const acb_t z, long digits)
+_arb_poly_taylor_shift(arb_ptr poly, const arb_t c, slong n, slong prec)
 {
-    printf("(");
-    arf_printd(arb_midref(acb_realref(z)), digits);
-
-    if (arf_sgn(arb_midref(acb_imagref(z))) < 0)
+    if (n <= 30 || (n <= 500 && arb_bits(c) == 1 && n < 30 + 3 * sqrt(prec))
+                || (n <= 100 && arb_bits(c) < 0.01 * prec))
     {
-        arf_t t;
-        arf_init_neg_shallow(t, arb_midref(acb_imagref(z)));
-        printf(" - ");
-        arf_printd(t, digits);
+        _arb_poly_taylor_shift_horner(poly, c, n, prec);
+    }
+    else if (prec > 2 * n)
+    {
+        _arb_poly_taylor_shift_convolution(poly, c, n, prec);
     }
     else
     {
-        printf(" + ");
-        arf_printd(arb_midref(acb_imagref(z)), digits);
+        _arb_poly_taylor_shift_divconquer(poly, c, n, prec);
     }
-    printf("j)");
-
-    printf("  +/-  ");
-
-    printf("(");
-    mag_printd(arb_radref(acb_realref(z)), 3);
-    printf(", ");
-    mag_printd(arb_radref(acb_imagref(z)), 3);
-    printf("j)");
 }
+
+void
+arb_poly_taylor_shift(arb_poly_t g, const arb_poly_t f,
+    const arb_t c, slong prec)
+{
+    if (f != g)
+        arb_poly_set_round(g, f, prec);
+
+    _arb_poly_taylor_shift(g->coeffs, c, g->length, prec);
+}
+

@@ -2,12 +2,13 @@
 
 #include <string.h>
 #include "arb_calc.h"
+#include "acb_hypgeom.h"
 #include "profiler.h"
 
-long eval_count = 0;
+slong eval_count = 0;
 
 int
-z_function(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+z_function(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_struct x[2];
 
@@ -27,7 +28,7 @@ z_function(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     int xlen = FLINT_MIN(2, order);
 
@@ -42,7 +43,7 @@ sin_x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_x2(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_x2(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
 
@@ -65,7 +66,7 @@ sin_x2(arb_ptr out, const arb_t inp, void * params, long order, long prec)
 }
 
 int
-sin_1x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
+sin_1x(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
     arb_ptr x;
     int xlen = FLINT_MIN(2, order);
@@ -85,13 +86,75 @@ sin_1x(arb_ptr out, const arb_t inp, void * params, long order, long prec)
     return 0;
 }
 
+int
+airy(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
+{
+    acb_t t, u;
+    int which = ((int *) params)[0];
+    int xlen = FLINT_MIN(2, order);
+
+    acb_init(t);
+    acb_init(u);
+    acb_set_arb(t, inp);
+
+    if (xlen == 1)
+    {
+        if (which == 0)
+            acb_hypgeom_airy(t, NULL, NULL, NULL, t, prec);
+        else if (which == 1)
+            acb_hypgeom_airy(NULL, t, NULL, NULL, t, prec);
+        else if (which == 2)
+            acb_hypgeom_airy(NULL,  NULL, t, NULL, t, prec);
+        else
+            acb_hypgeom_airy(NULL,  NULL, NULL, t, t, prec);
+
+        arb_set(out, acb_realref(t));
+    }
+    else
+    {
+        if (which == 0 || which == 1)
+            acb_hypgeom_airy(t, u, NULL, NULL, t, prec);
+        else
+            acb_hypgeom_airy(NULL, NULL, t, u, t, prec);
+
+        if (which == 0 || which == 2)
+        {
+            arb_set(out + 0, acb_realref(t));
+            arb_set(out + 1, acb_realref(u));
+
+            /* f''(z) = z f(z) */
+            if (xlen == 3)
+                arb_mul(out + 2, out + 0, inp, prec);
+        }
+        else
+        {
+            arb_set(out + 0, acb_realref(u));
+            arb_mul(out + 1, acb_realref(t), inp, prec);
+
+            /* f'''(z) = f(z) + z f'(z) */
+            if (xlen == 3)
+            {
+                arb_mul(out + 2, out + 0, inp, prec);
+                arb_add(out + 2, out + 2, acb_realref(t), prec);
+            }
+        }
+    }
+
+    acb_clear(t);
+    acb_clear(u);
+
+    eval_count++;
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     arf_interval_ptr blocks;
     arb_calc_func_t function;
     int * info;
-    long digits, low_prec, high_prec, i, num, found_roots, found_unknown;
-    long maxdepth, maxeval, maxfound;
+    int params;
+    slong digits, low_prec, high_prec, i, num, found_roots, found_unknown;
+    slong maxdepth, maxeval, maxfound;
     int refine;
     double a, b;
     arf_t C;
@@ -100,15 +163,21 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
-        printf("real_roots function a b [-refine d] [-verbose] "
+        flint_printf("real_roots function a b [-refine d] [-verbose] "
             "[-maxdepth n] [-maxeval n] [-maxfound n] [-prec n]\n");
-        printf("available functions:\n");
-        printf("  0  Z(x), Riemann-Siegel Z-function\n");
-        printf("  1  sin(x)\n");
-        printf("  2  sin(x^2)\n");
-        printf("  3  sin(1/x)\n");
+        flint_printf("available functions:\n");
+        flint_printf("  0  Z(x), Riemann-Siegel Z-function\n");
+        flint_printf("  1  sin(x)\n");
+        flint_printf("  2  sin(x^2)\n");
+        flint_printf("  3  sin(1/x)\n");
+        flint_printf("  4  Ai(x), Airy function\n");
+        flint_printf("  5  Ai'(x), Airy function\n");
+        flint_printf("  6  Bi(x), Airy function\n");
+        flint_printf("  7  Bi'(x), Airy function\n");
         return 1;
     }
+
+    params = 0;
 
     switch (atoi(argv[1]))
     {
@@ -124,8 +193,24 @@ int main(int argc, char *argv[])
         case 3:
             function = sin_1x;
             break;
+        case 4:
+            function = airy;
+            params = 0;
+            break;
+        case 5:
+            function = airy;
+            params = 1;
+            break;
+        case 6:
+            function = airy;
+            params = 2;
+            break;
+        case 7:
+            function = airy;
+            params = 3;
+            break;
         default:
-            printf("require a function 0-3\n");
+            flint_printf("require a function 0-7\n");
             return 1;
     }
 
@@ -134,7 +219,7 @@ int main(int argc, char *argv[])
 
     if (a >= b)
     {
-        printf("require a < b!\n");
+        flint_printf("require a < b!\n");
         return 1;
     }
 
@@ -188,14 +273,14 @@ int main(int argc, char *argv[])
     arf_set_d(&interval->a, a);
     arf_set_d(&interval->b, b);
 
-    printf("interval: "); arf_interval_printd(interval, 15); printf("\n");
-    printf("maxdepth = %ld, maxeval = %ld, maxfound = %ld, low_prec = %ld\n",
+    flint_printf("interval: "); arf_interval_printd(interval, 15); flint_printf("\n");
+    flint_printf("maxdepth = %wd, maxeval = %wd, maxfound = %wd, low_prec = %wd\n",
         maxdepth, maxeval, maxfound, low_prec);
 
     TIMEIT_ONCE_START
 
     num = arb_calc_isolate_roots(&blocks, &info, function,
-        NULL, interval, maxdepth, maxeval, maxfound, low_prec);
+        &params, interval, maxdepth, maxeval, maxfound, low_prec);
 
     for (i = 0; i < num; i++)
     {
@@ -203,9 +288,9 @@ int main(int argc, char *argv[])
         {
             if (arb_calc_verbose)
             {
-                printf("unable to count roots in ");
+                flint_printf("unable to count roots in ");
                 arf_interval_printd(blocks + i, 15);
-                printf("\n");
+                flint_printf("\n");
             }
             found_unknown++;
             continue;
@@ -217,52 +302,52 @@ int main(int argc, char *argv[])
             continue;
 
         if (arb_calc_refine_root_bisect(t,
-            function, NULL, blocks + i, 5, low_prec)
+            function, &params, blocks + i, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
-            printf("warning: some bisection steps failed!\n");
+            flint_printf("warning: some bisection steps failed!\n");
         }
 
         if (arb_calc_verbose)
         {
-            printf("after bisection 1: ");
+            flint_printf("after bisection 1: ");
             arf_interval_printd(t, 15);
-            printf("\n");
+            flint_printf("\n");
         }
 
         if (arb_calc_refine_root_bisect(blocks + i,
-            function, NULL, t, 5, low_prec)
+            function, &params, t, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
-            printf("warning: some bisection steps failed!\n");
+            flint_printf("warning: some bisection steps failed!\n");
         }
 
         if (arb_calc_verbose)
         {
-            printf("after bisection 2: ");
+            flint_printf("after bisection 2: ");
             arf_interval_printd(blocks + i, 15);
-            printf("\n");
+            flint_printf("\n");
         }
 
         arf_interval_get_arb(v, t, high_prec);
-        arb_calc_newton_conv_factor(C, function, NULL, v, low_prec);
+        arb_calc_newton_conv_factor(C, function, &params, v, low_prec);
 
         arf_interval_get_arb(w, blocks + i, high_prec);
-        if (arb_calc_refine_root_newton(z, function, NULL,
+        if (arb_calc_refine_root_newton(z, function, &params,
             w, v, C, 10, high_prec) != ARB_CALC_SUCCESS)
         {
-            printf("warning: some newton steps failed!\n");
+            flint_printf("warning: some newton steps failed!\n");
         }
 
-        printf("refined root:\n");
-        arb_printd(z, digits + 2);
-        printf("\n\n");
+        flint_printf("refined root (%wd/%wd):\n", i, num);
+        arb_printn(z, digits + 2, 0);
+        flint_printf("\n\n");
     }
 
-    printf("---------------------------------------------------------------\n");
-    printf("Found roots: %ld\n", found_roots);
-    printf("Subintervals possibly containing undetected roots: %ld\n", found_unknown);
-    printf("Function evaluations: %ld\n", eval_count);
+    flint_printf("---------------------------------------------------------------\n");
+    flint_printf("Found roots: %wd\n", found_roots);
+    flint_printf("Subintervals possibly containing undetected roots: %wd\n", found_unknown);
+    flint_printf("Function evaluations: %wd\n", eval_count);
 
     TIMEIT_ONCE_STOP
     SHOW_MEMORY_USAGE

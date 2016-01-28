@@ -26,18 +26,18 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_derivative(arb_ptr res, arb_srcptr poly, long len, long prec)
+_arb_poly_derivative(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 1; i < len; i++)
         arb_mul_ui(res + i - 1, poly + i, i, prec);
 }
 
 void
-arb_poly_derivative(arb_poly_t res, const arb_poly_t poly, long prec)
+arb_poly_derivative(arb_poly_t res, const arb_poly_t poly, slong prec)
 {
-    long len = poly->length;
+    slong len = poly->length;
 
     if (len < 2)
     {

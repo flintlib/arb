@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("add_si....");
+    flint_printf("add_si....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_poly_t a, b, c, d;
-        long v;
+        slong v;
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -59,7 +59,7 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL\n\n");
+            flint_printf("FAIL\n\n");
             abort();
         }
 
@@ -67,7 +67,7 @@ int main()
 
         if (!acb_poly_overlaps(a, d))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -79,7 +79,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

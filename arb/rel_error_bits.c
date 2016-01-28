@@ -25,11 +25,11 @@
 
 #include "arb.h"
 
-long
+slong
 arb_rel_error_bits(const arb_t x)
 {
     fmpz_t t;
-    long result;
+    slong result;
 
     if (mag_is_zero(arb_radref(x)))
     {

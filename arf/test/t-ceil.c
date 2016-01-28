@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("ceil....");
+    flint_printf("ceil....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -89,9 +89,9 @@ int main()
 
         if (!result)
         {
-            printf("FAIL!\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = "); arf_print(y); printf("\n\n");
+            flint_printf("FAIL!\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             abort();
         }
 
@@ -99,9 +99,9 @@ int main()
 
         if (!arf_equal(x, y))
         {
-            printf("FAIL (aliasing)!\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = "); arf_print(y); printf("\n\n");
+            flint_printf("FAIL (aliasing)!\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             abort();
         }
 
@@ -111,6 +111,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

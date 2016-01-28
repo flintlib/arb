@@ -28,7 +28,7 @@
 void
 _arb_poly_normalise(arb_poly_t poly)
 {
-    long i;
+    slong i;
 
     for (i = poly->length - 1;
         (i >= 0) && arb_is_zero(poly->coeffs + i); i--);

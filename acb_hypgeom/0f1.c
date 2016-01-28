@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 {
     acb_t t, u, v;
     int neg;
@@ -71,7 +71,7 @@ acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, 
 }
 
 void
-acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 {
     if (regularized)
     {
@@ -114,7 +114,7 @@ acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized,
 }
 
 int
-acb_hypgeom_0f1_use_asymp(const acb_t z, long prec)
+acb_hypgeom_0f1_use_asymp(const acb_t z, slong prec)
 {
     double x, y, c;
 
@@ -141,7 +141,7 @@ acb_hypgeom_0f1_use_asymp(const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 {
     if (acb_hypgeom_0f1_use_asymp(z, prec))
         acb_hypgeom_0f1_asymp(res, a, z, regularized, prec);

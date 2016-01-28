@@ -30,7 +30,7 @@ static __inline__ mp_bitcnt_t
 mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
 {
     mp_limb_t t;
-    long i, c;
+    slong i, c;
 
     i = from_bit / GMP_NUMB_BITS;
     c = from_bit % FLINT_BITS;
@@ -49,13 +49,13 @@ mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
     return (i * FLINT_BITS) + c;
 }
 
-long
+slong
 _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
-    const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+    const fmpz_t man, const fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     if (!COEFF_IS_MPZ(*man))
     {
-        long lead, trail, bc, v, w, shift, ret;
+        slong lead, trail, bc, v, w, shift, ret;
         int negative;
 
         v = *man;
@@ -107,7 +107,7 @@ _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
     }
     else
     {
-        long size, bc, val, val_bits, val_limbs, ret;
+        slong size, bc, val, val_bits, val_limbs, ret;
         int negative, increment;
         mp_ptr d;
         __mpz_struct * z = COEFF_TO_PTR(*man);

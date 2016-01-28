@@ -27,18 +27,18 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("laguerre_l....");
+    flint_printf("laguerre_l....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 2000; iter++)
     {
         acb_t n, m, n1, m1, z, res1, res2, res3, s;
-        long prec;
+        slong prec;
 
         acb_init(n);
         acb_init(m);
@@ -50,7 +50,7 @@ int main()
         acb_init(res3);
         acb_init(s);
 
-        prec = 2 + n_randint(state, 300);
+        prec = 2 + n_randint(state, 200);
 
         if (n_randint(state, 2))
         {
@@ -69,22 +69,22 @@ int main()
         acb_sub_ui(m1, m, 1, prec);
 
         acb_hypgeom_laguerre_l(res1, n, m, z, prec);
-        acb_hypgeom_laguerre_l(res2, n1, m, z, 2 + n_randint(state, 300));
-        acb_hypgeom_laguerre_l(res3, n, m1, z, 2 + n_randint(state, 300));
+        acb_hypgeom_laguerre_l(res2, n1, m, z, 2 + n_randint(state, 200));
+        acb_hypgeom_laguerre_l(res3, n, m1, z, 2 + n_randint(state, 200));
 
         acb_add(s, res2, res3, prec);
 
-        if (!acb_overlaps(res1, s))
+        if (acb_is_finite(res1) && acb_is_finite(s) && !acb_overlaps(res1, s))
         {
-            printf("FAIL: consistency\n\n");
-            printf("iter = %ld\n\n", iter);
-            printf("n = "); acb_printd(n, 30); printf("\n\n");
-            printf("m = "); acb_printd(m, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("res1 = "); acb_printd(res1, 30); printf("\n\n");
-            printf("res2 = "); acb_printd(res2, 30); printf("\n\n");
-            printf("res3 = "); acb_printd(res3, 30); printf("\n\n");
-            printf("s = "); acb_printd(s, 30); printf("\n\n");
+            flint_printf("FAIL: consistency\n\n");
+            flint_printf("iter = %wd\n\n", iter);
+            flint_printf("n = "); acb_printd(n, 30); flint_printf("\n\n");
+            flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("res1 = "); acb_printd(res1, 30); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 30); flint_printf("\n\n");
+            flint_printf("res3 = "); acb_printd(res3, 30); flint_printf("\n\n");
+            flint_printf("s = "); acb_printd(s, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -101,7 +101,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

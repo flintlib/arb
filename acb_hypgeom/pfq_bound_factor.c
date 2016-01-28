@@ -27,11 +27,11 @@
 
 void
 acb_hypgeom_pfq_bound_factor(mag_t C,
-    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, ulong n)
+    acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n)
 {
     mag_t t, u;
     acb_t w;
-    long i;
+    slong i;
 
     if (p > q)
     {

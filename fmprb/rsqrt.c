@@ -26,9 +26,9 @@
 #include "fmprb.h"
 
 void
-fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
+fmprb_rsqrt(fmprb_t z, const fmprb_t x, slong prec)
 {
-    long r;
+    slong r;
 
     if (fmprb_contains_nonpositive(x))
     {
@@ -70,7 +70,7 @@ fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec)
 }
 
 void
-fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec)
+fmprb_rsqrt_ui(fmprb_t z, ulong x, slong prec)
 {
     fmprb_t t;
     fmprb_init(t);

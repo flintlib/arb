@@ -28,17 +28,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("mul....");
+    flint_printf("mul....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t A, B, C;
         arb_poly_t a, b, c, d;
 
@@ -67,16 +67,16 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(c, C))
         {
-            printf("FAIL\n\n");
-            printf("bits3 = %ld\n", rbits3);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits3 = %wd\n", rbits3);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
-            printf("C = "); fmpq_poly_print(C); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
+            flint_printf("C = "); fmpq_poly_print(C); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -85,7 +85,7 @@ int main()
         arb_poly_mul(d, d, b, rbits3);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 1)\n\n");
+            flint_printf("FAIL (aliasing 1)\n\n");
             abort();
         }
 
@@ -93,7 +93,7 @@ int main()
         arb_poly_mul(d, a, d, rbits3);
         if (!arb_poly_equal(d, c))
         {
-            printf("FAIL (aliasing 2)\n\n");
+            flint_printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
@@ -103,11 +103,11 @@ int main()
         arb_poly_mul(d, a, a, rbits3);
         if (!arb_poly_overlaps(c, d))  /* not guaranteed to be identical */
         {
-            printf("FAIL (squaring)\n\n");
+            flint_printf("FAIL (squaring)\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -115,11 +115,11 @@ int main()
         arb_poly_mul(a, a, a, rbits3);
         if (!arb_poly_equal(d, a))
         {
-            printf("FAIL (aliasing, squaring)\n\n");
+            flint_printf("FAIL (aliasing, squaring)\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("d = "); arb_poly_printd(d, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("d = "); arb_poly_printd(d, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -136,6 +136,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

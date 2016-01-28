@@ -28,7 +28,7 @@
 void
 arb_mat_bound_inf_norm(mag_t b, const arb_mat_t A)
 {
-    long i, j, r, c;
+    slong i, j, r, c;
 
     mag_t s, t;
 

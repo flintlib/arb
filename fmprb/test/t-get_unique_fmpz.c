@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("get_unique_fmpz....");
+    flint_printf("get_unique_fmpz....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -66,13 +66,13 @@ int main()
 
         if ((unique != unique2) || (unique && !fmpz_equal(y, a)))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); fmprb_print(x); printf("\n\n");
-            printf("unique = %d, unique2 = %d\n\n", unique, unique2);
-            printf("y = "); fmpz_print(y); printf("\n\n");
-            printf("a = "); fmpz_print(a); printf("\n\n");
-            printf("b = "); fmpz_print(b); printf("\n\n");
-            printf(" exp = "); fmpz_print(exp); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); fmprb_print(x); flint_printf("\n\n");
+            flint_printf("unique = %d, unique2 = %d\n\n", unique, unique2);
+            flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
+            flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
+            flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
 
@@ -83,28 +83,28 @@ int main()
 
             if (!fmprb_overlaps(x, z))
             {
-                printf("FAIL (overlap):\n\n");
-                printf("x = "); fmprb_print(x); printf("\n\n");
-                printf("y = "); fmpz_print(y); printf("\n\n");
-                printf("z = "); fmprb_print(z); printf("\n\n");
+                flint_printf("FAIL (overlap):\n\n");
+                flint_printf("x = "); fmprb_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
+                flint_printf("z = "); fmprb_print(z); flint_printf("\n\n");
                 abort();
             }
 
             fmpz_add_ui(b, y, 1);
             if (fmprb_contains_fmpz(x, b))
             {
-                printf("FAIL (contains a + 1):\n\n");
-                printf("x = "); fmprb_print(x); printf("\n\n");
-                printf("y = "); fmpz_print(y); printf("\n\n");
+                flint_printf("FAIL (contains a + 1):\n\n");
+                flint_printf("x = "); fmprb_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
                 abort();
             }
 
             fmpz_sub_ui(b, y, 1);
             if (fmprb_contains_fmpz(x, b))
             {
-                printf("FAIL (contains a - 1):\n\n");
-                printf("x = "); fmprb_print(x); printf("\n\n");
-                printf("y = "); fmpz_print(y); printf("\n\n");
+                flint_printf("FAIL (contains a - 1):\n\n");
+                flint_printf("x = "); fmprb_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
                 abort();
             }
         }
@@ -119,6 +119,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

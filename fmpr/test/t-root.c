@@ -28,17 +28,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("root....");
+    flint_printf("root....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         ulong k;
         fmpr_t x, z, w;
         mpfr_t X, Z;
@@ -87,11 +87,11 @@ int main()
 
         if (!fmpr_equal(z, w))
         {
-            printf("FAIL\n\n");
-            printf("bits = %ld, k = %lu\n", bits, k);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("bits = %wd, k = %wu\n", bits, k);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+            flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             abort();
         }
 
@@ -105,6 +105,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

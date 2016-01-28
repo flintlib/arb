@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 int
-fmprb_contains_si(const fmprb_t x, long y)
+fmprb_contains_si(const fmprb_t x, slong y)
 {
     int ans;
     fmpr_t t;

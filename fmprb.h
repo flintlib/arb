@@ -66,7 +66,7 @@ fmprb_clear(fmprb_t x)
 #if FMPRB_DEBUG
     if (fmpr_is_nan(fmprb_radref(x)) || fmpr_sgn(fmprb_radref(x)) < 0)
     {
-        printf("ABORT: nan or negative radius!\n");
+        flint_printf("ABORT: nan or negative radius!\n");
         abort();
     }
 #endif
@@ -76,9 +76,9 @@ fmprb_clear(fmprb_t x)
 }
 
 static __inline__ fmprb_ptr
-_fmprb_vec_init(long n)
+_fmprb_vec_init(slong n)
 {
-    long i;
+    slong i;
     fmprb_ptr v = (fmprb_ptr) flint_malloc(sizeof(fmprb_struct) * n);
 
     for (i = 0; i < n; i++)
@@ -88,9 +88,9 @@ _fmprb_vec_init(long n)
 }
 
 static __inline__ void
-_fmprb_vec_clear(fmprb_ptr v, long n)
+_fmprb_vec_clear(fmprb_ptr v, slong n)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmprb_clear(v + i);
     flint_free(v);
@@ -163,7 +163,7 @@ fmprb_set(fmprb_t x, const fmprb_t y)
     fmpr_set(fmprb_radref(x), fmprb_radref(y));
 }
 
-void fmprb_set_round(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_set_round(fmprb_t z, const fmprb_t x, slong prec);
 
 void fmprb_trim(fmprb_t y, const fmprb_t x);
 
@@ -183,7 +183,7 @@ fmprb_neg(fmprb_t x, const fmprb_t y)
 }
 
 static __inline__ void
-fmprb_neg_round(fmprb_t x, const fmprb_t y, long prec)
+fmprb_neg_round(fmprb_t x, const fmprb_t y, slong prec)
 {
     fmprb_set_round(x, y, prec);
     fmprb_neg(x, x);
@@ -204,7 +204,7 @@ fmprb_set_fmpr(fmprb_t x, const fmpr_t y)
 }
 
 static __inline__ void
-fmprb_set_si(fmprb_t x, long y)
+fmprb_set_si(fmprb_t x, slong y)
 {
     fmpr_set_si(fmprb_midref(x), y);
     fmpr_zero(fmprb_radref(x));
@@ -233,16 +233,16 @@ fmprb_set_fmpz_2exp(fmprb_t x, const fmpz_t y, const fmpz_t exp)
 
 
 static __inline__ void
-fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, long prec)
+fmprb_set_round_fmpz_2exp(fmprb_t y, const fmpz_t x, const fmpz_t exp, slong prec)
 {
-    long r = fmpr_set_round_fmpz_2exp(fmprb_midref(y), x, exp, prec, FMPR_RND_DOWN);
+    slong r = fmpr_set_round_fmpz_2exp(fmprb_midref(y), x, exp, prec, FMPR_RND_DOWN);
     fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
 }
 
 static __inline__ void
-fmprb_set_round_fmpz(fmprb_t y, const fmpz_t x, long prec)
+fmprb_set_round_fmpz(fmprb_t y, const fmpz_t x, slong prec)
 {
-    long r = fmpr_set_round_fmpz(fmprb_midref(y), x, prec, FMPR_RND_DOWN);
+    slong r = fmpr_set_round_fmpz(fmprb_midref(y), x, prec, FMPR_RND_DOWN);
     fmpr_set_error_result(fmprb_radref(y), fmprb_midref(y), r);
 }
 
@@ -255,7 +255,7 @@ fmprb_is_one(const fmprb_t f)
 static __inline__ void
 fmprb_one(fmprb_t f)
 {
-    fmprb_set_ui(f, 1UL);
+    fmprb_set_ui(f, UWORD(1));
 }
 
 static __inline__ void
@@ -267,88 +267,88 @@ fmprb_adjust(fmprb_t x)
     }
 }
 
-void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_add_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
-void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
+void fmprb_add(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_add_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_add_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_add_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
+void fmprb_add_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec);
 
-void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_addmul_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_addmul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_addmul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_addmul_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_addmul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
 
-void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_div_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
-void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
-void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, long prec);
-void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, long prec);
+void fmprb_div(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_div_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_div_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_div_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
+void fmprb_div_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec);
+void fmprb_fmpz_div_fmpz(fmprb_t y, const fmpz_t num, const fmpz_t den, slong prec);
+void fmprb_ui_div(fmprb_t z, ulong x, const fmprb_t y, slong prec);
 
 static __inline__ void
-fmprb_inv(fmprb_t y, const fmprb_t x, long prec)
+fmprb_inv(fmprb_t y, const fmprb_t x, slong prec)
 {
     fmprb_ui_div(y, 1, x, prec);
 }
 
-void fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
-void fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_mul_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+void fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec);
+void fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_mul_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
 
-void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_mul_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
-void fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec);
+void fmprb_mul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_mul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_mul_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_mul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
+void fmprb_mul_fmpr(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec);
 
-void fmprb_sqrt(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_sqrt_ui(fmprb_t z, ulong x, long prec);
-void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, long prec);
+void fmprb_sqrt(fmprb_t z, const fmprb_t x, slong prec);
+void fmprb_sqrt_ui(fmprb_t z, ulong x, slong prec);
+void fmprb_sqrt_fmpz(fmprb_t z, const fmpz_t x, slong prec);
 
-void fmprb_rsqrt(fmprb_t z, const fmprb_t x, long prec);
-void fmprb_rsqrt_ui(fmprb_t z, ulong x, long prec);
+void fmprb_rsqrt(fmprb_t z, const fmprb_t x, slong prec);
+void fmprb_rsqrt_ui(fmprb_t z, ulong x, slong prec);
 
-void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec);
+void fmprb_sqrtpos(fmprb_t z, const fmprb_t x, slong prec);
 
-void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+void fmprb_hypot(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
 
 
-void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_sub_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_sub(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_sub_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_sub_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_sub_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
 
-void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
-void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, long prec);
-void fmprb_submul_si(fmprb_t z, const fmprb_t x, long y, long prec);
-void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, long prec);
+void fmprb_submul(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
+void fmprb_submul_ui(fmprb_t z, const fmprb_t x, ulong y, slong prec);
+void fmprb_submul_si(fmprb_t z, const fmprb_t x, slong y, slong prec);
+void fmprb_submul_fmpz(fmprb_t z, const fmprb_t x, const fmpz_t y, slong prec);
 
-void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, long prec);
+void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, slong prec);
 
-void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
 
 static __inline__ void
 fmprb_print(const fmprb_t x)
 {
     fmpr_print(fmprb_midref(x));
-    printf(" +/- ");
+    flint_printf(" +/- ");
     fmpr_print(fmprb_radref(x));
 }
 
 static __inline__ void
-fmprb_printd(const fmprb_t x, long digits)
+fmprb_printd(const fmprb_t x, slong digits)
 {
     fmpr_printd(fmprb_midref(x), FLINT_ABS(digits));
     if (digits > 0)
     {
-        printf(" +/- ");
+        flint_printf(" +/- ");
         fmpr_printd(fmprb_radref(x), 5);
     }
 }
 
 static __inline__ void
-fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, long e)
+fmprb_mul_2exp_si(fmprb_t y, const fmprb_t x, slong e)
 {
     fmpr_mul_2exp_si(fmprb_midref(y), fmprb_midref(x), e);
     fmpr_mul_2exp_si(fmprb_radref(y), fmprb_radref(x), e);
@@ -362,7 +362,7 @@ fmprb_mul_2exp_fmpz(fmprb_t y, const fmprb_t x, const fmpz_t e)
 }
 
 static __inline__ void
-fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
+fmprb_set_fmpq(fmprb_t y, const fmpq_t x, slong prec)
 {
     fmprb_fmpz_div_fmpz(y, fmpq_numref(x), fmpq_denref(x), prec);
 }
@@ -370,7 +370,7 @@ fmprb_set_fmpq(fmprb_t y, const fmpq_t x, long prec)
 int fmprb_contains_fmpr(const fmprb_t x, const fmpr_t y);
 int fmprb_contains_fmpq(const fmprb_t x, const fmpq_t y);
 int fmprb_contains_fmpz(const fmprb_t x, const fmpz_t y);
-int fmprb_contains_si(const fmprb_t x, long y);
+int fmprb_contains_si(const fmprb_t x, slong y);
 int fmprb_contains_mpfr(const fmprb_t x, const mpfr_t y);
 int fmprb_contains_zero(const fmprb_t x);
 
@@ -456,7 +456,7 @@ fmprb_contains_nonnegative(const fmprb_t x)
 }
 
 static __inline__ void
-fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, slong prec)
 {
     if (fmpr_sgn(fmprb_midref(x)) < 0)
         fmpr_sub(u, fmprb_midref(x), fmprb_radref(x), prec, FMPR_RND_UP);
@@ -467,7 +467,7 @@ fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, long prec)
 }
 
 static __inline__ void
-fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, long prec)
+fmprb_get_abs_lbound_fmpr(fmpr_t u, const fmprb_t x, slong prec)
 {
     if (fmpr_sgn(fmprb_midref(x)) > 0)
     {
@@ -487,15 +487,15 @@ void fmprb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const fmprb_t 
 
 int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x);
 
-void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec);
+void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, slong prec);
 
-void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec);
+void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
 
-static __inline__ long
+static __inline__ slong
 fmprb_rel_error_bits(const fmprb_t x)
 {
     fmpz_t midmag, radmag;
-    long result;
+    slong result;
 
     if (fmpr_is_zero(fmprb_radref(x)))
         return -FMPR_PREC_EXACT;
@@ -517,40 +517,40 @@ fmprb_rel_error_bits(const fmprb_t x)
     return result;
 }
 
-static __inline__ long
+static __inline__ slong
 fmprb_rel_accuracy_bits(const fmprb_t x)
 {
     return -fmprb_rel_error_bits(x);
 }
 
-static __inline__ long
+static __inline__ slong
 fmprb_bits(const fmprb_t x)
 {
     return fmpr_bits(fmprb_midref(x));
 }
 
 void fmprb_add_error_fmpr(fmprb_t x, const fmpr_t err);
-void fmprb_add_error_2exp_si(fmprb_t x, long err);
+void fmprb_add_error_2exp_si(fmprb_t x, slong err);
 void fmprb_add_error_2exp_fmpz(fmprb_t x, const fmpz_t err);
 void fmprb_add_error(fmprb_t x, const fmprb_t error);
 
-void fmprb_randtest(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
-void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
-void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
-void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
-void fmprb_randtest_special(fmprb_t x, flint_rand_t state, long prec, long mag_bits);
+void fmprb_randtest(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits);
+void fmprb_randtest_exact(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits);
+void fmprb_randtest_wide(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits);
+void fmprb_randtest_precise(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits);
+void fmprb_randtest_special(fmprb_t x, flint_rand_t state, slong prec, slong mag_bits);
 
-void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bits);
+void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, slong bits);
 
 #define DEF_CACHED_CONSTANT(name, comp_func) \
-    TLS_PREFIX long name ## _cached_prec = 0; \
+    TLS_PREFIX slong name ## _cached_prec = 0; \
     TLS_PREFIX fmprb_t name ## _cached_value; \
     void name ## _cleanup(void) \
     { \
         fmprb_clear(name ## _cached_value); \
         name ## _cached_prec = 0; \
     } \
-    void name(fmprb_t x, long prec) \
+    void name(fmprb_t x, slong prec) \
     { \
         if (name ## _cached_prec < prec) \
         { \
@@ -568,17 +568,17 @@ void fmprb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const fmprb_t x, long bit
 /* vector functions */
 
 static __inline__ void
-_fmprb_vec_zero(fmprb_ptr A, long n)
+_fmprb_vec_zero(fmprb_ptr A, slong n)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmprb_zero(A + i);
 }
 
 static __inline__ int
-_fmprb_vec_is_zero(fmprb_srcptr vec, long len)
+_fmprb_vec_is_zero(fmprb_srcptr vec, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         if (!fmprb_is_zero(vec + i))
             return 0;
@@ -586,78 +586,78 @@ _fmprb_vec_is_zero(fmprb_srcptr vec, long len)
 }
 
 static __inline__ void
-_fmprb_vec_set(fmprb_ptr res, fmprb_srcptr vec, long len)
+_fmprb_vec_set(fmprb_ptr res, fmprb_srcptr vec, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_set(res + i, vec + i);
 }
 
 static __inline__ void
-_fmprb_vec_set_round(fmprb_ptr res, fmprb_srcptr vec, long len, long prec)
+_fmprb_vec_set_round(fmprb_ptr res, fmprb_srcptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_set_round(res + i, vec + i, prec);
 }
 
 static __inline__ void
-_fmprb_vec_swap(fmprb_ptr res, fmprb_ptr vec, long len)
+_fmprb_vec_swap(fmprb_ptr res, fmprb_ptr vec, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_swap(res + i, vec + i);
 }
 
 static __inline__ void
-_fmprb_vec_neg(fmprb_ptr B, fmprb_srcptr A, long n)
+_fmprb_vec_neg(fmprb_ptr B, fmprb_srcptr A, slong n)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmprb_neg(B + i, A + i);
 }
 
 static __inline__ void
 _fmprb_vec_sub(fmprb_ptr C, fmprb_srcptr A,
-    fmprb_srcptr B, long n, long prec)
+    fmprb_srcptr B, slong n, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmprb_sub(C + i, A + i, B + i, prec);
 }
 
 static __inline__ void
 _fmprb_vec_add(fmprb_ptr C, fmprb_srcptr A,
-    fmprb_srcptr B, long n, long prec)
+    fmprb_srcptr B, slong n, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmprb_add(C + i, A + i, B + i, prec);
 }
 
 static __inline__ void
 _fmprb_vec_scalar_mul(fmprb_ptr res, fmprb_srcptr vec,
-    long len, const fmprb_t c, long prec)
+    slong len, const fmprb_t c, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_mul(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
 _fmprb_vec_scalar_div(fmprb_ptr res, fmprb_srcptr vec,
-    long len, const fmprb_t c, long prec)
+    slong len, const fmprb_t c, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_div(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
 _fmprb_vec_scalar_mul_fmpz(fmprb_ptr res, fmprb_srcptr vec,
-    long len, const fmpz_t c, long prec)
+    slong len, const fmpz_t c, slong prec)
 {
-    long i;
+    slong i;
     fmpr_t t;
     fmpr_init(t);
     fmpr_set_fmpz(t, c);
@@ -667,28 +667,28 @@ _fmprb_vec_scalar_mul_fmpz(fmprb_ptr res, fmprb_srcptr vec,
 }
 
 static __inline__ void
-_fmprb_vec_scalar_mul_2exp_si(fmprb_ptr res, fmprb_srcptr src, long len, long c)
+_fmprb_vec_scalar_mul_2exp_si(fmprb_ptr res, fmprb_srcptr src, slong len, slong c)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_mul_2exp_si(res + i, src + i, c);
 }
 
 static __inline__ void
 _fmprb_vec_scalar_addmul(fmprb_ptr res, fmprb_srcptr vec,
-    long len, const fmprb_t c, long prec)
+    slong len, const fmprb_t c, slong prec)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_addmul(res + i, vec + i, c, prec);
 }
 
 static __inline__ void
 _fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, fmprb_srcptr vec,
-        long len, long prec)
+        slong len, slong prec)
 {
     fmpr_t t;
-    long i;
+    slong i;
 
     if (len < 1)
     {
@@ -708,10 +708,10 @@ _fmprb_vec_get_abs_ubound_fmpr(fmpr_t bound, fmprb_srcptr vec,
     }
 }
 
-static __inline__ long
-_fmprb_vec_bits(fmprb_srcptr x, long len)
+static __inline__ slong
+_fmprb_vec_bits(fmprb_srcptr x, slong len)
 {
-    long i, b, c;
+    slong i, b, c;
 
     b = 0;
     for (i = 0; i < len; i++)
@@ -724,9 +724,9 @@ _fmprb_vec_bits(fmprb_srcptr x, long len)
 }
 
 static __inline__ void
-_fmprb_vec_set_powers(fmprb_ptr xs, const fmprb_t x, long len, long prec)
+_fmprb_vec_set_powers(fmprb_ptr xs, const fmprb_t x, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len; i++)
     {
@@ -742,17 +742,17 @@ _fmprb_vec_set_powers(fmprb_ptr xs, const fmprb_t x, long len, long prec)
 }
 
 static __inline__ void
-_fmprb_vec_add_error_fmpr_vec(fmprb_ptr res, fmpr_srcptr err, long len)
+_fmprb_vec_add_error_fmpr_vec(fmprb_ptr res, fmpr_srcptr err, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_add_error_fmpr(res + i, err + i);
 }
 
 static __inline__ void
-_fmprb_vec_indeterminate(fmprb_ptr vec, long len)
+_fmprb_vec_indeterminate(fmprb_ptr vec, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
     {
         fmpr_nan(fmprb_midref(vec + i));
@@ -761,9 +761,9 @@ _fmprb_vec_indeterminate(fmprb_ptr vec, long len)
 }
 
 static __inline__ void
-_fmprb_vec_trim(fmprb_ptr res, fmprb_srcptr vec, long len)
+_fmprb_vec_trim(fmprb_ptr res, fmprb_srcptr vec, slong len)
 {
-    long i;
+    slong i;
     for (i = 0; i < len; i++)
         fmprb_trim(res + i, vec + i);
 }

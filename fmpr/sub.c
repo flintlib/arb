@@ -25,7 +25,7 @@
 
 #include "fmpr.h"
 
-static long _fmpr_sub_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+static slong _fmpr_sub_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))
     {
@@ -54,10 +54,10 @@ static long _fmpr_sub_special(fmpr_t z, const fmpr_t x, const fmpr_t y, long pre
     }
 }
 
-long
-fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    long shift, xn, yn;
+    slong shift, xn, yn;
     mp_limb_t xtmp, ytmp;
     mp_ptr xptr, yptr;
     fmpz xv, yv;
@@ -107,10 +107,10 @@ fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
 }
 
 
-long
-fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_ui(t, y);
     r = fmpr_sub(z, x, t, prec, rnd);
@@ -118,10 +118,10 @@ fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_si(t, y);
     r = fmpr_sub(z, x, t, prec, rnd);
@@ -129,10 +129,10 @@ fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_fmpz(t, y);
     r = fmpr_sub(z, x, t, prec, rnd);

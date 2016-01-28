@@ -37,7 +37,7 @@ mag_set_ui(mag_t z, ulong x)
     }
     else
     {
-        long bits;
+        slong bits;
         mp_limb_t overflow;
 
         count_leading_zeros(bits, x);

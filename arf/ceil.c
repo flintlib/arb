@@ -34,7 +34,7 @@ arf_ceil(arf_t z, const arf_t x)
     }
     else
     {
-        long exp = ARF_EXP(x);
+        slong exp = ARF_EXP(x);
 
         /* now exp cannot be too large, as we would have
            caught this in arf_is_int() */

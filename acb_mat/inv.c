@@ -26,7 +26,7 @@
 #include "acb_mat.h"
 
 int
-acb_mat_inv(acb_mat_t X, const acb_mat_t A, long prec)
+acb_mat_inv(acb_mat_t X, const acb_mat_t A, slong prec)
 {
     if (X == A)
     {

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("get_rand_fmpq....");
+    flint_printf("get_rand_fmpq....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -47,9 +47,9 @@ int main()
 
         if (!arb_contains_fmpq(x, q) || !fmpq_is_canonical(q))
         {
-            printf("FAIL:\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("q = "); fmpq_print(q); printf("\n\n");
+            flint_printf("FAIL:\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
             abort();
         }
 
@@ -59,6 +59,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

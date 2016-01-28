@@ -27,9 +27,9 @@
 
 void
 acb_calc_cauchy_bound(arb_t bound, acb_calc_func_t func, void * param,
-    const acb_t x, const arb_t radius, long maxdepth, long prec)
+    const acb_t x, const arb_t radius, slong maxdepth, slong prec)
 {
-    long i, n, depth, wp;
+    slong i, n, depth, wp;
 
     arb_t pi, theta, v, s1, c1, s2, c2, st, ct;
     acb_t t, u;

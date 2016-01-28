@@ -69,7 +69,7 @@ zeta_bsplit_clear(zeta_bsplit_t S)
 
 
 static __inline__ void
-zeta_coeff_k(zeta_bsplit_t S, long k, long n, long s)
+zeta_coeff_k(zeta_bsplit_t S, slong k, slong n, slong s)
 {
     arb_set_si(S->D, 2 * (n + k));
     arb_mul_si(S->D, S->D, n - k, ARF_PREC_EXACT);
@@ -94,8 +94,8 @@ zeta_coeff_k(zeta_bsplit_t S, long k, long n, long s)
 }
 
 static void
-zeta_bsplit(zeta_bsplit_t L, long a, long b,
-    long n, long s, int cont, long bits)
+zeta_bsplit(zeta_bsplit_t L, slong a, slong b,
+    slong n, slong s, int cont, slong bits)
 {
     if (a + 1 == b)
     {
@@ -105,7 +105,7 @@ zeta_bsplit(zeta_bsplit_t L, long a, long b,
     {
         zeta_bsplit_t R;
 
-        long m = (a + b) / 2;
+        slong m = (a + b) / 2;
 
         zeta_bsplit(L, m, b, n, s, 1, bits);
 
@@ -139,7 +139,7 @@ zeta_bsplit(zeta_bsplit_t L, long a, long b,
 
 /* The error for eta(s) is bounded by 3/(3+sqrt(8))^n */
 void
-mag_borwein_error(mag_t err, long n)
+mag_borwein_error(mag_t err, slong n)
 {
     /* upper bound for 1/(3+sqrt(8)) */
     mag_set_ui_2exp_si(err, 736899889, -32);
@@ -149,11 +149,11 @@ mag_borwein_error(mag_t err, long n)
 }
 
 void
-arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec)
+arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, slong prec)
 {
     zeta_bsplit_t sum;
     mag_t err;
-    long wp, n;
+    slong wp, n;
 
     /* zeta(0) = -1/2 */
     if (s == 0)
@@ -165,7 +165,7 @@ arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec)
 
     if (s == 1)
     {
-        printf("zeta_ui_borwein_bsplit: zeta(1)");
+        flint_printf("zeta_ui_borwein_bsplit: zeta(1)");
         abort();
     }
 

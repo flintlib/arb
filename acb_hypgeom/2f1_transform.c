@@ -38,7 +38,7 @@ which == 5 -- 1-1/z
 
 void
 _acb_hypgeom_2f1_transform_limit(acb_t res, const acb_poly_t a, const acb_poly_t b,
-    const acb_poly_t c, const acb_poly_t z, int which, long prec)
+    const acb_poly_t c, const acb_poly_t z, int which, slong prec)
 {
     acb_poly_t ba, ca, cb, cab, ac1, bc1, ab1, ba1, w, t, u, v, s;
     acb_t tt;
@@ -98,7 +98,7 @@ _acb_hypgeom_2f1_transform_limit(acb_t res, const acb_poly_t a, const acb_poly_t
     }
     else
     {
-        printf("invalid transformation!\n");
+        flint_printf("invalid transformation!\n");
         abort();
     }
 
@@ -175,7 +175,7 @@ _acb_hypgeom_2f1_transform_limit(acb_t res, const acb_poly_t a, const acb_poly_t
 
 void
 acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, int which, long prec)
+    const acb_t c, const acb_t z, int regularized, int which, slong prec)
 {
     acb_poly_t aa, bb, cc, zz;
     acb_t t;
@@ -240,7 +240,7 @@ acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b,
 
 void
 acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, int which, long prec)
+    const acb_t c, const acb_t z, int regularized, int which, slong prec)
 {
     acb_t ba, ca, cb, cab, ac1, bc1, ab1, ba1, w, t, u, v, s;
 
@@ -322,7 +322,7 @@ acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
     }
     else
     {
-        printf("invalid transformation!\n");
+        flint_printf("invalid transformation!\n");
         abort();
     }
 
@@ -397,7 +397,7 @@ acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
 
 void
 acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, int which, long prec)
+    const acb_t c, const acb_t z, int regularized, int which, slong prec)
 {
     if (which == 1)
     {

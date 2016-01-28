@@ -36,7 +36,7 @@ FLINT_TLS_PREFIX int arf_have_registered_cleanup = 0;
 
 void _arf_cleanup(void)
 {
-    long i;
+    slong i;
     for (i = 0; i < arf_free_num; i++)
         flint_free(arf_free_arr[i]);
 

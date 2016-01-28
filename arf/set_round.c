@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
+arf_set_round(arf_t y, const arf_t x, slong prec, arf_rnd_t rnd)
 {
     if (arf_is_special(x))
     {
@@ -36,7 +36,7 @@ arf_set_round(arf_t y, const arf_t x, long prec, arf_rnd_t rnd)
     else
     {
         int inexact;
-        long fix;
+        slong fix;
         mp_size_t xn;
         mp_srcptr xptr;
 

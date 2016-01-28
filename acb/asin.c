@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_asin(acb_t res, const acb_t z, long prec)
+acb_asin(acb_t res, const acb_t z, slong prec)
 {
     if (arb_is_zero(acb_realref(z)))
     {

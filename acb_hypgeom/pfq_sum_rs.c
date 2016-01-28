@@ -26,12 +26,12 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_pfq_sum_rs(acb_t res, acb_t term, acb_srcptr a, long p,
-                                              acb_srcptr b, long q, const acb_t z, long n, long prec)
+acb_hypgeom_pfq_sum_rs(acb_t res, acb_t term, acb_srcptr a, slong p,
+                                              acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
     acb_ptr zpow;
     acb_t s, t, u;
-    long i, j, k, m;
+    slong i, j, k, m;
     mag_t B, C;
 
     if (n == 0)

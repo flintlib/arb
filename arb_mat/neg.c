@@ -28,7 +28,7 @@
 void
 arb_mat_neg(arb_mat_t dest, const arb_mat_t src)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < arb_mat_nrows(src); i++)
         for (j = 0; j < arb_mat_ncols(src); j++)

@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 static __inline__ void
-fmprb_nonnegative_part(fmprb_t z, const fmprb_t x, long prec)
+fmprb_nonnegative_part(fmprb_t z, const fmprb_t x, slong prec)
 {
     if (fmprb_contains_negative(x))
     {
@@ -49,7 +49,7 @@ fmprb_nonnegative_part(fmprb_t z, const fmprb_t x, long prec)
 }
 
 void
-fmprb_sqrtpos(fmprb_t z, const fmprb_t x, long prec)
+fmprb_sqrtpos(fmprb_t z, const fmprb_t x, slong prec)
 {
     if (!fmprb_is_finite(x))
     {

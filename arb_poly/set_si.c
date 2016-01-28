@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-arb_poly_set_si(arb_poly_t poly, long c)
+arb_poly_set_si(arb_poly_t poly, slong c)
 {
     if (c == 0)
     {

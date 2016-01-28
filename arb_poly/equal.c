@@ -28,7 +28,7 @@
 int
 arb_poly_equal(const arb_poly_t A, const arb_poly_t B)
 {
-    long i;
+    slong i;
 
     if (A->length != B->length)
         return 0;

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("evaluate2_rectangular....");
+    flint_printf("evaluate2_rectangular....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -59,14 +59,14 @@ int main()
 
         if (!arb_overlaps(y1, y2) || !arb_overlaps(z1, z2))
         {
-            printf("FAIL\n\n");
-            printf("f = "); arb_poly_printd(f, 15); printf("\n\n");
-            printf("g = "); arb_poly_printd(g, 15); printf("\n\n");
-            printf("x = "); arb_printd(x, 15); printf("\n\n");
-            printf("y1 = "); arb_printd(y1, 15); printf("\n\n");
-            printf("z1 = "); arb_printd(z1, 15); printf("\n\n");
-            printf("y2 = "); arb_printd(y2, 15); printf("\n\n");
-            printf("z2 = "); arb_printd(z2, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("f = "); arb_poly_printd(f, 15); flint_printf("\n\n");
+            flint_printf("g = "); arb_poly_printd(g, 15); flint_printf("\n\n");
+            flint_printf("x = "); arb_printd(x, 15); flint_printf("\n\n");
+            flint_printf("y1 = "); arb_printd(y1, 15); flint_printf("\n\n");
+            flint_printf("z1 = "); arb_printd(z1, 15); flint_printf("\n\n");
+            flint_printf("y2 = "); arb_printd(y2, 15); flint_printf("\n\n");
+            flint_printf("z2 = "); arb_printd(z2, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -81,7 +81,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

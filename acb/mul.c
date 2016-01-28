@@ -37,7 +37,7 @@
 #define dr arb_radref(d)
 
 static void
-_acb_sqr_fast(acb_t z, const acb_t x, long prec)
+_acb_sqr_fast(acb_t z, const acb_t x, slong prec)
 {
     int inexact;
 
@@ -75,7 +75,7 @@ _acb_sqr_fast(acb_t z, const acb_t x, long prec)
 }
 
 static void
-_acb_sqr_slow(acb_t z, const acb_t x, long prec)
+_acb_sqr_slow(acb_t z, const acb_t x, slong prec)
 {
     int inexact;
 
@@ -119,7 +119,7 @@ _acb_sqr_slow(acb_t z, const acb_t x, long prec)
 }
 
 static void
-_acb_mul_fast(acb_t z, const acb_t x, const acb_t y, long prec)
+_acb_mul_fast(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     int inexact;
 
@@ -163,7 +163,7 @@ _acb_mul_fast(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 static void
-_acb_mul_slow(acb_t z, const acb_t x, const acb_t y, long prec)
+_acb_mul_slow(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     int inexact;
 
@@ -215,7 +215,7 @@ _acb_mul_slow(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 void
-acb_mul(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_mul(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     if (arb_is_zero(b))
     {

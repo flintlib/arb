@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("u_asymp....");
+    flint_printf("u_asymp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
         acb_t a, b, a2, b2, z, U1, U2, t, u, M1, M2, am;
         acb_struct bm[2];
         ulong n1, n2;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         acb_init(a);
         acb_init(b);
@@ -94,14 +94,14 @@ int main()
 
         if (!acb_overlaps(U1, U2))
         {
-            printf("FAIL (Kummer transformation)\n");
-            printf("iter = %ld\n", iter);
-            printf("a = "); acb_printd(a, 50); printf("\n");
-            printf("b = "); acb_printd(b, 50); printf("\n");
-            printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
-            printf("U1 = "); acb_printd(U1, 100); printf("\n");
-            printf("U2 = "); acb_printd(U2, 100); printf("\n");
+            flint_printf("FAIL (Kummer transformation)\n");
+            flint_printf("iter = %wd\n", iter);
+            flint_printf("a = "); acb_printd(a, 50); flint_printf("\n");
+            flint_printf("b = "); acb_printd(b, 50); flint_printf("\n");
+            flint_printf("z = "); acb_printd(z, 50); flint_printf("\n");
+            flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
+            flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
+            flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
             abort();
         }
 
@@ -125,14 +125,14 @@ int main()
 
         if (!acb_contains_zero(t))
         {
-            printf("FAIL (contiguous relation)\n");
-            printf("iter = %ld\n", iter);
-            printf("a = "); acb_printd(a, 50); printf("\n");
-            printf("b = "); acb_printd(b, 50); printf("\n");
-            printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
-            printf("U1 = "); acb_printd(U1, 100); printf("\n");
-            printf("t = "); acb_printd(t, 100); printf("\n");
+            flint_printf("FAIL (contiguous relation)\n");
+            flint_printf("iter = %wd\n", iter);
+            flint_printf("a = "); acb_printd(a, 50); flint_printf("\n");
+            flint_printf("b = "); acb_printd(b, 50); flint_printf("\n");
+            flint_printf("z = "); acb_printd(z, 50); flint_printf("\n");
+            flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
+            flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
+            flint_printf("t = "); acb_printd(t, 100); flint_printf("\n");
             abort();
         }
 
@@ -177,14 +177,14 @@ int main()
 
         if (!acb_overlaps(U1, U2))
         {
-            printf("FAIL (U in terms of M)\n");
-            printf("iter = %ld\n", iter);
-            printf("a = "); acb_printd(a, 50); printf("\n");
-            printf("b = "); acb_printd(b, 50); printf("\n");
-            printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
-            printf("U1 = "); acb_printd(U1, 100); printf("\n");
-            printf("U2 = "); acb_printd(U2, 100); printf("\n");
+            flint_printf("FAIL (U in terms of M)\n");
+            flint_printf("iter = %wd\n", iter);
+            flint_printf("a = "); acb_printd(a, 50); flint_printf("\n");
+            flint_printf("b = "); acb_printd(b, 50); flint_printf("\n");
+            flint_printf("z = "); acb_printd(z, 50); flint_printf("\n");
+            flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
+            flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
+            flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
             abort();
         }
 
@@ -195,14 +195,14 @@ int main()
 
         if (!acb_overlaps(U1, U2))
         {
-            printf("FAIL (special value)\n");
-            printf("iter = %ld\n", iter);
-            printf("a = "); acb_printd(a, 50); printf("\n");
-            printf("b = "); acb_printd(b, 50); printf("\n");
-            printf("z = "); acb_printd(z, 50); printf("\n");
-            printf("n1 = %ld, n2 = %ld, prec1 = %ld, prec2 = %ld\n", n1, n2, prec1, prec2);
-            printf("U1 = "); acb_printd(U1, 100); printf("\n");
-            printf("U2 = "); acb_printd(U2, 100); printf("\n");
+            flint_printf("FAIL (special value)\n");
+            flint_printf("iter = %wd\n", iter);
+            flint_printf("a = "); acb_printd(a, 50); flint_printf("\n");
+            flint_printf("b = "); acb_printd(b, 50); flint_printf("\n");
+            flint_printf("z = "); acb_printd(z, 50); flint_printf("\n");
+            flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
+            flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
+            flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
             abort();
         }
 
@@ -224,7 +224,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

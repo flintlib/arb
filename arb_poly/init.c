@@ -34,7 +34,7 @@ arb_poly_init(arb_poly_t poly)
 }
 
 void
-arb_poly_init2(arb_poly_t poly, long len)
+arb_poly_init2(arb_poly_t poly, slong len)
 {
     arb_poly_init(poly);
     arb_poly_fit_length(poly, len);

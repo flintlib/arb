@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
+fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, slong prec)
 {
     /* (x+a) * y = x*y + y*a */
     if (fmpr_is_pos_inf(fmprb_radref(x)))
@@ -36,14 +36,14 @@ fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
     }
     else if (fmpr_is_zero(fmprb_radref(x)))
     {
-        long r;
+        slong r;
 
         r = fmpr_mul(fmprb_midref(z), fmprb_midref(x), y, prec, FMPR_RND_DOWN);
         fmpr_set_error_result(fmprb_radref(z), fmprb_midref(z), r);
     }
     else
     {
-        long r;
+        slong r;
 
         fmpr_mul(fmprb_radref(z), fmprb_radref(x), y, FMPRB_RAD_PREC, FMPR_RND_UP);
         fmpr_abs(fmprb_radref(z), fmprb_radref(z));
@@ -55,7 +55,7 @@ fmprb_mul_fmpr_naive(fmprb_t z, const fmprb_t x, const fmpr_t y, long prec)
 }
 
 void
-fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     if (fmpr_is_pos_inf(fmprb_radref(x)) || fmpr_is_pos_inf(fmprb_radref(y)))
     {
@@ -65,7 +65,7 @@ fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
     else
     {
         fmpr_t t, u;
-        long r;
+        slong r;
 
         fmpr_init(t);
         fmpr_init(u);
@@ -91,7 +91,7 @@ fmprb_mul_main_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
 }
 
 void
-fmprb_mul_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_mul_naive(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     if (fmprb_is_exact(x))
         fmprb_mul_fmpr_naive(z, y, fmprb_midref(x), prec);

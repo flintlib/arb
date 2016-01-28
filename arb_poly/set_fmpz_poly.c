@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_set_fmpz_poly(arb_poly_t poly, const fmpz_poly_t src, long prec)
+arb_poly_set_fmpz_poly(arb_poly_t poly, const fmpz_poly_t src, slong prec)
 {
-    long i, len = fmpz_poly_length(src);
+    slong i, len = fmpz_poly_length(src);
 
     arb_poly_fit_length(poly, len);
     _arb_poly_set_length(poly, len);

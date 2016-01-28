@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("atan....");
+    flint_printf("atan....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t x, a, b;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;
@@ -57,10 +57,10 @@ int main()
         /* check consistency */
         if (!acb_overlaps(a, b))
         {
-            printf("FAIL: overlap\n\n");
-            printf("x = "); acb_printd(x, 15); printf("\n\n");
-            printf("a = "); acb_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_printd(b, 15); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_printd(b, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -69,9 +69,9 @@ int main()
 
         if (!acb_contains(b, x))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("x = "); acb_printd(x, 15); printf("\n\n");
-            printf("b = "); acb_printd(b, 15); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_printd(b, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -79,9 +79,9 @@ int main()
 
         if (!acb_overlaps(a, x))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("a = "); acb_printd(a, 15); printf("\n\n");
-            printf("x = "); acb_printd(x, 15); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
+            flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -92,7 +92,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

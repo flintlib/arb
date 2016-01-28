@@ -26,9 +26,9 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_set_length(acb_poly_t poly, long len)
+_acb_poly_set_length(acb_poly_t poly, slong len)
 {
-    long i;
+    slong i;
 
     if (poly->length > len)
     {

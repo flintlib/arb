@@ -28,9 +28,9 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_shift_right(acb_ptr res, acb_srcptr poly, long len, long n)
+_acb_poly_shift_right(acb_ptr res, acb_srcptr poly, slong len, slong n)
 {
-    long i;
+    slong i;
 
     /* Copy in forward order to avoid writing over unshifted coefficients */
     if (res != poly)
@@ -47,7 +47,7 @@ _acb_poly_shift_right(acb_ptr res, acb_srcptr poly, long len, long n)
 }
 
 void
-acb_poly_shift_right(acb_poly_t res, const acb_poly_t poly, long n)
+acb_poly_shift_right(acb_poly_t res, const acb_poly_t poly, slong n)
 {
     if (n == 0)
     {

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("zeta_ui_borwein_bsplit....");
+    flint_printf("zeta_ui_borwein_bsplit....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -39,7 +39,7 @@ int main()
         arb_t r;
         ulong n;
         mpfr_t s;
-        long prec, accuracy;
+        slong prec, accuracy;
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 14));
 
@@ -53,10 +53,10 @@ int main()
 
         if (!arb_contains_mpfr(r, s))
         {
-            printf("FAIL: containment\n\n");
-            printf("n = %lu\n\n", n);
-            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
-            printf("s = "); mpfr_printf("%.275Rf\n", s); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
+            flint_printf("s = "); mpfr_printf("%.275Rf\n", s); flint_printf("\n\n");
             abort();
         }
 
@@ -64,8 +64,8 @@ int main()
 
         if (accuracy < prec - 4)
         {
-            printf("FAIL: accuracy = %ld, prec = %ld\n\n", accuracy, prec);
-            printf("r = "); arb_printd(r, prec / 3.33); printf("\n\n");
+            flint_printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
             abort();
         }
 
@@ -75,6 +75,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

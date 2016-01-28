@@ -34,7 +34,7 @@ static void
 lower_bound(mag_t bound, const fmpz_t a, const fmpz_t n)
 {
     arb_t t, u;
-    long wp;
+    slong wp;
 
     if (fmpz_is_zero(a))
     {
@@ -80,7 +80,7 @@ static void
 upper_bound(mag_t bound, const fmpz_t b, const fmpz_t n)
 {
     arb_t t, u;
-    long wp;
+    slong wp;
 
     wp = 10 + 2 * fmpz_bits(n);
 
@@ -151,7 +151,7 @@ _arb_bell_mag(fmpz_t mmag, const fmpz_t n, const fmpz_t k)
     {
         arb_t t, u;
         arf_t bound;
-        long prec;
+        slong prec;
 
         arb_init(t);
         arb_init(u);
@@ -182,7 +182,7 @@ _arb_bell_mag(fmpz_t mmag, const fmpz_t n, const fmpz_t k)
 }
 
 void
-arb_bell_find_cutoffs(fmpz_t A, fmpz_t B, fmpz_t M, fmpz_t Mmag, const fmpz_t n, long prec)
+arb_bell_find_cutoffs(fmpz_t A, fmpz_t B, fmpz_t M, fmpz_t Mmag, const fmpz_t n, slong prec)
 {
     fmpz_t a, amag, b, bmag, m, mmag, w, wmag, Amag, Bmag;
 
@@ -302,7 +302,7 @@ arb_bell_find_cutoffs(fmpz_t A, fmpz_t B, fmpz_t M, fmpz_t Mmag, const fmpz_t n,
 }
 
 void
-arb_bell_fmpz(arb_t res, const fmpz_t n, long prec)
+arb_bell_fmpz(arb_t res, const fmpz_t n, slong prec)
 {
     fmpz_t a, b, m, mmag, c;
     arb_t t;
@@ -316,7 +316,7 @@ arb_bell_fmpz(arb_t res, const fmpz_t n, long prec)
 
     if (fmpz_fits_si(n))
     {
-        long nn = fmpz_get_si(n);
+        slong nn = fmpz_get_si(n);
 
         /* compute exactly if we would be computing at least half the bits
            of the exact number */
@@ -369,7 +369,7 @@ arb_bell_fmpz(arb_t res, const fmpz_t n, long prec)
 }
 
 void
-arb_bell_ui(arb_t res, ulong n, long prec)
+arb_bell_ui(arb_t res, ulong n, slong prec)
 {
     fmpz_t t;
     fmpz_init(t);

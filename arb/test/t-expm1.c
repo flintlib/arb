@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("expm1....");
+    flint_printf("expm1....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
         arb_t a, b;
         fmpq_t q;
         mpfr_t t;
-        long prec0, prec;
+        slong prec0, prec;
 
         prec0 = 400;
         if (iter % 100 == 0)
@@ -64,10 +64,10 @@ int main()
 
         if (!arb_contains_mpfr(b, t))
         {
-            printf("FAIL: containment\n\n");
-            printf("iter = %ld, prec = %ld\n\n", iter, prec);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("iter = %wd, prec = %wd\n\n", iter, prec);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -75,10 +75,10 @@ int main()
 
         if (!arb_equal(a, b))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("iter = %ld, prec = %ld\n\n", iter, prec);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("iter = %wd, prec = %wd\n\n", iter, prec);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -92,7 +92,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         arb_t a, b, c, d;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         if (iter % 10 == 0)
             prec0 = 10000;
@@ -115,10 +115,10 @@ int main()
 
         if (!arb_overlaps(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -132,11 +132,11 @@ int main()
 
         if (!arb_overlaps(c, d))
         {
-            printf("FAIL: comparison with exp\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
-            printf("d = "); arb_print(d); printf("\n\n");
+            flint_printf("FAIL: comparison with exp\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -148,6 +148,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

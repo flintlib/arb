@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("inv....");
+    flint_printf("inv....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         fmpq_mat_t Q, Qinv;
         arb_mat_t A, Ainv;
-        long n, qbits, prec;
+        slong n, qbits, prec;
         int q_invertible, r_invertible, r_invertible2;
 
         n = n_randint(state, 8);
@@ -61,13 +61,13 @@ int main()
             r_invertible = arb_mat_inv(Ainv, A, prec);
             if (r_invertible)
             {
-                printf("FAIL: matrix is singular over Q but not over R\n");
-                printf("n = %ld, prec = %ld\n", n, prec);
-                printf("\n");
+                flint_printf("FAIL: matrix is singular over Q but not over R\n");
+                flint_printf("n = %wd, prec = %wd\n", n, prec);
+                flint_printf("\n");
 
-                printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-                printf("Ainv = \n"); arb_mat_printd(Ainv, 15); printf("\n\n");
+                flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+                flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
                 abort();
             }
         }
@@ -87,9 +87,9 @@ int main()
                 {
                     if (prec > 10000)
                     {
-                        printf("FAIL: failed to converge at 10000 bits\n");
-                        printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                        printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
+                        flint_printf("FAIL: failed to converge at 10000 bits\n");
+                        flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+                        flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                         abort();
                     }
                     prec *= 2;
@@ -98,15 +98,15 @@ int main()
 
             if (!arb_mat_contains_fmpq_mat(Ainv, Qinv))
             {
-                printf("FAIL (containment, iter = %ld)\n", iter);
-                printf("n = %ld, prec = %ld\n", n, prec);
-                printf("\n");
+                flint_printf("FAIL (containment, iter = %wd)\n", iter);
+                flint_printf("n = %wd, prec = %wd\n", n, prec);
+                flint_printf("\n");
 
-                printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                printf("Qinv = \n"); fmpq_mat_print(Qinv); printf("\n\n");
+                flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+                flint_printf("Qinv = \n"); fmpq_mat_print(Qinv); flint_printf("\n\n");
 
-                printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-                printf("Ainv = \n"); arb_mat_printd(Ainv, 15); printf("\n\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+                flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
 
                 abort();
             }
@@ -115,9 +115,9 @@ int main()
             r_invertible2 = arb_mat_inv(A, A, prec);
             if (!arb_mat_equal(A, Ainv) || r_invertible != r_invertible2)
             {
-                printf("FAIL (aliasing)\n");
-                printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-                printf("Ainv = \n"); arb_mat_printd(Ainv, 15); printf("\n\n");
+                flint_printf("FAIL (aliasing)\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+                flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
                 abort();
             }
         }
@@ -130,6 +130,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

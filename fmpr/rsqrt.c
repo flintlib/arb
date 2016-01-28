@@ -25,10 +25,10 @@
 
 #include "fmpr.h"
 
-long
-fmpr_rsqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_rsqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
-    long r;
+    slong r;
 
     if (fmpr_is_special(x))
     {

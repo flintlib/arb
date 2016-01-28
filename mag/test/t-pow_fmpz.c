@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pow_fmpz....");
+    flint_printf("pow_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -68,11 +68,11 @@ int main()
 
         if (!(fmpr_cmpabs(y, w) <= 0))
         {
-            printf("FAIL\n\n");
-            printf("e = "); fmpz_print(e); printf("\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("w = "); fmpr_print(w); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             abort();
         }
 
@@ -80,10 +80,10 @@ int main()
 
         if (!mag_equal(xb, yb))
         {
-            printf("FAIL (aliasing)\n\n");
-            printf("e = "); fmpz_print(e); printf("\n\n");
-            mag_print(xb); printf("\n\n");
-            mag_print(yb); printf("\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
+            flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
+            mag_print(xb); flint_printf("\n\n");
+            mag_print(yb); flint_printf("\n\n");
             abort();
         }
 
@@ -98,7 +98,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

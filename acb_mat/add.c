@@ -27,9 +27,9 @@
 
 void
 acb_mat_add(acb_mat_t res,
-        const acb_mat_t mat1, const acb_mat_t mat2, long prec)
+        const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 {
-    long i, j;
+    slong i, j;
 
     for (i = 0; i < acb_mat_nrows(mat1); i++)
         for (j = 0; j < acb_mat_ncols(mat1); j++)

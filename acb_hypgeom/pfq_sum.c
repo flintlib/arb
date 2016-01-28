@@ -26,8 +26,8 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p,
-    acb_srcptr b, long q, const acb_t z, long n, long prec)
+acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, slong p,
+    acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
     if (n > 4 && prec >= 128
         && _acb_vec_bits(a, p) * p + _acb_vec_bits(b, q) * q + 10 < prec / 2)
@@ -48,8 +48,8 @@ acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p,
 }
 
 void
-acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, long p,
-    acb_srcptr b, long q, const acb_t z, const acb_t zinv, long n, long prec)
+acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, slong p,
+    acb_srcptr b, slong q, const acb_t z, const acb_t zinv, slong n, slong prec)
 {
     if (n > 4 && prec >= 128
         && _acb_vec_bits(a, p) * p + _acb_vec_bits(b, q) * q + 10 < prec / 2)

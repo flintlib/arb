@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_add(arb_ptr res, arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long prec)
+_arb_poly_add(arb_ptr res, arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong prec)
 {
-    long i, min = FLINT_MIN(len1, len2);
+    slong i, min = FLINT_MIN(len1, len2);
 
     for (i = 0; i < min; i++)
         arb_add(res + i, poly1 + i, poly2 + i, prec);
@@ -43,9 +43,9 @@ _arb_poly_add(arb_ptr res, arb_srcptr poly1, long len1,
 
 void
 arb_poly_add(arb_poly_t res, const arb_poly_t poly1,
-              const arb_poly_t poly2, long prec)
+              const arb_poly_t poly2, slong prec)
 {
-    long max = FLINT_MAX(poly1->length, poly2->length);
+    slong max = FLINT_MAX(poly1->length, poly2->length);
 
     arb_poly_fit_length(res, max);
 

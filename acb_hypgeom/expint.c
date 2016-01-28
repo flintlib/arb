@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec)
+acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec)
 {
     acb_t t;
     acb_init(t);

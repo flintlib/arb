@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -27,41 +27,48 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("fac2_ui....");
+    flint_printf("root_ui....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 100000; iter++)
     {
         arb_t a, b, c;
-        ulong n;
-        long prec1, prec2;
+        ulong k;
+        slong prec;
 
-        prec1 = 2 + n_randint(state, 300);
-        prec2 = 2 + n_randint(state, 300);
+        prec = 2 + n_randint(state, 2000);
+        k = n_randtest_not_zero(state);
 
         arb_init(a);
         arb_init(b);
         arb_init(c);
 
-        n = n_randtest(state);
-        if (n + 1 == 0 || n + 2 == 0)
-            n -= 2;
+        arb_randtest(a, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
+        arb_randtest(b, state, 1 + n_randint(state, 2000), 1 + n_randint(state, 100));
 
-        arb_fac2_ui(a, n, prec1);
-        arb_fac2_ui(b, n + 2, prec1);
-        arb_mul_ui(c, a, n + 2, prec2);
+        arb_root_ui(b, a, k, prec);
+        arb_pow_ui(c, b, k, prec);
 
-        if (!arb_overlaps(b, c))
+        if (!arb_contains(c, a))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("k = %wu\n", k);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            abort();
+        }
+
+        arb_root_ui(a, a, k, prec);
+
+        if (!arb_equal(a, b))
+        {
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -72,6 +79,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

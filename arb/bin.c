@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_bin_ui(arb_t x, const arb_t n, ulong k, long prec)
+arb_bin_ui(arb_t x, const arb_t n, ulong k, slong prec)
 {
     if (k == 0)
     {
@@ -54,7 +54,7 @@ arb_bin_ui(arb_t x, const arb_t n, ulong k, long prec)
 }
 
 void
-arb_bin_uiui(arb_t x, ulong n, ulong k, long prec)
+arb_bin_uiui(arb_t x, ulong n, ulong k, slong prec)
 {
     arb_t t;
     arb_init(t);

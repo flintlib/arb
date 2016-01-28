@@ -26,11 +26,11 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_reverse(arb_ptr res, arb_srcptr poly, long len, long n)
+_arb_poly_reverse(arb_ptr res, arb_srcptr poly, slong len, slong n)
 {
     if (res == poly)
     {
-        long i;
+        slong i;
 
         for (i = 0; i < n / 2; i++)
         {
@@ -44,7 +44,7 @@ _arb_poly_reverse(arb_ptr res, arb_srcptr poly, long len, long n)
     }
     else
     {
-        long i;
+        slong i;
 
         for (i = 0; i < n - len; i++)
             arb_zero(res + i);

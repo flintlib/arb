@@ -27,7 +27,7 @@
 
 void
 acb_hypgeom_bessel_i_asymp_prefactors(acb_t A, acb_t B, acb_t C,
-    const acb_t nu, const acb_t z, long prec)
+    const acb_t nu, const acb_t z, slong prec)
 {
     acb_t t, u;
 
@@ -75,7 +75,7 @@ acb_hypgeom_bessel_i_asymp_prefactors(acb_t A, acb_t B, acb_t C,
 }
 
 void
-acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_t A1, A2, C, U1, U2, s, t, u;
     int is_real, is_imag;
@@ -148,7 +148,7 @@ acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_struct b[2];
     acb_t w, c, t;
@@ -193,7 +193,7 @@ acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     mag_t zmag;
 

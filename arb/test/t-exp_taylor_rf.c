@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("exp_taylor_rf....");
+    flint_printf("exp_taylor_rf....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -80,13 +80,13 @@ int main()
 
         if (!result)
         {
-            printf("FAIL\n");
-            printf("N = %ld xn = %ld\n", N, xn);
-            printf("x =");
+            flint_printf("FAIL\n");
+            flint_printf("N = %wd xn = %wd\n", N, xn);
+            flint_printf("x =");
             flint_mpn_debug(x, xn);
-            printf("y1 =");
+            flint_printf("y1 =");
             flint_mpn_debug(y1, xn + 1);
-            printf("y2 =");
+            flint_printf("y2 =");
             flint_mpn_debug(y2, xn + 1);
             abort();
         }
@@ -99,7 +99,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

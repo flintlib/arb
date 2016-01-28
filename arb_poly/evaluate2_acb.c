@@ -26,13 +26,13 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, long len, const acb_t x, long prec)
+_arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, slong len, const acb_t x, slong prec)
 {
     _arb_poly_evaluate2_acb_rectangular(y, z, f, len, x, prec);
 }
 
 void
-arb_poly_evaluate2_acb(acb_t r, acb_t s, const arb_poly_t f, const acb_t a, long prec)
+arb_poly_evaluate2_acb(acb_t r, acb_t s, const arb_poly_t f, const acb_t a, slong prec)
 {
     _arb_poly_evaluate2_acb(r, s, f->coeffs, f->length, a, prec);
 }

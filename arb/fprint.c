@@ -19,28 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "arb_poly.h"
+#include "arb.h"
 
 void
-arb_poly_printd(const arb_poly_t poly, long digits)
+arb_fprint(FILE * file, const arb_t x)
 {
-    long i;
-
-    printf("[");
-
-    for (i = 0; i < poly->length; i++)
-    {
-        printf("(");
-        arb_printd(poly->coeffs + i, digits);
-        printf(")");
-        
-        if (i + 1 < poly->length)
-            printf(", ");
-    }
-
-    printf("]");
+    arf_fprint(file, arb_midref(x));
+    flint_fprintf(file, " +/- ");
+    mag_fprint(file, arb_radref(x));
 }
+
+void
+arb_fprintd(FILE * file, const arb_t x, slong digits)
+{
+    arf_fprintd(file, arb_midref(x), FLINT_MAX(digits, 1));
+    flint_fprintf(file, " +/- ");
+    mag_fprintd(file, arb_radref(x), 5);
+}
+
+void
+arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags)
+{
+    char * s = arb_get_str(x, digits, flags);
+    flint_fprintf(file, "%s", s);
+    flint_free(s);
+}
+

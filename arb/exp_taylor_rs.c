@@ -1207,14 +1207,14 @@ void _arb_exp_taylor_rs(mp_ptr y, mp_limb_t * error,
 {
     mp_ptr s, t, xpow;
     mp_limb_t new_denom, old_denom, c;
-    long power, k, m;
+    slong power, k, m;
 
     TMP_INIT;
     TMP_START;
 
     if (N >= FACTORIAL_TAB_SIZE - 1)
     {
-        printf("_arb_exp_taylor_rs: N too large!\n");
+        flint_printf("_arb_exp_taylor_rs: N too large!\n");
         abort();
     }
 

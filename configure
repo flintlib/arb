@@ -9,9 +9,9 @@
 #
 # arb     => soname
 # 2.7.0   => 0.0.0
-ARB_MAJOR=0
-ARB_MINOR=0
-ARB_PATCH=0
+ARB_MAJOR=1
+ARB_MINOR=1
+ARB_PATCH=1
 
 PREFIX="/usr/local"
 GMP_DIR="/usr/local"
@@ -647,6 +647,7 @@ echo "ARB_STATIC=$STATIC" >> Makefile
 echo "ARB_SHARED=$SHARED" >> Makefile
 echo "ARB_LIB=$ARB_LIB" >> Makefile
 echo "ARB_LIBNAME=$ARB_LIBNAME" >> Makefile
+echo "ARB_MAJOR=$ARB_MAJOR" >> Makefile
 echo "ARB_SOLIB=$ARB_SOLIB" >> Makefile
 echo "EXEEXT=$EXEEXT" >> Makefile
 echo "PREFIX=$PREFIX" >> Makefile

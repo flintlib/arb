@@ -44,10 +44,10 @@ typedef struct
 
     /* precomputation data */
     int have_precomputed;
-    long r;
-    long boundC;
-    long boundD;
-    long boundK;
+    slong r;
+    slong boundC;
+    slong boundD;
+    slong boundK;
     mag_t MK;
 }
 hypgeom_struct;
@@ -60,18 +60,18 @@ void hypgeom_clear(hypgeom_t hyp);
 
 void hypgeom_precompute(hypgeom_t hyp);
 
-long hypgeom_estimate_terms(const mag_t z, int r, long prec);
+slong hypgeom_estimate_terms(const mag_t z, int r, slong prec);
 
-long hypgeom_bound(mag_t error, int r,
-    long C, long D, long K, const mag_t TK, const mag_t z, long prec);
+slong hypgeom_bound(mag_t error, int r,
+    slong C, slong D, slong K, const mag_t TK, const mag_t z, slong prec);
 
-void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, long n, long prec);
+void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, slong n, slong prec);
 
-void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, long target_prec, long prec);
+void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, slong target_prec, slong prec);
 
-void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, long n, long prec);
+void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, slong n, slong prec);
 
-void arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, long target_prec, long prec);
+void arb_hypgeom_infsum(arb_t P, arb_t Q, hypgeom_t hyp, slong target_prec, slong prec);
 
 #ifdef __cplusplus
 }

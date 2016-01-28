@@ -26,12 +26,12 @@
 #include "acb_modular.h"
 
 void
-acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
+acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
 {
     psl2z_t g;
     arf_t one_minus_eps;
     acb_t tau_prime, t1, t2, t3, t4, q;
-    long m, n;
+    slong m, n;
 
     if (len < 1)
         return;

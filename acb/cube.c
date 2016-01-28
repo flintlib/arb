@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_cube(acb_t r, const acb_t z, long prec)
+acb_cube(acb_t r, const acb_t z, slong prec)
 {
 #define a acb_realref(z)
 #define b acb_imagref(z)

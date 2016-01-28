@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 static void
-_acb_hypgeom_li(acb_t res, const acb_t z, long prec)
+_acb_hypgeom_li(acb_t res, const acb_t z, slong prec)
 {
     if (acb_is_zero(z))
     {
@@ -40,7 +40,7 @@ _acb_hypgeom_li(acb_t res, const acb_t z, long prec)
 }
 
 void
-_acb_hypgeom_const_li2_eval(arb_t s, long prec)
+_acb_hypgeom_const_li2_eval(arb_t s, slong prec)
 {
     acb_t t;
     acb_init(t);
@@ -53,7 +53,7 @@ _acb_hypgeom_const_li2_eval(arb_t s, long prec)
 ARB_DEF_CACHED_CONSTANT(_acb_hypgeom_const_li2, _acb_hypgeom_const_li2_eval)
 
 static void
-_acb_hypgeom_li_offset(acb_t res, const acb_t z, long prec)
+_acb_hypgeom_li_offset(acb_t res, const acb_t z, slong prec)
 {
     if (acb_is_int(z) && arf_cmp_2exp_si(arb_midref(acb_realref(z)), 1) == 0)
     {
@@ -71,7 +71,7 @@ _acb_hypgeom_li_offset(acb_t res, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_li(acb_t res, const acb_t z, int offset, long prec)
+acb_hypgeom_li(acb_t res, const acb_t z, int offset, slong prec)
 {
     if (offset)
         _acb_hypgeom_li_offset(res, z, prec);

@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-arb_poly_randtest(arb_poly_t poly, flint_rand_t state, long len, long prec, long mag_bits)
+arb_poly_randtest(arb_poly_t poly, flint_rand_t state, slong len, slong prec, slong mag_bits)
 {
-    long i;
+    slong i;
 
     arb_poly_fit_length(poly, len);
 

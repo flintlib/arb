@@ -25,8 +25,8 @@
 
 #include "fmpr.h"
 
-long
-_fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+slong
+_fmpr_normalise_naive(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     /* TODO: this should perhaps raise an exception to avoid ambiguity */
     if (fmpz_is_zero(man))
@@ -36,7 +36,7 @@ _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long bc, val;
+        slong bc, val;
 
         bc = fmpz_bits(man);
         val = fmpz_val2(man);
@@ -53,7 +53,7 @@ _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
         }
         else
         {
-            long exp_shift = bc - prec;
+            slong exp_shift = bc - prec;
 
             if (rnd == FMPR_RND_NEAR)
             {

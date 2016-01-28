@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_fmpz_2exp....");
+    flint_printf("set_fmpz_2exp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     /* test exact roundtrip R -> Q -> R */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         fmpr_t x, z;
         fmpz_t y, e;
 
@@ -58,12 +58,12 @@ int main()
 
         if (!fmpr_equal(x, z))
         {
-            printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpz_print(y); printf("\n\n");
-            printf("e = "); fmpz_print(e); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("bits: %wd\n", bits);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
+            flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -75,6 +75,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

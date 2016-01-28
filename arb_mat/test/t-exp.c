@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("exp....");
+    flint_printf("exp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -41,7 +41,7 @@ int main()
         arb_mat_t A, E, F, EF, G;
         fmpq_mat_t Q;
         arb_t c, d;
-        long n, qbits, prec;
+        slong n, qbits, prec;
 
         n = n_randint(state, 5);
         qbits = 2 + n_randint(state, 300);
@@ -73,16 +73,16 @@ int main()
 
         if (!arb_mat_overlaps(EF, G))
         {
-            printf("FAIL\n\n");
-            printf("n = %ld, prec = %ld\n", n, prec);
+            flint_printf("FAIL\n\n");
+            flint_printf("n = %wd, prec = %wd\n", n, prec);
 
-            printf("c = \n"); arb_printd(c, 15); printf("\n\n");
+            flint_printf("c = \n"); arb_printd(c, 15); flint_printf("\n\n");
 
-            printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-            printf("E   = \n"); arb_mat_printd(E, 15); printf("\n\n");
-            printf("F   = \n"); arb_mat_printd(F, 15); printf("\n\n");
-            printf("E*F = \n"); arb_mat_printd(EF, 15); printf("\n\n");
-            printf("G   = \n"); arb_mat_printd(G, 15); printf("\n\n");
+            flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+            flint_printf("E   = \n"); arb_mat_printd(E, 15); flint_printf("\n\n");
+            flint_printf("F   = \n"); arb_mat_printd(F, 15); flint_printf("\n\n");
+            flint_printf("E*F = \n"); arb_mat_printd(EF, 15); flint_printf("\n\n");
+            flint_printf("G   = \n"); arb_mat_printd(G, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -99,7 +99,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

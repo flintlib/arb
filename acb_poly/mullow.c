@@ -29,8 +29,8 @@
 
 void
 _acb_poly_mullow(acb_ptr res,
-    acb_srcptr poly1, long len1,
-    acb_srcptr poly2, long len2, long n, long prec)
+    acb_srcptr poly1, slong len1,
+    acb_srcptr poly2, slong len2, slong n, slong prec)
 {
     if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
         _acb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
@@ -41,9 +41,9 @@ _acb_poly_mullow(acb_ptr res,
 void
 acb_poly_mullow(acb_poly_t res, const acb_poly_t poly1,
                                             const acb_poly_t poly2,
-                                                long n, long prec)
+                                                slong n, slong prec)
 {
-    long len1, len2;
+    slong len1, len2;
 
     len1 = poly1->length;
     len2 = poly2->length;

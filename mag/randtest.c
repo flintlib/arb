@@ -26,7 +26,7 @@
 #include "mag.h"
 
 void
-mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
+mag_randtest_special(mag_t x, flint_rand_t state, slong expbits)
 {
     switch (n_randint(state, 32))
     {
@@ -52,7 +52,7 @@ mag_randtest_special(mag_t x, flint_rand_t state, long expbits)
 }
 
 void
-mag_randtest(mag_t x, flint_rand_t state, long expbits)
+mag_randtest(mag_t x, flint_rand_t state, slong expbits)
 {
     mag_randtest_special(x, state, expbits);
     if (mag_is_inf(x))

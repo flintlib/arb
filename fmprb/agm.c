@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     fmprb_t t, u, v, w;
 

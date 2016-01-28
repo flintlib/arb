@@ -27,7 +27,7 @@
 
 void
 _arb_poly_rsqrt_series(arb_ptr g,
-    arb_srcptr h, long hlen, long len, long prec)
+    arb_srcptr h, slong hlen, slong len, slong prec)
 {
     hlen = FLINT_MIN(hlen, len);
 
@@ -58,7 +58,7 @@ _arb_poly_rsqrt_series(arb_ptr g,
     else
     {
         arb_ptr t, u;
-        long tlen;
+        slong tlen;
         t = _arb_vec_init(2 * len);
         u = t + len;
 
@@ -82,7 +82,7 @@ _arb_poly_rsqrt_series(arb_ptr g,
 }
 
 void
-arb_poly_rsqrt_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+arb_poly_rsqrt_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec)
 {
     if (n == 0)
     {

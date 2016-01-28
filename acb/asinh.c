@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_asinh(acb_t res, const acb_t z, long prec)
+acb_asinh(acb_t res, const acb_t z, slong prec)
 {
     acb_mul_onei(res, z);
     acb_asin(res, res, prec);

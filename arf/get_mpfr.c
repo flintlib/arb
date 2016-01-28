@@ -44,7 +44,7 @@ arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd)
     }
     else if (COEFF_IS_MPZ(*ARF_EXPREF(y)))
     {
-        printf("exception: exponent too large to convert to mpfr");
+        flint_printf("exception: exponent too large to convert to mpfr");
         abort();
     }
     else

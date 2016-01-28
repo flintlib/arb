@@ -28,10 +28,10 @@
 int
 main(void)
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("charpoly....");
+    flint_printf("charpoly....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ main(void)
     {
         arb_mat_t A, B, C, D;
         arb_poly_t f, g;
-        long m, n;
+        slong m, n;
 
         m = n_randint(state, 8);
         n = m;

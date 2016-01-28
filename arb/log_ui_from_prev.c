@@ -27,7 +27,7 @@
 
 static void
 bsplit(fmpz_t p1, fmpz_t q1, fmpz_t r1,
-        const fmpz_t p, const fmpz_t q, long a, long b, int cont)
+        const fmpz_t p, const fmpz_t q, slong a, slong b, int cont)
 {
     if (b - a == 1)
     {
@@ -48,7 +48,7 @@ bsplit(fmpz_t p1, fmpz_t q1, fmpz_t r1,
     else
     {
         fmpz_t p2, q2, r2;
-        long m;
+        slong m;
 
         m = (a + b) / 2;
 
@@ -76,11 +76,11 @@ bsplit(fmpz_t p1, fmpz_t q1, fmpz_t r1,
 
 /* Assumption: p/q <= 2 */
 static void
-atanh_bs(arb_t s, ulong p, ulong q, long prec)
+atanh_bs(arb_t s, ulong p, ulong q, slong prec)
 {
     fmpz_t pp, qq, P, Q, R;
     double logqp;
-    long N;
+    slong N;
 
     if (p == 0)
     {
@@ -125,7 +125,7 @@ static int n_width(ulong k)
 }
 
 void
-arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, long prec)
+arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, slong prec)
 {
     if (prev < 2 || prec < 600 ||
         (prec < ARB_LOG_TAB2_PREC - 64 && n_width(k) <= ARB_LOG_TAB21_BITS + 1)

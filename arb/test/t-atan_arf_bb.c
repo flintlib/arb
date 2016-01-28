@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_atan_arf_via_mpfr(arb_t z, const arf_t x, long prec)
+arb_atan_arf_via_mpfr(arb_t z, const arf_t x, slong prec)
 {
     mpfr_t t, u;
     int exact;
@@ -50,10 +50,10 @@ arb_atan_arf_via_mpfr(arb_t z, const arf_t x, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("atan_arf_bb....");
+    flint_printf("atan_arf_bb....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -61,7 +61,7 @@ int main()
     for (iter = 0; iter < 5000; iter++)
     {
         arb_t x, y, z;
-        long prec, prec2;
+        slong prec, prec2;
 
         arb_init(x);
         arb_init(y);
@@ -87,21 +87,21 @@ int main()
 
         if (!arb_contains(z, y))
         {
-            printf("FAIL: containment\n\n");
-            printf("prec = %ld\n\n", prec);
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
-            printf("z = "); arb_printd(z, 50); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("prec = %wd\n\n", prec);
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
+            flint_printf("z = "); arb_printd(z, 50); flint_printf("\n\n");
             abort();
         }
 
         if (arb_rel_accuracy_bits(z) < prec - 2)
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec = %ld,  acc = %ld\n\n", prec, arb_rel_accuracy_bits(z));
-            printf("x = "); arb_printd(x, 50); printf("\n\n");
-            printf("y = "); arb_printd(y, 50); printf("\n\n");
-            printf("z = "); arb_printd(z, 50); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec = %wd,  acc = %wd\n\n", prec, arb_rel_accuracy_bits(z));
+            flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
+            flint_printf("z = "); arb_printd(z, 50); flint_printf("\n\n");
             abort();
         }
 
@@ -109,7 +109,7 @@ int main()
 
         if (!arb_overlaps(x, z))
         {
-            printf("FAIL: aliasing\n\n");
+            flint_printf("FAIL: aliasing\n\n");
             abort();
         }
 
@@ -120,7 +120,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

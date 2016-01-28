@@ -28,7 +28,7 @@
 int
 fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t exp)
 {
-    long shift;
+    slong shift;
 
     if (fmpr_is_zero(x))
     {
@@ -51,7 +51,7 @@ fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t exp)
 }
 
 int
-fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, long exp)
+fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, slong exp)
 {
     int result;
     fmpz_t t;

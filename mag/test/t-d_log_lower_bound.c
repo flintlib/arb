@@ -57,10 +57,10 @@ d_randtest2(flint_rand_t state)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("d_log_lower_bound....");
+    flint_printf("d_log_lower_bound....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -104,10 +104,10 @@ int main()
 
         if (y > z || fabs(y-z) > 0.000001 * fabs(z))
         {
-            printf("FAIL\n");
-            printf("x = %.20g\n", x);
-            printf("y = %.20g\n", y);
-            printf("z = %.20g\n", z);
+            flint_printf("FAIL\n");
+            flint_printf("x = %.20g\n", x);
+            flint_printf("y = %.20g\n", y);
+            flint_printf("z = %.20g\n", z);
             abort();
         }
 
@@ -116,7 +116,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

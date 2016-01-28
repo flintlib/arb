@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("theta_sum....");
+    flint_printf("theta_sum....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -42,7 +42,7 @@ int main()
         acb_ptr t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b;
         acb_t w, q;
         int w_is_unit;
-        long prec0, e0, prec1, prec2, len1, len2, i;
+        slong prec0, e0, prec1, prec2, len1, len2, i;
 
         acb_init(w);
         acb_init(q);
@@ -108,20 +108,20 @@ int main()
                 || !acb_overlaps(t3a + i, t3b + i)
                 || !acb_overlaps(t4a + i, t4b + i))
             {
-                printf("FAIL (overlap)  iter = %ld\n", iter);
-                printf("len1 = %ld, len2 = %ld, prec1 = %ld, prec2 = %ld\n\n",
+                flint_printf("FAIL (overlap)  iter = %wd\n", iter);
+                flint_printf("len1 = %wd, len2 = %wd, prec1 = %wd, prec2 = %wd\n\n",
                     len1, len2, prec1, prec2);
-                printf("i = %ld\n\n", i);
-                printf("q = "); acb_printd(q, 50); printf("\n\n");
-                printf("w = "); acb_printd(w, 50); printf("\n\n");
-                printf("t1a = "); acb_printd(t1a + i, 50); printf("\n\n");
-                printf("t1b = "); acb_printd(t1b + i, 50); printf("\n\n");
-                printf("t2a = "); acb_printd(t2a + i, 50); printf("\n\n");
-                printf("t2b = "); acb_printd(t2b + i, 50); printf("\n\n");
-                printf("t3a = "); acb_printd(t3a + i, 50); printf("\n\n");
-                printf("t3b = "); acb_printd(t3b + i, 50); printf("\n\n");
-                printf("t4a = "); acb_printd(t4a + i, 50); printf("\n\n");
-                printf("t4b = "); acb_printd(t4b + i, 50); printf("\n\n");
+                flint_printf("i = %wd\n\n", i);
+                flint_printf("q = "); acb_printd(q, 50); flint_printf("\n\n");
+                flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
+                flint_printf("t1a = "); acb_printd(t1a + i, 50); flint_printf("\n\n");
+                flint_printf("t1b = "); acb_printd(t1b + i, 50); flint_printf("\n\n");
+                flint_printf("t2a = "); acb_printd(t2a + i, 50); flint_printf("\n\n");
+                flint_printf("t2b = "); acb_printd(t2b + i, 50); flint_printf("\n\n");
+                flint_printf("t3a = "); acb_printd(t3a + i, 50); flint_printf("\n\n");
+                flint_printf("t3b = "); acb_printd(t3b + i, 50); flint_printf("\n\n");
+                flint_printf("t4a = "); acb_printd(t4a + i, 50); flint_printf("\n\n");
+                flint_printf("t4b = "); acb_printd(t4b + i, 50); flint_printf("\n\n");
                 abort();
             }
         }
@@ -141,7 +141,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

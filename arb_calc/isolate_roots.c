@@ -43,7 +43,7 @@ _arb_sign(const arb_t t)
 
 static int
 check_block(arb_calc_func_t func, void * param, const arf_interval_t block,
-    int asign, int bsign, long prec)
+    int asign, int bsign, slong prec)
 {
     arb_struct t[2];
     arb_t x;
@@ -85,7 +85,7 @@ check_block(arb_calc_func_t func, void * param, const arf_interval_t block,
 #define ADD_BLOCK       \
     if (*length >= *alloc)   \
     {   \
-        long new_alloc;   \
+        slong new_alloc;   \
         new_alloc = (*alloc == 0) ? 1 : 2 * (*alloc); \
         *blocks = flint_realloc(*blocks, sizeof(arf_interval_struct) * new_alloc);   \
         *flags = flint_realloc(*flags, sizeof(int) * new_alloc);   \
@@ -99,11 +99,11 @@ check_block(arb_calc_func_t func, void * param, const arf_interval_t block,
 
 static void
 isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
-    long * length, long * alloc,
+    slong * length, slong * alloc,
     arb_calc_func_t func, void * param,
     const arf_interval_t block, int asign, int bsign,
-    long depth, long * eval_count, long * found_count,
-    long prec)
+    slong depth, slong * eval_count, slong * found_count,
+    slong prec)
 {
     int status;
 
@@ -125,9 +125,9 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
                 {
                     if (arb_calc_verbose)
                     {
-                        printf("found isolated root in: ");
+                        flint_printf("found isolated root in: ");
                         arf_interval_printd(block, 15);
-                        printf("\n");
+                        flint_printf("\n");
                     }
 
                     *found_count -= 1;
@@ -147,9 +147,9 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
 
                 if (msign == 0 && arb_calc_verbose)
                 {
-                    printf("possible zero at midpoint: ");
+                    flint_printf("possible zero at midpoint: ");
                     arf_interval_printd(block, 15);
-                    printf("\n");
+                    flint_printf("\n");
                 }
 
                 isolate_roots_recursive(blocks, flags, length, alloc,
@@ -169,14 +169,14 @@ isolate_roots_recursive(arf_interval_ptr * blocks, int ** flags,
     }
 }
 
-long
+slong
 arb_calc_isolate_roots(arf_interval_ptr * blocks, int ** flags,
     arb_calc_func_t func, void * param,
-    const arf_interval_t block, long maxdepth, long maxeval, long maxfound,
-    long prec)
+    const arf_interval_t block, slong maxdepth, slong maxeval, slong maxfound,
+    slong prec)
 {
     int asign, bsign;
-    long length, alloc;
+    slong length, alloc;
     arb_t m, v;
 
     *blocks = NULL;

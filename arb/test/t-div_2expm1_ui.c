@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("div_2expm1_ui....");
+    flint_printf("div_2expm1_ui....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         arb_t a, b, c;
         ulong n;
-        long prec, acc1, acc2;
+        slong prec, acc1, acc2;
         fmpz_t t;
 
         arb_init(a);
@@ -58,11 +58,11 @@ int main()
         arb_div_2expm1_ui(b, a, n, prec);
 
         arb_one(c);
-        if (n >= (1UL << (FLINT_BITS-1)))
+        if (n >= (UWORD(1) << (FLINT_BITS-1)))
         {
-            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
-            arb_mul_2exp_si(c, c, (1UL << (FLINT_BITS-2)));
-            arb_mul_2exp_si(c, c, n - (1UL << (FLINT_BITS-1)));
+            arb_mul_2exp_si(c, c, (UWORD(1) << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, (UWORD(1) << (FLINT_BITS-2)));
+            arb_mul_2exp_si(c, c, n - (UWORD(1) << (FLINT_BITS-1)));
         }
         else
         {
@@ -77,23 +77,23 @@ int main()
 
         if (!arb_overlaps(b, c))
         {
-            printf("FAIL: containment\n\n");
-            printf("n = %lu\n", n);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("n = %wu\n", n);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
         if (n > 0 && (acc2 < FLINT_MIN(prec, acc1) - 10) &&
                 !(acc1 == -ARF_PREC_EXACT && acc2 == -ARF_PREC_EXACT))
         {
-            printf("FAIL: poor accuracy\n\n");
-            printf("prec=%ld, acc1=%ld, acc2=%ld\n\n", prec, acc1, acc2);
-            printf("n = %lu\n\n", n);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("c = "); arb_print(c); printf("\n\n");
+            flint_printf("FAIL: poor accuracy\n\n");
+            flint_printf("prec=%wd, acc1=%wd, acc2=%wd\n\n", prec, acc1, acc2);
+            flint_printf("n = %wu\n\n", n);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             abort();
         }
 
@@ -105,7 +105,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

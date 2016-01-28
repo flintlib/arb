@@ -25,12 +25,12 @@
 
 #include "acb_poly.h"
 
-long
+slong
 _acb_poly_validate_roots(acb_ptr roots,
-        acb_srcptr poly, long len, long prec)
+        acb_srcptr poly, slong len, slong prec)
 {
-    long i, j, deg;
-    long isolated, nonisolated, total_isolated;
+    slong i, j, deg;
+    slong isolated, nonisolated, total_isolated;
     acb_ptr deriv;
     acb_ptr tmp;
     int *overlap;

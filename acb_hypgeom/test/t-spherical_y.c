@@ -112,11 +112,11 @@ static const double testdata[] = {
 
 int main()
 {
-    printf("spherical_y....");
+    flint_printf("spherical_y....");
     fflush(stdout);
 
     {
-        long i, n, m;
+        slong i, n, m;
         acb_t z, w, x, y;
 
         acb_init(z);
@@ -143,10 +143,10 @@ int main()
 
                 if (!acb_overlaps(z, w))
                 {
-                    printf("FAIL: value\n\n");
-                    printf("n = %ld, m = %ld\n", n, m);
-                    printf("z = "); acb_printd(z, 20); printf("\n\n");
-                    printf("w = "); acb_printd(w, 20); printf("\n\n");
+                    flint_printf("FAIL: value\n\n");
+                    flint_printf("n = %wd, m = %wd\n", n, m);
+                    flint_printf("z = "); acb_printd(z, 20); flint_printf("\n\n");
+                    flint_printf("w = "); acb_printd(w, 20); flint_printf("\n\n");
                     abort();
                 }
 
@@ -161,7 +161,7 @@ int main()
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("exp_series_basecase....");
+    flint_printf("exp_series_basecase....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, bits1, bits2, bits3;
+        slong m, n, bits1, bits2, bits3;
         acb_poly_t a, b, c, d;
 
         bits1 = 2 + n_randint(state, 200);
@@ -65,12 +65,12 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL\n\n");
+            flint_printf("FAIL\n\n");
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
-            printf("d = "); acb_poly_printd(d, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -82,6 +82,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

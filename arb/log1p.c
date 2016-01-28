@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-arb_log1p_tiny(arb_t r, const arb_t z, long prec)
+arb_log1p_tiny(arb_t r, const arb_t z, slong prec)
 {
     mag_t b, c;
     arb_t t;
@@ -57,9 +57,9 @@ arb_log1p_tiny(arb_t r, const arb_t z, long prec)
 }
 
 void
-arb_log1p(arb_t r, const arb_t z, long prec)
+arb_log1p(arb_t r, const arb_t z, slong prec)
 {
-    long magz;
+    slong magz;
 
     if (arb_is_zero(z))
     {

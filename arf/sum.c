@@ -25,7 +25,7 @@
 
 #include "arf.h"
 
-int _arf_are_close(const arf_t x, const arf_t y, long prec)
+int _arf_are_close(const arf_t x, const arf_t y, slong prec)
 {
     fmpz_t xb, yb;
     fmpz_t delta;
@@ -54,16 +54,16 @@ int _arf_are_close(const arf_t x, const arf_t y, long prec)
 }
 
 int
-_arf_add_eps(arf_t s, const arf_t x, int sgn, long prec, arf_rnd_t rnd)
+_arf_add_eps(arf_t s, const arf_t x, int sgn, slong prec, arf_rnd_t rnd)
 {
     arf_t t;
-    long bits;
+    slong bits;
 
     bits = arf_bits(x);
 
     if (bits == 0)
     {
-        printf("_arf_add_eps\n");
+        flint_printf("_arf_add_eps\n");
         abort();
     }
 
@@ -80,10 +80,10 @@ _arf_add_eps(arf_t s, const arf_t x, int sgn, long prec, arf_rnd_t rnd)
 }
 
 int
-arf_sum(arf_t s, arf_srcptr terms, long len, long prec, arf_rnd_t rnd)
+arf_sum(arf_t s, arf_srcptr terms, slong len, slong prec, arf_rnd_t rnd)
 {
     arf_ptr blocks;
-    long i, j, used;
+    slong i, j, used;
     int have_merged, res;
 
     /* first check if the result is inf or nan */

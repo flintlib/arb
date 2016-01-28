@@ -63,14 +63,14 @@ Generation of Bernoulli numbers
 Caching
 -------------------------------------------------------------------------------
 
-.. var:: long bernoulli_cache_num
+.. var:: slong bernoulli_cache_num
 
 .. var:: fmpq * bernoulli_cache
 
     Cache of Bernoulli numbers. Uses thread-local storage if enabled
     in FLINT.
 
-.. function:: void bernoulli_cache_compute(long n)
+.. function:: void bernoulli_cache_compute(slong n)
 
     Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached.
     Calling :func:`flint_cleanup()` frees the cache.
@@ -79,7 +79,7 @@ Caching
 Bounding
 -------------------------------------------------------------------------------
 
-.. function:: long bernoulli_bound_2exp_si(ulong n)
+.. function:: slong bernoulli_bound_2exp_si(ulong n)
 
     Returns an integer `b` such that `|B_n| \le 2^b`. Uses a lookup table
     for small `n`, and for larger `n` uses the inequality

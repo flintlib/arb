@@ -29,7 +29,7 @@
 void
 _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
 {
-    long prec;
+    slong prec;
     arb_t t;
 
     arith_bernoulli_number_denom(den, n);
@@ -56,7 +56,7 @@ _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
         if (arb_get_unique_fmpz(num, t))
             break;
 
-        printf("warning: %ld insufficient precision for Bernoulli number %lu\n", prec, n);
+        flint_printf("warning: %wd insufficient precision for Bernoulli number %wu\n", prec, n);
     }
 
     arb_clear(t);

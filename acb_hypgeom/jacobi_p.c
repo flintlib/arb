@@ -27,7 +27,7 @@
 
 /* this can be improved */
 static int
-use_recurrence(const acb_t n, const acb_t a, const acb_t b, long prec)
+use_recurrence(const acb_t n, const acb_t a, const acb_t b, slong prec)
 {
     if (!acb_is_int(n) || !arb_is_nonnegative(acb_realref(n)))
         return 0;
@@ -44,11 +44,11 @@ use_recurrence(const acb_t n, const acb_t a, const acb_t b, long prec)
 
 void
 acb_hypgeom_jacobi_p_ui_direct(acb_t res, ulong n,
-    const acb_t a, const acb_t b, const acb_t z, long prec)
+    const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_ptr terms;
     acb_t t, u, v;
-    long k;
+    slong k;
 
     terms = _acb_vec_init(n + 1);
     acb_init(t);
@@ -90,7 +90,7 @@ acb_hypgeom_jacobi_p_ui_direct(acb_t res, ulong n,
 
 void
 acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b,
-    const acb_t z, long prec)
+    const acb_t z, slong prec)
 {
     acb_t t, u, v, w;
 

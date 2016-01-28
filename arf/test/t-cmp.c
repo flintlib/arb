@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("cmp....");
+    flint_printf("cmp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -73,12 +73,12 @@ int main()
 
             if (cmp1 != cmp2)
             {
-                printf("FAIL\n\n");
-                printf("x = "); arf_debug(x); printf("\n\n");
-                printf("y = "); arf_debug(y); printf("\n\n");
-                printf("X = "); fmpz_print(X); printf("\n\n");
-                printf("Y = "); fmpz_print(Y); printf("\n\n");
-                printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
+                flint_printf("FAIL\n\n");
+                flint_printf("x = "); arf_debug(x); flint_printf("\n\n");
+                flint_printf("y = "); arf_debug(y); flint_printf("\n\n");
+                flint_printf("X = "); fmpz_print(X); flint_printf("\n\n");
+                flint_printf("Y = "); fmpz_print(Y); flint_printf("\n\n");
+                flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
                 abort();
             }
         }
@@ -92,7 +92,7 @@ int main()
     /* compare with mpfr */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits;
+        slong bits;
         arf_t x, y;
         mpfr_t X, Y;
         int cmp1, cmp2;
@@ -116,10 +116,10 @@ int main()
 
         if (cmp1 != cmp2)
         {
-            printf("FAIL\n\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = "); arf_print(y); printf("\n\n");
-            printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+            flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
             abort();
         }
 
@@ -132,7 +132,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

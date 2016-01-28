@@ -27,16 +27,16 @@
 
 int arb_calc_refine_root_newton(arb_t r, arb_calc_func_t func,
     void * param, const arb_t start, const arb_t conv_region,
-    const arf_t conv_factor, long eval_extra_prec, long prec)
+    const arf_t conv_factor, slong eval_extra_prec, slong prec)
 {
-    long precs[FLINT_BITS];
-    long i, iters, wp, padding, start_prec;
+    slong precs[FLINT_BITS];
+    slong i, iters, wp, padding, start_prec;
     int result;
 
     start_prec = arb_rel_accuracy_bits(start);
 
     if (arb_calc_verbose)
-        printf("newton initial accuracy: %ld\n", start_prec);
+        flint_printf("newton initial accuracy: %wd\n", start_prec);
 
     padding = arf_abs_bound_lt_2exp_si(conv_factor);
     padding = FLINT_MIN(padding, prec) + 5;
@@ -62,7 +62,7 @@ int arb_calc_refine_root_newton(arb_t r, arb_calc_func_t func,
         wp = precs[i] + eval_extra_prec;
 
         if (arb_calc_verbose)
-            printf("newton step: wp = %ld + %ld = %ld\n",
+            flint_printf("newton step: wp = %wd + %wd = %wd\n",
                 precs[i], eval_extra_prec, wp);
 
         if ((result = arb_calc_newton_step(r, func, param,

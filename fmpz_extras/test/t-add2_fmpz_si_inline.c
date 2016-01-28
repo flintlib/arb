@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("add2_fmpz_si_inline....");
+    flint_printf("add2_fmpz_si_inline....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmpz_t a, b, c, d;
-        long e;
+        slong e;
 
         fmpz_init(a);
         fmpz_init(b);
@@ -56,24 +56,24 @@ int main()
         fmpz_add2_fmpz_si_inline(d, a, b, e);
         if (!fmpz_equal(c, d))
         {
-            printf("FAIL\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            flint_printf("FAIL\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
+            flint_printf("%wd\n\n", e);
             abort();
         }
 
         fmpz_add2_fmpz_si_inline(a, a, b, e);
         if (!fmpz_equal(c, a))
         {
-            printf("FAIL (aliasing 1)\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            flint_printf("FAIL (aliasing 1)\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
+            flint_printf("%wd\n\n", e);
             abort();
         }
         fmpz_randtest(a, state, 1 + n_randint(state, 200));
@@ -83,12 +83,12 @@ int main()
         fmpz_add2_fmpz_si_inline(b, a, b, e);
         if (!fmpz_equal(c, b))
         {
-            printf("FAIL (aliasing 2)\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            flint_printf("FAIL (aliasing 2)\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
+            flint_printf("%wd\n\n", e);
             abort();
         }
 
@@ -97,12 +97,12 @@ int main()
         fmpz_add2_fmpz_si_inline(c, a, a, e);
         if (!fmpz_equal(c, d))
         {
-            printf("FAIL (aliasing 3)\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            flint_printf("FAIL (aliasing 3)\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
+            flint_printf("%wd\n\n", e);
             abort();
         }
 
@@ -111,12 +111,12 @@ int main()
         fmpz_add2_fmpz_si_inline(a, a, a, e);
         if (!fmpz_equal(d, a))
         {
-            printf("FAIL (aliasing 4)\n");
-            fmpz_print(a); printf("\n\n");
-            fmpz_print(b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
-            printf("%ld\n\n", e);
+            flint_printf("FAIL (aliasing 4)\n");
+            fmpz_print(a); flint_printf("\n\n");
+            fmpz_print(b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
+            flint_printf("%wd\n\n", e);
             abort();
         }
 
@@ -128,7 +128,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

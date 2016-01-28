@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("j....");
+    flint_printf("j....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         acb_t tau1, tau2, z1, z2;
-        long e0, prec0, prec1, prec2;
+        slong e0, prec0, prec1, prec2;
         psl2z_t g;
 
         psl2z_init(g);
@@ -67,11 +67,11 @@ int main()
 
         if (!acb_overlaps(z1, z2))
         {
-            printf("FAIL (overlap)\n");
-            printf("tau1 = "); acb_print(tau1); printf("\n\n");
-            printf("tau2 = "); acb_print(tau2); printf("\n\n");
-            printf("z1 = "); acb_print(z1); printf("\n\n");
-            printf("z2 = "); acb_print(z2); printf("\n\n");
+            flint_printf("FAIL (overlap)\n");
+            flint_printf("tau1 = "); acb_print(tau1); flint_printf("\n\n");
+            flint_printf("tau2 = "); acb_print(tau2); flint_printf("\n\n");
+            flint_printf("z1 = "); acb_print(z1); flint_printf("\n\n");
+            flint_printf("z2 = "); acb_print(z2); flint_printf("\n\n");
             abort();
         }
 
@@ -79,11 +79,11 @@ int main()
 
         if (!acb_overlaps(z1, tau1))
         {
-            printf("FAIL (aliasing)\n");
-            printf("tau1 = "); acb_print(tau1); printf("\n\n");
-            printf("tau2 = "); acb_print(tau2); printf("\n\n");
-            printf("z1 = "); acb_print(z1); printf("\n\n");
-            printf("z2 = "); acb_print(z2); printf("\n\n");
+            flint_printf("FAIL (aliasing)\n");
+            flint_printf("tau1 = "); acb_print(tau1); flint_printf("\n\n");
+            flint_printf("tau2 = "); acb_print(tau2); flint_printf("\n\n");
+            flint_printf("z1 = "); acb_print(z1); flint_printf("\n\n");
+            flint_printf("z2 = "); acb_print(z2); flint_printf("\n\n");
             abort();
         }
 
@@ -98,7 +98,7 @@ int main()
     for (iter = 0; iter < 100; iter++)
     {
         acb_t tau, z;
-        long prec;
+        slong prec;
 
         acb_init(tau);
         acb_init(z);
@@ -113,9 +113,9 @@ int main()
 
         if (!acb_contains_zero(z))
         {
-            printf("FAIL (value 1)\n");
-            printf("tau = "); acb_print(tau); printf("\n\n");
-            printf("z = "); acb_print(z); printf("\n\n");
+            flint_printf("FAIL (value 1)\n");
+            flint_printf("tau = "); acb_print(tau); flint_printf("\n\n");
+            flint_printf("z = "); acb_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -127,9 +127,9 @@ int main()
 
         if (!acb_contains_zero(z))
         {
-            printf("FAIL (value 2)\n");
-            printf("tau = "); acb_print(tau); printf("\n\n");
-            printf("z = "); acb_print(z); printf("\n\n");
+            flint_printf("FAIL (value 2)\n");
+            flint_printf("tau = "); acb_print(tau); flint_printf("\n\n");
+            flint_printf("z = "); acb_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -139,7 +139,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

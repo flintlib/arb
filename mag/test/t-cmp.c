@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("cmp....");
+    flint_printf("cmp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -58,11 +58,11 @@ int main()
 
         if (c1 != c2)
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpr_print(y); printf("\n\n");
-            printf("xb = "); mag_print(xb); printf("\n\n");
-            printf("yb = "); mag_print(yb); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+            flint_printf("xb = "); mag_print(xb); flint_printf("\n\n");
+            flint_printf("yb = "); mag_print(yb); flint_printf("\n\n");
             abort();
         }
 
@@ -75,7 +75,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -26,8 +26,8 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_compose_series_horner(acb_ptr res, acb_srcptr poly1, long len1,
-                            acb_srcptr poly2, long len2, long n, long prec)
+_acb_poly_compose_series_horner(acb_ptr res, acb_srcptr poly1, slong len1,
+                            acb_srcptr poly2, slong len2, slong n, slong prec)
 {
     if (n == 1)
     {
@@ -35,8 +35,8 @@ _acb_poly_compose_series_horner(acb_ptr res, acb_srcptr poly1, long len1,
     }
     else
     {
-        long i = len1 - 1;
-        long lenr;
+        slong i = len1 - 1;
+        slong lenr;
 
         acb_ptr t = _acb_vec_init(n);
 
@@ -69,15 +69,15 @@ _acb_poly_compose_series_horner(acb_ptr res, acb_srcptr poly1, long len1,
 void
 acb_poly_compose_series_horner(acb_poly_t res,
                     const acb_poly_t poly1,
-                    const acb_poly_t poly2, long n, long prec)
+                    const acb_poly_t poly2, slong n, slong prec)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
-    long lenr;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
+    slong lenr;
 
     if (len2 != 0 && !acb_is_zero(poly2->coeffs))
     {
-        printf("exception: compose_series: inner "
+        flint_printf("exception: compose_series: inner "
                 "polynomial must have zero constant term\n");
         abort();
     }

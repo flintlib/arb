@@ -27,9 +27,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_binomial_transform_convolution(arb_ptr b, arb_srcptr a, long alen, long len, long prec)
+_arb_poly_binomial_transform_convolution(arb_ptr b, arb_srcptr a, slong alen, slong len, slong prec)
 {
-    long i;
+    slong i;
     arb_ptr c, d;
 
     alen = FLINT_MIN(alen, len);
@@ -54,7 +54,7 @@ _arb_poly_binomial_transform_convolution(arb_ptr b, arb_srcptr a, long alen, lon
 }
 
 void
-arb_poly_binomial_transform_convolution(arb_poly_t b, const arb_poly_t a, long len, long prec)
+arb_poly_binomial_transform_convolution(arb_poly_t b, const arb_poly_t a, slong len, slong prec)
 {
     if (len == 0 || a->length == 0)
     {

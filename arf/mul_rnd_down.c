@@ -26,11 +26,11 @@
 #include "arf.h"
 
 int
-arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
+arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec)
 {
     mp_size_t xn, yn, zn;
     mp_limb_t hi, lo;
-    long expfix;
+    slong expfix;
     int sgnbit, ret, fix;
     mp_ptr zptr;
 
@@ -233,10 +233,10 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec)
 }
 
 int
-arf_mul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, long prec, arf_rnd_t rnd)
+arf_mul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn;
-    long fix, shift;
+    slong fix, shift;
     int sgnbit, inexact;
 
     yn = FLINT_ABS(y->_mp_size);

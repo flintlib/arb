@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 void
-fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+fmpr_randtest(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     fmpz_randtest(fmpr_manref(x), state, bits);
     fmpz_randtest(fmpr_expref(x), state, mag_bits);
@@ -35,7 +35,7 @@ fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
 }
 
 void
-fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     fmpz_randtest_not_zero(fmpr_manref(x), state, bits);
     fmpz_randtest(fmpr_expref(x), state, mag_bits);
@@ -44,7 +44,7 @@ fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
 }
 
 void
-fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long mag_bits)
+fmpr_randtest_special(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 {
     switch (n_randint(state, 32))
     {

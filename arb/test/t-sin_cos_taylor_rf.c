@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("sin_cos_taylor_rf....");
+    flint_printf("sin_cos_taylor_rf....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -84,13 +84,13 @@ int main()
 
         if (!result)
         {
-            printf("FAIL\n");
-            printf("N = %ld xn = %ld\n", N, xn);
-            printf("x =");
+            flint_printf("FAIL\n");
+            flint_printf("N = %wd xn = %wd\n", N, xn);
+            flint_printf("x =");
             flint_mpn_debug(x, xn);
-            printf("y1s =");
+            flint_printf("y1s =");
             flint_mpn_debug(y1s, xn);
-            printf("y2s =");
+            flint_printf("y2s =");
             flint_mpn_debug(y2s, xn);
             abort();
         }
@@ -114,13 +114,13 @@ int main()
 
         if (!result)
         {
-            printf("FAIL\n");
-            printf("N = %ld xn = %ld\n", N, xn);
-            printf("x =");
+            flint_printf("FAIL\n");
+            flint_printf("N = %wd xn = %wd\n", N, xn);
+            flint_printf("x =");
             flint_mpn_debug(x, xn);
-            printf("y1c =");
+            flint_printf("y1c =");
             flint_mpn_debug(y1c, xn);
-            printf("y2c =");
+            flint_printf("y2c =");
             flint_mpn_debug(y2c, xn);
             abort();
         }
@@ -135,7 +135,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

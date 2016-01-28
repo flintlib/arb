@@ -26,7 +26,7 @@
 #include "arb.h"
 
 static void
-arb_sqrt1pm1_tiny(arb_t r, const arb_t z, long prec)
+arb_sqrt1pm1_tiny(arb_t r, const arb_t z, slong prec)
 {
     mag_t b, c;
     arb_t t;
@@ -59,9 +59,9 @@ arb_sqrt1pm1_tiny(arb_t r, const arb_t z, long prec)
 }
 
 void
-arb_sqrt1pm1(arb_t r, const arb_t z, long prec)
+arb_sqrt1pm1(arb_t r, const arb_t z, slong prec)
 {
-    long magz, wp;
+    slong magz, wp;
 
     if (arb_is_zero(z))
     {

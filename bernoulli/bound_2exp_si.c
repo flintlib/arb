@@ -61,13 +61,13 @@ const unsigned char log_tab[] = {
     56, 57, 58, 59, 59, 60, 61, 62, 62, 63, 64, 64
 };
 
-long
+slong
 bernoulli_bound_2exp_si(ulong n)
 {
     if (n % 2)
     {
         if (n == 1)
-            return -1L;
+            return -WORD(1);
         else
             return LONG_MIN;
     }
@@ -90,9 +90,9 @@ bernoulli_bound_2exp_si(ulong n)
         l += (LOG_PREC << LOG_PREC);
         umul_ppmm(hi, lo, l, u);
 
-        if (hi || n > (1UL << (FLINT_BITS - 6)))
+        if (hi || n > (UWORD(1) << (FLINT_BITS - 6)))
         {
-            printf("bernoulli_bound_2exp_si: n too large\n");
+            flint_printf("bernoulli_bound_2exp_si: n too large\n");
             abort();
         }
 

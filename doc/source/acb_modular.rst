@@ -68,6 +68,10 @@ The modular group
 
     Prints *g* to standard output.
 
+.. function:: void psl2z_fprint(FILE * file, const psl2z_t g)
+
+    Prints *g* to the stream *file*.
+
 .. function:: int psl2z_equal(const psl2z_t f, const psl2z_t g)
 
     Returns nonzero iff *f* and *g* are equal.
@@ -86,7 +90,7 @@ The modular group
     Returns nonzero iff *g* contains correct data, i.e.
     satisfying `ad-bc = 1`, `c \ge 0`, and `d > 0` if `c = 0`.
 
-.. function:: void psl2z_randtest(psl2z_t g, flint_rand_t state, long bits)
+.. function:: void psl2z_randtest(psl2z_t g, flint_rand_t state, slong bits)
 
     Sets *g* to a random element of `\text{PSL}(2, \mathbb{Z})`
     with entries of bit length at most *bits*
@@ -96,7 +100,7 @@ The modular group
 Modular transformations
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, long prec)
+.. function:: void acb_modular_transform(acb_t w, const psl2z_t g, const acb_t z, slong prec)
 
     Applies the modular transformation *g* to the complex number *z*,
     evaluating
@@ -107,7 +111,7 @@ Modular transformations
 
 .. function:: void acb_modular_fundamental_domain_approx_d(psl2z_t g, double x, double y, double one_minus_eps)
 
-.. function:: void acb_modular_fundamental_domain_approx_arf(psl2z_t g, const arf_t x, const arf_t y, const arf_t one_minus_eps, long prec)
+.. function:: void acb_modular_fundamental_domain_approx_arf(psl2z_t g, const arf_t x, const arf_t y, const arf_t one_minus_eps, slong prec)
 
     Attempts to determine a modular transformation *g* that maps the
     complex number `x+yi` to the fundamental domain or just
@@ -128,7 +132,7 @@ Modular transformations
     but it is up to the user to verify a posteriori that *g* maps `x+yi`
     close enough to the fundamental domain.
 
-.. function:: void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z, const arf_t one_minus_eps, long prec)
+.. function:: void acb_modular_fundamental_domain_approx(acb_t w, psl2z_t g, const acb_t z, const arf_t one_minus_eps, slong prec)
 
     Attempts to determine a modular transformation *g* that maps the
     complex number `z` to the fundamental domain or just
@@ -147,7 +151,7 @@ Modular transformations
     but it is up to the user to verify a posteriori that `w` is close enough
     to the fundamental domain.
 
-.. function:: int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, long prec)
+.. function:: int acb_modular_is_in_fundamental_domain(const acb_t z, const arf_t tol, slong prec)
 
     Returns nonzero if it is certainly true that `|z| \ge 1 - \varepsilon` and 
     `|\operatorname{Re}(z)| \le 1/2 + \varepsilon` where `\varepsilon` is
@@ -156,7 +160,7 @@ Modular transformations
 Addition sequences
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_fill_addseq(long * tab, long len)
+.. function:: void acb_modular_fill_addseq(slong * tab, slong len)
 
     Builds a near-optimal addition sequence for a sequence of integers
     which is assumed to be reasonably dense.
@@ -278,12 +282,12 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     and his "`\varepsilon`" differs from ours by a constant
     offset in the phase).
 
-.. function:: void acb_modular_addseq_theta(long * exponents, long * aindex, long * bindex, long num)
+.. function:: void acb_modular_addseq_theta(slong * exponents, slong * aindex, slong * bindex, slong num)
 
     Constructs an addition sequence for the first *num* squares and triangular
     numbers interleaved (excluding zero), i.e. 1, 2, 4, 6, 9, 12, 16, 20, 25, 30 etc.
 
-.. function:: void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2, acb_ptr theta3, acb_ptr theta4, const acb_t w, int w_is_unit, const acb_t q, long len, long prec)
+.. function:: void acb_modular_theta_sum(acb_ptr theta1, acb_ptr theta2, acb_ptr theta3, acb_ptr theta4, const acb_t w, int w_is_unit, const acb_t q, slong len, slong prec)
 
     Simultaneously computes the first *len* coefficients of each of the
     formal power series
@@ -378,9 +382,9 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     This function does not permit aliasing between input and output
     arguments.
 
-.. function:: void acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long N, long prec)
+.. function:: void acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, slong N, slong prec)
 
-.. function:: void acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long N, long prec)
+.. function:: void acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, slong N, slong prec)
 
     Computes the truncated theta constant sums
     `\theta_2 = \sum_{k(k+1) < N} q^{k(k+1)}`,
@@ -389,7 +393,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     The *basecase* version uses a minimal addition sequence.
     The *rs* version uses rectangular splitting.
 
-.. function:: void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, long prec)
+.. function:: void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, slong prec)
 
     Computes the respective theta constants by direct summation
     (without applying modular transformations). This function
@@ -398,14 +402,14 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     :func:`acb_modular_theta_const_sum_rs` or depending on *N*,
     and adds a bound for the truncation error.
 
-.. function:: void acb_modular_theta_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_theta_notransform(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, slong prec)
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function does not move `\tau` to the fundamental domain.
     This is generally worse than :func:`acb_modular_theta`, but can
     be slightly better for moderate input.
 
-.. function:: void acb_modular_theta(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_theta(acb_t theta1, acb_t theta2, acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau, slong prec)
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function moves `\tau` to the fundamental domain
@@ -415,12 +419,12 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 The Dedekind eta function
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_addseq_eta(long * exponents, long * aindex, long * bindex, long num)
+.. function:: void acb_modular_addseq_eta(slong * exponents, slong * aindex, slong * bindex, slong num)
 
     Constructs an addition sequence for the first *num* generalized pentagonal
     numbers (excluding zero), i.e. 1, 2, 5, 7, 12, 15, 22, 26, 35, 40 etc.
 
-.. function:: void acb_modular_eta_sum(acb_t eta, const acb_t q, long prec)
+.. function:: void acb_modular_eta_sum(acb_t eta, const acb_t q, slong prec)
 
     Evaluates the Dedekind eta function
     without the leading 24th root, i.e.
@@ -445,7 +449,7 @@ The Dedekind eta function
         \eta\left(\frac{a\tau+b}{c\tau+d}\right) = \varepsilon (a,b,c,d)
             \sqrt{c\tau+d} \eta(\tau).
 
-.. function:: void acb_modular_eta(acb_t r, const acb_t tau, long prec)
+.. function:: void acb_modular_eta(acb_t r, const acb_t tau, slong prec)
 
     Computes the Dedekind eta function `\eta(\tau)` given `\tau` in the upper
     half-plane. This function applies the functional equation to move
@@ -455,7 +459,7 @@ The Dedekind eta function
 Modular forms
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_j(acb_t r, const acb_t tau, long prec)
+.. function:: void acb_modular_j(acb_t r, const acb_t tau, slong prec)
 
     Computes Klein's j-invariant `j(\tau)` given `\tau` in the upper
     half-plane. The function is normalized so that `j(i) = 1728`.
@@ -464,14 +468,14 @@ Modular forms
     `j(\tau) = 32 (\theta_2^8+\theta_3^8+\theta_4^8)^3 / (\theta_2 \theta_3 \theta_4)^8` where
     `\theta_i = \theta_i(0,\tau)`.
 
-.. function:: void acb_modular_lambda(acb_t r, const acb_t tau, long prec)
+.. function:: void acb_modular_lambda(acb_t r, const acb_t tau, slong prec)
 
     Computes the lambda function
     `\lambda(\tau) = \theta_2^4(0,\tau) / \theta_3^4(0,\tau)`, which
     is invariant under modular transformations `(a, b; c, d)`
     where `a, d` are odd and `b, c` are even.
 
-.. function:: void acb_modular_delta(acb_t r, const acb_t tau, long prec)
+.. function:: void acb_modular_delta(acb_t r, const acb_t tau, slong prec)
 
     Computes the modular discriminant `\Delta(\tau) = \eta(\tau)^{24}`,
     which transforms as
@@ -483,7 +487,7 @@ Modular forms
     The modular discriminant is sometimes defined with an extra factor
     `(2\pi)^{12}`, which we omit in this implementation.
 
-.. function:: void acb_modular_eisenstein(acb_ptr r, const acb_t tau, long len, long prec)
+.. function:: void acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
 
     Computes simultaneously the first *len* entries in the sequence
     of Eisenstein series `G_4(\tau), G_6(\tau), G_8(\tau), \ldots`,
@@ -507,7 +511,7 @@ Modular forms
 Elliptic functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_elliptic_p(acb_t wp, const acb_t z, const acb_t tau, long prec)
+.. function:: void acb_modular_elliptic_p(acb_t wp, const acb_t z, const acb_t tau, slong prec)
 
     Computes Weierstrass's elliptic function
 
@@ -525,7 +529,7 @@ Elliptic functions
             \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
             \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
 
-.. function:: void acb_modular_elliptic_p_zpx(acb_ptr wp, const acb_t z, const acb_t tau, long len, long prec)
+.. function:: void acb_modular_elliptic_p_zpx(acb_ptr wp, const acb_t z, const acb_t tau, slong len, slong prec)
 
     Computes the formal power series `\wp(z + x, \tau) \in \mathbb{C}[[x]]`,
     truncated to length *len*. In particular, with *len* = 2, simultaneously
@@ -535,18 +539,18 @@ Elliptic functions
 Elliptic integrals
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_elliptic_k(acb_t w, const acb_t m, long prec)
+.. function:: void acb_modular_elliptic_k(acb_t w, const acb_t m, slong prec)
 
     Computes the complete elliptic integral of the first kind `K(m)`,
     using the arithmetic-geometric mean: `K(m) = \pi / (2 M(\sqrt{1-m}))`.
 
-.. function:: void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, long len, long prec)
+.. function:: void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, slong len, slong prec)
 
     Sets the coefficients in the array *w* to the power series expansion of the
     complete elliptic integral of the first kind at the point *m* truncated to
     length *len*, i.e. `K(m+x) \in \mathbb{C}[[x]]`.
 
-.. function:: void acb_modular_elliptic_e(acb_t w, const acb_t m, long prec)
+.. function:: void acb_modular_elliptic_e(acb_t w, const acb_t m, slong prec)
 
     Computes the complete elliptic integral of the second kind `E(m)`,
     which is given by `E(m) = (1-m)(2m K'(m) + K(m))` (where the prime
@@ -555,7 +559,7 @@ Elliptic integrals
 Class polynomials
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_hilbert_class_poly(fmpz_poly_t res, long D)
+.. function:: void acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D)
 
     Sets *res* to the Hilbert class polynomial of discriminant *D*,
     defined as

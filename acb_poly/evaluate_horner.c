@@ -27,8 +27,8 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_evaluate_horner(acb_t y, acb_srcptr f, long len,
-                           const acb_t x, long prec)
+_acb_poly_evaluate_horner(acb_t y, acb_srcptr f, slong len,
+                           const acb_t x, slong prec)
 {
     if (len == 0)
     {
@@ -45,7 +45,7 @@ _acb_poly_evaluate_horner(acb_t y, acb_srcptr f, long len,
     }
     else
     {
-        long i = len - 1;
+        slong i = len - 1;
         acb_t t, u;
 
         acb_init(t);
@@ -66,7 +66,7 @@ _acb_poly_evaluate_horner(acb_t y, acb_srcptr f, long len,
 }
 
 void
-acb_poly_evaluate_horner(acb_t res, const acb_poly_t f, const acb_t a, long prec)
+acb_poly_evaluate_horner(acb_t res, const acb_poly_t f, const acb_t a, slong prec)
 {
     _acb_poly_evaluate_horner(res, f->coeffs, f->length, a, prec);
 }

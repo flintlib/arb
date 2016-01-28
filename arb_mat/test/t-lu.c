@@ -38,10 +38,10 @@ int fmpq_mat_is_invertible(const fmpq_mat_t A)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("lu....");
+    flint_printf("lu....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -50,7 +50,7 @@ int main()
     {
         fmpq_mat_t Q;
         arb_mat_t A, LU, P, L, U, T;
-        long i, j, n, qbits, prec, *perm;
+        slong i, j, n, qbits, prec, *perm;
         int q_invertible, r_invertible;
 
         n = n_randint(state, 8);
@@ -75,13 +75,13 @@ int main()
             r_invertible = arb_mat_lu(perm, LU, A, prec);
             if (r_invertible)
             {
-                printf("FAIL: matrix is singular over Q but not over R\n");
-                printf("n = %ld, prec = %ld\n", n, prec);
-                printf("\n");
+                flint_printf("FAIL: matrix is singular over Q but not over R\n");
+                flint_printf("n = %wd, prec = %wd\n", n, prec);
+                flint_printf("\n");
 
-                printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-                printf("LU = \n"); arb_mat_printd(LU, 15); printf("\n\n");
+                flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+                flint_printf("LU = \n"); arb_mat_printd(LU, 15); flint_printf("\n\n");
             }
         }
         else
@@ -99,7 +99,7 @@ int main()
                 {
                     if (prec > 10000)
                     {
-                        printf("FAIL: failed to converge at 10000 bits\n");
+                        flint_printf("FAIL: failed to converge at 10000 bits\n");
                         abort();
                     }
                     prec *= 2;
@@ -125,16 +125,16 @@ int main()
 
             if (!arb_mat_contains_fmpq_mat(T, Q))
             {
-                printf("FAIL (containment, iter = %ld)\n", iter);
-                printf("n = %ld, prec = %ld\n", n, prec);
-                printf("\n");
+                flint_printf("FAIL (containment, iter = %wd)\n", iter);
+                flint_printf("n = %wd, prec = %wd\n", n, prec);
+                flint_printf("\n");
 
-                printf("Q = \n"); fmpq_mat_print(Q); printf("\n\n");
-                printf("A = \n"); arb_mat_printd(A, 15); printf("\n\n");
-                printf("LU = \n"); arb_mat_printd(LU, 15); printf("\n\n");
-                printf("L = \n"); arb_mat_printd(L, 15); printf("\n\n");
-                printf("U = \n"); arb_mat_printd(U, 15); printf("\n\n");
-                printf("P*L*U = \n"); arb_mat_printd(T, 15); printf("\n\n");
+                flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+                flint_printf("LU = \n"); arb_mat_printd(LU, 15); flint_printf("\n\n");
+                flint_printf("L = \n"); arb_mat_printd(L, 15); flint_printf("\n\n");
+                flint_printf("U = \n"); arb_mat_printd(U, 15); flint_printf("\n\n");
+                flint_printf("P*L*U = \n"); arb_mat_printd(T, 15); flint_printf("\n\n");
 
                 abort();
             }
@@ -152,6 +152,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

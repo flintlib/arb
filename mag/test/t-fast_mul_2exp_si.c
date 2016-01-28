@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("fast_mul_2exp_si....");
+    flint_printf("fast_mul_2exp_si....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         fmpr_t x, y, z;
         mag_t xb, yb;
-        long e;
+        slong e;
 
         fmpr_init(x);
         fmpr_init(y);
@@ -62,10 +62,10 @@ int main()
 
         if (!fmpr_equal(z, y))
         {
-            printf("FAIL\n\n");
-            printf("x = "); fmpr_printd(x, 15); printf("\n\n");
-            printf("y = "); fmpr_printd(y, 15); printf("\n\n");
-            printf("z = "); fmpr_printd(z, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); fmpr_printd(x, 15); flint_printf("\n\n");
+            flint_printf("y = "); fmpr_printd(y, 15); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_printd(z, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -79,6 +79,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

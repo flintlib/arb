@@ -29,7 +29,7 @@
 /* (+/- iz)^(-1/2-v) * z^v * exp(+/- iz) */
 void
 acb_hypgeom_bessel_j_asymp_prefactors_fallback(acb_t Ap, acb_t Am, acb_t C,
-    const acb_t nu, const acb_t z, long prec)
+    const acb_t nu, const acb_t z, slong prec)
 {
     acb_t t, u, v;
 
@@ -72,7 +72,7 @@ acb_hypgeom_bessel_j_asymp_prefactors_fallback(acb_t Ap, acb_t Am, acb_t C,
 
 void
 acb_hypgeom_bessel_j_asymp_prefactors(acb_t Ap, acb_t Am, acb_t C,
-    const acb_t nu, const acb_t z, long prec)
+    const acb_t nu, const acb_t z, slong prec)
 {
     if (arb_is_positive(acb_realref(z)))
     {
@@ -107,7 +107,7 @@ acb_hypgeom_bessel_j_asymp_prefactors(acb_t Ap, acb_t Am, acb_t C,
 }
 
 void
-acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_t A1, A2, C, U1, U2, s, t, u;
     int is_real, is_imag;
@@ -181,7 +181,7 @@ acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
 }
 
 void
-acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     acb_struct b[2];
     acb_t w, c, t;
@@ -242,7 +242,7 @@ We are a bit more conservative and use the factor 2.
 */
 
 void
-acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
     mag_t zmag;
 

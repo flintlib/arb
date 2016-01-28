@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("bessel_j....");
+    flint_printf("bessel_j....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t nu0, nu1, nu2, z, w0, w1, w2, t, u;
-        long prec0, prec1, prec2;
+        slong prec0, prec1, prec2;
 
         acb_init(nu0);
         acb_init(nu1);
@@ -89,11 +89,11 @@ int main()
 
         if (!acb_overlaps(w0, w1))
         {
-            printf("FAIL: consistency\n\n");
-            printf("nu = "); acb_printd(nu0, 30); printf("\n\n");
-            printf("z = "); acb_printd(z, 30); printf("\n\n");
-            printf("w0 = "); acb_printd(w0, 30); printf("\n\n");
-            printf("w1 = "); acb_printd(w1, 30); printf("\n\n");
+            flint_printf("FAIL: consistency\n\n");
+            flint_printf("nu = "); acb_printd(nu0, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
+            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -128,13 +128,13 @@ int main()
 
         if (!acb_contains_zero(t))
         {
-            printf("FAIL: contiguous relation\n\n");
-            printf("nu = "); acb_printd(nu0, 30); printf("\n\n");
-            printf("z = ");  acb_printd(z, 30); printf("\n\n");
-            printf("w0 = "); acb_printd(w0, 30); printf("\n\n");
-            printf("w1 = "); acb_printd(w1, 30); printf("\n\n");
-            printf("w2 = "); acb_printd(w2, 30); printf("\n\n");
-            printf("t = "); acb_printd(t, 30); printf("\n\n");
+            flint_printf("FAIL: contiguous relation\n\n");
+            flint_printf("nu = "); acb_printd(nu0, 30); flint_printf("\n\n");
+            flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
+            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
+            flint_printf("w2 = "); acb_printd(w2, 30); flint_printf("\n\n");
+            flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -178,11 +178,11 @@ int main()
 
         if (!acb_overlaps(w0, t))
         {
-            printf("FAIL: wronskian\n\n");
-            printf("nu = "); acb_printd(nu0, 30); printf("\n\n");
-            printf("z = ");  acb_printd(z, 30); printf("\n\n");
-            printf("w0 = "); acb_printd(w0, 30); printf("\n\n");
-            printf("t = "); acb_printd(t, 30); printf("\n\n");
+            flint_printf("FAIL: wronskian\n\n");
+            flint_printf("nu = "); acb_printd(nu0, 30); flint_printf("\n\n");
+            flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
+            flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -199,7 +199,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-psl2z_randtest(psl2z_t g, flint_rand_t state, long bits)
+psl2z_randtest(psl2z_t g, flint_rand_t state, slong bits)
 {
     bits = FLINT_MAX(bits, 1);
 

@@ -26,7 +26,7 @@
 #include "acb_modular.h"
 
 void
-acb_modular_lambda(acb_t r, const acb_t tau, long prec)
+acb_modular_lambda(acb_t r, const acb_t tau, slong prec)
 {
     psl2z_t g;
     arf_t one_minus_eps;

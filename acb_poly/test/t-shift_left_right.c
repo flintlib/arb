@@ -32,7 +32,7 @@ main(void)
     int i, result;
     flint_rand_t state;
 
-    printf("shift_left/right....");
+    flint_printf("shift_left/right....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -41,7 +41,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -53,9 +53,9 @@ main(void)
         result = (acb_poly_equal(a, b));
         if (!result)
         {
-            printf("FAIL:\n");
-            acb_poly_printd(a, 10), printf("\n\n");
-            acb_poly_printd(b, 10), printf("\n\n");
+            flint_printf("FAIL:\n");
+            acb_poly_printd(a, 10), flint_printf("\n\n");
+            acb_poly_printd(b, 10), flint_printf("\n\n");
             abort();
         }
 
@@ -67,7 +67,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -79,9 +79,9 @@ main(void)
         result = (acb_poly_equal(a, b));
         if (!result)
         {
-            printf("FAIL:\n");
-            acb_poly_printd(a, 10), printf("\n\n");
-            acb_poly_printd(b, 10), printf("\n\n");
+            flint_printf("FAIL:\n");
+            acb_poly_printd(a, 10), flint_printf("\n\n");
+            acb_poly_printd(b, 10), flint_printf("\n\n");
             abort();
         }
 
@@ -93,7 +93,7 @@ main(void)
     for (i = 0; i < 1000; i++)
     {
         acb_poly_t a, b, c;
-        long shift = n_randint(state, 100);
+        slong shift = n_randint(state, 100);
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -106,10 +106,10 @@ main(void)
         result = (acb_poly_equal(c, a));
         if (!result)
         {
-            printf("FAIL:\n");
-            acb_poly_printd(a, 10), printf("\n\n");
-            acb_poly_printd(b, 10), printf("\n\n");
-            acb_poly_printd(c, 10), printf("\n\n");
+            flint_printf("FAIL:\n");
+            acb_poly_printd(a, 10), flint_printf("\n\n");
+            acb_poly_printd(b, 10), flint_printf("\n\n");
+            acb_poly_printd(c, 10), flint_printf("\n\n");
             abort();
         }
 
@@ -120,7 +120,7 @@ main(void)
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return 0;
 }
 

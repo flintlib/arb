@@ -128,11 +128,11 @@ static const int hilbert_poly_values_2[] = {
 
 int main()
 {
-    printf("hilbert_class_poly....");
+    flint_printf("hilbert_class_poly....");
     fflush(stdout);
 
     {
-        long i;
+        slong i;
         mp_limb_t c;
         fmpz_poly_t hd;
         nmod_poly_t hdp;
@@ -148,10 +148,10 @@ int main()
 
             if (c != hilbert_poly_values[i])
             {
-                printf("FAIL!\n");
-                printf("D = %ld\n", -i);
-                printf("c = %lu\n", c);
-                printf("expected = %d\n", (int) hilbert_poly_values[i]);
+                flint_printf("FAIL!\n");
+                flint_printf("D = %wd\n", -i);
+                flint_printf("c = %wu\n", c);
+                flint_printf("expected = %d\n", (int) hilbert_poly_values[i]);
                 abort();
             }
         }
@@ -164,10 +164,10 @@ int main()
 
             if (c != hilbert_poly_values_2[2 * i + 1])
             {
-                printf("FAIL!\n");
-                printf("D = %ld\n", -i);
-                printf("c = %lu\n", c);
-                printf("expected = %d\n", (int) hilbert_poly_values_2[2*i+1]);
+                flint_printf("FAIL!\n");
+                flint_printf("D = %wd\n", -i);
+                flint_printf("c = %wu\n", c);
+                flint_printf("expected = %d\n", (int) hilbert_poly_values_2[2*i+1]);
                 abort();
             }
         }
@@ -177,7 +177,7 @@ int main()
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

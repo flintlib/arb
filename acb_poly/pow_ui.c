@@ -26,16 +26,16 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_pow_ui(acb_ptr res, acb_srcptr f, long flen, ulong exp, long prec)
+_acb_poly_pow_ui(acb_ptr res, acb_srcptr f, slong flen, ulong exp, slong prec)
 {
     _acb_poly_pow_ui_trunc_binexp(res, f, flen, exp, exp * (flen - 1) + 1, prec);
 }
 
 void
 acb_poly_pow_ui(acb_poly_t res,
-    const acb_poly_t poly, ulong exp, long prec)
+    const acb_poly_t poly, ulong exp, slong prec)
 {
-    long flen, rlen;
+    slong flen, rlen;
 
     flen = poly->length;
 

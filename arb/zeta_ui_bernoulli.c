@@ -27,11 +27,11 @@
 #include "bernoulli.h"
 
 void
-arb_zeta_ui_bernoulli(arb_t x, ulong n, long prec)
+arb_zeta_ui_bernoulli(arb_t x, ulong n, slong prec)
 {
     fmpq_t b;
     arb_t t, f;
-    long wp;
+    slong wp;
 
     if (n % 2)
         abort();

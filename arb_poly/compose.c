@@ -21,40 +21,76 @@
 
     Copyright (C) 2010 William Hart
     Copyright (C) 2012 Sebastian Pancratz
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2016 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "arb_poly.h"
 
+/* compose by poly2 = a*x^n + c, no aliasing; n >= 1 */
+void
+_arb_poly_compose_axnc(arb_ptr res, arb_srcptr poly1, slong len1,
+    const arb_t c, const arb_t a, slong n, slong prec)
+{
+    slong i;
+
+    _arb_vec_set_round(res, poly1, len1, prec);
+    /* shift by c (c = 0 case will be fast) */
+    _arb_poly_taylor_shift(res, c, len1, prec);
+
+    /* multiply by powers of a */
+    if (!arb_is_one(a))
+    {
+        if (arb_equal_si(a, -1))
+        {
+            for (i = 1; i < len1; i += 2)
+                arb_neg(res + i, res + i);
+        }
+        else if (len1 == 2)
+        {
+            arb_mul(res + 1, res + 1, a, prec);
+        }
+        else
+        {
+            arb_t t;
+            arb_init(t);
+            arb_set(t, a);
+
+            for (i = 1; i < len1; i++)
+            {
+                arb_mul(res + i, res + i, t, prec);
+                if (i + 1 < len1)
+                    arb_mul(t, t, a, prec);
+            }
+
+            arb_clear(t);
+        }
+    }
+
+    /* stretch */
+    for (i = len1 - 1; i >= 1 && n > 1; i--)
+    {
+        arb_swap(res + i * n, res + i);
+        _arb_vec_zero(res + (i - 1) * n + 1, n - 1);
+    }
+}
+
 void
 _arb_poly_compose(arb_ptr res,
-    arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long prec)
+    arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong prec)
 {
-    if (len2 == 1)
+    if (len1 == 1)
+    {
+        arb_set_round(res, poly1, prec);
+    }
+    else if (len2 == 1)
     {
         _arb_poly_evaluate(res, poly1, len1, poly2, prec);
     }
-    else if (_arb_vec_is_zero(poly2, len2 - 1)) /* poly2 is a monomial */
+    else if (_arb_vec_is_zero(poly2 + 1, len2 - 2))
     {
-        long i;
-        arb_t t;
-
-        arb_init(t);
-        arb_set(t, poly2 + len2 - 1);
-        arb_set_round(res, poly1, prec);
-
-        for (i = 1; i < len1; i++)
-        {
-            arb_mul(res + i * (len2 - 1), poly1 + i, t, prec);
-            if (i + 1 < len1)
-                arb_mul(t, t, poly2 + len2 - 1, prec);
-
-            _arb_vec_zero(res + (i - 1) * (len2 - 1) + 1, len2 - 2);
-        }
-
-        arb_clear(t);
+        _arb_poly_compose_axnc(res, poly1, len1, poly2, poly2 + len2 - 1, len2 - 1, prec);
     }
     else if (len1 <= 7)
     {
@@ -67,10 +103,10 @@ _arb_poly_compose(arb_ptr res,
 }
 
 void arb_poly_compose(arb_poly_t res,
-              const arb_poly_t poly1, const arb_poly_t poly2, long prec)
+              const arb_poly_t poly1, const arb_poly_t poly2, slong prec)
 {
-    const long len1 = poly1->length;
-    const long len2 = poly2->length;
+    const slong len1 = poly1->length;
+    const slong len2 = poly2->length;
     
     if (len1 == 0)
     {
@@ -82,7 +118,7 @@ void arb_poly_compose(arb_poly_t res,
     }
     else
     {
-        const long lenr = (len1 - 1) * (len2 - 1) + 1;
+        const slong lenr = (len1 - 1) * (len2 - 1) + 1;
         
         if (res != poly1 && res != poly2)
         {
@@ -104,3 +140,4 @@ void arb_poly_compose(arb_poly_t res,
         _arb_poly_normalise(res);
     }
 }
+

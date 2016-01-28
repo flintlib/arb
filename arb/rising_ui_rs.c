@@ -29,7 +29,7 @@
 void
 rising_difference_polynomial(fmpz * s, fmpz * c, ulong m)
 {
-    long i, j, v;
+    slong i, j, v;
 
     fmpz_t t;
     fmpz_init(t);
@@ -68,14 +68,14 @@ rising_difference_polynomial(fmpz * s, fmpz * c, ulong m)
 }
 
 void
-arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, long prec)
+arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, slong prec)
 {
     arb_ptr xs;
     arb_t t, u, v;
     ulong i, k, rem;
     fmpz_t c, h;
     fmpz *s, *d;
-    long wp;
+    slong wp;
 
     if (n == 0)
     {

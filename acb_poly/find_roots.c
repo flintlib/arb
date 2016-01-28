@@ -25,10 +25,10 @@
 
 #include "acb_poly.h"
 
-long
+slong
 _acb_get_mid_mag(const acb_t z)
 {
-    long rm, im;
+    slong rm, im;
 
     rm = arf_abs_bound_lt_2exp_si(arb_midref(acb_realref(z)));
     im = arf_abs_bound_lt_2exp_si(arb_midref(acb_imagref(z)));
@@ -36,10 +36,10 @@ _acb_get_mid_mag(const acb_t z)
     return FLINT_MAX(rm, im);
 }
 
-long
+slong
 _acb_get_rad_mag(const acb_t z)
 {
-    long rm, im;
+    slong rm, im;
 
     /* TODO: write mag function */
     arf_t t;
@@ -57,9 +57,9 @@ _acb_get_rad_mag(const acb_t z)
 }
 
 void
-_acb_poly_roots_initial_values(acb_ptr roots, long deg, long prec)
+_acb_poly_roots_initial_values(acb_ptr roots, slong deg, slong prec)
 {
-    long i;
+    slong i;
 
     fmpq_t q;
     fmpq_init(q);
@@ -81,13 +81,13 @@ _acb_poly_roots_initial_values(acb_ptr roots, long deg, long prec)
     }
 }
 
-long
+slong
 _acb_poly_find_roots(acb_ptr roots,
     acb_srcptr poly,
-    acb_srcptr initial, long len, long maxiter, long prec)
+    acb_srcptr initial, slong len, slong maxiter, slong prec)
 {
-    long iter, i, deg;
-    long rootmag, max_rootmag, correction, max_correction;
+    slong iter, i, deg;
+    slong rootmag, max_rootmag, correction, max_correction;
 
     deg = len - 1;
 
@@ -142,7 +142,7 @@ _acb_poly_find_roots(acb_ptr roots,
         /* estimate the correction relative to the whole set of roots */
         max_correction -= max_rootmag;
 
-        /* printf("ITER %ld MAX CORRECTION: %ld\n", iter, max_correction); */
+        /* flint_printf("ITER %wd MAX CORRECTION: %wd\n", iter, max_correction); */
 
         if (max_correction < -prec / 2)
             maxiter = FLINT_MIN(maxiter, iter + 2);
@@ -156,16 +156,16 @@ _acb_poly_find_roots(acb_ptr roots,
 }
 
 
-long
+slong
 acb_poly_find_roots(acb_ptr roots,
     const acb_poly_t poly, acb_srcptr initial,
-    long maxiter, long prec)
+    slong maxiter, slong prec)
 {
-    long len = poly->length;
+    slong len = poly->length;
 
     if (len == 0)
     {
-        printf("find_roots: expected a nonzero polynomial");
+        flint_printf("find_roots: expected a nonzero polynomial");
         abort();
     }
 

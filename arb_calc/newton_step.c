@@ -27,7 +27,7 @@
 
 int arb_calc_newton_step(arb_t xnew, arb_calc_func_t func,
     void * param, const arb_t x, const arb_t conv_region,
-    const arf_t conv_factor, long prec)
+    const arf_t conv_factor, slong prec)
 {
     mag_t err, v;
     arb_t t;

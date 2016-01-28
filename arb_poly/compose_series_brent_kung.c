@@ -28,12 +28,12 @@
 
 void
 _arb_poly_compose_series_brent_kung(arb_ptr res,
-    arb_srcptr poly1, long len1,
-    arb_srcptr poly2, long len2, long n, long prec)
+    arb_srcptr poly1, slong len1,
+    arb_srcptr poly2, slong len2, slong n, slong prec)
 {
     arb_mat_t A, B, C;
     arb_ptr t, h;
-    long i, m;
+    slong i, m;
 
     if (n == 1)
     {
@@ -56,7 +56,7 @@ _arb_poly_compose_series_brent_kung(arb_ptr res,
     _arb_vec_set(B->rows[i], poly1 + i*m, len1 % m);
 
     /* Set rows of A to powers of poly2 */
-    arb_set_ui(A->rows[0] + 0, 1UL);
+    arb_set_ui(A->rows[0] + 0, UWORD(1));
     _arb_vec_set(A->rows[1], poly2, len2);
     for (i = 2; i < m; i++)
         _arb_poly_mullow(A->rows[i], A->rows[(i + 1) / 2], n, A->rows[i / 2], n, n, prec);
@@ -84,15 +84,15 @@ _arb_poly_compose_series_brent_kung(arb_ptr res,
 void
 arb_poly_compose_series_brent_kung(arb_poly_t res,
                     const arb_poly_t poly1,
-                    const arb_poly_t poly2, long n, long prec)
+                    const arb_poly_t poly2, slong n, slong prec)
 {
-    long len1 = poly1->length;
-    long len2 = poly2->length;
-    long lenr;
+    slong len1 = poly1->length;
+    slong len2 = poly2->length;
+    slong lenr;
 
     if (len2 != 0 && !arb_is_zero(poly2->coeffs))
     {
-        printf("exception: compose_series: inner "
+        flint_printf("exception: compose_series: inner "
                 "polynomial must have zero constant term\n");
         abort();
     }

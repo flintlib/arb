@@ -53,14 +53,14 @@ arf_div_special(arf_t z, const arf_t x, const arf_t y)
 }
 
 int
-arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, long prec, arf_rnd_t rnd)
+arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn, zn, sn, tn, alloc;
     mp_srcptr xptr, yptr;
     mp_ptr tmp;
     mp_ptr tptr, zptr;
     int inexact;
-    long fix, fix2;
+    slong fix, fix2;
     ARF_MUL_TMP_DECL
 
     if (arf_is_special(x) || arf_is_special(y))

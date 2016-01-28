@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("power_sum_vec....");
+    flint_printf("power_sum_vec....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,8 +39,8 @@ int main()
     {
         arb_t a, b, s, t;
         arb_ptr res;
-        long aa, bb, k, n, len;
-        long prec;
+        slong aa, bb, k, n, len;
+        slong prec;
 
         len = n_randint(state, 30);
         prec = 2 + n_randint(state, 500);
@@ -69,10 +69,10 @@ int main()
 
             if (!arb_overlaps(res + n, s))
             {
-                printf("FAIL: overlap\n\n");
-                printf("a = %ld, b = %ld, n = %ld\n\n", aa, bb, n);
-                printf("res = "); arb_printd(res + n, 30); printf("\n\n");
-                printf("s = "); arb_printd(s, 30); printf("\n\n");
+                flint_printf("FAIL: overlap\n\n");
+                flint_printf("a = %wd, b = %wd, n = %wd\n\n", aa, bb, n);
+                flint_printf("res = "); arb_printd(res + n, 30); flint_printf("\n\n");
+                flint_printf("s = "); arb_printd(s, 30); flint_printf("\n\n");
                 abort();
             }
         }
@@ -86,6 +86,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

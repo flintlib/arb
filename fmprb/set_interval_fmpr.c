@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, long prec)
+fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, slong prec)
 {
     fmpr_t t;
     fmpr_init(t);

@@ -25,12 +25,12 @@
 
 #include "arb_mat.h"
 
-long
-arb_mat_gauss_partial(arb_mat_t A, long prec)
+slong
+arb_mat_gauss_partial(arb_mat_t A, slong prec)
 {
     arb_t e;
     arb_ptr * a;
-    long j, m, n, r, rank, row, col, sign;
+    slong j, m, n, r, rank, row, col, sign;
 
     m = A->r;
     n = A->c;
@@ -73,9 +73,9 @@ arb_mat_gauss_partial(arb_mat_t A, long prec)
 }
 
 void
-arb_vec_get_arf_2norm_squared_bound(arf_t s, arb_srcptr vec, long len, long prec)
+arb_vec_get_arf_2norm_squared_bound(arf_t s, arb_srcptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
     arf_t t;
 
     arf_init(t);
@@ -91,9 +91,9 @@ arb_vec_get_arf_2norm_squared_bound(arf_t s, arb_srcptr vec, long len, long prec
 }
 
 void
-arb_mat_det_inplace(arb_t det, arb_mat_t A, long prec)
+arb_mat_det_inplace(arb_t det, arb_mat_t A, slong prec)
 {
-    long i, n, sign, rank;
+    slong i, n, sign, rank;
 
     n = arb_mat_nrows(A);
     rank = arb_mat_gauss_partial(A, prec);
@@ -135,9 +135,9 @@ arb_mat_det_inplace(arb_t det, arb_mat_t A, long prec)
 }
 
 void
-arb_mat_det(arb_t det, const arb_mat_t A, long prec)
+arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 {
-    long n = arb_mat_nrows(A);
+    slong n = arb_mat_nrows(A);
 
     if (n == 0)
     {

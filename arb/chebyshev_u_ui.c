@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_chebyshev_u_ui(arb_t y, ulong n, const arb_t x, long prec)
+arb_chebyshev_u_ui(arb_t y, ulong n, const arb_t x, slong prec)
 {
     arb_t a, b;
 

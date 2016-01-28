@@ -26,7 +26,7 @@
 #include "fmprb.h"
 
 void
-fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, long prec)
+fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
 {
     fmpr_t left, right, t;
 

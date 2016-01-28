@@ -28,7 +28,7 @@
 void
 arb_mat_set_fmpz_mat(arb_mat_t dest, const fmpz_mat_t src)
 {
-    long i, j;
+    slong i, j;
 
     if (arb_mat_ncols(dest) != 0)
     {

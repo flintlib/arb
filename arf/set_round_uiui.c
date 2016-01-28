@@ -55,7 +55,7 @@
     while (0)
 
 int
-_arf_set_round_uiui(arf_t z, long * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, long prec, arf_rnd_t rnd)
+_arf_set_round_uiui(arf_t z, slong * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, slong prec, arf_rnd_t rnd)
 {
     int leading, trailing, bc, inexact, zn, up, exp;
 

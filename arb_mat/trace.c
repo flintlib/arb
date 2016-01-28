@@ -19,33 +19,27 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "arb.h"
+#include "arb_mat.h"
 
 void
-arb_print(const arb_t x)
+arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec)
 {
-    arf_print(arb_midref(x));
-    printf(" +/- ");
-    mag_print(arb_radref(x));
-}
+    slong i, n = arb_mat_nrows(mat);
 
-void
-arb_printd(const arb_t x, long digits)
-{
-    arf_printd(arb_midref(x), FLINT_MAX(digits, 1));
-    printf(" +/- ");
-    mag_printd(arb_radref(x), 5);
+    if (n == 0)
+    {
+        arb_zero(trace);
+    }
+    else
+    {
+        arb_set(trace, arb_mat_entry(mat, 0, 0));
+        for (i = 1; i < n; i++)
+        {
+            arb_add(trace, trace, arb_mat_entry(mat, i, i), prec);
+        }
+    }
 }
-
-void
-arb_printn(const arb_t x, long digits, ulong flags)
-{
-    char * s = arb_get_str(x, digits, flags);
-    printf("%s", s);
-    flint_free(s);
-}
-

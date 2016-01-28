@@ -27,11 +27,11 @@
 #include "acb_poly.h"
 
 void
-arb_const_glaisher_eval(arb_t y, long prec)
+arb_const_glaisher_eval(arb_t y, slong prec)
 {
     acb_struct z[2];
     acb_t s, a;
-    long wp;
+    slong wp;
 
     acb_init(z + 0);
     acb_init(z + 1);

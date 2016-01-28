@@ -47,13 +47,16 @@ phase(acb_t res, const arb_t re, const arb_t im)
 }
 
 void
-acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, long prec)
+acb_hypgeom_bessel_jy(acb_t res1, acb_t res2, const acb_t nu, const acb_t z, slong prec)
 {
-    acb_t t, u, v;
+    acb_t jnu, t, u, v;
 
+    acb_init(jnu);
     acb_init(t);
     acb_init(u);
     acb_init(v);
+
+    acb_hypgeom_bessel_j(jnu, nu, z, prec);
 
     if (acb_is_int(nu))
     {
@@ -70,32 +73,37 @@ acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, long prec)
         acb_mul_2exp_si(t, t, 1);
         acb_neg(t, t);
 
-        acb_hypgeom_bessel_j(u, nu, z, prec);
         phase(v, acb_realref(z), acb_imagref(z));
-        acb_mul(u, u, v, prec);
+        acb_mul(u, jnu, v, prec);
         acb_mul_onei(u, u);
 
-        acb_sub(res, t, u, prec);
+        acb_sub(res2, t, u, prec);
 
         if (is_real)
-            arb_zero(acb_imagref(res));
+            arb_zero(acb_imagref(res2));
     }
     else
     {
         acb_sin_cos_pi(t, u, nu, prec);
-
-        acb_hypgeom_bessel_j(v, nu, z, prec);
-        acb_mul(v, v, u, prec);
-
+        acb_mul(v, jnu, u, prec);
         acb_neg(u, nu);
         acb_hypgeom_bessel_j(u, u, z, prec);
         acb_sub(v, v, u, prec);
-
-        acb_div(res, v, t, prec);
+        acb_div(res2, v, t, prec);
     }
 
+    if (res1 != NULL)
+        acb_set(res1, jnu);
+
+    acb_clear(jnu);
     acb_clear(t);
     acb_clear(u);
     acb_clear(v);
+}
+
+void
+acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, slong prec)
+{
+    acb_hypgeom_bessel_jy(NULL, res, nu, z, prec);
 }
 

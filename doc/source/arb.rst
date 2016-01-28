@@ -101,12 +101,12 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
-.. function:: arb_ptr _arb_vec_init(long n)
+.. function:: arb_ptr _arb_vec_init(slong n)
 
     Returns a pointer to an array of *n* initialized :type:`arb_struct`
     entries.
 
-.. function:: void _arb_vec_clear(arb_ptr v, long n)
+.. function:: void _arb_vec_clear(arb_ptr v, slong n)
 
     Clears an array of *n* initialized :type:`arb_struct` entries.
 
@@ -125,7 +125,7 @@ Assignment and rounding
 
 .. function:: void arb_set_arf(arb_t y, const arf_t x)
 
-.. function:: void arb_set_si(arb_t y, long x)
+.. function:: void arb_set_si(arb_t y, slong x)
 
 .. function:: void arb_set_ui(arb_t y, ulong x)
 
@@ -139,21 +139,21 @@ Assignment and rounding
 
     Sets *y* to `x \cdot 2^e`.
 
-.. function:: void arb_set_round(arb_t y, const arb_t x, long prec)
+.. function:: void arb_set_round(arb_t y, const arb_t x, slong prec)
 
-.. function:: void arb_set_round_fmpz(arb_t y, const fmpz_t x, long prec)
+.. function:: void arb_set_round_fmpz(arb_t y, const fmpz_t x, slong prec)
 
     Sets *y* to the value of *x*, rounded to *prec* bits.
 
-.. function:: void arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e, long prec)
+.. function:: void arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e, slong prec)
 
     Sets *y* to `x \cdot 2^e`, rounded to *prec* bits.
 
-.. function:: void arb_set_fmpq(arb_t y, const fmpq_t x, long prec)
+.. function:: void arb_set_fmpq(arb_t y, const fmpq_t x, slong prec)
 
     Sets *y* to the rational number *x*, rounded to *prec* bits.
 
-.. function:: int arb_set_str(arb_t res, const char * inp, long prec)
+.. function:: int arb_set_str(arb_t res, const char * inp, slong prec)
 
     Sets *res* to the value specified by the human-readable string *inp*.
     The input may be a decimal floating-point literal,
@@ -170,7 +170,7 @@ Assignment and rounding
     Returns 0 if successful and nonzero if unsuccessful. If unsuccessful,
     the result is set to an indeterminate interval.
 
-.. function:: char * arb_get_str(const arb_t x, long n, ulong flags)
+.. function:: char * arb_get_str(const arb_t x, slong n, ulong flags)
 
     Returns a nice human-readable representation of *x*, with at most *n*
     digits of the midpoint printed.
@@ -230,15 +230,33 @@ Input and output
 
     Prints the internal representation of *x*.
 
-.. function:: void arb_printd(const arb_t x, long digits)
+.. function:: void arb_printd(const arb_t x, slong digits)
 
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
 
-.. function:: void arb_printn(const arb_t x, long digits, ulong flags)
+.. function:: void arb_printn(const arb_t x, slong digits, ulong flags)
 
     Prints a nice decimal representation of *x*.
+    By default, the output is guaranteed to be correct to within one unit
+    in the last digit. An error bound is also printed explicitly.
+    See :func:`arb_get_str` for details.
+
+.. function:: void arb_fprint(FILE * file, const arb_t x)
+
+    Prints the internal representation of *x* to the stream *file*.
+
+.. function:: void arb_fprintd(FILE * file, const arb_t x, slong digits)
+
+    Prints *x* in decimal to the stream *file*.
+    The printed value of the radius is not adjusted
+    to compensate for the fact that the binary-to-decimal conversion
+    of both the midpoint and the radius introduces additional error.
+
+.. function:: void arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags)
+
+    Prints a nice decimal representation of *x* to the stream *file*.
     By default, the output is guaranteed to be correct to within one unit
     in the last digit. An error bound is also printed explicitly.
     See :func:`arb_get_str` for details.
@@ -246,30 +264,30 @@ Input and output
 Random number generation
 -------------------------------------------------------------------------------
 
-.. function:: void arb_randtest(arb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void arb_randtest(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random ball. The midpoint and radius will both be finite.
 
-.. function:: void arb_randtest_exact(arb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void arb_randtest_exact(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with zero radius.
 
-.. function:: void arb_randtest_precise(arb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void arb_randtest_precise(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with radius around `2^{-\text{prec}}`
     the magnitude of the midpoint.
 
-.. function:: void arb_randtest_wide(arb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void arb_randtest_wide(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random number with midpoint and radius chosen independently,
     possibly giving a very large interval.
 
-.. function:: void arb_randtest_special(arb_t x, flint_rand_t state, long prec, long mag_bits)
+.. function:: void arb_randtest_special(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
 
     Generates a random interval, possibly having NaN or an infinity
     as the midpoint and possibly having an infinite radius.
 
-.. function:: void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, long bits)
+.. function:: void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits)
 
     Sets *q* to a random rational number from the interval represented by *x*.
     A denominator is chosen by multiplying the binary denominator of *x*
@@ -300,22 +318,22 @@ Radius and interval operations
     Adds the absolute value of *err* to the radius of *x* (the operation
     is done in-place).
 
-.. function:: void arb_add_error_2exp_si(arb_t x, long e)
+.. function:: void arb_add_error_2exp_si(arb_t x, slong e)
 
 .. function:: void arb_add_error_2exp_fmpz(arb_t x, const fmpz_t e)
 
     Adds `2^e` to the radius of *x*.
 
-.. function:: void arb_union(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_union(arb_t z, const arb_t x, const arb_t y, slong prec)
 
     Sets *z* to a ball containing both *x* and *y*.
 
-.. function:: void arb_get_abs_ubound_arf(arf_t u, const arb_t x, long prec)
+.. function:: void arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec)
 
     Sets *u* to the upper bound for the absolute value of *x*,
     rounded up to *prec* bits. If *x* contains NaN, the result is NaN.
 
-.. function:: void arb_get_abs_lbound_arf(arf_t u, const arb_t x, long prec)
+.. function:: void arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec)
 
     Sets *u* to the lower bound for the value of *x*,
     rounded down to *prec* bits. If *x* contains NaN, the result is NaN.
@@ -355,33 +373,33 @@ Radius and interval operations
     or if the difference in magnitude between the midpoint and radius
     is so large that representing the endpoints exactly would cause overflows.
 
-.. function:: void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
+.. function:: void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, slong prec)
 
-.. function:: void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, long prec)
+.. function:: void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, slong prec)
 
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
 
-.. function:: void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, long prec)
+.. function:: void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, slong prec)
 
 .. function:: void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x)
 
     Constructs an interval `[a, b]` containing the ball *x*. The MPFR version
     uses the precision of the output variables.
 
-.. function:: long arb_rel_error_bits(const arb_t x)
+.. function:: slong arb_rel_error_bits(const arb_t x)
 
     Returns the effective relative error of *x* measured in bits, defined as
     the difference between the position of the top bit in the radius
     and the top bit in the midpoint, plus one.
     The result is clamped between plus/minus *ARF_PREC_EXACT*.
 
-.. function:: long arb_rel_accuracy_bits(const arb_t x)
+.. function:: slong arb_rel_accuracy_bits(const arb_t x)
 
     Returns the effective relative accuracy of *x* measured in bits,
     equal to the negative of the return value from :func:`arb_rel_error_bits`.
 
-.. function:: long arb_bits(const arb_t x)
+.. function:: slong arb_bits(const arb_t x)
 
     Returns the number of bits needed to represent the absolute value
     of the mantissa of the midpoint of *x*, i.e. the minimum precision
@@ -402,20 +420,46 @@ Radius and interval operations
     nonzero. Otherwise (if *x* represents no integers or more than one integer),
     returns zero.
 
-.. function:: void arb_floor(arb_t y, const arb_t x, long prec)
+.. function:: void arb_floor(arb_t y, const arb_t x, slong prec)
 
-.. function:: void arb_ceil(arb_t y, const arb_t x, long prec)
+.. function:: void arb_ceil(arb_t y, const arb_t x, slong prec)
 
     Sets *y* to a ball containing `\lfloor x \rfloor` and `\lceil x \rceil`
     respectively, with the midpoint of *y* rounded to at most *prec* bits.
 
-.. function:: void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, long n)
+.. function:: void arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, slong n)
 
     Assuming that *x* is finite and not exactly zero, computes integers *mid*,
     *rad*, *exp* such that `x \in [m-r, m+r] \times 10^e` and such that the
     larger out of *mid* and *rad* has at least *n* digits plus a few guard
     digits. If *x* is infinite or exactly zero, the outputs are all set
     to zero.
+
+.. function:: int arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd)
+
+.. function:: int arb_can_round_mpfr(const arb_t x, slong prec, mpfr_rnd_t rnd)
+
+    Returns nonzero if rounding the midpoint of *x* to *prec* bits in
+    the direction *rnd* is guaranteed to give the unique correctly
+    rounded floating-point approximation for the real number represented by *x*.
+
+    In other words, if this function returns nonzero, applying
+    :func:`arf_set_round`, or :func:`arf_get_mpfr`, or :func:`arf_get_d`
+    to the midpoint of *x* is guaranteed to return a correctly rounded *arf_t*,
+    *mpfr_t* (provided that *prec* is the precision of the output variable),
+    or *double* (provided that *prec* is 53).
+    Moreover, :func:`arf_get_mpfr` is guaranteed to return the correct ternary
+    value according to MPFR semantics.
+
+    Note that the *mpfr* version of this function takes an MPFR rounding mode
+    symbol as input, while the *arf* version takes an *arf* rounding mode
+    symbol. Otherwise, the functions are identical.
+
+    This function may perform a fast, inexact test; that is, it may return
+    zero in some cases even when correct rounding actually is possible.
+
+    To be conservative, zero is returned when *x* is non-finite, even if it
+    is an "exact" infinity.
 
 Comparisons
 -------------------------------------------------------------------------------
@@ -458,6 +502,10 @@ Comparisons
     quantity, use :func:`arb_overlaps` or :func:`arb_contains`,
     depending on the circumstance.
 
+.. function:: int arb_equal_si(const arb_t x, slong y)
+
+    Returns nonzero iff *x* is equal to the integer *y*.
+
 .. function:: int arb_is_positive(const arb_t x)
 
 .. function:: int arb_is_nonnegative(const arb_t x)
@@ -483,7 +531,7 @@ Comparisons
 
 .. function:: int arb_contains_fmpz(const arb_t x, const fmpz_t y)
 
-.. function:: int arb_contains_si(const arb_t x, long y)
+.. function:: int arb_contains_si(const arb_t x, slong y)
 
 .. function:: int arb_contains_mpfr(const arb_t x, const mpfr_t y)
 
@@ -545,7 +593,7 @@ Arithmetic
 
 .. function:: void arb_neg(arb_t y, const arb_t x)
 
-.. function:: void arb_neg_round(arb_t y, const arb_t x, long prec)
+.. function:: void arb_neg_round(arb_t y, const arb_t x, slong prec)
 
     Sets *y* to the negation of *x*.
 
@@ -554,99 +602,99 @@ Arithmetic
     Sets *y* to the absolute value of *x*. No attempt is made to improve the
     interval represented by *x* if it contains zero.
 
-.. function:: void arb_add(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_add(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_add_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_add_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_add_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_add_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_add_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_add_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_add_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
     Sets `z = x + y`, rounded to *prec* bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t m, const fmpz_t e, long prec)
+.. function:: void arb_add_fmpz_2exp(arb_t z, const arb_t x, const fmpz_t m, const fmpz_t e, slong prec)
 
     Sets `z = x + m \cdot 2^e`, rounded to *prec* bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_sub(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_sub(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_sub_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_sub_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_sub_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_sub_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_sub_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_sub_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_sub_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_sub_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
     Sets `z = x - y`, rounded to *prec* bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_mul(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_mul(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_mul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_mul_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_mul_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_mul_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_mul_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_mul_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
     Sets `z = x \cdot y`, rounded to *prec* bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_mul_2exp_si(arb_t y, const arb_t x, long e)
+.. function:: void arb_mul_2exp_si(arb_t y, const arb_t x, slong e)
 
 .. function:: void arb_mul_2exp_fmpz(arb_t y, const arb_t x, const fmpz_t e)
 
     Sets *y* to *x* multiplied by `2^e`.
 
-.. function:: void arb_addmul(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_addmul(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_addmul_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_addmul_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_addmul_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_addmul_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_addmul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
     Sets `z = z + x \cdot y`, rounded to prec bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_submul(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_submul(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_submul_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_submul_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_submul_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_submul_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_submul_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_submul_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
     Sets `z = z - x \cdot y`, rounded to prec bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_inv(arb_t y, const arb_t x, long prec)
+.. function:: void arb_inv(arb_t y, const arb_t x, slong prec)
 
     Sets *z* to `1 / x`.
 
-.. function:: void arb_div(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_div(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-.. function:: void arb_div_arf(arb_t z, const arb_t x, const arf_t y, long prec)
+.. function:: void arb_div_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
-.. function:: void arb_div_si(arb_t z, const arb_t x, long y, long prec)
+.. function:: void arb_div_si(arb_t z, const arb_t x, slong y, slong prec)
 
-.. function:: void arb_div_ui(arb_t z, const arb_t x, ulong y, long prec)
+.. function:: void arb_div_ui(arb_t z, const arb_t x, ulong y, slong prec)
 
-.. function:: void arb_div_fmpz(arb_t z, const arb_t x, const fmpz_t y, long prec)
+.. function:: void arb_div_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec)
 
-.. function:: void arb_fmpz_div_fmpz(arb_t z, const fmpz_t x, const fmpz_t y, long prec)
+.. function:: void arb_fmpz_div_fmpz(arb_t z, const fmpz_t x, const fmpz_t y, slong prec)
 
-.. function:: void arb_ui_div(arb_t z, ulong x, const arb_t y, long prec)
+.. function:: void arb_ui_div(arb_t z, ulong x, const arb_t y, slong prec)
 
     Sets `z = x / y`, rounded to *prec* bits. If *y* contains zero, *z* is
     set to `0 \pm \infty`. Otherwise, error propagation uses the rule
@@ -660,48 +708,48 @@ Arithmetic
     where the triangle inequality has been applied to the numerator and
     the reverse triangle inequality has been applied to the denominator.
 
-.. function:: void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void arb_div_2expm1_ui(arb_t z, const arb_t x, ulong n, slong prec)
 
     Sets `z = x / (2^n - 1)`, rounded to *prec* bits.
 
 Powers and roots
 -------------------------------------------------------------------------------
 
-.. function:: void arb_sqrt(arb_t z, const arb_t x, long prec)
+.. function:: void arb_sqrt(arb_t z, const arb_t x, slong prec)
 
-.. function:: void arb_sqrt_arf(arb_t z, const arf_t x, long prec)
+.. function:: void arb_sqrt_arf(arb_t z, const arf_t x, slong prec)
 
-.. function:: void arb_sqrt_fmpz(arb_t z, const fmpz_t x, long prec)
+.. function:: void arb_sqrt_fmpz(arb_t z, const fmpz_t x, slong prec)
 
-.. function:: void arb_sqrt_ui(arb_t z, ulong x, long prec)
+.. function:: void arb_sqrt_ui(arb_t z, ulong x, slong prec)
 
     Sets *z* to the square root of *x*, rounded to *prec* bits.
 
     If `x = m \pm x` where `m \ge r \ge 0`, the propagated error is bounded by
     `\sqrt{m} - \sqrt{m-r} = \sqrt{m} (1 - \sqrt{1 - r/m}) \le \sqrt{m} (r/m + (r/m)^2)/2`.
 
-.. function:: void arb_sqrtpos(arb_t z, const arb_t x, long prec)
+.. function:: void arb_sqrtpos(arb_t z, const arb_t x, slong prec)
 
     Sets *z* to the square root of *x*, assuming that *x* represents a
     nonnegative number (i.e. discarding any negative numbers in the input
     interval).
 
-.. function:: void arb_hypot(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_hypot(arb_t z, const arb_t x, const arb_t y, slong prec)
 
     Sets *z* to `\sqrt{x^2 + y^2}`.
 
-.. function:: void arb_rsqrt(arb_t z, const arb_t x, long prec)
+.. function:: void arb_rsqrt(arb_t z, const arb_t x, slong prec)
 
-.. function:: void arb_rsqrt_ui(arb_t z, ulong x, long prec)
+.. function:: void arb_rsqrt_ui(arb_t z, ulong x, slong prec)
 
     Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
     At high precision, this is faster than computing a square root.
 
-.. function:: void arb_sqrt1pm1(arb_t z, const arb_t x, long prec)
+.. function:: void arb_sqrt1pm1(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \sqrt{1+x}-1`, computed accurately when `x \approx 0`.
 
-.. function:: void arb_root(arb_t z, const arb_t x, ulong k, long prec)
+.. function:: void arb_root_ui(arb_t z, const arb_t x, ulong k, slong prec)
 
     Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
     This function selects between different algorithms. For large *k*,
@@ -722,15 +770,19 @@ Powers and roots
 
     This is evaluated using :func:`mag_log1p`.
 
-.. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, long prec)
+.. function:: void arb_root(arb_t z, const arb_t x, ulong k, slong prec)
 
-.. function:: void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, long prec)
+    Alias for :func:`arb_root_ui`, provided for backwards compatibility.
 
-.. function:: void arb_pow_ui(arb_t y, const arb_t b, ulong e, long prec)
+.. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 
-.. function:: void arb_ui_pow_ui(arb_t y, ulong b, ulong e, long prec)
+.. function:: void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 
-.. function:: void arb_si_pow_ui(arb_t y, long b, ulong e, long prec)
+.. function:: void arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
+
+.. function:: void arb_ui_pow_ui(arb_t y, ulong b, ulong e, slong prec)
+
+.. function:: void arb_si_pow_ui(arb_t y, slong b, ulong e, slong prec)
 
     Sets `y = b^e` using binary exponentiation (with an initial division
     if `e < 0`). Provided that *b* and *e*
@@ -740,7 +792,7 @@ Powers and roots
     Note that these functions can get slow if the exponent is
     extremely large (in such cases :func:`arb_pow` may be superior).
 
-.. function:: void arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, long prec)
+.. function:: void arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec)
 
     Sets `y = b^e`, computed as `y = (b^{1/q})^p` if the denominator of
     `e = p/q` is small, and generally as `y = \exp(e \log b)`.
@@ -748,7 +800,7 @@ Powers and roots
     Note that this function can get slow if the exponent is
     extremely large (in such cases :func:`arb_pow` may be superior).
 
-.. function:: void arb_pow(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_pow(arb_t z, const arb_t x, const arb_t y, slong prec)
 
     Sets `z = x^y`, computed using binary exponentiation if `y` if
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
@@ -757,13 +809,13 @@ Powers and roots
 Exponentials and logarithms
 -------------------------------------------------------------------------------
 
-.. function:: void arb_log_ui(arb_t z, ulong x, long prec)
+.. function:: void arb_log_ui(arb_t z, ulong x, slong prec)
 
-.. function:: void arb_log_fmpz(arb_t z, const fmpz_t x, long prec)
+.. function:: void arb_log_fmpz(arb_t z, const fmpz_t x, slong prec)
 
-.. function:: void arb_log_arf(arb_t z, const arf_t x, long prec)
+.. function:: void arb_log_arf(arb_t z, const arf_t x, slong prec)
 
-.. function:: void arb_log(arb_t z, const arb_t x, long prec)
+.. function:: void arb_log(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \log(x)`.
 
@@ -773,7 +825,7 @@ Exponentials and logarithms
     The function :func:`arb_log` simply calls :func:`arb_log_arf` with
     the midpoint as input, and separately adds the propagated error.
 
-.. function:: void arb_log_ui_from_prev(arb_t log_k1, ulong k1, arb_t log_k0, ulong k0, long prec)
+.. function:: void arb_log_ui_from_prev(arb_t log_k1, ulong k1, arb_t log_k0, ulong k0, slong prec)
 
     Computes `\log(k_1)`, given `\log(k_0)` where `k_0 < k_1`.
     At high precision, this function uses the formula
@@ -783,21 +835,21 @@ Exponentials and logarithms
     be small). Otherwise, it ignores `\log(k_0)` and evaluates the logarithm
     the usual way.
 
-.. function:: void arb_log1p(arb_t z, const arb_t x, long prec)
+.. function:: void arb_log1p(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
 
-.. function:: void arb_exp(arb_t z, const arb_t x, long prec)
+.. function:: void arb_exp(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \exp(x)`. Error propagation is done using the following rule:
     assuming `x = m \pm r`, the error is largest at `m + r`, and we have
     `\exp(m+r) - \exp(m) = \exp(m) (\exp(r)-1) \le r \exp(m+r)`.
 
-.. function:: void arb_expm1(arb_t z, const arb_t x, long prec)
+.. function:: void arb_expm1(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \exp(x)-1`, computed accurately when `x \approx 0`.
 
-.. function:: void arb_exp_invexp(arb_t z, arb_t w, const arb_t x, long prec)
+.. function:: void arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec)
 
     Sets `z = \exp(x)` and `w = \exp(-x)`. The second exponential is computed
     from the first using a division, but propagated error bounds are
@@ -806,36 +858,36 @@ Exponentials and logarithms
 Trigonometric functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_sin(arb_t s, const arb_t x, long prec)
+.. function:: void arb_sin(arb_t s, const arb_t x, slong prec)
 
-.. function:: void arb_cos(arb_t c, const arb_t x, long prec)
+.. function:: void arb_cos(arb_t c, const arb_t x, slong prec)
 
-.. function:: void arb_sin_cos(arb_t s, arb_t c, const arb_t x, long prec)
+.. function:: void arb_sin_cos(arb_t s, arb_t c, const arb_t x, slong prec)
 
     Sets `s = \sin(x)`, `c = \cos(x)`. Error propagation uses the rule
     `|\sin(m \pm r) - \sin(m)| \le \min(r,2)`.
 
-.. function:: void arb_sin_pi(arb_t s, const arb_t x, long prec)
+.. function:: void arb_sin_pi(arb_t s, const arb_t x, slong prec)
 
-.. function:: void arb_cos_pi(arb_t c, const arb_t x, long prec)
+.. function:: void arb_cos_pi(arb_t c, const arb_t x, slong prec)
 
-.. function:: void arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, long prec)
+.. function:: void arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, slong prec)
 
     Sets `s = \sin(\pi x)`, `c = \cos(\pi x)`.
 
-.. function:: void arb_tan(arb_t y, const arb_t x, long prec)
+.. function:: void arb_tan(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \tan(x) = \sin(x) / \cos(y)`.
 
-.. function:: void arb_cot(arb_t y, const arb_t x, long prec)
+.. function:: void arb_cot(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \cot(x) = \cos(x) / \sin(y)`.
 
-.. function:: void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, long prec)
+.. function:: void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, slong prec)
 
-.. function:: void arb_sin_pi_fmpq(arb_t s, const fmpq_t x, long prec)
+.. function:: void arb_sin_pi_fmpq(arb_t s, const fmpq_t x, slong prec)
 
-.. function:: void arb_cos_pi_fmpq(arb_t c, const fmpq_t x, long prec)
+.. function:: void arb_cos_pi_fmpq(arb_t c, const fmpq_t x, slong prec)
 
     Sets `s = \sin(\pi x)`, `c = \cos(\pi x)` where `x` is a rational
     number (whose numerator and denominator are assumed to be reduced).
@@ -847,20 +899,24 @@ Trigonometric functions
     first of these two methods gives full accuracy even if the original
     argument is close to some root other the origin.
 
-.. function:: void arb_tan_pi(arb_t y, const arb_t x, long prec)
+.. function:: void arb_tan_pi(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \tan(\pi x)`.
 
-.. function:: void arb_cot_pi(arb_t y, const arb_t x, long prec)
+.. function:: void arb_cot_pi(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \cot(\pi x)`.
+
+.. function:: void arb_sinc(arb_t z, const arb_t x, slong prec)
+
+    Sets `z = \operatorname{sinc}(x) = \sin(x) / x`.
 
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_atan_arf(arb_t z, const arf_t x, long prec)
+.. function:: void arb_atan_arf(arb_t z, const arf_t x, slong prec)
 
-.. function:: void arb_atan(arb_t z, const arb_t x, long prec)
+.. function:: void arb_atan(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{atan}(x)`.
 
@@ -873,20 +929,20 @@ Inverse trigonometric functions
     The function :func:`arb_atan_arf` uses lookup tables if
     possible, and otherwise falls back to :func:`arb_atan_arf_bb`.
 
-.. function:: void arb_atan2(arb_t z, const arb_t b, const arb_t a, long prec)
+.. function:: void arb_atan2(arb_t z, const arb_t b, const arb_t a, slong prec)
 
     Sets *r* to an the argument (phase) of the complex number
     `a + bi`, with the branch cut discontinuity on `(-\infty,0]`.
     We define `\operatorname{atan2}(0,0) = 0`, and for `a < 0`,
     `\operatorname{atan2}(0,a) = \pi`.
 
-.. function:: void arb_asin(arb_t z, const arb_t x, long prec)
+.. function:: void arb_asin(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{asin}(x) = \operatorname{atan}(x / \sqrt{1-x^2})`.
     If `x` is not contained in the domain `[-1,1]`, the result is an
     indeterminate interval.
 
-.. function:: void arb_acos(arb_t z, const arb_t x, long prec)
+.. function:: void arb_acos(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{acos}(x) = \pi/2 - \operatorname{asin}(x)`.
     If `x` is not contained in the domain `[-1,1]`, the result is an
@@ -895,18 +951,18 @@ Inverse trigonometric functions
 Hyperbolic functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_sinh(arb_t s, const arb_t x, long prec)
+.. function:: void arb_sinh(arb_t s, const arb_t x, slong prec)
 
-.. function:: void arb_cosh(arb_t c, const arb_t x, long prec)
+.. function:: void arb_cosh(arb_t c, const arb_t x, slong prec)
 
-.. function:: void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, long prec)
+.. function:: void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, slong prec)
 
     Sets `s = \sinh(x)`, `c = \cosh(x)`. If the midpoint of `x` is close
     to zero and the hyperbolic sine is to be computed,
     evaluates `(e^{2x}\pm1) / (2e^x)` via :func:`arb_expm1`
     to avoid loss of accuracy. Otherwise evaluates `(e^x \pm e^{-x}) / 2`.
 
-.. function:: void arb_tanh(arb_t y, const arb_t x, long prec)
+.. function:: void arb_tanh(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \tanh(x) = \sinh(x) / \cosh(x)`, evaluated
     via :func:`arb_expm1` as `\tanh(x) = (e^{2x} - 1) / (e^{2x} + 1)`
@@ -914,7 +970,7 @@ Hyperbolic functions
     `\tanh(\pm x) = 1 - 2 e^{\mp 2x} / (1 + e^{\mp 2x})`
     if `|x|` is large.
 
-.. function:: void arb_coth(arb_t y, const arb_t x, long prec)
+.. function:: void arb_coth(arb_t y, const arb_t x, slong prec)
 
     Sets `y = \coth(x) = \cosh(x) / \sinh(x)`, evaluated using
     the same strategy as :func:`arb_tanh`.
@@ -922,15 +978,15 @@ Hyperbolic functions
 Inverse hyperbolic functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_atanh(arb_t z, const arb_t x, long prec)
+.. function:: void arb_atanh(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{atanh}(x)`.
 
-.. function:: void arb_asinh(arb_t z, const arb_t x, long prec)
+.. function:: void arb_asinh(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{asinh}(x)`.
 
-.. function:: void arb_acosh(arb_t z, const arb_t x, long prec)
+.. function:: void arb_acosh(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{acosh}(x)`.
     If `x < 1`, the result is an indeterminate interval.
@@ -943,63 +999,63 @@ The following functions cache the computed values to speed up repeated
 calls at the same or lower precision.
 For further implementation details, see :ref:`algorithms_constants`.
 
-.. function:: void arb_const_pi(arb_t z, long prec)
+.. function:: void arb_const_pi(arb_t z, slong prec)
 
     Computes `\pi`.
 
-.. function:: void arb_const_sqrt_pi(arb_t z, long prec)
+.. function:: void arb_const_sqrt_pi(arb_t z, slong prec)
 
     Computes `\sqrt{\pi}`.
 
-.. function:: void arb_const_log_sqrt2pi(arb_t z, long prec)
+.. function:: void arb_const_log_sqrt2pi(arb_t z, slong prec)
 
     Computes `\log \sqrt{2 \pi}`.
 
-.. function:: void arb_const_log2(arb_t z, long prec)
+.. function:: void arb_const_log2(arb_t z, slong prec)
 
     Computes `\log(2)`.
 
-.. function:: void arb_const_log10(arb_t z, long prec)
+.. function:: void arb_const_log10(arb_t z, slong prec)
 
     Computes `\log(10)`.
 
-.. function:: void arb_const_euler(arb_t z, long prec)
+.. function:: void arb_const_euler(arb_t z, slong prec)
 
     Computes Euler's constant `\gamma = \lim_{k \rightarrow \infty} (H_k - \log k)`
     where `H_k = 1 + 1/2 + \ldots + 1/k`.
 
-.. function:: void arb_const_catalan(arb_t z, long prec)
+.. function:: void arb_const_catalan(arb_t z, slong prec)
 
     Computes Catalan's constant `C = \sum_{n=0}^{\infty} (-1)^n / (2n+1)^2`.
 
-.. function:: void arb_const_e(arb_t z, long prec)
+.. function:: void arb_const_e(arb_t z, slong prec)
 
     Computes `e = \exp(1)`.
 
-.. function:: void arb_const_khinchin(arb_t z, long prec)
+.. function:: void arb_const_khinchin(arb_t z, slong prec)
 
     Computes Khinchin's constant `K_0`.
 
-.. function:: void arb_const_glaisher(arb_t z, long prec)
+.. function:: void arb_const_glaisher(arb_t z, slong prec)
 
     Computes the Glaisher-Kinkelin constant `A = \exp(1/12 - \zeta'(-1))`.
 
-.. function:: void arb_const_apery(arb_t z, long prec)
+.. function:: void arb_const_apery(arb_t z, slong prec)
 
     Computes Apery's constant `\zeta(3)`.
 
 Gamma function and factorials
 -------------------------------------------------------------------------------
 
-.. function:: void arb_rising_ui_bs(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void arb_rising_ui_bs(arb_t z, const arb_t x, ulong n, slong prec)
 
-.. function:: void arb_rising_ui_rs(arb_t z, const arb_t x, ulong n, ulong step, long prec)
+.. function:: void arb_rising_ui_rs(arb_t z, const arb_t x, ulong n, ulong step, slong prec)
 
-.. function:: void arb_rising_ui_rec(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void arb_rising_ui_rec(arb_t z, const arb_t x, ulong n, slong prec)
 
-.. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, long prec)
+.. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, slong prec)
 
-.. function:: void arb_rising(arb_t z, const arb_t x, const arb_t n, long prec)
+.. function:: void arb_rising(arb_t z, const arb_t x, const arb_t n, slong prec)
 
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
 
@@ -1011,59 +1067,59 @@ Gamma function and factorials
     The *rs* version takes an optional *step* parameter for tuning
     purposes (to use the default step length, pass zero).
 
-.. function:: void arb_rising_fmpq_ui(arb_t z, const fmpq_t x, ulong n, long prec)
+.. function:: void arb_rising_fmpq_ui(arb_t z, const fmpq_t x, ulong n, slong prec)
 
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)` using
     binary splitting. If the denominator or numerator of *x* is large
     compared to *prec*, it is more efficient to convert *x* to an approximation
     and use :func:`arb_rising_ui`.
 
-.. function :: void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+.. function :: void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 
-.. function :: void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong step, long prec)
+.. function :: void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong step, slong prec)
 
-.. function :: void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+.. function :: void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 
     Letting `u(x) = x (x+1) (x+2) \cdots (x+n-1)`, simultaneously compute
     `u(x)` and `v(x) = u'(x)`, respectively using binary splitting,
     rectangular splitting (with optional nonzero step length *step*
     to override the default choice), and an automatic algorithm choice.
 
-.. function:: void arb_fac_ui(arb_t z, ulong n, long prec)
+.. function:: void arb_fac_ui(arb_t z, ulong n, slong prec)
 
     Computes the factorial `z = n!` via the gamma function.
 
-.. function:: void arb_fac2_ui(arb_t z, ulong n, long prec)
+.. function:: void arb_doublefac_ui(arb_t z, ulong n, slong prec)
 
     Computes the double factorial `z = n!!` via the gamma function.
 
-.. function:: void arb_bin_ui(arb_t z, const arb_t n, ulong k, long prec)
+.. function:: void arb_bin_ui(arb_t z, const arb_t n, ulong k, slong prec)
 
-.. function:: void arb_bin_uiui(arb_t z, ulong n, ulong k, long prec)
+.. function:: void arb_bin_uiui(arb_t z, ulong n, ulong k, slong prec)
 
     Computes the binomial coefficient `z = {n \choose k}`, via the
     rising factorial as `{n \choose k} = (n-k+1)_k / k!`.
 
-.. function:: void arb_gamma(arb_t z, const arb_t x, long prec)
+.. function:: void arb_gamma(arb_t z, const arb_t x, slong prec)
 
-.. function:: void arb_gamma_fmpq(arb_t z, const fmpq_t x, long prec)
+.. function:: void arb_gamma_fmpq(arb_t z, const fmpq_t x, slong prec)
 
-.. function:: void arb_gamma_fmpz(arb_t z, const fmpz_t x, long prec)
+.. function:: void arb_gamma_fmpz(arb_t z, const fmpz_t x, slong prec)
 
     Computes the gamma function `z = \Gamma(x)`.
 
-.. function:: void arb_lgamma(arb_t z, const arb_t x, long prec)
+.. function:: void arb_lgamma(arb_t z, const arb_t x, slong prec)
 
     Computes the logarithmic gamma function `z = \log \Gamma(x)`.
     The complex branch structure is assumed, so if `x \le 0`, the
     result is an indeterminate interval.
 
-.. function:: void arb_rgamma(arb_t z, const arb_t x, long prec)
+.. function:: void arb_rgamma(arb_t z, const arb_t x, slong prec)
 
     Computes the reciprocal gamma function `z = 1/\Gamma(x)`,
     avoiding division by zero at the poles of the gamma function.
 
-.. function:: void arb_digamma(arb_t y, const arb_t x, long prec)
+.. function:: void arb_digamma(arb_t y, const arb_t x, slong prec)
 
     Computes the digamma function `z = \psi(x) = (\log \Gamma(x))' = \Gamma'(x) / \Gamma(x)`.
 
@@ -1071,7 +1127,7 @@ Gamma function and factorials
 Zeta function
 -------------------------------------------------------------------------------
 
-.. function:: void arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, long num, ulong step, long prec)
+.. function:: void arb_zeta_ui_vec_borwein(arb_ptr z, ulong start, slong num, ulong step, slong prec)
 
     Evaluates `\zeta(s)` at `\mathrm{num}` consecutive integers *s* beginning
     with *start* and proceeding in increments of *step*.
@@ -1099,14 +1155,14 @@ Zeta function
     additional rounding error, so by induction, the error per term
     is always smaller than 2 units.
 
-.. function:: void arb_zeta_ui_asymp(arb_t x, ulong s, long prec)
+.. function:: void arb_zeta_ui_asymp(arb_t x, ulong s, slong prec)
 
     Assuming `s \ge 2`, approximates `\zeta(s)` by `1 + 2^{-s}` along with
     a correct error bound. We use the following bounds: for `s > b`,
     `\zeta(s) - 1 < 2^{-b}`, and generally,
     `\zeta(s) - (1 + 2^{-s}) < 2^{2-\lfloor 3 s/2 \rfloor}`.
 
-.. function:: void arb_zeta_ui_euler_product(arb_t z, ulong s, long prec)
+.. function:: void arb_zeta_ui_euler_product(arb_t z, ulong s, slong prec)
 
     Computes `\zeta(s)` using the Euler product. This is fast only if *s*
     is large compared to the precision.
@@ -1125,51 +1181,51 @@ Zeta function
     the geometric series allows us to conclude that
     `\epsilon(M) \le f(s,M)`.
 
-.. function:: void arb_zeta_ui_bernoulli(arb_t x, ulong s, long prec)
+.. function:: void arb_zeta_ui_bernoulli(arb_t x, ulong s, slong prec)
 
     Computes `\zeta(s)` for even *s* via the corresponding Bernoulli number.
 
-.. function:: void arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, long prec)
+.. function:: void arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, slong prec)
 
     Computes `\zeta(s)` for arbitrary `s \ge 2` using a binary splitting
     implementation of Borwein's algorithm. This has quasilinear complexity
     with respect to the precision (assuming that `s` is fixed).
 
-.. function:: void arb_zeta_ui_vec(arb_ptr x, ulong start, long num, long prec)
+.. function:: void arb_zeta_ui_vec(arb_ptr x, ulong start, slong num, slong prec)
 
-.. function:: void arb_zeta_ui_vec_even(arb_ptr x, ulong start, long num, long prec)
+.. function:: void arb_zeta_ui_vec_even(arb_ptr x, ulong start, slong num, slong prec)
 
-.. function:: void arb_zeta_ui_vec_odd(arb_ptr x, ulong start, long num, long prec)
+.. function:: void arb_zeta_ui_vec_odd(arb_ptr x, ulong start, slong num, slong prec)
 
     Computes `\zeta(s)` at *num* consecutive integers (respectively *num*
     even or *num* odd integers) beginning with `s = \mathrm{start} \ge 2`,
     automatically choosing an appropriate algorithm.
 
-.. function:: void arb_zeta_ui(arb_t x, ulong s, long prec)
+.. function:: void arb_zeta_ui(arb_t x, ulong s, slong prec)
 
     Computes `\zeta(s)` for nonnegative integer `s \ne 1`, automatically
     choosing an appropriate algorithm. This function is
     intended for numerical evaluation of isolated zeta values; for
     multi-evaluation, the vector versions are more efficient.
 
-.. function:: void arb_zeta(arb_t z, const arb_t s, long prec)
+.. function:: void arb_zeta(arb_t z, const arb_t s, slong prec)
 
     Sets *z* to the value of the Riemann zeta function `\zeta(s)`.
 
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 
-.. function:: void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, long prec)
+.. function:: void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, slong prec)
 
     Sets *z* to the value of the Hurwitz zeta function `\zeta(s,a)`.
 
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 
-Bernoulli numbers
+Bernoulli numbers and polynomials
 -------------------------------------------------------------------------------
 
-.. function:: void arb_bernoulli_ui(arb_t b, ulong n, long prec)
+.. function:: void arb_bernoulli_ui(arb_t b, ulong n, slong prec)
 
     Sets `b` to the numerical value of the Bernoulli number `B_n` accurate
     to *prec* bits, computed by a division of the exact fraction if `B_n` is in
@@ -1179,7 +1235,7 @@ Bernoulli numbers
     if the number is already cached, but does not automatically extend
     the cache by itself.
 
-.. function:: void arb_bernoulli_ui_zeta(arb_t b, ulong n, long prec)
+.. function:: void arb_bernoulli_ui_zeta(arb_t b, ulong n, slong prec)
 
     Sets `b` to the numerical value of `B_n` accurate to *prec* bits,
     computed using the formula `B_{2n} = (-1)^{n+1} 2 (2n)! \zeta(2n) / (2 \pi)^n`.
@@ -1190,7 +1246,16 @@ Bernoulli numbers
     enough and `n` large enough for the Euler product to converge
     rapidly (otherwise this function will effectively hang).
 
-.. function:: void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, long len, long prec)
+.. function:: void arb_bernoulli_poly_ui(arb_t res, ulong n, const arb_t x, slong prec)
+
+    Sets *res* to the value of the Bernoulli polynomial `B_n(x)`.
+
+    Warning: this function is only fast if either *n* or *x* is a small integer.
+
+    This function reads Bernoulli numbers from the global cache if they
+    are already cached, but does not automatically extend the cache by itself.
+
+.. function:: void arb_power_sum_vec(arb_ptr res, const arb_t a, const arb_t b, slong len, slong prec)
 
     For *n* from 0 to *len* - 1, sets entry *n* in the output vector *res* to
 
@@ -1210,55 +1275,55 @@ Bernoulli numbers
 Polylogarithms
 -------------------------------------------------------------------------------
 
-.. function:: void arb_polylog(arb_t w, const arb_t s, const arb_t z, long prec)
+.. function:: void arb_polylog(arb_t w, const arb_t s, const arb_t z, slong prec)
 
-.. function:: void arb_polylog_si(arb_t w, long s, const arb_t z, long prec)
+.. function:: void arb_polylog_si(arb_t w, slong s, const arb_t z, slong prec)
 
     Sets *w* to the polylogarithm `\operatorname{Li}_s(z)`.
 
 Other special functions
 -------------------------------------------------------------------------------
 
-.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, long prec)
+.. function:: void arb_fib_fmpz(arb_t z, const fmpz_t n, slong prec)
 
-.. function:: void arb_fib_ui(arb_t z, ulong n, long prec)
+.. function:: void arb_fib_ui(arb_t z, ulong n, slong prec)
 
     Computes the Fibonacci number `F_n`. Uses the binary squaring
     algorithm described in [Tak2000]_.
     Provided that *n* is small enough, an exact Fibonacci number can be
     computed by setting the precision to *ARF_PREC_EXACT*.
 
-.. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, long prec)
+.. function:: void arb_agm(arb_t z, const arb_t x, const arb_t y, slong prec)
 
     Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
-.. function:: void arb_chebyshev_t_ui(arb_t a, ulong n, const arb_t x, long prec)
+.. function:: void arb_chebyshev_t_ui(arb_t a, ulong n, const arb_t x, slong prec)
 
-.. function:: void arb_chebyshev_u_ui(arb_t a, ulong n, const arb_t x, long prec)
+.. function:: void arb_chebyshev_u_ui(arb_t a, ulong n, const arb_t x, slong prec)
 
     Evaluates the Chebyshev polynomial of the first kind `a = T_n(x)`
     or the Chebyshev polynomial of the second kind `a = U_n(x)`.
 
-.. function:: void arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec)
+.. function:: void arb_chebyshev_t2_ui(arb_t a, arb_t b, ulong n, const arb_t x, slong prec)
 
-.. function:: void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, long prec)
+.. function:: void arb_chebyshev_u2_ui(arb_t a, arb_t b, ulong n, const arb_t x, slong prec)
 
     Simultaneously evaluates `a = T_n(x), b = T_{n-1}(x)` or
     `a = U_n(x), b = U_{n-1}(x)`.
     Aliasing between *a*, *b* and *x* is not permitted.
 
-.. function:: void arb_bell_sum_bsplit(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+.. function:: void arb_bell_sum_bsplit(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong prec)
 
-.. function:: void arb_bell_sum_taylor(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, long prec)
+.. function:: void arb_bell_sum_taylor(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong prec)
 
     Helper functions for Bell numbers, evaluating the sum
     `\sum_{k=a}^{b-1} k^n / k!`. If *mmag* is non-NULL, it may be used
     to indicate that the target error tolerance should be
     `2^{mmag - prec}`.
 
-.. function:: void arb_bell_fmpz(arb_t res, const fmpz_t n, long prec)
+.. function:: void arb_bell_fmpz(arb_t res, const fmpz_t n, slong prec)
 
-.. function:: void arb_bell_ui(arb_t res, ulong n, long prec)
+.. function:: void arb_bell_ui(arb_t res, ulong n, slong prec)
 
     Sets *res* to the Bell number `B_n`. If the number is too large to
     fit exactly in *prec* bits, a numerical approximation is computed
@@ -1331,13 +1396,13 @@ Internals for computing elementary functions
     The value of *q* mod 8 is written to *octant*. The output variable *q*
     can be NULL, in which case the full value of *q* is not stored.
 
-.. function:: long _arb_exp_taylor_bound(long mag, long prec)
+.. function:: slong _arb_exp_taylor_bound(slong mag, slong prec)
 
     Returns *n* such that
     `\left|\sum_{k=n}^{\infty} x^k / k!\right| \le 2^{-\mathrm{prec}}`,
     assuming `|x| \le 2^{\mathrm{mag}} \le 1/4`.
 
-.. function:: void arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int m1)
+.. function:: void arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int m1)
 
     Computes the exponential function using the bit-burst algorithm.
     If *m1* is nonzero, the exponential function minus one is computed
@@ -1356,9 +1421,9 @@ Internals for computing elementary functions
     could be improved by using `\log(2)` based reduction at precision low
     enough that the value can be assumed to be cached.
 
-.. function:: void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+.. function:: void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)
 
-.. function:: void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+.. function:: void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)
 
     Computes *T*, *Q* and *Qexp* such that
     `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (x/2^r)^k/k!` using binary splitting.
@@ -1368,9 +1433,9 @@ Internals for computing elementary functions
     resulting in slightly higher memory usage but better speed. For best
     efficiency, *N* should have many trailing zero bits.
 
-.. function:: void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+.. function:: void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)
 
-.. function:: void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, long N)
+.. function:: void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)
 
     Computes *T*, *Q* and *Qexp* such that
     `T / (Q 2^{\text{Qexp}}) = \sum_{k=1}^N (-1)^k (x/2^r)^{2k} / (2k+1)`
@@ -1383,7 +1448,7 @@ Internals for computing elementary functions
     resulting in slightly higher memory usage but better speed. For best
     efficiency, *N* should have many trailing zero bits.
 
-.. function:: void arb_atan_arf_bb(arb_t z, const arf_t x, long prec)
+.. function:: void arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 
     Computes the arctangent of *x*.
     Initially, the argument-halving formula
@@ -1409,84 +1474,84 @@ Internals for computing elementary functions
 Vector functions
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_vec_zero(arb_ptr vec, long n)
+.. function:: void _arb_vec_zero(arb_ptr vec, slong n)
 
     Sets all entries in *vec* to zero.
 
-.. function:: int _arb_vec_is_zero(arb_srcptr vec, long len)
+.. function:: int _arb_vec_is_zero(arb_srcptr vec, slong len)
 
     Returns nonzero iff all entries in *x* are zero.
 
-.. function:: int _arb_vec_is_finite(arb_srcptr x, long len)
+.. function:: int _arb_vec_is_finite(arb_srcptr x, slong len)
 
     Returns nonzero iff all entries in *x* certainly are finite.
 
-.. function:: void _arb_vec_set(arb_ptr res, arb_srcptr vec, long len)
+.. function:: void _arb_vec_set(arb_ptr res, arb_srcptr vec, slong len)
 
     Sets *res* to a copy of *vec*.
 
-.. function:: void _arb_vec_set_round(arb_ptr res, arb_srcptr vec, long len, long prec)
+.. function:: void _arb_vec_set_round(arb_ptr res, arb_srcptr vec, slong len, slong prec)
 
     Sets *res* to a copy of *vec*, rounding each entry to *prec* bits.
 
-.. function:: void _arb_vec_swap(arb_ptr vec1, arb_ptr vec2, long len)
+.. function:: void _arb_vec_swap(arb_ptr vec1, arb_ptr vec2, slong len)
 
     Swaps the entries of *vec1* and *vec2*.
 
-.. function:: void _arb_vec_neg(arb_ptr B, arb_srcptr A, long n)
+.. function:: void _arb_vec_neg(arb_ptr B, arb_srcptr A, slong n)
 
-.. function:: void _arb_vec_sub(arb_ptr C, arb_srcptr A, arb_srcptr B, long n, long prec)
+.. function:: void _arb_vec_sub(arb_ptr C, arb_srcptr A, arb_srcptr B, slong n, slong prec)
 
-.. function:: void _arb_vec_add(arb_ptr C, arb_srcptr A, arb_srcptr B, long n, long prec)
+.. function:: void _arb_vec_add(arb_ptr C, arb_srcptr A, arb_srcptr B, slong n, slong prec)
 
-.. function:: void _arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+.. function:: void _arb_vec_scalar_mul(arb_ptr res, arb_srcptr vec, slong len, const arb_t c, slong prec)
 
-.. function:: void _arb_vec_scalar_div(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+.. function:: void _arb_vec_scalar_div(arb_ptr res, arb_srcptr vec, slong len, const arb_t c, slong prec)
 
-.. function:: void _arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec, long len, const fmpz_t c, long prec)
+.. function:: void _arb_vec_scalar_mul_fmpz(arb_ptr res, arb_srcptr vec, slong len, const fmpz_t c, slong prec)
 
-.. function:: void _arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, long len, long c)
+.. function:: void _arb_vec_scalar_mul_2exp_si(arb_ptr res, arb_srcptr src, slong len, slong c)
 
-.. function:: void _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec, long len, const arb_t c, long prec)
+.. function:: void _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec, slong len, const arb_t c, slong prec)
 
    Performs the respective scalar operation elementwise.
 
-.. function:: void _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, long len2, long prec)
+.. function:: void _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, slong len2, slong prec)
 
     Sets *res* to the dot product of *vec1* and *vec2*.
 
-.. function:: void _arb_vec_norm(arb_t res, arb_srcptr vec, long len, long prec)
+.. function:: void _arb_vec_norm(arb_t res, arb_srcptr vec, slong len, slong prec)
 
     Sets *res* to the dot product of *vec* with itself.
 
-.. function:: void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, long len, long prec)
+.. function:: void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len, slong prec)
 
     Sets *bound* to an upper bound for the entries in *vec*.
 
-.. function:: long _arb_vec_bits(arb_srcptr x, long len)
+.. function:: slong _arb_vec_bits(arb_srcptr x, slong len)
 
     Returns the maximum of :func:`arb_bits` for all entries in *vec*.
 
-.. function:: void _arb_vec_set_powers(arb_ptr xs, const arb_t x, long len, long prec)
+.. function:: void _arb_vec_set_powers(arb_ptr xs, const arb_t x, slong len, slong prec)
 
     Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
 
-.. function:: void _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, long len)
+.. function:: void _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, slong len)
 
-.. function:: void _arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, long len)
+.. function:: void _arb_vec_add_error_mag_vec(arb_ptr res, mag_srcptr err, slong len)
 
     Adds the magnitude of each entry in *err* to the radius of the
     corresponding entry in *res*.
 
-.. function:: void _arb_vec_indeterminate(arb_ptr vec, long len)
+.. function:: void _arb_vec_indeterminate(arb_ptr vec, slong len)
 
     Applies :func:`arb_indeterminate` elementwise.
 
-.. function:: void _arb_vec_trim(arb_ptr res, arb_srcptr vec, long len)
+.. function:: void _arb_vec_trim(arb_ptr res, arb_srcptr vec, slong len)
 
     Applies :func:`arb_trim` elementwise.
 
-.. function:: int _arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, long len)
+.. function:: int _arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, slong len)
 
     Calls :func:`arb_get_unique_fmpz` elementwise and returns nonzero if
     all entries can be rounded uniquely to integers. If any entry in *vec*

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("add_error....");
+    flint_printf("add_error....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -77,10 +77,10 @@ int main()
 
         if (!arb_contains(c, b))
         {
-            printf("FAIL (arb_add_error)\n\n");
-            printf("a = "); arb_printn(a, 50, 0); printf("\n\n");
-            printf("b = "); arb_printn(b, 50, 0); printf("\n\n");
-            printf("c = "); arb_printn(c, 50, 0); printf("\n\n");
+            flint_printf("FAIL (arb_add_error)\n\n");
+            flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -124,10 +124,10 @@ int main()
 
         if (!arb_contains(c, b))
         {
-            printf("FAIL (arb_add_error_arf)\n\n");
-            printf("a = "); arb_printn(a, 50, 0); printf("\n\n");
-            printf("b = "); arb_printn(b, 50, 0); printf("\n\n");
-            printf("c = "); arb_printn(c, 50, 0); printf("\n\n");
+            flint_printf("FAIL (arb_add_error_arf)\n\n");
+            flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -171,10 +171,10 @@ int main()
 
         if (!arb_contains(c, b))
         {
-            printf("FAIL (arb_add_error_mag)\n\n");
-            printf("a = "); arb_printn(a, 50, 0); printf("\n\n");
-            printf("b = "); arb_printn(b, 50, 0); printf("\n\n");
-            printf("c = "); arb_printn(c, 50, 0); printf("\n\n");
+            flint_printf("FAIL (arb_add_error_mag)\n\n");
+            flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -189,7 +189,7 @@ int main()
     {
         arb_t a, b, c;
         arf_t t;
-        long e;
+        slong e;
 
         arb_init(a);
         arb_init(b);
@@ -219,10 +219,10 @@ int main()
 
         if (!arb_contains(c, b))
         {
-            printf("FAIL (arb_add_error_2exp_si)\n\n");
-            printf("a = "); arb_printn(a, 50, 0); printf("\n\n");
-            printf("b = "); arb_printn(b, 50, 0); printf("\n\n");
-            printf("c = "); arb_printn(c, 50, 0); printf("\n\n");
+            flint_printf("FAIL (arb_add_error_2exp_si)\n\n");
+            flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -267,10 +267,10 @@ int main()
 
         if (!arb_contains(c, b))
         {
-            printf("FAIL (arb_add_error_2exp_fmpz)\n\n");
-            printf("a = "); arb_printn(a, 50, 0); printf("\n\n");
-            printf("b = "); arb_printn(b, 50, 0); printf("\n\n");
-            printf("c = "); arb_printn(c, 50, 0); printf("\n\n");
+            flint_printf("FAIL (arb_add_error_2exp_fmpz)\n\n");
+            flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 50, 0); flint_printf("\n\n");
             abort();
         }
 
@@ -283,6 +283,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

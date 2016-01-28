@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("rising_ui_rs....");
+    flint_printf("rising_ui_rs....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -41,7 +41,7 @@ int main()
         arb_t a, b;
         fmpq_t x, y, z;
         ulong n, step;
-        long i;
+        slong i;
 
         arb_init(a);
         arb_init(b);
@@ -69,12 +69,12 @@ int main()
 
         if (!arb_contains_fmpq(b, y))
         {
-            printf("FAIL: containment\n\n");
-            printf("n = %lu\n", n);
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("n = %wu\n", n);
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
             abort();
         }
 
@@ -91,7 +91,7 @@ int main()
     {
         arb_t x, y;
         ulong n, step;
-        long prec;
+        slong prec;
 
         arb_init(x);
         arb_init(y);
@@ -108,10 +108,10 @@ int main()
 
         if (!arb_equal(x, y))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
-            printf("n = %lu\n", n);
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+            flint_printf("n = %wu\n", n);
             abort();
         }
 
@@ -121,6 +121,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_rising_ui(arb_t y, const arb_t x, ulong n, long prec)
+arb_rising_ui(arb_t y, const arb_t x, ulong n, slong prec)
 {
     if (n < FLINT_MAX(prec, 100))
     {
@@ -45,7 +45,7 @@ arb_rising_ui(arb_t y, const arb_t x, ulong n, long prec)
 }
 
 void
-arb_rising(arb_t y, const arb_t x, const arb_t n, long prec)
+arb_rising(arb_t y, const arb_t x, const arb_t n, slong prec)
 {
     if (arb_is_int(n) && arf_sgn(arb_midref(n)) >= 0 &&
         arf_cmpabs_ui(arb_midref(n), FLINT_MAX(prec, 100)) < 0)

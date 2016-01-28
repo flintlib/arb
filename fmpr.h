@@ -26,6 +26,9 @@
 #ifndef FMPR_H
 #define FMPR_H
 
+#if defined(__MINGW64__)
+#include "stdint.h"
+#endif
 #include <stdio.h>
 #include <limits.h>
 #include <gmp.h>
@@ -106,10 +109,10 @@ fmpr_clear(fmpr_t x)
 
 
 /* The return value encodes an error bound, or FMPR_RESULT_EXACT if exact */
-#define FMPR_RESULT_EXACT LONG_MAX
+#define FMPR_RESULT_EXACT WORD_MAX
 
 /* Allow 'infinite' precision for operations where a result can be computed exactly */
-#define FMPR_PREC_EXACT LONG_MAX
+#define FMPR_PREC_EXACT WORD_MAX
 
 #define FMPR_PREC_ADD(prec,extra) ((prec) == FMPR_PREC_EXACT ? FMPR_PREC_EXACT : (prec) + (extra))
 
@@ -121,9 +124,9 @@ fmpr_clear(fmpr_t x)
   Zero is encoded with a zero exponent.
 */
 
-#define FMPR_EXP_POS_INF 1L
-#define FMPR_EXP_NEG_INF 2L
-#define FMPR_EXP_NAN 3L
+#define FMPR_EXP_POS_INF WORD(1)
+#define FMPR_EXP_NEG_INF WORD(2)
+#define FMPR_EXP_NAN WORD(3)
 
 static __inline__ void fmpr_zero(fmpr_t x) {
     fmpz_zero(fmpr_manref(x));
@@ -195,7 +198,7 @@ fmpr_one(fmpr_t x)
 
 /* ------------------------------------------------------------------------ */
 
-long _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd);
+slong _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd);
 
 static __inline__ void
 fmpr_set(fmpr_t y, const fmpr_t x)
@@ -214,11 +217,11 @@ fmpr_swap(fmpr_t x, fmpr_t y)
     fmpz_swap(fmpr_expref(x), fmpr_expref(y));
 }
 
-long _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
-    const fmpz_t man, const fmpz_t exp, long prec, fmpr_rnd_t rnd);
+slong _fmpr_set_round(fmpz_t rman, fmpz_t rexp,
+    const fmpz_t man, const fmpz_t exp, slong prec, fmpr_rnd_t rnd);
 
-static __inline__ long
-_fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+_fmpr_normalise(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(man))
     {
@@ -232,8 +235,8 @@ _fmpr_normalise(fmpz_t man, fmpz_t exp, long prec, fmpr_rnd_t rnd)
     }
 }
 
-static __inline__ long
-fmpr_set_round_naive(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+fmpr_set_round_naive(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_set(y, x);
     if (fmpr_is_special(y))
@@ -242,8 +245,8 @@ fmpr_set_round_naive(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
         return _fmpr_normalise(fmpr_manref(y), fmpr_expref(y), prec, rnd);
 }
 
-static __inline__ long
-fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+fmpr_set_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -257,8 +260,8 @@ fmpr_set_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
 }
 
-static __inline__ long
-fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(x))
     {
@@ -271,8 +274,8 @@ fmpr_set_round_fmpz_2exp(fmpr_t y, const fmpz_t x, const fmpz_t exp, long prec, 
     }
 }
 
-static __inline__ long
-fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpz_is_zero(x))
     {
@@ -281,7 +284,7 @@ fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long ret;
+        slong ret;
         fmpz_t exp;
         fmpz_init(exp);
         ret = _fmpr_set_round(fmpr_manref(y), fmpr_expref(y), x, exp, prec, rnd);
@@ -290,19 +293,19 @@ fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, long prec, fmpr_rnd_t rnd)
     }
 }
 
-long _fmpr_set_round_mpn(long * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, long prec, fmpr_rnd_t rnd);
+slong _fmpr_set_round_mpn(slong * shift, fmpz_t man, mp_srcptr x, mp_size_t xn, int negative, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
+slong fmpr_set_round_ui_2exp_fmpz(fmpr_t z,
         mp_limb_t lo, const fmpz_t exp, int negative,
-        long prec, fmpr_rnd_t rnd);
+        slong prec, fmpr_rnd_t rnd);
 
-long fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
+slong fmpr_set_round_uiui_2exp_fmpz(fmpr_t z,
     mp_limb_t hi, mp_limb_t lo, const fmpz_t exp, int negative,
-    long prec, fmpr_rnd_t rnd);
+    slong prec, fmpr_rnd_t rnd);
 
-void fmpr_ulp(fmpr_t u, const fmpr_t x, long prec);
+void fmpr_ulp(fmpr_t u, const fmpr_t x, slong prec);
 
-int fmpr_check_ulp(const fmpr_t result, long r, long prec);
+int fmpr_check_ulp(const fmpr_t result, slong r, slong prec);
 
 static __inline__ int
 fmpr_equal(const fmpr_t x, const fmpr_t y)
@@ -334,11 +337,11 @@ int fmpr_cmpabs(const fmpr_t x, const fmpr_t y);
 
 int fmpr_cmpabs_ui(const fmpr_t x, ulong y);
 
-void fmpr_randtest(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
+void fmpr_randtest(fmpr_t x, flint_rand_t state, slong bits, slong exp_bits);
 
-void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
+void fmpr_randtest_not_zero(fmpr_t x, flint_rand_t state, slong bits, slong exp_bits);
 
-void fmpr_randtest_special(fmpr_t x, flint_rand_t state, long bits, long exp_bits);
+void fmpr_randtest_special(fmpr_t x, flint_rand_t state, slong bits, slong exp_bits);
 
 int fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd);
 
@@ -363,7 +366,7 @@ static __inline__ void fmpr_set_ui(fmpr_t x, ulong c)
     }
 }
 
-static __inline__ void fmpr_set_si(fmpr_t x, long c)
+static __inline__ void fmpr_set_si(fmpr_t x, slong c)
 {
     if (c == 0)
     {
@@ -387,7 +390,7 @@ fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
     }
     else
     {
-        long v = fmpz_val2(c);
+        slong v = fmpz_val2(c);
 
         fmpz_tdiv_q_2exp(fmpr_manref(x), c, v);
         fmpz_set_ui(fmpr_expref(x), v);
@@ -397,18 +400,18 @@ fmpr_set_fmpz(fmpr_t x, const fmpz_t c)
 /* Arithmetic */
 
 
-long _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, long prec, fmpr_rnd_t rnd);
+slong _fmpr_add_eps(fmpr_t z, const fmpr_t x, int sign, slong prec, fmpr_rnd_t rnd);
 
-long _fmpr_add_mpn(fmpr_t z,
+slong _fmpr_add_mpn(fmpr_t z,
         mp_srcptr xman, mp_size_t xn, int xsign, const fmpz_t xexp,
         mp_srcptr yman, mp_size_t yn, int ysign, const fmpz_t yexp,
-        long shift, long prec, fmpr_rnd_t rnd);
+        slong shift, slong prec, fmpr_rnd_t rnd);
 
-static __inline__ long
+static __inline__ slong
 _fmpr_add_1x1(fmpr_t z,
         mp_limb_t x, int xsign, const fmpz_t xexp,
         mp_limb_t y, int ysign, const fmpz_t yexp,
-        long shift, long prec, long rnd)
+        slong shift, slong prec, slong rnd)
 {
     mp_limb_t hi, lo, t, u;
     int sign = ysign;
@@ -451,69 +454,69 @@ _fmpr_add_1x1(fmpr_t z,
         return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, xexp, sign, prec, rnd);
 }
 
-long fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
 
-long _fmpr_mul_mpn(fmpr_t z,
+slong _fmpr_mul_mpn(fmpr_t z,
     mp_srcptr xman, mp_size_t xn, const fmpz_t xexp,
     mp_srcptr yman, mp_size_t yn, const fmpz_t yexp,
-    int negative, long prec, fmpr_rnd_t rnd);
+    int negative, slong prec, fmpr_rnd_t rnd);
 
-long _fmpr_mul_1x1(fmpr_t z,
+slong _fmpr_mul_1x1(fmpr_t z,
   mp_limb_t u, const fmpz_t xexp, mp_limb_t v, const fmpz_t yexp,
-  int negative, long prec, fmpr_rnd_t rnd);
+  int negative, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_mul_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_mul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_mul_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_mul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_mul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_add_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_add(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_add_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_add_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_add_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_sub_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_sub(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_sum(fmpr_t s, const fmpr_struct * terms, long len, long prec, fmpr_rnd_t rnd);
+slong fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_div_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec);
+void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec);
 
-long fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_addmul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_addmul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_addmul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd);
-long fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd);
-long fmpr_submul_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd);
-long fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_submul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_submul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_submul_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
+slong fmpr_submul_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_sqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
-long fmpr_sqrt_ui(fmpr_t z, ulong x, long prec, fmpr_rnd_t rnd);
-long fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, long prec, fmpr_rnd_t rnd);
+slong fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
+slong fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd);
+slong fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_rsqrt(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+slong fmpr_rsqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_root(fmpr_t y, const fmpr_t x, ulong k, long prec, fmpr_rnd_t rnd);
+slong fmpr_root(fmpr_t y, const fmpr_t x, ulong k, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
-long fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+slong fmpr_log(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
+slong fmpr_log1p(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
 
-long fmpr_exp(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
-long fmpr_expm1(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd);
+slong fmpr_exp(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
+slong fmpr_expm1(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd);
 
 static __inline__ void
 fmpr_neg(fmpr_t y, const fmpr_t x)
@@ -534,8 +537,8 @@ fmpr_neg(fmpr_t y, const fmpr_t x)
     }
 }
 
-static __inline__ long
-fmpr_neg_round(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+static __inline__ slong
+fmpr_neg_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     fmpr_neg(y, x);
     if (fmpr_is_special(y))
@@ -555,7 +558,7 @@ fmpr_abs(fmpr_t y, const fmpr_t x)
 
 /* Convert return value to error bound */
 static __inline__ void
-fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
+fmpr_set_error_result(fmpr_t err, const fmpr_t result, slong rret)
 {
     if (rret == FMPR_RESULT_EXACT)
     {
@@ -578,7 +581,7 @@ fmpr_set_error_result(fmpr_t err, const fmpr_t result, long rret)
 
 static __inline__ void
 fmpr_add_error_result(fmpr_t err, const fmpr_t err_in,
-    const fmpr_t result, long rret, long prec, fmpr_rnd_t rnd)
+    const fmpr_t result, slong rret, slong prec, fmpr_rnd_t rnd)
 {
     if (rret == FMPR_RESULT_EXACT)
     {
@@ -596,11 +599,11 @@ fmpr_add_error_result(fmpr_t err, const fmpr_t err_in,
 
 void fmpr_print(const fmpr_t x);
 
-void fmpr_printd(const fmpr_t x, long digits);
+void fmpr_printd(const fmpr_t x, slong digits);
 
 
 static __inline__ void
-fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, long e)
+fmpr_mul_2exp_si(fmpr_t y, const fmpr_t x, slong e)
 {
     if (e == 0 || fmpr_is_special(x))
     {
@@ -629,11 +632,11 @@ fmpr_mul_2exp_fmpz(fmpr_t y, const fmpr_t x, const fmpz_t e)
 
 void fmpr_get_fmpq(fmpq_t y, const fmpr_t x);
 
-long fmpr_set_fmpq(fmpr_t x, const fmpq_t y, long prec, fmpr_rnd_t rnd);
+slong fmpr_set_fmpq(fmpr_t x, const fmpq_t y, slong prec, fmpr_rnd_t rnd);
 
 void fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd);
 
-long fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd);
+slong fmpr_get_si(const fmpr_t x, fmpr_rnd_t rnd);
 
 void fmpr_set_fmpz_2exp(fmpr_t x, const fmpz_t man, const fmpz_t exp);
 
@@ -641,25 +644,25 @@ void fmpr_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const fmpr_t x);
 
 int fmpr_get_fmpz_fixed_fmpz(fmpz_t y, const fmpr_t x, const fmpz_t e);
 
-int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, long e);
+int fmpr_get_fmpz_fixed_si(fmpz_t y, const fmpr_t x, slong e);
 
 static __inline__ void
-fmpr_set_si_2exp_si(fmpr_t x, long man, long exp)
+fmpr_set_si_2exp_si(fmpr_t x, slong man, slong exp)
 {
     fmpr_set_si(x, man);
     fmpr_mul_2exp_si(x, x, exp);
 }
 
 static __inline__ void
-fmpr_set_ui_2exp_si(fmpr_t x, ulong man, long exp)
+fmpr_set_ui_2exp_si(fmpr_t x, ulong man, slong exp)
 {
     fmpr_set_ui(x, man);
     fmpr_mul_2exp_si(x, x, exp);
 }
 
-int fmpr_cmp_2exp_si(const fmpr_t x, long e);
+int fmpr_cmp_2exp_si(const fmpr_t x, slong e);
 
-int fmpr_cmpabs_2exp_si(const fmpr_t x, long e);
+int fmpr_cmpabs_2exp_si(const fmpr_t x, slong e);
 
 static __inline__ void
 fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
@@ -676,7 +679,7 @@ fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
     fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
 }
 
-long fmpr_abs_bound_lt_2exp_si(const fmpr_t x);
+slong fmpr_abs_bound_lt_2exp_si(const fmpr_t x);
 
 static __inline__ void
 fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)
@@ -696,7 +699,7 @@ fmpr_max(fmpr_t z, const fmpr_t a, const fmpr_t b)
         fmpr_set(z, b);
 }
 
-static __inline__ long
+static __inline__ slong
 fmpr_bits(const fmpr_t x)
 {
     if (fmpr_is_special(x))
@@ -715,7 +718,7 @@ fmpr_is_int(const fmpr_t x)
 }
 
 static __inline__ int
-fmpr_is_int_2exp_si(const fmpr_t x, long e)
+fmpr_is_int_2exp_si(const fmpr_t x, slong e)
 {
     if (fmpr_is_special(x))
         return fmpr_is_zero(x);
@@ -736,7 +739,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
         r = func(__u, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
@@ -762,7 +765,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
         r = func(__u, __t, k, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
@@ -788,7 +791,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
         func(__u, __v, __t, __rnd); \
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
-            printf("exception: mpfr overflow\n"); \
+            flint_printf("exception: mpfr overflow\n"); \
             abort(); \
         } \
         fmpr_set_mpfr(y1, __u); \
@@ -801,20 +804,20 @@ fmpr_is_int_2exp_si(const fmpr_t x, long e)
     } while (0);
 
 void fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
-    long prec, fmpr_rnd_t rnd);
+    slong prec, fmpr_rnd_t rnd);
 
 void fmpr_pow_sloppy_ui(fmpr_t y, const fmpr_t b, ulong e,
-    long prec, fmpr_rnd_t rnd);
+    slong prec, fmpr_rnd_t rnd);
 
-void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, long e,
-    long prec, fmpr_rnd_t rnd);
+void fmpr_pow_sloppy_si(fmpr_t y, const fmpr_t b, slong e,
+    slong prec, fmpr_rnd_t rnd);
 
 /* vector functions */
 
 static __inline__ fmpr_ptr
-_fmpr_vec_init(long n)
+_fmpr_vec_init(slong n)
 {
-    long i;
+    slong i;
     fmpr_ptr v = (fmpr_ptr) flint_malloc(sizeof(fmpr_struct) * n);
 
     for (i = 0; i < n; i++)
@@ -824,9 +827,9 @@ _fmpr_vec_init(long n)
 }
 
 static __inline__ void
-_fmpr_vec_clear(fmpr_ptr v, long n)
+_fmpr_vec_clear(fmpr_ptr v, slong n)
 {
-    long i;
+    slong i;
     for (i = 0; i < n; i++)
         fmpr_clear(v + i);
     flint_free(v);

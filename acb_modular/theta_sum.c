@@ -45,7 +45,7 @@ mag_get_log2_d_approx(const mag_t x)
     }
     else
     {
-        long e = MAG_EXP(x);
+        slong e = MAG_EXP(x);
 
         if (e < -20 || e > 20)
             return e;
@@ -60,13 +60,13 @@ acb_modular_theta_sum(acb_ptr theta1,
                           acb_ptr theta2,
                           acb_ptr theta3,
                           acb_ptr theta4,
-    const acb_t w, int w_is_unit, const acb_t q, long len, long prec)
+    const acb_t w, int w_is_unit, const acb_t q, slong len, slong prec)
 {
     mag_t qmag, wmag, vmag;
     mag_ptr err;
     double log2q_approx, log2w_approx, log2term_approx;
-    long e, e1, e2, k, k1, k2, r, n, N, WN, term_prec;
-    long *exponents, *aindex, *bindex;
+    slong e, e1, e2, k, k1, k2, r, n, N, WN, term_prec;
+    slong *exponents, *aindex, *bindex;
     acb_ptr qpow, wpow, vpow;
     acb_t tmp1, tmp2, v;
     int q_is_real, w_is_one;
@@ -221,7 +221,7 @@ acb_modular_theta_sum(acb_ptr theta1,
         mag_clear(dmag);
     }
 
-    exponents = flint_malloc(sizeof(long) * 3 * N);
+    exponents = flint_malloc(sizeof(slong) * 3 * N);
     aindex = exponents + N;
     bindex = aindex + N;
 
@@ -283,7 +283,7 @@ acb_modular_theta_sum(acb_ptr theta1,
             }
             else
             {
-                printf("exponent not in addition sequence!\n");
+                flint_printf("exponent not in addition sequence!\n");
                 abort();
             }
         }

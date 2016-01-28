@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_sin_pi(arb_t y, const arb_t x, long prec)
+arb_sin_pi(arb_t y, const arb_t x, slong prec)
 {
     arb_t t;
     arb_t u;
@@ -81,7 +81,7 @@ arb_sin_pi(arb_t y, const arb_t x, long prec)
 }
 
 void
-arb_cos_pi(arb_t y, const arb_t x, long prec)
+arb_cos_pi(arb_t y, const arb_t x, slong prec)
 {
     arb_t t;
     arb_t u;
@@ -136,7 +136,7 @@ arb_cos_pi(arb_t y, const arb_t x, long prec)
 }
 
 void
-arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, long prec)
+arb_sin_cos_pi(arb_t s, arb_t c, const arb_t x, slong prec)
 {
     arb_t t;
     arb_t u;

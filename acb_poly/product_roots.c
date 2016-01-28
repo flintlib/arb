@@ -27,7 +27,7 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_product_roots(acb_ptr poly, acb_srcptr xs, long n, long prec)
+_acb_poly_product_roots(acb_ptr poly, acb_srcptr xs, slong n, slong prec)
 {
     if (n == 0)
     {
@@ -47,7 +47,7 @@ _acb_poly_product_roots(acb_ptr poly, acb_srcptr xs, long n, long prec)
     }
     else
     {
-        const long m = (n + 1) / 2;
+        const slong m = (n + 1) / 2;
         acb_ptr tmp;
 
         tmp = _acb_vec_init(n + 2);
@@ -61,7 +61,7 @@ _acb_poly_product_roots(acb_ptr poly, acb_srcptr xs, long n, long prec)
 }
 
 void
-acb_poly_product_roots(acb_poly_t poly, acb_srcptr xs, long n, long prec)
+acb_poly_product_roots(acb_poly_t poly, acb_srcptr xs, slong n, slong prec)
 {
     acb_poly_fit_length(poly, n + 1);
     _acb_poly_product_roots(poly->coeffs, xs, n, prec);

@@ -27,8 +27,8 @@
 
 void
 _acb_poly_pow_series(acb_ptr h,
-    acb_srcptr f, long flen,
-    acb_srcptr g, long glen, long len, long prec)
+    acb_srcptr f, slong flen,
+    acb_srcptr g, slong glen, slong len, slong prec)
 {
     if (glen == 1)
     {
@@ -60,9 +60,9 @@ _acb_poly_pow_series(acb_ptr h,
 
 void
 acb_poly_pow_series(acb_poly_t h,
-    const acb_poly_t f, const acb_poly_t g, long len, long prec)
+    const acb_poly_t f, const acb_poly_t g, slong len, slong prec)
 {
-    long flen, glen;
+    slong flen, glen;
 
     flen = f->length;
     glen = g->length;

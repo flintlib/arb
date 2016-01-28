@@ -28,7 +28,7 @@
 void
 acb_poly_set_arb_poly(acb_poly_t poly, const arb_poly_t re)
 {
-    long i, len;
+    slong i, len;
 
     len = arb_poly_length(re);
 
@@ -46,7 +46,7 @@ acb_poly_set_arb_poly(acb_poly_t poly, const arb_poly_t re)
 void
 acb_poly_set2_arb_poly(acb_poly_t poly, const arb_poly_t re, const arb_poly_t im)
 {
-    long i, rlen, ilen, len;
+    slong i, rlen, ilen, len;
 
     rlen = arb_poly_length(re);
     ilen = arb_poly_length(im);

@@ -19,29 +19,40 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "arb_mat.h"
+#include "mag.h"
+#include "arf.h"
 
 void
-arb_mat_printd(const arb_mat_t mat, long digits)
+mag_fprint(FILE * file, const mag_t x)
 {
-    long i, j;
-
-    for (i = 0; i < arb_mat_nrows(mat); i++)
+    flint_fprintf(file, "(");
+    if (mag_is_zero(x))
+        flint_fprintf(file, "0");
+    else if (mag_is_inf(x))
+        flint_fprintf(file, "inf");
+    else
     {
-        printf("[");
-
-        for (j = 0; j < arb_mat_ncols(mat); j++)
-        {
-            arb_printd(arb_mat_entry(mat, i, j), digits);
-
-            if (j < arb_mat_ncols(mat) - 1)
-                printf(", ");
-        }
-
-        printf("]\n");
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_sub_ui(t, MAG_EXPREF(x), MAG_BITS);
+        flint_fprintf(file, "%wu * 2^", MAG_MAN(x));
+        fmpz_fprint(file, t);
+        fmpz_clear(t);
     }
+    flint_fprintf(file, ")");
+}
+
+void
+mag_fprintd(FILE * file, const mag_t x, slong d)
+{
+    arf_t t;
+    arf_init(t);
+    arf_set_mag(t, x);
+    arf_fprintd(file, t, d);
+    arf_clear(t);
 }

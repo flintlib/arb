@@ -26,7 +26,7 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set_si(acb_poly_t poly, long c)
+acb_poly_set_si(acb_poly_t poly, slong c)
 {
     if (c == 0)
     {

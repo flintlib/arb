@@ -53,7 +53,7 @@ mag_pow_ui(mag_t z, const mag_t x, ulong e)
         for (i = bits - 2; i >= 0; i--)
         {
             mag_mul(y, y, y);
-            if (e & (1UL << i))
+            if (e & (UWORD(1) << i))
                 mag_mul(y, y, x);
         }
 
@@ -90,7 +90,7 @@ mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
         for (i = bits - 2; i >= 0; i--)
         {
             mag_mul_lower(y, y, y);
-            if (e & (1UL << i))
+            if (e & (UWORD(1) << i))
                 mag_mul_lower(y, y, x);
         }
 

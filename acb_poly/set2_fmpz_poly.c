@@ -26,7 +26,7 @@
 #include "acb_poly.h"
 
 void
-acb_poly_set2_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, const fmpz_poly_t im, long prec)
+acb_poly_set2_fmpz_poly(acb_poly_t poly, const fmpz_poly_t re, const fmpz_poly_t im, slong prec)
 {
     arb_poly_t t, u;
     arb_poly_init(t);

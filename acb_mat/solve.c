@@ -26,10 +26,10 @@
 #include "acb_mat.h"
 
 int
-acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, long prec)
+acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 {
     int result;
-    long n, m, *perm;
+    slong n, m, *perm;
     acb_mat_t LU;
 
     n = acb_mat_nrows(A);

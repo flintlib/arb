@@ -25,20 +25,20 @@
 
 #include "arb_poly.h"
 
-long arf_get_si(const arf_t x, arf_rnd_t rnd);
+slong arf_get_si(const arf_t x, arf_rnd_t rnd);
 
-void _arb_poly_lgamma_series_at_one(arb_ptr u, long len, long prec);
+void _arb_poly_lgamma_series_at_one(arb_ptr u, slong len, slong prec);
 
-void arb_gamma_stirling_choose_param(int * reflect, long * r, long * n,
-    const arb_t x, int use_reflect, int digamma, long prec);
+void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+    const arb_t x, int use_reflect, int digamma, slong prec);
 
-void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, long n, long num, long prec);
+void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, slong n, slong num, slong prec);
 
 static __inline__ void
-_log_rising_ui_series(arb_ptr t, const arb_t x, long r, long len, long prec)
+_log_rising_ui_series(arb_ptr t, const arb_t x, slong r, slong len, slong prec)
 {
     arb_struct f[2];
-    long rflen;
+    slong rflen;
 
     arb_init(f);
     arb_init(f + 1);
@@ -54,10 +54,10 @@ _log_rising_ui_series(arb_ptr t, const arb_t x, long r, long len, long prec)
 }
 
 void
-_arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec)
 {
     int reflect;
-    long r, n, wp;
+    slong r, n, wp;
     arb_t zr;
     arb_ptr t, u;
 
@@ -128,7 +128,7 @@ cleanup:
 }
 
 void
-arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_lgamma_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     arb_poly_fit_length(res, n);
 

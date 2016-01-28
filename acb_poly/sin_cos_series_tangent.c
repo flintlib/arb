@@ -27,7 +27,7 @@
 
 void
 _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
-        const acb_srcptr h, long hlen, long len, long prec, int times_pi)
+        const acb_srcptr h, slong hlen, slong len, slong prec, int times_pi)
 {
     acb_ptr t, u, v;
     acb_t s0, c0;
@@ -109,9 +109,9 @@ _acb_poly_sin_cos_series_tangent(acb_ptr s, acb_ptr c,
 
 void
 acb_poly_sin_cos_series_tangent(acb_poly_t s, acb_poly_t c,
-                                    const acb_poly_t h, long n, long prec, int times_pi)
+                                    const acb_poly_t h, slong n, slong prec, int times_pi)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

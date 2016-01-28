@@ -30,7 +30,7 @@
 #define NUMBER_OF_SMALL_PARTITIONS 128
 extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
 
-long partitions_hrr_needed_terms(double n);
+slong partitions_hrr_needed_terms(double n);
 
 typedef struct
 {
@@ -54,7 +54,7 @@ worker(void * arg_ptr)
 /* TODO: set number of threads in child threads, for future
    multithreaded evaluation of single terms */
 static void
-hrr_sum_threaded(arb_t x, const fmpz_t n, long N, int use_doubles)
+hrr_sum_threaded(arb_t x, const fmpz_t n, slong N, int use_doubles)
 {
     arb_t y;
     pthread_t threads[2];
@@ -99,7 +99,7 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
     {
         arb_t x;
         arf_t bound;
-        long N;
+        slong N;
 
         arb_init(x);
         arf_init(bound);
@@ -120,9 +120,9 @@ partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles)
 
         if (!arb_get_unique_fmpz(p, x))
         {
-            printf("not unique!\n");
+            flint_printf("not unique!\n");
             arb_printd(x, 50);
-            printf("\n");
+            flint_printf("\n");
             abort();
         }
 

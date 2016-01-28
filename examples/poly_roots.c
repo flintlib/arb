@@ -6,9 +6,9 @@
 #include "arith.h"
 #include "profiler.h"
 
-int check_accuracy(acb_ptr vec, long len, long prec)
+int check_accuracy(acb_ptr vec, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     for (i = 0; i < len; i++)
     {
@@ -22,11 +22,11 @@ int check_accuracy(acb_ptr vec, long len, long prec)
 
 void
 poly_roots(const fmpz_poly_t poly,
-    long initial_prec,
-    long target_prec,
-    long print_digits)
+    slong initial_prec,
+    slong target_prec,
+    slong print_digits)
 {
-    long i, prec, deg, isolated, maxiter;
+    slong i, prec, deg, isolated, maxiter;
     acb_poly_t cpoly;
     acb_ptr roots;
 
@@ -41,15 +41,15 @@ poly_roots(const fmpz_poly_t poly,
         maxiter = FLINT_MIN(FLINT_MAX(deg, 32), prec);
 
         TIMEIT_ONCE_START
-        printf("prec=%ld: ", prec);
+        flint_printf("prec=%wd: ", prec);
         isolated = acb_poly_find_roots(roots, cpoly,
             prec == initial_prec ? NULL : roots, maxiter, prec);
-        printf("%ld isolated roots | ", isolated);
+        flint_printf("%wd isolated roots | ", isolated);
         TIMEIT_ONCE_STOP
 
         if (isolated == deg && check_accuracy(roots, deg, target_prec))
         {
-            printf("done!\n");
+            flint_printf("done!\n");
             break;
         }
     }
@@ -61,7 +61,7 @@ poly_roots(const fmpz_poly_t poly,
         for (i = 0; i < deg; i++)
         {
             acb_printd(roots + i, print_digits);
-            printf("\n");
+            flint_printf("\n");
         }
     }
 
@@ -73,37 +73,37 @@ int main(int argc, char *argv[])
 {
     fmpz_poly_t f;
     fmpz_t t;
-    long compd, printd, i, j;
+    slong compd, printd, i, j;
 
     if (argc < 2)
     {
-        printf("poly_roots2 [-refine d] [-print d] <poly>\n\n");
+        flint_printf("poly_roots2 [-refine d] [-print d] <poly>\n\n");
 
-        printf("Isolates all the complex roots of a polynomial with\n");
-        printf("integer coefficients. For convergence, the input polynomial\n");
-        printf("is required to be squarefree.\n\n");
+        flint_printf("Isolates all the complex roots of a polynomial with\n");
+        flint_printf("integer coefficients. For convergence, the input polynomial\n");
+        flint_printf("is required to be squarefree.\n\n");
 
-        printf("If -refine d is passed, the roots are refined to an absolute\n");
-        printf("tolerance better than 10^(-d). By default, the roots are only\n");
-        printf("computed to sufficient accuracy to isolate them.\n");
-        printf("The refinement is not currently done efficiently.\n\n");
+        flint_printf("If -refine d is passed, the roots are refined to an absolute\n");
+        flint_printf("tolerance better than 10^(-d). By default, the roots are only\n");
+        flint_printf("computed to sufficient accuracy to isolate them.\n");
+        flint_printf("The refinement is not currently done efficiently.\n\n");
 
-        printf("If -print d is passed, the computed roots are printed to\n");
-        printf("d decimals. By default, the roots are not printed.\n\n");
+        flint_printf("If -print d is passed, the computed roots are printed to\n");
+        flint_printf("d decimals. By default, the roots are not printed.\n\n");
 
-        printf("The polynomial can be specified by passing the following as <poly>:\n\n");
+        flint_printf("The polynomial can be specified by passing the following as <poly>:\n\n");
 
-        printf("a <n>          Easy polynomial 1 + 2x + ... + (n+1)x^n\n");
-        printf("t <n>          Chebyshev polynomial T_n\n");
-        printf("u <n>          Chebyshev polynomial U_n\n");
-        printf("p <n>          Legendre polynomial P_n\n");
-        printf("c <n>          Cyclotomic polynomial Phi_n\n");
-        printf("s <n>          Swinnerton-Dyer polynomial S_n\n");
-        printf("b <n>          Bernoulli polynomial B_n\n");
-        printf("w <n>          Wilkinson polynomial W_n\n");
-        printf("e <n>          Taylor series of exp(x) truncated to degree n\n");
-        printf("m <n> <m>      The Mignotte-like polynomial x^n + (100x+1)^m, n > m\n");
-        printf("c0 c1 ... cn   c0 + c1 x + ... + cn x^n where all c:s are specified integers\n");
+        flint_printf("a <n>          Easy polynomial 1 + 2x + ... + (n+1)x^n\n");
+        flint_printf("t <n>          Chebyshev polynomial T_n\n");
+        flint_printf("u <n>          Chebyshev polynomial U_n\n");
+        flint_printf("p <n>          Legendre polynomial P_n\n");
+        flint_printf("c <n>          Cyclotomic polynomial Phi_n\n");
+        flint_printf("s <n>          Swinnerton-Dyer polynomial S_n\n");
+        flint_printf("b <n>          Bernoulli polynomial B_n\n");
+        flint_printf("w <n>          Wilkinson polynomial W_n\n");
+        flint_printf("e <n>          Taylor series of exp(x) truncated to degree n\n");
+        flint_printf("m <n> <m>      The Mignotte-like polynomial x^n + (100x+1)^m, n > m\n");
+        flint_printf("c0 c1 ... cn   c0 + c1 x + ... + cn x^n where all c:s are specified integers\n");
 
         return 1;
     }
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "a"))
         {
-            long n = atol(argv[i+1]);
+            slong n = atol(argv[i+1]);
             for (j = 0; j <= n; j++)
                 fmpz_poly_set_coeff_ui(f, j, j+1);
             break;
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "w"))
         {
-            long n = atol(argv[i+1]);
+            slong n = atol(argv[i+1]);
             fmpz_poly_fit_length(f, n+2);
             arith_stirling_number_1_vec(f->coeffs, n+1, n+2);
             _fmpz_poly_set_length(f, n+2);

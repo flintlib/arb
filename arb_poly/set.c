@@ -28,7 +28,7 @@
 void
 arb_poly_set(arb_poly_t dest, const arb_poly_t src)
 {
-    long len = arb_poly_length(src);
+    slong len = arb_poly_length(src);
 
     arb_poly_fit_length(dest, len);
     _arb_vec_set(dest->coeffs, src->coeffs, len);

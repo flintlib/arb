@@ -28,13 +28,13 @@
 
 static void
 bsplit(acb_ptr P, acb_ptr T, const acb_t s, const acb_t Na,
-    long a, long b, int cont, long len, long prec)
+    slong a, slong b, int cont, slong len, slong prec)
 {
-    long plen = FLINT_MIN(2 * (b - a) + 1, len);
+    slong plen = FLINT_MIN(2 * (b - a) + 1, len);
 
     if (b - a == 1)
     {
-        long j = a;
+        slong j = a;
 
         fmpz_t t;
         fmpz_init(t);
@@ -89,7 +89,7 @@ bsplit(acb_ptr P, acb_ptr T, const acb_t s, const acb_t Na,
     }
     else
     {
-        long m, len1, len2, alloc;
+        slong m, len1, len2, alloc;
         acb_ptr P1, T1, P2, T2;
 
         m = a + (b - a) / 2;
@@ -120,7 +120,7 @@ bsplit(acb_ptr P, acb_ptr T, const acb_t s, const acb_t Na,
 }
 
 void
-_acb_poly_zeta_em_tail_bsplit(acb_ptr z, const acb_t s, const acb_t Na, acb_srcptr Nasx, long M, long len, long prec)
+_acb_poly_zeta_em_tail_bsplit(acb_ptr z, const acb_t s, const acb_t Na, acb_srcptr Nasx, slong M, slong len, slong prec)
 {
     acb_ptr P, T;
 

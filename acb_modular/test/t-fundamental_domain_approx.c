@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("fundamental_domain_approx....");
+    flint_printf("fundamental_domain_approx....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -42,7 +42,7 @@ int main()
         arf_t one_minus_eps, tol;
         acb_t z, w, w2;
         arb_t t;
-        long prec;
+        slong prec;
 
         fmpq_init(x);
         fmpq_init(y);
@@ -62,20 +62,20 @@ int main()
         } while (fmpz_sgn(fmpq_numref(y)) <= 0);
 
         /* pick a tolerance */
-        arf_set_ui_2exp_si(tol, 1, -(long) n_randint(state, 500));
+        arf_set_ui_2exp_si(tol, 1, -(slong) n_randint(state, 500));
 
         /* now increase the precision until convergence */
         for (prec = 32; ; prec *= 2)
         {
             if (prec > 16384)
             {
-                printf("FAIL (no convergence)\n");
-                printf("x = "); fmpq_print(x); printf("\n\n");
-                printf("y = "); fmpq_print(y); printf("\n\n");
-                printf("z = "); acb_printd(z, 50); printf("\n\n");
-                printf("w = "); acb_printd(w, 50); printf("\n\n");
-                printf("w2 = "); acb_printd(w2, 50); printf("\n\n");
-                printf("g = "); psl2z_print(g); printf("\n\n");
+                flint_printf("FAIL (no convergence)\n");
+                flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+                flint_printf("z = "); acb_printd(z, 50); flint_printf("\n\n");
+                flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
+                flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
+                flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
                 abort();
             }
 
@@ -91,13 +91,13 @@ int main()
 
             if (!psl2z_is_correct(g) || !acb_overlaps(w, w2))
             {
-                printf("FAIL (incorrect transformation)\n");
-                printf("x = "); fmpq_print(x); printf("\n\n");
-                printf("y = "); fmpq_print(y); printf("\n\n");
-                printf("z = "); acb_printd(z, 50); printf("\n\n");
-                printf("w = "); acb_printd(w, 50); printf("\n\n");
-                printf("w2 = "); acb_printd(w2, 50); printf("\n\n");
-                printf("g = "); psl2z_print(g); printf("\n\n");
+                flint_printf("FAIL (incorrect transformation)\n");
+                flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+                flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+                flint_printf("z = "); acb_printd(z, 50); flint_printf("\n\n");
+                flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
+                flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
+                flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
                 abort();
             }
 
@@ -112,13 +112,13 @@ int main()
         if (!arb_contains_fmpq(acb_realref(w2), x) ||
             !arb_contains_fmpq(acb_imagref(w2), y))
         {
-            printf("FAIL (inverse containment)\n");
-            printf("x = "); fmpq_print(x); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); acb_printd(z, 50); printf("\n\n");
-            printf("w = "); acb_printd(w, 50); printf("\n\n");
-            printf("w2 = "); acb_printd(w2, 50); printf("\n\n");
-            printf("g = "); psl2z_print(g); printf("\n\n");
+            flint_printf("FAIL (inverse containment)\n");
+            flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 50); flint_printf("\n\n");
+            flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
+            flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
+            flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
             abort();
         }
 
@@ -136,7 +136,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

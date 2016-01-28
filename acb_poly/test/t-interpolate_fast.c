@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("interpolate_fast....");
+    flint_printf("interpolate_fast....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t P;
         acb_poly_t R, S;
         fmpq_t t, u;
@@ -84,10 +84,10 @@ int main()
 
         if (!acb_poly_contains_fmpq_poly(S, P))
         {
-            printf("FAIL:\n");
-            printf("P = "); fmpq_poly_print(P); printf("\n\n");
-            printf("R = "); acb_poly_printd(R, 15); printf("\n\n");
-            printf("S = "); acb_poly_printd(S, 15); printf("\n\n");
+            flint_printf("FAIL:\n");
+            flint_printf("P = "); fmpq_poly_print(P); flint_printf("\n\n");
+            flint_printf("R = "); acb_poly_printd(R, 15); flint_printf("\n\n");
+            flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -102,6 +102,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

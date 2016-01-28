@@ -26,7 +26,7 @@
 #include "fmpr.h"
 
 void
-fmpr_ulp(fmpr_t u, const fmpr_t x, long prec)
+fmpr_ulp(fmpr_t u, const fmpr_t x, slong prec)
 {
     if (fmpr_is_special(x))
     {

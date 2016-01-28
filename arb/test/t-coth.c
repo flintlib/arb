@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("coth....");
+    flint_printf("coth....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arb_t x, y, a, b, c, d;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;
@@ -59,10 +59,10 @@ int main()
         /* check consistency */
         if (!arb_overlaps(a, b))
         {
-            printf("FAIL: overlap\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             abort();
         }
 
@@ -78,11 +78,11 @@ int main()
 
         if (!arb_overlaps(b, d))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
-            printf("y = "); arb_print(y); printf("\n\n");
-            printf("b = "); arb_print(b); printf("\n\n");
-            printf("d = "); arb_print(d); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arb_print(y); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -90,9 +90,9 @@ int main()
 
         if (!arb_overlaps(a, x))
         {
-            printf("FAIL: aliasing\n\n");
-            printf("a = "); arb_print(a); printf("\n\n");
-            printf("x = "); arb_print(x); printf("\n\n");
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             abort();
         }
 
@@ -106,7 +106,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

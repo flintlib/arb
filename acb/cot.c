@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_cot(acb_t r, const acb_t z, long prec)
+acb_cot(acb_t r, const acb_t z, slong prec)
 {
     if (arb_is_zero(acb_imagref(z)))
     {

@@ -28,7 +28,7 @@
 int
 arb_poly_contains_fmpz_poly(const arb_poly_t poly1, const fmpz_poly_t poly2)
 {
-    long i;
+    slong i;
 
     if (poly2->length > poly1->length)
         return 0;

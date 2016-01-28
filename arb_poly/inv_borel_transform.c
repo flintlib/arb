@@ -26,9 +26,9 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, long len, long prec)
+_arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, slong len, slong prec)
 {
-    long i;
+    slong i;
 
     arb_t t;
     arb_init(t);
@@ -47,7 +47,7 @@ _arb_poly_inv_borel_transform(arb_ptr res, arb_srcptr poly, long len, long prec)
 }
 
 void
-arb_poly_inv_borel_transform(arb_poly_t res, const arb_poly_t poly, long prec)
+arb_poly_inv_borel_transform(arb_poly_t res, const arb_poly_t poly, slong prec)
 {
     arb_poly_fit_length(res, poly->length);
     _arb_poly_inv_borel_transform(res->coeffs, poly->coeffs, poly->length, prec);

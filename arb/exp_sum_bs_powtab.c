@@ -30,10 +30,10 @@
    doing binary splitting with the top-level interval [0,n),
    assuming that we always choose m = a + floor((b-a)/2), and that
    the case b-a = 2 is inlined. */
-long
-_arb_compute_bs_exponents(long * tab, long n)
+slong
+_arb_compute_bs_exponents(slong * tab, slong n)
 {
-    long a, b, aa, /* ab, */ ba, bb, length;
+    slong a, b, aa, /* ab, */ ba, bb, length;
 
     if (n == 1)
     {
@@ -119,10 +119,10 @@ _arb_compute_bs_exponents(long * tab, long n)
 }
 
 /* just do a linear search */
-long
-_arb_get_exp_pos(const long * tab, long step)
+slong
+_arb_get_exp_pos(const slong * tab, slong step)
 {
-    long i;
+    slong i;
 
     for (i = 0; ; i++)
     {
@@ -131,7 +131,7 @@ _arb_get_exp_pos(const long * tab, long step)
 
         if (tab[i] == 0)
         {
-            printf("ERROR: exponent %ld not in table!\n", step);
+            flint_printf("ERROR: exponent %wd not in table!\n", step);
             abort();
         }
     }
@@ -139,8 +139,8 @@ _arb_get_exp_pos(const long * tab, long step)
 
 static void
 bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const long * xexp,
-    const fmpz * xpow, mp_bitcnt_t r, long a, long b)
+    const slong * xexp,
+    const fmpz * xpow, mp_bitcnt_t r, slong a, slong b)
 {
     int cc;
 
@@ -168,7 +168,7 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     }
     else
     {
-        long step, m, i;
+        slong step, m, i;
         mp_bitcnt_t Q2exp[1];
         fmpz_t Q2, T2;
 
@@ -197,14 +197,14 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 
 void
 _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, long N)
+    const fmpz_t x, mp_bitcnt_t r, slong N)
 {
-    long * xexp;
-    long length, i;
+    slong * xexp;
+    slong length, i;
     fmpz * xpow;
 
     /* compute the powers of x that will appear (at least x^1) */
-    xexp = flint_calloc(2 * FLINT_BITS, sizeof(long));
+    xexp = flint_calloc(2 * FLINT_BITS, sizeof(slong));
     length = _arb_compute_bs_exponents(xexp, N);
 
     xpow = _fmpz_vec_init(length);
@@ -233,7 +233,7 @@ _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
         }
         else
         {
-            printf("power table has the wrong structure!\n");
+            flint_printf("power table has the wrong structure!\n");
             abort();
         }
     }

@@ -60,7 +60,7 @@ static void euler_bsplit_clear(euler_bsplit_t s)
 
 static void
 euler_bsplit_1_merge(euler_bsplit_t s, euler_bsplit_t L, euler_bsplit_t R,
-                    long wp, int cont)
+                    slong wp, int cont)
 {
     arb_t t, u, v;
 
@@ -100,7 +100,7 @@ euler_bsplit_1_merge(euler_bsplit_t s, euler_bsplit_t L, euler_bsplit_t R,
 }
 
 static void
-euler_bsplit_1(euler_bsplit_t s, long n1, long n2, long N, long wp, int cont)
+euler_bsplit_1(euler_bsplit_t s, slong n1, slong n2, slong N, slong wp, int cont)
 {
     if (n2 - n1 == 1)
     {
@@ -116,7 +116,7 @@ euler_bsplit_1(euler_bsplit_t s, long n1, long n2, long N, long wp, int cont)
     else
     {
         euler_bsplit_t L, R;
-        long m = (n1 + n2) / 2;
+        slong m = (n1 + n2) / 2;
 
         euler_bsplit_init(L);
         euler_bsplit_init(R);
@@ -129,8 +129,8 @@ euler_bsplit_1(euler_bsplit_t s, long n1, long n2, long N, long wp, int cont)
 }
 
 static void
-euler_bsplit_2(arb_t P, arb_t Q, arb_t T, long n1, long n2,
-                        long N, long wp, int cont)
+euler_bsplit_2(arb_t P, arb_t Q, arb_t T, slong n1, slong n2,
+                        slong N, slong wp, int cont)
 {
     if (n2 - n1 == 1)
     {
@@ -155,7 +155,7 @@ euler_bsplit_2(arb_t P, arb_t Q, arb_t T, long n1, long n2,
     else
     {
         arb_t P2, Q2, T2;
-        long m = (n1 + n2) / 2;
+        slong m = (n1 + n2) / 2;
 
         arb_init(P2);
         arb_init(Q2);
@@ -180,7 +180,7 @@ euler_bsplit_2(arb_t P, arb_t Q, arb_t T, long n1, long n2,
 }
 
 static void
-atanh_bsplit(arb_t s, ulong c, long a, long prec)
+atanh_bsplit(arb_t s, ulong c, slong a, slong prec)
 {
     arb_t t;
     hypgeom_t series;
@@ -219,7 +219,7 @@ next_smooth(ulong n)
 }
 
 static void
-arb_log_ui_smooth(arb_t s, ulong n, long prec)
+arb_log_ui_smooth(arb_t s, ulong n, slong prec)
 {
     ulong m, i, j, k;
     arb_t t;
@@ -247,11 +247,11 @@ arb_log_ui_smooth(arb_t s, ulong n, long prec)
 }
 
 void
-arb_const_euler_eval(arb_t res, long prec)
+arb_const_euler_eval(arb_t res, slong prec)
 {
     euler_bsplit_t sum;
     arb_t t, u, v, P2, T2, Q2;
-    long bits, wp, wp2, n, N, M;
+    slong bits, wp, wp2, n, N, M;
 
     bits = prec + 10;
     n = 0.086643397569993163677 * bits + 1;  /* log(2) / 8 */

@@ -28,10 +28,10 @@
 
 void
 _arb_poly_div_root(arb_ptr Q, arb_t R, arb_srcptr A,
-    long len, const arb_t c, long prec)
+    slong len, const arb_t c, slong prec)
 {
     arb_t r, t;
-    long i;
+    slong i;
 
     if (len < 2)
     {

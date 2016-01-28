@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
-    printf("complex_sqr....");
+    flint_printf("complex_sqr....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         arf_t e1, f1, e2, f2, a, b;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         arf_rnd_t rnd;
 
         arf_init(a);
@@ -69,15 +69,15 @@ int main()
                 r2 = arf_complex_mul_fallback(e2, f2, a, b, a, b, prec, rnd);
                 if (!arf_equal(e1, e2) || !arf_equal(f1, f2) || r1 != r2)
                 {
-                    printf("FAIL!\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
-                    printf("a = "); arf_print(a); printf("\n\n");
-                    printf("b = "); arf_print(b); printf("\n\n");
-                    printf("e1 = "); arf_print(e1); printf("\n\n");
-                    printf("f1 = "); arf_print(f1); printf("\n\n");
-                    printf("e2 = "); arf_print(e2); printf("\n\n");
-                    printf("f2 = "); arf_print(f2); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL!\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("a = "); arf_print(a); flint_printf("\n\n");
+                    flint_printf("b = "); arf_print(b); flint_printf("\n\n");
+                    flint_printf("e1 = "); arf_print(e1); flint_printf("\n\n");
+                    flint_printf("f1 = "); arf_print(f1); flint_printf("\n\n");
+                    flint_printf("e2 = "); arf_print(e2); flint_printf("\n\n");
+                    flint_printf("f2 = "); arf_print(f2); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -87,13 +87,13 @@ int main()
                 r2 = arf_complex_sqr(a, b, a, b, prec, rnd);
                 if (!arf_equal(e1, a) || !arf_equal(f1, b) || r1 != r2)
                 {
-                    printf("FAIL! (aliasing)\n");
-                    printf("prec = %ld, rnd = %d\n\n", prec, rnd);
-                    printf("a = "); arf_print(a); printf("\n\n");
-                    printf("b = "); arf_print(b); printf("\n\n");
-                    printf("e1 = "); arf_print(e1); printf("\n\n");
-                    printf("f1 = "); arf_print(f1); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL! (aliasing)\n");
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("a = "); arf_print(a); flint_printf("\n\n");
+                    flint_printf("b = "); arf_print(b); flint_printf("\n\n");
+                    flint_printf("e1 = "); arf_print(e1); flint_printf("\n\n");
+                    flint_printf("f1 = "); arf_print(f1); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -110,6 +110,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

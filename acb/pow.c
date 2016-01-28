@@ -26,33 +26,33 @@
 #include "acb.h"
 
 void
-acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, long prec)
+acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, slong prec)
 {
-    long i, wp, bits;
+    slong i, wp, bits;
 
-    if (-2L <= *e && *e <= 4L)
+    if (-WORD(2) <= *e && *e <= WORD(4))
     {
-        if (*e == 0L)
+        if (*e == WORD(0))
         {
             acb_one(y);
         }
-        else if (*e == 1L)
+        else if (*e == WORD(1))
         {
             acb_set_round(y, b, prec);
         }
-        else if (*e == -1L)
+        else if (*e == -WORD(1))
         {
             acb_inv(y, b, prec);
         }
-        else if (*e == 2L)
+        else if (*e == WORD(2))
         {
             acb_mul(y, b, b, prec);
         }
-        else if (*e == 3L)
+        else if (*e == WORD(3))
         {
             acb_cube(y, b, prec);
         }
-        else if (*e == 4L)
+        else if (*e == WORD(4))
         {
             acb_mul(y, b, b, prec);
             acb_mul(y, y, y, prec);
@@ -108,13 +108,13 @@ acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, long prec)
 }
 
 void
-acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, long prec)
+acb_pow_fmpz(acb_t y, const acb_t b, const fmpz_t e, slong prec)
 {
     acb_pow_fmpz_binexp(y, b, e, prec);
 }
 
 void
-acb_pow_ui(acb_t y, const acb_t b, ulong e, long prec)
+acb_pow_ui(acb_t y, const acb_t b, ulong e, slong prec)
 {
     fmpz_t f;
     fmpz_init_set_ui(f, e);
@@ -123,7 +123,7 @@ acb_pow_ui(acb_t y, const acb_t b, ulong e, long prec)
 }
 
 void
-acb_pow_si(acb_t y, const acb_t b, long e, long prec)
+acb_pow_si(acb_t y, const acb_t b, slong e, slong prec)
 {
     fmpz_t f;
     fmpz_init(f);
@@ -133,7 +133,7 @@ acb_pow_si(acb_t y, const acb_t b, long e, long prec)
 }
 
 void
-_acb_pow_exp(acb_t z, const acb_t x, const acb_t y, long prec)
+_acb_pow_exp(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     acb_t t;
     acb_init(t);
@@ -144,7 +144,7 @@ _acb_pow_exp(acb_t z, const acb_t x, const acb_t y, long prec)
 }
 
 void
-_acb_pow_arb_exp(acb_t z, const acb_t x, const arb_t y, long prec)
+_acb_pow_arb_exp(acb_t z, const acb_t x, const arb_t y, slong prec)
 {
     acb_t t;
     acb_init(t);
@@ -157,7 +157,7 @@ _acb_pow_arb_exp(acb_t z, const acb_t x, const arb_t y, long prec)
 #define BINEXP_LIMIT 64
 
 void
-acb_pow_arb(acb_t z, const acb_t x, const arb_t y, long prec)
+acb_pow_arb(acb_t z, const acb_t x, const arb_t y, slong prec)
 {
     const arf_struct * ymid = arb_midref(y);
     const mag_struct * yrad = arb_radref(y);
@@ -207,7 +207,7 @@ acb_pow_arb(acb_t z, const acb_t x, const arb_t y, long prec)
 }
 
 void
-acb_pow(acb_t z, const acb_t x, const acb_t y, long prec)
+acb_pow(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
     if (arb_is_zero(acb_imagref(y)))
     {

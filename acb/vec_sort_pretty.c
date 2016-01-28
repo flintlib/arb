@@ -55,7 +55,7 @@ int acb_cmp_pretty(const acb_t a, const acb_t b)
     return res;
 }
 
-void _acb_vec_sort_pretty(acb_ptr vec, long len)
+void _acb_vec_sort_pretty(acb_ptr vec, slong len)
 {
     qsort(vec, len, sizeof(acb_struct), (__compar_fn_t) acb_cmp_pretty);
 }

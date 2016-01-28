@@ -26,10 +26,10 @@
 #include "arb_poly.h"
 
 int
-_arb_poly_newton_step(arb_t xnew, arb_srcptr poly, long len,
+_arb_poly_newton_step(arb_t xnew, arb_srcptr poly, slong len,
     const arb_t x,
     const arb_t convergence_interval,
-    const arf_t convergence_factor, long prec)
+    const arf_t convergence_factor, slong prec)
 {
     arf_t err;
     arb_t t, u, v;

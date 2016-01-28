@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_root(arf_ptr z, arf_srcptr x, ulong k, long prec, arf_rnd_t rnd)
+arf_root(arf_ptr z, arf_srcptr x, ulong k, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, zn, val;
     mp_srcptr xptr;

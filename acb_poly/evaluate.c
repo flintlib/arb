@@ -26,12 +26,12 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_evaluate(acb_t res, acb_srcptr f, long len,
-                           const acb_t x, long prec)
+_acb_poly_evaluate(acb_t res, acb_srcptr f, slong len,
+                           const acb_t x, slong prec)
 {
     if ((prec >= 1024) && (len >= 5 + 20000 / prec))
     {
-        long fbits;
+        slong fbits;
 
         fbits = _acb_vec_bits(f, len);
 
@@ -46,7 +46,7 @@ _acb_poly_evaluate(acb_t res, acb_srcptr f, long len,
 }
 
 void
-acb_poly_evaluate(acb_t res, const acb_poly_t f, const acb_t a, long prec)
+acb_poly_evaluate(acb_t res, const acb_poly_t f, const acb_t a, slong prec)
 {
     _acb_poly_evaluate(res, f->coeffs, f->length, a, prec);
 }

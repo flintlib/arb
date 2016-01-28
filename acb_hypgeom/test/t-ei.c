@@ -26,7 +26,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_ei_fallback(acb_t res, const acb_t z, long prec)
+acb_hypgeom_ei_fallback(acb_t res, const acb_t z, slong prec)
 {
     acb_t t, u;
 
@@ -59,10 +59,10 @@ acb_hypgeom_ei_fallback(acb_t res, const acb_t z, long prec)
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("ei....");
+    flint_printf("ei....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -70,7 +70,7 @@ int main()
     for (iter = 0; iter < 3000; iter++)
     {
         acb_t z0, z1, w0, w1;
-        long prec0, prec1;
+        slong prec0, prec1;
 
         acb_init(z0);
         acb_init(z1);
@@ -123,11 +123,11 @@ int main()
 
         if (!acb_overlaps(w0, w1))
         {
-            printf("FAIL: consistency\n\n");
-            printf("z0 = "); acb_printd(z0, 30); printf("\n\n");
-            printf("z1 = "); acb_printd(z1, 30); printf("\n\n");
-            printf("w0 = "); acb_printd(w0, 30); printf("\n\n");
-            printf("w1 = "); acb_printd(w1, 30); printf("\n\n");
+            flint_printf("FAIL: consistency\n\n");
+            flint_printf("z0 = "); acb_printd(z0, 30); flint_printf("\n\n");
+            flint_printf("z1 = "); acb_printd(z1, 30); flint_printf("\n\n");
+            flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
+            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
             abort();
         }
 
@@ -139,7 +139,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

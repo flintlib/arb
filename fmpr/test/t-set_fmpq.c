@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("set_fmpq....");
+    flint_printf("set_fmpq....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     /* test exact roundtrip R -> Q -> R */
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, res;
+        slong bits, res;
         fmpr_t x, z;
         fmpq_t y;
 
@@ -57,11 +57,11 @@ int main()
 
         if (!fmpr_equal(x, z) || !fmpr_check_ulp(z, res, bits))
         {
-            printf("FAIL\n\n");
-            printf("bits: %ld\n", bits);
-            printf("x = "); fmpr_print(x); printf("\n\n");
-            printf("y = "); fmpq_print(y); printf("\n\n");
-            printf("z = "); fmpr_print(z); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("bits: %wd\n", bits);
+            flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+            flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
+            flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             abort();
         }
 
@@ -72,6 +72,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

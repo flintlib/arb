@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pow_series....");
+    flint_printf("pow_series....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long rbits1, rbits2, len;
+        slong rbits1, rbits2, len;
         acb_poly_t a, b, c, d;
 
         rbits1 = 2 + n_randint(state, 200);
@@ -70,14 +70,14 @@ int main()
 
         if (!acb_poly_overlaps(c, d))
         {
-            printf("FAIL (iter %ld)\n\n", iter);
-            printf("bits2 = %ld\n", rbits2);
-            printf("len = %ld\n", len);
+            flint_printf("FAIL (iter %wd)\n\n", iter);
+            flint_printf("bits2 = %wd\n", rbits2);
+            flint_printf("len = %wd\n", len);
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
-            printf("d = "); acb_poly_printd(d, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -90,7 +90,7 @@ int main()
 
             if (!acb_poly_overlaps(c, d))
             {
-                printf("FAIL (aliasing 1)\n");
+                flint_printf("FAIL (aliasing 1)\n");
                 abort();
             }
 
@@ -99,7 +99,7 @@ int main()
 
             if (!acb_poly_overlaps(c, d))
             {
-                printf("FAIL (aliasing 2)\n");
+                flint_printf("FAIL (aliasing 2)\n");
                 abort();
             }
         }
@@ -112,6 +112,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

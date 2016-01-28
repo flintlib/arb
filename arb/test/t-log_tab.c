@@ -27,16 +27,16 @@
 
 int main()
 {
-    long i;
+    slong i;
 
     mpfr_t tabx, logx, y1, y2;
     mpz_t tt;
 
-    printf("log_tab....");
+    flint_printf("log_tab....");
     fflush(stdout);
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB11_BITS;
@@ -74,7 +74,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -88,7 +88,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB1_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB11_BITS + ARB_LOG_TAB12_BITS;
@@ -126,7 +126,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -140,7 +140,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB21_BITS;
@@ -178,7 +178,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -192,7 +192,7 @@ int main()
     }
 
     {
-        long prec, bits, num;
+        slong prec, bits, num;
 
         prec = ARB_LOG_TAB2_LIMBS * FLINT_BITS;
         bits = ARB_LOG_TAB21_BITS + ARB_LOG_TAB22_BITS;
@@ -230,7 +230,7 @@ int main()
 
             if (!mpfr_equal_p(y1, y2))
             {
-                printf("FAIL: i = %ld, bits = %ld, prec = %ld\n", i, bits, prec);
+                flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
                 abort();
@@ -244,7 +244,7 @@ int main()
     }
 
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

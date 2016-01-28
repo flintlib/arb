@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("polylog_tail....");
+    flint_printf("polylog_tail....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -40,7 +40,7 @@ int main()
     {
         mag_t xb, yb;
         ulong N, k, d;
-        long s, prec;
+        slong s, prec;
         arb_t z, t, u, r;
 
         mag_init(xb);
@@ -95,14 +95,14 @@ int main()
 
         if (!arb_contains(z, r))
         {
-            printf("FAIL\n\n");
-            printf("N = %lu\n\n", N);
-            printf("d = %lu\n\n", d);
-            printf("s = %ld\n\n", s);
-            printf("xb = "); mag_printd(xb, 15); printf("\n\n");
-            printf("yb = "); mag_printd(yb, 15); printf("\n\n");
-            printf("z = "); arb_printd(z, 15); printf("\n\n");
-            printf("r = "); arb_printd(r, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("N = %wu\n\n", N);
+            flint_printf("d = %wu\n\n", d);
+            flint_printf("s = %wd\n\n", s);
+            flint_printf("xb = "); mag_printd(xb, 15); flint_printf("\n\n");
+            flint_printf("yb = "); mag_printd(yb, 15); flint_printf("\n\n");
+            flint_printf("z = "); arb_printd(z, 15); flint_printf("\n\n");
+            flint_printf("r = "); arb_printd(r, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -110,7 +110,7 @@ int main()
 
         if (!mag_equal(xb, yb))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -124,7 +124,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

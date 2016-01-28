@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("cot_pi_series....");
+    flint_printf("cot_pi_series....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long m, n1, bits1, bits2, bits3;
+        slong m, n1, bits1, bits2, bits3;
         arb_poly_t S, A, B, C;
 
         bits1 = 2 + n_randint(state, 200);
@@ -63,10 +63,10 @@ int main()
 
         if (!arb_poly_overlaps(A, B))
         {
-            printf("FAIL\n\n");
-            printf("S = "); arb_poly_printd(S, 15); printf("\n\n");
-            printf("A = "); arb_poly_printd(A, 15); printf("\n\n");
-            printf("B = "); arb_poly_printd(B, 15); printf("\n\n");
+            flint_printf("FAIL\n\n");
+            flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
+            flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
+            flint_printf("B = "); arb_poly_printd(B, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -74,7 +74,7 @@ int main()
 
         if (!arb_poly_overlaps(A, S))
         {
-            printf("FAIL (aliasing)\n\n");
+            flint_printf("FAIL (aliasing)\n\n");
             abort();
         }
 
@@ -86,6 +86,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

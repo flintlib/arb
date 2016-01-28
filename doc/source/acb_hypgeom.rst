@@ -35,7 +35,7 @@ For the conventional generalized hypergeometric function
 `{}_pF_{q}`, compute  `{}_pH_{q+1}` with the explicit parameter `b_q = 1`,
 or remove a 1 from the `a_i` parameters if there is one.
 
-.. function:: void acb_hypgeom_pfq_bound_factor(mag_t C, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, ulong n)
+.. function:: void acb_hypgeom_pfq_bound_factor(mag_t C, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n)
 
     Computes a factor *C* such that
 
@@ -66,7 +66,7 @@ or remove a 1 from the `a_i` parameters if there is one.
     As currently implemented, the bound becomes infinite when `n` is
     too small, even if the series converges.
 
-.. function:: long acb_hypgeom_pfq_choose_n(acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long prec)
+.. function:: slong acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong prec)
 
     Heuristically attempts to choose a number of terms *n* to
     sum of a hypergeometric series at a working precision of *prec* bits.
@@ -82,15 +82,15 @@ or remove a 1 from the `a_i` parameters if there is one.
     This function will also attempt to pick a reasonable
     truncation point for divergent series.
 
-.. function:: void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_forward(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
-.. function:: void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_rs(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
-.. function:: void acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
-.. function:: void acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
-.. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
     Computes `s = \sum_{k=0}^{n-1} T(k)` and `t = T(n)`.
     Does not allow aliasing between input and output variables.
@@ -110,14 +110,14 @@ or remove a 1 from the `a_i` parameters if there is one.
     The default version automatically chooses an algorithm
     depending on the inputs.
 
-.. function:: void acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t w, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t w, slong n, slong prec)
 
-.. function:: void acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, const acb_t w, long n, long prec)
+.. function:: void acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, const acb_t w, slong n, slong prec)
 
     Like :func:`acb_hypgeom_pfq_sum`, but taking advantage of
     `w = 1/z` possibly having few bits.
 
-.. function:: void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_pfq_direct(acb_t res, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 
     Computes
 
@@ -133,7 +133,7 @@ or remove a 1 from the `a_i` parameters if there is one.
     If  `n < 0`, this function chooses a number of terms automatically
     using :func:`acb_hypgeom_pfq_choose_n`.
 
-.. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, long p, const acb_poly_struct * b, long q, const acb_poly_t z, int regularized, long n, long len, long prec)
+.. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
 
     Computes `{}_pH_{q}(z)` directly using the defining series, given
     parameters and argument that are power series.
@@ -226,13 +226,13 @@ in terms of the following auxiliary quantities
 
     \rho = \tfrac{1}{2} |2a^2-2ab+b| + \sigma' (1+ \tfrac{1}{4} \sigma') (1-\sigma')^{-2}
 
-.. function:: void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, long n, long prec)
+.. function:: void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong n, slong prec)
 
     Sets *res* to `U^{*}(a,b,z)` computed using *n* terms of the asymptotic series,
     with a rigorous bound for the error included in the output.
     We require `n \ge 0`.
 
-.. function:: int acb_hypgeom_u_use_asymp(const acb_t z, long prec)
+.. function:: int acb_hypgeom_u_use_asymp(const acb_t z, slong prec)
 
     Heuristically determines whether the asymptotic series can be used
     to evaluate `U(a,b,z)` to *prec* accurate bits (assuming that *a* and *b*
@@ -241,7 +241,7 @@ in terms of the following auxiliary quantities
 Confluent hypergeometric functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_u_1f1_series(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t z, long len, long prec)
+.. function:: void acb_hypgeom_u_1f1_series(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t z, slong len, slong prec)
 
     Computes `U(a,b,z)` as a power series truncated to length *len*,
     given `a, b, z \in \mathbb{C}[[x]]`.
@@ -250,7 +250,7 @@ Confluent hypergeometric functions
     As currently implemented, the output is indeterminate if `b` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+.. function:: void acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 
     Computes `U(a,b,z)` as a sum of two convergent hypergeometric series.
     If `b \in \mathbb{Z}`, it computes
@@ -258,7 +258,7 @@ Confluent hypergeometric functions
     As currently implemented, the output is indeterminate if `b` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+.. function:: void acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 
     Computes `U(a,b,z)` using an automatic algorithm choice. The
     function :func:`acb_hypgeom_u_asymp` is used
@@ -266,22 +266,22 @@ Confluent hypergeometric functions
     case the asymptotic series terminates), or if *z* is sufficiently large.
     Otherwise :func:`acb_hypgeom_u_1f1` is used.
 
-.. function:: void acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
 
     Computes the confluent hypergeometric function
     `M(a,b,z) = {}_1F_1(a,b,z)`, or
     `\mathbf{M}(a,b,z) = \frac{1}{\Gamma(b)} {}_1F_1(a,b,z)` if *regularized*
     is set.
 
-.. function:: void acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_0f1(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 
     Computes the confluent hypergeometric function
     `{}_0F_1(a,z)`, or `\frac{1}{\Gamma(a)} {}_0F_1(a,z)` if *regularized*
@@ -292,8 +292,8 @@ Confluent hypergeometric functions
 
     .. math ::
 
-        \frac{{}_0F_1(a,z)}{\Gamma(a)} = (-z)^{(1-b)/2} J_{b-1}(2 \sqrt{-z}) = 
-                                         z^{(1-b)/2} I_{b-1}(2 \sqrt{z}).
+        \frac{{}_0F_1(a,z)}{\Gamma(a)} = (-z)^{(1-a)/2} J_{a-1}(2 \sqrt{-z}) =
+                                         z^{(1-a)/2} I_{a-1}(2 \sqrt{z}).
 
     The Bessel-*J* function is used in the left half-plane and the
     Bessel-*I* function is used in the right half-plane, to avoid loss
@@ -302,13 +302,13 @@ Confluent hypergeometric functions
 The error function
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, long prec, long prec2)
+.. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
 
-.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
 
     Computes the error function respectively using
 
@@ -327,13 +327,13 @@ The error function
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
 
-.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erfc(acb_t res, const acb_t z, slong prec)
 
     Computes the complementary error function
     `\operatorname{erfc}(z) = 1 - \operatorname{erf}(z)`.
     This function avoids catastrophic cancellation for large positive *z*.
 
-.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_erfi(acb_t res, const acb_t z, slong prec)
 
     Computes the imaginary error function
     `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`. This is a trivial wrapper
@@ -342,7 +342,7 @@ The error function
 Bessel functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the Bessel function of the first kind
     via :func:`acb_hypgeom_u_asymp`.
@@ -366,7 +366,7 @@ Bessel functions
     `A_{\pm} = (\pm i)^{n} (2 \pi z)^{-1/2}`.
     And if `\operatorname{Re}(z) > 0`, we have `A_{\pm} = \exp(\mp i [(2\nu+1)/4] \pi) (2 \pi z)^{-1/2}`.
 
-.. function:: void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the Bessel function of the first kind from
 
@@ -375,12 +375,12 @@ Bessel functions
         J_{\nu}(z) = \frac{1}{\Gamma(\nu+1)} \left(\frac{z}{2}\right)^{\nu}
                      {}_0F_1\left(\nu+1, -\frac{z^2}{4}\right).
 
-.. function:: void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the Bessel function of the first kind `J_{\nu}(z)` using
     an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the Bessel function of the second kind `Y_{\nu}(z)` from the
     formula
@@ -400,11 +400,18 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_jy(acb_t res1, acb_t res2, const acb_t nu, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+    Sets *res1* to `J_{\nu}(z)` and *res2* to `Y_{\nu}(z)`, computed
+    simultaneously. From these values, the user can easily
+    construct the Bessel functions of the third kind (Hankel functions)
+    `H_{\nu}^{(1)}(z), H_{\nu}^{(2)}(z) = J_{\nu}(z) \pm i Y_{\nu}(z)`.
 
-.. function:: void acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
+
+.. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
+
+.. function:: void acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the first kind
     `I_{\nu}(z) = z^{\nu} (iz)^{-\nu} J_{\nu}(iz)` respectively using
@@ -418,7 +425,7 @@ Bessel functions
 
     or an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the second kind via
     via :func:`acb_hypgeom_u_asymp`. For all `\nu` and all `z \ne 0`, we have
@@ -428,7 +435,7 @@ Bessel functions
         K_{\nu}(z) = \left(\frac{2z}{\pi}\right)^{-1/2} e^{-z}
             U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
 
-.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, long len, long prec)
+.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, slong len, slong prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)`
     as a power series truncated to length *len*,
@@ -449,7 +456,7 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu[0]` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the second kind from
 
@@ -470,23 +477,165 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, long prec)
+.. function:: void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)` using
     an automatic algorithm choice.
 
+Airy functions
+-------------------------------------------------------------------------------
+
+The Airy functions are linearly independent solutions of the
+differential equation `y'' - zy = 0`. All solutions are entire functions.
+The standard solutions are denoted `\operatorname{Ai}(z), \operatorname{Bi}(z)`.
+For negative *z*, both functions are oscillatory. For positive *z*,
+the first function decreases exponentially while the second increases
+exponentially.
+
+The Airy functions can be expressed in terms of Bessel functions of fractional
+order, but this is inconvenient since such formulas
+only hold piecewise (due to the Stokes phenomenon). Computation of the
+Airy functions can also be optimized more than Bessel functions in general.
+We therefore provide a dedicated interface for evaluating Airy functions.
+
+The following functions optionally compute
+`(\operatorname{Ai}(z), \operatorname{Ai}'(z), \operatorname{Bi}(z), \operatorname{Bi}'(z))`
+simultaneously. Any of the four functions can be omitted by passing
+*NULL* for the unwanted output variables.
+Note that higher derivatives of the Airy functions can be computed
+via recurrence relations.
+
+.. function:: void acb_hypgeom_airy_direct(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong n, slong prec)
+
+    Computes the Airy functions using direct series expansions truncated at *n* terms.
+    Error bounds are included in the output.
+
+.. function:: void acb_hypgeom_airy_asymp(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong n, slong prec)
+
+    Computes the Airy functions using asymptotic expansions truncated at *n* terms.
+    Error bounds, based on Olver (DLMF section 9.7), are included in the output.
+    For `\arg(z) < \pi` and `\zeta = (2/3) z^{3/2}`, we have
+
+    .. math ::
+
+        \operatorname{Ai}(z) = \frac{e^{-\zeta}}{2 \sqrt{\pi} z^{1/4}} \left[S_n(\zeta) + R_n(z)\right], \quad
+        \operatorname{Ai}'(z) = -\frac{z^{1/4} e^{-\zeta}}{2 \sqrt{\pi}} \left[(S'_n(\zeta) + R'_n(z)\right]
+
+        S_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{u(k)}{\zeta^k}, \quad
+        S'_n(\zeta) = \sum_{k=0}^{n-1} (-1)^k \frac{v(k)}{\zeta^k}
+
+        u(k) = \frac{(1/6)_k (5/6)_k}{2^k k!}, \quad
+        v(k) = \frac{6k+1}{1-6k} u(k).
+
+    Assuming that *n* is positive, the error terms are bounded by
+
+    .. math ::
+
+        |R_n(z)|  \le C |u(n)| |\zeta|^{-n}, \quad |R'_n(z)| \le C |v(n)| |\zeta|^{-n}
+
+    where
+
+    .. math ::
+
+        C = \begin{cases}
+            2 \exp(7 / (36 |\zeta|)) & |\arg(z)| \le \pi/3 \\
+            2 \chi(n) \exp(7 \pi / (72 |\zeta|)) & \pi/3 \le |\arg(z)| \le 2\pi/3 \\
+            4 \chi(n) \exp(7 \pi / (36 |\operatorname{re}(\zeta)|)) |\cos(\arg(\zeta))|^{-n} & 2\pi/3 \le |\arg(z)| < \pi.
+            \end{cases}
+
+    For computing Bi when *z* is roughly in the positive half-plane, we use the
+    connection formulas
+
+    .. math ::
+
+        \operatorname{Bi}(z) = -i (2 w^{+1} \operatorname{Ai}(z w^{-2}) - \operatorname{Ai}(z))
+
+        \operatorname{Bi}(z) = +i (2 w^{-1} \operatorname{Ai}(z w^{+2}) - \operatorname{Ai}(z))
+
+    where `w = \exp(\pi i/3)`. Combining roots of unity gives
+
+    .. math ::
+
+        \operatorname{Bi}(z) = \frac{1}{2 \sqrt{\pi} z^{1/4}} [2X + iY]
+
+        \operatorname{Bi}(z) = \frac{1}{2 \sqrt{\pi} z^{1/4}} [2X - iY]
+
+        X = \exp(+\zeta) [S_n(-\zeta) + R_n(z w^{\mp 2})], \quad Y = \exp(-\zeta) [S_n(\zeta) + R_n(z)]
+
+    where the upper formula is valid
+    for `-\pi/3 < \arg(z) < \pi` and the lower formula is valid for `-\pi < \arg(z) < \pi/3`.
+    We proceed analogously for the derivative of Bi.
+
+    In the negative half-plane, we use the connection formulas
+
+    .. math ::
+
+        \operatorname{Ai}(z) = e^{+\pi i/3} \operatorname{Ai}(z_1)  +  e^{-\pi i/3} \operatorname{Ai}(z_2)
+
+        \operatorname{Bi}(z) = e^{-\pi i/6} \operatorname{Ai}(z_1)  +  e^{+\pi i/6} \operatorname{Ai}(z_2)
+
+    where `z_1 = -z e^{+\pi i/3}`, `z_2 = -z e^{-\pi i/3}`.
+    Provided that `|\arg(-z)| < 2 \pi / 3`, we have
+    `|\arg(z_1)|, |\arg(z_2)| < \pi`, and thus the asymptotic expansion
+    for Ai can be used. As before, we collect roots of unity to obtain
+
+    .. math ::
+
+        \operatorname{Ai}(z) = A_1 [S_n(i \zeta)  + R_n(z_1)]
+                             + A_2 [S_n(-i \zeta) + R_n(z_2)]
+
+        \operatorname{Bi}(z) = A_3 [S_n(i \zeta)  + R_n(z_1)]
+                             + A_4 [S_n(-i \zeta) + R_n(z_2)]
+
+    where `\zeta = (2/3) (-z)^{3/2}` and
+
+    .. math ::
+
+        A_1 = \frac{\exp(-i (\zeta - \pi/4))}{2 \sqrt{\pi} (-z)^{1/4}}, \quad
+        A_2 = \frac{\exp(+i (\zeta - \pi/4))}{2 \sqrt{\pi} (-z)^{1/4}}, \quad
+        A_3 = -i A_1, \quad
+        A_4 = +i A_2.
+
+    The differentiated formulas are analogous.
+
+.. function:: void acb_hypgeom_airy_bound(mag_t ai, mag_t aip, mag_t bi, mag_t bip, const acb_t z)
+
+    Computes bounds for the Airy functions using first-order asymptotic
+    expansions together with error bounds. This function uses some
+    shortcuts to make it slightly faster than calling
+    :func:`acb_hypgeom_airy_asymp` with `n = 1`.
+
+.. function:: void acb_hypgeom_airy(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong prec)
+
+    Computes Airy functions using an automatic algorithm choice.
+
+    We use :func:`acb_hypgeom_airy_asymp` whenever this gives full accuracy
+    and :func:`acb_hypgeom_airy_direct` otherwise.
+
+    In the latter case, we first use double precision arithmetic to
+    determine an accurate estimate of the working precision needed
+    to compute the Airy functions accurately for given *z*. This estimate is
+    obtained by comparing the leading-order asymptotic estimate of the Airy
+    functions with the magnitude of the largest term in the power series.
+    The estimate is generic in the sense that it does not take into account
+    vanishing near the roots of the functions.
+
+    We subsequently evaluate the power series at the midpoint of *z* and
+    bound the propagated error using derivatives. Derivatives are
+    bounded using :func:`acb_hypgeom_airy_bound`.
+
 Incomplete gamma functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, long s, const acb_t z, int modified, long prec)
+.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int modified, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, long prec)
+.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
 
     Computes the upper incomplete gamma function respectively using
 
@@ -515,16 +664,16 @@ Exponential and trigonometric integrals
 
 The branch cut conventions of the following functions match Mathematica.
 
-.. function:: void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, long prec)
+.. function:: void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec)
 
     Computes the generalized exponential integral `E_s(z)`. This is a
     trivial wrapper of :func:`acb_hypgeom_gamma_upper`.
 
-.. function:: void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_ei(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ei(acb_t res, const acb_t z, slong prec)
 
     Computes the exponential integral `\operatorname{Ei}(z)`, respectively
     using
@@ -539,11 +688,11 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_si_asymp(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_si_asymp(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_si_1f2(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_si_1f2(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_si(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_si(acb_t res, const acb_t z, slong prec)
 
     Computes the sine integral `\operatorname{Si}(z)`, respectively
     using
@@ -558,11 +707,11 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_ci(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_ci(acb_t res, const acb_t z, slong prec)
 
     Computes the cosine integral `\operatorname{Ci}(z)`, respectively
     using
@@ -579,17 +728,17 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_shi(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_shi(acb_t res, const acb_t z, slong prec)
 
     Computes the hyperbolic sine integral
     `\operatorname{Shi}(z) = -i \operatorname{Si}(iz)`.
     This is a trivial wrapper of :func:`acb_hypgeom_si`.
 
-.. function:: void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_chi(acb_t res, const acb_t z, long prec)
+.. function:: void acb_hypgeom_chi(acb_t res, const acb_t z, slong prec)
 
     Computes the hyperbolic cosine integral `\operatorname{Chi}(z)`, respectively
     using
@@ -606,7 +755,7 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_li(acb_t res, const acb_t z, int offset, long prec)
+.. function:: void acb_hypgeom_li(acb_t res, const acb_t z, int offset, slong prec)
 
     If *offset* is zero, computes the logarithmic integral
     `\operatorname{li}(z) = \operatorname{Ei}(\log(z))`.
@@ -627,24 +776,24 @@ or the regularized version
 `\operatorname{\mathbf{F}}(z) = \operatorname{\mathbf{F}}(a,b,c,z) = {}_2F_1(a,b,c,z) / \Gamma(c)`
 if the flag *regularized* is set.
 
-.. function:: void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1, const acb_t a, const acb_t b, const acb_t c, const acb_t z0, const acb_t z1, const acb_t f0, const acb_t f1, long prec)
+.. function:: void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1, const acb_t a, const acb_t b, const acb_t c, const acb_t z0, const acb_t z1, const acb_t f0, const acb_t f1, slong prec)
 
     Given `F(z_0), F'(z_0)` in *f0*, *f1*, sets *res0* and *res1* to `F(z_1), F'(z_1)`
     by integrating the hypergeometric differential equation along a straight-line path.
     The evaluation points should be well-isolated from the singular points 0 and 1.
 
-.. function:: void acb_hypgeom_2f1_series_direct(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t c, const acb_poly_t z, int regularized, long len, long prec)
+.. function:: void acb_hypgeom_2f1_series_direct(acb_poly_t res, const acb_poly_t a, const acb_poly_t b, const acb_poly_t c, const acb_poly_t z, int regularized, slong len, slong prec)
 
     Computes `F(z)` of the given power series truncated to length *len*, using
     direct summation of the hypergeometric series.
 
-.. function:: void acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_2f1_direct(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec)
 
     Computes `F(z)` using direct summation of the hypergeometric series.
 
-.. function:: void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, long prec)
+.. function:: void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, slong prec)
 
-.. function:: void acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, long prec)
+.. function:: void acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, slong prec)
 
     Computes `F(z)` using an argument transformation determined by the flag *which*.
     Legal values are 1 for `z/(z-1)`,
@@ -655,7 +804,7 @@ if the flag *regularized* is set.
     If *which* is 4 or 5, it assumes that `c-a-b` represents an exact integer.
     In these cases, it computes the correct limit value.
 
-.. function:: void acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec)
 
     Computes `F(z)` near the corner cases `\exp(\pm \pi i \sqrt{3})`
     by analytic continuation.
@@ -668,7 +817,7 @@ if the flag *regularized* is set.
     :func:`acb_hypgeom_2f1_transform` should be used.
     If the return value is 6, the corner case algorithm should be used.
 
-.. function:: void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, long prec)
+.. function:: void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec)
 
     Computes `F(z)` (or `\operatorname{\mathbf{F}}(z)` if *regularized* is set)
     using an automatic algorithm choice.
@@ -676,9 +825,9 @@ if the flag *regularized* is set.
 Orthogonal polynomials and functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_chebyshev_t(acb_t res, const acb_t n, const acb_t z, long prec)
+.. function:: void acb_hypgeom_chebyshev_t(acb_t res, const acb_t n, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_chebyshev_u(acb_t res, const acb_t n, const acb_t z, long prec)
+.. function:: void acb_hypgeom_chebyshev_u(acb_t res, const acb_t n, const acb_t z, slong prec)
 
     Computes the Chebyshev polynomial (or Chebyshev function) of first or second kind
 
@@ -693,7 +842,7 @@ Orthogonal polynomials and functions
     For word-size integer *n*, :func:`acb_chebyshev_t_ui` and
     :func:`acb_chebyshev_u_ui` are called.
 
-.. function:: void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b, const acb_t z, long prec)
+.. function:: void acb_hypgeom_jacobi_p(acb_t res, const acb_t n, const acb_t a, const acb_t b, const acb_t z, slong prec)
 
     Computes the Jacobi polynomial (or Jacobi function)
 
@@ -706,7 +855,7 @@ Orthogonal polynomials and functions
     is undefined. In such cases, the polynomial is evaluated using
     direct methods.
 
-.. function:: void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+.. function:: void acb_hypgeom_gegenbauer_c(acb_t res, const acb_t n, const acb_t m, const acb_t z, slong prec)
 
     Computes the Gegenbauer polynomial (or Gegenbauer function)
 
@@ -719,7 +868,7 @@ Orthogonal polynomials and functions
     is undefined. In such cases, the polynomial is evaluated using
     direct methods.
 
-.. function:: void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, long prec)
+.. function:: void acb_hypgeom_laguerre_l(acb_t res, const acb_t n, const acb_t m, const acb_t z, slong prec)
 
     Computes the Laguerre polynomial (or Laguerre function)
 
@@ -732,7 +881,13 @@ Orthogonal polynomials and functions
     is undefined. In such cases, the polynomial is evaluated using
     direct methods.
 
-.. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, long prec)
+    There are at least two incompatible ways to define the Laguerre function when
+    *n* is a negative integer.  One possibility when `m = 0` is to define
+    `L_{-n}^0(z) = e^z L_{n-1}^0(-z)`. Another possibility is to cover this
+    case with the recurrence relation `L_{n-1}^m(z) + L_n^{m-1}(z) = L_n^m(z)`.
+    Currently, we leave this case undefined (returning indeterminate).
+
+.. function:: void acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, slong prec)
 
     Computes the Hermite polynomial (or Hermite function)
 
@@ -743,7 +898,7 @@ Orthogonal polynomials and functions
             - 
             \frac{2z}{\Gamma(-n/2)} {}_1F_1\left(\frac{1-n}{2},\frac{3}{2},z^2\right)\right).
 
-.. function:: void acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, long prec)
+.. function:: void acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, slong prec)
 
     Sets *res* to the associated Legendre function of the first kind
     evaluated for degree *n*, order *m*, and argument *z*.
@@ -767,7 +922,7 @@ Orthogonal polynomials and functions
     is computed. Type 0 and type 1 respectively correspond to
     type 2 and type 3 in *Mathematica* and *mpmath*.
 
-.. function:: void acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, long prec)
+.. function:: void acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, slong prec)
 
     Sets *res* to the associated Legendre function of the second kind
     evaluated for degree *n*, order *m*, and argument *z*.
@@ -804,12 +959,12 @@ Orthogonal polynomials and functions
     .. [WQ3c] http://functions.wolfram.com/07.12.26.0003.01
     .. [WQ3d] http://functions.wolfram.com/07.12.26.0088.01
 
-.. function:: void acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, long prec)
+.. function:: void acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, slong prec)
 
     For nonnegative integer *n* and *m*, uses recurrence relations to evaluate
     `(1-z^2)^{-m/2} P_n^m(z)` which is a polynomial in *z*.
 
-.. function:: void acb_hypgeom_spherical_y(acb_t res, long n, long m, const acb_t theta, const acb_t phi, long prec)
+.. function:: void acb_hypgeom_spherical_y(acb_t res, slong n, slong m, const acb_t theta, const acb_t phi, slong prec)
 
     Computes the spherical harmonic of degree *n*, order *m*,
     latitude angle *theta*, and longitude angle *phi*, normalized

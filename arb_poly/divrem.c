@@ -30,10 +30,10 @@
 
 void
 _arb_poly_div(arb_ptr Q,
-    arb_srcptr A, long lenA,
-    arb_srcptr B, long lenB, long prec)
+    arb_srcptr A, slong lenA,
+    arb_srcptr B, slong lenB, slong prec)
 {
-    long lenQ, lenB2;
+    slong lenQ, lenB2;
     arb_ptr Arev, Brev;
 
     lenQ = lenA - lenB + 1;
@@ -61,10 +61,10 @@ _arb_poly_div(arb_ptr Q,
 }
 
 void _arb_poly_divrem(arb_ptr Q, arb_ptr R,
-    arb_srcptr A, long lenA,
-    arb_srcptr B, long lenB, long prec)
+    arb_srcptr A, slong lenA,
+    arb_srcptr B, slong lenB, slong prec)
 {
-    const long lenQ = lenA - lenB + 1;
+    const slong lenQ = lenA - lenB + 1;
     _arb_poly_div(Q, A, lenA, B, lenB, prec);
 
     if (lenB > 1)
@@ -78,19 +78,19 @@ void _arb_poly_divrem(arb_ptr Q, arb_ptr R,
 }
 
 void _arb_poly_rem(arb_ptr R,
-    arb_srcptr A, long lenA,
-    arb_srcptr B, long lenB, long prec)
+    arb_srcptr A, slong lenA,
+    arb_srcptr B, slong lenB, slong prec)
 {
-    const long lenQ = lenA - lenB + 1;
+    const slong lenQ = lenA - lenB + 1;
     arb_ptr Q = _arb_vec_init(lenQ);
     _arb_poly_divrem(Q, R, A, lenA, B, lenB, prec);
     _arb_vec_clear(Q, lenQ);
 }
 
 int arb_poly_divrem(arb_poly_t Q, arb_poly_t R,
-                             const arb_poly_t A, const arb_poly_t B, long prec)
+                             const arb_poly_t A, const arb_poly_t B, slong prec)
 {
-    const long lenA = A->length, lenB = B->length;
+    const slong lenA = A->length, lenB = B->length;
 
     if (lenB == 0 || arb_contains_zero(B->coeffs + lenB - 1))
     {

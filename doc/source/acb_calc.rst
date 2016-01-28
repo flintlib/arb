@@ -16,7 +16,7 @@ Types, macros and constants
 
     Typedef for a pointer to a function with signature::
 
-        int func(acb_ptr out, const acb_t inp, void * param, long order, long prec)
+        int func(acb_ptr out, const acb_t inp, void * param, slong order, slong prec)
 
     implementing a univariate complex function `f(x)`.
     When called, *func* should write to *out* the first *order*
@@ -32,7 +32,7 @@ Types, macros and constants
 Bounds
 -------------------------------------------------------------------------------
 
-.. function:: void acb_calc_cauchy_bound(arb_t bound, acb_calc_func_t func, void * param, const acb_t x, const arb_t radius, long maxdepth, long prec)
+.. function:: void acb_calc_cauchy_bound(arb_t bound, acb_calc_func_t func, void * param, const acb_t x, const arb_t radius, slong maxdepth, slong prec)
 
     Sets *bound* to a ball containing the value of the integral
 
@@ -53,7 +53,7 @@ Bounds
 Integration
 -------------------------------------------------------------------------------
 
-.. function:: int acb_calc_integrate_taylor(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const arf_t inner_radius, const arf_t outer_radius, long accuracy_goal, long prec)
+.. function:: int acb_calc_integrate_taylor(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const arf_t inner_radius, const arf_t outer_radius, slong accuracy_goal, slong prec)
 
     Computes the integral
 

@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("cmpabs_2exp_si....");
+    flint_printf("cmpabs_2exp_si....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 100000; iter++)
     {
-        long bits, e;
+        slong bits, e;
         arf_t x, y;
         int cmp1, cmp2;
 
@@ -59,10 +59,10 @@ int main()
 
         if (cmp1 != cmp2)
         {
-            printf("FAIL\n\n");
-            printf("x = "); arf_print(x); printf("\n\n");
-            printf("y = "); arf_print(y); printf("\n\n");
-            printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
+            flint_printf("FAIL\n\n");
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+            flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
             abort();
         }
 
@@ -72,7 +72,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

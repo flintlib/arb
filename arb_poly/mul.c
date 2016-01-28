@@ -26,17 +26,17 @@
 #include "arb_poly.h"
 
 void _arb_poly_mul(arb_ptr C,
-    arb_srcptr A, long lenA,
-    arb_srcptr B, long lenB, long prec)
+    arb_srcptr A, slong lenA,
+    arb_srcptr B, slong lenB, slong prec)
 {
     _arb_poly_mullow(C, A, lenA, B, lenB, lenA + lenB - 1, prec);
 }
 
 void
 arb_poly_mul(arb_poly_t res, const arb_poly_t poly1,
-              const arb_poly_t poly2, long prec)
+              const arb_poly_t poly2, slong prec)
 {
-    long len_out;
+    slong len_out;
 
     if ((poly1->length == 0) || (poly2->length == 0))
     {

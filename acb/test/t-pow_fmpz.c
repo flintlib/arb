@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("pow_fmpz....");
+    flint_printf("pow_fmpz....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     {
         acb_t a, b, c, d;
         fmpz_t e1, e2, e3;
-        long prec1, prec2;
+        slong prec1, prec2;
 
         prec1 = 2 + n_randint(state, 1000);
         prec2 = prec1 + 30;
@@ -62,11 +62,11 @@ int main()
 
         if (!acb_overlaps(b, c))
         {
-            printf("FAIL: overlap\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("e1 = "); fmpz_print(e1); printf("\n\n");
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("e1 = "); fmpz_print(e1); flint_printf("\n\n");
             abort();
         }
 
@@ -78,13 +78,13 @@ int main()
 
         if (!acb_overlaps(c, d))
         {
-            printf("FAIL: functional equation\n\n");
-            printf("a = "); acb_print(a); printf("\n\n");
-            printf("b = "); acb_print(b); printf("\n\n");
-            printf("c = "); acb_print(c); printf("\n\n");
-            printf("d = "); acb_print(d); printf("\n\n");
-            printf("e1 = "); fmpz_print(e1); printf("\n\n");
-            printf("e2 = "); fmpz_print(e2); printf("\n\n");
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); acb_print(d); flint_printf("\n\n");
+            flint_printf("e1 = "); fmpz_print(e1); flint_printf("\n\n");
+            flint_printf("e2 = "); fmpz_print(e2); flint_printf("\n\n");
             abort();
         }
 
@@ -99,6 +99,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

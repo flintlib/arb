@@ -27,7 +27,7 @@
 #include "acb_poly.h"
 
 void
-acb_zeta_si(acb_t z, long s, long prec)
+acb_zeta_si(acb_t z, slong s, slong prec)
 {
     if (s >= 0)
     {
@@ -45,7 +45,7 @@ acb_zeta_si(acb_t z, long s, long prec)
 }
 
 void
-acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
+acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, slong prec)
 {
     if (acb_is_one(a) && acb_is_int(s) &&
         arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), FLINT_BITS - 1) < 0)
@@ -58,7 +58,7 @@ acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, long prec)
 }
 
 void
-acb_zeta(acb_t z, const acb_t s, long prec)
+acb_zeta(acb_t z, const acb_t s, slong prec)
 {
     acb_t a;
     acb_init(a);
@@ -74,7 +74,7 @@ acb_zeta(acb_t z, const acb_t s, long prec)
     if (arf_sgn(arb_midref(acb_realref(s))) < 0)
     {
         acb_t t, u, v;
-        long wp = prec + 6;
+        slong wp = prec + 6;
 
         acb_init(t);
         acb_init(u);

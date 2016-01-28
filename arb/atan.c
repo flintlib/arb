@@ -29,7 +29,7 @@
 
 /* atan(x) = x + eps, |eps| < x^3*/
 void
-arb_atan_eps(arb_t z, const arf_t x, long prec)
+arb_atan_eps(arb_t z, const arf_t x, slong prec)
 {
     fmpz_t mag;
     fmpz_init(mag);
@@ -42,7 +42,7 @@ arb_atan_eps(arb_t z, const arf_t x, long prec)
 
 /* atan(x) = pi/2 - eps, eps < 1/x <= 2^(1-mag) */
 void
-arb_atan_inf_eps(arb_t z, const arf_t x, long prec)
+arb_atan_inf_eps(arb_t z, const arf_t x, slong prec)
 {
     fmpz_t mag;
     fmpz_init(mag);
@@ -66,15 +66,15 @@ arb_atan_inf_eps(arb_t z, const arf_t x, long prec)
     fmpz_clear(mag);
 }
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, long exp);
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
 
 int
-_arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, long prec)
+_arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec)
 {
-    long exp, exp_shift;
+    slong exp, exp_shift;
     int inexact;
 
-    exp = (long)(xn - fixn) * FLINT_BITS;
+    exp = (slong)(xn - fixn) * FLINT_BITS;
 
     while (xn > 0 && xp[xn-1] == 0)
     {
@@ -98,7 +98,7 @@ _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int nega
 
 /* TODO: move out */
 void
-mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e)
+mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e)
 {
     mag_t t;
     mag_init(t);
@@ -108,7 +108,7 @@ mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, long e)
 }
 
 void
-arb_atan_arf(arb_t z, const arf_t x, long prec)
+arb_atan_arf(arb_t z, const arf_t x, slong prec)
 {
     if (arf_is_special(x))
     {
@@ -141,7 +141,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
     }
     else
     {
-        long exp, wp, wn, N, r;
+        slong exp, wp, wn, N, r;
         mp_srcptr xp;
         mp_size_t xn, tn;
         mp_ptr tmp, w, t, u;
@@ -209,7 +209,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
         }
         else    /* |x| > 1 */
         {
-            long one_exp, one_limbs, one_bits;
+            slong one_exp, one_limbs, one_bits;
             mp_ptr one;
 
             reciprocal = 1;
@@ -348,7 +348,7 @@ arb_atan_arf(arb_t z, const arf_t x, long prec)
 }
 
 void
-arb_atan(arb_t z, const arb_t x, long prec)
+arb_atan(arb_t z, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {

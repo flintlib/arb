@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("find_roots....");
+    flint_printf("find_roots....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -43,8 +43,8 @@ int main()
         acb_poly_t C;
         acb_t t;
         acb_ptr roots;
-        long i, deg, isolated;
-        long prec = 10 + n_randint(state, 400);
+        slong i, deg, isolated;
+        slong prec = 10 + n_randint(state, 400);
 
         acb_init(t);
         acb_poly_init(A);
@@ -77,9 +77,9 @@ int main()
 
             if (!acb_poly_contains(B, A))
             {
-                printf("FAIL: product does not equal polynomial\n");
-                acb_poly_printd(A, 15); printf("\n\n");
-                acb_poly_printd(B, 15); printf("\n\n");
+                flint_printf("FAIL: product does not equal polynomial\n");
+                acb_poly_printd(A, 15); flint_printf("\n\n");
+                acb_poly_printd(B, 15); flint_printf("\n\n");
                 abort();
             }
         }
@@ -89,10 +89,10 @@ int main()
             acb_poly_evaluate(t, A, roots + i, prec);
             if (!acb_contains_zero(t))
             {
-                printf("FAIL: poly(root) does not contain zero\n");
-                acb_poly_printd(A, 15); printf("\n\n");
-                acb_printd(roots + i, 15); printf("\n\n");
-                acb_printd(t, 15); printf("\n\n");
+                flint_printf("FAIL: poly(root) does not contain zero\n");
+                acb_poly_printd(A, 15); flint_printf("\n\n");
+                acb_printd(roots + i, 15); flint_printf("\n\n");
+                acb_printd(t, 15); flint_printf("\n\n");
                 abort();
             }
         }
@@ -107,6 +107,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

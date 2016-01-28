@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("sin_series/cos_series....");
+    flint_printf("sin_series/cos_series....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 1000; iter++)
     {
-        long m, n, rbits1, rbits2;
+        slong m, n, rbits1, rbits2;
         fmpq_poly_t B;
         acb_poly_t a, b, c, d, e;
 
@@ -67,13 +67,13 @@ int main()
         fmpq_poly_one(B);
         if (!acb_poly_contains_fmpq_poly(d, B))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("a = "); acb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); acb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); acb_poly_printd(c, 15); printf("\n\n");
-            printf("d = "); acb_poly_printd(d, 15); printf("\n\n");
+            flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
+            flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -82,7 +82,7 @@ int main()
         acb_poly_sin_series(d, d, n, rbits2);
         if (!acb_poly_equal(b, d))
         {
-            printf("FAIL (aliasing 1)\n\n");
+            flint_printf("FAIL (aliasing 1)\n\n");
             abort();
         }
 
@@ -90,7 +90,7 @@ int main()
         acb_poly_cos_series(d, d, n, rbits2);
         if (!acb_poly_equal(c, d))
         {
-            printf("FAIL (aliasing 2)\n\n");
+            flint_printf("FAIL (aliasing 2)\n\n");
             abort();
         }
 
@@ -104,7 +104,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

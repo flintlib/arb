@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_sin_cos(acb_t s, acb_t c, const acb_t z, long prec)
+acb_sin_cos(acb_t s, acb_t c, const acb_t z, slong prec)
 {
 #define a acb_realref(z)
 #define b acb_imagref(z)

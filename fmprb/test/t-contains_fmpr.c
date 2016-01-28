@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("contains_fmpq....");
+    flint_printf("contains_fmpq....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -67,14 +67,14 @@ int main()
 
         if (c1 != c2)
         {
-            printf("FAIL:\n\n");
-            printf("a = "); fmprb_print(a); printf("\n\n");
-            printf("b = "); fmpr_print(b); printf("\n\n");
-            printf("am = "); fmpq_print(am); printf("\n\n");
-            printf("ar = "); fmpq_print(ar); printf("\n\n");
-            printf("bm = "); fmpq_print(bm); printf("\n\n");
-            printf("t = "); fmpq_print(t); printf("\n\n");
-            printf("c1 = %d, c2 = %d\n\n", c1, c2);
+            flint_printf("FAIL:\n\n");
+            flint_printf("a = "); fmprb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
+            flint_printf("am = "); fmpq_print(am); flint_printf("\n\n");
+            flint_printf("ar = "); fmpq_print(ar); flint_printf("\n\n");
+            flint_printf("bm = "); fmpq_print(bm); flint_printf("\n\n");
+            flint_printf("t = "); fmpq_print(t); flint_printf("\n\n");
+            flint_printf("c1 = %d, c2 = %d\n\n", c1, c2);
             abort();
         }
 
@@ -89,6 +89,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

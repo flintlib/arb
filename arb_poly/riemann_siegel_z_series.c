@@ -27,9 +27,9 @@
 #include "acb_poly.h"
 
 void
-_arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long len, long prec)
+_arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec)
 {
-    long i, alloc;
+    slong i, alloc;
     arb_ptr t, u, v, w, q;
 
     hlen = FLINT_MIN(hlen, len);
@@ -45,7 +45,7 @@ _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long len
     {
         acb_ptr sx, z;
         acb_t a;
-        long slen = FLINT_MIN(len, 2);
+        slong slen = FLINT_MIN(len, 2);
 
         z = _acb_vec_init(len);
         sx = _acb_vec_init(slen);
@@ -92,7 +92,7 @@ _arb_poly_riemann_siegel_z_series(arb_ptr res, arb_srcptr h, long hlen, long len
 }
 
 void
-arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t f, long n, long prec)
+arb_poly_riemann_siegel_z_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec)
 {
     if (n == 0)
     {

@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter, iter2;
+    slong iter, iter2;
     flint_rand_t state;
 
-    printf("mul....");
+    flint_printf("mul....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         fmpr_t x, y, z, v;
-        long prec, r1, r2;
+        slong prec, r1, r2;
         fmpr_rnd_t rnd;
 
         fmpr_init(x);
@@ -67,12 +67,12 @@ int main()
                 r2 = fmpr_mul_naive(v, x, y, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = "); fmpr_print(y); printf("\n\n");
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -82,11 +82,11 @@ int main()
                 r2 = fmpr_mul_naive(v, x, x, prec, rnd);
                 if (!fmpr_equal(z, v) || r1 != r2 || !fmpr_check_ulp(z, r1, prec))
                 {
-                    printf("FAIL (aliasing 1)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL (aliasing 1)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -96,11 +96,11 @@ int main()
                 r1 = fmpr_mul(x, x, x, prec, rnd);
                 if (!fmpr_equal(v, x) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
-                    printf("FAIL (aliasing 2)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("z = "); fmpr_print(z); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL (aliasing 2)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -110,11 +110,11 @@ int main()
                 r1 = fmpr_mul(x, x, y, prec, rnd);
                 if (!fmpr_equal(x, v) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
-                    printf("FAIL (aliasing 3)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = "); fmpr_print(y); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL (aliasing 3)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -124,11 +124,11 @@ int main()
                 r1 = fmpr_mul(x, y, x, prec, rnd);
                 if (!fmpr_equal(x, v) || r1 != r2 || !fmpr_check_ulp(x, r1, prec))
                 {
-                    printf("FAIL (aliasing 4)!\n");
-                    printf("x = "); fmpr_print(x); printf("\n\n");
-                    printf("y = "); fmpr_print(y); printf("\n\n");
-                    printf("v = "); fmpr_print(v); printf("\n\n");
-                    printf("r1 = %ld, r2 = %ld\n", r1, r2);
+                    flint_printf("FAIL (aliasing 4)!\n");
+                    flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
+                    flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
                     abort();
                 }
                 break;
@@ -143,6 +143,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

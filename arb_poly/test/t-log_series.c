@@ -28,10 +28,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("log_series....");
+    flint_printf("log_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -39,7 +39,7 @@ int main()
     /* compare with fmpq_poly */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A, B;
         arb_poly_t a, b;
 
@@ -57,7 +57,7 @@ int main()
         arb_poly_init(b);
 
         fmpq_poly_randtest_not_zero(A, state, m, qbits);
-        fmpq_poly_set_coeff_ui(A, 0, 1UL);
+        fmpq_poly_set_coeff_ui(A, 0, UWORD(1));
 
         fmpq_poly_log_series(B, A, n);
         arb_poly_set_fmpq_poly(a, A, rbits1);
@@ -66,14 +66,14 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(b, B))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
-            printf("B = "); fmpq_poly_print(B); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
+            flint_printf("B = "); fmpq_poly_print(B); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -88,7 +88,7 @@ int main()
     /* test aliasing */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2;
+        slong m, n, qbits, rbits1, rbits2;
         fmpq_poly_t A;
         arb_poly_t a, b;
 
@@ -114,13 +114,13 @@ int main()
 
         if (!arb_poly_equal(a, b))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -133,7 +133,7 @@ int main()
     /* test that exp(log(f)) contains f */
     for (iter = 0; iter < 10000; iter++)
     {
-        long m, n, qbits, rbits1, rbits2, rbits3;
+        slong m, n, qbits, rbits1, rbits2, rbits3;
         fmpq_poly_t A;
         arb_poly_t a, b, c;
 
@@ -164,15 +164,15 @@ int main()
 
         if (!arb_poly_contains_fmpq_poly(c, A))
         {
-            printf("FAIL\n\n");
-            printf("bits2 = %ld\n", rbits2);
-            printf("bits3 = %ld\n", rbits3);
+            flint_printf("FAIL\n\n");
+            flint_printf("bits2 = %wd\n", rbits2);
+            flint_printf("bits3 = %wd\n", rbits3);
 
-            printf("A = "); fmpq_poly_print(A); printf("\n\n");
+            flint_printf("A = "); fmpq_poly_print(A); flint_printf("\n\n");
 
-            printf("a = "); arb_poly_printd(a, 15); printf("\n\n");
-            printf("b = "); arb_poly_printd(b, 15); printf("\n\n");
-            printf("c = "); arb_poly_printd(c, 15); printf("\n\n");
+            flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
+            flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
+            flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -185,6 +185,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

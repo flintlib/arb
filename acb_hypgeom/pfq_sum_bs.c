@@ -46,17 +46,17 @@ A1 B2 + B1 B2 = B2 (A1 + B1) -- use to save time?
 
 static void
 bsplit(acb_t A1, acb_t B1, acb_t C1,
-        acb_srcptr a, long p,
-        acb_srcptr b, long q,
+        acb_srcptr a, slong p,
+        acb_srcptr b, slong q,
         const acb_t z,
-        long aa,
-        long bb,
-        long prec,
+        slong aa,
+        slong bb,
+        slong prec,
         int invz)
 {
     if (bb - aa == 1)
     {
-        long i;
+        slong i;
 
         if (p == 0)
         {
@@ -104,7 +104,7 @@ bsplit(acb_t A1, acb_t B1, acb_t C1,
     }
     else
     {
-        long m;
+        slong m;
 
         acb_t A2, B2, C2;
 
@@ -147,7 +147,7 @@ bsplit(acb_t A1, acb_t B1, acb_t C1,
 
 void
 acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t,
-    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+    acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
     acb_t u, v, w;
 
@@ -173,7 +173,7 @@ acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t,
 
 void
 acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t,
-    acb_srcptr a, long p, acb_srcptr b, long q, const acb_t z, long n, long prec)
+    acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
     acb_t u, v, w;
 

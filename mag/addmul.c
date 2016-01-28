@@ -42,7 +42,7 @@ mag_addmul(mag_t z, const mag_t x, const mag_t y)
     }
     else
     {
-        long shift;
+        slong shift;
         fmpz_t e;
 
         fmpz_init(e);

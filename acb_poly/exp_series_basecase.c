@@ -29,9 +29,9 @@
 
 static void
 _acb_poly_exp_series_basecase_rec(acb_ptr f, acb_ptr a,
-        acb_srcptr h, long hlen, long n, long prec)
+        acb_srcptr h, slong hlen, slong n, slong prec)
 {
-    long j, k;
+    slong j, k;
 
     acb_t s;
     acb_init(s);
@@ -55,7 +55,7 @@ _acb_poly_exp_series_basecase_rec(acb_ptr f, acb_ptr a,
 
 void
 _acb_poly_exp_series_basecase(acb_ptr f,
-        acb_srcptr h, long hlen, long n, long prec)
+        acb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(n, hlen);
 
@@ -67,7 +67,7 @@ _acb_poly_exp_series_basecase(acb_ptr f,
     }
     else
     {
-        long m, v;
+        slong m, v;
         acb_ptr t, u;
 
         m = (n + 2) / 3;
@@ -91,9 +91,9 @@ _acb_poly_exp_series_basecase(acb_ptr f,
 }
 
 void
-acb_poly_exp_series_basecase(acb_poly_t f, const acb_poly_t h, long n, long prec)
+acb_poly_exp_series_basecase(acb_poly_t f, const acb_poly_t h, slong n, slong prec)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {

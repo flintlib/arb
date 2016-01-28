@@ -29,7 +29,7 @@ void _gamma_rf_bsplit(fmpz * A, ulong a, ulong b);
 
 void
 acb_rising2_ui_rs(acb_t u, acb_t v,
-    const acb_t x, ulong n, ulong m, long prec)
+    const acb_t x, ulong n, ulong m, slong prec)
 {
     if (n == 0)
     {
@@ -43,7 +43,7 @@ acb_rising2_ui_rs(acb_t u, acb_t v,
     }
     else
     {
-        long wp;
+        slong wp;
         ulong i, j, a, b;
         acb_ptr xs;
         acb_t S, T, U, V;

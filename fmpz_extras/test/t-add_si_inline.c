@@ -27,10 +27,10 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("add_si_inline....");
+    flint_printf("add_si_inline....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -38,7 +38,7 @@ int main()
     for (iter = 0; iter < 100000; iter++)
     {
         fmpz_t a, c, d;
-        long b;
+        slong b;
 
         fmpz_init(a);
         fmpz_init(c);
@@ -54,22 +54,22 @@ int main()
 
         if (!fmpz_equal(c, d))
         {
-            printf("FAIL\n");
-            fmpz_print(a); printf("\n\n");
-            printf("%ld", b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
+            flint_printf("FAIL\n");
+            fmpz_print(a); flint_printf("\n\n");
+            flint_printf("%wd", b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
             abort();
         }
 
         fmpz_add_si_inline(a, a, b);
         if (!fmpz_equal(c, a))
         {
-            printf("FAIL (aliasing)\n");
-            fmpz_print(a); printf("\n\n");
-            printf("%ld", b); printf("\n\n");
-            fmpz_print(c); printf("\n\n");
-            fmpz_print(d); printf("\n\n");
+            flint_printf("FAIL (aliasing)\n");
+            fmpz_print(a); flint_printf("\n\n");
+            flint_printf("%wd", b); flint_printf("\n\n");
+            fmpz_print(c); flint_printf("\n\n");
+            fmpz_print(d); flint_printf("\n\n");
             abort();
         }
 
@@ -80,7 +80,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

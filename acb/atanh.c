@@ -26,7 +26,7 @@
 #include "acb.h"
 
 void
-acb_atanh(acb_t res, const acb_t z, long prec)
+acb_atanh(acb_t res, const acb_t z, slong prec)
 {
     acb_mul_onei(res, z);
     acb_atan(res, res, prec);

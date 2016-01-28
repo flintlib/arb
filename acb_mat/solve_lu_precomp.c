@@ -26,10 +26,10 @@
 #include "acb_mat.h"
 
 void
-acb_mat_solve_lu_precomp(acb_mat_t X, const long * perm,
-    const acb_mat_t A, const acb_mat_t B, long prec)
+acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm,
+    const acb_mat_t A, const acb_mat_t B, slong prec)
 {
-    long i, j, c, n, m;
+    slong i, j, c, n, m;
 
     n = acb_mat_nrows(X);
     m = acb_mat_ncols(X);

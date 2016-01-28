@@ -27,17 +27,17 @@
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("evaluate_vec_fast....");
+    flint_printf("evaluate_vec_fast....");
     fflush(stdout);
 
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
-        long i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
+        slong i, n, qbits1, qbits2, rbits1, rbits2, rbits3;
         fmpq_poly_t F;
         fmpq * X, * Y;
         acb_poly_t f;
@@ -74,15 +74,15 @@ int main()
         {
             if (!acb_contains_fmpq(y + i, Y + i))
             {
-                printf("FAIL (%ld of %ld)\n\n", i, n);
+                flint_printf("FAIL (%wd of %wd)\n\n", i, n);
 
-                printf("F = "); fmpq_poly_print(F); printf("\n\n");
-                printf("X = "); fmpq_print(X + i); printf("\n\n");
-                printf("Y = "); fmpq_print(Y + i); printf("\n\n");
+                flint_printf("F = "); fmpq_poly_print(F); flint_printf("\n\n");
+                flint_printf("X = "); fmpq_print(X + i); flint_printf("\n\n");
+                flint_printf("Y = "); fmpq_print(Y + i); flint_printf("\n\n");
 
-                printf("f = "); acb_poly_printd(f, 15); printf("\n\n");
-                printf("x = "); acb_printd(x + i, 15); printf("\n\n");
-                printf("y = "); acb_printd(y + i, 15); printf("\n\n");
+                flint_printf("f = "); acb_poly_printd(f, 15); flint_printf("\n\n");
+                flint_printf("x = "); acb_printd(x + i, 15); flint_printf("\n\n");
+                flint_printf("y = "); acb_printd(y + i, 15); flint_printf("\n\n");
 
                 abort();
             }
@@ -99,6 +99,6 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

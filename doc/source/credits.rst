@@ -5,8 +5,9 @@ Credits and references
 
 Arb is licensed GNU General Public License version 2, or any later version.
 
-Arb includes code by Bill Hart and
-Sebastian Pancratz taken from FLINT (also licensed GPL 2.0+).
+Fredrik Johansson is the main author. The project was started in 2012
+as a numerical extension of FLINT, and the initial design was heavily based
+on FLINT 2.0 (with particular credit to Bill Hart and Sebastian Pancratz).
 
 From 2012 to July 2014, Fredrik's work on Arb was supported by
 Austrian Science Fund FWF Grant Y464-N18 (Fast Computer Algebra
@@ -14,29 +15,42 @@ for Special Functions).
 During that period, he was a PhD student (and briefly a postdoc) at
 RISC, Johannes Kepler University, Linz, supervised by Manuel Kauers.
 
-From September 2014 to the present, Fredrik's work on Arb was supported by
-ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
-During that period, he was a postdoc at INRIA-Bordeaux and IMB, supervised
-by Andreas Enge.
+From September 2014 to October 2015, Fredrik was a postdoc in the LFANT
+project-team at INRIA Bordeaux and Institut de Mathématiques de Bordeaux,
+headed by Andreas Enge. During that period, Fredrik's work on Arb was supported
+by ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in
+Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
+Since October 2015, Fredrik is a CR2 researcher in the LFANT team,
+funded by INRIA.
 
 Contributors
 -------------------------------------------------------------------------------
 
-The following people (among others) have contributed patches or bug reports.
+Several people have contributed patches, bug reports, or substantial feedback.
+This list is probably incomplete.
 
-* Jonathan Bober
-* Yuri Matiyasevich
-* Abhinav Baid
-* Ondřej Čertík
-* Andrew Booker
-* Francesco Biscani
-* Clemens Heuberger
-* Pascal Molin
-* Ricky Farr
-* Marcello Seri
-* Tommy Hofmann
+* Bill Hart - build system, Windows 64 support, design of FLINT
+* Sebastian Pancratz - divide-and-conquer polynomial composition algorithm (taken from FLINT)
+* The MPFR development team - Arb includes two-limb multiplication code taken from MPFR
+* Jonathan Bober - C++ compatibility fixes
+* Yuri Matiyasevich - feedback about the zeta function and root-finding code
+* Abhinav Baid - dot product and norm functions
+* Ondřej Čertík - bug reports, feedback
+* Andrew Booker - bug reports, feedback
+* Francesco Biscani - C++ compatibility fixes, feedback
+* Clemens Heuberger - work on Arb interface in Sage, feedback
+* Marc Mezzarobba - work on Arb interface in Sage, bug reports, feedback
+* Pascal Molin - feedback
+* Ricky Farr - convenience functions, feedback
+* Marcello Seri - fix for static builds on OS X
+* Tommy Hofmann - matrix transpose, comparison, other utility methods, Julia interface
+* Alexander Kobel - documentation and code cleanup patches
+* Hrvoje Abraham - patches for MinGW compatibility
+* Julien Puydt - soname versioning support
+* Alex Griffing - sinc function, matrix trace, improved matrix squaring, miscellaneous patches
+* Jeroen Demeyer - patch for major bug on PPC64
 
-Software 
+Software
 -------------------------------------------------------------------------------
 
 The following software has been helpful in the development of Arb.

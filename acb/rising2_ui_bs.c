@@ -26,7 +26,7 @@
 #include "acb.h"
 
 static void
-bsplit(acb_t p, acb_t q, const acb_t x, ulong a, ulong b, long prec)
+bsplit(acb_t p, acb_t q, const acb_t x, ulong a, ulong b, slong prec)
 {
     if (b - a < 8)
     {
@@ -71,7 +71,7 @@ bsplit(acb_t p, acb_t q, const acb_t x, ulong a, ulong b, long prec)
 }
 
 void
-acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec)
+acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
 {
     if (n == 0)
     {
@@ -86,7 +86,7 @@ acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, long prec)
     else
     {
         acb_t t;
-        long wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
+        slong wp = ARF_PREC_ADD(prec, FLINT_BIT_COUNT(n));
 
         acb_init(t);  /* support aliasing */
         acb_set(t, x);

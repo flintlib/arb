@@ -167,9 +167,9 @@ int main()
     double x;
     int error, bracket;
     char tmp[256];
-    long i, j;
+    slong i, j;
 
-    printf("set_str....");
+    flint_printf("set_str....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -198,9 +198,9 @@ int main()
 
         if (error != 0 || !arb_equal(t, u))
         {
-            printf("FAIL (valid input): %s\n", testdata_floats[i]);
-            arb_printd(t, 15); printf("\n");
-            arb_printd(u, 15); printf("\n");
+            flint_printf("FAIL (valid input): %s\n", testdata_floats[i]);
+            arb_printd(t, 15); flint_printf("\n");
+            arb_printd(u, 15); flint_printf("\n");
             abort();
         }
     }
@@ -251,9 +251,9 @@ int main()
 
                 if (error != 0 || !arb_equal(t, u))
                 {
-                    printf("FAIL (valid input): %s\n", tmp);
-                    arb_printd(t, 15); printf("\n");
-                    arb_printd(u, 15); printf("\n");
+                    flint_printf("FAIL (valid input): %s\n", tmp);
+                    arb_printd(t, 15); flint_printf("\n");
+                    arb_printd(u, 15); flint_printf("\n");
                     abort();
                 }
             }
@@ -268,8 +268,8 @@ int main()
 
         if (error == 0)
         {
-            printf("FAIL (invalid input): %s\n", testdata_invalid[i]);
-            arb_printd(t, 15); printf("\n");
+            flint_printf("FAIL (invalid input): %s\n", testdata_invalid[i]);
+            arb_printd(t, 15); flint_printf("\n");
             abort();
         }
     }
@@ -300,8 +300,8 @@ int main()
 
                 if (error == 0)
                 {
-                    printf("FAIL (invalid input): %s\n", tmp);
-                    arb_printd(t, 15); printf("\n");
+                    flint_printf("FAIL (invalid input): %s\n", tmp);
+                    arb_printd(t, 15); flint_printf("\n");
                     abort();
                 }
             }
@@ -313,6 +313,6 @@ int main()
     arb_clear(v);
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

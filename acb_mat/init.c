@@ -26,11 +26,11 @@
 #include "acb_mat.h"
 
 void
-acb_mat_init(acb_mat_t mat, long r, long c)
+acb_mat_init(acb_mat_t mat, slong r, slong c)
 {
     if (r != 0 && c != 0)
     {
-        long i;
+        slong i;
 
         mat->entries = _acb_vec_init(r * c);
         mat->rows = (acb_ptr *) flint_malloc(r * sizeof(acb_ptr));

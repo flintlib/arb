@@ -27,16 +27,18 @@
 
 double mag_get_log2_d_approx(const mag_t x);
 
+#define D_ABS(x) ((x) < 0.0 ? (-x) : (x))
+
 int
-acb_hypgeom_pfq_choose_n_double(long * nn,
-    const double * are, const double * aim, long p,
-    const double * bre, const double * bim, long q,
+acb_hypgeom_pfq_choose_n_double(slong * nn,
+    const double * are, const double * aim, slong p,
+    const double * bre, const double * bim, slong q,
     double log2_z,
-    long n_skip, long n_min, long n_max, long prec)
+    slong n_skip, slong n_min, slong n_max, slong prec)
 {
     double increase, term, term_max, accuracy, accuracy_best, t, u;
     double required_decrease;
-    long k, n, n_best;
+    slong k, n, n_best;
     int success;
 
     if (p < q)
@@ -58,13 +60,13 @@ acb_hypgeom_pfq_choose_n_double(long * nn,
             if (k < p)
             {
                 u = (are[k]+n-1)*(are[k]+n-1) + (aim[k]*aim[k]);
-                t *= FLINT_ABS(u);
+                t *= D_ABS(u);
             }
 
             if (k < q)
             {
                 u = (bre[k]+n-1)*(bre[k]+n-1) + (bim[k]*bim[k]);
-                u = FLINT_ABS(u);
+                u = D_ABS(u);
 
                 if (u > 1e-100)
                     t /= u;
@@ -94,12 +96,12 @@ acb_hypgeom_pfq_choose_n_double(long * nn,
     return success;
 }
 
-long
-acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
-                         acb_srcptr b, long q, const acb_t z, long prec)
+slong
+acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
+                         acb_srcptr b, slong q, const acb_t z, slong prec)
 {
-    long n_skip, n_min, n_max, n_terminating, nint;
-    long k, n;
+    slong n_skip, n_min, n_max, n_terminating, nint;
+    slong k, n;
     double log2_z;
     double * are;
     double * aim;
@@ -123,8 +125,8 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
 
     n_skip = 1;
     n_min = 1;
-    n_max = FLINT_MIN(LONG_MAX / 2, 50 + 10.0 * prec);
-    n_terminating = LONG_MAX;
+    n_max = FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec);
+    n_terminating = WORD_MAX;
 
     for (k = 0; k < p; k++)
     {
@@ -134,16 +136,16 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
         /* If the series is terminating, stop at this n. */
         if (acb_is_int(a + k) && are[k] <= 0.0)
         {
-            n_terminating = FLINT_MIN(n_terminating, (long) (-are[k] + 1));
+            n_terminating = FLINT_MIN(n_terminating, (slong) (-are[k] + 1));
             n_terminating = FLINT_MAX(n_terminating, 1);
         }
-        else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)
+        else if (are[k] <= 0.01 && D_ABS(aim[k]) < 0.01)
         {
             /* If very close to an integer, we don't want to deal with it
                using doubles, so fast forward (todo: could work with the
                log2 of the difference instead when this happens). */
             nint = floor(are[k] + 0.5);
-            if (FLINT_ABS(nint - are[k]) < 0.01)
+            if (D_ABS(nint - are[k]) < 0.01)
                 n_skip = FLINT_MAX(n_skip, 2 - nint);
         }
     }
@@ -161,10 +163,10 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
 
             /* Also avoid near-integers here (can even allow exact
                integers when computing regularized hypergeometric functions). */
-            if (bre[k] <= 0.01 && FLINT_ABS(bim[k]) < 0.01)
+            if (bre[k] <= 0.01 && D_ABS(bim[k]) < 0.01)
             {
                 nint = floor(bre[k] + 0.5);
-                if (FLINT_ABS(nint - bre[k]) < 0.01)
+                if (D_ABS(nint - bre[k]) < 0.01)
                     n_skip = FLINT_MAX(n_skip, 2 - nint);
             }
         }
@@ -192,13 +194,13 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, long p,
     return n;
 }
 
-long
-acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
-                                const acb_poly_struct * b, long q,
-                                const acb_poly_t z, long len, long prec)
+slong
+acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
+                                const acb_poly_struct * b, slong q,
+                                const acb_poly_t z, slong len, slong prec)
 {
-    long n_skip, n_min, n_max, n_terminating, nint;
-    long k, n;
+    slong n_skip, n_min, n_max, n_terminating, nint;
+    slong k, n;
     double log2_z;
     double * are;
     double * aim;
@@ -224,8 +226,8 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
 
     n_skip = 1;
     n_min = 1;
-    n_max = FLINT_MIN(LONG_MAX / 2, 50 + 10.0 * prec);
-    n_terminating = LONG_MAX;
+    n_max = FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec);
+    n_terminating = WORD_MAX;
 
     /* e.g. for exp(x + O(x^100)), make sure that we actually
        run the recurrence up to order 100.
@@ -243,16 +245,16 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
         /* If the series is terminating, stop at this n. */
         if (acb_is_int(t) && are[k] <= 0.0 && acb_poly_length(a + k) <= 1)
         {
-            n_terminating = FLINT_MIN(n_terminating, (long) (-are[k] + 1));
+            n_terminating = FLINT_MIN(n_terminating, (slong) (-are[k] + 1));
             n_terminating = FLINT_MAX(n_terminating, 1);
         }
-        else if (are[k] <= 0.01 && FLINT_ABS(aim[k]) < 0.01)
+        else if (are[k] <= 0.01 && D_ABS(aim[k]) < 0.01)
         {
             /* If very close to an integer, we don't want to deal with it
                using doubles, so fast forward (todo: could work with the
                log2 of the difference instead when this happens). */
             nint = floor(are[k] + 0.5);
-            if (FLINT_ABS(nint - are[k]) < 0.01)
+            if (D_ABS(nint - are[k]) < 0.01)
                 n_skip = FLINT_MAX(n_skip, 2 - nint);
         }
     }
@@ -272,10 +274,10 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, long p,
 
             /* Also avoid near-integers here (can even allow exact
                integers when computing regularized hypergeometric functions). */
-            if (bre[k] <= 0.01 && FLINT_ABS(bim[k]) < 0.01)
+            if (bre[k] <= 0.01 && D_ABS(bim[k]) < 0.01)
             {
                 nint = floor(bre[k] + 0.5);
-                if (FLINT_ABS(nint - bre[k]) < 0.01)
+                if (D_ABS(nint - bre[k]) < 0.01)
                     n_skip = FLINT_MAX(n_skip, 2 - nint);
             }
         }

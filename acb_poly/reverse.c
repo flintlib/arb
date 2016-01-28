@@ -26,11 +26,11 @@
 #include "acb_poly.h"
 
 void
-_acb_poly_reverse(acb_ptr res, acb_srcptr poly, long len, long n)
+_acb_poly_reverse(acb_ptr res, acb_srcptr poly, slong len, slong n)
 {
     if (res == poly)
     {
-        long i;
+        slong i;
 
         for (i = 0; i < n / 2; i++)
         {
@@ -44,7 +44,7 @@ _acb_poly_reverse(acb_ptr res, acb_srcptr poly, long len, long n)
     }
     else
     {
-        long i;
+        slong i;
 
         for (i = 0; i < n - len; i++)
             acb_zero(res + i);

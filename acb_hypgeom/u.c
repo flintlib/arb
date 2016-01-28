@@ -28,12 +28,12 @@
 void
 acb_hypgeom_u_1f1_series(acb_poly_t res,
     const acb_poly_t a, const acb_poly_t b, const acb_poly_t z,
-    long len, long prec)
+    slong len, slong prec)
 {
     acb_poly_t s, u, A, B;
     acb_poly_struct aa[3];
     arb_t c;
-    long wlen;
+    slong wlen;
     int singular;
 
     acb_poly_init(s);
@@ -100,7 +100,7 @@ acb_hypgeom_u_1f1_series(acb_poly_t res,
 }
 
 void
-acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     if (acb_is_int(b))
     {
@@ -174,7 +174,7 @@ acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, long p
 }
 
 void
-acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, long prec)
+acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_t t;
     acb_init(t);

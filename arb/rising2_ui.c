@@ -26,7 +26,7 @@
 #include "arb.h"
 
 void
-arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, long prec)
+arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 {
     if (prec < 512 || n < 8 || arb_bits(x) < prec / 8)
         arb_rising2_ui_bs(u, v, x, n, prec);

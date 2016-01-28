@@ -28,7 +28,7 @@
 int
 acb_poly_contains(const acb_poly_t poly1, const acb_poly_t poly2)
 {
-    long i;
+    slong i;
 
     if (poly2->length > poly1->length)
         return 0;

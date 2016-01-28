@@ -71,11 +71,11 @@
   } while (0); \
 
 void
-_acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, long prec)
+_acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, slong n, slong len, slong prec)
 {
-    long * divisors;
-    long powers_alloc;
-    long i, j, k, ibound, kprev, power_of_two, horner_point;
+    slong * divisors;
+    slong powers_alloc;
+    slong i, j, k, ibound, kprev, power_of_two, horner_point;
     int critical_line, integer;
 
     acb_ptr powers;
@@ -88,7 +88,7 @@ _acb_poly_powsum_one_series_sieved(acb_ptr z, const acb_t s, long n, long len, l
 
     integer = arb_is_zero(acb_imagref(s)) && arb_is_int(acb_realref(s));
 
-    divisors = flint_calloc(n / 2 + 1, sizeof(long));
+    divisors = flint_calloc(n / 2 + 1, sizeof(slong));
     powers_alloc = (n / 6 + 1) * len;
     powers = _acb_vec_init(powers_alloc);
 

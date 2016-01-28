@@ -28,7 +28,7 @@
 void
 _acb_poly_root_inclusion(acb_t r, const acb_t m,
     acb_srcptr poly,
-    acb_srcptr polyder, long len, long prec)
+    acb_srcptr polyder, slong len, slong prec)
 {
     acb_t t;
     arf_t u, v;

@@ -27,7 +27,7 @@
 #include "hypgeom.h"
 
 static void
-atanh_bsplit(arb_t s, ulong c, long a, long prec)
+atanh_bsplit(arb_t s, ulong c, slong a, slong prec)
 {
     arb_t t;
     hypgeom_t series;
@@ -50,7 +50,7 @@ atanh_bsplit(arb_t s, ulong c, long a, long prec)
 }
 
 void
-arb_const_log10_eval(arb_t s, long prec)
+arb_const_log10_eval(arb_t s, slong prec)
 {
     arb_t t;
     arb_init(t);

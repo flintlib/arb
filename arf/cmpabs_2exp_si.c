@@ -26,7 +26,7 @@
 #include "arf.h"
 
 int
-arf_cmpabs_2exp_si(const arf_t x, long e)
+arf_cmpabs_2exp_si(const arf_t x, slong e)
 {
     if (arf_is_special(x))
     {

@@ -55,11 +55,11 @@ low_bits_are_zero(const fmpz_t u, int bits)
     else
         low = COEFF_TO_PTR(f)->_mp_d[0];
 
-    return (low & ((1UL << bits) - 1)) == 0;
+    return (low & ((UWORD(1) << bits) - 1)) == 0;
 }
 
-long
-fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x) || fmpr_is_special(y))
     {
@@ -79,7 +79,7 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long xbits, ybits, extra, extra_pad, extra_control;
+        slong xbits, ybits, extra, extra_pad, extra_control;
         int negative;
         fmpz_t t, u;
 
@@ -131,10 +131,10 @@ fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     }
 }
 
-long
-fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_ui(t, y);
     r = fmpr_div(z, x, t, prec, rnd);
@@ -142,10 +142,10 @@ fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_ui(t, x);
     r = fmpr_div(z, t, y, prec, rnd);
@@ -153,10 +153,10 @@ fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_div_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_si(t, y);
     r = fmpr_div(z, x, t, prec, rnd);
@@ -164,10 +164,10 @@ fmpr_div_si(fmpr_t z, const fmpr_t x, long y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_si(t, x);
     r = fmpr_div(z, t, y, prec, rnd);
@@ -175,10 +175,10 @@ fmpr_si_div(fmpr_t z, long x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
     return r;
 }
 
-long
-fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_fmpz(t, y);
     r = fmpr_div(z, x, t, prec, rnd);
@@ -186,10 +186,10 @@ fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, long prec, fmpr_rnd_t rn
     return r;
 }
 
-long
-fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t; long r;
+    fmpr_t t; slong r;
     fmpr_init(t);
     fmpr_set_fmpz(t, x);
     r = fmpr_div(z, t, y, prec, rnd);
@@ -197,10 +197,10 @@ fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, long prec, fmpr_rnd_t rn
     return r;
 }
 
-long
-fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd)
 {
-    fmpr_t t, u; long r;
+    fmpr_t t, u; slong r;
     fmpr_init(t);
     fmpr_init(u);
     fmpr_set_fmpz(t, x);

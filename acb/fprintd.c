@@ -19,28 +19,38 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Fredrik Johansson
+    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2015 Arb authors
 
 ******************************************************************************/
 
-#include "arb.h"
+#include "acb.h"
 
 void
-arb_fac2_ui(arb_t res, ulong n, long prec)
+acb_fprintd(FILE * file, const acb_t z, slong digits)
 {
-    if (n % 2 == 0)
+    flint_fprintf(file, "(");
+    arf_fprintd(file, arb_midref(acb_realref(z)), digits);
+
+    if (arf_sgn(arb_midref(acb_imagref(z))) < 0)
     {
-        arb_fac_ui(res, n / 2, prec);
-        arb_mul_2exp_si(res, res, n / 2);
+        arf_t t;
+        arf_init_neg_shallow(t, arb_midref(acb_imagref(z)));
+        flint_fprintf(file, " - ");
+        arf_fprintd(file, t, digits);
     }
     else
     {
-        arb_t t;
-        arb_init(t);
-        arb_fac2_ui(t, n - 1, prec + 5);
-        arb_fac_ui(res, n, prec + 5);
-        arb_div(res, res, t, prec);
-        arb_clear(t);
+        flint_fprintf(file, " + ");
+        arf_fprintd(file, arb_midref(acb_imagref(z)), digits);
     }
-}
+    flint_fprintf(file, "j)");
 
+    flint_fprintf(file, "  +/-  ");
+
+    flint_fprintf(file, "(");
+    mag_fprintd(file, arb_radref(acb_realref(z)), 3);
+    flint_fprintf(file, ", ");
+    mag_fprintd(file, arb_radref(acb_imagref(z)), 3);
+    flint_fprintf(file, "j)");
+}

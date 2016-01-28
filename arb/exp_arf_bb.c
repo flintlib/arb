@@ -30,10 +30,10 @@ Determine N such that the error is bounded by 2^-prec when summing the
 Taylor series of exp(x) up to term x^N inclusive. We choose an N with
 many trailing zeros to improve efficiency of the binary splitting.
 */
-static long
-bs_num_terms(long mag, long prec)
+static slong
+bs_num_terms(slong mag, slong prec)
 {
-    long N;
+    slong N;
 
     N = _arb_exp_taylor_bound(mag, prec);
     /* Convert from N exclusive to N inclusive. */
@@ -55,10 +55,10 @@ bs_num_terms(long mag, long prec)
 }
 
 void
-arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one)
+arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
 {
-    long k, iter, bits, r, mag, q, wp, N;
-    long argred_bits, start_bits;
+    slong k, iter, bits, r, mag, q, wp, N;
+    slong argred_bits, start_bits;
     mp_bitcnt_t Qexp[1];
     int inexact;
     fmpz_t t, u, T, Q;
@@ -85,7 +85,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, long prec, int minus_one)
        the main exp wrapper). */
     if (mag > 200 || mag < -2 * prec - 100)
     {
-        printf("arb_exp_arf_bb: unexpectedly large/small input\n");
+        flint_printf("arb_exp_arf_bb: unexpectedly large/small input\n");
         abort();
     }
 

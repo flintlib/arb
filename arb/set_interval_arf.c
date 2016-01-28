@@ -28,7 +28,7 @@
 /* [(a + b) +/- (b - a)] / 2 */
 
 void
-arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
+arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, slong prec)
 {
     arf_t t;
     int inexact;
@@ -46,7 +46,7 @@ arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, long prec)
 
     if (arf_sgn(t) < 0)
     {
-        printf("exception: arb_set_interval_arf: endpoints not ordered\n");
+        flint_printf("exception: arb_set_interval_arf: endpoints not ordered\n");
         abort();
     }
 

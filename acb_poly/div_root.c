@@ -28,10 +28,10 @@
 
 void
 _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A,
-    long len, const acb_t c, long prec)
+    slong len, const acb_t c, slong prec)
 {
     acb_t r, t;
-    long i;
+    slong i;
 
     if (len < 2)
     {

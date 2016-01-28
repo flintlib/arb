@@ -29,7 +29,7 @@
 void
 acb_modular_theta_zpx_notransform(acb_ptr theta1, acb_ptr theta2,
     acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau,
-    long len, long prec)
+    slong len, slong prec)
 {
     acb_t q, q4, w;
     int w_is_unit;
@@ -59,7 +59,7 @@ acb_modular_theta_zpx_notransform(acb_ptr theta1, acb_ptr theta2,
 }
 
 void
-acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, long len, long prec)
+acb_modular_elliptic_p_zpx(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong prec)
 {
     acb_t t01, t02, t03, t04;
     acb_ptr tz1, tz2, tz3, tz4;

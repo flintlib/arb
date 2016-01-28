@@ -25,8 +25,8 @@
 
 #include "fmpr.h"
 
-long
-fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_log(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -51,14 +51,14 @@ fmpr_log(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long r;
+        slong r;
         CALL_MPFR_FUNC(r, mpfr_log, y, x, prec, rnd);
         return r;
     }
 }
 
-long
-fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
+slong
+fmpr_log1p(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_special(x))
     {
@@ -73,7 +73,7 @@ fmpr_log1p(fmpr_t y, const fmpr_t x, long prec, fmpr_rnd_t rnd)
     }
     else
     {
-        long r;
+        slong r;
         CALL_MPFR_FUNC(r, mpfr_log1p, y, x, prec, rnd);
         return r;
     }

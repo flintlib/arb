@@ -39,7 +39,7 @@ void
 bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
 {
     ulong n;
-    long j, wp;
+    slong j, wp;
     fmpz_t sum;
     mag_t err;
     arb_t z, h;
@@ -89,11 +89,11 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     if (n % 4 == 0)
         arb_neg(z, z);
 
-    /* printf("%ld: ", n); arb_printd(z, 5); printf("\n"); */
+    /* flint_printf("%wd: ", n); arb_printd(z, 5); flint_printf("\n"); */
 
     if (!arb_get_unique_fmpz(numer, z))
     {
-        printf("warning: insufficient precision for B_%ld\n", n);
+        flint_printf("warning: insufficient precision for B_%wd\n", n);
         _bernoulli_fmpq_ui(numer, denom, n);
     }
 
@@ -116,7 +116,7 @@ bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter)
     /* readjust precision */
     if (n % 64 == 0 && n > BERNOULLI_REV_MIN)
     {
-        long new_prec, new_max;
+        slong new_prec, new_max;
 
         new_prec = bernoulli_global_prec(n);
         new_max = bernoulli_zeta_terms(n, new_prec);

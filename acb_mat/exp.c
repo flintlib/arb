@@ -26,11 +26,11 @@
 #include "double_extras.h"
 #include "acb_mat.h"
 
-long _arb_mat_exp_choose_N(const mag_t norm, long prec);
+slong _arb_mat_exp_choose_N(const mag_t norm, slong prec);
 
 /* evaluates the truncated Taylor series (assumes no aliasing) */
 void
-_acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, long N, long prec)
+_acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, slong N, slong prec)
 {
     if (N == 1)
     {
@@ -45,7 +45,7 @@ _acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, long N, long prec)
     {
         acb_mat_t T;
         acb_mat_init(T, acb_mat_nrows(A), acb_mat_nrows(A));
-        acb_mat_mul(T, A, A, prec);
+        acb_mat_sqr(T, A, prec);
         acb_mat_scalar_mul_2exp_si(T, T, -1);
         acb_mat_add(S, A, T, prec);
         acb_mat_one(T);
@@ -54,7 +54,7 @@ _acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, long N, long prec)
     }
     else
     {
-        long i, lo, hi, m, w, dim;
+        slong i, lo, hi, m, w, dim;
         acb_mat_struct * pows;
         acb_mat_t T, U;
         fmpz_t c, f;
@@ -118,9 +118,9 @@ _acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, long N, long prec)
 }
 
 void
-acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
+acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 {
-    long i, j, dim, wp, N, q, r;
+    slong i, j, dim, wp, N, q, r;
     mag_t norm, err;
     acb_mat_t T;
     int is_real;
@@ -129,7 +129,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
 
     if (dim != acb_mat_ncols(A))
     {
-        printf("acb_mat_exp: a square matrix is required!\n");
+        flint_printf("acb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
@@ -191,7 +191,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, long prec)
 
         for (i = 0; i < r; i++)
         {
-            acb_mat_mul(T, B, B, wp);
+            acb_mat_sqr(T, B, wp);
             acb_mat_swap(T, B);
         }
 

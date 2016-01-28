@@ -258,10 +258,10 @@ const double polylog_testdata[NUM_TESTS][10] = {
 
 int main()
 {
-    long iter;
+    slong iter;
     flint_rand_t state;
 
-    printf("polylog_cpx....");
+    flint_printf("polylog_cpx....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -270,7 +270,7 @@ int main()
     {
         acb_t s, z, t;
         acb_ptr w1, w2;
-        long i, j, prec;
+        slong i, j, prec;
 
         acb_init(s);
         acb_init(z);
@@ -303,12 +303,12 @@ int main()
                     if (!acb_overlaps(w1 + j, t) || !acb_overlaps(w2 + j, t)
                         || !acb_overlaps(w1 + j, w2 + j))
                     {
-                        printf("FAIL\n\n");
-                        printf("s = "); acb_printd(s, 15); printf("\n\n");
-                        printf("z = "); acb_printd(z, 15); printf("\n\n");
-                        printf("t = "); acb_printd(t, 15); printf("\n\n");
-                        printf("w1 = "); acb_printd(w1 + j, 15); printf("\n\n");
-                        printf("w2 = "); acb_printd(w2 + j, 15); printf("\n\n");
+                        flint_printf("FAIL\n\n");
+                        flint_printf("s = "); acb_printd(s, 15); flint_printf("\n\n");
+                        flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
+                        flint_printf("t = "); acb_printd(t, 15); flint_printf("\n\n");
+                        flint_printf("w1 = "); acb_printd(w1 + j, 15); flint_printf("\n\n");
+                        flint_printf("w2 = "); acb_printd(w2 + j, 15); flint_printf("\n\n");
                         abort();
                     }
                 }
@@ -326,7 +326,7 @@ int main()
     {
         acb_t s, z;
         acb_ptr w1, w2;
-        long i, len1, len2, prec1, prec2;
+        slong i, len1, len2, prec1, prec2;
 
         acb_init(s);
         acb_init(z);
@@ -387,13 +387,13 @@ int main()
         {
             if (!acb_overlaps(w1 + i, w2 + i))
             {
-                printf("FAIL: overlap\n\n");
-                printf("iter = %ld\n", iter);
-                printf("len1 = %ld, len2 = %ld, i = %ld\n\n", len1, len2, i);
-                printf("s = "); acb_printd(s, prec1 / 3.33); printf("\n\n");
-                printf("z = "); acb_printd(z, prec1 / 3.33); printf("\n\n");
-                printf("w1 = "); acb_printd(w1 + i, prec1 / 3.33); printf("\n\n");
-                printf("w2 = "); acb_printd(w2 + i, prec2 / 3.33); printf("\n\n");
+                flint_printf("FAIL: overlap\n\n");
+                flint_printf("iter = %wd\n", iter);
+                flint_printf("len1 = %wd, len2 = %wd, i = %wd\n\n", len1, len2, i);
+                flint_printf("s = "); acb_printd(s, prec1 / 3.33); flint_printf("\n\n");
+                flint_printf("z = "); acb_printd(z, prec1 / 3.33); flint_printf("\n\n");
+                flint_printf("w1 = "); acb_printd(w1 + i, prec1 / 3.33); flint_printf("\n\n");
+                flint_printf("w2 = "); acb_printd(w2 + i, prec2 / 3.33); flint_printf("\n\n");
                 abort();
             }
         }
@@ -406,7 +406,7 @@ int main()
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
 

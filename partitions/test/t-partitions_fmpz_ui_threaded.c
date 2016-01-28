@@ -96,7 +96,7 @@ static const ulong testdata[][2] =
   {100000004, 166747980},
   {500000000, 143535392},
   {1000000000, 685688339},
-  {4000000000UL, 525944299},
+  {UWORD(4000000000), 525944299},
   {0, 0},
 };
 
@@ -105,9 +105,9 @@ static const ulong testdata[][2] =
 int main(void)
 {
     flint_rand_t state;
-    long i;
+    slong i;
 
-    printf("partitions_fmpz_ui_threaded....");
+    flint_printf("partitions_fmpz_ui_threaded....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -128,10 +128,10 @@ int main(void)
             partitions_fmpz_ui(p, i);
             if (!fmpz_equal(p, v + i))
             {
-                printf("FAIL:\n");
-                printf("p(%ld) does not agree with power series\n", i);
-                printf("Computed p(%ld): ", i); fmpz_print(p); printf("\n");
-                printf("Expected: "); fmpz_print(v + i); printf("\n");
+                flint_printf("FAIL:\n");
+                flint_printf("p(%wd) does not agree with power series\n", i);
+                flint_printf("Computed p(%wd): ", i); fmpz_print(p); flint_printf("\n");
+                flint_printf("Expected: "); fmpz_print(v + i); flint_printf("\n");
                 abort();
             }
         }
@@ -144,11 +144,11 @@ int main(void)
 
             if (fmpz_fdiv_ui(p, 1000000000) != testdata[i][1])
             {
-                printf("FAIL:\n");
-                printf("p(%ld) does not agree with known value mod 10^9\n",
+                flint_printf("FAIL:\n");
+                flint_printf("p(%wd) does not agree with known value mod 10^9\n",
                     testdata[i][0]);
-                printf("Computed: %lu\n", fmpz_fdiv_ui(p, 1000000000));
-                printf("Expected: %lu\n", testdata[i][1]);
+                flint_printf("Computed: %wu\n", fmpz_fdiv_ui(p, 1000000000));
+                flint_printf("Expected: %wu\n", testdata[i][1]);
                 abort();
             }
         }
@@ -158,7 +158,7 @@ int main(void)
 
     flint_randclear(state);
     flint_cleanup();
-    printf("PASS\n");
+    flint_printf("PASS\n");
     return 0;
 }
 

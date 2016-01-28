@@ -26,7 +26,7 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_sin_pi_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
+_arb_poly_sin_pi_series(arb_ptr g, arb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
@@ -54,9 +54,9 @@ _arb_poly_sin_pi_series(arb_ptr g, arb_srcptr h, long hlen, long n, long prec)
 }
 
 void
-arb_poly_sin_pi_series(arb_poly_t g, const arb_poly_t h, long n, long prec)
+arb_poly_sin_pi_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec)
 {
-    long hlen = h->length;
+    slong hlen = h->length;
 
     if (hlen == 0 || n == 0)
     {

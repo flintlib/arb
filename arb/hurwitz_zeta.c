@@ -27,7 +27,7 @@
 #include "acb.h"
 
 void
-arb_hurwitz_zeta(arb_t res, const arb_t s, const arb_t z, long prec)
+arb_hurwitz_zeta(arb_t res, const arb_t s, const arb_t z, slong prec)
 {
     if (!arb_contains_si(s, 1) &&
         (arb_is_positive(z) ||

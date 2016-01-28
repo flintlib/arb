@@ -39,8 +39,8 @@ static __inline__ double d_root(double x, int r)
     return pow(x, 1. / r);
 }
 
-long
-hypgeom_estimate_terms(const mag_t z, int r, long prec)
+slong
+hypgeom_estimate_terms(const mag_t z, int r, slong prec)
 {
     double y, t;
 
@@ -53,7 +53,7 @@ hypgeom_estimate_terms(const mag_t z, int r, long prec)
     {
         if (t >= 1)
         {
-            printf("z must be smaller than 1\n");
+            flint_printf("z must be smaller than 1\n");
             abort();
         }
 
@@ -65,9 +65,9 @@ hypgeom_estimate_terms(const mag_t z, int r, long prec)
         y = (prec * LOG2) / (r * d_lambertw(y)) + 1;
     }
 
-    if (y >= LONG_MAX / 2)
+    if (y >= WORD_MAX / 2)
     {
-        printf("error: series will converge too slowly\n");
+        flint_printf("error: series will converge too slowly\n");
         abort();
     }
 
