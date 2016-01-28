@@ -23,10 +23,109 @@
 
 ******************************************************************************/
 
+#include "fmpz_mat.h"
 #include "double_extras.h"
 #include "arb_mat.h"
 
 #define LOG2_OVER_E 0.25499459743395350926
+
+
+/* Warshall's algorithm */
+void
+_fmpz_mat_transitive_closure(fmpz_mat_t A)
+{
+    slong k, i, j, dim;
+    dim = fmpz_mat_nrows(A);
+
+    if (dim != fmpz_mat_ncols(A))
+    {
+        flint_printf("_fmpz_mat_transitive_closure: a square matrix is required!\n");
+        abort();
+    }
+
+    for (k = 0; k < dim; k++)
+    {
+        for (i = 0; i < dim; i++)
+        {
+            for (j = 0; j < dim; j++)
+            {
+                if (fmpz_is_zero(fmpz_mat_entry(A, i, j)) &&
+                    !fmpz_is_zero(fmpz_mat_entry(A, i, k)) &&
+                    !fmpz_is_zero(fmpz_mat_entry(A, k, j)))
+                {
+                    fmpz_one(fmpz_mat_entry(A, i, j));
+                }
+            }
+        }
+    }
+}
+
+int
+_arb_mat_is_diagonal(const arb_mat_t A)
+{
+    slong i, j;
+    for (i = 0; i < arb_mat_nrows(A); i++)
+        for (j = 0; j < arb_mat_ncols(A); j++)
+            if (i != j && !arb_is_zero(arb_mat_entry(A, i, j)))
+                return 0;
+    return 1;
+}
+
+int
+_arb_mat_any_is_zero(const arb_mat_t A)
+{
+    slong i, j;
+    for (i = 0; i < arb_mat_nrows(A); i++)
+        for (j = 0; j < arb_mat_ncols(A); j++)
+            if (arb_is_zero(arb_mat_entry(A, i, j)))
+                return 1;
+    return 0;
+}
+
+void
+_arb_mat_exp_get_structure(fmpz_mat_t C, const arb_mat_t A)
+{
+    slong i, j, dim;
+
+    dim = arb_mat_nrows(A);
+    fmpz_mat_zero(C);
+    for (i = 0; i < dim; i++)
+    {
+        for (j = 0; j < dim; j++)
+        {
+            if (!arb_is_zero(arb_mat_entry(A, i, j)))
+            {
+                fmpz_one(fmpz_mat_entry(C, i, j));
+            }
+        }
+    }
+    _fmpz_mat_transitive_closure(C);
+}
+
+void
+_arb_mat_exp_set_structure(arb_mat_t B, const fmpz_mat_t C)
+{
+    slong i, j, dim;
+
+    dim = arb_mat_nrows(B);
+    for (i = 0; i < dim; i++)
+    {
+        for (j = 0; j < dim; j++)
+        {
+            if (fmpz_is_zero(fmpz_mat_entry(C, i, j)))
+            {
+                if (i == j)
+                {
+                    arb_one(arb_mat_entry(B, i, j));
+                }
+                else
+                {
+                    arb_zero(arb_mat_entry(B, i, j));
+                }
+            }
+        }
+    }
+}
 
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
@@ -166,6 +265,20 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         return;
     }
 
+    /* todo: generalize to (possibly permuted) block diagonal structure */
+    if (_arb_mat_is_diagonal(A))
+    {
+        if (B != A)
+        {
+            arb_mat_zero(B);
+        }
+        for (i = 0; i < dim; i++)
+        {
+            arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
+        }
+        return;
+    }
+
     wp = prec + 3 * FLINT_BIT_COUNT(prec);
 
     mag_init(norm);
@@ -180,6 +293,16 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
     }
     else
     {
+        fmpz_mat_t S;
+        int using_structure;
+
+        using_structure = _arb_mat_any_is_zero(A);
+        if (using_structure)
+        {
+            fmpz_mat_init(S, dim, dim);
+            _arb_mat_exp_get_structure(S, A);
+        }
+
         q = pow(wp, 0.25);  /* wanted magnitude */
 
         if (mag_cmp_2exp_si(norm, 2 * wp) > 0) /* too big */
@@ -200,6 +323,12 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
                 arb_add_error_mag(arb_mat_entry(B, i, j), err);
+
+        if (using_structure)
+        {
+            _arb_mat_exp_set_structure(B, S);
+            fmpz_mat_clear(S);
+        }
 
         for (i = 0; i < r; i++)
         {

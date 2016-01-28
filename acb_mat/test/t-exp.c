@@ -25,6 +25,26 @@
 
 #include "acb_mat.h"
 
+void
+_fmpq_mat_randtest_for_exp(fmpq_mat_t mat, flint_rand_t state, mp_bitcnt_t bits)
+{
+    slong i, j;
+    slong l, u;
+    l = n_randint(state, 5);
+    u = n_randint(state, 5);
+    fmpq_mat_zero(mat);
+    for (i = 0; i < fmpq_mat_nrows(mat); i++)
+    {
+        for (j = 0; j < fmpq_mat_ncols(mat); j++)
+        {
+            if ((i == j) || (i < j && u) || (i > j && l))
+            {
+                fmpq_randtest(fmpq_mat_entry(mat, i, j), state, bits);
+            }
+        }
+    }
+}
+
 int main()
 {
     slong iter;
@@ -56,7 +76,7 @@ int main()
         acb_mat_init(EF, n, n);
         acb_mat_init(G, n, n);
 
-        fmpq_mat_randtest(Q, state, qbits);
+        _fmpq_mat_randtest_for_exp(Q, state, qbits);
         acb_mat_set_fmpq_mat(A, Q, prec);
 
         acb_mat_exp(E, A, prec);
