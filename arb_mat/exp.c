@@ -23,10 +23,98 @@
 
 ******************************************************************************/
 
+#include "fmpz_mat.h"
 #include "double_extras.h"
 #include "arb_mat.h"
 
 #define LOG2_OVER_E 0.25499459743395350926
+
+
+/* Warshall's algorithm */
+void
+_fmpz_mat_transitive_closure(fmpz_mat_t A)
+{
+    slong k, i, j, dim;
+    dim = fmpz_mat_nrows(A);
+
+    if (dim != fmpz_mat_ncols(A))
+    {
+        flint_printf("_fmpz_mat_transitive_closure: a square matrix is required!\n");
+        abort();
+    }
+
+    for (k = 0; k < dim; k++)
+    {
+        for (i = 0; i < dim; i++)
+        {
+            for (j = 0; j < dim; j++)
+            {
+                if (fmpz_is_zero(fmpz_mat_entry(A, i, j)) &&
+                    !fmpz_is_zero(fmpz_mat_entry(A, i, k)) &&
+                    !fmpz_is_zero(fmpz_mat_entry(A, k, j)))
+                {
+                    fmpz_one(fmpz_mat_entry(A, i, j));
+                }
+            }
+        }
+    }
+}
+
+
+int
+_arb_mat_any_is_zero(const arb_mat_t A)
+{
+    slong i, j;
+    for (i = 0; i < arb_mat_nrows(A); i++)
+        for (j = 0; j < arb_mat_ncols(A); j++)
+            if (arb_is_zero(arb_mat_entry(A, i, j)))
+                return 1;
+    return 0;
+}
+
+
+void
+_arb_mat_exp_set_structure(arb_mat_t B, const arb_mat_t A)
+{
+    slong i, j, dim;
+    fmpz_mat_t C;
+
+    dim = arb_mat_nrows(A);
+    fmpz_mat_init(C, dim, dim);
+    fmpz_mat_zero(C);
+    for (i = 0; i < dim; i++)
+    {
+        for (j = 0; j < dim; j++)
+        {
+            if (!arb_is_zero(arb_mat_entry(A, i, j)))
+            {
+                fmpz_one(fmpz_mat_entry(C, i, j));
+            }
+        }
+    }
+
+    _fmpz_mat_transitive_closure(C);
+
+    for (i = 0; i < dim; i++)
+    {
+        for (j = 0; j < dim; j++)
+        {
+            if (fmpz_is_zero(fmpz_mat_entry(C, i, j)))
+            {
+                if (i == j)
+                {
+                    arb_one(arb_mat_entry(B, i, j));
+                }
+                else
+                {
+                    arb_zero(arb_mat_entry(B, i, j));
+                }
+            }
+        }
+    }
+    fmpz_mat_clear(C);
+}
+
 
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
@@ -200,6 +288,9 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
                 arb_add_error_mag(arb_mat_entry(B, i, j), err);
+
+        if (_arb_mat_any_is_zero(A))
+            _arb_mat_exp_set_structure(B, A);
 
         for (i = 0; i < r; i++)
         {
