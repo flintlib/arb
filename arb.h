@@ -464,7 +464,7 @@ arb_get_ubound_arf(arf_t u, const arb_t x, long prec)
     arf_t t;
     arf_init_set_mag_shallow(t, arb_radref(x));
 
-    arf_add(u, arb_midref(x), t, prec, ARF_RND_UP);
+    arf_add(u, arb_midref(x), t, prec, ARF_RND_CEIL);
 }
 
 ARB_INLINE void
@@ -473,7 +473,7 @@ arb_get_lbound_arf(arf_t u, const arb_t x, long prec)
     arf_t t;
     arf_init_set_mag_shallow(t, arb_radref(x));
 
-    arf_sub(u, arb_midref(x), t, prec, ARF_RND_DOWN);
+    arf_sub(u, arb_midref(x), t, prec, ARF_RND_FLOOR);
 }
 
 slong arb_rel_error_bits(const arb_t x);
