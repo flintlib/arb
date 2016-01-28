@@ -317,6 +317,8 @@ Special functions
           \sum_{k=N}^{\infty} \frac{(2^{-r} \|A\|_{\infty})^k}{k!}.
 
     We bound the sum on the right using :func:`mag_exp_tail`.
+    Truncation error is not added to entries whose values are determined
+    by the sparsity structure of `A`.
 
 .. function:: void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec)
 

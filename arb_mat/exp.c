@@ -62,6 +62,18 @@ _fmpz_mat_transitive_closure(fmpz_mat_t A)
 
 
 int
+_arb_mat_is_diagonal(const arb_mat_t A)
+{
+    slong i, j;
+    for (i = 0; i < arb_mat_nrows(A); i++)
+        for (j = 0; j < arb_mat_ncols(A); j++)
+            if (i != j && !arb_is_zero(arb_mat_entry(A, i, j)))
+                return 0;
+    return 1;
+}
+
+
+int
 _arb_mat_any_is_zero(const arb_mat_t A)
 {
     slong i, j;
@@ -254,6 +266,20 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         return;
     }
 
+    /* todo: generalize to (possibly permuted) block diagonal structure */
+    if (_arb_mat_is_diagonal(A))
+    {
+        if (B != A)
+        {
+            arb_mat_zero(B);
+        }
+        for (i = 0; i < dim; i++)
+        {
+            arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
+        }
+        return;
+    }
+
     wp = prec + 3 * FLINT_BIT_COUNT(prec);
 
     mag_init(norm);
@@ -268,6 +294,10 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
     }
     else
     {
+        int A_may_be_structured;
+
+        A_may_be_structured = _arb_mat_any_is_zero(A);
+
         q = pow(wp, 0.25);  /* wanted magnitude */
 
         if (mag_cmp_2exp_si(norm, 2 * wp) > 0) /* too big */
@@ -289,7 +319,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
             for (j = 0; j < dim; j++)
                 arb_add_error_mag(arb_mat_entry(B, i, j), err);
 
-        if (_arb_mat_any_is_zero(A))
+        if (A_may_be_structured)
             _arb_mat_exp_set_structure(B, A);
 
         for (i = 0; i < r; i++)
