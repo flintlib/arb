@@ -335,12 +335,12 @@ Radius and interval operations
 
 .. function:: void arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec)
 
-    Sets *u* to the lower bound for the value of *x*,
+    Sets *u* to the lower bound for the absolute value of *x*,
     rounded down to *prec* bits. If *x* contains NaN, the result is NaN.
 
 .. function:: void arb_get_ubound_arf(arf_t u, const arb_t x, long prec)
 
-    Sets *u* to the upper bound for the absolute value of *x*,
+    Sets *u* to the upper bound for the value of *x*,
     rounded up to *prec* bits. If *x* contains NaN, the result is NaN.
 
 .. function:: void arb_get_lbound_arf(arf_t u, const arb_t x, long prec)
