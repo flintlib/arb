@@ -629,6 +629,7 @@ void arb_log_arf(arb_t z, const arf_t x, slong prec);
 void arb_log_ui(arb_t z, ulong x, slong prec);
 void arb_log_fmpz(arb_t z, const fmpz_t x, slong prec);
 void arb_log1p(arb_t r, const arb_t z, slong prec);
+void arb_log_base_ui(arb_t res, const arb_t x, ulong b, slong prec);
 void arb_exp(arb_t z, const arb_t x, slong prec);
 void arb_expm1(arb_t z, const arb_t x, slong prec);
 void arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec);

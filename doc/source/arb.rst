@@ -839,6 +839,10 @@ Exponentials and logarithms
 
     Sets `z = \log(1+x)`, computed accurately when `x \approx 0`.
 
+.. function:: void arb_log_base_ui(arb_t res, const arb_t x, ulong b, slong prec)
+
+    Sets *res* to `\log_b(x)`. The result is computed exactly when possible.
+
 .. function:: void arb_exp(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \exp(x)`. Error propagation is done using the following rule:
