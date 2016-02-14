@@ -141,9 +141,10 @@ on building and installing Arb directly from the source code.
 Arb might also be available (or coming soon) as a package for
 your Linux distribution.
 
-SageMath <http://sagemath.org/> will include Arb as a standard package
-in an upcoming version, including a high-level Python interface
-to Arb as part of the SageMath standard library.
+SageMath <http://sagemath.org/> includes Arb as a standard package
+and contains a high-level Python interface. See the SageMath documentation
+for RealBallField (http://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/real_arb.html)
+and ComplexBallField (http://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/complex_arb.html).
 
 Nemo <http://nemocas.org/> is a computer algebra package for
 the Julia programming language which includes a high-level
