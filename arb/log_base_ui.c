@@ -140,7 +140,7 @@ arb_log_base_ui(arb_t res, const arb_t x, ulong b, slong prec)
                     double xlog;
 
                     /* libm.log should be accurate enough since we will certainly
-                       have xbits << 53. Worst case, we will not get the exact
+                       have bits(n) << 53. Worst case, we will not get the exact
                        logarithm and fall back to compute an approximate logarithm. */
                     xlog = _arf_get_mantissa_d(arb_midref(x));
                     xlog = log(xlog) + xexp * 0.69314718055994530942;
