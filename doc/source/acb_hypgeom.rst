@@ -210,7 +210,7 @@ in terms of the following auxiliary quantities
     C_n = \begin{cases}
     1                              & \text{if } R = 1 \\
     \chi(n)                        & \text{if } R = 2 \\
-    (\chi(n) + \rho \nu^2 n) \nu^n & \text{if } R = 3
+    (\chi(n) + \sigma \nu^2 n) \nu^n & \text{if } R = 3
     \end{cases}
 
     \nu = \left(\tfrac{1}{2} + \tfrac{1}{2}\sqrt{1-4\sigma^2}\right)^{-1/2} \le 1 + 2 \sigma^2
