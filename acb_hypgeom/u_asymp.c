@@ -179,7 +179,6 @@ acb_hypgeom_mag_chi(mag_t chi, ulong n)
     mag_clear(q);
 }
 
-/* note: ERROR IN DOCS -- should be sigma, not rho */
 static void
 acb_hypgeom_mag_Cn(mag_t Cn, int R, const mag_t nu, const mag_t sigma, ulong n)
 {
