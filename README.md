@@ -123,12 +123,12 @@ the complex number `z = 5^(1/2) + 7^(1/2)i`, to a given
 number of decimal digits (Arb 2.8-git and mpmath 0.19 on
 an 1.90 GHz Intel i5-4300U, Mathematica 9.0 on a 3.07 GHz Intel Xeon X5675).
 
-| Digits  | Mathematica |     mpmath |      Arb  |
-| -------:|:------------|:-----------|:----------|
-|      10 |     0.00066 |    0.00090 |   0.00011 |
-|     100 |     0.0039  |    0.0017  |   0.00075 |
-|    1000 |     0.23    |    1.5     |   0.019   |
-|   10000 |     42.6    |    98      |   1.2     |
+| Digits  | Mathematica |     mpmath |      Arb   |
+| -------:|:------------|:-----------|:-----------|
+|      10 |     0.00066 |    0.00065 |   0.000071 |
+|     100 |     0.0039  |    0.0012  |   0.00048  |
+|    1000 |     0.23    |    1.2     |   0.0093   |
+|   10000 |     42.6    |    84      |   0.56     |
 
 ## Dependencies, installation, and interfaces
 
