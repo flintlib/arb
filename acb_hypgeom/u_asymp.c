@@ -25,6 +25,11 @@
 
 #include "acb_hypgeom.h"
 
+slong
+acb_hypgeom_pfq_choose_n_max(acb_srcptr a, slong p,
+                         acb_srcptr b, slong q, const acb_t z,
+                         slong prec, slong n_max);
+
 /* computes the factors that are independent of n (all are upper bounds) */
 void
 acb_hypgeom_u_asymp_bound_factors(int * R, mag_t alpha,
@@ -174,29 +179,53 @@ acb_hypgeom_mag_chi(mag_t chi, ulong n)
     mag_clear(q);
 }
 
+/* note: ERROR IN DOCS -- should be sigma, not rho */
+static void
+acb_hypgeom_mag_Cn(mag_t Cn, int R, const mag_t nu, const mag_t sigma, ulong n)
+{
+    if (R == 1)
+    {
+        mag_one(Cn);
+    }
+    else
+    {
+        acb_hypgeom_mag_chi(Cn, n);
+
+        if (R == 3)
+        {
+            mag_t tmp;
+            mag_init(tmp);
+            mag_mul(tmp, nu, nu);
+            mag_mul(tmp, tmp, sigma);
+            if (n != 1)
+                mag_mul_ui(tmp, tmp, n);
+            mag_add(Cn, Cn, tmp);
+            mag_pow_ui(tmp, nu, n);
+            mag_mul(Cn, Cn, tmp);
+            mag_clear(tmp);
+        }
+    }
+}
+
+static int
+acb_is_nonpositive_int(const acb_t x)
+{
+    return acb_is_int(x) && arf_sgn(arb_midref(acb_realref(x))) <= 0;
+}
+
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, slong n, slong prec)
 {
-    mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
     acb_struct aa[3];
     acb_t s, t, w, winv;
-    int R, p, q, is_real;
+    int R, p, q, is_real, is_terminating;
+    slong n_terminating;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(z))
     {
         acb_indeterminate(res);
         return;
     }
-
-    mag_init(C1);
-    mag_init(Cn);
-    mag_init(alpha);
-    mag_init(nu);
-    mag_init(sigma);
-    mag_init(rho);
-    mag_init(zinv);
-    mag_init(tmp);
-    mag_init(err);
 
     acb_init(aa);
     acb_init(aa + 1);
@@ -205,6 +234,9 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     acb_init(t);
     acb_init(w);
     acb_init(winv);
+
+    is_terminating = 0;
+    n_terminating = WORD_MAX;
 
     /* special case, for incomplete gamma
       [todo: also when they happen to be exact and with difference 1...] */
@@ -224,84 +256,132 @@ void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
         q = 1;
     }
 
-    is_real = acb_is_real(a) && acb_is_real(b) &&
-        acb_is_real(z) && arb_is_positive(acb_realref(z));
+    if (acb_is_nonpositive_int(aa))
+    {
+        is_terminating = 1;
+
+        if (arf_cmpabs_ui(arb_midref(acb_realref(aa)), prec) < 0)
+            n_terminating = 1 - arf_get_si(arb_midref(acb_realref(aa)), ARF_RND_DOWN);
+    }
+
+    if (p == 2 && acb_is_nonpositive_int(aa + 1))
+    {
+        is_terminating = 1;
+
+        if (arf_cmpabs_ui(arb_midref(acb_realref(aa + 1)), n_terminating) < 0)
+            n_terminating = 1 - arf_get_si(arb_midref(acb_realref(aa + 1)), ARF_RND_DOWN);
+    }
 
     acb_neg(w, z);
     acb_inv(w, w, prec);
     acb_neg(winv, z);
 
-    if (n < 0)
-        n = acb_hypgeom_pfq_choose_n(aa, p, aa + p, q, w, prec);
-
-    /* todo: handle the exact polynomial case better... */
-
-    acb_hypgeom_u_asymp_bound_factors(&R, alpha, nu,
-        sigma, rho, zinv, a, b, z);
-
-    if (R == 0)
+    /* low degree polynomial -- no need to try to terminate sooner */
+    if (is_terminating && n_terminating < 8)
     {
-        acb_indeterminate(res);
+        acb_hypgeom_pfq_sum_invz(s, t, aa, p, aa + p, q, w, winv,
+            n_terminating, prec);
+        acb_set(res, s);
     }
     else
     {
-        acb_hypgeom_pfq_sum_invz(s, t, aa, p, aa + p, q, w, winv, n, prec);
+        mag_t C1, Cn, alpha, nu, sigma, rho, zinv, tmp, err;
 
-        if (R == 1)
-        {
-            mag_one(C1);
-            mag_one(Cn);
-        }
-        else
-        {
-            acb_hypgeom_mag_chi(C1, 1);
-            acb_hypgeom_mag_chi(Cn, n);
+        mag_init(C1);
+        mag_init(Cn);
+        mag_init(alpha);
+        mag_init(nu);
+        mag_init(sigma);
+        mag_init(rho);
+        mag_init(zinv);
+        mag_init(tmp);
+        mag_init(err);
 
-            if (R == 3)
+        acb_hypgeom_u_asymp_bound_factors(&R, alpha, nu,
+            sigma, rho, zinv, a, b, z);
+
+        is_real = acb_is_real(a) && acb_is_real(b) && acb_is_real(z) &&
+            (is_terminating || arb_is_positive(acb_realref(z)));
+
+        if (R == 0)
+        {
+            /* if R == 0, the error bound is infinite unless terminating */
+            if (is_terminating && n_terminating < prec)
             {
-                mag_mul(tmp, nu, nu);
-                mag_mul(tmp, tmp, sigma);
-
-                mag_add(C1, C1, tmp);
-                mag_mul(C1, C1, nu);
-
-                mag_mul_ui(tmp, tmp, n);
-                mag_add(Cn, Cn, tmp);
-                mag_pow_ui(tmp, nu, n);
-                mag_mul(Cn, Cn, tmp);
+                acb_hypgeom_pfq_sum_invz(s, t, aa, p, aa + p, q, w, winv,
+                    n_terminating, prec);
+                acb_set(res, s);
+            }
+            else
+            {
+                acb_indeterminate(res);
             }
         }
-
-        mag_mul(tmp, C1, rho);
-        mag_mul(tmp, tmp, alpha);
-        mag_mul(tmp, tmp, zinv);
-        mag_mul_2exp_si(tmp, tmp, 1);
-        mag_exp(err, tmp);
-        mag_mul(err, err, Cn);
-        mag_mul(err, err, alpha);
-        mag_mul_2exp_si(err, err, 1);
-
-        /* nth term * factor */
-        acb_get_mag(tmp, t);
-        mag_mul(err, err, tmp);
-
-        if (is_real)
-            arb_add_error_mag(acb_realref(s), err);
         else
-            acb_add_error_mag(s, err);
+        {
+            /* C1 */
+            acb_hypgeom_mag_Cn(C1, R, nu, sigma, 1);
 
-        acb_set(res, s);
+            /* err = 2 * alpha * exp(...) */
+            mag_mul(tmp, C1, rho);
+            mag_mul(tmp, tmp, alpha);
+            mag_mul(tmp, tmp, zinv);
+            mag_mul_2exp_si(tmp, tmp, 1);
+            mag_exp(err, tmp);
+            mag_mul(err, err, alpha);
+            mag_mul_2exp_si(err, err, 1);
+
+            /* choose n automatically */
+            if (n < 0)
+            {
+                slong moreprec;
+
+                /* take err into account when finding truncation point */
+                /* we should take Cn into account as well, but this depends
+                   on n which is to be determined; it's easier to look
+                   only at exp(...) which should be larger anyway */
+                if (mag_cmp_2exp_si(err, 10 * prec) > 0)
+                    moreprec = 10 * prec;
+                else if (mag_cmp_2exp_si(err, 0) < 0)
+                    moreprec = 0;
+                else
+                    moreprec = MAG_EXP(err);
+
+                n = acb_hypgeom_pfq_choose_n_max(aa, p, aa + p, q, w,
+                    prec + moreprec, FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec));
+            }
+
+            acb_hypgeom_pfq_sum_invz(s, t, aa, p, aa + p, q, w, winv, n, prec);
+
+            /* add error bound, if not terminating */
+            if (!(is_terminating && n == n_terminating))
+            {
+                acb_hypgeom_mag_Cn(Cn, R, nu, sigma, n);
+                mag_mul(err, err, Cn);
+
+                /* nth term * factor */
+                acb_get_mag(tmp, t);
+                mag_mul(err, err, tmp);
+
+                if (is_real)
+                    arb_add_error_mag(acb_realref(s), err);
+                else
+                    acb_add_error_mag(s, err);
+            }
+
+            acb_set(res, s);
+        }
+
+        mag_clear(C1);
+        mag_clear(Cn);
+        mag_clear(alpha);
+        mag_clear(nu);
+        mag_clear(sigma);
+        mag_clear(rho);
+        mag_clear(zinv);
+        mag_clear(tmp);
+        mag_clear(err);
     }
-
-    mag_clear(C1);
-    mag_clear(Cn);
-    mag_clear(alpha);
-    mag_clear(nu);
-    mag_clear(sigma);
-    mag_clear(rho);
-    mag_clear(zinv);
-    mag_clear(tmp);
-    mag_clear(err);
 
     acb_clear(aa);
     acb_clear(aa + 1);

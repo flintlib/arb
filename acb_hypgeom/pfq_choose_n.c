@@ -97,10 +97,11 @@ acb_hypgeom_pfq_choose_n_double(slong * nn,
 }
 
 slong
-acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
-                         acb_srcptr b, slong q, const acb_t z, slong prec)
+acb_hypgeom_pfq_choose_n_max(acb_srcptr a, slong p,
+                         acb_srcptr b, slong q, const acb_t z,
+                         slong prec, slong n_max)
 {
-    slong n_skip, n_min, n_max, n_terminating, nint;
+    slong n_skip, n_min, n_terminating, nint;
     slong k, n;
     double log2_z;
     double * are;
@@ -125,7 +126,6 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
 
     n_skip = 1;
     n_min = 1;
-    n_max = FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec);
     n_terminating = WORD_MAX;
 
     for (k = 0; k < p; k++)
@@ -192,6 +192,15 @@ acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
     mag_clear(zmag);
 
     return n;
+}
+
+slong
+acb_hypgeom_pfq_choose_n(acb_srcptr a, slong p,
+                                acb_srcptr b, slong q,
+                                const acb_t z, slong prec)
+{
+    return acb_hypgeom_pfq_choose_n_max(a, p, b, q, z, prec,
+        FLINT_MIN(WORD_MAX / 2, 50 + 10.0 * prec));
 }
 
 slong
