@@ -65,6 +65,7 @@ Module documentation (Arb 2.x types)
    acb_calc.rst
    acb_hypgeom.rst
    acb_modular.rst
+   acb_dirichlet.rst
    bernoulli.rst
    hypgeom.rst
    partitions.rst

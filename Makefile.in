@@ -13,7 +13,8 @@ QUIET_AR  = @echo '   ' AR  ' ' $@;
 AT=@
 
 BUILD_DIRS = fmpr arf mag arb arb_mat arb_poly arb_calc acb acb_mat acb_poly \
-   acb_calc acb_hypgeom acb_modular fmprb bernoulli hypgeom fmpz_extras partitions \
+   acb_calc acb_hypgeom acb_modular acb_dirichlet fmprb bernoulli hypgeom \
+   fmpz_extras partitions \
    $(EXTRA_BUILD_DIRS)
 
 TEMPLATE_DIRS = 
