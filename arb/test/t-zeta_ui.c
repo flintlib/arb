@@ -34,7 +34,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         arb_t r;
         ulong n;
@@ -65,6 +65,7 @@ int main()
         if (accuracy < prec - 4)
         {
             flint_printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
+            flint_printf("n = %wu\n\n", n);
             flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
             abort();
         }

@@ -19,13 +19,23 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2016 Fredrik Johansson
 
 ******************************************************************************/
 
 #include <math.h>
 #include "arith.h"
 #include "arb.h"
+
+/* The constant factor is nearly optimal up to at least 300000 bits. */
+static double
+euler_product_cutoff(double prec)
+{
+    if (prec > 200 && prec < 15000)  /* This range has a slight "bulge". */
+        return 0.39 * pow(prec, 0.8);
+    else
+        return 7 + 0.535 * prec / log(prec);
+}
 
 void
 arb_zeta_ui(arb_t x, ulong n, slong prec)
@@ -70,7 +80,7 @@ arb_zeta_ui(arb_t x, ulong n, slong prec)
                 /* small odd n, extremely high precision */
                 arb_zeta_ui_borwein_bsplit(x, n, prec);
             }
-            else if (prec > 20 && n > 6 && n > 0.4 * pow(prec, 0.8))
+            else if (n > euler_product_cutoff(prec))
             {
                 /* large n */
                 arb_zeta_ui_euler_product(x, n, prec);

@@ -36,14 +36,15 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     ulong p;
     mag_t err;
 
-    if (s <= 2)
+    if (s <= 1)
     {
         arb_indeterminate(res);
         return;
     }
 
-    /* L(s), 1/L(s) = 1 + ...
-       For s >= 3, zeta(s,2) < 2^(1-s). */
+    if (prec < 2) abort(); /* assert */
+
+    /* L(s), 1/L(s) = 1 + ...  For s >= 3, zeta(s,2) < 2^(1-s). */
     if (s > (ulong) prec)
     {
         arf_one(arb_midref(res));
@@ -52,7 +53,7 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     }
 
     /* L(s), 1/L(s) = 1 +/- chi(2) 2^(-s) + ...
-       For s >= 3, zeta(s,3) < 2^(2-floor(3s/2)). */
+       For s >= 2, zeta(s,3) < 2^(2-floor(3s/2)). */
     if (s > 0.7 * prec)
     {
         arb_one(res);
@@ -87,7 +88,10 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
         arb_add(res, res, t, wp);
 
     /* Cut at some point if this algorithm just isn't a good fit... */
-    limit = 10 + prec;
+    /* The C * prec / log(prec) cutoff in arb_zeta_ui implies that the limit
+       should be at least prec ^ (log(2) / C) for the Riemann zeta function,
+       which gives prec ^ 1.2956 here. */
+    limit = 100 + prec * sqrt(prec);
 
     for (p = 3; p < limit; p = n_nextprime(p, 1))
     {

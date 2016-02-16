@@ -71,13 +71,13 @@ int main()
         }
         else
         {
-            s = 6 + n_randint(state, 1 << n_randint(state, 10));
+            s = 6 + n_randint(state, 1 << n_randint(state, 12));
             prec1 = 2 + n_randint(state, 12 * s);
             prec2 = 2 + n_randint(state, 12 * s);
         }
 
-        if (iter % 10 == 0)
-            prec1 = 2 + n_randint(state, 10000);
+        if (n_randint(state, 30)  == 0)
+            prec1 = 2 + n_randint(state, 4000);
 
         choice = n_randint(state, 7);
         reciprocal1 = n_randint(state, 2);
