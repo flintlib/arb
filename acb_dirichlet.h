@@ -32,6 +32,9 @@
 extern "C" {
 #endif
 
+void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
+    const signed char * chi, int mod, int reciprocal, slong prec);
+
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
 #ifdef __cplusplus
