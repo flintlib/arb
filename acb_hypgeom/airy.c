@@ -117,7 +117,7 @@ estimate_airy(double x, double y, int ai)
 /* error propagation based on derivatives */
 void
 acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
-    const acb_t z, slong n, long prec)
+    const acb_t z, slong n, slong prec)
 {
     mag_t aib, aipb, bib, bipb, zb, rad;
     acb_t zz;
@@ -188,7 +188,7 @@ acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
 }
 
 void
-acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, long prec)
+acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong prec)
 {
     arf_srcptr re, im;
     double x, y, t, zmag, z15, term_est, airy_est, abstol;
