@@ -1161,29 +1161,11 @@ Zeta function
 
 .. function:: void arb_zeta_ui_asymp(arb_t x, ulong s, slong prec)
 
-    Assuming `s \ge 2`, approximates `\zeta(s)` by `1 + 2^{-s}` along with
-    a correct error bound. We use the following bounds: for `s > b`,
-    `\zeta(s) - 1 < 2^{-b}`, and generally,
-    `\zeta(s) - (1 + 2^{-s}) < 2^{2-\lfloor 3 s/2 \rfloor}`.
-
 .. function:: void arb_zeta_ui_euler_product(arb_t z, ulong s, slong prec)
 
     Computes `\zeta(s)` using the Euler product. This is fast only if *s*
-    is large compared to the precision.
-
-    Writing `P(a,b) = \prod_{a \le p \le b} (1 - p^{-s})`, we have
-    `1/\zeta(s) = P(a,M) P(M+1,\infty)`.
-
-    To bound the error caused by truncating
-    the product at `M`, we write `P(M+1,\infty) = 1 - \epsilon(s,M)`.
-    Since `0 < P(a,M) \le 1`, the absolute error for `\zeta(s)` is
-    bounded by `\epsilon(s,M)`.
-
-    According to the analysis in [Fil1992]_, it holds for all `s \ge 6` and `M \ge 1`
-    that `1/P(M+1,\infty) - 1 \le f(s,M) \equiv 2 M^{1-s} / (s/2 - 1)`.
-    Thus, we have `1/(1-\epsilon(s,M)) - 1 \le f(s,M)`, and expanding
-    the geometric series allows us to conclude that
-    `\epsilon(M) \le f(s,M)`.
+    is large compared to the precision. Both methods are trivial wrappers
+    for :func:`_acb_dirichlet_euler_product_real_ui`.
 
 .. function:: void arb_zeta_ui_bernoulli(arb_t x, ulong s, slong prec)
 
