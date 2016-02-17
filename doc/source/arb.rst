@@ -602,6 +602,11 @@ Arithmetic
     Sets *y* to the absolute value of *x*. No attempt is made to improve the
     interval represented by *x* if it contains zero.
 
+.. function:: void arb_sgn(arb_t y, const arb_t x)
+
+    Sets *y* to the sign function of *x*. The result is `[0 \pm 1]` if
+    *x* contains both zero and nonzero numbers.
+
 .. function:: void arb_add(arb_t z, const arb_t x, const arb_t y, slong prec)
 
 .. function:: void arb_add_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
