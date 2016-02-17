@@ -424,6 +424,8 @@ acb_get_rad_ubound_arf(arf_t u, const acb_t z, slong prec)
 
 void acb_arg(arb_t r, const acb_t z, slong prec);
 
+void acb_sgn(acb_t res, const acb_t z, slong prec);
+
 ACB_INLINE void
 acb_add(acb_t z, const acb_t x, const acb_t y, slong prec)
 {

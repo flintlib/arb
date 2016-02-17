@@ -331,6 +331,11 @@ Complex parts
 
     Sets *r* to the absolute value of *z*.
 
+.. function:: void acb_sgn(arb_t r, const acb_t z, slong prec)
+
+    Sets *r* to the complex sign of *z*, defined as 0 if *z* is exactly zero
+    and the projection onto the unit circle `z / |z| = \exp(i \arg(z))` otherwise.
+
 Arithmetic
 -------------------------------------------------------------------------------
 
