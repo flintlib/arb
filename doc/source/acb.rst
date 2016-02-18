@@ -331,10 +331,18 @@ Complex parts
 
     Sets *r* to the absolute value of *z*.
 
-.. function:: void acb_sgn(arb_t r, const acb_t z, slong prec)
+.. function:: void acb_sgn(acb_t r, const acb_t z, slong prec)
 
     Sets *r* to the complex sign of *z*, defined as 0 if *z* is exactly zero
     and the projection onto the unit circle `z / |z| = \exp(i \arg(z))` otherwise.
+
+.. function:: void acb_csgn(arb_t r, const acb_t z)
+
+    Sets *r* to the extension of the real sign function taking the
+    value 1 for *z* strictly in the right half plane, -1 for *z* strictly
+    in the left half plane, and the sign of the imaginary part when *z* is on
+    the imaginary axis. Equivalently, `\operatorname{csgn}(z) = z / \sqrt{z^2}`
+    except that the value is 0 when *z* is exactly zero.
 
 Arithmetic
 -------------------------------------------------------------------------------

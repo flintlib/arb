@@ -426,6 +426,8 @@ void acb_arg(arb_t r, const acb_t z, slong prec);
 
 void acb_sgn(acb_t res, const acb_t z, slong prec);
 
+void acb_csgn(arb_t res, const acb_t z);
+
 ACB_INLINE void
 acb_add(acb_t z, const acb_t x, const acb_t y, slong prec)
 {
