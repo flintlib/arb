@@ -124,16 +124,8 @@ acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
     acb_div(u, u, t, prec2);
 
     /* branch cut term: -1 or 1 */
-    if (arb_contains_zero(acb_realref(z)))
-    {
-        arb_zero(acb_imagref(t));
-        arf_zero(arb_midref(acb_realref(t)));
-        mag_one(arb_radref(acb_realref(t)));
-    }
-    else
-    {
-        acb_set_si(t, arf_sgn(arb_midref(acb_realref(z))));
-    }
+    acb_csgn(acb_realref(t), z);
+    arb_zero(acb_imagref(t));
 
     acb_sub(t, t, u, prec);
 
