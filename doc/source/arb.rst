@@ -1218,11 +1218,21 @@ Bernoulli numbers and polynomials
 
 .. function:: void arb_bernoulli_ui(arb_t b, ulong n, slong prec)
 
-    Sets `b` to the numerical value of the Bernoulli number `B_n` accurate
-    to *prec* bits, computed by a division of the exact fraction if `B_n` is in
-    the global cache or the exact numerator roughly is larger than
-    *prec* bits, and using :func:`arb_bernoulli_ui_zeta`
-    otherwise. This function reads `B_n` from the global cache
+.. function:: void arb_bernoulli_fmpz(arb_t b, const fmpz_t n, slong prec)
+
+    Sets `b` to the numerical value of the Bernoulli number `B_n`
+    approximated to *prec* bits.
+
+    The internal precision is increased automatically to give an accurate
+    result. Note that, with huge *fmpz* input, the output will have a huge
+    exponent and evaluation will accordingly be slower.
+
+    A single division from the exact fraction of `B_n` is used if this value
+    is in the global cache or the exact numerator roughly is larger than
+    *prec* bits. Otherwise, the Riemann zeta function is used
+    (see :func:`arb_bernoulli_ui_zeta`).
+
+    This function reads `B_n` from the global cache
     if the number is already cached, but does not automatically extend
     the cache by itself.
 
@@ -1233,9 +1243,8 @@ Bernoulli numbers and polynomials
 
     To avoid potential infinite recursion, we explicitly call the
     Euler product implementation of the zeta function.
-    We therefore assume that the precision is small
-    enough and `n` large enough for the Euler product to converge
-    rapidly (otherwise this function will effectively hang).
+    This method will only give high accuracy if the precision is small
+    enough compared to `n` for the Euler product to converge rapidly.
 
 .. function:: void arb_bernoulli_poly_ui(arb_t res, ulong n, const arb_t x, slong prec)
 
