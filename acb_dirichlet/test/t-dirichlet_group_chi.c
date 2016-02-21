@@ -41,12 +41,6 @@ int main()
         ulong q, m, n1, n2, iter2;
 
         q = 1 + n_randint(state, 1000);
-        do {
-            m = 1 + n_randint(state, q);
-        } while (n_gcd(q, m) != 1);
-
-        n1 = n_randint(state, 1000);
-        n2 = n_randint(state, 1000);
 
         acb_dirichlet_group_init(G, q);
         acb_init(zn1);
@@ -56,6 +50,13 @@ int main()
 
         for (iter2 = 0; iter2 < 10; iter2++)
         {
+            do {
+                m = 1 + n_randint(state, q);
+            } while (n_gcd(q, m) != 1);
+
+            n1 = n_randint(state, 1000);
+            n2 = n_randint(state, 1000);
+
             _acb_dirichlet_group_chi(zn1, G, m, n1, 53);
             _acb_dirichlet_group_chi(zn2, G, m, n2, 53);
             _acb_dirichlet_group_chi(zn1n2, G, m, n1 * n2, 53);
