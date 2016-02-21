@@ -32,7 +32,7 @@ This list is probably incomplete.
 * Bill Hart - build system, Windows 64 support, design of FLINT
 * Sebastian Pancratz - divide-and-conquer polynomial composition algorithm (taken from FLINT)
 * The MPFR development team - Arb includes two-limb multiplication code taken from MPFR
-* Jonathan Bober - C++ compatibility fixes
+* Jonathan Bober - Dirichlet characters (the code in Arb is based on his Cython implementation), C++ compatibility fixes
 * Yuri Matiyasevich - feedback about the zeta function and root-finding code
 * Abhinav Baid - dot product and norm functions
 * Ondřej Čertík - bug reports, feedback

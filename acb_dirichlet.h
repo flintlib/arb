@@ -19,6 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
+    Copyright (C) 2015 Jonathan Bober
     Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
@@ -32,10 +33,33 @@
 extern "C" {
 #endif
 
+typedef struct
+{
+    ulong q;                /* modulus */
+    ulong q_even;           /* even part of modulus */
+    ulong q_odd;            /* odd part of modulus */
+    ulong phi_q;            /* phi(q) */
+    ulong phi_q_odd;        /* phi(q_odd) */
+    slong num;              /* number of odd prime factors */
+    ulong * primes;         /* odd primes p[k] */
+    ulong * exponents;      /* exponents e[k] */
+    ulong * generators;     /* generator for each odd prime p[k] */
+    ulong * PHI;            /* PHI(k) = phi(q_odd) / phi(p[k]^e[k])  */
+}
+acb_dirichlet_group_struct;
+
+typedef acb_dirichlet_group_struct acb_dirichlet_group_t[1];
+
 void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     const signed char * chi, int mod, int reciprocal, slong prec);
 
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
+
+void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
+
+void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
+
+void _acb_dirichlet_group_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec);
 
 #ifdef __cplusplus
 }
