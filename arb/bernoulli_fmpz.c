@@ -52,7 +52,7 @@ arb_bernoulli_fmpz(arb_t res, const fmpz_t n, slong prec)
         mag_one(arb_radref(res));
         mag_mul_2exp_si(arb_radref(res), arb_radref(res), WORD_MIN);
 
-        /* |B_n| = 2 * Gamma(n)! / (2*pi)^n * zeta(n) */
+        /* |B_n| = 2 * n! / (2*pi)^n * zeta(n) */
         arb_gamma_fmpz(t, n, wp);
         arb_mul_fmpz(t, t, n, wp);
         arb_mul(res, res, t, wp);
