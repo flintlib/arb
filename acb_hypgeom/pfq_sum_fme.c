@@ -179,8 +179,18 @@ acb_hypgeom_pfq_sum_fme(acb_t s, acb_t t,
     acb_ptr * tree;
     slong i, k, m, w;
 
-    m = n_sqrt(n) / 4;  /* tuning parameter */
-    w = n / FLINT_MAX(m, 1);
+    /* we compute to n-1 instead of n to avoid dividing by 0 in the
+       denominator when computing a hypergeometric polynomial
+       that terminates right before a pole */
+    if (n > 4)
+    {
+        m = n_sqrt(n - 1) / 4;  /* tuning parameter */
+        w = (n - 1) / FLINT_MAX(m, 1);
+    }
+    else
+    {
+        m = w = 0;
+    }
 
     if (m < 1 || w < 1 || p > 3 || q > 3)
     {

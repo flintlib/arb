@@ -45,6 +45,33 @@ A1 B2 + B1 B2 = B2 (A1 + B1) -- use to save time?
 */
 
 static void
+factor(acb_t A, acb_t tmp, acb_srcptr a, slong p, const acb_t z, slong k, slong prec)
+{
+    slong i;
+
+    if (p == 0)
+    {
+        if (z == NULL)
+            acb_one(A);
+        else
+            acb_set(A, z);
+    }
+    else
+    {
+        acb_add_ui(A, a, k, prec);
+
+        for (i = 1; i < p; i++)
+        {
+            acb_add_ui(tmp, a + i, k, prec);
+            acb_mul(A, A, tmp, prec);
+        }
+
+        if (z != NULL)
+            acb_mul(A, A, z, prec);
+    }
+}
+
+static void
 bsplit(acb_t A1, acb_t B1, acb_t C1,
         acb_srcptr a, slong p,
         acb_srcptr b, slong q,
@@ -56,50 +83,8 @@ bsplit(acb_t A1, acb_t B1, acb_t C1,
 {
     if (bb - aa == 1)
     {
-        slong i;
-
-        if (p == 0)
-        {
-            if (invz)
-                acb_one(A1);
-            else
-                acb_set(A1, z);
-        }
-        else
-        {
-            acb_add_ui(A1, a, aa, prec);
-
-            for (i = 1; i < p; i++)
-            {
-                acb_add_ui(B1, a + i, aa, prec);
-                acb_mul(A1, A1, B1, prec);
-            }
-
-            if (!invz)
-                acb_mul(A1, A1, z, prec);
-        }
-
-        if (q == 0)
-        {
-            if (invz)
-                acb_set(C1, z);
-            else
-                acb_one(C1);
-        }
-        else
-        {
-            acb_add_ui(C1, b, aa, prec);
-
-            for (i = 1; i < q; i++)
-            {
-                acb_add_ui(B1, b + i, aa, prec);
-                acb_mul(C1, C1, B1, prec);
-            }
-
-            if (invz)
-                acb_mul(C1, C1, z, prec);
-        }
-
+        factor(A1, B1, a, p, invz ? NULL : z, aa, prec);
+        factor(C1, B1, b, q, invz ? z : NULL, aa, prec);
         /* acb_set(B1, C1);   but we skip this */
     }
     else
@@ -149,7 +134,7 @@ void
 acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
-    acb_t u, v, w;
+    acb_t u, v, w, tmp;
 
     if (n < 4)
     {
@@ -160,22 +145,34 @@ acb_hypgeom_pfq_sum_bs(acb_t s, acb_t t,
     acb_init(u);
     acb_init(v);
     acb_init(w);
+    acb_init(tmp);
 
-    bsplit(u, v, w, a, p, b, q, z, 0, n, prec, 0);
+    /* we compute to n-1 instead of n to avoid dividing by 0 in the
+       denominator when computing a hypergeometric polynomial
+       that terminates right before a pole */
+    bsplit(u, v, w, a, p, b, q, z, 0, n - 1, prec, 0);
 
+    acb_add(s, u, v, prec); /* s = s + t */
+    acb_div(s, s, w, prec);
+
+    /* split off last factor */
+    factor(t, tmp, a, p, z, n - 1, prec);
+    acb_mul(u, u, t, prec);
+    factor(t, tmp, b, q, NULL, n - 1, prec);
+    acb_mul(w, w, t, prec);
     acb_div(t, u, w, prec);
-    acb_div(s, v, w, prec);
 
     acb_clear(u);
     acb_clear(v);
     acb_clear(w);
+    acb_clear(tmp);
 }
 
 void
 acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, slong n, slong prec)
 {
-    acb_t u, v, w;
+    acb_t u, v, w, tmp;
 
     if (n < 4)
     {
@@ -189,14 +186,26 @@ acb_hypgeom_pfq_sum_bs_invz(acb_t s, acb_t t,
     acb_init(u);
     acb_init(v);
     acb_init(w);
+    acb_init(tmp);
 
-    bsplit(u, v, w, a, p, b, q, z, 0, n, prec, 1);
+    /* we compute to n-1 instead of n to avoid dividing by 0 in the
+       denominator when computing a hypergeometric polynomial
+       that terminates right before a pole */
+    bsplit(u, v, w, a, p, b, q, z, 0, n - 1, prec, 1);
 
+    acb_add(s, u, v, prec); /* s = s + t */
+    acb_div(s, s, w, prec);
+
+    /* split off last factor */
+    factor(t, tmp, a, p, NULL, n - 1, prec);
+    acb_mul(u, u, t, prec);
+    factor(t, tmp, b, q, z, n - 1, prec);
+    acb_mul(w, w, t, prec);
     acb_div(t, u, w, prec);
-    acb_div(s, v, w, prec);
 
     acb_clear(u);
     acb_clear(v);
     acb_clear(w);
+    acb_clear(tmp);
 }
 

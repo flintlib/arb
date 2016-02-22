@@ -35,6 +35,49 @@ int main()
 
     flint_randinit(state);
 
+    /* special accuracy test -- see nemo #38 */
+    for (iter = 0; iter < 1000; iter++)
+    {
+        acb_t a, z, res;
+        slong prec, goal;
+        int modified;
+
+        acb_init(a);
+        acb_init(z);
+        acb_init(res);
+
+        acb_set_si(a, n_randint(state, 100) - 50);
+
+        do {
+            acb_set_si(z, n_randint(state, 100) - 50);
+        } while (acb_is_zero(z));
+
+        modified = n_randint(state, 2);
+
+        goal = 2 + n_randint(state, 4000);
+
+        for (prec = 2 + n_randint(state, 1000); ; prec *= 2)
+        {
+            acb_hypgeom_gamma_upper(res, a, z, modified, prec);
+
+            if (acb_rel_accuracy_bits(res) > goal)
+                break;
+
+            if (prec > 10000)
+            {
+                printf("FAIL (convergence)\n");
+                flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
+                flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+                flint_printf("res = "); acb_printd(res, 30); flint_printf("\n\n");
+                abort();
+            }
+        }
+
+        acb_clear(a);
+        acb_clear(z);
+        acb_clear(res);
+    }
+
     for (iter = 0; iter < 2000; iter++)
     {
         acb_t a0, a1, b, z, w0, w1, t, u;
