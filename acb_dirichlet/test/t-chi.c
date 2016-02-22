@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("dirichlet_group_chi....");
+    flint_printf("chi....");
     fflush(stdout);
     flint_randinit(state);
 
@@ -57,9 +57,9 @@ int main()
             n1 = n_randint(state, 1000);
             n2 = n_randint(state, 1000);
 
-            _acb_dirichlet_group_chi(zn1, G, m, n1, 53);
-            _acb_dirichlet_group_chi(zn2, G, m, n2, 53);
-            _acb_dirichlet_group_chi(zn1n2, G, m, n1 * n2, 53);
+            acb_dirichlet_chi(zn1, G, m, n1, 53);
+            acb_dirichlet_chi(zn2, G, m, n2, 53);
+            acb_dirichlet_chi(zn1n2, G, m, n1 * n2, 53);
             acb_mul(zn1zn2, zn1, zn2, 53);
 
             if (!acb_overlaps(zn1n2, zn1zn2))

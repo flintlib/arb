@@ -59,7 +59,7 @@ void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
 
 void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
 
-void _acb_dirichlet_group_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec);
+void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec);
 
 #ifdef __cplusplus
 }

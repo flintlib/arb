@@ -88,7 +88,7 @@ chi_even_exponent(const acb_dirichlet_group_t G, ulong m, ulong n)
 }
 
 void
-_acb_dirichlet_group_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
+acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
 {
     fmpq_t t, u;
 
@@ -96,23 +96,15 @@ _acb_dirichlet_group_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulon
     ulong q_even = G->q_even;
     ulong q_odd = G->q_odd;
 
-    odd_part = 0;
-    even_part = 0;
-
-    /* todo: check gcd before computing logarithms? */
-
-    if (q_even > 1)
+    if ((q_even > 1 && (n % 2 == 0)) || (q_odd > 1 && (n_gcd(q_odd, n) != 1)))
     {
-        if (m % 2 == 0 || n % 2 == 0)
-        {
-            acb_zero(res);
-            return;
-        }
-        else if (q_even == 2)
-        {
-            even_part = 0;  /* 1 */
-        }
-        else if (q_even == 4)
+        acb_zero(res);
+        return;
+    }
+
+    if (q_even > 2)
+    {
+        if (q_even == 4)
         {
             if (m % 4 == 3 && n % 4 == 3)
                 even_part = q_even / 2;  /* -1 */
@@ -124,20 +116,15 @@ _acb_dirichlet_group_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulon
             even_part = 4 * chi_even_exponent(G, m % q_even, n % q_even);
         }
     }
+    else
+    {
+        even_part = 0;
+    }
 
     if (q_odd > 1)
-    {
-        m = m % q_odd;
-        n = n % q_odd;
-
-        if (n_gcd(q_odd, m) != 1 || n_gcd(q_odd, n) != 1)
-        {
-            acb_zero(res);
-            return;
-        }
-
-        odd_part = chi_odd_exponent(G, m, n);
-    }
+        odd_part = chi_odd_exponent(G, m % q_odd, n % q_odd);
+    else
+        odd_part = 0;
 
     fmpq_init(t);
     fmpq_init(u);
