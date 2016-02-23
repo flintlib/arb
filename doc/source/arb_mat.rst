@@ -176,6 +176,11 @@ Arithmetic
     if the matrices are sufficiently large and more than one thread
     can be used.
 
+.. function:: void arb_mat_mul_entrywise(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+    Sets *C* to the entrywise product of *A* and *B*.
+    The operands must have the same dimensions.
+
 .. function:: void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec)
 
 .. function:: void arb_mat_sqr(arb_mat_t res, const arb_mat_t mat, slong prec)

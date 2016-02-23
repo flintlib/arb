@@ -175,6 +175,11 @@ Arithmetic
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
 
+.. function:: void acb_mat_mul_entrywise(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
+
+    Sets *res* to the entrywise product of *mat1* and *mat2*.
+    The operands must have the same dimensions.
+
 .. function:: void acb_mat_sqr(acb_mat_t res, const acb_mat_t mat, slong prec)
 
     Sets *res* to the matrix square of *mat*. The operands must both be square
