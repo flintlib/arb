@@ -299,6 +299,23 @@ void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec);
 
 void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
 
+/* Sparsity structure */
+
+void arb_mat_entrywise_is_zero(fmpz_mat_t dest, const arb_mat_t src);
+
+void arb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const arb_mat_t src);
+
+slong arb_mat_count_is_zero(const arb_mat_t mat);
+
+ARB_MAT_INLINE slong
+arb_mat_count_not_is_zero(const arb_mat_t mat)
+{
+    slong size;
+    size = arb_mat_nrows(mat) * arb_mat_ncols(mat);
+    return size - arb_mat_count_is_zero(mat);
+}
+
+
 #ifdef __cplusplus
 }
 #endif
