@@ -27,7 +27,7 @@
 #include "acb_mat.h"
 
 slong _arb_mat_exp_choose_N(const mag_t norm, slong prec);
-void _fmpz_mat_transitive_closure(fmpz_mat_t A);
+void _fmpz_mat_transitive_closure(fmpz_mat_t A, const fmpz_mat_t B);
 
 int
 _acb_mat_is_diagonal(const acb_mat_t A)
@@ -68,7 +68,7 @@ _acb_mat_exp_get_structure(fmpz_mat_t C, const acb_mat_t A)
             }
         }
     }
-    _fmpz_mat_transitive_closure(C);
+    _fmpz_mat_transitive_closure(C, C);
 }
 
 void
