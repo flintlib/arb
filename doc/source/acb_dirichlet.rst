@@ -3,6 +3,9 @@
 **acb_dirichlet.h** -- Dirichlet L-functions, zeta functions, and related functions
 ===================================================================================
 
+Warning: the interfaces in this module are experimental and may change
+without notice.
+
 This module will eventually allow working with Dirichlet L-functions and
 possibly slightly more general Dirichlet series. At the moment, it contains
 nothing interesting.
@@ -18,6 +21,42 @@ A Dirichlet L-function is the analytic continuation of an L-series
     L(s,\chi) = \sum_{k=1}^\infty \frac{\chi(k)}{k^s}
 
 where `\chi(k)` is a Dirichlet character.
+
+Dirichlet characters
+-------------------------------------------------------------------------------
+
+.. type:: acb_dirichlet_struct
+
+.. type:: acb_dirichlet_t
+
+    Represents the group of Dirichlet characters mod *q*.
+
+    An *acb_dirichlet_t* is defined as an array of *acb_dirichlet_struct*
+    of length 1, permitting it to be passed by reference.
+
+.. function:: void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
+
+    Initializes *G* to the group of Dirichlet characters mod *q*.
+
+    This method computes the prime factorization of *q* and other useful
+    invariants. It does *not* automatically precompute lookup tables
+    of discrete logarithms or numerical roots of unity, and can therefore
+    safely be called even with large *q*.
+    For implementation reasons, the largest prime factor of *q* must not
+    exceed `10^{12}` (an abort will be raised). This restriction could
+    be removed in the future.
+
+.. function:: void acb_dirichlet_group_clear(acb_dirichlet_group_t G)
+
+    Clears *G*.
+
+.. function:: void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
+
+    Sets *res* to `\chi_m(n)`, the value of the Dirichlet character
+    of index *m* evaluated at the integer *n*.
+
+    Requires that *m* is a valid index, that is, `1 \le m \le q` and *m* is
+    coprime to *q*. There are no restrictions on *n*.
 
 Euler products
 -------------------------------------------------------------------------------
