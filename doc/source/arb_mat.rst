@@ -328,15 +328,25 @@ Special functions
 Sparsity structure
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_mat_entrywise_nonzero_round_up(fmpz_mat_t A, const arb_mat_t src)
+.. function:: void arb_mat_entrywise_is_zero(fmpz_mat_t dest, const arb_mat_t src)
 
-.. function:: void arb_mat_adjacency(fmpz_mat_t A, const arb_mat_t src)
+    Sets each entry of *dest* to indicate whether the corresponding
+    entry of *src* is certainly zero.
+    If the entry of *src* at row `i` and column `j` is zero according to
+    :func:`arb_is_zero` then the entry of *dest* at that row and column
+    is set to one, otherwise that entry of *dest* is set to zero.
 
-    Each entry of *A* is set to 0 or 1 depending on whether or not
-    the corresponding entry of *src* is zero.
+.. function:: void arb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const arb_mat_t src)
 
-.. function:: slong _arb_mat_count_nonzero_round_up(const arb_mat_t src)
+    Sets each entry of *dest* to indicate whether the corresponding
+    entry of *src* is not certainly zero.
+    This the complement of :func:`arb_mat_entrywise_is_zero`.
 
-.. function:: slong arb_mat_count_nonzero(const arb_mat_t src)
+.. function:: slong arb_mat_count_is_zero(const arb_mat_t mat)
 
-    Returns the number of nonzero entries of the matrix.
+    Returns the number of entries of *mat* that are certainly zero
+    according to :func:`arb_is_zero`.
+
+.. function:: slong arb_mat_count_not_is_zero(const arb_mat_t mat)
+
+    Returns the number of entries of *mat* that are not certainly zero.

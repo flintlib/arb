@@ -301,21 +301,20 @@ void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
 
 /* Sparsity structure */
 
-void _arb_mat_entrywise_nonzero_round_up(fmpz_mat_t A, const arb_mat_t src);
+void arb_mat_entrywise_is_zero(fmpz_mat_t dest, const arb_mat_t src);
 
-ARB_MAT_INLINE void
-arb_mat_adjacency(fmpz_mat_t A, const arb_mat_t src)
-{
-    _arb_mat_entrywise_nonzero_round_up(A, src);
-}
+void arb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const arb_mat_t src);
 
-slong _arb_mat_count_nonzero_round_up(const arb_mat_t src);
+slong arb_mat_count_is_zero(const arb_mat_t mat);
 
 ARB_MAT_INLINE slong
-arb_mat_count_nonzero(const arb_mat_t src)
+arb_mat_count_not_is_zero(const arb_mat_t mat)
 {
-    return  _arb_mat_count_nonzero_round_up(src);
+    slong size;
+    size = arb_mat_nrows(mat) * arb_mat_ncols(mat);
+    return size - arb_mat_count_is_zero(mat);
 }
+
 
 #ifdef __cplusplus
 }

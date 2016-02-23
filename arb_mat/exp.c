@@ -270,11 +270,11 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         fmpz_mat_t S;
         int using_structure;
 
-        using_structure = arb_mat_count_nonzero(A) < dim * dim;
+        using_structure = arb_mat_count_is_zero(A) > 0;
         if (using_structure)
         {
             fmpz_mat_init(S, dim, dim);
-            arb_mat_adjacency(S, A);
+            arb_mat_entrywise_not_is_zero(S, A);
             _fmpz_mat_transitive_closure(S, S);
         }
 

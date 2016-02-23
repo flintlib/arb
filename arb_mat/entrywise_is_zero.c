@@ -26,37 +26,18 @@
 #include "arb_mat.h"
 
 void
-_arb_mat_entrywise_nonzero_round_up(fmpz_mat_t A, const arb_mat_t src)
+_arb_mat_entrywise_is_zero(fmpz_mat_t dest, const arb_mat_t src)
 {
     slong i, j;
-    fmpz_mat_zero(A);
+    fmpz_mat_zero(dest);
     for (i = 0; i < arb_mat_nrows(src); i++)
     {
         for (j = 0; j < arb_mat_ncols(src); j++)
         {
-            if (!arb_is_zero(arb_mat_entry(src, i, j)))
+            if (arb_is_zero(arb_mat_entry(src, i, j)))
             {
-                fmpz_one(fmpz_mat_entry(A, i, j));
+                fmpz_one(fmpz_mat_entry(dest, i, j));
             }
         }
     }
-}
-
-slong
-_arb_mat_count_nonzero_round_up(const arb_mat_t src)
-{
-    slong nnz;
-    slong i, j;
-    nnz = 0;
-    for (i = 0; i < arb_mat_nrows(src); i++)
-    {
-        for (j = 0; j < arb_mat_ncols(src); j++)
-        {
-            if (!arb_is_zero(arb_mat_entry(src, i, j)))
-            {
-                nnz++;
-            }
-        }
-    }
-    return nnz;
 }
