@@ -144,6 +144,8 @@ void arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, sl
 
 void arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec);
 
+void arb_mat_mul_entrywise(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec);
+
 void arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec);
 
 void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec);
