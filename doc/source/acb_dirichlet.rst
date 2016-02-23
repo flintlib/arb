@@ -25,13 +25,13 @@ where `\chi(k)` is a Dirichlet character.
 Dirichlet characters
 -------------------------------------------------------------------------------
 
-.. type:: acb_dirichlet_struct
+.. type:: acb_dirichlet_group_struct
 
-.. type:: acb_dirichlet_t
+.. type:: acb_dirichlet_group_t
 
     Represents the group of Dirichlet characters mod *q*.
 
-    An *acb_dirichlet_t* is defined as an array of *acb_dirichlet_struct*
+    An *acb_dirichlet_group_t* is defined as an array of *acb_dirichlet_struct*
     of length 1, permitting it to be passed by reference.
 
 .. function:: void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
