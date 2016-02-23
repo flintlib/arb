@@ -299,6 +299,24 @@ void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec);
 
 void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
 
+/* Sparsity structure */
+
+void _arb_mat_entrywise_nonzero_round_up(fmpz_mat_t A, const arb_mat_t src);
+
+ARB_MAT_INLINE void
+arb_mat_adjacency(fmpz_mat_t A, const arb_mat_t src)
+{
+    _arb_mat_entrywise_nonzero_round_up(A, src);
+}
+
+slong _arb_mat_count_nonzero_round_up(const arb_mat_t src);
+
+ARB_MAT_INLINE slong
+arb_mat_count_nonzero(const arb_mat_t src)
+{
+    return  _arb_mat_count_nonzero_round_up(src);
+}
+
 #ifdef __cplusplus
 }
 #endif

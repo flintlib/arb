@@ -324,3 +324,19 @@ Special functions
 
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
+
+Sparsity structure
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_mat_entrywise_nonzero_round_up(fmpz_mat_t A, const arb_mat_t src)
+
+.. function:: void arb_mat_adjacency(fmpz_mat_t A, const arb_mat_t src)
+
+    Each entry of *A* is set to 0 or 1 depending on whether or not
+    the corresponding entry of *src* is zero.
+
+.. function:: slong _arb_mat_count_nonzero_round_up(const arb_mat_t src)
+
+.. function:: slong arb_mat_count_nonzero(const arb_mat_t src)
+
+    Returns the number of nonzero entries of the matrix.
