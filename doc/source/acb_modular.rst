@@ -1,6 +1,6 @@
 .. _acb-modular:
 
-**acb_modular.h** -- modular forms in the complex numbers
+**acb_modular.h** -- modular forms of complex variables
 ===============================================================================
 
 This module provides methods for numerical evaluation of modular

@@ -1,6 +1,6 @@
 .. _arb:
 
-**arb.h** -- real numbers represented as floating-point balls
+**arb.h** -- real numbers
 ===============================================================================
 
 An :type:`arb_t` represents a ball over the real numbers,

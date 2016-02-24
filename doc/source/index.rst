@@ -50,6 +50,9 @@ General information
 Floating-point numbers
 ::::::::::::::::::::::::::::::::::::
 
+The radius and midpoint of a ball are represented using two specialized
+floating-point types.
+
 .. toctree::
    :maxdepth: 2
 
@@ -58,6 +61,10 @@ Floating-point numbers
 
 Real and complex numbers
 ::::::::::::::::::::::::::::::::::::
+
+Real numbers (*arb_t*) are represented as midpoint-radius intervals,
+also known as balls. Complex numbers (*acb_t*) are represented in rectangular
+form, with balls for the real and imaginary parts.
 
 .. toctree::
    :maxdepth: 2
@@ -68,6 +75,10 @@ Real and complex numbers
 Polynomials and power series
 ::::::::::::::::::::::::::::::::::::
 
+These modules implement dense univariate polynomials with real and complex
+coefficients. Truncated power series are supported via methods acting
+on polynomials, without introducing a separate power series type.
+
 .. toctree::
    :maxdepth: 2
 
@@ -77,6 +88,9 @@ Polynomials and power series
 Matrices
 ::::::::::::::::::::::::::::::::::::
 
+These modules implement dense matrices with real and complex coefficients.
+Rudimentary linear algebra is supported.
+
 .. toctree::
    :maxdepth: 2
 
@@ -85,6 +99,10 @@ Matrices
 
 Higher mathematical functions
 ::::::::::::::::::::::::::::::::::::
+
+These modules implement mathematical functions with complexity
+that goes beyond the basics covered directly in the *arb* and *acb*
+modules.
 
 .. toctree::
    :maxdepth: 2
@@ -99,6 +117,10 @@ Higher mathematical functions
 Calculus
 ::::::::::::::::::::::::::::::::::::
 
+Using ball arithmetic, it is possible to do rigorous root-finding and
+integration (among other operations)
+with generic functions. This code should be considered experimental.
+
 .. toctree::
    :maxdepth: 2
 
@@ -108,6 +130,8 @@ Calculus
 Extra utility modules
 ::::::::::::::::::::::::::::::::::::
 
+Mainly for internal use.
+
 .. toctree::
    :maxdepth: 1
 
@@ -115,6 +139,9 @@ Extra utility modules
 
 Legacy modules (Arb 1.x types)
 ::::::::::::::::::::::::::::::::::::
+
+These modules are deprecated. They are mainly kept for testing
+the newer (and faster) implementations introduced in Arb 2.x.
 
 .. toctree::
    :maxdepth: 1
@@ -124,6 +151,9 @@ Legacy modules (Arb 1.x types)
 
 Supplementary algorithm notes
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Here, we give extra proofs, error bounds, and formulas that would be too
+lengthy to reproduce in the documentation for each module.
 
 .. toctree::
    :maxdepth: 1
