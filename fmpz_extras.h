@@ -127,35 +127,6 @@ fmpz_add2_fmpz_si_inline(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
     fmpz_add_si(z, z, c);
 }
 
-/* sets z = +/- ({src, n} >> shift) where 0 <= shift < FLINT_BITS
-   and the top limb of src is nonzero */
-/* TODO: optimize for result = 1 limb */
-
-static __inline__ void
-fmpz_set_mpn_rshift(fmpz_t z, mp_srcptr src, mp_size_t n, unsigned int shift, int negative)
-{
-    __mpz_struct * zptr;
-    zptr = _fmpz_promote(z);
-
-    if (zptr->_mp_alloc < n)
-        mpz_realloc2(zptr, n * FLINT_BITS);
-
-    if (shift == 0)
-    {
-        flint_mpn_copyi(zptr->_mp_d, src, n);
-    }
-    else
-    {
-        mpn_rshift(zptr->_mp_d, src, n, shift);
-        while (zptr->_mp_d[n - 1] == 0) /* todo: can only do one iter? */
-            n--;
-    }
-
-    zptr->_mp_size = negative ? -n : n;
-    _fmpz_demote_val(z);
-}
-
-/* sets z = +/- {src, n} where n >= 2 and the top limb of src is nonzero */
 static __inline__ void
 fmpz_set_mpn_large(fmpz_t z, mp_srcptr src, mp_size_t n, int negative)
 {
@@ -169,7 +140,6 @@ fmpz_set_mpn_large(fmpz_t z, mp_srcptr src, mp_size_t n, int negative)
     zz->_mp_size = negative ? -n : n;
 }
 
-/* round away from zero */
 static __inline__ void
 fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, mp_bitcnt_t exp)
 {
@@ -179,25 +149,6 @@ fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, mp_bitcnt_t exp)
         fmpz_cdiv_q_2exp(z, x, exp);
     else
         fmpz_fdiv_q_2exp(z, x, exp);
-}
-
-/* sets z = x + y*2^shift */
-static __inline__ void fmpz_add_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
-{
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_mul_2exp(t, y, shift);
-    fmpz_add(z, x, t);
-    fmpz_clear(t);
-}
-
-static __inline__ void fmpz_sub_mul2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
-{
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_mul_2exp(t, y, shift);
-    fmpz_sub(z, x, t);
-    fmpz_clear(t);
 }
 
 slong _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y);

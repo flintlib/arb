@@ -105,11 +105,19 @@ Calculus
    arb_calc.rst
    acb_calc.rst
 
+Extra utility modules
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 1
+
+   fmpz_extras.rst
+
 Legacy modules (Arb 1.x types)
 ::::::::::::::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    fmpr.rst
    fmprb.rst
@@ -118,7 +126,7 @@ Supplementary algorithm notes
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    constants.rst
    gamma.rst

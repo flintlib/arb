@@ -25,6 +25,16 @@
 
 #include "fmpr.h"
 
+static __inline__ void
+fmpz_addmul_2exp(fmpz_t z, const fmpz_t x, const fmpz_t y, ulong shift)
+{
+    fmpz_t t;
+    fmpz_init(t);
+    fmpz_mul_2exp(t, y, shift);
+    fmpz_add(z, x, t);
+    fmpz_clear(t);
+}
+
 static slong _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {
     if (fmpr_is_zero(x))
@@ -91,7 +101,7 @@ fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t 
             }
         }
 
-        fmpz_add_mul2exp(fmpr_manref(z), fmpr_manref(y), fmpr_manref(x), shift);
+        fmpz_addmul_2exp(fmpr_manref(z), fmpr_manref(y), fmpr_manref(x), shift);
         fmpz_set(fmpr_expref(z), fmpr_expref(y));
     }
     else
@@ -110,7 +120,7 @@ fmpr_add_naive(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t 
             }
         }
 
-        fmpz_add_mul2exp(fmpr_manref(z), fmpr_manref(x), fmpr_manref(y), shift);
+        fmpz_addmul_2exp(fmpr_manref(z), fmpr_manref(x), fmpr_manref(y), shift);
         fmpz_set(fmpr_expref(z), fmpr_expref(x));
     }
 
