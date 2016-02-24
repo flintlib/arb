@@ -26,52 +26,41 @@
 
 #include "acb_dirichlet.h"
 
-/* todo: modular arithmetic */
+void
+acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G) {
+  chi->expo = flint_malloc(G->num * sizeof(ulong));
+}
 
-long
-n_dirichlet_chi_conrey(const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b)
+void
+acb_dirichlet_char_clear(acb_dirichlet_char_t chi) {
+    flint_free(chi->expo);
+}
+
+void
+acb_dirichlet_char_log(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_conrey_t x)
 {
-  ulong x, k;
-  x = 0;
+  ulong k, g;
+  g = G->expo;
+  /* modify exponents */
   for (k = 0; k < G->num; k++)
-    x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
-  return x;
-}
+  {
+    chi->expo[k] = (x->log[k] * G->PHI[k]) % G->expo;
+    g = n_gcd(g, chi->expo[k]);
+  }
+  for (k = 0; k < G->num; k++)
+    chi->expo[k] = chi->expo[k] / g;
 
-long
-n_dirichlet_chi(const acb_dirichlet_group_t G, ulong m, ulong n)
-{
-  ulong x;
-  acb_conrey_t a, b;
-  acb_conrey_init(a, G);
-  acb_conrey_init(b, G);
-
-  acb_conrey_log(a, G, m);
-  acb_conrey_log(b, G, n);
-  x = n_dirichlet_chi_conrey(G, a, b);
-
-  acb_conrey_clear(a);
-  acb_conrey_clear(b);
-
-  return x;
+  chi->q = G->q;
+  chi->order = G->expo / g;
+  chi->n = x->n;
 }
 
 void
-acb_dirichlet_chi_conrey(acb_t res, const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b, slong prec)
+acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n)
 {
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi_conrey(G, a, b), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
+  acb_conrey_t x;
+  x->log = chi->expo;
+  acb_conrey_log(x, G, n);
+  acb_dirichlet_char_log(chi, G, x);
 }
 
-void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
-{
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi(G, m, n), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
-}

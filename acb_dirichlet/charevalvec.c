@@ -26,52 +26,42 @@
 
 #include "acb_dirichlet.h"
 
-/* todo: modular arithmetic */
-
-long
-n_dirichlet_chi_conrey(const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b)
+static void
+set_non_invertible_values(long *v, const acb_dirichlet_group_t G, ulong nv)
 {
-  ulong x, k;
-  x = 0;
-  for (k = 0; k < G->num; k++)
-    x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
-  return x;
-}
-
-long
-n_dirichlet_chi(const acb_dirichlet_group_t G, ulong m, ulong n)
-{
-  ulong x;
-  acb_conrey_t a, b;
-  acb_conrey_init(a, G);
-  acb_conrey_init(b, G);
-
-  acb_conrey_log(a, G, m);
-  acb_conrey_log(b, G, n);
-  x = n_dirichlet_chi_conrey(G, a, b);
-
-  acb_conrey_clear(a);
-  acb_conrey_clear(b);
-
-  return x;
+  ulong k, l;
+  if (G->q_even > 1)
+  {
+    for (k = 2; k < nv; k += 2)
+      v[k] = -1;
+  }
+  for (l = 0; l < G->num; l++)
+  {
+    ulong p = G->primes[k];
+    for (k = p; k < nv; k += p)
+      v[k] = -1;
+  }
 }
 
 void
-acb_dirichlet_chi_conrey(acb_t res, const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b, slong prec)
+n_dirichlet_char_vec(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
 {
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi_conrey(G, a, b), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
-}
-
-void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
-{
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi(G, m, n), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
+  ulong t, k, j;
+  acb_conrey_t x;
+  acb_conrey_init(x, G);
+  acb_conrey_one(x, G);
+  t = v[1] = 0;
+  while( (j = acb_conrey_next(x, G)) < G->num ) {
+    /* exponents were modified up to j */
+    for (k = 0; k < j; k++)
+      t = (t + chi->expo[k] * x->log[k]) % chi->order;
+    if (x->n < nv)
+      v[x->n] = t;
+  }
+  /* fix result outside primes */
+  set_non_invertible_values(v, G, nv);
+  /* copy outside modulus */
+  for (k = G->q + 1; k < nv ; k++ )
+    v[k] = v[k-G->q];
+  acb_conrey_clear(x);
 }

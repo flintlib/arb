@@ -26,52 +26,31 @@
 
 #include "acb_dirichlet.h"
 
-/* todo: modular arithmetic */
-
 long
-n_dirichlet_chi_conrey(const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b)
+n_dirichlet_char_eval(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
 {
-  ulong x, k;
-  x = 0;
+  ulong v = 0, k;
+  acb_conrey_t x;
+  acb_conrey_init(x, G);
+  acb_conrey_log(x, G, n);
   for (k = 0; k < G->num; k++)
-    x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
-  return x;
-}
-
-long
-n_dirichlet_chi(const acb_dirichlet_group_t G, ulong m, ulong n)
-{
-  ulong x;
-  acb_conrey_t a, b;
-  acb_conrey_init(a, G);
-  acb_conrey_init(b, G);
-
-  acb_conrey_log(a, G, m);
-  acb_conrey_log(b, G, n);
-  x = n_dirichlet_chi_conrey(G, a, b);
-
-  acb_conrey_clear(a);
-  acb_conrey_clear(b);
-
-  return x;
+    v = (v + chi->expo[k] * x->log[k]) % chi->order;
+  acb_conrey_clear(x);
+  return v;
 }
 
 void
-acb_dirichlet_chi_conrey(acb_t res, const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b, slong prec)
+fmpq_dirichlet_char_eval(fmpq_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
 {
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi_conrey(G, a, b), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
+    fmpq_set_si(res, n_dirichlet_char_eval(G, chi, n), chi->order);
 }
 
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
+acb_dirichlet_char_eval(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
 {
-  fmpq_t t;
-  fmpq_init(t);
-  fmpq_set_si(t, n_dirichlet_chi(G, m, n), G->expo);
-  arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-  fmpq_clear(t);
+    fmpq_t t;
+    fmpq_init(t);
+    fmpq_dirichlet_char_eval(t, G, chi, n);
+    arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
+    fmpq_clear(t);
 }
