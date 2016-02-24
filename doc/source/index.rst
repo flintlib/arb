@@ -39,7 +39,7 @@ General information
 ::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    overview.rst
    setup.rst
@@ -47,22 +47,48 @@ General information
    history.rst
    examples.rst
 
-Module documentation (Arb 2.x types)
+Floating-point numbers
 ::::::::::::::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    mag.rst
    arf.rst
+
+Real and complex numbers
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
    arb.rst
-   arb_poly.rst
-   arb_mat.rst
-   arb_calc.rst
    acb.rst
+
+Polynomials and power series
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   arb_poly.rst
    acb_poly.rst
+
+Matrices
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   arb_mat.rst
    acb_mat.rst
-   acb_calc.rst
+
+Higher mathematical functions
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
    acb_hypgeom.rst
    acb_modular.rst
    acb_dirichlet.rst
@@ -70,24 +96,33 @@ Module documentation (Arb 2.x types)
    hypgeom.rst
    partitions.rst
 
-Algorithms and proofs
+Calculus
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   arb_calc.rst
+   acb_calc.rst
+
+Legacy modules (Arb 1.x types)
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   fmpr.rst
+   fmprb.rst
+
+Supplementary algorithm notes
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    constants.rst
    gamma.rst
    polylogarithms.rst
-
-Module documentation (Arb 1.x types)
-::::::::::::::::::::::::::::::::::::
-
-.. toctree::
-   :maxdepth: 1
-
-   fmpr.rst
-   fmprb.rst
 
 Credits and references
 ::::::::::::::::::::::::
