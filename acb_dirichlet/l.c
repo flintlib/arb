@@ -16,32 +16,39 @@ acb_dirichlet_l(acb_t res, const acb_t s,
     const acb_dirichlet_group_t G, ulong m, slong prec)
 {
     acb_t chi, t, u, a;
-    ulong k;
+    acb_conrey_t cm, cn;
 
     acb_init(chi);
+    acb_conrey_init(cm, G);
+    acb_conrey_init(cn, G);
     acb_init(t);
     acb_init(u);
     acb_init(a);
 
+    acb_conrey_log(cm, G, m);
+    acb_conrey_one(cn, G);
     acb_zero(t);
 
-    for (k = 1; k <= G->q; k++)
-    {
-        acb_dirichlet_chi(chi, G, m, k, prec);
+    while (1) {
+        /* todo: use n_dirichlet_chi and precomputed roots instead */
+        acb_dirichlet_chi_conrey(chi, G, cm, cn, prec);
 
-        if (!acb_is_zero(chi))
-        {
-            acb_set_ui(a, k);
-            acb_div_ui(a, a, G->q, prec);
-            acb_hurwitz_zeta(u, s, a, prec);
-            acb_addmul(t, chi, u, prec);
-        }
+        acb_set_ui(a, cn->n);
+        acb_div_ui(a, a, G->q, prec);
+        acb_hurwitz_zeta(u, s, a, prec);
+        acb_addmul(t, chi, u, prec);
+
+        if (acb_conrey_next(cn, G) == G->num)
+          break;
     }
 
     acb_set_ui(u, G->q);
     acb_neg(a, s);
     acb_pow(u, u, a, prec);
     acb_mul(res, t, u, prec);
+
+    acb_conrey_clear(cm);
+    acb_conrey_clear(cn);
 
     acb_clear(chi);
     acb_clear(t);
