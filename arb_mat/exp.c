@@ -26,44 +26,9 @@
 #include "fmpz_mat.h"
 #include "double_extras.h"
 #include "arb_mat.h"
+#include "fmpz_mat_extras.h"
 
 #define LOG2_OVER_E 0.25499459743395350926
-
-
-/* Warshall's algorithm */
-void
-_fmpz_mat_transitive_closure(fmpz_mat_t B, fmpz_mat_t A)
-{
-    slong k, i, j, dim;
-    dim = fmpz_mat_nrows(A);
-
-    if (dim != fmpz_mat_ncols(A))
-    {
-        flint_printf("_fmpz_mat_transitive_closure: a square matrix is required!\n");
-        abort();
-    }
-
-    if (A != B)
-    {
-        fmpz_mat_set(B, A);
-    }
-
-    for (k = 0; k < dim; k++)
-    {
-        for (i = 0; i < dim; i++)
-        {
-            for (j = 0; j < dim; j++)
-            {
-                if (fmpz_is_zero(fmpz_mat_entry(B, i, j)) &&
-                    !fmpz_is_zero(fmpz_mat_entry(B, i, k)) &&
-                    !fmpz_is_zero(fmpz_mat_entry(B, k, j)))
-                {
-                    fmpz_one(fmpz_mat_entry(B, i, j));
-                }
-            }
-        }
-    }
-}
 
 int
 _arb_mat_is_diagonal(const arb_mat_t A)
@@ -275,7 +240,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         {
             fmpz_mat_init(S, dim, dim);
             arb_mat_entrywise_not_is_zero(S, A);
-            _fmpz_mat_transitive_closure(S, S);
+            fmpz_mat_transitive_closure(S, S);
         }
 
         q = pow(wp, 0.25);  /* wanted magnitude */
