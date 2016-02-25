@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
@@ -28,17 +28,49 @@
 int
 arb_contains_fmpq(const arb_t x, const fmpq_t y)
 {
-    fmprb_t t;
-    int result;
+    if (fmpz_is_one(fmpq_denref(y)) || !arb_is_finite(x))
+    {
+        return arb_contains_fmpz(x, fmpq_numref(y));
+    }
+    else
+    {
+        arf_t t, xm, xr, ym;
+        arf_struct tmp[3];
+        int result;
 
-    fmprb_init(t);
+        arf_init(t);
+        arf_init(xm);
+        arf_init(xr);
+        arf_init(ym);
 
-    arb_get_fmprb(t, x);
+        /* To compare x with p/q, compare qx with p. */
+        arf_mul_fmpz(xm, arb_midref(x), fmpq_denref(y), ARF_PREC_EXACT, ARF_RND_DOWN);
+        arf_set_mag(xr, arb_radref(x));
+        arf_mul_fmpz(xr, xr, fmpq_denref(y), ARF_PREC_EXACT, ARF_RND_DOWN);
+        arf_set_fmpz(ym, fmpq_numref(y));
 
-    result = fmprb_contains_fmpq(t, y);
+        /* y >= xm - xr  <=>  0 >= xm - xr - y */
+        arf_init_set_shallow(tmp + 0, xm);
+        arf_init_neg_shallow(tmp + 1,  xr);
+        arf_init_neg_shallow(tmp + 2, ym);
 
-    fmprb_clear(t);
+        arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+        result = (arf_sgn(t) <= 0);
 
-    return result;
+        if (result)
+        {
+            /* y <= xm + xr  <=>  0 <= xm + xr - y */
+            arf_init_set_shallow(tmp + 1, xr);
+            arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+            result = (arf_sgn(t) >= 0);
+        }
+
+        arf_clear(t);
+        arf_clear(xm);
+        arf_clear(xr);
+        arf_clear(ym);
+
+        return result;
+    }
 }
 
