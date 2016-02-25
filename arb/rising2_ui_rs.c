@@ -23,9 +23,8 @@
 
 ******************************************************************************/
 
+#include "fmpz_poly.h"
 #include "arb.h"
-
-
 
 void
 _gamma_rf_bsplit(fmpz * A, ulong a, ulong b)

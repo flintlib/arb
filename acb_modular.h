@@ -27,6 +27,7 @@
 #define ACB_MODULAR_H
 
 #include <stdio.h>
+#include "fmpz_poly.h"
 #include "acb.h"
 
 #ifdef __cplusplus

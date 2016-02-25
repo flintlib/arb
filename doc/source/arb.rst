@@ -117,10 +117,6 @@ Memory management
 Assignment and rounding
 -------------------------------------------------------------------------------
 
-.. function:: void arb_set_fmprb(arb_t y, const fmprb_t x)
-
-.. function:: void arb_get_fmprb(fmprb_t y, const arb_t x)
-
 .. function:: void arb_set(arb_t y, const arb_t x)
 
 .. function:: void arb_set_arf(arb_t y, const arf_t x)
@@ -134,6 +130,14 @@ Assignment and rounding
 .. function:: void arb_set_fmpz(arb_t y, const fmpz_t x)
 
     Sets *y* to the value of *x* without rounding.
+
+.. function:: void arb_set_fmprb(arb_t y, const fmprb_t x)
+
+.. function:: void arb_get_fmprb(fmprb_t y, const arb_t x)
+
+    Sets *y* to the value of *x* without rounding. These methods are
+    deprecated. To enable them, ``fmprb.h`` must be included before
+    including ``arb.h``.
 
 .. function:: void arb_set_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e)
 

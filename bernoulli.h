@@ -32,7 +32,6 @@
 #include "fmpz_vec.h"
 #include "fmpq.h"
 #include "arith.h"
-#include "fmprb.h"
 #include "arb.h"
 
 #ifdef __cplusplus
@@ -117,11 +116,6 @@ void bernoulli_rev_clear(bernoulli_rev_t iter);
   } while (0); \
 
 slong bernoulli_bound_2exp_si(ulong n);
-
-
-void bernoulli_fmprb_ui_zeta(fmprb_t b, ulong n, slong prec);
-
-void bernoulli_fmprb_ui(fmprb_t b, ulong n, slong prec);
 
 void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n);
 

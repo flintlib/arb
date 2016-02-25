@@ -23,6 +23,7 @@
 
 ******************************************************************************/
 
+#include "fmpz_poly.h"
 #include "acb.h"
 
 void rising_difference_polynomial(fmpz * s, fmpz * c, ulong m);
