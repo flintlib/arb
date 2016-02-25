@@ -333,6 +333,22 @@ void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec);
 
 void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec);
 
+/* Sparsity structure */
+
+void acb_mat_entrywise_is_zero(fmpz_mat_t dest, const acb_mat_t src);
+
+void acb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const acb_mat_t src);
+
+slong acb_mat_count_is_zero(const acb_mat_t mat);
+
+ARB_MAT_INLINE slong
+acb_mat_count_not_is_zero(const acb_mat_t mat)
+{
+    slong size;
+    size = acb_mat_nrows(mat) * acb_mat_ncols(mat);
+    return size - acb_mat_count_is_zero(mat);
+}
+
 #ifdef __cplusplus
 }
 #endif
