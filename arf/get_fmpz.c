@@ -131,33 +131,44 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         mp_srcptr xp;
         __mpz_struct * zz;
 
-        /* TBD: implement efficiently */
-        if (rnd == ARF_RND_NEAR)
-        {
-            fmpr_t t;
-            fmpr_init(t);
-            arf_get_fmpr(t, x);
-            fmpr_get_fmpz(z, t, rnd);
-            fmpr_clear(t);
-            return;
-        }
-
         exp = ARF_EXP(x);
         negative = ARF_SGNBIT(x);
 
         /* |x| < 1 */
         if (exp <= 0)
         {
-            if (rnd == ARF_RND_DOWN ||
+            int value;
+
+            if (rnd == ARF_RND_NEAR)
+            {
+                if (exp == 0)
+                {
+                    /* check for the special case +/- 1/2 */
+                    ARF_GET_MPN_READONLY(xp, xn, x);
+
+                    if (xp[xn - 1] < LIMB_TOP || (xn == 1 && xp[xn - 1] == LIMB_TOP))
+                        value = 0;
+                    else
+                        value = negative ? -1 : 1;
+                }
+                else
+                {
+                    value = 0;
+                }
+            }
+            else if (rnd == ARF_RND_DOWN ||
                 (rnd == ARF_RND_FLOOR && !negative) ||
                 (rnd == ARF_RND_CEIL && negative))
             {
-                fmpz_zero(z);
+                value = 0;
             }
             else
             {
-                fmpz_set_si(z, negative ? -1 : 1);
+                value = negative ? -1 : 1;
             }
+
+            _fmpz_demote(z);
+            *z = value;
             return;
         }
 
@@ -166,18 +177,26 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
         /* |x| < 2^31 or 2^63 (must save 1 bit for rounding up!) */
         if (exp < FLINT_BITS)
         {
-            mp_limb_t v, v2;
+            mp_limb_t v, v2, v3;
 
             v = xp[xn - 1];
-            v2 = v >> (FLINT_BITS - exp);
-            inexact = (xn > 1) || ((v2 << (FLINT_BITS - exp)) != v);
+            v2 = v >> (FLINT_BITS - exp); /* integral part */
+            v3 = v << exp;                /* fractional part (truncated, at least 1 bit) */
+
+            inexact = (xn > 1) || (v3 != 0);
 
             if (inexact && rnd != ARF_RND_DOWN)
             {
-                if (negative && (rnd == ARF_RND_UP || rnd == ARF_RND_FLOOR))
-                    v2++;
-                if (!negative && (rnd == ARF_RND_UP || rnd == ARF_RND_CEIL))
-                    v2++;
+                if (rnd == ARF_RND_NEAR)
+                {
+                    /* round up of fractional part is > 1/2,
+                       or if equal to 1/2 and the integral part is odd */
+                    v2 += (v3 > LIMB_TOP) || (v3 == LIMB_TOP && (xn > 1 || (v2 & 1)));
+                }
+                else
+                {
+                    v2 += (rnd == ARF_RND_UP) || (negative ^ (rnd == ARF_RND_CEIL));
+                }
             }
 
             if (negative)
@@ -185,6 +204,17 @@ arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
             else
                 fmpz_set_ui(z, v2);
 
+            return;
+        }
+
+        /* TBD: implement efficiently */
+        if (rnd == ARF_RND_NEAR)
+        {
+            fmpr_t t;
+            fmpr_init(t);
+            arf_get_fmpr(t, x);
+            fmpr_get_fmpz(z, t, rnd);
+            fmpr_clear(t);
             return;
         }
 
