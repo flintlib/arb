@@ -24,14 +24,13 @@
 ******************************************************************************/
 
 #include "mag.h"
+#include "arf.h"
 
 void
 mag_get_fmpq(fmpq_t y, const mag_t x)
 {
-    fmpr_t t;
-    fmpr_init(t);
-    mag_get_fmpr(t, x);
-    fmpr_get_fmpq(y, t);
-    fmpr_clear(t);
+    arf_t t;
+    arf_init_set_mag_shallow(t, x);
+    arf_get_fmpq(y, t);
 }
 
