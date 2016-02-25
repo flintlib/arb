@@ -55,14 +55,36 @@ _nilpotence_degree_is_superficially_ok_entrywise(const fmpz_mat_t A)
     return 1;
 }
 
+static void
+_fmpz_mat_directed_path_adjacency(fmpz_mat_t A)
+{
+    slong n, i;
+    if (!fmpz_mat_is_square(A)) abort(); /* assert */
+    n = fmpz_mat_nrows(A);
+    fmpz_mat_zero(A);
+    for (i = 0; i < n-1; i++)
+    {
+        fmpz_one(fmpz_mat_entry(A, i, i+1));
+    }
+}
+
+static void
+_fmpz_mat_directed_cycle_adjacency(fmpz_mat_t A)
+{
+    slong n;
+    if (!fmpz_mat_is_square(A)) abort(); /* assert */
+    n = fmpz_mat_nrows(A);
+    _fmpz_mat_directed_path_adjacency(A);
+    fmpz_one(fmpz_mat_entry(A, n-1, 0));
+}
 
 /* permute rows and columns of a square matrix */
 void
 _fmpz_mat_permute(fmpz_mat_t B, const fmpz_mat_t A, const slong *perm)
 {
     slong n, i, j;
-    if (!fmpz_mat_is_square(A)) abort();
-    if (A == B) abort();
+    if (!fmpz_mat_is_square(A)) abort(); /* assert */
+    if (A == B) abort(); /* assert */
     n = fmpz_mat_nrows(A);
     for (i = 0; i < n; i++)
     {
@@ -251,7 +273,7 @@ int main()
         fmpz_mat_clear(D);
     }
 
-    /* use brute force to check small examples */
+    /* use brute force to check small random examples */
     for (iter = 0; iter < 1000; iter++)
     {
         slong m;
@@ -281,6 +303,67 @@ int main()
         fmpz_mat_clear(A);
         fmpz_mat_clear(B);
         fmpz_mat_clear(C);
+    }
+
+    /* path graph adjacency matrices */
+    {
+        slong m, i, j;
+        fmpz_mat_t A, B;
+        for (m = 1; m < 100; m++)
+        {
+            fmpz_mat_init(A, m, m);
+            fmpz_mat_init(B, m, m);
+            _fmpz_mat_directed_path_adjacency(A);
+            fmpz_mat_entrywise_nilpotence_degree(B, A);
+
+            for (i = 0; i < m; i++)
+            {
+                for (j = 0; j < m; j++)
+                {
+                    if (fmpz_get_si(fmpz_mat_entry(B, i, j)) !=
+                        FLINT_MAX(0, 1 + j - i))
+                    {
+                        flint_printf("FAIL (directed path graph)\n");
+                        fmpz_mat_print_pretty(A); flint_printf("\n\n");
+                        fmpz_mat_print_pretty(B); flint_printf("\n\n");
+                        abort();
+                    }
+                }
+            }
+
+            fmpz_mat_clear(A);
+            fmpz_mat_clear(B);
+        }
+    }
+
+    /* cycle graph adjacency matrices */
+    {
+        slong m, i, j;
+        fmpz_mat_t A, B;
+        for (m = 1; m < 100; m++)
+        {
+            fmpz_mat_init(A, m, m);
+            fmpz_mat_init(B, m, m);
+            _fmpz_mat_directed_cycle_adjacency(A);
+            fmpz_mat_entrywise_nilpotence_degree(B, A);
+
+            for (i = 0; i < m; i++)
+            {
+                for (j = 0; j < m; j++)
+                {
+                    if (fmpz_get_si(fmpz_mat_entry(B, i, j)) != -1)
+                    {
+                        flint_printf("FAIL (directed cycle graph)\n");
+                        fmpz_mat_print_pretty(A); flint_printf("\n\n");
+                        fmpz_mat_print_pretty(B); flint_printf("\n\n");
+                        abort();
+                    }
+                }
+            }
+
+            fmpz_mat_clear(A);
+            fmpz_mat_clear(B);
+        }
     }
 
     flint_randclear(state);

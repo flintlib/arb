@@ -30,6 +30,26 @@
 
 #define LOG2_OVER_E 0.25499459743395350926
 
+slong
+_fmpz_mat_max_si(const fmpz_mat_t A)
+{
+    slong i, j, x;
+
+    /* empty max is undefined */
+    if (fmpz_mat_is_empty(A)) abort(); /* assert */
+
+    x = fmpz_get_si(fmpz_mat_entry(A, 0, 0));
+    for (i = 0; i < fmpz_mat_nrows(A); i++)
+    {
+        for (j = 0; j < fmpz_mat_ncols(A); j++)
+        {
+            x = FLINT_MAX(x, fmpz_get_si(fmpz_mat_entry(A, i, j)));
+        }
+    }
+
+    return x;
+}
+
 int
 _arb_mat_is_diagonal(const arb_mat_t A)
 {
@@ -231,6 +251,13 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         mag_mul_2exp_si(norm, norm, -r);
 
         N = _arb_mat_exp_choose_N(norm, wp);
+
+        /* get a second opinion if the matrix is nilpotent */
+        if (using_structure && fmpz_mat_is_nonnegative(S))
+        {
+            N = FLINT_MIN(N, _fmpz_mat_max_si(S));
+        }
+
         mag_exp_tail(err, norm, N);
 
         _arb_mat_exp_taylor(B, T, N, wp);
