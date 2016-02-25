@@ -368,10 +368,19 @@ Radius and interval operations
 
     Computes the exact interval represented by *x*, in the form of an integer
     interval multiplied by a power of two, i.e. `x = [a, b] \times 2^{\text{exp}}`.
+    The result is normalized by removing common trailing zeros
+    from *a* and *b*.
 
-    The outcome is undefined if the midpoint or radius of *x* is non-finite,
-    or if the difference in magnitude between the midpoint and radius
-    is so large that representing the endpoints exactly would cause overflows.
+    This method aborts if *x* is infinite or NaN, or if the difference between
+    the exponents of the midpoint and the radius is so large that allocating
+    memory for the result fails.
+
+    Warning: this method will allocate a huge amount of memory to store
+    the result if the exponent difference is huge. Memory allocation could
+    succeed even if the required space is far larger than the physical
+    memory available on the machine, resulting in swapping. It is recommended
+    to check that the midpoint and radius of *x* both are within a
+    reasonable range before calling this method.
 
 .. function:: void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, slong prec)
 
@@ -419,6 +428,16 @@ Radius and interval operations
     If *x* contains a unique integer, sets *z* to that value and returns
     nonzero. Otherwise (if *x* represents no integers or more than one integer),
     returns zero.
+
+    This method aborts if there is a unique integer but that integer
+    is so large that allocating memory for the result fails.
+
+    Warning: this method will allocate a huge amount of memory to store
+    the result if there is a unique integer and that integer is huge.
+    Memory allocation could succeed even if the required space is far
+    larger than the physical memory available on the machine, resulting
+    in swapping. It is recommended to check that the midpoint of *x* is
+    within a reasonable range before calling this method.
 
 .. function:: void arb_floor(arb_t y, const arb_t x, slong prec)
 

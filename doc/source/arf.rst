@@ -258,8 +258,16 @@ Assignment, rounding and conversions
 
     Sets *z* to *x* rounded to the nearest integer in the direction
     specified by *rnd*. If rnd is *ARF_RND_NEAR*, rounds to the nearest
-    even integer in case of a tie. Aborts if *x* is infinite, NaN or if the
-    exponent is unreasonably large.
+    even integer in case of a tie.
+
+    This method aborts if *x* is infinite or NaN, or if the exponent of *x*
+    is so large that allocating memory for the result fails.
+
+    Warning: this method will allocate a huge amount of memory to store
+    the result if the exponent of *x* is huge. Memory allocation could
+    succeed even if the required space is far larger than the physical
+    memory available on the machine, resulting in swapping. It is recommended
+    to check that *x* is within a reasonable range before calling this method.
 
 .. function:: slong arf_get_si(const arf_t x, arf_rnd_t rnd)
 

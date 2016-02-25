@@ -53,7 +53,7 @@ int main()
         arf_set_fmpz_2exp(y, a, exp);
         if (!arb_contains_arf(x, y))
         {
-            flint_printf("FAIL:\n\n");
+            flint_printf("FAIL (a):\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("a = "); fmpz_print(a);
             flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
@@ -63,9 +63,20 @@ int main()
         arf_set_fmpz_2exp(y, b, exp);
         if (!arb_contains_arf(x, y))
         {
-            flint_printf("FAIL:\n\n");
+            flint_printf("FAIL (b):\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b);
+            flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
+            abort();
+        }
+
+        if (fmpz_is_even(a) && fmpz_is_even(b) &&
+            !(fmpz_is_zero(a) && fmpz_is_zero(b)))
+        {
+            flint_printf("FAIL (odd):\n\n");
+            flint_printf("x = "); arb_print(x); flint_printf("\n\n");
+            flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
             flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
             abort();
         }
