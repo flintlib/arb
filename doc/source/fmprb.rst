@@ -225,32 +225,12 @@ Radius and interval operations
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
 
-.. function:: slong fmprb_rel_error_bits(const fmprb_t x)
-
-    Returns the effective relative error of *x* measured in bits, defined as
-    the difference between the position of the top bit in the radius
-    and the top bit in the midpoint, plus one.
-    The result is clamped between plus/minus *FMPR_PREC_EXACT*.
-
-.. function:: slong fmprb_rel_accuracy_bits(const fmprb_t x)
-
-    Returns the effective relative accuracy of *x* measured in bits,
-    equal to the negative of the return value from *fmprb_rel_error_bits*.
-
 .. function:: slong fmprb_bits(const fmprb_t x)
 
     Returns the number of bits needed to represent the absolute value
     of the mantissa of the midpoint of *x*, i.e. the minimum precision
     sufficient to represent *x* exactly. Returns 0 if the midpoint
     of *x* is a special value.
-
-.. function:: void fmprb_trim(fmprb_t y, const fmprb_t x)
-
-    Sets *y* to a trimmed copy of *x*: rounds *x* to a number of bits
-    equal to the accuracy of *x* (as indicated by its radius),
-    plus a few guard bits. The resulting ball is guaranteed to
-    contain *x*, but is more economical if *x* has
-    less than full accuracy.
 
 .. function:: int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x)
 
@@ -490,15 +470,4 @@ Powers and roots
 
     Sets *z* to the reciprocal square root of *x*, rounded to *prec* bits.
     At high precision, this is faster than computing a square root.
-
-.. function:: void fmprb_root(fmprb_t z, const fmprb_t x, ulong k, slong prec)
-
-    Sets *z* to the *k*-th root of *x*, rounded to *prec* bits.
-    As currently implemented, this function is only fast for small
-    fixed *k*. For large *k* it is better to use :func:`fmprb_pow_fmpq`
-    or :func:`fmprb_pow`.
-
-.. function:: void fmprb_agm(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
-
-    Sets *z* to the arithmetic-geometric mean of *x* and *y*.
 
