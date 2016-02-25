@@ -41,31 +41,6 @@ _arb_mat_is_diagonal(const arb_mat_t A)
     return 1;
 }
 
-void
-_arb_mat_exp_set_structure(arb_mat_t B, const fmpz_mat_t C)
-{
-    slong i, j, dim;
-
-    dim = arb_mat_nrows(B);
-    for (i = 0; i < dim; i++)
-    {
-        for (j = 0; j < dim; j++)
-        {
-            if (fmpz_is_zero(fmpz_mat_entry(C, i, j)))
-            {
-                if (i == j)
-                {
-                    arb_one(arb_mat_entry(B, i, j));
-                }
-                else
-                {
-                    arb_zero(arb_mat_entry(B, i, j));
-                }
-            }
-        }
-    }
-}
-
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
 {
@@ -240,7 +215,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         {
             fmpz_mat_init(S, dim, dim);
             arb_mat_entrywise_not_is_zero(S, A);
-            fmpz_mat_transitive_closure(S, S);
+            fmpz_mat_entrywise_nilpotence_degree(S, S);
         }
 
         q = pow(wp, 0.25);  /* wanted magnitude */
@@ -260,14 +235,26 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
         _arb_mat_exp_taylor(B, T, N, wp);
 
-        for (i = 0; i < dim; i++)
-            for (j = 0; j < dim; j++)
-                arb_add_error_mag(arb_mat_entry(B, i, j), err);
-
         if (using_structure)
         {
-            _arb_mat_exp_set_structure(B, S);
+            for (i = 0; i < dim; i++)
+            {
+                for (j = 0; j < dim; j++)
+                {
+                    if (fmpz_sgn(fmpz_mat_entry(S, i, j)) < 0 ||
+                        fmpz_cmp_si(fmpz_mat_entry(S, i, j), N) > 0)
+                    {
+                        arb_add_error_mag(arb_mat_entry(B, i, j), err);
+                    }
+                }
+            }
             fmpz_mat_clear(S);
+        }
+        else
+        {
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    arb_add_error_mag(arb_mat_entry(B, i, j), err);
         }
 
         for (i = 0; i < r; i++)
@@ -286,4 +273,3 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
     mag_clear(err);
     arb_mat_clear(T);
 }
-

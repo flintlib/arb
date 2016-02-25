@@ -35,6 +35,16 @@ extern "C" {
 
 void fmpz_mat_transitive_closure(fmpz_mat_t dest, const fmpz_mat_t src);
 
+void fmpz_mat_entrywise_nilpotence_degree(fmpz_mat_t dest, const fmpz_mat_t src);
+
+void fmpz_mat_entrywise_not_is_zero(fmpz_mat_t dest, const fmpz_mat_t src);
+
+int fmpz_mat_is_hollow(const fmpz_mat_t mat);
+
+int fmpz_mat_is_nonnegative(const fmpz_mat_t mat);
+
+int fmpz_mat_is_lower_triangular(const fmpz_mat_t mat);
+
 #ifdef __cplusplus
 }
 #endif

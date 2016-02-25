@@ -26,37 +26,36 @@
 #include "fmpz_mat_extras.h"
 #include "perm.h"
 
-/* transitive closure can only turn zeros into ones */
+
 int
-_transitive_closure_is_ok_entrywise(const fmpz_mat_t X, const fmpz_mat_t Y)
+_nilpotence_degree_is_superficially_ok_entrywise(const fmpz_mat_t A)
 {
-    slong i, j;
-    if (fmpz_mat_nrows(X) != fmpz_mat_nrows(Y) ||
-        fmpz_mat_ncols(X) != fmpz_mat_ncols(Y))
-    {
+    slong n, i, j, d;
+
+    if (!fmpz_mat_is_square(A))
         return 0;
-    }
-    for (i = 0; i < fmpz_mat_nrows(X); i++)
+
+    n = fmpz_mat_nrows(A);
+    for (i = 0; i < n; i++)
     {
-        for (j = 0; j < fmpz_mat_ncols(X); j++)
+        for (j = 0; j < n; j++)
         {
-            if (!fmpz_equal(
-                        fmpz_mat_entry(X, i, j),
-                        fmpz_mat_entry(Y, i, j)))
-            {
-                if (!fmpz_is_zero(fmpz_mat_entry(X, i, j)))
-                {
-                    return 0;
-                }
-                if (!fmpz_is_one(fmpz_mat_entry(Y, i, j)))
-                {
-                    return 0;
-                }
-            }
+            d = fmpz_get_si(fmpz_mat_entry(A, i, j));
+
+            if (d < -1 || d > n)
+                return 0;
+
+            if (i == j && d == 0)
+                return 0;
+
+            if (i != j && d == 1)
+                return 0;
         }
     }
     return 1;
 }
+
+/* todo: unfinished after here ... just copied from transitive closure ... */
 
 /* permute rows and columns of a square matrix */
 void
@@ -77,11 +76,12 @@ _fmpz_mat_permute(fmpz_mat_t B, const fmpz_mat_t A, const slong *perm)
     }
 }
 
+
 /* this is not efficient */
 void
-_brute_force_transitive_closure(fmpz_mat_t B, const fmpz_mat_t A)
+_brute_force_entrywise_nilpotence_degree(fmpz_mat_t B, const fmpz_mat_t A)
 {
-    slong n, k;
+    slong n, i, j, k;
     fmpz_mat_t S, curr, accum;
 
     n = fmpz_mat_nrows(A);
@@ -91,10 +91,19 @@ _brute_force_transitive_closure(fmpz_mat_t B, const fmpz_mat_t A)
     fmpz_mat_entrywise_not_is_zero(S, A);
     fmpz_mat_one(curr);
     fmpz_mat_zero(accum);
-    for (k = 0; k < n; k++)
+    for (k = 0; k < 2*n+1; k++)
     {
+        for (i = 0; i < n; i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                if (!fmpz_is_zero(fmpz_mat_entry(curr, i, j)))
+                {
+                    fmpz_set_si(fmpz_mat_entry(accum, i, j), k+1);
+                }
+            }
+        }
         fmpz_mat_mul(curr, curr, S);
-        fmpz_mat_add(accum, accum, curr);
     }
     fmpz_mat_clear(S);
     fmpz_mat_clear(curr);
@@ -104,15 +113,15 @@ _brute_force_transitive_closure(fmpz_mat_t B, const fmpz_mat_t A)
         {
             for (j = 0; j < n; j++)
             {
-                if (fmpz_is_zero(fmpz_mat_entry(A, i, j)) &&
-                    !fmpz_is_zero(fmpz_mat_entry(accum, i, j)))
+                if (fmpz_cmp_si(fmpz_mat_entry(accum, i, j), n) > 0)
                 {
-                    fmpz_one(fmpz_mat_entry(B, i, j));
+                    fmpz_set_si(fmpz_mat_entry(B, i, j), -1);
                 }
                 else
                 {
                     fmpz_set(fmpz_mat_entry(B, i, j),
-                             fmpz_mat_entry(A, i, j));
+                             fmpz_mat_entry(accum, i, j));
+
                 }
             }
         }
@@ -126,7 +135,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("transitive_closure....");
+    flint_printf("entrywise_nilpotence_degree....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -144,12 +153,11 @@ int main()
         fmpz_mat_init(D, m, m);
 
         fmpz_mat_randtest(A, state, n_randint(state, 20) + 1);
-        fmpz_mat_randtest(B, state, n_randint(state, 20) + 1);
+        fmpz_mat_entrywise_not_is_zero(A, A);
 
-        fmpz_mat_transitive_closure(B, A);
+        fmpz_mat_entrywise_nilpotence_degree(B, A);
 
-        /* test local properties of the closure */
-        if (!_transitive_closure_is_ok_entrywise(A, B))
+        if (!_nilpotence_degree_is_superficially_ok_entrywise(B))
         {
             flint_printf("FAIL (entrywise)\n");
             fmpz_mat_print_pretty(A); flint_printf("\n\n");
@@ -157,10 +165,10 @@ int main()
             abort();
         }
 
-        /* test aliasing */
+        /* aliasing */
         {
             fmpz_mat_set(C, A);
-            fmpz_mat_transitive_closure(C, C);
+            fmpz_mat_entrywise_nilpotence_degree(C, C);
             if (!fmpz_mat_equal(B, C))
             {
                 flint_printf("FAIL (aliasing)\n");
@@ -171,18 +179,58 @@ int main()
             }
         }
 
-        /* test commutativity of permutation with transitive closure */
+        /* reduction to transitive closure */
+        {
+            slong i, j;
+            fmpz_mat_t U, V;
+
+            fmpz_mat_init(U, m, m);
+            fmpz_mat_transitive_closure(U, A);
+            fmpz_mat_entrywise_not_is_zero(U, U);
+
+            fmpz_mat_init(V, m, m);
+            for (i = 0; i < m; i++)
+            {
+                for (j = 0; j < m; j++)
+                {
+                    if (fmpz_is_zero(fmpz_mat_entry(B, i, j)) ||
+                        fmpz_is_one(fmpz_mat_entry(B, i, j)))
+                    {
+                        fmpz_zero(fmpz_mat_entry(V, i, j));
+                    }
+                    else
+                    {
+                        fmpz_one(fmpz_mat_entry(V, i, j));
+                    }
+                }
+            }
+
+            if (!fmpz_mat_equal(U, V))
+            {
+                flint_printf("FAIL (reduction to transitive closure)\n");
+                fmpz_mat_print_pretty(A); flint_printf("\n\n");
+                fmpz_mat_print_pretty(B); flint_printf("\n\n");
+                fmpz_mat_print_pretty(U); flint_printf("\n\n");
+                fmpz_mat_print_pretty(V); flint_printf("\n\n");
+                abort();
+            }
+
+            fmpz_mat_clear(U);
+            fmpz_mat_clear(V);
+        }
+
+        /* test commutativity of permutation with entrywise nilpotence */
         {
             slong *perm;
             perm = flint_malloc(m * sizeof(slong));
             _perm_randtest(perm, m, state);
 
-            /* C is the transitive closure of the permutation of A */
+            /* C is the entrywise nilpotence of the permutation of A */
             fmpz_mat_randtest(C, state, n_randint(state, 20) + 1);
             _fmpz_mat_permute(C, A, perm);
-            fmpz_mat_transitive_closure(C, C);
+            fmpz_mat_entrywise_nilpotence_degree(C, C);
 
-            /* D is the permutation of the transitive closure of A */
+            /* D is the permutation of the entrywise nilpotence of A */
             fmpz_mat_randtest(D, state, n_randint(state, 20) + 1);
             _fmpz_mat_permute(D, B, perm);
 
@@ -204,7 +252,7 @@ int main()
         fmpz_mat_clear(D);
     }
 
-    /* check transitive closure using brute force with smallish matrices */
+    /* use brute force to check small examples */
     for (iter = 0; iter < 1000; iter++)
     {
         slong m;
@@ -217,11 +265,10 @@ int main()
         fmpz_mat_init(C, m, m);
 
         fmpz_mat_randtest(A, state, n_randint(state, 20) + 1);
-        fmpz_mat_randtest(B, state, n_randint(state, 20) + 1);
-        fmpz_mat_randtest(C, state, n_randint(state, 20) + 1);
+        fmpz_mat_entrywise_not_is_zero(A, A);
 
-        fmpz_mat_transitive_closure(B, A);
-        _brute_force_transitive_closure(C, A);
+        fmpz_mat_entrywise_nilpotence_degree(B, A);
+        _brute_force_entrywise_nilpotence_degree(C, A);
 
         if (!fmpz_mat_equal(B, C))
         {
