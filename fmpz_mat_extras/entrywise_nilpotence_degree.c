@@ -32,11 +32,11 @@ typedef struct
     slong *data;
     slong capacity;
     slong size;
-} si_stack_struct;
-typedef si_stack_struct si_stack_t[1];
+} _si_stack_struct;
+typedef _si_stack_struct _si_stack_t[1];
 
 static void
-si_stack_init(si_stack_t S, slong capacity)
+_si_stack_init(_si_stack_t S, slong capacity)
 {
     S->data = flint_malloc(capacity * sizeof(slong));
     S->capacity = capacity;
@@ -44,20 +44,20 @@ si_stack_init(si_stack_t S, slong capacity)
 }
 
 static void
-si_stack_clear(si_stack_t S)
+_si_stack_clear(_si_stack_t S)
 {
     flint_free(S->data);
 }
 
 static void
-si_stack_push(si_stack_t S, slong x)
+_si_stack_push(_si_stack_t S, slong x)
 {
     if (S->size >= S->capacity) abort(); /* assert */
     S->data[S->size++] = x;
 }
 
 static slong
-si_stack_pop(si_stack_t S)
+_si_stack_pop(_si_stack_t S)
 {
     slong x;
     if (S->size <= 0) abort(); /* assert */
@@ -73,120 +73,120 @@ typedef struct
     slong *_index;
     slong *_lowlink;
     int *_onstack;
-    si_stack_t _S;
+    _si_stack_t _S;
     slong _nsccs;
     slong _dim;
     slong _idx;
-} tarjan_struct;
-typedef tarjan_struct tarjan_t[1];
+} _tarjan_struct;
+typedef _tarjan_struct _tarjan_t[1];
 
-static const slong tarjan_UNDEFINED = -1;
+static const slong _tarjan_UNDEFINED = -1;
 
 static slong *
-tarjan_index(tarjan_t t, slong i)
+_tarjan_index(_tarjan_t t, slong i)
 {
     return t->_index + i;
 }
 
 static slong *
-tarjan_lowlink(tarjan_t t, slong i)
+_tarjan_lowlink(_tarjan_t t, slong i)
 {
     return t->_lowlink + i;
 }
 
 static int
-tarjan_onstack(tarjan_t t, slong i)
+_tarjan_onstack(_tarjan_t t, slong i)
 {
     return t->_onstack[i];
 }
 
 static void
-tarjan_push(tarjan_t t, slong v)
+_tarjan_push(_tarjan_t t, slong v)
 {
-    si_stack_push(t->_S, v);
+    _si_stack_push(t->_S, v);
     t->_onstack[v] = 1;
 }
 
 static slong
-tarjan_pop(tarjan_t t)
+_tarjan_pop(_tarjan_t t)
 {
     slong v;
-    v = si_stack_pop(t->_S);
+    v = _si_stack_pop(t->_S);
     t->_onstack[v] = 0;
     return v;
 }
 
 static slong
-tarjan_next_scc(tarjan_t t)
+_tarjan_next_scc(_tarjan_t t)
 {
     return t->_nsccs++;
 }
 
 static slong
-tarjan_next_idx(tarjan_t t)
+_tarjan_next_idx(_tarjan_t t)
 {
     return t->_idx++;
 }
 
 static void
-tarjan_init(tarjan_t t, slong dim)
+_tarjan_init(_tarjan_t t, slong dim)
 {
     slong i;
     t->_index = flint_calloc(dim, sizeof(slong));
     t->_lowlink = flint_calloc(dim, sizeof(slong));
     t->_onstack = flint_calloc(dim, sizeof(int));
-    si_stack_init(t->_S, dim);
+    _si_stack_init(t->_S, dim);
     t->_dim = dim;
     t->_nsccs = 0;
     t->_idx = 0;
     for (i = 0; i < dim; i++)
     {
-        t->_index[i] = tarjan_UNDEFINED;
+        t->_index[i] = _tarjan_UNDEFINED;
     }
 }
 
 static void
-tarjan_clear(tarjan_t t)
+_tarjan_clear(_tarjan_t t)
 {
     flint_free(t->_index);
     flint_free(t->_lowlink);
     flint_free(t->_onstack);
-    si_stack_clear(t->_S);
+    _si_stack_clear(t->_S);
 }
 
 static void
-tarjan_strongconnect(slong *sccs, tarjan_t t, const fmpz_mat_t A, slong v)
+_tarjan_strongconnect(slong *sccs, _tarjan_t t, const fmpz_mat_t A, slong v)
 {
     slong idx, w, scc;
 
-    idx = tarjan_next_idx(t);
-    *tarjan_index(t, v) = idx;
-    *tarjan_lowlink(t, v) = idx;
-    tarjan_push(t, v);
+    idx = _tarjan_next_idx(t);
+    *_tarjan_index(t, v) = idx;
+    *_tarjan_lowlink(t, v) = idx;
+    _tarjan_push(t, v);
     for (w = 0; w < t->_dim; w++)
     {
         if (!fmpz_is_zero(fmpz_mat_entry(A, v, w)))
         {
-            if (*tarjan_index(t, w) == tarjan_UNDEFINED)
+            if (*_tarjan_index(t, w) == _tarjan_UNDEFINED)
             {
-                tarjan_strongconnect(sccs, t, A, w);
-                *tarjan_lowlink(t, v) = FLINT_MIN(
-                        *tarjan_lowlink(t, v), *tarjan_lowlink(t, w));
+                _tarjan_strongconnect(sccs, t, A, w);
+                *_tarjan_lowlink(t, v) = FLINT_MIN(
+                        *_tarjan_lowlink(t, v), *_tarjan_lowlink(t, w));
             }
-            else if (tarjan_onstack(t, w))
+            else if (_tarjan_onstack(t, w))
             {
-                *tarjan_lowlink(t, v) = FLINT_MIN(
-                        *tarjan_lowlink(t, v), *tarjan_index(t, w));
+                *_tarjan_lowlink(t, v) = FLINT_MIN(
+                        *_tarjan_lowlink(t, v), *_tarjan_index(t, w));
             }
         }
     }
-    if (*tarjan_lowlink(t, v) == *tarjan_index(t, v))
+    if (*_tarjan_lowlink(t, v) == *_tarjan_index(t, v))
     {
-        scc = tarjan_next_scc(t);
+        scc = _tarjan_next_scc(t);
         while (w != v)
         {
-            w = tarjan_pop(t);
-            if (sccs[w] != tarjan_UNDEFINED) abort(); /* assert */
+            w = _tarjan_pop(t);
+            if (sccs[w] != _tarjan_UNDEFINED) abort(); /* assert */
             sccs[w] = scc;
         }
     }
@@ -194,11 +194,11 @@ tarjan_strongconnect(slong *sccs, tarjan_t t, const fmpz_mat_t A, slong v)
 
 
 /* Tarjan's strongly connected components algorithm */
-void
+static void
 _fmpz_mat_get_sccs(slong *sccs, const fmpz_mat_t A)
 {
     slong v, dim;
-    tarjan_t t;
+    _tarjan_t t;
 
     dim = fmpz_mat_nrows(A);
 
@@ -208,21 +208,21 @@ _fmpz_mat_get_sccs(slong *sccs, const fmpz_mat_t A)
         abort();
     }
 
-    tarjan_init(t, dim);
+    _tarjan_init(t, dim);
 
     for (v = 0; v < dim; v++)
     {
-        sccs[v] = tarjan_UNDEFINED;
+        sccs[v] = _tarjan_UNDEFINED;
     }
     for (v = 0; v < dim; v++)
     {
-        if (*tarjan_index(t, v) == tarjan_UNDEFINED)
+        if (*_tarjan_index(t, v) == _tarjan_UNDEFINED)
         {
-            tarjan_strongconnect(sccs, t, A, v);
+            _tarjan_strongconnect(sccs, t, A, v);
         }
     }
 
-    tarjan_clear(t);
+    _tarjan_clear(t);
 }
 
 
@@ -236,35 +236,19 @@ typedef struct
     slong k; /* number of strongly connnected components (sccs) */
     fmpz_mat_t C; /* adjacency matrix of the sccs in the condensation */
     slong *partition; /* maps the vertex index to the scc index */
-} condensation_struct;
+} _condensation_struct;
 
-typedef condensation_struct condensation_t[1];
+typedef _condensation_struct _condensation_t[1];
 
-void
-condensation_fprint(FILE * file, condensation_t c)
-{
-    slong i;
-    flint_fprintf(file, "number of vertices: %wd\n", c->n);
-    flint_fprintf(file, "number of SCCs: %wd\n", c->k);
-    flint_fprintf(file, "adjacency matrix of SCCs:\n");
-    fmpz_mat_fprint_pretty(file, c->C);
-    flint_fprintf(file, "\n");
-    flint_fprintf(file, "partition of vertices:\n");
-    for (i = 0; i < c->n; i++)
-    {
-        flint_fprintf(file, "%wd : %wd\n", i, c->partition[i]);
-    }
-}
-
-void
-condensation_init(condensation_t c, const fmpz_mat_t A)
+static void
+_condensation_init(_condensation_t c, const fmpz_mat_t A)
 {
     slong i, j, u, v;
 
     c->n = fmpz_mat_nrows(A);
     if (c->n != fmpz_mat_ncols(A))
     {
-        flint_printf("condensation_init: a square matrix is required!\n");
+        flint_printf("_condensation_init: a square matrix is required!\n");
         abort();
     }
 
@@ -306,14 +290,14 @@ condensation_init(condensation_t c, const fmpz_mat_t A)
     if (!fmpz_mat_is_lower_triangular(c->C) ||
         !fmpz_mat_is_hollow(c->C))
     {
-        flint_printf("condensation_init: unexpected matrix structure\n");
+        flint_printf("_condensation_init: unexpected matrix structure\n");
         fmpz_mat_print_pretty(c->C);
         abort();
     }
 }
 
-void
-condensation_clear(condensation_t c)
+static void
+_condensation_clear(_condensation_t c)
 {
     fmpz_mat_clear(c->C);
     flint_free(c->partition);
@@ -323,46 +307,26 @@ condensation_clear(condensation_t c)
 
 typedef struct
 {
-    condensation_t con;
+    _condensation_t con;
     fmpz_mat_t T; /* transitive closure of condensation */
     fmpz_mat_t P; /* is there a cycle in any component on a path from u to v */
     fmpz_mat_t Q; /* longest path, if any, from u to v */
     int *scc_has_cycle;
-} connectivity_struct;
-typedef connectivity_struct connectivity_t[1];
+} _connectivity_struct;
+typedef _connectivity_struct _connectivity_t[1];
 
-void
-connectivity_fprint(FILE * file, connectivity_t c)
-{
-    slong i;
-    flint_fprintf(file, "begin condensation ...\n");
-    condensation_fprint(file, c->con);
-    flint_fprintf(file, "... end condensation\n");
-    flint_fprintf(file, "transitive closure of condensation:\n");
-    fmpz_mat_fprint_pretty(file, c->T);
-    flint_fprintf(file, "a path goes through a cycle-containing SCC:\n");
-    fmpz_mat_fprint_pretty(file, c->P);
-    flint_fprintf(file, "max path length in condensation:\n");
-    fmpz_mat_fprint_pretty(file, c->Q);
-    flint_fprintf(file, "SCC has cycle:\n");
-    for (i = 0; i < c->con->k; i++)
-    {
-        flint_fprintf(file, "%wd : %d\n", i, c->scc_has_cycle[i]);
-    }
-}
-
-void
-connectivity_clear(connectivity_t c)
+static void
+_connectivity_clear(_connectivity_t c)
 {
     fmpz_mat_clear(c->T);
     fmpz_mat_clear(c->P);
     fmpz_mat_clear(c->Q);
     flint_free(c->scc_has_cycle);
-    condensation_clear(c->con);
+    _condensation_clear(c->con);
 }
 
-void
-_connectivity_init_scc_has_cycle(connectivity_t c, const fmpz_mat_t A)
+static void
+_connectivity_init_scc_has_cycle(_connectivity_t c, const fmpz_mat_t A)
 {
     slong n, i, u;
     slong *scc_size;
@@ -403,15 +367,15 @@ _connectivity_init_scc_has_cycle(connectivity_t c, const fmpz_mat_t A)
     flint_free(scc_size);
 }
 
-void
-connectivity_init(connectivity_t c, const fmpz_mat_t A)
+static void
+_connectivity_init(_connectivity_t c, const fmpz_mat_t A)
 {
     slong u, v, w;
     slong k;
     slong curr, rest;
 
     /* compute the condensation */
-    condensation_init(c->con, A);
+    _condensation_init(c->con, A);
     k = c->con->k;
 
     /* check whether each scc contains a cycle */
@@ -481,9 +445,9 @@ connectivity_init(connectivity_t c, const fmpz_mat_t A)
 }
 
 
-void
-connectivity_entrywise_nilpotence_degree(
-        fmpz_t N, connectivity_t c, slong i, slong j)
+static void
+_connectivity_entrywise_nilpotence_degree(
+        fmpz_t N, _connectivity_t c, slong i, slong j)
 {
     slong u, v;
     u = c->con->partition[i];
@@ -532,7 +496,7 @@ void
 fmpz_mat_entrywise_nilpotence_degree(fmpz_mat_t dest, const fmpz_mat_t src)
 {
     slong i, j;
-    connectivity_t c;
+    _connectivity_t c;
 
     if (!fmpz_mat_is_square(src) || !fmpz_mat_is_nonnegative(src))
     {
@@ -541,14 +505,14 @@ fmpz_mat_entrywise_nilpotence_degree(fmpz_mat_t dest, const fmpz_mat_t src)
         abort();
     }
 
-    connectivity_init(c, src);
+    _connectivity_init(c, src);
     for (i = 0; i < c->con->n; i++)
     {
         for (j = 0; j < c->con->n; j++)
         {
-            connectivity_entrywise_nilpotence_degree(
+            _connectivity_entrywise_nilpotence_degree(
                     fmpz_mat_entry(dest, i, j), c, i, j);
         }
     }
-    connectivity_clear(c);
+    _connectivity_clear(c);
 }
