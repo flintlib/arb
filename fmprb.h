@@ -462,8 +462,6 @@ int fmprb_get_unique_fmpz(fmpz_t z, const fmprb_t x);
 
 void fmprb_set_interval_fmpr(fmprb_t x, const fmpr_t a, const fmpr_t b, slong prec);
 
-void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec);
-
 static __inline__ slong
 fmprb_bits(const fmprb_t x)
 {

@@ -197,10 +197,6 @@ Radius and interval operations
     Adds the supremum of *err*, which is assumed to be nonnegative, to the
     radius of *x*.
 
-.. function:: void fmprb_union(fmprb_t z, const fmprb_t x, const fmprb_t y, slong prec)
-
-    Sets *z* to a ball containing both *x* and *y*.
-
 .. function:: void fmprb_get_abs_ubound_fmpr(fmpr_t u, const fmprb_t x, slong prec)
 
     Sets *u* to the upper bound of the absolute value of *x*,
