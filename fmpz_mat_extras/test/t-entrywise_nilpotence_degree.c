@@ -55,7 +55,6 @@ _nilpotence_degree_is_superficially_ok_entrywise(const fmpz_mat_t A)
     return 1;
 }
 
-/* todo: unfinished after here ... just copied from transitive closure ... */
 
 /* permute rows and columns of a square matrix */
 void
