@@ -254,11 +254,12 @@ Assignment, rounding and conversions
     indicates the direction of rounding, following the convention
     of the MPFR library.
 
-.. function:: void arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
+.. function:: int arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
 
     Sets *z* to *x* rounded to the nearest integer in the direction
     specified by *rnd*. If rnd is *ARF_RND_NEAR*, rounds to the nearest
-    even integer in case of a tie.
+    even integer in case of a tie. Returns inexact (beware: accordingly
+    returns whether *x* is *not* an integer).
 
     This method aborts if *x* is infinite or NaN, or if the exponent of *x*
     is so large that allocating memory for the result fails.
@@ -283,6 +284,8 @@ Assignment, rounding and conversions
     Converts *x* to a mantissa with predetermined exponent, i.e. computes
     an integer *y* such that `y \times 2^e \approx x`, truncating if necessary.
     Returns 0 if exact and 1 if truncation occurred.
+
+    The warnings for :func:`arf_get_fmpz` apply.
 
 .. function:: void arf_floor(arf_t y, const arf_t x)
 
