@@ -77,27 +77,6 @@ _fmpz_mat_permute(fmpz_mat_t B, const fmpz_mat_t A, const slong *perm)
     }
 }
 
-/* remove all non-sparsity information from an fmpz matrix */
-void
-_fmpz_mat_entrywise_not_is_zero(fmpz_mat_t B, const fmpz_mat_t A)
-{
-    slong i, j;
-    for (i = 0; i < fmpz_mat_nrows(A); i++)
-    {
-        for (j = 0; j < fmpz_mat_ncols(A); j++)
-        {
-            if (fmpz_is_zero(fmpz_mat_entry(A, i, j)))
-            {
-                fmpz_zero(fmpz_mat_entry(B, i, j));
-            }
-            else
-            {
-                fmpz_one(fmpz_mat_entry(B, i, j));
-            }
-        }
-    }
-}
-
 /* this is not efficient */
 void
 _brute_force_transitive_closure(fmpz_mat_t B, const fmpz_mat_t A)
@@ -109,7 +88,7 @@ _brute_force_transitive_closure(fmpz_mat_t B, const fmpz_mat_t A)
     fmpz_mat_init(S, n, n);
     fmpz_mat_init(curr, n, n);
     fmpz_mat_init(accum, n, n);
-    _fmpz_mat_entrywise_not_is_zero(S, A);
+    fmpz_mat_entrywise_not_is_zero(S, A);
     fmpz_mat_one(curr);
     fmpz_mat_zero(accum);
     for (k = 0; k < n; k++)

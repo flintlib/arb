@@ -118,6 +118,18 @@ int arb_mat_contains_fmpq_mat(const arb_mat_t mat1, const fmpq_mat_t mat2);
 
 int arb_mat_contains_fmpz_mat(const arb_mat_t mat1, const fmpz_mat_t mat2);
 
+ARB_MAT_INLINE int
+arb_mat_is_empty(const arb_mat_t mat)
+{
+    return (mat->r == 0) || (mat->c == 0);
+}
+
+ARB_MAT_INLINE int
+arb_mat_is_square(const arb_mat_t mat)
+{
+    return (mat->r == mat->c);
+}
+
 /* Special matrices */
 
 void arb_mat_zero(arb_mat_t mat);

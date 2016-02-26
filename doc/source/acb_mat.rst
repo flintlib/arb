@@ -120,6 +120,14 @@ Comparisons
 
     Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
 
+.. function:: int acb_mat_is_empty(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows or the number of columns in *mat* is zero.
+
+.. function:: int acb_mat_is_square(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows is equal to the number of columns in *mat*.
+
 .. function:: int acb_mat_is_real(const acb_mat_t mat)
 
     Returns nonzero iff all entries in *mat* have zero imaginary part.
@@ -320,3 +328,29 @@ Special functions
 
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
+
+Sparsity structure
+-------------------------------------------------------------------------------
+
+.. function:: void acb_mat_entrywise_is_zero(fmpz_mat_t dest, const acb_mat_t src)
+
+    Sets each entry of *dest* to indicate whether the corresponding
+    entry of *src* is certainly zero.
+    If the entry of *src* at row `i` and column `j` is zero according to
+    :func:`acb_is_zero` then the entry of *dest* at that row and column
+    is set to one, otherwise that entry of *dest* is set to zero.
+
+.. function:: void acb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const acb_mat_t src)
+
+    Sets each entry of *dest* to indicate whether the corresponding
+    entry of *src* is not certainly zero.
+    This the complement of :func:`acb_mat_entrywise_is_zero`.
+
+.. function:: slong acb_mat_count_is_zero(const acb_mat_t mat)
+
+    Returns the number of entries of *mat* that are certainly zero
+    according to :func:`acb_is_zero`.
+
+.. function:: slong acb_mat_count_not_is_zero(const acb_mat_t mat)
+
+    Returns the number of entries of *mat* that are not certainly zero.

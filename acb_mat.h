@@ -94,6 +94,18 @@ void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src);
 
 void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, slong prec);
 
+ACB_MAT_INLINE int
+acb_mat_is_empty(const acb_mat_t mat)
+{
+    return (mat->r == 0) || (mat->c == 0);
+}
+
+ACB_MAT_INLINE int
+acb_mat_is_square(const acb_mat_t mat)
+{
+    return (mat->r == mat->c);
+}
+
 /* Random generation */
 
 void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits);
@@ -332,6 +344,22 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec);
 void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec);
 
 void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec);
+
+/* Sparsity structure */
+
+void acb_mat_entrywise_is_zero(fmpz_mat_t dest, const acb_mat_t src);
+
+void acb_mat_entrywise_not_is_zero(fmpz_mat_t dest, const acb_mat_t src);
+
+slong acb_mat_count_is_zero(const acb_mat_t mat);
+
+ARB_MAT_INLINE slong
+acb_mat_count_not_is_zero(const acb_mat_t mat)
+{
+    slong size;
+    size = acb_mat_nrows(mat) * acb_mat_ncols(mat);
+    return size - acb_mat_count_is_zero(mat);
+}
 
 #ifdef __cplusplus
 }
