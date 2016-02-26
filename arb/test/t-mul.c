@@ -23,7 +23,6 @@
 
 ******************************************************************************/
 
-#include "fmprb.h"
 #include "arb.h"
 
 int
@@ -57,22 +56,67 @@ mag_close(const mag_t am, const mag_t bm)
 void
 arb_mul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
-    fmprb_t c, a, b;
+    arf_t zm_exact, zm_rounded, zr, t, u;
 
-    fmprb_init(a);
-    fmprb_init(b);
-    fmprb_init(c);
+    arf_init(zm_exact);
+    arf_init(zm_rounded);
+    arf_init(zr);
+    arf_init(t);
+    arf_init(u);
 
-    arb_get_fmprb(a, x);
-    arb_get_fmprb(b, y);
+    arf_mul(zm_exact, arb_midref(x), arb_midref(y), ARF_PREC_EXACT, ARF_RND_DOWN);
+    arf_set_round(zm_rounded, zm_exact, prec, ARB_RND);
 
-    fmprb_mul(c, a, b, prec);
+    /* rounding error */
+    if (arf_equal(zm_exact, zm_rounded))
+    {
+        arf_zero(zr);
+    }
+    else
+    {
+        fmpz_t e;
+        fmpz_init(e);
 
-    arb_set_fmprb(z, c);
+        /* more accurate, but not what we are testing
+        arf_sub(zr, zm_exact, zm_rounded, MAG_BITS, ARF_RND_UP);
+        arf_abs(zr, zr); */
 
-    fmprb_clear(a);
-    fmprb_clear(b);
-    fmprb_clear(c);
+        fmpz_sub_ui(e, ARF_EXPREF(zm_rounded), prec);
+        arf_one(zr);
+        arf_mul_2exp_fmpz(zr, zr, e);
+        fmpz_clear(e);
+    }
+
+    /* propagated error */
+    if (!arb_is_exact(x))
+    {
+        arf_set_mag(t, arb_radref(x));
+        arf_abs(u, arb_midref(y));
+        arf_addmul(zr, t, u, MAG_BITS, ARF_RND_UP);
+    }
+
+    if (!arb_is_exact(y))
+    {
+        arf_set_mag(t, arb_radref(y));
+        arf_abs(u, arb_midref(x));
+        arf_addmul(zr, t, u, MAG_BITS, ARF_RND_UP);
+    }
+
+    if (!arb_is_exact(x) && !arb_is_exact(y))
+    {
+        arf_set_mag(t, arb_radref(x));
+        arf_set_mag(u, arb_radref(y));
+        arf_addmul(zr, t, u, MAG_BITS, ARF_RND_UP);
+    }
+
+    arf_set(arb_midref(z), zm_rounded);
+    arf_get_mag(arb_radref(z), zr);
+
+    arf_clear(zm_exact);
+    arf_clear(zm_rounded);
+    arf_clear(zr);
+    arf_clear(t);
+    arf_clear(u);
 }
 
 int main()
