@@ -26,11 +26,12 @@ typedef struct
     ulong q_odd;            /* odd part of modulus */
     ulong phi_q;            /* phi(q) = group size */
     ulong expo;             /* group exponent = lcm(phi(q_even), phi(p[k]^e[k]) ) */
-    slong neven;            /* number of even components */
+    slong neven;            /* number of even components (in 0,1,2)*/
     slong num;              /* number of prime components (even + odd) */
     ulong * primes;         /* primes p[k] */
     ulong * exponents;      /* exponents e[k] */
-    ulong * generators;     /* generator for each prime p[k] */
+    ulong * primepowers;    /* powers p[k]^[k] */
+    ulong * generators;     /* generator for each prime p[k] lifted mod q */
     ulong * phi;            /* phi(k) = phi(p[k]^e[k])       */
     ulong * PHI;            /* PHI(k) = expo / phi(k)        */
 }
@@ -63,6 +64,8 @@ void acb_conrey_clear(acb_conrey_t x);
 
 void acb_conrey_one(acb_conrey_t x, const acb_dirichlet_group_t G);
 
+void acb_conrey_first_primitive(acb_conrey_t x, const acb_dirichlet_group_t G);
+
 void acb_conrey_log(acb_conrey_t x, const acb_dirichlet_group_t G, ulong m);
 
 int  acb_conrey_next(acb_conrey_t x, const acb_dirichlet_group_t G);
@@ -77,13 +80,13 @@ void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong 
 
 /* introducing character type */
 
-/* character = reduced exponents, keep its order and number */
+/* character = reduced exponents, keep order and number */
 typedef struct
 {
-  ulong q;      /* modulus */
-  ulong n;      /* number */
-  ulong order;  /* order */
-  ulong * expo; /* reduced exponents ( order * log[k] / gcd( ) ) */
+  ulong q;           /* modulus */
+  ulong n;           /* number */
+  ulong order;       /* order */
+  ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
 }
 acb_dirichlet_char_struct;
 
