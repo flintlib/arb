@@ -26,7 +26,6 @@
 #ifndef HYPGEOM_H
 #define HYPGEOM_H
 
-#include "fmprb.h"
 #include "arb.h"
 #include "mag.h"
 #include "fmpz_poly.h"
@@ -64,10 +63,6 @@ slong hypgeom_estimate_terms(const mag_t z, int r, slong prec);
 
 slong hypgeom_bound(mag_t error, int r,
     slong C, slong D, slong K, const mag_t TK, const mag_t z, slong prec);
-
-void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, slong n, slong prec);
-
-void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, slong target_prec, slong prec);
 
 void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, slong n, slong prec);
 

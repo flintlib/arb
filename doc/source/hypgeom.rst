@@ -179,22 +179,6 @@ Error bounding
 Summation
 -------------------------------------------------------------------------------
 
-.. function:: void fmprb_hypgeom_sum(fmprb_t P, fmprb_t Q, const hypgeom_t hyp, const slong n, slong prec)
-
-    Computes `P, Q` such that `P / Q = \sum_{k=0}^{n-1} T(k)` where `T(k)`
-    is defined by *hyp*,
-    using binary splitting and a working precision of *prec* bits.
-
-.. function:: void fmprb_hypgeom_infsum(fmprb_t P, fmprb_t Q, hypgeom_t hyp, slong tol, slong prec)
-
-    Computes `P, Q` such that `P / Q = \sum_{k=0}^{\infty} T(k)` where `T(k)`
-    is defined by *hyp*, using binary splitting and
-    working precision of *prec* bits.
-    The number of terms is chosen automatically to bound the
-    truncation error by at most `2^{-\mathrm{tol}}`.
-    The bound for the truncation error is included in the output
-    as part of *P*.
-
 .. function:: void arb_hypgeom_sum(arb_t P, arb_t Q, const hypgeom_t hyp, const slong n, slong prec)
 
     Computes `P, Q` such that `P / Q = \sum_{k=0}^{n-1} T(k)` where `T(k)`

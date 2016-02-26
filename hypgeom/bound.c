@@ -36,14 +36,14 @@ hypgeom_root_bound(const mag_t z, int r)
     }
     else
     {
-        fmpr_t t;
+        arf_t t;
         slong v;
-        fmpr_init(t);
-        mag_get_fmpr(t, z);
-        fmpr_root(t, t, r, MAG_BITS, FMPR_RND_UP);
-        fmpr_add_ui(t, t, 1, MAG_BITS, FMPR_RND_UP);
-        v = fmpr_get_si(t, FMPR_RND_UP);
-        fmpr_clear(t);
+        arf_init(t);
+        arf_set_mag(t, z);
+        arf_root(t, t, r, MAG_BITS, ARF_RND_UP);
+        arf_add_ui(t, t, 1, MAG_BITS, ARF_RND_UP);
+        v = arf_get_si(t, ARF_RND_UP);
+        arf_clear(t);
         return v;
     }
 }
