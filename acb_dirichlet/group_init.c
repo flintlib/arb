@@ -58,45 +58,58 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     G->num = G->neven + fac.num;
     G->primes = flint_malloc(G->num * sizeof(ulong));
     G->exponents = flint_malloc(G->num * sizeof(ulong));
+    G->primepowers = flint_malloc(G->num * sizeof(ulong));
     G->generators = flint_malloc(G->num * sizeof(ulong));
     G->phi = flint_malloc(G->num * sizeof(ulong));
     G->PHI = flint_malloc(G->num * sizeof(ulong));
 
     /* even part */
-    if (G->q_even <= 2)
+    G->expo = G->phi_q = 1;
+    if (G->neven >= 1)
     {
-      G->expo = G->phi_q = 1;
+        G->primes[0] = 2;
+        G->exponents[0] = 2;
+        G->phi[0] = 2;
+        G->primepowers[0] = G->q_even;
+        G->generators[0] = G->q_even-1;
+        G->expo = 2;
+        G->phi_q = 2;
     }
-    else
+    if (G->neven == 2)
     {
-      G->phi_q = G->q_even / 2;
-      G->expo = G->phi_q / 2;
+        G->primes[1] = 2;
+        G->exponents[1] = e2-2;
+        G->phi[1] = G->q_even / 4;
+        G->primepowers[1] = G->q_even;
+        G->generators[1] = 5;
+        G->expo = G->phi[1];
+        G->phi_q = G->q_even / 2;
     }
-
-    for (k = 0; k < G->neven; k++)
-    {
-        G->primes[k] = 2;
-        G->exponents[k] = (k==0) ? 1 : e2-2;
-        G->generators[k] = (k==0) ? -1 : 5;
-        G->phi[k] = (k==0) ? 1 : G->expo;
-    }
-
+    /* odd part */
     for (k = G->neven; k < G->num; k++)
     {
-        ulong phik, p1;
+        ulong p1, pe1;
         G->primes[k] = fac.p[k - G->neven];
         G->exponents[k] = fac.exp[k - G->neven];
-        G->generators[k] = primitive_root_p_and_p2(G->primes[k]);
         p1 = G->primes[k] - 1;
-        phik = p1 * n_pow(G->primes[k], G->exponents[k]-1);
-        G->expo *= phik / n_gcd(G->expo, p1);
-        G->phi_q *= phik;
-        G->phi[k] = phik;
+        pe1 = n_pow(G->primes[k], G->exponents[k]-1);
+        G->phi[k] = p1 * pe1;
+        G->primepowers[k] = pe1 * G->primes[k];
+        G->generators[k] = primitive_root_p_and_p2(G->primes[k]);
+        G->expo *= G->phi[k] / n_gcd(G->expo, p1);
+        G->phi_q *= G->phi[k];
     }
-
+    /* generic odd+even */
     for (k = 0; k < G->num; k++)
     {
+        ulong pe, qpe, v;
         G->PHI[k] = G->expo / G->phi[k];
-        /* FIXME: generators[k] should be lifted mod q! */
+        /* lift generators mod q */
+        /* u * p^e + v * q/p^e = 1 -> g mod q = 1 + (g-1) * v*(q/p^e) */
+        pe = G->primepowers[k];
+        qpe = q / pe;
+        v = n_invmod(qpe % pe, pe);
+        /* no overflow since v * qpe < q */
+        G->generators[k] = (1 + (G->generators[k]-1) * v * qpe) % q;
     }
 }
