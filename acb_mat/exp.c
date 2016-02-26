@@ -194,7 +194,8 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         {
             fmpz_mat_init(S, dim, dim);
             acb_mat_entrywise_not_is_zero(S, A);
-            fmpz_mat_entrywise_nilpotence_degree(S, S);
+            fmpz_mat_unweighted_all_pairs_longest_walk(S, S);
+            fmpz_mat_add_ui_entrywise(S, S, 1);
         }
 
         q = pow(wp, 0.25);  /* wanted magnitude */

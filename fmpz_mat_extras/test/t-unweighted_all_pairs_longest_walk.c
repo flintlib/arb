@@ -100,7 +100,7 @@ _fmpz_mat_permute(fmpz_mat_t B, const fmpz_mat_t A, const slong *perm)
 
 /* this is not efficient */
 void
-_brute_force_entrywise_nilpotence_degree(fmpz_mat_t B, const fmpz_mat_t A)
+_brute_force_unweighted_all_pairs_longest_walk(fmpz_mat_t B, const fmpz_mat_t A)
 {
     slong n, i, j, k;
     fmpz_mat_t S, curr, accum;
@@ -148,6 +148,8 @@ _brute_force_entrywise_nilpotence_degree(fmpz_mat_t B, const fmpz_mat_t A)
         }
     }
     fmpz_mat_clear(accum);
+
+    fmpz_mat_sub_ui_entrywise(B, B, 1);
 }
 
 
@@ -156,7 +158,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("entrywise_nilpotence_degree....");
+    flint_printf("unweighted_all_pairs_longest_walk....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -176,7 +178,8 @@ int main()
         fmpz_mat_randtest(A, state, n_randint(state, 20) + 1);
         fmpz_mat_entrywise_not_is_zero(A, A);
 
-        fmpz_mat_entrywise_nilpotence_degree(B, A);
+        fmpz_mat_unweighted_all_pairs_longest_walk(B, A);
+        fmpz_mat_add_ui_entrywise(B, B, 1);
 
         if (!_nilpotence_degree_is_superficially_ok_entrywise(B))
         {
@@ -189,7 +192,8 @@ int main()
         /* aliasing */
         {
             fmpz_mat_set(C, A);
-            fmpz_mat_entrywise_nilpotence_degree(C, C);
+            fmpz_mat_unweighted_all_pairs_longest_walk(C, C);
+            fmpz_mat_add_ui_entrywise(C, C, 1);
             if (!fmpz_mat_equal(B, C))
             {
                 flint_printf("FAIL (aliasing)\n");
@@ -240,24 +244,25 @@ int main()
             fmpz_mat_clear(V);
         }
 
-        /* test commutativity of permutation with entrywise nilpotence */
+        /* test commutativity of all pairs longest path with permutation */
         {
             slong *perm;
             perm = flint_malloc(m * sizeof(slong));
             _perm_randtest(perm, m, state);
 
-            /* C is the entrywise nilpotence of the permutation of A */
+            /* C is the 'entrywise nilpotence' of the permutation of A */
             fmpz_mat_randtest(C, state, n_randint(state, 20) + 1);
             _fmpz_mat_permute(C, A, perm);
-            fmpz_mat_entrywise_nilpotence_degree(C, C);
+            fmpz_mat_unweighted_all_pairs_longest_walk(C, C);
+            fmpz_mat_add_ui_entrywise(C, C, 1);
 
-            /* D is the permutation of the entrywise nilpotence of A */
+            /* D is the permutation of the 'entrywise nilpotence' of A */
             fmpz_mat_randtest(D, state, n_randint(state, 20) + 1);
             _fmpz_mat_permute(D, B, perm);
 
             if (!fmpz_mat_equal(C, D))
             {
-                flint_printf("FAIL (commutativity with permutation)\n");
+                flint_printf("FAIL (permutation)\n");
                 fmpz_mat_print_pretty(A); flint_printf("\n\n");
                 fmpz_mat_print_pretty(B); flint_printf("\n\n");
                 fmpz_mat_print_pretty(C); flint_printf("\n\n");
@@ -288,8 +293,11 @@ int main()
         fmpz_mat_randtest(A, state, n_randint(state, 20) + 1);
         fmpz_mat_entrywise_not_is_zero(A, A);
 
-        fmpz_mat_entrywise_nilpotence_degree(B, A);
-        _brute_force_entrywise_nilpotence_degree(C, A);
+        fmpz_mat_unweighted_all_pairs_longest_walk(B, A);
+        fmpz_mat_add_ui_entrywise(B, B, 1);
+
+        _brute_force_unweighted_all_pairs_longest_walk(C, A);
+        fmpz_mat_add_ui_entrywise(C, C, 1);
 
         if (!fmpz_mat_equal(B, C))
         {
@@ -314,7 +322,8 @@ int main()
             fmpz_mat_init(A, m, m);
             fmpz_mat_init(B, m, m);
             _fmpz_mat_directed_path_adjacency(A);
-            fmpz_mat_entrywise_nilpotence_degree(B, A);
+            fmpz_mat_unweighted_all_pairs_longest_walk(B, A);
+            fmpz_mat_add_ui_entrywise(B, B, 1);
 
             for (i = 0; i < m; i++)
             {
@@ -345,7 +354,8 @@ int main()
             fmpz_mat_init(A, m, m);
             fmpz_mat_init(B, m, m);
             _fmpz_mat_directed_cycle_adjacency(A);
-            fmpz_mat_entrywise_nilpotence_degree(B, A);
+            fmpz_mat_unweighted_all_pairs_longest_walk(B, A);
+            fmpz_mat_add_ui_entrywise(B, B, 1);
 
             for (i = 0; i < m; i++)
             {

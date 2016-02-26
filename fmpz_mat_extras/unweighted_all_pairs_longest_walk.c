@@ -480,39 +480,29 @@ _connectivity_entrywise_nilpotence_degree(
     }
 }
 
-/*
- * Implemented only for entrywise non-negative square matrices.
- * The term 'entrywise nilpotence degree' is not standard
- * and may even be misleading, but it's supposed to mean the following:
- * For each i,j find the smallest non-negative k
- * so that (A^N)_{ij} = 0 when N >= k.
- * If there is no such k then set the entry to -1.
- * The matrix itself is nilpotent if and only if each entry
- * of the entrywise nilpotence degree matrix is non-negative.
- * If the matrix is nilpotent, then its nilpotence degree
- * is the maximum of the entrywise nilpotence degrees.
- */
 void
-fmpz_mat_entrywise_nilpotence_degree(fmpz_mat_t dest, const fmpz_mat_t src)
+fmpz_mat_unweighted_all_pairs_longest_walk(fmpz_mat_t B, const fmpz_mat_t A)
 {
     slong i, j;
     _connectivity_t c;
 
-    if (!fmpz_mat_is_square(src) || !fmpz_mat_is_nonnegative(src))
+    if (!fmpz_mat_is_square(A) || !fmpz_mat_is_nonnegative(A))
     {
-        flint_printf("fmpz_mat_entrywise_nilpotence_degree: "
+        flint_printf("fmpz_mat_unweighted_all_pairs_longest_walk: "
                      "a non-negative square matrix is required!\n");
         abort();
     }
 
-    _connectivity_init(c, src);
+    _connectivity_init(c, A);
     for (i = 0; i < c->con->n; i++)
     {
         for (j = 0; j < c->con->n; j++)
         {
             _connectivity_entrywise_nilpotence_degree(
-                    fmpz_mat_entry(dest, i, j), c, i, j);
+                    fmpz_mat_entry(B, i, j), c, i, j);
         }
     }
     _connectivity_clear(c);
+
+    fmpz_mat_sub_ui_entrywise(B, B, 1);
 }
