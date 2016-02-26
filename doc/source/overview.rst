@@ -57,7 +57,7 @@ and *fmpcb*). These types had a slightly simpler internal representation,
 but generally had worse performance. Almost all methods for the Arb 1.x types
 have now been ported to faster equivalents for the Arb 2.x types.
 The last version to include both the Arb 1.x and Arb 2.x types and methods
-was Arb 2.2. As of Arb 2.3, only a small set of *fmpr* and *fmprb*
+was Arb 2.2. As of Arb 2.3, only a small set of *fmpr*
 methods are left for fallback and testing purposes.
 
 Planned features include more transcendental functions and more extensive

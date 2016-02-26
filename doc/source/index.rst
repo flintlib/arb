@@ -147,7 +147,6 @@ the newer (and faster) implementations introduced in Arb 2.x.
    :maxdepth: 1
 
    fmpr.rst
-   fmprb.rst
 
 Supplementary algorithm notes
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -49,12 +49,12 @@ and may be returned as output from functions.
 * The ball `[\operatorname{NaN} \pm c]`, where `c` is finite or infinite, represents an indeterminate value (the value could be any extended real number, or it could represent a function being evaluated outside its domain of definition, for example where the result would be complex). Such an indeterminate ball can always be replaced by `[\operatorname{NaN} \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library).
 
 The :type:`arb_t` type is almost identical semantically to
-the legacy :type:`fmprb_t` type, but uses a more efficient
+the legacy *fmprb_t* type, but uses a more efficient
 internal representation.
-Whereas the midpoint and radius of an :type:`fmprb_t` both have the
+Whereas the midpoint and radius of an *fmprb_t* both have the
 same type, the :type:`arb_t` type uses an :type:`arf_t` for the midpoint
 and a :type:`mag_t` for the radius.  Code designed to manipulate the
-radius of an :type:`fmprb_t` directly can be ported to the :type:`arb_t` type
+radius of an *fmprb_t* directly can be ported to the :type:`arb_t` type
 by writing the radius to a temporary :type:`arf_t` variable, manipulating
 that variable, and then converting back to the :type:`mag_t` radius.
 Alternatively, :type:`mag_t` methods can be used directly where available.
@@ -130,14 +130,6 @@ Assignment and rounding
 .. function:: void arb_set_fmpz(arb_t y, const fmpz_t x)
 
     Sets *y* to the value of *x* without rounding.
-
-.. function:: void arb_set_fmprb(arb_t y, const fmprb_t x)
-
-.. function:: void arb_get_fmprb(fmprb_t y, const arb_t x)
-
-    Sets *y* to the value of *x* without rounding. These methods are
-    deprecated. To enable them, ``fmprb.h`` must be included before
-    including ``arb.h``.
 
 .. function:: void arb_set_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e)
 

@@ -95,22 +95,6 @@ _arb_vec_clear(arb_ptr v, slong n)
     flint_free(v);
 }
 
-#ifdef FMPRB_H
-ARB_INLINE void
-arb_set_fmprb(arb_t x, const fmprb_t y)
-{
-    arf_set_fmpr(arb_midref(x), fmprb_midref(y));
-    mag_set_fmpr(arb_radref(x), fmprb_radref(y));
-}
-
-ARB_INLINE void
-arb_get_fmprb(fmprb_t x, const arb_t y)
-{
-    arf_get_fmpr(fmprb_midref(x), arb_midref(y));
-    mag_get_fmpr(fmprb_radref(x), arb_radref(y));
-}
-#endif
-
 ARB_INLINE arf_ptr arb_mid_ptr(arb_t z) { return arb_midref(z); }
 ARB_INLINE mag_ptr arb_rad_ptr(arb_t z) { return arb_radref(z); }
 
