@@ -53,7 +53,7 @@ Convenience methods
     If no such `k` exists, then the entry in *B* at that row and column
     is set to a negative value.
 
-    If the matrix *B* computed by this function contains any negative value,
+    If the matrix *B* computed by this function is non-negative
     then this means that *A* is nilpotent.
 
     This function is implemented only for non-negative square matrices.
