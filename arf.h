@@ -676,39 +676,9 @@ arf_bot(fmpz_t e, const arf_t x)
         fmpz_sub_si(e, ARF_EXPREF(x), arf_bits(x));
 }
 
-ARF_INLINE int
-arf_is_int(const arf_t x)
-{
-    if (arf_is_special(x))
-        return arf_is_zero(x);
-    else
-    {
-        fmpz_t t;
-        int r;
-        fmpz_init(t);
-        arf_bot(t, x);
-        r = fmpz_sgn(t) >= 0;
-        fmpz_clear(t);
-        return r;
-    }
-}
+int arf_is_int(const arf_t x);
 
-ARF_INLINE int
-arf_is_int_2exp_si(const arf_t x, slong e)
-{
-    if (arf_is_special(x))
-        return arf_is_zero(x);
-    else
-    {
-        fmpz_t t;
-        int r;
-        fmpz_init(t);
-        arf_bot(t, x);
-        r = fmpz_cmp_si(t, e) >= 0;
-        fmpz_clear(t);
-        return r;
-    }
-}
+int arf_is_int_2exp_si(const arf_t x, slong e);
 
 int arf_cmp_2exp_si(const arf_t x, slong e);
 
