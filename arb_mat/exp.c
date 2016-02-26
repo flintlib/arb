@@ -50,17 +50,6 @@ _fmpz_mat_max_si(const fmpz_mat_t A)
     return x;
 }
 
-int
-_arb_mat_is_diagonal(const arb_mat_t A)
-{
-    slong i, j;
-    for (i = 0; i < arb_mat_nrows(A); i++)
-        for (j = 0; j < arb_mat_ncols(A); j++)
-            if (i != j && !arb_is_zero(arb_mat_entry(A, i, j)))
-                return 0;
-    return 1;
-}
-
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
 {
@@ -178,66 +167,67 @@ void
 arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 {
     slong i, j, dim, wp, N, q, r;
-    mag_t norm, err;
-    arb_mat_t T;
+    fmpz_mat_t P;
 
-    dim = arb_mat_nrows(A);
-
-    if (dim != arb_mat_ncols(A))
+    if (!arb_mat_is_square(A))
     {
         flint_printf("arb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
-    if (dim == 0)
-    {
+    if (arb_mat_is_empty(A))
         return;
-    }
-    else if (dim == 1)
+
+    dim = arb_mat_nrows(A);
+
+    if (dim == 1)
     {
         arb_exp(arb_mat_entry(B, 0, 0), arb_mat_entry(A, 0, 0), prec);
         return;
     }
 
-    /* todo: generalize to (possibly permuted) block diagonal structure */
-    if (_arb_mat_is_diagonal(A))
+    fmpz_mat_init(P, dim, dim);
+    arb_mat_entrywise_not_is_zero(P, A);
+
+    if (fmpz_mat_is_diagonal(P))
     {
-        if (B != A)
+        if (fmpz_mat_is_zero(P))
         {
-            arb_mat_zero(B);
+            arb_mat_one(B);
         }
-        for (i = 0; i < dim; i++)
+        else
         {
-            arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
+            if (B != A)
+            {
+                arb_mat_zero(B);
+            }
+            for (i = 0; i < dim; i++)
+            {
+                arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
+            }
         }
-        return;
-    }
-
-    wp = prec + 3 * FLINT_BIT_COUNT(prec);
-
-    mag_init(norm);
-    mag_init(err);
-    arb_mat_init(T, dim, dim);
-
-    arb_mat_bound_inf_norm(norm, A);
-
-    if (mag_is_zero(norm))
-    {
-        arb_mat_one(B);
     }
     else
     {
+        mag_t norm, err;
+        arb_mat_t T;
         fmpz_mat_t S;
         int using_structure;
 
-        using_structure = arb_mat_count_is_zero(A) > 0;
+        using_structure = fmpz_mat_count_nonzero(P) < dim * dim;
         if (using_structure)
         {
             fmpz_mat_init(S, dim, dim);
-            arb_mat_entrywise_not_is_zero(S, A);
-            fmpz_mat_unweighted_all_pairs_longest_walk(S, S);
+            fmpz_mat_unweighted_all_pairs_longest_walk(S, P);
             fmpz_mat_add_ui_entrywise(S, S, 1);
         }
+
+        mag_init(norm);
+        mag_init(err);
+        arb_mat_init(T, dim, dim);
+
+        wp = prec + 3 * FLINT_BIT_COUNT(prec);
+        arb_mat_bound_inf_norm(norm, A);
 
         q = pow(wp, 0.25);  /* wanted magnitude */
 
@@ -295,9 +285,11 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
             for (j = 0; j < dim; j++)
                 arb_set_round(arb_mat_entry(B, i, j),
                     arb_mat_entry(B, i, j), prec);
+
+        mag_clear(norm);
+        mag_clear(err);
+        arb_mat_clear(T);
     }
 
-    mag_clear(norm);
-    mag_clear(err);
-    arb_mat_clear(T);
+    fmpz_mat_clear(P);
 }

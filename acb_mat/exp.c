@@ -30,17 +30,6 @@
 slong _arb_mat_exp_choose_N(const mag_t norm, slong prec);
 slong _fmpz_mat_max_si(const fmpz_mat_t A);
 
-int
-_acb_mat_is_diagonal(const acb_mat_t A)
-{
-    slong i, j;
-    for (i = 0; i < acb_mat_nrows(A); i++)
-        for (j = 0; j < acb_mat_ncols(A); j++)
-            if (i != j && !acb_is_zero(acb_mat_entry(A, i, j)))
-                return 0;
-    return 1;
-}
-
 /* evaluates the truncated Taylor series (assumes no aliasing) */
 void
 _acb_mat_exp_taylor(acb_mat_t S, const acb_mat_t A, slong N, slong prec)
@@ -134,69 +123,70 @@ void
 acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 {
     slong i, j, dim, wp, N, q, r;
-    mag_t norm, err;
-    acb_mat_t T;
-    int is_real;
+    fmpz_mat_t P;
 
-    dim = acb_mat_nrows(A);
-
-    if (dim != acb_mat_ncols(A))
+    if (!acb_mat_is_square(A))
     {
         flint_printf("acb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
-    if (dim == 0)
-    {
+    if (acb_mat_is_empty(A))
         return;
-    }
-    else if (dim == 1)
+
+    dim = acb_mat_nrows(A);
+
+    if (dim == 1)
     {
         acb_exp(acb_mat_entry(B, 0, 0), acb_mat_entry(A, 0, 0), prec);
         return;
     }
 
-    /* todo: generalize to (possibly permuted) block diagonal structure */
-    if (_acb_mat_is_diagonal(A))
+    fmpz_mat_init(P, dim, dim);
+    acb_mat_entrywise_not_is_zero(P, A);
+
+    if (fmpz_mat_is_diagonal(P))
     {
-        if (B != A)
+        if (fmpz_mat_is_zero(P))
         {
-            acb_mat_zero(B);
+            acb_mat_one(B);
         }
-        for (i = 0; i < dim; i++)
+        else
         {
-            acb_exp(acb_mat_entry(B, i, i), acb_mat_entry(A, i, i), prec);
+            if (B != A)
+            {
+                acb_mat_zero(B);
+            }
+            for (i = 0; i < dim; i++)
+            {
+                acb_exp(acb_mat_entry(B, i, i), acb_mat_entry(A, i, i), prec);
+            }
         }
-        return;
-    }
-
-    is_real = acb_mat_is_real(A);
-
-    wp = prec + 3 * FLINT_BIT_COUNT(prec);
-
-    mag_init(norm);
-    mag_init(err);
-    acb_mat_init(T, dim, dim);
-
-    acb_mat_bound_inf_norm(norm, A);
-
-    if (mag_is_zero(norm))
-    {
-        acb_mat_one(B);
     }
     else
     {
+        mag_t norm, err;
+        acb_mat_t T;
         fmpz_mat_t S;
-        int using_structure;
+        int is_real, using_structure;
 
-        using_structure = acb_mat_count_is_zero(A) > 0;
+        using_structure = fmpz_mat_count_nonzero(P) < dim * dim;
         if (using_structure)
         {
             fmpz_mat_init(S, dim, dim);
-            acb_mat_entrywise_not_is_zero(S, A);
-            fmpz_mat_unweighted_all_pairs_longest_walk(S, S);
+            fmpz_mat_unweighted_all_pairs_longest_walk(S, P);
             fmpz_mat_add_ui_entrywise(S, S, 1);
         }
+
+        is_real = acb_mat_is_real(A);
+
+        wp = prec + 3 * FLINT_BIT_COUNT(prec);
+
+        mag_init(norm);
+        mag_init(err);
+        acb_mat_init(T, dim, dim);
+
+        acb_mat_bound_inf_norm(norm, A);
 
         q = pow(wp, 0.25);  /* wanted magnitude */
 
@@ -272,10 +262,12 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
             for (j = 0; j < dim; j++)
                 acb_set_round(acb_mat_entry(B, i, j),
                     acb_mat_entry(B, i, j), prec);
+
+        mag_clear(norm);
+        mag_clear(err);
+        acb_mat_clear(T);
     }
 
-    mag_clear(norm);
-    mag_clear(err);
-    acb_mat_clear(T);
+    fmpz_mat_clear(P);
 }
 

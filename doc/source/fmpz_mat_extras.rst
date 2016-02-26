@@ -8,13 +8,18 @@ multiprecision integer matrix type (*fmpz_mat_t*).
 It is mainly intended for internal use.
 
 
-Comparison
+Convenience functions related to sparsity structure
 -------------------------------------------------------------------------------
 
 .. function:: int fmpz_mat_is_hollow(const fmpz_mat_t mat)
 
     Returns a non-zero value if all entries on the diagonal of *mat* are zero,
     and otherwise returns zero.
+
+.. function:: int fmpz_mat_is_diagonal(const fmpz_mat_t mat)
+
+    Returns a non-zero value if all entries
+    on the off-diagonal of *mat* are zero, and otherwise returns zero.
 
 .. function:: int fmpz_mat_is_nonnegative(const fmpz_mat_t mat)
 
@@ -32,6 +37,10 @@ Comparison
 
     Sets each entry in *dest* to zero or one according to whether
     or not the corresponding entry in *src* is zero.
+
+.. function:: slong fmpz_mat_count_nonzero(const fmpz_mat_t mat)
+
+    Returns the number of non-zero entries in *mat*.
 
 
 Arithmetic

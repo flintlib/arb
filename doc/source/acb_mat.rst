@@ -120,6 +120,14 @@ Comparisons
 
     Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
 
+.. function:: int acb_mat_is_empty(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows or the number of columns in *mat* is zero.
+
+.. function:: int acb_mat_is_square(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows is equal to the number of columns in *mat*.
+
 .. function:: int acb_mat_is_real(const acb_mat_t mat)
 
     Returns nonzero iff all entries in *mat* have zero imaginary part.

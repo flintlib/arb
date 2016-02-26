@@ -94,6 +94,18 @@ void acb_mat_set_arb_mat(acb_mat_t dest, const arb_mat_t src);
 
 void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, slong prec);
 
+ACB_MAT_INLINE int
+acb_mat_is_empty(const acb_mat_t mat)
+{
+    return (mat->r == 0) || (mat->c == 0);
+}
+
+ACB_MAT_INLINE int
+acb_mat_is_square(const acb_mat_t mat)
+{
+    return (mat->r == mat->c);
+}
+
 /* Random generation */
 
 void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits);

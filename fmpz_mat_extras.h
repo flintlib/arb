@@ -33,15 +33,19 @@
 extern "C" {
 #endif
 
-/* Comparison */
+/* Convenience functions related to sparsity structure */
 
 int fmpz_mat_is_hollow(const fmpz_mat_t mat);
+
+int fmpz_mat_is_diagonal(const fmpz_mat_t mat);
 
 int fmpz_mat_is_nonnegative(const fmpz_mat_t mat);
 
 int fmpz_mat_is_lower_triangular(const fmpz_mat_t mat);
 
 void fmpz_mat_entrywise_not_is_zero(fmpz_mat_t dest, const fmpz_mat_t src);
+
+slong fmpz_mat_count_nonzero(const fmpz_mat_t mat);
 
 /* Arithmetic */
 
