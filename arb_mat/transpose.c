@@ -28,7 +28,6 @@
 void
 arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
 {
-    arb_struct tmp;
     slong i, j;
 
     if (arb_mat_nrows(B) != arb_mat_ncols(A) || arb_mat_ncols(B) != arb_mat_nrows(A))
@@ -37,15 +36,16 @@ arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
         abort();
     }
 
+    if (arb_mat_is_empty(A))
+        return;
+
     if (A == B)  /* In-place, guaranteed to be square */
     {
         for (i = 0; i < arb_mat_nrows(A) - 1; i++)
         {
             for (j = i + 1; j < arb_mat_ncols(A); j++)
             {
-                tmp = *arb_mat_entry(A, i, j);
-                *arb_mat_entry(A, i, j) = *arb_mat_entry(A, j, i);
-                *arb_mat_entry(A, j, i) = tmp;
+                arb_swap(arb_mat_entry(A, i, j), arb_mat_entry(A, j, i));
             }
         }
     }
@@ -56,4 +56,3 @@ arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
                 arb_set(arb_mat_entry(B, i, j), arb_mat_entry(A, j, i));
     }
 }
-

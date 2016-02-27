@@ -137,7 +137,15 @@ arb_mat_det_inplace(arb_t det, arb_mat_t A, slong prec)
 void
 arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 {
-    slong n = arb_mat_nrows(A);
+    slong n;
+
+    if (!arb_mat_is_square(A))
+    {
+        flint_printf("arb_mat_det: a square matrix is required!\n");
+        abort();
+    }
+
+    n = arb_mat_nrows(A);
 
     if (n == 0)
     {

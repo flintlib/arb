@@ -126,6 +126,18 @@ int acb_mat_contains_fmpz_mat(const acb_mat_t mat1, const fmpz_mat_t mat2);
 
 int acb_mat_is_real(const acb_mat_t mat);
 
+ACB_MAT_INLINE int
+acb_mat_is_empty(const acb_mat_t mat)
+{
+    return (mat->r == 0) || (mat->c == 0);
+}
+
+ACB_MAT_INLINE int
+acb_mat_is_square(const acb_mat_t mat)
+{
+    return (mat->r == mat->c);
+}
+
 /* Special matrices */
 
 void acb_mat_zero(acb_mat_t mat);

@@ -33,13 +33,11 @@ acb_mat_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
     slong i, j, m, n, r, row, col;
     int result;
 
+    if (acb_mat_is_empty(A))
+        return 1;
+
     m = acb_mat_nrows(A);
     n = acb_mat_ncols(A);
-
-    result = 1;
-
-    if (m == 0 || n == 0)
-        return result;
 
     acb_mat_set(LU, A);
 
@@ -51,6 +49,8 @@ acb_mat_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
 
     acb_init(d);
     acb_init(e);
+
+    result = 1;
 
     while (row < m && col < n)
     {

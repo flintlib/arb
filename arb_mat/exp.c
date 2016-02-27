@@ -186,19 +186,18 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
     mag_t norm, err;
     arb_mat_t T;
 
-    dim = arb_mat_nrows(A);
-
-    if (dim != arb_mat_ncols(A))
+    if (!arb_mat_is_square(A))
     {
         flint_printf("arb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
-    if (dim == 0)
-    {
+    if (arb_mat_is_empty(A))
         return;
-    }
-    else if (dim == 1)
+
+    dim = arb_mat_nrows(A);
+
+    if (dim == 1)
     {
         arb_exp(arb_mat_entry(B, 0, 0), arb_mat_entry(A, 0, 0), prec);
         return;

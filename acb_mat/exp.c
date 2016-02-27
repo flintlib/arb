@@ -193,19 +193,18 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
     acb_mat_t T;
     int is_real;
 
-    dim = acb_mat_nrows(A);
-
-    if (dim != acb_mat_ncols(A))
+    if (!acb_mat_is_square(A))
     {
         flint_printf("acb_mat_exp: a square matrix is required!\n");
         abort();
     }
 
-    if (dim == 0)
-    {
+    if (acb_mat_is_empty(A))
         return;
-    }
-    else if (dim == 1)
+
+    dim = acb_mat_nrows(A);
+
+    if (dim == 1)
     {
         acb_exp(acb_mat_entry(B, 0, 0), acb_mat_entry(A, 0, 0), prec);
         return;

@@ -40,10 +40,7 @@ acb_mat_sqr(acb_mat_t B, const acb_mat_t A, slong prec)
     }
 
     if (n == 0)
-    {
-        acb_mat_zero(B);
         return;
-    }
 
     if (n == 1)
     {
