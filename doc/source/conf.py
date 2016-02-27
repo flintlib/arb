@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Arb'
-copyright = u'2012-2014, Fredrik Johansson'
+copyright = u'2012-2016, Fredrik Johansson'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -75,6 +75,7 @@ default_role = 'math'
 
 latex_preamble = r"""
 \usepackage{amsmath,amssymb}
+\usepackage{breakurl}
 \setcounter{tocdepth}{2}
 """
 
@@ -183,13 +184,14 @@ htmlhelp_basename = 'Arbdoc'
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+  'papersize': 'a4paper',
+  'fontpkg': '',
 
 # The font size ('10pt', '11pt' or '12pt').
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+  'preamble': '\\usepackage{lmodern}',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
