@@ -29,7 +29,8 @@ void
 _fmpq_mat_randtest_for_exp(fmpq_mat_t mat, flint_rand_t state, mp_bitcnt_t bits)
 {
     slong i, j;
-    slong l, u;
+    slong d, l, u;
+    d = n_randint(state, 5);
     l = n_randint(state, 5);
     u = n_randint(state, 5);
     fmpq_mat_zero(mat);
@@ -37,7 +38,7 @@ _fmpq_mat_randtest_for_exp(fmpq_mat_t mat, flint_rand_t state, mp_bitcnt_t bits)
     {
         for (j = 0; j < fmpq_mat_ncols(mat); j++)
         {
-            if ((i == j) || (i < j && u) || (i > j && l))
+            if ((i == j && d) || (i < j && u) || (i > j && l))
             {
                 fmpq_randtest(fmpq_mat_entry(mat, i, j), state, bits);
             }
