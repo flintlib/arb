@@ -31,7 +31,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("exp_taylor_rf....");
+    flint_printf("atan_taylor_rs....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -43,25 +43,24 @@ int main()
         mp_limb_t err1, err2;
         ulong N;
         mp_size_t xn;
-        int cmp, result;
+        int alternating, cmp, result;
 
-        N = n_randint(state, 288 - 1);
+        N = n_randint(state, 256);
+        alternating = n_randint(state, 2);
         xn = 1 + n_randint(state, 20);
 
         x = flint_malloc(sizeof(mp_limb_t) * xn);
-        y1 = flint_malloc(sizeof(mp_limb_t) * (xn + 1));
-        y2 = flint_malloc(sizeof(mp_limb_t) * (xn + 1));
-        t = flint_malloc(sizeof(mp_limb_t) * (xn + 1));
+        y1 = flint_malloc(sizeof(mp_limb_t) * xn);
+        y2 = flint_malloc(sizeof(mp_limb_t) * xn);
+        t = flint_malloc(sizeof(mp_limb_t) * xn);
 
         flint_mpn_rrandom(x, state->gmp_state, xn);
-        flint_mpn_rrandom(y1, state->gmp_state, xn + 1);
-        flint_mpn_rrandom(y2, state->gmp_state, xn + 1);
         x[xn - 1] &= (LIMB_ONES >> 4);
 
-        _arb_exp_taylor_naive(y1, &err1, x, xn, N);
-        _arb_exp_taylor_rs(y2, &err2, x, xn, N);
+        _arb_atan_taylor_naive(y1, &err1, x, xn, N, alternating);
+        _arb_atan_taylor_rs(y2, &err2, x, xn, N, alternating);
 
-        cmp = mpn_cmp(y1, y2, xn + 1);
+        cmp = mpn_cmp(y1, y2, xn);
 
         if (cmp == 0)
         {
@@ -69,25 +68,25 @@ int main()
         }
         else if (cmp > 0)
         {
-            mpn_sub_n(t, y1, y2, xn + 1);
-            result = flint_mpn_zero_p(t + 1, xn) && (t[0] <= err2);
+            mpn_sub_n(t, y1, y2, xn);
+            result = flint_mpn_zero_p(t + 1, xn - 1) && (t[0] <= err2);
         }
         else
         {
-            mpn_sub_n(t, y2, y1, xn + 1);
-            result = flint_mpn_zero_p(t + 1, xn) && (t[0] <= err2);
+            mpn_sub_n(t, y2, y1, xn);
+            result = flint_mpn_zero_p(t + 1, xn - 1) && (t[0] <= err2);
         }
 
         if (!result)
         {
             flint_printf("FAIL\n");
-            flint_printf("N = %wd xn = %wd\n", N, xn);
+            flint_printf("N = %wd xn = %wd alternating = %d\n", N, xn, alternating);
             flint_printf("x =");
             flint_mpn_debug(x, xn);
             flint_printf("y1 =");
-            flint_mpn_debug(y1, xn + 1);
+            flint_mpn_debug(y1, xn);
             flint_printf("y2 =");
-            flint_mpn_debug(y2, xn + 1);
+            flint_mpn_debug(y2, xn);
             abort();
         }
 
