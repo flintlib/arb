@@ -1344,6 +1344,9 @@ Other special functions
     fit exactly in *prec* bits, a numerical approximation is computed
     efficiently.
 
+    The algorithm to compute Bell numbers, including error analysis,
+    is described in detail in [Joh2015]_.
+
 Internals for computing elementary functions
 -------------------------------------------------------------------------------
 

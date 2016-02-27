@@ -31,8 +31,7 @@ Generation of Bernoulli numbers
     no caching is performed.
 
     The Bernoulli numbers are computed by direct summation of the zeta series.
-    This is made fast by storing a table of powers (as done by Bloemen et al.
-    http://remcobloemen.nl/2009/11/even-faster-zeta-calculation.html).
+    This is made fast by storing a table of powers (as done by [Blo2009]_).
     As an optimization, we only include the odd powers, and use
     fixed-point arithmetic.
 
