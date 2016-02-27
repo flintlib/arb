@@ -160,6 +160,7 @@ lengthy to reproduce in the documentation for each module.
    constants.rst
    gamma.rst
    polylogarithms.rst
+   hypergeometric.rst
 
 Credits and references
 ::::::::::::::::::::::::
