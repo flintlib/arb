@@ -161,6 +161,7 @@ lengthy to reproduce in the documentation for each module.
    gamma.rst
    polylogarithms.rst
    hypergeometric.rst
+   agm.rst
 
 Credits and references
 ::::::::::::::::::::::::

@@ -812,6 +812,8 @@ Polylogarithms
 Arithmetic-geometric mean
 -------------------------------------------------------------------------------
 
+See :ref:`algorithms_agm` for implementation details.
+
 .. function:: void acb_agm1(acb_t m, const acb_t z, slong prec)
 
     Sets *m* to the arithmetic-geometric mean `M(z) = \operatorname{agm}(1,z)`,
