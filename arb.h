@@ -719,6 +719,9 @@ void arb_bell_sum_taylor(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t
 void arb_bell_sum_bsplit(arb_t res, const fmpz_t n, const fmpz_t a, const fmpz_t b, const fmpz_t mmag, slong prec);
 void arb_bell_fmpz(arb_t res, const fmpz_t n, slong prec);
 
+void arb_euler_number_fmpz(arb_t res, const fmpz_t n, slong prec);
+void arb_euler_number_ui(arb_t res, ulong n, slong prec);
+
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX slong name ## _cached_prec = 0; \
     TLS_PREFIX arb_t name ## _cached_value; \

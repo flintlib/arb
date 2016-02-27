@@ -1347,6 +1347,19 @@ Other special functions
     The algorithm to compute Bell numbers, including error analysis,
     is described in detail in [Joh2015]_.
 
+.. function:: void arb_euler_number_fmpz(arb_t res, const fmpz_t n, slong prec)
+
+.. function:: void arb_euler_number_ui(arb_t res, ulong n, slong prec)
+
+    Sets *res* to the Euler number `E_n`, which is defined by having
+    the exponential generating function `1 / \cosh(x)`.
+
+    The Euler product for the Dirichlet beta function
+    (:func:`_acb_dirichlet_euler_product_real_ui`) is used to compute
+    a numerical approximation. If *prec* is more than enough to represent
+    the result exactly, the exact value is automatically determined
+    from a lower-precision approximation.
+
 Internals for computing elementary functions
 -------------------------------------------------------------------------------
 
