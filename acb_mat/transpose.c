@@ -28,7 +28,6 @@
 void
 acb_mat_transpose(acb_mat_t B, const acb_mat_t A)
 {
-    acb_struct tmp;
     slong i, j;
 
     if (acb_mat_nrows(B) != acb_mat_ncols(A) || acb_mat_ncols(B) != acb_mat_nrows(A))
@@ -37,15 +36,16 @@ acb_mat_transpose(acb_mat_t B, const acb_mat_t A)
         abort();
     }
 
+    if (acb_mat_is_empty(A))
+        return;
+
     if (A == B)  /* In-place, guaranteed to be square */
     {
         for (i = 0; i < acb_mat_nrows(A) - 1; i++)
         {
             for (j = i + 1; j < acb_mat_ncols(A); j++)
             {
-                tmp = *acb_mat_entry(A, i, j);
-                *acb_mat_entry(A, i, j) = *acb_mat_entry(A, j, i);
-                *acb_mat_entry(A, j, i) = tmp;
+                acb_swap(acb_mat_entry(A, i, j), acb_mat_entry(A, j, i));
             }
         }
     }

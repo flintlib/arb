@@ -28,18 +28,23 @@
 void
 acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec)
 {
-    slong i, n = acb_mat_nrows(mat);
+    slong i;
 
-    if (n == 0)
+    if (!acb_mat_is_square(mat))
+    {
+        flint_printf("acb_mat_trace: a square matrix is required!\n");
+        abort();
+    }
+
+    if (acb_mat_is_empty(mat))
     {
         acb_zero(trace);
+        return;
     }
-    else
+
+    acb_set(trace, acb_mat_entry(mat, 0, 0));
+    for (i = 1; i < acb_mat_nrows(mat); i++)
     {
-        acb_set(trace, acb_mat_entry(mat, 0, 0));
-        for (i = 1; i < n; i++)
-        {
-            acb_add(trace, trace, acb_mat_entry(mat, i, i), prec);
-        }
+        acb_add(trace, trace, acb_mat_entry(mat, i, i), prec);
     }
 }

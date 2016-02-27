@@ -28,18 +28,23 @@
 void
 arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec)
 {
-    slong i, n = arb_mat_nrows(mat);
+    slong i;
 
-    if (n == 0)
+    if (!arb_mat_is_square(mat))
+    {
+        flint_printf("arb_mat_trace: a square matrix is required!\n");
+        abort();
+    }
+
+    if (arb_mat_is_empty(mat))
     {
         arb_zero(trace);
+        return;
     }
-    else
+
+    arb_set(trace, arb_mat_entry(mat, 0, 0));
+    for (i = 1; i < arb_mat_nrows(mat); i++)
     {
-        arb_set(trace, arb_mat_entry(mat, 0, 0));
-        for (i = 1; i < n; i++)
-        {
-            arb_add(trace, trace, arb_mat_entry(mat, i, i), prec);
-        }
+        arb_add(trace, trace, arb_mat_entry(mat, i, i), prec);
     }
 }

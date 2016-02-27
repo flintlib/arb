@@ -124,6 +124,15 @@ Comparisons
 
     Returns nonzero iff all entries in *mat* have zero imaginary part.
 
+.. function:: int acb_mat_is_empty(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows or the number of columns in *mat* is zero.
+
+.. function:: int acb_mat_is_square(const acb_mat_t mat)
+
+    Returns nonzero iff the number of rows is equal to the number of columns in *mat*.
+
+
 Special matrices
 -------------------------------------------------------------------------------
 

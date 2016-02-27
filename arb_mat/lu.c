@@ -33,13 +33,11 @@ arb_mat_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
     slong i, j, m, n, r, row, col;
     int result;
 
+    if (arb_mat_is_empty(A))
+        return 1;
+
     m = arb_mat_nrows(A);
     n = arb_mat_ncols(A);
-
-    result = 1;
-
-    if (m == 0 || n == 0)
-        return result;
 
     arb_mat_set(LU, A);
 
@@ -51,6 +49,8 @@ arb_mat_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
 
     arb_init(d);
     arb_init(e);
+
+    result = 1;
 
     while (row < m && col < n)
     {

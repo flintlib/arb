@@ -40,10 +40,7 @@ arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec)
     }
 
     if (n == 0)
-    {
-        arb_mat_zero(B);
         return;
-    }
 
     if (n == 1)
     {

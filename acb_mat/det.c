@@ -153,7 +153,15 @@ acb_mat_det_inplace(acb_t det, acb_mat_t A, slong prec)
 void
 acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
 {
-    slong n = acb_mat_nrows(A);
+    slong n;
+
+    if (!acb_mat_is_square(A))
+    {
+        flint_printf("acb_mat_det: a square matrix is required!\n");
+        abort();
+    }
+
+    n = acb_mat_nrows(A);
 
     if (n == 0)
     {
