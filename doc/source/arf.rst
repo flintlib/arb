@@ -652,3 +652,16 @@ Complex arithmetic
     identical semantics to :func:`arf_complex_mul` (with `c = a, b = d`),
     but is faster.
 
+Low-level methods
+-------------------------------------------------------------------------------
+
+.. function:: int _arf_get_integer_mpn(mp_ptr y, mp_srcptr xp, mp_size_t xn, slong exp)
+
+    Given a floating-point number *x* represented by *xn* limbs at *xp*
+    and an exponent *exp*, writes the integer part of *x* to
+    *y*, returning 0 if the result is exact and 1 if the result is inexact.
+    The correct number of limbs is written (no limbs are written
+    if the integer part of *x* is zero).
+    Assumes that ``xp[0]`` is nonzero and that the
+    top bit of ``xp[xn-1]`` is set.
+

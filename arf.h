@@ -756,6 +756,8 @@ slong arf_abs_bound_lt_2exp_si(const arf_t x);
 
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
+int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
+
 int arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd);
 
 slong arf_get_si(const arf_t x, arf_rnd_t rnd);

@@ -28,8 +28,6 @@
 /* See verify_taylor.py for code to generate tables and
    proof of correctness */
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
-
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 
 #define ODD_RECIPROCAL_TAB_SIZE 256

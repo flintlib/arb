@@ -25,64 +25,6 @@
 
 #include "arf.h"
 
-/* assumes xp[0] is nonzero and xp[xn-1] has the top bit set */
-/* assumes that the correct number of limbs for y has been allocated
-   (no zero-extension is done) */
-/* truncates, returns inexact */
-int
-_arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp)
-{
-    slong bot_exp = exp - xn * FLINT_BITS;
-
-    if (bot_exp >= 0)
-    {
-        mp_size_t bot_limbs;
-        mp_bitcnt_t bot_bits;
-
-        bot_limbs = bot_exp / FLINT_BITS;
-        bot_bits = bot_exp % FLINT_BITS;
-
-        flint_mpn_zero(y, bot_limbs);
-
-        if (bot_bits == 0)
-            flint_mpn_copyi(y + bot_limbs, x, xn);
-        else
-            y[bot_limbs + xn] = mpn_lshift(y + bot_limbs, x, xn, bot_bits);
-
-        /* exact */
-        return 0;
-    }
-    else if (exp <= 0)
-    {
-        /* inexact */
-        return 1;
-    }
-    else
-    {
-        mp_size_t top_limbs;
-        mp_bitcnt_t top_bits;
-        mp_limb_t cy;
-
-        top_limbs = exp / FLINT_BITS;
-        top_bits = exp % FLINT_BITS;
-
-        if (top_bits == 0)
-        {
-            flint_mpn_copyi(y, x + xn - top_limbs, top_limbs);
-            /* inexact */
-            return 1;
-        }
-        else
-        {
-            /* can be inexact */
-            cy = mpn_rshift(y, x + xn - top_limbs - 1,
-                top_limbs + 1, FLINT_BITS - top_bits);
-
-            return (cy != 0) || (top_limbs + 1 != xn);
-        }
-    }
-}
-
 int
 arf_get_fmpz(fmpz_t z, const arf_t x, arf_rnd_t rnd)
 {

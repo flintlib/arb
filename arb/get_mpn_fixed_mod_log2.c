@@ -77,8 +77,6 @@ for a total of 3 ulp.
 */
 
 
-int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);
-
 int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
 
 int
