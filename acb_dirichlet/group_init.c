@@ -78,7 +78,7 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     if (G->neven == 2)
     {
         G->primes[1] = 2;
-        G->exponents[1] = e2-2;
+        G->exponents[1] = e2;
         G->phi[1] = G->q_even / 4;
         G->primepowers[1] = G->q_even;
         G->generators[1] = 5;

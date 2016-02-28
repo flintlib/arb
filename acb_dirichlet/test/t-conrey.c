@@ -46,6 +46,27 @@ int main()
 
         acb_dirichlet_group_init(G, q);
 
+        acb_conrey_init(x, G);
+
+        /* check group size and elements */
+        acb_conrey_one(x, G);
+        sum = 1;
+
+#if 1
+        for (n = 1; acb_conrey_next(x, G) < G->num; n++)
+            sum += x->n * x->n;
+#else
+        /* iteration much faster than gcd below */
+        n = 1;
+        for (k = 2; k < G->q; k++)
+        {
+            if (n_gcd(k, G->q) > 1)
+                continue;
+            n++;
+            sum += k * k;
+        }
+#endif
+
         /* use http://oeis.org/A053818 to check all elements
          * are gone through */
         ref = (q % 4 == 2) ? -2 : 1;
@@ -54,13 +75,6 @@ int main()
           ref = - ref * G->primes[k];
         ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
 
-        acb_conrey_init(x, G);
-        acb_conrey_one(x, G);
-        sum = 1;
-
-        /* check group size */
-        for (n = 1; acb_conrey_next(x, G) < G->num; n++)
-            sum += x->n * x->n;
 
         if (n != G->phi_q)
         {
@@ -76,6 +90,38 @@ int main()
             flint_printf("q = %wu\n\n", q);
             flint_printf("sum k^2 = %wu\n\n", ref);
             flint_printf("sum obtained = %wu\n\n", sum);
+            abort();
+        }
+
+        if (q % 4 == 2)
+            continue;
+
+        /* check primitive elements */
+        if (q % 4 == 2)
+            ref = 0;
+        else
+        {
+           ref = 1;
+           k = (G->neven == 2) ? 1 : 0;
+           for (; k < G->num; k++)
+           {
+               ulong p = G->primes[k];
+               if (G->exponents[k] == 1)
+                   ref *= p - 2;
+               else
+                   ref *= (p * (p -2) + 1) * n_pow(p, G->exponents[k] - 2);
+           }
+        }
+
+        acb_conrey_first_primitive(x, G);
+        for (n = 1; (k=acb_conrey_next_primitive(x, G)) < G->num; n++);
+
+        if (n != ref)
+        {
+            flint_printf("FAIL: number of primitive elements\n\n");
+            flint_printf("q = %wu\n\n", q);
+            flint_printf("# primitive = %wu\n\n", ref);
+            flint_printf("loop index = %wu\n\n", n);
             abort();
         }
 

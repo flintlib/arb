@@ -68,7 +68,9 @@ void acb_conrey_first_primitive(acb_conrey_t x, const acb_dirichlet_group_t G);
 
 void acb_conrey_log(acb_conrey_t x, const acb_dirichlet_group_t G, ulong m);
 
-int  acb_conrey_next(acb_conrey_t x, const acb_dirichlet_group_t G);
+int acb_conrey_next(acb_conrey_t x, const acb_dirichlet_group_t G);
+
+int acb_conrey_next_primitive(acb_conrey_t x, const acb_dirichlet_group_t G);
 
 long n_dirichlet_chi_conrey(const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b);
 
