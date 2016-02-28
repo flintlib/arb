@@ -268,7 +268,7 @@ Arithmetic
     multiplying two power series with a similar decay rate.
 
     The default algorithm chooses the *classical* algorithm for
-    short polynomials and the *block* algorithm for slong polynomials.
+    short polynomials and the *block* algorithm for long polynomials.
 
     If the input pointers are identical (and the lengths are the same),
     they are assumed to represent the same polynomial, and its
