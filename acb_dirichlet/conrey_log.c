@@ -88,6 +88,11 @@ acb_conrey_one(acb_conrey_t x, const acb_dirichlet_group_t G) {
 void
 acb_conrey_first_primitive(acb_conrey_t x, const acb_dirichlet_group_t G) {
     ulong k;
+    if (G->q % 4 == 2)
+    {
+      flint_printf("Exception (acb_conrey_first_primitive). no primitive element mod %wu.\n",G->q);
+      abort();
+    }
     for (k = 0; k < G->num ; k++)
       x->log[k] = 1;
     if (G->neven == 2)
