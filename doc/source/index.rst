@@ -35,6 +35,11 @@ Welcome to Arb's documentation!
     A `PDF version <http://fredrikj.net/arb/arb.pdf>`_ of this documentation
     is available.
 
+.. dummy toctree because sphinx sets tocdepth to maxdepth - 1 instead of maxdepth
+
+.. toctree::
+   :maxdepth: 3
+
 General information
 ::::::::::::::::::::
 
