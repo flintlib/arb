@@ -66,17 +66,6 @@ arb_atan_inf_eps(arb_t z, const arf_t x, slong prec)
     fmpz_clear(mag);
 }
 
-/* TODO: move out */
-void
-mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e)
-{
-    mag_t t;
-    mag_init(t);
-    mag_set_ui_2exp_si(t, y, e);
-    mag_add(z, x, t);
-    mag_clear(t);
-}
-
 void
 arb_atan_arf(arb_t z, const arf_t x, slong prec)
 {

@@ -204,6 +204,10 @@ Arithmetic
 
     Sets *z* to an upper bound for `x + 2^e`.
 
+.. function:: void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e)
+
+    Sets *z* to an upper bound for `x + y 2^e`.
+
 .. function:: void mag_div(mag_t z, const mag_t x, const mag_t y)
 
 .. function:: void mag_div_ui(mag_t z, const mag_t x, ulong y)

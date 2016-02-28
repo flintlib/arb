@@ -25,8 +25,6 @@
 
 #include "arb.h"
 
-void mag_add_ui_2exp_si(mag_t, const mag_t, ulong, slong);
-
 /*
 Determine N such that the error is bounded by 2^-prec.
 We choose an N with many trailing zeros to improve efficiency

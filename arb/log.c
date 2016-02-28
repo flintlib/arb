@@ -72,8 +72,6 @@ arf_log_via_mpfr(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
     TMP_END;
 }
 
-void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e);
-
 void
 arb_log_arf_huge(arb_t z, const arf_t x, slong prec)
 {
