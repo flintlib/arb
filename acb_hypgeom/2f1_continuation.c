@@ -98,15 +98,6 @@ bound(mag_t A, mag_t nu, mag_t N,
     mag_clear(u);
 }
 
-static void
-mag_add_ui(mag_t y, const mag_t x, ulong k)
-{
-    mag_t t;
-    mag_init(t); /* no need to free */
-    mag_set_ui(t, k);
-    mag_add(y, x, t);
-}
-
 /* 
    F(x)  = c0   +     c1 x    +     c2 x^2   +     c3 x^3    +    [...]
    F'(x) = c1   +   2 c2 x    +   3 c3 x^2   +   4 c4 x^3    +    [...]

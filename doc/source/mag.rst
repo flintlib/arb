@@ -194,6 +194,8 @@ Arithmetic
 
 .. function:: void mag_add(mag_t z, const mag_t x, const mag_t y)
 
+.. function:: void mag_add_ui(mag_t z, const mag_t x, ulong y)
+
     Sets *z* to an upper bound for `x + y`.
 
 .. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
