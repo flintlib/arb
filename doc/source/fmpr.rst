@@ -1,9 +1,12 @@
 .. _fmpr:
 
-**fmpr.h** -- arbitrary-precision floating-point numbers
+**fmpr.h** -- Arb 1.x floating-point numbers (deprecated)
 ===============================================================================
 
-This type is now obsolete: use :type:`arf_t` instead.
+This module is deprecated, and any methods contained herein could disappear
+in the future. This module is mainly kept for testing the faster
+:type:`arf_t` type that was introduced in Arb 2.0. Please use
+:type:`arf_t` instead of the :type:`fmpr_t` type.
 
 A variable of type :type:`fmpr_t` holds an arbitrary-precision binary
 floating-point number, i.e. a rational number of the form

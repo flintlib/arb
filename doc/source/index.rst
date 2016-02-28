@@ -44,7 +44,6 @@ General information
    overview.rst
    setup.rst
    issues.rst
-   history.rst
    examples.rst
 
 Floating-point numbers
@@ -136,16 +135,6 @@ Mainly for internal use.
    :maxdepth: 1
 
    fmpz_extras.rst
-
-Legacy modules (Arb 1.x types)
-::::::::::::::::::::::::::::::::::::
-
-These modules are deprecated. They are mainly kept for testing
-the newer (and faster) implementations introduced in Arb 2.x.
-
-.. toctree::
-   :maxdepth: 1
-
    fmpr.rst
 
 Supplementary algorithm notes
@@ -163,11 +152,16 @@ lengthy to reproduce in the documentation for each module.
    hypergeometric.rst
    agm.rst
 
-Credits and references
-::::::::::::::::::::::::
+History, credits and references
+:::::::::::::::::::::::::::::::::
 
 .. toctree::
    :maxdepth: 2
 
    credits.rst
+
+.. toctree::
+   :maxdepth: 1
+
+   history.rst
 
