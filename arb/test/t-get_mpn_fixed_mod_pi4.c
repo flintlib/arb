@@ -25,8 +25,6 @@
 
 #include "arb.h"
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 int main()
 {
     slong iter;
@@ -86,7 +84,7 @@ int main()
                 abort();
             }
 
-            _arf_set_mpn_fixed(arb_midref(wb), w, wn, wn, 0, FLINT_BITS * wn);
+            _arf_set_mpn_fixed(arb_midref(wb), w, wn, wn, 0, FLINT_BITS * wn, ARB_RND);
             mag_set_ui_2exp_si(arb_radref(wb), error, -FLINT_BITS * wn);
 
             arb_const_pi(u, prec2);

@@ -659,9 +659,18 @@ Low-level methods
 
     Given a floating-point number *x* represented by *xn* limbs at *xp*
     and an exponent *exp*, writes the integer part of *x* to
-    *y*, returning 0 if the result is exact and 1 if the result is inexact.
+    *y*, returning whether the result is inexact.
     The correct number of limbs is written (no limbs are written
     if the integer part of *x* is zero).
     Assumes that ``xp[0]`` is nonzero and that the
     top bit of ``xp[xn-1]`` is set.
+
+.. function:: int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec, arf_rnd_t rnd)
+
+    Sets *z* to the fixed-point number having *xn* total limbs and *fixn*
+    fractional limbs, negated if *negative* is set, rounding *z* to *prec*
+    bits in the direction *rnd* and returning whether the result is inexact.
+    Both *xn* and *fixn* must be nonnegative and not so large
+    that the bit shift would overflow an *slong*, but otherwise no
+    assumptions are made about the input.
 

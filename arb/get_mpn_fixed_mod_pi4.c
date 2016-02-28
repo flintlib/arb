@@ -27,8 +27,6 @@
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 int
 _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
     mp_limb_t * error, const arf_t x, mp_size_t wn)

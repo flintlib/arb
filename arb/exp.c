@@ -27,8 +27,6 @@
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 void
 arb_exp_arf_huge(arb_t z, const arf_t x, slong mag, slong prec, int minus_one)
 {
@@ -363,13 +361,13 @@ arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one)
         /* Set the midpoint */
         if (!minus_one)
         {
-            inexact = _arf_set_mpn_fixed(arb_midref(z), finalvalue, finaln, wn, 0, prec);
+            inexact = _arf_set_mpn_fixed(arb_midref(z), finalvalue, finaln, wn, 0, prec, ARB_RND);
             if (inexact)
                 arf_mag_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
         }
         else
         {
-            _arf_set_mpn_fixed(arb_midref(z), finalvalue, finaln, wn, 0, finaln * FLINT_BITS);
+            _arf_set_mpn_fixed(arb_midref(z), finalvalue, finaln, wn, 0, finaln * FLINT_BITS, ARB_RND);
         }
 
         arb_mul_2exp_fmpz(z, z, n);

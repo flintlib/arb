@@ -27,9 +27,6 @@
 #include "mpn_extras.h"
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
-
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))
 
 static void
@@ -460,7 +457,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     if (want_sin)
     {
         inexact = _arf_set_mpn_fixed(arb_midref(zsin), sinptr,
-            wn, wn, sinnegative, prec);
+            wn, wn, sinnegative, prec, ARB_RND);
         if (inexact)
             arf_mag_add_ulp(arb_radref(zsin),
                 arb_radref(zsin), arb_midref(zsin), prec);
@@ -469,7 +466,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     if (want_cos)
     {
         inexact = _arf_set_mpn_fixed(arb_midref(zcos), cosptr,
-            wn, wn, cosnegative, prec);
+            wn, wn, cosnegative, prec, ARB_RND);
         if (inexact)
             arf_mag_add_ulp(arb_radref(zcos),
                 arb_radref(zcos), arb_midref(zcos), prec);

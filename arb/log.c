@@ -72,8 +72,6 @@ arf_log_via_mpfr(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
     TMP_END;
 }
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e);
 
 void
@@ -368,7 +366,7 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
             mag_add_ui_2exp_si(arb_radref(z), arb_radref(z), 1, -r*(2*N+1) + 1);
 
         /* Set the midpoint */
-        inexact = _arf_set_mpn_fixed(arb_midref(z), t, tn, wn, negative, prec);
+        inexact = _arf_set_mpn_fixed(arb_midref(z), t, tn, wn, negative, prec, ARB_RND);
         if (inexact)
             arf_mag_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
 

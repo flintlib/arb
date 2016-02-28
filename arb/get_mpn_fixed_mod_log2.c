@@ -77,8 +77,6 @@ for a total of 3 ulp.
 */
 
 
-int _arf_set_mpn_fixed(arf_t z, mp_srcptr xp, mp_size_t xn, mp_size_t fixn, int negative, slong prec);
-
 int
 _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
                                                 const arf_t x, mp_size_t wn)
