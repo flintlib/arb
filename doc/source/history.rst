@@ -6,6 +6,16 @@ History and changes
 For more details, view the commit log
 in the git repository https://github.com/fredrik-johansson/arb
 
+Old versions of the documentation
+-------------------------------------------------------------------------------
+
+* http://fredrikj.net/arb/arb-2.8.0.pdf
+* http://fredrikj.net/arb/arb-2.7.0.pdf
+* http://fredrikj.net/arb/arb-2.6.0.pdf
+* http://fredrikj.net/arb/arb-2.5.0.pdf
+* http://fredrikj.net/arb/arb-2.4.0.pdf
+* http://fredrikj.net/arb/arb-2.3.0.pdf
+
 2015-12-31 - version 2.8.1
 -------------------------------------------------------------------------------
 

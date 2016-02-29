@@ -48,6 +48,7 @@ General information
 
    overview.rst
    setup.rst
+   using.rst
    issues.rst
    examples.rst
 

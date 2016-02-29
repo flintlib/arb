@@ -1,40 +1,130 @@
 .. _issues:
 
-Potential issues
+Technical conventions and potential issues
 ===============================================================================
 
-Interface changes
+Integer types
 -------------------------------------------------------------------------------
 
-Most of the core API should be stable at this point,
-and significant compatibility-breaking changes will be specified in the
-release notes.
+Arb generally uses the *int* type for boolean values and status flags.
 
-In general, Arb does not distinguish between "private" and "public"
-parts of the API. The implementation is meant to be transparent by design.
-All methods are intended to be fully documented and tested
-(exceptions to this are mainly due to lack of time on part of the
-author).
-The user should use common sense to determine whether a function is
-concerned with implementation details, making it likely
-to change as the implementation changes in the future.
-The interface of :func:`arb_add` is probably not going to change in
-the next version, but :func:`_arb_get_mpn_fixed_mod_pi4` just might.
+The *char*, *short* and *int* types are assumed to be two's complement
+types with exactly 8, 16 and 32 bits. This is not technically guaranteed
+by the C standard, but there are no mainstream platforms where this
+assumption does not hold, and new ones are unlikely to appear in the near
+future (ignoring certain low-power DSPs and the like, which are out of
+scope for this software).
 
-Correctness
+Since the C types *long* and *unsigned long* do not have a standardized size
+in practice, FLINT defines *slong* and *ulong* types which are guaranteed
+to be 32 bits on a 32-bit system and 64 bits on a 64-bit system.
+They are also guaranteed to have the same size as GMP's :type:`mp_limb_t`.
+GMP builds with a different limb size configuration are not supported at all.
+
+.. type:: slong
+
+    The *slong* type is used for precisions, bit counts, loop indices,
+    array sizes, and the like, even when those values are known to be
+    nonnegative. It is also used for small integer-valued coefficients.
+    In method names, an *slong* parameter is denoted by *si*, for example
+    :func:`arb_add_si`.
+
+.. type:: ulong
+
+    The *ulong* type is used for integer-valued coefficients
+    that are known to be unsigned, and for values that require the
+    full 32-bit or 64-bit range.
+    In method names, a *ulong* parameter is denoted by *ui*, for example
+    :func:`arb_add_ui`.
+
+The following GMP-defined types are used in methods that manipulate the
+internal representation of numbers (using limb arrays).
+
+.. type:: mp_limb_t
+
+    A single limb.
+
+.. type:: mp_ptr
+
+    Pointer to a writable array of limbs.
+
+.. type:: mp_srcptr
+
+    Pointer to a read-only array of limbs.
+
+.. type:: mp_size_t
+
+    A limb count (always nonnegative).
+
+.. type:: mp_bitcnt_t
+
+    A bit offset within an array of limbs (always nonnegative).
+
+Arb uses the following FLINT types for exact (integral and rational)
+arbitrary-size values. For details, refer to the FLINT documentation.
+
+.. type:: fmpz_t
+
+    The FLINT multi-precision integer type uses an inline representation for small
+    integers, specifically when the absolute value is at most `2^{62}-1` (on
+    64-bit machines) or `2^{30}-1` (on 32-bit machines). It switches
+    automatically to a GMP integer for larger values.
+    The *fmpz_t* type is functionally identical to the GMP *mpz_t*
+    type, but faster for small values.
+
+.. type:: fmpq_t
+
+    FLINT multi-precision rational number.
+
+.. type:: fmpz_poly_t
+
+.. type:: fmpq_poly_t
+
+.. type:: fmpz_mat_t
+
+.. type:: fmpq_mat_t
+
+    FLINT polynomials and matrices with integer and rational coefficients.
+
+Integer overflow
 -------------------------------------------------------------------------------
 
-Except where otherwise specified, Arb is designed to produce
-provably correct error bounds. The code has been written carefully,
-and the library is extensively tested.
-However, like any complex mathematical software, Arb is virtually certain to
-contains bugs, so the usual precautions are advised:
+When machine-size integers are used for precisions, sizes of integers in
+bits, lengths of polynomials, and similar quantities that relate
+to sizes in memory, very few internal checks are performed to verify that
+such quantities do not overflow.
 
-* Perform sanity checks on the output (check known mathematical relations; recompute to another precision and compare)
-* Compare against other mathematical software
-* Read the source code to verify that it does what it is supposed to do
+Precisions and lengths exceeding a small fraction
+of *LONG_MAX*, say `2^{24} \sim 10^7` on 32-bit systems,
+should be regarded as resulting in undefined behavior.
+On 64-bit systems this should generally not be an issue,
+since most calculations will exhaust the available memory
+(or the user's patience waiting for the computation to complete)
+long before running into integer overflows.
+However, the user needs to be wary of unintentionally passing input
+parameters of order *LONG_MAX* or negative parameters where
+positive parameters are expected, for example due to a runaway loop
+that repeatedly increases the precision.
 
-All bug reports are highly welcome!
+Currently, no hard upper limit on the precision is defined, but
+`2^{24} \approx 10^7` bits on 32-bit system
+and `2^{36} \approx 10^{11}` bits on a 64-bit system
+can be considered safe for most purposes.
+The relatively low limit on 64-bit systems is due to the fact that GMP
+integers are used internally in some algorithms, and GMP integers
+are limited to `2^{37}` bits.
+The minimum allowed precision is 2 bits.
+
+This caveat does not apply to exponents of floating-point numbers,
+which are represented as arbitrary-precision integers, nor to
+integers used as numerical scalars (e.g. :func:`arb_mul_si`).
+However, it still applies to conversions and operations where
+the result is requested exactly and sizes become an issue.
+For example, trying to convert
+the floating-point number `2^{2^{100}}` to an integer could
+result in anything from a silent wrong value to thrashing followed
+by a crash, and it is the user's responsibility not
+to attempt such a thing.
 
 Aliasing
 -------------------------------------------------------------------------------
@@ -104,36 +194,6 @@ currently do not implement this optimization.
 It is better to use ``arb_mul_2exp_si(z, x, 1)`` and
 ``arb_zero(z)``, respectively.
 
-Integer overflow
--------------------------------------------------------------------------------
-
-Machine-size integers are used for precisions, sizes of integers in
-bits, lengths of polynomials, and similar quantities that relate
-to sizes in memory. Very few checks are performed to verify that
-such quantities do not overflow.
-Precisions and lengths exceeding a small fraction
-of *LONG_MAX*, say `2^{24} \sim 10^7` on 32-bit systems,
-should be regarded as resulting in undefined behavior.
-On 64-bit systems this should generally not be an issue,
-since most calculations will exhaust the available memory
-(or the user's patience waiting for the computation to complete)
-long before running into integer overflows.
-However, the user needs to be wary of unintentionally passing input
-parameters of order *LONG_MAX* or negative parameters where
-positive parameters are expected, for example due to a runaway loop
-that repeatedly increases the precision.
-
-This caveat does not apply to exponents of floating-point numbers,
-which are represented as arbitrary-precision integers, nor to
-integers used as numerical scalars (e.g. :func:`arb_mul_si`).
-However, it still applies to conversions and operations where
-the result is requested exactly and sizes become an issue.
-For example, trying to convert
-the floating-point number `2^{2^{100}}` to an integer could
-result in anything from a silent wrong value to thrashing followed
-by a crash, and it is the user's responsibility not
-to attempt such a thing.
-
 Thread safety and caches
 -------------------------------------------------------------------------------
 
@@ -200,4 +260,42 @@ With the stated exceptions, these should hold on all commonly used platforms.
   of several ulps, and there is unfortunately no way to get guaranteed
   bounds. However, we do use functions such as ``ldexp`` and ``sqrt``, which we
   assume to be correctly implemented.
+
+Interface changes
+-------------------------------------------------------------------------------
+
+Most of the core API should be stable at this point,
+and significant compatibility-breaking changes will be specified in the
+release notes.
+
+In general, Arb does not distinguish between "private" and "public"
+parts of the API. The implementation is meant to be transparent by design.
+All methods are intended to be fully documented and tested
+(exceptions to this are mainly due to lack of time on part of the
+author).
+The user should use common sense to determine whether a function is
+concerned with implementation details, making it likely
+to change as the implementation changes in the future.
+The interface of :func:`arb_add` is probably not going to change in
+the next version, but :func:`_arb_get_mpn_fixed_mod_pi4` just might.
+
+General note on correctness
+-------------------------------------------------------------------------------
+
+Except where otherwise specified, Arb is designed to produce
+provably correct error bounds. The code has been written carefully,
+and the library is extensively tested.
+However, like any complex mathematical software, Arb is virtually certain to
+contains bugs, so the usual precautions are advised:
+
+* Do sanity checks. For example, check that the result satisfies an expected
+  mathematical relation, or compute the same result in two different ways,
+  with different settings, and with different levels of precision.
+  Arb's unit tests already do such checks, but they are not guaranteed to
+  catch every possible bug, and they provide no protection against
+  the user accidentally using the interface incorrectly.
+* Compare results with other mathematical software.
+* Read the source code to verify that it really does what it is supposed to do.
+
+All bug reports are highly appreciated.
 

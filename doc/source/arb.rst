@@ -48,17 +48,6 @@ and may be returned as output from functions.
 * The ball `[c \pm \infty]`, where `c` is finite or infinite, represents the whole extended real line `[-\infty,+\infty]`. Such a ball can always be replaced by `[0 \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library). Note that there is no way to represent a half-infinite interval such as `[0,\infty]`.
 * The ball `[\operatorname{NaN} \pm c]`, where `c` is finite or infinite, represents an indeterminate value (the value could be any extended real number, or it could represent a function being evaluated outside its domain of definition, for example where the result would be complex). Such an indeterminate ball can always be replaced by `[\operatorname{NaN} \pm \infty]` while preserving mathematical correctness (this is currently not done automatically by the library).
 
-The :type:`arb_t` type is almost identical semantically to
-the legacy *fmprb_t* type, but uses a more efficient
-internal representation.
-Whereas the midpoint and radius of an *fmprb_t* both have the
-same type, the :type:`arb_t` type uses an :type:`arf_t` for the midpoint
-and a :type:`mag_t` for the radius.  Code designed to manipulate the
-radius of an *fmprb_t* directly can be ported to the :type:`arb_t` type
-by writing the radius to a temporary :type:`arf_t` variable, manipulating
-that variable, and then converting back to the :type:`mag_t` radius.
-Alternatively, :type:`mag_t` methods can be used directly where available.
-
 Types, macros and constants
 -------------------------------------------------------------------------------
 
