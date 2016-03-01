@@ -33,15 +33,15 @@ to satisfy the bound
 
     |[t^k] R_n(z+t)| \le 2 |B_{2n}|
         \frac{\Gamma(2n+k-1)}{\Gamma(k+1) \Gamma(2n+1)}
-        \; |z| \; (b / |z|)^{2n+k}
+        \; |z| \; \left(\frac{b}{|z|}\right)^{2n+k}
 
 where `b = 1/\cos(\operatorname{arg}(z)/2)`.
 Note that by trigonometric identities, assuming that `z = x+yi`, we
-have `b = \sqrt{1 + t^2}` where
+have `b = \sqrt{1 + u^2}` where
 
 .. math ::
 
-    t = \frac{y}{\sqrt{x^2 + y^2} + x} = \frac{\sqrt{x^2 + y^2} - x}{y}.
+    u = \frac{y}{\sqrt{x^2 + y^2} + x} = \frac{\sqrt{x^2 + y^2} - x}{y}.
 
 To use the Stirling series at `p`-bit precision,
 we select parameters `r`, `n` such that the

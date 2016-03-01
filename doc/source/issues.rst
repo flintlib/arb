@@ -95,7 +95,7 @@ to sizes in memory, very few internal checks are performed to verify that
 such quantities do not overflow.
 
 Precisions and lengths exceeding a small fraction
-of *LONG_MAX*, say `2^{24} \sim 10^7` on 32-bit systems,
+of *LONG_MAX*, say `2^{24} \approx 10^7` on 32-bit systems,
 should be regarded as resulting in undefined behavior.
 On 64-bit systems this should generally not be an issue,
 since most calculations will exhaust the available memory

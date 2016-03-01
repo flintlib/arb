@@ -15,9 +15,10 @@ for Special Functions).
 During that period, he was a PhD student (and briefly a postdoc) at
 RISC, Johannes Kepler University, Linz, supervised by Manuel Kauers.
 
-From September 2014 to October 2015, Fredrik was a postdoc in the LFANT
-project-team at INRIA Bordeaux and Institut de Mathématiques de Bordeaux,
-headed by Andreas Enge. During that period, Fredrik's work on Arb was supported
+From September 2014 to October 2015, Fredrik was a postdoc at
+INRIA Bordeaux and Institut de Mathématiques de Bordeaux,
+in the LFANT project-team headed by Andreas Enge. During that period,
+Fredrik's work on Arb was supported
 by ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in
 Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
 Since October 2015, Fredrik is a CR2 researcher in the LFANT team,

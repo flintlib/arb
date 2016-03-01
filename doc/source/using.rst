@@ -10,10 +10,10 @@ Let `f : A \to B` be a function.
 A ball implementation of `f` is a function `F` that maps subsets of `A`
 to subsets of `B` subject to the following rule:
 
-    If `F(X) = Y`, then for all `x \in X \subseteq A`,
-    we have `f(x) \in Y \subseteq B`.
+    For all `x \in X \subseteq A`,
+    we have `f(x) \in F(X) \subseteq B`.
 
-In other words, `Y` is an *enclosure* for the set `\{f(x) : x \in X\}`.
+In other words, `F(X)` is an *enclosure* for the set `\{f(x) : x \in X\}`.
 This rule is sometimes called the *inclusion principle*.
 
 Throughout the documentation (except where otherwise noted),
@@ -50,7 +50,7 @@ Predicates
 
 A ball implementation of a predicate 
 `f : \mathbb{R} \to \{\operatorname{True}, \operatorname{False}\}`
-would need to be able to return a third result indicating
+would need to be able to return a third logical value indicating
 that the result could be either True or False.
 In most cases, predicates in Arb are implemented as 
 functions that return the *int* value 1 to indicate that the
@@ -89,6 +89,8 @@ Instead, the following can be used:
         ... /* do things assuming that the sign of x is unknown */
     }
 
+Likewise, we will write `x \le y` in mathematical notation with the meaning
+that `x \le y` holds for all `x \in X, y \in Y` where `X` and `Y` are balls.
 
 Note that that some predicates naturally act on the input *viewed as balls*,
 rather than being ball implementations of pointwise predicates.
