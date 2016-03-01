@@ -221,13 +221,13 @@ Special functions
     Sets *B* to the transitive closure `\sum_{k=1}^\infty A^k`.
     The matrix *A* is required to be square.
 
-.. function:: slong bool_mat_get_strongly_connected_components(slong \*p, const bool_mat_t A)
+.. function:: slong bool_mat_get_strongly_connected_components(slong * p, const bool_mat_t A)
 
     Partitions the `n` row and column indices of the `n \times n` matrix *A*
     according to the strongly connected components (SCC) of the graph
     for which *A* is the adjacency matrix.
     If the graph has `k` SCCs then the function returns `k`,
-    and for each vertex `i \in \[0, n-1\]`,
+    and for each vertex `i \in [0, n-1]`,
     `p_i` is set to the index of the SCC to which the vertex belongs.
     The SCCs themselves can be considered as nodes in a directed acyclic
     graph (DAG), and the SCCs are indexed in postorder with respect to that DAG.
