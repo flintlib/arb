@@ -1,9 +1,10 @@
 .. _bool-mat:
 
-**bool_mat.h** -- matrices over the boolean semiring `\langle \left{0, 1\right}, \vee, \wedge \rangle`
+**bool_mat.h** -- matrices over booleans
 ===============================================================================
 
-A :type:`bool_mat_t` represents a dense matrix over booleans,
+A :type:`bool_mat_t` represents a dense matrix over the boolean
+semiring `\langle \left\{0, 1\right\}, \vee, \wedge \rangle`,
 implemented as an array of entries of type :type:`int`.
 
 The dimension (number of rows and columns) of a matrix is fixed at
