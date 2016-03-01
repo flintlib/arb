@@ -34,7 +34,7 @@
 typedef struct
 {
     int *u; /* 'temporary mark' */
-    int *v; /* 'permanant mark' */
+    int *v; /* 'permanent mark' */
     slong *post; /* postorder nodes */
     slong npost; /* number of postorder nodes so far */
     slong size;
