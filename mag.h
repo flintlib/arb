@@ -697,6 +697,11 @@ mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
     mag_clear(t);
 }
 
+MAG_INLINE void mag_const_pi(mag_t res)
+{
+    mag_set_ui_2exp_si(res, 843314857, -28);
+}
+
 #ifdef __cplusplus
 }
 #endif

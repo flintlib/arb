@@ -334,6 +334,12 @@ arb_atan(arb_t z, const arb_t x, slong prec)
             mag_div(t, arb_radref(x), t);
         }
 
+        if (mag_cmp_2exp_si(t, 0) > 0)
+        {
+            mag_const_pi(u);
+            mag_min(t, t, u);
+        }
+
         arb_atan_arf(z, arb_midref(x), prec);
         mag_add(arb_radref(z), arb_radref(z), t);
 

@@ -334,6 +334,10 @@ Powers and logarithms
 Special functions
 -------------------------------------------------------------------------------
 
+.. function:: void mag_const_pi(mag_t z)
+
+    Sets *z* to an upper bound for `\pi`.
+
 .. function:: void mag_fac_ui(mag_t z, ulong n)
 
     Sets *z* to an upper bound for `n!`.
