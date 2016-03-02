@@ -96,7 +96,7 @@ int main()
         bool_mat_randtest(A, state);
 
         i = (slong) n_randint(state, n);
-        *bool_mat_entry(A, i, i) = 1;
+        bool_mat_set_entry(A, i, i, 1);
         if (bool_mat_trace(A) != 1)
         {
             flint_printf("FAIL (diagonal has a non-zero entry)\n");
@@ -106,7 +106,7 @@ int main()
 
         for (i = 0; i < n; i++)
         {
-            *bool_mat_entry(A, i, i) = 0;
+            bool_mat_set_entry(A, i, i, 0);
         }
         if (bool_mat_trace(A) != 0)
         {

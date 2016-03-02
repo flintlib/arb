@@ -36,7 +36,7 @@ bool_mat_fprint(FILE * file, const bool_mat_t mat)
 
         for (j = 0; j < bool_mat_ncols(mat); j++)
         {
-            flint_fprintf(file, "%d", *bool_mat_entry(mat, i, j));
+            flint_fprintf(file, "%d", bool_mat_get_entry(mat, i, j));
 
             if (j < bool_mat_ncols(mat) - 1)
                 flint_fprintf(file, ", ");

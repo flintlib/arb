@@ -35,7 +35,7 @@ bool_mat_randtest(bool_mat_t mat, flint_rand_t state)
     density = n_randint(state, 101);
     for (i = 0; i < bool_mat_nrows(mat); i++)
         for (j = 0; j < bool_mat_ncols(mat); j++)
-            *bool_mat_entry(mat, i, j) = (n_randint(state, 100) < density);
+            bool_mat_set_entry(mat, i, j, n_randint(state, 100) < density);
 }
 
 void
@@ -49,7 +49,7 @@ bool_mat_randtest_diagonal(bool_mat_t mat, flint_rand_t state)
     density = n_randint(state, 101);
     bool_mat_zero(mat);
     for (i = 0; i < n; i++)
-        *bool_mat_entry(mat, i, i) = (n_randint(state, 100) < density);
+        bool_mat_set_entry(mat, i, i, n_randint(state, 100) < density);
 }
 
 void
@@ -76,7 +76,7 @@ bool_mat_randtest_nilpotent(bool_mat_t mat, flint_rand_t state)
 
     if (n == 1)
     {
-        *bool_mat_entry(mat, 0, 0) = 0;
+        bool_mat_set_entry(mat, 0, 0, 0);
         return;
     }
 
@@ -87,7 +87,7 @@ bool_mat_randtest_nilpotent(bool_mat_t mat, flint_rand_t state)
     {
         for (j = 0; j < i; j++)
         {
-            *bool_mat_entry(mat, i, j) = (n_randint(state, 100) < density);
+            bool_mat_set_entry(mat, i, j, n_randint(state, 100) < density);
         }
     }
 
@@ -106,7 +106,8 @@ bool_mat_randtest_nilpotent(bool_mat_t mat, flint_rand_t state)
         {
             for (j = 0; j < n; j++)
             {
-                *bool_mat_entry(mat, p[i], p[j]) = *bool_mat_entry(A, i, j);
+                bool_mat_set_entry(
+                        mat, p[i], p[j], bool_mat_get_entry(A, i, j));
             }
         }
 

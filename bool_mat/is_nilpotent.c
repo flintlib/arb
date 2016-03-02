@@ -62,7 +62,7 @@ _cycle_detection_visit(_cycle_detection_s *s, const bool_mat_t A, slong n)
         slong m;
         s->u[n] = 1;
         for (m = 0; m < s->size; m++)
-            if (*bool_mat_entry(A, n, m))
+            if (bool_mat_get_entry(A, n, m))
                 if (_cycle_detection_visit(s, A, m))
                     return 1;
         s->v[n] = 1;
@@ -89,7 +89,7 @@ bool_mat_is_nilpotent(const bool_mat_t A)
 
     if (n == 1)
     {
-        return !*bool_mat_entry(A, 0, 0);
+        return !bool_mat_get_entry(A, 0, 0);
     }
     else
     {

@@ -49,7 +49,7 @@ bool_mat_pow_ui(bool_mat_t B, const bool_mat_t A, ulong exp)
         }
         else if (d == 1)
         {
-            *bool_mat_entry(B, 0, 0) = *bool_mat_entry(A, 0, 0);
+            bool_mat_set_entry(B, 0, 0, bool_mat_get_entry(A, 0, 0));
         }
         else if (exp == 1)
         {

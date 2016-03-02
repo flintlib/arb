@@ -101,7 +101,7 @@ int main()
             j = n_randint(state, n);
             if (i != j)
             {
-                *bool_mat_entry(A, i, j) = 1;
+                bool_mat_set_entry(A, i, j, 1);
                 if (bool_mat_is_diagonal(A))
                 {
                     flint_printf("FAIL (random non-diagonal)\n");

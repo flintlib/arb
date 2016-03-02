@@ -61,13 +61,11 @@ bool_mat_mul(bool_mat_t C, const bool_mat_t A, const bool_mat_t B)
     {
         for (j = 0; j < bc; j++)
         {
-            *bool_mat_entry(C, i, j) = (*bool_mat_entry(A, i, 0) &
-                                        *bool_mat_entry(B, 0, j));
-            for (k = 1; k < br; k++)
-            {
-                *bool_mat_entry(C, i, j) |= (*bool_mat_entry(A, i, k) &
-                                             *bool_mat_entry(B, k, j));
-            }
+            int any = 0;
+            for (k = 0; k < br && !any; k++)
+                any |= (bool_mat_get_entry(A, i, k) &
+                        bool_mat_get_entry(B, k, j));
+            bool_mat_set_entry(C, i, j, any);
         }
     }
 }

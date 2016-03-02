@@ -40,7 +40,7 @@ bool_mat_trace(const bool_mat_t mat)
         return 0;
 
     for (i = 0; i < bool_mat_nrows(mat); i++)
-        if (*bool_mat_entry(mat, i, i))
+        if (bool_mat_get_entry(mat, i, i))
             return 1;
 
     return 0;

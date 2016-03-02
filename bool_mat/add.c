@@ -35,6 +35,6 @@ bool_mat_add(bool_mat_t res, const bool_mat_t mat1, const bool_mat_t mat2)
 
     for (i = 0; i < bool_mat_nrows(mat1); i++)
         for (j = 0; j < bool_mat_ncols(mat1); j++)
-            *bool_mat_entry(res, i, j) = (*bool_mat_entry(mat1, i, j) |
-                                          *bool_mat_entry(mat2, i, j));
+            bool_mat_set_entry(res, i, j, (bool_mat_get_entry(mat1, i, j) |
+                                           bool_mat_get_entry(mat2, i, j)));
 }

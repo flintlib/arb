@@ -42,6 +42,6 @@ bool_mat_directed_path(bool_mat_t mat)
     bool_mat_zero(mat);
     for (i = 0; i < bool_mat_nrows(mat) - 1; i++)
     {
-        *bool_mat_entry(mat, i, i+1) = 1;
+        bool_mat_set_entry(mat, i, i+1, 1);
     }
 }

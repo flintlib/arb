@@ -28,9 +28,13 @@ Types, macros and constants
     *bool_mat_struct*, permitting an *bool_mat_t* to
     be passed by reference.
 
-.. macro:: bool_mat_entry(mat, i, j)
+.. function:: int bool_mat_get_entry(const bool_mat_t mat, slong i, slong j)
 
-    Macro giving a pointer to the entry at row *i* and column *j*.
+    Returns the entry of matrix *mat* at row *i* and column *j*.
+
+.. function:: void bool_mat_set_entry(bool_mat_t mat, slong i, slong j, int x)
+
+    Sets the entry of matrix *mat* at row *i* and column *j* to *x*.
 
 .. macro:: bool_mat_nrows(mat)
 

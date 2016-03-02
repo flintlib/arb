@@ -38,5 +38,5 @@ bool_mat_directed_cycle(bool_mat_t mat)
         return;
 
     bool_mat_directed_path(mat);
-    *bool_mat_entry(mat, bool_mat_nrows(mat) - 1, 0) = 1;
+    bool_mat_set_entry(mat, bool_mat_nrows(mat) - 1, 0, 1);
 }

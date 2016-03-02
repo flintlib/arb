@@ -63,13 +63,13 @@ _condensation_init(_condensation_t c, const bool_mat_t A)
     {
         for (j = 0; j < c->n; j++)
         {
-            if (*bool_mat_entry(A, i, j))
+            if (bool_mat_get_entry(A, i, j))
             {
                 u = c->partition[i];
                 v = c->partition[j];
                 if (u != v)
                 {
-                    *bool_mat_entry(c->C, u, v) = 1;
+                    bool_mat_set_entry(c->C, u, v, 1);
                 }
             }
         }
@@ -129,7 +129,7 @@ _connectivity_init_scc_has_cycle(_connectivity_t c, const bool_mat_t A)
      */
     for (i = 0; i < n; i++)
     {
-        if (*bool_mat_entry(A, i, i))
+        if (bool_mat_get_entry(A, i, i))
         {
             u = c->con->partition[i];
             c->scc_has_cycle[u] = 1;
@@ -189,10 +189,10 @@ _connectivity_init(_connectivity_t c, const bool_mat_t A)
             {
                 for (v = 0; v < k; v++)
                 {
-                    if (*bool_mat_entry(c->T, u, w) &&
-                        *bool_mat_entry(c->T, w, v))
+                    if (bool_mat_get_entry(c->T, u, w) &&
+                        bool_mat_get_entry(c->T, w, v))
                     {
-                        *bool_mat_entry(c->P, u, v) = 1;
+                        bool_mat_set_entry(c->P, u, v, 1);
                     }
                 }
             }
@@ -211,7 +211,7 @@ _connectivity_init(_connectivity_t c, const bool_mat_t A)
     {
         for (w = 0; w < k; w++)
         {
-            if (*bool_mat_entry(c->con->C, u, w))
+            if (bool_mat_get_entry(c->con->C, u, w))
             {
                 curr = fmpz_get_si(fmpz_mat_entry(c->Q, u, w));
                 fmpz_set_si(
@@ -219,7 +219,7 @@ _connectivity_init(_connectivity_t c, const bool_mat_t A)
                         FLINT_MAX(curr, 1));
                 for (v = 0; v < k; v++)
                 {
-                    if (*bool_mat_entry(c->T, w, v))
+                    if (bool_mat_get_entry(c->T, w, v))
                     {
                         rest = fmpz_get_si(fmpz_mat_entry(c->Q, w, v));
                         curr = fmpz_get_si(fmpz_mat_entry(c->Q, u, v));
@@ -252,14 +252,14 @@ _connectivity_entrywise_nilpotence_degree(
             fmpz_one(N);
         }
     }
-    else if (!*bool_mat_entry(c->T, u, v))
+    else if (!bool_mat_get_entry(c->T, u, v))
     {
         fmpz_zero(N);
     }
     else if (
             c->scc_has_cycle[u] ||
             c->scc_has_cycle[v] ||
-            *bool_mat_entry(c->P, u, v))
+            bool_mat_get_entry(c->P, u, v))
     {
         fmpz_set_si(N, -1);
     }
@@ -288,7 +288,7 @@ bool_mat_all_pairs_longest_walk(fmpz_mat_t B, const bool_mat_t A)
 
     if (n == 1)
     {
-        if (*bool_mat_entry(A, 0, 0))
+        if (bool_mat_get_entry(A, 0, 0))
         {
             fmpz_set_si(fmpz_mat_entry(B, 0, 0), -2);
             return -2;

@@ -43,13 +43,13 @@ bool_mat_transpose(bool_mat_t B, const bool_mat_t A)
     if (A == B)  /* In-place, guaranteed to be square */
     {
         int tmp;
-        for (i = 0; i < bool_mat_nrows(A) - 1; i++)
+        for (i = 0; i < bool_mat_nrows(B) - 1; i++)
         {
-            for (j = i + 1; j < bool_mat_ncols(A); j++)
+            for (j = i + 1; j < bool_mat_ncols(B); j++)
             {
-                tmp = *bool_mat_entry(A, i, j);
-                *bool_mat_entry(A, i, j) = *bool_mat_entry(A, j, i);
-                *bool_mat_entry(A, j, i) = tmp;
+                tmp = bool_mat_get_entry(B, i, j);
+                bool_mat_set_entry(B, i, j, bool_mat_get_entry(B, j, i));
+                bool_mat_set_entry(B, j, i, tmp);
             }
         }
     }
@@ -57,6 +57,6 @@ bool_mat_transpose(bool_mat_t B, const bool_mat_t A)
     {
         for (i = 0; i < bool_mat_nrows(B); i++)
             for (j = 0; j < bool_mat_ncols(B); j++)
-                *bool_mat_entry(B, i, j) = *bool_mat_entry(A, j, i);
+                bool_mat_set_entry(B, i, j, bool_mat_get_entry(A, j, i));
     }
 }
