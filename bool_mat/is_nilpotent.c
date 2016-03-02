@@ -33,7 +33,7 @@
 typedef struct
 {
     int *u; /* 'temporary mark' */
-    int *v; /* 'permanant mark' */
+    int *v; /* 'permanent mark' */
     slong size;
 } _cycle_detection_s;
 
