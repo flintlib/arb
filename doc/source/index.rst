@@ -141,6 +141,7 @@ Mainly for internal use.
    :maxdepth: 1
 
    fmpz_extras.rst
+   bool_mat.rst
    fmpr.rst
 
 Supplementary algorithm notes
@@ -152,6 +153,7 @@ lengthy to reproduce in the documentation for each module.
 .. toctree::
    :maxdepth: 1
 
+   formulas.rst
    constants.rst
    gamma.rst
    polylogarithms.rst
