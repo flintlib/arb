@@ -3,6 +3,11 @@
 Using ball arithmetic
 ===============================================================================
 
+This section gives an introduction to working with
+real numbers in Arb (see :ref:`arb` for the API and technical documentation).
+The general principles carry over to complex numbers, polynomials and
+matrices.
+
 Ball semantics
 -------------------------------------------------------------------------------
 
@@ -44,6 +49,52 @@ it is usually preferable to print numbers in decimal. The binary-to-decimal
 conversion generally requires rounding, so a printout
 `[m \pm r]` will typically have a slightly larger *r*
 than the actual radius that is stored (see :func:`arb_get_str` for details).
+
+Quality of enclosures
+-------------------------------------------------------------------------------
+
+The main problem when working with ball arithmetic (or interval arithmetic)
+is *overestimation*. In general, the enclosure of a value or set
+of values as computed with ball arithmetic will be larger than the smallest
+possible enclosure.
+
+Overestimation results naturally from rounding errors and cancellations
+in the individual steps of a calculation.
+As a general principle, formula rewriting techniques that make
+floating-point code more numerically stable also make ball arithmetic code
+more numerically stable, in the sense of producing tighter enclosures.
+
+As a result of the *dependency problem*, ball or interval
+arithmetic can produce error
+bounds that are much larger than the actual numerical errors
+resulting from doing floating-point arithmetic.
+Consider the expression `(x + 1) - x` as an example.
+When evaluated in floating-point
+arithmetic, `x` may have a large initial error. However, that error will
+cancel itself out in the subtraction, so that the result equals 1
+(except perhaps for a small rounding error left from the operation `x + 1`).
+In ball arithmetic, dependent errors add up instead of cancelling out.
+If `x = [3 \pm 0.1]`, the result will be `[1 \pm 0.2]`, where
+the error bound has doubled.
+In unfavorable circumstances, error bounds can grow exponentially
+with the number of steps.
+
+If all inputs to a calculation are "point values", i.e.
+exact numbers and known mathematical constants that can
+be approximated arbitrarily closely (such as `\pi`), then an error
+of order `2^n` can typically be overcome by working with *n* extra bits of
+precision, increasing the computation time by an amount
+that is polynomial in *n*.
+In certain situations, however, overestimation leads to exponential
+slowdown or even failure of an algorithm to converge.
+For example, root-finding algorithms that refine the result iteratively
+may fail to converge in ball arithmetic, even if they do converge in plain
+floating-point arithmetic.
+
+Therefore, ball arithmetic is not a silver bullet: there will always
+be situations where some amount of numerical or mathematical analysis
+is required. Some experimentation may be required to find whether
+(and how) it can be used effectively for a given problem.
 
 Predicates
 -------------------------------------------------------------------------------
@@ -92,17 +143,41 @@ Instead, the following can be used:
 Likewise, we will write `x \le y` in mathematical notation with the meaning
 that `x \le y` holds for all `x \in X, y \in Y` where `X` and `Y` are balls.
 
-Note that that some predicates naturally act on the input *viewed as balls*,
-rather than being ball implementations of pointwise predicates.
+Note that some predicates such as :func:`arb_overlaps` and :func:`arb_contains`
+actually are predicates on balls viewed as sets, and not ball implementations
+of pointwise predicates.
+
+Some predicates are also complementary.
 For example :func:`arb_contains_zero` tests whether the input ball
-contains the point zero, and this is an exact test as such.
+contains the point zero.
+Negated, it is equivalent to :func:`arb_is_nonzero`,
+and complementary to :func:`arb_is_zero` as a pointwise predicate:
+
+.. code-block:: c
+
+    if (arb_is_zero(x))
+    {
+        ...  /* do things assuming that x = 0 */
+    }
+    #if 1
+    else if (arb_is_nonzero(x))
+    #else
+    else if (!arb_contains_zero(x))      /* equivalent */
+    #endif
+    {
+        ...  /* do things assuming that x != 0 */
+    }
+    else
+    {
+        ... /* do things assuming that the sign of x is unknown */
+    }
 
 A worked example: the sine function
 -------------------------------------------------------------------------------
 
 We implement the function `\sin(x)` naively using
 the Taylor series `\sum_{k=0}^{\infty} (-1)^k x^{2k+1} / (2k+1)!`
-and :type:`arb_t` arithmetic (see :ref:`arb`).
+and :type:`arb_t` arithmetic.
 Since there are infinitely many terms, we need to split the series
 in two parts: a finite sum that can be evaluated directly, and
 a tail that has to be bounded.
