@@ -26,45 +26,9 @@
 #include "fmpz_mat.h"
 #include "double_extras.h"
 #include "arb_mat.h"
-#include "fmpz_mat_extras.h"
+#include "bool_mat.h"
 
 #define LOG2_OVER_E 0.25499459743395350926
-
-int
-_arb_mat_is_diagonal(const arb_mat_t A)
-{
-    slong i, j;
-    for (i = 0; i < arb_mat_nrows(A); i++)
-        for (j = 0; j < arb_mat_ncols(A); j++)
-            if (i != j && !arb_is_zero(arb_mat_entry(A, i, j)))
-                return 0;
-    return 1;
-}
-
-void
-_arb_mat_exp_set_structure(arb_mat_t B, const fmpz_mat_t C)
-{
-    slong i, j, dim;
-
-    dim = arb_mat_nrows(B);
-    for (i = 0; i < dim; i++)
-    {
-        for (j = 0; j < dim; j++)
-        {
-            if (fmpz_is_zero(fmpz_mat_entry(C, i, j)))
-            {
-                if (i == j)
-                {
-                    arb_one(arb_mat_entry(B, i, j));
-                }
-                else
-                {
-                    arb_zero(arb_mat_entry(B, i, j));
-                }
-            }
-        }
-    }
-}
 
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
@@ -179,12 +143,26 @@ _arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
     }
 }
 
+static void
+_arb_mat_exp_diagonal(arb_mat_t B, const arb_mat_t A, slong prec)
+{
+    slong n, i;
+    n = arb_mat_nrows(A);
+    if (B != A)
+    {
+        arb_mat_zero(B);
+    }
+    for (i = 0; i < n; i++)
+    {
+        arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
+    }
+}
+
 void
 arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 {
-    slong i, j, dim, wp, N, q, r;
-    mag_t norm, err;
-    arb_mat_t T;
+    slong i, j, dim, nz;
+    bool_mat_t C;
 
     if (!arb_mat_is_square(A))
     {
@@ -203,44 +181,53 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         return;
     }
 
-    /* todo: generalize to (possibly permuted) block diagonal structure */
-    if (_arb_mat_is_diagonal(A))
+    nz = arb_mat_count_is_zero(A);
+
+    if (nz == dim * dim)
     {
-        if (B != A)
-        {
-            arb_mat_zero(B);
-        }
-        for (i = 0; i < dim; i++)
-        {
-            arb_exp(arb_mat_entry(B, i, i), arb_mat_entry(A, i, i), prec);
-        }
+        arb_mat_one(B);
         return;
     }
 
-    wp = prec + 3 * FLINT_BIT_COUNT(prec);
-
-    mag_init(norm);
-    mag_init(err);
-    arb_mat_init(T, dim, dim);
-
-    arb_mat_bound_inf_norm(norm, A);
-
-    if (mag_is_zero(norm))
+    if (nz == 0)
     {
-        arb_mat_one(B);
+        bool_mat_init(C, dim, dim);
+        bool_mat_complement(C, C);
     }
     else
     {
-        fmpz_mat_t S;
-        int using_structure;
-
-        using_structure = arb_mat_count_is_zero(A) > 0;
-        if (using_structure)
+        bool_mat_t S;
+        bool_mat_init(S, dim, dim);
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                bool_mat_set_entry(S, i, j, !arb_is_zero(arb_mat_entry(A, i, j)));
+        if (bool_mat_is_diagonal(S))
         {
-            fmpz_mat_init(S, dim, dim);
-            arb_mat_entrywise_not_is_zero(S, A);
-            fmpz_mat_transitive_closure(S, S);
+            _arb_mat_exp_diagonal(B, A, prec);
+            bool_mat_clear(S);
+            return;
         }
+        else
+        {
+            bool_mat_init(C, dim, dim);
+            bool_mat_transitive_closure(C, S);
+            bool_mat_clear(S);
+        }
+    }
+
+    /* evaluate using scaling and squaring of truncated taylor series */
+    {
+        slong wp, N, q, r;
+        mag_t norm, err;
+        arb_mat_t T;
+
+        wp = prec + 3 * FLINT_BIT_COUNT(prec);
+
+        mag_init(norm);
+        mag_init(err);
+        arb_mat_init(T, dim, dim);
+
+        arb_mat_bound_inf_norm(norm, A);
 
         q = pow(wp, 0.25);  /* wanted magnitude */
 
@@ -261,13 +248,8 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
-                arb_add_error_mag(arb_mat_entry(B, i, j), err);
-
-        if (using_structure)
-        {
-            _arb_mat_exp_set_structure(B, S);
-            fmpz_mat_clear(S);
-        }
+                if (bool_mat_get_entry(C, i, j))
+                    arb_add_error_mag(arb_mat_entry(B, i, j), err);
 
         for (i = 0; i < r; i++)
         {
@@ -279,10 +261,11 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
             for (j = 0; j < dim; j++)
                 arb_set_round(arb_mat_entry(B, i, j),
                     arb_mat_entry(B, i, j), prec);
+
+        mag_clear(norm);
+        mag_clear(err);
+        arb_mat_clear(T);
     }
 
-    mag_clear(norm);
-    mag_clear(err);
-    arb_mat_clear(T);
+    bool_mat_clear(C);
 }
-
