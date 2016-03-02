@@ -38,44 +38,48 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         slong m, n;
-        bool_mat_t a, b, c;
+        bool_mat_t a, b;
 
         m = n_randint(state, 10);
         n = n_randint(state, 10);
 
         bool_mat_init(a, m, n);
         bool_mat_init(b, n, m);
-        bool_mat_init(c, m, n);
 
         bool_mat_randtest(a, state);
         bool_mat_randtest(b, state);
-        bool_mat_randtest(c, state);
 
         bool_mat_transpose(b, a);
-        bool_mat_transpose(c, b);
 
-        if (!bool_mat_equal(c, a))
+        /* involution */
         {
-            flint_printf("FAIL\n\n");
-            flint_printf("m = %wd, n = %wd\n", m, n);
-            abort();
+            bool_mat_t c;
+            bool_mat_init(c, m, n);
+            bool_mat_randtest(c, state);
+            bool_mat_transpose(c, b);
+            if (!bool_mat_equal(c, a))
+            {
+                flint_printf("FAIL (involution)\n");
+                flint_printf("m = %wd, n = %wd\n", m, n);
+                abort();
+            }
+            bool_mat_clear(c);
         }
 
-        if (bool_mat_nrows(a) == bool_mat_ncols(a))
+        /* aliasing */
+        if (bool_mat_is_square(a))
         {
-            bool_mat_transpose(c, a);
             bool_mat_transpose(a, a);
 
-            if (!bool_mat_equal(a, c))
+            if (!bool_mat_equal(a, b))
             {
-                flint_printf("FAIL (aliasing)\n\n");
+                flint_printf("FAIL (aliasing)\n");
                 abort();
             }
         }
 
         bool_mat_clear(a);
         bool_mat_clear(b);
-        bool_mat_clear(c);
     }
 
     flint_randclear(state);

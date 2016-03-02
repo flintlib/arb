@@ -53,8 +53,12 @@ bool_mat_transitive_closure(bool_mat_t dest, const bool_mat_t src)
         {
             for (j = 0; j < dim; j++)
             {
-                *bool_mat_entry(dest, i, j) |= (*bool_mat_entry(dest, i, k) &
-                                                *bool_mat_entry(dest, k, j));
+                if (!bool_mat_get_entry(dest, i, j))
+                {
+                    bool_mat_set_entry(dest, i, j, (
+                                bool_mat_get_entry(dest, i, k) &
+                                bool_mat_get_entry(dest, k, j)));
+                }
             }
         }
     }

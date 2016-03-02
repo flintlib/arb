@@ -35,7 +35,7 @@ bool_mat_is_lower_triangular(const bool_mat_t mat)
 
     for (j = 0; j < bool_mat_ncols(mat); j++)
         for (i = 0; i < bool_mat_nrows(mat) && i < j; i++)
-            if (*bool_mat_entry(mat, i, j))
+            if (bool_mat_get_entry(mat, i, j))
                 return 0;
 
     return 1;

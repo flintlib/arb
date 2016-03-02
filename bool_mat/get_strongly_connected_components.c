@@ -166,7 +166,7 @@ _tarjan_strongconnect(slong *sccs, _tarjan_t t, const bool_mat_t A, slong v)
     _tarjan_push(t, v);
     for (w = 0; w < t->dim; w++)
     {
-        if (*bool_mat_entry(A, v, w))
+        if (bool_mat_get_entry(A, v, w))
         {
             if (*_tarjan_index(t, w) == _tarjan_UNDEFINED)
             {

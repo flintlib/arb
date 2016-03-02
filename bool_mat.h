@@ -51,14 +51,19 @@ bool_mat_struct;
 
 typedef bool_mat_struct bool_mat_t[1];
 
-#define bool_mat_entry(mat,i,j) ((mat)->rows[(i)] + (j))
 #define bool_mat_nrows(mat) ((mat)->r)
 #define bool_mat_ncols(mat) ((mat)->c)
 
-BOOL_MAT_INLINE int *
-bool_mat_entry_ptr(bool_mat_t mat, slong i, slong j)
+BOOL_MAT_INLINE int
+bool_mat_get_entry(const bool_mat_t mat, slong i, slong j)
 {
-    return bool_mat_entry(mat, i, j);
+    return mat->rows[i][j];
+}
+
+BOOL_MAT_INLINE void
+bool_mat_set_entry(bool_mat_t mat, slong i, slong j, int value)
+{
+    mat->rows[i][j] = value;
 }
 
 /* Memory management */

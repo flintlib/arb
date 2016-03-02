@@ -84,21 +84,38 @@ int main()
     for (iter = 0; iter < 10000; iter++)
     {
         slong m, n;
-        bool_mat_t A, C;
+        bool_mat_t A, C, CC;
 
         m = n_randint(state, 10) + 1;
         n = n_randint(state, 10) + 1;
 
         bool_mat_init(A, m, n);
         bool_mat_init(C, m, n);
+        bool_mat_init(CC, m, n);
 
         bool_mat_randtest(A, state);
         bool_mat_complement(C, A);
+        bool_mat_complement(CC, C);
 
         if ((bool_mat_all(A) && bool_mat_any(C)) ||
             (bool_mat_all(C) && bool_mat_any(A)))
         {
             flint_printf("FAIL\n");
+            abort();
+        }
+
+        /* involution */
+        if (!bool_mat_equal(A, CC))
+        {
+            flint_printf("FAIL (involution)\n");
+            abort();
+        }
+
+        /* aliasing */
+        bool_mat_complement(A, A);
+        if (!bool_mat_equal(A, C))
+        {
+            flint_printf("FAIL (aliasing)\n");
             abort();
         }
 

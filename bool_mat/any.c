@@ -35,7 +35,7 @@ bool_mat_any(const bool_mat_t mat)
 
     for (i = 0; i < bool_mat_nrows(mat); i++)
         for (j = 0; j < bool_mat_ncols(mat); j++)
-            if (*bool_mat_entry(mat, i, j))
+            if (bool_mat_get_entry(mat, i, j))
                 return 1;
 
     return 0;

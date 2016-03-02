@@ -35,5 +35,5 @@ bool_mat_set(bool_mat_t dest, const bool_mat_t src)
 
     for (i = 0; i < bool_mat_nrows(src); i++)
         for (j = 0; j < bool_mat_ncols(src); j++)
-            *bool_mat_entry(dest, i, j) = *bool_mat_entry(src, i, j);
+            bool_mat_set_entry(dest, i, j, bool_mat_get_entry(src, i, j));
 }

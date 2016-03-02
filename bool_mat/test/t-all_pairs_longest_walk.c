@@ -66,7 +66,8 @@ _bool_mat_permute(bool_mat_t B, const bool_mat_t A, const slong *perm)
     {
         for (j = 0; j < n; j++)
         {
-            *bool_mat_entry(B, perm[i], perm[j]) = *bool_mat_entry(A, i, j);
+            bool_mat_set_entry(
+                    B, perm[i], perm[j], bool_mat_get_entry(A, i, j));
         }
     }
 }
@@ -110,7 +111,7 @@ _brute_force_all_pairs_longest_walk(fmpz_mat_t B, const bool_mat_t A)
             {
                 for (j = 0; j < n; j++)
                 {
-                    if (*bool_mat_entry(T, i, j))
+                    if (bool_mat_get_entry(T, i, j))
                     {
                         fmpz_set_si(fmpz_mat_entry(B, i, j), k);
                     }
@@ -209,7 +210,7 @@ int main()
                 for (j = 0; j < m; j++)
                 {
                     slong x = fmpz_get_si(fmpz_mat_entry(B, i, j));
-                    *bool_mat_entry(V, i, j) = (x != -1 && x != 0);
+                    bool_mat_set_entry(V, i, j, (x != -1 && x != 0));
                 }
             }
 

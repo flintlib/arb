@@ -37,7 +37,8 @@ _bool_mat_permute(bool_mat_t B, const bool_mat_t A, const slong *perm)
     {
         for (j = 0; j < n; j++)
         {
-            *bool_mat_entry(B, perm[i], perm[j]) = *bool_mat_entry(A, i, j);
+            bool_mat_set_entry(
+                    B, perm[i], perm[j], bool_mat_get_entry(A, i, j));
         }
     }
 }

@@ -68,7 +68,7 @@ _toposort_visit(_toposort_s *s, const bool_mat_t A, slong n)
         slong m;
         s->u[n] = 1;
         for (m = 0; m < s->size; m++)
-            if (*bool_mat_entry(A, n, m))
+            if (bool_mat_get_entry(A, n, m))
                 if (_toposort_visit(s, A, m))
                     return 1;
         s->v[n] = 1;
@@ -96,7 +96,7 @@ bool_mat_nilpotency_degree(const bool_mat_t A)
 
     if (n == 1)
     {
-        return *bool_mat_entry(A, 0, 0) ? -1 : 1;
+        return bool_mat_get_entry(A, 0, 0) ? -1 : 1;
     }
     else
     {
@@ -138,7 +138,7 @@ bool_mat_nilpotency_degree(const bool_mat_t A)
                 }
                 for (z = 0; z < n; z++)
                 {
-                    if (*bool_mat_entry(A, y, z))
+                    if (bool_mat_get_entry(A, y, z))
                     {
                         fmpz_set_si(fmpz_mat_entry(E, y, z), max_in + 1);
                         max_overall = FLINT_MAX(max_overall, max_in + 1);

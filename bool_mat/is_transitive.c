@@ -44,9 +44,9 @@ bool_mat_is_transitive(const bool_mat_t mat)
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
             for (k = 0; k < n; k++)
-                if (*bool_mat_entry(mat, i, j) &&
-                    *bool_mat_entry(mat, j, k) &&
-                    !*bool_mat_entry(mat, i, k))
+                if (bool_mat_get_entry(mat, i, j) &&
+                    bool_mat_get_entry(mat, j, k) &&
+                    !bool_mat_get_entry(mat, i, k))
                 {
                     return 0;
                 }

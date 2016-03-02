@@ -36,8 +36,11 @@ bool_mat_equal(const bool_mat_t mat1, const bool_mat_t mat2)
 
     for (i = 0; i < bool_mat_nrows(mat1); i++)
         for (j = 0; j < bool_mat_ncols(mat1); j++)
-            if (*bool_mat_entry(mat1, i, j) != *bool_mat_entry(mat2, i, j))
+            if (bool_mat_get_entry(mat1, i, j) !=
+                bool_mat_get_entry(mat2, i, j))
+            {
                 return 0;
+            }
 
     return 1;
 }

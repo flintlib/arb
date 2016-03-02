@@ -41,8 +41,8 @@ bool_mat_mul_entrywise(bool_mat_t C, const bool_mat_t A, const bool_mat_t B)
     {
         for (j = 0; j < bool_mat_ncols(A); j++)
         {
-            *bool_mat_entry(C, i, j) = (*bool_mat_entry(A, i, j) &
-                                        *bool_mat_entry(B, i, j));
+            bool_mat_set_entry(C, i, j, (bool_mat_get_entry(A, i, j) &
+                                         bool_mat_get_entry(B, i, j)));
         }
     }
 }
