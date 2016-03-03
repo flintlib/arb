@@ -12,11 +12,11 @@ Ball semantics
 -------------------------------------------------------------------------------
 
 Let `f : A \to B` be a function.
-A ball implementation of `f` is a function `F` that maps subsets of `A`
-to subsets of `B` subject to the following rule:
+A ball implementation of `f` is a function `F` that maps sets `X \subseteq A`
+to sets `F(X) \subseteq B` subject to the following rule:
 
-    For all `x \in X \subseteq A`,
-    we have `f(x) \in F(X) \subseteq B`.
+    For all `x \in X`,
+    we have `f(x) \in F(X)`.
 
 In other words, `F(X)` is an *enclosure* for the set `\{f(x) : x \in X\}`.
 This rule is sometimes called the *inclusion principle*.
@@ -40,9 +40,9 @@ floating-point number),
 we can always round *m* to a nearby floating-point number that has at most
 most *prec* bits in the component *u*,
 and add an upper bound for the rounding error to *r*.
-In Arb, ball functions that take a *prec* argument as input always
-round their output to *prec* bits.
-Some functions are always exact, and thus do not take a *prec* argument.
+In Arb, ball functions that take a *prec* argument as input
+(e.g. :func:`arb_add`) always round their output to *prec* bits.
+Some functions are always exact (e.g. :func:`arb_neg`), and thus do not take a *prec* argument.
 
 While the internal representation uses binary floating-point numbers,
 it is usually preferable to print numbers in decimal. The binary-to-decimal
@@ -338,20 +338,155 @@ though this would not constitute a mathematical proof that
 More on precision and accuracy
 -------------------------------------------------------------------------------
 
-Basic operations on balls such addition and multiplication only
-involve a single floating-point operation on the midpoint.
-The effect of the *prec* argument is then obvious.
-More complicated functions are computed by performing a long sequence
-of arithmetic operations, each of which requires a rounding
-and also propagates the error accumulated from previous operations.
+The relation between the working precision and the accuracy of the output
+is not always easy predict. The following remarks might help
+to choose *prec* optimally.
 
-The *prec* argument essentially controls the internal working precision
-for each step. A higher higher or lower precision might be used internally
-in order to try to achieve an accuracy of *prec* bits.
-To complicate things further, many algorithms require
-approximation steps (such as truncation of infinite series)
-that depend on the precision in a more subtle way.
-As a result, the relation between *prec* and the accuracy of
-the output is not always easy to predict.
+For a ball `[m \pm r]` it is convenient to define the following notions:
 
-(To be expanded.)
+* Absolute error: `e_{abs} = |r|`
+* Relative error: `e_{rel} = |r| / \max(0, |m| - |r|)` (or `e_{rel} = 0` if `r = m = 0`)
+* Absolute accuracy: `a_{abs} = 1 / e_{abs}`
+* Relative accuracy: `a_{rel} = 1 / e_{rel}`
+
+Expressed in bits, one takes the corresponding `\log_2` values.
+
+Of course, if `x` is the exact value being approximated, then
+the "absolute error" so defined is an upper bound for the
+actual absolute error `|x-m|` and "absolute accuracy"
+a lower bound for `1/|x-m|`, etc.
+
+The *prec* argument in Arb should be thought of as controlling
+the working precision.
+Generically, when evaluating a fixed expression (that is, when the
+sequence of operations does not depend on the precision), the
+absolute or relative error will be bounded by
+
+.. math ::
+
+    2^{O(1) - prec}
+
+where the `O(1)` term depends on the expression and implementation
+details of the ball functions used to evaluate it.
+Accordingly, for an accuracy of *p* bits, we need to use a working precision
+`O(1) + p`.
+If the expression is numerically well-behaved, then the `O(1)` term
+will be small, which leads to the heuristic of "adding a few guard bits"
+(for most basic calculations, 10 or 20 guard bits is enough).
+If the `O(1)` term is unknown, then increasing the number of guard
+bits in exponential steps until the result is accurate enough
+is generally a good heuristic.
+
+Sometimes, a partially accurate result can be used to estimate the `O(1)`
+term. For example, if the goal is to achieve 100 bits of accuracy
+and a precision of 120 bits yields 80 bits of accuracy, then
+it is plausible that a precision of just over
+140 bits yields 100 bits of accuracy.
+
+Built-in functions in Arb can roughly be characterized as
+belonging to one of two extremes (though there is actually a spectrum):
+
+* Simple operations, including basic arithmetic operations and many
+  elementary functions. In most cases, for an input `x = [m \pm r]`,
+  `f(x)` is evaluated by computing `f(m)` and then separately bounding the
+  *propagated error* `|f(m) - f(m + \varepsilon)|, |\varepsilon| \le r`.
+  The working precision is automatically increased internally
+  so that `f(m)` is computed to *prec* bits of relative accuracy
+  with an error of at most a few units in the last place (perhaps with
+  rare exceptions).
+  The propagated error can generally be bounded quite tightly as well (see :ref:`general_formulas`).
+  As a result, the enclosure will be close to the best possible
+  at the given precision.
+
+* Complex operations, such as certain higher
+  transcendental functions (for example, the Riemann zeta function).
+  The function is evaluated by performing a sequence of simpler operations,
+  each using ball arithmetic with a working precision of roughly *prec*
+  bits. The sequence of operations might depend on *prec*;
+  for example, an infinite series might be truncated
+  so that the remainder is smaller than `2^{-prec}`.
+  The final result can be far from tight, and it is not guaranteed
+  that the error converges to zero as `prec \to \infty`, though
+  in practice, it should do so in most cases.
+
+In short, the *inclusion principle* is the fundamental contract in Arb.
+Enclosures computed by built-in functions may or may not be tight
+enough to be useful, but the hope is that they will be sufficient
+for most purposes.
+Tightening the error bounds for more complex operations is a long
+term optimization goal, which in many cases will require a
+fair amount of research.
+A tradeoff also has to be made for efficiency: tighter error bounds
+allow the user to work with a lower precision, but they may
+also be much more expensive to compute.
+
+Polynomial time guarantee
+-------------------------------------------------------------------------------
+
+Arb provides a soft guarantee that the time used to evaluate a ball
+function will depend polynomially on *prec* and the bit size
+of the input, uniformly regardless of the numerical value of the input.
+
+The idea behind this soft guarantee is to allow Arb to be used as a
+black box to evaluate expressions numerically without potentially
+slowing down, hanging indefinitely or crashing
+because of "bad" input such as nested exponentials.
+The user can force an accurate result by setting
+the precision high enough, or cancel
+a computation before it uses up
+an unreasonable amount of resources
+without having to rely on other timeout or exception mechanisms.
+
+As motivation, consider evaluating `\sin(x)` or `\exp(x)` with
+the exact floating-point number
+`x = 2^{2^n}` as input.
+The time and space required to compute an accurate floating-point
+approximation of `\sin(x)` or `\exp(x)` increases as `2^n`,
+in the first case because because of the need to subtract an accurate
+multiple of `2\pi` and in the second case due to the size of the
+output exponent and the internal subtraction of an accurate multiple of `\log(2)`.
+This is despite the fact that size of `x` as an object in memory only
+increases linearly with `n`.
+Already `n = 33` would require at least 1 GB of memory, and
+`n = 100` would be physically impossible to process.
+For functions that are computed by direct use of power series expansions,
+e.g. `f(x) = \sum_{k=0}^{\infty} c_k x^k`,
+without having fast argument-reduction techniques
+like those for elementary functions,
+the time would be exponential in `n` already when `x = 2^n`.
+
+Therefore, Arb caps internal work parameters
+(the internal working precision,
+the number terms of an infinite series to add, etc.) by polynomial,
+usually linear, functions of *prec*.
+When the limit is exceeded, the output is set to a crude bound.
+For example, if `x` is too large, :func:`arb_sin` will
+simply return `[\pm 1]`, and :func:`arb_exp`
+will simply return `[\pm \infty]` if `x` is positive
+or `[\pm 2^{-m}]` if `x` is negative.
+
+This is not just a failsafe, but occasionally a useful optimization.
+It is not entirely uncommon to have formulas where one term
+is modest and another term decreases exponentially, such as:
+
+.. math ::
+
+    \log(x) + \sin(x) \exp(-x).
+
+For example, the reflection formula of the digamma function has
+a similar structure.
+When `x` is large, the right term would be expensive to compute
+to high relative accuracy. Doing so is unnecessary, however,
+since a crude bound of `[\pm 1] \cdot [\pm 2^{-m}]` is enough to evaluate
+the expression as a whole accurately.
+
+The polynomial time guarantee is "soft" in that there are a few exceptions.
+For example, the complexity of computing the Riemann zeta function
+`\zeta(\sigma+it)` increases linearly with the imaginary height `|t|`
+in the current implementation, and all known algorithms
+have a complexity of `|t|^{\alpha}` where the best known value for `\alpha`
+is about `0.3`.
+Input with large `|t|` is most likely to be given deliberately
+by users with the explicit intent of evaluationg the zeta
+function itself, so the evaluation is not cut off automatically.
+
