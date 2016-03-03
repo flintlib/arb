@@ -44,11 +44,81 @@ In Arb, ball functions that take a *prec* argument as input
 (e.g. :func:`arb_add`) always round their output to *prec* bits.
 Some functions are always exact (e.g. :func:`arb_neg`), and thus do not take a *prec* argument.
 
+The programming interface resembles that of GMP.
+Each :type:`arb_t` variable must be initialized with :func:`arb_init` before use
+(this also sets its value to zero), and deallocated with :func:`arb_clear`
+after use. Variables have pass-by-reference semantics.
+In the list of arguments to a function, output variables come first,
+followed by input variables, and finally the precision:
+
+.. code-block:: c
+
+    #include "arb.h"
+
+    int main()
+    {
+        arb_t x, y;
+        arb_init(x); arb_init(y);
+        arb_set_ui(x, 3);       /* x = 3 */
+        arb_const_pi(y, 128);   /* y = pi, to 128 bits */
+        arb_sub(y, y, x, 53);   /* y = y - x, to 53 bits */
+        arb_clear(x); arb_clear(y);
+    }
+
+Binary and decimal
+-------------------------------------------------------------------------------
+
 While the internal representation uses binary floating-point numbers,
 it is usually preferable to print numbers in decimal. The binary-to-decimal
-conversion generally requires rounding, so a printout
-`[m \pm r]` will typically have a slightly larger *r*
-than the actual radius that is stored (see :func:`arb_get_str` for details).
+conversion generally requires rounding. Three different methods
+are available for printing a number to standard output:
+
+* :func:`arb_print` shows the exact internal representation of a ball, with binary exponents.
+* :func:`arb_printd` shows an inexact view of the internal representation, approximated by decimal floating-point numbers.
+* :func:`arb_printn` shows a *decimal ball* that is guaranteed to be an enclosure of the binary
+  floating-point ball. By default, it only prints digits in the midpoint that are certain to
+  be correct, up to an error of at most one unit in the last place.
+  Converting from binary to decimal is generally inexact, and the output of this
+  method takes this rounding into account when printing the radius.
+
+This snippet computes a 53-bit enclosure of `\pi` and prints it
+in three ways:
+
+.. code-block:: c
+
+    arb_const_pi(x, 53);
+    arb_print(x); printf("\n");
+    arb_printd(x, 20); printf("\n");
+    arb_printn(x, 20, 0); printf("\n");
+
+The output is:
+
+.. code-block:: text
+
+    (884279719003555 * 2^-48) +/- (536870913 * 2^-80)
+    3.141592653589793116 +/- 4.4409e-16
+    [3.141592653589793 +/- 5.61e-16]
+
+The :func:`arb_get_str` and :func:`arb_set_str` methods are useful for
+converting rigorously between decimal strings and binary balls
+(:func:`arb_get_str` produces the same string as :func:`arb_printn`,
+and :func:`arb_set_str` can parse such strings back).
+
+A potential mistake is to create a ball from a ``double`` constant
+such as ``2.3``, when this actually represents
+``2.29999999999999982236431605997495353221893310546875``.
+To produce a ball containing the rational number
+`23/10`, one of the following can be used:
+
+.. code-block:: c
+
+    arb_set_str(x, "2.3", prec)
+
+    arb_set_ui(x, 23);
+    arb_div_ui(x, x, 10, prec)
+
+    fmpq_set_si(q, 23, 10);   /* q is a FLINT fmpq_t */
+    arb_set_fmpq(x, q, prec);
 
 Quality of enclosures
 -------------------------------------------------------------------------------
@@ -262,7 +332,9 @@ or negative.
         arb_clear(x); arb_clear(y);
     }
 
-The program produces the following output::
+The program produces the following output:
+
+.. code-block:: text
 
     Using    64 bits, sin(x) = [+/- 2.67e+859]
     Using   128 bits, sin(x) = [+/- 1.30e+840]
@@ -307,7 +379,9 @@ may fail to terminate (alternatively, instead of actually looping forever,
 it might signal failure after a certain number of iterations).
 
 The loop will fail to terminate if we attempt to determine the sign of
-`\sin(\pi)`::
+`\sin(\pi)`:
+
+.. code-block:: text
 
     Using    64 bits, sin(x) = [+/- 3.96e-18]
     Using   128 bits, sin(x) = [+/- 2.17e-37]
@@ -396,7 +470,8 @@ belonging to one of two extremes (though there is actually a spectrum):
   rare exceptions).
   The propagated error can generally be bounded quite tightly as well (see :ref:`general_formulas`).
   As a result, the enclosure will be close to the best possible
-  at the given precision.
+  at the given precision, and the user can estimate the precision to use
+  accordingly.
 
 * Complex operations, such as certain higher
   transcendental functions (for example, the Riemann zeta function).
@@ -431,11 +506,12 @@ The idea behind this soft guarantee is to allow Arb to be used as a
 black box to evaluate expressions numerically without potentially
 slowing down, hanging indefinitely or crashing
 because of "bad" input such as nested exponentials.
-The user can force an accurate result by setting
-the precision high enough, or cancel
+By controlling the precision, the user can cancel
 a computation before it uses up
-an unreasonable amount of resources
+an unreasonable amount of resources,
 without having to rely on other timeout or exception mechanisms.
+A result that is feasible but very expensive to compute
+can still be forced by setting the precision high enough.
 
 As motivation, consider evaluating `\sin(x)` or `\exp(x)` with
 the exact floating-point number
@@ -445,7 +521,7 @@ approximation of `\sin(x)` or `\exp(x)` increases as `2^n`,
 in the first case because because of the need to subtract an accurate
 multiple of `2\pi` and in the second case due to the size of the
 output exponent and the internal subtraction of an accurate multiple of `\log(2)`.
-This is despite the fact that size of `x` as an object in memory only
+This is despite the fact that the size of `x` as an object in memory only
 increases linearly with `n`.
 Already `n = 33` would require at least 1 GB of memory, and
 `n = 100` would be physically impossible to process.
@@ -487,6 +563,6 @@ in the current implementation, and all known algorithms
 have a complexity of `|t|^{\alpha}` where the best known value for `\alpha`
 is about `0.3`.
 Input with large `|t|` is most likely to be given deliberately
-by users with the explicit intent of evaluationg the zeta
+by users with the explicit intent of evaluating the zeta
 function itself, so the evaluation is not cut off automatically.
 
