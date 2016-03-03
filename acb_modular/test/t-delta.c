@@ -25,8 +25,6 @@
 
 #include "acb_modular.h"
 
-#include "profiler.h"
-
 int main()
 {
     slong iter;

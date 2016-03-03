@@ -4,7 +4,7 @@
 #include "acb.h"
 #include "acb_hypgeom.h"
 #include "acb_modular.h"
-#include "profiler.h"
+#include "flint/profiler.h"
 
 /* HLS algorithm from python's colorsys module */
 static double

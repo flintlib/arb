@@ -26,11 +26,9 @@
 #include "arb.h"
 #include "arb_poly.h"
 
-
-
 /* include minpoly code here until it appears in a flint release */
-#include "fmpz_poly.h"
-#include "ulong_extras.h"
+#include "flint/fmpz_poly.h"
+#include "flint/ulong_extras.h"
 
 /* Use a lookup table for small n. We skip 53, 59 and 61, as the
    coefficients do not fit in 16 bits. */

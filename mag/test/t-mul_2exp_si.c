@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "mag.h"
-#include "long_extras.h"
+#include "flint/long_extras.h"
 
 int main()
 {

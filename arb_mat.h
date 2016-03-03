@@ -33,10 +33,10 @@
 #endif
 
 #include <stdio.h>
+#include "flint/fmpz_mat.h"
+#include "flint/fmpq_mat.h"
+#include "flint/perm.h"
 #include "arb.h"
-#include "fmpz_mat.h"
-#include "fmpq_mat.h"
-#include "perm.h"
 #include "arb_poly.h"
 
 #ifdef __cplusplus

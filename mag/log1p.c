@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/double_extras.h"
 #include "mag.h"
-#include "double_extras.h"
 
 void
 mag_log1p(mag_t z, const mag_t x)

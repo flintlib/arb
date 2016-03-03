@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "fmpz_mat_extras.h"
-#include "perm.h"
+#include "flint/perm.h"
 
 /* transitive closure can only turn zeros into ones */
 int

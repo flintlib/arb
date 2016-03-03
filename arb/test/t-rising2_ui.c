@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "arith.h"
+#include "flint/arith.h"
 #include "arb_poly.h"
 
 int main()

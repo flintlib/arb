@@ -33,12 +33,12 @@
 #include <limits.h>
 #include <gmp.h>
 #include <mpfr.h>
-#include "flint.h"
-#include "fmpz.h"
-#include "fmpq.h"
+#include "flint/flint.h"
+#include "flint/fmpz.h"
+#include "flint/fmpq.h"
+#include "flint/config.h"
 #include "fmpz_extras.h"
 
-#include "config.h"
 #ifdef HAVE_TLS
 #if HAVE_TLS
 #define TLS_PREFIX __thread

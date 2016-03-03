@@ -34,8 +34,8 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "flint.h"
-#include "fmpz.h"
+#include "flint/flint.h"
+#include "flint/fmpz.h"
 #include "fmpz_extras.h"
 
 #ifdef __cplusplus

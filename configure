@@ -263,8 +263,15 @@ else
 fi
 
 if [ -d "${FLINT_INC_DIR}/flint" ]; then
-   FLINT_INC_DIR="${FLINT_INC_DIR}/flint"
+   FLINT_INC_DIR="${FLINT_INC_DIR}"
+elif [ -f "${FLINT_INC_DIR}/flint.h" ]; then
+   mkdir -p build/include
+   ln -sf ${FLINT_INC_DIR} build/include/flint
+   FLINT_INC_DIR="${PWD}/build/include"
 fi
+
+echo "FLINT_LIB_DIR set to ${FLINT_LIB_DIR}"
+echo "FLINT_INC_DIR set to ${FLINT_INC_DIR}"
 
 LIB_DIRS="${LIB_DIRS} ${FLINT_LIB_DIR}"
 INC_DIRS="${INC_DIRS} ${FLINT_INC_DIR}"

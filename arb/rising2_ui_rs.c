@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpz_poly.h"
+#include "flint/fmpz_poly.h"
 #include "arb.h"
 
 void

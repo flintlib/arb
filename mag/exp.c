@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/double_extras.h"
 #include "mag.h"
-#include "double_extras.h"
 
 static const double inverse_factorials[] = {
     1.0,

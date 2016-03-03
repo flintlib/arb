@@ -23,8 +23,7 @@
 
 ******************************************************************************/
 
-#include "fmpz_mat.h"
-#include "double_extras.h"
+#include "flint/double_extras.h"
 #include "arb_mat.h"
 #include "bool_mat.h"
 

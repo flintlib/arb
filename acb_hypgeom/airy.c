@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/double_extras.h"
 #include "acb_hypgeom.h"
-#include "double_extras.h"
 
 #define LOG2 0.69314718055994530942
 #define EXP1 2.7182818284590452354

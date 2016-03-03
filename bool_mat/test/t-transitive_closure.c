@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "bool_mat.h"
-#include "perm.h"
+#include "flint/perm.h"
 
 /* permute rows and columns of a square matrix */
 void

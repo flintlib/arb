@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/mpn_extras.h"
 #include "arb.h"
-#include "mpn_extras.h"
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))

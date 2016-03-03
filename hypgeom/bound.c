@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include <math.h>
-#include "double_extras.h"
+#include "flint/double_extras.h"
 #include "hypgeom.h"
 
 slong

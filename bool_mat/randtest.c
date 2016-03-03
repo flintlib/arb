@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/perm.h"
 #include "bool_mat.h"
-#include "perm.h"
 
 void
 bool_mat_randtest(bool_mat_t mat, flint_rand_t state)

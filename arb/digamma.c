@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/arith.h"
 #include "arb.h"
-#include "arith.h"
 
 void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const arb_t x, int use_reflect, int digamma, slong prec);

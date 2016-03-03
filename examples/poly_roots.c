@@ -3,8 +3,8 @@
 #include <string.h>
 #include "acb.h"
 #include "acb_poly.h"
-#include "arith.h"
-#include "profiler.h"
+#include "flint/arith.h"
+#include "flint/profiler.h"
 
 int check_accuracy(acb_ptr vec, slong len, slong prec)
 {

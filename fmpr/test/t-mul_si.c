@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/long_extras.h"
 #include "fmpr.h"
-#include "long_extras.h"
 
 static slong
 fmpr_mul_si_naive(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd)

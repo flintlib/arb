@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/fmpz_mat.h"
 #include "bool_mat.h"
-#include "fmpz_mat.h"
 
 /*
  * Postorder traversal of a DAG follows

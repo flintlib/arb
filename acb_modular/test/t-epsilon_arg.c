@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "acb_modular.h"
-#include "arith.h"
+#include "flint/arith.h"
 
 static void
 acb_modular_epsilon_arg_naive(fmpq_t arg, const psl2z_t g)

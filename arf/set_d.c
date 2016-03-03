@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/double_extras.h"
 #include "arf.h"
-#include "double_extras.h"
 
 void
 arf_set_d(arf_t x, double v)

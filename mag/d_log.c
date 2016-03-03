@@ -23,8 +23,8 @@
 
 ******************************************************************************/
 
+#include "flint/double_extras.h"
 #include "mag.h"
-#include "double_extras.h"
 
 /*
 This is a bad implementation the logarithm function,

@@ -26,8 +26,8 @@
 #ifndef FMPZ_MAT_EXTRAS_H
 #define FMPZ_MAT_EXTRAS_H
 
-#include "flint.h"
-#include "fmpz_mat.h"
+#include "flint/flint.h"
+#include "flint/fmpz_mat.h"
 
 #ifdef __cplusplus
 extern "C" {

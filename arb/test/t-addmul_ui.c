@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 #include "arb.h"
-#include "ulong_extras.h"
+#include "flint/ulong_extras.h"
 
 int main()
 {
