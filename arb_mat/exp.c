@@ -162,6 +162,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 {
     slong i, j, dim, nz;
     bool_mat_t C;
+    slong nildegree;
 
     if (!arb_mat_is_square(A))
     {
@@ -190,6 +191,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
     if (nz == 0)
     {
+        nildegree = -1;
         bool_mat_init(C, dim, dim);
         bool_mat_complement(C, C);
     }
@@ -208,6 +210,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         }
         else
         {
+            nildegree = bool_mat_nilpotency_degree(S);
             bool_mat_init(C, dim, dim);
             bool_mat_transitive_closure(C, S);
             bool_mat_clear(S);
@@ -241,14 +244,20 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
         mag_mul_2exp_si(norm, norm, -r);
 
         N = _arb_mat_exp_choose_N(norm, wp);
+
+        /* if positive, nildegree is an upper bound on nilpotency degree */
+        if (nildegree > 0)
+            N = FLINT_MIN(N, nildegree);
+
         mag_exp_tail(err, norm, N);
 
         _arb_mat_exp_taylor(B, T, N, wp);
 
-        for (i = 0; i < dim; i++)
-            for (j = 0; j < dim; j++)
-                if (bool_mat_get_entry(C, i, j))
-                    arb_add_error_mag(arb_mat_entry(B, i, j), err);
+        if (nildegree <= 0 || N < nildegree)
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    if (bool_mat_get_entry(C, i, j))
+                        arb_add_error_mag(arb_mat_entry(B, i, j), err);
 
         for (i = 0; i < r; i++)
         {

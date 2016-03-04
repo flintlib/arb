@@ -148,6 +148,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 {
     slong i, j, dim, nz;
     bool_mat_t C;
+    slong nildegree;
 
     if (!acb_mat_is_square(A))
     {
@@ -166,6 +167,20 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         return;
     }
 
+    if (acb_mat_is_real(A))
+    {
+        arb_mat_t R;
+        arb_mat_init(R, dim, dim);
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                arb_set(arb_mat_entry(R, i, j),
+                        acb_realref(acb_mat_entry(A, i, j)));
+        arb_mat_exp(R, R, prec);
+        acb_mat_set_arb_mat(B, R);
+        arb_mat_clear(R);
+        return;
+    }
+
     nz = _acb_mat_count_is_zero(A);
 
     if (nz == dim * dim)
@@ -176,6 +191,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 
     if (nz == 0)
     {
+        nildegree = -1;
         bool_mat_init(C, dim, dim);
         bool_mat_complement(C, C);
     }
@@ -194,6 +210,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         }
         else
         {
+            nildegree = bool_mat_nilpotency_degree(S);
             bool_mat_init(C, dim, dim);
             bool_mat_transitive_closure(C, S);
             bool_mat_clear(S);
@@ -205,9 +222,6 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         slong wp, N, q, r;
         mag_t norm, err;
         acb_mat_t T;
-        int is_real;
-
-        is_real = acb_mat_is_real(A);
 
         wp = prec + 3 * FLINT_BIT_COUNT(prec);
 
@@ -230,24 +244,20 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         mag_mul_2exp_si(norm, norm, -r);
 
         N = _arb_mat_exp_choose_N(norm, wp);
+
+        /* if positive, nildegree is an upper bound on nilpotency degree */
+        if (nildegree > 0)
+            N = FLINT_MIN(N, nildegree);
+
         mag_exp_tail(err, norm, N);
 
         _acb_mat_exp_taylor(B, T, N, wp);
 
-        if (is_real)
-        {
-            for (i = 0; i < dim; i++)
-                for (j = 0; j < dim; j++)
-                    if (bool_mat_get_entry(C, i, j))
-                        arb_add_error_mag(acb_realref(acb_mat_entry(B, i, j)), err);
-        }
-        else
-        {
+        if (nildegree <= 0 || N < nildegree)
             for (i = 0; i < dim; i++)
                 for (j = 0; j < dim; j++)
                     if (bool_mat_get_entry(C, i, j))
                         acb_add_error_mag(acb_mat_entry(B, i, j), err);
-        }
 
         for (i = 0; i < r; i++)
         {
