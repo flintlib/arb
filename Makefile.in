@@ -14,7 +14,7 @@ AT=@
 
 BUILD_DIRS = fmpr arf mag arb arb_mat arb_poly arb_calc acb acb_mat acb_poly \
    acb_calc acb_hypgeom acb_modular acb_dirichlet bernoulli hypgeom \
-   fmpz_extras fmpz_mat_extras bool_mat partitions \
+   fmpz_extras bool_mat partitions \
    $(EXTRA_BUILD_DIRS)
 
 TEMPLATE_DIRS = 
