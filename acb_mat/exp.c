@@ -58,7 +58,7 @@ void
 acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 {
     slong i, j, dim, nz;
-    bool_mat_t C;
+    bool_mat_t S;
     slong nildegree;
 
     if (!acb_mat_is_square(A))
@@ -100,16 +100,14 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         return;
     }
 
+    bool_mat_init(S, dim, dim);
     if (nz == 0)
     {
         nildegree = -1;
-        bool_mat_init(C, dim, dim);
-        bool_mat_complement(C, C);
+        bool_mat_complement(S, S);
     }
     else
     {
-        bool_mat_t S;
-        bool_mat_init(S, dim, dim);
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
                 bool_mat_set_entry(S, i, j, !acb_is_zero(acb_mat_entry(A, i, j)));
@@ -122,9 +120,6 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         else
         {
             nildegree = bool_mat_nilpotency_degree(S);
-            bool_mat_init(C, dim, dim);
-            bool_mat_transitive_closure(C, S);
-            bool_mat_clear(S);
         }
     }
 
@@ -161,14 +156,35 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
             N = FLINT_MIN(N, nildegree);
 
         mag_exp_tail(err, norm, N);
-
         acb_mat_exp_taylor_sum(B, T, N, wp);
 
-        if (nildegree <= 0 || N < nildegree)
+        /* add truncation error to entries for which it is not ruled out */
+        if (nz == 0)
+        {
             for (i = 0; i < dim; i++)
                 for (j = 0; j < dim; j++)
-                    if (bool_mat_get_entry(C, i, j))
+                    acb_add_error_mag(acb_mat_entry(B, i, j), err);
+        }
+        else if (nildegree < 0 || N < nildegree)
+        {
+            slong w;
+            fmpz_mat_t W;
+            fmpz_mat_init(W, dim, dim);
+            w = bool_mat_all_pairs_longest_walk(W, S);
+            if (w + 1 != nildegree) abort(); /* assert */
+            for (i = 0; i < dim; i++)
+            {
+                for (j = 0; j < dim; j++)
+                {
+                    slong d = fmpz_get_si(fmpz_mat_entry(W, i, j)) + 1;
+                    if (d < 0 || N < d)
+                    {
                         acb_add_error_mag(acb_mat_entry(B, i, j), err);
+                    }
+                }
+            }
+            fmpz_mat_clear(W);
+        }
 
         for (i = 0; i < r; i++)
         {
@@ -186,5 +202,5 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
         acb_mat_clear(T);
     }
 
-    bool_mat_clear(C);
+    bool_mat_clear(S);
 }
