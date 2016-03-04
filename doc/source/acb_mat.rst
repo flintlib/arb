@@ -312,6 +312,11 @@ Characteristic polynomial
 Special functions
 -------------------------------------------------------------------------------
 
+.. function:: void acb_mat_exp_taylor_sum(acb_mat_t S, const acb_mat_t A, slong N, slong prec)
+
+    Sets *S* to the truncated exponential Taylor series `S = \sum_{k=0}^{N-1} A^k / k!`.
+    See :func:`arb_mat_exp_taylor_sum` for implementation notes.
+
 .. function:: void acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
 
     Sets *B* to the exponential of the matrix *A*, defined by the Taylor series
@@ -321,8 +326,7 @@ Special functions
         \exp(A) = \sum_{k=0}^{\infty} \frac{A^k}{k!}.
 
     The function is evaluated as `\exp(A/2^r)^{2^r}`, where `r` is chosen
-    to give rapid convergence of the Taylor series. The series is
-    evaluated using rectangular splitting.
+    to give rapid convergence of the Taylor series.
     Error bounds are computed as for :func:`arb_mat_exp`.
 
 .. function:: void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec)

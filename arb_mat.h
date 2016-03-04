@@ -305,6 +305,8 @@ void arb_mat_det(arb_t det, const arb_mat_t A, slong prec);
 
 /* Special functions */
 
+void arb_mat_exp_taylor_sum(arb_mat_t S, const arb_mat_t A, slong N, slong prec);
+
 void arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec);
 
 void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec);

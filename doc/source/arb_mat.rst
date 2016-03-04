@@ -308,6 +308,17 @@ Characteristic polynomial
 Special functions
 -------------------------------------------------------------------------------
 
+.. function:: void arb_mat_exp_taylor_sum(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
+
+    Sets *S* to the truncated exponential Taylor series `S = \sum_{k=0}^{N-1} A^k / k!`.
+    Uses rectangular splitting to compute the sum using `O(\sqrt{N})`
+    matrix multiplications. The recurrence relation for factorials
+    is used to get scalars that are small integers instead of full
+    factorials. As in [Joh2014b]_, all divisions are postponed to
+    the end by computing partial factorials of length `O(\sqrt{N})`.
+    The scalars could be reduced by doing more divisions, but this
+    appears to be slower in most cases.
+
 .. function:: void arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
     Sets *B* to the exponential of the matrix *A*, defined by the Taylor series
@@ -317,8 +328,7 @@ Special functions
         \exp(A) = \sum_{k=0}^{\infty} \frac{A^k}{k!}.
 
     The function is evaluated as `\exp(A/2^r)^{2^r}`, where `r` is chosen
-    to give rapid convergence. The series is
-    evaluated using rectangular splitting.
+    to give rapid convergence.
 
     The elementwise error when truncating the Taylor series after *N*
     terms is bounded by the error in the infinity norm, for which we have

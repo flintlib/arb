@@ -52,96 +52,6 @@ _arb_mat_exp_choose_N(const mag_t norm, slong prec)
         return FLINT_MIN((slong) (t + 1.0), 2 * prec);
     }
 }
-
-/* evaluates the truncated Taylor series (assumes no aliasing) */
-void
-_arb_mat_exp_taylor(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
-{
-    if (N == 1)
-    {
-        arb_mat_one(S);
-    }
-    else if (N == 2)
-    {
-        arb_mat_one(S);
-        arb_mat_add(S, S, A, prec);
-    }
-    else if (N == 3)
-    {
-        arb_mat_t T;
-        arb_mat_init(T, arb_mat_nrows(A), arb_mat_nrows(A));
-        arb_mat_sqr(T, A, prec);
-        arb_mat_scalar_mul_2exp_si(T, T, -1);
-        arb_mat_add(S, A, T, prec);
-        arb_mat_one(T);
-        arb_mat_add(S, S, T, prec);
-        arb_mat_clear(T);
-    }
-    else
-    {
-        slong i, lo, hi, m, w, dim;
-        arb_mat_struct * pows;
-        arb_mat_t T, U;
-        fmpz_t c, f;
-
-        dim = arb_mat_nrows(A);
-        m = n_sqrt(N);
-        w = (N + m - 1) / m;
-
-        fmpz_init(c);
-        fmpz_init(f);
-        pows = flint_malloc(sizeof(arb_mat_t) * (m + 1));
-        arb_mat_init(T, dim, dim);
-        arb_mat_init(U, dim, dim);
-
-        for (i = 0; i <= m; i++)
-        {
-            arb_mat_init(pows + i, dim, dim);
-            if (i == 0)
-                arb_mat_one(pows + i);
-            else if (i == 1)
-                arb_mat_set(pows + i, A);
-            else
-                arb_mat_mul(pows + i, pows + i - 1, A, prec);
-        }
-
-        arb_mat_zero(S);
-        fmpz_one(f);
-
-        for (i = w - 1; i >= 0; i--)
-        {
-            lo = i * m;
-            hi = FLINT_MIN(N - 1, lo + m - 1);
-
-            arb_mat_zero(T);
-            fmpz_one(c);
-
-            while (hi >= lo)
-            {
-                arb_mat_scalar_addmul_fmpz(T, pows + hi - lo, c, prec);
-                if (hi != 0)
-                    fmpz_mul_ui(c, c, hi);
-                hi--;
-            }
-
-            arb_mat_mul(U, pows + m, S, prec);
-            arb_mat_scalar_mul_fmpz(S, T, f, prec);
-            arb_mat_add(S, S, U, prec);
-            fmpz_mul(f, f, c);
-        }
-
-        arb_mat_scalar_div_fmpz(S, S, f, prec);
-
-        fmpz_clear(c);
-        fmpz_clear(f);
-        for (i = 0; i <= m; i++)
-            arb_mat_clear(pows + i);
-        flint_free(pows);
-        arb_mat_clear(T);
-        arb_mat_clear(U);
-    }
-}
-
 static void
 _arb_mat_exp_diagonal(arb_mat_t B, const arb_mat_t A, slong prec)
 {
@@ -251,7 +161,7 @@ arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec)
 
         mag_exp_tail(err, norm, N);
 
-        _arb_mat_exp_taylor(B, T, N, wp);
+        arb_mat_exp_taylor_sum(B, T, N, wp);
 
         if (nildegree <= 0 || N < nildegree)
             for (i = 0; i < dim; i++)

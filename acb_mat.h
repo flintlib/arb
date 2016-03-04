@@ -337,6 +337,8 @@ void acb_mat_det(acb_t det, const acb_mat_t A, slong prec);
 
 /* Special functions */
 
+void acb_mat_exp_taylor_sum(acb_mat_t S, const acb_mat_t A, slong N, slong prec);
+
 void acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec);
 
 void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec);
