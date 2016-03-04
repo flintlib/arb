@@ -166,6 +166,24 @@ see :ref:`algorithms_hypergeometric_asymptotic_confluent`.
     to evaluate `U(a,b,z)` to *prec* accurate bits (assuming that *a* and *b*
     are small).
 
+Generalized hypergeometric function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_pfq(acb_poly_t res, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, int regularized, slong prec)
+
+    Computes the regularized hypergeometric function `{}_pF_{q}(z)`,
+    or the regularized version if *regularized* is set.
+
+    This function automatically delegates to a specialized implementation
+    when the order (*p*, *q*) is one of (0,0), (1,0), (0,1), (1,1), (2,1).
+    Otherwise, it falls back to direct summation.
+
+    While this is a top-level function meant to take care of special cases
+    automatically, it does not generally perform the optimization
+    of deleting parameters that appear in both *a* and *b*. This can be
+    done ahead of time by the user in applications where duplicate
+    parameters are likely to occur.
+
 Confluent hypergeometric functions
 -------------------------------------------------------------------------------
 

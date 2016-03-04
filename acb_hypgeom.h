@@ -73,6 +73,9 @@ void acb_hypgeom_pfq_series_direct(acb_poly_t res,
     const acb_poly_t z, int regularized,
     slong n, slong len, slong prec);
 
+void acb_hypgeom_pfq(acb_t res, acb_srcptr a, slong p, acb_srcptr b, slong q,
+    const acb_t z, int regularized, slong prec);
+
 void acb_hypgeom_u_asymp(acb_t res, const acb_t a, const acb_t b,
     const acb_t z, slong n, slong prec);
 
