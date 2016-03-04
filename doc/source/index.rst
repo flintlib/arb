@@ -33,7 +33,7 @@ Welcome to Arb's documentation!
     The documentation website is http://fredrikj.net/arb/
 
     A `PDF version <http://fredrikj.net/arb/arb.pdf>`_ of this documentation
-    is available.
+    is available (:ref:`older versions <history>`).
 
 General information
 ::::::::::::::::::::
