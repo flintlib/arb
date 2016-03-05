@@ -48,7 +48,7 @@ This list is probably incomplete.
 * Alexander Kobel - documentation and code cleanup patches
 * Hrvoje Abraham - patches for MinGW compatibility
 * Julien Puydt - soname versioning support
-* Alex Griffing - sinc function, matrix trace, improved matrix squaring, miscellaneous patches
+* Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, miscellaneous patches
 * Jeroen Demeyer - patch for major bug on PPC64
 
 Software
