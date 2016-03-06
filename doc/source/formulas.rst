@@ -73,11 +73,11 @@ where the first inequality is an equality if `a \le 0`.
 
 .. math ::
 
-    x^{1/k} - (x-r)^{1/k} = x^{1/k} [1 - (1-r/x)^{1/k}]
+    x^{1/k} - (x-r)^{1/k} &= x^{1/k} [1 - (1-r/x)^{1/k}]
 
-    = x^{1/k} [1 - \exp(\log(1-r/x)/k)] \le x^{1/k} \min(1, -\log(1-r/x)/k)
+    &= x^{1/k} [1 - \exp(\log(1-r/x)/k)] \le x^{1/k} \min(1, -\log(1-r/x)/k)
 
-    = x^{1/k} \min(1, \log(1+r/(x-r))/k).
+    &= x^{1/k} \min(1, \log(1+r/(x-r))/k).
 
 **Theorem (sine, cosine)**: For `x, a \in \mathbb{R}`, `|\sin(x+a) - \sin(x)| \le \min(2, |a|)`.
 
@@ -168,11 +168,17 @@ If `f(t)` is `2M`-times differentiable, then
 
     \sum_{k=L}^U f(k) = S + I + T + R
 
+.. math ::
+
     S = \sum_{k=L}^{N-1} f(k), \quad I = \int_N^U f(t) dt,
+
+.. math ::
 
     T = \frac{1}{2} \left( f(N) + f(U) \right) + 
         \sum_{k=1}^M \frac{B_{2k}}{(2k)!}
         \left(f^{(2k-1)}(U) - f^{(2k-1)}(N)\right),
+
+.. math ::
 
     R = -\int_N^U \frac{B_{2M}(t - \lfloor t \rfloor)}{(2M)!} f^{(2M)}(t) dt.
 

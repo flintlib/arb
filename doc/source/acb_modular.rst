@@ -185,11 +185,17 @@ we use the functions
     \theta_1(z,\tau) = -i \sum_{n=-\infty}^{\infty} (-1)^n \exp(\pi i [(n + 1/2)^2 \tau + (2n + 1) z])
                      = 2 q_{1/4} \sum_{n=0}^{\infty} (-1)^n q^{n(n+1)} \sin((2n+1) \pi z)
 
+.. math ::
+
     \theta_2(z,\tau) = \sum_{n=-\infty}^{\infty} \exp(\pi i [(n + 1/2)^2 \tau + (2n + 1) z])
                      = 2 q_{1/4} \sum_{n=0}^{\infty} q^{n(n+1)} \cos((2n+1) \pi z)
 
+.. math ::
+
     \theta_3(z,\tau) = \sum_{n=-\infty}^{\infty} \exp(\pi i [n^2 \tau + 2n z])
                      = 1 + 2 \sum_{n=1}^{\infty} q^{n^2} \cos(2n \pi z)
+
+.. math ::
 
     \theta_4(z,\tau) = \sum_{n=-\infty}^{\infty} (-1)^n \exp(\pi i [n^2 \tau + 2n z])
                      = 1 + 2 \sum_{n=1}^{\infty} (-1)^n q^{n^2} \cos(2n \pi z)
@@ -242,10 +248,16 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
         \theta_{0,0}(z,\tau) = \theta_3(z,\tau), \quad
         \theta_{0,1}(z,\tau) = \theta_4(z,\tau)
 
+    .. math ::
+
         \theta_{1,0}(z,\tau) = \theta_2(z,\tau), \quad
         \theta_{1,1}(z,\tau) = i \theta_1(z,\tau)
 
+    .. math ::
+
         \theta_{m+2,n}(z,\tau) = (-1)^n \theta_{m,n}(z,\tau)
+
+    .. math ::
 
         \theta_{m,n+2}(z,\tau) = \theta_{m,n}(z,\tau).
 
@@ -253,13 +265,13 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     .. math ::
 
-        \theta_1(z,\tau) = \varepsilon_1 A B \theta_1(z', \tau')
+        \theta_1(z,\tau) &= \varepsilon_1 A B \theta_1(z', \tau')
 
-        \theta_2(z,\tau) = \varepsilon_2 A B \theta_{1-c,1+a}(z', \tau')
+        \theta_2(z,\tau) &= \varepsilon_2 A B \theta_{1-c,1+a}(z', \tau')
 
-        \theta_3(z,\tau) = \varepsilon_3 A B \theta_{1+d-c,1-b+a}(z', \tau')
+        \theta_3(z,\tau) &= \varepsilon_3 A B \theta_{1+d-c,1-b+a}(z', \tau')
 
-        \theta_4(z,\tau) = \varepsilon_4 A B \theta_{1+d,1-b}(z', \tau')
+        \theta_4(z,\tau) &= \varepsilon_4 A B \theta_{1+d,1-b}(z', \tau')
 
     where `\varepsilon_i` is an 8th root of unity.
     Specifically, if we denote the 24th root of unity
@@ -269,13 +281,13 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     .. math ::
 
-        \varepsilon_1(a,b,c,d) = \exp(\pi i [R(-d,b,c,-a) + 1] / 4)
+        \varepsilon_1(a,b,c,d) &= \exp(\pi i [R(-d,b,c,-a) + 1] / 4)
 
-        \varepsilon_2(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (5+(2-c)a)] / 4)
+        \varepsilon_2(a,b,c,d) &= \exp(\pi i [-R(a,b,c,d) + (5+(2-c)a)] / 4)
 
-        \varepsilon_3(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (4+(c-d-2)(b-a))] / 4)
+        \varepsilon_3(a,b,c,d) &= \exp(\pi i [-R(a,b,c,d) + (4+(c-d-2)(b-a))] / 4)
 
-        \varepsilon_4(a,b,c,d) = \exp(\pi i [-R(a,b,c,d) + (3-(2+d)b)] / 4)
+        \varepsilon_4(a,b,c,d) &= \exp(\pi i [-R(a,b,c,d) + (3-(2+d)b)] / 4)
 
     These formulas are easily derived from the formulas in [Rad1973]_
     (Rademacher has the transformed/untransformed variables exchanged,

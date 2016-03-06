@@ -74,6 +74,8 @@ using the following relations:
     \Gamma(2/3) = \frac{2 \pi}{3^{1/2} \Gamma(1/3)}, \quad \quad
     \Gamma(3/4) = \frac{2^{1/2} \pi}{\Gamma(1/4)},
 
+.. math ::
+
     \Gamma(1/6) = \frac{\Gamma(1/3)^2}{(\pi/3)^{1/2} 2^{1/3}}, \quad \quad
     \Gamma(5/6) = \frac{2 \pi (\pi/3)^{1/2} 2^{1/3}}{\Gamma(1/3)^2}.
 

@@ -260,13 +260,13 @@ The error function
 
     .. math ::
 
-        \operatorname{erf}(z) = \frac{2z}{\sqrt{\pi}}
+        \operatorname{erf}(z) &= \frac{2z}{\sqrt{\pi}}
             {}_1F_1(\tfrac{1}{2}, \tfrac{3}{2}, -z^2)
 
-        \operatorname{erf}(z) = \frac{2z e^{-z^2}}{\sqrt{\pi}}
+        \operatorname{erf}(z) &= \frac{2z e^{-z^2}}{\sqrt{\pi}}
             {}_1F_1(1, \tfrac{3}{2}, z^2)
 
-        \operatorname{erf}(z) = \frac{z}{\sqrt{z^2}}
+        \operatorname{erf}(z) &= \frac{z}{\sqrt{z^2}}
             \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
             U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right).
 
@@ -304,6 +304,8 @@ Bessel functions
     .. math ::
 
         A_{\pm} = z^{\nu} (z^2)^{-\tfrac{1}{2}-\nu} (\mp i z)^{\tfrac{1}{2}+\nu} (2 \pi)^{-1/2} = (\pm iz)^{-1/2-\nu} z^{\nu} (2 \pi)^{-1/2}
+
+    .. math ::
 
         B_{\pm} = e^{\pm i z} U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, \mp 2iz).
 
@@ -508,9 +510,15 @@ Incomplete gamma functions
 
         \Gamma(s,z) = e^{-z} U(1-s,1-s,z)
 
+    .. math ::
+
         \Gamma(s,z) = \Gamma(s) - \frac{z^s}{s} {}_1F_1(s, s+1, -z)
 
+    .. math ::
+
         \Gamma(s,z) = \Gamma(s) - \frac{z^s e^{-z}}{s} {}_1F_1(1, s+1, z)
+
+    .. math ::
 
         \Gamma(s,z) = \frac{(-1)^n}{n!} (\psi(n+1) - \log(z))
                     + \frac{(-1)^n}{(n+1)!} z \, {}_2F_2(1,1,2,2+n,-z)
@@ -548,6 +556,8 @@ The branch cut conventions of the following functions match Mathematica.
         \operatorname{Ei}(z) = -e^z U(1,1,-z) - \log(-z)
             + \frac{1}{2} \left(\log(z) - \log\left(\frac{1}{z}\right) \right)
 
+    .. math ::
+
         \operatorname{Ei}(z) = z {}_2F_2(1, 1; 2, 2; z) + \gamma
             + \frac{1}{2} \left(\log(z) - \log\left(\frac{1}{z}\right) \right)
 
@@ -568,6 +578,8 @@ The branch cut conventions of the following functions match Mathematica.
             e^{iz} U(1,1,-iz) - e^{-iz} U(1,1,iz) + 
             \log(-iz) - \log(iz) \right]
 
+    .. math ::
+
         \operatorname{Si}(z) = z {}_1F_2(\tfrac{1}{2}; \tfrac{3}{2}, \tfrac{3}{2}; -\tfrac{z^2}{4})
 
     and an automatic algorithm choice.
@@ -586,6 +598,8 @@ The branch cut conventions of the following functions match Mathematica.
         \operatorname{Ci}(z) = \log(z) - \frac{1}{2} \left[
             e^{iz} U(1,1,-iz) + e^{-iz} U(1,1,iz) + 
             \log(-iz) + \log(iz) \right]
+
+    .. math ::
 
         \operatorname{Ci}(z) = -\tfrac{z^2}{4}
             {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; -\tfrac{z^2}{4})
@@ -613,6 +627,8 @@ The branch cut conventions of the following functions match Mathematica.
         \operatorname{Chi}(z) = -\frac{1}{2} \left[
             e^{z} U(1,1,-z) + e^{-z} U(1,1,z) + 
             \log(-z) - \log(z) \right]
+
+    .. math ::
 
         \operatorname{Chi}(z) = \tfrac{z^2}{4}
             {}_2F_3(1, 1; 2, 2, \tfrac{3}{2}; \tfrac{z^2}{4})
@@ -699,6 +715,8 @@ Orthogonal polynomials and functions
     .. math ::
 
         T_n(z) = {}_2F_1\left(-n,n,\frac{1}{2},\frac{1-z}{2}\right)
+
+    .. math ::
 
         U_n(z) = (n+1) {}_2F_1\left(-n,n+2,\frac{3}{2},\frac{1-z}{2}\right).
 
