@@ -82,6 +82,10 @@ The function `W(z) = 1 / M(z)` is D-finite. The coefficients of
 
 .. math ::
 
+    -2 z (z^2-1) c_2 = (3z^2-1) c_1 + z c_0,
+
+.. math ::
+
     -(k+2)(k+3) z (z^2-1) c_{k+3} = (k+2)^2 (3z^2-1) c_{k+2} + (3k(k+3)+7)z c_{k+1} + (k+1)^2 c_{k}
 
 in general, and
