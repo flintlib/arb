@@ -25,6 +25,25 @@
 
 #include "arb.h"
 
+/* todo: make arb_pow_fmpz automatic */
+void
+_arb_10_pow_fmpz(arb_t res, const fmpz_t m, slong prec)
+{
+    slong bits = fmpz_bits(m);
+
+    if (bits < 128)
+    {
+        arb_set_ui(res, 10);
+        arb_pow_fmpz_binexp(res, res, m, prec + 2 * bits);
+    }
+    else
+    {
+        arb_const_log10(res, prec + bits);
+        arb_mul_fmpz(res, res, m, prec + bits);
+        arb_exp(res, res, prec + bits);
+    }
+}
+
 void
 arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, slong n)
 {
@@ -68,21 +87,19 @@ arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, sl
 
     arf_get_fmpz(m, arb_midref(t), ARF_RND_FLOOR);
 
-    arb_set_ui(t, 10);
-
     fmpz_neg(exp, m);
 
     prec = n * 3.32192809488736 + 30;
 
     if (fmpz_sgn(m) >= 0)
     {
-        arb_pow_fmpz_binexp(t, t, m, prec + 2 * fmpz_bits(m));
+        _arb_10_pow_fmpz(t, m, prec);
         arb_mul(t, x, t, prec);
     }
     else
     {
         fmpz_neg(m, m);
-        arb_pow_fmpz_binexp(t, t, m, prec + 2 * fmpz_bits(m));
+        _arb_10_pow_fmpz(t, m, prec);
         arb_div(t, x, t, prec);
     }
 
