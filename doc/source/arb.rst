@@ -1349,6 +1349,16 @@ Other special functions
     the result exactly, the exact value is automatically determined
     from a lower-precision approximation.
 
+.. function:: void arb_partitions_fmpz(arb_t res, const fmpz_t n, slong prec)
+
+.. function:: void arb_partitions_ui(arb_t res, ulong n, slong prec)
+
+    Sets *res* to the partition function `p(n)`.
+    When *n* is large and `\log_2 p(n)` is more than twice *prec*,
+    the leading term in the Hardy-Ramanujan asymptotic series is used
+    together with an error bound. Otherwise, the exact value is computed
+    and rounded.
+
 Internals for computing elementary functions
 -------------------------------------------------------------------------------
 

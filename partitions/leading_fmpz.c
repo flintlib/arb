@@ -19,36 +19,45 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
-#ifndef PARTITIONS_H
-#define PARTITIONS_H
+#include "partitions.h"
 
-#include <math.h>
-#include "flint/flint.h"
-#include "flint/arith.h"
-#include "arb.h"
+void
+partitions_leading_fmpz(arb_t res, const fmpz_t n, slong prec)
+{
+    arb_t t;
+    fmpz_t c;
+    slong eprec;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    arb_init(t);
+    fmpz_init(c);
 
-void partitions_rademacher_bound(arf_t b, const fmpz_t n, ulong N);
+    eprec = prec + fmpz_bits(n) / 2;
 
-void partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles);
+    /* c = 24n-1 */
+    fmpz_mul_ui(c, n, 24);
+    fmpz_sub_ui(c, c, 1);
 
-void partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles);
+    /* t = pi sqrt(24n-1) / 6 */
+    arb_sqrt_fmpz(t, c, eprec);
+    arb_const_pi(res, eprec);
+    arb_mul(t, t, res, eprec);
+    arb_div_ui(t, t, 6, eprec);
 
-void partitions_fmpz_ui(fmpz_t p, ulong n);
+    /* res = exp(t) - exp(t) / t */
+    /* todo: eprec only needed for argument reduction */
+    arb_exp(res, t, eprec);
+    arb_div(t, res, t, prec);
+    arb_sub(res, res, t, prec);
 
-void partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n);
+    arb_sqrt_ui(t, 12, prec);
+    arb_mul(res, res, t, prec);
+    arb_div_fmpz(res, res, c, prec);
 
-void partitions_leading_fmpz(arb_t res, const fmpz_t n, slong prec);
-
-#ifdef __cplusplus
+    arb_clear(t);
+    fmpz_clear(c);
 }
-#endif
 
-#endif

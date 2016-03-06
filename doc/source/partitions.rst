@@ -73,3 +73,10 @@ terms. This gives a significant speedup for small (e.g. `n < 10^6`).
     (e.g. `n < 10^6`), but the error bounds are not certified
     (see remarks for :func:`partitions_hrr_sum_arb`).
 
+.. function:: void partitions_leading_fmpz(arb_t res, const fmpz_t n, slong prec)
+
+    Sets *res* to the leading term in the Hardy-Ramanujan series
+    for `p(n)` (without Rademacher's correction of this term, which is
+    vanishingly small when `n` is large), that is,
+    `\sqrt{12} (1-1/t) e^t / (24n-1)` where `t = \pi \sqrt{24n-1} / 6`.
+
