@@ -37,7 +37,7 @@ set_non_invertible_values(long *v, const acb_dirichlet_group_t G, ulong nv)
   }
   for (l = 0; l < G->num; l++)
   {
-    ulong p = G->primes[k];
+    ulong p = G->primes[l];
     for (k = p; k < nv; k += p)
       v[k] = -1;
   }
@@ -45,9 +45,10 @@ set_non_invertible_values(long *v, const acb_dirichlet_group_t G, ulong nv)
 
 /* loop over whole group */
 void
-n_dirichlet_char_vec_large(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
+n_dirichlet_char_vec_loop(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
 {
-  ulong t, k, j;
+  int j;
+  ulong t, k;
   acb_conrey_t x;
   acb_conrey_init(x, G);
   acb_conrey_one(x, G);
@@ -64,15 +65,14 @@ n_dirichlet_char_vec_large(long *v, const acb_dirichlet_group_t G, const acb_dir
   set_non_invertible_values(v, G, nv);
   /* copy outside modulus */
   for (k = G->q + 1; k < nv ; k++ )
-    v[k] = v[k-G->q];
+    v[k] = v[k - G->q];
   acb_conrey_clear(x);
 }
 
 /* loop over primary components */
 void
-n_dirichlet_char_vec_med(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
+n_dirichlet_char_vec_primeloop(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
 {
-  /* prime by prime */
   ulong k, l;
 
   for(k = 1; k < nv; ++k)
@@ -86,7 +86,6 @@ n_dirichlet_char_vec_med(long *v, const acb_dirichlet_group_t G, const acb_diric
     pe = G->primepowers[l];
     g = G->generators[l] % pe;
     vj = vp = chi->expo[l];
-    if( g < 0 ) g += pe;
     /* for each x = g^j mod p^e,
      * set a[x] += j*vp
      * and use periodicity */
@@ -102,9 +101,9 @@ n_dirichlet_char_vec_med(long *v, const acb_dirichlet_group_t G, const acb_diric
 }
 
 
-/* eratosthene sieve */
+/* eratosthene sieve on primes */
 void
-n_dirichlet_char_vec_small(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
+n_dirichlet_char_vec_logsieve(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
 {
 	ulong k, p, pmax;
 	n_primes_t iter;
