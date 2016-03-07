@@ -280,3 +280,46 @@ where `\zeta = (2/3) (-z)^{3/2}` and
 
 The differentiated formulas are analogous.
 
+Corner case of the Gauss hypergeometric function
+-------------------------------------------------------------------------------
+
+In the corner case where `z` is near `\exp(\pm \pi i / 3)`, none of the
+linear fractional transformations is effective.
+In this case, we use Taylor series to analytically continue the solution
+of the hypergeometric differential equation from the origin.
+The function `f(z) = {}_2F_1(a,b,c,z_0+z)` satisfies
+
+.. math ::
+
+    f''(z) = -\frac{((z_0+z)(a+b+1)-c)}{(z_0+z)(z_0-1+z)} f'(z) - \frac{a b}{(z_0+z)(z_0-1+z)} f(z).
+
+Knowing `f(0), f'(0)`, we can compute the consecutive derivatives
+recursively, and evaluating the truncated Taylor series allows us to
+compute `f(z), f'(z)` to high accuracy
+for sufficiently small `z`.
+Some experimentation showed that two continuation steps
+
+.. math ::
+
+    0 \quad \to \quad 0.375 \pm 0.625i \quad \to \quad 0.5 \pm 0.8125i \quad \to \quad z
+
+gives good performance.
+Error bounds for the truncated Taylor series are obtained
+using the Cauchy-Kovalevskaya majorant method,
+following the outline in [Hoe2001]_.
+The differential equation is majorized by
+
+.. math ::
+
+    g''(z) = \frac{N+1}{2} \left( \frac{\nu}{1-\nu z} \right) g'(z)
+    + \frac{(N+1)N}{2} \left( \frac{\nu}{1-\nu z} \right)^2 g(z)
+
+provided that `N` and `\nu \ge \max(1/|z_0|, 1/|z_0-1|)`
+are chosen sufficiently large. It follows that we can compute explicit
+numbers `A, N, \nu` such that the simple solution `g(z) = A (1-\nu z)^{-N}`
+of the differential equation provides the bound
+
+.. math ::
+
+    |f_{[k]}| \le g_{[k]} = A {{N+k} \choose k} \nu^k.
+
