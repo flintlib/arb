@@ -3,6 +3,87 @@
 Algorithms for hypergeometric functions
 ===============================================================================
 
+.. _algorithms_hypergeometric_convergent:
+
+Convergent series
+-------------------------------------------------------------------------------
+
+Let
+
+.. math ::
+
+    T(k) = \frac{\prod_{i=0}^{p-1} (a_i)_k}{\prod_{i=0}^{q-1} (b_i)_k} z^k.
+
+We compute a factor *C* such that
+
+.. math ::
+
+    \left|\sum_{k=n}^{\infty} T(k)\right| \le C |T(n)|.
+
+We check that `\operatorname{Re}(b+n) > 0` for all lower
+parameters *b*. If this does not hold, *C* is set to infinity.
+Otherwise, we cancel out pairs of parameters
+`a` and `b` against each other. We have
+
+.. math ::
+
+    \left|\frac{a+k}{b+k}\right| = \left|1 + \frac{a-b}{b+k}\right| \le 1 + \frac{|a-b|}{|b+n|}
+
+and
+
+.. math ::
+
+    \left|\frac{1}{b+k}\right| \le \frac{1}{|b+n|}
+
+for all `k \ge n`. This gives us a constant *D* such that
+`T(k+1) \le D T(k)` for all `k \ge n`.
+If `D \ge 1`, we set *C* to infinity. Otherwise, we take
+`C = \sum_{k=0}^{\infty} D^k = (1-D)^{-1}`.
+
+Convergent series of power series
+-------------------------------------------------------------------------------
+
+The same principle is used to get tail bounds for
+with `a_i, b_i, z \in \mathbb{C}[[x]]`,
+or more precisely, bounds for each coefficient in
+`\sum_{k=N}^{\infty} T(k) \in \mathbb{C}[[x]] / \langle x^n \rangle`
+given `a_i, b_i, z \in \mathbb{C}[[x]] / \langle x^n \rangle`.
+First, we fix some notation, assuming that `A` and `B` are power series:
+
+* `A_{[k]}` denotes the coefficient of `x^k` in `A`, and `A_{[m:n]}` denotes the power series `\sum_{k=m}^{n-1} A_{[k]} x^k`.
+* `|A|` denotes `\sum_{k=0}^{\infty} |A_{[k]}| x^k` (this can be viewed as an element of `\mathbb{R}_{\ge 0}[[x]]`).
+* `A \le B` signifies that `|A|_{[k]} \le |B|_{[k]}` holds for all `k`.
+* We define `\mathcal{R}(B) = |B_{[0]}| - |B_{[1:\infty]}|`.
+
+Using the formulas
+
+.. math ::
+
+    (A B)_{[k]} = \sum_{j=0}^k A_{[j]} B_{[k-j]}, \quad (1 / B)_{[k]} = \frac{1}{B_{[0]}} \sum_{j=1}^k -B_{[j]} (1/B)_{[k-j]},
+
+it is easy prove the following bounds for the coefficients
+of sums, products and quotients of formal power series:
+
+.. math ::
+
+    |A + B| \le |A| + |B|,
+    \quad |A B|  \le |A| |B|,
+    \quad |A / B| \le |A| / \mathcal{R}(B).
+
+If `p \le q` and `\operatorname{Re}({b_i}_{[0]}+N) > 0` for all `b_i`, then we may take
+
+.. math ::
+
+    D = |z| \, \prod_{i=1}^p \left(1 + \frac{|a_i-b_i|}{\mathcal{R}(b_i+N)}\right) \prod_{i=p+1}^{q} \frac{1}{\mathcal{R}(b_i + N)}.
+
+If `D_{[0]} < 1`,then  `(1 - D)^{-1} |T(n)|` gives the error bound.
+
+Note when adding and multiplying power series with (complex) interval coefficients,
+we can use point-valued upper bounds for the absolute values instead
+of performing interval arithmetic throughout.
+For `\mathcal{R}(B)`, we must then pick a lower bound for `|B_{[0]}|` and upper bounds for
+the coefficients of `|B_{[1:\infty]}|`.
+
 .. _algorithms_hypergeometric_asymptotic_confluent:
 
 Asymptotic series for the confluent hypergeometric function

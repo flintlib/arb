@@ -29,40 +29,17 @@ and
 
 .. math ::
 
-    {}_pH_{q}(a_0,\ldots,a_{p-1}; b_0 \ldots b_{q-1}; z) = {}_{p+1}F_{q}(a_0,\ldots,a_{p-1},1; b_0 \ldots b_{q-1}; z) = \sum_{k=0}^{\infty} T(k)
+    {}_pf_{q}(a_0,\ldots,a_{p-1}; b_0 \ldots b_{q-1}; z) = {}_{p+1}F_{q}(a_0,\ldots,a_{p-1},1; b_0 \ldots b_{q-1}; z) = \sum_{k=0}^{\infty} T(k)
 
 For the conventional generalized hypergeometric function
-`{}_pF_{q}`, compute  `{}_pH_{q+1}` with the explicit parameter `b_q = 1`,
+`{}_pF_{q}`, compute  `{}_pf_{q+1}` with the explicit parameter `b_q = 1`,
 or remove a 1 from the `a_i` parameters if there is one.
 
 .. function:: void acb_hypgeom_pfq_bound_factor(mag_t C, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n)
 
     Computes a factor *C* such that
-
-    .. math ::
-
-        \left|\sum_{k=n}^{\infty} T(k)\right| \le C |T(n)|.
-
-    We check that `\operatorname{Re}(b+n) > 0` for all lower
-    parameters *b*. If this does not hold, *C* is set to infinity.
-    Otherwise, we cancel out pairs of parameters
-    `a` and `b` against each other. We have
-
-    .. math ::
-
-        \left|\frac{a+k}{b+k}\right| = \left|1 + \frac{a-b}{b+k}\right| \le 1 + \frac{|a-b|}{|b+n|}
-
-    and
-
-    .. math ::
-
-        \left|\frac{1}{b+k}\right| \le \frac{1}{|b+n|}
-
-    for all `k \ge n`. This gives us a constant *D* such that
-    `T(k+1) \le D T(k)` for all `k \ge n`.
-    If `D \ge 1`, we set *C* to infinity. Otherwise, we take
-    `C = \sum_{k=0}^{\infty} D^k = (1-D)^{-1}`.
-
+    `\left|\sum_{k=n}^{\infty} T(k)\right| \le C |T(n)|`.
+    See :ref:`algorithms_hypergeometric_convergent`.
     As currently implemented, the bound becomes infinite when `n` is
     too small, even if the series converges.
 
@@ -123,7 +100,7 @@ or remove a 1 from the `a_i` parameters if there is one.
 
     .. math ::
 
-        {}_pH_{q}(z)
+        {}_pf_{q}(z)
             = \sum_{k=0}^{\infty} T(k)
             = \sum_{k=0}^{n-1} T(k) + \varepsilon
 
@@ -135,7 +112,7 @@ or remove a 1 from the `a_i` parameters if there is one.
 
 .. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
 
-    Computes `{}_pH_{q}(z)` directly using the defining series, given
+    Computes `{}_pf_{q}(z)` directly using the defining series, given
     parameters and argument that are power series.
     The result is a power series of length *len*.
 
@@ -171,7 +148,7 @@ Generalized hypergeometric function
 
 .. function:: void acb_hypgeom_pfq(acb_poly_t res, acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, int regularized, slong prec)
 
-    Computes the regularized hypergeometric function `{}_pF_{q}(z)`,
+    Computes the generalized hypergeometric function `{}_pF_{q}(z)`,
     or the regularized version if *regularized* is set.
 
     This function automatically delegates to a specialized implementation
