@@ -105,6 +105,9 @@ long n_dirichlet_char_eval(const acb_dirichlet_group_t G, const acb_dirichlet_ch
 void acb_dirichlet_char_eval(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
 
 void n_dirichlet_char_vec(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv);
+void n_dirichlet_char_vec_loop(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv);
+void n_dirichlet_char_vec_primeloop(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv);
+void n_dirichlet_char_vec_logsieve(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv);
 
 void acb_dirichlet_char_vec(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
 
