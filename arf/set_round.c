@@ -33,6 +33,48 @@ arf_set_round(arf_t y, const arf_t x, slong prec, arf_rnd_t rnd)
         arf_set(y, x);
         return 0;
     }
+    else if (rnd == ARF_RND_NEAR)
+    {
+        int inexact, bit;
+        mp_srcptr rp;
+        mp_size_t rn;
+        slong pos;
+
+        inexact = arf_set_round(y, x, prec + 1, ARF_RND_DOWN);
+
+        ARF_GET_MPN_READONLY(rp, rn, y);
+
+        /* Read bits[prec] counting from top. */
+        pos = rn * FLINT_BITS - 1 - prec;
+        if (pos >= 0)
+            bit = (rp[pos / FLINT_BITS] >> (pos % FLINT_BITS)) & 1;
+        else
+            bit = 0;
+
+        /* We already have the right result if bit = 0. */
+        if (bit != 0)
+        {
+            /* We already threw away bits, so fractional part is > 1/2. */
+            if (inexact)
+            {
+                arf_set_round(y, y, prec, ARF_RND_UP);
+            }
+            else  /* Fractional part is exactly 1/2. */
+            {
+                /* Read parity bit bits[prec-1] counting from top. */
+                bit = (rp[(pos + 1) / FLINT_BITS] >> ((pos + 1) % FLINT_BITS)) & 1;
+
+                if (bit == 0)
+                    arf_set_round(y, y, prec, ARF_RND_DOWN);
+                else
+                    arf_set_round(y, y, prec, ARF_RND_UP);
+
+                inexact = 1;
+            }
+        }
+
+        return inexact;
+    }
     else
     {
         int inexact;

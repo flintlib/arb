@@ -95,7 +95,7 @@ Types, macros and constants
 
     Specifies that the result of an operation should be rounded to the
     nearest representable number, rounding to an odd mantissa if there is a tie
-    between two values. *Warning*: this rounding mode is currently
+    between two values. **Warning**: this rounding mode is currently
     not implemented (except for a few conversions functions where this 
     stated explicitly).
 
@@ -213,6 +213,10 @@ Assignment, rounding and conversions
 
     Sets *y* to *x*, rounded to *prec* bits in the direction
     specified by *rnd*.
+
+    Warning: :func:`arf_set_round` supports rounding to nearest
+    with *ARF_RND_NEAR*, but the other methods currently do not.
+    Rounding to nearest is currently much slower than the other rounding modes.
 
 .. function:: void arf_set_si_2exp_si(arf_t y, slong m, slong e)
 
