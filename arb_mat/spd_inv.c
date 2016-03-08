@@ -28,17 +28,88 @@
 int
 arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec)
 {
-    if (X == A)
+    slong n;
+    arb_mat_t L;
+    int result;
+
+    if (!arb_mat_is_square(A))
     {
-        int r;
-        arb_mat_t T;
-        arb_mat_init(T, arb_mat_nrows(A), arb_mat_ncols(A));
-        r = arb_mat_spd_inv(T, A, prec);
-        arb_mat_swap(T, X);
-        arb_mat_clear(T);
-        return r;
+        flint_printf("arb_mat_spd_inv: a square matrix is required\n");
+        abort();
     }
 
-    arb_mat_one(X);
-    return arb_mat_spd_solve(X, A, X, prec);
+    if (arb_mat_nrows(X) != arb_mat_nrows(A) ||
+        arb_mat_ncols(X) != arb_mat_ncols(A))
+    {
+        flint_printf("arb_mat_spd_inv: incompatible dimensions\n");
+        abort();
+    }
+
+    if (arb_mat_is_empty(A))
+        return 1;
+
+    n = arb_mat_nrows(A);
+
+    if (n == 1)
+    {
+        if (arb_is_positive(arb_mat_entry(A, 0, 0)))
+        {
+            arb_inv(arb_mat_entry(X, 0, 0), arb_mat_entry(A, 0, 0), prec);
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    arb_mat_init(L, n, n);
+    arb_mat_set(L, A);
+
+    if (!_arb_mat_cholesky_banachiewicz(L, prec))
+    {
+        result = 0;
+    }
+    else
+    {
+        slong i, j, k;
+        arb_struct *s;
+        arb_mat_zero(X);
+        s = _arb_vec_init(n);
+        for (i = 0; i < n; i++)
+        {
+            arb_inv(s + i, arb_mat_entry(L, i, i), prec);
+        }
+        for (j = n-1; j >= 0; j--)
+        {
+            for (i = j; i >= 0; i--)
+            {
+                if (i == j)
+                {
+                    arb_set(arb_mat_entry(X, i, j), s + i);
+                }
+                else
+                {
+                    arb_zero(arb_mat_entry(X, i, j));
+                }
+                for (k = i + 1; k < n; k++)
+                {
+                    arb_submul(arb_mat_entry(X, i, j),
+                               arb_mat_entry(L, k, i),
+                               arb_mat_entry(X, k, j), prec);
+                }
+                arb_div(arb_mat_entry(X, i, j),
+                        arb_mat_entry(X, i, j),
+                        arb_mat_entry(L, i, i), prec);
+                arb_set(arb_mat_entry(X, j, i),
+                        arb_mat_entry(X, i, j));
+            }
+        }
+
+        _arb_vec_clear(s, n);
+        result = 1;
+    }
+
+    arb_mat_clear(L);
+    return result;
 }

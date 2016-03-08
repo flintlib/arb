@@ -66,13 +66,16 @@ arb_mat_spd_logdet(arb_t logdet, const arb_mat_t A, slong prec)
         if (result)
         {
             slong i;
-            arb_set(logdet, arb_mat_entry(L, 0, 0));
+            arb_t x;
+            arb_init(x);
+            arb_log(logdet, arb_mat_entry(L, 0, 0), prec);
             for (i = 1; i < n; i++)
             {
-                arb_mul(logdet, logdet, arb_mat_entry(L, i, i), prec);
+                arb_log(x, arb_mat_entry(L, i, i), prec);
+                arb_add(logdet, logdet, x, prec);
             }
-            arb_log(logdet, logdet, prec);
             arb_mul_2exp_si(logdet, logdet, 1);
+            arb_clear(x);
         }
         arb_mat_clear(L);
         return result;

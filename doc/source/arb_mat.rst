@@ -293,6 +293,82 @@ Gaussian elimination and solving
     determinant of the remaining submatrix is bounded using
     Hadamard's inequality.
 
+.. function:: int _arb_mat_cholesky_banachiewicz(arb_mat_t A, slong prec)
+
+.. function:: int arb_mat_cho(arb_mat_t L, const arb_mat_t A, slong prec)
+
+    Computes the Cholesky decomposition of *A*, returning nonzero iff
+    the symmetric matrix defined by the lower triangular part of *A*
+    is certainly positive definite.
+
+    If a nonzero value is returned, then *L* is set to the lower triangular
+    matrix such that `A = L * L^T`.
+
+    If zero is returned, then either the matrix is not symmetric positive
+    definite, the input matrix was computed to insufficient precision,
+    or the decomposition was attempted at insufficient precision.
+
+    The underscore method computes *L* from *A* in-place, leaving the
+    strict upper triangular region undefined.
+
+.. function:: void arb_mat_solve_cho_precomp(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, slong prec)
+
+    Solves `AX = B` given the precomputed Cholesky decomposition `A = L L^T`.
+    The matrices *X* and *B* are allowed to be aliased with each other,
+    but *X* is not allowed to be aliased with *L*.
+
+.. function:: int arb_mat_spd_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+    Solves `AX = B` where *A* is a symmetric positive definite matrix
+    and *X* and *B* are `n \times m` matrices, using Cholesky decomposition.
+
+    If `m > 0` and *A* cannot be factored using Cholesky decomposition
+    (indicating either that *A* is not symmetric positive definite or that
+    the precision is insufficient), the values in the
+    output matrix are left undefined and zero is returned. A nonzero return
+    value guarantees that the symmetric matrix defined through the lower
+    triangular part of *A* is invertible and that the exact solution matrix
+    is contained in the output.
+
+.. function:: int arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec)
+
+    Sets `X = A^{-1}` where *A* is a symmetric positive definite matrix.
+    It is calculated using the method of [Kri2013]_ which computes fewer
+    intermediate results than solving `AX = I` with :func:`arb_mat_spd_solve`.
+
+    If *A* cannot be factored using Cholesky decomposition
+    (indicating either that *A* is not symmetric positive definite or that
+    the precision is insufficient), the values in the
+    output matrix are left undefined and zero is returned.  A nonzero return
+    value guarantees that the symmetric matrix defined through the lower
+    triangular part of *A* is invertible and that the exact inverse
+    is contained in the output.
+
+.. function:: int arb_mat_spd_det(arb_t det, const arb_mat_t A, slong prec)
+
+    Computes the determinant of a symmetric positive definite matrix,
+    using Cholesky decomposition.
+
+    If *A* cannot be factored using Cholesky decomposition
+    (indicating either that *A* is not symmetric positive definite or that
+    the precision is insufficient), the determinant is left undefined
+    and zero is returned.  A nonzero return value guarantees that the
+    symmetric matrix defined through the lower triangular part of *A*
+    is positive definite and that the exact determinant
+    is contained in the output.
+
+.. function:: int arb_mat_spd_logdet(arb_t logdet, const arb_mat_t A, slong prec)
+
+    Computes the logarithm of the determinant (logdet) of a symmetric positive
+    definite matrix, using Cholesky decomposition.
+
+    If *A* cannot be factored using Cholesky decomposition
+    (indicating either that *A* is not symmetric positive definite or that
+    the precision is insufficient), the logdet is left undefined
+    and zero is returned.  A nonzero return value guarantees that the
+    symmetric matrix defined through the lower triangular part of *A*
+    is positive definite and that the exact logdet is contained in the output.
+
 Characteristic polynomial
 -------------------------------------------------------------------------------
 
