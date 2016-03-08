@@ -66,48 +66,14 @@ arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec)
     arb_mat_init(L, n, n);
     arb_mat_set(L, A);
 
-    if (!_arb_mat_cholesky_banachiewicz(L, prec))
+    if (_arb_mat_cholesky_banachiewicz(L, prec))
     {
-        result = 0;
+        arb_mat_inv_cho_precomp(X, L, prec);
+        result = 1;
     }
     else
     {
-        slong i, j, k;
-        arb_struct *s;
-        arb_mat_zero(X);
-        s = _arb_vec_init(n);
-        for (i = 0; i < n; i++)
-        {
-            arb_inv(s + i, arb_mat_entry(L, i, i), prec);
-        }
-        for (j = n-1; j >= 0; j--)
-        {
-            for (i = j; i >= 0; i--)
-            {
-                if (i == j)
-                {
-                    arb_set(arb_mat_entry(X, i, j), s + i);
-                }
-                else
-                {
-                    arb_zero(arb_mat_entry(X, i, j));
-                }
-                for (k = i + 1; k < n; k++)
-                {
-                    arb_submul(arb_mat_entry(X, i, j),
-                               arb_mat_entry(L, k, i),
-                               arb_mat_entry(X, k, j), prec);
-                }
-                arb_div(arb_mat_entry(X, i, j),
-                        arb_mat_entry(X, i, j),
-                        arb_mat_entry(L, i, i), prec);
-                arb_set(arb_mat_entry(X, j, i),
-                        arb_mat_entry(X, i, j));
-            }
-        }
-
-        _arb_vec_clear(s, n);
-        result = 1;
+        result = 0;
     }
 
     arb_mat_clear(L);

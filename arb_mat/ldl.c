@@ -74,6 +74,56 @@ _arb_mat_ldl_inplace(arb_mat_t A, slong prec)
 }
 
 int
+_arb_mat_ldl_golub_and_van_loan(arb_mat_t A, slong prec)
+{
+    slong n, i, j, k;
+    arb_struct *v;
+    int result;
+
+    n = arb_mat_nrows(A);
+    v = _arb_vec_init(n);
+
+    result = 1;
+    for (j = 0; j < n; j++)
+    {
+        for (i = 0; i < j; i++)
+        {
+            arb_mul(v + i,
+                    arb_mat_entry(A, j, i),
+                    arb_mat_entry(A, i, i), prec);
+        }
+
+        arb_set(v + j, arb_mat_entry(A, j, j));
+        for (i = 0; i < j; i++)
+        {
+            arb_submul(v + j, arb_mat_entry(A, j, i), v + i, prec);
+        }
+
+        if (!arb_is_positive(v + j))
+        {
+            result = 0;
+            break;
+        }
+
+        arb_set(arb_mat_entry(A, j, j), v + j);
+        for (i = j + 1; i < n; i++)
+        {
+            for (k = 0; k < j; k++)
+            {
+                arb_submul(arb_mat_entry(A, i, j),
+                           arb_mat_entry(A, i, k), v + k, prec);
+            }
+            arb_div(arb_mat_entry(A, i, j),
+                    arb_mat_entry(A, i, j), v + j, prec);
+        }
+    }
+
+    _arb_vec_clear(v, n);
+
+    return result;
+}
+
+int
 arb_mat_ldl(arb_mat_t L, const arb_mat_t A, slong prec)
 {
     slong n;
@@ -102,7 +152,7 @@ arb_mat_ldl(arb_mat_t L, const arb_mat_t A, slong prec)
     if (n == 1)
         return arb_is_positive(arb_mat_entry(L, 0, 0));
 
-    result = _arb_mat_ldl_inplace(L, prec);
+    result = _arb_mat_ldl_golub_and_van_loan(L, prec);
 
     /* set the strictly upper triangular region of L to zero */
     {

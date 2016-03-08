@@ -310,6 +310,8 @@ int arb_mat_cho(arb_mat_t L, const arb_mat_t A, slong prec);
 void arb_mat_solve_cho_precomp(arb_mat_t X,
     const arb_mat_t L, const arb_mat_t B, slong prec);
 
+void arb_mat_inv_cho_precomp(arb_mat_t X, const arb_mat_t L, slong prec);
+
 int arb_mat_spd_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
 
 int arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec);
@@ -320,6 +322,8 @@ int arb_mat_ldl(arb_mat_t L, const arb_mat_t A, slong prec);
 
 void arb_mat_solve_ldl_precomp(arb_mat_t X,
     const arb_mat_t L, const arb_mat_t B, slong prec);
+
+void arb_mat_inv_ldl_precomp(arb_mat_t X, const arb_mat_t L, slong prec);
 
 /* Special functions */
 

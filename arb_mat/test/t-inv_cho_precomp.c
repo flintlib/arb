@@ -41,12 +41,37 @@ _fmpq_mat_randtest_positive_semidefinite(fmpq_mat_t mat, flint_rand_t state, mp_
     fmpq_mat_clear(RT);
 }
 
+static int
+_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec)
+{
+    slong n;
+    arb_mat_t L;
+    int result;
+
+    n = arb_mat_nrows(A);
+    arb_mat_init(L, n, n);
+    arb_mat_set(L, A);
+
+    if (_arb_mat_cholesky_banachiewicz(L, prec))
+    {
+        arb_mat_inv_cho_precomp(X, L, prec);
+        result = 1;
+    }
+    else
+    {
+        result = 0;
+    }
+
+    arb_mat_clear(L);
+    return result;
+}
+
 int main()
 {
     slong iter;
     flint_rand_t state;
 
-    flint_printf("spd_inv....");
+    flint_printf("inv_cho_precomp....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -74,7 +99,7 @@ int main()
         if (!q_invertible)
         {
             arb_mat_set_fmpq_mat(A, Q, prec);
-            r_invertible = arb_mat_spd_inv(Ainv, A, prec);
+            r_invertible = _spd_inv(Ainv, A, prec);
             if (r_invertible)
             {
                 flint_printf("FAIL: matrix is singular over Q but not over R\n");
@@ -93,7 +118,7 @@ int main()
             while (1)
             {
                 arb_mat_set_fmpq_mat(A, Q, prec);
-                r_invertible = arb_mat_spd_inv(Ainv, A, prec);
+                r_invertible = _spd_inv(Ainv, A, prec);
 
                 if (r_invertible)
                 {
@@ -128,7 +153,7 @@ int main()
             }
 
             /* test aliasing */
-            r_invertible2 = arb_mat_spd_inv(A, A, prec);
+            r_invertible2 = _spd_inv(A, A, prec);
             if (!arb_mat_equal(A, Ainv) || r_invertible != r_invertible2)
             {
                 flint_printf("FAIL (aliasing)\n");
