@@ -344,31 +344,6 @@ Gaussian elimination and solving
     triangular part of *A* is invertible and that the exact inverse
     is contained in the output.
 
-.. function:: int arb_mat_spd_det(arb_t det, const arb_mat_t A, slong prec)
-
-    Computes the determinant of a symmetric positive definite matrix,
-    using Cholesky decomposition.
-
-    If *A* cannot be factored using Cholesky decomposition
-    (indicating either that *A* is not symmetric positive definite or that
-    the precision is insufficient), the determinant is left undefined
-    and zero is returned.  A nonzero return value guarantees that the
-    symmetric matrix defined through the lower triangular part of *A*
-    is positive definite and that the exact determinant
-    is contained in the output.
-
-.. function:: int arb_mat_spd_logdet(arb_t logdet, const arb_mat_t A, slong prec)
-
-    Computes the logarithm of the determinant (logdet) of a symmetric positive
-    definite matrix, using Cholesky decomposition.
-
-    If *A* cannot be factored using Cholesky decomposition
-    (indicating either that *A* is not symmetric positive definite or that
-    the precision is insufficient), the logdet is left undefined
-    and zero is returned.  A nonzero return value guarantees that the
-    symmetric matrix defined through the lower triangular part of *A*
-    is positive definite and that the exact logdet is contained in the output.
-
 Characteristic polynomial
 -------------------------------------------------------------------------------
 
