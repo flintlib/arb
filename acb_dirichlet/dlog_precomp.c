@@ -70,7 +70,7 @@ dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
                 ulong m;
                 m = (2 * num < n) ? ceil(sqrt((double) n * num)) : n;
                 pre->type = DLOG_BSGS;
-                dlog_bsgs_init(pre->t.bsgs, a, mod, m);
+                dlog_bsgs_init(pre->t.bsgs, a, mod, n, m);
             } else {
                 pre->type = DLOG_CRT;
                 dlog_crt_init(pre->t.crt, a, mod, n, num);
@@ -93,7 +93,7 @@ dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num)
         ulong m;
         m = (2 * num < p) ? ceil(sqrt((double) p * num)) : p;
         pre->type = DLOG_BSGS;
-        dlog_bsgs_init(pre->t.bsgs, a, mod, m);
+        dlog_bsgs_init(pre->t.bsgs, a, mod, p, m);
     }
 }
 

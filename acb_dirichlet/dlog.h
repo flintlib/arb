@@ -82,15 +82,26 @@ typedef struct apow {
 } apow_t;
 
 typedef struct {
-    ulong n;
-    double ninv;
+    ulong mod;
+    double modinv;
     ulong m;
+    ulong g;
     ulong am;
     apow_t * table;
 } dlog_bsgs_struct;
 
 typedef dlog_bsgs_struct dlog_bsgs_t[1];
 /* typedef bsgs_t dlog_bsgs_t; */
+
+/* Pollard rho */
+typedef struct {
+  ulong a;
+  ulong n;
+  ulong mod;
+  int nisprime;
+} dlog_rho_struct;
+
+typedef dlog_rho_struct dlog_rho_t[1];
 
 /* CRT decomposition (Pohlig-Hellman) */
 typedef struct
@@ -150,7 +161,8 @@ void dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e);
 void dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num);
 void dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num);
 void dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num);
-void dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong n, ulong m);
+void dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m);
+void dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n);
 /*#define dlog_bsgs_init(t, a, n, m) bsgs_table_init(t, a, n, m)*/
 
 void dlog_table_clear(dlog_table_t t);
@@ -159,6 +171,7 @@ void dlog_crt_clear(dlog_crt_t t);
 void dlog_power_clear(dlog_power_t t);
 void dlog_modpe_clear(dlog_modpe_t t);
 void dlog_bsgs_clear(dlog_bsgs_t t);
+void dlog_rho_clear(dlog_rho_t t);
 /*#define dlog_bsgs_clear(t) bsgs_table_clear(t)*/
 
 ulong dlog_table(const dlog_table_t t, ulong b);
@@ -167,6 +180,7 @@ ulong dlog_power(const dlog_power_t t, ulong b);
 ulong dlog_modpe(const dlog_modpe_t t, ulong b);
 ulong dlog_1modpe(const dlog_1modpe_t t, ulong b);
 ulong dlog_bsgs(const dlog_bsgs_t t, ulong b);
+ulong dlog_rho(const dlog_rho_t t, ulong b);
 /*#define dlog_bsgs(t, b) n_discrete_log_bsgs_table(t, b)*/
 
 void dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num);

@@ -37,23 +37,25 @@ apow_cmp(const apow_t * x, const apow_t * y)
 
 /* set size of table m=sqrt(nk) to compute k logs in a group of size n */
 void
-dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong n, ulong m)
+dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
 {
     ulong k, ak;
     t->table = (apow_t *)flint_malloc(m * sizeof(apow_t));
+    if (m > n) m = n;
 
-    t->n = n;
-    t->ninv = n_precompute_inverse(n);
+    t->mod = mod;
+    t->modinv = n_precompute_inverse(mod);
     t->m = m;
+    t->g = n / m;
 
     for (k = 0, ak = 1; k < m; k++)
     {
         t->table[k].k = k;
         t->table[k].ak = ak;
-        ak = n_mulmod_precomp(ak, a, n, t->ninv);
+        ak = n_mulmod_precomp(ak, a, mod, t->modinv);
     }
 
-    t->am = n_invmod(ak, n);
+    t->am = n_invmod(ak, mod);
     qsort(t->table, m, sizeof(apow_t), (int(*)(const void*,const void*))apow_cmp);
 }
 
@@ -69,16 +71,17 @@ dlog_bsgs(const dlog_bsgs_t t, ulong b)
     ulong i;
     apow_t c, * x;
 
-    c.k = 0;
     c.ak = b;
-    for (i = 0; i < t->m; i++)
+    for (i = 0; i <= t->g; i++)
     {
         x = bsearch(&c, t->table, t->m, sizeof(apow_t),
             (int(*)(const void*,const void*))apow_cmp);
         if (x != NULL)
             return i * t->m + x->k;
-        c.ak = n_mulmod_precomp(c.ak, t->am, t->n, t->ninv);
+        c.ak = n_mulmod_precomp(c.ak, t->am, t->mod, t->modinv);
     }
     flint_printf("Exception (n_discrete_log_bsgs).  discrete log not found.\n");
+    flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found\n",
+            t->m, t->g, t->mod, b);
     abort();
 }
