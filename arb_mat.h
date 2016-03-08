@@ -318,6 +318,8 @@ int arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
 int _arb_mat_ldl_inplace(arb_mat_t A, slong prec);
 
+int _arb_mat_ldl_golub_and_van_loan(arb_mat_t A, slong prec);
+
 int arb_mat_ldl(arb_mat_t L, const arb_mat_t A, slong prec);
 
 void arb_mat_solve_ldl_precomp(arb_mat_t X,

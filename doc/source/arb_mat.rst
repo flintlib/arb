@@ -330,6 +330,14 @@ Gaussian elimination and solving
     triangular part of *A* is invertible and that the exact solution matrix
     is contained in the output.
 
+.. function:: void arb_mat_inv_cho_precomp(arb_mat_t X, const arb_mat_t L, slong prec);
+
+    Sets `X = A^{-1}` where `A` is a symmetric positive definite matrix
+    whose Cholesky decomposition *L* has been computed with
+    :func:`arb_mat_cho`.
+    The inverse is calculated using the method of [Kri2013]_ which is more
+    efficient than solving `AX = I` with :func:`arb_mat_solve_cho_precomp`.
+
 .. function:: int arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec)
 
     Sets `X = A^{-1}` where *A* is a symmetric positive definite matrix.
@@ -343,6 +351,45 @@ Gaussian elimination and solving
     value guarantees that the symmetric matrix defined through the lower
     triangular part of *A* is invertible and that the exact inverse
     is contained in the output.
+
+.. function:: int _arb_mat_ldl_inplace(arb_mat_t A, slong prec)
+
+.. function:: int _arb_mat_ldl_golub_and_van_loan(arb_mat_t A, slong prec)
+
+.. function:: int arb_mat_ldl(arb_mat_t res, const arb_mat_t A, slong prec)
+
+    Computes the `LDL^T` decomposition of *A*, returning nonzero iff
+    the symmetric matrix defined by the lower triangular part of *A*
+    is certainly positive definite.
+
+    If a nonzero value is returned, then *res* is set to a lower triangular
+    matrix that encodes the `L * D * L^T` decomposition of *A*.
+    In particular, `L` is a lower triangular matrix with ones on its diagonal
+    and whose strictly lower triangular region is the same as that of *res*.
+    `D` is a diagonal matrix with the same diagonal as that of *res*.
+
+    If zero is returned, then either the matrix is not symmetric positive
+    definite, the input matrix was computed to insufficient precision,
+    or the decomposition was attempted at insufficient precision.
+
+    The underscore methods compute *res* from *A* in-place, leaving the
+    strict upper triangular region undefined.
+    The default method uses algorithm 4.1.2 from [GVL1996]_.
+
+.. function:: void arb_mat_solve_ldl_precomp(arb_mat_t X,
+    const arb_mat_t L, const arb_mat_t B, slong prec)
+
+    Solves `AX = B` given the precomputed `A = LDL^T` decomposition
+    encoded by *L*.  The matrices *X* and *B* are allowed to be aliased
+    with each other, but *X* is not allowed to be aliased with *L*.
+
+.. function:: void arb_mat_inv_ldl_precomp(arb_mat_t X, const arb_mat_t L, slong prec)
+
+    Sets `X = A^{-1}` where `A` is a symmetric positive definite matrix
+    whose `LDL^T` decomposition encoded by *L* has been computed with
+    :func:`arb_mat_ldl`.
+    The inverse is calculated using the method of [Kri2013]_ which is more
+    efficient than solving `AX = I` with :func:`arb_mat_solve_ldl_precomp`.
 
 Characteristic polynomial
 -------------------------------------------------------------------------------
