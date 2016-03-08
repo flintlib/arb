@@ -351,6 +351,10 @@ acb_agm1(acb_t m, const acb_t z, slong prec)
     {
         acb_agm1_basecase(m, z, prec);
     }
+    else if (acb_equal_si(z, -1))
+    {
+        acb_zero(m);
+    }
     else
     {
         /* use M(z) = (z+1)/2 * M(2 sqrt(z) / (z+1)) */
