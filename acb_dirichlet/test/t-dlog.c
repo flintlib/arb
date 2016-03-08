@@ -39,6 +39,7 @@ int main()
     {
         dlog_table_t table;
         dlog_bsgs_t bsgs;
+        dlog_rho_t rho;
         dlog_precomp_t pre1, pre100;
         ulong p, a, k;
 
@@ -46,26 +47,29 @@ int main()
         a = n_primitive_root_prime(p);
 
         dlog_table_init(table, a, p);
-        dlog_bsgs_init(bsgs, a, p, ceil(sqrt((double)p)));
+        dlog_bsgs_init(bsgs, a, p, p-1, ceil(sqrt((double)p)));
+        dlog_rho_init(rho, a, p, p-1);
         dlog_precomp_n_init(pre1, a, p, p-1, 1);
         dlog_precomp_n_init(pre100, a, p, p-1, 100);
 
         for (k = 1; k < 100 && k < p; k++)
         {
-            ulong l1, l2, l3, l4;
+            ulong l1, l2, l3, l4, l5;
             l1 = dlog_table(table, k);
             l2 = dlog_bsgs(bsgs, k);
-            l3 = dlog_precomp(pre1, k);
-            l4 = dlog_precomp(pre100, k);
-            if (l1 != l2 || l3 != l4 || l1 != l3)
+            l3 = dlog_rho(rho, k);
+            l4 = dlog_precomp(pre1, k);
+            l5 = dlog_precomp(pre100, k);
+            if (l1 != l2 || l1 != l3 || l1 != l4 || l1 != l5)
             {
-                flint_printf("FAIL: log(%wu,%wu) mod %wu: [%wu, %wu, %wu, %wu]\n",
-                        k, a, p, l1, l2, l3, l4);
+                flint_printf("FAIL: log(%wu,%wu) mod %wu: [%wu, %wu, %wu, %wu, %wu]\n",
+                        k, a, p, l1, l2, l3, l4, l5);
                 abort();
             }
         }
         dlog_table_clear(table);
         dlog_bsgs_clear(bsgs);
+        dlog_rho_clear(rho);
         dlog_precomp_clear(pre1);
         dlog_precomp_clear(pre100);
     }
