@@ -314,6 +314,13 @@ int arb_mat_spd_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong p
 
 int arb_mat_spd_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
+int _arb_mat_ldl_inplace(arb_mat_t A, slong prec);
+
+int arb_mat_ldl(arb_mat_t L, const arb_mat_t A, slong prec);
+
+void arb_mat_solve_ldl_precomp(arb_mat_t X,
+    const arb_mat_t L, const arb_mat_t B, slong prec);
+
 /* Special functions */
 
 void arb_mat_exp_taylor_sum(arb_mat_t S, const arb_mat_t A, slong N, slong prec);
