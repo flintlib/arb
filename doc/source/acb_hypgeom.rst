@@ -423,12 +423,10 @@ only hold piecewise (due to the Stokes phenomenon). Computation of the
 Airy functions can also be optimized more than Bessel functions in general.
 We therefore provide a dedicated interface for evaluating Airy functions.
 
-The following functions optionally compute
+The following methods optionally compute
 `(\operatorname{Ai}(z), \operatorname{Ai}'(z), \operatorname{Bi}(z), \operatorname{Bi}'(z))`
-simultaneously. Any of the four functions can be omitted by passing
-*NULL* for the unwanted output variables.
-Note that higher derivatives of the Airy functions can be computed
-via recurrence relations.
+simultaneously. Any of the four function values can be omitted by passing
+*NULL* for the unwanted output variables, speeding up the evaluation.
 
 .. function:: void acb_hypgeom_airy_direct(acb_t ai, acb_t ai_prime, acb_t bi, acb_t bi_prime, const acb_t z, slong n, slong prec)
 
@@ -442,7 +440,7 @@ via recurrence relations.
     For details about how the error bounds are computed, see
     :ref:`algorithms_hypergeometric_asymptotic_airy`.
 
-.. function:: void acb_hypgeom_airy_bound(mag_t ai, mag_t aip, mag_t bi, mag_t bip, const acb_t z)
+.. function:: void acb_hypgeom_airy_bound(mag_t ai, mag_t ai_prime, mag_t bi, mag_t bi_prime, const acb_t z)
 
     Computes bounds for the Airy functions using first-order asymptotic
     expansions together with error bounds. This function uses some
@@ -455,18 +453,35 @@ via recurrence relations.
 
     We use :func:`acb_hypgeom_airy_asymp` whenever this gives full accuracy
     and :func:`acb_hypgeom_airy_direct` otherwise.
-
-    In the latter case, we first use double precision arithmetic to
+    In the latter case, we first use hardware double precision arithmetic to
     determine an accurate estimate of the working precision needed
     to compute the Airy functions accurately for given *z*. This estimate is
     obtained by comparing the leading-order asymptotic estimate of the Airy
     functions with the magnitude of the largest term in the power series.
     The estimate is generic in the sense that it does not take into account
     vanishing near the roots of the functions.
-
     We subsequently evaluate the power series at the midpoint of *z* and
     bound the propagated error using derivatives. Derivatives are
     bounded using :func:`acb_hypgeom_airy_bound`.
+
+.. function:: void acb_hypgeom_airy_jet(acb_ptr ai, acb_ptr bi, const acb_t z, slong len, slong prec)
+
+    Writes to *ai* and *bi* the respective Taylor expansions of the Airy functions
+    at the point *z*, truncated to length *len*.
+    Either of the outputs can be *NULL* to avoid computing that function.
+    The variable *z* is not allowed to be aliased with the outputs.
+    To simplify the implementation, this method does not compute the
+    series expansions of the primed versions directly; these are
+    easily obtained by computing one extra coefficient and differentiating
+    the output with :func:`_acb_poly_derivative`.
+
+.. function:: void _acb_hypgeom_airy_series(acb_ptr ai, acb_ptr ai_prime, acb_ptr bi, acb_ptr bi_prime, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_airy_series(acb_poly_t ai, acb_poly_t ai_prime, acb_poly_t bi, acb_poly_t bi_prime, const acb_poly_t z, slong len, slong prec)
+
+    Computes the Airy functions evaluated at the power series *z*,
+    truncated to length *len*. As with the other Airy methods, any of the
+    outputs can be *NULL*.
 
 Incomplete gamma functions
 -------------------------------------------------------------------------------
