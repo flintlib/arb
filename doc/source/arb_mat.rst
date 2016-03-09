@@ -293,6 +293,9 @@ Gaussian elimination and solving
     determinant of the remaining submatrix is bounded using
     Hadamard's inequality.
 
+Cholesky decomposition and solving
+-------------------------------------------------------------------------------
+
 .. function:: int _arb_mat_cholesky_banachiewicz(arb_mat_t A, slong prec)
 
 .. function:: int arb_mat_cho(arb_mat_t L, const arb_mat_t A, slong prec)
@@ -330,7 +333,7 @@ Gaussian elimination and solving
     triangular part of *A* is invertible and that the exact solution matrix
     is contained in the output.
 
-.. function:: void arb_mat_inv_cho_precomp(arb_mat_t X, const arb_mat_t L, slong prec);
+.. function:: void arb_mat_inv_cho_precomp(arb_mat_t X, const arb_mat_t L, slong prec)
 
     Sets `X = A^{-1}` where `A` is a symmetric positive definite matrix
     whose Cholesky decomposition *L* has been computed with
@@ -376,8 +379,7 @@ Gaussian elimination and solving
     strict upper triangular region undefined.
     The default method uses algorithm 4.1.2 from [GVL1996]_.
 
-.. function:: void arb_mat_solve_ldl_precomp(arb_mat_t X,
-    const arb_mat_t L, const arb_mat_t B, slong prec)
+.. function:: void arb_mat_solve_ldl_precomp(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, slong prec)
 
     Solves `AX = B` given the precomputed `A = LDL^T` decomposition
     encoded by *L*.  The matrices *X* and *B* are allowed to be aliased
