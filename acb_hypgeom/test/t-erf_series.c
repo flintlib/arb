@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "acb_poly.h"
+#include "acb_hypgeom.h"
 
 int main()
 {
@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100; iter++)
+    for (iter = 0; iter < 200; iter++)
     {
         slong m, n1, n2, bits1, bits2, bits3;
         acb_poly_t S, A, B, C;
@@ -57,8 +57,8 @@ int main()
         acb_poly_randtest(A, state, m, bits1, 3);
         acb_poly_randtest(B, state, m, bits1, 3);
 
-        acb_poly_erf_series(A, S, n1, bits2);
-        acb_poly_erf_series(B, S, n2, bits3);
+        acb_hypgeom_erf_series(A, S, n1, bits2);
+        acb_hypgeom_erf_series(B, S, n2, bits3);
 
         acb_poly_set(C, A);
         acb_poly_truncate(C, FLINT_MIN(n1, n2));
@@ -73,7 +73,7 @@ int main()
             abort();
         }
 
-        acb_poly_erf_series(S, S, n1, bits2);
+        acb_hypgeom_erf_series(S, S, n1, bits2);
 
         if (!acb_poly_overlaps(A, S))
         {

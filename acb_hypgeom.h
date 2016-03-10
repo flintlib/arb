@@ -92,11 +92,6 @@ void acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z,
 void acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec);
 void acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec);
 
-void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec);
-void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec);
-void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2);
-void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec);
-
 void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec);
 void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec);
 void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, slong prec);
@@ -133,8 +128,20 @@ void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modifi
 
 void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec);
 
+void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec);
+void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec);
+void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2);
+void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_erf_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_erf_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
+
 void acb_hypgeom_erfc(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_erfc_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_erfc_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
+
 void acb_hypgeom_erfi(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_erfi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_erfi_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, slong prec);

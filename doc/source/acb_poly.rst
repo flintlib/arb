@@ -954,6 +954,9 @@ Other special functions
 .. function:: void acb_poly_erf_series(acb_poly_t res, const acb_poly_t z, slong n, slong prec)
 
     Sets *res* to the error function of the power series *z*, truncated to length *n*.
+    These methods are provided for backwards compatibility.
+    See :func:`acb_hypgeom_erf_series`, :func:`acb_hypgeom_erfc_series`,
+    :func:`acb_hypgeom_erfi_series`.
 
 .. function:: void _acb_poly_upper_gamma_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, slong n, slong prec)
 

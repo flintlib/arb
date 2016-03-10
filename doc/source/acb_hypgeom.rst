@@ -250,17 +250,38 @@ The error function
     and an automatic algorithm choice. The *asymp* version takes a second
     precision to use for the *U* term.
 
+.. function:: void _acb_hypgeom_erf_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_erf_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the error function of the power series *z*,
+    truncated to length *len*.
+
 .. function:: void acb_hypgeom_erfc(acb_t res, const acb_t z, slong prec)
 
     Computes the complementary error function
     `\operatorname{erfc}(z) = 1 - \operatorname{erf}(z)`.
     This function avoids catastrophic cancellation for large positive *z*.
 
+.. function:: void _acb_hypgeom_erfc_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_erfc_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the complementary error function of the power series *z*,
+    truncated to length *len*.
+
 .. function:: void acb_hypgeom_erfi(acb_t res, const acb_t z, slong prec)
 
     Computes the imaginary error function
     `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`. This is a trivial wrapper
     of :func:`acb_hypgeom_erf`.
+
+.. function:: void _acb_hypgeom_erfi_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_erfi_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the imaginary error function of the power series *z*,
+    truncated to length *len*.
 
 Bessel functions
 -------------------------------------------------------------------------------
