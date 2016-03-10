@@ -35,6 +35,8 @@ void
 _arb_poly_inv_series(arb_ptr Qinv,
     arb_srcptr Q, slong Qlen, slong len, slong prec)
 {
+    Qlen = FLINT_MIN(Qlen, len);
+
     arb_inv(Qinv, Q, prec);
 
     if (Qlen == 1)
@@ -43,31 +45,56 @@ _arb_poly_inv_series(arb_ptr Qinv,
     }
     else if (len == 2)
     {
-        arb_div(Qinv + 1, Qinv, Q, prec);
+        arb_mul(Qinv + 1, Qinv, Qinv, prec);
         arb_mul(Qinv + 1, Qinv + 1, Q + 1, prec);
         arb_neg(Qinv + 1, Qinv + 1);
     }
     else
     {
-        slong Qnlen, Wlen, W2len;
-        arb_ptr W;
+        slong i, j, blen;
 
-        W = _arb_vec_init(len);
+        /* The basecase algorithm is faster for much larger Qlen or len than
+           this, but unfortunately also much less numerically stable. */
+        if (Qlen == 2 || len <= 8)
+            blen = len;
+        else
+            blen = FLINT_MIN(len, 4);
 
-        NEWTON_INIT(1, len)
-        NEWTON_LOOP(m, n)
+        for (i = 1; i < blen; i++)
+        {
+            arb_mul(Qinv + i, Q + 1, Qinv + i - 1, prec);
 
-        Qnlen = FLINT_MIN(Qlen, n);
-        Wlen = FLINT_MIN(Qnlen + m - 1, n);
-        W2len = Wlen - m;
-        MULLOW(W, Q, Qnlen, Qinv, m, Wlen, prec);
-        MULLOW(Qinv + m, Qinv, m, W + m, W2len, n - m, prec);
-        _arb_vec_neg(Qinv + m, Qinv + m, n - m);
+            for (j = 2; j < FLINT_MIN(i + 1, Qlen); j++)
+                arb_addmul(Qinv + i, Q + j, Qinv + i - j, prec);
 
-        NEWTON_END_LOOP
-        NEWTON_END
+            if (!arb_is_one(Qinv))
+                arb_mul(Qinv + i, Qinv + i, Qinv, prec);
 
-        _arb_vec_clear(W, len);
+            arb_neg(Qinv + i, Qinv + i);
+        }
+
+        if (len > blen)
+        {
+            slong Qnlen, Wlen, W2len;
+            arb_ptr W;
+
+            W = _arb_vec_init(len);
+
+            NEWTON_INIT(blen, len)
+            NEWTON_LOOP(m, n)
+
+            Qnlen = FLINT_MIN(Qlen, n);
+            Wlen = FLINT_MIN(Qnlen + m - 1, n);
+            W2len = Wlen - m;
+            MULLOW(W, Q, Qnlen, Qinv, m, Wlen, prec);
+            MULLOW(Qinv + m, Qinv, m, W + m, W2len, n - m, prec);
+            _arb_vec_neg(Qinv + m, Qinv + m, n - m);
+
+            NEWTON_END_LOOP
+            NEWTON_END
+
+            _arb_vec_clear(W, len);
+        }
     }
 }
 
