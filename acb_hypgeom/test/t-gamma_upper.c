@@ -40,7 +40,7 @@ int main()
     {
         acb_t a, z, res;
         slong prec, goal;
-        int modified;
+        int regularized;
 
         acb_init(a);
         acb_init(z);
@@ -52,13 +52,13 @@ int main()
             acb_set_si(z, n_randint(state, 100) - 50);
         } while (acb_is_zero(z));
 
-        modified = n_randint(state, 2);
+        regularized = n_randint(state, 3);
 
         goal = 2 + n_randint(state, 4000);
 
         for (prec = 2 + n_randint(state, 1000); ; prec *= 2)
         {
-            acb_hypgeom_gamma_upper(res, a, z, modified, prec);
+            acb_hypgeom_gamma_upper(res, a, z, regularized, prec);
 
             if (acb_rel_accuracy_bits(res) > goal)
                 break;
@@ -66,6 +66,7 @@ int main()
             if (prec > 10000)
             {
                 printf("FAIL (convergence)\n");
+                flint_printf("regularized = %d\n\n", regularized);
                 flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
                 flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
                 flint_printf("res = "); acb_printd(res, 30); flint_printf("\n\n");
@@ -82,7 +83,7 @@ int main()
     {
         acb_t a0, a1, b, z, w0, w1, t, u;
         slong prec0, prec1;
-        int modified;
+        int regularized;
 
         acb_init(a0);
         acb_init(a1);
@@ -93,7 +94,7 @@ int main()
         acb_init(t);
         acb_init(u);
 
-        modified = n_randint(state, 2);
+        regularized = n_randint(state, 3);
 
         prec0 = 2 + n_randint(state, 1000);
         prec1 = 2 + n_randint(state, 1000);
@@ -108,37 +109,37 @@ int main()
         switch (n_randint(state, 4))
         {
             case 0:
-                acb_hypgeom_gamma_upper_asymp(w0, a0, z, modified, prec0);
+                acb_hypgeom_gamma_upper_asymp(w0, a0, z, regularized, prec0);
                 break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w0, a0, z, modified, prec0);
+                acb_hypgeom_gamma_upper_1f1a(w0, a0, z, regularized, prec0);
                 break;
             case 2:
-                acb_hypgeom_gamma_upper_1f1b(w0, a0, z, modified, prec0);
+                acb_hypgeom_gamma_upper_1f1b(w0, a0, z, regularized, prec0);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w0, a0, z, modified, prec0);
+                acb_hypgeom_gamma_upper(w0, a0, z, regularized, prec0);
         }
 
         switch (n_randint(state, 4))
         {
             case 0:
-                acb_hypgeom_gamma_upper_asymp(w1, a0, z, modified, prec1);
+                acb_hypgeom_gamma_upper_asymp(w1, a0, z, regularized, prec1);
                 break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w1, a0, z, modified, prec1);
+                acb_hypgeom_gamma_upper_1f1a(w1, a0, z, regularized, prec1);
                 break;
             case 2:
-                acb_hypgeom_gamma_upper_1f1b(w1, a0, z, modified, prec1);
+                acb_hypgeom_gamma_upper_1f1b(w1, a0, z, regularized, prec1);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w1, a0, z, modified, prec1);
+                acb_hypgeom_gamma_upper(w1, a0, z, regularized, prec1);
         }
 
         if (!acb_overlaps(w0, w1))
         {
             flint_printf("FAIL: consistency\n\n");
-            flint_printf("nu = "); acb_printd(a0, 30); flint_printf("\n\n");
+            flint_printf("a0 = "); acb_printd(a0, 30); flint_printf("\n\n");
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
@@ -148,36 +149,53 @@ int main()
         switch (n_randint(state, 4))
         {
             case 0:
-                acb_hypgeom_gamma_upper_asymp(w1, a1, z, modified, prec1);
+                acb_hypgeom_gamma_upper_asymp(w1, a1, z, regularized, prec1);
                 break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w1, a1, z, modified, prec1);
+                acb_hypgeom_gamma_upper_1f1a(w1, a1, z, regularized, prec1);
                 break;
             case 2:
-                acb_hypgeom_gamma_upper_1f1b(w1, a1, z, modified, prec1);
+                acb_hypgeom_gamma_upper_1f1b(w1, a1, z, regularized, prec1);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w1, a1, z, modified, prec1);
+                acb_hypgeom_gamma_upper(w1, a1, z, regularized, prec1);
         }
 
-        /* a Gamma(a,z) + exp(-z) z^a = Gamma(a+1,z) */
-        if (modified)
-            acb_one(t);
-        else
-            acb_pow(t, z, a0, prec0);
-
-        acb_neg(u, z);
-        acb_exp(u, u, prec0);
-        acb_mul(t, t, u, prec0);
-
-        if (modified)
+        if (regularized == 2)
         {
+            acb_one(t);
+
+            acb_neg(u, z);
+            acb_exp(u, u, prec0);
+            acb_mul(t, t, u, prec0);
+
             acb_mul(b, w1, z, prec0);
             acb_addmul(t, a0, w0, prec0);
             acb_sub(t, t, b, prec0);
         }
+        else if (regularized == 1)
+        {
+            /* Q(a,z) + exp(-z) z^a / Gamma(a+1) - Q(a+1,z) = 0 */
+            acb_pow(t, z, a0, prec0);
+            acb_rgamma(u, a1, prec0);
+            acb_mul(t, t, u, prec0);
+
+            acb_neg(u, z);
+            acb_exp(u, u, prec0);
+            acb_mul(t, t, u, prec0);
+
+            acb_add(t, t, w0, prec0);
+            acb_sub(t, t, w1, prec0);
+        }
         else
         {
+            /* a Gamma(a,z) + exp(-z) z^a - Gamma(a+1,z) = 0 */
+            acb_pow(t, z, a0, prec0);
+
+            acb_neg(u, z);
+            acb_exp(u, u, prec0);
+            acb_mul(t, t, u, prec0);
+
             acb_addmul(t, a0, w0, prec0);
             acb_sub(t, t, w1, prec0);
         }
@@ -185,7 +203,8 @@ int main()
         if (!acb_contains_zero(t))
         {
             flint_printf("FAIL: contiguous relation\n\n");
-            flint_printf("nu = "); acb_printd(a0, 30); flint_printf("\n\n");
+            flint_printf("regularized = %d\n\n", regularized);
+            flint_printf("a0 = "); acb_printd(a0, 30); flint_printf("\n\n");
             flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");

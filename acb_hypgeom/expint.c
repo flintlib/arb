@@ -32,7 +32,7 @@ acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec)
     acb_init(t);
     acb_sub_ui(t, s, 1, prec);
     acb_neg(t, t);
-    acb_hypgeom_gamma_upper(res, t, z, 1, prec);
+    acb_hypgeom_gamma_upper(res, t, z, 2, prec);
     acb_clear(t);
 }
 

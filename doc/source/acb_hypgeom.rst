@@ -486,17 +486,28 @@ simultaneously. Any of the four function values can be omitted by passing
 Incomplete gamma functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
+.. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
+.. function:: void acb_hypgeom_gamma_upper_1f1a(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
+.. function:: void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int modified, slong prec)
+.. function:: void acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int regularized, slong prec)
 
-.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, slong prec)
+.. function:: void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
-    Computes the upper incomplete gamma function respectively using
+    If *regularized* is 0, computes the upper incomplete gamma function
+    `\Gamma(s,z)`.
+
+    If *regularized* is 1, computes the regularized upper incomplete
+    gamma function `Q(s,z) = \Gamma(s,z) / \Gamma(s)`.
+
+    If *regularized* is 2, computes the generalized exponential integral
+    `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead (this option is mainly
+    intended for internal use; :func:`acb_hypgeom_expint` is the intended
+    interface for computing the exponential integral).
+
+    The different methods respectively implement the formulas
 
     .. math ::
 
@@ -521,8 +532,6 @@ Incomplete gamma functions
     other special input such as `z = 0` and `s = 1, 2, 3`.
     The *singular* version evaluates the finite sum directly and therefore
     assumes that *s* is not too large.
-    If *modified* is set, computes the exponential integral
-    `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead.
 
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
