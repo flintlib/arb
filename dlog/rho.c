@@ -30,8 +30,8 @@ void
 dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n)
 {
   t->a = a;
-  t->n = n;
-  t->mod = mod;
+  nmod_init(&t->n, n);
+  nmod_init(&t->mod, mod);
   t->nisprime = n_is_prime(n);
 }
 
@@ -42,7 +42,7 @@ dlog_rho_clear(dlog_rho_t t)
 }
 
 static ulong
-dlog_once(ulong b, ulong a, ulong mod, ulong n)
+dlog_once(ulong b, ulong a, const nmod_t mod, ulong n)
 {
     if (n < 50)
     {
@@ -52,14 +52,14 @@ dlog_once(ulong b, ulong a, ulong mod, ulong n)
         {
             if (ak == b)
                 return k;
-            ak = (ak * a) % mod;
+            ak = nmod_mul(ak, a, mod);
         }
         flint_printf("FAIL[dlog once]: log(%wu,%wu) mod %wu not found (size %wu)\n",
-                b, a, mod, n);
+                b, a, mod.n, n);
         abort();
     } else {
         dlog_rho_t t;
-        dlog_rho_init(t, a, mod, n);
+        dlog_rho_init(t, a, mod.n, n);
         return dlog_rho(t, b);
     }
 }
@@ -68,22 +68,21 @@ dlog_once(ulong b, ulong a, ulong mod, ulong n)
 static ulong
 dlog_quotient(const dlog_rho_t t, ulong e, ulong f, ulong g, ulong b)
 {
-    ulong r, n, b_ar, an;
-    n = t->n;
-    if (g == n)
+    ulong r, b_ar, an;
+    nmod_t n = t->n;
+    if (g == n.n)
     {
         flint_printf("FAIL[dlog quotient]: trivial relation e = %wu, f = %wu mod %wu\n",
-                e, f, n);
+                e, f, n.n);
         abort();
     }
-    n = n / g;
+    nmod_init(&n, n.n / g);
     e = e / g;
     f = f / g;
-    f = n_invmod(f, n);
-    r = ( e * f ) % n;
-    an = n_powmod(t->a, n, t->mod);
-    b_ar = (b * n_invmod(n_powmod(t->a, r, t->mod), t->mod)) % t->mod;
-    return r + n * dlog_once(b_ar, an, t->mod, g);
+    r = nmod_div(e, f, n);
+    an = nmod_pow_ui(t->a, n.n, t->mod);
+    b_ar = nmod_div(b, nmod_pow_ui(t->a, r, t->mod), t->mod);
+    return r + n.n * dlog_once(b_ar, an, t->mod, g);
 }
 
 #define RWALK 20
@@ -94,13 +93,14 @@ dlog_rho(const dlog_rho_t t, ulong b)
     ulong m[RWALK], n[RWALK], ab[RWALK];
     ulong x[2], e[2], f[2], g;
     flint_rand_t state;
+
     flint_randinit(state);
     do {
         for (k = 0; k < RWALK; k++)
         {
-            m[k] = 1 + n_randint(state, t->n - 1);
-            n[k] = 1 + n_randint(state, t->n - 1);
-            ab[k] = (n_powmod(t->a, m[k], t->mod) * n_powmod(b, n[k], t->mod)) % t->mod;
+            m[k] = 1 + n_randint(state, t->n.n - 1);
+            n[k] = 1 + n_randint(state, t->n.n - 1);
+            ab[k] = nmod_mul(nmod_pow_ui(t->a, m[k], t->mod), nmod_pow_ui(b, n[k], t->mod), t->mod);
         }
         /* x[l] = a^e[l] * b^f[l] */
         x[0] = x[1] = 1;
@@ -110,24 +110,20 @@ dlog_rho(const dlog_rho_t t, ulong b)
             for(j = 0; j < 3; j++)
             {
                 l = (j > 0);
-                k = floor( (double) RWALK * x[l] / t->mod );
-                x[l] = (x[l] * ab[k]) % t->mod;
-                e[l] = (e[l] + m[k]) % t->n;
-                f[l] = (f[l] + n[k]) % t->n;
+                k = floor( (double) RWALK * x[l] / t->mod.n );
+                x[l] = nmod_mul(x[l], ab[k], t->mod);
+                e[l] = nmod_add(e[l], m[k], t->n);
+                f[l] = nmod_add(f[l], n[k], t->n);
             }
         } while (x[0] != x[1]);
     } while (e[0] == e[1] && f[0] == f[1]);
     flint_randclear(state);
+
     /* e = f * log(b) */
-    e[0] = (e[0] > e[1]) ?  e[0] - e[1] : e[0] + t->n - e[1];
-    f[0] = (f[1] > f[0]) ?  f[1] - f[0] : f[1] + t->n - f[0];
-    if (!t->nisprime && (g = n_gcd(f[0], t->n)) > 1)
-    {
+    e[0] = nmod_sub(e[0], e[1], t->n);
+    f[0] = nmod_sub(f[1], f[0], t->n);
+    if (!t->nisprime && (g = n_gcd(f[0], t->n.n)) > 1)
         return dlog_quotient(t, e[0], f[0], g, b);
-    }
     else
-    {
-        f[0] = n_invmod(f[0], t->n);
-        return ( e[0] * f[0] ) % t->n;
-    }
+        return nmod_div(e[0], f[0], t->n);
 }

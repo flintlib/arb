@@ -36,8 +36,8 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
     n_factor(&fac, n, 1);
 
     t->num = fac.num;
-    t->mod = mod;
-    t->n = n;
+    nmod_init(&t->mod,mod);
+    nmod_init(&t->n, n);
 
     M = t->expo = flint_malloc(t->num * sizeof(ulong));
     u = t->crt_coeffs = flint_malloc(t->num * sizeof(ulong));
@@ -52,9 +52,9 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
         e = fac.exp[k];
         mk = n_pow(p, e);
         M[k] = n / mk;
-        u[k] = M[k] * n_invmod(M[k] % mk, mk) % n;
+        u[k] = nmod_mul(M[k], n_invmod(M[k] % mk, mk), t->n);
         /* depends on the power */
-        dlog_precomp_pe_init(t->pre[k], n_powmod(a, M[k], mod), mod, p, e, mk, num);
+        dlog_precomp_pe_init(t->pre[k], nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
     }
 }
 
@@ -80,13 +80,13 @@ dlog_crt(const dlog_crt_t t, ulong b)
     for (k = 0; k < t->num; k++)
     {
         ulong bk, rk;
-        bk = n_powmod(b, t->expo[k], t->mod);
+        bk = nmod_pow_ui(b, t->expo[k], t->mod);
         rk = dlog_precomp(t->pre[k], bk);
 #if 0
         flint_printf("##[crt-%d]: log(%wu)=log(%wu^%wu) = %wu [size %wu mod %wu]\n",
                 k, bk, b, t->expo[k], rk, t->n/t->expo[k], t->mod);
 #endif
-        r = (r + t->crt_coeffs[k] * rk) % t->n;
+        r = nmod_add(r, nmod_mul(t->crt_coeffs[k], rk, t->n), t->n);
     }
     return r;
 }
