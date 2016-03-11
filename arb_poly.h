@@ -524,14 +524,23 @@ void _arb_poly_acos_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong
 
 void arb_poly_acos_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec);
 
-void _arb_poly_exp_series_basecase(arb_ptr f,
-        arb_srcptr h, slong hlen, slong n, slong prec);
-
+void _arb_poly_exp_series_basecase(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec);
 void arb_poly_exp_series_basecase(arb_poly_t f, const arb_poly_t h, slong n, slong prec);
-
 void _arb_poly_exp_series(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec);
-
 void arb_poly_exp_series(arb_poly_t f, const arb_poly_t h, slong n, slong prec);
+
+void _arb_poly_sinh_cosh_series_basecase(arb_ptr s, arb_ptr c, const arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_sinh_cosh_series_basecase(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec);
+void _arb_poly_sinh_cosh_series_exponential(arb_ptr s, arb_ptr c, const arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_sinh_cosh_series_exponential(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec);
+void _arb_poly_sinh_cosh_series(arb_ptr s, arb_ptr c, const arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_sinh_cosh_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, slong n, slong prec);
+
+void _arb_poly_sinh_series(arb_ptr s, arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_sinh_series(arb_poly_t s, const arb_poly_t h, slong n, slong prec);
+
+void _arb_poly_cosh_series(arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_cosh_series(arb_poly_t c, const arb_poly_t h, slong n, slong prec);
 
 void _arb_poly_sin_cos_series_basecase(arb_ptr s,
                                     arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec, int times_pi);

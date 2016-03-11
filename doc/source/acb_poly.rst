@@ -785,6 +785,33 @@ Elementary functions
     Compute the respective trigonometric functions of the input
     multiplied by `\pi`.
 
+.. function:: void _acb_poly_sinh_cosh_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_sinh_cosh_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, slong n, slong prec)
+
+.. function:: void _acb_poly_sinh_cosh_series_exponential(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_sinh_cosh_series_exponential(acb_poly_t s, acb_poly_t c, const acb_poly_t h, slong n, slong prec)
+
+.. function:: void _acb_poly_sinh_cosh_series(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_sinh_cosh_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, slong n, slong prec)
+
+.. function:: void _acb_poly_sinh_series(acb_ptr s, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_sinh_series(acb_poly_t s, const acb_poly_t h, slong n, slong prec)
+
+.. function:: void _acb_poly_cosh_series(acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_cosh_series(acb_poly_t c, const acb_poly_t h, slong n, slong prec)
+
+    Sets *s* and *c* respectively to the hyperbolic sine and cosine of the
+    power series *h*, truncated to length *n*.
+
+    The implementations mirror those for sine and cosine, except that
+    the *exponential* version computes both functions using the exponential
+    function instead of the hyperbolic tangent.
+
 Gamma function
 -------------------------------------------------------------------------------
 
