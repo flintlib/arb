@@ -53,14 +53,14 @@ arb_contains_arf(const arb_t x, const arf_t y)
         arf_init_neg_mag_shallow(tmp + 1,  arb_radref(x));
         arf_init_neg_shallow(tmp + 2, y);
 
-        arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+        arf_sum(t, tmp, 3, MAG_BITS, ARF_RND_DOWN);
         result = (arf_sgn(t) <= 0);
 
         if (result)
         {
             /* y <= xm + xr  <=>  0 <= xm + xr - y */
             arf_init_set_mag_shallow(tmp + 1,  arb_radref(x));
-            arf_sum(t, tmp, 3, 30, ARF_RND_DOWN);
+            arf_sum(t, tmp, 3, MAG_BITS, ARF_RND_DOWN);
             result = (arf_sgn(t) >= 0);
         }
 
