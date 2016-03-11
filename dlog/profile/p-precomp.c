@@ -23,7 +23,7 @@
 
 ******************************************************************************/
 
-#include "acb_dirichlet/dlog.h"
+#include "dlog.h"
 #include "profiler.h"
 #include <math.h>
 
