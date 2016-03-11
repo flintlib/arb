@@ -47,8 +47,8 @@ arb_contains(const arb_t x, const arb_t y)
     arf_init_set_mag_shallow(yr, arb_radref(y));
 
     /* fast check */
-    arf_sub(t, arb_midref(x), xr, 30, ARF_RND_CEIL);
-    arf_sub(u, arb_midref(y), yr, 30, ARF_RND_FLOOR);
+    arf_sub(t, arb_midref(x), xr, MAG_BITS, ARF_RND_CEIL);
+    arf_sub(u, arb_midref(y), yr, MAG_BITS, ARF_RND_FLOOR);
     left_ok = arf_cmp(t, u) <= 0;
 
     /* exact check */
@@ -59,13 +59,13 @@ arb_contains(const arb_t x, const arb_t y)
         arf_init_neg_shallow(tmp + 2, arb_midref(y));
         arf_init_set_mag_shallow(tmp + 3, arb_radref(y));
 
-        arf_sum(t, tmp, 4, 30, ARF_RND_DOWN);
+        arf_sum(t, tmp, 4, MAG_BITS, ARF_RND_DOWN);
         left_ok = arf_sgn(t) <= 0;
     }
 
     /* fast check */
-    arf_add(t, arb_midref(x), xr, 30, ARF_RND_FLOOR);
-    arf_add(u, arb_midref(y), yr, 30, ARF_RND_CEIL);
+    arf_add(t, arb_midref(x), xr, MAG_BITS, ARF_RND_FLOOR);
+    arf_add(u, arb_midref(y), yr, MAG_BITS, ARF_RND_CEIL);
     right_ok = (arf_cmp(t, u) >= 0);
 
     /* exact check */
@@ -76,7 +76,7 @@ arb_contains(const arb_t x, const arb_t y)
         arf_init_neg_shallow(tmp + 2, arb_midref(y));
         arf_init_neg_mag_shallow(tmp + 3, arb_radref(y));
 
-        arf_sum(t, tmp, 4, 30, ARF_RND_DOWN);
+        arf_sum(t, tmp, 4, MAG_BITS, ARF_RND_DOWN);
         right_ok = arf_sgn(t) >= 0;
     }
 

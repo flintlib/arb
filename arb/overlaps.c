@@ -56,7 +56,7 @@ arb_overlaps(const arb_t x, const arb_t y)
     arf_init_neg_mag_shallow(u + 2, arb_radref(x));
     arf_init_neg_mag_shallow(u + 3, arb_radref(y));
 
-    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    arf_sum(t, u, 4, MAG_BITS, ARF_RND_DOWN);
     result = arf_sgn(t) <= 0;
 
     arf_clear(t);
