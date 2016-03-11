@@ -179,7 +179,7 @@ Arithmetic
 
 .. function:: void bool_mat_add(bool_mat_t res, const bool_mat_t mat1, const bool_mat_t mat2)
 
-    Sets res to the sum of *mat1* and *mat2*.
+    Sets *res* to the sum of *mat1* and *mat2*.
     The operands must have the same dimensions.
 
 .. function:: void bool_mat_mul(bool_mat_t res, const bool_mat_t mat1, const bool_mat_t mat2)
@@ -251,7 +251,7 @@ Special functions
     and otherwise it returns the maximum entry in `B`, except if `A` is empty
     in which case `-1` is returned.
     Note that the returned value is one less than
-    than that of :func:`nilpotency_degree`.
+    that of :func:`nilpotency_degree`.
 
     This function can help quantify entrywise errors in a truncated evaluation
     of a matrix power series.  If *A* is an indictor matrix with the same
