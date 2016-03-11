@@ -26,8 +26,9 @@
 #ifndef DLOG_H
 #define DLOG_H
 
-#include "padic.h"
 #include "ulong_extras.h"
+#include "nmod_vec.h"
+#include "padic.h"
 
 enum
 {
@@ -56,7 +57,6 @@ typedef struct
     ulong p;
     ulong e;
     ulong pe;
-    /*dlog_precomp_t modp;*/
     dlog_precomp_struct * modp;
     dlog_1modpe_t modpe;
 }
@@ -96,8 +96,8 @@ typedef dlog_bsgs_struct dlog_bsgs_t[1];
 /* Pollard rho */
 typedef struct {
   ulong a;
-  ulong n;
-  ulong mod;
+  nmod_t n;
+  nmod_t mod;
   int nisprime;
 } dlog_rho_struct;
 
@@ -106,8 +106,8 @@ typedef dlog_rho_struct dlog_rho_t[1];
 /* CRT decomposition (Pohlig-Hellman) */
 typedef struct
 {
-    ulong mod;
-    ulong n;
+    nmod_t mod;
+    nmod_t n;
     ulong num;
     ulong * expo;
     ulong * crt_coeffs;
@@ -124,7 +124,7 @@ typedef dlog_crt_struct dlog_crt_t[1];
 /* dlog when generator has prime power order */
 typedef struct
 {
-    ulong mod;
+    nmod_t mod;
     ulong p;
     ulong e;
     ulong * apk;
@@ -188,5 +188,10 @@ void dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong 
 void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, ulong pe, ulong num);
 void dlog_precomp_clear(dlog_precomp_t pre);
 ulong dlog_precomp(const dlog_precomp_t pre, ulong b);
+
+void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
+void dlog_vec_sieve(ulong * v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
+void dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+
 
 #endif
