@@ -78,7 +78,7 @@ int arb_lt(const arb_t x, const arb_t y)
     arf_init_set_mag_shallow(u + 3, arb_radref(y));
 
     arf_init(t);
-    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    arf_sum(t, u, 4, MAG_BITS, ARF_RND_DOWN);
     res = (arf_sgn(t) < 0);
     arf_clear(t);
 
@@ -109,7 +109,7 @@ int arb_le(const arb_t x, const arb_t y)
     arf_init_set_mag_shallow(u + 3, arb_radref(y));
 
     arf_init(t);
-    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    arf_sum(t, u, 4, MAG_BITS, ARF_RND_DOWN);
     res = (arf_sgn(t) <= 0);
     arf_clear(t);
 
@@ -139,7 +139,7 @@ int arb_gt(const arb_t x, const arb_t y)
     arf_init_neg_mag_shallow(u + 3, arb_radref(y));
 
     arf_init(t);
-    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    arf_sum(t, u, 4, MAG_BITS, ARF_RND_DOWN);
     res = (arf_sgn(t) > 0);
     arf_clear(t);
 
@@ -170,7 +170,7 @@ int arb_ge(const arb_t x, const arb_t y)
     arf_init_neg_mag_shallow(u + 3, arb_radref(y));
 
     arf_init(t);
-    arf_sum(t, u, 4, 30, ARF_RND_DOWN);
+    arf_sum(t, u, 4, MAG_BITS, ARF_RND_DOWN);
     res = (arf_sgn(t) >= 0);
     arf_clear(t);
 
