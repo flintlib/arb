@@ -54,6 +54,36 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen,
             acb_div(Q + 1, Q + 1, B, prec);
         }
     }
+    else if (Blen == 2 || n <= 10)
+    {
+        /* The basecase algorithm is faster for much larger Blen and n than
+           this, but unfortunately has worse numerical stability. */
+        slong i, j;
+        acb_t q;
+
+        acb_init(q);
+
+        acb_inv(q, B, prec);
+        acb_div(Q, A, B, prec);
+
+        for (i = 1; i < n; i++)
+        {
+            acb_mul(Q + i, B + 1, Q + i - 1, prec);
+
+            for (j = 2; j < FLINT_MIN(i + 1, Blen); j++)
+                acb_addmul(Q + i, B + j, Q + i - j, prec);
+
+            if (i < Alen)
+                acb_sub(Q + i, A + i, Q + i, prec);
+            else
+                acb_neg(Q + i, Q + i);
+
+            if (!acb_is_one(q))
+                acb_mul(Q + i, Q + i, q, prec);
+        }
+
+        acb_clear(q);
+    }
     else
     {
         acb_ptr Binv;
