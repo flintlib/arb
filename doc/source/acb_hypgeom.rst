@@ -585,6 +585,13 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
+.. function:: void _acb_hypgeom_ei_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_ei_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the exponential integral of the power series *z*,
+    truncated to length *len*.
+
 .. function:: void acb_hypgeom_si_asymp(acb_t res, const acb_t z, slong prec)
 
 .. function:: void acb_hypgeom_si_1f2(acb_t res, const acb_t z, slong prec)
