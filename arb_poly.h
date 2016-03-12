@@ -590,6 +590,9 @@ void _arb_poly_tan_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong 
 
 void arb_poly_tan_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec);
 
+void _arb_poly_sinc_series(arb_ptr g, arb_srcptr h, slong hlen, slong n, slong prec);
+void arb_poly_sinc_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec);
+
 void _arb_poly_compose_series_brent_kung(arb_ptr res, arb_srcptr poly1, slong len1,
                             arb_srcptr poly2, slong len2, slong n, slong prec);
 

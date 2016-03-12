@@ -908,6 +908,13 @@ Powers and elementary functions
     the *exponential* version computes both functions using the exponential
     function instead of the hyperbolic tangent.
 
+.. function:: void _arb_poly_sinc_series(arb_ptr s, arb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void arb_poly_sinc_series(arb_poly_t s, const arb_poly_t h, slong n, slong prec)
+
+    Sets *c* to the sinc function of the power series *h*, truncated
+    to length *n*.
+
 Gamma function and factorials
 -------------------------------------------------------------------------------
 
