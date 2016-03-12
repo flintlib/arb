@@ -47,11 +47,24 @@ hls_to_rgb(double *R, double *G, double *B, double h, double l, double s)
 
 #define PI 3.1415926535898
 
+const double blue_orange_colors[][4] = {
+  {-1.0,  0.0, 0.0, 0.0},
+  {-0.95, 0.1, 0.2, 0.5},
+  {-0.5,  0.0, 0.5, 1.0},
+  {-0.05, 0.4, 0.8, 0.8},
+  { 0.0,  1.0, 1.0, 1.0},
+  { 0.05, 1.0, 0.9, 0.3},
+  { 0.5,  0.9, 0.5, 0.0},
+  { 0.95, 0.7, 0.1, 0.0},
+  { 1.0,  0.0, 0.0, 0.0},
+  { 2.0,  0.0, 0.0, 0.0},
+};
+
 void
-color_function(double * R, double * G, double * B, const acb_t z)
+color_function(double * R, double * G, double * B, const acb_t z, int mode)
 {
     double H, L, S;
-    slong prec;
+    slong prec, i;
     arb_t t, u;
 
     if (!acb_is_finite(z) || acb_rel_accuracy_bits(z) < 4)
@@ -71,28 +84,60 @@ color_function(double * R, double * G, double * B, const acb_t z)
     arb_atan2(t, u, t, prec);
 
     H = arf_get_d(arb_midref(t), ARF_RND_DOWN);
-    H = (H + PI) / (2 * PI) + 0.5;
-    H = H - floor(H);
 
-    acb_abs(t, z, prec);
+    if (mode == 0)
+    {
+        H = (H + PI) / (2 * PI) + 0.5;
+        H = H - floor(H);
 
-    if (arf_cmpabs_2exp_si(arb_midref(t), 200) > 0)
-    {
-        L = 1.0;
-    }
-    else if (arf_cmpabs_2exp_si(arb_midref(t), -200) < 0)
-    {
-        L = 0.0;
+        acb_abs(t, z, prec);
+
+        if (arf_cmpabs_2exp_si(arb_midref(t), 200) > 0)
+        {
+            L = 1.0;
+        }
+        else if (arf_cmpabs_2exp_si(arb_midref(t), -200) < 0)
+        {
+            L = 0.0;
+        }
+        else
+        {
+            L = arf_get_d(arb_midref(t), ARF_RND_DOWN);
+            L = 1.0 - 1.0/(1.0 + pow(L, 0.2));
+        }
+
+        S = 0.8;
+
+        hls_to_rgb(R, G, B, H, L, S);
     }
     else
     {
-        L = arf_get_d(arb_midref(t), ARF_RND_DOWN);
-        L = 1.0 - 1.0/(1.0 + pow(L, 0.2));
+        H = H / PI;
+        H = FLINT_MAX(FLINT_MIN(H, 1.0), -1.0);
+
+        for (i = 1; ; i++)
+        {
+            if (blue_orange_colors[i][0] > H)
+            {
+                double a, ra, ga, ba, b, rb, gb, bb, s;
+
+                a  = blue_orange_colors[i-1][0];
+                ra = blue_orange_colors[i-1][1];
+                ga = blue_orange_colors[i-1][2];
+                ba = blue_orange_colors[i-1][3];
+                b  = blue_orange_colors[i][0];
+                rb = blue_orange_colors[i][1];
+                gb = blue_orange_colors[i][2];
+                bb = blue_orange_colors[i][3];
+
+                s = (H - a) / (b - a);
+                *R = ra + (rb - ra) * s;
+                *G = ga + (gb - ga) * s;
+                *B = ba + (bb - ba) * s;
+                break;
+            }
+        }
     }
-
-    S = 0.8;
-
-    hls_to_rgb(R, G, B, H, L, S);
 
     arb_clear(t);
     arb_clear(u);
@@ -164,20 +209,26 @@ int main(int argc, char *argv[])
     arf_t xa, xb, ya, yb;
     acb_t z, w;
     func_ptr func;
+    int color_mode;
 
     if (argc < 2)
     {
-        printf("complex_plot [-range xa xb ya yb] [-size xn yn] <func>\n\n");
+        printf("complex_plot [-range xa xb ya yb] [-size xn yn] [-color n] <func>\n\n");
 
         printf("Plots one of the predefined functions on [xa,xb] + [ya,yb]i\n");
         printf("using domain coloring, at a resolution of xn by yn pixels.\n\n");
 
         printf("Defaults parameters are [-10,10] + [-10,10]i and xn = yn = 512.\n\n");
 
+        printf("A color function can be selected with -color. Valid options\n");
+        printf("are 0 (phase=hue, magnitude=brightness) and 1 (phase only,\n");
+        printf("white-gold-black-blue-white counterclockwise).\n\n");
+
         printf("The output is written to arbplot.ppm. If you have ImageMagick,\n");
         printf("run [convert arbplot.ppm arbplot.png] to get a PNG.\n\n");
 
         printf("Function codes <func> are:\n");
+        printf("  sin     - Sine\n");
         printf("  gamma   - Gamma function\n");
         printf("  digamma - Digamma function\n");
         printf("  lgamma  - Logarithmic gamma function\n");
@@ -202,6 +253,7 @@ int main(int argc, char *argv[])
     dxa = dya = -10;
     dxb = dyb = 10;
     func = acb_gamma;
+    color_mode = 0;
 
     for (i = 1; i < argc; i++)
     {
@@ -218,6 +270,15 @@ int main(int argc, char *argv[])
             dya = atof(argv[i+3]);
             dyb = atof(argv[i+4]);
             i += 4;
+        }
+        else if (!strcmp(argv[i], "-color"))
+        {
+            color_mode = atoi(argv[i+1]);
+            i++;
+        }
+        else if (!strcmp(argv[i], "sin"))
+        {
+            func = acb_sin;
         }
         else if (!strcmp(argv[i], "gamma"))
         {
@@ -335,7 +396,7 @@ int main(int argc, char *argv[])
                     break;
             }
 
-            color_function(&R, &G, &B, w);
+            color_function(&R, &G, &B, w, color_mode);
 
             fputc(FLINT_MIN(255, floor(R * 255)), fp);
             fputc(FLINT_MIN(255, floor(G * 255)), fp);
