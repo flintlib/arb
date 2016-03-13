@@ -146,23 +146,30 @@ void acb_hypgeom_erfi_series(acb_poly_t g, const acb_poly_t h, slong len, slong 
 void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ei(acb_t res, const acb_t z, slong prec);
-
 void _acb_hypgeom_ei_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
 void acb_hypgeom_ei_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_si_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_si_1f2(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_si(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_si_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_si_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ci(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_ci_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_ci_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_shi(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_shi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_shi_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_chi_2f3(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_chi(acb_t res, const acb_t z, slong prec);
+void _acb_hypgeom_chi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
+void acb_hypgeom_chi_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_li(acb_t res, const acb_t z, int offset, slong prec);
 

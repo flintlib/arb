@@ -613,6 +613,13 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
+.. function:: void _acb_hypgeom_si_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_si_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the sine integral of the power series *z*,
+    truncated to length *len*.
+
 .. function:: void acb_hypgeom_ci_asymp(acb_t res, const acb_t z, slong prec)
 
 .. function:: void acb_hypgeom_ci_2f3(acb_t res, const acb_t z, slong prec)
@@ -636,11 +643,25 @@ The branch cut conventions of the following functions match Mathematica.
 
     and an automatic algorithm choice.
 
+.. function:: void _acb_hypgeom_ci_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_ci_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the cosine integral of the power series *z*,
+    truncated to length *len*.
+
 .. function:: void acb_hypgeom_shi(acb_t res, const acb_t z, slong prec)
 
     Computes the hyperbolic sine integral
     `\operatorname{Shi}(z) = -i \operatorname{Si}(iz)`.
     This is a trivial wrapper of :func:`acb_hypgeom_si`.
+
+.. function:: void _acb_hypgeom_shi_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_shi_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the hyperbolic sine integral of the power series *z*,
+    truncated to length *len*.
 
 .. function:: void acb_hypgeom_chi_asymp(acb_t res, const acb_t z, slong prec)
 
@@ -664,6 +685,13 @@ The branch cut conventions of the following functions match Mathematica.
             + \log(z) + \gamma
 
     and an automatic algorithm choice.
+
+.. function:: void _acb_hypgeom_chi_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void acb_hypgeom_chi_series(acb_poly_t res, const acb_poly_t z, slong len, slong prec)
+
+    Computes the hyperbolic cosine integral of the power series *z*,
+    truncated to length *len*.
 
 .. function:: void acb_hypgeom_li(acb_t res, const acb_t z, int offset, slong prec)
 

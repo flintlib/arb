@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("ei_series....");
+    flint_printf("shi_series....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -60,18 +60,20 @@ int main()
         acb_poly_randtest(A, state, m, bits1, 3);
         acb_poly_randtest(B, state, m, bits1, 3);
 
-        acb_hypgeom_ei_series(A, S, n1, bits2);
-        acb_hypgeom_ei_series(B, S, n2, bits3);
+        acb_hypgeom_shi_series(A, S, n1, bits2);
+        acb_hypgeom_shi_series(B, S, n2, bits3);
 
         acb_poly_set(C, A);
         acb_poly_truncate(C, n3);
         acb_poly_truncate(B, n3);
 
-        /* [Ei(h(x))]' h(x) = exp(h(x)) h'(x) */
+        /* [Shi(h(x))]' h(x) = sinh(h(x)) h'(x) */
+        acb_poly_sinh_series(U, S, n3, bits2);
+        acb_poly_derivative(T, S, bits2);
+        acb_poly_mullow(U, U, T, FLINT_MAX(0, n3 - 1), bits2);
+
         acb_poly_derivative(T, A, bits2);
         acb_poly_mullow(T, T, S, FLINT_MAX(0, n3 - 1), bits2);
-        acb_poly_exp_series(U, S, n3, bits2);
-        acb_poly_derivative(U, U, bits2);
 
         if (!acb_poly_overlaps(B, C) || !acb_poly_overlaps(T, U))
         {
@@ -84,7 +86,7 @@ int main()
             abort();
         }
 
-        acb_hypgeom_ei_series(S, S, n1, bits2);
+        acb_hypgeom_shi_series(S, S, n1, bits2);
 
         if (!acb_poly_overlaps(A, S))
         {
