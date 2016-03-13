@@ -172,6 +172,8 @@ void _acb_hypgeom_chi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slo
 void acb_hypgeom_chi_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_li(acb_t res, const acb_t z, int offset, slong prec);
+void _acb_hypgeom_li_series(acb_ptr g, acb_srcptr h, slong hlen, int offset, slong len, slong prec);
+void acb_hypgeom_li_series(acb_poly_t g, const acb_poly_t h, int offset, slong len, slong prec);
 
 void acb_hypgeom_2f1_continuation(acb_t res0, acb_t res1,
     const acb_t a, const acb_t b, const acb_t c, const acb_t z0,

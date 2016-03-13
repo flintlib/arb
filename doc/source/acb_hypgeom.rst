@@ -701,6 +701,13 @@ The branch cut conventions of the following functions match Mathematica.
     If *offset* is nonzero, computes the offset logarithmic integral
     `\operatorname{Li}(z) = \operatorname{li}(z) - \operatorname{li}(2)`.
 
+.. function:: void _acb_hypgeom_li_series(acb_ptr res, acb_srcptr z, slong zlen, int offset, slong len, slong prec)
+
+.. function:: void acb_hypgeom_li_series(acb_poly_t res, const acb_poly_t z, int offset, slong len, slong prec)
+
+    Computes the logarithmic integral (optionally the offset version)
+    of the power series *z*, truncated to length *len*.
+
 Gauss hypergeometric function
 -------------------------------------------------------------------------------
 
