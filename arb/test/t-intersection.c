@@ -111,7 +111,7 @@ int main()
         int c1, c2, c3;
         slong prec;
 
-        prec = 32;
+        prec = 2 + n_randint(state, 200);
 
         arb_init(a);
         arb_init(b);
