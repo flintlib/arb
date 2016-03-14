@@ -43,7 +43,12 @@ acb_hypgeom_pfq_sum(acb_t s, acb_t t, acb_srcptr a, slong p,
     }
     else
     {
-        acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);
+        /* With inexact complex numbers, prefer binary splitting
+           as it reduces the wrapping effect. */
+        if (n > 8)
+            acb_hypgeom_pfq_sum_bs(s, t, a, p, b, q, z, n, prec);
+        else
+            acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);
     }
 }
 
@@ -65,7 +70,12 @@ acb_hypgeom_pfq_sum_invz(acb_t s, acb_t t, acb_srcptr a, slong p,
     }
     else
     {
-        acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);
+        /* With inexact complex numbers, binary splitting
+           as it reduces the wrapping effect. */
+        if (n > 8)
+            acb_hypgeom_pfq_sum_bs_invz(s, t, a, p, b, q, zinv, n, prec);
+        else
+            acb_hypgeom_pfq_sum_forward(s, t, a, p, b, q, z, n, prec);
     }
 }
 
