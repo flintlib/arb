@@ -532,6 +532,7 @@ void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, slong prec);
 void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x);
 
 void arb_union(arb_t z, const arb_t x, const arb_t y, slong prec);
+int arb_intersection(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits);
 
 int arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd);
