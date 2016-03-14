@@ -23,42 +23,7 @@
 
 ******************************************************************************/
 
-#include "acb_dirichlet.h"
-#include "padic.h"
-
-typedef struct
-{
-    ulong p;
-    padic_ctx_t ctx;     /* padic context */
-    padic_t invlog;
-}
-dlog_1modpe_struct;
-
-typedef dlog_1modpe_struct dlog_1modpe_t[1];
-
-void
-dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e)
-{
-    fmpz_t tmp;
-    t->p = p;
-    fmpz_init(tmp);
-    padic_init(t->invlog);
-
-    fmpz_set_ui(tmp, p);
-    padic_ctx_init(t->ctx , tmp , 0 , e, PADIC_TERSE);
-
-    padic_set_ui(t->invlog, a1, t->ctx);
-    padic_inv(t->invlog, t->invlog, t->ctx);
-
-    fmpz_clear(tmp);
-}
-
-void
-dlog_1modpe_clear(dlog_1modpe_t t)
-{
-    padic_clear(t->invlog);
-    padic_ctx_clear(t->ctx);
-}
+#include "dlog.h"
 
 /* assume b = 1 mod p, not checked */
 ulong

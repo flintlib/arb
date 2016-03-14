@@ -19,6 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
+    Copyright (C) 2013 Mike Hansen
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
@@ -26,23 +27,37 @@
 #include <stdlib.h>
 #include "dlog.h"
 
-ulong
-dlog_bsgs(const dlog_bsgs_t t, ulong b)
+int
+apow_cmp(const apow_t * x, const apow_t * y)
 {
-    ulong i;
-    apow_t c, * x;
+    return (x->ak < y->ak) ? -1 : (x->ak > y->ak);
+}
 
-    c.ak = b;
-    for (i = 0; i <= t->g; i++)
+/* set size of table m=sqrt(nk) to compute k logs in a group of size n */
+void
+dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
+{
+    ulong k, ak;
+    t->table = (apow_t *)flint_malloc(m * sizeof(apow_t));
+    if (m > n) m = n;
+
+    nmod_init(&t->mod, mod);
+    t->m = m;
+    t->g = n / m;
+
+    for (k = 0, ak = 1; k < m; k++)
     {
-        x = bsearch(&c, t->table, t->m, sizeof(apow_t),
-            (int(*)(const void*,const void*))apow_cmp);
-        if (x != NULL)
-            return i * t->m + x->k;
-        c.ak = nmod_mul(c.ak, t->am, t->mod);
+        t->table[k].k = k;
+        t->table[k].ak = ak;
+        ak = nmod_mul(ak, a, t->mod);
     }
-    flint_printf("Exception (n_discrete_log_bsgs).  discrete log not found.\n");
-    flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found\n",
-            t->m, t->g, t->mod.n, b);
-    abort();
+
+    t->am = nmod_inv(ak, t->mod);
+    qsort(t->table, m, sizeof(apow_t), (int(*)(const void*,const void*))apow_cmp);
+}
+
+void
+dlog_bsgs_clear(dlog_bsgs_t t)
+{
+    flint_free(t->table);
 }

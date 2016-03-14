@@ -25,24 +25,49 @@
 
 #include "dlog.h"
 
-ulong
-dlog_power(const dlog_power_t t, ulong b)
+void
+dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
 {
     int k;
-    ulong x, pk[30]; /* 3^30*2+1, 2^30*3+1 are primes */
+    n_factor_t fac;
+    ulong * M, * u;
 
-    pk[0] = 1;
-    for (k = 1; k < t->e; k++)
-       pk[k] = pk[k-1] * t->p;
-    
-    x = 0;
-    for(k = 0; k < t->e; k++)
+    n_factor_init(&fac);
+    n_factor(&fac, n, 1);
+
+    t->num = fac.num;
+    nmod_init(&t->mod,mod);
+    nmod_init(&t->n, n);
+
+    M = t->expo = flint_malloc(t->num * sizeof(ulong));
+    u = t->crt_coeffs = flint_malloc(t->num * sizeof(ulong));
+    t->pre = flint_malloc(t->num * sizeof(dlog_precomp_t));
+    for (k = 0; k < t->num; k++)
+        t->pre[k] = flint_malloc(sizeof(dlog_precomp_struct));
+
+    for (k = 0; k < t->num; k++)
     {
-      ulong bk, xk;
-      bk = nmod_pow_ui(b, pk[t->e-1-k], t->mod);
-      xk = dlog_precomp(t->pre, bk);
-      b = nmod_mul(b, nmod_pow_ui(t->apk[k], xk, t->mod), t->mod);
-      x += xk * pk[k]; /* cannot overflow */
+        ulong p, e, mk;
+        p = fac.p[k];
+        e = fac.exp[k];
+        mk = n_pow(p, e);
+        M[k] = n / mk;
+        u[k] = nmod_mul(M[k], n_invmod(M[k] % mk, mk), t->n);
+        /* depends on the power */
+        dlog_precomp_pe_init(t->pre[k], nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
     }
-    return x;
+}
+
+void
+dlog_crt_clear(dlog_crt_t t)
+{
+    int k;
+    flint_free(t->expo);
+    flint_free(t->crt_coeffs);
+    for (k = 0; k < t->num; k++)
+    {
+        dlog_precomp_clear(t->pre[k]);
+        flint_free(t->pre[k]);
+    }
+    flint_free(t->pre);
 }

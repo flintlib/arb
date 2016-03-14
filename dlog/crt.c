@@ -25,53 +25,6 @@
 
 #include "dlog.h"
 
-void
-dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
-{
-    int k;
-    n_factor_t fac;
-    ulong * M, * u;
-
-    n_factor_init(&fac);
-    n_factor(&fac, n, 1);
-
-    t->num = fac.num;
-    nmod_init(&t->mod,mod);
-    nmod_init(&t->n, n);
-
-    M = t->expo = flint_malloc(t->num * sizeof(ulong));
-    u = t->crt_coeffs = flint_malloc(t->num * sizeof(ulong));
-    t->pre = flint_malloc(t->num * sizeof(dlog_precomp_t));
-    for (k = 0; k < t->num; k++)
-        t->pre[k] = flint_malloc(sizeof(dlog_precomp_struct));
-
-    for (k = 0; k < t->num; k++)
-    {
-        ulong p, e, mk;
-        p = fac.p[k];
-        e = fac.exp[k];
-        mk = n_pow(p, e);
-        M[k] = n / mk;
-        u[k] = nmod_mul(M[k], n_invmod(M[k] % mk, mk), t->n);
-        /* depends on the power */
-        dlog_precomp_pe_init(t->pre[k], nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
-    }
-}
-
-void
-dlog_crt_clear(dlog_crt_t t)
-{
-    int k;
-    flint_free(t->expo);
-    flint_free(t->crt_coeffs);
-    for (k = 0; k < t->num; k++)
-    {
-        dlog_precomp_clear(t->pre[k]);
-        flint_free(t->pre[k]);
-    }
-    flint_free(t->pre);
-}
-
 ulong
 dlog_crt(const dlog_crt_t t, ulong b)
 {
