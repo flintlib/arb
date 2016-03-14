@@ -189,9 +189,16 @@ void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong
 void dlog_precomp_clear(dlog_precomp_t pre);
 ulong dlog_precomp(const dlog_precomp_t pre, ulong b);
 
-void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
-void dlog_vec_sieve(ulong * v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
-void dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+#define NOT_FOUND UWORD_MAX
+#define LOOP_MAX_FACTOR 6
+typedef struct
+{
+    ulong m, logm;
+} log_pair_t;
 
+void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 
 #endif
