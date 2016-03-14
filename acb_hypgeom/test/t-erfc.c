@@ -30,7 +30,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("erf....");
+    flint_printf("erfc....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -56,39 +56,37 @@ int main()
         switch (n_randint(state, 4))
         {
             case 0:
-                acb_hypgeom_erf_asymp(b, a, 0, prec1, prec3);
+                acb_hypgeom_erf_asymp(b, a, 1, prec1, prec3);
                 break;
             case 1:
-                acb_hypgeom_erf_1f1a(b, a, prec1);
-                break;
-            case 2:
-                acb_hypgeom_erf_1f1b(b, a, prec1);
+                acb_hypgeom_erf(b, a, prec1);
+                acb_sub_ui(b, b, 1, prec1);
+                acb_neg(b, b);
                 break;
             default:
-                acb_hypgeom_erf(b, a, prec1);
+                acb_hypgeom_erfc(b, a, prec1);
         }
 
         switch (n_randint(state, 4))
         {
             case 0:
-                acb_hypgeom_erf_asymp(c, a, 0, prec2, prec4);
+                acb_hypgeom_erf_asymp(c, a, 1, prec2, prec4);
                 break;
             case 1:
-                acb_hypgeom_erf_1f1a(c, a, prec2);
-                break;
-            case 2:
-                acb_hypgeom_erf_1f1b(c, a, prec2);
+                acb_hypgeom_erf(c, a, prec2);
+                acb_sub_ui(c, c, 1, prec2);
+                acb_neg(c, c);
                 break;
             default:
-                acb_hypgeom_erf(c, a, prec2);
+                acb_hypgeom_erfc(c, a, prec2);
         }
 
         if (!acb_overlaps(b, c))
         {
             flint_printf("FAIL: overlap\n\n");
-            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
-            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
-            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
+            flint_printf("b = "); acb_printd(b, 30); flint_printf("\n\n");
+            flint_printf("c = "); acb_printd(c, 30); flint_printf("\n\n");
             abort();
         }
 

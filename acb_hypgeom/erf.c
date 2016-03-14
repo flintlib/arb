@@ -99,7 +99,7 @@ acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
 }
 
 void
-acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
+acb_hypgeom_erf_asymp(acb_t res, const acb_t z, int complementary, slong prec, slong prec2)
 {
     acb_t a, t, u;
 
@@ -127,12 +127,29 @@ acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
     acb_csgn(acb_realref(t), z);
     arb_zero(acb_imagref(t));
 
-    acb_sub(t, t, u, prec);
+    if (complementary)
+    {
+        /* erfc(z) = 1 - erf(z) = u - (sgn - 1) */
+        acb_sub_ui(t, t, 1, prec);
+        acb_sub(t, u, t, prec);
+    }
+    else
+    {
+        /* erf(z) = sgn - u */
+        acb_sub(t, t, u, prec);
+    }
 
     if (arb_is_zero(acb_imagref(z)))
+    {
         arb_zero(acb_imagref(t));
+    }
     else if (arb_is_zero(acb_realref(z)))
-        arb_zero(acb_realref(t));
+    {
+        if (complementary)
+            arb_one(acb_realref(t));
+        else
+            arb_zero(acb_realref(t));
+    }
 
     acb_set(res, t);
 
@@ -266,7 +283,7 @@ acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
     if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
          arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
     {
-        acb_hypgeom_erf_asymp(res, z, prec, prec);
+        acb_hypgeom_erf_asymp(res, z, 0, prec, prec);
         return;
     }
 
@@ -286,7 +303,7 @@ acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
         prec2 = FLINT_MAX(8, prec2);
         prec2 = FLINT_MIN(prec2, prec);
 
-        acb_hypgeom_erf_asymp(res, z, prec, prec2);
+        acb_hypgeom_erf_asymp(res, z, 0, prec, prec2);
     }
     else
     {

@@ -131,7 +131,7 @@ void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec);
 void acb_hypgeom_erf_propagated_error(mag_t re, mag_t im, const acb_t z);
 void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec);
-void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2);
+void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, int complementary, slong prec, slong prec2);
 void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec);
 void _acb_hypgeom_erf_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong prec);
 void acb_hypgeom_erf_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);

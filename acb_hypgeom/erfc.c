@@ -28,28 +28,84 @@
 void
 acb_hypgeom_erfc(acb_t res, const acb_t z, slong prec)
 {
-    if (arb_is_positive(acb_realref(z)))
+    double x, y, abs_z2, log_z, log_erfc_z_asymp;
+
+    if (!acb_is_finite(z))
     {
-        acb_t t, u;
+        acb_indeterminate(res);
+        return;
+    }
 
-        acb_init(t);
-        acb_init(u);
+    if (acb_is_zero(z))
+    {
+        acb_one(res);
+        return;
+    }
 
-        acb_set_si(t, 1);
-        acb_mul_2exp_si(t, t, -1);
-        acb_mul(u, z, z, prec);
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), -64) < 0 &&
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), -64) < 0) ||
+        arf_sgn(arb_midref(acb_realref(z))) < 0)
+    {
+        acb_hypgeom_erf(res, z, prec);
+        acb_sub_ui(res, res, 1, prec);
+        acb_neg(res, res);
+        return;
+    }
 
-        acb_hypgeom_gamma_upper(res, t, u, 0, prec);
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
+    {
+        acb_hypgeom_erf_asymp(res, z, 1, prec, prec);
+        return;
+    }
 
-        arb_const_sqrt_pi(acb_realref(t), prec);
-        acb_div_arb(res, res, acb_realref(t), prec);
+    x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
+    y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
 
-        acb_clear(t);
-        acb_clear(u);
+    abs_z2 = x * x + y * y;
+
+    if (abs_z2 > (prec + 8) * 0.69314718055994530942)
+    {
+        acb_hypgeom_erf_asymp(res, z, 1, prec, prec);
     }
     else
     {
-        acb_hypgeom_erf(res, z, prec);
+        slong wp;
+
+        log_z = 0.5 * log(abs_z2);
+        log_erfc_z_asymp = y * y - x * x - log_z;
+
+        wp = prec + 2;
+        if (log_erfc_z_asymp < 0.0)
+            wp += (-log_erfc_z_asymp) * 1.4426950408889634074;
+
+        if (acb_rel_accuracy_bits(z) >= wp)
+        {
+            acb_hypgeom_erf(res, z, wp);
+        }
+        else
+        {
+            acb_t zmid;
+            mag_t re_err, im_err;
+
+            acb_init(zmid);
+            mag_init(re_err);
+            mag_init(im_err);
+
+            acb_hypgeom_erf_propagated_error(re_err, im_err, z);
+            arf_set(arb_midref(acb_realref(zmid)), arb_midref(acb_realref(z)));
+            arf_set(arb_midref(acb_imagref(zmid)), arb_midref(acb_imagref(z)));
+
+            acb_hypgeom_erf(res, zmid, wp);
+
+            arb_add_error_mag(acb_realref(res), re_err);
+            arb_add_error_mag(acb_imagref(res), im_err);
+
+            acb_clear(zmid);
+            mag_clear(re_err);
+            mag_clear(im_err);
+        }
+
         acb_sub_ui(res, res, 1, prec);
         acb_neg(res, res);
     }

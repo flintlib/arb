@@ -236,7 +236,7 @@ The error function
 
 .. function:: void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
 
-.. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
+.. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, int complementary, slong prec, slong prec2)
 
     Computes the error function respectively using
 
@@ -250,9 +250,13 @@ The error function
 
         \operatorname{erf}(z) &= \frac{z}{\sqrt{z^2}}
             \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
-            U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right).
+            U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right) =
+            \frac{z}{\sqrt{z^2}} - \frac{z e^{-z^2}}{\sqrt{\pi}}
+            U^{*}(\tfrac{1}{2}, \tfrac{1}{2}, z^2).
 
     The *asymp* version takes a second precision to use for the *U* term.
+    It also takes an extra flag *complementary*, computing the complementary
+    error function if set.
 
 .. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
 
