@@ -142,10 +142,107 @@ acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
 }
 
 void
+acb_hypgeom_erf_propagated_error(mag_t re, mag_t im, const acb_t z)
+{
+    mag_t x, y;
+
+    mag_init(x);
+    mag_init(y);
+
+    /* |exp(-(x+y)^2)| = exp(y^2-x^2) */
+    arb_get_mag(y, acb_imagref(z));
+    mag_mul(y, y, y);
+
+    arb_get_mag_lower(x, acb_realref(z));
+    mag_mul_lower(x, x, x);
+
+    if (mag_cmp(y, x) >= 0)
+    {
+        mag_sub(re, y, x);
+        mag_exp(re, re);
+    }
+    else
+    {
+        mag_sub_lower(re, x, y);
+        mag_expinv(re, re);
+    }
+
+    /* Radius. */
+    mag_hypot(x, arb_radref(acb_realref(z)), arb_radref(acb_imagref(z)));
+    mag_mul(re, re, x);
+
+    /* 2/sqrt(pi) < 289/256 */
+    mag_mul_ui(re, re, 289);
+    mag_mul_2exp_si(re, re, -8);
+
+    if (arb_is_zero(acb_imagref(z)))
+    {
+        /* todo: could bound magnitude even for complex numbers */
+        mag_set_ui(y, 2);
+        mag_min(re, re, y);
+
+        mag_zero(im);
+    }
+    else if (arb_is_zero(acb_realref(z)))
+    {
+        mag_swap(im, re);
+        mag_zero(re);
+    }
+    else
+    {
+        mag_set(im, re);
+    }
+
+    mag_clear(x);
+    mag_clear(y);
+}
+
+void
+acb_hypgeom_erf_1f1(acb_t res, const acb_t z, slong prec,
+    slong wp, int more_imaginary)
+{
+    if (acb_rel_accuracy_bits(z) >= wp)
+    {
+        if (more_imaginary)
+            acb_hypgeom_erf_1f1a(res, z, wp);
+        else
+            acb_hypgeom_erf_1f1b(res, z, wp);
+    }
+    else
+    {
+        acb_t zmid;
+        mag_t re_err, im_err;
+
+        acb_init(zmid);
+        mag_init(re_err);
+        mag_init(im_err);
+
+        acb_hypgeom_erf_propagated_error(re_err, im_err, z);
+        arf_set(arb_midref(acb_realref(zmid)), arb_midref(acb_realref(z)));
+        arf_set(arb_midref(acb_imagref(zmid)), arb_midref(acb_imagref(z)));
+
+        if (more_imaginary)
+            acb_hypgeom_erf_1f1a(res, zmid, wp);
+        else
+            acb_hypgeom_erf_1f1b(res, zmid, wp);
+
+        arb_add_error_mag(acb_realref(res), re_err);
+        arb_add_error_mag(acb_imagref(res), im_err);
+
+        acb_clear(zmid);
+        mag_clear(re_err);
+        mag_clear(im_err);
+    }
+
+    acb_set_round(res, res, prec);
+}
+
+void
 acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
 {
-    double x, y, absz2, logz;
-    slong prec2;
+    double x, y, abs_z2, log_z, log_erf_z_asymp;
+    slong prec2, wp;
+    int more_imaginary;
 
     if (!acb_is_finite(z))
     {
@@ -159,10 +256,10 @@ acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
         return;
     }
 
-    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 0) < 0 &&
-         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 0) < 0))
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), -64) < 0 &&
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), -64) < 0))
     {
-        acb_hypgeom_erf_1f1a(res, z, prec);
+        acb_hypgeom_erf_1f1(res, z, prec, prec, 1);
         return;
     }
 
@@ -176,26 +273,34 @@ acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
     x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
     y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
 
-    absz2 = x * x + y * y;
-    logz = 0.5 * log(absz2);
+    abs_z2 = x * x + y * y;
+    log_z = 0.5 * log(abs_z2);
+    /* estimate of log(erf(z)), disregarding csgn term */
+    log_erf_z_asymp = y*y - x*x - log_z;
 
-    if (logz - absz2 < -(prec + 8) * 0.69314718055994530942)
+    if (log_z - abs_z2 < -(prec + 8) * 0.69314718055994530942)
     {
         /* If the asymptotic term is small, we can
-           compute with reduced precision */
-        prec2 = FLINT_MIN(prec + 4 + (y*y - x*x - logz) * 1.4426950408889634074, (double) prec);
+           compute with reduced precision. */
+        prec2 = FLINT_MIN(prec + 4 + log_erf_z_asymp * 1.4426950408889634074, (double) prec);
         prec2 = FLINT_MAX(8, prec2);
         prec2 = FLINT_MIN(prec2, prec);
 
         acb_hypgeom_erf_asymp(res, z, prec, prec2);
     }
-    else if (arf_cmpabs(arb_midref(acb_imagref(z)), arb_midref(acb_realref(z))) > 0)
-    {
-        acb_hypgeom_erf_1f1a(res, z, prec);
-    }
     else
     {
-        acb_hypgeom_erf_1f1b(res, z, prec);
+        more_imaginary = arf_cmpabs(arb_midref(acb_imagref(z)),
+                                    arb_midref(acb_realref(z))) > 0;
+
+        /* Worst case: exp(|x|^2), computed: exp(x^2).
+           (x^2+y^2) - (x^2-y^2) = 2y^2, etc. */
+        if (more_imaginary)
+            wp = prec + FLINT_MAX(2 * x * x, 0.0) * 1.4426950408889634074 + 5;
+        else
+            wp = prec + FLINT_MAX(2 * y * y, 0.0) * 1.4426950408889634074 + 5;
+
+        acb_hypgeom_erf_1f1(res, z, prec, wp, more_imaginary);
     }
 }
 

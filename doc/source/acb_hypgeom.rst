@@ -225,13 +225,18 @@ Confluent hypergeometric functions
 The error function
 -------------------------------------------------------------------------------
 
+.. function:: void acb_hypgeom_erf_propagated_error(mag_t re, mag_t im, const acb_t z)
+
+    Sets *re* and *im* to upper bounds for the error in the real and imaginary
+    part resulting from approximating the error function of *z* by
+    the error function evaluated at the midpoint of *z*. Uses
+    the first derivative.
+
 .. function:: void acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec)
 
 .. function:: void acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
 
 .. function:: void acb_hypgeom_erf_asymp(acb_t res, const acb_t z, slong prec, slong prec2)
-
-.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
 
     Computes the error function respectively using
 
@@ -247,8 +252,15 @@ The error function
             \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
             U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right).
 
-    and an automatic algorithm choice. The *asymp* version takes a second
-    precision to use for the *U* term.
+    The *asymp* version takes a second precision to use for the *U* term.
+
+.. function:: void acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
+
+    Computes the error function using an automatic algorithm choice.
+    If *z* is too small to use the asymptotic expansion, a working precision
+    sufficient to circumvent cancellation in the hypergeometric series is
+    determined automatically, and a bound for the propagated error is
+    computed with :func:`acb_hypgeom_erf_propagated_error`.
 
 .. function:: void _acb_hypgeom_erf_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
 
