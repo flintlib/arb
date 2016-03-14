@@ -342,6 +342,8 @@ mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
     }
 }
 
+void mag_sub(mag_t z, const mag_t x, const mag_t y);
+
 void mag_sub_lower(mag_t z, const mag_t x, const mag_t y);
 
 /* Fast versions (no infs/nans, small exponents). Note that this
@@ -581,6 +583,8 @@ mag_exp(mag_t y, const mag_t x)
 
 void mag_expm1(mag_t y, const mag_t x);
 void mag_exp_tail(mag_t z, const mag_t x, ulong N);
+
+void mag_expinv(mag_t res, const mag_t x);
 
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);

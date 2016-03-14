@@ -230,6 +230,10 @@ Arithmetic
 
     Sets *z* to a lower bound for `x + y`.
 
+.. function:: void mag_sub(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to an upper bound for `\max(x-y, 0)`.
+
 .. function:: void mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
 
     Sets *z* to a lower bound for `\max(x-y, 0)`.
@@ -313,6 +317,12 @@ Powers and logarithms
 .. function:: void mag_exp(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\exp(x)`.
+
+.. function:: void mag_expinv(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\exp(-x)`. As currently implemented,
+    the bound is computed crudely by rounding *x* down to an integer
+    before approximating the exponential.
 
 .. function:: void mag_expm1(mag_t z, const mag_t x)
 
