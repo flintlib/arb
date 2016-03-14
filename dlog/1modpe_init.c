@@ -25,24 +25,26 @@
 
 #include "dlog.h"
 
-ulong
-dlog_power(const dlog_power_t t, ulong b)
+void
+dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e)
 {
-    int k;
-    ulong x, pk[30]; /* 3^30*2+1, 2^30*3+1 are primes */
+    fmpz_t tmp;
+    t->p = p;
+    fmpz_init(tmp);
+    padic_init(t->invlog);
 
-    pk[0] = 1;
-    for (k = 1; k < t->e; k++)
-       pk[k] = pk[k-1] * t->p;
-    
-    x = 0;
-    for(k = 0; k < t->e; k++)
-    {
-      ulong bk, xk;
-      bk = nmod_pow_ui(b, pk[t->e-1-k], t->mod);
-      xk = dlog_precomp(t->pre, bk);
-      b = nmod_mul(b, nmod_pow_ui(t->apk[k], xk, t->mod), t->mod);
-      x += xk * pk[k]; /* cannot overflow */
-    }
-    return x;
+    fmpz_set_ui(tmp, p);
+    padic_ctx_init(t->ctx , tmp , 0 , e, PADIC_TERSE);
+
+    padic_set_ui(t->invlog, a1, t->ctx);
+    padic_inv(t->invlog, t->invlog, t->ctx);
+
+    fmpz_clear(tmp);
+}
+
+void
+dlog_1modpe_clear(dlog_1modpe_t t)
+{
+    padic_clear(t->invlog);
+    padic_ctx_clear(t->ctx);
 }

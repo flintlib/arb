@@ -81,12 +81,13 @@ typedef struct apow {
     ulong ak;
 } apow_t;
 
+int apow_cmp(const apow_t * x, const apow_t * y);
+
 typedef struct {
-    ulong mod;
-    double modinv;
+    nmod_t mod;
     ulong m;
-    ulong g;
     ulong am;
+    ulong g;
     apow_t * table;
 } dlog_bsgs_struct;
 

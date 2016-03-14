@@ -25,24 +25,26 @@
 
 #include "dlog.h"
 
-ulong
-dlog_power(const dlog_power_t t, ulong b)
+/* assume mod is small so no overflow */
+void
+dlog_table_init(dlog_table_t t, ulong a, ulong mod)
 {
-    int k;
-    ulong x, pk[30]; /* 3^30*2+1, 2^30*3+1 are primes */
+  int k;
+  ulong ak;
+  t->mod = mod;
+  t->table = flint_malloc(mod * sizeof(ulong));
+  ak = 1; k = 0;
+  /* warning: do not check a is invertible modulo mod */
+  do
+  {
+    t->table[ak] = k++;
+    ak = (ak * a) % mod;
+  }
+  while (ak != 1);
+}
 
-    pk[0] = 1;
-    for (k = 1; k < t->e; k++)
-       pk[k] = pk[k-1] * t->p;
-    
-    x = 0;
-    for(k = 0; k < t->e; k++)
-    {
-      ulong bk, xk;
-      bk = nmod_pow_ui(b, pk[t->e-1-k], t->mod);
-      xk = dlog_precomp(t->pre, bk);
-      b = nmod_mul(b, nmod_pow_ui(t->apk[k], xk, t->mod), t->mod);
-      x += xk * pk[k]; /* cannot overflow */
-    }
-    return x;
+void
+dlog_table_clear(dlog_table_t t)
+{
+  flint_free(t->table);
 }
