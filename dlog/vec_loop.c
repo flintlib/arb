@@ -25,11 +25,16 @@
 
 #include "dlog.h"
 
+/* vector of log(k,a)*loga % order in Z/modZ */ 
 void
-dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    if (na * LOOP_MAX_FACTOR > nv)
-        dlog_vec_loop(v, nv, a, va, mod, na, order);
-    else
-        dlog_vec_crt(v, nv, a, va, mod, na, order);
+    ulong x, xp;
+    ulong vx = 0;
+    for(x = a; x != 1; x = nmod_mul(x, a, mod))
+    {
+      vx = nmod_add(vx, va, order);
+      for(xp = x; xp < nv; xp+=mod.n)
+          v[xp] = nmod_add(v[xp], vx, order);
+    }
 }
