@@ -687,6 +687,9 @@ n_zerobits(mp_limb_t e)
     return zeros;
 }
 
+/* Computes the length of the result when raising a polynomial of
+   length *len* to the power *exp* and truncating to length *trunc*,
+   without overflow. Assumes poly_len >= 1. */
 ARB_POLY_INLINE slong
 poly_pow_length(slong poly_len, ulong exp, slong trunc)
 {
