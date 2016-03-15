@@ -313,6 +313,14 @@ Radius and interval operations
 
     Sets *z* to a ball containing both *x* and *y*.
 
+.. function:: int arb_intersection(arb_t z, const arb_t x, const arb_t y, slong prec)
+
+    If *x* and *y* overlap according to :func:`arb_overlaps`,
+    then *z* is set to a ball containing the intersection of *x* and *y*
+    and a nonzero value is returned.
+    Otherwise zero is returned and the value of *z* is undefined.
+    If *x* or *y* contains NaN, the result is NaN.
+
 .. function:: void arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec)
 
     Sets *u* to the upper bound for the absolute value of *x*,
