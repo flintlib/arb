@@ -222,7 +222,7 @@ Confluent hypergeometric functions
     Bessel-*I* function is used in the right half-plane, to avoid loss
     of accuracy due to evaluating the square root on the branch cut.
 
-The error function
+Error functions and Fresnel integrals
 -------------------------------------------------------------------------------
 
 .. function:: void acb_hypgeom_erf_propagated_error(mag_t re, mag_t im, const acb_t z)
@@ -298,6 +298,16 @@ The error function
 
     Computes the imaginary error function of the power series *z*,
     truncated to length *len*.
+
+.. function:: void acb_hypgeom_fresnel(acb_t res1, acb_t res2, const acb_t z, int normalized, slong prec)
+
+    Sets *res1* to the Fresnel sine integral `S(z)` and *res2* to
+    the Fresnel cosine integral `C(z)`. Optionally, just a single function
+    can be computed by passing *NULL* as the other output variable.
+    The definition `S(z) = \int_0^z \sin(t^2) dt` is used if *normalized* is 0,
+    and `S(z) = \int_0^z \sin(\tfrac{1}{2} \pi t^2) dt` is used if
+    *normalized* is 1 (the latter is the Abramowitz & Stegun convention).
+    `C(z)` is defined analogously.
 
 Bessel functions
 -------------------------------------------------------------------------------
