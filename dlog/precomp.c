@@ -47,6 +47,9 @@ dlog_precomp(const dlog_precomp_t pre, ulong b)
       case DLOG_BSGS:
         return dlog_bsgs(pre->t.bsgs, b);
         break;
+      case DLOG_23:
+        return dlog_order23(pre->t.order23, b);
+        break;
       default:
         abort();
         break;

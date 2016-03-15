@@ -34,16 +34,16 @@ apow_cmp(const apow_t * x, const apow_t * y)
 }
 
 /* set size of table m=sqrt(nk) to compute k logs in a group of size n */
-void
+ulong
 dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
 {
     ulong k, ak;
+    if (m >= n) m = n + 1;
     t->table = (apow_t *)flint_malloc(m * sizeof(apow_t));
-    if (m > n) m = n;
 
     nmod_init(&t->mod, mod);
     t->m = m;
-    t->g = n / m;
+    t->g = n / m + 1;
 
     for (k = 0, ak = 1; k < m; k++)
     {
@@ -54,6 +54,7 @@ dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
 
     t->am = nmod_inv(ak, t->mod);
     qsort(t->table, m, sizeof(apow_t), (int(*)(const void*,const void*))apow_cmp);
+    return t->g;
 }
 
 void

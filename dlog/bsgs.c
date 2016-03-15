@@ -33,7 +33,7 @@ dlog_bsgs(const dlog_bsgs_t t, ulong b)
     apow_t c, * x;
 
     c.ak = b;
-    for (i = 0; i <= t->g; i++)
+    for (i = 0; i < t->g; i++)
     {
         x = bsearch(&c, t->table, t->m, sizeof(apow_t),
             (int(*)(const void*,const void*))apow_cmp);
@@ -42,7 +42,7 @@ dlog_bsgs(const dlog_bsgs_t t, ulong b)
         c.ak = nmod_mul(c.ak, t->am, t->mod);
     }
     flint_printf("Exception (n_discrete_log_bsgs).  discrete log not found.\n");
-    flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found\n",
-            t->m, t->g, t->mod.n, b);
+    flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found (a^-m=%wu)\n",
+            t->m, t->g, t->mod.n, b, t->am);
     abort();
 }

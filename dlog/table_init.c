@@ -26,7 +26,7 @@
 #include "dlog.h"
 
 /* assume mod is small so no overflow */
-void
+ulong
 dlog_table_init(dlog_table_t t, ulong a, ulong mod)
 {
   int k;
@@ -41,6 +41,7 @@ dlog_table_init(dlog_table_t t, ulong a, ulong mod)
     ak = (ak * a) % mod;
   }
   while (ak != 1);
+  return 1;
 }
 
 void
