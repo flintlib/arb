@@ -24,33 +24,9 @@
 ******************************************************************************/
 
 #include "dlog.h"
-#include "padic.h"
 
 ulong
-dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num)
+dlog_order23(const dlog_order23_t t, ulong b)
 {
-    t->p = p;
-    t->e = e;
-    t->pe = pe;
-    dlog_precomp_n_init(t->modp, a, p, p-1, num);
-    dlog_1modpe_init(t->modpe, n_powmod(a, p - 1, pe), p, e);
-    return t->modp->cost + e;
-}
-
-void
-dlog_modpe_clear(dlog_modpe_t t)
-{
-  dlog_precomp_clear(t->modp);
-  dlog_1modpe_clear(t->modpe);
-}
-
-ulong
-dlog_modpe(const dlog_modpe_t t, ulong b)
-{
-    ulong x;
-    x = dlog_precomp(t->modp, b % t->p);
-    /*b = b * n_powmod(t->a, -x, t->pe);*/
-    b = n_powmod(b, t->p - 1, t->pe);
-    x = x + (t->p-1) * dlog_1modpe(t->modpe, b);
-    return x;
+    return (b == *t) ? 1 : (b == 1) ? 0 : 2;
 }

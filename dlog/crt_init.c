@@ -25,12 +25,13 @@
 
 #include "dlog.h"
 
-void
+ulong
 dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
 {
     int k;
     n_factor_t fac;
     ulong * M, * u;
+    ulong cost = 0;
 
     n_factor_init(&fac);
     n_factor(&fac, n, 1);
@@ -54,8 +55,17 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
         M[k] = n / mk;
         u[k] = nmod_mul(M[k], n_invmod(M[k] % mk, mk), t->n);
         /* depends on the power */
+#if 0
+        flint_printf("[sub-crt -- init for size %wu mod %wu]\n", mk, mod);
+#endif
         dlog_precomp_pe_init(t->pre[k], nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
+        cost += t->pre[k]->cost;
     }
+#if 0
+    if (cost > 500)
+    flint_printf("[crt init for size %wu mod %wu -> cost %wu]\n", n,mod,cost);
+#endif
+    return cost;
 }
 
 void

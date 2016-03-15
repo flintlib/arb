@@ -32,7 +32,7 @@
 
 enum
 {
-    DLOG_MODPE, DLOG_CRT, DLOG_POWER, DLOG_BSGS, DLOG_TABLE
+    DLOG_MODPE, DLOG_CRT, DLOG_POWER, DLOG_BSGS, DLOG_TABLE, DLOG_23
 };
 
 typedef struct dlog_precomp_struct dlog_precomp_struct;
@@ -139,12 +139,15 @@ dlog_power_struct;
 
 typedef dlog_power_struct dlog_power_t[1];
 
+typedef ulong dlog_order23_t[1];
+
 /* generic decomposition */
 /*typedef */
 struct
 dlog_precomp_struct
 {
     int type;
+    ulong cost;
     union
     {
         dlog_table_t table;
@@ -152,20 +155,23 @@ dlog_precomp_struct
         dlog_crt_t crt;
         dlog_power_t power;
         dlog_modpe_t modpe;
+        dlog_order23_t order23;
     } t;
 };
 
 typedef dlog_precomp_struct dlog_precomp_t[1];
 
-void dlog_table_init(dlog_table_t t, ulong a, ulong mod);
+ulong dlog_order23_init(dlog_order23_t t, ulong a);
+ulong dlog_table_init(dlog_table_t t, ulong a, ulong mod);
+ulong dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num);
+ulong dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num);
+ulong dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num);
+ulong dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m);
 void dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e);
-void dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num);
-void dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num);
-void dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num);
-void dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m);
 void dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n);
 /*#define dlog_bsgs_init(t, a, n, m) bsgs_table_init(t, a, n, m)*/
 
+void dlog_order23_clear(dlog_order23_t t);
 void dlog_table_clear(dlog_table_t t);
 void dlog_1modpe_clear(dlog_1modpe_t t);
 void dlog_crt_clear(dlog_crt_t t);
@@ -175,6 +181,7 @@ void dlog_bsgs_clear(dlog_bsgs_t t);
 void dlog_rho_clear(dlog_rho_t t);
 /*#define dlog_bsgs_clear(t) bsgs_table_clear(t)*/
 
+ulong dlog_order23(const dlog_order23_t t, ulong b);
 ulong dlog_table(const dlog_table_t t, ulong b);
 ulong dlog_crt(const dlog_crt_t t, ulong b);
 ulong dlog_power(const dlog_power_t t, ulong b);
@@ -198,6 +205,9 @@ typedef struct
 } log_pair_t;
 
 void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_eratos_ph(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_eratos(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve_ph(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);

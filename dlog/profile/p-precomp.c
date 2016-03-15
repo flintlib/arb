@@ -27,7 +27,10 @@
 #include "profiler.h"
 #include <math.h>
 
-typedef void (*multilog_f) (ulong p, ulong a, ulong num);
+#define NUMPRIMES 400
+#define CSV 0
+
+typedef void (*log_f) (ulong p, ulong a, ulong num);
 
 void
 flog_table(ulong p, ulong a, ulong num)
@@ -37,7 +40,7 @@ flog_table(ulong p, ulong a, ulong num)
     dlog_table_init(t, a, p);
     for (k = 1; k < num; k++)
     {
-        if (k == p) continue;
+        if (k % p == 0) continue;
         dlog_table(t, k % p);
     }
     dlog_table_clear(t);
@@ -50,7 +53,7 @@ flog_bsgs(ulong p, ulong a, ulong num)
     dlog_bsgs_init(t, a, p, p-1, ceil( sqrt((double)num * p)));
     for (k = 1; k < num; k++)
     {
-        if (k == p) continue;
+        if (k % p == 0) continue;
         dlog_bsgs(t, k % p);
     }
     dlog_bsgs_clear(t);
@@ -63,7 +66,7 @@ flog_rho(ulong p, ulong a, ulong num)
     dlog_rho_init(t, a, p, p-1);
     for (k = 1; k < num; k++)
     {
-        if (k == p) continue;
+        if (k % p == 0) continue;
         dlog_rho(t, k % p);
     }
     dlog_rho_clear(t);
@@ -76,7 +79,7 @@ flog_crt(ulong p, ulong a, ulong num)
     dlog_crt_init(t, a, p, p-1, num);
     for (k = 1; k < num; k++)
     {
-        if (k == p) continue;
+        if (k % p == 0) continue;
         dlog_crt(t, k % p);
     }
     dlog_crt_clear(t);
@@ -89,20 +92,10 @@ flog_gen(ulong p, ulong a, ulong num)
     dlog_precomp_n_init(t, a, p, p-1, num);
     for (k = 1; k < num; k++)
     {
-        if (k == p) continue;
+        if (k % p == 0) continue;
         dlog_precomp(t, k % p);
     }
     dlog_precomp_clear(t);
-}
-void
-dlog_bench(multilog_f flog, const ulong * p, const ulong * a, int np, int num)
-{
-    int i;
-    ulong q;
-    TIMEIT_ONCE_START
-    for (i = 0; i < np; i ++)
-        flog(p[i], a[i], num);
-    TIMEIT_ONCE_STOP
 }
 
 int main()
@@ -110,16 +103,27 @@ int main()
     slong iter, k, nv, nref, r, nr;
     ulong minq, maxq;
     ulong * rand;
-    int nbits, nl = 4;
-    int vl[5] = { 1, 10, 100, 1000 , 5000};
+    int nbits, nl = 5;
+    int l[5] = { 1, 10, 100, 1000 , 5000};
+
+    int nf = 4;
+    log_f func[4] = { flog_table, flog_bsgs, flog_crt, flog_gen };
+    char * n[4] = { "table", "bsgs", "crt", "generic" };
+
+    int np = NUMPRIMES;
+
     flint_rand_t state;
 
     flint_randinit(state);
-    for (nbits = 10; nbits < 52; nbits += 10)
+    for (nbits = 10; nbits < 50; nbits += 5)
     {
 
-        int i, np = 100;
-        ulong p[100], a[100];
+        int i;
+        ulong p[NUMPRIMES], a[NUMPRIMES];
+
+        if (nbits >= 25)
+            np /= 2;
+
         for (i=0; i < np; i++)
         {
             p[i] = n_randprime(state, nbits, 0);
@@ -128,36 +132,33 @@ int main()
 
         for (i = 0; i < nl; i++)
         {    
-            flint_printf("%wu * logs mod primes of size %wu.....\n", vl[i], nbits);
+            int f;
+#if LOG
+            flint_printf("%d * logs mod primes of size %d.....\n", l[i], nbits);
+#endif
 
-            if (nbits <= 20)
-            { 
-                flint_printf("table.......... ");
-                fflush(stdout);
-                dlog_bench(flog_table, p, a, np, vl[i]);
-            }
-
-            if (nbits <= 40 || vl[i] <= 10)
+            for (f = 0; f < nf; f++)
             {
-                flint_printf("bsgs........... ");
+                int j;
+
+
+                /* skip useless */
+                if (f == 0 && nbits >= 20)
+                    continue;
+                if (f == 1 && nbits >= 30 && l[i] > 10)
+                    continue;
+#if LOG
+                flint_printf("%-20s...   ",n[f]);
                 fflush(stdout);
-                dlog_bench(flog_bsgs, p, a, np, vl[i]);
+#endif
+                TIMEIT_ONCE_START
+                    for (j = 0; j < np; j ++)
+                        (func[f])(p[j], a[j], l[i]);
+#if LOG == 0
+                flint_printf("%-8s, %2d, %4d, %3d, ",n[f],nbits,l[i],np);
+#endif
+                TIMEIT_ONCE_STOP
             }
-
-            if (nbits <= 20 || vl[i] == 1)
-            { 
-                flint_printf("rho............ ");
-                fflush(stdout);
-                dlog_bench(flog_rho, p, a, np, vl[i]);
-            }
-
-            flint_printf("crt............ ");
-            fflush(stdout);
-            dlog_bench(flog_crt, p, a, np, vl[i]);
-
-            flint_printf("generic........ ");
-            fflush(stdout);
-            dlog_bench(flog_gen, p, a, np, vl[i]);
         }
     }
     flint_randclear(state);

@@ -26,30 +26,56 @@
 #include "math.h"
 #include "dlog.h"
 
+#define SMALL_LIM 50
+#define TABLE_LIM 50
 #define TABLE_P_LIM 50
+#define TABLE_MODPE_LIM 50
 #define TABLE_PE_LIM 50
 #define TABLE_N_LIM 50
 #define BSGS_LIM  500 
 
+void
+dlog_precomp_small_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
+{
+    if (n <= 3)
+    {
+        pre->type = DLOG_23;
+        pre->cost = dlog_order23_init(pre->t.order23, a); 
+    }
+    else
+    {
+        if ( mod < TABLE_LIM )
+        {
+            pre->type = DLOG_TABLE;
+            pre->cost = dlog_table_init(pre->t.table, a, mod);
+        }
+        else
+        {
+            pre->type = DLOG_BSGS;
+            pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, n, n);
+        }
+    }
+}
 
 /* log mod p^e */
 void
 dlog_precomp_modpe_init(dlog_precomp_t pre, ulong a, ulong p, ulong e, ulong pe, ulong num)
 {
-    if ( pe < TABLE_PE_LIM )
+    if ( pe < TABLE_MODPE_LIM )
     {
-        pre->type = DLOG_TABLE;
-        dlog_table_init(pre->t.table, a, pe);
+        dlog_precomp_small_init(pre, a, pe, pe - pe / p, num);
         return;
     }
-    if (e > 1)
-    {
-        pre->type = DLOG_MODPE;
-        dlog_modpe_init(pre->t.modpe, a, p, e, pe, num);
-    }
-    else
-    {
-        dlog_precomp_n_init(pre, a, p, p - 1, num);
+    else {
+        if (e > 1)
+        {
+            pre->type = DLOG_MODPE;
+            pre->cost = dlog_modpe_init(pre->t.modpe, a, p, e, pe, num);
+        }
+        else
+        {
+            dlog_precomp_n_init(pre, a, p, p - 1, num);
+        }
     }
 }
 
@@ -60,20 +86,21 @@ dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
     if (n%2 && n_is_probabprime(n))
         dlog_precomp_p_init(pre, a, mod, n, num);
     else {
-        if ( mod < TABLE_N_LIM )
+        if (n < TABLE_N_LIM)
         {
-           pre->type = DLOG_TABLE;
-           dlog_table_init(pre->t.table, a, mod);
-        } else {
+           dlog_precomp_small_init(pre, a, mod, n, num);
+        }
+        else
+        {
             if (n < BSGS_LIM)
             {
                 ulong m;
                 m = (2 * num < n) ? ceil(sqrt((double) n * num)) : n;
                 pre->type = DLOG_BSGS;
-                dlog_bsgs_init(pre->t.bsgs, a, mod, n, m);
+                pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, n, m);
             } else {
                 pre->type = DLOG_CRT;
-                dlog_crt_init(pre->t.crt, a, mod, n, num);
+                pre->cost = dlog_crt_init(pre->t.crt, a, mod, n, num);
             }
         }
     }
@@ -85,15 +112,14 @@ dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num)
 {
     if ( p < TABLE_P_LIM )
     {
-        pre->type = DLOG_TABLE;
-        dlog_table_init(pre->t.table, a, mod);
+        dlog_precomp_small_init(pre, a, mod, p, num);
     }
     else
     {
         ulong m;
         m = (2 * num < p) ? ceil(sqrt((double) p * num)) : p;
         pre->type = DLOG_BSGS;
-        dlog_bsgs_init(pre->t.bsgs, a, mod, p, m);
+        pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, p, m);
     }
 }
 
@@ -102,8 +128,7 @@ dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, u
 {
     if ( pe < TABLE_PE_LIM )
     {
-        pre->type = DLOG_TABLE;
-        dlog_table_init(pre->t.table, a, mod);
+        dlog_precomp_small_init(pre, a, mod, pe, num);
     }
     else
     {
@@ -114,7 +139,7 @@ dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, u
         else
         {
             pre->type = DLOG_POWER;
-            dlog_power_init(pre->t.power, a, mod, p, e, num);
+            pre->cost = dlog_power_init(pre->t.power, a, mod, p, e, num);
         }
     }
 }
@@ -138,6 +163,9 @@ dlog_precomp_clear(dlog_precomp_t pre)
         break;
       case DLOG_BSGS:
         dlog_bsgs_clear(pre->t.bsgs);
+        break;
+      case DLOG_23:
+        dlog_order23_clear(pre->t.order23);
         break;
       default:
         abort();

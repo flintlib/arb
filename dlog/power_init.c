@@ -25,7 +25,7 @@
 
 #include "dlog.h"
 
-void
+ulong
 dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num)
 {
     int k;
@@ -40,7 +40,8 @@ dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num)
     for (k = 1; k < e; k++)
         t->apk[k] = nmod_pow_ui(t->apk[k-1], p, t->mod);
 
-    dlog_precomp_p_init(t->pre, nmod_inv(t->apk[e-1], t->mod), mod, p, num);
+    dlog_precomp_p_init(t->pre, nmod_inv(t->apk[e-1], t->mod), mod, p, e * num);
+    return e * t->pre->cost;
 }
 
 void
