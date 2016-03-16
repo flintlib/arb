@@ -107,6 +107,33 @@ acb_hypgeom_erf_asymp(acb_t res, const acb_t z, int complementary, slong prec, s
     acb_init(t);
     acb_init(u);
 
+    if (!acb_is_exact(z) &&
+        (arf_cmpabs_ui(arb_midref(acb_realref(z)), prec) < 0) &&
+        (arf_cmpabs_ui(arb_midref(acb_imagref(z)), prec) < 0))
+    {
+        acb_t zmid;
+        mag_t re_err, im_err;
+
+        acb_init(zmid);
+        mag_init(re_err);
+        mag_init(im_err);
+
+        acb_hypgeom_erf_propagated_error(re_err, im_err, z);
+        arf_set(arb_midref(acb_realref(zmid)), arb_midref(acb_realref(z)));
+        arf_set(arb_midref(acb_imagref(zmid)), arb_midref(acb_imagref(z)));
+
+        acb_hypgeom_erf_asymp(res, zmid, complementary, prec, prec2);
+
+        arb_add_error_mag(acb_realref(res), re_err);
+        arb_add_error_mag(acb_imagref(res), im_err);
+
+        acb_clear(zmid);
+        mag_clear(re_err);
+        mag_clear(im_err);
+
+        return;
+    }
+
     acb_one(a);
     acb_mul_2exp_si(a, a, -1);
     acb_mul(t, z, z, prec2);
