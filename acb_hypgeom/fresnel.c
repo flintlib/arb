@@ -122,13 +122,28 @@ acb_hypgeom_fresnel_erf_error(acb_t res1, acb_t res2, const acb_t z, slong prec)
     mag_init(im);
     acb_init(zmid);
 
-    /* todo: use higher precision for large complex values */
-    arb_get_mag(re, acb_realref(z));
-    arb_get_mag(im, acb_imagref(z));
-    mag_mul(re, re, im);
-    mag_mul_2exp_si(re, re, 2);
-    mag_exp_maglim(re, re, FLINT_MAX(128, 2 * prec));
-    mag_mul_ui(re, re, 5);
+    if (arf_cmpabs_ui(arb_midref(acb_realref(z)), 1000) < 0 &&
+        arf_cmpabs_ui(arb_midref(acb_imagref(z)), 1000) < 0)
+    {
+        arb_get_mag(re, acb_realref(z));
+        arb_get_mag(im, acb_imagref(z));
+        mag_mul(re, re, im);
+        mag_mul_2exp_si(re, re, 2);
+        mag_exp(re, re);
+        mag_mul_ui(re, re, 5);
+    }
+    else
+    {
+        arb_t t;
+        arb_init(t);
+        arb_mul(t, acb_realref(z), acb_imagref(z), prec);
+        arb_abs(t, t);
+        arb_mul_2exp_si(t, t, 2);
+        arb_exp(t, t, prec);
+        arb_get_mag(re, t);
+        mag_mul_ui(re, re, 5);
+        arb_clear(t);
+    }
 
     mag_hypot(im, arb_radref(acb_realref(z)), arb_radref(acb_imagref(z)));
     mag_mul(re, re, im);
