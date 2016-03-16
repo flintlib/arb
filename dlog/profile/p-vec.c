@@ -25,6 +25,9 @@
 
 #include "dlog.h"
 #include "profiler.h"
+
+#define NPRIMES 640
+
 typedef void (*vec_f) (ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
    
 void
@@ -35,20 +38,20 @@ f_empty(ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const
 
 int main()
 {
-    int i, ni = 3;
-    int bits[5] = { 10, 20, 30, 40, 50 };
+    int i, ni = 8;
+    int bits[9] = { 10, 15, 20, 25, 30, 35, 40, 45, 50 };
 
-    int j, nj = 5;
+    int j, nj = 6;
     ulong * v;
-    ulong nv[5] = { 50, 200, 1000, 2000, 10000 };
+    ulong nv[6] = { 50, 200, 1000, 2000, 10000, 30000 };
 
-    int k, np = 1000;
+    int k, np = NPRIMES;
     nmod_t * p;
     ulong * a;
 
-    int l, nf = 3;
-    vec_f func[4] = { f_empty, dlog_vec_loop, dlog_vec_sieve, dlog_vec_crt };
-    char * n[4] = { "empty", "loop", "sieve", "crt" };
+    int l, nf = 5;
+    vec_f func[5] = { f_empty, dlog_vec_loop, dlog_vec_eratos, dlog_vec_sieve, dlog_vec_crt };
+    char * n[5] = { "empty", "loop", "eratos", "sieve", "crt" };
 
     flint_rand_t state;
     nmod_t order;
@@ -56,6 +59,9 @@ int main()
     nmod_init(&order, 100);
     p = flint_malloc(np * sizeof(nmod_t));
     a = flint_malloc(np * sizeof(ulong));
+
+
+    flint_randinit(state);
 
     for (i = 0; i < ni; i++)
     {
@@ -75,7 +81,9 @@ int main()
 
             for (l = 0; l < nf; l++)
             { 
-                if (l == 1 && (i >= 2 || j > 0))
+                if (l == 1 && i > 2)
+                    continue;
+                if (l == 2 && i > 5)
                     continue;
                 
                 flint_printf("%-20s...   ",n[l]);
@@ -92,6 +100,7 @@ int main()
             }
             flint_free(v);
         }
+        np /= 2;
     }
 
     flint_free(p);

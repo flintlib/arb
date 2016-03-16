@@ -25,16 +25,34 @@
 
 #include "dlog.h"
 
-/* vector of log(k,a)*loga % order in Z/modZ */ 
 void
-dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_eratos_ph(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order)
 {
-    ulong x, xp;
-    ulong vx = 0;
-    for (x = a; x != 1; x = nmod_mul(x, a, mod))
-    {
-      vx = nmod_add(vx, va, order);
-      for(xp = x; xp < nv; xp+=mod.n)
-          v[xp] = nmod_add(v[xp], vx, order);
+	ulong p, pmax;
+	dlog_precomp_t pre;
+	n_primes_t iter;
+
+	/* discrete log on primes */
+	pmax = (nv < mod.n) ? nv : mod.n;
+	dlog_precomp_n_init(pre, a, mod.n, na, n_prime_pi(nv));
+
+	n_primes_init(iter);
+	while ((p = n_primes_next(iter)) < pmax)
+	{ 
+        ulong k, pM, wp; 
+        if (mod.n % p == 0)
+            continue; /* won't be attained another time */
+        pM = (M) ? nmod_pow_ui(p, M, mod) : p;
+        wp = nmod_mul(dlog_precomp(pre, pM), va, order);
+        for (pM = p; pM < nv; pM *= p)
+            for (k = pM; k < nv; k += pM)
+                v[k] = nmod_add(v[k],  wp, order);
     }
+    n_primes_clear(iter);
+}
+
+void
+dlog_vec_eratos(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+{
+    dlog_vec_eratos_ph(v, nv, a, va, 1, mod, na, order);
 }
