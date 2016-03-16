@@ -212,7 +212,7 @@ acb_hypgeom_airy_bound(mag_t ai, mag_t aip, mag_t bi, mag_t bip, const acb_t z)
             /* multiply by exp(-2 pi i / 3) in upper half plane
                and by exp(2 pi i / 3) in lower half plane, to stay close
                to positive reals */
-            if (arf_sgn(zim) <= 0)
+            if (arf_sgn(zim) >= 0)
                 acb_conj(z1, z1);
 
             acb_mul(z1, z1, z, wp);
