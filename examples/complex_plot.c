@@ -201,6 +201,18 @@ modj(acb_t res, const acb_t z, slong prec)
     acb_div_ui(res, res, 1728, prec);
 }
 
+void
+fresnels(acb_t res, const acb_t z, slong prec)
+{
+    acb_hypgeom_fresnel(res, NULL, z, 0, prec);
+}
+
+void
+fresnelc(acb_t res, const acb_t z, slong prec)
+{
+    acb_hypgeom_fresnel(NULL, res, z, 0, prec);
+}
+
 int main(int argc, char *argv[])
 {
     slong x, y, xnum, ynum, prec, i;
@@ -228,22 +240,24 @@ int main(int argc, char *argv[])
         printf("run [convert arbplot.ppm arbplot.png] to get a PNG.\n\n");
 
         printf("Function codes <func> are:\n");
-        printf("  sin     - Sine\n");
-        printf("  gamma   - Gamma function\n");
-        printf("  digamma - Digamma function\n");
-        printf("  lgamma  - Logarithmic gamma function\n");
-        printf("  zeta    - Riemann zeta function\n");
-        printf("  erf     - Error function\n");
-        printf("  ai      - Airy function Ai\n");
-        printf("  bi      - Airy function Bi\n");
-        printf("  besselj - Bessel function J_0\n");
-        printf("  bessely - Bessel function Y_0\n");
-        printf("  besseli - Bessel function I_0\n");
-        printf("  besselk - Bessel function K_0\n");
-        printf("  modj    - Modular j-function\n");
-        printf("  modeta  - Dedekind eta function\n");
-        printf("  barnesg - Barnes G-function\n");
-        printf("  agm     - Arithmetic geometric mean\n\n");
+        printf("  sin      - Sine\n");
+        printf("  gamma    - Gamma function\n");
+        printf("  digamma  - Digamma function\n");
+        printf("  lgamma   - Logarithmic gamma function\n");
+        printf("  zeta     - Riemann zeta function\n");
+        printf("  erf      - Error function\n");
+        printf("  ai       - Airy function Ai\n");
+        printf("  bi       - Airy function Bi\n");
+        printf("  besselj  - Bessel function J_0\n");
+        printf("  bessely  - Bessel function Y_0\n");
+        printf("  besseli  - Bessel function I_0\n");
+        printf("  besselk  - Bessel function K_0\n");
+        printf("  modj     - Modular j-function\n");
+        printf("  modeta   - Dedekind eta function\n");
+        printf("  barnesg  - Barnes G-function\n");
+        printf("  agm      - Arithmetic geometric mean\n");
+        printf("  fresnels - Fresnel integral S\n");
+        printf("  fresnelc - Fresnel integral C\n\n");
 
         return 1;
     }
@@ -339,6 +353,14 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "agm"))
         {
             func = acb_agm1;
+        }
+        else if (!strcmp(argv[i], "fresnels"))
+        {
+            func = fresnels;
+        }
+        else if (!strcmp(argv[i], "fresnelc"))
+        {
+            func = fresnelc;
         }
         else
         {
