@@ -197,17 +197,23 @@ void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong
 void dlog_precomp_clear(dlog_precomp_t pre);
 ulong dlog_precomp(const dlog_precomp_t pre, ulong b);
 
-#define NOT_FOUND UWORD_MAX
 #define LOOP_MAX_FACTOR 6
+#define G_SMALL 0
+#define G_BIG 1
+void dlog_n_factor_group(n_factor_t * fac, ulong bound);
+
+#define NOT_FOUND UWORD_MAX
 typedef struct
 {
     ulong m, logm;
 } log_pair_t;
 
+ulong dlog_vec_pindex_factorgcd(log_pair_t * v, ulong nv, ulong p, nmod_t mod, ulong a, ulong na, ulong loga, ulong logm1, nmod_t order, int maxtry);
+
 void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_eratos_ph(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_eratos_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_eratos(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_sieve_ph(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);

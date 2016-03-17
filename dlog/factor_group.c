@@ -25,16 +25,39 @@
 
 #include "dlog.h"
 
-/* vector of log(k,a)*loga % order in Z/modZ */ 
+/* group components up to bound and return cofactor */
 void
-dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_n_factor_group(n_factor_t * fac, ulong bound)
 {
-    ulong x, xp;
-    ulong vx = 0;
-    for (x = a; x != 1; x = nmod_mul(x, a, mod))
+    int i, j, k;
+    ulong m[FLINT_MAX_FACTORS_IN_LIMB];
+    ulong c = 1;
+    i = 0;
+    for (k = fac->num - 1; k >= 0; k--)
     {
-        vx = nmod_add(vx, va, order);
-        for(xp = x; xp < nv; xp+=mod.n)
-            v[xp] = nmod_add(v[xp], vx, order);
+        ulong qe = n_pow(fac->p[k], fac->exp[k]);
+        if (qe > bound)
+            c *= qe;
+        else
+        {
+            /* try to insert somewhere in m */
+            for (j = 0; j < i && (m[j] * qe > bound); j++);
+            if (j == i)
+                m[i++] = qe;
+            else
+                m[j] *= qe;
+        }
     }
+    for (j = 0; j < i; j++)
+    {
+        fac->p[j] = m[j];
+        fac->exp[j] = G_SMALL;
+    }
+    if (c > 1)
+    {
+        fac->p[i] = c;
+        fac->exp[i] = G_BIG;
+        i++;
+    }
+    fac->num = i;
 }

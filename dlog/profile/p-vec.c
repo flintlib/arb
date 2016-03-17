@@ -27,6 +27,11 @@
 #include "profiler.h"
 
 #define NPRIMES 640
+#define LOG 0
+#define CSV 1
+#define JSON 2
+#define OUT JSON
+
 
 typedef void (*vec_f) (ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
    
@@ -60,7 +65,6 @@ int main()
     p = flint_malloc(np * sizeof(nmod_t));
     a = flint_malloc(np * sizeof(ulong));
 
-
     flint_randinit(state);
 
     for (i = 0; i < ni; i++)
@@ -76,8 +80,10 @@ int main()
 
             v = flint_malloc(nv[j] * sizeof(ulong));
 
+#if OUT == LOG
             flint_printf("log(1..%wu) mod %d primes of size %d bits....\n", nv[j], np, bits[i]);
             fflush(stdout);
+#endif
 
             for (l = 0; l < nf; l++)
             { 
@@ -86,8 +92,16 @@ int main()
                 if (l == 2 && i > 5)
                     continue;
                 
+#if OUT == LOG
                 flint_printf("%-20s...   ",n[l]);
                 fflush(stdout);
+#elif OUT == CSV
+                flint_printf("%-8s, %2d, %4d, %3d, ",n[l],bits[i],nv[j],np);
+#elif OUT == JSON
+                flint_printf("{ \"name\": \"%s\", \"bits\": %d, \"nv\": %d, \"nprimes\": %d, \"time\": ",
+                        n[l],bits[i],nv[j],np);
+#endif
+
                 TIMEIT_ONCE_START
                 for (k = 0; k < np; k++)
                 {
@@ -97,6 +111,12 @@ int main()
                     (func[l])(v, nv[j], a[k], 1, p[k], p[k].n - 1, order);
                 }
                 TIMEIT_ONCE_STOP
+
+#if OUT == JSON
+                    flint_printf("}\n");
+#else
+                    flint_printf("\n");
+#endif
             }
             flint_free(v);
         }

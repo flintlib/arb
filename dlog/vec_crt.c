@@ -27,46 +27,6 @@
 
 #define SIEVE_START 100
 
-/* group components up to bound and return cofactor */
-#define G_SMALL 0
-#define G_BIG 1
-
-static void
-n_factor_group(n_factor_t * fac, ulong bound)
-{
-    int i, j, k;
-    ulong m[FLINT_MAX_FACTORS_IN_LIMB];
-    ulong c = 1;
-    i = 0;
-    for (k = fac->num - 1; k >= 0; k--)
-    {
-        ulong qe = n_pow(fac->p[k], fac->exp[k]);
-        if (qe > bound)
-            c *= qe;
-        else
-        {
-            /* try to insert somewhere in m */
-            for (j = 0; j < i && (m[j] * qe > bound); j++);
-            if (j == i)
-                m[i++] = qe;
-            else
-                m[j] *= qe;
-        }
-    }
-    for (j = 0; j < i; j++)
-    {
-        fac->p[j] = m[j];
-        fac->exp[j] = G_SMALL;
-    }
-    if (c > 1)
-    {
-        fac->p[i] = c;
-        fac->exp[i] = G_BIG;
-        i++;
-    }
-    fac->num = i;
-}
-
 /* assume v[k] = -1 for bad primes? */
 /* loop on small components and if needed keep one subgroup for DLOG + sieve */
   void
@@ -79,7 +39,7 @@ dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t
     maxloop = LOOP_MAX_FACTOR * nv;
     n_factor_init(&fac);
     n_factor(&fac, na, 1);
-    n_factor_group(&fac, maxloop);
+    dlog_n_factor_group(&fac, maxloop);
     for (k = 0; k < fac.num; k++)
     {
         ulong m, M, aM, uM, vaM;
@@ -93,9 +53,9 @@ dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t
         else
         {
             if (nv <= SIEVE_START)
-                dlog_vec_eratos_ph(v, nv, aM, vaM, M, mod, m, order);
+                dlog_vec_eratos_subgroup(v, nv, aM, vaM, M, mod, m, order);
             else
-                dlog_vec_sieve_ph(v, nv, aM, vaM, M, mod, m, order);
+                dlog_vec_sieve_subgroup(v, nv, aM, vaM, M, mod, m, order);
         }
     }
 }
