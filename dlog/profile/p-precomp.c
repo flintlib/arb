@@ -28,7 +28,10 @@
 #include <math.h>
 
 #define NUMPRIMES 400
-#define CSV 0
+#define LOG 0
+#define CSV 1
+#define JSON 2
+#define OUT JSON
 
 typedef void (*log_f) (ulong p, ulong a, ulong num);
 
@@ -133,7 +136,7 @@ int main()
         for (i = 0; i < nl; i++)
         {    
             int f;
-#if LOG
+#if OUT == LOG
             flint_printf("%d * logs mod primes of size %d.....\n", l[i], nbits);
 #endif
 
@@ -147,17 +150,26 @@ int main()
                     continue;
                 if (f == 1 && nbits >= 30 && l[i] > 10)
                     continue;
-#if LOG
+#if OUT == LOG
                 flint_printf("%-20s...   ",n[f]);
                 fflush(stdout);
+#elif OUT == CSV
+                flint_printf("%-8s, %2d, %4d, %3d, ",n[f],nbits,l[i],np);
+#elif OUT == JSON
+                flint_printf("{ \"name\": \"%s\", \"bits\": %d, \"nlogs\": %d, \"nprimes\": %d, \"time\": ",
+                        n[f],nbits,l[i],np);
 #endif
+
                 TIMEIT_ONCE_START
                     for (j = 0; j < np; j ++)
                         (func[f])(p[j], a[j], l[i]);
-#if LOG == 0
-                flint_printf("%-8s, %2d, %4d, %3d, ",n[f],nbits,l[i],np);
-#endif
                 TIMEIT_ONCE_STOP
+
+#if OUT == JSON
+                    flint_printf("}\n");
+#else
+                    flint_printf("\n");
+#endif
             }
         }
     }
