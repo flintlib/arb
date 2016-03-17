@@ -309,6 +309,15 @@ Error functions and Fresnel integrals
     *normalized* is 1 (the latter is the Abramowitz & Stegun convention).
     `C(z)` is defined analogously.
 
+.. function:: void _acb_hypgeom_fresnel_series(acb_ptr res1, acb_ptr res2, acb_srcptr z, slong zlen, int normalized, slong len, slong prec)
+
+.. function:: void acb_hypgeom_fresnel_series(acb_poly_t res1, acb_poly_t res2, const acb_poly_t z, int normalized, slong len, slong prec)
+
+    Sets *res1* to the Fresnel sine integral and *res2* to the Fresnel
+    cosine integral of the power series *z*, truncated to length *len*.
+    Optionally, just a single function can be computed by passing *NULL*
+    as the other output variable.
+
 Bessel functions
 -------------------------------------------------------------------------------
 

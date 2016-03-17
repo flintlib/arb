@@ -145,6 +145,8 @@ void _acb_hypgeom_erfi_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, sl
 void acb_hypgeom_erfi_series(acb_poly_t g, const acb_poly_t h, slong len, slong prec);
 
 void acb_hypgeom_fresnel(acb_t res1, acb_t res2, const acb_t z, int normalized, slong prec);
+void _acb_hypgeom_fresnel_series(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, int normalized, slong len, slong prec);
+void acb_hypgeom_fresnel_series(acb_poly_t s, acb_poly_t c, const acb_poly_t h, int normalized, slong len, slong prec);
 
 void acb_hypgeom_ei_asymp(acb_t res, const acb_t z, slong prec);
 void acb_hypgeom_ei_2f2(acb_t res, const acb_t z, slong prec);
