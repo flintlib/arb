@@ -29,12 +29,15 @@
 void
 dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    ulong x, xp;
-    ulong vx = 0;
-    for (x = a; x != 1; x = nmod_mul(x, a, mod))
+    ulong x, vx;
+    x = 1; vx = 0;
+    do
     {
+        v[x] = vx;
+        x = nmod_mul(x, a, mod);
         vx = nmod_add(vx, va, order);
-        for(xp = x; xp < nv; xp+=mod.n)
-            v[xp] = nmod_add(v[xp], vx, order);
     }
+    while (x != 1);
+    for(x = mod.n + 1; x < nv; x++)
+        v[x] = v[x - mod.n];
 }

@@ -49,7 +49,7 @@ dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t
         uM = M * n_invmod(M % m, m); /* uM < n */
         vaM = nmod_mul(va, uM % order.n, order);
         if (fac.exp[k] == G_SMALL)
-            dlog_vec_loop(v, nv, aM, vaM, mod, m, order);
+            dlog_vec_loop_subgroup(v, nv, aM, vaM, mod, m, order);
         else
         {
             if (nv <= SIEVE_START)
