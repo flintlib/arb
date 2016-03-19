@@ -142,10 +142,9 @@ acb_hypgeom_erf_asymp(acb_t res, const acb_t z, int complementary, slong prec, s
     acb_exp(t, t, prec2);
     acb_mul(u, u, t, prec2);
 
-    acb_const_pi(t, prec2);
-    acb_sqrt(t, t, prec2);
+    arb_const_sqrt_pi(acb_realref(t), prec2);
+    arb_zero(acb_imagref(t));
     acb_mul(t, t, z, prec2);
-
     acb_div(u, u, t, prec2);
 
     /* branch cut term: -1 or 1 */

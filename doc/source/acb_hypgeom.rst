@@ -251,7 +251,7 @@ Error functions and Fresnel integrals
         \operatorname{erf}(z) &= \frac{z}{\sqrt{z^2}}
             \left(1 - \frac{e^{-z^2}}{\sqrt{\pi}}
             U(\tfrac{1}{2}, \tfrac{1}{2}, z^2)\right) =
-            \frac{z}{\sqrt{z^2}} - \frac{z e^{-z^2}}{\sqrt{\pi}}
+            \frac{z}{\sqrt{z^2}} - \frac{e^{-z^2}}{z \sqrt{\pi}}
             U^{*}(\tfrac{1}{2}, \tfrac{1}{2}, z^2).
 
     The *asymp* version takes a second precision to use for the *U* term.
