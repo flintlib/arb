@@ -49,10 +49,9 @@ acb_hypgeom_erf_1f1a(acb_t res, const acb_t z, slong prec)
 
     acb_hypgeom_pfq_direct(t, a, 1, b, 2, w, -1, prec);
 
-    acb_const_pi(w, prec);
-    acb_rsqrt(w, w, prec);
-    acb_mul(t, t, w, prec);
     acb_mul(t, t, z, prec);
+    arb_const_sqrt_pi(acb_realref(w), prec);
+    acb_div_arb(t, t, acb_realref(w), prec);
 
     acb_mul_2exp_si(res, t, 1);
 
@@ -85,10 +84,9 @@ acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
     acb_exp(w, w, prec);
     acb_mul(t, t, w, prec);
 
-    acb_const_pi(w, prec);
-    acb_rsqrt(w, w, prec);
-    acb_mul(t, t, w, prec);
     acb_mul(t, t, z, prec);
+    arb_const_sqrt_pi(acb_realref(w), prec);
+    acb_div_arb(t, t, acb_realref(w), prec);
 
     acb_mul_2exp_si(res, t, 1);
 
