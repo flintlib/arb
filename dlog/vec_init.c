@@ -26,9 +26,9 @@
 #include "dlog.h"
 
 void
-dlog_vec_init(ulong *v, ulong nv)
+dlog_vec_fill(ulong *v, ulong nv, ulong x)
 {
     ulong k;
     for (k = 0; k < nv; k++)
-        v[k] = 0;
+        v[k] = x;
 }

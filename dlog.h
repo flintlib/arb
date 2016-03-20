@@ -208,10 +208,11 @@ typedef struct
     ulong m, logm;
 } log_pair_t;
 
-ulong dlog_vec_pindex_factorgcd(log_pair_t * v, ulong nv, ulong p, nmod_t mod, ulong a, ulong na, ulong loga, ulong logm1, nmod_t order, int maxtry);
+ulong dlog_vec_pindex_factorgcd(ulong * v, ulong nv, ulong p, nmod_t mod, ulong a, ulong na, ulong loga, ulong logm1, nmod_t order, int maxtry);
 
 
-void dlog_vec_init(ulong * v, ulong nv);
+void dlog_vec_fill(ulong * v, ulong nv, ulong x);
+void dlog_vec_set_not_found(ulong *v, ulong nv, nmod_t mod);
 void dlog_vec_loop_subgroup(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_eratos_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order);

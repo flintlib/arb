@@ -28,5 +28,6 @@
 void
 dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
+    dlog_vec_set_not_found(v, nv, mod);
     dlog_vec_sieve_subgroup(v, nv, a, va, 1, mod, na, order);
 }

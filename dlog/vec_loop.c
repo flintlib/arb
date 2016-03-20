@@ -30,10 +30,12 @@ void
 dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
     ulong x, vx;
+    dlog_vec_fill(v, nv, NOT_FOUND);
     x = 1; vx = 0;
     do
     {
-        v[x] = vx;
+        if (x < nv)
+            v[x] = vx;
         x = nmod_mul(x, a, mod);
         vx = nmod_add(vx, va, order);
     }
