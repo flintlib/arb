@@ -184,9 +184,8 @@ _acb_hypgeom_legendre_q_single(acb_t res, const acb_t n, const acb_t m,
 
     acb_mul_2exp_si(t, t, -1);
 
-    acb_const_pi(u, prec);
-    acb_sqrt(u, u, prec);
-    acb_mul(t, t, u, prec);
+    arb_const_sqrt_pi(acb_realref(u), prec);
+    acb_mul_arb(t, t, acb_realref(u), prec);
 
     acb_set(res, t);
 
@@ -284,9 +283,8 @@ acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m,
             acb_mul(t, t, u, prec);
         }
 
-        acb_const_pi(u, prec);
-        acb_sqrt(u, u, prec);
-        acb_mul(t, t, u, prec);
+        arb_const_sqrt_pi(acb_realref(u), prec);
+        acb_mul_arb(t, t, acb_realref(u), prec);
 
         acb_set(res, t);
 

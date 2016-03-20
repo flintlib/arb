@@ -140,9 +140,8 @@ acb_hypgeom_hermite_h(acb_t res, const acb_t n, const acb_t z, slong prec)
         acb_set_ui(t, 2);
         acb_pow(t, t, n, prec);
         acb_mul(u, u, t, prec);
-        acb_const_pi(t, prec);
-        acb_sqrt(t, t, prec);
-        acb_mul(u, u, t, prec);
+        arb_const_sqrt_pi(acb_realref(t), prec);
+        acb_mul_arb(u, u, acb_realref(t), prec);
 
         acb_set(res, u);
     }
