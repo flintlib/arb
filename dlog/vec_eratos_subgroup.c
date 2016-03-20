@@ -25,29 +25,33 @@
 
 #include "dlog.h"
 
-/* assume 1 mod n already set */
+/* assume non invertible and 1 mod n already set */
 void
 dlog_vec_eratos_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order)
 {
-    ulong p, pmax;
+    ulong p, k, n;
     dlog_precomp_t pre;
     n_primes_t iter;
 
     /* discrete log on primes */
-    pmax = (nv < mod.n) ? nv : mod.n;
-    dlog_precomp_n_init(pre, a, mod.n, na, n_prime_pi(nv));
+    n = (nv < mod.n) ? nv : mod.n;
+    dlog_precomp_n_init(pre, a, mod.n, na, n_prime_pi(n));
 
     n_primes_init(iter);
-    while ((p = n_primes_next(iter)) < pmax)
+    while ((p = n_primes_next(iter)) < n)
     { 
-        ulong k, pM, wp; 
-        if (mod.n % p == 0)
+        ulong pM, wp; 
+        if (v[p] == NOT_FOUND)
             continue; /* won't be attained another time */
         pM = (M > 1) ? nmod_pow_ui(p, M, mod) : p;
         wp = nmod_mul(dlog_precomp(pre, pM), va, order);
-        for (pM = p; pM < nv; pM *= p)
-            for (k = pM; k < nv; k += pM)
-                v[k] = nmod_add(v[k],  wp, order);
+        /* fixme: could be faster sieving m*pe */
+        for (pM = p; pM < n; pM *= p)
+            for (k = pM; k < n; k += pM)
+                if (v[k] != NOT_FOUND)
+                    v[k] = nmod_add(v[k],  wp, order);
     }
     n_primes_clear(iter);
+    for (k = mod.n + 1; k < nv; k++)
+        v[k] = v[k - mod.n];
 }

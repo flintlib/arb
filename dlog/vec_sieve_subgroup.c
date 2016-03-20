@@ -26,7 +26,7 @@
 #include "dlog.h"
 #include <math.h>
 
-#define vbs 0
+#define vbs 1
 
 void
 dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order)
@@ -34,7 +34,7 @@ dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t m
     ulong smooth = 0, sievecount = 0, logcount = 0, missed = 0;
     ulong logcost, limcount;
     ulong k, p, p1, pmax, logm1;
-    log_pair_t * w;
+    ulong * w;
     dlog_precomp_t pre;
     n_primes_t iter;
     ulong X, aX, vaX;
@@ -42,10 +42,9 @@ dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t m
     /* store size */
     w = flint_malloc( nv * sizeof(log_pair_t));
     for (k = 0; k < nv; k++)
-    {
-        w[k].m = 1;
-        w[k].logm = 0; /* could be v[k]... */
-    } 
+        w[k] = NOT_FOUND;
+    w[1] = 0;
+    logm1 = (na % 2) ? 0 : nmod_mul(na / 2, va, order);
 
     /* discrete log on first primes, then sieve */
     pmax = (nv < mod.n) ? nv : mod.n;
@@ -62,7 +61,6 @@ dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t m
     else
     {
         limcount = ceil(pow((double)mod.n,1./2.3) * 40 / logcost);
-        logm1 = (mod.n % 2) ? 0 : dlog_precomp(pre, mod.n - 1);
     }
 
     /* find big power of gen */
@@ -76,7 +74,7 @@ dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t m
     { 
         double cost = log(mod.n)/log(p);
         ulong m, wp; 
-        if (mod.n % p == 0) /* FIXME: those primes could be known... */
+        if (v[p] == NOT_FOUND)
             continue; /* won't be attained another time */
         cost = log(mod.n)/log(p);
         cost = pow(cost,cost);
@@ -94,16 +92,19 @@ dlog_vec_sieve_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t m
         }
         for (k = p, m = 1; k < nv; k += p, m++)
         {
-            w[k].m = w[m].m * p;
-            w[k].logm = nmod_add(w[m].logm,  wp, order);
-            if (w[k].m == k)
-                smooth++;
+            if (w[m] == NOT_FOUND)
+                continue;
+            smooth++;
+            w[k] = nmod_add(w[m],  wp, order);
+            flint_printf("set log(%wu)=log(%wu)+log(%wu)=%wu\n",k,m,p,w[k]);
         }
     }
+    for (k = mod.n + 1; k < nv; k++)
+        w[k] = w[k - mod.n];
     /* write in v */
     for (k = 0; k < nv; k++)
         if (v[k] != NOT_FOUND)
-            v[k] = nmod_add(v[k], w[k].logm, order);
+            v[k] = nmod_add(v[k], w[k], order);
 #if vbs
     if (missed)
         flint_printf("[sieve: got %wu / %wu, n = %wu, cost %wu, logs %wu, sieve %wu missed %wu]\n",

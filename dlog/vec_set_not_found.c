@@ -26,11 +26,18 @@
 #include "dlog.h"
 
 void
-dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_set_not_found(ulong *v, ulong nv, nmod_t mod)
 {
-    dlog_vec_fill(v, nv, 0);
-    if (na * LOOP_MAX_FACTOR > nv)
-        dlog_vec_loop(v, nv, a, va, mod, na, order);
-    else
-        dlog_vec_crt(v, nv, a, va, mod, na, order);
+    n_factor_t fac;
+    ulong i;
+
+    n_factor_init(&fac);
+    n_factor(&fac, mod.n, 1);
+    for (i = 0; i < fac.num; i++)
+    {
+        ulong p, k;
+        p = fac.p[i];
+        for (k = p; k < nv; k += p)
+            v[k] = NOT_FOUND;
+    }
 }

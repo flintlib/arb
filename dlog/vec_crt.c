@@ -36,6 +36,7 @@ dlog_vec_crt(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t
     ulong maxloop;
     int k;
 
+    dlog_vec_fill(v, nv, 0);
     maxloop = LOOP_MAX_FACTOR * nv;
     n_factor_init(&fac);
     n_factor(&fac, na, 1);
