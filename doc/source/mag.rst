@@ -165,6 +165,10 @@ Conversions
 
     Sets *y* exactly to *x*. Assumes that no overflow occurs.
 
+.. function:: double mag_get_d(const mag_t x)
+
+    Returns a *double* giving an upper bound for *x*.
+
 .. function:: void mag_set_ui_lower(mag_t z, ulong x)
 
 .. function:: void mag_set_fmpz_lower(mag_t z, const fmpz_t x)
