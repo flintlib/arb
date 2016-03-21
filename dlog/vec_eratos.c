@@ -28,6 +28,7 @@
 void
 dlog_vec_eratos(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
+    dlog_vec_fill(v, nv, 0);
     dlog_vec_set_not_found(v, nv, mod);
-    dlog_vec_eratos_subgroup(v, nv, a, va, 1, mod, na, order);
+    dlog_vec_eratos_add(v, nv, a, va, mod, na, order);
 }

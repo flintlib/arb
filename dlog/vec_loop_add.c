@@ -25,19 +25,17 @@
 
 #include "dlog.h"
 
+/* vector of log(k,a)*loga % order in Z/modZ */ 
 void
-dlog_vec_set_not_found(ulong *v, ulong nv, nmod_t mod)
+dlog_vec_loop_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    n_factor_t fac;
-    ulong i;
-
-    n_factor_init(&fac);
-    n_factor(&fac, mod.n, 1);
-    for (i = 0; i < fac.num; i++)
+    ulong x, xp, vx;
+    vx = 0;
+    for (x = a; x != 1; x = nmod_mul(x, a, mod))
     {
-        ulong p, k;
-        p = fac.p[i];
-        for (k = p; k < nv; k += p)
-            v[k] = DLOG_NOT_FOUND;
+        vx = nmod_add(vx, va, order);
+        for(xp = x; xp < nv; xp+=mod.n)
+            if (v[xp] != DLOG_NONE)
+                v[xp] = nmod_add(v[xp], vx, order);
     }
 }

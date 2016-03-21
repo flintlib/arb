@@ -79,7 +79,7 @@ dlog_vec_pindex_factorgcd(ulong * v, ulong nv, ulong p, nmod_t mod, ulong a, ulo
         while (r[i] > u[i])
         {
             ng++;
-            if (r[i] < nv && v[r[i]] != NOT_FOUND && u[i] < nv && v[u[i]] != NOT_FOUND)
+            if (r[i] < nv && v[r[i]] != DLOG_NOT_FOUND && u[i] < nv && v[u[i]] != DLOG_NOT_FOUND)
             {
                 /* early smooth detection: occurs for primes < 30 bits */
                 ulong x;
@@ -87,15 +87,6 @@ dlog_vec_pindex_factorgcd(ulong * v, ulong nv, ulong p, nmod_t mod, ulong a, ulo
                 x = nmod_sub(v[r[i]], nmod_add(v[u[i]], logm, order), order);
                 if (j)
                     x = nmod_add(x, logm1, order);
-                flint_printf("[sieve early] %wu * %wu^%wu = %wu [%wu]\n",
-                        p, a, nm, pm, mod.n);
-                flint_printf("[sieve early] found %wu * %wu = (-1)^%d*%wu [%wu]\n",
-                        u[i], pm, j, r[i], mod.n);
-                flint_printf("[sieve early] log(%wu^%wu) = %wu * %wu = %wu [%wu]\n",
-                        a, nm, nm, loga, logm, order.n);
-                flint_printf("[    on logs] %wu + %wu + log(%wu) = %d * %wu + %wu [%wu]\n",
-                        v[u[i]],logm,p,j,logm1,v[r[i]], order.n);
-                flint_printf("[    hence  ] log(%wu) = %wu\n", p, x);
                 return x;
             }
             j = i; i = 1 - i; /* switch */
@@ -103,39 +94,23 @@ dlog_vec_pindex_factorgcd(ulong * v, ulong nv, ulong p, nmod_t mod, ulong a, ulo
             r[i] = r[i] % r[j];
             u[i] = u[i] + t * u[j]; /* times (-1)^j */
         };
-        flint_printf("[sieve factor] %wu * %wu^%wu = %wu [%wu]\n",
-                p, a, nm, pm, mod.n);
-        flint_printf("[sieve factor] found %wu * %wu = (-1)^%d*%wu [%wu]\n",
-                u[i], pm, j, r[i], mod.n);
-        flint_printf("[sieve factor] logm = %wu [A=%wu,logA=%wu,nm=%wu]\n",
-                logm,a,loga,nm);
-        logr = (j) ? logm1 : 0;
-        flint_printf("[sieve factor] logr = %wu\n",logr);
         /* try to factor both r[i] and u[i] */
         iu = factor_until(&u[i], nv, prime, pmax, up, ue);
-        if (u[i] >= nv || v[u[i]] == NOT_FOUND)
+        if (u[i] >= nv || v[u[i]] == DLOG_NOT_FOUND)
             continue;
-        flint_printf("[sieve factor] u: found %d factors up to %wu\n",iu,u[i]);
         ir = factor_until(&r[i], nv, prime, pmax, rp, re);
-        if (r[i] >= nv || v[r[i]] == NOT_FOUND)
+        if (r[i] >= nv || v[r[i]] == DLOG_NOT_FOUND)
             continue;
-        flint_printf("[sieve factor] r: found %d factors up to %wu\n",ir,r[i]);
         /* log(u)+log(p)+log(m)=log(r) */
         logm = nmod_add(logm, v[u[i]], order);
+        logr = (j) ? logm1 : 0;
         logr = nmod_add(logr, v[r[i]], order);
         for (i=0; i < ir; i++)
             logr = nmod_add(logr, (re[i] * v[rp[i]]) % order.n, order);
-        flint_printf("[sieve factor] logr = %wu\n",logr);
         for (i=0; i < iu; i++)
             logm = nmod_add(logm, (ue[i] * v[up[i]]) % order.n, order);
-        flint_printf("[sieve factor] logm = %wu\n",logm);
-        flint_printf("[sieve factor] log(%wu^%wu) = %wu * %wu = %wu [%wu]\n",
-                a, nm, nm, loga, logm, order.n);
-        flint_printf("[    on logs] %wu + log(%wu) = %d * %wu + %wu [%wu]\n",
-                logm,p,j,logm1, logr, order.n);
-        flint_printf("[    hence  ] log(%wu) = %wu\n", p, nmod_sub(logr, logm, order));
 
         return nmod_sub(logr, logm, order);
     }
-    return NOT_FOUND;
+    return DLOG_NOT_FOUND;
 }

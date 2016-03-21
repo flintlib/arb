@@ -25,16 +25,16 @@
 
 #include "dlog.h"
 
-/* vector of log(k,a)*loga % order in Z/modZ */ 
 void
-dlog_vec_loop_subgroup(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_sieve_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    ulong x, xp, vx;
-    vx = 0;
-    for (x = a; x != 1; x = nmod_mul(x, a, mod))
-    {
-        vx = nmod_add(vx, va, order);
-        for(xp = x; xp < nv; xp+=mod.n)
-            v[xp] = nmod_add(v[xp], vx, order);
-    }
+    ulong * w, k;
+    /* store size */
+    w = flint_malloc(nv * sizeof(ulong));
+    dlog_vec_sieve(w, nv, a, va, mod, na, order);
+    /* write in v */
+    for (k = 0; k < nv; k++)
+        if (v[k] != DLOG_NOT_FOUND)
+            v[k] = nmod_add(v[k], w[k], order);
+    flint_free(w);
 }

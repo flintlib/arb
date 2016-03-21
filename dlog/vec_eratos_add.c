@@ -27,7 +27,7 @@
 
 /* assume non invertible and 1 mod n already set */
 void
-dlog_vec_eratos_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_eratos_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
     ulong p, k, n;
     dlog_precomp_t pre;
@@ -40,15 +40,15 @@ dlog_vec_eratos_subgroup(ulong *v, ulong nv, ulong a, ulong va, ulong M, nmod_t 
     n_primes_init(iter);
     while ((p = n_primes_next(iter)) < n)
     { 
-        ulong pM, wp; 
-        if (v[p] == NOT_FOUND)
+        ulong wp, pe; 
+        if (v[p] == DLOG_NOT_FOUND)
             continue; /* won't be attained another time */
-        pM = (M > 1) ? nmod_pow_ui(p, M, mod) : p;
-        wp = nmod_mul(dlog_precomp(pre, pM), va, order);
-        /* fixme: could be faster sieving m*pe */
-        for (pM = p; pM < n; pM *= p)
-            for (k = pM; k < n; k += pM)
-                if (v[k] != NOT_FOUND)
+        wp = nmod_mul(dlog_precomp(pre, p), va, order);
+        /* fixme: could be faster sieving m*pe? but cannot
+         * use v[p*m]=v[p]*v[m]... */
+        for (pe = p; pe < n; pe *= p)
+            for (k = pe; k < n; k += pe)
+                if (v[k] != DLOG_NOT_FOUND)
                     v[k] = nmod_add(v[k],  wp, order);
     }
     n_primes_clear(iter);
