@@ -35,9 +35,10 @@ dlog_vec_trivial(ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong 
     dlog_precomp_n_init(pre, a, mod.n, na, 50);
     for (k = 1; k < nv; k++)
         if (n_gcd(k, mod.n) > 1)
-            v[k] = NOT_FOUND;
+            v[k] = DLOG_NOT_FOUND;
         else
             v[k] = dlog_precomp(pre, k % mod.n);
+    dlog_precomp_clear(pre);
 }
 
 static ulong
@@ -54,16 +55,17 @@ int main()
 {
     slong bits, nv, iter;
     flint_rand_t state;
-    int f, nf = 3;
-    vec_f func[5] = { dlog_vec_trivial, dlog_vec_loop, dlog_vec_eratos, dlog_vec_sieve, dlog_vec_crt };
-    char * n[5] = { "trivial", "loop", "eratos", "sieve", "crt" };
+    int f, nf = 4;
+    vec_f func[4] = { dlog_vec_trivial, dlog_vec_loop, dlog_vec_eratos,
+        dlog_vec_sieve };
+    char * n[4] = { "trivial", "loop", "eratos", "sieve" };
 
 
     flint_printf("dlog(1..n) mod p....");
     fflush(stdout);
     flint_randinit(state);
 
-    for (bits = 10; bits <= 10; bits += 5)
+    for (bits = 10; bits <= 35; bits += 5)
     {
         for (nv = 10; nv <= 10000; nv *= 10)
         {
@@ -90,20 +92,18 @@ int main()
                 va = 1; na = p - 1;
                 nmod_init(&order, na);
 
-                dlog_vec_init(ref, nv);
+                dlog_vec_fill(ref, nv, 0);
                 (func[iref])(ref, nv, a, va, mod, na, order);
 
                 /* compare */
-                for (f = 0; f < nf; f++)
+                for (f = iref + 1; f < nf; f++)
                 {
-                    if (f == iref)
-                        continue;
-                    dlog_vec_init(v, nv);
+                    dlog_vec_fill(v, nv, 0);
                     (func[f])(v, nv, a, va, mod, na, order);
 
                     if ((k = dlog_vec_diff(v, ref, nv)))
                     {
-                        flint_printf("FAIL: log(%wu,%wu) mod %wu: %s->%w != %s->%wu\n",
+                        flint_printf("FAIL: log(%wu,%wu) mod %wu: %s->%w != %s->%w\n",
                                 k, a, p, n[iref], ref[k], n[f], v[k]);
                         abort();
                     }

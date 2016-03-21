@@ -28,9 +28,8 @@
 void
 dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    dlog_vec_fill(v, nv, 0);
     if (na * LOOP_MAX_FACTOR > nv)
         dlog_vec_loop(v, nv, a, va, mod, na, order);
     else
-        dlog_vec_crt(v, nv, a, va, mod, na, order);
+        dlog_vec_sieve(v, nv, a, va, mod, na, order);
 }
