@@ -51,16 +51,16 @@ int main()
     for (n = 0, q = 2; q <= maxq; q++)
     {
         acb_dirichlet_group_t G;
-        acb_conrey_t x;
+        acb_dirichlet_conrey_t x;
 
         acb_dirichlet_group_init(G, q);
-        acb_conrey_init(x, G);
+        acb_dirichlet_conrey_init(x, G);
 
-        acb_conrey_one(x, G);
+        acb_dirichlet_conrey_one(x, G);
         n++;
 
-        for (; acb_conrey_next(x, G) < G->num; n++);
-        acb_conrey_clear(x);
+        for (; acb_dirichlet_conrey_next(x, G) < G->num; n++);
+        acb_dirichlet_conrey_clear(x);
         acb_dirichlet_group_clear(G);
     }
     TIMEIT_ONCE_STOP

@@ -19,27 +19,48 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+int
+acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
-    {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
-    }
+  ulong k;
+
+  acb_dirichlet_char_denormalize(chi, G);
+
+  /* update index */
+  k = 0;
+  if (G->neven == 2)
+  {
+      /* chi->n = n_mulmod(chi->n, G->generators[0], G->q); */
+      chi->n = chi->n * G->generators[0] % G->q;
+      if (++chi->expo[0] < G->expo)
+          return 0;
+      chi->expo[0] = 0;
+      k = 1;
+  }
+  for (; k < G->num ; k++)
+  {
+      /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
+      chi->n = chi->n * G->generators[k] % G->q;
+      chi->expo[k] += G->PHI[k];
+      if (chi->expo[k] % G->primes[k] == 0)
+      {
+          /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
+          chi->n = chi->n * G->generators[k] % G->q;
+          chi->expo[k] += G->PHI[k];
+      }
+      if (chi->expo[k] < G->expo)
+          break;
+      chi->expo[k] = G->PHI[k];  
+  }
+
+  acb_dirichlet_char_normalize(chi, G);
+
+  /* return last index modified */
+  return k;
 }

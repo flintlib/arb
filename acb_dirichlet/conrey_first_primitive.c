@@ -19,8 +19,6 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
@@ -28,18 +26,15 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
-{
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
+acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G) {
+    ulong k;
+    if (G->q % 4 == 2)
     {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
+      flint_printf("Exception (acb_dirichlet_conrey_first_primitive). no primitive element mod %wu.\n",G->q);
+      abort();
     }
+    for (k = 0; k < G->num ; k++)
+      x->log[k] = 1;
+    if (G->neven == 2)
+      x->log[0] = 0;
 }

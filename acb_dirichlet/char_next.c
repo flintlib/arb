@@ -19,38 +19,32 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-long
-n_dirichlet_char_eval(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
+int
+acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
-  ulong v = 0, k;
-  acb_conrey_t x;
-  acb_conrey_init(x, G);
-  acb_conrey_log(x, G, n);
-  for (k = 0; k < G->num; k++)
-    v = (v + chi->expo[k] * x->log[k]) % chi->order;
-  acb_conrey_clear(x);
-  return v;
-}
+  ulong k;
 
-void
-fmpq_dirichlet_char_eval(fmpq_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
-{
-    fmpq_set_si(res, n_dirichlet_char_eval(G, chi, n), chi->order);
-}
+  acb_dirichlet_char_denormalize(chi, G);
 
-void
-acb_dirichlet_char_eval(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
-{
-    fmpq_t t;
-    fmpq_init(t);
-    fmpq_dirichlet_char_eval(t, G, chi, n);
-    arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-    fmpq_clear(t);
+  /* update index */
+  for (k=0; k < G->num ; k++)
+  {
+    /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
+    chi->n = chi->n * G->generators[k] % G->q;
+    chi->expo[k] += G->PHI[k];
+    if (chi->expo[k] < G->expo)
+      break;
+    chi->expo[k] = 0;  
+  }
+
+  acb_dirichlet_char_normalize(chi, G);
+
+  /* return last index modified */
+  return k;
 }
