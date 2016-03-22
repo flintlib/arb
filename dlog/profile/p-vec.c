@@ -55,8 +55,8 @@ int main()
     ulong * a;
 
     int l, nf = 5;
-    vec_f func[5] = { f_empty, dlog_vec_loop, dlog_vec_eratos, dlog_vec_sieve, dlog_vec_crt };
-    char * n[5] = { "empty", "loop", "eratos", "sieve", "crt" };
+    vec_f func[5] = { f_empty, dlog_vec_loop, dlog_vec_eratos, dlog_vec_sieve, dlog_vec };
+    char * n[5] = { "empty", "loop", "eratos", "sieve", "default" };
 
     flint_rand_t state;
     nmod_t order;
