@@ -19,27 +19,39 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
+/* loop over primary components */
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
+  ulong k, l;
+
+  for(k = 1; k < nv; ++k)
+      v[k] = 0;
+
+  for(l = 1; l < G->num; ++l)
+  {
+    long p, pe, g, x, vp, xp;
+    long j, vj;
+    p = G->primes[l];
+    pe = G->primepowers[l];
+    g = G->generators[l] % pe;
+    vj = vp = chi->expo[l];
+    /* for each x = g^j mod p^e,
+     * set a[x] += j*vp
+     * and use periodicity */
+    for(j = 1, x = g; x > 1; j++)
     {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
+      for(xp = x; xp < nv; xp+=pe)
+          v[xp] = (v[xp] + vj) % chi->order;
+      x = (x*g) % pe;
+      vj = (vj + vp) % chi->order;
     }
+  }
+  acb_dirichlet_vec_set_null(v, nv, G);
 }

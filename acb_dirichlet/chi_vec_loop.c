@@ -19,27 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
+/* loop over whole group */
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_chi_vec_loop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
-    {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
-    }
+  int j;
+  ulong t, k;
+  acb_dirichlet_conrey_t x;
+  acb_dirichlet_conrey_init(x, G);
+  acb_dirichlet_conrey_one(x, G);
+  t = v[1] = 0;
+  while ( (j = acb_dirichlet_conrey_next(x, G)) < G->num )
+  {
+    /* exponents were modified up to j */
+    for (k = 0; k < j; k++)
+      t = (t + chi->expo[k] * x->log[k]) % chi->order;
+    if (x->n < nv)
+      v[x->n] = t;
+  }
+  /* fix result outside primes */
+  acb_dirichlet_vec_set_null(v, nv, G);
+  /* copy outside modulus */
+  for (k = G->q + 1; k < nv ; k++ )
+    v[k] = v[k - G->q];
+  acb_dirichlet_conrey_clear(x);
 }

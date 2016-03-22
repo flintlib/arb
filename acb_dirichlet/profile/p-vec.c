@@ -25,16 +25,16 @@
 
 #include "acb_dirichlet.h"
 #include "profiler.h"
-typedef void (*dir_f) (long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv);
+typedef void (*dir_f) (ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
 void
-dir_empty(long *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong nv)
+dir_empty(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
     return;
 }
 
 void
-vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, long * v, ulong nv)
+vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ulong nv)
 {
     ulong q;
     TIMEIT_ONCE_START
@@ -49,7 +49,7 @@ vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, long * v, ulo
         for (r = 0; r < nr; r++)
         {
             acb_dirichlet_char(chi, G, rand[r] % q);
-            dir(v, G, chi, nv);
+            dir(v, nv, G, chi);
         }
         acb_dirichlet_char_clear(chi);
         acb_dirichlet_group_clear(G);
@@ -65,14 +65,14 @@ int main()
     int i, ni = 5;
     ulong q[5] =  {   2, 1000, 3000, 10000, 100000 };
     ulong qq[5] = { 500, 2000, 5000, 12000, 100500 };
-    long * v;
+    ulong * v;
     flint_rand_t state;
 
     nr = 20;
 
     flint_randinit(state);
     rand = flint_malloc(nr * sizeof(ulong));
-    v = flint_malloc(nv * sizeof(long));
+    v = flint_malloc(nv * sizeof(ulong));
 
     for (r = 0; r < nr; r++)
         rand[r] = n_randprime(state, 42, 0);
@@ -92,15 +92,21 @@ int main()
 
         flint_printf("big loop................ ");
         fflush(stdout);
-        vecloop(n_dirichlet_char_vec_loop, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_chi_vec_loop, minq, maxq, rand, nr, v, nv);
 
         flint_printf("med loop................ ");
         fflush(stdout);
-        vecloop(n_dirichlet_char_vec_primeloop, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_chi_vec_primeloop, minq, maxq, rand, nr, v, nv);
 
         flint_printf("small loop................ ");
         fflush(stdout);
-        vecloop(n_dirichlet_char_vec_logsieve, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_chi_vec_sieve, minq, maxq, rand, nr, v, nv);
+
+        /*
+        flint_printf("generic........ ");
+        fflush(stdout);
+        vecloop(acb_dirichlet_chi_vec, minq, maxq, rand, nr, v, nv);
+        */
     }
 
     flint_free(v);

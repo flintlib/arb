@@ -30,14 +30,14 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("chi....");
+    flint_printf("conrey....");
     fflush(stdout);
     flint_randinit(state);
 
     for (iter = 0; iter < 10000; iter++)
     {
         acb_dirichlet_group_t G;
-        acb_conrey_t x;
+        acb_dirichlet_conrey_t x;
         ulong q, n, k, sum;
         long ref;
         /*int * bits;*/
@@ -46,14 +46,14 @@ int main()
 
         acb_dirichlet_group_init(G, q);
 
-        acb_conrey_init(x, G);
+        acb_dirichlet_conrey_init(x, G);
 
         /* check group size and elements */
-        acb_conrey_one(x, G);
+        acb_dirichlet_conrey_one(x, G);
         sum = 1;
 
 #if 1
-        for (n = 1; acb_conrey_next(x, G) < G->num; n++)
+        for (n = 1; acb_dirichlet_conrey_next(x, G) < G->num; n++)
             sum += x->n * x->n;
 #else
         /* iteration much faster than gcd below */
@@ -113,8 +113,8 @@ int main()
            }
         }
 
-        acb_conrey_first_primitive(x, G);
-        for (n = 1; (k=acb_conrey_next_primitive(x, G)) < G->num; n++);
+        acb_dirichlet_conrey_first_primitive(x, G);
+        for (n = 1; (k=acb_dirichlet_conrey_next_primitive(x, G)) < G->num; n++);
 
         if (n != ref)
         {
@@ -125,7 +125,7 @@ int main()
             abort();
         }
 
-        acb_conrey_clear(x);
+        acb_dirichlet_conrey_clear(x);
         acb_dirichlet_group_clear(G);
     }
 

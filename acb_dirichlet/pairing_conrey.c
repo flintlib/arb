@@ -27,19 +27,14 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+/* todo: modular arithmetic */
+
+ulong
+acb_dirichlet_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
-    {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
-    }
+  ulong x, k;
+  x = 0;
+  for (k = 0; k < G->num; k++)
+    x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
+  return x;
 }

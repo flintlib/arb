@@ -28,17 +28,17 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_acb_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
 {
     ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
+    expo = acb_dirichlet_chi(G, chi, n);
+    if (expo == CHI_NULL)
         acb_zero(res);
     else
     {
         fmpq_t t;
         fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
+        fmpq_set_si(t, 2 * expo , chi->order);
         arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
         fmpq_clear(t);
     }

@@ -21,28 +21,16 @@
 
     Copyright (C) 2015 Jonathan Bober
     Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-/* todo: modular arithmetic
-   discrete log can be computed along exponents or using p-adic log
-*/
-
-void
-acb_conrey_init(acb_conrey_t x, const acb_dirichlet_group_t G) {
-    x->log = flint_malloc(G->num * sizeof(ulong));
-}
-
-void
-acb_conrey_clear(acb_conrey_t x) {
-    flint_free(x->log);
-}
-
 /* TODO: use precomputations in G if present */
+/* assume m is invertible */
 void
-acb_conrey_log(acb_conrey_t x, const acb_dirichlet_group_t G, ulong m)
+acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
 {
     ulong k, pk, gk;
     /* even part */
@@ -64,96 +52,4 @@ acb_conrey_log(acb_conrey_t x, const acb_dirichlet_group_t G, ulong m)
     }
     /* keep value m */
     x->n = m;
-}
-
-ulong
-acb_conrey_exp(acb_conrey_t x, const acb_dirichlet_group_t G)
-{
-    ulong k, n = 1;
-    for (k = G->neven; k < G->num; k++)
-        /* n = n_mulmod(n, n_powmod(G->generators[k], x->log[k], G->q), G->q); */
-        n = n * n_powmod(G->generators[k], x->log[k], G->q) % G->q;
-    x->n = n;
-    return n;
-}
-
-void
-acb_conrey_one(acb_conrey_t x, const acb_dirichlet_group_t G) {
-    ulong k;
-    for (k = 0; k < G->num ; k++)
-      x->log[k] = 0;
-    x->n = 1;
-}
-
-void
-acb_conrey_first_primitive(acb_conrey_t x, const acb_dirichlet_group_t G) {
-    ulong k;
-    if (G->q % 4 == 2)
-    {
-      flint_printf("Exception (acb_conrey_first_primitive). no primitive element mod %wu.\n",G->q);
-      abort();
-    }
-    for (k = 0; k < G->num ; k++)
-      x->log[k] = 1;
-    if (G->neven == 2)
-      x->log[0] = 0;
-}
-
-int
-acb_conrey_next(acb_conrey_t x, const acb_dirichlet_group_t G)
-{
-  /* update index */
-  ulong k;
-  for (k=0; k < G->num ; k++)
-  {
-    /* x->n = n_mulmod(x->n, G->generators[k], G->q); */
-    x->n = x->n * G->generators[k] % G->q;
-    if (++x->log[k] < G->phi[k])
-      break;
-    x->log[k] = 0;  
-  }
-  /* return last index modified */
-  return k;
-}
-
-int
-acb_conrey_next_primitive(acb_conrey_t x, const acb_dirichlet_group_t G)
-{
-  /* update index avoiding multiples of p except for first component
-     if 8|q */
-  ulong k = 0;
-  if (G->neven == 2)
-  {
-      /* x->n = n_mulmod(x->n, G->generators[0], G->q); */
-      x->n = x->n * G->generators[0] % G->q;
-      if (++x->log[0] == 1)
-          return 0;
-      x->log[0] = 0;
-      k = 1;
-  }
-  for (; k < G->num ; k++)
-  {
-    /* x->n = n_mulmod(x->n, G->generators[k], G->q); */
-    x->n = x->n * G->generators[k] % G->q;
-    if (++x->log[k] % G->primes[k] == 0)
-    {
-        /* x->n = n_mulmod(x->n, G->generators[k], G->q); */
-        x->n = x->n * G->generators[k] % G->q;
-        ++x->log[k];
-    }
-    if (x->log[k] < G->phi[k])
-        break;
-    x->log[k] =  1;
-  }
-  /* return last index modified */
-  return k;
-}
-
-void
-acb_conrey_mul(acb_conrey_t c, const acb_dirichlet_group_t G, const acb_conrey_t a, const acb_conrey_t b)
-{
-    ulong k;
-    for (k = 0; k < G->num ; k++)
-      c->log[k] = a->log[k] + b->log[k] % G->phi[k];
-    c->n = a->n * b->n % G->q;
 }

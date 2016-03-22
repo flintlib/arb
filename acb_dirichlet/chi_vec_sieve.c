@@ -19,27 +19,38 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
+/* sieve on primes */
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_chi_vec_sieve(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
-    {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
-    }
+	ulong k, p, pmax;
+	n_primes_t iter;
+
+	n_primes_init(iter);
+
+	pmax = (nv < G->q) ? nv : G->q;
+	v[1] = 0; 
+	while ((p = n_primes_next(iter)) < pmax)
+	{ 
+		if (G->q % p == 0) 
+		{
+			for (k = p; k < nv; k += p)
+				v[k] = CHI_NULL;
+		}
+		else
+		{ 
+			long chip; 
+			chip = acb_dirichlet_chi(G, chi, p);
+			for (k = p; k < nv; k += p)
+				if (v[k] != -1)
+					 v[k] = (v[k] + chip) % chi->order;
+		}
+	}
+	n_primes_clear(iter);
 }

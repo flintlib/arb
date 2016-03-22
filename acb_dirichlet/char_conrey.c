@@ -19,27 +19,24 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
+/* char n has exponents  = log[k]*PHI[k] / gcd and order expo / gcd 
+ * so that log = expo[k] */
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 {
-    ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
-    {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order.n);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
-    }
+  ulong k;
+  chi->q = G->q;
+  chi->n = x->n;
+
+  for (k = 0; k < G->num; k++)
+    chi->expo[k] = (x->log[k] * G->PHI[k]) % G->expo;
+
+  /* optional: divide by gcd to obtain true order */
+  acb_dirichlet_char_normalize(chi, G);
 }
