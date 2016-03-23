@@ -33,9 +33,10 @@ acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t 
   ulong k;
   chi->q = G->q;
   chi->n = x->n;
+  chi->parity = acb_dirichlet_conrey_parity(G, x);
 
   for (k = 0; k < G->num; k++)
-    chi->expo[k] = (x->log[k] * G->PHI[k]) % G->expo;
+      chi->expo[k] = (x->log[k] * G->PHI[k]) % G->expo;
 
   /* optional: divide by gcd to obtain true order */
   acb_dirichlet_char_normalize(chi, G);
