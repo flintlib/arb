@@ -26,6 +26,12 @@
 #ifndef DLOG_H
 #define DLOG_H
 
+#ifdef ACB_INLINES_C
+#define ACB_INLINE
+#else
+#define ACB_INLINE static __inline__
+#endif
+
 #include "ulong_extras.h"
 #include "nmod_vec.h"
 #include "padic.h"
@@ -36,6 +42,7 @@ enum
 };
 
 typedef struct dlog_precomp_struct dlog_precomp_struct;
+typedef struct dlog_precomp_struct * dlog_precomp_ptr;
 
 /* log in (1+pZ/p^eZ): compute via p-adic log */
 typedef struct
@@ -112,11 +119,7 @@ typedef struct
     ulong num;
     ulong * expo;
     ulong * crt_coeffs;
-    dlog_precomp_struct ** pre;
-    /*
-       void * pre;
-       dlog_precomp_t * pre;
-       */
+    dlog_precomp_ptr pre;
 }
 dlog_crt_struct;
 
@@ -130,10 +133,6 @@ typedef struct
     ulong e;
     ulong * apk;
     dlog_precomp_struct * pre;
-    /*
-       void * pre;
-       dlog_precomp_t * pre;
-       */
 }
 dlog_power_struct;
 
@@ -161,6 +160,15 @@ dlog_precomp_struct
 
 typedef dlog_precomp_struct dlog_precomp_t[1];
 
+void dlog_precomp_modpe_init(dlog_precomp_t pre, ulong a, ulong p, ulong e, ulong pe, ulong num);
+void dlog_precomp_small_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num);
+void dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num);
+void dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num);
+void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, ulong pe, ulong num);
+void dlog_precomp_clear(dlog_precomp_t pre);
+
+ulong dlog_precomp(const dlog_precomp_t pre, ulong b);
+
 ulong dlog_order23_init(dlog_order23_t t, ulong a);
 ulong dlog_table_init(dlog_table_t t, ulong a, ulong mod);
 ulong dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num);
@@ -171,14 +179,53 @@ void dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e);
 void dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n);
 /*#define dlog_bsgs_init(t, a, n, m) bsgs_table_init(t, a, n, m)*/
 
-void dlog_order23_clear(dlog_order23_t t);
-void dlog_table_clear(dlog_table_t t);
-void dlog_1modpe_clear(dlog_1modpe_t t);
+ACB_INLINE void
+dlog_order23_clear(dlog_order23_t t)
+{
+    return;
+}
+
+ACB_INLINE void
+dlog_table_clear(dlog_table_t t)
+{
+  flint_free(t->table);
+}
+
+ACB_INLINE void
+dlog_1modpe_clear(dlog_1modpe_t t)
+{
+    padic_clear(t->invlog);
+    padic_ctx_clear(t->ctx);
+}
+
 void dlog_crt_clear(dlog_crt_t t);
-void dlog_power_clear(dlog_power_t t);
-void dlog_modpe_clear(dlog_modpe_t t);
-void dlog_bsgs_clear(dlog_bsgs_t t);
-void dlog_rho_clear(dlog_rho_t t);
+
+ACB_INLINE void
+dlog_power_clear(dlog_power_t t)
+{
+    flint_free(t->apk);
+    dlog_precomp_clear(t->pre);
+    flint_free(t->pre);
+}
+
+ACB_INLINE void
+dlog_modpe_clear(dlog_modpe_t t)
+{
+  dlog_precomp_clear(t->modp);
+  dlog_1modpe_clear(t->modpe);
+}
+
+ACB_INLINE void
+dlog_bsgs_clear(dlog_bsgs_t t)
+{
+    flint_free(t->table);
+}
+
+ACB_INLINE void
+dlog_rho_clear(dlog_rho_t t)
+{
+  return;
+}
 /*#define dlog_bsgs_clear(t) bsgs_table_clear(t)*/
 
 ulong dlog_order23(const dlog_order23_t t, ulong b);
@@ -191,12 +238,13 @@ ulong dlog_bsgs(const dlog_bsgs_t t, ulong b);
 ulong dlog_rho(const dlog_rho_t t, ulong b);
 /*#define dlog_bsgs(t, b) n_discrete_log_bsgs_table(t, b)*/
 
-void dlog_precomp_modpe_init(dlog_precomp_t pre, ulong a, ulong p, ulong e, ulong pe, ulong num);
-void dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num);
-void dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num);
-void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, ulong pe, ulong num);
-void dlog_precomp_clear(dlog_precomp_t pre);
-ulong dlog_precomp(const dlog_precomp_t pre, ulong b);
+#define DLOG_SMALL_LIM 50
+#define DLOG_TABLE_LIM 50
+#define DLOG_TABLE_P_LIM 50
+#define DLOG_TABLE_MODPE_LIM 50
+#define DLOG_TABLE_PE_LIM 50
+#define DLOG_TABLE_N_LIM 50
+#define DLOG_BSGS_LIM  500 
 
 #define LOOP_MAX_FACTOR 6
 #define G_SMALL 0

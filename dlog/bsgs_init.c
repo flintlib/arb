@@ -56,9 +56,3 @@ dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
     qsort(t->table, m, sizeof(apow_t), (int(*)(const void*,const void*))apow_cmp);
     return t->g;
 }
-
-void
-dlog_bsgs_clear(dlog_bsgs_t t)
-{
-    flint_free(t->table);
-}

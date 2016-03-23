@@ -26,21 +26,6 @@
 #include "dlog.h"
 #include <math.h>
 
-void
-dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n)
-{
-  t->a = a;
-  nmod_init(&t->n, n);
-  nmod_init(&t->mod, mod);
-  t->nisprime = n_is_prime(n);
-}
-
-void
-dlog_rho_clear(dlog_rho_t t)
-{
-  return;
-}
-
 static ulong
 dlog_once(ulong b, ulong a, const nmod_t mod, ulong n)
 {

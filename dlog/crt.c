@@ -34,7 +34,7 @@ dlog_crt(const dlog_crt_t t, ulong b)
     {
         ulong bk, rk;
         bk = nmod_pow_ui(b, t->expo[k], t->mod);
-        rk = dlog_precomp(t->pre[k], bk);
+        rk = dlog_precomp(t->pre + k, bk);
 #if 0
         flint_printf("##[crt-%d]: log(%wu)=log(%wu^%wu) = %wu [size %wu mod %wu]\n",
                 k, bk, b, t->expo[k], rk, t->n/t->expo[k], t->mod);

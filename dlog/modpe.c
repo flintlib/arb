@@ -27,24 +27,6 @@
 #include "padic.h"
 
 ulong
-dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num)
-{
-    t->p = p;
-    t->e = e;
-    t->pe = pe;
-    dlog_precomp_n_init(t->modp, a, p, p-1, num);
-    dlog_1modpe_init(t->modpe, n_powmod(a, p - 1, pe), p, e);
-    return t->modp->cost + e;
-}
-
-void
-dlog_modpe_clear(dlog_modpe_t t)
-{
-  dlog_precomp_clear(t->modp);
-  dlog_1modpe_clear(t->modpe);
-}
-
-ulong
 dlog_modpe(const dlog_modpe_t t, ulong b)
 {
     ulong x;

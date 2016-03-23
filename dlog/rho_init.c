@@ -24,10 +24,13 @@
 ******************************************************************************/
 
 #include "dlog.h"
+#include <math.h>
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+void
+dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n)
 {
-    * t = a;
-    return 0;
+  t->a = a;
+  nmod_init(&t->n, n);
+  nmod_init(&t->mod, mod);
+  t->nisprime = n_is_prime(n);
 }

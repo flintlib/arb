@@ -24,10 +24,21 @@
 ******************************************************************************/
 
 #include "dlog.h"
+#include "math.h"
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+/* we known the order is prime */
+void
+dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num)
 {
-    * t = a;
-    return 0;
+    if ( p < DLOG_TABLE_P_LIM )
+    {
+        dlog_precomp_small_init(pre, a, mod, p, num);
+    }
+    else
+    {
+        ulong m;
+        m = (2 * num < p) ? ceil(sqrt((double) p * num)) : p;
+        pre->type = DLOG_BSGS;
+        pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, p, m);
+    }
 }

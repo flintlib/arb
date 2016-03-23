@@ -25,9 +25,23 @@
 
 #include "dlog.h"
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+void
+dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, ulong pe, ulong num)
 {
-    * t = a;
-    return 0;
+    if ( pe < DLOG_TABLE_PE_LIM )
+    {
+        dlog_precomp_small_init(pre, a, mod, pe, num);
+    }
+    else
+    {
+        if ( e == 1)
+        {
+            dlog_precomp_p_init(pre, a, mod, p, num);
+        }
+        else
+        {
+            pre->type = DLOG_POWER;
+            pre->cost = dlog_power_init(pre->t.power, a, mod, p, e, num);
+        }
+    }
 }
