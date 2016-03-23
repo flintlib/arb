@@ -35,20 +35,31 @@ acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G
     ulong k, pk, gk;
     /* even part */
     if (G->neven >= 1)
-      x->log[0] = (m % 4 == 3);
-    if (G->neven == 2)
     {
-        ulong q_even = G->q_even;
-        ulong g2 = 5;
-        ulong m2 = (m % 4 == 3) ? -m % q_even : m % q_even;
-        x->log[1] = n_discrete_log_bsgs(m2, g2, q_even);
+      x->log[0] = (m % 4 == 3);
+      if (G->neven == 2)
+      {
+        ulong m2 = (x->log[0]) ? -m % G->q_even : m % G->q_even;
+        if (G->dlog == NULL)
+            x->log[1] = n_discrete_log_bsgs(m2, 5, G->q_even);
+        else
+            x->log[1] = dlog_precomp(G->dlog[1], m2);
+      }
     }
     /* odd part */
-    for (k = G->neven; k < G->num; k++)
+    if (G->dlog == NULL)
     {
-        pk = G->primepowers[k];
-        gk = G->generators[k] % pk;
-        x->log[k] = n_discrete_log_bsgs(m % pk, gk, pk);
+        for (k = G->neven; k < G->num; k++)
+        {
+            pk = G->primepowers[k];
+            gk = G->generators[k] % pk;
+            x->log[k] = n_discrete_log_bsgs(m % pk, gk, pk);
+        }
+    }
+    else
+    {
+        for (k = G->neven; k < G->num; k++)
+            x->log[k] = dlog_precomp(G->dlog[k], m % G->primepowers[k]);
     }
     /* keep value m */
     x->n = m;

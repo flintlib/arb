@@ -29,8 +29,9 @@ void
 acb_dirichlet_conrey_print(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 {
     int k;
-    flint_printf("[%wu",x->log[0]);
+    if (G->num)
+        flint_printf("[%wu", x->log[0]);
     for (k = 1; k < G->num; k++)
-        flint_printf(", %wu",x->log[k]);
+        flint_printf(", %wu", x->log[k]);
     flint_printf("]\n");
 }
