@@ -23,6 +23,7 @@ extern "C" {
 typedef struct
 {
     ulong q;                /* modulus */
+    nmod_t mod;             /* modulus with precomputed inverse */
     ulong q_even;           /* even part of modulus */
     ulong q_odd;            /* odd part of modulus */
     ulong phi_q;            /* phi(q) = group size */
@@ -35,6 +36,7 @@ typedef struct
     ulong * generators;     /* generator for each prime p[k] lifted mod q */
     ulong * phi;            /* phi(k) = phi(p[k]^e[k])       */
     ulong * PHI;            /* PHI(k) = expo / phi(k)        */
+    dlog_precomp_t * dlog;  /* precomputed data for discrete log mod p^e */
 }
 acb_dirichlet_group_struct;
 
@@ -101,6 +103,9 @@ void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_gro
 void acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_denormalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
+ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
+int acb_dirichlet_char_is_odd(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
+
 void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
@@ -114,6 +119,10 @@ void acb_dirichlet_chi_vec_sieve(ulong *v, ulong nv, const acb_dirichlet_group_t
 void acb_dirichlet_chi_vec(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
 void acb_dirichlet_char_vec(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
+
+
+void acb_dirichlet_zeta(acb_t res, ulong order, slong prec);
+void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
 
 #ifdef __cplusplus
 }

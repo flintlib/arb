@@ -30,6 +30,6 @@ acb_dirichlet_conrey_mul(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G
 {
     ulong k;
     for (k = 0; k < G->num ; k++)
-      c->log[k] = a->log[k] + b->log[k] % G->phi[k];
-    c->n = a->n * b->n % G->q;
+      c->log[k] = (a->log[k] + b->log[k]) % G->phi[k];
+    c->n = nmod_mul(a->n, b->n, G->mod);
 }

@@ -25,24 +25,32 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+ulong
+acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    ulong k;
-    if (G->q % 4 == 2)
+    int k, f;
+    ulong cond = 1;
+    if (G->neven >= 1 && chi->expo[0] == 1)
+        cond = 4;
+    if (G->neven == 2 && chi->expo[1])
     {
-        flint_printf("Exception (acb_dirichlet_conrey_first_primitive). No primitive element mod %wu.\n",G->q);
-        abort();
+        ulong l2 = chi->expo[1];
+        f = n_remove(&l2, 2);
+        cond = G->primepowers[1] >> f;
     }
-    x->n = 1;
-    for (k = 0; k < G->num ; k++)
+    for (k = G->neven; k < G->neven; k++)
     {
-        if (k == 0 && G->neven == 2)
-            x->log[k] = 0;
-        else
+        if (chi->expo[k])
         {
-            x->n = nmod_mul(x->n, G->generators[k], G->mod);
-            x->log[k] = 1;
+            ulong p, lp;
+            p = G->primes[k];
+            lp = chi->expo[k];
+            f = n_remove(&lp, p);
+            if (f)
+                cond *= n_pow(p, G->exponents[k] - f);
+            else
+                cond *= G->primepowers[k];
         }
     }
+    return cond;
 }

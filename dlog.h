@@ -191,6 +191,7 @@ ulong dlog_bsgs(const dlog_bsgs_t t, ulong b);
 ulong dlog_rho(const dlog_rho_t t, ulong b);
 /*#define dlog_bsgs(t, b) n_discrete_log_bsgs_table(t, b)*/
 
+void dlog_precomp_modpe_init(dlog_precomp_t pre, ulong a, ulong p, ulong e, ulong pe, ulong num);
 void dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num);
 void dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num);
 void dlog_precomp_pe_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong e, ulong pe, ulong num);

@@ -30,8 +30,7 @@ acb_dirichlet_conrey_exp(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G
 {
     ulong k, n = 1;
     for (k = G->neven; k < G->num; k++)
-        /* n = n_mulmod(n, n_powmod(G->generators[k], x->log[k], G->q), G->q); */
-        n = n * n_powmod(G->generators[k], x->log[k], G->q) % G->q;
+        n = nmod_mul(n, nmod_pow_ui(G->generators[k], x->log[k], G->mod), G->mod);
     x->n = n;
     return n;
 }

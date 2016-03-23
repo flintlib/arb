@@ -41,6 +41,8 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     n_factor_t fac;
 
     G->q = q;
+    nmod_init(&G->mod, q);
+
     G->q_odd = q;
     G->q_even = 1;
 
@@ -63,6 +65,7 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     G->generators = flint_malloc(G->num * sizeof(ulong));
     G->phi = flint_malloc(G->num * sizeof(ulong));
     G->PHI = flint_malloc(G->num * sizeof(ulong));
+    G->dlog = NULL;
 
     /* even part */
     G->expo = G->phi_q = 1;

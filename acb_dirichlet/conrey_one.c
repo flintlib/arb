@@ -26,9 +26,10 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G) {
+acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+{
     ulong k;
     for (k = 0; k < G->num ; k++)
-      x->log[k] = 0;
+        x->log[k] = 0;
     x->n = 1;
 }

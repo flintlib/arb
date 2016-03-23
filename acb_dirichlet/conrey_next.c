@@ -28,16 +28,16 @@
 int
 acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 {
-  /* update index */
-  ulong k;
-  for (k=0; k < G->num ; k++)
-  {
-    /* x->n = n_mulmod(x->n, G->generators[k], G->q); */
-    x->n = x->n * G->generators[k] % G->q;
-    if (++x->log[k] < G->phi[k])
-      break;
-    x->log[k] = 0;  
-  }
-  /* return last index modified */
-  return k;
+    /* update index */
+    int k;
+    for (k=0; k < G->num; k++)
+    {
+        x->n = nmod_mul(x->n, G->generators[k], G->mod);
+        x->log[k] += 1;
+        if (x->log[k] < G->phi[k])
+            break;
+        x->log[k] = 0;
+    }
+    /* return last index modified */
+    return k;
 }

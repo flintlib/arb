@@ -36,8 +36,7 @@ acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_
   k = 0;
   if (G->neven == 2)
   {
-      /* chi->n = n_mulmod(chi->n, G->generators[0], G->q); */
-      chi->n = chi->n * G->generators[0] % G->q;
+      chi->n = nmod_mul(chi->n, G->generators[0], G->mod);
       if (++chi->expo[0] < G->expo)
           return 0;
       chi->expo[0] = 0;
@@ -45,13 +44,11 @@ acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_
   }
   for (; k < G->num ; k++)
   {
-      /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
-      chi->n = chi->n * G->generators[k] % G->q;
+      chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
       chi->expo[k] += G->PHI[k];
       if (chi->expo[k] % G->primes[k] == 0)
       {
-          /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
-          chi->n = chi->n * G->generators[k] % G->q;
+          chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
           chi->expo[k] += G->PHI[k];
       }
       if (chi->expo[k] < G->expo)

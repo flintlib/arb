@@ -25,24 +25,16 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+int
+acb_dirichlet_char_is_odd(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    ulong k;
-    if (G->q % 4 == 2)
+    slong k, odd = 0;
+    for (k = 0; k < G->num; k++)
     {
-        flint_printf("Exception (acb_dirichlet_conrey_first_primitive). No primitive element mod %wu.\n",G->q);
-        abort();
+        if (k == 1 && G->neven == 2)
+            continue;
+        if (chi->expo[k] % 2 == 1)
+            odd = 1 - odd;
     }
-    x->n = 1;
-    for (k = 0; k < G->num ; k++)
-    {
-        if (k == 0 && G->neven == 2)
-            x->log[k] = 0;
-        else
-        {
-            x->n = nmod_mul(x->n, G->generators[k], G->mod);
-            x->log[k] = 1;
-        }
-    }
+    return odd;
 }

@@ -26,23 +26,11 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+acb_dirichlet_zeta(acb_t res, ulong order, slong prec)
 {
-    ulong k;
-    if (G->q % 4 == 2)
-    {
-        flint_printf("Exception (acb_dirichlet_conrey_first_primitive). No primitive element mod %wu.\n",G->q);
-        abort();
-    }
-    x->n = 1;
-    for (k = 0; k < G->num ; k++)
-    {
-        if (k == 0 && G->neven == 2)
-            x->log[k] = 0;
-        else
-        {
-            x->n = nmod_mul(x->n, G->generators[k], G->mod);
-            x->log[k] = 1;
-        }
-    }
+    fmpq_t t;
+    fmpq_init(t);
+    fmpq_set_si(t, 2, order);
+    arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
+    fmpq_clear(t);
 }

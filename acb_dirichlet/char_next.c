@@ -35,8 +35,7 @@ acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
   /* update index */
   for (k=0; k < G->num ; k++)
   {
-    /* chi->n = n_mulmod(chi->n, G->generators[k], G->q); */
-    chi->n = chi->n * G->generators[k] % G->q;
+    chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
     chi->expo[k] += G->PHI[k];
     if (chi->expo[k] < G->expo)
       break;
