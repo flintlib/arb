@@ -42,9 +42,7 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
 
     M = t->expo = flint_malloc(t->num * sizeof(ulong));
     u = t->crt_coeffs = flint_malloc(t->num * sizeof(ulong));
-    t->pre = flint_malloc(t->num * sizeof(dlog_precomp_t));
-    for (k = 0; k < t->num; k++)
-        t->pre[k] = flint_malloc(sizeof(dlog_precomp_struct));
+    t->pre = flint_malloc(t->num * sizeof(dlog_precomp_struct));
 
     for (k = 0; k < t->num; k++)
     {
@@ -58,26 +56,12 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
 #if 0
         flint_printf("[sub-crt -- init for size %wu mod %wu]\n", mk, mod);
 #endif
-        dlog_precomp_pe_init(t->pre[k], nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
-        cost += t->pre[k]->cost;
+        dlog_precomp_pe_init(t->pre + k, nmod_pow_ui(a, M[k], t->mod), mod, p, e, mk, num);
+        cost += t->pre[k].cost;
     }
 #if 0
     if (cost > 500)
     flint_printf("[crt init for size %wu mod %wu -> cost %wu]\n", n,mod,cost);
 #endif
     return cost;
-}
-
-void
-dlog_crt_clear(dlog_crt_t t)
-{
-    int k;
-    flint_free(t->expo);
-    flint_free(t->crt_coeffs);
-    for (k = 0; k < t->num; k++)
-    {
-        dlog_precomp_clear(t->pre[k]);
-        flint_free(t->pre[k]);
-    }
-    flint_free(t->pre);
 }

@@ -26,8 +26,9 @@
 #include "dlog.h"
 #include <math.h>
 
-#define vbs 1
+#define vbs 0
 
+/* TODO: tune the limit dlog -> index calculus */
 void
 dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
@@ -47,7 +48,6 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
     pmax = (nv < mod.n) ? nv : mod.n;
     p1 = 50; /* FIXME: tune this limit! */
     dlog_precomp_n_init(pre, a, mod.n, na, p1);
-    /*flint_printf("## single log cost: %wu\n", pre->cost);*/
     logcost = pre->cost;
 
     if (logcost < 15)

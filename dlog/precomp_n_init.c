@@ -24,10 +24,31 @@
 ******************************************************************************/
 
 #include "dlog.h"
+#include "math.h"
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+/* group of order n modulo mod, mod a prime and no information on n */
+void
+dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
 {
-    * t = a;
-    return 0;
+    if (n%2 && n_is_probabprime(n))
+        dlog_precomp_p_init(pre, a, mod, n, num);
+    else {
+        if (n < DLOG_TABLE_N_LIM)
+        {
+           dlog_precomp_small_init(pre, a, mod, n, num);
+        }
+        else
+        {
+            if (n < DLOG_BSGS_LIM)
+            {
+                ulong m;
+                m = (2 * num < n) ? ceil(sqrt((double) n * num)) : n;
+                pre->type = DLOG_BSGS;
+                pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, n, m);
+            } else {
+                pre->type = DLOG_CRT;
+                pre->cost = dlog_crt_init(pre->t.crt, a, mod, n, num);
+            }
+        }
+    }
 }

@@ -25,9 +25,25 @@
 
 #include "dlog.h"
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+void
+dlog_precomp_small_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
 {
-    * t = a;
-    return 0;
+    if (n <= 3)
+    {
+        pre->type = DLOG_23;
+        pre->cost = dlog_order23_init(pre->t.order23, a); 
+    }
+    else
+    {
+        if ( mod < DLOG_TABLE_LIM )
+        {
+            pre->type = DLOG_TABLE;
+            pre->cost = dlog_table_init(pre->t.table, a, mod);
+        }
+        else
+        {
+            pre->type = DLOG_BSGS;
+            pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, n, n);
+        }
+    }
 }

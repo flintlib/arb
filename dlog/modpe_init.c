@@ -26,8 +26,12 @@
 #include "dlog.h"
 
 ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num)
 {
-    * t = a;
-    return 0;
+    t->p = p;
+    t->e = e;
+    t->pe = pe;
+    dlog_precomp_n_init(t->modp, a, p, p-1, num);
+    dlog_1modpe_init(t->modpe, n_powmod(a, p - 1, pe), p, e);
+    return t->modp->cost + e;
 }

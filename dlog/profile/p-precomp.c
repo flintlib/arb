@@ -118,7 +118,7 @@ int main()
     flint_rand_t state;
 
     flint_randinit(state);
-    for (nbits = 10; nbits < 50; nbits += 5)
+    for (nbits = 10; nbits <= 40; nbits += 5)
     {
 
         int i;

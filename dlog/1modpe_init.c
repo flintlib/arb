@@ -41,10 +41,3 @@ dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e)
 
     fmpz_clear(tmp);
 }
-
-void
-dlog_1modpe_clear(dlog_1modpe_t t)
-{
-    padic_clear(t->invlog);
-    padic_ctx_clear(t->ctx);
-}

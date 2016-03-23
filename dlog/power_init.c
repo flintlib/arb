@@ -43,11 +43,3 @@ dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num)
     dlog_precomp_p_init(t->pre, nmod_inv(t->apk[e-1], t->mod), mod, p, e * num);
     return e * t->pre->cost;
 }
-
-void
-dlog_power_clear(dlog_power_t t)
-{
-    flint_free(t->apk);
-    dlog_precomp_clear(t->pre);
-    flint_free(t->pre);
-}

@@ -43,9 +43,3 @@ dlog_table_init(dlog_table_t t, ulong a, ulong mod)
   while (ak != 1);
   return 1;
 }
-
-void
-dlog_table_clear(dlog_table_t t)
-{
-  flint_free(t->table);
-}

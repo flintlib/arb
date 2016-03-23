@@ -25,9 +25,13 @@
 
 #include "dlog.h"
 
-ulong
-dlog_order23_init(dlog_order23_t t, ulong a)
+void
+dlog_crt_clear(dlog_crt_t t)
 {
-    * t = a;
-    return 0;
+    int k;
+    flint_free(t->expo);
+    flint_free(t->crt_coeffs);
+    for (k = 0; k < t->num; k++)
+        dlog_precomp_clear(t->pre + k);
+    flint_free(t->pre);
 }
