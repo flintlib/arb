@@ -26,14 +26,14 @@
 #include "acb_dirichlet.h"
 
 int
-acb_dirichlet_char_is_odd(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 {
-    slong k, odd = 0;
+    int k, odd = 0;
     for (k = 0; k < G->num; k++)
     {
         if (k == 1 && G->neven == 2)
             continue;
-        if (chi->expo[k] % 2 == 1)
+        if (x->log[k] % 2)
             odd = 1 - odd;
     }
     return odd;

@@ -100,7 +100,7 @@ int main()
             /*
             flint_printf("Theta(chi_%wu(%wu)) (m=%wu)\n", q, chi->n, m);
             */
-            tt = acb_dirichlet_char_is_odd(G, chi) ? kt : t;
+            tt = acb_dirichlet_char_parity(chi) ? kt : t;
             for (k = 1; k < nv; k++)
                 if (v[k] != CHI_NULL)
                     acb_addmul_arb(sum, z + (v[k] * m), tt + k, prec);

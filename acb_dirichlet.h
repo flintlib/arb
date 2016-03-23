@@ -1,6 +1,7 @@
 /*
     Copyright (C) 2015 Jonathan Bober
     Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
     This file is part of Arb.
 
@@ -12,6 +13,12 @@
 
 #ifndef ACB_DIRICHLET_H
 #define ACB_DIRICHLET_H
+
+#ifdef ACB_INLINES_C
+#define ACB_INLINE
+#else
+#define ACB_INLINE static __inline__
+#endif
 
 #include "acb.h"
 #include "dlog.h"
@@ -59,11 +66,14 @@ void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
 void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
 void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
+void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
+
 
 void acb_dirichlet_conrey_init(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 void acb_dirichlet_conrey_clear(acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_print(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 
+int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m);
 
 void acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
@@ -89,10 +99,23 @@ typedef struct
   ulong n;           /* number */
   ulong order;       /* order */
   ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
+  int parity;        /* 0 for even char, 1 for odd */
 }
 acb_dirichlet_char_struct;
 
 typedef acb_dirichlet_char_struct acb_dirichlet_char_t[1];
+
+ACB_INLINE int
+acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
+{
+    return chi->order;
+}
+
+ACB_INLINE int
+acb_dirichlet_char_parity(const acb_dirichlet_char_t chi)
+{
+    return chi->parity;
+}
 
 void acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_clear(acb_dirichlet_char_t chi);
@@ -129,4 +152,3 @@ void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slon
 #endif
 
 #endif
-
