@@ -294,7 +294,7 @@ Except where otherwise specified, Arb is designed to produce
 provably correct error bounds. The code has been written carefully,
 and the library is extensively tested.
 However, like any complex mathematical software, Arb is virtually certain to
-contains bugs, so the usual precautions are advised:
+contain bugs, so the usual precautions are advised:
 
 * Do sanity checks. For example, check that the result satisfies an expected
   mathematical relation, or compute the same result in two different ways,
