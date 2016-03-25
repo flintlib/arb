@@ -25,30 +25,39 @@
 
 #include "dlog.h"
 
+/* assume b = 1 mod p, not checked */
 ulong
-dlog_modpe(const dlog_modpe_t t, ulong b)
+dlog_1modpe_padic(const dlog_1modpe_padic_t t, ulong b1)
 {
-    ulong x;
-    x = dlog_precomp(t->modp, b % t->p);
-    if (t->e > 1)
-    {
-        ulong b1, y;
-#if 0
-        b1 = nmod_mul(b, nmod_pow_ui(t->inva, x, t->pe), t->pe);
-#else
-        b1 = nmod_pow_ui(b, t->p - 1, t->pe);
-#endif
-        if (1 || t->e <= 2)
-            y = dlog_1modpe_rec(t->modpe.rec, b1, t->p, t->e, t->pe);
-        else
-            y = dlog_1modpe_padic(t->modpe.padic, b1);
-        y = y % t->pe1;
-#if 0
-        x = x + (t->p - 1) * y;
-#else
-        x = n_submod(x, y % (t->p - 1), t->p - 1);
-        x = y + t->pe1 * x;
-#endif
-    }
-    return x;
+    padic_t px;
+    fmpz_t ix;
+    ulong ux;
+
+    if (b1 == 1)
+        return 0;
+
+    padic_init(px);
+    fmpz_init(ix);
+
+    padic_set_ui(px, b1, t->ctx);
+    flint_printf("set %wu -> ", b1);
+    padic_print(px, t->ctx);
+
+    padic_log(px, px, t->ctx);
+    flint_printf("\n\n compute log -> ");
+    padic_print(px, t->ctx);
+
+    flint_printf("\n\n 1/log(a^(p-1)) -> ");
+    padic_print(t->invlog, t->ctx);
+
+    padic_mul(px, px, t->invlog, t->ctx);
+    flint_printf("\n\n divide by log(a^(p-1)) -> ");
+    padic_print(px, t->ctx);
+
+    padic_get_fmpz(ix, px, t->ctx);
+    ux =  fmpz_get_ui(ix);
+    flint_printf("\n\nlog_p(%wu)/log_p(a) = %wu\n", b1, ux);
+    padic_clear(px);
+    fmpz_clear(ix);
+    return ux;
 }

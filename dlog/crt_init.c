@@ -49,6 +49,11 @@ dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num)
         ulong p, e, mk;
         p = fac.p[k];
         e = fac.exp[k];
+        if (0 && mod % p == 0)
+        {
+            flint_printf("dlog_crt_init: modulus must be prime to order.\n");
+            abort();
+        }
         mk = n_pow(p, e);
         M[k] = n / mk;
         u[k] = nmod_mul(M[k], n_invmod(M[k] % mk, mk), t->n);

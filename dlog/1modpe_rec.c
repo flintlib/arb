@@ -25,23 +25,16 @@
 
 #include "dlog.h"
 
-/* assume b = 1 mod p, not checked */
 ulong
-dlog_1modpe(const dlog_1modpe_t t, ulong b)
+dlog_1modpe_rec(const dlog_1modpe_rec_t t, ulong b1, ulong p, ulong e, nmod_t pe)
 {
-    padic_t px;
-    fmpz_t ix;
-    ulong ux;
-    padic_init(px);
-    fmpz_init(ix);
-
-    padic_set_ui(px, b, t->ctx);
-    padic_log(px, px, t->ctx);
-    padic_mul(px, px, t->invlog, t->ctx);
-    padic_get_fmpz(ix, px, t->ctx);
-    ux =  fmpz_get_ui(ix);
-
-    padic_clear(px);
-    fmpz_clear(ix);
-    return ux;
+    if (e == 1)
+        return 0;
+    else
+    {
+        ulong logb1;
+        logb1 = dlog_1modpe_mod1p(b1, p, e, t->inv1p, pe);
+        /* only need mod p^(e-1) */
+        return nmod_mul(logb1, t->invloga1, pe);
+    }
 }
