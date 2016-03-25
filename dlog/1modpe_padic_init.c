@@ -25,30 +25,23 @@
 
 #include "dlog.h"
 
-ulong
-dlog_modpe(const dlog_modpe_t t, ulong b)
+void
+dlog_1modpe_padic_init(dlog_1modpe_padic_t t, ulong a1, ulong p, ulong e)
 {
-    ulong x;
-    x = dlog_precomp(t->modp, b % t->p);
-    if (t->e > 1)
-    {
-        ulong b1, y;
-#if 0
-        b1 = nmod_mul(b, nmod_pow_ui(t->inva, x, t->pe), t->pe);
-#else
-        b1 = nmod_pow_ui(b, t->p - 1, t->pe);
-#endif
-        if (1 || t->e <= 2)
-            y = dlog_1modpe_rec(t->modpe.rec, b1, t->p, t->e, t->pe);
-        else
-            y = dlog_1modpe_padic(t->modpe.padic, b1);
-        y = y % t->pe1;
-#if 0
-        x = x + (t->p - 1) * y;
-#else
-        x = n_submod(x, y % (t->p - 1), t->p - 1);
-        x = y + t->pe1 * x;
-#endif
-    }
-    return x;
+    fmpz_t tmp;
+
+    fmpz_init(tmp);
+    padic_init(t->invlog);
+
+    fmpz_set_ui(tmp, p);
+    padic_ctx_init(t->ctx , tmp , 0 , e, PADIC_SERIES);
+
+    padic_set_ui(t->invlog, a1, t->ctx);
+    flint_printf("set %wu -> ", a1);
+    flint_printf("\n\n compute log -> ");
+    padic_log(t->invlog, t->invlog, t->ctx);
+    padic_print(t->invlog, t->ctx);
+    padic_inv(t->invlog, t->invlog, t->ctx);
+
+    fmpz_clear(tmp);
 }

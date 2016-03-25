@@ -26,29 +26,23 @@
 #include "dlog.h"
 
 ulong
-dlog_modpe(const dlog_modpe_t t, ulong b)
+dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
 {
-    ulong x;
-    x = dlog_precomp(t->modp, b % t->p);
-    if (t->e > 1)
-    {
-        ulong b1, y;
-#if 0
-        b1 = nmod_mul(b, nmod_pow_ui(t->inva, x, t->pe), t->pe);
-#else
-        b1 = nmod_pow_ui(b, t->p - 1, t->pe);
-#endif
-        if (1 || t->e <= 2)
-            y = dlog_1modpe_rec(t->modpe.rec, b1, t->p, t->e, t->pe);
-        else
-            y = dlog_1modpe_padic(t->modpe.padic, b1);
-        y = y % t->pe1;
-#if 0
-        x = x + (t->p - 1) * y;
-#else
-        x = n_submod(x, y % (t->p - 1), t->p - 1);
-        x = y + t->pe1 * x;
-#endif
+    int f;
+    ulong x, xf, pf, pf1;
+    pf1 = 1;
+    pf = p;
+    x = 0;
+    for (f = 1; f < e; f++)
+    {      
+        if (b1 % pf != 1)
+            abort();
+        xf = (b1 - 1) / pf;
+        xf = (xf % p) * pf1;
+        x += xf;
+        b1 = nmod_mul(b1, nmod_pow_ui(inv1p, xf, pe), pe);
+        pf1 = pf;
+        pf *= p;
     }
     return x;
 }

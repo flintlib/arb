@@ -44,28 +44,39 @@ enum
 typedef struct dlog_precomp_struct dlog_precomp_struct;
 typedef struct dlog_precomp_struct * dlog_precomp_ptr;
 
-/* log in (1+pZ/p^eZ): compute via p-adic log */
+/* log in (1+pZ/p^eZ), e large: compute via p-adic log */
 typedef struct
 {
-    ulong p;
-    ulong e;
     padic_ctx_t ctx;     /* padic context */
-    padic_t invlog;
-    padic_t x;
-    fmpz_t r;
+    padic_t invlog;      /* 1 / log_p(a^(p-1)) */
 }
-dlog_1modpe_struct;
+dlog_1modpe_padic_struct;
 
-typedef dlog_1modpe_struct dlog_1modpe_t[1];
+typedef dlog_1modpe_padic_struct dlog_1modpe_padic_t[1];
+
+/* log in (1+pZ/p^eZ), e small: use recursion formulas */
+typedef struct
+{
+    ulong inv1p;         /* 1 / (1 + p) */
+    ulong invloga1;      /* 1 / log(a^(p-1),1+p) */
+}
+dlog_1modpe_rec_struct;
+
+typedef dlog_1modpe_rec_struct dlog_1modpe_rec_t[1];
 
 /* log in (Z/p^eZ)^* */
 typedef struct
 {
     ulong p;
     ulong e;
-    ulong pe;
+    ulong pe1;                   /* p^(e-1) */
+    ulong inva;
+    nmod_t pe;
     dlog_precomp_struct * modp;
-    dlog_1modpe_t modpe;
+    union {
+      dlog_1modpe_rec_t rec;     /* if e <= 3 && e < p */
+      dlog_1modpe_padic_t padic; /* otherwise */
+    } modpe;
 }
 dlog_modpe_struct;
 
@@ -175,7 +186,8 @@ ulong dlog_crt_init(dlog_crt_t t, ulong a, ulong mod, ulong n, ulong num);
 ulong dlog_power_init(dlog_power_t t, ulong a, ulong mod, ulong p, ulong e, ulong num);
 ulong dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num);
 ulong dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m);
-void dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e);
+void dlog_1modpe_rec_init(dlog_1modpe_rec_t t, ulong a1, ulong p, ulong e, nmod_t pe);
+void dlog_1modpe_padic_init(dlog_1modpe_padic_t t, ulong a1, ulong p, ulong e);
 void dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n);
 /*#define dlog_bsgs_init(t, a, n, m) bsgs_table_init(t, a, n, m)*/
 
@@ -192,7 +204,7 @@ dlog_table_clear(dlog_table_t t)
 }
 
 ACB_INLINE void
-dlog_1modpe_clear(dlog_1modpe_t t)
+dlog_1modpe_padic_clear(dlog_1modpe_padic_t t)
 {
     padic_clear(t->invlog);
     padic_ctx_clear(t->ctx);
@@ -212,7 +224,9 @@ ACB_INLINE void
 dlog_modpe_clear(dlog_modpe_t t)
 {
   dlog_precomp_clear(t->modp);
-  dlog_1modpe_clear(t->modpe);
+  if (0 && t->e > 2)
+      dlog_1modpe_padic_clear(t->modpe.padic);
+  flint_free(t->modp);
 }
 
 ACB_INLINE void
@@ -233,9 +247,11 @@ ulong dlog_table(const dlog_table_t t, ulong b);
 ulong dlog_crt(const dlog_crt_t t, ulong b);
 ulong dlog_power(const dlog_power_t t, ulong b);
 ulong dlog_modpe(const dlog_modpe_t t, ulong b);
-ulong dlog_1modpe(const dlog_1modpe_t t, ulong b);
 ulong dlog_bsgs(const dlog_bsgs_t t, ulong b);
 ulong dlog_rho(const dlog_rho_t t, ulong b);
+ulong dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe);
+ulong dlog_1modpe_padic(const dlog_1modpe_padic_t t, ulong b1);
+ulong dlog_1modpe_rec(const dlog_1modpe_rec_t t, ulong b1, ulong p, ulong e, nmod_t pe);
 /*#define dlog_bsgs(t, b) n_discrete_log_bsgs_table(t, b)*/
 
 #define DLOG_SMALL_LIM 50
