@@ -129,7 +129,10 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
             fmpz_clear(exp);
         }
     }
-    else if (COEFF_IS_MPZ(*ARF_EXPREF(x)))
+    else if (COEFF_IS_MPZ(ARF_EXP(x)) ||
+        /* The first test is sufficient except on Windows 64, where MPFR
+           still uses 32-bit exponents. */
+        ARF_EXP(x) < MPFR_EMIN_MIN || ARF_EXP(x) > MPFR_EMAX_MAX)
     {
         arb_log_arf_huge(z, x, prec);
     }
