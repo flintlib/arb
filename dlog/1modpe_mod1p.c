@@ -25,6 +25,7 @@
 
 #include "dlog.h"
 
+/* for odd prime p, assume b1 = 1 mod p */
 ulong
 dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
 {
@@ -36,7 +37,11 @@ dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
     for (f = 1; f < e; f++)
     {      
         if (b1 % pf != 1)
+        {
+            flint_printf("ERROR dlog_1modpe_1modp: %wu %% %wu != 1 mod %wu\n\n",
+                    b1, pf, pe.n);
             abort();
+        }
         xf = (b1 - 1) / pf;
         xf = (xf % p) * pf1;
         x += xf;

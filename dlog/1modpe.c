@@ -25,39 +25,16 @@
 
 #include "dlog.h"
 
-/* assume b = 1 mod p, not checked */
 ulong
-dlog_1modpe_padic(const dlog_1modpe_padic_t t, ulong b1)
+dlog_1modpe(const dlog_1modpe_t t, ulong b1, ulong p, ulong e, nmod_t pe)
 {
-    padic_t px;
-    fmpz_t ix;
-    ulong ux;
-
-    if (b1 == 1)
+    if (e == 1)
         return 0;
-
-    padic_init(px);
-    fmpz_init(ix);
-
-    padic_set_ui(px, b1, t->ctx);
-    flint_printf("set %wu -> ", b1);
-    padic_print(px, t->ctx);
-
-    padic_log(px, px, t->ctx);
-    flint_printf("\n\n compute log -> ");
-    padic_print(px, t->ctx);
-
-    flint_printf("\n\n 1/log(a^(p-1)) -> ");
-    padic_print(t->invlog, t->ctx);
-
-    padic_mul(px, px, t->invlog, t->ctx);
-    flint_printf("\n\n divide by log(a^(p-1)) -> ");
-    padic_print(px, t->ctx);
-
-    padic_get_fmpz(ix, px, t->ctx);
-    ux =  fmpz_get_ui(ix);
-    flint_printf("\n\nlog_p(%wu)/log_p(a) = %wu\n", b1, ux);
-    padic_clear(px);
-    fmpz_clear(ix);
-    return ux;
+    else
+    {
+        ulong logb1;
+        logb1 = dlog_1modpe_mod1p(b1, p, e, t->inv1p, pe);
+        /* only need mod p^(e-1) */
+        return nmod_mul(logb1, t->invloga1, pe);
+    }
 }
