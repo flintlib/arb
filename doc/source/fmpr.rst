@@ -404,7 +404,7 @@ Random number generation
 
 .. function:: void fmpr_randtest_special(fmpr_t x, flint_rand_t state, slong bits, slong mag_bits)
 
-    Indentical to *fmpr_randtest*, except that the output occasionally
+    Identical to *fmpr_randtest*, except that the output occasionally
     is set to an infinity or NaN.
 
 

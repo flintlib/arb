@@ -465,7 +465,7 @@ Random number generation
 
 .. function:: void arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
 
-    Indentical to :func:`arf_randtest`, except that the output occasionally
+    Identical to :func:`arf_randtest`, except that the output occasionally
     is set to an infinity or NaN.
 
 Input and output
