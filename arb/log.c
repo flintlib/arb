@@ -129,10 +129,7 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
             fmpz_clear(exp);
         }
     }
-    else if (COEFF_IS_MPZ(ARF_EXP(x)) ||
-        /* The first test is sufficient except on Windows 64, where MPFR
-           still uses 32-bit exponents. */
-        ARF_EXP(x) < MPFR_EMIN_MIN || ARF_EXP(x) > MPFR_EMAX_MAX)
+    else if (COEFF_IS_MPZ(ARF_EXP(x)))
     {
         arb_log_arf_huge(z, x, prec);
     }
@@ -219,8 +216,18 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
         /* Too high precision to use table */
         if (wp > ARB_LOG_TAB2_PREC)
         {
-            arf_log_via_mpfr(arb_midref(z), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(z), arb_midref(z), prec);
+            /* The earlier test for COEFF_IS_MPZ(ARF_EXP(x)) rules out
+               too large exponents for MPFR, except on Windows 64 where
+               MPFR still uses 32-bit exponents. */
+            if (exp < MPFR_EMIN_MIN || exp > MPFR_EMAX_MAX)
+            {
+                arb_log_arf_huge(z, x, prec);
+            }
+            else
+            {
+                arf_log_via_mpfr(arb_midref(z), x, prec, ARB_RND);
+                arf_mag_set_ulp(arb_radref(z), arb_midref(z), prec);
+            }
             return;
         }
 
