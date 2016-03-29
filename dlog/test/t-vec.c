@@ -26,7 +26,7 @@
 #include "dlog.h"
 
 typedef void (*vec_f) (ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
-   
+
 void
 dlog_vec_trivial(ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order)
 {
@@ -61,12 +61,13 @@ int main()
     char * n[4] = { "trivial", "loop", "eratos", "sieve" };
 
 
-    flint_printf("dlog(1..n) mod p....");
+    flint_printf("vec....");
     fflush(stdout);
     flint_randinit(state);
 
     for (bits = 10; bits <= 35; bits += 5)
     {
+
         for (nv = 10; nv <= 10000; nv *= 10)
         {
 
@@ -108,10 +109,13 @@ int main()
                         abort();
                     }
                 }
+
             }
+
             flint_free(ref);
             flint_free(v);
         }
+
     }
     flint_randclear(state);
     flint_cleanup();

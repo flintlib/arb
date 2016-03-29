@@ -33,6 +33,7 @@ dlog_n_factor_group(n_factor_t * fac, ulong bound)
     ulong m[FLINT_MAX_FACTORS_IN_LIMB];
     ulong c = 1;
     i = 0;
+
     for (k = fac->num - 1; k >= 0; k--)
     {
         ulong qe = n_pow(fac->p[k], fac->exp[k]);
@@ -48,16 +49,19 @@ dlog_n_factor_group(n_factor_t * fac, ulong bound)
                 m[j] *= qe;
         }
     }
+
     for (j = 0; j < i; j++)
     {
         fac->p[j] = m[j];
-        fac->exp[j] = G_SMALL;
+        fac->exp[j] = DLOG_G_SMALL;
     }
+
     if (c > 1)
     {
         fac->p[i] = c;
-        fac->exp[i] = G_BIG;
+        fac->exp[i] = DLOG_G_BIG;
         i++;
     }
+
     fac->num = i;
 }

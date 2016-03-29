@@ -218,6 +218,16 @@ dlog_rho_clear(dlog_rho_t t)
 {
     return;
 }
+
+DLOG_INLINE ulong
+dlog_bsgs_size(ulong n, ulong num)
+{
+    if (2 * num < n)
+        return (1 + n_sqrt(n)) * (1 + n_sqrt(num));
+    else
+        return n;
+}
+
 /*#define dlog_bsgs_clear(t) bsgs_table_clear(t)*/
 
 ulong dlog_order23(const dlog_order23_t t, ulong b);
@@ -240,9 +250,9 @@ ulong dlog_1modpe(const dlog_1modpe_t t, ulong b1, ulong p, ulong e, nmod_t pe);
 #define DLOG_TABLE_N_LIM 50
 #define DLOG_BSGS_LIM  500 
 
-#define LOOP_MAX_FACTOR 6
-#define G_SMALL 0
-#define G_BIG 1
+#define DLOG_LOOP_MAX_FACTOR 6
+#define DLOG_G_SMALL 0
+#define DLOG_G_BIG 1
 void dlog_n_factor_group(n_factor_t * fac, ulong bound);
 
 #define DLOG_NOT_FOUND UWORD_MAX

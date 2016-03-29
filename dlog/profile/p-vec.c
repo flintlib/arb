@@ -34,7 +34,7 @@
 
 
 typedef void (*vec_f) (ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order);
-   
+
 void
 f_empty(ulong *v, ulong nv, ulong a, ulong va, const nmod_t mod, ulong na, const nmod_t order)
 {
@@ -69,6 +69,7 @@ int main()
 
     for (i = 0; i < ni; i++)
     {
+
         for (k = 0; k < np; k++)
         {
             nmod_init(&p[k], n_randprime(state, bits[i], 0));
@@ -86,12 +87,12 @@ int main()
 #endif
 
             for (l = 0; l < nf; l++)
-            { 
+            {
                 if (l == 1 && i > 2)
                     continue;
                 if (l == 2 && i > 5)
                     continue;
-                
+
 #if OUT == LOG
                 flint_printf("%-20s...   ",n[l]);
                 fflush(stdout);
@@ -103,13 +104,17 @@ int main()
 #endif
 
                 TIMEIT_ONCE_START
+
                 for (k = 0; k < np; k++)
                 {
                     int kk;
+
                     for (kk=0; kk < nv[j]; kk++)
                         v[kk] = 0;
+
                     (func[l])(v, nv[j], a[k], 1, p[k], p[k].n - 1, order);
                 }
+
                 TIMEIT_ONCE_STOP
 
 #if OUT == JSON

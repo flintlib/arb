@@ -32,10 +32,12 @@ dlog_power(const dlog_power_t t, ulong b)
     ulong x, pk[30]; /* 3^30*2+1, 2^30*3+1 are primes */
 
     pk[0] = 1;
+
     for (k = 1; k < t->e; k++)
        pk[k] = pk[k-1] * t->p;
-    
+
     x = 0;
+
     for(k = 0; k < t->e; k++)
     {
       ulong bk, xk;
@@ -44,5 +46,6 @@ dlog_power(const dlog_power_t t, ulong b)
       b = nmod_mul(b, nmod_pow_ui(t->apk[k], xk, t->mod), t->mod);
       x += xk * pk[k]; /* cannot overflow */
     }
+
     return x;
 }
