@@ -28,8 +28,8 @@
 void
 acb_dirichlet_char_print(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-  acb_dirichlet_conrey_t x;
-  x->log = chi->expo;
-  flint_printf("chi_%wu(%wu,.) of order %wu and index ", G->q, chi->n, chi->order);
-  acb_dirichlet_conrey_print(G, x);
+    acb_dirichlet_conrey_t x;
+    x->log = chi->expo;
+    flint_printf("chi_%wu(%wu,.) of order %wu and index ", G->q, chi->n, chi->order);
+    acb_dirichlet_conrey_print(G, x);
 }

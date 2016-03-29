@@ -29,29 +29,30 @@
 void
 acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-  ulong k, l;
+    ulong k, l;
 
-  for(k = 1; k < nv; ++k)
-      v[k] = 0;
+    for (k = 1; k < nv; k++)
+        v[k] = 0;
 
-  for(l = 1; l < G->num; ++l)
-  {
-    long p, pe, g, x, vp, xp;
-    long j, vj;
-    p = G->primes[l];
-    pe = G->primepowers[l];
-    g = G->generators[l] % pe;
-    vj = vp = chi->expo[l];
-    /* for each x = g^j mod p^e,
-     * set a[x] += j*vp
-     * and use periodicity */
-    for(j = 1, x = g; x > 1; j++)
+    for (l = 1; l < G->num; l++)
     {
-      for(xp = x; xp < nv; xp+=pe)
-          v[xp] = (v[xp] + vj) % chi->order;
-      x = (x*g) % pe;
-      vj = (vj + vp) % chi->order;
+        long p, pe, g, x, vp, xp;
+        long j, vj;
+        p = G->primes[l];
+        pe = G->primepowers[l];
+        g = G->generators[l] % pe;
+        vj = vp = chi->expo[l];
+        /* for each x = g^j mod p^e,
+         * set a[x] += j*vp
+         * and use periodicity */
+        for (j = 1, x = g; x > 1; j++)
+        {
+            for (xp = x; xp < nv; xp += pe)
+                v[xp] = (v[xp] + vj) % chi->order;
+
+            x = (x*g) % pe;
+            vj = (vj + vp) % chi->order;
+        }
     }
-  }
-  acb_dirichlet_vec_set_null(v, nv, G);
+    acb_dirichlet_vec_set_null(v, nv, G);
 }

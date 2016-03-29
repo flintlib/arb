@@ -32,7 +32,7 @@ acb_dirichlet_pairing(const acb_dirichlet_group_t G, ulong m, ulong n)
     acb_dirichlet_conrey_t a, b;
 
     if (n_gcd(G->q, m) > 1 || n_gcd(G->q, n) > 1)
-        return CHI_NULL;
+        return ACB_DIRICHLET_CHI_NULL;
 
     acb_dirichlet_conrey_init(a, G);
     acb_dirichlet_conrey_init(b, G);

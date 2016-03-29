@@ -36,21 +36,26 @@ acb_dirichlet_chi_vec_loop(ulong *v, ulong nv, const acb_dirichlet_group_t G, co
     acb_dirichlet_conrey_one(x, G);
 
     for (k = 0; k < nv; k++)
-        v[k] = CHI_NULL;
+        v[k] = ACB_DIRICHLET_CHI_NULL;
 
     t = v[1] = 0;
+
     while ( (j = acb_dirichlet_conrey_next(x, G)) < G->num )
     {
         /* exponents were modified up to j */
         for (k = 0; k <= j; k++)
             t = (t + chi->expo[k]) % chi->order;
+
         if (x->n < nv)
             v[x->n] = t;
     }
+
     /* fix result outside primes */
     /*acb_dirichlet_vec_set_null(v, nv, G);*/
     /* copy outside modulus */
+
     for (k = G->q; k < nv ; k++ )
         v[k] = v[k - G->q];
+
     acb_dirichlet_conrey_clear(x);
 }

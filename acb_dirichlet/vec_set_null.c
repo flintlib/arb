@@ -28,16 +28,18 @@
 void
 acb_dirichlet_vec_set_null(ulong *v, ulong nv, const acb_dirichlet_group_t G)
 {
-  ulong k, l;
-  if (G->q_even > 1)
-  {
-    for (k = 2; k < nv; k += 2)
-      v[k] = -1;
-  }
-  for (l = 0; l < G->num; l++)
-  {
-    ulong p = G->primes[l];
-    for (k = p; k < nv; k += p)
-      v[k] = CHI_NULL;
-  }
+    ulong k, l;
+    if (G->q_even > 1)
+    {
+        for (k = 2; k < nv; k += 2)
+            v[k] = -1;
+    }
+
+    for (l = 0; l < G->num; l++)
+    {
+        ulong p = G->primes[l];
+
+        for (k = p; k < nv; k += p)
+            v[k] = ACB_DIRICHLET_CHI_NULL;
+    }
 }

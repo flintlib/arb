@@ -28,10 +28,10 @@
 void
 acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
-  acb_dirichlet_conrey_t x;
-  chi->q = G->q;
-  x->log = chi->expo;
-  acb_dirichlet_conrey_first_primitive(x, G);
-  chi->n = x->n;
-  acb_dirichlet_char_normalize(chi, G);
+    acb_dirichlet_conrey_t x;
+    chi->q = G->q;
+    x->log = chi->expo;
+    acb_dirichlet_conrey_first_primitive(x, G);
+    chi->n = x->n;
+    acb_dirichlet_char_normalize(chi, G);
 }

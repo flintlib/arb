@@ -28,29 +28,31 @@
 int
 acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 {
-  /* update index avoiding multiples of p except for first component
-     if 8|q */
-  ulong k = 0;
-  if (G->neven == 2)
-  {
-      x->n = nmod_mul(x->n, G->generators[0], G->mod);
-      if (++x->log[0] == 1)
-          return 0;
-      x->log[0] = 0;
-      k = 1;
-  }
-  for (; k < G->num ; k++)
-  {
-    x->n = nmod_mul(x->n, G->generators[k], G->mod);
-    if (++x->log[k] % G->primes[k] == 0)
+    /* update index avoiding multiples of p except for first component
+       if 8|q */
+    ulong k = 0;
+    if (G->neven == 2)
+    {
+        x->n = nmod_mul(x->n, G->generators[0], G->mod);
+        x->log[0]++;
+        if (x->log[0] == 1)
+            return 0;
+        x->log[0] = 0;
+        k = 1;
+    }
+    for (; k < G->num ; k++)
     {
         x->n = nmod_mul(x->n, G->generators[k], G->mod);
-        ++x->log[k];
+        x->log[k]++;
+        if (x->log[k] % G->primes[k] == 0)
+        {
+            x->n = nmod_mul(x->n, G->generators[k], G->mod);
+            x->log[k]++;
+        }
+        if (x->log[k] < G->phi[k])
+            break;
+        x->log[k] =  1;
     }
-    if (x->log[k] < G->phi[k])
-        break;
-    x->log[k] =  1;
-  }
-  /* return last index modified */
-  return k;
+    /* return last index modified */
+    return k;
 }

@@ -36,21 +36,24 @@ acb_dirichlet_chi_vec_sieve(ulong *v, ulong nv, const acb_dirichlet_group_t G, c
 
 	pmax = (nv < G->q) ? nv : G->q;
 	v[1] = 0; 
+
 	while ((p = n_primes_next(iter)) < pmax)
 	{ 
 		if (G->q % p == 0) 
 		{
 			for (k = p; k < nv; k += p)
-				v[k] = CHI_NULL;
+				v[k] = ACB_DIRICHLET_CHI_NULL;
 		}
 		else
 		{ 
 			long chip; 
 			chip = acb_dirichlet_chi(G, chi, p);
+
 			for (k = p; k < nv; k += p)
 				if (v[k] != -1)
 					 v[k] = (v[k] + chip) % chi->order;
 		}
 	}
+
 	n_primes_clear(iter);
 }

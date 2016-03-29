@@ -32,7 +32,7 @@ acb_dirichlet_acb_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirich
 {
     ulong expo;
     expo = acb_dirichlet_chi(G, chi, n);
-    if (expo == CHI_NULL)
+    if (expo == ACB_DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
     {

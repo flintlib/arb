@@ -55,6 +55,7 @@ vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ul
         acb_dirichlet_group_clear(G);
     }
     TIMEIT_ONCE_STOP
+    flint_printf("\n");
 }
 
 int main()
@@ -98,7 +99,7 @@ int main()
         fflush(stdout);
         vecloop(acb_dirichlet_chi_vec_primeloop, minq, maxq, rand, nr, v, nv);
 
-        flint_printf("small loop................ ");
+        flint_printf("sieve................... ");
         fflush(stdout);
         vecloop(acb_dirichlet_chi_vec_sieve, minq, maxq, rand, nr, v, nv);
 

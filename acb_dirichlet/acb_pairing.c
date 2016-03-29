@@ -31,7 +31,7 @@ acb_dirichlet_acb_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ulo
 {
     ulong expo;
     expo = acb_dirichlet_pairing(G, m, n);
-    if (expo == CHI_NULL)
+    if (expo == ACB_DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
     {

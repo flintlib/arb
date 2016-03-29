@@ -14,10 +14,10 @@
 #ifndef ACB_DIRICHLET_H
 #define ACB_DIRICHLET_H
 
-#ifdef ACB_INLINES_C
-#define ACB_INLINE
+#ifdef ACB_DIRICHLET_INLINES_C
+#define ACB_DIRICHLET_INLINE
 #else
-#define ACB_INLINE static __inline__
+#define ACB_DIRICHLET_INLINE static __inline__
 #endif
 
 #include "acb.h"
@@ -82,7 +82,7 @@ void acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_di
 int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 int acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 
-#define CHI_NULL UWORD_MAX
+#define ACB_DIRICHLET_CHI_NULL UWORD_MAX
 
 ulong acb_dirichlet_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b);
 ulong acb_dirichlet_pairing(const acb_dirichlet_group_t G, ulong m, ulong n);
@@ -105,13 +105,13 @@ acb_dirichlet_char_struct;
 
 typedef acb_dirichlet_char_struct acb_dirichlet_char_t[1];
 
-ACB_INLINE int
+ACB_DIRICHLET_INLINE int
 acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 {
     return chi->order;
 }
 
-ACB_INLINE int
+ACB_DIRICHLET_INLINE int
 acb_dirichlet_char_parity(const acb_dirichlet_char_t chi)
 {
     return chi->parity;
