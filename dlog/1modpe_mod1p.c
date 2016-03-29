@@ -35,7 +35,7 @@ dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
     pf = p;
     x = 0;
     for (f = 1; f < e; f++)
-    {      
+    {
         if (b1 % pf != 1)
         {
             flint_printf("ERROR dlog_1modpe_1modp: %wu %% %wu != 1 mod %wu\n\n",

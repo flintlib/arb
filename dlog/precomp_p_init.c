@@ -37,7 +37,7 @@ dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num)
     else
     {
         ulong m;
-        m = (2 * num < p) ? ceil(sqrt((double) p * num)) : p;
+        m = dlog_bsgs_size(p, num);
         pre->type = DLOG_BSGS;
         pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, p, m);
     }

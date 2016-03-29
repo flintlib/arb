@@ -31,7 +31,9 @@ dlog_modpe(const dlog_modpe_t t, ulong b)
     ulong x;
     if (t->p == 2)
         return dlog_mod2e(t, b);
+
     x = dlog_precomp(t->modp, b % t->p);
+
     if (t->e > 1)
     {
         ulong b1, y;
@@ -48,5 +50,6 @@ dlog_modpe(const dlog_modpe_t t, ulong b)
         x = y + t->pe1 * x;
 #endif
     }
+
     return x;
 }

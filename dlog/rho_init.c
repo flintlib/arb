@@ -29,8 +29,8 @@
 void
 dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n)
 {
-  t->a = a;
-  nmod_init(&t->n, n);
-  nmod_init(&t->mod, mod);
-  t->nisprime = n_is_prime(n);
+    t->a = a;
+    nmod_init(&t->n, n);
+    nmod_init(&t->mod, mod);
+    t->nisprime = n_is_prime(n);
 }

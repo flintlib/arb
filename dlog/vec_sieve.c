@@ -60,17 +60,16 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
         limcount = ceil(pow((double)mod.n,1./2.3) * 40 / logcost);
     }
 
-    /* find big power of gen */
-    X = n_nextprime(na / 2 + 10, 0);
-    X = (na % 257) ? 257 % na : 1031 % na ; /* FIXME! */
+    /* take big power of gen */
+    X = n_nextprime(3 * na / 2, 0) % na;
     aX = nmod_pow_ui(a, X, mod);
     vaX = nmod_mul(va, X % order.n, order);
 
     n_primes_init(iter);
     while ((p = n_primes_next(iter)) < pmax)
-    { 
-        double cost = log(mod.n)/log(p);
-        ulong m, vp; 
+    {
+        double cost;
+        ulong m, vp;
         if (mod.n % p == 0)
             continue; /* won't be attained another time */
         cost = log(mod.n)/log(p);

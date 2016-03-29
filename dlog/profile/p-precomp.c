@@ -53,7 +53,7 @@ flog_bsgs(ulong p, ulong a, ulong num)
 {
     int k;
     dlog_bsgs_t t;
-    dlog_bsgs_init(t, a, p, p-1, ceil( sqrt((double)num * p)));
+    dlog_bsgs_init(t, a, p, p-1, dlog_bsgs_size(p, num));
     for (k = 1; k < num; k++)
     {
         if (k % p == 0) continue;
@@ -134,7 +134,7 @@ int main()
         }
 
         for (i = 0; i < nl; i++)
-        {    
+        {
             int f;
 #if OUT == LOG
             flint_printf("%d * logs mod primes of size %d.....\n", l[i], nbits);
@@ -143,7 +143,6 @@ int main()
             for (f = 0; f < nf; f++)
             {
                 int j;
-
 
                 /* skip useless */
                 if (f == 0 && nbits >= 20)

@@ -25,7 +25,7 @@
 
 #include "dlog.h"
 
-/* vector of log(k,a)*loga % order in Z/modZ */ 
+/* vector of log(k,a)*loga % order in Z/modZ */
 void
 dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {

@@ -29,17 +29,19 @@
 ulong
 dlog_table_init(dlog_table_t t, ulong a, ulong mod)
 {
-  int k;
-  ulong ak;
-  t->mod = mod;
-  t->table = flint_malloc(mod * sizeof(ulong));
-  ak = 1; k = 0;
-  /* warning: do not check a is invertible modulo mod */
-  do
-  {
-    t->table[ak] = k++;
-    ak = (ak * a) % mod;
-  }
-  while (ak != 1);
-  return 1;
+    int k;
+    ulong ak;
+    t->mod = mod;
+    t->table = flint_malloc(mod * sizeof(ulong));
+    ak = 1; k = 0;
+
+    /* warning: do not check a is invertible modulo mod */
+    do
+    {
+        t->table[ak] = k++;
+        ak = (ak * a) % mod;
+    }
+
+    while (ak != 1);
+    return 1;
 }

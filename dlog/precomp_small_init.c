@@ -31,7 +31,7 @@ dlog_precomp_small_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong n
     if (n <= 3)
     {
         pre->type = DLOG_23;
-        pre->cost = dlog_order23_init(pre->t.order23, a); 
+        pre->cost = dlog_order23_init(pre->t.order23, a);
     }
     else
     {

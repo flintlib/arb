@@ -25,6 +25,7 @@
 
 #include "dlog.h"
 
+/* todo: recursion could be made quadratic (not very useful for ulongs) */
 ulong
 dlog_modpe_init(dlog_modpe_t t, ulong a, ulong p, ulong e, ulong pe, ulong num)
 {

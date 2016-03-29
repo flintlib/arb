@@ -42,7 +42,7 @@ dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
             if (n < DLOG_BSGS_LIM)
             {
                 ulong m;
-                m = (2 * num < n) ? ceil(sqrt((double) n * num)) : n;
+                m = dlog_bsgs_size(n, num);
                 pre->type = DLOG_BSGS;
                 pre->cost = dlog_bsgs_init(pre->t.bsgs, a, mod, n, m);
             } else {
