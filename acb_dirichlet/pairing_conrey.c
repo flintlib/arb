@@ -32,9 +32,11 @@
 ulong
 acb_dirichlet_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
 {
-  ulong x, k;
-  x = 0;
-  for (k = 0; k < G->num; k++)
-    x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
-  return x;
+    ulong x, k;
+    x = 0;
+
+    for (k = 0; k < G->num; k++)
+        x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
+
+    return x;
 }

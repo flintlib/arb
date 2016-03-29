@@ -30,7 +30,7 @@ acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num)
 {
     slong k;
     G->dlog = flint_malloc(G->num * sizeof(dlog_precomp_t));
-    for (k = G->neven; k < G->num; k++)
+    for (k = 0; k < G->num; k++)
     {
         ulong p, e, pe, a;
         p = G->primes[k];

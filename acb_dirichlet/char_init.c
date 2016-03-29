@@ -26,6 +26,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G) {
-  chi->expo = flint_malloc(G->num * sizeof(ulong));
+acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+{
+    chi->expo = flint_malloc(G->num * sizeof(ulong));
 }

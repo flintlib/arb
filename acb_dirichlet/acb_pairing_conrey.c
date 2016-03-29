@@ -30,7 +30,7 @@ acb_dirichlet_acb_pairing_conrey(acb_t res, const acb_dirichlet_group_t G, const
 {
     ulong expo;
     expo = acb_dirichlet_pairing_conrey(G, a, b);
-    if (expo == CHI_NULL)
+    if (expo == ACB_DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
     {

@@ -26,6 +26,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_char_clear(acb_dirichlet_char_t chi) {
+acb_dirichlet_char_clear(acb_dirichlet_char_t chi)
+{
     flint_free(chi->expo);
 }
