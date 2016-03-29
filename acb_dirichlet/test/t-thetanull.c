@@ -94,7 +94,7 @@ int main()
             acb_zero(sum);
 
             acb_dirichlet_char_conrey(chi, G, x);
-            acb_dirichlet_chi_vec_loop(v, nv, G, chi);
+            acb_dirichlet_chi_vec_loop(v, G, chi, nv);
 
             m = G->expo / chi->order;
             /*

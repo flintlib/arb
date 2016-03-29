@@ -25,10 +25,10 @@
 
 #include "acb_dirichlet.h"
 #include "profiler.h"
-typedef void (*dir_f) (ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
+typedef void (*dir_f) (ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 
 void
-dir_empty(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+dir_empty(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
     return;
 }
@@ -38,6 +38,7 @@ vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ul
 {
     ulong q;
     TIMEIT_ONCE_START
+
     for (q = minq; q <= maxq; q++)
     {
         ulong r;
@@ -46,14 +47,17 @@ vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ul
 
         acb_dirichlet_group_init(G, q);
         acb_dirichlet_char_init(chi, G);
+
         for (r = 0; r < nr; r++)
         {
             acb_dirichlet_char(chi, G, rand[r] % q);
             dir(v, nv, G, chi);
         }
+
         acb_dirichlet_char_clear(chi);
         acb_dirichlet_group_clear(G);
     }
+
     TIMEIT_ONCE_STOP
     flint_printf("\n");
 }
