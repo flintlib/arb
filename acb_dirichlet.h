@@ -95,11 +95,11 @@ void acb_dirichlet_acb_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m
 /* character = reduced exponents, keep order and number */
 typedef struct
 {
-  ulong q;           /* modulus */
-  ulong n;           /* number */
-  ulong order;       /* order */
-  ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
-  int parity;        /* 0 for even char, 1 for odd */
+    ulong q;           /* modulus */
+    ulong n;           /* number */
+    ulong order;       /* order */
+    ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
+    int parity;        /* 0 for even char, 1 for odd */
 }
 acb_dirichlet_char_struct;
 
@@ -135,11 +135,11 @@ void acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_diri
 ulong acb_dirichlet_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n);
 void acb_dirichlet_acb_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
 
-void acb_dirichlet_vec_set_null(ulong *v, ulong nv, const acb_dirichlet_group_t G);
-void acb_dirichlet_chi_vec_loop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
-void acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
-void acb_dirichlet_chi_vec_sieve(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
-void acb_dirichlet_chi_vec(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
+void acb_dirichlet_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv);
+void acb_dirichlet_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
+void acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
+void acb_dirichlet_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
+void acb_dirichlet_chi_vec(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 
 void acb_dirichlet_char_vec(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
 

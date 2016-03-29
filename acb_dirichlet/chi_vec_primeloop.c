@@ -27,9 +27,9 @@
 
 /* loop over primary components */
 void
-acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
-    ulong k, l;
+    slong k, l;
 
     for (k = 1; k < nv; k++)
         v[k] = 0;
@@ -45,6 +45,7 @@ acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t 
         /* for each x = g^j mod p^e,
          * set a[x] += j*vp
          * and use periodicity */
+
         for (j = 1, x = g; x > 1; j++)
         {
             for (xp = x; xp < nv; xp += pe)
@@ -54,5 +55,5 @@ acb_dirichlet_chi_vec_primeloop(ulong *v, ulong nv, const acb_dirichlet_group_t 
             vj = (vj + vp) % chi->order;
         }
     }
-    acb_dirichlet_vec_set_null(v, nv, G);
+    acb_dirichlet_vec_set_null(v, G, nv);
 }

@@ -25,35 +25,11 @@
 
 #include "acb_dirichlet.h"
 
-/* sieve on primes */
 void
-acb_dirichlet_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+acb_dirichlet_chi_vec(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
-	slong k, p, pmax;
-	n_primes_t iter;
-
-	n_primes_init(iter);
-
-	pmax = (nv < G->q) ? nv : G->q;
-	v[1] = 0; 
-
-	while ((p = n_primes_next(iter)) < pmax)
-	{ 
-		if (G->q % p == 0) 
-		{
-			for (k = p; k < nv; k += p)
-				v[k] = ACB_DIRICHLET_CHI_NULL;
-		}
-		else
-		{ 
-			long chip; 
-			chip = acb_dirichlet_chi(G, chi, p);
-
-			for (k = p; k < nv; k += p)
-				if (v[k] != -1)
-					 v[k] = (v[k] + chip) % chi->order;
-		}
-	}
-
-	n_primes_clear(iter);
+    if (3 * nv > G->q)
+        acb_dirichlet_chi_vec_loop(v, G, chi, nv);
+    else
+        acb_dirichlet_chi_vec_primeloop(v, G, chi, nv);
 }

@@ -27,10 +27,11 @@
 
 /* loop over whole group */
 void
-acb_dirichlet_chi_vec_loop(ulong *v, ulong nv, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+acb_dirichlet_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
     int j;
-    ulong t, k;
+    ulong t;
+    slong k;
     acb_dirichlet_conrey_t x;
     acb_dirichlet_conrey_init(x, G);
     acb_dirichlet_conrey_one(x, G);
@@ -51,7 +52,7 @@ acb_dirichlet_chi_vec_loop(ulong *v, ulong nv, const acb_dirichlet_group_t G, co
     }
 
     /* fix result outside primes */
-    /*acb_dirichlet_vec_set_null(v, nv, G);*/
+    /*acb_dirichlet_vec_set_null(v, G, nv);*/
     /* copy outside modulus */
 
     for (k = G->q; k < nv ; k++ )

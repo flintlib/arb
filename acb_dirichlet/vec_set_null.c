@@ -26,9 +26,9 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_vec_set_null(ulong *v, ulong nv, const acb_dirichlet_group_t G)
+acb_dirichlet_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv)
 {
-    ulong k, l;
+    slong k, l;
     if (G->q_even > 1)
     {
         for (k = 2; k < nv; k += 2)
