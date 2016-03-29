@@ -25,22 +25,33 @@
 
 #include "dlog.h"
 
-void
-dlog_1modpe_rec_init(dlog_1modpe_rec_t t, ulong a1, ulong p, ulong e, nmod_t pe)
+ulong
+dlog_mod2e(const dlog_modpe_t t, ulong b1)
 {
-    if (e == 1)
-    {
-        t->inv1p = 1;
-        t->invloga1 = 0;
-    }
+    if (t->e == 2)
+        return (b1 % 4) == 3;
     else
     {
-        ulong loga1;
-        if (a1 == 1)
-            abort();
-        t->inv1p = nmod_inv(1 + p, pe); /* 1 - p + p^2 - ... */
-        loga1 = dlog_1modpe_mod1p(a1, p, e, t->inv1p, pe);
-        /* only need inverse mod p^(e-1) but does not hurt */
-        t->invloga1 = nmod_inv(loga1, pe);
+        slong f;
+        ulong pf1, pf, x, xf;
+        pf1 = 1;
+        pf = 4;
+        x = 0;
+        for (f = 2; f < t->e; f++)
+        {
+            if (b1 % pf != 1)
+            {
+                flint_printf("ERROR dlog_mod2e: %wu %% %wu != 1 mod %wu\n\n",
+                        b1, pf, t->pe.n);
+                abort();
+            }
+            xf = (b1 - 1) / pf;
+            xf = (f == 2) ? xf % 4 : (xf % 2) * (pf1 / 2);
+            b1 = nmod_mul(b1, nmod_pow_ui(t->inva, xf, t->pe), t->pe);
+            x += xf;
+            pf1 = pf;
+            pf *= 2;
+        }
+        return x;
     }
 }

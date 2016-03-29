@@ -29,23 +29,21 @@ ulong
 dlog_modpe(const dlog_modpe_t t, ulong b)
 {
     ulong x;
+    if (t->p == 2)
+        return dlog_mod2e(t, b);
     x = dlog_precomp(t->modp, b % t->p);
     if (t->e > 1)
     {
         ulong b1, y;
 #if 0
         b1 = nmod_mul(b, nmod_pow_ui(t->inva, x, t->pe), t->pe);
-#else
-        b1 = nmod_pow_ui(b, t->p - 1, t->pe);
-#endif
-        if (1 || t->e <= 2)
-            y = dlog_1modpe_rec(t->modpe.rec, b1, t->p, t->e, t->pe);
-        else
-            y = dlog_1modpe_padic(t->modpe.padic, b1);
+        y = dlog_1modpe(t->modpe.rec, b1, t->p, t->e, t->pe);
         y = y % t->pe1;
-#if 0
         x = x + (t->p - 1) * y;
 #else
+        b1 = nmod_pow_ui(b, t->p - 1, t->pe);
+        y = dlog_1modpe(t->modpe, b1, t->p, t->e, t->pe);
+        y = y % t->pe1;
         x = n_submod(x, y % (t->p - 1), t->p - 1);
         x = y + t->pe1 * x;
 #endif

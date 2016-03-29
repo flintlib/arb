@@ -25,16 +25,22 @@
 
 #include "dlog.h"
 
-ulong
-dlog_1modpe_rec(const dlog_1modpe_rec_t t, ulong b1, ulong p, ulong e, nmod_t pe)
+void
+dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e, nmod_t pe)
 {
     if (e == 1)
-        return 0;
+    {
+        t->inv1p = 1;
+        t->invloga1 = 0;
+    }
     else
     {
-        ulong logb1;
-        logb1 = dlog_1modpe_mod1p(b1, p, e, t->inv1p, pe);
-        /* only need mod p^(e-1) */
-        return nmod_mul(logb1, t->invloga1, pe);
+        ulong loga1;
+        if (a1 == 1)
+            abort();
+        t->inv1p = nmod_inv(1 + p, pe); /* 1 - p + p^2 - ... */
+        loga1 = dlog_1modpe_mod1p(a1, p, e, t->inv1p, pe);
+        /* only need inverse mod p^(e-1) but does not hurt */
+        t->invloga1 = nmod_inv(loga1, pe);
     }
 }

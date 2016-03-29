@@ -28,6 +28,8 @@
 void
 dlog_precomp_clear(dlog_precomp_t pre)
 {
+    if (pre == NULL)
+        return;
     switch (pre->type)
     {
         case DLOG_MODPE:
