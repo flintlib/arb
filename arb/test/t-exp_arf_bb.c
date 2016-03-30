@@ -72,11 +72,10 @@ int main()
 
         if (n_randint(state, 2))
         {
-#if FLINT_BITS == 64
-            arb_mul_2exp_si(x, x, 1 + n_randint(state, 40));
-#else
-            arb_mul_2exp_si(x, x, 1 + n_randint(state, 20));
-#endif
+            if ((FLINT_BITS == 64) && (sizeof(mpfr_exp_t) >= sizeof(slong)))
+                arb_mul_2exp_si(x, x, 1 + n_randint(state, 40));
+            else
+                arb_mul_2exp_si(x, x, 1 + n_randint(state, 20));
         }
         else
         {
