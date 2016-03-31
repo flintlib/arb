@@ -25,8 +25,8 @@
 
 #include "acb_poly.h"
 
-#define NEWTON_EXP_CUTOFF 120
-
+/* allow changing this from the test code */
+slong acb_poly_newton_exp_cutoff = 120;
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
@@ -126,7 +126,7 @@ _acb_poly_exp_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec)
         _acb_vec_zero(f + j - d + 1, n - (j - d + 1));
         acb_clear(t);
     }
-    else if (hlen <= NEWTON_EXP_CUTOFF)
+    else if (hlen <= acb_poly_newton_exp_cutoff)
     {
         _acb_poly_exp_series_basecase(f, h, hlen, n, prec);
     }
@@ -150,7 +150,7 @@ _acb_poly_exp_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec)
         acb_init(u);
         acb_exp(u, h, prec);
 
-        _acb_poly_exp_series_newton(f, g, t, n, prec, 0, NEWTON_EXP_CUTOFF);
+        _acb_poly_exp_series_newton(f, g, t, n, prec, 0, acb_poly_newton_exp_cutoff);
 
         if (!acb_is_one(u))
             _acb_vec_scalar_mul(f, f, n, u, prec);

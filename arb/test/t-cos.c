@@ -85,7 +85,7 @@ int main()
     }
 
     /* check large arguments */
-    for (iter = 0; iter < 1000000; iter++)
+    for (iter = 0; iter < 100000; iter++)
     {
         arb_t a, b, c, d;
         slong prec0, prec1, prec2;

@@ -40,20 +40,20 @@ int main()
         slong m, n, bits1, bits2, bits3;
         acb_poly_t a, b, c, d;
 
-        bits1 = 2 + n_randint(state, 200);
-        bits2 = 2 + n_randint(state, 200);
-        bits3 = 2 + n_randint(state, 200);
+        bits1 = 2 + n_randint(state, 100);
+        bits2 = 2 + n_randint(state, 100);
+        bits3 = 2 + n_randint(state, 100);
 
-        m = 1 + n_randint(state, 40);
-        n = 1 + n_randint(state, 40);
+        m = 1 + n_randint(state, 30);
+        n = 1 + n_randint(state, 30);
 
         acb_poly_init(a);
         acb_poly_init(b);
         acb_poly_init(c);
         acb_poly_init(d);
 
-        acb_poly_randtest(a, state, m, bits1, 10);
-        acb_poly_randtest(b, state, m, bits1, 10);
+        acb_poly_randtest(a, state, m, bits1, 5);
+        acb_poly_randtest(b, state, m, bits1, 5);
 
         /* check exp(a+b) = exp(a) exp(b) */
         acb_poly_exp_series_basecase(c, a, n, bits2);

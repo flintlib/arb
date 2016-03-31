@@ -25,20 +25,7 @@
 
 #include "arb_poly.h"
 
-
-/* hack: avoid overflow since exp currently uses mpfr */
-void
-fmpq_poly_randtest_small(fmpq_poly_t A, flint_rand_t state, slong len, slong bits)
-{
-    fmpq_poly_randtest(A, state, len, bits);
-    if (A->length > 0)
-    {
-        bits = _fmpz_vec_max_bits(A->coeffs, A->length);
-        bits = FLINT_ABS(bits);
-        fmpz_mul_2exp(A->den, A->den, bits);
-        _fmpq_poly_normalise(A);
-    }
-}
+extern slong arb_poly_newton_exp_cutoff;
 
 int main()
 {
@@ -57,9 +44,9 @@ int main()
         fmpq_poly_t A, B;
         arb_poly_t a, b;
 
-        qbits = 2 + n_randint(state, 200);
-        rbits1 = 2 + n_randint(state, 200);
-        rbits2 = 2 + n_randint(state, 200);
+        qbits = 2 + n_randint(state, 100);
+        rbits1 = 2 + n_randint(state, 100);
+        rbits2 = 2 + n_randint(state, 100);
 
         m = 1 + n_randint(state, 20);
         n = 1 + n_randint(state, 20);
@@ -106,14 +93,14 @@ int main()
         fmpq_poly_t A;
         arb_poly_t a, b;
 
-        qbits = 2 + n_randint(state, 200);
-        rbits1 = 2 + n_randint(state, 200);
-        rbits2 = 2 + n_randint(state, 200);
+        qbits = 2 + n_randint(state, 100);
+        rbits1 = 2 + n_randint(state, 100);
+        rbits2 = 2 + n_randint(state, 100);
 
         if (n_randint(state, 100) == 0)
         {
-            m = 1 + n_randint(state, 600);
-            n = 1 + n_randint(state, 600);
+            m = 1 + n_randint(state, 300);
+            n = 1 + n_randint(state, 300);
         }
         else
         {
@@ -125,7 +112,7 @@ int main()
         arb_poly_init(a);
         arb_poly_init(b);
 
-        fmpq_poly_randtest_small(A, state, m, qbits);
+        fmpq_poly_randtest(A, state, m, qbits);
 
         arb_poly_randtest(a, state, 1 + n_randint(state, 300), rbits1, 5);
         arb_poly_set_fmpq_poly(a, A, rbits1);
@@ -158,15 +145,20 @@ int main()
         fmpq_poly_t A;
         arb_poly_t a, b, c;
 
-        qbits = 2 + n_randint(state, 200);
-        rbits1 = 2 + n_randint(state, 200);
-        rbits2 = 2 + n_randint(state, 200);
-        rbits3 = 2 + n_randint(state, 200);
+        qbits = 2 + n_randint(state, 100);
+        rbits1 = 2 + n_randint(state, 100);
+        rbits2 = 2 + n_randint(state, 100);
+        rbits3 = 2 + n_randint(state, 100);
+
+        if (iter > 100)
+        {
+            arb_poly_newton_exp_cutoff = 5 + n_randint(state, 50);
+        }
 
         if (n_randint(state, 100) == 0)
         {
-            m = 1 + n_randint(state, 600);
-            n = 1 + n_randint(state, 600);
+            m = 1 + n_randint(state, 100);
+            n = 1 + n_randint(state, 100);
         }
         else
         {
@@ -182,7 +174,7 @@ int main()
         arb_poly_randtest(b, state, 1 + n_randint(state, 300), rbits1, 5);
 
         do {
-            fmpq_poly_randtest_small(A, state, m, qbits);
+            fmpq_poly_randtest(A, state, m, qbits);
             arb_poly_set_fmpq_poly(a, A, rbits1);
             arb_poly_exp_series(b, a, n, rbits3);
         } while (b->length == 0 || arb_contains_zero(b->coeffs));

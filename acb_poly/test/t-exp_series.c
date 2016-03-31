@@ -25,6 +25,8 @@
 
 #include "acb_poly.h"
 
+extern slong acb_poly_newton_exp_cutoff;
+
 int main()
 {
     slong iter;
@@ -40,14 +42,19 @@ int main()
         slong m, n, bits1, bits2, bits3;
         acb_poly_t a, b, c, d;
 
-        bits1 = 2 + n_randint(state, 200);
-        bits2 = 2 + n_randint(state, 200);
-        bits3 = 2 + n_randint(state, 200);
+        bits1 = 2 + n_randint(state, 100);
+        bits2 = 2 + n_randint(state, 100);
+        bits3 = 2 + n_randint(state, 100);
+
+        if (iter > 1000)
+        {
+            acb_poly_newton_exp_cutoff = 5 + n_randint(state, 50);
+        }
 
         if (n_randint(state, 100) == 0)
         {
-            m = 1 + n_randint(state, 400);
-            n = 1 + n_randint(state, 400);
+            m = 1 + n_randint(state, 100);
+            n = 1 + n_randint(state, 100);
         }
         else
         {
@@ -60,8 +67,8 @@ int main()
         acb_poly_init(c);
         acb_poly_init(d);
 
-        acb_poly_randtest(a, state, m, bits1, 10);
-        acb_poly_randtest(b, state, m, bits1, 10);
+        acb_poly_randtest(a, state, m, bits1, 5);
+        acb_poly_randtest(b, state, m, bits1, 5);
 
         acb_poly_randtest(c, state, 1 + n_randint(state, 300), bits1, 10);
         acb_poly_randtest(d, state, 1 + n_randint(state, 300), bits1, 10);

@@ -40,11 +40,19 @@ int main()
         slong m, n, rbits1, rbits2;
         acb_poly_t a, b, c, d, e;
 
-        rbits1 = 2 + n_randint(state, 200);
-        rbits2 = 2 + n_randint(state, 200);
+        rbits1 = 2 + n_randint(state, 100);
+        rbits2 = 2 + n_randint(state, 100);
 
-        m = 1 + n_randint(state, 50);
-        n = 1 + n_randint(state, 50);
+        if (n_randint(state, 10) == 0)
+        {
+            m = 1 + n_randint(state, 50);
+            n = 1 + n_randint(state, 50);
+        }
+        else
+        {
+            m = 1 + n_randint(state, 20);
+            n = 1 + n_randint(state, 20);
+        }
 
         acb_poly_init(a);
         acb_poly_init(b);
@@ -53,8 +61,6 @@ int main()
         acb_poly_init(e);
 
         acb_poly_randtest(a, state, m, rbits1, 10);
-        acb_poly_set_coeff_si(a, 0, 0); /* TODO: implement complex atan */
-
         acb_poly_tan_series(b, a, n, rbits2);
 
         /* check tan(x) = 2*tan(x/2)/(1-tan(x/2)^2) */
