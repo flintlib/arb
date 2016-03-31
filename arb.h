@@ -895,15 +895,6 @@ _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, slong len2, slong prec
 }
 
 ARB_INLINE void
-_arb_vec_norm(arb_t res, arb_srcptr vec, slong len, slong prec)
-{
-    slong i;
-    arb_zero(res);
-    for (i = 0; i < len; i++)
-        arb_addmul(res, vec + i, vec + i, prec);
-}
-
-ARB_INLINE void
 _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len)
 {
     if (len < 1)
