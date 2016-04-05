@@ -1558,10 +1558,6 @@ Vector functions
 
     Sets *res* to the dot product of *vec1* and *vec2*.
 
-.. function:: void _arb_vec_norm(arb_t res, arb_srcptr vec, slong len, slong prec)
-
-    Sets *res* to the dot product of *vec* with itself.
-
 .. function:: void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len, slong prec)
 
     Sets *bound* to an upper bound for the entries in *vec*.
