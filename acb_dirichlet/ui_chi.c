@@ -25,19 +25,22 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_acb_pairing_conrey(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b, slong prec)
+ulong
+acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
 {
-    ulong expo;
-    expo = acb_dirichlet_pairing_conrey(G, a, b);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
+    if (n_gcd(G->q, n) > 1)
+    {
+        return ACB_DIRICHLET_CHI_NULL;
+    }
     else
     {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo, G->expo);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
+        ulong v = 0, k;
+        acb_dirichlet_conrey_t x;
+        acb_dirichlet_conrey_init(x, G);
+        acb_dirichlet_conrey_log(x, G, n);
+        for (k = 0; k < G->num; k++)
+            v = (v + chi->expo[k] * x->log[k]) % chi->order;
+        acb_dirichlet_conrey_clear(x);
+        return v;
     }
 }

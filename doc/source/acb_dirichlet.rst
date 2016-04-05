@@ -22,8 +22,20 @@ A Dirichlet L-function is the analytic continuation of an L-series
 
 where `\chi(k)` is a Dirichlet character.
 
-Dirichlet characters
+Multiplicative group modulo *q*
 -------------------------------------------------------------------------------
+
+Working with Dirichlet characters mod *q* consists mainly
+in going from residue classes mod *q* to exponents on a set
+of generators of the group.
+
+This implementation relies on the Conrey generators introduced
+in the LMFDB. We call *number* a residue class, and *index* the
+corresponding vector of exponents.
+
+Going from an *index* to the corresponding *number* is a cheap
+operation while the converse requires computing discrete
+logarithms.
 
 .. type:: acb_dirichlet_group_struct
 
@@ -31,17 +43,27 @@ Dirichlet characters
 
     Represents the group of Dirichlet characters mod *q*.
 
-    An *acb_dirichlet_group_t* is defined as an array of *acb_dirichlet_struct*
+    An *acb_dirichlet_group_t* is defined as an array of *acb_dirichlet_group_struct*
     of length 1, permitting it to be passed by reference.
 
 .. function:: void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
 
     Initializes *G* to the group of Dirichlet characters mod *q*.
 
-    This method computes the prime factorization of *q* and other useful
-    invariants. It does *not* automatically precompute lookup tables
+    This method computes a canonical decomposition of *G* in terms of cyclic
+    groups, which are the mod `p^e` subgroups for `p^e\|q`.
+    In particular *G* contains:
+
+    - the number *num* of components
+
+    - the generators
+
+    - the exponent *expo* of the group
+
+    It does *not* automatically precompute lookup tables
     of discrete logarithms or numerical roots of unity, and can therefore
     safely be called even with large *q*.
+
     For implementation reasons, the largest prime factor of *q* must not
     exceed `10^{12}` (an abort will be raised). This restriction could
     be removed in the future.
@@ -50,13 +72,111 @@ Dirichlet characters
 
     Clears *G*.
 
-.. function:: void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
+.. function:: void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num)
 
-    Sets *res* to `\chi_m(n)`, the value of the Dirichlet character
-    of index *m* evaluated at the integer *n*.
+    Precompute decomposition and tables for discrete log computations in *G*,
+    so as to minimize the complexity of *num* calls to discrete logarithms.
 
-    Requires that *m* is a valid index, that is, `1 \le m \le q` and *m* is
-    coprime to *q*. There are no restrictions on *n*.
+    If *num* gets very large, the entire group may be indexed.
+
+.. type:: acb_dirichlet_conrey_struct
+
+.. type:: acb_dirichlet_conrey_t
+
+    Represents elements of the unit group mod *q*, keeping both the
+    *number* (residue class) and *index* (exponents on the group
+    generators).
+
+.. function:: void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
+
+    Sets *x* to the element of number *m*, computing its index using discrete
+    logarithm in *G*.
+
+.. function:: ulong acb_dirichlet_conrey_exp(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+
+    Compute the reverse operation.
+
+.. function:: void acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+
+    Sets *x* to the *number* `1\in G`, having *index* `[0,\dots 0]`.
+
+.. function:: int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+
+    This function allows to iterate on the elements of *G* looping on the *index*.
+    It produces elements in seemingly random *number* order. The return value
+    is the index of the last updated exponent of *x*, or *G->num* if the last
+    element has been reached.
+
+Dirichlet characters
+-------------------------------------------------------------------------------
+
+Dirichlet characters take value in a finite cyclic group of roots of unity plus zero.
+
+When evaluation functions return a *ulong*, this number corresponds to the
+power of a primitive root of unity, the special value *ACB_DIRICHLET_CHI_NULL*
+encoding the zero value.
+
+The Conrey numbering scheme makes explicit the mathematical fact that
+the group *G* is isomorphic to its dual.
+
+.. function:: ulong acb_dirichlet_ui_pairing(const acb_dirichlet_group_t G, ulong m, ulong n)
+
+.. function:: ulong acb_dirichlet_ui_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
+
+    Compute the value of the Dirichlet pairing on numbers *m* and *n*, as
+    exponent modulo *G->expo*.
+    The second form takes the index *a* and *b*, and does not take discrete
+    logarithms.
+
+    The returned value is the numerator of the actual value exponent mod the group exponent *G->expo*.
+
+.. type:: acb_dirichlet_char_struct
+
+.. type:: acb_dirichlet_char_t
+
+    Represents a Dirichlet character. This structure contains various
+    useful invariants such as the order of the character.
+
+    An *acb_dirichlet_char_t* is defined as an array of *acb_dirichlet_char_struct*
+    of length 1, permitting it to be passed by reference.
+
+.. function:: void acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
+
+.. function:: void acb_dirichlet_char_clear(acb_dirichlet_char_t chi);
+
+    Initializes and clear *chi*.
+
+.. function:: void acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n);
+
+    Sets *chi* to the Dirichlet character of number *n*, using Conrey numbering scheme.
+    This function performs a discrete logarithm in *G*.
+
+.. function:: void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
+
+    Sets *chi* to the Dirichlet character of Conrey index *x*.
+
+Character properties
+-------------------------------------------------------------------------------
+
+.. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
+
+.. function:: int acb_dirichlet_char_parity(const acb_dirichlet_char_t chi)
+
+.. function:: ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+
+Character evaluation
+-------------------------------------------------------------------------------
+
+The image of a Dirichlet character is a finite cyclic group. Dirichlet
+character evaluations are either exponents in this group, or an *acb_t* root of
+unity.
+
+.. function:: void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+
+    Sets *res* to `\chi(n)`, the value of the Dirichlet character *chi*
+    at the integer *n*.
+
+    There are no restrictions on *n*.
 
 Euler products
 -------------------------------------------------------------------------------

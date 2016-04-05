@@ -49,8 +49,8 @@ int main()
             n1 = n_randint(state, 1000);
             n2 = n_randint(state, 1000);
 
-            acb_dirichlet_acb_chi(zn1, G, chi, n1, 53);
-            acb_dirichlet_acb_pairing(zn2, G, m, n1, 53);
+            acb_dirichlet_chi(zn1, G, chi, n1, 53);
+            acb_dirichlet_pairing(zn2, G, m, n1, 53);
             if (!acb_overlaps(zn1, zn2))
             {
                 acb_dirichlet_conrey_t x;
@@ -69,8 +69,8 @@ int main()
                 abort();
             }
 
-            acb_dirichlet_acb_pairing(zn2, G, m, n2, 53);
-            acb_dirichlet_acb_pairing(zn1n2, G, m, n1 * n2, 53);
+            acb_dirichlet_pairing(zn2, G, m, n2, 53);
+            acb_dirichlet_pairing(zn1n2, G, m, n1 * n2, 53);
             acb_mul(zn1zn2, zn1, zn2, 53);
 
             if (!acb_overlaps(zn1n2, zn1zn2))
@@ -97,7 +97,7 @@ int main()
             {
                 if (n_gcd(q, m) == 1)
                 {
-                    acb_dirichlet_acb_pairing(zn2, G, m, n1, 53);
+                    acb_dirichlet_pairing(zn2, G, m, n1, 53);
                     acb_add(zn1, zn1, zn2, 53);
                 }
             }

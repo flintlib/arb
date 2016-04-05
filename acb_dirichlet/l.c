@@ -31,7 +31,7 @@ acb_dirichlet_l(acb_t res, const acb_t s,
 
     while (1) {
         /* todo: use n_dirichlet_chi and precomputed roots instead */
-        acb_dirichlet_acb_pairing_conrey(chi, G, cm, cn, prec);
+        acb_dirichlet_pairing_conrey(chi, G, cm, cn, prec);
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
@@ -55,4 +55,3 @@ acb_dirichlet_l(acb_t res, const acb_t s,
     acb_clear(u);
     acb_clear(a);
 }
-

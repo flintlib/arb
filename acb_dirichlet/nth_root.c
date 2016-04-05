@@ -26,7 +26,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_zeta(acb_t res, ulong order, slong prec)
+acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
 {
     fmpq_t t;
     fmpq_init(t);

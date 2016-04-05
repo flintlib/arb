@@ -61,7 +61,7 @@ int main()
         acb_dirichlet_char_init(chi, G);
 
         acb_init(zeta);
-        acb_dirichlet_zeta(zeta, G->expo, prec);
+        acb_dirichlet_nth_root(zeta, G->expo, prec);
 
         z = _acb_vec_init(G->expo);
         _acb_vec_set_powers(z, zeta, G->expo, prec);
@@ -91,7 +91,7 @@ int main()
             acb_zero(sum);
 
             acb_dirichlet_char_conrey(chi, G, x);
-            acb_dirichlet_chi_vec(v, G, chi, nv);
+            acb_dirichlet_ui_chi_vec(v, G, chi, nv);
 
             m = G->expo / chi->order;
             tt = acb_dirichlet_char_parity(chi) ? kt : t;

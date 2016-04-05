@@ -25,38 +25,24 @@
 
 #include "acb_dirichlet.h"
 
-/* loop over whole group */
-void
-acb_dirichlet_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+ulong
+acb_dirichlet_ui_pairing(const acb_dirichlet_group_t G, ulong m, ulong n)
 {
-    int j;
-    ulong t;
-    slong k;
-    acb_dirichlet_conrey_t x;
-    acb_dirichlet_conrey_init(x, G);
-    acb_dirichlet_conrey_one(x, G);
+    ulong x;
+    acb_dirichlet_conrey_t a, b;
 
-    for (k = 0; k < nv; k++)
-        v[k] = ACB_DIRICHLET_CHI_NULL;
+    if (n_gcd(G->q, m) > 1 || n_gcd(G->q, n) > 1)
+        return ACB_DIRICHLET_CHI_NULL;
 
-    t = v[1] = 0;
+    acb_dirichlet_conrey_init(a, G);
+    acb_dirichlet_conrey_init(b, G);
+    acb_dirichlet_conrey_log(a, G, m);
+    acb_dirichlet_conrey_log(b, G, n);
 
-    while ( (j = acb_dirichlet_conrey_next(x, G)) < G->num )
-    {
-        /* exponents were modified up to j */
-        for (k = 0; k <= j; k++)
-            t = (t + chi->expo[k]) % chi->order;
+    x = acb_dirichlet_ui_pairing_conrey(G, a, b);
 
-        if (x->n < nv)
-            v[x->n] = t;
-    }
+    acb_dirichlet_conrey_clear(a);
+    acb_dirichlet_conrey_clear(b);
 
-    /* fix result outside primes */
-    /*acb_dirichlet_vec_set_null(v, G, nv);*/
-    /* copy outside modulus */
-
-    for (k = G->q; k < nv ; k++ )
-        v[k] = v[k - G->q];
-
-    acb_dirichlet_conrey_clear(x);
+    return x;
 }

@@ -63,8 +63,8 @@ int main()
 
             acb_dirichlet_char_conrey(chi, G, x);
 
-            acb_dirichlet_chi_vec_loop(v1, G, chi, nv);
-            acb_dirichlet_chi_vec_primeloop(v2, G, chi, nv);
+            acb_dirichlet_ui_chi_vec_loop(v1, G, chi, nv);
+            acb_dirichlet_ui_chi_vec_primeloop(v2, G, chi, nv);
 
             if ((k = vec_diff(v1, v2, nv)))
             {

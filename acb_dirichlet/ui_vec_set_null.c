@@ -19,8 +19,6 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
@@ -28,18 +26,20 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_acb_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_ui_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv)
 {
-    ulong expo;
-    expo = acb_dirichlet_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
-        acb_zero(res);
-    else
+    slong k, l;
+    if (G->q_even > 1)
     {
-        fmpq_t t;
-        fmpq_init(t);
-        fmpq_set_si(t, 2 * expo , chi->order);
-        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
-        fmpq_clear(t);
+        for (k = 2; k < nv; k += 2)
+            v[k] = -1;
+    }
+
+    for (l = 0; l < G->num; l++)
+    {
+        ulong p = G->primes[l];
+
+        for (k = p; k < nv; k += p)
+            v[k] = ACB_DIRICHLET_CHI_NULL;
     }
 }
