@@ -124,6 +124,7 @@ int main()
 
             flint_printf("trace(ab) = \n"); arb_printd(trab, 15); flint_printf("\n\n");
             flint_printf("trace(ba) = \n"); arb_printd(trba, 15); flint_printf("\n\n");
+            abort();
         }
 
         arb_clear(trab);
@@ -133,6 +134,65 @@ int main()
         arb_mat_clear(b);
         arb_mat_clear(ab);
         arb_mat_clear(ba);
+    }
+
+    /* check trace(A^T A) = frobenius_norm(A)^2 */
+    for (iter = 0; iter < 10000; iter++)
+    {
+        slong m, n, prec;
+        arb_mat_t A, AT, ATA;
+        arb_t t;
+        mag_t low, fro;
+
+        prec = 2 + n_randint(state, 200);
+
+        m = n_randint(state, 10);
+        n = n_randint(state, 10);
+
+        arb_mat_init(A, m, n);
+        arb_mat_randtest(A, state, 2 + n_randint(state, 100), 10);
+
+        arb_mat_init(AT, n, m);
+        arb_mat_transpose(AT, A);
+
+        arb_mat_init(ATA, n, n);
+        arb_mat_mul(ATA, AT, A, prec);
+
+        arb_init(t);
+        arb_mat_trace(t, ATA, prec);
+        arb_sqrt(t, t, prec);
+
+        mag_init(low);
+        arb_get_mag_lower(low, t);
+
+        mag_init(fro);
+        arb_mat_bound_fro_norm(fro, A);
+
+        if (mag_cmp(low, fro) > 0)
+        {
+            flint_printf("FAIL (frobenius norm)\n", iter);
+            flint_printf("m = %wd, n = %wd, prec = %wd\n", m, n, prec);
+            flint_printf("\n");
+
+            flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
+
+            flint_printf("lower(sqrt(trace(A^T A))) = \n");
+            mag_printd(low, 15); flint_printf("\n\n");
+
+            flint_printf("upper(frobenius_norm(A)) = \n");
+            mag_printd(fro, 15); flint_printf("\n\n");
+
+            abort();
+        }
+
+        arb_clear(t);
+
+        mag_clear(low);
+        mag_clear(fro);
+
+        arb_mat_clear(A);
+        arb_mat_clear(AT);
+        arb_mat_clear(ATA);
     }
 
     flint_randclear(state);
