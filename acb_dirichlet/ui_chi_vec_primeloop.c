@@ -25,7 +25,7 @@
 
 #include "acb_dirichlet.h"
 
-void
+static void
 chi_vec_evenpart(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
 
@@ -60,7 +60,7 @@ chi_vec_evenpart(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_ch
 
 /* loop over primary components */
 void
-acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
     slong k, l;
 
@@ -93,5 +93,5 @@ acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const a
             vx = (vx + vp) % chi->order;
         }
     }
-    acb_dirichlet_vec_set_null(v, G, nv);
+    acb_dirichlet_ui_vec_set_null(v, G, nv);
 }

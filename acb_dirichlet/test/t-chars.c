@@ -97,7 +97,7 @@ int main()
                 abort();
             }
 
-            chim1 = acb_dirichlet_chi(G, chi, q - 1);
+            chim1 = acb_dirichlet_ui_chi(G, chi, q - 1);
             if (acb_dirichlet_char_parity(chi) != (chim1 != 0))
             {
                 flint_printf("FAIL: parity\n\n");
@@ -114,10 +114,10 @@ int main()
             while (n_gcd(q, n) > 1);
 
             acb_dirichlet_char(chi2, G, n);
-            pairing = acb_dirichlet_pairing(G, m, n);
+            pairing = acb_dirichlet_ui_pairing(G, m, n);
 
-            if (pairing != acb_dirichlet_chi(G, chi, n) * (G->expo / chi->order)
-                    || pairing != acb_dirichlet_chi(G, chi2, m) * (G->expo / chi2->order))
+            if (pairing != acb_dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order)
+                    || pairing != acb_dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order))
             {
                 flint_printf("FAIL: pairing\n\n");
                 flint_printf("q = %wu\n\n", q);

@@ -27,7 +27,7 @@
 
 /* sieve on primes */
 void
-acb_dirichlet_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
 	slong k, p, pmax;
 	n_primes_t iter;
@@ -47,7 +47,7 @@ acb_dirichlet_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_d
 		else
 		{ 
 			long chip; 
-			chip = acb_dirichlet_chi(G, chi, p);
+			chip = acb_dirichlet_ui_chi(G, chi, p);
 
 			for (k = p; k < nv; k += p)
 				if (v[k] != -1)

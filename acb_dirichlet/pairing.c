@@ -19,30 +19,26 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2016 Pascal Molin
+    Copyright (C) 2015 Jonathan Bober
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-ulong
-acb_dirichlet_pairing(const acb_dirichlet_group_t G, ulong m, ulong n)
+void
+acb_dirichlet_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
 {
-    ulong x;
-    acb_dirichlet_conrey_t a, b;
-
-    if (n_gcd(G->q, m) > 1 || n_gcd(G->q, n) > 1)
-        return ACB_DIRICHLET_CHI_NULL;
-
-    acb_dirichlet_conrey_init(a, G);
-    acb_dirichlet_conrey_init(b, G);
-    acb_dirichlet_conrey_log(a, G, m);
-    acb_dirichlet_conrey_log(b, G, n);
-
-    x = acb_dirichlet_pairing_conrey(G, a, b);
-
-    acb_dirichlet_conrey_clear(a);
-    acb_dirichlet_conrey_clear(b);
-
-    return x;
+    ulong expo;
+    expo = acb_dirichlet_ui_pairing(G, m, n);
+    if (expo == ACB_DIRICHLET_CHI_NULL)
+        acb_zero(res);
+    else
+    {
+        fmpq_t t;
+        fmpq_init(t);
+        fmpq_set_si(t, 2 * expo, G->expo);
+        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
+        fmpq_clear(t);
+    }
 }

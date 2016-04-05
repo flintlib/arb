@@ -19,24 +19,25 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-/* todo: modular arithmetic */
-
-ulong
-acb_dirichlet_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
+void
+acb_dirichlet_pairing_conrey(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b, slong prec)
 {
-    ulong x, k;
-    x = 0;
-
-    for (k = 0; k < G->num; k++)
-        x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
-
-    return x;
+    ulong expo;
+    expo = acb_dirichlet_ui_pairing_conrey(G, a, b);
+    if (expo == ACB_DIRICHLET_CHI_NULL)
+        acb_zero(res);
+    else
+    {
+        fmpq_t t;
+        fmpq_init(t);
+        fmpq_set_si(t, 2 * expo, G->expo);
+        arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
+        fmpq_clear(t);
+    }
 }

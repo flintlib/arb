@@ -19,27 +19,24 @@
 =============================================================================*/
 /******************************************************************************
 
+    Copyright (C) 2015 Jonathan Bober
+    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv)
+/* todo: modular arithmetic */
+
+ulong
+acb_dirichlet_ui_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
 {
-    slong k, l;
-    if (G->q_even > 1)
-    {
-        for (k = 2; k < nv; k += 2)
-            v[k] = -1;
-    }
+    ulong x, k;
+    x = 0;
 
-    for (l = 0; l < G->num; l++)
-    {
-        ulong p = G->primes[l];
+    for (k = 0; k < G->num; k++)
+        x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
 
-        for (k = p; k < nv; k += p)
-            v[k] = ACB_DIRICHLET_CHI_NULL;
-    }
+    return x;
 }
