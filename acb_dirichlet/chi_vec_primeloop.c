@@ -25,6 +25,39 @@
 
 #include "acb_dirichlet.h"
 
+void
+chi_vec_evenpart(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+{
+
+    ulong c3, c4, x;
+
+    if (G->neven >= 1 && (c3 = chi->expo[0]))
+    {
+        for (x = 3; x < nv; x += 4)
+            v[x] = c3;
+    }
+    if (G->neven == 2 && (c4 = chi->expo[1]))
+    {
+        ulong g, pe, vx, xp;
+        vx = c4;
+        pe = G->primepowers[1];
+        g = G->generators[1] % pe;
+
+        for (x = g; x > 1;)
+        {
+
+            for (xp = x; xp < nv; xp += pe)
+                v[xp] = (v[xp] + vx) % chi->order;
+
+            for (xp = pe - x; xp < nv; xp += pe)
+                v[xp] = (v[xp] + vx) % chi->order;
+
+            x = (x * g) % pe;
+            vx = (vx + c4) % chi->order;
+        }
+    }
+}
+
 /* loop over primary components */
 void
 acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
@@ -34,25 +67,30 @@ acb_dirichlet_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const a
     for (k = 1; k < nv; k++)
         v[k] = 0;
 
-    for (l = 1; l < G->num; l++)
+    if (G->neven)
+        chi_vec_evenpart(v, G, chi, nv);
+
+    for (l = G->neven; l < G->num; l++)
     {
-        long p, pe, g, x, vp, xp;
-        long j, vj;
+        ulong p, pe, g, x, vx, vp, xp;
         p = G->primes[l];
         pe = G->primepowers[l];
         g = G->generators[l] % pe;
-        vj = vp = chi->expo[l];
+        vx = vp = chi->expo[l];
+
+        if (vp == 0)
+            continue;
         /* for each x = g^j mod p^e,
          * set a[x] += j*vp
          * and use periodicity */
-
-        for (j = 1, x = g; x > 1; j++)
+        for (x = g; x > 1;)
         {
-            for (xp = x; xp < nv; xp += pe)
-                v[xp] = (v[xp] + vj) % chi->order;
 
-            x = (x*g) % pe;
-            vj = (vj + vp) % chi->order;
+            for (xp = x; xp < nv; xp += pe)
+                v[xp] = (v[xp] + vx) % chi->order;
+
+            x = (x * g) % pe;
+            vx = (vx + vp) % chi->order;
         }
     }
     acb_dirichlet_vec_set_null(v, G, nv);

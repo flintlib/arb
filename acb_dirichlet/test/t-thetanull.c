@@ -24,14 +24,10 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-
-#define PI   3.14159265358
-#define LOG2 0.69314718055
 
 int main()
 {
-    slong prec = 80;
+    slong prec = 64;
     ulong q;
 
     flint_printf("thetanull....");
@@ -43,7 +39,7 @@ int main()
      * characters of moduli 300 and 600 + conjugates
      */
 
-    for (q = 3; q < 800; q ++)
+    for (q = 3; q < 1000; q ++)
     {
         acb_dirichlet_group_t G;
         acb_dirichlet_conrey_t x;
@@ -57,6 +53,7 @@ int main()
         arb_ptr t, kt, tt;
 
         if (q % 4 == 2)
+            /* no primitive character mod q */
             continue;
 
         acb_dirichlet_group_init(G, q);
@@ -69,7 +66,7 @@ int main()
         z = _acb_vec_init(G->expo);
         _acb_vec_set_powers(z, zeta, G->expo, prec);
 
-        nv = ceil(sqrt((double)q * prec * LOG2 / PI)) + 2;
+        nv = acb_dirichlet_theta_length(q, 1, prec);
         v = flint_malloc(nv * sizeof(ulong));
 
         arb_init(eq);
@@ -94,12 +91,9 @@ int main()
             acb_zero(sum);
 
             acb_dirichlet_char_conrey(chi, G, x);
-            acb_dirichlet_chi_vec_loop(v, G, chi, nv);
+            acb_dirichlet_chi_vec(v, G, chi, nv);
 
             m = G->expo / chi->order;
-            /*
-            flint_printf("Theta(chi_%wu(%wu)) (m=%wu)\n", q, chi->n, m);
-            */
             tt = acb_dirichlet_char_parity(chi) ? kt : t;
 
             for (k = 1; k < nv; k++)
@@ -133,6 +127,7 @@ int main()
         acb_clear(zeta);
         acb_clear(sum);
         arb_clear(eq);
+        flint_free(v);
         acb_dirichlet_group_clear(G);
         acb_dirichlet_char_clear(chi);
         acb_dirichlet_conrey_clear(x);

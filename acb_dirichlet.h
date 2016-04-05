@@ -96,6 +96,7 @@ void acb_dirichlet_acb_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m
 typedef struct
 {
     ulong q;           /* modulus */
+    /*? acb_dirichet_conrey_struct n; */
     ulong n;           /* number */
     ulong order;       /* order */
     ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
@@ -105,7 +106,7 @@ acb_dirichlet_char_struct;
 
 typedef acb_dirichlet_char_struct acb_dirichlet_char_t[1];
 
-ACB_DIRICHLET_INLINE int
+ACB_DIRICHLET_INLINE ulong
 acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 {
     return chi->order;
@@ -127,7 +128,6 @@ void acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_
 void acb_dirichlet_char_denormalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
 ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
-int acb_dirichlet_char_is_odd(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
 void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
@@ -146,6 +146,7 @@ void acb_dirichlet_char_vec(acb_t res, const acb_dirichlet_group_t G, const acb_
 
 void acb_dirichlet_zeta(acb_t res, ulong order, slong prec);
 void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
+ulong acb_dirichlet_theta_length(ulong q, double x, slong prec);
 
 #ifdef __cplusplus
 }

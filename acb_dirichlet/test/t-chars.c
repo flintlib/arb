@@ -26,6 +26,7 @@
 #include "acb_dirichlet.h"
 
 
+/* order of an element knowing the factorization of a multiple */
 static ulong
 nmod_order_precomp(ulong a, nmod_t mod, ulong expo, n_factor_t fac)
 {

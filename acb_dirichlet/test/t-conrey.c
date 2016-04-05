@@ -34,7 +34,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 3000; iter++)
     {
         acb_dirichlet_group_t G;
         acb_dirichlet_conrey_t x;
@@ -109,7 +109,7 @@ int main()
                if (G->exponents[k] == 1)
                    ref *= p - 2;
                else
-                   ref *= (p * (p -2) + 1) * n_pow(p, G->exponents[k] - 2);
+                   ref *= (p * (p - 2) + 1) * n_pow(p, G->exponents[k] - 2);
            }
         }
 
