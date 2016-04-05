@@ -535,6 +535,9 @@ void arb_union(arb_t z, const arb_t x, const arb_t y, slong prec);
 int arb_intersection(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits);
 
+void arb_min(arb_t z, const arb_t x, const arb_t y, slong prec);
+void arb_max(arb_t z, const arb_t x, const arb_t y, slong prec);
+
 int arb_can_round_arf(const arb_t x, slong prec, arf_rnd_t rnd);
 int arb_can_round_mpfr(const arb_t x, slong prec, mpfr_rnd_t rnd);
 

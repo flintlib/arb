@@ -619,6 +619,12 @@ Arithmetic
     Sets *y* to the sign function of *x*. The result is `[0 \pm 1]` if
     *x* contains both zero and nonzero numbers.
 
+.. function:: void arb_min(arb_t z, const arb_t x, const arb_t y, slong prec)
+
+.. function:: void arb_max(arb_t z, const arb_t x, const arb_t y, slong prec)
+
+    Sets *z* respectively to the minimum and the maximum of *x* and *y*.
+
 .. function:: void arb_add(arb_t z, const arb_t x, const arb_t y, slong prec)
 
 .. function:: void arb_add_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
