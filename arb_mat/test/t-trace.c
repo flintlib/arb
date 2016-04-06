@@ -142,7 +142,7 @@ int main()
         slong m, n, prec;
         arb_mat_t A, AT, ATA;
         arb_t t;
-        mag_t low, fro;
+        mag_t low, frobenius;
 
         prec = 2 + n_randint(state, 200);
 
@@ -165,10 +165,10 @@ int main()
         mag_init(low);
         arb_get_mag_lower(low, t);
 
-        mag_init(fro);
-        arb_mat_bound_fro_norm(fro, A);
+        mag_init(frobenius);
+        arb_mat_bound_frobenius_norm(frobenius, A);
 
-        if (mag_cmp(low, fro) > 0)
+        if (mag_cmp(low, frobenius) > 0)
         {
             flint_printf("FAIL (frobenius norm)\n", iter);
             flint_printf("m = %wd, n = %wd, prec = %wd\n", m, n, prec);
@@ -180,7 +180,7 @@ int main()
             mag_printd(low, 15); flint_printf("\n\n");
 
             flint_printf("upper(frobenius_norm(A)) = \n");
-            mag_printd(fro, 15); flint_printf("\n\n");
+            mag_printd(frobenius, 15); flint_printf("\n\n");
 
             abort();
         }
@@ -188,7 +188,7 @@ int main()
         arb_clear(t);
 
         mag_clear(low);
-        mag_clear(fro);
+        mag_clear(frobenius);
 
         arb_mat_clear(A);
         arb_mat_clear(AT);

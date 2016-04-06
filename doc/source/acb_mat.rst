@@ -161,7 +161,7 @@ Norms
     Sets *b* to an upper bound for the infinity norm (i.e. the largest
     absolute value row sum) of *A*.
 
-.. function:: void acb_mat_bound_fro_norm(mag_t b, const acb_mat_t A)
+.. function:: void acb_mat_bound_frobenius_norm(mag_t b, const acb_mat_t A)
 
     Sets *b* to an upper bound for the Frobenius norm (i.e. the square root
     of the sum of squares of magnitudes of entries) of *A*.
