@@ -25,16 +25,6 @@
 
 #include "acb_mat.h"
 
-static void
-_acb_mat_conjugate_transpose(acb_mat_t B, const acb_mat_t A)
-{
-    slong i, j;
-    acb_mat_transpose(B, A);
-    for (i = 0; i < acb_mat_nrows(B); i++)
-        for (j = 0; j < acb_mat_ncols(B); j++)
-            acb_conj(acb_mat_entry(B, i, j), acb_mat_entry(B, i, j));
-}
-
 int main()
 {
     slong iter;
@@ -144,93 +134,6 @@ int main()
         acb_mat_clear(b);
         acb_mat_clear(ab);
         acb_mat_clear(ba);
-    }
-
-    /* check trace(A^H A) = frobenius_norm(A)^2 */
-    for (iter = 0; iter < 10000; iter++)
-    {
-        slong m, n, prec;
-        acb_mat_t A, AH, AHA;
-        acb_t t;
-
-        prec = 2 + n_randint(state, 200);
-
-        m = n_randint(state, 10);
-        n = n_randint(state, 10);
-
-        acb_mat_init(A, m, n);
-        acb_mat_init(AH, n, m);
-        acb_mat_init(AHA, n, n);
-        acb_init(t);
-
-        acb_mat_randtest(A, state, 2 + n_randint(state, 100), 10);
-        _acb_mat_conjugate_transpose(AH, A);
-        acb_mat_mul(AHA, AH, A, prec);
-        acb_mat_trace(t, AHA, prec);
-        acb_sqrt(t, t, prec);
-
-        /* check the norm bound */
-        {
-            mag_t low, frobenius;
-
-            mag_init(low);
-            acb_get_mag_lower(low, t);
-
-            mag_init(frobenius);
-            acb_mat_bound_frobenius_norm(frobenius, A);
-
-            if (mag_cmp(low, frobenius) > 0)
-            {
-                flint_printf("FAIL (frobenius norm bound)\n", iter);
-                flint_printf("m = %wd, n = %wd, prec = %wd\n", m, n, prec);
-                flint_printf("\n");
-
-                flint_printf("A = \n"); acb_mat_printd(A, 15); flint_printf("\n\n");
-
-                flint_printf("lower(sqrt(trace(A^H A))) = \n");
-                mag_printd(low, 15); flint_printf("\n\n");
-
-                flint_printf("bound_frobenius_norm(A) = \n");
-                mag_printd(frobenius, 15); flint_printf("\n\n");
-
-                abort();
-            }
-
-            mag_clear(low);
-            mag_clear(frobenius);
-        }
-
-        /* check the norm interval */
-        {
-            acb_t frobenius;
-
-            acb_init(frobenius);
-            acb_mat_frobenius_norm(frobenius, A, prec);
-
-            if (!arb_overlaps(acb_realref(t), frobenius))
-            {
-                flint_printf("FAIL (frobenius norm overlap)\n", iter);
-                flint_printf("m = %wd, n = %wd, prec = %wd\n", m, n, prec);
-                flint_printf("\n");
-
-                flint_printf("A = \n"); acb_mat_printd(A, 15); flint_printf("\n\n");
-
-                flint_printf("sqrt(trace(A^H A)) = \n");
-                acb_printd(t, 15); flint_printf("\n\n");
-
-                flint_printf("frobenius_norm(A) = \n");
-                acb_printd(frobenius, 15); flint_printf("\n\n");
-
-                abort();
-            }
-
-            acb_clear(frobenius);
-        }
-
-        acb_mat_clear(A);
-        acb_mat_clear(AH);
-        acb_mat_clear(AHA);
-        acb_clear(t);
     }
 
     flint_randclear(state);
