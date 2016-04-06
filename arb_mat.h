@@ -343,6 +343,8 @@ void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec);
 
 void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
 
+int arb_mat_symmetric_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec);
+
 /* Sparsity structure */
 
 void arb_mat_entrywise_is_zero(fmpz_mat_t dest, const arb_mat_t src);
