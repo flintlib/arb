@@ -25,16 +25,6 @@
 
 #include "acb_mat.h"
 
-static void
-_acb_mat_conjugate_transpose(acb_mat_t B, const acb_mat_t A)
-{
-    slong i, j;
-    acb_mat_transpose(B, A);
-    for (i = 0; i < acb_mat_nrows(B); i++)
-        for (j = 0; j < acb_mat_ncols(B); j++)
-            acb_conj(acb_mat_entry(B, i, j), acb_mat_entry(B, i, j));
-}
-
 int main()
 {
     slong iter;
@@ -134,6 +124,7 @@ int main()
 
             flint_printf("trace(ab) = \n"); acb_printd(trab, 15); flint_printf("\n\n");
             flint_printf("trace(ba) = \n"); acb_printd(trba, 15); flint_printf("\n\n");
+            abort();
         }
 
         acb_clear(trab);
@@ -143,65 +134,6 @@ int main()
         acb_mat_clear(b);
         acb_mat_clear(ab);
         acb_mat_clear(ba);
-    }
-
-    /* check trace(A^H A) = frobenius_norm(A)^2 */
-    for (iter = 0; iter < 10000; iter++)
-    {
-        slong m, n, prec;
-        acb_mat_t A, AH, AHA;
-        acb_t t;
-        mag_t low, fro;
-
-        prec = 2 + n_randint(state, 200);
-
-        m = n_randint(state, 10);
-        n = n_randint(state, 10);
-
-        acb_mat_init(A, m, n);
-        acb_mat_randtest(A, state, 2 + n_randint(state, 100), 10);
-
-        acb_mat_init(AH, n, m);
-        _acb_mat_conjugate_transpose(AH, A);
-
-        acb_mat_init(AHA, n, n);
-        acb_mat_mul(AHA, AH, A, prec);
-
-        acb_init(t);
-        acb_mat_trace(t, AHA, prec);
-        acb_sqrt(t, t, prec);
-
-        mag_init(low);
-        acb_get_mag_lower(low, t);
-
-        mag_init(fro);
-        acb_mat_bound_fro_norm(fro, A);
-
-        if (mag_cmp(low, fro) > 0)
-        {
-            flint_printf("FAIL (frobenius norm)\n", iter);
-            flint_printf("m = %wd, n = %wd, prec = %wd\n", m, n, prec);
-            flint_printf("\n");
-
-            flint_printf("A = \n"); acb_mat_printd(A, 15); flint_printf("\n\n");
-
-            flint_printf("lower(sqrt(trace(A^H A))) = \n");
-            mag_printd(low, 15); flint_printf("\n\n");
-
-            flint_printf("upper(frobenius_norm(A)) = \n");
-            mag_printd(fro, 15); flint_printf("\n\n");
-
-            abort();
-        }
-
-        acb_clear(t);
-
-        mag_clear(low);
-        mag_clear(fro);
-
-        acb_mat_clear(A);
-        acb_mat_clear(AH);
-        acb_mat_clear(AHA);
     }
 
     flint_randclear(state);

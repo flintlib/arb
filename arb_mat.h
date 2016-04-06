@@ -142,7 +142,9 @@ void arb_mat_transpose(arb_mat_t mat1, const arb_mat_t mat2);
 
 void arb_mat_bound_inf_norm(mag_t b, const arb_mat_t A);
 
-void arb_mat_bound_fro_norm(mag_t b, const arb_mat_t A);
+void arb_mat_frobenius_norm(arb_t res, const arb_mat_t A, slong prec);
+
+void arb_mat_bound_frobenius_norm(mag_t b, const arb_mat_t A);
 
 /* Arithmetic */
 

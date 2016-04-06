@@ -26,7 +26,7 @@
 #include "acb_mat.h"
 
 void
-acb_mat_bound_fro_norm(mag_t b, const acb_mat_t A)
+acb_mat_bound_frobenius_norm(mag_t b, const acb_mat_t A)
 {
     slong i, j, r, c;
     mag_t t;
@@ -45,7 +45,7 @@ acb_mat_bound_fro_norm(mag_t b, const acb_mat_t A)
     {
         for (j = 0; j < c; j++)
         {
-            acb_ptr z = acb_mat_entry(A, i, j);
+            acb_srcptr z = acb_mat_entry(A, i, j);
             arb_get_mag(t, acb_realref(z));
             mag_addmul(b, t, t);
             arb_get_mag(t, acb_imagref(z));
