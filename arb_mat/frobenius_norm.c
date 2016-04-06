@@ -23,37 +23,29 @@
 
 ******************************************************************************/
 
-#include "acb_mat.h"
+#include "arb_mat.h"
 
 void
-acb_mat_bound_frobenius_norm(mag_t b, const acb_mat_t A)
+arb_mat_frobenius_norm(arb_t res, const arb_mat_t A, slong prec)
 {
     slong i, j, r, c;
-    mag_t t;
 
-    r = acb_mat_nrows(A);
-    c = acb_mat_ncols(A);
+    r = arb_mat_nrows(A);
+    c = arb_mat_ncols(A);
 
-    mag_zero(b);
+    arb_zero(res);
 
     if (r == 0 || c == 0)
         return;
-
-    mag_init(t);
 
     for (i = 0; i < r; i++)
     {
         for (j = 0; j < c; j++)
         {
-            acb_srcptr z = acb_mat_entry(A, i, j);
-            arb_get_mag(t, acb_realref(z));
-            mag_addmul(b, t, t);
-            arb_get_mag(t, acb_imagref(z));
-            mag_addmul(b, t, t);
+            arb_srcptr x = arb_mat_entry(A, i, j);
+            arb_addmul(res, x, x, prec);
         }
     }
 
-    mag_sqrt(b, b);
-
-    mag_clear(t);
+    arb_sqrtpos(res, res, prec);
 }

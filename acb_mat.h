@@ -150,6 +150,8 @@ void acb_mat_transpose(acb_mat_t mat1, const acb_mat_t mat2);
 
 void acb_mat_bound_inf_norm(mag_t b, const acb_mat_t A);
 
+void acb_mat_frobenius_norm(arb_t res, const acb_mat_t A, slong prec);
+
 void acb_mat_bound_frobenius_norm(mag_t b, const acb_mat_t A);
 
 /* Arithmetic */
