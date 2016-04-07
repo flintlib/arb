@@ -457,6 +457,21 @@ Special functions
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
 
+.. function:: int _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec)
+
+.. function:: int arb_mat_symmetric_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec)
+
+    Given a d x d real symmetric matrix A, compute an orthogonal matrix
+    P and a diagonal D such that A = P D P^t = P D P^(-1).
+
+    D should have already been initialized as a d x 1 matrix, and P
+    should have already been initialized as a d x d matrix.
+
+    If the eigenvalues can be certified as unique, then a nonzero int is
+    returned, and the eigenvectors should have reasonable error bounds. If
+    the eigenvalues cannot be certified as unique, then some of the
+    eigenvectors will have infinite error radius.
+
 Sparsity structure
 -------------------------------------------------------------------------------
 

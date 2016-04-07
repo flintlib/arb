@@ -43,7 +43,7 @@ int main()
         slong prec;
         arb_mat_t D, P, A;
 
-        n = n_randint(state, 6) + 2;
+        n = n_randint(state, 8);
         prec = 2 + n_randint(state, 202);
 
         arb_mat_init(D, n, 1);
