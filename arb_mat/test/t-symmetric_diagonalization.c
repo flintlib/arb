@@ -37,8 +37,6 @@ int main()
 
     for (iter = 0; iter < 10000; iter++)
     {
-        /* flint_printf("symmetric diagonalization iter %wd\n", iter); */
-
         slong i, j, n;
         slong prec;
         arb_mat_t D, P, A;
@@ -54,37 +52,6 @@ int main()
         for (i = 0; i < n; i++)
             for (j = 0; j < i; j++)
                 arb_set(arb_mat_entry(A, i, j), arb_mat_entry(A, j, i));
-
-        /*
-        prec = 114;
-        arb_one(arb_mat_entry(A, 0, 0));
-        arb_zero(arb_mat_entry(A, 1, 1));
-        arb_set_d(arb_mat_entry(A, 0, 1), 1e39);
-        arb_set_d(arb_mat_entry(A, 1, 0), 1e39);
-        */
-
-        /*
-        prec = 64;
-        arb_mat_zero(A);
-        arb_one(arb_mat_entry(A, 0, 0));
-        arb_zero(arb_mat_entry(A, 1, 1));
-        arf_set_si_2exp_si(arb_midref(arb_mat_entry(A, 0, 1)), 1, 60);
-        arf_set_si_2exp_si(arb_midref(arb_mat_entry(A, 1, 0)), 1, 60);
-        */
-
-        /*
-        prec = 114
-            A = 
-            [1.29185485839844 +/- 9.8608e-32, 3.34374580571462e+38 +/- 3.3554e+07]
-            [3.34374580571462e+38 +/- 3.3554e+07, 1.66605735186693e-13 +/- 0]
-
-        */
-
-        /*
-        flint_printf("before diagonalization:\n");
-        flint_printf("prec = %wd\n", prec);
-        flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
-        */
 
         arb_mat_symmetric_diagonalization(D, P, A, prec);
 
@@ -102,11 +69,6 @@ int main()
             for (i = 0; i < n; i++)
             {
                 arb_srcptr x = arb_mat_entry(D, i, 0);
-
-                /*
-                flint_printf("eigenvalue %wd : ", i);
-                arb_printd(x, 15); flint_printf("\n");
-                */
 
                 arb_poly_evaluate(y, f, x, prec);
                 if (!arb_contains_zero(y))
