@@ -35,13 +35,13 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10; iter++)
+    for (iter = 0; iter < 10000; iter++)
     {
         /* flint_printf("symmetric diagonalization iter %wd\n", iter); */
 
-        slong n;
+        slong i, j, n;
         slong prec;
-        arb_mat_t D, P, A, AT;
+        arb_mat_t D, P, A;
 
         n = n_randint(state, 6) + 2;
         prec = 2 + n_randint(state, 202);
@@ -49,14 +49,40 @@ int main()
         arb_mat_init(D, n, 1);
         arb_mat_init(P, n, n);
         arb_mat_init(A, n, n);
-        arb_mat_init(AT, n, n);
 
         arb_mat_randtest(A, state, 2 + n_randint(state, 100), 10);
-        arb_mat_transpose(AT, A);
-        arb_mat_add(A, A, AT, prec);
+        for (i = 0; i < n; i++)
+            for (j = 0; j < i; j++)
+                arb_set(arb_mat_entry(A, i, j), arb_mat_entry(A, j, i));
+
+        /*
+        prec = 114;
+        arb_one(arb_mat_entry(A, 0, 0));
+        arb_zero(arb_mat_entry(A, 1, 1));
+        arb_set_d(arb_mat_entry(A, 0, 1), 1e39);
+        arb_set_d(arb_mat_entry(A, 1, 0), 1e39);
+        */
+
+        /*
+        prec = 64;
+        arb_mat_zero(A);
+        arb_one(arb_mat_entry(A, 0, 0));
+        arb_zero(arb_mat_entry(A, 1, 1));
+        arf_set_si_2exp_si(arb_midref(arb_mat_entry(A, 0, 1)), 1, 60);
+        arf_set_si_2exp_si(arb_midref(arb_mat_entry(A, 1, 0)), 1, 60);
+        */
+
+        /*
+        prec = 114
+            A = 
+            [1.29185485839844 +/- 9.8608e-32, 3.34374580571462e+38 +/- 3.3554e+07]
+            [3.34374580571462e+38 +/- 3.3554e+07, 1.66605735186693e-13 +/- 0]
+
+        */
 
         /*
         flint_printf("before diagonalization:\n");
+        flint_printf("prec = %wd\n", prec);
         flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
         */
 
@@ -76,6 +102,12 @@ int main()
             for (i = 0; i < n; i++)
             {
                 arb_srcptr x = arb_mat_entry(D, i, 0);
+
+                /*
+                flint_printf("eigenvalue %wd : ", i);
+                arb_printd(x, 15); flint_printf("\n");
+                */
+
                 arb_poly_evaluate(y, f, x, prec);
                 if (!arb_contains_zero(y))
                 {
@@ -91,10 +123,47 @@ int main()
             arb_clear(y);
         }
 
+        /* Multiplying out the decomposition should give the original matrix */
+        {
+            /* A = P * D * P^T */
+            slong i, j, k;
+            arb_t t;
+            arb_mat_t Y;
+
+            arb_init(t);
+            arb_mat_init(Y, n, n);
+
+            for (i = 0; i < n; i++)
+            {
+                for (j = 0; j < n; j++)
+                {
+                    for (k = 0; k < n; k++)
+                    {
+                        arb_mul(t, arb_mat_entry(P, i, k),
+                                   arb_mat_entry(P, j, k), prec);
+                        arb_addmul(arb_mat_entry(Y, i, j),
+                                   arb_mat_entry(D, k, 0), t, prec);
+                    }
+                }
+            }
+
+            if (!arb_mat_contains(Y, A))
+            {
+                flint_printf("FAIL (decomposition expansion)\n");
+                flint_printf("A = \n"); arb_mat_printd(A, 15);
+                flint_printf("D = \n"); arb_mat_printd(D, 15);
+                flint_printf("P = \n"); arb_mat_printd(P, 15);
+                flint_printf("P * D * P^T = \n"); arb_mat_printd(Y, 15);
+                abort();
+            }
+
+            arb_clear(t);
+            arb_mat_clear(Y);
+        }
+
         arb_mat_clear(D);
         arb_mat_clear(P);
         arb_mat_clear(A);
-        arb_mat_clear(AT);
     }
 
     flint_randclear(state);
