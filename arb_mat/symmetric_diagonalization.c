@@ -29,7 +29,8 @@ void arb_set_exact(arb_t x) {
     mag_zero(arb_radref(x));
 }
 
-void arf_twobytwo_diag(arf_t u1, arf_t u2, const arf_t a, const arf_t b, const arf_t d, slong prec) {
+void arf_twobytwo_diag(arf_t u1, arf_t u2,
+        const arf_t a, const arf_t b, const arf_t d, slong prec) {
     /*
     // Compute the orthogonal matrix that diagonalizes
     //
@@ -46,9 +47,11 @@ void arf_twobytwo_diag(arf_t u1, arf_t u2, const arf_t a, const arf_t b, const a
     */
     arf_t x;
 
-    if(arf_is_zero(b)) {
+    if(arf_is_zero(b))
+    {
         arf_set_ui(u1, 1);
         arf_set_ui(u2, 0);
+        flint_printf("b is zero\n");
         return;
     }
     arf_init(x);
@@ -71,6 +74,23 @@ void arf_twobytwo_diag(arf_t u1, arf_t u2, const arf_t a, const arf_t b, const a
     arf_div(u2, u1, x, prec, ARF_RND_NEAR);
     arf_div(u1, b, x, prec, ARF_RND_NEAR);
     arf_neg(u1, u1);
+
+    /*
+     * if u1 = cos x and u2 = -sin x then they should satisfy
+     * certain invariants if the calculation did not fail too badly.
+     * For example u1^2 + u2^2 should be 1.
+     */
+    /*
+    {
+        arf_t s;
+        arf_init(s);
+        arf_addmul(s, u1, u1, prec, ARF_RND_NEAR);
+        arf_addmul(s, u2, u2, prec, ARF_RND_NEAR);
+        flint_printf("2x2 pythagorean identity : ");
+        arf_printd(s, 15); flint_printf("\n");
+        arf_clear(s);
+    }
+    */
 
     arf_clear(x);
 }
@@ -99,7 +119,7 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
     int dim, i, j, k, l;
     int iter, finished;
     arb_mat_t B;
-    arf_t x1, x2;
+    arf_t x1;
     arf_t Gii, Gij, Gji, Gjj;
 
     dim = arb_mat_nrows(A);
@@ -124,7 +144,6 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
     }
 
     arf_init(x1);
-    arf_init(x2);
 
     arf_init(Gii);
     arf_init(Gij);
@@ -150,7 +169,6 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
         slong bound;
 
         iter++;
-        /* flint_printf("jacobi iter %wd\n", iter); */
 
         arf_zero(x1);
         i = 0;
@@ -164,14 +182,36 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
         j = row_max_indices[i];
 
         bound = arf_abs_bound_lt_2exp_si(x1);
+
+        /*
+        flint_printf("iter=%wd bound=%wd\n", iter, bound);
+        flint_printf("B = \n");
+        arb_mat_printd(B, 15);
+        flint_printf("P = \n");
+        arb_mat_printd(P, 15);
+        flint_printf("\n");
+        */
+
         if(bound < -prec * .9) {
             finished = 1;
             break;
         }
 
-        arf_twobytwo_diag(Gii, Gij, arb_midref(B(i,i)), arb_midref(B(i,j)), arb_midref(B(j,j)), 2*prec);
+        arf_twobytwo_diag(
+                Gii, Gij,
+                arb_midref(B(i,i)), arb_midref(B(i,j)), arb_midref(B(j,j)),
+                2*prec);
         arf_neg(Gji, Gij);
         arf_set(Gjj, Gii);
+
+        /*
+        flint_printf("i=%wd j=%wd\n", i, j);
+        flint_printf("Gii =\n");
+        arf_printd(Gii, 15); flint_printf("\n");
+        flint_printf("Gij =\n");
+        arf_printd(Gij, 15); flint_printf("\n");
+        flint_printf("\n\n");
+        */
 
         if(arf_is_zero(Gij)) {  /* If this happens, we're */
             finished = 1;       /* not going to do any better */
@@ -189,6 +229,7 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
             arf_set(arb_midref(B(i,k)), B1[k]);
             arf_set(arb_midref(B(j,k)), B2[k]);
         }
+
         for(k = 0; k < dim; k++) {
             arf_mul(B1[k], Gii, arb_midref(B(k,i)), prec, ARF_RND_NEAR);
             arf_addmul(B1[k], Gji, arb_midref(B(k,j)), prec, ARF_RND_NEAR);
@@ -212,6 +253,10 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
             arf_set(arb_midref(P(k,i)), B1[k]);
             arf_set(arb_midref(P(k,j)), B2[k]);
         }
+
+        /* Declare that the 2x2 diagonalization was successful. */
+        arf_zero(arb_midref(B(i, j)));
+        arf_zero(arb_midref(B(j, i)));
 
         if(i < dim - 1)
             arf_set_ui(row_max[i], 0);
@@ -290,12 +335,15 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
     {
     arb_mat_t e;
     arb_struct *error_norms;
+    arf_t x2;
     arb_t z1, z2;
     int unique_eigenvalues = 1;
 
     error_norms = _arb_vec_init(dim);
 
     arb_mat_init(e, dim, 1);
+
+    arf_init(x2);
 
     arb_init(z1);
     arb_init(z2);
@@ -364,6 +412,28 @@ int _arb_mat_jacobi(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
     free(B2);
     free(row_max);
     free(row_max_indices);
+
+    /* Normalize columns of P. */
+    {
+        arb_t t;
+        arb_init(t);
+        for (j = 0; j < dim; j++)
+        {
+            arb_zero(t);
+            for (i = 0; i < dim; i++)
+            {
+                arb_srcptr z = arb_mat_entry(P, i, j);
+                arb_addmul(t, z, z, prec);
+            }
+            arb_sqrtpos(t, t, prec);
+            for (i = 0; i < dim; i++)
+            {
+                arb_ptr z = arb_mat_entry(P, i, j);
+                arb_div(z, z, t, prec);
+            }
+        }
+        arb_clear(t);
+    }
 
     if(unique_eigenvalues) return 0;
     else return 1;
