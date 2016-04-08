@@ -100,18 +100,6 @@ _arf_twobytwo_diag(arf_t u1, arf_t u2,
 
 int
 _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec) {
-    /*
-    // Given a d x d real symmetric matrix A, compute an orthogonal matrix
-    // P and a diagonal D such that A = P D P^t = P D P^(-1).
-    //
-    // D should have already been initialized as a d x 1 matrix, and P
-    // should have already been initialized as a d x d matrix.
-    //
-    // If the eigenvalues can be certified as unique, then a nonzero int is
-    // returned, and the eigenvectors should have reasonable error bounds. If
-    // the eigenvalues cannot be certified as unique, then some of the
-    // eigenvectors will have infinite error radius.
-    */
 
 #define B(i,j) arb_mat_entry(B, i, j)
 #define D(i) arb_mat_entry(D, i, 0)
@@ -150,7 +138,7 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
     {
         arb_mat_set(D, A);
         arb_mat_one(P);
-        return 1;
+        return 0;
     }
     arb_mat_init(B, dim, dim);
 
@@ -451,8 +439,11 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arb_clear(t);
     }
 
-    if(unique_eigenvalues) return 0;
-    else return 1;
+    if (unique_eigenvalues)
+        return 0;
+    else
+        return 1;
+
 #undef B
 #undef D
 #undef P
