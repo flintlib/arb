@@ -23,6 +23,7 @@
 
 ******************************************************************************/
 
+#include "flint/fmpq_mat.h"
 #include "arb_mat.h"
 
 /*
@@ -114,7 +115,8 @@ _test_dct2(flint_rand_t state)
 {
     slong n, p1, p2, logscale;
 
-    n = n_randint(state, 8) + 2;
+    /* n = n_randint(state, 8) + 2; */
+    n = 5;
     p1 = 2 + n_randint(state, 202);
     p2 = 2 + n_randint(state, 202);
 
@@ -122,7 +124,7 @@ _test_dct2(flint_rand_t state)
     /* logscale = n_randint(state, 4); */
 
     /* but this one, not so much... */
-    logscale = n_randint(state, 1000);
+    logscale = n_randint(state, 10);
 
     if (n_randint(state, 2))
         logscale = -logscale;
@@ -149,6 +151,7 @@ _test_dct2(flint_rand_t state)
         if (!arb_mat_overlaps(D, Dt))
         {
             flint_printf("FAIL (DCT-II eigenvalues)\n");
+            flint_printf("logscale=%wd p1=%wd p2=%wd\n", logscale, p1, p2);
             flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
             flint_printf("eigenvalues computed using diagonalization = \n");
             arb_mat_printd(D, 15); flint_printf("\n");
@@ -160,6 +163,7 @@ _test_dct2(flint_rand_t state)
         if (!arb_mat_overlaps(P, Pt))
         {
             flint_printf("FAIL (DCT-II eigenvectors)\n");
+            flint_printf("logscale=%wd p1=%wd p2=%wd\n", logscale, p1, p2);
             flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
             flint_printf("eigenvalues computed using diagonalization = \n");
             arb_mat_printd(D, 15); flint_printf("\n");
@@ -180,6 +184,175 @@ _test_dct2(flint_rand_t state)
     }
 }
 
+static int
+_fmpq_mat_is_symmetric(const fmpq_mat_t Q)
+{
+    slong i, j;
+    if (!fmpq_mat_is_square(Q))
+        return 0;
+    for (i = 0; i < fmpq_mat_nrows(Q); i++)
+        for (j = 0; j < i; j++)
+            if (!fmpq_equal(fmpq_mat_entry(Q, i, j), fmpq_mat_entry(Q, j, i)))
+                return 0;
+    return 1;
+}
+
+static int
+_fmpq_mat_is_one(const fmpq_mat_t Q)
+{
+    slong i, j, n;
+    if (!fmpq_mat_is_square(Q))
+        return 0;
+    n = fmpq_mat_nrows(Q);
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            fmpq *q = fmpq_mat_entry(Q, i, j);
+            if (i == j && !fmpq_is_one(q))
+                return 0;
+            if (i != j && !fmpq_is_zero(q))
+                return 0;
+        }
+    }
+    return 1;
+}
+
+static void
+_fmpq_mat_randtest_skew_symmetric(
+        fmpq_mat_t Q, flint_rand_t state, mp_bitcnt_t bits)
+{
+    slong i, j, n;
+    if (!fmpq_mat_is_square(Q)) abort(); /* assert */
+    fmpq_mat_randtest(Q, state, bits);
+    n = fmpq_mat_nrows(Q);
+    for (i = 0; i < n; i++)
+        fmpq_zero(fmpq_mat_entry(Q, i, i));
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < i; j++)
+        {
+            fmpq_neg(fmpq_mat_entry(Q, i, j),
+                     fmpq_mat_entry(Q, j, i));
+        }
+    }
+}
+
+void
+_fmpq_mat_randtest_orthogonal(
+        fmpq_mat_t Q, flint_rand_t state, mp_bitcnt_t bits)
+{
+    /*
+     * S -> (S - I)^-1 (S + I)
+     * The Generation of All Rational Orthogonal Matrices
+     * Hans Liebeck and Anthony Osborne
+     * The American Mathematical Monthly,
+     * Vol 98, No 2, Feb 1991, pp 131--133.
+     */
+    slong n;
+    int invertible;
+    fmpq_mat_t S, I, A, B;
+    if (!fmpq_mat_is_square(Q)) abort(); /* assert */
+    n = fmpq_mat_nrows(Q);
+    fmpq_mat_init(S, n, n);
+    fmpq_mat_init(I, n, n);
+    fmpq_mat_init(A, n, n);
+    fmpq_mat_init(B, n, n);
+    _fmpq_mat_randtest_skew_symmetric(S, state, bits);
+    fmpq_mat_one(I);
+    fmpq_mat_sub(A, S, I);
+    fmpq_mat_add(B, S, I);
+    invertible = fmpq_mat_solve_fraction_free(Q, A, B);
+    if (!invertible) abort(); /* assert */
+    fmpq_mat_clear(S);
+    fmpq_mat_clear(I);
+    fmpq_mat_clear(A);
+    fmpq_mat_clear(B);
+}
+
+void
+_test_eigenvalue_separation(flint_rand_t state)
+{
+    slong i, n, prec, k;
+    fmpq_mat_t Q, QT, D, A, Dq;
+    mp_bitcnt_t bits;
+    int ambiguous;
+
+    bits = 20;
+    n = 4;
+
+    fmpq_mat_init(Q, n, n);
+    fmpq_mat_init(QT, n, n);
+    fmpq_mat_init(A, n, n);
+    fmpq_mat_init(D, n, n);
+    fmpq_mat_init(Dq, n, n);
+
+    _fmpq_mat_randtest_orthogonal(Q, state, bits);
+    fmpq_mat_transpose(QT, Q);
+
+    /* check an orthogonality property */
+    fmpq_mat_mul(A, Q, QT);
+    if (!_fmpq_mat_is_one(A)) abort(); /* assert */
+
+    k = 1 << 24;
+    fmpq_set_si(fmpq_mat_entry(D, 0, 0), 1, k);
+    fmpq_set_si(fmpq_mat_entry(D, 1, 1), k, k);
+    fmpq_set_si(fmpq_mat_entry(D, 2, 2), k+1, k);
+    fmpq_set_si(fmpq_mat_entry(D, 3, 3), k, 1);
+    fmpq_mat_mul(A, Q, D);
+    fmpq_mat_mul(A, A, QT);
+
+    if (!_fmpq_mat_is_symmetric(A)) abort(); /* assert */
+
+    fmpq_mat_init(Dq, n, 1);
+    for (i = 0; i < n; i++)
+    {
+        fmpq_set(fmpq_mat_entry(Dq, i, 0), fmpq_mat_entry(D, i, i));
+    }
+
+    /* try to separate the eigenvalues in A */
+    ambiguous = 0;
+    for (prec = 2; prec < 10000; prec <<= 1)
+    {
+        arb_mat_t Ar, Dr, Pr;
+
+        /* flint_printf("prec=%wd\n", prec); */
+        arb_mat_init(Ar, n, n);
+        arb_mat_init(Dr, n, 1);
+        arb_mat_init(Pr, n, n);
+        arb_mat_set_fmpq_mat(Ar, A, prec);
+        /* arb_mat_printd(Ar, 15); */
+        ambiguous = arb_mat_symmetric_diagonalization(Dr, Pr, Ar, prec);
+        if (!ambiguous)
+        {
+            if (!arb_mat_contains_fmpq_mat(Dr, Dq))
+            {
+                flint_printf("FAIL (eigenvalue containment)\n");
+                flint_printf("Dr = \n"); arb_mat_printd(Dr, 15); flint_printf("\n");
+                flint_printf("Dq = \n"); fmpq_mat_print(Dq); flint_printf("\n");
+                abort();
+            }
+        }
+        arb_mat_clear(Ar);
+        arb_mat_clear(Dr);
+        arb_mat_clear(Pr);
+        if (!ambiguous)
+            break;
+    }
+    if (ambiguous)
+    {
+        flint_printf("FAIL (eigenvalue ambiguity)\n");
+        flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n");
+        abort();
+    }
+
+    fmpq_mat_clear(Q);
+    fmpq_mat_clear(QT);
+    fmpq_mat_clear(A);
+    fmpq_mat_clear(D);
+    fmpq_mat_clear(Dq);
+}
+
 int main()
 {
     slong iter;
@@ -190,8 +363,13 @@ int main()
 
     flint_randinit(state);
 
-    /* test known diagonalizations */
     for (iter = 0; iter < 100; iter++)
+    {
+        _test_eigenvalue_separation(state);
+    }
+
+    /* test known diagonalizations */
+    for (iter = 0; iter < 10000; iter++)
     {
         _test_dct2(state);
     }
