@@ -25,6 +25,161 @@
 
 #include "arb_mat.h"
 
+/*
+ *  1 -1
+ * -1  2 -1
+ *    -1  2 -1
+ *        .  .  .
+ *          -1  2 -1
+ *             -1  1
+ */
+static void
+_dct2_A(arb_mat_t A)
+{
+    slong k, n;
+    n = arb_mat_nrows(A);
+    arb_mat_zero(A);
+    for (k = 0; k < n-1; k++)
+    {
+        arb_set_si(arb_mat_entry(A, k+1, k), -1);
+        arb_set_si(arb_mat_entry(A, k, k+1), -1);
+    }
+    for (k = 1; k < n-1; k++)
+    {
+        arb_set_si(arb_mat_entry(A, k, k), 2);
+    }
+    arb_set_si(arb_mat_entry(A, 0, 0), 1);
+    arb_set_si(arb_mat_entry(A, n-1, n-1), 1);
+}
+
+void
+_dct2_P(arb_mat_t P, slong prec)
+{
+    slong j, k, n;
+    arb_t x, r;
+
+    n = arb_mat_nrows(P);
+    arb_init(x);
+    arb_init(r);
+
+    /* set the first column to 1/sqrt(n) */
+    arb_set_si(x, n);
+    arb_rsqrt(x, x, prec);
+    for (j = 0; j < n; j++)
+    {
+        arb_set(arb_mat_entry(P, j, 0), x);
+    }
+
+    /* set remaining columns to sqrt(2/n)*cos[(j+1/2)*k*pi/n] */
+    arb_set_si(r, n);
+    arb_mul_2exp_si(r, r, -1);
+    arb_rsqrt(r, r, prec);
+    for (k = 1; k < n; k++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            arb_set_d(x, (2*j + 1) * k);
+            arb_div_si(x, x, 2*n, prec);
+            arb_cos_pi(x, x, prec);
+            arb_mul(arb_mat_entry(P, j, k), x, r, prec);
+        }
+    }
+    arb_clear(x);
+    arb_clear(r);
+}
+
+void
+_dct2_D(arb_mat_t D, slong prec)
+{
+    slong k, n;
+    arb_t x;
+
+    n = arb_mat_nrows(D);
+    arb_init(x);
+    for (k = 0; k < n; k++)
+    {
+        arb_set_si(x, k);
+        arb_div_si(x, x, n, prec);
+        arb_cos_pi(x, x, prec);
+        arb_sub_si(x, x, 1, prec);
+        arb_neg(x, x);
+        arb_mul_2exp_si(x, x, 1);
+        arb_set(arb_mat_entry(D, k, 0), x);
+    }
+    arb_clear(x);
+}
+
+static void
+_test_dct2(flint_rand_t state)
+{
+    slong n, p1, p2, logscale;
+
+    n = n_randint(state, 8) + 2;
+    p1 = 2 + n_randint(state, 202);
+    p2 = 2 + n_randint(state, 202);
+
+    /* this works for me */
+    /* logscale = n_randint(state, 4); */
+
+    /* but this one, not so much... */
+    logscale = n_randint(state, 1000);
+
+    if (n_randint(state, 2))
+        logscale = -logscale;
+
+    {
+        arb_mat_t A, D, P, Dt, Pt;
+
+        arb_mat_init(A, n, n);
+        arb_mat_init(D, n, 1);
+        arb_mat_init(P, n, n);
+        arb_mat_init(Dt, n, 1);
+        arb_mat_init(Pt, n, n);
+
+        /* compute the diagonalization of the scaled DCT-II matrix */
+        _dct2_A(A);
+        arb_mat_scalar_mul_2exp_si(A, A, logscale);
+        arb_mat_symmetric_diagonalization(D, P, A, p1);
+
+        /* compute the true eigenvectors and the true scaled eigenvalues */
+        _dct2_D(Dt, p2);
+        _dct2_P(Pt, p2);
+        arb_mat_scalar_mul_2exp_si(Dt, Dt, logscale);
+
+        if (!arb_mat_overlaps(D, Dt))
+        {
+            flint_printf("FAIL (DCT-II eigenvalues)\n");
+            flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
+            flint_printf("eigenvalues computed using diagonalization = \n");
+            arb_mat_printd(D, 15); flint_printf("\n");
+            flint_printf("true eigenvalues = \n");
+            arb_mat_printd(Dt, 15); flint_printf("\n");
+            abort();
+        }
+
+        if (!arb_mat_overlaps(P, Pt))
+        {
+            flint_printf("FAIL (DCT-II eigenvectors)\n");
+            flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n");
+            flint_printf("eigenvalues computed using diagonalization = \n");
+            arb_mat_printd(D, 15); flint_printf("\n");
+            flint_printf("true eigenvalues = \n");
+            arb_mat_printd(Dt, 15); flint_printf("\n");
+            flint_printf("eigenvectors computed using diagonalization = \n");
+            arb_mat_printd(P, 15); flint_printf("\n");
+            flint_printf("true eigenvectors = \n");
+            arb_mat_printd(Pt, 15); flint_printf("\n");
+            abort();
+        }
+
+        arb_mat_clear(A);
+        arb_mat_clear(D);
+        arb_mat_clear(P);
+        arb_mat_clear(Dt);
+        arb_mat_clear(Pt);
+    }
+}
+
 int main()
 {
     slong iter;
@@ -34,6 +189,12 @@ int main()
     fflush(stdout);
 
     flint_randinit(state);
+
+    /* test known diagonalizations */
+    for (iter = 0; iter < 100; iter++)
+    {
+        _test_dct2(state);
+    }
 
     for (iter = 0; iter < 10000; iter++)
     {
