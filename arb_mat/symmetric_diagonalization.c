@@ -81,7 +81,7 @@ _sort_decomposition(arb_mat_t D, arb_mat_t P)
     flint_free(s);
 }
 
-/* multiplies each column by the sign of its first nonzero entry midpoint */
+/* multiplies each column by the sign of its leading nonzero midpoint */
 static void
 _standardize_column_signs(arb_mat_t P)
 {
@@ -181,7 +181,7 @@ _arf_twobytwo_diag(arf_t u1, arf_t u2,
     arf_t x;
     arf_t r;
 
-    if(arf_is_zero(b))
+    if (arf_is_zero(b))
     {
         arf_set_ui(u1, 1);
         arf_set_ui(u2, 0);
@@ -260,12 +260,12 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
     row_max = flint_malloc((dim - 1) * sizeof(arf_struct));
     row_max_indices = flint_malloc((dim - 1) * sizeof(int));
 
-    for(k = 0; k < dim; k++)
+    for (k = 0; k < dim; k++)
     {
         arf_init(B1+k);
         arf_init(B2+k);
     }
-    for(k = 0; k < dim - 1; k++)
+    for (k = 0; k < dim - 1; k++)
     {
         arf_init(row_max+k);
     }
@@ -280,9 +280,9 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
     arb_mat_set(B, A);
     arb_mat_one(P);
 
-    for(i = 0; i < dim - 1; i++)
+    for (i = 0; i < dim - 1; i++)
     {
-        for(j = i + 1; j < dim; j++)
+        for (j = i + 1; j < dim; j++)
         {
             arf_abs(x1, arb_midref(B(i,j)));
             if (arf_cmp(row_max+i, x1) <= 0)
@@ -295,7 +295,8 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
 
     finished = 0;
     iter = 0;
-    while (!finished) {
+    while (!finished)
+    {
         slong bound;
 
         iter++;
@@ -303,8 +304,10 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arf_zero(x1);
         i = 0;
         j = 0;
-        for(k = 0; k < dim - 1; k++) {
-            if(arf_cmp(x1, row_max+k) < 0) {
+        for (k = 0; k < dim - 1; k++)
+        {
+            if (arf_cmp(x1, row_max+k) < 0)
+            {
                 arf_set(x1, row_max+k);
                 i = k;
             }
@@ -313,7 +316,8 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
 
         bound = arf_abs_bound_lt_2exp_si(x1);
 
-        if(bound < -prec * .9) {
+        if (bound < -prec * .9)
+        {
             finished = 1;
             break;
         }
@@ -325,43 +329,50 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arf_neg(Gji, Gij);
         arf_set(Gjj, Gii);
 
-        if(arf_is_zero(Gij)) {  /* If this happens, we're */
+        if (arf_is_zero(Gij))
+        {                       /* If this happens, we're */
             finished = 1;       /* not going to do any better */
             break;              /* without increasing the precision. */
         }
 
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_mul(B1+k, Gii, arb_midref(B(i,k)), prec, ARF_RND_NEAR);
             arf_addmul(B1+k, Gji, arb_midref(B(j,k)), prec, ARF_RND_NEAR);
 
             arf_mul(B2+k, Gij, arb_midref(B(i,k)), prec, ARF_RND_NEAR);
             arf_addmul(B2+k, Gjj, arb_midref(B(j,k)), prec, ARF_RND_NEAR);
         }
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_set(arb_midref(B(i,k)), B1+k);
             arf_set(arb_midref(B(j,k)), B2+k);
         }
 
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_mul(B1+k, Gii, arb_midref(B(k,i)), prec, ARF_RND_NEAR);
             arf_addmul(B1+k, Gji, arb_midref(B(k,j)), prec, ARF_RND_NEAR);
 
             arf_mul(B2+k, Gij, arb_midref(B(k,i)), prec, ARF_RND_NEAR);
             arf_addmul(B2+k, Gjj, arb_midref(B(k,j)), prec, ARF_RND_NEAR);
         }
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_set(arb_midref(B(k,i)), B1+k);
             arf_set(arb_midref(B(k,j)), B2+k);
         }
 
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_mul(B1+k, Gii, arb_midref(P(k,i)), prec, ARF_RND_NEAR);
             arf_addmul(B1+k, Gji, arb_midref(P(k,j)), prec, ARF_RND_NEAR);
 
             arf_mul(B2+k, Gij, arb_midref(P(k,i)), prec, ARF_RND_NEAR);
             arf_addmul(B2+k, Gjj, arb_midref(P(k,j)), prec, ARF_RND_NEAR);
         }
-        for(k = 0; k < dim; k++) {
+        for (k = 0; k < dim; k++)
+        {
             arf_set(arb_midref(P(k,i)), B1+k);
             arf_set(arb_midref(P(k,j)), B2+k);
         }
@@ -370,20 +381,24 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arf_zero(arb_midref(B(i, j)));
         arf_zero(arb_midref(B(j, i)));
 
-        if(i < dim - 1)
+        if (i < dim - 1)
             arf_zero(row_max+i);
-        if(j < dim - 1)
+        if (j < dim - 1)
             arf_zero(row_max+j);
 
         /* Update the max in any row where the maximum
-        // was in a column that changed. */
-        for(k = 0; k < dim - 1; k++) {
-            if(row_max_indices[k] == j || row_max_indices[k] == i) {
+         * was in a column that changed. */
+        for (k = 0; k < dim - 1; k++)
+        {
+            if (row_max_indices[k] == j || row_max_indices[k] == i)
+            {
                 arf_abs(row_max+k, arb_midref(B(k,k+1)));
                 row_max_indices[k] = k+1;
-                for(l = k+2; l < dim; l++) {
+                for (l = k+2; l < dim; l++)
+                {
                     arf_abs(x1, arb_midref(B(k,l)));
-                    if(arf_cmp(row_max+k, x1) < 0) {
+                    if (arf_cmp(row_max+k, x1) < 0)
+                    {
                         arf_set(row_max+k, x1);
                         row_max_indices[k] = l;
                     }
@@ -392,42 +407,50 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         }
 
         /* Update the max in the ith row. */
-        for(k = i + 1; k < dim; k++) {
+        for (k = i + 1; k < dim; k++)
+        {
             arf_abs(x1, arb_midref(B(i, k)));
-            if(arf_cmp(row_max+i, x1) < 0) {
+            if (arf_cmp(row_max+i, x1) < 0)
+            {
                 arf_set(row_max+i, x1);
                 row_max_indices[i] = k;
             }
         }
 
         /* Update the max in the jth row. */
-        for(k = j + 1; k < dim; k++) {
+        for (k = j + 1; k < dim; k++)
+        {
             arf_abs(x1, arb_midref(B(j, k)));
-            if(arf_cmp(row_max+j, x1) < 0) {
+            if (arf_cmp(row_max+j, x1) < 0)
+            {
                 arf_set(row_max+j, x1);
                 row_max_indices[j] = k;
             }
         }
 
-        /*
-        // Go through column i to see if any of
-        // the new entries are larger than the
-        // max of their row.
-        // */
-        for(k = 0; k < i; k++) {
-            if(k == dim) continue;
+        /* Go through column i to see if any of
+         * the new entries are larger than the
+         * max of their row. */
+        for (k = 0; k < i; k++)
+        {
+            if (k == dim)
+                continue;
             arf_abs(x1, arb_midref(B(k, i)));
-            if(arf_cmp(row_max+k, x1) < 0) {
+            if (arf_cmp(row_max+k, x1) < 0)
+            {
                 arf_set(row_max+k, x1);
                 row_max_indices[k] = i;
             }
         }
 
         /* And then column j. */
-        for(k = 0; k < j; k++) {
-            if(k == dim) continue;
+        for (k = 0; k < j; k++)
+        {
+            if (k == dim)
+                continue;
             arf_abs(x1, arb_midref(B(k, j)));
-            if(arf_cmp(row_max+k, x1) < 0) {
+            if (arf_cmp(row_max+k, x1) < 0)
+            {
                 arf_set(row_max+k, x1);
                 row_max_indices[k] = j;
             }
@@ -439,12 +462,12 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
 
     arf_clear(x1);
     arb_mat_clear(B);
-    for(k = 0; k < dim; k++)
+    for (k = 0; k < dim; k++)
     {
         arf_clear(B1+k);
         arf_clear(B2+k);
     }
-    for(k = 0; k < dim - 1; k++)
+    for (k = 0; k < dim - 1; k++)
     {
         arf_clear(row_max+k);
     }
@@ -457,10 +480,8 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
     flint_free(row_max);
     flint_free(row_max_indices);
 
-    /*
-     * At this point we've done that diagonalization and all that remains is
-     * to certify the correctness and compute error bounds.
-     */
+    /* At this point we've done that diagonalization and all that remains is
+     * to certify the correctness and compute error bounds. */
     {
         arb_mat_t e;
         arb_struct *error_norms;
@@ -478,45 +499,56 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arb_init(z1);
         arb_init(z2);
 
-        for(j = 0; j < dim; j++)
+        for (j = 0; j < dim; j++)
         {
             arb_mat_set(B, A);
-            for(k = 0; k < dim; k++) {
+            for (k = 0; k < dim; k++)
+            {
                 arb_sub(B(k, k), B(k, k), D(j), prec);
             }
-            for(k = 0; k < dim; k++) {
+            for (k = 0; k < dim; k++)
+            {
                 arb_set(arb_mat_entry(e, k, 0), P(k, j));
             }
             arb_mat_frobenius_norm(z2, e, prec);
             arb_mat_mul(e, B, e, prec);
             arb_mat_frobenius_norm(error_norms+j, e, prec);
 
-            arb_div(z2, error_norms+j, z2, prec); /* and now z2 is an upper bound for the */
-                                                   /* error in the eigenvalue */
+            /* And now z2 is an upper bound for the
+             * error in the eigenvalue. */
+            arb_div(z2, error_norms+j, z2, prec);
             arb_add_error(D(j), z2);
         }
 
-        for(j = 0; j < dim; j++) {
-            if(j == 0) {
+        for (j = 0; j < dim; j++)
+        {
+            if (j == 0)
+            {
                 arb_sub(z1, D(j), D(1), prec);
             }
-            else {
+            else
+            {
                 arb_sub(z1, D(j), D(0), prec);
             }
             arb_get_abs_lbound_arf(x1, z1, prec);
-            for(k = 1; k < dim; k++) {
-                if(k == j) continue;
+            for (k = 1; k < dim; k++)
+            {
+                if (k == j)
+                    continue;
                 arb_sub(z1, D(j), D(k), prec);
                 arb_get_abs_lbound_arf(x2, z1, prec);
-                if(arf_cmp(x2, x1) < 0) {
+                if (arf_cmp(x2, x1) < 0)
+                {
                     arf_set(x1, x2);
                 }
             }
-            if(arf_is_zero(x1)) {
+            if (arf_is_zero(x1))
+            {
                 unique_eigenvalues = 0;
             }
             arb_div_arf(z1, error_norms+j, x1, prec);
-            for(k = 0; k < dim; k++) {
+            for (k = 0; k < dim; k++)
+            {
                 arb_add_error(P(k, j), z1);
             }
         }

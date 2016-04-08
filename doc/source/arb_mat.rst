@@ -461,17 +461,21 @@ Special functions
 
 .. function:: int arb_mat_symmetric_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slong prec)
 
-    Given a d x d real symmetric matrix *A*, compute an orthogonal matrix
-    *P* and a diagonal *D* such that `A = P D P^T = P D P^{-1}`.
-
-    *D* should have already been initialized as a d x 1 matrix, and *P*
-    should have already been initialized as a d x d matrix.
+    Given a `n \times n` symmetric matrix `A`, computes a decomposition
+    `P D P^T = A` where *P* is an orthogonal matrix and *D*
+    is a diagonal matrix represented by a `n \times 1` matrix.
 
     If the eigenvalues can be certified as unique then zero is returned,
     and the eigenvectors should have reasonable error bounds.
     Otherwise if the eigenvalues cannot be certified as unique, then
     some of the eigenvectors will have infinite error radius
     and a nonzero value will be returned.
+
+    The entries of *D* are returned in increasing order of their midpoints.
+    The signs of columns of *P* are arbitrary; some attempt is made
+    to normalize them so that the leading nonzero entry of each column
+    is positive, but the eigenvector error intervals do not account for
+    this convention.
 
 Sparsity structure
 -------------------------------------------------------------------------------
