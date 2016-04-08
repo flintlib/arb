@@ -25,6 +25,119 @@
 
 #include "arb_mat.h"
 
+struct _sortme
+{
+    arb_ptr p;
+    int idx;
+};
+
+static int
+_arb_cmp_for_sort(const void *a, const void *b)
+{
+    const struct _sortme *x = a;
+    const struct _sortme *y = b;
+    return arf_cmp(arb_midref(x->p), arb_midref(y->p));
+}
+
+/* midpoints of diagonal entries will be non-decreasing */
+static void
+_sort_decomposition(arb_mat_t D, arb_mat_t P)
+{
+    slong j, n;
+    struct _sortme *s;
+
+    n = arb_mat_nrows(P);
+    s = flint_malloc(n * sizeof(struct _sortme));
+
+    for (j = 0; j < n; j++)
+    {
+        s[j].p = arb_mat_entry(D, j, 0);
+        s[j].idx = j;
+    }
+
+    qsort(s, n, sizeof(struct _sortme), _arb_cmp_for_sort);
+
+    {
+        slong i;
+        arb_mat_t Pt, Dt;
+        arb_mat_init(Pt, n, n);
+        arb_mat_init(Dt, n, 1);
+        arb_mat_set(Pt, P);
+        arb_mat_set(Dt, D);
+        for (j = 0; j < n; j++)
+        {
+            arb_set(arb_mat_entry(D, j, 0),
+                    arb_mat_entry(Dt, s[j].idx, 0));
+            for (i = 0; i < n; i++)
+            {
+                arb_set(arb_mat_entry(P, i, j),
+                        arb_mat_entry(Pt, i, s[j].idx));
+            }
+        }
+        arb_mat_clear(Pt);
+        arb_mat_clear(Dt);
+    }
+
+    flint_free(s);
+}
+
+/* multiplies each column by the sign of its first nonzero entry midpoint */
+static void
+_standardize_column_signs(arb_mat_t P)
+{
+    slong i, j;
+    for (j = 0; j < arb_mat_ncols(P); j++)
+    {
+        int negate_col = 0;
+        for (i = 0; i < arb_mat_nrows(P); i++)
+        {
+            int sgn = arf_sgn(arb_midref(arb_mat_entry(P, i, j)));
+            if (sgn < 0)
+            {
+                negate_col = 1;
+                break;
+            }
+            else if (sgn > 0)
+            {
+                break;
+            }
+        }
+        if (negate_col)
+        {
+            for (i = 0; i < arb_mat_nrows(P); i++)
+            {
+                arb_neg(arb_mat_entry(P, i, j), arb_mat_entry(P, i, j));
+            }
+        }
+    }
+}
+
+/* divides each column by its norm */
+static void
+_standardize_column_norms(arb_mat_t P, slong prec)
+{
+    slong i, j;
+    arb_t t;
+    arb_init(t);
+    for (j = 0; j < arb_mat_ncols(P); j++)
+    {
+        arb_zero(t);
+        for (i = 0; i < arb_mat_nrows(P); i++)
+        {
+            arb_srcptr z = arb_mat_entry(P, i, j);
+            arb_addmul(t, z, z, prec);
+        }
+        arb_sqrtpos(t, t, prec);
+        for (i = 0; i < arb_mat_nrows(P); i++)
+        {
+            arb_ptr z = arb_mat_entry(P, i, j);
+            arb_div(z, z, t, prec);
+        }
+    }
+    arb_clear(t);
+}
+
+
 static void
 _arf_hypot(arf_t z, const arf_t x, const arf_t y, slong prec)
 {
@@ -417,27 +530,9 @@ _arb_mat_jacobi_diagonalization(arb_mat_t D, arb_mat_t P, const arb_mat_t A, slo
         arb_clear(z2);
     }
 
-    /* Normalize columns of P. */
-    {
-        arb_t t;
-        arb_init(t);
-        for (j = 0; j < dim; j++)
-        {
-            arb_zero(t);
-            for (i = 0; i < dim; i++)
-            {
-                arb_srcptr z = arb_mat_entry(P, i, j);
-                arb_addmul(t, z, z, prec);
-            }
-            arb_sqrtpos(t, t, prec);
-            for (i = 0; i < dim; i++)
-            {
-                arb_ptr z = arb_mat_entry(P, i, j);
-                arb_div(z, z, t, prec);
-            }
-        }
-        arb_clear(t);
-    }
+    _sort_decomposition(D, P);
+    _standardize_column_norms(P, prec);
+    _standardize_column_signs(P);
 
     if (unique_eigenvalues)
         return 0;
