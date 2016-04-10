@@ -46,7 +46,7 @@ int main()
         arb_init(a);
         arb_init(b);
         fmpq_init(q);
-        mpfr_init2(t, prec + 300);
+        mpfr_init2(t, prec + 100);
 
         do {
             arb_randtest(a, state, 1 + n_randint(state, 200), 10);
@@ -56,6 +56,14 @@ int main()
         arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
+
+        /* todo: estimate cancellation precisely */
+        if (mpfr_cmp_d(t, 1 - 1e-10) > 0 && mpfr_cmp_d(t, 1 + 1e-10) < 0)
+        {
+            mpfr_set_prec(t, prec + 1000);
+            fmpq_get_mpfr(t, q, MPFR_RNDN);
+        }
+
         mpfr_log(t, t, MPFR_RNDN);
 
         arb_log(b, a, prec);
@@ -93,7 +101,7 @@ int main()
         arb_init(a);
         arb_init(b);
         fmpq_init(q);
-        mpfr_init2(t, prec + 7000);
+        mpfr_init2(t, prec + 100);
 
         do {
             arb_randtest(a, state, 1 + n_randint(state, 6000), 10);
@@ -103,6 +111,14 @@ int main()
         arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
         fmpq_get_mpfr(t, q, MPFR_RNDN);
+
+        /* todo: estimate cancellation precisely */
+        if (mpfr_cmp_d(t, 1 - 1e-10) > 0 && mpfr_cmp_d(t, 1 + 1e-10) < 0)
+        {
+            mpfr_set_prec(t, prec + 10000);
+            fmpq_get_mpfr(t, q, MPFR_RNDN);
+        }
+
         mpfr_log(t, t, MPFR_RNDN);
 
         arb_log(b, a, prec);
