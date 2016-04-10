@@ -49,12 +49,12 @@ int main()
         arb_init(a);
         arb_sinc(a, x, prec);
 
-        /* sinc(x) in [-2, 2] */
+        /* sinc(x) approximately in [-2, 2] */
         {
             arb_t b;
             arb_init(b);
             arb_zero(b);
-            mag_one(arb_radref(b));
+            mag_set_d(arb_radref(b), 1.01);
             mag_mul_2exp_si(arb_radref(b), arb_radref(b), 1);
 
             if (!arb_contains(b, a))
