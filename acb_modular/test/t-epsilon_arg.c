@@ -71,7 +71,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         psl2z_t g;
         fmpq_t x, y;

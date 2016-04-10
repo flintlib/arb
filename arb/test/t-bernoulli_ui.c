@@ -36,7 +36,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t b1, b2;
         ulong n;

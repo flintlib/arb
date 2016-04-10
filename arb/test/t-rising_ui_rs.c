@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* compare with fmpq */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
         fmpq_t x, y, z;
@@ -87,7 +87,7 @@ int main()
     }
 
     /* aliasing of y and x */
-    for (iter = 0; iter < 500; iter++)
+    for (iter = 0; iter < 500 * arb_test_multiplier(); iter++)
     {
         arb_t x, y;
         ulong n, step;

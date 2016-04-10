@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 2000; iter++)
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         acb_t nu, z, jv, iv, t;
         slong prec;
@@ -88,7 +88,7 @@ int main()
         acb_clear(t);
     }
 
-    for (iter = 0; iter < 2000; iter++)
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         acb_t nu0, nu1, nu2, z, w0, w1, w2, t, u;
         slong prec0, prec1, prec2;

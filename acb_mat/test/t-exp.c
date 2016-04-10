@@ -57,7 +57,7 @@ int main()
     flint_randinit(state);
 
     /* check exp(A)*exp(c*A) = exp((1+c)*A) */
-    for (iter = 0; iter < 500; iter++)
+    for (iter = 0; iter < 500 * arb_test_multiplier(); iter++)
     {
         acb_mat_t A, E, F, EF, G;
         fmpq_mat_t Q;

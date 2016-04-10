@@ -42,7 +42,7 @@ int main()
         arf_init(y);
         arf_init(z);
 
-        for (iter = 0; iter < 100000; iter++)
+        for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
         {
             slong bits1, bits2;
             int ret1, ret2;

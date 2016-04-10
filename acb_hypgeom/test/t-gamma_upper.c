@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* special accuracy test -- see nemo #38 */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         acb_t a, z, res;
         slong prec, goal;
@@ -79,7 +79,7 @@ int main()
         acb_clear(res);
     }
 
-    for (iter = 0; iter < 2000; iter++)
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         acb_t a0, a1, b, z, w0, w1, t, u;
         slong prec0, prec1;

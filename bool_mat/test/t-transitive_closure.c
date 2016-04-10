@@ -71,7 +71,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         slong m;
         bool_mat_t A, B, C, D;
@@ -158,7 +158,7 @@ int main()
     }
 
     /* check transitive closure using brute force with smallish matrices */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         slong m;
         bool_mat_t A, B, C;

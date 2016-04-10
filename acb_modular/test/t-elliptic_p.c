@@ -62,7 +62,7 @@ int main()
     flint_randinit(state);
 
     /* check test values */
-    for (iter = 0; iter < 100; iter++)
+    for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
     {
         slong i;
 
@@ -99,7 +99,7 @@ int main()
     }
 
     /* Test periods */
-    for (iter = 0; iter < 2000; iter++)
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         acb_t tau, z1, z2, p1, p2;
         slong m, n, e0, prec0, prec1, prec2;

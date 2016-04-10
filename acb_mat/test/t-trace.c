@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* check that the acb trace contains the fmpq trace */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         fmpq_mat_t Q;
         fmpq_t Qtrace;
@@ -83,7 +83,7 @@ int main()
     }
 
     /* check trace(A*B) = trace(B*A) */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong m, n, prec;
         acb_mat_t a, b, ab, ba;

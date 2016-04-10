@@ -40,7 +40,7 @@ int main()
     flint_printf("fmpq_ui....");
     fflush(stdout);
 
-    N = 4000;
+    N = 4000 * FLINT_MIN(1.0, arb_test_multiplier());
 
     num1 = _fmpz_vec_init(N);
     den1 = _fmpz_vec_init(N);

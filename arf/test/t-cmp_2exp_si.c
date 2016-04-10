@@ -35,7 +35,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         slong bits, e;
         arf_t x, y;

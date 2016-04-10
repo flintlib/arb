@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* compare with mpfr */
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
         fmpq_t q;
@@ -83,7 +83,7 @@ int main()
     }
 
     /* compare with mpfr (higher precision) */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
         fmpq_t q;
@@ -130,7 +130,7 @@ int main()
     }
 
     /* test large numbers */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, ab, lab, la, lb, lalb;
         slong prec = 2 + n_randint(state, 6000);

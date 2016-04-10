@@ -77,7 +77,7 @@ int main()
     flint_randinit(state);
 
     /* compare to the exact rational norm */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         fmpq_mat_t Qr, Qi;
         fmpq_t q;
@@ -185,7 +185,7 @@ int main()
     }
 
     /* check trace(A^H A) = frobenius_norm(A)^2 */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong m, n, prec;
         acb_mat_t A, AH, AHA;

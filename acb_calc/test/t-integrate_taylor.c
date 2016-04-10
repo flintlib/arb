@@ -49,7 +49,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 150; iter++)
+    for (iter = 0; iter < 150 * arb_test_multiplier(); iter++)
     {
         acb_t ans, res, a, b;
         arf_t inr, outr;

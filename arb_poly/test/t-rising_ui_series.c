@@ -37,7 +37,7 @@ int main()
     flint_randinit(state);
 
     /* check rf(f, a) * rf(f + a, b) = rf(f, a + b) */
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         slong bits, trunc;
         ulong a, b;

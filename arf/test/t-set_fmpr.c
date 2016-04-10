@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* test exact roundtrip R -> Q -> R */
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         slong bits;
         arf_t x, z;
@@ -70,7 +70,7 @@ int main()
     }
 
     /* test exact roundtrip Q -> R -> Q */
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         slong bits;
         fmpr_t x, z;

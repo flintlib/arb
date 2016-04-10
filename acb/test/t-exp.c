@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* check exp(a+b) = exp(a)*exp(b) */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t a, b, c, d, e;
         slong prec;

@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* check functional equation S(s+1) = S(s) + log(-s) - log(s) */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t s, s1, r, r1, t;
         slong prec;

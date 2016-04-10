@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* Test SL2Z invariance */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t tau1, tau2, z1, z2;
         slong e0, prec0, prec1, prec2;
@@ -95,7 +95,7 @@ int main()
     }
 
     /* Test special values */
-    for (iter = 0; iter < 100; iter++)
+    for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
     {
         acb_t tau, z;
         slong prec;

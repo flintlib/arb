@@ -36,7 +36,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arf_t x, x2;
         fmpz_t z, z2, e;
@@ -75,7 +75,7 @@ int main()
         fmpz_clear(e);
     }
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arf_t x, x2;
         fmpz_t z, z2;
@@ -113,7 +113,7 @@ int main()
         fmpz_clear(z2);
     }
 
-    for (iter = 0; iter < 1000000; iter++)
+    for (iter = 0; iter < 1000000 * arb_test_multiplier(); iter++)
     {
         slong bits;
         arf_t x;

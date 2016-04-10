@@ -35,7 +35,7 @@ int main()
     flint_randinit(state);
 
     /* check a containment requirement */
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         arb_t x, y, z, w;
         arb_t xy, yz;
@@ -104,7 +104,7 @@ int main()
     }
 
     /* require that the return value is the same as for arb_overlaps */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, y;
         fmpq_t am, ar, bm, br, t, u;

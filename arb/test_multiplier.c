@@ -19,57 +19,34 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2016 Fredrik Johansson
 
 ******************************************************************************/
 
+#include <stdlib.h>
 #include "arb.h"
 
-int main()
+double _arb_test_multiplier = -1.0;
+
+double arb_test_multiplier()
 {
-    slong iter;
-    flint_rand_t state;
-
-    flint_printf("get_mag....");
-    fflush(stdout);
-    flint_randinit(state);
-
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    if (_arb_test_multiplier == -1.0)
     {
-        arb_t a, b;
-        mag_t m;
+        const char * s = getenv("ARB_TEST_MULTIPLIER");
 
-        arb_init(a);
-        arb_init(b);
-        mag_init(m);
-
-        arb_randtest_special(a, state, 200, 1 + n_randint(state, 100));
-        arb_get_mag(m, a);
-        MAG_CHECK_BITS(m)
-
-        if (arf_is_nan(arb_midref(a)))
-            arf_nan(arb_midref(b));
-        else
-            arf_zero(arb_midref(b));
-        mag_set(arb_radref(b), m);
-
-        if (!arb_contains(b, a))
+        if (s == NULL)
         {
-            flint_printf("FAIL:\n\n");
-            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
-            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            flint_printf("m = "); mag_print(m); flint_printf("\n\n");
-            abort();
+            _arb_test_multiplier = 1.0;
         }
+        else
+        {
+            _arb_test_multiplier = strtod(s, NULL);
 
-        arb_clear(a);
-        arb_clear(b);
-        mag_clear(m);
+            if (!(_arb_test_multiplier >= 0.0 && _arb_test_multiplier <= 1000.0))
+                _arb_test_multiplier = 1.0;
+        }
     }
 
-    flint_randclear(state);
-    flint_cleanup();
-    flint_printf("PASS\n");
-    return EXIT_SUCCESS;
+    return _arb_test_multiplier;
 }
 

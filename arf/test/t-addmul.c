@@ -51,7 +51,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000; iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         arf_t x, y, z, v;
         slong prec, r1, r2;

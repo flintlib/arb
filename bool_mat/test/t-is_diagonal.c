@@ -72,7 +72,7 @@ int main()
         }
     }
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong m, n;
         bool_mat_t A;

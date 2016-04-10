@@ -37,7 +37,7 @@ int main()
     flint_randinit(state);
     _flint_rand_init_gmp(state);
 
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         mp_ptr x, y1s, y1c, y2s, y2c, t;
         mp_limb_t err1, err2;

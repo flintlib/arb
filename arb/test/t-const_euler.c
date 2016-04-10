@@ -34,7 +34,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 250; iter++)
+    for (iter = 0; iter < 250 * arb_test_multiplier(); iter++)
     {
         arb_t r;
         mpfr_t s;

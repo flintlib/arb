@@ -34,6 +34,9 @@
 extern "C" {
 #endif
 
+/* currently defined in the arb module, but global to the library */
+double arb_test_multiplier();
+
 static __inline__ void
 fmpz_add_inline(fmpz_t z, const fmpz_t x, const fmpz_t y)
 {

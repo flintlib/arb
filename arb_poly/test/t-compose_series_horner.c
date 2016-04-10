@@ -36,7 +36,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 3000; iter++)
+    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
     {
         slong qbits1, qbits2, rbits1, rbits2, rbits3, n;
         fmpq_poly_t A, B, C;

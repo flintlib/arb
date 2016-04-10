@@ -37,7 +37,7 @@ int main()
 
     /* Very weak test, just testing the error bounds and not
        that we compute the right functions */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_ptr t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b;
         acb_t w, q;

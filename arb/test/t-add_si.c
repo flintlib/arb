@@ -36,7 +36,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c, d;
         slong x;
@@ -75,7 +75,7 @@ int main()
     }
 
     /* aliasing */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c;
         slong x;

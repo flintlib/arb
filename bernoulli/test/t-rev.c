@@ -41,7 +41,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    bound = 100000;
+    bound = 100000 * FLINT_MIN(1.0, arb_test_multiplier());
 
     p = n_nextprime(UWORD(1) << (FLINT_BITS - 1), 0);
     pinv = n_preinvert_limb(p);

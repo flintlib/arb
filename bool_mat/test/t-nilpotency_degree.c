@@ -48,7 +48,7 @@ int main()
     }
 
     /* check nilpotency degree by looking at each power of a matrix */
-    for (iter = 0; iter < 10000; iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong m, i;
         bool_mat_t A, B;

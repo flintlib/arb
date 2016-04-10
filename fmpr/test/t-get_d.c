@@ -36,7 +36,7 @@ int main()
     flint_randinit(state);
 
     /* test exact roundtrip */
-    for (iter = 0; iter < 100000; iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         fmpr_t x, z;
         double y;

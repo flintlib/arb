@@ -64,7 +64,7 @@ int main()
         acb_clear(c);
     }
 
-    for (iter = 0; iter < 500; iter++)
+    for (iter = 0; iter < 500 * arb_test_multiplier(); iter++)
     {
         slong m, n1, n2, rbits1, rbits2, rbits3;
         acb_poly_t a, b, c, d;
