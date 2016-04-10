@@ -42,8 +42,12 @@ arf_get_mag(mag_t y, const arf_t x)
 
         ARF_GET_TOP_LIMB(t, x);
         t = (t >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE;
+
+        /* may have rounded up to next power of two */
         u = t >> MAG_BITS;
-        t = (t >> u) + u;
+        /* todo: avoid the addition? check agreement with mag_fast_init_set_arf */
+        t = (t >> u) + (u & t);
+
         _fmpz_add_fast(MAG_EXPREF(y), ARF_EXPREF(x), u);
         MAG_MAN(y) = t;
     }

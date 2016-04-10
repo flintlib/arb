@@ -164,7 +164,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #define MAG_ADJUST_ONE_TOO_LARGE(x) \
     do { \
         mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
-        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
+        MAG_MAN(x) = (MAG_MAN(x) >> __t) + (__t & MAG_MAN(x)); \
         if (__t) \
             fmpz_add_ui(MAG_EXPREF(x), MAG_EXPREF(x), __t); \
     } while (0)
@@ -172,7 +172,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 #define MAG_FAST_ADJUST_ONE_TOO_LARGE(x) \
     do { \
         mp_limb_t __t = MAG_MAN(x) >> MAG_BITS; \
-        MAG_MAN(x) = (MAG_MAN(x) >> __t) + __t; \
+        MAG_MAN(x) = (MAG_MAN(x) >> __t) + (__t & MAG_MAN(x)); \
         MAG_EXP(x) += __t; \
     } while (0)
 
