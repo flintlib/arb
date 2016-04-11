@@ -18,6 +18,9 @@ script:
         export CC=gcc-4.8;
         export CXX=g++-4.8;
     fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        export ARB_TEST_MULTIPLIER=0.1;
+    fi
   - ./.build_dependencies
   - ./configure --with-mpir=$HOME/deps --with-mpfr=$HOME/deps --with-flint=$HOME/deps
   - make -j4
