@@ -15,6 +15,8 @@ Author: Fredrik Johansson <fredrik.johansson@gmail.com>
 Bug reports, feature requests and other comments are welcome
 in private communication, on the GitHub issue tracker, or on the FLINT mailing list <flint-devel@googlegroups.com>.
 
+[![Build Status](https://travis-ci.org/fredrik-johansson/arb.svg?branch=master)](https://travis-ci.org/fredrik-johansson/arb)
+
 ## Code example
 
 The following program evaluates `sin(pi + exp(-10000))`. Since the
