@@ -26,15 +26,6 @@
 #include "arb_poly.h"
 #include "acb_poly.h"
 
-static __inline__ void
-_arb_vec_printd(arb_srcptr vec, slong len, slong digits)
-{
-    slong i;
-    for (i = 0; i < len; i++)
-        arb_printd(vec + i, digits), flint_printf("\n");
-}
-
-
 /* series of c^(d+x) */
 static __inline__ void
 _arb_poly_pow_cpx(arb_ptr res, const arb_t c, const arb_t d, slong trunc, slong prec)
