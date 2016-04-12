@@ -24,27 +24,28 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+void
+acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
-}
+    slong k;
+    ulong * a;
+    acb_dirichlet_powers_t t;
 
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    a = flint_malloc(nv * sizeof(ulong));
+    acb_dirichlet_ui_chi_vec(a, G, chi, nv);
+
+    acb_dirichlet_powers_init(t, chi->order, nv, prec);
+
+    acb_zero(v + 0);
+    for (k = 0; k < nv; k++)
+    {
+        if (a[k] != ACB_DIRICHLET_CHI_NULL)
+            acb_dirichlet_power(v + k, t, a[k], prec);
+        else
+            *(v + k) = *(v + 0);
+    }
+
+    acb_dirichlet_powers_clear(t);
+    flint_free(a);
 }

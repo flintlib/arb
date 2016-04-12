@@ -24,27 +24,22 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
+#include "acb_poly.h"
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+void
+acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
-}
+    acb_t z;
+    acb_ptr v;
 
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    v = _acb_vec_init(G->q);
+    acb_dirichlet_chi_vec(v, G, chi, G->q, prec);
+
+    acb_init(z);
+    acb_dirichlet_nth_root(z, G->q, prec);
+
+    _acb_poly_evaluate(res, v, G->q, z, prec);
+
+    acb_clear(z);
+    _acb_vec_clear(v, G->q);
 }

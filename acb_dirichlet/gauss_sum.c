@@ -24,27 +24,28 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+void
+acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
-}
-
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    if (chi->order <= 2)
+    {
+        if (chi->parity)
+        {
+            arb_sqrt_ui(acb_imagref(res), G->q, prec);
+            arb_zero(acb_realref(res));
+        }
+        else
+        {
+            arb_sqrt_ui(acb_realref(res), G->q, prec);
+            arb_zero(acb_imagref(res));
+        }
+    }
+    else
+    {
+        if (acb_dirichlet_theta_length_d(G->q, 1, prec) > G->q)
+            acb_dirichlet_gauss_sum_naive(res, G, chi, prec);
+        else
+            acb_dirichlet_gauss_sum_theta(res, G, chi, prec);
+    }
 }

@@ -24,27 +24,28 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
+#include "acb_poly.h"
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+/* assume won't be modified */
+void
+acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
-}
-
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    if (n < t->m)
+    {
+        /* acb_set(z, t->z + n); */
+        *z = *(t->z + n);
+    }
+    else
+    {
+        ulong q, r;
+        q = n / t->m;
+        r = n % t->m;
+        if (q >= t->M)
+        {
+            flint_printf("acb_dirichlet_power: power %wu not available "
+                    "in table of size %wu * %wu.", n, t->m, t->M);
+            abort();
+        }
+        acb_mul(z, t->Z + q, t->z + r, prec);
+    }
 }

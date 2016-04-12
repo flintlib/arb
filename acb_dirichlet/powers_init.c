@@ -24,27 +24,34 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
+#include "acb_poly.h"
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+void
+acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
-}
+    ulong m;
+    acb_t zeta;
+    t->order = order;
+    m = (num == 1) ? 1 : num * (prec / 64 + 1);
+    if (m > order)
+        m = order;
+    t->m = m;
 
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    acb_init(zeta);
+    acb_dirichlet_nth_root(zeta, order, prec);
+    t->z = _acb_vec_init(m);
+    _acb_vec_set_powers(t->z, zeta, m, prec);
+
+    if (order > m)
+    {
+        t->M = (order / m) + 1;
+        t->Z = _acb_vec_init(t->M);
+        acb_pow_ui(zeta, zeta, m, prec);
+        _acb_vec_set_powers(t->Z, zeta, t->M, prec);
+    }
+    else
+    {
+        t->M = 0;
+        t->Z = NULL;
+    }
 }

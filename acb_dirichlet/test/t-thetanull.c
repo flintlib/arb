@@ -66,7 +66,7 @@ int main()
         z = _acb_vec_init(G->expo);
         _acb_vec_set_powers(z, zeta, G->expo, prec);
 
-        nv = acb_dirichlet_theta_length(q, 1, prec);
+        nv = acb_dirichlet_theta_length_d(q, 1, prec);
         v = flint_malloc(nv * sizeof(ulong));
 
         arb_init(eq);
