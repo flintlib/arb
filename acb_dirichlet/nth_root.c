@@ -25,12 +25,32 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
+static void
+_acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
 {
     fmpq_t t;
     fmpq_init(t);
     fmpq_set_si(t, 2, order);
     arb_sin_cos_pi_fmpq(acb_imagref(res), acb_realref(res), t, prec);
     fmpq_clear(t);
+}
+
+void
+acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
+{
+    switch (order)
+    {
+       case 1:
+           acb_one(res);
+           break;
+       case 2:
+           acb_set_si(res, -1);
+           break;
+       case 4:
+           acb_onei(res);
+           break;
+       default:
+           _acb_dirichlet_nth_root(res, order, prec);
+           break;
+    }
 }

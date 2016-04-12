@@ -132,6 +132,7 @@ ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_diri
 void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
+ulong acb_dirichlet_ui_chi_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n);
 
 void acb_dirichlet_ui_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv);
@@ -140,12 +141,37 @@ void acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G,
 void acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 void acb_dirichlet_ui_chi_vec(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 
+/* precompute powers of a root of unity */
+typedef struct
+{
+    ulong order;
+    acb_ptr z;
+    ulong m;
+    ulong M;
+    acb_ptr Z;
+}
+acb_dirichlet_powers_struct;
+
+typedef acb_dirichlet_powers_struct acb_dirichlet_powers_t[1];
+
+void acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec);
+void acb_dirichlet_powers_clear(acb_dirichlet_powers_t t);
+void acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec);
+
 void acb_dirichlet_nth_root(acb_t res, ulong order, slong prec);
 
 void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
+void acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv, slong prec);
 
 void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
-ulong acb_dirichlet_theta_length(ulong q, double x, slong prec);
+
+ulong acb_dirichlet_theta_length_d(ulong q, double x, slong prec);
+ulong acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec);
+void acb_dirichlet_chi_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t x, slong prec);
+
+void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
 #ifdef __cplusplus
 }

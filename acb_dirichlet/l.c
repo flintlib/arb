@@ -12,31 +12,35 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_l(acb_t res, const acb_t s,
-    const acb_dirichlet_group_t G, ulong m, slong prec)
+acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
+    const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
-    acb_t chi, t, u, a;
-    acb_dirichlet_conrey_t cm, cn;
+    ulong chin;
+    acb_t z, t, u, a;
+    acb_ptr xz;
+    acb_dirichlet_conrey_t cn;
 
-    acb_init(chi);
-    acb_dirichlet_conrey_init(cm, G);
     acb_dirichlet_conrey_init(cn, G);
+    acb_init(z);
     acb_init(t);
     acb_init(u);
     acb_init(a);
 
-    acb_dirichlet_conrey_log(cm, G, m);
     acb_dirichlet_conrey_one(cn, G);
     acb_zero(t);
 
+    acb_dirichlet_nth_root(z, chi->order, prec);
+    xz = _acb_vec_init(chi->order);
+    _acb_vec_set_powers(xz, z, chi->order, prec);
+
     while (1) {
-        /* todo: use n_dirichlet_chi and precomputed roots instead */
-        acb_dirichlet_pairing_conrey(chi, G, cm, cn, prec);
+        chin = acb_dirichlet_ui_chi_conrey(G, chi, cn);
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
         acb_hurwitz_zeta(u, s, a, prec);
-        acb_addmul(t, chi, u, prec);
+
+        acb_addmul(t, xz + chin, u, prec);
 
         if (acb_dirichlet_conrey_next(cn, G) == G->num)
           break;
@@ -47,10 +51,10 @@ acb_dirichlet_l(acb_t res, const acb_t s,
     acb_pow(u, u, a, prec);
     acb_mul(res, t, u, prec);
 
-    acb_dirichlet_conrey_clear(cm);
     acb_dirichlet_conrey_clear(cn);
 
-    acb_clear(chi);
+    _acb_vec_clear(xz, chi->order);
+    acb_clear(z);
     acb_clear(t);
     acb_clear(u);
     acb_clear(a);
