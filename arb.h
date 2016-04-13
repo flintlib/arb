@@ -277,6 +277,13 @@ arb_print(const arb_t x)
 }
 
 ARB_INLINE void
+arb_println(const arb_t x)
+{
+    arb_fprint(stdout, x);
+    printf("\n");
+}
+
+ARB_INLINE void
 arb_printd(const arb_t x, slong digits)
 {
     arb_fprintd(stdout, x, digits);
