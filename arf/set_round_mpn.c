@@ -25,16 +25,6 @@
 
 #include "arf.h"
 
-void
-_arf_set_mpn_roundup_power_two(arf_t y, int sgnbit)
-{
-    /* The exponent has already been set, so just increment it. */
-    fmpz_add_ui(ARF_EXPREF(y), ARF_EXPREF(y), 1);
-    ARF_DEMOTE(y);
-    ARF_NOPTR_D(y)[0] = LIMB_TOP;
-    ARF_XSIZE(y) = ARF_MAKE_XSIZE(1, sgnbit);
-}
-
 int
 _arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, slong prec, arf_rnd_t rnd)
