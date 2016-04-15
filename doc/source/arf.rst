@@ -529,6 +529,7 @@ Addition and multiplication
 
     Sets `z = x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
+    These methods support *ARF_RND_NEAR*.
 
 .. function:: int arf_add(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 

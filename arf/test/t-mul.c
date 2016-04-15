@@ -28,23 +28,31 @@
 int
 arf_mul_naive(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 {
-    fmpr_t a, b;
-    slong r;
+    if (rnd == ARF_RND_NEAR)
+    {
+        arf_mul(z, x, y, ARF_PREC_EXACT, rnd);
+        return arf_set_round(z, z, prec, rnd);
+    }
+    else
+    {
+        fmpr_t a, b;
+        slong r;
 
-    fmpr_init(a);
-    fmpr_init(b);
+        fmpr_init(a);
+        fmpr_init(b);
 
-    arf_get_fmpr(a, x);
-    arf_get_fmpr(b, y);
+        arf_get_fmpr(a, x);
+        arf_get_fmpr(b, y);
 
-    r = fmpr_mul_naive(a, a, b, prec, rnd);
+        r = fmpr_mul_naive(a, a, b, prec, rnd);
 
-    arf_set_fmpr(z, a);
+        arf_set_fmpr(z, a);
 
-    fmpr_clear(a);
-    fmpr_clear(b);
+        fmpr_clear(a);
+        fmpr_clear(b);
 
-    return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+        return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+    }
 }
 
 int main()
@@ -77,12 +85,13 @@ int main()
             if (n_randint(state, 50) == 0)
                 prec = ARF_PREC_EXACT;
 
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0:  rnd = ARF_RND_DOWN; break;
                 case 1:  rnd = ARF_RND_UP; break;
                 case 2:  rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3:  rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
             }
 
             switch (n_randint(state, 5))
