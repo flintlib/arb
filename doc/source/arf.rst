@@ -229,7 +229,6 @@ Assignment, rounding and conversions
 
     Warning: :func:`arf_set_round` supports rounding to nearest
     with *ARF_RND_NEAR*, but the other methods currently do not.
-    Rounding to nearest is currently much slower than the other rounding modes.
 
 .. function:: void arf_set_si_2exp_si(arf_t y, slong m, slong e)
 
@@ -510,6 +509,7 @@ Addition and multiplication
 
     Sets `y = -x`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
+    This method supports *ARF_RND_NEAR*.
 
 .. function:: void arf_mul_2exp_si(arf_t y, const arf_t x, slong e)
 
