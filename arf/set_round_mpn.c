@@ -68,11 +68,45 @@ _arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
     else
     {
         inexact = 1;
-        increment = arf_rounds_up(rnd, sgnbit);
 
         /* Limb and bit of the truncation point. */
         val_limbs = (exp - prec) / FLINT_BITS;
         val_bits = (exp - prec) % FLINT_BITS;
+
+        if (rnd == ARF_RND_DOWN)
+        {
+            increment = 0;
+        }
+        else if (rnd == ARF_RND_NEAR)
+        {
+            bc = exp - val;
+
+            /* If exactly one excess bit, there is a tie; the rounding
+               direction is determined by the bit to the left of the
+               truncation point. */
+            if (bc - 1 == prec)
+            {
+                increment = (x[val_limbs] >> val_bits) & 1;
+            }
+            else
+            {
+                /* The bit to the right of the truncation point determines
+                   the rounding direction. */
+                mp_size_t exc_limbs = (exp - prec - 1) / FLINT_BITS;
+                mp_bitcnt_t exc_bits = (exp - prec - 1) % FLINT_BITS;
+
+                increment = (x[exc_limbs] >> exc_bits) & 1;
+            }
+        }
+        else
+        {
+            if (rnd == ARF_RND_UP)
+                increment = 1;
+            else if (rnd == ARF_RND_FLOOR)
+                increment = sgnbit;
+            else
+                increment = !sgnbit;
+        }
 
         if (!increment)
         {
