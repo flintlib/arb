@@ -589,6 +589,16 @@ Incomplete gamma functions
     The *singular* version evaluates the finite sum directly and therefore
     assumes that *s* is not too large.
 
+.. function:: void acb_hypgeom_gamma_lower_1f1a(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
+
+.. function:: void acb_hypgeom_gamma_lower_1f1b(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
+
+.. function:: void acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
+
+    Computes the lower incomplete gamma function `\gamma(s,z)`
+    with regularization options similar to those for the upper
+    incomplete gamma function.
+
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
 

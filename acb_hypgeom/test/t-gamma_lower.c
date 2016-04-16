@@ -19,7 +19,7 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2016 Arb authors
 
 ******************************************************************************/
 
@@ -30,54 +30,10 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("gamma_upper....");
+    flint_printf("gamma_lower....");
     fflush(stdout);
 
     flint_randinit(state);
-
-    /* special accuracy test -- see nemo #38 */
-    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
-    {
-        acb_t a, z, res;
-        slong prec, goal;
-        int regularized;
-
-        acb_init(a);
-        acb_init(z);
-        acb_init(res);
-
-        acb_set_si(a, n_randint(state, 100) - 50);
-
-        do {
-            acb_set_si(z, n_randint(state, 100) - 50);
-        } while (acb_is_zero(z));
-
-        regularized = n_randint(state, 3);
-
-        goal = 2 + n_randint(state, 4000);
-
-        for (prec = 2 + n_randint(state, 1000); ; prec *= 2)
-        {
-            acb_hypgeom_gamma_upper(res, a, z, regularized, prec);
-
-            if (acb_rel_accuracy_bits(res) > goal)
-                break;
-
-            if (prec > 10000)
-            {
-                printf("FAIL (convergence)\n");
-                flint_printf("regularized = %d\n\n", regularized);
-                flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
-                flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
-                flint_printf("res = "); acb_printd(res, 30); flint_printf("\n\n");
-                abort();
-            }
-        }
-
-        acb_clear(a);
-        acb_clear(z);
-        acb_clear(res);
-    }
 
     for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
@@ -106,34 +62,28 @@ int main()
 
         acb_add_ui(a1, a0, 1, prec0);
 
-        switch (n_randint(state, 4))
+        switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_gamma_upper_asymp(w0, a0, z, regularized, prec0);
+                acb_hypgeom_gamma_lower_1f1a(w0, a0, z, regularized, prec0);
                 break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w0, a0, z, regularized, prec0);
-                break;
-            case 2:
-                acb_hypgeom_gamma_upper_1f1b(w0, a0, z, regularized, prec0);
+                acb_hypgeom_gamma_lower_1f1b(w0, a0, z, regularized, prec0);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w0, a0, z, regularized, prec0);
+                acb_hypgeom_gamma_lower(w0, a0, z, regularized, prec0);
         }
 
-        switch (n_randint(state, 4))
+        switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_gamma_upper_asymp(w1, a0, z, regularized, prec1);
+                acb_hypgeom_gamma_lower_1f1a(w1, a0, z, regularized, prec1);
                 break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w1, a0, z, regularized, prec1);
-                break;
-            case 2:
-                acb_hypgeom_gamma_upper_1f1b(w1, a0, z, regularized, prec1);
+                acb_hypgeom_gamma_lower_1f1b(w1, a0, z, regularized, prec1);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w1, a0, z, regularized, prec1);
+                acb_hypgeom_gamma_lower(w1, a0, z, regularized, prec1);
         }
 
         if (!acb_overlaps(w0, w1))
@@ -146,29 +96,24 @@ int main()
             abort();
         }
 
-        switch (n_randint(state, 4))
+        switch (n_randint(state, 3))
         {
-            case 0:
-                acb_hypgeom_gamma_upper_asymp(w1, a1, z, regularized, prec1);
-                break;
             case 1:
-                acb_hypgeom_gamma_upper_1f1a(w1, a1, z, regularized, prec1);
+                acb_hypgeom_gamma_lower_1f1a(w1, a1, z, regularized, prec1);
                 break;
             case 2:
-                acb_hypgeom_gamma_upper_1f1b(w1, a1, z, regularized, prec1);
+                acb_hypgeom_gamma_lower_1f1b(w1, a1, z, regularized, prec1);
                 break;
             default:
-                acb_hypgeom_gamma_upper(w1, a1, z, regularized, prec1);
+                acb_hypgeom_gamma_lower(w1, a1, z, regularized, prec1);
         }
 
         if (regularized == 2)
         {
-            /* a R(a,z) + exp(-z) - z R(a+1,z) = 0 */
-            acb_one(t);
-
+            /* a r(a,z) - exp(-z) - z r(a+1,z) = 0 */
             acb_neg(u, z);
             acb_exp(u, u, prec0);
-            acb_mul(t, t, u, prec0);
+            acb_neg(t, u);
 
             acb_mul(b, w1, z, prec0);
             acb_addmul(t, a0, w0, prec0);
@@ -176,13 +121,14 @@ int main()
         }
         else if (regularized == 1)
         {
-            /* Q(a,z) + exp(-z) z^a / Gamma(a+1) - Q(a+1,z) = 0 */
+            /* q(a,z) - exp(-z) z^a / Gamma(a+1) - q(a+1,z) = 0 */
             acb_pow(t, z, a0, prec0);
             acb_rgamma(u, a1, prec0);
             acb_mul(t, t, u, prec0);
 
             acb_neg(u, z);
             acb_exp(u, u, prec0);
+            acb_neg(u, u);
             acb_mul(t, t, u, prec0);
 
             acb_add(t, t, w0, prec0);
@@ -190,11 +136,12 @@ int main()
         }
         else
         {
-            /* a Gamma(a,z) + exp(-z) z^a - Gamma(a+1,z) = 0 */
+            /* a gamma(a,z) - exp(-z) z^a - gamma(a+1,z) = 0 */
             acb_pow(t, z, a0, prec0);
 
             acb_neg(u, z);
             acb_exp(u, u, prec0);
+            acb_neg(u, u);
             acb_mul(t, t, u, prec0);
 
             acb_addmul(t, a0, w0, prec0);
@@ -228,4 +175,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
