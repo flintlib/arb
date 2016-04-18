@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 extern const char * arb_version;
-double arb_test_multiplier();
+double arb_test_multiplier(void);
 
 typedef struct
 {

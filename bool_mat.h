@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 /* currently defined in the arb module, but global to the library */
-double arb_test_multiplier();
+double arb_test_multiplier(void);
 
 typedef struct
 {
