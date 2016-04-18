@@ -163,6 +163,7 @@ int main()
 
         if (regularized == 2)
         {
+            /* a R(a,z) + exp(-z) - z R(a+1,z) = 0 */
             acb_one(t);
 
             acb_neg(u, z);
@@ -176,6 +177,7 @@ int main()
         else if (regularized == 1)
         {
             /* Q(a,z) + exp(-z) z^a / Gamma(a+1) - Q(a+1,z) = 0 */
+            /* http://dlmf.nist.gov/8.8.E6 */
             acb_pow(t, z, a0, prec0);
             acb_rgamma(u, a1, prec0);
             acb_mul(t, t, u, prec0);
@@ -190,6 +192,7 @@ int main()
         else
         {
             /* a Gamma(a,z) + exp(-z) z^a - Gamma(a+1,z) = 0 */
+            /* http://dlmf.nist.gov/8.8.E2 */
             acb_pow(t, z, a0, prec0);
 
             acb_neg(u, z);
