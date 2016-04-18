@@ -26,94 +26,45 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_gamma_lower_1f1a(acb_t res, const acb_t s,
-        const acb_t z, int regularized, slong prec)
-{
-    acb_t a, w;
-    acb_struct b[2];
-
-    acb_init(a);
-    acb_init(b);
-    acb_init(b + 1);
-    acb_init(w);
-
-    acb_set(a, s);
-    acb_add_ui(b, s, 1, prec);
-    acb_one(b + 1);
-    acb_neg(w, z);
-
-    /* res = 1F1(s, s+1, -z) / s */
-    acb_hypgeom_pfq_direct(res, a, 1, b, 2, w, -1, prec);
-    acb_div(res, res, s, prec);
-
-    if (regularized == 0)
-    {
-        acb_pow(a, z, s, prec);
-        acb_mul(res, res, a, prec);
-    }
-    else if (regularized == 1)
-    {
-        acb_pow(a, z, s, prec);
-        acb_mul(res, res, a, prec);
-        acb_rgamma(a, s, prec);
-        acb_mul(res, res, a, prec);
-    }
-
-    acb_clear(a);
-    acb_clear(b);
-    acb_clear(b + 1);
-    acb_clear(w);
-}
-
-void
-acb_hypgeom_gamma_lower_1f1b(acb_t res, const acb_t s,
-        const acb_t z, int regularized, slong prec)
-{
-    acb_t a, b;
-
-    acb_init(a);
-    acb_init(b);
-
-    acb_add_ui(b, s, 1, prec);
-    acb_hypgeom_pfq_direct(res, NULL, 0, b, 1, z, -1, prec);
-    acb_div(res, res, s, prec);
-
-    acb_neg(a, z);
-    acb_exp(a, a, prec);
-    acb_mul(res, res, a, prec);
-
-    if (regularized == 0)
-    {
-        acb_pow(a, z, s, prec);
-        acb_mul(res, res, a, prec);
-    }
-    else if (regularized == 1)
-    {
-        acb_pow(a, z, s, prec);
-        acb_mul(res, res, a, prec);
-        acb_rgamma(a, s, prec);
-        acb_mul(res, res, a, prec);
-    }
-
-    acb_clear(a);
-    acb_clear(b);
-}
-
-void
 acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 {
+    acb_t s1, nz, t;
+
     if (!acb_is_finite(s) || !acb_is_finite(z))
     {
         acb_indeterminate(res);
         return;
     }
 
-    /* todo: handle the case where z is zero */
+    acb_init(s1);
+    acb_init(nz);
+    acb_init(t);
 
-    /* todo: handle the case where s is an integer */
+    acb_add_ui(s1, s, 1, prec);
+    acb_neg(nz, z);
 
-    if (arf_sgn(arb_midref(acb_realref(z))) > 0)
-        acb_hypgeom_gamma_lower_1f1b(res, s, z, regularized, prec);
-    else
-        acb_hypgeom_gamma_lower_1f1a(res, s, z, regularized, prec);
+    if (regularized == 0)
+    {
+        /* \gamma(s, z) = s^-1 z^s 1F1(s, 1+s, -z) */
+        acb_hypgeom_m(res, s, s1, nz, 0, prec);
+        acb_pow(t, z, s, prec);
+        acb_mul(res, res, t, prec);
+        acb_div(res, res, s, prec);
+    }
+    else if (regularized == 1)
+    {
+        /* P(s, z) = z^s \gamma^{*}(s, z) */
+        acb_hypgeom_m(res, s, s1, nz, 1, prec);
+        acb_pow(t, z, s, prec);
+        acb_mul(res, res, t, prec);
+    }
+    else if (regularized == 2)
+    {
+        /* \gamma^{*}(s, z) */
+        acb_hypgeom_m(res, s, s1, nz, 1, prec);
+    }
+
+    acb_clear(s1);
+    acb_clear(nz);
+    acb_clear(t);
 }

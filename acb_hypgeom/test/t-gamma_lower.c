@@ -37,7 +37,7 @@ int main()
 
     for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
-        acb_t a0, a1, b, z, w0, w1, t, u;
+        acb_t a0, a1, b, z, w0, w1, t, u, enz;
         slong prec0, prec1;
         int regularized;
 
@@ -49,6 +49,7 @@ int main()
         acb_init(w1);
         acb_init(t);
         acb_init(u);
+        acb_init(enz);
 
         regularized = n_randint(state, 3);
 
@@ -62,95 +63,45 @@ int main()
 
         acb_add_ui(a1, a0, 1, prec0);
 
-        switch (n_randint(state, 3))
-        {
-            case 0:
-                acb_hypgeom_gamma_lower_1f1a(w0, a0, z, regularized, prec0);
-                break;
-            case 1:
-                acb_hypgeom_gamma_lower_1f1b(w0, a0, z, regularized, prec0);
-                break;
-            default:
-                acb_hypgeom_gamma_lower(w0, a0, z, regularized, prec0);
-        }
+        acb_hypgeom_gamma_lower(w0, a0, z, regularized, prec0);
+        acb_hypgeom_gamma_lower(w1, a1, z, regularized, prec1);
 
-        switch (n_randint(state, 3))
-        {
-            case 0:
-                acb_hypgeom_gamma_lower_1f1a(w1, a0, z, regularized, prec1);
-                break;
-            case 1:
-                acb_hypgeom_gamma_lower_1f1b(w1, a0, z, regularized, prec1);
-                break;
-            default:
-                acb_hypgeom_gamma_lower(w1, a0, z, regularized, prec1);
-        }
+        acb_neg(enz, z);
+        acb_exp(enz, enz, prec0);
 
-        if (!acb_overlaps(w0, w1))
-        {
-            flint_printf("FAIL: consistency\n\n");
-            flint_printf("a0 = "); acb_printd(a0, 30); flint_printf("\n\n");
-            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
-            flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
-            flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
-            abort();
-        }
-
-        switch (n_randint(state, 3))
-        {
-            case 1:
-                acb_hypgeom_gamma_lower_1f1a(w1, a1, z, regularized, prec1);
-                break;
-            case 2:
-                acb_hypgeom_gamma_lower_1f1b(w1, a1, z, regularized, prec1);
-                break;
-            default:
-                acb_hypgeom_gamma_lower(w1, a1, z, regularized, prec1);
-        }
-
+        /* recurrence relations */
         if (regularized == 2)
         {
-            /* a r(a,z) - exp(-z) - z r(a+1,z) = 0 */
-            acb_neg(u, z);
-            acb_exp(u, u, prec0);
-            acb_neg(t, u);
-
-            acb_mul(b, w1, z, prec0);
-            acb_addmul(t, a0, w0, prec0);
-            acb_sub(t, t, b, prec0);
+            /* gamma^{*}(a,z) - exp(-z)/Gamma(a+1) - z gamma^{*}(a+1,z) = 0 */
+            /* http://dlmf.nist.gov/8.8.E4 */
+            acb_set(t, w0);
+            acb_rgamma(u, a1, prec0);
+            acb_submul(t, enz, u, prec0);
+            acb_submul(t, z, w1, prec0);
         }
         else if (regularized == 1)
         {
-            /* q(a,z) - exp(-z) z^a / Gamma(a+1) - q(a+1,z) = 0 */
-            acb_pow(t, z, a0, prec0);
-            acb_rgamma(u, a1, prec0);
-            acb_mul(t, t, u, prec0);
-
-            acb_neg(u, z);
-            acb_exp(u, u, prec0);
-            acb_neg(u, u);
-            acb_mul(t, t, u, prec0);
-
-            acb_add(t, t, w0, prec0);
-            acb_sub(t, t, w1, prec0);
+            /* P(a,z) - exp(-z) z^a / Gamma(a+1) - P(a+1,z) = 0 */
+            /* http://dlmf.nist.gov/8.8.E5 */
+            acb_pow(u, z, a0, prec0);
+            acb_rgamma(b, a1, prec0);
+            acb_mul(u, u, b, prec0);
+            acb_sub(t, w0, w1, prec0);
+            acb_submul(t, enz, u, prec0);
         }
         else
         {
             /* a gamma(a,z) - exp(-z) z^a - gamma(a+1,z) = 0 */
-            acb_pow(t, z, a0, prec0);
-
-            acb_neg(u, z);
-            acb_exp(u, u, prec0);
-            acb_neg(u, u);
-            acb_mul(t, t, u, prec0);
-
-            acb_addmul(t, a0, w0, prec0);
+            /* http://dlmf.nist.gov/8.8.E1 */
+            acb_pow(u, z, a0, prec0);
+            acb_mul(t, a0, w0, prec0);
+            acb_submul(t, enz, u, prec0);
             acb_sub(t, t, w1, prec0);
         }
 
         if (!acb_contains_zero(t))
         {
-            flint_printf("FAIL: contiguous relation\n\n");
+            flint_printf("FAIL: recurrence relation\n\n");
             flint_printf("regularized = %d\n\n", regularized);
             flint_printf("a0 = "); acb_printd(a0, 30); flint_printf("\n\n");
             flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
@@ -158,6 +109,50 @@ int main()
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
             flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
             abort();
+        }
+
+        /* identities relating lower and upper incomplete gamma functions */
+        if (regularized == 0 || regularized == 1)
+        {
+            acb_t u0;
+            acb_init(u0);
+            acb_hypgeom_gamma_upper(u0, a0, z, regularized, prec0);
+
+            acb_zero(t);
+
+            if (regularized == 1)
+            {
+                /* P(s,z) + Q(s,z) - 1 = 0 */
+                /* http://dlmf.nist.gov/8.2.E5 */
+                acb_add(t, w0, u0, prec0);
+                acb_sub_ui(t, t, 1, prec0);
+            }
+            else
+            {
+                /* gamma(s,z) + Gamma(s,z) - Gamma(s) = 0 */
+                /* excludes non-positive integer values of s */
+                /* http://dlmf.nist.gov/8.2.E3 */
+                if (!acb_is_int(a0) || arb_is_positive(acb_realref(a0)))
+                {
+                    acb_gamma(b, a0, prec0);
+                    acb_add(t, w0, u0, prec0);
+                    acb_sub(t, t, b, prec0);
+                }
+            }
+
+            if (!acb_contains_zero(t))
+            {
+                flint_printf("FAIL: lower plus upper\n\n");
+                flint_printf("regularized = %d\n\n", regularized);
+                flint_printf("a0 = "); acb_printd(a0, 30); flint_printf("\n\n");
+                flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
+                flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
+                flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
+                flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
+                abort();
+            }
+
+            acb_clear(u0);
         }
 
         acb_clear(a0);
@@ -168,6 +163,7 @@ int main()
         acb_clear(w1);
         acb_clear(t);
         acb_clear(u);
+        acb_clear(enz);
     }
 
     flint_randclear(state);

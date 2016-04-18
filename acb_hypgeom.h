@@ -126,8 +126,6 @@ void acb_hypgeom_gamma_upper_1f1b(acb_t res, const acb_t s, const acb_t z, int m
 void acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int modified, slong prec);
 void acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
 
-void acb_hypgeom_gamma_lower_1f1a(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
-void acb_hypgeom_gamma_lower_1f1b(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
 void acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int modified, slong prec);
 
 void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec);
