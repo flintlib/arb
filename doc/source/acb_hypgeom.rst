@@ -595,7 +595,7 @@ Incomplete gamma functions
     `\gamma(s,z)`.
 
     If *regularized* is 1, computes the regularized lower incomplete
-    gamma function `P(s,z) = \Gamma(s,z) / \Gamma(s)`.
+    gamma function `P(s,z) = \gamma(s,z) / \Gamma(s)`.
 
     If *regularized* is 2, computes a further regularized lower incomplete
     gamma function `\gamma^{*}(s,z) = z^{-s} P(s,z)`.
