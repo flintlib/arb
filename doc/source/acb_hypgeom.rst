@@ -592,7 +592,7 @@ Incomplete gamma functions
 .. function:: void acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
     If *regularized* is 0, computes the lower incomplete gamma function
-    `\gamma(s,z)`.
+    `\gamma(s,z) = \frac{z^s}{s} {}_1F_1(s, s+1, -z)`.
 
     If *regularized* is 1, computes the regularized lower incomplete
     gamma function `P(s,z) = \gamma(s,z) / \Gamma(s)`.
