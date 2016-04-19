@@ -589,10 +589,9 @@ Incomplete gamma functions
     The *singular* version evaluates the finite sum directly and therefore
     assumes that *s* is not too large.
 
-.. function:: void _acb_hypgeom_upper_gamma_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, slong n, slong prec)
+.. function:: void _acb_hypgeom_gamma_upper_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, slong n, slong prec)
 
-
-.. function:: void acb_hypgeom_upper_gamma_series(acb_poly_t res, const acb_t s, const acb_poly_t z, slong n, slong prec)
+.. function:: void acb_hypgeom_gamma_upper_series(acb_poly_t res, const acb_t s, const acb_poly_t z, slong n, slong prec)
 
     Sets *res* to the upper incomplete gamma function `\Gamma(s,z)` where *s* is
     a constant and *z* is a power series, truncated to length *n*.
