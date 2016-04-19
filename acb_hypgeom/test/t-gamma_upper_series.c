@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
+#include "acb_hypgeom.h"
 
 int main()
 {
@@ -61,8 +62,8 @@ int main()
         acb_poly_randtest(B, state, m, bits1, 3);
         acb_randtest(s, state, bits1, 3);
 
-        acb_poly_gamma_upper_series(A, s, S, n1, bits2);
-        acb_poly_gamma_upper_series(B, s, S, n2, bits3);
+        acb_hypgeom_gamma_upper_series(A, s, S, n1, bits2);
+        acb_hypgeom_gamma_upper_series(B, s, S, n2, bits3);
 
         acb_poly_set(C, A);
         acb_poly_truncate(C, FLINT_MIN(n1, n2));
@@ -99,7 +100,7 @@ int main()
             abort();
         }
 
-        acb_poly_gamma_upper_series(S, s, S, n1, bits2);
+        acb_hypgeom_gamma_upper_series(S, s, S, n1, bits2);
 
         if (!acb_poly_overlaps(A, S))
         {

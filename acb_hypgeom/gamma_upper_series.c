@@ -27,7 +27,7 @@
 #include "acb_hypgeom.h"
 
 void
-_acb_poly_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, slong n, slong prec)
+_acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, slong n, slong prec)
 {
     acb_t c;
     acb_init(c);
@@ -69,7 +69,7 @@ _acb_poly_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen,
 }
 
 void
-acb_poly_gamma_upper_series(acb_poly_t g, const acb_t s, const acb_poly_t h, slong n, slong prec)
+acb_hypgeom_gamma_upper_series(acb_poly_t g, const acb_t s, const acb_poly_t h, slong n, slong prec)
 {
     slong hlen = h->length;
 
@@ -85,12 +85,12 @@ acb_poly_gamma_upper_series(acb_poly_t g, const acb_t s, const acb_poly_t h, slo
     {
         acb_t t;
         acb_init(t);
-        _acb_poly_gamma_upper_series(g->coeffs, s, t, 1, n, prec);
+        _acb_hypgeom_gamma_upper_series(g->coeffs, s, t, 1, n, prec);
         acb_clear(t);
     }
     else
     {
-        _acb_poly_gamma_upper_series(g->coeffs, s, h->coeffs, hlen, n, prec);
+        _acb_hypgeom_gamma_upper_series(g->coeffs, s, h->coeffs, hlen, n, prec);
     }
 
     _acb_poly_set_length(g, n);
