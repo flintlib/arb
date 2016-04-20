@@ -590,6 +590,11 @@ CONFIG_PTHREAD="#define HAVE_PTHREAD ${PTHREAD}"
 
 EXTRA_INC_DIRS="${EXTRA_INC_DIRS} ${EXTENSIONS}"
 
+
+if [ -d "${EXTENSIONS}/examples" ]; then
+   cp ${EXTENSIONS}/examples/*.c ./examples/
+fi
+
 #include paths
 
 INCS="-I\$(CURDIR)"
