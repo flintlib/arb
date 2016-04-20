@@ -797,6 +797,10 @@ Powers and roots
 
     Alias for :func:`arb_root_ui`, provided for backwards compatibility.
 
+.. function:: void arb_sqr(arb_t y, const arb_t x, slong prec)
+
+    Sets *y* to be the square of *x*. 
+
 .. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 
 .. function:: void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
