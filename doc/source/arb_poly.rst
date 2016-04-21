@@ -48,7 +48,7 @@ Memory management
 .. function:: void _arb_poly_set_length(arb_poly_t poly, slong len)
 
     Directly changes the length of the polynomial, without allocating or
-    deallocating coefficients. The value shold not exceed the allocation length.
+    deallocating coefficients. The value should not exceed the allocation length.
 
 .. function:: void _arb_poly_normalise(arb_poly_t poly)
 
