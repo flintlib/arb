@@ -27,7 +27,7 @@
 #include "acb_hypgeom.h"
 
 void
-_acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, slong n, int regularized, slong prec)
+_acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, int regularized, slong n, slong prec)
 {
     acb_t c;
     acb_init(c);
@@ -61,15 +61,14 @@ _acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
 
         if (regularized == 1)
         {
-            acb_t c;
-            acb_init(c);
-            acb_gamma(c, s, prec);
-            _acb_vec_scalar_div(g, g, n, c, prec);
-            acb_clear(c);
+            acb_rgamma(t, s, prec);
+            _acb_vec_scalar_mul(g, g, n, t, prec);
         }
         else if (regularized == 2)
         {
             _acb_vec_set(u, g, n);
+            acb_neg(v, s);
+            _acb_poly_pow_acb_series(t, h, hlen, v, n, prec);
             _acb_poly_mullow(g, u, n, t, n, n, prec);
         }
 
@@ -84,7 +83,7 @@ _acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
 
 void
 acb_hypgeom_gamma_upper_series(acb_poly_t g, const acb_t s,
-        const acb_poly_t h, slong n, int regularized, slong prec)
+        const acb_poly_t h, int regularized, slong n, slong prec)
 {
     slong hlen = h->length;
 
@@ -100,13 +99,13 @@ acb_hypgeom_gamma_upper_series(acb_poly_t g, const acb_t s,
     {
         acb_t t;
         acb_init(t);
-        _acb_hypgeom_gamma_upper_series(g->coeffs, s, t, 1, n, regularized, prec);
+        _acb_hypgeom_gamma_upper_series(g->coeffs, s, t, 1, regularized, n, prec);
         acb_clear(t);
     }
     else
     {
         _acb_hypgeom_gamma_upper_series(
-                g->coeffs, s, h->coeffs, hlen, n, regularized, prec);
+                g->coeffs, s, h->coeffs, hlen, regularized, n, prec);
     }
 
     _acb_poly_set_length(g, n);

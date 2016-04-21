@@ -66,8 +66,8 @@ int main()
         acb_poly_randtest(B, state, m, bits1, 3);
         acb_randtest(s, state, bits1, 3);
 
-        acb_hypgeom_gamma_upper_series(A, s, S, n1, regularized, bits2);
-        acb_hypgeom_gamma_upper_series(B, s, S, n2, regularized, bits3);
+        acb_hypgeom_gamma_upper_series(A, s, S, regularized, n1, bits2);
+        acb_hypgeom_gamma_upper_series(B, s, S, regularized, n2, bits3);
 
         acb_poly_set(C, A);
         acb_poly_truncate(C, FLINT_MIN(n1, n2));
@@ -113,18 +113,21 @@ int main()
         }
         else if (regularized == 2)
         {
-            /* (exp(-h(x)) integral(f(h(x)) h'(x)))' =
-             * exp(-h(x)) (f(h(x)) - integral(f(h(x)) h'(x))) h'(x) */
+            /* (h(x)^-s integral(f(h(x)) h'(x)))' =
+             * h(x)^-(s+1) (h(x) f(h(x)) - s integral(f(h(x)) h'(x))) h'(x) */
             acb_poly_t D;
             acb_poly_init(D);
 
             acb_poly_derivative(B, S, bits2);
             acb_poly_mullow(D, C, B, n1, bits2);
             acb_poly_integral(D, D, bits2);
+            _acb_vec_scalar_mul(D->coeffs, D->coeffs, D->length, s, bits2);
+            acb_poly_mullow(C, C, S, n1, bits2);
             acb_poly_sub(D, C, D, bits2);
 
-            acb_poly_neg(B, S);
-            acb_poly_exp_series(B, B, n1, bits2);
+            acb_add_ui(t, s, 1, bits2);
+            acb_neg(t, t);
+            acb_poly_pow_acb_series(B, S, t, n1, bits2);
 
             acb_poly_mullow(C, D, B, n1, bits2);
 
@@ -149,7 +152,7 @@ int main()
             abort();
         }
 
-        acb_hypgeom_gamma_upper_series(S, s, S, n1, regularized, bits2);
+        acb_hypgeom_gamma_upper_series(S, s, S, regularized, n1, bits2);
 
         if (!acb_poly_overlaps(A, S))
         {
