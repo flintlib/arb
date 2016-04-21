@@ -42,7 +42,7 @@ Memory management
 
 .. function:: void arb_poly_fit_length(arb_poly_t poly, slong len)
 
-    Makes sures that the coefficient array of the polynomial contains at
+    Makes sure that the coefficient array of the polynomial contains at
     least *len* initialized coefficients.
 
 .. function:: void _arb_poly_set_length(arb_poly_t poly, slong len)
