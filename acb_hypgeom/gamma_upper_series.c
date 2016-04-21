@@ -43,10 +43,18 @@ _acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
     else
     {
         acb_ptr t, u, v;
+        acb_ptr w = NULL;
 
         t = _acb_vec_init(n);
         u = _acb_vec_init(n);
         v = _acb_vec_init(n);
+
+        if (regularized == 2)
+        {
+            w = _acb_vec_init(n);
+            acb_neg(t, s);
+            _acb_poly_pow_acb_series(w, h, hlen, t, n, prec);
+        }
 
         /* Gamma(s, h(x)) = -integral(h'(x) h(x)^(s-1) exp(-h(x)) */
         acb_sub_ui(u, s, 1, prec);
@@ -67,9 +75,8 @@ _acb_hypgeom_gamma_upper_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
         else if (regularized == 2)
         {
             _acb_vec_set(u, g, n);
-            acb_neg(v, s);
-            _acb_poly_pow_acb_series(t, h, hlen, v, n, prec);
-            _acb_poly_mullow(g, u, n, t, n, n, prec);
+            _acb_poly_mullow(g, u, n, w, n, n, prec);
+            _acb_vec_clear(w, n);
         }
 
         _acb_vec_clear(t, n);
