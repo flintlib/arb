@@ -410,6 +410,10 @@ Arithmetic
 
     Sets *z* to *x* multiplied by `2^e`, without rounding.
 
+.. function:: void acb_sqr(acb_t z, const acb_t x, slong prec)
+
+    Sets *z* to *x* squared.
+
 .. function:: void acb_cube(acb_t z, const acb_t x, slong prec)
 
     Sets *z* to *x* cubed, computed efficiently using two real squarings,
