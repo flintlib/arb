@@ -42,13 +42,13 @@ Memory management
 
 .. function:: void arb_poly_fit_length(arb_poly_t poly, slong len)
 
-    Makes sures that the coefficient array of the polynomial contains at
+    Makes sure that the coefficient array of the polynomial contains at
     least *len* initialized coefficients.
 
 .. function:: void _arb_poly_set_length(arb_poly_t poly, slong len)
 
     Directly changes the length of the polynomial, without allocating or
-    deallocating coefficients. The value shold not exceed the allocation length.
+    deallocating coefficients. The value should not exceed the allocation length.
 
 .. function:: void _arb_poly_normalise(arb_poly_t poly)
 
