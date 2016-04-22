@@ -24,6 +24,7 @@
 ******************************************************************************/
 
 #include "acb_poly.h"
+#include "acb_hypgeom.h"
 
 int main()
 {
@@ -39,7 +40,10 @@ int main()
     {
         slong m, n1, n2, bits1, bits2, bits3;
         acb_poly_t S, A, B, C;
-        acb_t s, t;
+        acb_t s, t, c;
+        int regularized;
+
+        regularized = n_randint(state, 3);
 
         bits1 = 2 + n_randint(state, 200);
         bits2 = 2 + n_randint(state, 200);
@@ -55,14 +59,15 @@ int main()
         acb_poly_init(C);
         acb_init(s);
         acb_init(t);
+        acb_init(c);
 
         acb_poly_randtest(S, state, m, bits1, 3);
         acb_poly_randtest(A, state, m, bits1, 3);
         acb_poly_randtest(B, state, m, bits1, 3);
         acb_randtest(s, state, bits1, 3);
 
-        acb_poly_gamma_upper_series(A, s, S, n1, bits2);
-        acb_poly_gamma_upper_series(B, s, S, n2, bits3);
+        acb_hypgeom_gamma_upper_series(A, s, S, regularized, n1, bits2);
+        acb_hypgeom_gamma_upper_series(B, s, S, regularized, n2, bits3);
 
         acb_poly_set(C, A);
         acb_poly_truncate(C, FLINT_MIN(n1, n2));
@@ -71,27 +76,7 @@ int main()
         if (!acb_poly_overlaps(B, C))
         {
             flint_printf("FAIL (consistency)\n\n");
-            flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
-            flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
-            flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
-            abort();
-        }
-
-        acb_poly_derivative(C, S, bits2);
-        acb_poly_neg(B, S);
-        acb_poly_exp_series(B, B, n1, bits2);
-        acb_poly_mullow(C, C, B, n1, bits2);
-        acb_sub_ui(t, s, 1, bits2);
-        acb_poly_pow_acb_series(B, S, t, n1, bits2);
-        acb_poly_mullow(C, C, B, n1, bits2);
-        acb_poly_neg(C, C);
-        acb_poly_truncate(C, n1 - 1);
-
-        acb_poly_derivative(B, A, bits2);
-
-        if (!acb_poly_overlaps(B, C))
-        {
-            flint_printf("FAIL (derivative)\n\n");
+            flint_printf("regularized = %d\n\n", regularized);
             flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
             flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
@@ -99,11 +84,82 @@ int main()
             abort();
         }
 
-        acb_poly_gamma_upper_series(S, s, S, n1, bits2);
+        /* f(h(x)) = -exp(-h(x)) h(x)^(s-1) */
+        acb_poly_neg(C, S);
+        acb_poly_exp_series(C, C, n1, bits2);
+        acb_sub_ui(t, s, 1, bits2);
+        acb_poly_pow_acb_series(B, S, t, n1, bits2);
+        acb_poly_mullow(C, C, B, n1, bits2);
+        acb_poly_neg(C, C);
+
+        if (regularized == 0)
+        {
+            /* integral(f(h(x)) h'(x))' = f(h(x)) h'(x) */
+            acb_poly_derivative(B, S, bits2);
+            acb_poly_mullow(C, C, B, n1, bits2);
+
+            acb_poly_truncate(C, n1 - 1);
+        }
+        else if (regularized == 1)
+        {
+            /* (integral(f(h(x)) h'(x)) / c)' = (f(h(x)) h'(x)) / c */
+            acb_poly_derivative(B, S, bits2);
+            acb_poly_mullow(C, C, B, n1, bits2);
+
+            acb_gamma(c, s, bits2);
+            _acb_vec_scalar_div(C->coeffs, C->coeffs, C->length, c, bits2);
+
+            acb_poly_truncate(C, n1 - 1);
+        }
+        else if (regularized == 2)
+        {
+            /* (h(x)^-s integral(f(h(x)) h'(x)))' =
+             * h(x)^-(s+1) (h(x) f(h(x)) - s integral(f(h(x)) h'(x))) h'(x) */
+            acb_poly_t D;
+            acb_poly_init(D);
+
+            acb_poly_derivative(B, S, bits2);
+            acb_poly_mullow(D, C, B, n1, bits2);
+            acb_poly_integral(D, D, bits2);
+            _acb_vec_scalar_mul(D->coeffs, D->coeffs, D->length, s, bits2);
+            acb_poly_mullow(C, C, S, n1, bits2);
+            acb_poly_sub(D, C, D, bits2);
+
+            acb_add_ui(t, s, 1, bits2);
+            acb_neg(t, t);
+            acb_poly_pow_acb_series(B, S, t, n1, bits2);
+
+            acb_poly_mullow(C, D, B, n1, bits2);
+
+            acb_poly_derivative(B, S, bits2);
+            acb_poly_mullow(C, C, B, n1, bits2);
+
+            acb_poly_truncate(C, n1 - 1);
+
+            acb_poly_clear(D);
+        }
+
+        acb_poly_derivative(B, A, bits2);
+
+        if (!acb_poly_overlaps(B, C))
+        {
+            flint_printf("FAIL (derivative)\n\n");
+            flint_printf("regularized = %d\n\n", regularized);
+            flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
+            flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
+            flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
+            flint_printf("C = "); acb_poly_printd(C, 15); flint_printf("\n\n");
+            abort();
+        }
+
+        acb_hypgeom_gamma_upper_series(S, s, S, regularized, n1, bits2);
 
         if (!acb_poly_overlaps(A, S))
         {
             flint_printf("FAIL (aliasing)\n\n");
+            flint_printf("regularized = %d\n\n", regularized);
+            flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
+            flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
             abort();
         }
 
@@ -113,6 +169,7 @@ int main()
         acb_poly_clear(C);
         acb_clear(s);
         acb_clear(t);
+        acb_clear(c);
     }
 
     flint_randclear(state);

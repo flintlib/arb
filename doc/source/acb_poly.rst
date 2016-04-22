@@ -992,13 +992,6 @@ Other special functions
     See :func:`acb_hypgeom_erf_series`, :func:`acb_hypgeom_erfc_series`,
     :func:`acb_hypgeom_erfi_series`.
 
-.. function:: void _acb_poly_upper_gamma_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, slong n, slong prec)
-
-.. function:: void acb_poly_upper_gamma_series(acb_poly_t res, const acb_t s, const acb_poly_t z, slong n, slong prec)
-
-    Sets *res* to the upper incomplete gamma function `\Gamma(s,z)` where *s* is
-    a constant and *z* is a power series, truncated to length *n*.
-
 .. function:: void _acb_poly_agm1_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
 
 .. function:: void acb_poly_agm1_series(acb_poly_t res, const acb_poly_t z, slong n, slong prec)
