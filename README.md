@@ -3,6 +3,8 @@
 Arb is a C library for arbitrary-precision interval arithmetic.
 It has full support for both real and complex numbers.
 The library is thread-safe, portable, and extensively tested.
+Arb is free software distributed under the
+GNU Lesser General Public License (LGPL), version 2.1 or later.
 
 ![arb logo](http://fredrikj.net/blog/2015/01/arb-2-5-0-released/arbtext.png)
 

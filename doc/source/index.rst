@@ -13,6 +13,10 @@ Welcome to Arb's documentation!
     and evaluation of many transcendental functions.
     All is done with automatic, rigorous error bounds.
 
+    Arb is free software distributed under the
+    GNU Lesser General Public License (LGPL), version 2.1 or later
+    (see :ref:`license` for details).
+
     The git repository is https://github.com/fredrik-johansson/arb/
 
     The documentation website is http://fredrikj.net/arb/
@@ -27,6 +31,10 @@ Welcome to Arb's documentation!
     It supports real and complex numbers, polynomials, power series, matrices,
     and evaluation of many transcendental functions.
     All is done with automatic, rigorous error bounds.
+
+    Arb is free software distributed under the
+    GNU Lesser General Public License (LGPL), version 2.1 or later
+    (see :ref:`license` for details).
 
     The git repository is https://github.com/fredrik-johansson/arb/
 

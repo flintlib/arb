@@ -3,29 +3,36 @@
 Credits and references
 ===============================================================================
 
-Arb is licensed GNU General Public License version 2, or any later version.
+.. _license:
+
+License
+-------------------------------------------------------------------------------
+
+Arb is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License (LGPL)
+as published by the Free Software Foundation; either version 2.1 of the
+License, or (at your option) any later version.
+
+Arb is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Arb (see the LICENSE file in the root of the Arb source
+directory).  If not, see http://www.gnu.org/licenses/.
+
+Versions of Arb up to and including 2.8 were distributed under
+the GNU General Public License (GPL), not the LGPL. The switch to
+the LGPL applies retroactively; i.e. users may redistribute older versions
+of Arb under the LGPL if they prefer.
+
+Authors
+-------------------------------------------------------------------------------
 
 Fredrik Johansson is the main author. The project was started in 2012
 as a numerical extension of FLINT, and the initial design was heavily based
 on FLINT 2.0 (with particular credit to Bill Hart and Sebastian Pancratz).
-
-From 2012 to July 2014, Fredrik's work on Arb was supported by
-Austrian Science Fund FWF Grant Y464-N18 (Fast Computer Algebra
-for Special Functions).
-During that period, he was a PhD student (and briefly a postdoc) at
-RISC, Johannes Kepler University, Linz, supervised by Manuel Kauers.
-
-From September 2014 to October 2015, Fredrik was a postdoc at
-INRIA Bordeaux and Institut de Mathématiques de Bordeaux,
-in the LFANT project-team headed by Andreas Enge. During that period,
-Fredrik's work on Arb was supported
-by ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in
-Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
-Since October 2015, Fredrik is a CR2 researcher in the LFANT team,
-funded by INRIA.
-
-Contributors
--------------------------------------------------------------------------------
 
 Several people have contributed patches, bug reports, or substantial feedback.
 This list is probably incomplete.
@@ -50,6 +57,24 @@ This list is probably incomplete.
 * Julien Puydt - soname versioning support
 * Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, Cholesky decomposition, miscellaneous patches
 * Jeroen Demeyer - patch for major bug on PPC64
+
+Funding
+-------------------------------------------------------------------------------
+
+From 2012 to July 2014, Fredrik's work on Arb was supported by
+Austrian Science Fund FWF Grant Y464-N18 (Fast Computer Algebra
+for Special Functions).
+During that period, he was a PhD student (and briefly a postdoc) at
+RISC, Johannes Kepler University, Linz, supervised by Manuel Kauers.
+
+From September 2014 to October 2015, Fredrik was a postdoc at
+INRIA Bordeaux and Institut de Mathématiques de Bordeaux,
+in the LFANT project-team headed by Andreas Enge. During that period,
+Fredrik's work on Arb was supported
+by ERC Starting Grant ANTICS 278537 (Algorithmic Number Theory in
+Computer Science) http://cordis.europa.eu/project/rcn/101288_en.html
+Since October 2015, Fredrik is a CR2 researcher in the LFANT team,
+funded by INRIA.
 
 Software
 -------------------------------------------------------------------------------
