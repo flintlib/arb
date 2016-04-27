@@ -64,7 +64,16 @@ int main()
         acb_poly_randtest(S, state, m, bits1, 3);
         acb_poly_randtest(A, state, m, bits1, 3);
         acb_poly_randtest(B, state, m, bits1, 3);
-        acb_randtest(s, state, bits1, 3);
+
+        if (n_randint(state, 10))
+        {
+            acb_randtest(s, state, bits1, 3);
+        }
+        else
+        {
+            slong p = n_randint(state, 100);
+            acb_set_d(s, -p);
+        }
 
         acb_hypgeom_gamma_lower_series(A, s, S, regularized, n1, bits2);
         acb_hypgeom_gamma_lower_series(B, s, S, regularized, n2, bits3);
@@ -112,33 +121,54 @@ int main()
         }
         else if (regularized == 2)
         {
-            /* (h(x)^-s integral(f(h(x)) h'(x)) / c)' =
-             * h(x)^-(s+1) (h(x) f(h(x)) - s integral(f(h(x)) h'(x))) h'(x) / c */
-            acb_poly_t D;
-            acb_poly_init(D);
+            if (acb_is_int(s) &&
+                arf_sgn(arb_midref(acb_realref(s))) <= 0 &&
+                arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)
+            {
+                /* (h(x)^-s)' = -s h(x)^-(s+1) h'(x) */
+                acb_poly_derivative(C, S, bits2);
 
-            acb_poly_derivative(B, S, bits2);
-            acb_poly_mullow(D, C, B, n1, bits2);
-            acb_poly_integral(D, D, bits2);
-            _acb_vec_scalar_mul(D->coeffs, D->coeffs, D->length, s, bits2);
-            acb_poly_mullow(C, C, S, n1, bits2);
-            acb_poly_sub(D, C, D, bits2);
+                acb_add_ui(t, s, 1, bits2);
+                acb_neg(t, t);
+                acb_poly_pow_acb_series(B, S, t, n1, bits2);
 
-            acb_add_ui(t, s, 1, bits2);
-            acb_neg(t, t);
-            acb_poly_pow_acb_series(B, S, t, n1, bits2);
+                acb_poly_mullow(C, C, B, n1, bits2);
 
-            acb_poly_mullow(C, D, B, n1, bits2);
+                _acb_vec_scalar_mul(C->coeffs, C->coeffs, C->length, s, bits2);
+                acb_poly_neg(C, C);
 
-            acb_poly_derivative(B, S, bits2);
-            acb_poly_mullow(C, C, B, n1, bits2);
+                acb_poly_truncate(C, n1 - 1);
+            }
+            else
+            {
+                /* (h(x)^-s integral(f(h(x)) h'(x)) / c)' =
+                 * h(x)^-(s+1) (h(x) f(h(x)) - s integral(f(h(x)) h'(x))) h'(x) / c */
+                acb_poly_t D;
+                acb_poly_init(D);
 
-            acb_gamma(c, s, bits2);
-            _acb_vec_scalar_div(C->coeffs, C->coeffs, C->length, c, bits2);
+                acb_poly_derivative(B, S, bits2);
+                acb_poly_mullow(D, C, B, n1, bits2);
+                acb_poly_integral(D, D, bits2);
+                _acb_vec_scalar_mul(D->coeffs, D->coeffs, D->length, s, bits2);
+                acb_poly_mullow(C, C, S, n1, bits2);
+                acb_poly_sub(D, C, D, bits2);
 
-            acb_poly_truncate(C, n1 - 1);
+                acb_add_ui(t, s, 1, bits2);
+                acb_neg(t, t);
+                acb_poly_pow_acb_series(B, S, t, n1, bits2);
 
-            acb_poly_clear(D);
+                acb_poly_mullow(C, D, B, n1, bits2);
+
+                acb_poly_derivative(B, S, bits2);
+                acb_poly_mullow(C, C, B, n1, bits2);
+
+                acb_gamma(c, s, bits2);
+                _acb_vec_scalar_div(C->coeffs, C->coeffs, C->length, c, bits2);
+
+                acb_poly_truncate(C, n1 - 1);
+
+                acb_poly_clear(D);
+            }
         }
 
         acb_poly_derivative(B, A, bits2);

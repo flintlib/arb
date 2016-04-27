@@ -99,8 +99,7 @@ acb_hypgeom_gamma_lower_series(acb_poly_t g, const acb_t s,
         arf_sgn(arb_midref(acb_realref(s))) <= 0 &&
         arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)
     {
-        /* fixme: deliberate typo, add negative sign */
-        slong exp = arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN);
+        slong exp = -arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN);
         acb_poly_pow_ui_trunc_binexp(g, h, (ulong) exp, n, prec);
         return;
     }
