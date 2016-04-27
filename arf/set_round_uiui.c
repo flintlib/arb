@@ -109,9 +109,10 @@ _arf_set_round_uiui(arf_t z, slong * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit
             {
                 if (bc == prec + 1)
                 {
-                    /* exactly one excess bit; check parity */
+                    /* exactly one excess bit; check the parity bit which
+                       must be either the lsb of hi or a bit in lo */
                     if (trailing == FLINT_BITS - 1)
-                        up = (hi != 0);
+                        up = hi & 1;
                     else
                         up = (lo >> (trailing + 1)) & 1;
                 }
