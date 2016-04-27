@@ -16,11 +16,33 @@ void
 _acb_hypgeom_gamma_lower_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, int regularized, slong n, slong prec)
 {
     acb_t c;
-    acb_init(c);
-
-    acb_hypgeom_gamma_lower(c, s, h, regularized, prec);
 
     hlen = FLINT_MIN(hlen, n);
+
+    if (regularized == 2 && acb_is_int(s) &&
+        arf_sgn(arb_midref(acb_realref(s))) <= 0 &&
+        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)
+    {
+        acb_t ns;
+        acb_init(ns);
+        acb_neg(ns, s);
+        if (g == h)
+        {
+            acb_ptr t = _acb_vec_init(hlen);
+            _acb_vec_set(t, h, hlen);
+            _acb_poly_pow_acb_series(g, t, hlen, ns, n, prec);
+            _acb_vec_clear(t, hlen);
+        }
+        else
+        {
+            _acb_poly_pow_acb_series(g, h, hlen, ns, n, prec);
+        }
+        acb_clear(ns);
+        return;
+    }
+
+    acb_init(c);
+    acb_hypgeom_gamma_lower(c, s, h, regularized, prec);
 
     if (hlen == 1)
     {
@@ -75,22 +97,12 @@ _acb_hypgeom_gamma_lower_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
     acb_clear(c);
 }
 
+
 void
 acb_hypgeom_gamma_lower_series(acb_poly_t g, const acb_t s,
         const acb_poly_t h, int regularized, slong n, slong prec)
 {
-    slong hlen;
-
-    if (regularized == 2 && acb_is_int(s) &&
-        arf_sgn(arb_midref(acb_realref(s))) <= 0 &&
-        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)
-    {
-        slong exp = -arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN);
-        acb_poly_pow_ui_trunc_binexp(g, h, (ulong) exp, n, prec);
-        return;
-    }
-
-    hlen = h->length;
+    slong hlen = h->length;
 
     if (n == 0)
     {
