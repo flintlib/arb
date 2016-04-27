@@ -57,8 +57,11 @@ int main()
         }
         else
         {
-            slong p = n_randint(state, 100);
-            acb_set_d(s, -p);
+            fmpz_t k;
+            fmpz_init(k);
+            fmpz_randtest(k, state, 100);
+            acb_set_fmpz(s, k);
+            fmpz_clear(k);
         }
 
         acb_hypgeom_gamma_lower_series(A, s, S, regularized, n1, bits2);

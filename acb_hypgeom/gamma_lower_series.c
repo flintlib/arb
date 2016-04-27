@@ -19,9 +19,7 @@ _acb_hypgeom_gamma_lower_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hl
 
     hlen = FLINT_MIN(hlen, n);
 
-    if (regularized == 2 && acb_is_int(s) &&
-        arf_sgn(arb_midref(acb_realref(s))) <= 0 &&
-        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), 30) < 0)
+    if (regularized == 2 && acb_is_int(s) && arb_is_nonpositive(acb_realref(s)))
     {
         acb_t ns;
         acb_init(ns);
