@@ -610,6 +610,15 @@ Incomplete gamma functions
     If *regularized* is 2, computes a further regularized lower incomplete
     gamma function `\gamma^{*}(s,z) = z^{-s} P(s,z)`.
 
+.. function:: void _acb_hypgeom_gamma_lower_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+
+.. function:: void acb_hypgeom_gamma_lower_series(acb_poly_t res, const acb_t s, const acb_poly_t z, int regularized, slong n, slong prec)
+
+    Sets *res* to an lower incomplete gamma function where *s* is
+    a constant and *z* is a power series, truncated to length *n*.
+    The *regularized* argument has the same interpretation as in
+    :func:`acb_hypgeom_gamma_lower`.
+
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
 
