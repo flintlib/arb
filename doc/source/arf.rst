@@ -94,10 +94,8 @@ Types, macros and constants
 .. macro:: ARF_RND_NEAR
 
     Specifies that the result of an operation should be rounded to the
-    nearest representable number, rounding to an odd mantissa if there is a tie
-    between two values. **Warning**: this rounding mode is currently
-    not implemented (except for a few conversions functions where this 
-    stated explicitly).
+    nearest representable number, rounding to even if there is a tie
+    between two values.
 
 .. macro:: ARF_PREC_EXACT
 
@@ -227,9 +225,6 @@ Assignment, rounding and conversions
     Sets *y* to *x*, rounded to *prec* bits in the direction
     specified by *rnd*.
 
-    Warning: :func:`arf_set_round` supports rounding to nearest
-    with *ARF_RND_NEAR*, but the other methods currently do not.
-
 .. function:: void arf_set_si_2exp_si(arf_t y, slong m, slong e)
 
 .. function:: void arf_set_ui_2exp_si(arf_t y, ulong m, slong e)
@@ -254,8 +249,7 @@ Assignment, rounding and conversions
 .. function:: double arf_get_d(const arf_t x, arf_rnd_t rnd)
 
     Returns *x* rounded to a double in the direction specified by *rnd*.
-    This method supports rounding to nearest with *ARF_RND_NEAR*.
-    It also rounds correctly when overflowing or underflowing
+    This method rounds correctly when overflowing or underflowing
     the double exponent range (this was not the case in an earlier version).
 
 .. function:: void arf_get_fmpr(fmpr_t y, const arf_t x)
@@ -509,7 +503,6 @@ Addition and multiplication
 
     Sets `y = -x`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
-    This method supports *ARF_RND_NEAR*.
 
 .. function:: void arf_mul_2exp_si(arf_t y, const arf_t x, slong e)
 
@@ -529,7 +522,6 @@ Addition and multiplication
 
     Sets `z = x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
-    These methods support *ARF_RND_NEAR*.
 
 .. function:: int arf_add(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
