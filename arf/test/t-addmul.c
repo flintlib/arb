@@ -65,12 +65,13 @@ int main()
                 prec = ARF_PREC_EXACT;
             }
 
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0:  rnd = ARF_RND_DOWN; break;
                 case 1:  rnd = ARF_RND_UP; break;
                 case 2:  rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3:  rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
             }
 
             switch (n_randint(state, 5))

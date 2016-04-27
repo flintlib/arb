@@ -14,23 +14,30 @@
 int
 arf_add_naive(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 {
-    fmpr_t a, b;
-    slong r;
+    if (rnd == ARF_RND_NEAR)
+    {
+        arf_add(z, x, y, ARF_PREC_EXACT, ARF_RND_DOWN);
+        return arf_set_round(z, z, prec, rnd);
+    }
+    else
+    {
+        fmpr_t a, b;
+        slong r;
 
-    fmpr_init(a);
-    fmpr_init(b);
+        fmpr_init(a);
+        fmpr_init(b);
 
-    arf_get_fmpr(a, x);
-    arf_get_fmpr(b, y);
+        arf_get_fmpr(a, x);
+        arf_get_fmpr(b, y);
 
-    r = fmpr_add(a, a, b, prec, rnd);
+        r = fmpr_add(a, a, b, prec, rnd);
+        arf_set_fmpr(z, a);
 
-    arf_set_fmpr(z, a);
+        fmpr_clear(a);
+        fmpr_clear(b);
 
-    fmpr_clear(a);
-    fmpr_clear(b);
-
-    return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+        return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+    }
 }
 
 int main()
@@ -48,11 +55,13 @@ int main()
         arf_t x, y, z, v;
         slong prec, r1, r2;
         arf_rnd_t rnd;
+        fmpz_t t;
 
         arf_init(x);
         arf_init(y);
         arf_init(z);
         arf_init(v);
+        fmpz_init(t);
 
         for (iter2 = 0; iter2 < 100; iter2++)
         {
@@ -60,19 +69,31 @@ int main()
             arf_randtest_special(y, state, 2000, 100);
             prec = 2 + n_randint(state, 2000);
 
-            if (n_randint(state, 10) == 0 &&
-                fmpz_bits(ARF_EXPREF(x)) < 10 &&
-                fmpz_bits(ARF_EXPREF(y)) < 10)
-            {
-                prec = ARF_PREC_EXACT;
-            }
-
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0:  rnd = ARF_RND_DOWN; break;
                 case 1:  rnd = ARF_RND_UP; break;
                 case 2:  rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3:  rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
+            }
+
+            rnd = ARF_RND_DOWN;
+
+            if (arf_is_normal(x) && arf_is_normal(y))
+            {
+                fmpz_sub(t, ARF_EXPREF(x), ARF_EXPREF(y));
+
+                /* if not too far apart, sometimes test exact addition */
+                if (fmpz_bits(t) < 10)
+                {
+                    if (n_randint(state, 10) == 0)
+                        prec = ARF_PREC_EXACT;
+                }
+                else if (rnd == ARF_RND_NEAR)
+                { /* large shift not supported in add_naive */
+                    rnd = ARF_RND_DOWN;
+                }
             }
 
             switch (n_randint(state, 5))
@@ -159,6 +180,7 @@ int main()
         arf_clear(y);
         arf_clear(z);
         arf_clear(v);
+        fmpz_clear(t);
     }
 
     flint_randclear(state);

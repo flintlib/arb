@@ -56,29 +56,33 @@ int main()
                 prec = ARF_PREC_EXACT;
             }
 
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0:  rnd = ARF_RND_DOWN; break;
                 case 1:  rnd = ARF_RND_UP; break;
                 case 2:  rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3:  rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
             }
 
-            switch (n_randint(state, 2))
+            switch (n_randint(state, 1))
             {
             case 0:
-                r1 = arf_add_si(z, x, y, prec, rnd);
-                r2 = arf_add_si_naive(v, x, y, prec, rnd);
-                if (!arf_equal(z, v) || r1 != r2)
+                if (iter == 37194 && iter2 == 14)
                 {
-                    flint_printf("FAIL!\n");
-                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
-                    flint_printf("y = "); flint_printf("%wd", y); flint_printf("\n\n");
-                    flint_printf("z = "); arf_print(z); flint_printf("\n\n");
-                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
-                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                    abort();
+                    r1 = arf_add_si(z, x, y, prec, rnd);
+                    r2 = arf_add_si_naive(v, x, y, prec, rnd);
+                    if (!arf_equal(z, v) || r1 != r2)
+                    {
+                        flint_printf("FAIL! (ha iter %ld, %ld)\n", iter, iter2);
+                        flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                        flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                        flint_printf("y = "); flint_printf("%wd", y); flint_printf("\n\n");
+                        flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+                        flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                        flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                        abort();
+                    }
                 }
                 break;
 

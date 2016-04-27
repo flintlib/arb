@@ -66,12 +66,13 @@ int main()
             fmpz_randtest(a, state, bits1);
             fmpz_get_mpz(b, a);
 
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0: rnd = ARF_RND_DOWN; break;
                 case 1: rnd = ARF_RND_UP; break;
                 case 2: rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3: rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
             }
 
             ret1 = arf_set_round_mpz(x, b, bits2, rnd);
