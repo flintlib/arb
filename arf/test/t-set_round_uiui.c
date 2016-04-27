@@ -53,32 +53,29 @@ int main()
             default: rnd = ARF_RND_NEAR; break;
         }
 
-        if (iter == 506825)
+        if (t[1] != 0)
         {
-            if (t[1] != 0)
-            {
-                ret1 = _arf_set_round_mpn(x, &fix1, t, 2, sgnbit, prec, rnd);
-                fmpz_set_si(ARF_EXPREF(x), 2 * FLINT_BITS + fix1);
-            }
-            else
-            {
-                ret1 = _arf_set_round_mpn(x, &fix1, t, 1, sgnbit, prec, rnd);
-                fmpz_set_si(ARF_EXPREF(x), FLINT_BITS + fix1);
-            }
+            ret1 = _arf_set_round_mpn(x, &fix1, t, 2, sgnbit, prec, rnd);
+            fmpz_set_si(ARF_EXPREF(x), 2 * FLINT_BITS + fix1);
+        }
+        else
+        {
+            ret1 = _arf_set_round_mpn(x, &fix1, t, 1, sgnbit, prec, rnd);
+            fmpz_set_si(ARF_EXPREF(x), FLINT_BITS + fix1);
+        }
 
-            ret2 = _arf_set_round_uiui(y, &fix2, t[1], t[0], sgnbit, prec, rnd);
-            fmpz_set_si(ARF_EXPREF(y), 2 * FLINT_BITS + fix2);
+        ret2 = _arf_set_round_uiui(y, &fix2, t[1], t[0], sgnbit, prec, rnd);
+        fmpz_set_si(ARF_EXPREF(y), 2 * FLINT_BITS + fix2);
 
-            if (!arf_equal(x, y) || (ret1 != ret2))
-            {
-                flint_printf("FAIL\n\n");
-                flint_printf("prec = %wd", prec); flint_printf("\n\n");
-                flint_printf("hi = %wu, lo = %wu\n\n", t[1], t[0]);
-                flint_printf("x = "); arf_print(x); flint_printf("\n\n");
-                flint_printf("y = "); arf_print(y); flint_printf("\n\n");
-                flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-                abort();
-            }
+        if (!arf_equal(x, y) || (ret1 != ret2))
+        {
+            flint_printf("FAIL\n\n");
+            flint_printf("prec = %wd", prec); flint_printf("\n\n");
+            flint_printf("hi = %wu, lo = %wu\n\n", t[1], t[0]);
+            flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+            flint_printf("y = "); arf_print(y); flint_printf("\n\n");
+            flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
+            abort();
         }
 
         arf_clear(x);
