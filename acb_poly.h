@@ -244,6 +244,7 @@ acb_poly_scalar_div(acb_poly_t res, const acb_poly_t poly, const acb_t c, slong 
     acb_poly_fit_length(res, poly->length);
     _acb_vec_scalar_div(res->coeffs, poly->coeffs, poly->length, c, prec);
     _acb_poly_set_length(res, poly->length);
+    _acb_poly_normalise(res);
 }
 
 void acb_poly_mullow_classical(acb_poly_t res, const acb_poly_t poly1,
