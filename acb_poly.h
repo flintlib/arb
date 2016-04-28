@@ -235,6 +235,7 @@ acb_poly_scalar_mul(acb_poly_t res, const acb_poly_t poly, const acb_t c, slong 
     acb_poly_fit_length(res, poly->length);
     _acb_vec_scalar_mul(res->coeffs, poly->coeffs, poly->length, c, prec);
     _acb_poly_set_length(res, poly->length);
+    _acb_poly_normalise(res);
 }
 
 ACB_POLY_INLINE void
