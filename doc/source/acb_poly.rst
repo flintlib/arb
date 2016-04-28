@@ -246,6 +246,14 @@ Arithmetic
 
     Sets *C* to *A* multiplied by `2^c`.
 
+.. function:: void acb_poly_scalar_mul(acb_poly_t C, const acb_poly_t A, const acb_t c, slong prec)
+
+    Sets *C* to *A* multiplied by *c*.
+
+.. function:: void acb_poly_scalar_div(acb_poly_t C, const acb_poly_t A, const acb_t c, slong prec)
+
+    Sets *C* to *A* divided by *c*.
+
 .. function:: void _acb_poly_mullow_classical(acb_ptr C, acb_srcptr A, slong lenA, acb_srcptr B, slong lenB, slong n, slong prec)
 
 .. function:: void _acb_poly_mullow_transpose(acb_ptr C, acb_srcptr A, slong lenA, acb_srcptr B, slong lenB, slong n, slong prec)
