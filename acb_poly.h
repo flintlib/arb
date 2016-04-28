@@ -229,6 +229,22 @@ acb_poly_scalar_mul_2exp_si(acb_poly_t res, const acb_poly_t poly, slong c)
     _acb_poly_set_length(res, poly->length);
 }
 
+ACB_POLY_INLINE void
+acb_poly_scalar_mul(acb_poly_t res, const acb_poly_t poly, const acb_t c, slong prec)
+{
+    acb_poly_fit_length(res, poly->length);
+    _acb_vec_scalar_mul(res->coeffs, poly->coeffs, poly->length, c, prec);
+    _acb_poly_set_length(res, poly->length);
+}
+
+ACB_POLY_INLINE void
+acb_poly_scalar_div(acb_poly_t res, const acb_poly_t poly, const acb_t c, slong prec)
+{
+    acb_poly_fit_length(res, poly->length);
+    _acb_vec_scalar_div(res->coeffs, poly->coeffs, poly->length, c, prec);
+    _acb_poly_set_length(res, poly->length);
+}
+
 void acb_poly_mullow_classical(acb_poly_t res, const acb_poly_t poly1,
                                             const acb_poly_t poly2,
                                                 slong n, slong prec);
@@ -685,4 +701,3 @@ void acb_poly_erf_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec);
 #endif
 
 #endif
-

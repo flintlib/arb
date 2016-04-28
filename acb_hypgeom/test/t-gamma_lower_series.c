@@ -104,7 +104,7 @@ int main()
             acb_poly_mullow(C, C, B, n1, bits2);
 
             acb_gamma(c, s, bits2);
-            _acb_vec_scalar_div(C->coeffs, C->coeffs, C->length, c, bits2);
+            acb_poly_scalar_div(C, C, c, bits2);
 
             acb_poly_truncate(C, n1 - 1);
         }
@@ -123,7 +123,7 @@ int main()
 
                 acb_poly_mullow(C, C, B, n1, bits2);
 
-                _acb_vec_scalar_mul(C->coeffs, C->coeffs, C->length, s, bits2);
+                acb_poly_scalar_mul(C, C, s, bits2);
                 acb_poly_neg(C, C);
 
                 acb_poly_truncate(C, n1 - 1);
@@ -138,7 +138,7 @@ int main()
                 acb_poly_derivative(B, S, bits2);
                 acb_poly_mullow(D, C, B, n1, bits2);
                 acb_poly_integral(D, D, bits2);
-                _acb_vec_scalar_mul(D->coeffs, D->coeffs, D->length, s, bits2);
+                acb_poly_scalar_mul(D, D, s, bits2);
                 acb_poly_mullow(C, C, S, n1, bits2);
                 acb_poly_sub(D, C, D, bits2);
 
@@ -152,7 +152,7 @@ int main()
                 acb_poly_mullow(C, C, B, n1, bits2);
 
                 acb_gamma(c, s, bits2);
-                _acb_vec_scalar_div(C->coeffs, C->coeffs, C->length, c, bits2);
+                acb_poly_scalar_div(C, C, c, bits2);
 
                 acb_poly_truncate(C, n1 - 1);
 
