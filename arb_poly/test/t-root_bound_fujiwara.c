@@ -43,7 +43,7 @@ int main()
 
         arb_poly_product_roots(a, roots, deg, prec);
         arb_randtest(t, state, prec, 1 + n_randint(state, 20));
-        _arb_vec_scalar_mul(a->coeffs, a->coeffs, a->length, t, prec);
+        arb_poly_scalar_mul(a, a, t, prec);
 
         arb_poly_root_bound_fujiwara(mag1, a);
 

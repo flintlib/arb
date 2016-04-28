@@ -207,6 +207,24 @@ arb_poly_scalar_mul_2exp_si(arb_poly_t res, const arb_poly_t poly, slong c)
     _arb_poly_set_length(res, poly->length);
 }
 
+ARB_POLY_INLINE void
+arb_poly_scalar_mul(arb_poly_t res, const arb_poly_t poly, const arb_t c, slong prec)
+{
+    arb_poly_fit_length(res, poly->length);
+    _arb_vec_scalar_mul(res->coeffs, poly->coeffs, poly->length, c, prec);
+    _arb_poly_set_length(res, poly->length);
+    _arb_poly_normalise(res);
+}
+
+ARB_POLY_INLINE void
+arb_poly_scalar_div(arb_poly_t res, const arb_poly_t poly, const arb_t c, slong prec)
+{
+    arb_poly_fit_length(res, poly->length);
+    _arb_vec_scalar_div(res->coeffs, poly->coeffs, poly->length, c, prec);
+    _arb_poly_set_length(res, poly->length);
+    _arb_poly_normalise(res);
+}
+
 void _arb_poly_mullow_ztrunc(arb_ptr res,
     arb_srcptr poly1, slong len1,
     arb_srcptr poly2, slong len2, slong n, slong prec);
