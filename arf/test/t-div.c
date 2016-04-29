@@ -14,23 +14,63 @@
 int
 arf_div_naive(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 {
-    fmpr_t a, b;
-    slong r;
+    if (rnd == ARF_RND_NEAR)
+    {
+        arf_t m, n;
+        fmpz_t e, f;
+        mpfr_t a, b, c;
+        int inexact;
 
-    fmpr_init(a);
-    fmpr_init(b);
+        if (arf_is_zero(y))
+        {
+            arf_nan(z);
+            return 0;
+        }
 
-    arf_get_fmpr(a, x);
-    arf_get_fmpr(b, y);
+        arf_init(m); arf_init(n);
+        fmpz_init(e); fmpz_init(f);
+        mpfr_init2(a, FLINT_MAX(2, arf_bits(x)));
+        mpfr_init2(b, FLINT_MAX(2, arf_bits(y)));
+        mpfr_init2(c, prec);
 
-    r = fmpr_div(a, a, b, prec, rnd);
+        arf_frexp(m, e, x);
+        arf_frexp(n, f, y);
 
-    arf_set_fmpr(z, a);
+        arf_get_mpfr(a, m, MPFR_RNDD);
+        arf_get_mpfr(b, n, MPFR_RNDD);
 
-    fmpr_clear(a);
-    fmpr_clear(b);
+        inexact = (mpfr_div(c, a, b, arf_rnd_to_mpfr(rnd)) != 0);
 
-    return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+        arf_set_mpfr(z, c);
+        fmpz_sub(e, e, f);
+        arf_mul_2exp_fmpz(z, z, e);
+
+        arf_clear(m); arf_clear(n);
+        fmpz_clear(e); fmpz_clear(f);
+        mpfr_clear(a); mpfr_clear(b); mpfr_clear(c);
+
+        return inexact;
+    }
+    else
+    {
+        fmpr_t a, b;
+        slong r;
+
+        fmpr_init(a);
+        fmpr_init(b);
+
+        arf_get_fmpr(a, x);
+        arf_get_fmpr(b, y);
+
+        r = fmpr_div(a, a, b, prec, rnd);
+
+        arf_set_fmpr(z, a);
+
+        fmpr_clear(a);
+        fmpr_clear(b);
+
+        return (r == FMPR_RESULT_EXACT) ? 0 : 1;
+    }
 }
 
 int main()
@@ -63,12 +103,13 @@ int main()
             if (n_randint(state, 20) == 0)
                 arf_mul(x, x, y, 2 + n_randint(state, 3000), ARF_RND_FLOOR);
 
-            switch (n_randint(state, 4))
+            switch (n_randint(state, 5))
             {
                 case 0:  rnd = ARF_RND_DOWN; break;
                 case 1:  rnd = ARF_RND_UP; break;
                 case 2:  rnd = ARF_RND_FLOOR; break;
-                default: rnd = ARF_RND_CEIL; break;
+                case 3:  rnd = ARF_RND_CEIL; break;
+                default: rnd = ARF_RND_NEAR; break;
             }
 
             switch (n_randint(state, 5))
