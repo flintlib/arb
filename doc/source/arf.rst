@@ -690,3 +690,25 @@ Low-level methods
     that the bit shift would overflow an *slong*, but otherwise no
     assumptions are made about the input.
 
+.. function:: int _arf_set_round_ui(arf_t z, ulong x, int sgnbit, slong prec, arf_rnd_t rnd)
+
+    Sets *z* to the integer *x*, negated if *sgnbit* is 1, rounded to *prec*
+    bits in the direction specified by *rnd*. There are no assumptions on *x*.
+
+.. function:: int _arf_set_round_uiui(arf_t z, slong * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, slong prec, arf_rnd_t rnd)
+
+    Sets the mantissa of *z* to the two-limb mantissa given by *hi* and *lo*,
+    negated if *sgnbit* is 1, rounded to *prec* bits in the direction specified
+    by *rnd*. Requires that not both *hi* and *lo* are zero.
+    Writes the exponent shift to *fix* without writing the exponent of *z*
+    directly.
+
+.. function:: int _arf_set_round_mpn(arf_t z, slong * exp_shift, mp_srcptr x, mp_size_t xn, int sgnbit, slong prec, arf_rnd_t rnd)
+
+    Sets the mantissa of *z* to the mantissa given by the *xn* limbs in *x*,
+    negated if *sgnbit* is 1, rounded to *prec* bits in the direction
+    specified by *rnd*. Returns the inexact flag. Requires that *xn* is positive
+    and that the top limb of *x* is nonzero. If *x* has leading zero bits,
+    writes the shift to *exp_shift*. This method does not write the exponent of
+    *z* directly. Requires that *x* does not point to the limbs of *z*.
+

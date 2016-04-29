@@ -544,10 +544,8 @@ arf_set_fmpz(arf_t y, const fmpz_t x)
 
 int _arf_set_round_ui(arf_t x, ulong v, int sgnbit, slong prec, arf_rnd_t rnd);
 
-/* TODO: document */
 int _arf_set_round_uiui(arf_t z, slong * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit, slong prec, arf_rnd_t rnd);
 
-/* Assumes xn > 0, x[xn-1] != 0. */
 int
 _arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, slong prec, arf_rnd_t rnd);
