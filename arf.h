@@ -740,6 +740,8 @@ arf_abs_bound_le_2exp_fmpz(fmpz_t b, const arf_t x)
 
 slong arf_abs_bound_lt_2exp_si(const arf_t x);
 
+void arf_frexp(arf_t man, fmpz_t exp, const arf_t x);
+
 void arf_get_fmpz_2exp(fmpz_t man, fmpz_t exp, const arf_t x);
 
 int _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp);

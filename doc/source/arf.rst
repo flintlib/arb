@@ -246,6 +246,12 @@ Assignment, rounding and conversions
     If *x* is zero, both *m* and *e* are set to zero. If *x* is
     infinite or NaN, the result is undefined.
 
+.. function:: void arf_frexp(arf_t m, fmpz_t e, const arf_t x)
+
+    Writes *x* as `m \times 2^e`, where `1/2 \le |m| < 1` if *x* is a normal
+    value. If *x* is a special value, copies this to *m* and sets *e* to zero.
+    Note: for the inverse operation (*ldexp*), use :func:`arf_mul_2exp_fmpz`.
+
 .. function:: double arf_get_d(const arf_t x, arf_rnd_t rnd)
 
     Returns *x* rounded to a double in the direction specified by *rnd*.
