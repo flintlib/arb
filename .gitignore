@@ -1,0 +1,5 @@
+Makefile
+build/*
+libarb.so*
+doc/build/*
+*.ppm
