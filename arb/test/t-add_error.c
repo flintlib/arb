@@ -58,7 +58,7 @@ int main()
             arf_sub(arb_midref(b), arb_midref(b), r, ARF_PREC_EXACT, ARF_RND_DOWN);
 
         /* should this be done differently? */
-        if (arf_is_nan(arb_midref(b)))
+        if (arb_is_indeterminate(b))
             arf_zero(arb_midref(b));
 
         if (!arb_contains(c, b))
@@ -105,7 +105,7 @@ int main()
             arf_sub(arb_midref(b), arb_midref(b), m, ARF_PREC_EXACT, ARF_RND_DOWN);
 
         /* should this be done differently? */
-        if (arf_is_nan(arb_midref(b)))
+        if (arb_is_indeterminate(b))
             arf_zero(arb_midref(b));
 
         if (!arb_contains(c, b))
@@ -152,7 +152,7 @@ int main()
             arf_sub(arb_midref(b), arb_midref(b), t, ARF_PREC_EXACT, ARF_RND_DOWN);
 
         /* should this be done differently? */
-        if (arf_is_nan(arb_midref(b)))
+        if (arb_is_indeterminate(b))
             arf_zero(arb_midref(b));
 
         if (!arb_contains(c, b))
@@ -200,7 +200,7 @@ int main()
             arf_sub(arb_midref(b), arb_midref(b), t, ARF_PREC_EXACT, ARF_RND_DOWN);
 
         /* should this be done differently? */
-        if (arf_is_nan(arb_midref(b)))
+        if (arb_is_indeterminate(b))
             arf_zero(arb_midref(b));
 
         if (!arb_contains(c, b))
@@ -248,7 +248,7 @@ int main()
             arf_sub(arb_midref(b), arb_midref(b), t, ARF_PREC_EXACT, ARF_RND_DOWN);
 
         /* should this be done differently? */
-        if (arf_is_nan(arb_midref(b)))
+        if (arb_is_indeterminate(b))
             arf_zero(arb_midref(b));
 
         if (!arb_contains(c, b))

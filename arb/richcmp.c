@@ -13,7 +13,7 @@
 
 int arb_eq(const arb_t x, const arb_t y)
 {
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
@@ -28,7 +28,7 @@ int arb_eq(const arb_t x, const arb_t y)
 
 int arb_ne(const arb_t x, const arb_t y)
 {
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
@@ -47,7 +47,7 @@ int arb_lt(const arb_t x, const arb_t y)
     arf_t t;
     int res;
 
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
@@ -77,7 +77,7 @@ int arb_le(const arb_t x, const arb_t y)
     arf_t t;
     int res;
 
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
@@ -108,7 +108,7 @@ int arb_gt(const arb_t x, const arb_t y)
     arf_t t;
     int res;
 
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
@@ -138,7 +138,7 @@ int arb_ge(const arb_t x, const arb_t y)
     arf_t t;
     int res;
 
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
         return 0;
 
     if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))

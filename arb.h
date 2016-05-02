@@ -158,6 +158,12 @@ arb_is_finite(const arb_t x)
     return arf_is_finite(arb_midref(x)) && mag_is_finite(arb_radref(x));
 }
 
+ARB_INLINE int
+arb_is_indeterminate(const arb_t x)
+{
+    return arf_is_nan(arb_midref(x));
+}
+
 void arb_set(arb_t x, const arb_t y);
 
 ARB_INLINE void
@@ -312,7 +318,7 @@ arb_is_positive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) > 0) &&
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
-         !arf_is_nan(arb_midref(x));
+         !arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -320,7 +326,7 @@ arb_is_nonnegative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) >= 0) &&
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
-         !arf_is_nan(arb_midref(x));
+         !arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -328,7 +334,7 @@ arb_is_negative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) < 0) &&
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
-         !arf_is_nan(arb_midref(x));
+         !arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -336,7 +342,7 @@ arb_is_nonpositive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) <= 0) &&
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
-         !arf_is_nan(arb_midref(x));
+         !arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -344,7 +350,7 @@ arb_contains_negative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) < 0) ||
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
-        || arf_is_nan(arb_midref(x));
+        || arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -352,7 +358,7 @@ arb_contains_nonpositive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) <= 0) ||
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
-        || arf_is_nan(arb_midref(x));
+        || arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -360,7 +366,7 @@ arb_contains_positive(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) > 0) ||
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
-        || arf_is_nan(arb_midref(x));
+        || arb_is_indeterminate(x);
 }
 
 ARB_INLINE int
@@ -368,7 +374,7 @@ arb_contains_nonnegative(const arb_t x)
 {
     return (arf_sgn(arb_midref(x)) >= 0) ||
         (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
-        || arf_is_nan(arb_midref(x));
+        || arb_is_indeterminate(x);
 }
 
 void arb_get_mag_lower(mag_t z, const arb_t x);

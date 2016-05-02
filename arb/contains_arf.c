@@ -16,9 +16,9 @@ arb_contains_arf(const arb_t x, const arf_t y)
 {
     if (arf_is_nan(y))
     {
-        return arf_is_nan(arb_midref(x));
+        return arb_is_indeterminate(x);
     }
-    else if (arf_is_nan(arb_midref(x)))
+    else if (arb_is_indeterminate(x))
     {
         return 1;
     }

@@ -19,7 +19,7 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 
     if (arf_is_zero(y))
     {
-        if (arf_is_nan(arb_midref(x)))
+        if (arb_is_indeterminate(x))
             arb_indeterminate(z);
         else
             arb_zero_pm_inf(z);

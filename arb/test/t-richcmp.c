@@ -14,7 +14,7 @@
 static void
 arb_supremum(arf_t res, const arb_t x)
 {
-    if (arf_is_nan(arb_midref(x)))
+    if (arb_is_indeterminate(x))
     {
         arf_nan(res);
     }
@@ -32,7 +32,7 @@ arb_supremum(arf_t res, const arb_t x)
 static void
 arb_infimum(arf_t res, const arb_t x)
 {
-    if (arf_is_nan(arb_midref(x)))
+    if (arb_is_indeterminate(x))
     {
         arf_nan(res);
     }
