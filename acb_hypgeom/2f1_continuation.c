@@ -52,16 +52,15 @@ bound(mag_t A, mag_t nu, mag_t N,
     mag_mul(M0, M0, nu);
     mag_mul_2exp_si(M0, M0, 1);
 
-    /* M1 = 2 nu |(a+b+1)y-c| + 2|a+b+1| */
+    /* M1 = nu |a+b+1| + 2|c| */
     acb_add(d, a, b, MAG_BITS);
     acb_add_ui(d, d, 1, MAG_BITS);
     acb_get_mag(t, d);
-    acb_mul(d, d, y, MAG_BITS);
-    acb_sub(d, d, c, MAG_BITS);
-    acb_get_mag(u, d);
-    mag_mul(u, u, nu);
+    mag_mul(t, t, nu);
+
+    acb_get_mag(u, c);
+    mag_mul_2exp_si(u, u, 1);
     mag_add(M1, t, u);
-    mag_mul_2exp_si(M1, M1, 1);
 
     /* N = max(sqrt(2 M0), 2 M1) / nu */
     mag_mul_2exp_si(M0, M0, 1);
