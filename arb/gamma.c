@@ -762,6 +762,7 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
     int reflect;
     slong r, n, wp;
     arb_t t, u, v;
+    double acc;
 
     if (arb_is_exact(x))
     {
@@ -799,8 +800,13 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
         }
     }
 
-    wp = prec + FLINT_BIT_COUNT(prec);
-
+    /* todo: for large x (if exact or accurate enough), increase precision */
+    acc = arb_rel_accuracy_bits(x);
+    acc = FLINT_MAX(acc, 0);
+    wp = FLINT_MIN(prec, acc + 20);
+    wp = FLINT_MAX(wp, 2);
+    wp = wp + FLINT_BIT_COUNT(wp);
+ 
     arb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 0, wp);
 
     arb_init(t);
