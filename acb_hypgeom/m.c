@@ -71,9 +71,79 @@ acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int 
     acb_clear(c);
 }
 
-static void
-_acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
+void
+_acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z,
+    int regularized, slong prec, slong gamma_prec, int kummer)
 {
+    if (regularized)
+    {
+        /* Remove singularity */
+        if (acb_is_int(b) && arb_is_nonpositive(acb_realref(b)) &&
+            arf_cmpabs_2exp_si(arb_midref(acb_realref(b)), 30) < 0)
+        {
+            acb_t c, d, t, u;
+            slong n;
+
+            n = arf_get_si(arb_midref(acb_realref(b)), ARF_RND_DOWN);
+
+            acb_init(c);
+            acb_init(d);
+            acb_init(t);
+            acb_init(u);
+
+            acb_sub(c, a, b, prec);
+            acb_add_ui(c, c, 1, prec);
+
+            acb_neg(d, b);
+            acb_add_ui(d, d, 2, prec);
+
+            _acb_hypgeom_m_1f1(t, c, d, z, 0, prec, gamma_prec, kummer);
+
+            acb_pow_ui(u, z, 1 - n, prec);
+            acb_mul(t, t, u, prec);
+
+            acb_rising_ui(u, a, 1 - n, prec);
+            acb_mul(t, t, u, prec);
+
+            arb_fac_ui(acb_realref(u), 1 - n, prec);
+            acb_div_arb(res, t, acb_realref(u), prec);
+
+            acb_clear(c);
+            acb_clear(d);
+            acb_clear(t);
+            acb_clear(u);
+        }
+        else
+        {
+            acb_t t;
+            acb_init(t);
+            acb_rgamma(t, b, gamma_prec);
+            _acb_hypgeom_m_1f1(res, a, b, z, 0, prec, gamma_prec, kummer);
+            acb_mul(res, res, t, prec);
+            acb_clear(t);
+        }
+        return;
+    }
+
+    /* Kummer's transformation */
+    if (kummer)
+    {
+        acb_t u, v;
+        acb_init(u);
+        acb_init(v);
+
+        acb_sub(u, b, a, prec);
+        acb_neg(v, z);
+
+        _acb_hypgeom_m_1f1(u, u, b, v, regularized, prec, gamma_prec, 0);
+        acb_exp(v, z, prec);
+        acb_mul(res, u, v, prec);
+
+        acb_clear(u);
+        acb_clear(v);
+        return;
+    }
+
     if (acb_is_one(a))
     {
         acb_hypgeom_pfq_direct(res, NULL, 0, b, 1, z, -1, prec);
@@ -96,47 +166,32 @@ _acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong
 void
 acb_hypgeom_m_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
 {
-    acb_t t;
-
-    if (regularized)
-    {
-        acb_init(t);
-        acb_rgamma(t, b, prec);
-    }
-
     if (arf_sgn(arb_midref(acb_realref(z))) >= 0
         || (acb_is_int(a) && arb_is_nonpositive(acb_realref(a))))
     {
-        _acb_hypgeom_m_1f1(res, a, b, z, prec);
+        _acb_hypgeom_m_1f1(res, a, b, z, regularized, prec, prec, 0);
     }
     else
     {
-        /* Kummer's transformation */
-        acb_t u, v;
-        acb_init(u);
-        acb_init(v);
-
-        acb_sub(u, b, a, prec);
-        acb_neg(v, z);
-
-        _acb_hypgeom_m_1f1(u, u, b, v, prec);
-        acb_exp(v, z, prec);
-        acb_mul(res, u, v, prec);
-
-        acb_clear(u);
-        acb_clear(v);
-    }
-
-    if (regularized)
-    {
-        acb_mul(res, res, t, prec);
-        acb_clear(t);
+        _acb_hypgeom_m_1f1(res, a, b, z, regularized, prec, prec, 1);
     }
 }
 
-void
-acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+static double
+hypotmx(double x, double y)
 {
+    if (x > 0.0 && x > 1e6 * fabs(y))
+        return y * y / (2.0 * x);
+    else
+        return sqrt(x * x + y * y) - x;
+}
+
+void
+acb_hypgeom_m_choose(int * asymp, int * kummer, slong * wp,
+    const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+{
+    double x, y, t, cancellation;
+    double input_accuracy, direct_accuracy, asymp_accuracy;
     slong m = WORD_MAX;
     slong n = WORD_MAX;
 
@@ -152,55 +207,107 @@ acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regula
         n = arf_get_si(arb_midref(acb_realref(b)), ARF_RND_DOWN);
     }
 
-    /* terminating */
+    *asymp = 0;
+    *kummer = 0;
+    *wp = prec;
+
+    /* The 1F1 series terminates. */
+    /* TODO: for large m, estimate extra precision here. */
     if (m <= 0 && m < n && m > -10 * prec && (n > 0 || !regularized))
     {
-        acb_hypgeom_m_1f1(res, a, b, z, regularized, prec);
+        *asymp = 0;
         return;
     }
 
-    /* large */
-    if (acb_hypgeom_u_use_asymp(z, prec))
+    /* The 1F1 series terminates with the Kummer transform. */
+    /* TODO: for large m, estimate extra precision here. */
+    if (m >= 1 && n >= 1 && m < 0.1 * prec && n < 0.1 * prec && n <= m)
     {
-        acb_hypgeom_m_asymp(res, a, b, z, regularized, prec);
+        *asymp = 0;
+        *kummer = 1;
         return;
     }
 
-    /* remove singularity */
-    if (n <= 0 && n > -10 * prec && regularized)
+    input_accuracy = acb_rel_accuracy_bits(z);
+    t = acb_rel_accuracy_bits(a);
+    input_accuracy = FLINT_MIN(input_accuracy, t);
+    t = acb_rel_accuracy_bits(b);
+    input_accuracy = FLINT_MIN(input_accuracy, t);
+    input_accuracy = FLINT_MAX(input_accuracy, 0.0);
+
+    /* From here we ignore the values of a, b. Taking them into account is
+       a possible future improvement... */
+
+    /* Tiny |z|. */
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 2) < 0 &&
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 2) < 0))
     {
-        acb_t c, d, t, u;
+        *asymp = 0;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
 
-        acb_init(c);
-        acb_init(d);
-        acb_init(t);
-        acb_init(u);
+    /* Huge |z|. */
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
+    {
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
 
-        acb_sub(c, a, b, prec);
-        acb_add_ui(c, c, 1, prec);
+    x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
+    y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
 
-        acb_neg(d, b);
-        acb_add_ui(d, d, 2, prec);
+    asymp_accuracy = sqrt(x * x + y * y) * 1.44269504088896 - 5.0;
 
-        acb_hypgeom_m_1f1(t, c, d, z, 0, prec);
+    /* The Kummer transformation gives less cancellation with the 1F1 series. */
+    if (x < 0.0)
+    {
+        *kummer = 1;
+        x = -x;
+    }
 
-        acb_pow_ui(u, z, 1 - n, prec);
-        acb_mul(t, t, u, prec);
+    if (asymp_accuracy >= prec)
+    {
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
 
-        acb_rising_ui(u, a, 1 - n, prec);
-        acb_mul(t, t, u, prec);
+    cancellation = hypotmx(x, y) * 1.44269504088896;
 
-        arb_fac_ui(acb_realref(u), 1 - n, prec);
-        acb_div_arb(res, t, acb_realref(u), prec);
+    direct_accuracy = input_accuracy - cancellation;
 
-        acb_clear(c);
-        acb_clear(d);
-        acb_clear(t);
-        acb_clear(u);
+    if (direct_accuracy > asymp_accuracy)
+    {
+        *asymp = 0;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec + cancellation));
     }
     else
     {
-        acb_hypgeom_m_1f1(res, a, b, z, regularized, prec);
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
     }
+}
+
+void
+acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+{
+    int asymp, kummer;
+    slong wp;
+
+    acb_hypgeom_m_choose(&asymp, &kummer, &wp, a, b, z, regularized, prec);
+
+    if (asymp)
+    {
+        acb_hypgeom_m_asymp(res, a, b, z, regularized, wp);
+    }
+    else
+    {
+        _acb_hypgeom_m_1f1(res, a, b, z, regularized, wp, FLINT_MIN(wp, prec), kummer);
+    }
+
+    acb_set_round(res, res, prec);
 }
 
