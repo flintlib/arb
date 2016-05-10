@@ -194,6 +194,12 @@ int acb_hypgeom_2f1_choose(const acb_t z);
 
 void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec);
 
+#define ACB_HYPGEOM_2F1_REGULARIZED 1
+#define ACB_HYPGEOM_2F1_AB 2   /* a-b integer */
+#define ACB_HYPGEOM_2F1_AC 4   /* a-c integer */
+#define ACB_HYPGEOM_2F1_BC 8   /* b-c integer */
+#define ACB_HYPGEOM_2F1_ABC 16  /* a+b-c integer */
+
 void acb_hypgeom_legendre_p_uiui_rec(acb_t res, ulong n, ulong m, const acb_t z, slong prec);
 void acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, slong prec);
 void acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m, const acb_t z, int type, slong prec);

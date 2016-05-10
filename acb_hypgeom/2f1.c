@@ -32,9 +32,11 @@ _acb_hypgeom_2f1r_reduced(acb_t res,
 
 void
 acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
-        const acb_t c, const acb_t z, int regularized, slong prec)
+        const acb_t c, const acb_t z, int flags, slong prec)
 {
-    int algorithm;
+    int algorithm, regularized;
+
+    regularized = flags & ACB_HYPGEOM_2F1_REGULARIZED;
 
     if (!acb_is_finite(a) || !acb_is_finite(b) || !acb_is_finite(c) || !acb_is_finite(z))
     {
@@ -92,6 +94,7 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
     }
 
     /* Try to reduce to a polynomial case using the Pfaff transformation */
+    /* TODO: look at flags for integer c-b, c-a here, even when c is nonexact */
     if (acb_is_exact(c))
     {
         acb_t t;
@@ -101,7 +104,7 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
 
         if (acb_is_int(t) && arb_is_nonpositive(acb_realref(t)))
         {
-            acb_hypgeom_2f1_transform(res, a, b, c, z, regularized, 1, prec);
+            acb_hypgeom_2f1_transform(res, a, b, c, z, flags, 1, prec);
             acb_clear(t);
             return;
         }
@@ -110,7 +113,19 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
 
         if (acb_is_int(t) && arb_is_nonpositive(acb_realref(t)))
         {
-            acb_hypgeom_2f1_transform(res, b, a, c, z, regularized, 1, prec);
+            int f1, f2;
+
+            /* When swapping a, b, also swap the flags. */
+            f1 = flags & ACB_HYPGEOM_2F1_AC;
+            f2 = flags & ACB_HYPGEOM_2F1_BC;
+
+            flags &= ~ACB_HYPGEOM_2F1_AC;
+            flags &= ~ACB_HYPGEOM_2F1_BC;
+
+            if (f1) flags |= ACB_HYPGEOM_2F1_BC;
+            if (f2) flags |= ACB_HYPGEOM_2F1_AC;
+
+            acb_hypgeom_2f1_transform(res, b, a, c, z, flags, 1, prec);
             acb_clear(t);
             return;
         }
@@ -167,7 +182,7 @@ acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b,
     }
     else if (algorithm >= 1 && algorithm <= 5)
     {
-        acb_hypgeom_2f1_transform(res, a, b, c, z, regularized, algorithm, prec);
+        acb_hypgeom_2f1_transform(res, a, b, c, z, flags, algorithm, prec);
     }
     else
     {

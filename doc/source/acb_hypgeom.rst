@@ -801,7 +801,7 @@ if the flag *regularized* is set.
 
     Computes `F(z)` using direct summation of the hypergeometric series.
 
-.. function:: void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, slong prec)
+.. function:: void acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int flags, int which, slong prec)
 
 .. function:: void acb_hypgeom_2f1_transform_limit(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, int which, slong prec)
 
@@ -809,10 +809,12 @@ if the flag *regularized* is set.
     Legal values are 1 for `z/(z-1)`,
     2 for `1/z`, 3 for `1/(1-z)`, 4 for `1-z`, and 5 for `1-1/z`.
 
-    The *limit* version assumes that *which* is not 1.
+    The *transform_limit* version assumes that *which* is not 1.
     If *which* is 2 or 3, it assumes that `b-a` represents an exact integer.
     If *which* is 4 or 5, it assumes that `c-a-b` represents an exact integer.
     In these cases, it computes the correct limit value.
+
+    See :func:`acb_hypgeom_2f1` for the meaning of *flags*.
 
 .. function:: void acb_hypgeom_2f1_corner(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec)
 
@@ -827,10 +829,38 @@ if the flag *regularized* is set.
     :func:`acb_hypgeom_2f1_transform` should be used.
     If the return value is 6, the corner case algorithm should be used.
 
-.. function:: void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int regularized, slong prec)
+.. function:: void acb_hypgeom_2f1(acb_t res, const acb_t a, const acb_t b, const acb_t c, const acb_t z, int flags, slong prec)
 
-    Computes `F(z)` (or `\operatorname{\mathbf{F}}(z)` if *regularized* is set)
+    Computes `F(z)` or `\operatorname{\mathbf{F}}(z)`
     using an automatic algorithm choice.
+
+    The following bit fields can be set in *flags*:
+
+    - *ACB_HYPGEOM_2F1_REGULARIZED* - computes the regularized
+      hypergeometric function `\operatorname{\mathbf{F}}(z)`.
+      Setting *flags* to 1 is the same as just toggling this option.
+
+    - *ACB_HYPGEOM_2F1_AB* - `a-b` is an integer.
+
+    - *ACB_HYPGEOM_2F1_ABC* - `a+b-c` is an integer.
+
+    - *ACB_HYPGEOM_2F1_AC* - `a-c` is an integer.
+
+    - *ACB_HYPGEOM_2F1_BC* - `b-c` is an integer.
+
+    The last four flags can be set to indicate that the respective parameter
+    differences are known to represent exact integers, even if the input intervals
+    are inexact. This allows the correct limits to be evaluated when
+    applying transformation formulas. For example, to evaluate
+    `{}_2F_1(\sqrt{2}, 1/2, \sqrt{2}+3/2, 9/10)`, the *ABC* flag should be set.
+    If not set, the result will be an indeterminate interval due to
+    internally dividing by an interval containing zero.
+    If the parameters are exact floating-point numbers (including exact
+    integers or half-integers), then the limits are computed automatically, and
+    setting these flags is unnecessary.
+
+    Currently, only the *AB* and *ABC* flags are used this way;
+    the *AC* and *BC* flags might be used in the future.
 
 Orthogonal polynomials and functions
 -------------------------------------------------------------------------------

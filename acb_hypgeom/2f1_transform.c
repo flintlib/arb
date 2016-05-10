@@ -383,8 +383,12 @@ acb_hypgeom_2f1_transform_nolimit(acb_t res, const acb_t a, const acb_t b,
 
 void
 acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
-    const acb_t c, const acb_t z, int regularized, int which, slong prec)
+    const acb_t c, const acb_t z, int flags, int which, slong prec)
 {
+    int regularized;
+
+    regularized = flags & ACB_HYPGEOM_2F1_REGULARIZED;
+
     if (which == 1)
     {
         acb_t t, u, v;
@@ -420,19 +424,37 @@ acb_hypgeom_2f1_transform(acb_t res, const acb_t a, const acb_t b,
     else
     {
         acb_t d;
+        int limit;
+
         acb_init(d);
 
         if (which == 2 || which == 3)
         {
-            acb_sub(d, b, a, prec);
+            if (flags & ACB_HYPGEOM_2F1_AB)
+            {
+                limit = 1;
+            }
+            else
+            {
+                acb_sub(d, b, a, prec);
+                limit = acb_is_int(d);
+            }
         }
         else
         {
-            acb_sub(d, c, a, prec);
-            acb_sub(d, d, b, prec);
+            if (flags & ACB_HYPGEOM_2F1_ABC)
+            {
+                limit = 1;
+            }
+            else
+            {
+                acb_sub(d, c, a, prec);
+                acb_sub(d, d, b, prec);
+                limit = acb_is_int(d);
+            }
         }
 
-        if (acb_is_int(d))
+        if (limit)
             acb_hypgeom_2f1_transform_limit(res, a, b, c, z, regularized, which, prec);
         else
             acb_hypgeom_2f1_transform_nolimit(res, a, b, c, z, regularized, which, prec);
