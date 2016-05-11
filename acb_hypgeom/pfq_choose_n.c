@@ -13,7 +13,7 @@
 
 double mag_get_log2_d_approx(const mag_t x);
 
-#define D_ABS(x) ((x) < 0.0 ? (-x) : (x))
+#define D_ABS(x) ((x) < 0.0 ? (-(x)) : (x))
 
 int
 acb_hypgeom_pfq_choose_n_double(slong * nn,
