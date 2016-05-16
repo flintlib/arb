@@ -77,6 +77,25 @@ ARB_POLY_INLINE slong arb_poly_degree(const arb_poly_t poly)
     return poly->length - 1;
 }
 
+ARB_POLY_INLINE int
+arb_poly_is_zero(const arb_poly_t z)
+{
+    return arb_poly_length(z) == 0;
+}
+
+ARB_POLY_INLINE int
+arb_poly_is_one(const arb_poly_t z)
+{
+    return (arb_poly_length(z) == 1) && arb_is_one(z->coeffs);
+}
+
+ARB_POLY_INLINE int
+arb_poly_is_x(const arb_poly_t z)
+{
+    return (arb_poly_length(z) == 2) && arb_is_zero(z->coeffs)
+        && arb_is_one(z->coeffs + 1);
+}
+
 ARB_POLY_INLINE void arb_poly_zero(arb_poly_t poly)
 {
     poly->length = 0;

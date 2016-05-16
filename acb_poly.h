@@ -69,6 +69,25 @@ ACB_POLY_INLINE slong acb_poly_degree(const acb_poly_t poly)
     return poly->length - 1;
 }
 
+ACB_POLY_INLINE int
+acb_poly_is_zero(const acb_poly_t z)
+{
+    return acb_poly_length(z) == 0;
+}
+
+ACB_POLY_INLINE int
+acb_poly_is_one(const acb_poly_t z)
+{
+    return (acb_poly_length(z) == 1) && acb_is_one(z->coeffs);
+}
+
+ACB_POLY_INLINE int
+acb_poly_is_x(const acb_poly_t z)
+{
+    return (acb_poly_length(z) == 2) && acb_is_zero(z->coeffs)
+        && acb_is_one(z->coeffs + 1);
+}
+
 ACB_POLY_INLINE void acb_poly_zero(acb_poly_t poly)
 {
     poly->length = 0;

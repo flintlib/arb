@@ -57,6 +57,30 @@ Memory management
 Basic manipulation
 -------------------------------------------------------------------------------
 
+.. function:: slong arb_poly_length(const arb_poly_t poly)
+
+    Returns the length of *poly*, i.e. zero if *poly* is
+    identically zero, and otherwise one more than the index
+    of the highest term that is not identically zero.
+
+.. function:: slong arb_poly_degree(const arb_poly_t poly)
+
+    Returns the degree of *poly*, defined as one less than its length.
+    Note that if one or several leading coefficients are balls
+    containing zero, this value can be larger than the true
+    degree of the exact polynomial represented by *poly*,
+    so the return value of this function is effectively
+    an upper bound.
+
+.. function:: int arb_poly_is_zero(const arb_poly_t poly)
+
+.. function:: int arb_poly_is_one(const arb_poly_t poly)
+
+.. function:: int arb_poly_is_x(const arb_poly_t poly)
+
+    Returns 1 if *poly* is exactly the polynomial 0, 1 or *x*
+    respectively. Returns 0 otherwise.
+
 .. function:: void arb_poly_zero(arb_poly_t poly)
 
 .. function:: void arb_poly_one(arb_poly_t poly)
@@ -106,21 +130,6 @@ Basic manipulation
 
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
-
-.. function:: slong arb_poly_length(const arb_poly_t poly)
-
-    Returns the length of *poly*, i.e. zero if *poly* is
-    identically zero, and otherwise one more than the index
-    of the highest term that is not identically zero.
-
-.. function:: slong arb_poly_degree(const arb_poly_t poly)
-
-    Returns the degree of *poly*, defined as one less than its length.
-    Note that if one or several leading coefficients are balls
-    containing zero, this value can be larger than the true
-    degree of the exact polynomial represented by *poly*,
-    so the return value of this function is effectively
-    an upper bound.
 
 Conversions
 -------------------------------------------------------------------------------

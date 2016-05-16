@@ -76,6 +76,15 @@ Basic properties and manipulation
     so the return value of this function is effectively
     an upper bound.
 
+.. function:: int acb_poly_is_zero(const acb_poly_t poly)
+
+.. function:: int acb_poly_is_one(const acb_poly_t poly)
+
+.. function:: int acb_poly_is_x(const acb_poly_t poly)
+
+    Returns 1 if *poly* is exactly the polynomial 0, 1 or *x*
+    respectively. Returns 0 otherwise.
+
 .. function:: void acb_poly_zero(acb_poly_t poly)
 
     Sets *poly* to the zero polynomial.
