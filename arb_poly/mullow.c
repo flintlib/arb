@@ -33,37 +33,84 @@ _arb_poly_mullow(arb_ptr res,
 
 void
 arb_poly_mullow(arb_poly_t res, const arb_poly_t poly1,
-                                            const arb_poly_t poly2,
-                                                slong n, slong prec)
+                        const arb_poly_t poly2, slong n, slong prec)
 {
-    slong len_out;
+    slong len1, len2;
 
-    if (poly1->length == 0 || poly2->length == 0 || n == 0)
+    len1 = poly1->length;
+    len2 = poly2->length;
+
+    if (len1 == 0 || len2 == 0 || n == 0)
     {
         arb_poly_zero(res);
         return;
     }
 
-    len_out = poly1->length + poly2->length - 1;
-    if (n > len_out)
-        n = len_out;
+    n = FLINT_MIN((len1 + len2 - 1), n);
+    len1 = FLINT_MIN(len1, n);
+    len2 = FLINT_MIN(len2, n);
+
+    /* Hack to avoid temporary allocations with first derivatives. */
+    if (n <= 2 && !(len1 == 2 && len2 == 2))
+    {
+        arb_poly_fit_length(res, n);
+
+        if (n == 1)
+        {
+            arb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+        }
+        else if (len2 == 1)
+        {
+            arb_mul(res->coeffs + 1, poly1->coeffs + 1, poly2->coeffs, prec);
+            arb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+        }
+        else if (len1 == 1)
+        {
+            arb_mul(res->coeffs + 1, poly2->coeffs + 1, poly1->coeffs, prec);
+            arb_mul(res->coeffs, poly2->coeffs, poly1->coeffs, prec);
+        }
+        else
+        {
+            if (res == poly1 || res == poly2)
+            {
+                arb_t t;
+                arb_init(t);
+                arb_mul(t, poly1->coeffs, poly2->coeffs + 1, prec);
+                arb_addmul(t, poly2->coeffs, poly1->coeffs + 1, prec);
+                arb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+                arb_swap(t, res->coeffs + 1);
+                arb_clear(t);
+            }
+            else
+            {
+                arb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+                arb_mul(res->coeffs + 1, poly1->coeffs, poly2->coeffs + 1, prec);
+                arb_addmul(res->coeffs + 1, poly2->coeffs, poly1->coeffs + 1, prec);
+            }
+        }
+
+        _arb_poly_set_length(res, n);
+        _arb_poly_normalise(res);
+        return;
+    }
 
     if (res == poly1 || res == poly2)
     {
         arb_poly_t t;
         arb_poly_init2(t, n);
-        _arb_poly_mullow(t->coeffs, poly1->coeffs, poly1->length,
-                                poly2->coeffs, poly2->length, n, prec);
+        _arb_poly_mullow(t->coeffs, poly1->coeffs, len1,
+                                poly2->coeffs, len2, n, prec);
         arb_poly_swap(res, t);
         arb_poly_clear(t);
     }
     else
     {
         arb_poly_fit_length(res, n);
-        _arb_poly_mullow(res->coeffs, poly1->coeffs, poly1->length,
-                                poly2->coeffs, poly2->length, n, prec);
+        _arb_poly_mullow(res->coeffs, poly1->coeffs, len1,
+                                poly2->coeffs, len2, n, prec);
     }
 
     _arb_poly_set_length(res, n);
     _arb_poly_normalise(res);
 }
+

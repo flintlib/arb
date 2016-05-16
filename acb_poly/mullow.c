@@ -26,8 +26,7 @@ _acb_poly_mullow(acb_ptr res,
 
 void
 acb_poly_mullow(acb_poly_t res, const acb_poly_t poly1,
-                                            const acb_poly_t poly2,
-                                                slong n, slong prec)
+                    const acb_poly_t poly2, slong n, slong prec)
 {
     slong len1, len2;
 
@@ -43,6 +42,50 @@ acb_poly_mullow(acb_poly_t res, const acb_poly_t poly1,
     n = FLINT_MIN((len1 + len2 - 1), n);
     len1 = FLINT_MIN(len1, n);
     len2 = FLINT_MIN(len2, n);
+
+    /* Hack to avoid temporary allocations with first derivatives. */
+    if (n <= 2 && !(len1 == 2 && len2 == 2))
+    {
+        acb_poly_fit_length(res, n);
+
+        if (n == 1)
+        {
+            acb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+        }
+        else if (len2 == 1)
+        {
+            acb_mul(res->coeffs + 1, poly1->coeffs + 1, poly2->coeffs, prec);
+            acb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+        }
+        else if (len1 == 1)
+        {
+            acb_mul(res->coeffs + 1, poly2->coeffs + 1, poly1->coeffs, prec);
+            acb_mul(res->coeffs, poly2->coeffs, poly1->coeffs, prec);
+        }
+        else
+        {
+            if (res == poly1 || res == poly2)
+            {
+                acb_t t;
+                acb_init(t);
+                acb_mul(t, poly1->coeffs, poly2->coeffs + 1, prec);
+                acb_addmul(t, poly2->coeffs, poly1->coeffs + 1, prec);
+                acb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+                acb_swap(t, res->coeffs + 1);
+                acb_clear(t);
+            }
+            else
+            {
+                acb_mul(res->coeffs, poly1->coeffs, poly2->coeffs, prec);
+                acb_mul(res->coeffs + 1, poly1->coeffs, poly2->coeffs + 1, prec);
+                acb_addmul(res->coeffs + 1, poly2->coeffs, poly1->coeffs + 1, prec);
+            }
+        }
+
+        _acb_poly_set_length(res, n);
+        _acb_poly_normalise(res);
+        return;
+    }
 
     if (res == poly1 || res == poly2)
     {
