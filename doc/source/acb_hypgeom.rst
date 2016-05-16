@@ -110,11 +110,32 @@ or remove a 1 from the `a_i` parameters if there is one.
     If  `n < 0`, this function chooses a number of terms automatically
     using :func:`acb_hypgeom_pfq_choose_n`.
 
+.. function:: void acb_hypgeom_pfq_series_sum_forward(acb_poly_t s, acb_poly_t t, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
+
+.. function:: void acb_hypgeom_pfq_series_sum_bs(acb_poly_t s, acb_poly_t t, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
+
+.. function:: void acb_hypgeom_pfq_series_sum_rs(acb_poly_t s, acb_poly_t t, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
+
+.. function:: void acb_hypgeom_pfq_series_sum(acb_poly_t s, acb_poly_t t, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
+
+    Computes `s = \sum_{k=0}^{n-1} T(k)` and `t = T(n)` given parameters
+    and argument that are power series.
+    Does not allow aliasing between input and output variables.
+    We require `n \ge 0` and that *len* is positive.
+
+    If *regularized* is set, the regularized sum is computed, avoiding
+    division by zero at the poles of the gamma function.
+
+    The *forward*, *bs*, *rs* and default versions use forward recurrence,
+    binary splitting, rectangular splitting, and an automatic algorithm
+    choice.
+
 .. function:: void acb_hypgeom_pfq_series_direct(acb_poly_t res, const acb_poly_struct * a, slong p, const acb_poly_struct * b, slong q, const acb_poly_t z, int regularized, slong n, slong len, slong prec)
 
     Computes `{}_pf_{q}(z)` directly using the defining series, given
     parameters and argument that are power series.
     The result is a power series of length *len*.
+    We require that *len* is positive.
 
     An error bound is computed automatically as a function of the number
     of terms *n*. If `n < 0`, the number of terms is chosen

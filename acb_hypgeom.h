@@ -53,6 +53,34 @@ slong acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
                                 const acb_poly_struct * b, slong q,
                                 const acb_poly_t z, slong len, slong prec);
 
+void
+acb_hypgeom_pfq_series_sum_forward(acb_poly_t s, acb_poly_t t,
+    const acb_poly_struct * a, slong p,
+    const acb_poly_struct * b, slong q,
+    const acb_poly_t z, int regularized,
+    slong n, slong len, slong prec);
+
+void
+acb_hypgeom_pfq_series_sum_bs(acb_poly_t s, acb_poly_t t,
+    const acb_poly_struct * a, slong p,
+    const acb_poly_struct * b, slong q,
+    const acb_poly_t z, int regularized,
+    slong n, slong len, slong prec);
+
+void
+acb_hypgeom_pfq_series_sum_rs(acb_poly_t s, acb_poly_t t,
+    const acb_poly_struct * a, slong p,
+    const acb_poly_struct * b, slong q,
+    const acb_poly_t z, int regularized,
+    slong n, slong len, slong prec);
+
+void
+acb_hypgeom_pfq_series_sum(acb_poly_t s, acb_poly_t t,
+    const acb_poly_struct * a, slong p,
+    const acb_poly_struct * b, slong q,
+    const acb_poly_t z, int regularized,
+    slong n, slong len, slong prec);
+
 void acb_hypgeom_pfq_series_direct(acb_poly_t res,
     const acb_poly_struct * a, slong p,
     const acb_poly_struct * b, slong q,
