@@ -203,6 +203,9 @@ acb_hypgeom_pfq_series_sum_forward(acb_poly_t s, acb_poly_t t,
     {
         acb_poly_zero(s);
 
+        if (q == 0)
+            acb_poly_one(t);
+
         for (i = 0; i < q; i++)
         {
             if (i == 0)
