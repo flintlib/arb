@@ -114,6 +114,58 @@ Sample output::
     1000: 2.3260531616864664574065046940832238158044982041872 +/- 3.927e-08
     virt/peak/res/peak(MB): 170.18 294.69 7.51 7.51
 
+logistic.c
+-------------------------------------------------------------------------------
+
+This program computes the *n*-th iterate of the logistic map defined
+by `x_{n+1} = r x_n (1 - x_n)` where `r` and `x_0` are given.
+It takes the following parameters::
+
+    logistic n [x_0] [r] [digits]
+
+The inputs `x_0`, *r* and *digits* default to 0.5, 3.75 and 10 respectively.
+The computation is automatically restarted with doubled precision
+until the result is accurate to *digits* decimal digits.
+
+Sample output::
+
+    > build/examples/logistic 10
+    Trying prec=64 bits...success!
+    cpu/wall(s): 0 0.001
+    x_10 = [0.6453672908 +/- 3.10e-11]
+
+    > build/examples/logistic 100
+    Trying prec=64 bits...ran out of accuracy at step 18
+    Trying prec=128 bits...ran out of accuracy at step 53
+    Trying prec=256 bits...success!
+    cpu/wall(s): 0 0
+    x_100 = [0.8882939923 +/- 1.60e-11]
+
+    > build/examples/logistic 10000
+    Trying prec=64 bits...ran out of accuracy at step 18
+    Trying prec=128 bits...ran out of accuracy at step 53
+    Trying prec=256 bits...ran out of accuracy at step 121
+    Trying prec=512 bits...ran out of accuracy at step 256
+    Trying prec=1024 bits...ran out of accuracy at step 525
+    Trying prec=2048 bits...ran out of accuracy at step 1063
+    Trying prec=4096 bits...ran out of accuracy at step 2139
+    Trying prec=8192 bits...ran out of accuracy at step 4288
+    Trying prec=16384 bits...ran out of accuracy at step 8584
+    Trying prec=32768 bits...success!
+    cpu/wall(s): 0.859 0.858
+    x_10000 = [0.8242048008 +/- 4.35e-11]
+
+    > build/examples/logistic 1234 0.1 3.99 30
+    Trying prec=64 bits...ran out of accuracy at step 0
+    Trying prec=128 bits...ran out of accuracy at step 10
+    Trying prec=256 bits...ran out of accuracy at step 76
+    Trying prec=512 bits...ran out of accuracy at step 205
+    Trying prec=1024 bits...ran out of accuracy at step 461
+    Trying prec=2048 bits...ran out of accuracy at step 974
+    Trying prec=4096 bits...success!
+    cpu/wall(s): 0.009 0.009
+    x_1234 = [0.256445391958651410579677945635 +/- 3.92e-31]
+
 real_roots.c
 -------------------------------------------------------------------------------
 
