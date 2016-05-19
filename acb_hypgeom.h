@@ -148,6 +148,10 @@ void acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int modifi
 void _acb_hypgeom_gamma_lower_series(acb_ptr g, const acb_t s, acb_srcptr h, slong hlen, int regularized, slong n, slong prec);
 void acb_hypgeom_gamma_lower_series(acb_poly_t g, const acb_t s, const acb_poly_t h, int regularized, slong n, slong prec);
 
+void acb_hypgeom_beta_lower(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec);
+void _acb_hypgeom_beta_lower_series(acb_ptr res, const acb_t a, const acb_t b, acb_srcptr z, slong zlen, int regularized, slong len, slong prec);
+void acb_hypgeom_beta_lower_series(acb_poly_t res, const acb_t a, const acb_t b, const acb_poly_t z, int regularized, slong len, slong prec);
+
 void acb_hypgeom_expint(acb_t res, const acb_t s, const acb_t z, slong prec);
 
 void acb_hypgeom_erf_propagated_error(mag_t re, mag_t im, const acb_t z);

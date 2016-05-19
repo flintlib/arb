@@ -560,7 +560,7 @@ simultaneously. Any of the four function values can be omitted by passing
     truncated to length *len*. As with the other Airy methods, any of the
     outputs can be *NULL*.
 
-Incomplete gamma functions
+Incomplete gamma and beta functions
 -------------------------------------------------------------------------------
 
 .. function:: void acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
@@ -610,7 +610,7 @@ Incomplete gamma functions
     The *singular* version evaluates the finite sum directly and therefore
     assumes that *s* is not too large.
 
-.. function:: void _acb_hypgeom_gamma_upper_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+.. function:: void _acb_hypgeom_gamma_upper_series(acb_ptr res, const acb_t s, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
 
 .. function:: void acb_hypgeom_gamma_upper_series(acb_poly_t res, const acb_t s, const acb_poly_t z, int regularized, slong n, slong prec)
 
@@ -618,7 +618,6 @@ Incomplete gamma functions
     a constant and *z* is a power series, truncated to length *n*.
     The *regularized* argument has the same interpretation as in
     :func:`acb_hypgeom_gamma_upper`.
-
 
 .. function:: void acb_hypgeom_gamma_lower(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 
@@ -631,7 +630,7 @@ Incomplete gamma functions
     If *regularized* is 2, computes a further regularized lower incomplete
     gamma function `\gamma^{*}(s,z) = z^{-s} P(s,z)`.
 
-.. function:: void _acb_hypgeom_gamma_lower_series(acb_ptr res, acb_t s, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+.. function:: void _acb_hypgeom_gamma_lower_series(acb_ptr res, const acb_t s, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
 
 .. function:: void acb_hypgeom_gamma_lower_series(acb_poly_t res, const acb_t s, const acb_poly_t z, int regularized, slong n, slong prec)
 
@@ -639,6 +638,38 @@ Incomplete gamma functions
     a constant and *z* is a power series, truncated to length *n*.
     The *regularized* argument has the same interpretation as in
     :func:`acb_hypgeom_gamma_lower`.
+
+.. function:: void acb_hypgeom_beta_lower(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+
+    Computes the (lower) incomplete beta function, defined by
+    `B(a,b;z) = \int_0^z t^{a-1} (1-t)^{b-1}`,
+    optionally the regularized incomplete beta function
+    `I(a,b;z) = B(a,b;z) / B(a,b;1)`.
+
+    In general, the integral must be interpreted using analytic continuation.
+    The precise definitions for all parameter values are
+
+    .. math ::
+
+        B(a,b;z) = \frac{z^a}{a} {}_2F_1(a, 1-b, a+1, z)
+
+    .. math ::
+
+        I(a,b;z) = \frac{\Gamma(a+b)}{\Gamma(b)} z^a {}_2{\widetilde F}_1(a, 1-b, a+1, z).
+
+    Note that both functions with this definition are undefined
+    for nonpositive integer *a*, and *I* is undefined for nonpositive integer
+    `a + b`.
+
+.. function:: void _acb_hypgeom_beta_lower_series(acb_ptr res, const acb_t a, const acb_t b, acb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+
+.. function:: void acb_hypgeom_beta_lower_series(acb_poly_t res, const acb_t a, const acb_t b, const acb_poly_t z, int regularized, slong n, slong prec)
+
+    Sets *res* to the lower incomplete beta function `B(a,b;z)` (optionally
+    the regularized version `I(a,b;z)`) where *a* and *b* are constants
+    and *z* is a power series, truncating the result to length *n*.
+    The underscore method requires positive lengths and does not support
+    aliasing.
 
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
