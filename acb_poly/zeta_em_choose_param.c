@@ -13,7 +13,7 @@
 
 static ulong choose_M(ulong N, slong target)
 {
-    return FLINT_MIN(N, target + N / 100);
+    return FLINT_MIN(N, target + FLINT_MIN(N / 100, 2000));
 }
 
 static void
