@@ -11,6 +11,134 @@
 
 #include "acb_hypgeom.h"
 
+static void
+bsplit(acb_t A, acb_t B, acb_t C, acb_t D,
+    const acb_t b, const acb_t z, slong n0, slong n1, slong prec)
+{
+    if (n1 - n0 == 1)
+    {
+        acb_zero(A);
+        acb_one(B);
+        acb_neg(C, b);
+        acb_add_si(C, C, 2 - n0, prec);
+        acb_mul_si(C, C, n0 - 1, prec);
+        acb_sub(D, z, b, prec);
+        acb_add_si(D, D, 2 - 2 * n0, prec);
+    }
+    else
+    {
+        slong m;
+        acb_t T, A2, B2, C2, D2;
+
+        acb_init(T);
+        acb_init(A2);
+        acb_init(B2);
+        acb_init(C2);
+        acb_init(D2);
+
+        m = n0 + (n1 - n0) / 2;
+
+        bsplit(A, B, C, D, b, z, n0, m, prec);
+        bsplit(A2, B2, C2, D2, b, z, m, n1, prec);
+
+        acb_set(T, A);
+        acb_mul(A, A, A2, prec);
+        acb_addmul(A, B2, C, prec);
+        acb_mul(C, C, D2, prec);
+        acb_addmul(C, C2, T, prec);
+
+        acb_set(T, B);
+        acb_mul(B, B, A2, prec);
+        acb_addmul(B, B2, D, prec);
+        acb_mul(D, D, D2, prec);
+        acb_addmul(D, C2, T, prec);
+
+        acb_clear(T);
+        acb_clear(A2);
+        acb_clear(B2);
+        acb_clear(C2);
+        acb_clear(D2);
+    }
+}
+
+void
+acb_hypgeom_u_si_rec(acb_t res, slong a, const acb_t b, const acb_t z, slong prec)
+{
+    slong k;
+    acb_t u0, u1, t;
+
+    if (a > 0)
+        abort();
+
+    if (a == 0)
+    {
+        acb_one(res);
+        return;
+    }
+    else if (a == -1)
+    {
+        acb_sub(res, z, b, prec);
+        return;
+    }
+
+    /* special-case U(-n, -n+1, z) = z^n */
+    if (acb_equal_si(b, a + 1))
+    {
+        acb_pow_si(res, z, -a, prec);
+        return;
+    }
+
+    acb_init(u0);
+    acb_init(u1);
+    acb_init(t);
+
+    acb_one(u0);
+    acb_sub(u1, z, b, prec);
+
+    if (-a < 20)
+    {
+        for (k = 2; k <= -a; k++)
+        {
+            acb_neg(t, b);
+            acb_add_si(t, t, 2 - k, prec);
+            acb_mul_si(t, t, k - 1, prec);
+            acb_mul(u0, u0, t, prec);
+
+            acb_sub(t, z, b, prec);
+            acb_add_si(t, t, 2 - 2 * k, prec);
+            acb_addmul(u0, u1, t, prec);
+
+            acb_swap(u0, u1);
+        }
+
+        acb_set(res, u1);
+    }
+    else
+    {
+        acb_t A, B, C, D;
+
+        acb_init(A);
+        acb_init(B);
+        acb_init(C);
+        acb_init(D);
+
+        bsplit(A, B, C, D, b, z, 2, -a + 1, prec);
+
+        acb_sub(A, z, b, prec);
+        acb_mul(D, D, A, prec);
+        acb_add(res, C, D, prec);
+
+        acb_clear(A);
+        acb_clear(B);
+        acb_clear(C);
+        acb_clear(D);
+    }
+
+    acb_clear(u0);
+    acb_clear(u1);
+    acb_clear(t);
+}
+
 void
 acb_hypgeom_u_1f1_series(acb_poly_t res,
     const acb_poly_t a, const acb_poly_t b, const acb_poly_t z,
@@ -163,13 +291,31 @@ void
 acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_t t;
-    acb_init(t);
+    arf_srcptr av, tv;
 
+    av = arb_midref(acb_realref(a));
+
+    /* Handle small polynomial cases without divisions. */
+    /* todo: should incorporate a -> 1+a-b transformation, also... */
+    if (acb_is_int(a) && arf_sgn(av) <= 0)
+    {
+        if (arf_cmpabs_ui(av, 30) < 0 ||
+            (arf_cmpabs_ui(av, prec) < 0 &&
+                ((acb_bits(b) < 0.1 * prec && acb_bits(z) < 0.1 * prec)
+                    || acb_contains_zero(z))))
+        {
+            acb_hypgeom_u_si_rec(res, arf_get_si(av, ARF_RND_DOWN), b, z, prec);
+            return;
+        }
+    }
+
+    acb_init(t);
     acb_sub(t, a, b, prec);
     acb_add_ui(t, t, 1, prec);
+    tv = arb_midref(acb_realref(t));
 
-    if ((acb_is_int(a) && arf_sgn(arb_midref(acb_realref(a))) <= 0) ||
-        (acb_is_int(t) && arf_sgn(arb_midref(acb_realref(t))) <= 0) ||
+    if ((acb_is_int(a) && arf_sgn(av) <= 0) ||
+        (acb_is_int(t) && arf_sgn(tv) <= 0) ||
         acb_hypgeom_u_use_asymp(z, prec))
     {
         acb_neg(t, a);
