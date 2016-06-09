@@ -18,10 +18,13 @@
 slong
 _arb_mat_exp_choose_N(const mag_t norm, slong prec)
 {
-    if (mag_is_special(norm) || mag_cmp_2exp_si(norm, 30) > 0 ||
-        mag_cmp_2exp_si(norm, -prec) < 0)
+    if (mag_is_special(norm) || mag_cmp_2exp_si(norm, 30) > 0)
     {
         return 1;
+    }
+    else if (mag_cmp_2exp_si(norm, -prec) < 0)
+    {
+        return 2;
     }
     else if (mag_cmp_2exp_si(norm, -300) < 0)
     {
