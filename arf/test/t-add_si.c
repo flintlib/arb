@@ -68,21 +68,18 @@ int main()
             switch (n_randint(state, 1))
             {
             case 0:
-                if (iter == 37194 && iter2 == 14)
+                r1 = arf_add_si(z, x, y, prec, rnd);
+                r2 = arf_add_si_naive(v, x, y, prec, rnd);
+                if (!arf_equal(z, v) || r1 != r2)
                 {
-                    r1 = arf_add_si(z, x, y, prec, rnd);
-                    r2 = arf_add_si_naive(v, x, y, prec, rnd);
-                    if (!arf_equal(z, v) || r1 != r2)
-                    {
-                        flint_printf("FAIL! (ha iter %ld, %ld)\n", iter, iter2);
-                        flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
-                        flint_printf("x = "); arf_print(x); flint_printf("\n\n");
-                        flint_printf("y = "); flint_printf("%wd", y); flint_printf("\n\n");
-                        flint_printf("z = "); arf_print(z); flint_printf("\n\n");
-                        flint_printf("v = "); arf_print(v); flint_printf("\n\n");
-                        flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                        abort();
-                    }
+                    flint_printf("FAIL! (ha iter %ld, %ld)\n", iter, iter2);
+                    flint_printf("prec = %wd, rnd = %d\n\n", prec, rnd);
+                    flint_printf("x = "); arf_print(x); flint_printf("\n\n");
+                    flint_printf("y = "); flint_printf("%wd", y); flint_printf("\n\n");
+                    flint_printf("z = "); arf_print(z); flint_printf("\n\n");
+                    flint_printf("v = "); arf_print(v); flint_printf("\n\n");
+                    flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
+                    abort();
                 }
                 break;
 
