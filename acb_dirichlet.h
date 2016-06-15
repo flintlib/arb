@@ -49,6 +49,16 @@ acb_dirichlet_group_struct;
 
 typedef acb_dirichlet_group_struct acb_dirichlet_group_t[1];
 
+ACB_DIRICHLET_INLINE ulong
+acb_dirichlet_group_size(const acb_dirichlet_group_t G)
+{
+    return G->phi_q;
+}
+
+void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
+void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
+void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
+
 /* elements of the group, keep both number and log */
 typedef struct
 {
@@ -64,16 +74,12 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
 
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
-void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
-void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
-void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
-
-
 void acb_dirichlet_conrey_init(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 void acb_dirichlet_conrey_clear(acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_print(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 
 int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
+ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m);
 
 void acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
@@ -81,6 +87,9 @@ void acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_di
 
 int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 int acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
+
+void acb_dirichlet_conrey_mul(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b);
+void acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, ulong n);
 
 #define ACB_DIRICHLET_CHI_NULL UWORD_MAX
 
@@ -92,7 +101,7 @@ void acb_dirichlet_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ul
 
 /* introducing character type */
 
-/* character = reduced exponents, keep order and number */
+/* character = reduced exponents, keep order, number and conductor */
 typedef struct
 {
     ulong q;           /* modulus */
@@ -101,6 +110,7 @@ typedef struct
     ulong order;       /* order */
     ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
     int parity;        /* 0 for even char, 1 for odd */
+    ulong conductor;
 }
 acb_dirichlet_char_struct;
 

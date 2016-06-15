@@ -25,14 +25,35 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+ulong
+acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 {
-    acb_dirichlet_conrey_t x;
-    chi->q = G->q;
-    x->log = chi->expo;
-    acb_dirichlet_conrey_first_primitive(x, G);
-    chi->n = x->n;
-    chi->conductor = chi->q;
-    acb_dirichlet_char_normalize(chi, G);
+    int k, f;
+    ulong cond = 1;
+
+    if (G->neven >= 1 && x->log[0] == 1)
+        cond = 4;
+    if (G->neven == 2 && x->log[1])
+    {
+        ulong l2 = x->log[1];
+        f = n_remove(&l2, 2);
+        cond = G->primepowers[1] >> f;
+    }
+
+    for (k = G->neven; k < G->num; k++)
+    {
+        if (x->log[k])
+        {
+            ulong p, lp;
+            p = G->primes[k];
+            lp = x->log[k];
+            f = n_remove(&lp, p);
+            if (f)
+                cond *= n_pow(p, G->exponents[k] - f);
+            else
+                cond *= G->primepowers[k];
+        }
+    }
+
+    return cond;
 }

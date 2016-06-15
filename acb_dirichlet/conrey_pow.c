@@ -26,13 +26,10 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, ulong n)
 {
-    acb_dirichlet_conrey_t x;
-    chi->q = G->q;
-    x->log = chi->expo;
-    acb_dirichlet_conrey_first_primitive(x, G);
-    chi->n = x->n;
-    chi->conductor = chi->q;
-    acb_dirichlet_char_normalize(chi, G);
+    ulong k;
+    for (k = 0; k < G->num ; k++)
+      c->log[k] = (a->log[k]  * n) % G->phi[k];
+    c->n = nmod_pow_ui(a->n, n, G->mod);
 }
