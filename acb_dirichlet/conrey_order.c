@@ -24,30 +24,15 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
 
 ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 {
-    double a, la;
-    a = PI / (double)q * x * x;
-    la = (a < .3) ? -log(2*a*(1-a)) : .8;
-    la = ((double)prec * LOG2 + la) / a;
-    return ceil(sqrt(la)+.5);
-}
+    ulong k, g;
+    g = G->expo;
 
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    for (k = 0; k < G->num; k++)
+        g = n_gcd(g, G->PHI[k] * x->log[k]);
+
+    return G->expo / g;
 }

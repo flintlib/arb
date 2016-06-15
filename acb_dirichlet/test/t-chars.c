@@ -26,25 +26,6 @@
 #include "acb_dirichlet.h"
 
 
-/* order of an element knowing the factorization of a multiple */
-static ulong
-nmod_order_precomp(ulong a, nmod_t mod, ulong expo, n_factor_t fac)
-{
-    int k;
-    ulong pe, ap, order = 1;
-    for (k = 0; k < fac.num; k++)
-    {
-        pe = n_pow(fac.p[k], fac.exp[k]);
-        ap = nmod_pow_ui(a, expo / pe, mod);
-        while ( ap != 1)
-        {
-            ap = nmod_pow_ui(ap, fac.p[k], mod);
-            order *= fac.p[k];
-        }
-    }
-    return order;
-}
-
 int main()
 {
     slong iter, bits;
@@ -61,16 +42,12 @@ int main()
         acb_dirichlet_group_t G;
         acb_dirichlet_char_t chi, chi2;
         ulong q, iter2;
-        n_factor_t fac;
 
         q = 2 + n_randint(state, 1 << bits);
 
         acb_dirichlet_group_init(G, q);
         acb_dirichlet_char_init(chi, G);
         acb_dirichlet_char_init(chi2, G);
-
-        n_factor_init(&fac);
-        n_factor(&fac, G->expo, 1);
 
         acb_dirichlet_group_dlog_precompute(G, 50);
 
@@ -87,7 +64,7 @@ int main()
 
             acb_dirichlet_char(chi, G, m);
 
-            order = nmod_order_precomp(m, G->mod, G->expo, fac);
+            order = acb_dirichlet_ui_order(G, m);
             if (order != chi->order)
             {
                 flint_printf("FAIL: order\n\n");
@@ -98,7 +75,7 @@ int main()
                 abort();
             }
 
-            cond = acb_dirichlet_conductor_ui(G, m);
+            cond = acb_dirichlet_ui_conductor(G, m);
             if (cond != acb_dirichlet_char_conductor(G, chi))
             {
                 flint_printf("FAIL: conductor\n\n");
@@ -109,7 +86,7 @@ int main()
                 abort();
             }
 
-            par = acb_dirichlet_parity_ui(G, m);
+            par = acb_dirichlet_ui_parity(G, m);
             chim1 = acb_dirichlet_ui_chi(G, chi, q - 1);
             if (acb_dirichlet_char_parity(chi) != par || par != (chim1 != 0))
             {

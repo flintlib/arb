@@ -27,6 +27,11 @@
 extern "C" {
 #endif
 
+void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
+    const signed char * chi, int mod, int reciprocal, slong prec);
+
+void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
+
 typedef struct
 {
     ulong q;                /* modulus */
@@ -62,11 +67,9 @@ void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
 /* properties of elements without log */
 
 ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G);
-ulong acb_dirichlet_conductor_ui(const acb_dirichlet_group_t G, ulong a);
-int acb_dirichlet_parity_ui(const acb_dirichlet_group_t G, ulong a);
-/*
-ulong acb_dirichlet_order_ui(const acb_dirichlet_groupt_t G, ulong a);
-*/
+ulong acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a);
+int acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a);
+ulong acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a);
 
 /* elements of the group, keep both number and log */
 typedef struct
@@ -77,11 +80,6 @@ typedef struct
 acb_dirichlet_conrey_struct;
 
 typedef acb_dirichlet_conrey_struct acb_dirichlet_conrey_t[1];
-
-void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
-    const signed char * chi, int mod, int reciprocal, slong prec);
-
-void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
 void acb_dirichlet_conrey_init(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 void acb_dirichlet_conrey_clear(acb_dirichlet_conrey_t x);

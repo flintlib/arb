@@ -25,43 +25,31 @@
 
 #include "acb_dirichlet.h"
 
+/* order of an element knowing the factorization of a multiple */
 ulong
-acb_dirichlet_conductor_ui(const acb_dirichlet_group_t G, ulong a)
+nmod_order_precomp(ulong a, nmod_t mod, ulong expo, n_factor_t fac)
 {
-    slong k;
-    ulong ap, cond;
-    nmod_t pe;
-
-    cond = 1;
-
-    for (k = (G->neven == 2); k < G->num; k++)
+    int k;
+    ulong pe, ap, order = 1;
+    for (k = 0; k < fac.num; k++)
     {
-        ulong p, e;
-        p = G->primes[k];
-        e = G->exponents[k];
-        nmod_init(&pe, G->primepowers[k]);
-        ap = a % pe.n;
-        if (ap == 1)
-            continue;
-        if (p == 2)
+        pe = n_pow(fac.p[k], fac.exp[k]);
+        ap = nmod_pow_ui(a, expo / pe, mod);
+        while ( ap != 1)
         {
-            cond = 4;
-            if (a % 4 == 3)
-                ap = pe.n - ap;
+            ap = nmod_pow_ui(ap, fac.p[k], mod);
+            order *= fac.p[k];
         }
-        else
-        {
-            cond *= p;
-            ap = nmod_pow_ui(ap, p - 1, pe);
-        }
-
-        while (ap != 1)
-        {
-            cond *= p;
-            ap = nmod_pow_ui(ap, p, pe);
-        }
-
     }
+    return order;
+}
 
-    return cond;
+ulong
+acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a)
+{
+    n_factor_t fac;
+
+    n_factor_init(&fac);
+    n_factor(&fac, G->expo, 1);
+    return nmod_order_precomp(a, G->mod, G->expo, fac);
 }

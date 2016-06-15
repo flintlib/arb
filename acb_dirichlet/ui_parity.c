@@ -24,30 +24,24 @@
 ******************************************************************************/
 
 #include "acb_dirichlet.h"
-#include <math.h>
-#define PI   3.14159265358
-#define LOG2 0.69314718055
 
-ulong
-acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
+int
+acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
 {
-    double a, la;
-    a = PI / (double)q * x * x;
-    la = (a < .3) ? -log(2*a*(1-a)) : .8;
-    la = ((double)prec * LOG2 + la) / a;
-    return ceil(sqrt(la)+.5);
-}
+    slong k;
+    int par;
 
-ulong
-acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec)
-{
-    double dx;
-    ulong len;
-    arf_t ax;
-    arf_init(ax);
-    arb_get_lbound_arf(ax, x, 53);
-    dx = arf_get_d(ax, ARF_RND_DOWN);
-    len = acb_dirichlet_theta_length_d(q, dx, prec);
-    arf_clear(ax);
-    return len;
+    par = 0;
+
+    if (G->neven && a % 4 == 3)
+        par++;
+
+    /* could replace by jacobi(a, core(q_odd)) */
+    for (k = G->neven; k < G->num; k++)
+    {
+        if (n_jacobi_unsigned(a, G->primes[k]) == -1)
+            par++;
+    }
+
+    return par % 2;
 }

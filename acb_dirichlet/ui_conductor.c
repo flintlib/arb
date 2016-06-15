@@ -25,23 +25,43 @@
 
 #include "acb_dirichlet.h"
 
-int
-acb_dirichlet_parity_ui(const acb_dirichlet_group_t G, ulong a)
+ulong
+acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
 {
     slong k;
-    int par;
+    ulong ap, cond;
+    nmod_t pe;
 
-    par = 0;
+    cond = 1;
 
-    if (G->neven && a % 4 == 3)
-        par++;
-
-    /* could replace by jacobi(a, core(q_odd)) */
-    for (k = G->neven; k < G->num; k++)
+    for (k = (G->neven == 2); k < G->num; k++)
     {
-        if (n_jacobi_unsigned(a, G->primes[k]) == -1)
-            par++;
+        ulong p, e;
+        p = G->primes[k];
+        e = G->exponents[k];
+        nmod_init(&pe, G->primepowers[k]);
+        ap = a % pe.n;
+        if (ap == 1)
+            continue;
+        if (p == 2)
+        {
+            cond = 4;
+            if (a % 4 == 3)
+                ap = pe.n - ap;
+        }
+        else
+        {
+            cond *= p;
+            ap = nmod_pow_ui(ap, p - 1, pe);
+        }
+
+        while (ap != 1)
+        {
+            cond *= p;
+            ap = nmod_pow_ui(ap, p, pe);
+        }
+
     }
 
-    return par % 2;
+    return cond;
 }
