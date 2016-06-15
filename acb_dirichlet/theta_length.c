@@ -31,8 +31,11 @@
 ulong
 acb_dirichlet_theta_length_d(ulong q, double x, slong prec)
 {
-    double a = PI / (double)q * x * x;
-    return ceil(sqrt(((double)prec * LOG2 - log(2 * a)) / a));
+    double a, la;
+    a = PI / (double)q * x * x;
+    la = (a>.3) ? -log(2*a*(1-a)) : .8;
+    la = ((double)prec * LOG2 + la) / a;
+    return ceil(sqrt(la)+.5);
 }
 
 ulong

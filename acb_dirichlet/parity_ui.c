@@ -36,6 +36,7 @@ acb_dirichlet_parity_ui(const acb_dirichlet_group_t G, ulong a)
     if (G->neven && a % 4 == 3)
         par++;
 
+    /* could replace by jacobi(a, core(q_odd)) */
     for (k = G->neven; k < G->num; k++)
     {
         if (n_jacobi_unsigned(a, G->primes[k]) == -1)
