@@ -59,6 +59,15 @@ void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
 void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
 void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
 
+/* properties of elements without log */
+
+ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G);
+ulong acb_dirichlet_conductor_ui(const acb_dirichlet_group_t G, ulong a);
+/*
+ulong acb_dirichlet_parity_ui(const acb_dirichlet_groupt_t G, ulong a);
+ulong acb_dirichlet_order_ui(const acb_dirichlet_groupt_t G, ulong a);
+*/
+
 /* elements of the group, keep both number and log */
 typedef struct
 {

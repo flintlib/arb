@@ -96,26 +96,10 @@ int main()
         if (q % 4 == 2)
             continue;
 
-        /* check primitive elements */
-        if (q % 4 == 2)
-            ref = 0;
-        else
-        {
-           ref = 1;
-           k = (G->neven == 2) ? 1 : 0;
-           for (; k < G->num; k++)
-           {
-               ulong p = G->primes[k];
-               if (G->exponents[k] == 1)
-                   ref *= p - 2;
-               else
-                   ref *= (p * (p - 2) + 1) * n_pow(p, G->exponents[k] - 2);
-           }
-        }
-
         acb_dirichlet_conrey_first_primitive(x, G);
         for (n = 1; (k=acb_dirichlet_conrey_next_primitive(x, G)) < G->num; n++);
 
+        ref = acb_dirichlet_number_primitive(G);
         if (n != ref)
         {
             flint_printf("FAIL: number of primitive elements\n\n");
