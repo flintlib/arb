@@ -45,52 +45,6 @@ nmod_order_precomp(ulong a, nmod_t mod, ulong expo, n_factor_t fac)
     return order;
 }
 
-static ulong
-n_conductor(ulong q, ulong a)
-{
-    slong k;
-    ulong ap, cond;
-
-    nmod_t pe;
-    n_factor_t fac;
-    n_factor_init(&fac);
-    n_factor(&fac, q, 1);
-
-    cond = 1;
-
-    for (k = 0; k < fac.num; k++)
-    {
-        ulong p, e;
-        p = fac.p[k];
-        e = fac.exp[k];
-
-        nmod_init(&pe, n_pow(p, e));
-        ap = a % pe.n;
-        if (ap == 1)
-            continue;
-        if (p == 2)
-        {
-            cond = 4;
-            if (a % 4 == 3)
-                ap = pe.n - ap;
-        }
-        else
-        {
-            cond *= p;
-            ap = nmod_pow_ui(ap, p - 1, pe);
-        }
-
-        while (ap != 1)
-        {
-            cond *= p;
-            ap = nmod_pow_ui(ap, p, pe);
-        }
-
-    }
-
-        return cond;
-}
-
 int main()
 {
     slong iter, bits;
@@ -143,7 +97,7 @@ int main()
                 abort();
             }
 
-            cond = n_conductor(G->q, m);
+            cond = acb_dirichlet_conductor_ui(G, m);
             if (cond != acb_dirichlet_char_conductor(G, chi))
             {
                 flint_printf("FAIL: conductor\n\n");
