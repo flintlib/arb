@@ -77,6 +77,7 @@ int main()
         /* check number char properties */
         for (iter2 = 0; iter2 < 50; iter2++)
         { 
+            int par;
             ulong m, n;
             ulong order, chim1, pairing, cond;
 
@@ -108,14 +109,16 @@ int main()
                 abort();
             }
 
+            par = acb_dirichlet_parity_ui(G, m);
             chim1 = acb_dirichlet_ui_chi(G, chi, q - 1);
-            if (acb_dirichlet_char_parity(chi) != (chim1 != 0))
+            if (acb_dirichlet_char_parity(chi) != par || par != (chim1 != 0))
             {
                 flint_printf("FAIL: parity\n\n");
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("m = %wu\n\n", m);
                 flint_printf("chi(-1) = %wu\n\n", chim1);
                 flint_printf("char_parity = %d", acb_dirichlet_char_parity(chi));
+                flint_printf("parity_ui = %d", par);
                 acb_dirichlet_char_print(G, chi);
                 abort();
             }

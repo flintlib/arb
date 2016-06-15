@@ -63,8 +63,8 @@ void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
 
 ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G);
 ulong acb_dirichlet_conductor_ui(const acb_dirichlet_group_t G, ulong a);
+int acb_dirichlet_parity_ui(const acb_dirichlet_group_t G, ulong a);
 /*
-ulong acb_dirichlet_parity_ui(const acb_dirichlet_groupt_t G, ulong a);
 ulong acb_dirichlet_order_ui(const acb_dirichlet_groupt_t G, ulong a);
 */
 
