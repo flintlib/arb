@@ -36,4 +36,5 @@ acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
         chi->expo[k] = 0;
 
     chi->order = 1;
+    chi->conductor = 1;
 }

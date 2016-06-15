@@ -34,6 +34,7 @@ acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t 
     chi->q = G->q;
     chi->n = x->n;
     chi->parity = acb_dirichlet_conrey_parity(G, x);
+    chi->conductor = acb_dirichlet_conrey_conductor(G, x);
 
     for (k = 0; k < G->num; k++)
         chi->expo[k] = (x->log[k] * G->PHI[k]) % G->expo;
