@@ -184,7 +184,9 @@ void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slon
 
 ulong acb_dirichlet_theta_length_d(ulong q, double x, slong prec);
 ulong acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec);
-void acb_dirichlet_chi_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t x, slong prec);
+void acb_dirichlet_arb_theta_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t x, slong prec);
 
 void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
