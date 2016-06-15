@@ -42,8 +42,8 @@ acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
         chi->expo[k] = 0;  
     }
 
-    /* should do it with log, but not kept yet */
-    chi->conductor = acb_dirichlet_conductor_ui(G, chi->n);
+    /* should do it with log, but log is not kept yet in the struct */
+    chi->conductor = acb_dirichlet_ui_conductor(G, chi->n);
     acb_dirichlet_char_normalize(chi, G);
 
     /* return last index modified */

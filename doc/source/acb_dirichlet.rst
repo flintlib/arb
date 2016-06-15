@@ -29,9 +29,10 @@ Working with Dirichlet characters mod *q* consists mainly
 in going from residue classes mod *q* to exponents on a set
 of generators of the group.
 
-This implementation relies on the Conrey generators introduced
-in the LMFDB. We call *number* a residue class, and *index* the
-corresponding vector of exponents.
+This implementation relies on the Conrey numbering scheme
+introduced in the LMFDB.
+We call *number* a residue class modulo *q*, and *index* the
+corresponding vector of exponents of Conrey generators.
 
 Going from an *index* to the corresponding *number* is a cheap
 operation while the converse requires computing discrete
@@ -78,6 +79,9 @@ logarithms.
     so as to minimize the complexity of *num* calls to discrete logarithms.
 
     If *num* gets very large, the entire group may be indexed.
+
+Conrey index
+...............................................................................
 
 .. type:: acb_dirichlet_conrey_struct
 
@@ -130,12 +134,43 @@ the group *G* is isomorphic to its dual.
 
     The returned value is the numerator of the actual value exponent mod the group exponent *G->expo*.
 
+Character properties
+...............................................................................
+
+As a consequence of the Conrey numbering, properties of
+characters such that the order, the parity or the conductor are available
+at the level of their number, whithout any discrete log computation,
+or at the Conrey index level.
+
+.. function:: ulong acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: ulong acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
+
+   Compute the order of a mod q.
+
+.. function:: ulong acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
+
+   Compute the conductor of a mod q, that is the smallest r dividing q such
+   that a corresponds to an element defined modulo r.
+
+.. function:: ulong acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
+
+   Compute the parity of a mod q, which is the parity of the corresponding
+   Dirichlet character.
+
+Character type
+-------------------------------------------------------------------------------
+
 .. type:: acb_dirichlet_char_struct
 
 .. type:: acb_dirichlet_char_t
 
     Represents a Dirichlet character. This structure contains various
-    useful invariants such as the order of the character.
+    useful invariants such as the order, the parity and the conductor of the character.
 
     An *acb_dirichlet_char_t* is defined as an array of *acb_dirichlet_char_struct*
     of length 1, permitting it to be passed by reference.
@@ -156,13 +191,13 @@ the group *G* is isomorphic to its dual.
     Sets *chi* to the Dirichlet character of Conrey index *x*.
 
 Character properties
--------------------------------------------------------------------------------
+...............................................................................
 
 .. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 
 .. function:: int acb_dirichlet_char_parity(const acb_dirichlet_char_t chi)
 
-.. function:: ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
+.. function:: ulong acb_dirichlet_char_conductor(const acb_dirichlet_char_t chi)
 
 Character evaluation
 -------------------------------------------------------------------------------
