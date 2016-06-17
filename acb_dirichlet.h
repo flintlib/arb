@@ -85,6 +85,15 @@ void acb_dirichlet_conrey_init(acb_dirichlet_conrey_t x, const acb_dirichlet_gro
 void acb_dirichlet_conrey_clear(acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_print(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 
+ACB_DIRICHLET_INLINE void
+acb_dirichlet_conrey_copy(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t y)
+{
+    slong k;
+    x->n = y->n;
+    for (k = 0; k < G->num; k++)
+        x->log[k] = y->log[k];
+}
+
 int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m);
@@ -112,10 +121,9 @@ void acb_dirichlet_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ul
 typedef struct
 {
     ulong q;           /* modulus */
-    /*? acb_dirichet_conrey_struct n; */
-    ulong n;           /* number */
     ulong order;       /* order */
-    ulong * expo;      /* reduced exponents ( order * log[k] / gcd( ) ) */
+    acb_dirichlet_conrey_t x;
+    ulong * expo;      /* reduced exponents ( log[k] * PHI[k] / gcd( ) ) */
     int parity;        /* 0 for even char, 1 for odd */
     ulong conductor;
 }
@@ -127,6 +135,12 @@ ACB_DIRICHLET_INLINE ulong
 acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 {
     return chi->order;
+}
+
+ACB_DIRICHLET_INLINE ulong
+acb_dirichlet_char_conductor(const acb_dirichlet_char_t chi)
+{
+    return chi->conductor;
 }
 
 ACB_DIRICHLET_INLINE int
@@ -141,13 +155,19 @@ void acb_dirichlet_char_print(const acb_dirichlet_group_t G, const acb_dirichlet
 
 void acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n);
 void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
+void acb_dirichlet_char_set_expo(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_denormalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
-ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
+void acb_dirichlet_char_mul(acb_dirichlet_char_t chi12, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2);
+
+/*ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);*/
 
 void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 void acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
+
+int acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
+int acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
 ulong acb_dirichlet_ui_chi_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n);

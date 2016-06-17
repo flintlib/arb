@@ -69,7 +69,7 @@ int main()
             if ((k = vec_diff(v1, v2, nv)))
             {
                 flint_printf("FAIL: chi(%wu,%wu) = %wu != chi(%wu,%wu) = %wu mod %wu (modulus = %wu)\n",
-                        chi->n, k, v1[k], chi->n, k, v2[k], chi->order, q);
+                        chi->x->n, k, v1[k], chi->x->n, k, v2[k], chi->order, q);
                 abort();
             }
 

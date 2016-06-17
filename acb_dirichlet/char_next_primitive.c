@@ -28,38 +28,9 @@
 int
 acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
-    ulong k;
-
-    acb_dirichlet_char_denormalize(chi, G);
-
-    /* update index */
-    k = 0;
-    if (G->neven == 2)
-    {
-        chi->n = nmod_mul(chi->n, G->generators[0], G->mod);
-        chi->expo[0]++;
-        if (chi->expo[0] < G->expo)
-            return 0;
-        chi->expo[0] = 0;
-        k = 1;
-    }
-
-    for (; k < G->num ; k++)
-    {
-        chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
-        chi->expo[k] += G->PHI[k];
-        if (chi->expo[k] % G->primes[k] == 0)
-        {
-            chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
-            chi->expo[k] += G->PHI[k];
-        }
-        if (chi->expo[k] < G->expo)
-            break;
-        chi->expo[k] = G->PHI[k];  
-    }
-
-    acb_dirichlet_char_normalize(chi, G);
-
+    int k;
+    k = acb_dirichlet_conrey_next(chi->x, G);
+    acb_dirichlet_char_conrey(chi, G, NULL);
     /* return last index modified */
     return k;
 }

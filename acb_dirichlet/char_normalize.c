@@ -26,6 +26,14 @@
 #include "acb_dirichlet.h"
 
 void
+acb_dirichlet_char_set_expo(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+{
+    slong k;
+    for (k = 0; k < G->num; k++)
+        chi->expo[k] = (chi->x->log[k] * G->PHI[k]) % G->expo;
+}
+
+void
 acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
     ulong k, g;

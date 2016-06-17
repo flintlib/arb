@@ -100,21 +100,25 @@ int main()
                 if (v[k] != ACB_DIRICHLET_CHI_NULL)
                     acb_addmul_arb(sum, z + (v[k] * m), tt + k, prec);
 
-            if ((q == 300 && (chi->n == 271 || chi->n == 131))
-                    || (q == 600 && (chi->n == 11 || chi->n == 91)))
+            if ((q == 300 && (chi->x->n == 271 || chi->x->n == 131))
+                    || (q == 600 && (chi->x->n == 11 || chi->x->n == 91)))
             {
                 if (!acb_contains_zero(sum))
                 {
-                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->n);
+                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
                 acb_printd(sum, 10);
+                flint_printf("\n");
+                acb_dirichlet_char_print(G, chi);
                 flint_printf("\n");
                 abort();
                 }
             }
             else if (acb_contains_zero(sum))
             {
-                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->n);
+                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
                 acb_printd(sum, 10);
+                flint_printf("\n");
+                acb_dirichlet_char_print(G, chi);
                 flint_printf("\n");
                 abort();
             }

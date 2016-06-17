@@ -28,7 +28,9 @@
 void
 acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
-    if (chi->order <= 2)
+    if (chi->x->n == 1)
+        acb_set_si(res, -1);
+    else if (chi->order <= 2)
     {
         if (chi->parity)
         {

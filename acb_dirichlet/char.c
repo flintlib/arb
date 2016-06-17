@@ -28,8 +28,6 @@
 void
 acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n)
 {
-    acb_dirichlet_conrey_t x;
-    x->log = chi->expo;
-    acb_dirichlet_conrey_log(x, G, n);
-    acb_dirichlet_char_conrey(chi, G, x);
+    acb_dirichlet_conrey_log(chi->x, G, n);
+    acb_dirichlet_char_conrey(chi, G, chi->x);
 }

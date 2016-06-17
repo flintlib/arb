@@ -28,5 +28,6 @@
 void
 acb_dirichlet_char_clear(acb_dirichlet_char_t chi)
 {
+    acb_dirichlet_conrey_clear(chi->x);
     flint_free(chi->expo);
 }

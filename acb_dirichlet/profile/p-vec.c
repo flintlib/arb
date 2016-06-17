@@ -51,7 +51,7 @@ vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ul
         for (r = 0; r < nr; r++)
         {
             acb_dirichlet_char(chi, G, rand[r] % q);
-            dir(v, nv, G, chi);
+            dir(v, G, chi, nv);
         }
 
         acb_dirichlet_char_clear(chi);
@@ -97,15 +97,15 @@ int main()
 
         flint_printf("big loop................ ");
         fflush(stdout);
-        vecloop(acb_dirichlet_chi_vec_loop, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_ui_chi_vec_loop, minq, maxq, rand, nr, v, nv);
 
         flint_printf("med loop................ ");
         fflush(stdout);
-        vecloop(acb_dirichlet_chi_vec_primeloop, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_ui_chi_vec_primeloop, minq, maxq, rand, nr, v, nv);
 
         flint_printf("sieve................... ");
         fflush(stdout);
-        vecloop(acb_dirichlet_chi_vec_sieve, minq, maxq, rand, nr, v, nv);
+        vecloop(acb_dirichlet_ui_chi_vec_sieve, minq, maxq, rand, nr, v, nv);
 
         /*
         flint_printf("generic........ ");

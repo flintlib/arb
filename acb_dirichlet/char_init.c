@@ -28,5 +28,6 @@
 void
 acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
+    acb_dirichlet_conrey_init(chi->x, G);
     chi->expo = flint_malloc(G->num * sizeof(ulong));
 }
