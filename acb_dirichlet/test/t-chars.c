@@ -76,13 +76,13 @@ int main()
             }
 
             cond = acb_dirichlet_ui_conductor(G, m);
-            if (cond != acb_dirichlet_char_conductor(G, chi))
+            if (cond != chi->conductor)
             {
                 flint_printf("FAIL: conductor\n\n");
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("m = %wu\n\n", m);
                 flint_printf("conductor(m) = %wu\n\n", cond);
-                flint_printf("chi->conductor = %wu\n\n", acb_dirichlet_char_conductor(G, chi));
+                flint_printf("chi->conductor = %wu\n\n", chi->conductor);
                 abort();
             }
 

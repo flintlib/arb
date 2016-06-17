@@ -67,7 +67,7 @@ int main()
             if (!acb_overlaps(s1, s2)
                     || !acb_overlaps(s1, s3))
             {
-                flint_printf("FAIL: G(chi_%wu(%wu))\n\n", q, chi->n);
+                flint_printf("FAIL: G(chi_%wu(%wu))\n\n", q, chi->x->n);
                 flint_printf("\nnaive ", q, x->n);
                 acb_printd(s1, 25);
                 flint_printf("\ntheta ", q, x->n);

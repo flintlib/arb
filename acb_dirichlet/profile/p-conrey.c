@@ -46,7 +46,7 @@ int main()
     TIMEIT_ONCE_STOP
     nref = n;
 
-    flint_printf("conrey elements.... ");
+    flint_printf("conrey.... ");
     TIMEIT_ONCE_START
     for (n = 0, q = 2; q <= maxq; q++)
     {
@@ -69,6 +69,31 @@ int main()
             flint_printf("FAIL: wrong number of elements %wu != %wu\n\n",n, nref);
             abort();
     }
+
+    flint_printf("chars.... ");
+    TIMEIT_ONCE_START
+    for (n = 0, q = 2; q <= maxq; q++)
+    {
+        acb_dirichlet_group_t G;
+        acb_dirichlet_char_t chi;
+
+        acb_dirichlet_group_init(G, q);
+        acb_dirichlet_char_init(chi, G);
+
+        acb_dirichlet_char_one(chi, G);
+        n++;
+
+        for (; acb_dirichlet_char_next(chi, G) < G->num; n++);
+        acb_dirichlet_char_clear(chi);
+        acb_dirichlet_group_clear(G);
+    }
+    TIMEIT_ONCE_STOP
+    if (n != nref)
+    {
+            flint_printf("FAIL: wrong number of elements %wu != %wu\n\n",n, nref);
+            abort();
+    }
+
 
     flint_cleanup();
     flint_printf("PASS\n");

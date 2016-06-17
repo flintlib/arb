@@ -33,8 +33,8 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const ac
 
     arb_init(x);
 
-    if ((G->q == 300 && (chi->n == 271 || chi->n == 131))
-            || (G->q == 600 && (chi->n == 11 || chi->n == 91)))
+    if ((G->q == 300 && (chi->x->n == 271 || chi->x->n == 131))
+            || (G->q == 600 && (chi->x->n == 11 || chi->x->n == 91)))
     {
         /* or could use l'Hopital rule */
         acb_dirichlet_gauss_sum_naive(res, G, chi, prec);
@@ -42,7 +42,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const ac
     }
 
     arb_one(x);
-    acb_dirichlet_chi_theta(res, G, chi, x, prec);
+    acb_dirichlet_chi_theta_arb(res, G, chi, x, prec);
     acb_init(eps);
     acb_conj(eps, res);
     acb_div(eps, res, eps, prec);

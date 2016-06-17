@@ -26,9 +26,39 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_char_first_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
 {
-    acb_dirichlet_conrey_first_primitive(chi->x, G);
-    acb_dirichlet_char_conrey(chi, G, NULL);
-    acb_dirichlet_char_normalize(chi, G);
+    if (chi1->x->n == 1 || chi2->x->n == 1)
+    {
+        if (chi1->x->n == 1 && chi2->x->n == 1)
+            acb_set_si(res, G->q - 2);
+        else
+            acb_set_si(res, - 1);
+    }
+    else if (nmod_mul(chi1->x->n, chi2->x->n, G->mod) == 1)
+    {
+        if (chi1->parity)
+            acb_one(res);
+        else
+            acb_set_si(res, -1);
+    }
+    else
+    {
+        acb_dirichlet_char_t chi12;
+        acb_t tmp;
+
+        acb_dirichlet_char_init(chi12, G);
+        acb_init(tmp);
+
+        acb_dirichlet_gauss_sum(res, G, chi1, prec);
+        acb_dirichlet_gauss_sum(tmp, G, chi2, prec);
+        acb_mul(res, res, tmp, prec);
+        acb_dirichlet_char_mul(chi12, G, chi1, chi2);
+        acb_dirichlet_gauss_sum(tmp, G, chi12, prec);
+        acb_div(res, res, tmp, prec);
+
+        acb_dirichlet_char_clear(chi12);
+        acb_clear(tmp);
+    }
+
 }

@@ -39,7 +39,7 @@ acb_dirichlet_arb_theta_argt(arb_t x, ulong q, const arb_t t, slong prec)
 }
 
 void
-acb_dirichlet_chi_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec)
+acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec)
 {
     slong len;
     ulong * a;

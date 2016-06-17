@@ -213,6 +213,13 @@ unity.
 
     There are no restrictions on *n*.
 
+Gauss and Jacobi sums
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
+
 Euler products
 -------------------------------------------------------------------------------
 
@@ -250,3 +257,18 @@ Simple functions
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
 
+
+Implementation notes
+-------------------------------------------------------------------------------
+
+The current implementation introduces a *char* type which contains a *conrey*
+index plus additional information which
+
+- make evaluation of a single character a bit faster
+
+- have some initialization cost.
+
+Even if it is straiforward to convert a *conrey* index to the
+corresponding *char*, looping is faster at the
+level of conrey representation. Things can be improved on this aspect
+but it makes code more intricate.

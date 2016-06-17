@@ -28,24 +28,9 @@
 int
 acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
-    ulong k;
-
-    acb_dirichlet_char_denormalize(chi, G);
-
-    /* update index */
-    for (k=0; k < G->num ; k++)
-    {
-        chi->n = nmod_mul(chi->n, G->generators[k], G->mod);
-        chi->expo[k] += G->PHI[k];
-        if (chi->expo[k] < G->expo)
-            break;
-        chi->expo[k] = 0;  
-    }
-
-    /* should do it with log, but log is not kept yet in the struct */
-    chi->conductor = acb_dirichlet_ui_conductor(G, chi->n);
-    acb_dirichlet_char_normalize(chi, G);
-
+    int k;
+    k = acb_dirichlet_conrey_next(chi->x, G);
+    acb_dirichlet_char_conrey(chi, G, NULL);
     /* return last index modified */
     return k;
 }
