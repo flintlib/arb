@@ -25,9 +25,17 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n)
+int
+acb_dirichlet_conrey_eq(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
 {
-    acb_dirichlet_conrey_log(chi->x, G, n);
-    acb_dirichlet_char_conrey(chi, G, NULL);
+    slong k;
+
+    if (x->n != y->n)
+        return 0;
+
+    for (k = 0; k < G->num; k++)
+        if (x->log[k] != y->log[k])
+            return 0;
+
+    return 1;
 }

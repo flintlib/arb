@@ -25,9 +25,28 @@
 
 #include "acb_dirichlet.h"
 
-void
-acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n)
+int
+acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 {
-    acb_dirichlet_conrey_log(chi->x, G, n);
-    acb_dirichlet_char_conrey(chi, G, NULL);
+    acb_dirichlet_conrey_t x, y;
+    
+    if (chi1->q != chi2->q)
+        return 0;
+
+    if (chi1->order != chi2->order)
+        return 0;
+
+    if (chi1->conductor != chi2->conductor)
+        return 0;
+
+    if (!acb_dirichlet_conrey_eq(G, chi1->x, chi2->x))
+        return 0;
+
+    x->n = y->n = 1;
+    x->log = chi1->expo;
+    y->log = chi2->expo;
+    if (!acb_dirichlet_conrey_eq(G, x, y))
+        return 0;
+
+    return 1;
 }
