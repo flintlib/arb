@@ -42,7 +42,6 @@ int main()
     for (q = 3; q < 1000; q ++)
     {
         acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x;
         acb_dirichlet_char_t chi;
         ulong * v, nv, k;
 
@@ -57,7 +56,6 @@ int main()
             continue;
 
         acb_dirichlet_group_init(G, q);
-        acb_dirichlet_conrey_init(x, G);
         acb_dirichlet_char_init(chi, G);
 
         acb_init(zeta);
@@ -84,13 +82,12 @@ int main()
 
         /* theta function on primitive characters */
         acb_init(sum);
-        acb_dirichlet_conrey_first_primitive(x, G);
+        acb_dirichlet_char_first_primitive(chi, G);
 
         while (1) {
             ulong m;
             acb_zero(sum);
 
-            acb_dirichlet_char_conrey(chi, G, x);
             acb_dirichlet_ui_chi_vec(v, G, chi, nv);
 
             m = G->expo / chi->order;
@@ -123,7 +120,7 @@ int main()
                 abort();
             }
 
-            if (acb_dirichlet_conrey_next_primitive(x, G) == G->num)
+            if (acb_dirichlet_char_next_primitive(chi, G) == G->num)
                 break;
         }
         _acb_vec_clear(z, G->expo);
@@ -134,7 +131,6 @@ int main()
         flint_free(v);
         acb_dirichlet_group_clear(G);
         acb_dirichlet_char_clear(chi);
-        acb_dirichlet_conrey_clear(x);
     }
 
     flint_cleanup();
