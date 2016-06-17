@@ -29,7 +29,7 @@ int
 acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
     int k;
-    k = acb_dirichlet_conrey_next(chi->x, G);
+    k = acb_dirichlet_conrey_next_primitive(chi->x, G);
     acb_dirichlet_char_conrey(chi, G, NULL);
     /* return last index modified */
     return k;
