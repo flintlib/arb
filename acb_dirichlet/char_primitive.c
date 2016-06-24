@@ -25,28 +25,14 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: BSGS can reduce to nv mul */ 
 void
-acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec)
+acb_dirichlet_char_primitive(acb_dirichlet_char_t chi0, const acb_dirichlet_group_t G0, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi)
 {
-    slong i;
-    arb_t dx, x2;
-    arb_init(dx);
-    arb_init(x2);
-    arb_set(dx, x);
-    arb_mul(x2, x, x, prec);
-    for (i = 0; i < nv; i++)
-    {
-        if (i == 0)
-            arb_one(v + i);
-        else if (i == 1)
-            arb_set_round(v + i, x, prec);
-        else
-        {
-            arb_mul(dx, dx, x2, prec);
-            arb_mul(v + i, v + i - 1, dx, prec);
-        }
-    }
-    arb_clear(dx);
-    arb_clear(x2);
+    chi0->q = chi->conductor;
+    chi0->parity = chi->parity;
+    chi0->conductor = chi->conductor;
+    acb_dirichlet_conrey_primitive(chi0->x, G, chi->x, chi->conductor);
+    acb_dirichlet_char_set_expo(chi0, G0);
+    /* optional: divide by gcd to obtain true order */
+    acb_dirichlet_char_normalize(chi0, G0);
 }

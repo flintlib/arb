@@ -30,66 +30,66 @@ int main()
     slong prec = 128;
     ulong q;
 
-    flint_printf("gauss....");
+    flint_printf("jacobi....");
     fflush(stdout);
 
-    /* check Gauss sums */
+    /* check Jacobi sums */
 
-    for (q = 3; q < 200; q ++)
+    for (q = 3; q < 250; q ++)
     {
         acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x;
-        acb_dirichlet_char_t chi;
+        acb_dirichlet_char_t chi1, chi2;
 
-        acb_t s1, s2, s3;
-
-        if (q % 4 == 2)
-            /* no primitive character mod q */
-            continue;
+        acb_t s1, s2;
 
         acb_dirichlet_group_init(G, q);
-        acb_dirichlet_conrey_init(x, G);
-        acb_dirichlet_char_init(chi, G);
+        acb_dirichlet_char_init(chi1, G);
+        acb_dirichlet_char_init(chi2, G);
 
         acb_init(s1);
         acb_init(s2);
-        acb_init(s3);
-        acb_dirichlet_conrey_one(x, G);
+
+        acb_dirichlet_char_one(chi1, G);
 
         while (1) {
 
-            acb_dirichlet_char_conrey(chi, G, x);
+            acb_dirichlet_char_one(chi2, G);
 
-            acb_dirichlet_gauss_sum_naive(s1, G, chi, prec);
-            acb_dirichlet_gauss_sum(s2, G, chi, prec);
-            if (chi->conductor == G->q)
-                acb_dirichlet_gauss_sum_theta(s3, G, chi, prec);
-            else
-                acb_set(s3, s1);
+            while (1) {
 
-            if (!acb_overlaps(s1, s2)
-                    || !acb_overlaps(s1, s3))
-            {
-                flint_printf("FAIL: G(chi_%wu(%wu))\n\n", q, chi->x->n);
-                flint_printf("\nnaive ", q, x->n);
-                acb_printd(s1, 25);
-                flint_printf("\ndefault ", q, x->n);
-                acb_printd(s2, 25);
-                flint_printf("\ntheta ", q, x->n);
-                acb_printd(s3, 25);
-                abort();
+                acb_dirichlet_jacobi_sum_naive(s1, G, chi1, chi2, prec);
+                acb_dirichlet_jacobi_sum(s2, G, chi1, chi2, prec);
+
+                if (!acb_overlaps(s1, s2))
+                {
+                    flint_printf("FAIL: J_%wu(%wu,%wu)",
+                            q, chi1->x->n, chi2->x->n);
+                    flint_printf("\nnaive ");
+                    acb_printd(s1, 25);
+                    flint_printf("\ntheta ");
+                    acb_printd(s2, 25);
+                    flint_printf("\n");
+                    flint_printf("cond = %wu, %wu, %wu\n",
+                            chi1->conductor, chi2->conductor,
+                            acb_dirichlet_ui_conductor(G, nmod_mul(chi1->x->n, chi2->x->n, G->mod))
+                            );
+                    abort();
+                }
+                if (acb_dirichlet_char_next(chi2, G) == G->num)
+                    break;
+
             }
 
-            if (acb_dirichlet_conrey_next(x, G) == G->num)
+            if (acb_dirichlet_char_next(chi1, G) == G->num)
                 break;
+
         }
+
         acb_clear(s1);
         acb_clear(s2);
-        acb_clear(s3);
-
         acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi);
-        acb_dirichlet_conrey_clear(x);
+        acb_dirichlet_char_clear(chi1);
+        acb_dirichlet_char_clear(chi2);
     }
 
     flint_cleanup();

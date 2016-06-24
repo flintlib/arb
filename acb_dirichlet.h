@@ -108,6 +108,7 @@ int acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_diri
 
 void acb_dirichlet_conrey_mul(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b);
 void acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, ulong n);
+void acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, ulong cond);
 
 #define ACB_DIRICHLET_CHI_NULL UWORD_MAX
 
@@ -164,6 +165,7 @@ void acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_
 void acb_dirichlet_char_denormalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G);
 
 void acb_dirichlet_char_mul(acb_dirichlet_char_t chi12, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2);
+void acb_dirichlet_char_primitive(acb_dirichlet_char_t chi0, const acb_dirichlet_group_t G0, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
 /*ulong acb_dirichlet_char_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);*/
 
@@ -215,6 +217,11 @@ void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const
 void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+
+void acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec);
+
+void acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
 
 #ifdef __cplusplus
 }

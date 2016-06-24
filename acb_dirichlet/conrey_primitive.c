@@ -25,28 +25,37 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: BSGS can reduce to nv mul */ 
 void
-acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec)
+acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, ulong cond)
 {
-    slong i;
-    arb_t dx, x2;
-    arb_init(dx);
-    arb_init(x2);
-    arb_set(dx, x);
-    arb_mul(x2, x, x, prec);
-    for (i = 0; i < nv; i++)
+    int k, l, f;
+    
+    l = 0;
+    if (cond % 4 == 0)
     {
-        if (i == 0)
-            arb_one(v + i);
-        else if (i == 1)
-            arb_set_round(v + i, x, prec);
-        else
+        y->log[l++] = x->log[0];
+        
+        if (cond % 8 == 0)
         {
-            arb_mul(dx, dx, x2, prec);
-            arb_mul(v + i, v + i - 1, dx, prec);
+            ulong l2 = x->log[1];
+            f = n_remove(&l2, 2);
+            y->log[l++] = l2;
         }
     }
-    arb_clear(dx);
-    arb_clear(x2);
+
+    for (k = G->neven; k < G->num; k++)
+    {
+        if (x->log[k])
+        {
+            ulong p, lp;
+            p = G->primes[k];
+            if (cond % p == 0)
+            {
+                lp = x->log[k];
+                f = n_remove(&lp, p);
+                y->log[l++] = lp;
+            }
+        }
+    }
+
 }
