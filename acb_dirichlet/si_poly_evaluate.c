@@ -25,28 +25,50 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: BSGS can reduce to nv mul */ 
 void
-acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec)
+acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec)
 {
-    slong i;
-    arb_t dx, x2;
-    arb_init(dx);
-    arb_init(x2);
-    arb_set(dx, x);
-    arb_mul(x2, x, x, prec);
-    for (i = 0; i < nv; i++)
+    slong k, r, m;
+    acb_t sq;
+    acb_ptr zk;
+
+    if (len < 3)
     {
-        if (i == 0)
-            arb_one(v + i);
-        else if (i == 1)
-            arb_set_round(v + i, x, prec);
-        else
+        if (len == 0)
         {
-            arb_mul(dx, dx, x2, prec);
-            arb_mul(v + i, v + i - 1, dx, prec);
+            acb_zero(res);
         }
+        else if (len == 1)
+        {
+            acb_set_si(res, v[0]);
+        }
+        else if (len == 2)
+        {
+            acb_mul_si(res, z, v[1], prec);
+            acb_add_si(res, res, v[0], prec);
+        }
+        return;
     }
-    arb_clear(dx);
-    arb_clear(x2);
+
+    m = n_sqrt(len) + 1;
+
+    zk = _acb_vec_init(m + 1);
+    _acb_vec_set_powers(zk, z, m + 1, prec);
+
+    acb_init(sq);
+    acb_zero(res);
+
+    k = len - 1;
+    r = k % m;
+    for (; k >= 0; r = m - 1)
+    {
+        acb_zero(sq);
+        for (; r >= 0; r--, k--)
+            acb_addmul_si(sq, zk + r, v[k], prec);
+        acb_mul(res, res, zk + m, prec);
+        acb_add(res, res, sq, prec);
+    }
+
+    _acb_vec_clear(zk, m + 1);
+    acb_clear(sq);
 }
