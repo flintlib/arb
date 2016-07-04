@@ -48,12 +48,7 @@ acb_init(acb_t x)
     arb_init(acb_imagref(x));
 }
 
-ACB_INLINE void
-acb_clear(acb_t x)
-{
-    arb_clear(acb_realref(x));
-    arb_clear(acb_imagref(x));
-}
+void acb_clear(acb_t x);
 
 ACB_INLINE acb_ptr
 _acb_vec_init(slong n)

@@ -228,12 +228,7 @@ arf_init(arf_t x)
     ARF_XSIZE(x) = 0;
 }
 
-ARF_INLINE void
-arf_clear(arf_t x)
-{
-    fmpz_clear(ARF_EXPREF(x));
-    ARF_DEMOTE(x);
-}
+void arf_clear(arf_t x);
 
 ARF_INLINE void
 arf_zero(arf_t x)
