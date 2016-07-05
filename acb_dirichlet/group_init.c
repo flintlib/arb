@@ -56,6 +56,13 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     n_factor_init(&fac);
     n_factor(&fac, G->q_odd, 1);
 
+    /*
+     TODO: Dirichlet group may be an array of
+     prime components structs instead, since
+     many algorithms are done prime by prime
+     and this would make subgroups easier.
+     */
+
     /* number of components at p=2 */
     G->neven = (e2 >= 3) ? 2 : (e2 == 2) ? 1 : 0;
     G->num = G->neven + fac.num;

@@ -35,8 +35,9 @@ int main()
 
     /* check Jacobi sums */
 
-    for (q = 3; q < 250; q ++)
+    for (q = 29*29; q > 1; q = q%2 ? 3*q+1 : q/2)
     {
+        slong m1, m2;
         acb_dirichlet_group_t G;
         acb_dirichlet_char_t chi1, chi2;
 
@@ -51,11 +52,13 @@ int main()
 
         acb_dirichlet_char_one(chi1, G);
 
-        while (1) {
+        for (m1 = 0; m1 < 50; m1++)
+        {
 
             acb_dirichlet_char_one(chi2, G);
 
-            while (1) {
+            for (m2 = 0; m2 < 50; m2++)
+            {
 
                 acb_dirichlet_jacobi_sum_naive(s1, G, chi1, chi2, prec);
                 acb_dirichlet_jacobi_sum(s2, G, chi1, chi2, prec);
@@ -66,7 +69,7 @@ int main()
                             q, chi1->x->n, chi2->x->n);
                     flint_printf("\nnaive ");
                     acb_printd(s1, 25);
-                    flint_printf("\ntheta ");
+                    flint_printf("\ndefault ");
                     acb_printd(s2, 25);
                     flint_printf("\n");
                     flint_printf("cond = %wu, %wu, %wu\n",

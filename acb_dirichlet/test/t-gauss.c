@@ -35,7 +35,7 @@ int main()
 
     /* check Gauss sums */
 
-    for (q = 3; q < 200; q ++)
+    for (q = 3; q < 250; q ++)
     {
         acb_dirichlet_group_t G;
         acb_dirichlet_conrey_t x;
