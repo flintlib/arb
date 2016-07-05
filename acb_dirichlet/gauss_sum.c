@@ -25,6 +25,8 @@
 
 #include "acb_dirichlet.h"
 
+/* TODO: factor on modulus */
+
 static void
 gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
@@ -40,6 +42,7 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
         return;
     }
 
+    /* FIXME: check if one can start at G->neven */
     for (k = 0; k < G->num; k++)
     {
         ulong p = G->primes[k];

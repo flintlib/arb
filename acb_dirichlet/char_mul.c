@@ -29,5 +29,5 @@ void
 acb_dirichlet_char_mul(acb_dirichlet_char_t chi12, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 {
     acb_dirichlet_conrey_mul(chi12->x, G, chi1->x, chi2->x);
-    acb_dirichlet_char_conrey(chi12, G, chi12->x);
+    acb_dirichlet_char_conrey(chi12, G, NULL);
 }
