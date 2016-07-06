@@ -48,7 +48,7 @@ acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_gro
         if (x->log[k])
         {
             ulong p, lp;
-            p = G->primes[k];
+            p = G->P[k].p;
             if (cond % p == 0)
             {
                 lp = x->log[k];

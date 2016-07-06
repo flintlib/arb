@@ -34,7 +34,7 @@ acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t 
     {
         x->n = nmod_mul(x->n, G->generators[k], G->mod);
         x->log[k] += 1;
-        if (x->log[k] < G->phi[k])
+        if (x->log[k] < G->P[k].phi)
             break;
         x->log[k] = 0;
     }

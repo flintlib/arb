@@ -40,8 +40,8 @@ chi_vec_evenpart(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_ch
     {
         ulong g, pe, vx, xp;
         vx = c4;
-        pe = G->primepowers[1];
-        g = G->generators[1] % pe;
+        pe = G->P[1].pe.n;
+        g = G->P[1].g;
 
         for (x = g; x > 1;)
         {
@@ -73,9 +73,9 @@ acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, cons
     for (l = G->neven; l < G->num; l++)
     {
         ulong p, pe, g, x, vx, vp, xp;
-        p = G->primes[l];
-        pe = G->primepowers[l];
-        g = G->generators[l] % pe;
+        p = G->P[l].p;
+        pe = G->P[l].pe.n;
+        g = G->P[l].g;
         vx = vp = chi->expo[l];
 
         if (vp == 0)

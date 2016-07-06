@@ -28,7 +28,6 @@
 int
 acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
 {
-    slong k;
     int par;
 
     par = 0;
@@ -36,12 +35,8 @@ acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
     if (G->neven && a % 4 == 3)
         par++;
 
-    /* could replace by jacobi(a, core(q_odd)) */
-    for (k = G->neven; k < G->num; k++)
-    {
-        if (n_jacobi_unsigned(a, G->primes[k]) == -1)
-            par++;
-    }
+    if (n_jacobi_unsigned(a, G->rad_q) == -1)
+        par++;
 
     return par % 2;
 }

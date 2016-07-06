@@ -44,12 +44,12 @@ acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_dirichle
     {
         x->n = nmod_mul(x->n, G->generators[k], G->mod);
         x->log[k]++;
-        if (x->log[k] % G->primes[k] == 0)
+        if (x->log[k] % G->P[k].p == 0)
         {
             x->n = nmod_mul(x->n, G->generators[k], G->mod);
             x->log[k]++;
         }
-        if (x->log[k] < G->phi[k])
+        if (x->log[k] < G->P[k].phi)
             break;
         x->log[k] =  1;
     }

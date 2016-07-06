@@ -37,7 +37,7 @@ acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichle
     {
         ulong l2 = x->log[1];
         f = n_remove(&l2, 2);
-        cond = G->primepowers[1] >> f;
+        cond = 1 << (G->P[1].e - f);
     }
 
     for (k = G->neven; k < G->num; k++)
@@ -45,13 +45,13 @@ acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichle
         if (x->log[k])
         {
             ulong p, lp;
-            p = G->primes[k];
+            p = G->P[k].p;
             lp = x->log[k];
             f = n_remove(&lp, p);
             if (f)
-                cond *= n_pow(p, G->exponents[k] - f);
+                cond *= n_pow(p, G->P[k].e - f);
             else
-                cond *= G->primepowers[k];
+                cond *= G->P[k].pe.n;
         }
     }
 

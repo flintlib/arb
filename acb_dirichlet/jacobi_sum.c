@@ -49,8 +49,8 @@ jacobi_one(const acb_dirichlet_group_t G, ulong cond)
     slong k, r = 1;
 
     for (k = 0; k < G->num; k++)
-        r *= jacobi_one_prime(G->primes[k], G->exponents[k],
-                G->primepowers[k], cond);
+        r *= jacobi_one_prime(G->P[k].p, G->P[k].e,
+                G->P[k].pe.n, cond);
     return r;
 }
 
@@ -91,21 +91,22 @@ acb_dirichlet_jacobi_sum_primes(acb_t res,  const acb_dirichlet_group_t G, const
     /* TODO: efficient subgroup */
     for (k = 0; k < G->num; k++)
     {
-        ulong p, e, pe, ap, bp;
+        nmod_t pe;
+        ulong p, e, ap, bp;
 
-        p = G->primes[k];
-        e = G->exponents[k];
-        pe = G->primepowers[k];
-        ap = chi1->x->n % pe;
-        bp = chi2->x->n % pe;
+        p = G->P[k].p;
+        e = G->P[k].e;
+        pe = G->P[k].pe;
+        ap = chi1->x->n % pe.n;
+        bp = chi2->x->n % pe.n;
 
-        if (ap == 1 || bp == 1 || n_mulmod2(ap, bp, pe) == 1)
+        if (ap == 1 || bp == 1 || nmod_mul(ap, bp, pe) == 1)
         {
             slong r;
             ulong cond;
 
             cond = (ap == 1) ? chi2->conductor : chi1->conductor;
-            r = jacobi_one_prime(p, e, pe, cond);
+            r = jacobi_one_prime(p, e, pe.n, cond);
 
             /* chi(a,-1) if ap * bp = 1 */
             if (ap != 1 && bp != 1)
@@ -118,7 +119,7 @@ acb_dirichlet_jacobi_sum_primes(acb_t res,  const acb_dirichlet_group_t G, const
             acb_dirichlet_group_t Gp;
             acb_dirichlet_char_t chi1p, chi2p;
 
-            acb_dirichlet_group_init(Gp, pe);
+            acb_dirichlet_group_init(Gp, pe.n);
             acb_dirichlet_char_init(chi1p, Gp);
             acb_dirichlet_char_init(chi2p, Gp);
 
@@ -174,7 +175,7 @@ acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dir
             acb_dirichlet_jacobi_sum_naive(res, G, chi1, chi2, prec);
         else if (G->num > 1)
             acb_dirichlet_jacobi_sum_primes(res, G, chi1, chi2, prec);
-        else if (G->exponents[0] > 1)
+        else if (G->P[0].e > 1)
             acb_dirichlet_jacobi_sum_naive(res, G, chi1, chi2, prec);
         else
             acb_dirichlet_jacobi_sum_gauss(res, G, chi1, chi2, prec);

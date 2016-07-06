@@ -72,7 +72,7 @@ int main()
         ref = (q % 4 == 2) ? -2 : 1;
         k = (G->neven == 2) ? 1 : 0;
         for (; k<G->num; k++)
-          ref = - ref * G->primes[k];
+            ref = - ref * G->P[k].p;
         ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
 
 
