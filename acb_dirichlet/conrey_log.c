@@ -27,7 +27,7 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: use precomputations in G if present */
+/* TODO: use dlog module instead of n_discrete_log_bsgs */
 /* assume m is invertible */
 void
 acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
@@ -40,26 +40,25 @@ acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G
       if (G->neven == 2)
       {
         ulong m2 = (x->log[0]) ? -m % G->q_even : m % G->q_even;
-        if (G->dlog == NULL)
+        if (G->P[1].dlog == NULL)
             x->log[1] = n_discrete_log_bsgs(m2, 5, G->q_even);
         else
-            x->log[1] = dlog_precomp(G->dlog[1], m2);
+            x->log[1] = dlog_precomp(G->P[1].dlog, m2);
       }
     }
     /* odd part */
-    if (G->dlog == NULL)
+    for (k = G->neven; k < G->num; k++)
     {
-        for (k = G->neven; k < G->num; k++)
+        if (G->P[k].dlog == NULL)
         {
-            pk = G->primepowers[k];
-            gk = G->generators[k] % pk;
+            pk = G->P[k].pe.n;
+            gk = G->P[k].g;
             x->log[k] = n_discrete_log_bsgs(m % pk, gk, pk);
         }
-    }
-    else
-    {
-        for (k = G->neven; k < G->num; k++)
-            x->log[k] = dlog_precomp(G->dlog[k], m % G->primepowers[k]);
+        else
+        {
+            x->log[k] = dlog_precomp(G->P[k].dlog, m % G->P[k].pe.n);
+        }
     }
     /* keep value m */
     x->n = m;

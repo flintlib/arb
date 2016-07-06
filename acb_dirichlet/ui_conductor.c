@@ -25,21 +25,21 @@
 
 #include "acb_dirichlet.h"
 
+/* TODO: product of local conductors */
 ulong
 acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
 {
     slong k;
     ulong ap, cond;
-    nmod_t pe;
 
     cond = 1;
 
     for (k = (G->neven == 2); k < G->num; k++)
     {
-        ulong p, e;
-        p = G->primes[k];
-        e = G->exponents[k];
-        nmod_init(&pe, G->primepowers[k]);
+        ulong p;
+        nmod_t pe;
+        p = G->P[k].p;
+        pe = G->P[k].pe;
         ap = a % pe.n;
         if (ap == 1)
             continue;

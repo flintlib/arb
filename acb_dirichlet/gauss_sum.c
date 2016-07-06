@@ -45,9 +45,9 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     /* FIXME: check if one can start at G->neven */
     for (k = 0; k < G->num; k++)
     {
-        ulong p = G->primes[k];
+        ulong p = G->P[k].p;
 
-        if (G->exponents[k] > 1 && NN0 % (p*p) == 0)
+        if (G->P[k].e > 1 && NN0 % (p*p) == 0)
         {
             acb_zero(res);
             return;

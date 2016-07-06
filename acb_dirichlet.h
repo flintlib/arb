@@ -34,21 +34,28 @@ void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
 typedef struct
 {
+    ulong p;    /* underlying prime */
+    int e;      /* exponent */
+    nmod_t pe;  /* modulus */
+    ulong phi;  /* phi(p^e) */
+    ulong g;    /* conrey generator */
+    dlog_precomp_struct * dlog;  /* precomputed data for discrete log mod p^e */
+}
+acb_dirichlet_prime_group_struct;
+
+typedef struct
+{
     ulong q;                /* modulus */
-    nmod_t mod;             /* modulus with precomputed inverse */
     ulong q_even;           /* even part of modulus */
-    ulong q_odd;            /* odd part of modulus */
+    nmod_t mod;             /* modulus with precomputed inverse */
+    ulong rad_q;            /* radical = product of odd primes */
     ulong phi_q;            /* phi(q) = group size */
-    ulong expo;             /* group exponent = lcm(phi(q_even), phi(p[k]^e[k]) ) */
     slong neven;            /* number of even components (in 0,1,2)*/
     slong num;              /* number of prime components (even + odd) */
-    ulong * primes;         /* primes p[k] */
-    ulong * exponents;      /* exponents e[k] */
-    ulong * primepowers;    /* powers p[k]^[k] */
-    ulong * generators;     /* generator for each prime p[k] lifted mod q */
-    ulong * phi;            /* phi(k) = phi(p[k]^e[k])       */
+    ulong expo;             /* exponent = largest order in G */
+    acb_dirichlet_prime_group_struct * P;
+    ulong * generators;     /* generators lifted mod q */
     ulong * PHI;            /* PHI(k) = expo / phi(k)        */
-    dlog_precomp_t * dlog;  /* precomputed data for discrete log mod p^e */
 }
 acb_dirichlet_group_struct;
 
@@ -74,8 +81,8 @@ ulong acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a);
 /* elements of the group, keep both number and log */
 typedef struct
 {
-  ulong n;           /* number */
-  ulong * log;       /* s.t. prod generators[k]^log[k] = number */
+    ulong n;           /* number */
+    ulong * log;       /* s.t. prod generators[k]^log[k] = number */
 }
 acb_dirichlet_conrey_struct;
 

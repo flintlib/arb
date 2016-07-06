@@ -39,11 +39,11 @@ acb_dirichlet_number_primitive(const acb_dirichlet_group_t G)
 
         for (k = (G->neven == 2); k < G->num; k++)
         {
-            ulong p = G->primes[k];
-            if (G->exponents[k] == 1)
+            ulong p = G->P[k].p, e = G->P[k].e;
+            if (e == 1)
                 n *= p - 2;
             else
-                n *= (p * (p - 2) + 1) * n_pow(p, G->exponents[k] - 2);
+                n *= (p * (p - 2) + 1) * n_pow(p, e - 2);
         }
 
         return n;
