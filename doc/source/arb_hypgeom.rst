@@ -12,6 +12,50 @@ a tiny amount of extra overhead for conversions, but in some cases the
 functions in this module will be faster. In the future, code that is further
 optimized specifically for real variables might be added to this module.
 
+Generalized hypergeometric function
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q, const arb_t z, int regularized, slong prec)
+
+    Computes the generalized hypergeometric function `{}_pF_{q}(z)`,
+    or the regularized version if *regularized* is set.
+
+Confluent hypergeometric functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_0f1(arb_t res, const arb_t a, const arb_t z, int regularized, slong prec)
+
+    Computes the confluent hypergeometric limit function
+    `{}_0F_1(a,z)`, or `\frac{1}{\Gamma(a)} {}_0F_1(a,z)` if *regularized*
+    is set.
+
+.. function:: void arb_hypgeom_m(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+
+    Computes the confluent hypergeometric function
+    `M(a,b,z) = {}_1F_1(a,b,z)`, or
+    `\mathbf{M}(a,b,z) = \frac{1}{\Gamma(b)} {}_1F_1(a,b,z)` if *regularized* is set.
+
+.. function:: void arb_hypgeom_1f1(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+
+    Alias for :func:`arb_hypgeom_m`.
+
+.. function:: void arb_hypgeom_u(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec)
+
+    Computes the confluent hypergeometric function `U(a,b,z)`.
+
+Gauss hypergeometric function
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_2f1(arb_t res, const arb_t a, const arb_t b, const arb_t c, const arb_t z, int regularized, slong prec)
+
+    Computes the Gauss hypergeometric function
+    `{}_2F_1(a,b,c,z)`, or
+    `\mathbf{F}(a,b,c,z) = \frac{1}{\Gamma(c)} {}_2F_1(a,b,c,z)`
+    if *regularized* is set.
+
+    Additional evaluation flags can be passed via the *regularized*
+    argument; see :func:`acb_hypgeom_2f1` for documentation.
+
 Error functions and Fresnel integrals
 -------------------------------------------------------------------------------
 

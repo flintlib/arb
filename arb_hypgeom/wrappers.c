@@ -196,3 +196,108 @@ arb_hypgeom_li(arb_t res, const arb_t z, int offset, slong prec)
     }
 }
 
+void
+arb_hypgeom_0f1(arb_t res, const arb_t a, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), a);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_0f1(t, t, u, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
+arb_hypgeom_m(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u, v;
+    acb_init(t);
+    acb_init(u);
+    acb_init(v);
+    arb_set(acb_realref(t), a);
+    arb_set(acb_realref(u), b);
+    arb_set(acb_realref(v), z);
+    acb_hypgeom_m(t, t, u, v, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+    acb_clear(v);
+}
+
+void
+arb_hypgeom_1f1(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+{
+    arb_hypgeom_m(res, a, b, z, regularized, prec);
+}
+
+void
+arb_hypgeom_u(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec)
+{
+    acb_t t, u, v;
+    acb_init(t);
+    acb_init(u);
+    acb_init(v);
+    arb_set(acb_realref(t), a);
+    arb_set(acb_realref(u), b);
+    arb_set(acb_realref(v), z);
+    acb_hypgeom_u(t, t, u, v, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+    acb_clear(v);
+}
+
+void
+arb_hypgeom_2f1(arb_t res, const arb_t a, const arb_t b, const arb_t c, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u, v, w;
+    acb_init(t);
+    acb_init(u);
+    acb_init(v);
+    acb_init(w);
+    arb_set(acb_realref(t), a);
+    arb_set(acb_realref(u), b);
+    arb_set(acb_realref(v), c);
+    arb_set(acb_realref(w), z);
+    acb_hypgeom_2f1(t, t, u, v, w, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+    acb_clear(v);
+    acb_clear(w);
+}
+
+void
+arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q, const arb_t z, int regularized, slong prec)
+{
+    acb_ptr t;
+    slong i;
+    t = _acb_vec_init(p + q + 1);
+    for (i = 0; i < p; i++)
+        arb_set(acb_realref(t + i), a + i);
+    for (i = 0; i < q; i++)
+        arb_set(acb_realref(t + p + i), b + i);
+    arb_set(acb_realref(t + p + q), z);
+    acb_hypgeom_pfq(t, t, p, t + p, q, t + p + q, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    _acb_vec_clear(t, p + q + 1);
+}
+
