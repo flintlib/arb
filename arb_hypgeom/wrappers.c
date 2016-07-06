@@ -88,3 +88,111 @@ arb_hypgeom_fresnel(arb_t res1, arb_t res2, const arb_t z, int normalized, slong
     }
 }
 
+void
+arb_hypgeom_ei(arb_t res, const arb_t z, slong prec)
+{
+    if (!arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_ei(t, t, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
+void
+arb_hypgeom_si(arb_t res, const arb_t z, slong prec)
+{
+    if (!arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_si(t, t, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
+void
+arb_hypgeom_ci(arb_t res, const arb_t z, slong prec)
+{
+    if (!arb_is_finite(z) || !arb_is_positive(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_ci(t, t, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
+void
+arb_hypgeom_shi(arb_t res, const arb_t z, slong prec)
+{
+    if (!arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_shi(t, t, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
+void
+arb_hypgeom_chi(arb_t res, const arb_t z, slong prec)
+{
+    if (!arb_is_finite(z) || !arb_is_positive(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_chi(t, t, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
+void
+arb_hypgeom_li(arb_t res, const arb_t z, int offset, slong prec)
+{
+    if (!arb_is_finite(z) || !arb_is_nonnegative(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        arb_set(acb_realref(t), z);
+        acb_hypgeom_li(t, t, offset, prec);
+        arb_swap(res, acb_realref(t));
+        acb_clear(t);
+    }
+}
+
