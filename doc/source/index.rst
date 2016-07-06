@@ -116,6 +116,7 @@ modules.
    :maxdepth: 2
 
    acb_hypgeom.rst
+   arb_hypgeom.rst
    acb_modular.rst
    acb_dirichlet.rst
    bernoulli.rst
