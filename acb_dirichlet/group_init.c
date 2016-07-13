@@ -92,6 +92,11 @@ acb_dirichlet_group_lift_generators(acb_dirichlet_group_t G)
         /* u * p^e + v * q/p^e = 1 -> g mod q = 1 + (g-1) * v*(q/p^e) */
         pe = G->P[k].pe;
         qpe = G->q / pe.n;
+        if (G->q < G->P[k].pe.n)
+        {
+            flint_printf("lift generator %wu from %wu to %wu e=%wu\n",
+                G->P[k].g, G->P[k].pe.n, G->q, G->P[k].e);
+        }
         v = nmod_inv(qpe % pe.n, pe);
         /* no overflow since v * qpe < q */
         G->generators[k] = (1 + (G->P[k].g-1) * v * qpe) % G->q;
@@ -108,20 +113,16 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
     G->q = q;
     nmod_init(&G->mod, q);
 
-    G->q_even = 1;
 
-    for (e2 = 0; q % 2 == 0; e2++)
-    {
-        q /= 2;
-        G->q_even *= 2;
-    }
+    e2 = n_remove(&q, 2);
+    G->q_even = 1 << e2;
+    /* number of components at p=2 */
+    G->neven = (e2 >= 3) ? 2 : (e2 == 2) ? 1 : 0;
 
     /* warning: only factor odd part */
     n_factor_init(&fac);
     n_factor(&fac, q, 1);
 
-    /* number of components at p=2 */
-    G->neven = (e2 >= 3) ? 2 : (e2 == 2) ? 1 : 0;
     G->num = fac.num + G->neven;
     G->P = flint_malloc(G->num * sizeof(acb_dirichlet_prime_group_struct));
     G->generators = flint_malloc(G->num * sizeof(ulong));
@@ -149,31 +150,70 @@ acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q)
 void
 acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h)
 {
-    slong k, j;
-    int s[15]; /* selected components */
+    int s[15];    /* selected components */
+    slong k, j, e2;
 
     H->q = h;
-    for (k = 0, j = 0; k < G->num; k++)
+    nmod_init(&H->mod, h);
+
+    /* even components */
+
+    e2 = n_remove(&h, 2);
+    H->q_even = 1 << e2;
+
+    s[0] = s[1] = 0;
+    j = 0;
+    if (e2 >= 2)
+        s[j++] = 2;
+    if (e2 >= 3)
+        s[j++] = e2;
+
+    H->neven = j;
+
+    /* odd components */
+    for (k = G->neven; k < G->num; k++)
     {
         ulong p = G->P[k].p;
 
-        for(s[k] = 0; h % p == 0; h /= p)
-            s[k]++;
+        s[k] = n_remove(&h, p);
 
         if (s[k] > 0)
+        {
             j++;
+            H->rad_q *= p;
+        }
     }
 
     H->num = j;
     H->P = flint_malloc(j * sizeof(acb_dirichlet_prime_group_struct));
+    H->generators = flint_malloc(j * sizeof(ulong));
+    H->PHI = flint_malloc(j * sizeof(ulong));
 
     j = 0;
-    for (k = 0; k < G->num; k++)
+    for (k = 0; k < H->neven; k++)
+    {
+            H->P[j] = G->P[k];
+            if (H->q_even < G->q_even)
+            {
+                nmod_init(&H->P[j].pe, H->q_even);
+                H->P[j].e = s[k];
+                if (k == 0)
+                    H->P[j].g = H->q_even - 1;
+            }
+            j++;
+    }
+
+    for (k = G->neven; k < G->num; k++)
     {
         if (s[k])
         {
             H->P[j] = G->P[k];
-            H->P[j].e = s[k];
+            if (s[k] < G->P[k].e)
+            {
+                ulong p = H->P[j].p;
+                H->P[j].e = s[k];
+                nmod_init(&H->P[j].pe, n_pow(p, s[k]));
+            }
             j++;
         }
     }

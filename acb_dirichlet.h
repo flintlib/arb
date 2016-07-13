@@ -68,6 +68,7 @@ acb_dirichlet_group_size(const acb_dirichlet_group_t G)
 }
 
 void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
+void acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h);
 void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
 void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
 
@@ -223,6 +224,7 @@ void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const
 
 void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+void acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
 void acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec);

@@ -36,14 +36,18 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
 
     /* G(chi) = mu(N/N0)chi0(N/N0)G(chi0) */
 
-    if (NN0 % 4 == 0)
+    if (NN0 % 2 == 0)
     {
-        acb_zero(res);
-        return;
+        if (G->q % 4)
+            mu = -1;
+        else
+        {
+            acb_zero(res);
+            return;
+        }
     }
 
-    /* FIXME: check if one can start at G->neven */
-    for (k = 0; k < G->num; k++)
+    for (k = G->neven; k < G->num; k++)
     {
         ulong p = G->P[k].p;
 
@@ -68,8 +72,7 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
         acb_dirichlet_char_t chi0;
         acb_t z;
 
-        /* TODO: implement efficient subgroup */
-        acb_dirichlet_group_init(G0, chi->conductor);
+        acb_dirichlet_subgroup_init(G0, G, chi->conductor);
         acb_dirichlet_char_init(chi0, G);
         acb_dirichlet_char_primitive(chi0, G0, G, chi);
 
@@ -90,6 +93,7 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
 void
 acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
+    /* no need, factor also does it... */
     if (chi->conductor != G->q)
     {
         gauss_sum_non_primitive(res, G, chi, prec);
@@ -106,6 +110,10 @@ acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_diri
             arb_sqrt_ui(acb_realref(res), G->q, prec);
             arb_zero(acb_imagref(res));
         }
+    }
+    else if (G->num  > 1 && G->num > G->neven)
+    {
+        acb_dirichlet_gauss_sum_factor(res, G, chi, prec);
     }
     else
     {
