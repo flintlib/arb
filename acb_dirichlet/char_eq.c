@@ -33,7 +33,7 @@ acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t 
     if (chi1->q != chi2->q)
         return 0;
 
-    if (chi1->order != chi2->order)
+    if (chi1->order.n != chi2->order.n)
         return 0;
 
     if (chi1->conductor != chi2->conductor)

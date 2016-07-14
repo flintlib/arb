@@ -38,22 +38,23 @@ chi_vec_evenpart(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_ch
     }
     if (G->neven == 2 && (c4 = chi->expo[1]))
     {
-        ulong g, pe, vx, xp;
+        ulong g, vx, xp;
+        nmod_t pe;
         vx = c4;
-        pe = G->P[1].pe.n;
+        pe = G->P[1].pe;
         g = G->P[1].g;
 
         for (x = g; x > 1;)
         {
 
-            for (xp = x; xp < nv; xp += pe)
-                v[xp] = (v[xp] + vx) % chi->order;
+            for (xp = x; xp < nv; xp += pe.n)
+                v[xp] = nmod_add(v[xp], vx, chi->order);
 
-            for (xp = pe - x; xp < nv; xp += pe)
-                v[xp] = (v[xp] + vx) % chi->order;
+            for (xp = pe.n - x; xp < nv; xp += pe.n)
+                v[xp] = nmod_add(v[xp], vx, chi->order);
 
-            x = (x * g) % pe;
-            vx = (vx + c4) % chi->order;
+            x = nmod_mul(x, g, pe);
+            vx = nmod_add(vx,  c4, chi->order);
         }
     }
 }
@@ -63,7 +64,6 @@ void
 acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
     slong k, l;
-    nmod_t order;
 
     for (k = 1; k < nv; k++)
         v[k] = 0;
@@ -71,13 +71,12 @@ acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, cons
     if (G->neven)
         chi_vec_evenpart(v, G, chi, nv);
 
-    nmod_init(&order, chi->order);
     for (l = G->neven; l < G->num; l++)
     {
         acb_dirichlet_prime_group_struct P = G->P[l];
 
         /* FIXME: there may be some precomputed dlog in P if needed */
-        dlog_vec_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, order);
+        dlog_vec_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, chi->order);
 
     }
     acb_dirichlet_ui_vec_set_null(v, G, nv);

@@ -50,7 +50,7 @@ acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_
 
     a = flint_malloc(len * sizeof(ulong));
     acb_dirichlet_ui_chi_vec(a, G, chi, len);
-    acb_dirichlet_powers_init(z, chi->order, len, prec);
+    acb_dirichlet_powers_init(z, chi->order.n, len, prec);
 
     arb_init(x);
     acb_dirichlet_arb_theta_argt(x, G->q, t, prec);

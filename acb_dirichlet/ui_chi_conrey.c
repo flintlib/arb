@@ -30,8 +30,9 @@ acb_dirichlet_ui_chi_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_c
 {
         ulong v = 0, k;
 
+        /* TODO: nmod_addmul? */
         for (k = 0; k < G->num; k++)
-            v = (v + chi->expo[k] * x->log[k]) % chi->order;
+            v = nmod_add(v, nmod_mul(chi->expo[k], x->log[k], chi->order), chi->order);
 
         return v;
 }

@@ -90,7 +90,7 @@ int main()
 
             acb_dirichlet_ui_chi_vec(v, G, chi, nv);
 
-            m = G->expo / chi->order;
+            m = G->expo / chi->order.n;
             tt = acb_dirichlet_char_parity(chi) ? kt : t;
 
             for (k = 1; k < nv; k++)

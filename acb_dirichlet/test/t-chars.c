@@ -81,7 +81,7 @@ int main()
                 }
 
                 order = acb_dirichlet_ui_order(G, m);
-                if (order != chi->order)
+                if (order != chi->order.n)
                 {
                     flint_printf("FAIL: order\n\n");
                     flint_printf("q = %wu\n\n", q);
@@ -123,8 +123,8 @@ int main()
                 acb_dirichlet_char(chi2, G, n);
                 pairing = acb_dirichlet_ui_pairing(G, m, n);
 
-                if (pairing != acb_dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order)
-                        || pairing != acb_dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order))
+                if (pairing != acb_dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order.n)
+                        || pairing != acb_dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order.n))
                 {
                     flint_printf("FAIL: pairing\n\n");
                     flint_printf("q = %wu\n\n", q);

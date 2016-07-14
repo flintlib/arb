@@ -45,14 +45,14 @@ acb_dirichlet_char_normalize(acb_dirichlet_char_t chi, const acb_dirichlet_group
     for (k = 0; k < G->num; k++)
         chi->expo[k] = chi->expo[k] / g;
 
-    chi->order = G->expo / g;
+    nmod_init(&chi->order, G->expo / g);
 }
 
 void
 acb_dirichlet_char_denormalize(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
     ulong k, g;
-    g = G->expo / chi->order;
+    g = G->expo / chi->order.n;
 
     for (k = 0; k < G->num; k++)
         chi->expo[k] *= g;

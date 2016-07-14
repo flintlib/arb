@@ -35,7 +35,7 @@ acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirich
     a = flint_malloc(nv * sizeof(ulong));
     acb_dirichlet_ui_chi_vec(a, G, chi, nv);
 
-    acb_dirichlet_powers_init(t, chi->order, nv, prec);
+    acb_dirichlet_powers_init(t, chi->order.n, nv, prec);
 
     acb_zero(v + 0);
     for (k = 0; k < nv; k++)
