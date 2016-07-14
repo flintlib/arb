@@ -32,8 +32,9 @@ acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec
 {
     if (n < t->m)
     {
-        /* acb_set(z, t->z + n); */
+        /* FIXME: I do not want to copy: is this all right? */
         *z = *(t->z + n);
+        /* acb_set(z, t->z + n); */
     }
     else
     {
