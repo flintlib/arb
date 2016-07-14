@@ -98,7 +98,7 @@ acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     {
         gauss_sum_non_primitive(res, G, chi, prec);
     }
-    else if (chi->order <= 2)
+    else if (chi->order.n <= 2)
     {
         if (chi->parity)
         {

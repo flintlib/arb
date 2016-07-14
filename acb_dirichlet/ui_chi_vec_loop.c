@@ -45,7 +45,7 @@ acb_dirichlet_ui_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb
     {
         /* exponents were modified up to j */
         for (k = 0; k <= j; k++)
-            t = (t + chi->expo[k]) % chi->order;
+            t = nmod_add(t, chi->expo[k], chi->order);
 
         if (x->n < nv)
             v[x->n] = t;

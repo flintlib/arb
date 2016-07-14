@@ -44,8 +44,8 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const a
     acb_dirichlet_ui_vec_set_null(v2, G, G->q);
     acb_dirichlet_ui_chi_vec_loop(v2, G, chi2, G->q);
 
-    m1 = chi1->order;
-    m2 = chi2->order;
+    m1 = chi1->order.n;
+    m2 = chi2->order.n;
     g = n_gcd(m1, m2); 
     nmod_init(&order, m1 * (m2 / g));
     m1 = order.n / m1;

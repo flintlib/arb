@@ -32,6 +32,7 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
 
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
+/* should this dlog pointer be in the prime or the global group? */
 typedef struct
 {
     ulong p;    /* underlying prime */
@@ -132,7 +133,7 @@ void acb_dirichlet_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ul
 typedef struct
 {
     ulong q;           /* modulus */
-    ulong order;       /* order */
+    nmod_t order;       /* order */
     acb_dirichlet_conrey_t x;
     ulong * expo;      /* reduced exponents ( log[k] * PHI[k] / gcd( ) ) */
     int parity;        /* 0 for even char, 1 for odd */
@@ -145,7 +146,7 @@ typedef acb_dirichlet_char_struct acb_dirichlet_char_t[1];
 ACB_DIRICHLET_INLINE ulong
 acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 {
-    return chi->order;
+    return chi->order.n;
 }
 
 ACB_DIRICHLET_INLINE ulong

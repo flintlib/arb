@@ -26,6 +26,10 @@
 #include "acb_dirichlet.h"
 
 /* sieve on primes */
+/* TODO: see if really more efficient than primeloop using dlog
+ * this one is cheaper propagating the values, but not sure this
+ * is noticeable ...
+ */
 void
 acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
@@ -51,7 +55,7 @@ acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const ac
 
 			for (k = p; k < nv; k += p)
 				if (v[k] != -1)
-					 v[k] = (v[k] + chip) % chi->order;
+					 v[k] = nmod_add(v[k], chip, chi->order);
 		}
 	}
 
