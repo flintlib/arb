@@ -35,7 +35,7 @@ acb_dirichlet_ui_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv)
             v[k] = -1;
     }
 
-    for (l = 0; l < G->num; l++)
+    for (l = G->neven; l < G->num; l++)
     {
         ulong p = G->P[l].p;
 
