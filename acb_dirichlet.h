@@ -190,7 +190,6 @@ ulong acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_ch
 void acb_dirichlet_ui_vec_set_null(ulong *v, const acb_dirichlet_group_t G, slong nv);
 void acb_dirichlet_ui_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 void acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
-void acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 void acb_dirichlet_ui_chi_vec(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 
 /* precompute powers of a root of unity */

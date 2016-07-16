@@ -69,6 +69,11 @@ logarithms.
     exceed `10^{12}` (an abort will be raised). This restriction could
     be removed in the future.
 
+.. function:: void acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h)
+
+   Given an already computed group *G* mod `q`, initialize its subgroup *H*
+   defined mod `h\mid q`. Precomputed discrete logs tables are kept.
+
 .. function:: void acb_dirichlet_group_clear(acb_dirichlet_group_t G)
 
     Clears *G*.
@@ -80,8 +85,8 @@ logarithms.
 
     If *num* gets very large, the entire group may be indexed.
 
-Conrey index
-...............................................................................
+Conrey elements
+-------------------------------------------------------------------------------
 
 .. type:: acb_dirichlet_conrey_struct
 
@@ -134,34 +139,6 @@ the group *G* is isomorphic to its dual.
 
     The returned value is the numerator of the actual value exponent mod the group exponent *G->expo*.
 
-Character properties
-...............................................................................
-
-As a consequence of the Conrey numbering, properties of
-characters such that the order, the parity or the conductor are available
-at the level of their number, whithout any discrete log computation,
-or at the Conrey index level.
-
-.. function:: ulong acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a)
-
-.. function:: ulong acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
-
-   Compute the order of a mod q.
-
-.. function:: ulong acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
-
-.. function:: ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
-
-   Compute the conductor of a mod q, that is the smallest r dividing q such
-   that a corresponds to an element defined modulo r.
-
-.. function:: ulong acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
-
-.. function:: int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
-
-   Compute the parity of a mod q, which is the parity of the corresponding
-   Dirichlet character.
-
 Character type
 -------------------------------------------------------------------------------
 
@@ -191,13 +168,44 @@ Character type
     Sets *chi* to the Dirichlet character of Conrey index *x*.
 
 Character properties
-...............................................................................
+-------------------------------------------------------------------------------
 
-.. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
+As a consequence of the Conrey numbering, all these numbers are available at the
+level off *number* and *index*, and for *char*.
+No discrete log computation is performed.
+
+.. function:: ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G)
+
+   return the number of primitive elements in *G*.
+
+.. function:: ulong acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
+
+.. function:: ulong acb_dirichlet_char_conductor(const acb_dirichlet_char_t chi)
+
+   return the *conductor* of `\chi_q(a,\cdot)`, that is the smallest `r` dividing `q`
+   such `\chi_q(a,\cdot)` can be obtained as a character mod `r`.
+   This number is precomputed for the *char* type.
+
+.. function:: int acb_dirichlet_ui_parity(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 
 .. function:: int acb_dirichlet_char_parity(const acb_dirichlet_char_t chi)
 
-.. function:: ulong acb_dirichlet_char_conductor(const acb_dirichlet_char_t chi)
+   return the *parity* `\lambda` in `\{0,1\}` of `\chi_q(a,\cdot)`, such that
+   `\chi_q(a,-1)=(-1)^\lambda`.
+   This number is precomputed for the *char* type.
+
+.. function:: ulong acb_dirichlet_ui_order(const acb_dirichlet_group_t G, ulong a)
+
+.. function:: int acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
+
+.. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
+
+   return the order of `\chi_q(a,\cdot)` which is the order of `a\nmod q`.
+   This number is precomputed for the *char* type.
 
 Character evaluation
 -------------------------------------------------------------------------------
@@ -206,6 +214,12 @@ The image of a Dirichlet character is a finite cyclic group. Dirichlet
 character evaluations are either exponents in this group, or an *acb_t* root of
 unity.
 
+.. function:: ulong acb_dirichlet_ui_chi_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const acb_dirichlet_conrey_t x)
+
+.. function:: ulong acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
+
+   compute that value `\chi(a)` as the exponent mod the order of `\chi`.
+
 .. function:: void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
 
     Sets *res* to `\chi(n)`, the value of the Dirichlet character *chi*
@@ -213,12 +227,48 @@ unity.
 
     There are no restrictions on *n*.
 
+Vector evaluation
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_ui_chi_vec(ulong * v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+
+   compute the list of exponent values *v[k]* for `0\leq k < nv`
+
+.. function:: void acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv, slong prec)
+
+   compute the *nv* first Dirichlet values
+
+Operations
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_conrey_mul(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
+
+.. function:: void acb_dirichlet_char_mul(acb_dirichlet_char_t chi12, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
+
+   multiply two characters in the same group
+
+.. function:: void acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, ulong n)
+
+   take the power of some character
+
 Gauss and Jacobi sums
 -------------------------------------------------------------------------------
 
 .. function:: void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 
+   compute the Gauss sum
+
+   .. math::
+
+      G_q(a) = \sum_{x \mod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
+
 .. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
+
+   compute the Jacobi sum
+
+   .. math::
+
+      J_q(a,b) = \sum_{x \mod q} \chi_q(a, x)\chi_q(b, 1-x)
 
 Euler products
 -------------------------------------------------------------------------------
