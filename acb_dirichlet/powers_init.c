@@ -32,6 +32,7 @@ acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slon
     ulong m;
     acb_t zeta;
     t->order = order;
+
     m = (num == 1) ? 1 : num * (prec / 64 + 1);
     if (m > order)
         m = order;
@@ -54,4 +55,5 @@ acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slon
         t->M = 0;
         t->Z = NULL;
     }
+    acb_clear(zeta);
 }

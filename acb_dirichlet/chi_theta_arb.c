@@ -26,16 +26,16 @@
 #include "acb_dirichlet.h"
 #include "acb_poly.h"
 
-/* x = Pi / q * t^2 */
+/* q(t) = Pi / q * t^2 */
 static void
-acb_dirichlet_arb_theta_argt(arb_t x, ulong q, const arb_t t, slong prec)
+acb_dirichlet_arb_theta_xt(arb_t xt, ulong q, const arb_t t, slong prec)
 {
-    arb_const_pi(x, prec);
-    arb_div_ui(x, x, q, prec);
-    arb_mul(x, x, t, prec);
-    arb_mul(x, x, t, prec);
-    arb_neg(x, x);
-    arb_exp(x, x, prec);
+    arb_const_pi(xt, prec);
+    arb_div_ui(xt, xt, q, prec);
+    arb_mul(xt, xt, t, prec);
+    arb_mul(xt, xt, t, prec);
+    arb_neg(xt, xt);
+    arb_exp(xt, xt, prec);
 }
 
 void
@@ -43,7 +43,7 @@ acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_
 {
     slong len;
     ulong * a;
-    arb_t x;
+    arb_t xt;
     acb_dirichlet_powers_t z;
 
     len = acb_dirichlet_theta_length(G->q, t, prec);
@@ -52,11 +52,12 @@ acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_
     acb_dirichlet_ui_chi_vec(a, G, chi, len);
     acb_dirichlet_powers_init(z, chi->order.n, len, prec);
 
-    arb_init(x);
-    acb_dirichlet_arb_theta_argt(x, G->q, t, prec);
-    acb_dirichlet_arb_theta_naive(res, x, chi->parity, a, z, len, prec);
+    arb_init(xt);
+    acb_dirichlet_arb_theta_xt(xt, G->q, t, prec);
+    /* TODO: switch to theta smallorder at some point */
+    acb_dirichlet_arb_theta_naive(res, xt, chi->parity, a, z, len, prec);
 
-    arb_clear(x);
+    arb_clear(xt);
     flint_free(a);
     acb_dirichlet_powers_clear(z);
 }

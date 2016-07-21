@@ -25,51 +25,15 @@
 
 #include "acb_dirichlet.h"
 
-/* bsgs evaluation */
 void
-acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec)
+acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec)
 {
-    slong k, r, m;
-    acb_t sq;
-    acb_ptr zk;
+    acb_dirichlet_char_t chi;
 
-    if (len < 3)
-    {
-        if (len == 0)
-        {
-            acb_zero(res);
-        }
-        else if (len == 1)
-        {
-            acb_set_si(res, v[0]);
-        }
-        else if (len == 2)
-        {
-            acb_mul_si(res, z, v[1], prec);
-            acb_add_si(res, res, v[0], prec);
-        }
-        return;
-    }
+    acb_dirichlet_char_init(chi, G);
+    acb_dirichlet_char(chi, G, a);
 
-    m = n_sqrt(len) + 1;
+    acb_dirichlet_chi_theta_arb(res, G, chi, t, prec);
 
-    zk = _acb_vec_init(m + 1);
-    _acb_vec_set_powers(zk, z, m + 1, prec);
-
-    acb_init(sq);
-    acb_zero(res);
-
-    k = len - 1;
-    r = k % m;
-    for (; k >= 0; r = m - 1)
-    {
-        acb_zero(sq);
-        for (; r >= 0; r--, k--)
-            acb_addmul_si(sq, zk + r, v[k], prec);
-        acb_mul(res, res, zk + m, prec);
-        acb_add(res, res, sq, prec);
-    }
-
-    _acb_vec_clear(zk, m + 1);
-    acb_clear(sq);
+    acb_dirichlet_char_clear(chi);
 }
