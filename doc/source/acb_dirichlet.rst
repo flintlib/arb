@@ -227,6 +227,42 @@ unity.
 
     There are no restrictions on *n*.
 
+Roots of unity
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
+
+   sets *res* to `\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
+
+.. type:: acb_dirichlet_powers_struct
+
+.. type:: acb_dirichlet_powers_t
+
+   this structure allows to compute *n* powers of a fixed root of unity of order *m*
+   using precomputations. Extremal cases are
+
+   - all powers are stored: `O(m)` initialization + storage, `O(n)` eval
+
+   - nothing stored: `O(1)` initialization + storage, `O(\log(m)n)` eval
+
+   - `k` step decomposition: `O(k m^{\frac1k})` init + storage, `O((k-1)n)` eval.
+
+   Currently, only baby-step giant-step decomposition (i.e. `k=2`)
+   is implemented, allowing to obtain each power using one multiplication.
+
+.. function:: void acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec)
+
+   initialize the powers structure for *num* evaluations of powers of the root of unity
+   of order *order*.
+
+.. function:: void acb_dirichlet_powers_clear(acb_dirichlet_powers_t t)
+
+   clears *t*.
+
+.. function:: void acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec)
+
+   sets *z* to `x^n` where *t* contains precomputed powers of `x`.
+
 Vector evaluation
 -------------------------------------------------------------------------------
 
@@ -250,6 +286,54 @@ Operations
 .. function:: void acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, ulong n)
 
    take the power of some character
+
+Theta sums
+-------------------------------------------------------------------------------
+
+We call Theta series of a Dirichlet character the quadratic series
+
+.. math::
+
+   \Theta_q(a) = \sum_{n\geq 0} \chi_q(a, n) n^p x^{n^2}
+
+where `p` is the parity of the character `\chi_q(a,\cdot)`.
+
+For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
+
+.. math::
+
+   \Theta_q(a,t) = \sum_{n\geq 0} \chi_q(a, n) x(t)^{n^2}.
+
+.. function:: void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec);
+
+.. function:: void acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec);
+
+   compute the theta series `\Theta_q(a,t)` for real argument `t>0`.
+   Beware that if `t<1` the functional equation
+   
+   .. math::
+     
+      t \theta(a,t) = \epsilon(\chi) \theta(\frac1a, \frac1t)
+   
+   should be used, which is not done automatically (to avoid recomputing the
+   Gauss sum).
+
+.. function:: ulong acb_dirichlet_theta_length(ulong q, const arb_t t, slong prec)
+
+   compute the number of terms to be summed in the theta series of argument *t*
+   so that the tail is less than `2^{-\mathrm{prec}}`.
+
+.. function:: void acb_dirichlet_arb_theta_naive(acb_t res, const arb_t x, int parity, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+.. function:: void acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+   compute the series `\sum n^p z^{a_n} x^{n^2}` for exponent list *a*,
+   precomputed powers *z* and parity *p* (being 0 or 1).
+   
+   The *naive* version sums the series as defined, while the *smallorder*
+   variant evaluates the series on the quotient ring by a cyclotomic polynomial
+   before evaluating at the root of unity, ignoring its argument *z*.
+
 
 Gauss and Jacobi sums
 -------------------------------------------------------------------------------

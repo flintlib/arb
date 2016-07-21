@@ -26,15 +26,14 @@
 #include "acb_dirichlet.h"
 #include "acb_poly.h"
 
-/* assume won't be modified */
 void
 acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec)
 {
     if (n < t->m)
     {
-        /* FIXME: I do not want to copy: is this all right? */
-        *z = *(t->z + n);
-        /* acb_set(z, t->z + n); */
+        /* TODO: could avoid copy ? line below does not work
+           z = *(t->z + n); */
+        acb_set(z, t->z + n);
     }
     else
     {
