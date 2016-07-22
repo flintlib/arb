@@ -47,17 +47,28 @@ acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_
     acb_dirichlet_powers_t z;
 
     len = acb_dirichlet_theta_length(G->q, t, prec);
-
     a = flint_malloc(len * sizeof(ulong));
     acb_dirichlet_ui_chi_vec(a, G, chi, len);
-    acb_dirichlet_powers_init(z, chi->order.n, len, prec);
 
     arb_init(xt);
     acb_dirichlet_arb_theta_xt(xt, G->q, t, prec);
+
+    /* TODO: tune this limit */
+    if (chi->order.n < 30)
+    {
+        _acb_dirichlet_powers_init(z, chi->order.n, 0, 0, prec);
+        acb_dirichlet_arb_theta_smallorder(res, xt, chi->parity, a, z, len, prec);
+        acb_dirichlet_powers_clear(z);
+    }
+    else
+    {
+        acb_dirichlet_powers_init(z, chi->order.n, len, prec);
+        acb_dirichlet_arb_theta_naive(res, xt, chi->parity, a, z, len, prec);
+        acb_dirichlet_powers_clear(z);
+    }
+
     /* TODO: switch to theta smallorder at some point */
-    acb_dirichlet_arb_theta_naive(res, xt, chi->parity, a, z, len, prec);
 
     arb_clear(xt);
     flint_free(a);
-    acb_dirichlet_powers_clear(z);
 }

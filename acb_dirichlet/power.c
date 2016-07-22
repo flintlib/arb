@@ -29,23 +29,22 @@
 void
 acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec)
 {
-    if (n < t->m)
+    if (!t->depth)
     {
-        /* TODO: could avoid copy ? line below does not work
-           z = *(t->z + n); */
-        acb_set(z, t->z + n);
+        acb_pow_ui(z, t->z, n, prec);
     }
     else
     {
-        ulong q, r;
-        q = n / t->m;
-        r = n % t->m;
-        if (q >= t->M)
+        slong k;
+        ulong r;
+        r = n % t->size;
+        n = n / t->size;
+        acb_set(z, t->Z[0] + r);
+        for (k = 1; k < t->depth && n; k++)
         {
-            flint_printf("acb_dirichlet_power: power %wu not available "
-                    "in table of size %wu * %wu.", n, t->m, t->M);
-            abort();
+            r = n % t->size;
+            n = n / t->size;
+            acb_mul(z, z, t->Z[k] + r, prec);
         }
-        acb_mul(z, t->Z + q, t->z + r, prec);
     }
 }

@@ -29,7 +29,11 @@
 void
 acb_dirichlet_powers_clear(acb_dirichlet_powers_t t)
 {
-    _acb_vec_clear(t->z, t->m);
-    if (t->M)
-        _acb_vec_clear(t->Z, t->M);
+    slong k;
+
+    for (k = 0; k < t->depth; k++)
+        _acb_vec_clear(t->Z[k], t->size);
+
+    flint_free(t->Z);
+    acb_clear(t->z);
 }
