@@ -29,7 +29,7 @@ ulong
 acb_dirichlet_conrey_exp(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 {
     ulong k, n = 1;
-    for (k = G->neven; k < G->num; k++)
+    for (k = 0; k < G->num; k++)
         n = nmod_mul(n, nmod_pow_ui(G->generators[k], x->log[k], G->mod), G->mod);
     x->n = n;
     return n;
