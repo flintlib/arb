@@ -68,7 +68,7 @@ acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const u
     }
 
     /* now Hörner */
-    _acb_poly_evaluate(res, t, order, z->z + 1, prec);
+    _acb_poly_evaluate(res, t, order, z->z, prec);
 
     _acb_vec_clear(t, order);
     arb_clear(xk2);

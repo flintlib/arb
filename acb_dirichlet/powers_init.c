@@ -27,33 +27,39 @@
 #include "acb_poly.h"
 
 void
-acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec)
+_acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong size, slong depth, slong prec)
 {
-    ulong m;
-    acb_t zeta;
+    slong k;
     t->order = order;
-
-    m = (num == 1) ? 1 : num * (prec / 64 + 1);
-    if (m > order)
-        m = order;
-    t->m = m;
-
-    acb_init(zeta);
-    acb_dirichlet_nth_root(zeta, order, prec);
-    t->z = _acb_vec_init(m);
-    _acb_vec_set_powers(t->z, zeta, m, prec);
-
-    if (order > m)
+    acb_init(t->z);
+    acb_dirichlet_nth_root(t->z, order, prec);
+    t->size = size;
+    t->depth = depth;
+    if (depth)
     {
-        t->M = (order / m) + 1;
-        t->Z = _acb_vec_init(t->M);
-        acb_pow_ui(zeta, zeta, m, prec);
-        _acb_vec_set_powers(t->Z, zeta, t->M, prec);
+        acb_struct * z;
+        z = t->z + 0;
+        t->Z = flint_malloc(depth * sizeof(acb_ptr));
+        for (k = 0; k < depth; k++)
+        {
+            t->Z[k] = _acb_vec_init(size);
+            _acb_vec_set_powers(t->Z[k], z, size, prec);
+            z = t->Z[k] + 1;
+        }
     }
     else
     {
-        t->M = 0;
         t->Z = NULL;
     }
-    acb_clear(zeta);
+}
+
+void
+acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec)
+{
+    slong size, depth;
+
+    depth = (num > order) ? 1 : n_flog(order, num);
+    size = n_root(order, depth) + 1;
+
+    _acb_dirichlet_powers_init(t, order, size, depth, prec);
 }
