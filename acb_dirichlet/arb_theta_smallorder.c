@@ -75,3 +75,4 @@ acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const u
     arb_clear(x2);
     arb_clear(dx);
 }
+
