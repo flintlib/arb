@@ -25,50 +25,15 @@
 
 #include "acb_dirichlet.h"
 
-int main()
+/* dft, use conrey indices */
+void
+acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
 {
+    slong k, l, * cyc;
+    cyc = flint_malloc(G->num * sizeof(slong));
+    for (k = 0, l = G->num - 1; l >= 0; k++, l--)
+        cyc[k] = G->P[l].phi;
 
-    slong k;
-    slong prec = 100;
-    slong nq = 10;
-    ulong q[10] = { 2, 3, 4, 5, 6, 10, 15, 30, 308, 961};
-
-    flint_printf("dft....");
-    fflush(stdout);
-
-    for (k = 0; k < nq; k++)
-    {
-        slong i;
-        acb_ptr v, w1, w2;
-
-        v = _acb_vec_init(q[k]);
-        w1 = _acb_vec_init(q[k]);
-        w2 = _acb_vec_init(q[k]);
-
-        for (i = 0; i < q[k]; i++)
-            acb_set_si(v + i, i);
-
-        acb_dirichlet_dft_pol(w1, v, q[k], prec);
-        acb_dirichlet_dft_fast(w2, v, q[k], prec);
-
-        for (i = 0; i < q[k]; i++)
-        {
-            if (!acb_overlaps(w1 + i, w2 + i))
-            {
-                flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
-                flint_printf("pol =\n");
-                acb_vec_printd(w1, q[k], 10);
-                flint_printf("fast =\n");
-                acb_vec_printd(w2, q[k], 10);
-                flint_printf("\n\n");
-                abort();
-            }
-        }
-        
-        _acb_vec_clear(v, q[k]);
-        _acb_vec_clear(w1, q[k]);
-        _acb_vec_clear(w2, q[k]);
-    }
-
-    flint_printf("PASS\n");
+    acb_dirichlet_dft_prod(w, v, cyc, G->num, prec);
+    flint_free(cyc);
 }

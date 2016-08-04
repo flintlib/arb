@@ -28,6 +28,63 @@
 #define nq 5
 #define nx 3
 
+void
+test_dft()
+{
+    ulong i, q = 15;
+    slong prec = 100;
+    acb_dirichlet_group_t G;
+    acb_dirichlet_conrey_t x;
+    acb_dirichlet_char_t chi;
+    acb_t s, z;
+    acb_ptr v;
+
+    acb_dirichlet_group_init(G, q);
+    acb_dirichlet_conrey_init(x, G);
+    acb_dirichlet_char_init(chi, G);
+
+    acb_init(s);
+    acb_one(s);
+    acb_div_si(s, s, 2, prec);
+
+    v = _acb_vec_init(G->phi_q);
+
+    /* all at once */
+    acb_dirichlet_l_vec_hurwitz(v, s, G, prec);
+
+    /* check with complete loop */
+
+    i = 0;
+    acb_dirichlet_conrey_one(x, G);
+    while (1) {
+
+        acb_dirichlet_char_conrey(chi, G, x);
+        acb_dirichlet_l_hurwitz(z, s, G, chi, prec);
+
+        if (!acb_overlaps(z, v + i))
+        {
+            flint_printf("\n L value differ");
+            flint_printf("\nL(1/2, %wu) single = ", x->n);
+            acb_printd(z, 20);
+            flint_printf("\nL(1/2, %wu) multi = ", x->n);
+            acb_printd(v + i, 20);
+            flint_printf("\n\n");
+            acb_vec_printd(v, G->phi_q, 10);
+            flint_printf("\n\n");
+        }
+
+        if (acb_dirichlet_conrey_next(x, G) == G->num)
+          break;
+        i++;
+    }
+
+    acb_clear(s);
+    _acb_vec_clear(v, G->phi_q);
+    acb_dirichlet_char_clear(chi);
+    acb_dirichlet_conrey_clear(x);
+    acb_dirichlet_group_clear(G);
+}
+
 int main()
 {
 
@@ -150,6 +207,9 @@ int main()
     acb_clear(ref);
     acb_clear(res);
     _acb_vec_clear(x, nx);
+
+    /* test using dft */
+    test_dft();
 
     flint_cleanup();
     flint_printf("PASS\n");
