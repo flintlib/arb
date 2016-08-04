@@ -97,8 +97,37 @@ int main()
                 if (v[k] != ACB_DIRICHLET_CHI_NULL)
                     acb_addmul_arb(sum, z + (v[k] * m), tt + k, prec);
 
-            if ((q == 300 && (chi->x->n == 271 || chi->x->n == 131))
-                    || (q == 600 && (chi->x->n == 11 || chi->x->n == 91)))
+            /* compare with function */
+
+            {
+                acb_t res;
+                arb_t t;
+                acb_init(res);
+                arb_init(t);
+                arb_one(t);
+                acb_dirichlet_chi_theta_arb(res, G, chi, t, prec);
+
+                if (!acb_overlaps(res, sum))
+                {
+                    flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
+                    acb_printd(sum, 10);
+                    flint_printf("\n");
+                    acb_dirichlet_char_print(G, chi);
+                    flint_printf("\n");
+                    flint_printf("should be \n");
+                    acb_printd(res, 10);
+                    flint_printf("\n");
+                    abort();
+                }
+
+                acb_clear(res);
+                arb_clear(t);
+            }
+
+            /* check null values */
+
+            if ((q == 300 && (chi->x->n == 71 || chi->x->n == 131))
+                    || (q == 600 && (chi->x->n == 11 || chi->x->n == 491)))
             {
                 if (!acb_contains_zero(sum))
                 {
@@ -119,6 +148,7 @@ int main()
                 flint_printf("\n");
                 abort();
             }
+
         } while (acb_dirichlet_char_next_primitive(chi, G) >= 0);
 
         _acb_vec_clear(z, G->expo);

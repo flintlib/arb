@@ -55,6 +55,7 @@ test_dft()
     /* check with complete loop */
 
     i = 0;
+    acb_init(z);
     acb_dirichlet_conrey_one(x, G);
     do {
 

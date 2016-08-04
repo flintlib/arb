@@ -72,7 +72,7 @@ int main()
     }
 
     /* Dirichlet group DFT */
-    for (k = 0; k < nq; k++)
+    for (k = 0; k < nq - 1; k++)
     {
         slong i, j, len;
         acb_dirichlet_group_t G;

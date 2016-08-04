@@ -114,6 +114,7 @@ int main()
         {
             slong k;
             ulong m;
+
             for (m = 1; n_gcd(m, q) > 1; m = n_randint(state, q));
             acb_dirichlet_conrey_log(x, G, m);
 
@@ -147,6 +148,22 @@ int main()
                 abort();
             }
 
+            acb_dirichlet_conrey_next_primitive(x, G);
+            m = x->n;
+
+            if (m != acb_dirichlet_conrey_exp(x, G))
+            {
+                flint_printf("FAIL: conrey number next primitive\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("conrey = ");
+                acb_dirichlet_conrey_print(G, y);
+                flint_printf(", m = %wu\n\n", y->n);
+                flint_printf("next primitive = ");
+                acb_dirichlet_conrey_print(G, x);
+                flint_printf(", m = %wu\n\n", m);
+                flint_printf("exp = %wu\n\n", x->n);
+                abort();
+            }
         }
 
         acb_dirichlet_conrey_clear(x);
