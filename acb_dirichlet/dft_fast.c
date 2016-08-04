@@ -202,7 +202,10 @@ _acb_dft_prod(acb_ptr w, acb_srcptr v, dft_prod_step * cyc, slong num, slong pre
 {
     dft_prod_step c;
     if (num == 0)
+    {
+        flint_printf("error: reached num = 0 in dft_prod\n");
         abort(); /* or just copy v to w */
+    }
     c = cyc[0];
     if (num == 1)
     {
@@ -221,7 +224,7 @@ _acb_dft_prod(acb_ptr w, acb_srcptr v, dft_prod_step * cyc, slong num, slong pre
         {
             _acb_dft_prod(wi, vi, cyc + 1, num - 1, prec);
             wi += M;
-            vi += dv;
+            vi += dv; /* here = M */
         }
         /* after first pass */
         for (j = 0; j < M; j++)
@@ -237,7 +240,14 @@ _acb_dft_prod(acb_ptr w, acb_srcptr v, dft_prod_step * cyc, slong num, slong pre
 void
 acb_dirichlet_dft_prod_precomp(acb_ptr w, acb_srcptr v, acb_dft_prod_t t, slong prec)
 {
-    _acb_dft_prod(w, v, t->cyc, t->num, prec);
+    if (t->num == 0)
+    {
+        acb_set(w + 0, v + 0);
+    }
+    else
+    {
+        _acb_dft_prod(w, v, t->cyc, t->num, prec);
+    }
 }
 
 void
@@ -258,7 +268,7 @@ acb_dirichlet_dft_prod_init(acb_dft_prod_t t, slong * cyc, slong num, slong prec
         len /= m;
         t->cyc[i].m = m;
         t->cyc[i].M = len;
-        t->cyc[i].dv = dv;
+        t->cyc[i].dv = len;
         _acb_dirichlet_dft_cyc_init(t->cyc[i].pre, m, len, prec);
         dv *= m;
     }
