@@ -56,7 +56,7 @@ test_dft()
 
     i = 0;
     acb_dirichlet_conrey_one(x, G);
-    while (1) {
+    do {
 
         acb_dirichlet_char_conrey(chi, G, x);
         acb_dirichlet_l_hurwitz(z, s, G, chi, prec);
@@ -73,10 +73,8 @@ test_dft()
             flint_printf("\n\n");
         }
 
-        if (acb_dirichlet_conrey_next(x, G) == G->num)
-          break;
         i++;
-    }
+    } while (acb_dirichlet_conrey_next(x, G) >= 0);
 
     acb_clear(s);
     _acb_vec_clear(v, G->phi_q);

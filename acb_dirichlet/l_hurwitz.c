@@ -33,7 +33,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     xz = _acb_vec_init(chi->order.n);
     _acb_vec_set_powers(xz, z, chi->order.n, prec);
 
-    while (1) {
+    do {
         chin = acb_dirichlet_ui_chi_conrey(G, chi, cn);
 
         acb_set_ui(a, cn->n);
@@ -42,9 +42,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
         acb_addmul(t, xz + chin, u, prec);
 
-        if (acb_dirichlet_conrey_next(cn, G) == G->num)
-          break;
-    }
+    } while (acb_dirichlet_conrey_next(cn, G) >= 0);
 
     acb_set_ui(u, G->q);
     acb_neg(a, s);

@@ -43,17 +43,15 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
 
     zeta = z = _acb_vec_init(G->phi_q);
     acb_dirichlet_conrey_one(cn, G);
-    while (1) {
+    do {
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
         acb_hurwitz_zeta(z, s, a, prec);
         acb_mul(z, z, qs, prec);
 
-        if (acb_dirichlet_conrey_next(cn, G) == G->num)
-          break;
         z++;
-    }
+    } while (acb_dirichlet_conrey_next(cn, G) >= 0);
 
     acb_dirichlet_dft_conrey(res, zeta, G, prec);
 

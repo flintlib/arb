@@ -41,10 +41,10 @@ acb_dirichlet_ui_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb
 
     t = v[1] = 0;
 
-    while ( (j = acb_dirichlet_conrey_next(x, G)) < G->num )
+    while ( (j = acb_dirichlet_conrey_next(x, G)) >= 0 )
     {
         /* exponents were modified up to j */
-        for (k = 0; k <= j; k++)
+        for (k = G->num - 1; k >= j; k--)
             t = nmod_add(t, chi->expo[k], chi->order);
 
         if (x->n < nv)

@@ -35,7 +35,7 @@ int main()
 
     /* check Jacobi sums */
 
-    for (q = 29*29; q > 1; q = q%2 ? 3*q+1 : q/2)
+    for (q = 29 * 29; q > 1; q = q%2 ? 3*q+1 : q/2)
     {
         slong m1, m2;
         acb_dirichlet_group_t G;
@@ -78,12 +78,12 @@ int main()
                             );
                     abort();
                 }
-                if (acb_dirichlet_char_next(chi2, G) == G->num)
+                if (acb_dirichlet_char_next(chi2, G) < 0)
                     break;
 
             }
 
-            if (acb_dirichlet_char_next(chi1, G) == G->num)
+            if (acb_dirichlet_char_next(chi1, G) < 0)
                 break;
 
         }
