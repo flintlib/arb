@@ -59,7 +59,7 @@ int main()
         acb_dirichlet_conrey_one(x, G);
         n++;
 
-        for (; acb_dirichlet_conrey_next(x, G) < G->num; n++);
+        for (; acb_dirichlet_conrey_next(x, G) >= 0; n++);
         acb_dirichlet_conrey_clear(x);
         acb_dirichlet_group_clear(G);
     }
@@ -83,7 +83,7 @@ int main()
         acb_dirichlet_char_one(chi, G);
         n++;
 
-        for (; acb_dirichlet_char_next(chi, G) < G->num; n++);
+        for (; acb_dirichlet_char_next(chi, G) >= 0; n++);
         acb_dirichlet_char_clear(chi);
         acb_dirichlet_group_clear(G);
     }

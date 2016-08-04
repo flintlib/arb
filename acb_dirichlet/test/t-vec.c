@@ -59,7 +59,7 @@ int main()
 
         acb_dirichlet_conrey_one(x, G);
 
-        while (1) {
+        do {
 
             acb_dirichlet_char_conrey(chi, G, x);
 
@@ -73,9 +73,7 @@ int main()
                 abort();
             }
 
-            if (acb_dirichlet_conrey_next(x, G) == G->num)
-                break;
-        }
+        } while (acb_dirichlet_conrey_next(x, G) >= 0);
 
         flint_free(v1);
         flint_free(v2);

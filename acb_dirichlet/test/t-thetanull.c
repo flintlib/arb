@@ -84,7 +84,7 @@ int main()
         acb_init(sum);
         acb_dirichlet_char_first_primitive(chi, G);
 
-        while (1) {
+        do {
             ulong m;
             acb_zero(sum);
 
@@ -119,10 +119,8 @@ int main()
                 flint_printf("\n");
                 abort();
             }
+        } while (acb_dirichlet_char_next_primitive(chi, G) >= 0);
 
-            if (acb_dirichlet_char_next_primitive(chi, G) == G->num)
-                break;
-        }
         _acb_vec_clear(z, G->expo);
         _arb_vec_clear(t, nv);
         acb_clear(zeta);

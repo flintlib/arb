@@ -81,7 +81,7 @@ int main()
                 abort();
             }
 
-            if (acb_dirichlet_conrey_next(x, G) == G->num)
+            if (acb_dirichlet_conrey_next(x, G) < 0)
                 break;
         }
         acb_clear(s1);

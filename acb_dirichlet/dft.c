@@ -32,7 +32,7 @@ acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G,
     slong k, l, * cyc;
     cyc = flint_malloc(G->num * sizeof(slong));
     for (k = 0, l = G->num - 1; l >= 0; k++, l--)
-        cyc[k] = G->P[l].phi;
+        cyc[k] = G->P[k].phi;
 
     acb_dirichlet_dft_prod(w, v, cyc, G->num, prec);
     flint_free(cyc);

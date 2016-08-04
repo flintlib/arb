@@ -54,7 +54,7 @@ int main()
         sum = 1;
 
 #if 1
-        for (n = 1; acb_dirichlet_conrey_next(x, G) < G->num; n++)
+        for (n = 1; acb_dirichlet_conrey_next(x, G) >= 0; n++)
             sum += x->n * x->n;
 #else
         /* iteration much faster than gcd below */
@@ -71,11 +71,9 @@ int main()
         /* use http://oeis.org/A053818 to check all elements
          * are gone through */
         ref = (q % 4 == 2) ? -2 : 1;
-        k = (G->neven == 2) ? 1 : 0;
-        for (; k<G->num; k++)
+        for (k = (G->neven == 2); k < G->num; k++)
             ref = - ref * G->P[k].p;
         ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
-
 
         if (n != G->phi_q)
         {
@@ -98,7 +96,7 @@ int main()
             continue;
 
         acb_dirichlet_conrey_first_primitive(x, G);
-        for (n = 1; (k=acb_dirichlet_conrey_next_primitive(x, G)) < G->num; n++);
+        for (n = 1; acb_dirichlet_conrey_next_primitive(x, G) >= 0; n++);
 
         ref = acb_dirichlet_number_primitive(G);
         if (n != ref)

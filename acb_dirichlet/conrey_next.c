@@ -30,7 +30,7 @@ acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t 
 {
     /* update index */
     int k;
-    for (k=0; k < G->num; k++)
+    for (k = G->num - 1; k >= 0; k--)
     {
         x->n = nmod_mul(x->n, G->generators[k], G->mod);
         x->log[k] += 1;
