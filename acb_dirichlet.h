@@ -275,21 +275,6 @@ acb_vec_printd(acb_srcptr vec, slong len, slong digits)
         acb_printd(vec + i, digits), flint_printf("\n");
 }
 
-/* Discrete Fourier Transform */
-
-acb_ptr acb_roots_init(slong len, slong prec);
-void _acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, acb_srcptr z, slong len, slong prec);
-void acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
-void acb_dirichlet_dft_fast(acb_ptr w, acb_srcptr v, slong len, slong prec);
-
-ACB_DIRICHLET_INLINE void
-acb_vec_printd(acb_srcptr vec, slong len, slong digits)
-{
-    slong i;
-    for (i = 0; i < len; i++)
-        acb_printd(vec + i, digits), flint_printf("\n");
-}
-
 #ifdef __cplusplus
 }
 #endif
