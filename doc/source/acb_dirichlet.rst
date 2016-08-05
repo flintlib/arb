@@ -287,6 +287,25 @@ Operations
 
    take the power of some character
 
+Gauss and Jacobi sums
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+   compute the Gauss sum
+
+   .. math::
+
+      G_q(a) = \sum_{x \mod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
+
+.. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
+
+   compute the Jacobi sum
+
+   .. math::
+
+      J_q(a,b) = \sum_{x \mod q} \chi_q(a, x)\chi_q(b, 1-x)
+
 Theta sums
 -------------------------------------------------------------------------------
 
@@ -334,25 +353,59 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
    variant evaluates the series on the quotient ring by a cyclotomic polynomial
    before evaluating at the root of unity, ignoring its argument *z*.
 
-
-Gauss and Jacobi sums
+Discrete Fourier Transforms (DFT)
 -------------------------------------------------------------------------------
 
-.. function:: void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+Let *G* be a finite abelian group, and `\chi` a character of *G*.
+For any map `f:G\to\C`, the discrete fourier transform `\hat f:\hat G\to C`
+is defined by
 
-   compute the Gauss sum
+.. math::
 
-   .. math::
+   \hat f(\chi) = \sum_{x\in G}\chi(x)f(x)
 
-      G_q(a) = \sum_{x \mod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
+Fast Fourier Transform techniques allow to compute efficiently
+all values `\hat f(\chi)`.
 
-.. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
+For a Dirichlet group `G` modulo `q`, we take advantage
+of the Conrey isomorphism `G \to \hat G` to consider the
+the Fourier transform on Conrey labels as
 
-   compute the Jacobi sum
+.. math::
 
-   .. math::
+   g(a) = \sum_{b\bmod q}\chi_q(a,b)f(b)
 
-      J_q(a,b) = \sum_{x \mod q} \chi_q(a, x)\chi_q(b, 1-x)
+
+.. function:: void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using conrey indices.
+   This function assumes *v* and *w* are vectors
+   of size *G->phi_q*, whose values correspond to a lexicographic ordering
+   of Conrey indices.
+
+   For example, if `q=15`, the Conrey elements are stored in following
+   order
+
+   -------  ---------------------
+   index      number = 7^x11^y
+   -------  ---------------------
+   [0, 0]   1
+   [0, 1]   7
+   [0, 2]   4
+   [0, 3]   13
+   [0, 4]   1
+   [1, 0]   11
+   [1, 1]   2
+   [1, 2]   14
+   [1, 3]   8
+   [1, 4]   11
+   -------  ---------------------
+
+.. function:: void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using Conrey numbers.
+   This function assumes *v* and *w* are vectors of size *G->q*.
+   All values at index not coprime to *G->q* are ignored.
 
 Euler products
 -------------------------------------------------------------------------------
