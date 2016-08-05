@@ -1000,6 +1000,7 @@ int arf_sub_si(arf_ptr z, arf_srcptr x, slong y, slong prec, arf_rnd_t rnd);
 int arf_sub_ui(arf_ptr z, arf_srcptr x, ulong y, slong prec, arf_rnd_t rnd);
 int arf_sub_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, slong prec, arf_rnd_t rnd);
 
+int arf_fam(arf_ptr res, arf_srcptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd);
 int arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd);
 
 ARF_INLINE int
