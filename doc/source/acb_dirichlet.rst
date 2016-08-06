@@ -204,7 +204,7 @@ No discrete log computation is performed.
 
 .. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 
-   return the order of `\chi_q(a,\cdot)` which is the order of `a\nmod q`.
+   return the order of `\chi_q(a,\cdot)` which is the order of `a\mod q`.
    This number is precomputed for the *char* type.
 
 Character evaluation
@@ -357,8 +357,8 @@ Discrete Fourier Transforms (DFT)
 -------------------------------------------------------------------------------
 
 Let *G* be a finite abelian group, and `\chi` a character of *G*.
-For any map `f:G\to\C`, the discrete fourier transform `\hat f:\hat G\to C`
-is defined by
+For any map `f:G\to\mathbb C`, the discrete fourier transform
+`\hat f:\hat G\to \mathbb C` is defined by
 
 .. math::
 
@@ -386,20 +386,20 @@ the Fourier transform on Conrey labels as
    For example, if `q=15`, the Conrey elements are stored in following
    order
 
-   -------  ---------------------
-   index      number = 7^x11^y
-   -------  ---------------------
-   [0, 0]   1
-   [0, 1]   7
-   [0, 2]   4
-   [0, 3]   13
-   [0, 4]   1
-   [1, 0]   11
-   [1, 1]   2
-   [1, 2]   14
-   [1, 3]   8
-   [1, 4]   11
-   -------  ---------------------
+   ============  =====================
+   index [e,f]     number = 7^e11^f
+   ============  =====================
+   [0, 0]        1
+   [0, 1]        7
+   [0, 2]        4
+   [0, 3]        13
+   [0, 4]        1
+   [1, 0]        11
+   [1, 1]        2
+   [1, 2]        14
+   [1, 3]        8
+   [1, 4]        11
+   ============  =====================
 
 .. function:: void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
 
@@ -444,6 +444,25 @@ Simple functions
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
 
+L functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+   Compute `L(s,\chi)` for `s\neq 1`, using decomposition in terms of Hurwitz zeta function
+
+   .. math::
+
+      L(s,\chi) = q^{-s}\sum_{k=1}^{q-1} \chi(k) \zeta(s,\frac kq)
+
+   This formula is slow for large *q*.
+
+.. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_group_t G, slong prec)
+
+   Compute all values `L(s,\chi)` for `\chi` mod `q`, by Hurwitz formula and
+   discrete Fourier transform.
+   *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered Conrey
+   index. See :func:`acb_dirichlet_dft_conrey`.
 
 Implementation notes
 -------------------------------------------------------------------------------
