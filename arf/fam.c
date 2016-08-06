@@ -16,7 +16,11 @@ int
 arf_fam(arf_t w, const arf_t z, const arf_t x, const arf_t y,
         slong prec, arf_rnd_t rnd)
 {
-    if (arf_is_special(x) || arf_is_special(y) || arf_is_special(z))
+    if (w == z)
+    {
+        return arf_addmul(w, x, y, prec, rnd);
+    }
+    else if (arf_is_special(x) || arf_is_special(y) || arf_is_special(z))
     {
         if (arf_is_zero(z))
         {
@@ -28,26 +32,14 @@ arf_fam(arf_t w, const arf_t z, const arf_t x, const arf_t y,
         }
         else
         {
-            if (w != z)
-            {
-                arf_mul(w, x, y, ARF_PREC_EXACT, ARF_RND_DOWN);
-                return arf_add(w, z, w, prec, rnd);
-            }
-
-            /* todo: speed up */
-            int inexact;
-            arf_t t;
-            arf_init(t);
-            arf_mul(t, x, y, ARF_PREC_EXACT, ARF_RND_DOWN);
-            inexact = arf_add(w, z, t, prec, rnd);
-            arf_clear(t);
-            return inexact;
+            arf_mul(w, x, y, ARF_PREC_EXACT, ARF_RND_DOWN);
+            return arf_add(w, z, w, prec, rnd);
         }
     }
 
     mp_size_t xn, yn, zn, tn, alloc;
     mp_srcptr xptr, yptr, zptr;
-    mp_ptr tptr;
+    mp_ptr tptr, tptr2;
     fmpz_t texp;
     slong shift;
     int tsgnbit, inexact;
@@ -65,7 +57,8 @@ arf_fam(arf_t w, const arf_t z, const arf_t x, const arf_t y,
     shift = _fmpz_sub_small(ARF_EXPREF(z), texp);
 
     alloc = tn = xn + yn;
-    ARF_MUL_TMP_ALLOC(tptr, alloc);
+    ARF_MUL_TMP_ALLOC(tptr2, alloc);
+    tptr = tptr2;
 
     ARF_MPN_MUL(tptr, xptr, xn, yptr, yn);
 
@@ -79,7 +72,7 @@ arf_fam(arf_t w, const arf_t z, const arf_t x, const arf_t y,
         inexact = _arf_add_mpn(w, tptr, tn, tsgnbit, texp,
             zptr, zn, ARF_SGNBIT(z), -shift, prec, rnd);
 
-    ARF_MUL_TMP_FREE(tptr, alloc)
+    ARF_MUL_TMP_FREE(tptr2, alloc)
     fmpz_clear(texp);
 
     return inexact;
