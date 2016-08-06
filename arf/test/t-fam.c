@@ -13,7 +13,7 @@
 
 #include <arf.h>
 
-int
+static int
 arf_fam_naive(arf_t w, const arf_t z, const arf_t x, const arf_t y,
               slong prec, arf_rnd_t rnd)
 {
