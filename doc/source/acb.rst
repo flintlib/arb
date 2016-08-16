@@ -634,7 +634,7 @@ Inverse hyperbolic functions
 
     Sets *res* to `\operatorname{atanh}(z) = -i \operatorname{atan}(iz)`.
 
-Rising factorials
+Rising and Falling factorials
 -------------------------------------------------------------------------------
 
 .. function:: void acb_rising_ui_bs(acb_t z, const acb_t x, ulong n, slong prec)
@@ -645,17 +645,26 @@ Rising factorials
 
 .. function:: void acb_rising_ui(acb_t z, const acb_t x, ulong n, slong prec)
 
-.. function:: void acb_rising(acb_t z, const acb_t x, const acb_t n, slong prec)
-
-    Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
+    Computes the rising factorial, `z = (x)^{(n)} = x (x+1) (x+2) \cdots (x+n-1)`.
 
     The *bs* version uses binary splitting. The *rs* version uses rectangular
-    splitting. The *rec* version uses either *bs* or *rs* depending
-    on the input. The default version uses the gamma function unless
+    splitting and takes an optional *step* parameter for tuning
+    purposes (to use the default step length, pass zero).
+
+    The *rec* version uses either *bs* or *rs* depending
+    on the input. The default version uses :func:`acb_rising()` unless
     *n* is a small integer.
 
-    The *rs* version takes an optional *step* parameter for tuning
-    purposes (to use the default step length, pass zero).
+.. function:: void acb_rising(acb_t z, const acb_t x, const acb_t n, slong prec)
+
+    Computes the rising factorial of *x* using the formula 
+
+    .. math ::
+
+        z = \frac{\Gamma(x + n)}{\Gamma(x)}.
+
+    Whenever *n* is a small positive integer, the result is calculated
+    using  :func:`acb_rising_ui_rec()`.
 
 .. function :: void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
 
@@ -673,6 +682,37 @@ Rising factorials
     Computes an upper bound for the absolute value of
     the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
     Not currently optimized for large *n*.
+
+.. function:: void acb_falling_ui_bs(acb_t z, const acb_t x, ulong n, slong prec)
+
+.. function:: void acb_falling_ui_rs(acb_t z, const acb_t x, ulong n, ulong step, slong prec)
+
+.. function:: void acb_falling_ui_rec(acb_t z, const acb_t x, ulong n, slong prec)
+
+.. function:: void acb_falling_ui(acb_t z, const acb_t x, ulong n, slong prec)
+
+.. function :: void acb_falling2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
+
+.. function :: void acb_falling2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong step, slong prec)
+
+.. function :: void acb_falling2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
+
+.. function :: void acb_falling_ui_get_mag(mag_t bound, const acb_t x, ulong n)
+
+    Computes the falling factorial, `z = (x)_n = x (x-1) (x-2) \cdots (x-n+1)`, 
+    using the identity, `z = (x)_n = (-1)^n (-x)^{(n)}`, and using the similarly
+    defined *rising* factorial version of the function.
+
+.. function:: void acb_falling(acb_t z, const acb_t x, const acb_t n, slong prec)
+
+    Computes the falling factorial of *x* using the formula 
+
+    .. math ::
+
+        z = \frac{\Gamma(x + 1)}{\Gamma(x + n + 1)}.
+
+    Whenever *n* is a small positive integer, the result is calculated
+    using  :func:`acb_falling_ui_rec()`.
 
 Gamma function
 -------------------------------------------------------------------------------
