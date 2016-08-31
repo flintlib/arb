@@ -25,7 +25,7 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: BSGS can reduce to nv mul */ 
+/* TODO: BSGS can reduce to nv mul */
 void
 acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec)
 {

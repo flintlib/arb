@@ -29,15 +29,18 @@ int main()
 {
 
     slong k;
-    slong prec = 100;
-    slong nq = 10;
-    ulong q[10] = { 2, 3, 4, 5, 6, 10, 15, 30, 308, 961};
+    slong prec = 100, digits = 30;
+    slong nq = 12;
+    ulong q[12] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 961};
+    flint_rand_t state;
 
     flint_printf("dft....");
     fflush(stdout);
 
+    flint_randinit(state);
+
     /* cyclic dft */
-    for (k = 0; k < nq; k++)
+    for (k = 0; k < 0 * nq; k++) /* FIXME!!!*/
     {
         slong i;
         acb_ptr v, w1, w2;
@@ -58,9 +61,9 @@ int main()
             {
                 flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
                 flint_printf("pol =\n");
-                acb_vec_printd(w1, q[k], 10);
+                acb_vec_printd(w1, q[k], digits);
                 flint_printf("fast =\n");
-                acb_vec_printd(w2, q[k], 10);
+                acb_vec_printd(w2, q[k], digits);
                 flint_printf("\n\n");
                 abort();
             }
@@ -89,11 +92,16 @@ int main()
 
         acb_dirichlet_conrey_init(x, G);
         acb_dirichlet_conrey_one(x, G);
+#if 0
         for (i = 0; i < len; i++)
         {
             acb_set_si(v + i, x->n);
             acb_dirichlet_conrey_next(x, G);
         }
+#else
+        for (i = 0; i < len; i++)
+            acb_randtest_precise(v + i, state, prec, 0);
+#endif
 
         /* naive */
         acb_init(chiy);
@@ -125,13 +133,29 @@ int main()
                 flint_printf("FAIL\n\n");
                 flint_printf("q = %wu\n", q[k]);
                 flint_printf("v [size %wu]\n", len);
-                acb_vec_printd(v, len, 10);
+                acb_vec_printd(v, len, digits);
                 flint_printf("\nDFT differ from index %ld / %ld \n", i, len);
                 flint_printf("\nnaive =\n");
-                acb_vec_printd(w1, len, 10);
+                acb_vec_printd(w1, len, digits);
                 flint_printf("\nfast =\n");
-                acb_vec_printd(w2, len, 10);
+                acb_vec_printd(w2, len, digits);
                 flint_printf("\n\n");
+                abort();
+            }
+            else if (acb_rel_accuracy_bits(w1 + i) < 30
+                    || acb_rel_accuracy_bits(w2 + i) < 30)
+            {
+                flint_printf("FAIL\n\n");
+                flint_printf("q = %wu\n", q[k]);
+                flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
+                flint_printf("\nnaive =\n");
+                acb_printd(w1 + i, digits);
+                flint_printf("\nfast =\n");
+                acb_printd(w2 + i, digits);
+                flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
+                    acb_rel_accuracy_bits(w1 + i),
+                    acb_rel_accuracy_bits(w2 + i), prec
+                        );
                 abort();
             }
         }
@@ -143,5 +167,6 @@ int main()
         acb_dirichlet_group_clear(G);
     }
 
+    flint_randclear(state);
     flint_printf("PASS\n");
 }

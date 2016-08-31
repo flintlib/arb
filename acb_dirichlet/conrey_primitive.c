@@ -29,12 +29,12 @@ void
 acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, ulong cond)
 {
     int k, l, f;
-    
+
     l = 0;
     if (cond % 4 == 0)
     {
         y->log[l++] = x->log[0];
-        
+
         if (cond % 8 == 0)
         {
             ulong l2 = x->log[1];

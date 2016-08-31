@@ -29,14 +29,11 @@
 static acb_ptr
 vec_extract(acb_srcptr v, slong step, slong len)
 {
-    slong k;
+    slong k, l;
     acb_ptr res;
     res = flint_malloc(len * sizeof(acb_struct));
-    for (k = 0; k < len; k++)
-    {
-        res[k] = v[0];
-        v += step;
-    }
+    for (k = 0, l = 0; k < len; k++, l+=step)
+        res[k] = v[l];
     return res;
 }
 void
@@ -164,7 +161,7 @@ _acb_dft_cyc(acb_ptr w, acb_srcptr v, dft_cyc_step * cyc, slong num, slong prec)
         {
             _acb_dft_cyc(wi, vi, cyc + 1, num - 1, prec);
             if (i)
-            { 
+            {
                 for (j = 1; j < M; j++)
                     acb_mul(wi + j, wi + j, z + dz * i * j, prec);
             }

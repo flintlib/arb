@@ -29,7 +29,7 @@ int
 acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 {
     acb_dirichlet_conrey_t x, y;
-    
+
     if (chi1->q != chi2->q)
         return 0;
 

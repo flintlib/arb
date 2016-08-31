@@ -35,7 +35,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
     for (bits = 5; bits <= 30; bits += 5)
-    { 
+    {
 
         for (iter = 0; iter < 50; iter++)
         {
@@ -55,7 +55,7 @@ int main()
 
             /* check number char properties */
             for (iter2 = 0; iter2 < 100; iter2++)
-            { 
+            {
                 int par;
                 ulong m, n;
                 ulong order, chim1, pairing, cond;
