@@ -68,7 +68,7 @@ _acb_vec_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec
 acb_ptr
 acb_roots_init(slong len, slong prec)
 {
-   slong i, q, q1;
+   slong i, q;
    acb_ptr z;
    n_factor_t fac;
    z = _acb_vec_init(len);
@@ -76,42 +76,32 @@ acb_roots_init(slong len, slong prec)
 
    n_factor_init(&fac);
    n_factor(&fac, len, 0);
-   q = q1 = 1;
+   q = 1;
 
    for (i = 0; i < fac.num; i++)
    {
-       slong p, e, pe, mp, mq, m;
+       slong p, e, pe, mp, mq;
        p = fac.p[i];
        e = fac.exp[i];
        pe = n_pow(p, e);
-       q1 *= pe;
        mp = len / pe;
        mq = len / q;
-       m = len / q1;
 
        _acb_vec_roots_pe(z, p, e, pe, mp, prec);
 
        if (i > 0)
        {
-           slong j, jk, jl, k, l;
+           slong k, l;
 
-           jl = mq; /* m * pe; */
-           jk = mp + mq; /* m * (q + pe); */
-           for (k = 1, j = jk; k < pe; k++, j += jk)
+           for (k = mp; k < len; k += mp)
            {
-               for (l = 1; l < q; l++, j += jl)
-               {
-                   if (j >= len)
-                       j %= len;
-                   /*
-                   flint_printf("[mul] (%ld * %ld + %ld * %ld) * %ld = %ld = %ld =  (%ld * %ld) * (%ld * %ld)\n",k,q,l,pe,m,
-                           ((k * q + l * pe) % q1) * m, j ,k,mp,l,mq);
-                   */
-                   acb_mul(z + j, z + k * mp, z + l * mq, prec);
-               }
+               for (l = mq; l < len - k; l += mq)
+                   acb_mul(z + k + l, z + k, z + l, prec);
+               for (; l < len; l += mq)
+                   acb_mul(z + k + l - len, z + k, z + l, prec);
            }
        }
-       q = q1;
+       q *= pe;
    }
 
    return z;

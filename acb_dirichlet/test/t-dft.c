@@ -40,7 +40,7 @@ int main()
     flint_randinit(state);
 
     /* cyclic dft */
-    for (k = 0; k < 0 * nq; k++) /* FIXME!!!*/
+    for (k = 0; k < nq; k++)
     {
         slong i;
         acb_ptr v, w1, w2;
@@ -75,7 +75,7 @@ int main()
     }
 
     /* Dirichlet group DFT */
-    for (k = 0; k < nq - 1; k++)
+    for (k = 0; k < nq; k++)
     {
         slong i, j, len;
         acb_dirichlet_group_t G;
