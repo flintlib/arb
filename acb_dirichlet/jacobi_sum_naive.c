@@ -46,7 +46,7 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const a
 
     m1 = chi1->order.n;
     m2 = chi2->order.n;
-    g = n_gcd(m1, m2); 
+    g = n_gcd(m1, m2);
     nmod_init(&order, m1 * (m2 / g));
     m1 = order.n / m1;
     m2 = order.n / m2;

@@ -43,7 +43,7 @@ acb_dirichlet_chi_theta_arb_smallorder(acb_t res, const acb_dirichlet_group_t G,
 {
     ulong * a;
     acb_dirichlet_powers_t z;
-    
+
     a = flint_malloc(len * sizeof(ulong));
     acb_dirichlet_ui_chi_vec(a, G, chi, len);
 

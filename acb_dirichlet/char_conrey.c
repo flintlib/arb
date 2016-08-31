@@ -25,7 +25,7 @@
 
 #include "acb_dirichlet.h"
 
-/* char n has exponents  = log[k]*PHI[k] / gcd and order expo / gcd 
+/* char n has exponents  = log[k]*PHI[k] / gcd and order expo / gcd
  * so that log = expo[k] */
 void
 acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)

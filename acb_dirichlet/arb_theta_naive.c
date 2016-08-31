@@ -50,7 +50,7 @@ acb_dirichlet_arb_theta_naive(acb_t res, const arb_t x, int parity, const ulong 
         arb_mul(xk2, xk2, dx, prec);
         if (a[k] != ACB_DIRICHLET_CHI_NULL)
         {
-            acb_dirichlet_power(zk, z, a[k], prec); 
+            acb_dirichlet_power(zk, z, a[k], prec);
             if (parity)
                 acb_mul_si(zk, zk, k, prec);
             acb_addmul_arb(res, zk, xk2, prec);
