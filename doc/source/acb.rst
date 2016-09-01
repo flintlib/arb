@@ -74,26 +74,6 @@ Memory management
 Basic manipulation
 -------------------------------------------------------------------------------
 
-.. function:: int acb_is_zero(const acb_t z)
-
-    Returns nonzero iff *z* is zero.
-
-.. function:: int acb_is_one(const acb_t z)
-
-    Returns nonzero iff *z* is exactly 1.
-
-.. function:: int acb_is_finite(const acb_t z)
-
-    Returns nonzero iff *z* certainly is finite.
-
-.. function:: int acb_is_exact(const acb_t z)
-
-    Returns nonzero iff *z* is exact.
-
-.. function:: int acb_is_int(const acb_t z)
-
-    Returns nonzero iff *z* is an exact integer.
-
 .. function:: void acb_zero(acb_t z)
 
 .. function:: void acb_one(acb_t z)
@@ -194,6 +174,26 @@ Random number generation
 
 Precision and comparisons
 -------------------------------------------------------------------------------
+
+.. function:: int acb_is_zero(const acb_t z)
+
+    Returns nonzero iff *z* is zero.
+
+.. function:: int acb_is_one(const acb_t z)
+
+    Returns nonzero iff *z* is exactly 1.
+
+.. function:: int acb_is_finite(const acb_t z)
+
+    Returns nonzero iff *z* certainly is finite.
+
+.. function:: int acb_is_exact(const acb_t z)
+
+    Returns nonzero iff *z* is exact.
+
+.. function:: int acb_is_int(const acb_t z)
+
+    Returns nonzero iff *z* is an exact integer.
 
 .. function:: int acb_equal(const acb_t x, const acb_t y)
 
