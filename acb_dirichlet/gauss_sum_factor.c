@@ -25,46 +25,6 @@
 
 #include "acb_dirichlet.h"
 
-/*
-void
-acb_dirichlet_gauss_sum_naive_prime(acb_t res, acb_dirichlet_prime_group_struct P, ulong expo, slong prec)
-{
-    acb_t z;
-    acb_ptr v;
-
-    v = _acb_vec_init(G->q);
-    acb_dirichlet_chi_vec(v, G, chi, G->q, prec);
-
-    acb_init(z);
-    acb_dirichlet_nth_root(z, G->q, prec);
-
-    _acb_poly_evaluate(res, v, G->q, z, prec);
-
-    acb_clear(z);
-    _acb_vec_clear(v, G->q);
-}
-
-
-static void
-acb_dirichlet_gauss_sum_prime(acb_t res, acb_dirichlet_prime_group_struct P, ulong expo, slong prec)
-{
-    if (expo % P.p == 0)
-    {
-        if (P.e == 1)
-            acb_set_si(res, -1);
-        else
-            acb_zero(res);
-    }
-    else
-    {
-        if (acb_dirichlet_theta_length_d(P.pe.n, 1, prec) > P.pe.n)
-            acb_dirichlet_gauss_sum_naive_prime(res, P, expo, prec);
-        else
-            acb_dirichlet_gauss_sum_naive_prime(res, P, expo, prec);
-    }
-}
-*/
-
 void
 acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
@@ -122,5 +82,4 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
         acb_neg(res, res);
 
     acb_clear(tmp);
-
 }

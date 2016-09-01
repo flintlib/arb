@@ -103,7 +103,8 @@ _acb_dirichlet_dft_cyc_init(acb_dft_cyc_t t, slong len, slong dv, slong prec)
         num += fac.exp[i];
     t->num = num;
     t->cyc = flint_malloc(num * sizeof(dft_cyc_step));
-    t->z = z = acb_roots_init(t->n, prec);
+    t->z = z = _acb_vec_init(t->n);
+    acb_dirichlet_vec_nth_roots(z, t->n, prec);
 
     num = 0;
     dz = 1;

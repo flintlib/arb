@@ -33,7 +33,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const ac
 
     arb_init(x);
 
-    if ((G->q == 300 && (chi->x->n == 71 || chi->x->n == 131))
+    if (chi->conductor < G->q || (G->q == 300 && (chi->x->n == 71 || chi->x->n == 131))
             || (G->q == 600 && (chi->x->n == 11 || chi->x->n == 491)))
     {
         /* or could use l'Hopital rule */
