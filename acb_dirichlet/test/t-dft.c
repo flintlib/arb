@@ -30,8 +30,8 @@ int main()
 
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 12;
-    ulong q[12] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 961};
+    slong nq = 13;
+    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
 
     flint_printf("dft....");
@@ -92,16 +92,8 @@ int main()
 
         acb_dirichlet_conrey_init(x, G);
         acb_dirichlet_conrey_one(x, G);
-#if 0
-        for (i = 0; i < len; i++)
-        {
-            acb_set_si(v + i, x->n);
-            acb_dirichlet_conrey_next(x, G);
-        }
-#else
         for (i = 0; i < len; i++)
             acb_randtest_precise(v + i, state, prec, 0);
-#endif
 
         /* naive */
         acb_init(chiy);

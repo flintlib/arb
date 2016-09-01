@@ -25,8 +25,6 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: factor on modulus */
-
 static void
 gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
@@ -93,7 +91,7 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
 void
 acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
-    /* no need, factor also does it... */
+    /* TODO: no need, factor also does it... */
     if (chi->conductor != G->q)
     {
         gauss_sum_non_primitive(res, G, chi, prec);
