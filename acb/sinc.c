@@ -59,6 +59,8 @@ _acb_sinc_diffbound(acb_t res, const acb_t z, slong prec)
 
     arf_set(arb_midref(acb_realref(res)), arb_midref(acb_realref(z)));
     arf_set(arb_midref(acb_imagref(res)), arb_midref(acb_imagref(z)));
+    mag_zero(arb_radref(acb_realref(res)));
+    mag_zero(arb_radref(acb_imagref(res)));
 
     _acb_sinc_direct(res, res, prec);
 
