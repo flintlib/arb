@@ -29,9 +29,9 @@
 #define nx 3
 
 void
-test_dft()
+test_dft(ulong q)
 {
-    ulong i, q = 15;
+    ulong i;
     slong prec = 100;
     acb_dirichlet_group_t G;
     acb_dirichlet_conrey_t x;
@@ -73,6 +73,21 @@ test_dft()
             acb_vec_printd(v, G->phi_q, 10);
             flint_printf("\n\n");
         }
+        else if (acb_rel_accuracy_bits(z) < prec - 8
+                    || acb_rel_accuracy_bits(v + i) < prec - 8)
+        {
+                flint_printf("FAIL\n\n");
+                flint_printf("q = %wu\n", q);
+                flint_printf("\nL(1/2,chi_%wu(%wu,)) inaccurate\n", q, x->n);
+                flint_printf("\nsingle =\n");
+                acb_printd(z, 30);
+                flint_printf("\ndft =\n");
+                acb_printd(v + i, 30);
+                flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
+                    acb_rel_accuracy_bits(z),
+                    acb_rel_accuracy_bits(v + i), prec);
+                abort();
+         }
 
         i++;
     } while (acb_dirichlet_conrey_next(x, G) >= 0);
@@ -202,13 +217,15 @@ int main()
         }
         acb_dirichlet_char_clear(chi);
         acb_dirichlet_group_clear(G);
+
+        /* test using dft */
+        test_dft(q[i]);
+
     }
     acb_clear(ref);
     acb_clear(res);
     _acb_vec_clear(x, nx);
 
-    /* test using dft */
-    test_dft();
 
     flint_cleanup();
     flint_printf("PASS\n");

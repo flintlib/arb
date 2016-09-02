@@ -234,6 +234,12 @@ Roots of unity
 
    sets *res* to `\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
 
+.. function:: void acb_dirichlet_vec_nth_roots(acb_ptr z, slong order, slong prec)
+
+   compute the vector ``1,z,z^2,\dots z^{\mathrm{order}-1}`` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
+
+   In order to avoid precision loss, this function does not simply compute powers of a primitive root.
+
 .. type:: acb_dirichlet_powers_struct
 
 .. type:: acb_dirichlet_powers_t

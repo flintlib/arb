@@ -124,7 +124,6 @@ acb_dirichlet_chi_theta_arb_naive(acb_t res, const acb_dirichlet_group_t G, cons
     flint_free(a);
 }
 
-
 void
 acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec)
 {

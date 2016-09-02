@@ -45,7 +45,7 @@ int main()
         acb_dirichlet_char_t chi;
         ulong * v, nv, k;
 
-        acb_t zeta, sum;
+        acb_t sum;
         acb_ptr z;
 
         arb_t eq;
@@ -58,11 +58,8 @@ int main()
         acb_dirichlet_group_init(G, q);
         acb_dirichlet_char_init(chi, G);
 
-        acb_init(zeta);
-        acb_dirichlet_nth_root(zeta, G->expo, prec);
-
         z = _acb_vec_init(G->expo);
-        _acb_vec_set_powers(z, zeta, G->expo, prec);
+        acb_dirichlet_vec_nth_roots(z, G->expo, prec);
 
         nv = acb_dirichlet_theta_length_d(q, 1, prec);
         v = flint_malloc(nv * sizeof(ulong));
@@ -124,7 +121,6 @@ int main()
 
         _acb_vec_clear(z, G->expo);
         _arb_vec_clear(t, nv);
-        acb_clear(zeta);
         acb_clear(sum);
         arb_clear(eq);
         flint_free(v);
