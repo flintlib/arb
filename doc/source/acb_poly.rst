@@ -101,6 +101,12 @@ Basic properties and manipulation
 
     Sets *dest* to a copy of *src*, rounded to *prec* bits.
 
+.. function:: void acb_poly_set_trunc(acb_poly_t dest, const acb_poly_t src, slong n)
+
+.. function:: void acb_poly_set_trunc_round(acb_poly_t dest, const acb_poly_t src, slong n, slong prec)
+
+    Sets *dest* to a copy of *src*, truncated to length *n* and rounded to *prec* bits.
+
 .. function:: void acb_poly_set_coeff_si(acb_poly_t poly, slong n, slong c)
 
 .. function:: void acb_poly_set_coeff_acb(acb_poly_t poly, slong n, const acb_t c)

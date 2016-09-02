@@ -95,6 +95,12 @@ Basic manipulation
 
     Sets *dest* to a copy of *src*, rounded to *prec* bits.
 
+.. function:: void arb_poly_set_trunc(arb_poly_t dest, const arb_poly_t src, slong n)
+
+.. function:: void arb_poly_set_trunc_round(arb_poly_t dest, const arb_poly_t src, slong n, slong prec)
+
+    Sets *dest* to a copy of *src*, truncated to length *n* and rounded to *prec* bits.
+
 .. function:: void arb_poly_set_coeff_si(arb_poly_t poly, slong n, slong c)
 
 .. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, slong n, const arb_t c)

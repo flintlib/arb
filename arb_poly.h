@@ -65,6 +65,10 @@ void arb_poly_set(arb_poly_t poly, const arb_poly_t src);
 
 void arb_poly_set_round(arb_poly_t poly, const arb_poly_t src, slong prec);
 
+void arb_poly_set_trunc(arb_poly_t res, const arb_poly_t poly, slong n);
+
+void arb_poly_set_trunc_round(arb_poly_t res, const arb_poly_t poly, slong n, slong prec);
+
 /* Basic manipulation */
 
 ARB_POLY_INLINE slong arb_poly_length(const arb_poly_t poly)
