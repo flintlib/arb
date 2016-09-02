@@ -16,12 +16,11 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
     ulong chin;
-    acb_t z, t, u, a;
-    acb_ptr xz;
+    acb_t t, u, a;
+    acb_ptr z;
     acb_dirichlet_conrey_t cn;
 
     acb_dirichlet_conrey_init(cn, G);
-    acb_init(z);
     acb_init(t);
     acb_init(u);
     acb_init(a);
@@ -29,9 +28,10 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     acb_dirichlet_conrey_one(cn, G);
     acb_zero(t);
 
-    acb_dirichlet_nth_root(z, chi->order.n, prec);
-    xz = _acb_vec_init(chi->order.n);
-    _acb_vec_set_powers(xz, z, chi->order.n, prec);
+    prec += n_clog(G->phi_q, 2);
+
+    z = _acb_vec_init(chi->order.n);
+    acb_dirichlet_vec_nth_roots(z, chi->order.n, prec);
 
     do {
         chin = acb_dirichlet_ui_chi_conrey(G, chi, cn);
@@ -40,7 +40,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
         acb_div_ui(a, a, G->q, prec);
         acb_hurwitz_zeta(u, s, a, prec);
 
-        acb_addmul(t, xz + chin, u, prec);
+        acb_addmul(t, z + chin, u, prec);
 
     } while (acb_dirichlet_conrey_next(cn, G) >= 0);
 
@@ -51,8 +51,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
     acb_dirichlet_conrey_clear(cn);
 
-    _acb_vec_clear(xz, chi->order.n);
-    acb_clear(z);
+    _acb_vec_clear(z, chi->order.n);
     acb_clear(t);
     acb_clear(u);
     acb_clear(a);
