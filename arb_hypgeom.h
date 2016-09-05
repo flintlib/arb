@@ -68,6 +68,12 @@ void arb_hypgeom_li(arb_t res, const arb_t z, int offset, slong prec);
 void _arb_hypgeom_li_series(arb_ptr g, arb_srcptr h, slong hlen, int offset, slong len, slong prec);
 void arb_hypgeom_li_series(arb_poly_t g, const arb_poly_t h, int offset, slong len, slong prec);
 
+void arb_hypgeom_bessel_j(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_bessel_y(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_bessel_jy(arb_t res1, arb_t res2, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_bessel_i(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec);
+
 void arb_hypgeom_airy(arb_t ai, arb_t aip, arb_t bi, arb_t bip, const arb_t z, slong prec);
 void arb_hypgeom_airy_jet(arb_ptr ai, arb_ptr bi, const arb_t z, slong len, slong prec);
 void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime,

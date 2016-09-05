@@ -191,6 +191,31 @@ Exponential and trigonometric integrals
     Computes the logarithmic integral (optionally the offset version)
     of the power series *z*, truncated to length *len*.
 
+Bessel functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_bessel_j(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the Bessel function of the first kind `J_{\nu}(z)`.
+
+.. function:: void arb_hypgeom_bessel_y(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the Bessel function of the second kind `Y_{\nu}(z)`.
+
+.. function:: void arb_hypgeom_bessel_jy(arb_t res1, arb_t res2, const arb_t nu, const arb_t z, slong prec)
+
+    Sets *res1* to `J_{\nu}(z)` and *res2* to `Y_{\nu}(z)`, computed
+    simultaneously.
+
+.. function:: void arb_hypgeom_bessel_i(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the modified Bessel function of the first kind
+    `I_{\nu}(z) = z^{\nu} (iz)^{-\nu} J_{\nu}(iz)`.
+
+.. function:: void arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the modified Bessel function of the second kind `K_{\nu}(z)`.
+
 Airy functions
 -------------------------------------------------------------------------------
 
