@@ -191,3 +191,31 @@ Exponential and trigonometric integrals
     Computes the logarithmic integral (optionally the offset version)
     of the power series *z*, truncated to length *len*.
 
+Airy functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_airy(arb_t ai, arb_t ai_prime, arb_t bi, arb_t bi_prime, const arb_t z, slong prec)
+
+    Computes the Airy functions `(\operatorname{Ai}(z), \operatorname{Ai}'(z), \operatorname{Bi}(z), \operatorname{Bi}'(z))`
+    simultaneously. Any of the four function values can be omitted by passing
+    *NULL* for the unwanted output variables, speeding up the evaluation.
+
+.. function:: void arb_hypgeom_airy_jet(arb_ptr ai, arb_ptr bi, const arb_t z, slong len, slong prec)
+
+    Writes to *ai* and *bi* the respective Taylor expansions of the Airy functions
+    at the point *z*, truncated to length *len*.
+    Either of the outputs can be *NULL* to avoid computing that function.
+    The variable *z* is not allowed to be aliased with the outputs.
+    To simplify the implementation, this method does not compute the
+    series expansions of the primed versions directly; these are
+    easily obtained by computing one extra coefficient and differentiating
+    the output with :func:`_arb_poly_derivative`.
+
+.. function:: void _arb_hypgeom_airy_series(arb_ptr ai, arb_ptr ai_prime, arb_ptr bi, arb_ptr bi_prime, arb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime, arb_poly_t bi, arb_poly_t bi_prime, const arb_poly_t z, slong len, slong prec)
+
+    Computes the Airy functions evaluated at the power series *z*,
+    truncated to length *len*. As with the other Airy methods, any of the
+    outputs can be *NULL*.
+
