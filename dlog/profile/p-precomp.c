@@ -23,15 +23,15 @@
 
 ******************************************************************************/
 
+#include <math.h>
+#include <string.h>
 #include "dlog.h"
 #include "profiler.h"
-#include <math.h>
 
 #define NUMPRIMES 400
 #define LOG 0
 #define CSV 1
 #define JSON 2
-#define OUT JSON
 
 typedef void (*log_f) (ulong p, ulong a, ulong num);
 
@@ -101,8 +101,9 @@ flog_gen(ulong p, ulong a, ulong num)
     dlog_precomp_clear(t);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    int out = LOG;
     slong iter, k, nv, nref, r, nr;
     ulong minq, maxq;
     ulong * rand;
@@ -116,6 +117,20 @@ int main()
     int np = NUMPRIMES;
 
     flint_rand_t state;
+
+    if (argc < 2)
+        out = LOG;
+    else if (!strcmp(argv[1], "json"))
+        out = JSON;
+    else if (!strcmp(argv[1], "csv"))
+        out = CSV;
+    else if (!strcmp(argv[1], "log"))
+        out = LOG;
+    else
+    {
+        printf("usage: %s [log|csv|json]\n", argv[0]);
+        abort();
+    }
 
     flint_randinit(state);
     for (nbits = 10; nbits <= 40; nbits += 5)
@@ -136,9 +151,9 @@ int main()
         for (i = 0; i < nl; i++)
         {
             int f;
-#if OUT == LOG
-            flint_printf("%d * logs mod primes of size %d.....\n", l[i], nbits);
-#endif
+
+            if (out == LOG)
+                flint_printf("%d * logs mod primes of size %d.....\n", l[i], nbits);
 
             for (f = 0; f < nf; f++)
             {
@@ -149,26 +164,26 @@ int main()
                     continue;
                 if (f == 1 && nbits >= 30 && l[i] > 10)
                     continue;
-#if OUT == LOG
-                flint_printf("%-20s...   ",n[f]);
-                fflush(stdout);
-#elif OUT == CSV
-                flint_printf("%-8s, %2d, %4d, %3d, ",n[f],nbits,l[i],np);
-#elif OUT == JSON
-                flint_printf("{ \"name\": \"%s\", \"bits\": %d, \"nlogs\": %d, \"nprimes\": %d, \"time\": ",
-                        n[f],nbits,l[i],np);
-#endif
+                if (out == LOG)
+                {
+                    flint_printf("%-20s...   ",n[f]);
+                    fflush(stdout);
+                }
+                else if (out == CSV)
+                    flint_printf("%-8s, %2d, %4d, %3d, ",n[f],nbits,l[i],np);
+                else if (out == JSON)
+                    flint_printf("{ \"name\": \"%s\", \"bits\": %d, \"nlogs\": %d, \"nprimes\": %d, \"time\": ",
+                            n[f],nbits,l[i],np);
 
                 TIMEIT_ONCE_START
                     for (j = 0; j < np; j ++)
                         (func[f])(p[j], a[j], l[i]);
                 TIMEIT_ONCE_STOP
 
-#if OUT == JSON
-                    flint_printf("}\n");
-#else
-                    flint_printf("\n");
-#endif
+                    if (out == JSON)
+                        flint_printf("}\n");
+                    else
+                        flint_printf("\n");
             }
         }
     }
