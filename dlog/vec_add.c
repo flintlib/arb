@@ -28,7 +28,9 @@
 void
 dlog_vec_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    if (na * DLOG_LOOP_MAX_FACTOR > nv)
+    if (va == 0)
+        return;
+    if (na * DLOG_LOOP_MAX_FACTOR < nv)
         dlog_vec_loop_add(v, nv, a, va, mod, na, order);
     else
         dlog_vec_sieve_add(v, nv, a, va, mod, na, order);
