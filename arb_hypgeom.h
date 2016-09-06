@@ -81,6 +81,20 @@ void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime,
 void _arb_hypgeom_airy_series(arb_ptr ai, arb_ptr ai_prime,
     arb_ptr bi, arb_ptr bi_prime, arb_srcptr z, slong zlen, slong len, slong prec);
 
+void arb_hypgeom_expint(arb_t res, const arb_t s, const arb_t z, slong prec);
+
+void arb_hypgeom_gamma_lower(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec);
+void _arb_hypgeom_gamma_lower_series(arb_ptr g, const arb_t s, arb_srcptr h, slong hlen, int regularized, slong n, slong prec);
+void arb_hypgeom_gamma_lower_series(arb_poly_t g, const arb_t s, const arb_poly_t h, int regularized, slong n, slong prec);
+
+void arb_hypgeom_gamma_upper(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec);
+void _arb_hypgeom_gamma_upper_series(arb_ptr g, const arb_t s, arb_srcptr h, slong hlen, int regularized, slong n, slong prec);
+void arb_hypgeom_gamma_upper_series(arb_poly_t g, const arb_t s, const arb_poly_t h, int regularized, slong n, slong prec);
+
+void arb_hypgeom_beta_lower(arb_t res, const arb_t a, const arb_t c, const arb_t z, int regularized, slong prec);
+void arb_hypgeom_beta_lower_series(arb_poly_t res, const arb_t a, const arb_t b, const arb_poly_t z, int regularized, slong len, slong prec);
+void _arb_hypgeom_beta_lower_series(arb_ptr res, const arb_t a, const arb_t b, arb_srcptr z, slong zlen, int regularized, slong len, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

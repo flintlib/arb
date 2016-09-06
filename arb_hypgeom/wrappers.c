@@ -389,3 +389,74 @@ arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec)
     acb_clear(u);
 }
 
+void
+arb_hypgeom_expint(arb_t res, const arb_t s, const arb_t z, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), s);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_expint(t, t, u, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
+arb_hypgeom_gamma_lower(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), s);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_gamma_lower(t, t, u, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
+arb_hypgeom_gamma_upper(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), s);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_gamma_upper(t, t, u, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
+arb_hypgeom_beta_lower(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+{
+    acb_t t, u, v;
+    acb_init(t);
+    acb_init(u);
+    acb_init(v);
+    arb_set(acb_realref(t), a);
+    arb_set(acb_realref(u), b);
+    arb_set(acb_realref(v), z);
+    acb_hypgeom_beta_lower(t, t, u, v, regularized, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+    acb_clear(v);
+}
+
