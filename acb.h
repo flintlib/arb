@@ -1011,7 +1011,7 @@ acb_printd(const acb_t z, slong digits)
 
 void acb_fprintn(FILE * fp, const acb_t z, long digits, ulong flags);
 
-ARB_INLINE void
+ACB_INLINE void
 acb_printn(const acb_t x, slong digits, ulong flags)
 {
     acb_fprintn(stdout, x, digits, flags);
