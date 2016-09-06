@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
     This file is part of Arb.
 
