@@ -211,11 +211,18 @@ Assignment of special values
 Input and output
 -------------------------------------------------------------------------------
 
+The *arb_print...* functions print to standard output, while
+*arb_fprint...* functions print to the stream *file*.
+
 .. function:: void arb_print(const arb_t x)
+
+.. function:: void arb_fprint(FILE * file, const arb_t x)
 
     Prints the internal representation of *x*.
 
 .. function:: void arb_printd(const arb_t x, slong digits)
+
+.. function:: void arb_fprintd(FILE * file, const arb_t x, slong digits)
 
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
@@ -223,27 +230,13 @@ Input and output
 
 .. function:: void arb_printn(const arb_t x, slong digits, ulong flags)
 
-    Prints a nice decimal representation of *x*.
-    By default, the output is guaranteed to be correct to within one unit
-    in the last digit. An error bound is also printed explicitly.
-    See :func:`arb_get_str` for details.
-
-.. function:: void arb_fprint(FILE * file, const arb_t x)
-
-    Prints the internal representation of *x* to the stream *file*.
-
-.. function:: void arb_fprintd(FILE * file, const arb_t x, slong digits)
-
-    Prints *x* in decimal to the stream *file*.
-    The printed value of the radius is not adjusted
-    to compensate for the fact that the binary-to-decimal conversion
-    of both the midpoint and the radius introduces additional error.
-
 .. function:: void arb_fprintn(FILE * file, const arb_t x, slong digits, ulong flags)
 
-    Prints a nice decimal representation of *x* to the stream *file*.
-    By default, the output is guaranteed to be correct to within one unit
-    in the last digit. An error bound is also printed explicitly.
+    Prints a nice decimal representation of *x*.
+    By default, the output shows the midpoint with a guaranteed error of at
+    most one unit in the last decimal place. In addition, an explicit error
+    bound is printed so that the displayed decimal interval is guaranteed to
+    enclose *x*.
     See :func:`arb_get_str` for details.
 
 Random number generation
