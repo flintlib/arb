@@ -34,4 +34,3 @@ acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
         acb_clear(t);
     }
 }
-

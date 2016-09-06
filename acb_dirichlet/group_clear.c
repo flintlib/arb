@@ -15,9 +15,7 @@
 void
 acb_dirichlet_group_clear(acb_dirichlet_group_t G)
 {
-    flint_free(G->primes);
-    flint_free(G->exponents);
+    flint_free(G->P);
     flint_free(G->generators);
     flint_free(G->PHI);
 }
-
