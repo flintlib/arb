@@ -23,15 +23,33 @@
 
 ******************************************************************************/
 
+#include <string.h>
 #include "acb_dirichlet.h"
 
-#define OUT 0
-
-int main()
+int main(int argc, char *argv[])
 {
+    int i, out = 1;
     slong prec = 100, digits = 30;
-    ulong q;
+    ulong qmin, qmax, q;
     acb_t s;
+
+    if (argc < 3)
+    {
+        printf("usage: %s [--quiet] qmin qmax\n", argv[0]);
+        return 1;
+    }
+    for (i = 1; i < argc - 2; i++)
+    {
+        if (!strcmp(argv[i],"--quiet"))
+            out = 0;
+        /*
+        else if (!strcmp(argv[i],"--algo"))
+        {
+        }
+        */
+    }
+    qmin = atol(argv[i++]);
+    qmax = atol(argv[i++]);
 
     fflush(stdout);
 
@@ -39,8 +57,7 @@ int main()
     acb_one(s);
     acb_div_si(s, s, 2, prec);
 
-    /* look for vanishing theta values for prime power moduli */
-    for (q = 3; q < 100; q++)
+    for (q = qmin; q <= qmax; q++)
     {
         ulong k;
         acb_dirichlet_group_t G;
@@ -57,19 +74,20 @@ int main()
 
         acb_dirichlet_l_vec_hurwitz(z, s, G, prec);
 
-#if OUT
-        k = 0;
-        acb_dirichlet_conrey_one(x, G);
-        while (acb_dirichlet_conrey_next(x, G) >= 0)
-        { 
-            k++;
-            if (acb_dirichlet_conrey_conductor(G,x) < q)
-                continue;
-            flint_printf("%wu,%wu: ", q, x->n);
-            acb_printd(z + k, digits);
-            flint_printf("\n");
+        if (out)
+        {
+            k = 0;
+            acb_dirichlet_conrey_one(x, G);
+            while (acb_dirichlet_conrey_next(x, G) >= 0)
+            {
+                k++;
+                if (acb_dirichlet_conrey_conductor(G,x) < q)
+                    continue;
+                flint_printf("%wu,%wu: ", q, x->n);
+                acb_printd(z + k, digits);
+                flint_printf("\n");
+            }
         }
-#endif
 
         _acb_vec_clear(z, G->phi_q);
         acb_dirichlet_conrey_clear(x);
