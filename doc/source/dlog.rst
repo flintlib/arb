@@ -42,7 +42,14 @@ of successive integers `1\dots n`:
   the group size is comparable with the number of elements requested
 
 - otherwise the logarithms are computed on primes and propagated by
-  Eratosthene-like sieving.
+  Eratosthene-like sieving on composite numbers.
+
+- when several logarithms are already computed, a basic smoothing technique
+  inspired by index-calculus is adopted to obtain larger logs from
+  smaller ones.
+
+- in the the present implementation, the full index-calculus method is not
+  implemented.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
