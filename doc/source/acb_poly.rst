@@ -143,6 +143,11 @@ Basic properties and manipulation
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
 
+.. function:: slong acb_poly_valuation(const acb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
+
 Input and output
 -------------------------------------------------------------------------------
 

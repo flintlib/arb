@@ -137,6 +137,11 @@ Basic manipulation
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
 
+.. function:: slong arb_poly_valuation(const arb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
+
 Conversions
 -------------------------------------------------------------------------------
 
