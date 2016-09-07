@@ -1,7 +1,14 @@
 /* This file is public domain. Author: Pascal Molin. */
 
 #include <string.h>
+#include <math.h>
 #include "acb_dirichlet.h"
+
+static int usage(char *argv[])
+{
+    printf("usage: %s [--quiet] [--prec <bits>] qmin qmax\n", argv[0]);
+    return 1;
+}
 
 int main(int argc, char *argv[])
 {
@@ -11,22 +18,25 @@ int main(int argc, char *argv[])
     acb_t s;
 
     if (argc < 3)
-    {
-        printf("usage: %s [--quiet] qmin qmax\n", argv[0]);
-        return 1;
-    }
+        return usage(argv);
+
     for (i = 1; i < argc - 2; i++)
     {
         if (!strcmp(argv[i],"--quiet"))
             out = 0;
-        /*
-        else if (!strcmp(argv[i],"--algo"))
+        else if (!strcmp(argv[i],"--prec"))
         {
+            i++;
+            prec = atol(argv[i]);
+            digits = floor(prec * 0.3);
         }
-        */
     }
-    qmin = atol(argv[i++]);
-    qmax = atol(argv[i++]);
+
+    if (argc < i + 2)
+        return usage(argv);
+
+    qmin = atol(argv[i]);
+    qmax = atol(argv[i+1]);
 
     fflush(stdout);
 
