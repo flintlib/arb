@@ -19,38 +19,6 @@ No particular effort has been made towards single discrete logarithm
 computation. Currently only machine size primepower moduli
 are supported.
 
-Algorithms
--------------------------------------------------------------------------------
-
-Several discrete logarithms strategies are implemented:
-
-- complete lookup table for small groups
-
-- baby-step giant-step table
-
-combined with mathematical reductions
-
-- Pohlig-Hellman decomposition (chinese remainder decomposition on the
-  order of the group and base `p` decomposition for primepower order)
-
-- p-adic log for primepower modulus `p^e`.
-
-For *dlog_vec* functions which compute the vector of discrete logarithms
-of successive integers `1\dots n`:
-
-- a simple loop on group elements avoiding all logarithms is done when
-  the group size is comparable with the number of elements requested
-
-- otherwise the logarithms are computed on primes and propagated by
-  Eratosthene-like sieving on composite numbers.
-
-- when several logarithms are already computed, a basic smoothing technique
-  inspired by index-calculus is adopted to obtain larger logs from
-  smaller ones.
-
-- in the the present implementation, the full index-calculus method is not
-  implemented.
-
 Types, macros and constants
 -------------------------------------------------------------------------------
 
@@ -115,6 +83,38 @@ Vector evaluations
 
 .. function:: void dlog_vec_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 
-   same parameters as before, but adds `\log(k,a)` times value *va*
+   same parameters as before, but adds `\log(k,a)\times v_a`
    to *v[k]* and reduce modulo *order* instead of replacing the value. Indices
    *k* such that *v[k]* equals *DLOG_NONE* are ignored.
+
+Algorithms
+-------------------------------------------------------------------------------
+
+Several discrete logarithms strategies are implemented:
+
+- complete lookup table for small groups
+
+- baby-step giant-step table
+
+combined with mathematical reductions
+
+- Pohlig-Hellman decomposition (chinese remainder decomposition on the
+  order of the group and base `p` decomposition for primepower order)
+
+- p-adic log for primepower modulus `p^e`.
+
+For *dlog_vec* functions which compute the vector of discrete logarithms
+of successive integers `1\dots n`:
+
+- a simple loop on group elements avoiding all logarithms is done when
+  the group size is comparable with the number of elements requested
+
+- otherwise the logarithms are computed on primes and propagated by
+  Eratosthene-like sieving on composite numbers.
+
+- when several logarithms are already computed, a basic smoothing technique
+  inspired by index-calculus is adopted to obtain larger logs from
+  smaller ones.
+
+- in the the present implementation, the full index-calculus method is not
+  implemented.

@@ -146,6 +146,7 @@ Mainly for internal use.
 
    fmpz_extras.rst
    bool_mat.rst
+   dlog.rst
    fmpr.rst
 
 Supplementary algorithm notes
