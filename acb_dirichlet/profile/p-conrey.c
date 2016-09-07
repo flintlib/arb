@@ -111,14 +111,69 @@ do_gcdpluscond(ulong q1, ulong q2)
     return n;
 }
 
+static ulong
+do_conreypluscond(ulong q1, ulong q2)
+{
+    ulong n, q, k;
+
+    for (n = 0, q = q1; q <= q2; q++)
+    {
+        acb_dirichlet_group_t G;
+        acb_dirichlet_conrey_t x;
+
+        acb_dirichlet_group_init(G, q);
+        acb_dirichlet_conrey_init(x, G);
+
+        acb_dirichlet_conrey_one(x, G);
+        n++;
+
+        for (; acb_dirichlet_conrey_next(x, G) >= 0; n++)
+            acb_dirichlet_conrey_conductor(G, x);
+
+        acb_dirichlet_conrey_clear(x);
+        acb_dirichlet_group_clear(G);
+
+    }
+
+    return n;
+}
+
+static ulong
+do_conreyplusorder(ulong q1, ulong q2)
+{
+    ulong n, q, k;
+
+    for (n = 0, q = q1; q <= q2; q++)
+    {
+        acb_dirichlet_group_t G;
+        acb_dirichlet_conrey_t x;
+
+        acb_dirichlet_group_init(G, q);
+        acb_dirichlet_conrey_init(x, G);
+
+        acb_dirichlet_conrey_one(x, G);
+        n++;
+
+        for (; acb_dirichlet_conrey_next(x, G) >= 0; n++)
+            acb_dirichlet_conrey_order(G, x);
+
+        acb_dirichlet_conrey_clear(x);
+        acb_dirichlet_group_clear(G);
+
+    }
+
+    return n;
+}
 int main(int argc, char *argv[])
 {
     int out;
     ulong n, nref, maxq = 5000;
 
-    int l, nf = 4;
-    do_f func[4] = { do_gcd, do_conrey, do_chars, do_gcdpluscond };
-    char * name[4] = { "gcd", "conrey", "chars", "gcd+cond" };
+    int l, nf = 6;
+    do_f func[6] = { do_gcd, do_conrey, do_chars,
+        do_gcdpluscond, do_conreypluscond, do_conreyplusorder  };
+    char * name[6] = { "gcd", "conrey", "chars",
+        "gcd + cond", "conrey + cond", "conrey + order"  };
 
     int i, ni = 5;
     ulong qmin[5] = { 2,   1000, 10000, 100000, 1000000 };
@@ -139,7 +194,7 @@ int main(int argc, char *argv[])
     }
 
     if (out == CSV)
-        flint_printf("# %-6s, %7s, %7s, %7s\n","name", "qmin", "qmax", "time");
+        flint_printf("# %-12s, %7s, %7s, %7s\n","name", "qmin", "qmax", "time");
 
     for (i = 0; i < ni; i++)
     {
@@ -153,9 +208,9 @@ int main(int argc, char *argv[])
         {
 
             if (out == LOG)
-                flint_printf("%-8s      ...  ",name[l]);
+                flint_printf("%-14s ...  ",name[l]);
             else if (out == CSV)
-                flint_printf("%-8s, %7d, %7d,   ",name[l],qmin[i],qmax[i]);
+                flint_printf("%-12s, %7d, %7d,   ",name[l],qmin[i],qmax[i]);
             else if (out == JSON)
                 flint_printf("{ \"name\": \"%s\", \"qmin\": %d, \"qmax\": %d, \"time\": ",
                         name[l],qmin[i],qmax[i]);
