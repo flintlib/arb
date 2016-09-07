@@ -214,6 +214,12 @@ void _arb_poly_sub(arb_ptr res, arb_srcptr poly1, slong len1,
 void arb_poly_sub(arb_poly_t res, const arb_poly_t poly1,
               const arb_poly_t poly2, slong prec);
 
+void arb_poly_add_series(arb_poly_t res, const arb_poly_t poly1,
+              const arb_poly_t poly2, slong len, slong prec);
+
+void arb_poly_sub_series(arb_poly_t res, const arb_poly_t poly1,
+              const arb_poly_t poly2, slong len, slong prec);
+
 ARB_POLY_INLINE void
 arb_poly_neg(arb_poly_t res, const arb_poly_t poly)
 {

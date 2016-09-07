@@ -253,6 +253,14 @@ Arithmetic
 
     Sets *C* to the difference of *A* and *B*.
 
+.. function:: void acb_poly_add_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the sum of *A* and *B*, truncated to length *len*.
+
+.. function:: void acb_poly_sub_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the difference of *A* and *B*, truncated to length *len*.
+
 .. function:: void acb_poly_neg(acb_poly_t C, const acb_poly_t A)
 
     Sets *C* to the negation of *A*.

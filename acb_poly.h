@@ -236,6 +236,12 @@ void _acb_poly_sub(acb_ptr res, acb_srcptr poly1, slong len1,
 void acb_poly_sub(acb_poly_t res, const acb_poly_t poly1,
               const acb_poly_t poly2, slong prec);
 
+void acb_poly_add_series(acb_poly_t res, const acb_poly_t poly1,
+              const acb_poly_t poly2, slong len, slong prec);
+
+void acb_poly_sub_series(acb_poly_t res, const acb_poly_t poly1,
+              const acb_poly_t poly2, slong len, slong prec);
+
 ACB_POLY_INLINE void
 acb_poly_neg(acb_poly_t res, const acb_poly_t poly)
 {
