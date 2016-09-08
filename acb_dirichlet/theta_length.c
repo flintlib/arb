@@ -37,3 +37,41 @@ acb_dirichlet_theta_length(ulong q, const arb_t t, slong prec)
     arf_clear(at);
     return len;
 }
+
+/* bound for sum_{k>n} k*exp(-a k^2) */
+void
+mag_tail_kexpk2_arb(mag_t res, const arb_t a, ulong n)
+{
+    mag_t m;
+    mag_init(m);
+    arb_get_mag_lower(m, a);
+    /* a < 1/4 ? */
+    if (mag_cmp_2exp_si(m, -2) <= 0)
+    {
+        mag_t c;
+        mag_init(c);
+        mag_mul_ui(c, m, 2);
+        mag_addmul(c, c, c);
+        mag_mul_ui(res, m, n*n-n+1);
+        mag_expinv(res, res);
+        mag_div(res, res, c);
+        mag_clear(c);
+    }
+    else
+    {
+        mag_mul_ui(res, m, n*n-n-1);
+        mag_expinv(res, res);
+        mag_mul_ui(res, res, 2);
+    }
+    mag_clear(m);
+}
+
+/* a(t) = Pi / q * t^2 */
+void
+_acb_dirichlet_theta_argument_at_arb(arb_t xt, ulong q, const arb_t t, slong prec)
+{
+    arb_const_pi(xt, prec);
+    arb_div_ui(xt, xt, q, prec);
+    arb_mul(xt, xt, t, prec);
+    arb_mul(xt, xt, t, prec);
+}
