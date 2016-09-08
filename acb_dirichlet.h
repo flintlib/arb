@@ -234,14 +234,16 @@ void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_diric
 void acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv, slong prec);
 
 void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
-void acb_dirichlet_qseries_eval_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec);
+void acb_dirichlet_qseries_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec);
+void acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void acb_dirichlet_qseries_arb_powers(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
 
 ulong acb_dirichlet_theta_length_d(ulong q, double x, slong prec);
 ulong acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec);
-void acb_dirichlet_arb_theta_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
-void acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void mag_tail_kexpk2_arb(mag_t res, const arb_t a, ulong n);
 
-void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec);
+void _acb_dirichlet_theta_argument_at_arb(arb_t xt, ulong q, const arb_t t, slong prec);
+void acb_dirichlet_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec);
 void acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec);
 
 void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);

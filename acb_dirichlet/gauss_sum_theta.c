@@ -28,7 +28,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const ac
     }
 
     arb_one(x);
-    acb_dirichlet_chi_theta_arb(res, G, chi, x, prec);
+    acb_dirichlet_theta_arb(res, G, chi, x, prec);
     acb_init(eps);
     acb_conj(eps, res);
     acb_div(eps, res, eps, prec);

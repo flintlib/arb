@@ -11,9 +11,9 @@
 
 #include "acb_dirichlet.h"
 
-/* assume a[0] = 0 */
+/* sum a_k x^(k^2), assume a[0] = 0 */
 void
-acb_dirichlet_qseries_eval_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec)
+acb_dirichlet_qseries_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec)
 {
     slong k;
     arb_t xk2, dx, x2;

@@ -19,7 +19,7 @@ acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, co
     acb_dirichlet_char_init(chi, G);
     acb_dirichlet_char(chi, G, a);
 
-    acb_dirichlet_chi_theta_arb(res, G, chi, t, prec);
+    acb_dirichlet_theta_arb(res, G, chi, t, prec);
 
     acb_dirichlet_char_clear(chi);
 }
