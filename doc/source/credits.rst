@@ -34,13 +34,18 @@ Fredrik Johansson is the main author. The project was started in 2012
 as a numerical extension of FLINT, and the initial design was heavily based
 on FLINT 2.0 (with particular credit to Bill Hart and Sebastian Pancratz).
 
+The following authors have developed major new features.
+
+* Pascal Molin - Dirichlet characters, Dirichlet L-functions, discrete logarithm computation
+* Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, Cholesky decomposition, miscellaneous patches
+
 Several people have contributed patches, bug reports, or substantial feedback.
-This list is probably incomplete.
+This list (ordered by time of first contribution) is probably incomplete.
 
 * Bill Hart - build system, Windows 64 support, design of FLINT
 * Sebastian Pancratz - divide-and-conquer polynomial composition algorithm (taken from FLINT)
 * The MPFR development team - Arb includes two-limb multiplication code taken from MPFR
-* Jonathan Bober - Dirichlet characters (the code in Arb is based on his Cython implementation), C++ compatibility fixes
+* Jonathan Bober - original code for Dirichlet characters, C++ compatibility fixes
 * Yuri Matiyasevich - feedback about the zeta function and root-finding code
 * Abhinav Baid - dot product and norm functions
 * Ondřej Čertík - bug reports, feedback
@@ -48,14 +53,12 @@ This list is probably incomplete.
 * Francesco Biscani - C++ compatibility fixes, feedback
 * Clemens Heuberger - work on Arb interface in Sage, feedback
 * Marc Mezzarobba - work on Arb interface in Sage, bug reports, feedback
-* Pascal Molin - feedback
 * Ricky Farr - convenience functions, feedback
 * Marcello Seri - fix for static builds on OS X
 * Tommy Hofmann - matrix transpose, comparison, other utility methods, Julia interface
 * Alexander Kobel - documentation and code cleanup patches
 * Hrvoje Abraham - patches for MinGW compatibility
 * Julien Puydt - soname versioning support
-* Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, Cholesky decomposition, miscellaneous patches
 * Jeroen Demeyer - patch for major bug on PPC64
 
 Funding
