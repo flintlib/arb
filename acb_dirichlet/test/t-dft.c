@@ -147,4 +147,6 @@ int main()
 
     flint_randclear(state);
     flint_printf("PASS\n");
+    return EXIT_SUCCESS;
 }
+
