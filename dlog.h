@@ -235,11 +235,12 @@ ulong dlog_table(const dlog_table_t t, ulong b);
 ulong dlog_crt(const dlog_crt_t t, ulong b);
 ulong dlog_power(const dlog_power_t t, ulong b);
 ulong dlog_modpe(const dlog_modpe_t t, ulong b);
-ulong dlog_mod2e(const dlog_modpe_t t, ulong b);
 ulong dlog_bsgs(const dlog_bsgs_t t, ulong b);
 ulong dlog_rho(const dlog_rho_t t, ulong b);
-ulong dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe);
+ulong dlog_1modpe_1modp(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe);
 ulong dlog_1modpe(const dlog_1modpe_t t, ulong b1, ulong p, ulong e, nmod_t pe);
+ulong dlog_mod2e_1mod4(ulong b1, ulong e, ulong inva, nmod_t pe);
+ulong dlog_mod2e(const dlog_modpe_t t, ulong b);
 /*#define dlog_bsgs(t, b) n_discrete_log_bsgs_table(t, b)*/
 
 #define DLOG_SMALL_LIM 50

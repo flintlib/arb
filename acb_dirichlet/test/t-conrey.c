@@ -123,11 +123,11 @@ int main()
 
             if (!acb_dirichlet_conrey_eq(G, x, y))
             {
-                flint_printf("FAIL: conrey log and exp\n\n");
+                flint_printf("FAIL: conrey exp and log\n\n");
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("conrey = ");
                 acb_dirichlet_conrey_print(G, x);
-                flint_printf("m = %wu\n\n", m);
+                flint_printf("\n\nm = %wu\n\n", m);
                 flint_printf("log = ");
                 acb_dirichlet_conrey_print(G, y);
                 flint_printf("\n\nnumber = %wu\n\n", y->n);

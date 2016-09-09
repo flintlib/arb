@@ -11,6 +11,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "dlog.h"
 #include "acb_dirichlet.h"
 
 /* TODO: use dlog module instead of n_discrete_log_bsgs */
@@ -27,7 +28,8 @@ acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G
       {
         ulong m2 = (x->log[0]) ? -m % G->q_even : m % G->q_even;
         if (G->P[1].dlog == NULL)
-            x->log[1] = n_discrete_log_bsgs(m2, 5, G->q_even);
+            x->log[1] = dlog_mod2e_1mod4(m2, G->P[1].e,
+                    nmod_inv(5, G->P[1].pe), G->P[1].pe);
         else
             x->log[1] = dlog_precomp(G->P[1].dlog, m2);
       }

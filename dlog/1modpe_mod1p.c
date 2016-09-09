@@ -13,7 +13,7 @@
 
 /* for odd prime p, assume b1 = 1 mod p */
 ulong
-dlog_1modpe_mod1p(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
+dlog_1modpe_1modp(ulong b1, ulong p, ulong e, ulong inv1p, nmod_t pe)
 {
     int f;
     ulong x, xf, pf, pf1;
