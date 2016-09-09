@@ -34,6 +34,14 @@ Types, macros and constants
 
 .. function:: void dlog_precomp_clear(dlog_precomp_t pre)
 
+Single evaluation
+-------------------------------------------------------------------------------
+
+.. function:: ulong dlog_once(ulong b, ulong a, const nmod_t mod, ulong n)
+
+   Returns `x` such that `b = a^x` in `(\mathbb Z/mod \mathbb Z)^\times`,
+   a has order *n*.
+
 Precomputations
 -------------------------------------------------------------------------------
 
@@ -58,7 +66,7 @@ group:
    Assume that *a* has primepower order *p*.
 
 
-Single evaluation
+Evaluation
 -------------------------------------------------------------------------------
 
 .. function:: ulong dlog_precomp(const dlog_precomp_t pre, ulong b)

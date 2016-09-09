@@ -14,7 +14,6 @@
 #include "dlog.h"
 #include "acb_dirichlet.h"
 
-/* TODO: use dlog module instead of n_discrete_log_bsgs */
 /* assume m is invertible */
 void
 acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
