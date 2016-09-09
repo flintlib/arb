@@ -10,6 +10,7 @@
 */
 
 #include "acb_dirichlet.h"
+#include "acb_poly.h"
 
 void
 acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
@@ -18,6 +19,10 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
     acb_t a, qs;
     acb_ptr zeta, z;
     acb_dirichlet_conrey_t cn;
+    int deflate;
+
+    /* remove pole in Hurwitz zeta at s = 1 */
+    deflate = acb_is_one(s);
 
     acb_dirichlet_conrey_init(cn, G);
     acb_init(qs);
@@ -35,7 +40,12 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
-        acb_hurwitz_zeta(z, s, a, prec);
+
+        if (!deflate)
+            acb_hurwitz_zeta(z, s, a, prec);
+        else
+            _acb_poly_zeta_cpx_series(z, s, a, 1, 1, prec);
+
         acb_mul(z, z, qs, prec);
 
         z++;
@@ -43,8 +53,13 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
 
     acb_dirichlet_dft_conrey(res, zeta, G, prec);
 
+    /* restore pole for the principal character */
+    if (deflate)
+        acb_indeterminate(res);
+
     acb_dirichlet_conrey_clear(cn);
     _acb_vec_clear(zeta, G->phi_q);
     acb_clear(qs);
     acb_clear(a);
 }
+
