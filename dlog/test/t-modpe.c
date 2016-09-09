@@ -11,6 +11,11 @@
 
 #include "dlog.h"
 #include <math.h>
+#if FLINT_BITS == 64
+#define LIM UWORD(1000000000000)
+#else
+#define LIM UWORD(1000000000)
+#endif
 
 int main()
 {
@@ -39,7 +44,7 @@ int main()
             e = 1;
         }
 
-        for (; pe < UWORD(1000000000000); pe *= p, e++)
+        for (; pe < LIM; pe *= p, e++)
         {
             ulong k, phi;
             nmod_t mod;
