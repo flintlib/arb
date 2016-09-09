@@ -13,7 +13,7 @@
 #include <math.h>
 
 static ulong
-dlog_once(ulong b, ulong a, const nmod_t mod, ulong n)
+dlog_single(ulong b, ulong a, const nmod_t mod, ulong n)
 {
     if (n < 50)
     {
@@ -27,7 +27,7 @@ dlog_once(ulong b, ulong a, const nmod_t mod, ulong n)
             ak = nmod_mul(ak, a, mod);
         }
 
-        flint_printf("FAIL[dlog once]: log(%wu,%wu) mod %wu not found (size %wu)\n",
+        flint_printf("FAIL[dlog single]: log(%wu,%wu) mod %wu not found (size %wu)\n",
                 b, a, mod.n, n);
         abort();
     }
@@ -60,7 +60,7 @@ dlog_quotient(const dlog_rho_t t, ulong e, ulong f, ulong g, ulong b)
     an = nmod_pow_ui(t->a, n.n, t->mod);
     b_ar = nmod_div(b, nmod_pow_ui(t->a, r, t->mod), t->mod);
 
-    return r + n.n * dlog_once(b_ar, an, t->mod, g);
+    return r + n.n * dlog_single(b_ar, an, t->mod, g);
 }
 
 #define RWALK 20

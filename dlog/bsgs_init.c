@@ -23,7 +23,7 @@ ulong
 dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
 {
     ulong k, ak;
-    if (m >= n) m = n + 1;
+    if (m >= n) m = n;
     t->table = (apow_t *)flint_malloc(m * sizeof(apow_t));
 
     nmod_init(&t->mod, mod);
