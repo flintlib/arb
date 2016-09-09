@@ -109,10 +109,26 @@ Conrey elements
 
 .. function:: int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 
-    This function allows to iterate on the elements of *G* looping on the *index*.
-    It produces elements in seemingly random *number* order. The return value
-    is the index of the last updated exponent of *x*, or *G->num* if the last
+    Sets *x* to the next conrey index in *G* with lexicographic ordering.
+    The return value
+    is the index of the last updated exponent of *x*, or *-1* if the last
     element has been reached.
+
+    This function allows to iterate on the elements of *G* looping on their *index*.
+    Note that it produces elements in seemingly random *number* order.
+
+    The following template can be used to loop over all elements *x* in *G*::
+
+        acb_conrey_one(x, G);
+        do {
+            /* use Conrey element x */
+        } while (acb_dirichlet_conrey_next(x, G) >= 0);
+
+
+.. function:: int acb_dirichlet_conrey_eq(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
+
+   Return 1 if *x* equals *y*. This function checks both *number* and *index*,
+   writing ``(x->n == y->n)`` gives a faster check.
 
 Dirichlet characters
 -------------------------------------------------------------------------------
@@ -130,12 +146,12 @@ the group *G* is isomorphic to its dual.
 
 .. function:: ulong acb_dirichlet_ui_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t a, const acb_dirichlet_conrey_t b)
 
-    Compute the value of the Dirichlet pairing on numbers *m* and *n*, as
-    exponent modulo *G->expo*.
-    The second form takes the index *a* and *b*, and does not take discrete
-    logarithms.
+   Compute the value of the Dirichlet pairing on numbers *m* and *n*, as
+   exponent modulo *G->expo*.
+   The second form takes the Conrey index *a* and *b*, and does not take discrete
+   logarithms.
 
-    The returned value is the numerator of the actual value exponent mod the group exponent *G->expo*.
+   The returned value is the numerator of the actual value exponent mod the group exponent *G->expo*.
 
 Character type
 -------------------------------------------------------------------------------
@@ -164,6 +180,14 @@ Character type
 .. function:: void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 
     Sets *chi* to the Dirichlet character of Conrey index *x*.
+
+.. function:: int acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
+
+   Return 1 if *chi1* equals *chi2*.
+
+.. function:: acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)
+
+   Return 1 if *chi* is the principal character mod *q*.
 
 Character properties
 -------------------------------------------------------------------------------
@@ -204,6 +228,10 @@ No discrete log computation is performed.
 
    Return the order of `\chi_q(a,\cdot)` which is the order of `a\mod q`.
    This number is precomputed for the *char* type.
+
+.. function:: acb_dirichlet_char_is_real(const acb_dirichlet_char_t chi)
+
+   Return 1 if *chi* is a real character (iff it has order `\leq 2`).
 
 Character evaluation
 -------------------------------------------------------------------------------
@@ -333,11 +361,11 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
 
    Compute the theta series `\Theta_q(a,t)` for real argument `t>0`.
    Beware that if `t<1` the functional equation
-   
+
    .. math::
-     
+
       t \theta(a,t) = \epsilon(\chi) \theta(\frac1a, \frac1t)
-   
+
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).
 
@@ -346,13 +374,13 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
    Compute the number of terms to be summed in the theta series of argument *t*
    so that the tail is less than `2^{-\mathrm{prec}}`.
 
-.. function:: void acb_dirichlet_arb_theta_naive(acb_t res, const arb_t x, int parity, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+.. function:: void acb_dirichlet_qseries_powers_naive(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
 
-.. function:: void acb_dirichlet_arb_theta_smallorder(acb_t res, const arb_t x, int parity, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+.. function:: void acb_dirichlet_qseries_powers_smallorder(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
 
    Compute the series `\sum n^p z^{a_n} x^{n^2}` for exponent list *a*,
    precomputed powers *z* and parity *p* (being 0 or 1).
-   
+
    The *naive* version sums the series as defined, while the *smallorder*
    variant evaluates the series on the quotient ring by a cyclotomic polynomial
    before evaluating at the root of unity, ignoring its argument *z*.
@@ -385,7 +413,7 @@ the Fourier transform on Conrey labels as
    Compute the DFT of *v* using Conrey indices.
    This function assumes *v* and *w* are vectors
    of size *G->phi_q*, whose values correspond to a lexicographic ordering
-   of Conrey indices.
+   of Conrey indices (as obtained using :func:`acb_dirichlet_conrey_next`).
 
    For example, if `q=15`, the Conrey elements are stored in following
    order
@@ -459,7 +487,7 @@ L-functions
 
       L(s,\chi) = q^{-s}\sum_{k=1}^{q-1} \chi(k) \zeta(s,\frac kq)
 
-   This formula is slow for large *q*.
+   This formula is slow for large *q* (and not defined for `s=1`).
 
 .. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_group_t G, slong prec)
 
@@ -482,4 +510,3 @@ Even if it is straightforward to convert a *conrey* index to the
 corresponding *char*, looping is faster at the
 level of Conrey representation. Things can be improved on this aspect
 but it makes code more intricate.
-

@@ -51,7 +51,7 @@ acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, con
 
 /* small order, multiply by chi at the end */
 void
-acb_dirichlet_qseries_arb_powers(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec)
+acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec)
 {
     slong k;
     ulong order = z->order;

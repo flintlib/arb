@@ -45,21 +45,24 @@ mag_tail_kexpk2_arb(mag_t res, const arb_t a, ulong n)
     mag_t m;
     mag_init(m);
     arb_get_mag_lower(m, a);
-    /* a < 1/4 ? */
+    /* a < 1/4 */
     if (mag_cmp_2exp_si(m, -2) <= 0)
     {
         mag_t c;
         mag_init(c);
-        mag_mul_ui(c, m, 2);
-        mag_addmul(c, c, c);
-        mag_mul_ui(res, m, n*n-n+1);
+        mag_mul_ui_lower(res, m, n*n-n+1);
         mag_expinv(res, res);
+        /* c = 2a(1+2a) */
+        mag_mul_ui(m, m, 2);
+        mag_set_ui(c, 1);
+        mag_add_lower(c, m, c);
+        mag_mul_lower(c, m, c);
         mag_div(res, res, c);
         mag_clear(c);
     }
     else
     {
-        mag_mul_ui(res, m, n*n-n-1);
+        mag_mul_ui_lower(res, m, n*n-n-1);
         mag_expinv(res, res);
         mag_mul_ui(res, res, 2);
     }

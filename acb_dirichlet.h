@@ -120,7 +120,6 @@ acb_dirichlet_conrey_copy(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t 
 }
 
 int acb_dirichlet_conrey_eq(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y);
-
 int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
@@ -184,6 +183,16 @@ void acb_dirichlet_char_clear(acb_dirichlet_char_t chi);
 void acb_dirichlet_char_print(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
 int acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2);
+ACB_DIRICHLET_INLINE int
+acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)
+{
+    return (chi->x->n == 1);
+}
+ACB_DIRICHLET_INLINE int
+acb_dirichlet_char_is_real(const acb_dirichlet_char_t chi)
+{
+    return (chi->order.n <= 2);
+}
 
 void acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n);
 void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
@@ -236,7 +245,7 @@ void acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_d
 void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
 void acb_dirichlet_qseries_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec);
 void acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
-void acb_dirichlet_qseries_arb_powers(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
 
 ulong acb_dirichlet_theta_length_d(ulong q, double x, slong prec);
 ulong acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec);
