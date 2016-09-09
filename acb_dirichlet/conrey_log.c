@@ -19,7 +19,7 @@
 void
 acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
 {
-    ulong k, pk, gk;
+    slong k;
     /* even part */
     if (G->neven >= 1)
     {
@@ -37,15 +37,14 @@ acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G
     /* odd part */
     for (k = G->neven; k < G->num; k++)
     {
-        if (G->P[k].dlog == NULL)
+        acb_dirichlet_prime_group_struct P = G->P[k];
+        if (P.dlog == NULL)
         {
-            pk = G->P[k].pe.n;
-            gk = G->P[k].g;
-            x->log[k] = n_discrete_log_bsgs(m % pk, gk, pk);
+            x->log[k] = dlog_once(m % P.pe.n, P.g, P.pe, P.phi);
         }
         else
         {
-            x->log[k] = dlog_precomp(G->P[k].dlog, m % G->P[k].pe.n);
+            x->log[k] = dlog_precomp(P.dlog, m % P.pe.n);
         }
     }
     /* keep value m */
