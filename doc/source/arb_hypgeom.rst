@@ -114,8 +114,74 @@ Error functions and Fresnel integrals
     Optionally, just a single function can be computed by passing *NULL*
     as the other output variable.
 
+Incomplete gamma and beta functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_gamma_upper(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec)
+
+    If *regularized* is 0, computes the upper incomplete gamma function
+    `\Gamma(s,z)`.
+
+    If *regularized* is 1, computes the regularized upper incomplete
+    gamma function `Q(s,z) = \Gamma(s,z) / \Gamma(s)`.
+
+    If *regularized* is 2, computes the generalized exponential integral
+    `z^{-s} \Gamma(s,z) = E_{1-s}(z)` instead (this option is mainly
+    intended for internal use; :func:`arb_hypgeom_expint` is the intended
+    interface for computing the exponential integral).
+
+.. function:: void _arb_hypgeom_gamma_upper_series(arb_ptr res, const arb_t s, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+
+.. function:: void arb_hypgeom_gamma_upper_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
+
+    Sets *res* to an upper incomplete gamma function where *s* is
+    a constant and *z* is a power series, truncated to length *n*.
+    The *regularized* argument has the same interpretation as in
+    :func:`arb_hypgeom_gamma_upper`.
+
+.. function:: void arb_hypgeom_gamma_lower(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec)
+
+    If *regularized* is 0, computes the lower incomplete gamma function
+    `\gamma(s,z) = \frac{z^s}{s} {}_1F_1(s, s+1, -z)`.
+
+    If *regularized* is 1, computes the regularized lower incomplete
+    gamma function `P(s,z) = \gamma(s,z) / \Gamma(s)`.
+
+    If *regularized* is 2, computes a further regularized lower incomplete
+    gamma function `\gamma^{*}(s,z) = z^{-s} P(s,z)`.
+
+.. function:: void _arb_hypgeom_gamma_lower_series(arb_ptr res, const arb_t s, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+
+.. function:: void arb_hypgeom_gamma_lower_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
+
+    Sets *res* to an lower incomplete gamma function where *s* is
+    a constant and *z* is a power series, truncated to length *n*.
+    The *regularized* argument has the same interpretation as in
+    :func:`arb_hypgeom_gamma_lower`.
+
+.. function:: void arb_hypgeom_beta_lower(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+
+    Computes the (lower) incomplete beta function, defined by
+    `B(a,b;z) = \int_0^z t^{a-1} (1-t)^{b-1}`,
+    optionally the regularized incomplete beta function
+    `I(a,b;z) = B(a,b;z) / B(a,b;1)`.
+
+.. function:: void _arb_hypgeom_beta_lower_series(arb_ptr res, const arb_t a, const arb_t b, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
+
+.. function:: void arb_hypgeom_beta_lower_series(arb_poly_t res, const arb_t a, const arb_t b, const arb_poly_t z, int regularized, slong n, slong prec)
+
+    Sets *res* to the lower incomplete beta function `B(a,b;z)` (optionally
+    the regularized version `I(a,b;z)`) where *a* and *b* are constants
+    and *z* is a power series, truncating the result to length *n*.
+    The underscore method requires positive lengths and does not support
+    aliasing.
+
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_expint(arb_t res, const arb_t s, const arb_t z, slong prec)
+
+    Computes the generalized exponential integral `E_s(z)`.
 
 .. function:: void arb_hypgeom_ei(arb_t res, const arb_t z, slong prec)
 

@@ -143,6 +143,11 @@ Basic properties and manipulation
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
 
+.. function:: slong acb_poly_valuation(const acb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
+
 Input and output
 -------------------------------------------------------------------------------
 
@@ -252,6 +257,14 @@ Arithmetic
 .. function:: void acb_poly_sub(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong prec)
 
     Sets *C* to the difference of *A* and *B*.
+
+.. function:: void acb_poly_add_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the sum of *A* and *B*, truncated to length *len*.
+
+.. function:: void acb_poly_sub_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the difference of *A* and *B*, truncated to length *len*.
 
 .. function:: void acb_poly_neg(acb_poly_t C, const acb_poly_t A)
 

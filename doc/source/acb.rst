@@ -128,27 +128,38 @@ Basic manipulation
 Input and output
 -------------------------------------------------------------------------------
 
+The *acb_print...* functions print to standard output, while
+*acb_fprint...* functions print to the stream *file*.
+
 .. function:: void acb_print(const acb_t x)
+
+.. function:: void acb_fprint(FILE * file, const acb_t x)
 
     Prints the internal representation of *x*.
 
-.. function:: void acb_printd(const acb_t z, slong digits)
+.. function:: void acb_printd(const acb_t x, slong digits)
+
+.. function:: void acb_fprintd(FILE * file, const acb_t x, slong digits)
 
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
 
-.. function:: void acb_fprint(FILE * file, const acb_t x)
+.. function:: void acb_printn(const acb_t x, slong digits, ulong flags)
 
-    Prints the internal representation of *x* to the stream *file*.
+.. function:: void acb_fprintn(FILE * file, const acb_t x, slong digits, ulong flags)
 
-.. function:: void acb_fprintd(FILE * file, const acb_t z, slong digits)
+    Prints a nice decimal representation of *x*, using the format of
+    :func:`arb_get_str` (or the corresponding :func:`arb_printn`) for the 
+    real and imaginary parts.
 
-    Prints *x* in decimal to the stream *file*.
-    The printed value of the radius is not adjusted
-    to compensate for the fact that the binary-to-decimal conversion
-    of both the midpoint and the radius introduces additional error.
+    By default, the output shows the midpoint of both the real and imaginary
+    parts with a guaranteed error of at most one unit in the last decimal
+    place. In addition, explicit error bounds are printed so that the displayed
+    decimal interval is guaranteed to enclose *x*.
 
+    Any flags understood by :func:`arb_get_str` can be passed via *flags*
+    to control the format of the real and imaginary parts.
 
 Random number generation
 -------------------------------------------------------------------------------

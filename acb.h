@@ -1009,6 +1009,14 @@ acb_printd(const acb_t z, slong digits)
     acb_fprintd(stdout, z, digits);
 }
 
+void acb_fprintn(FILE * fp, const acb_t z, long digits, ulong flags);
+
+ACB_INLINE void
+acb_printn(const acb_t x, slong digits, ulong flags)
+{
+    acb_fprintn(stdout, x, digits, flags);
+}
+
 void acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
 
 void acb_randtest_special(acb_t z, flint_rand_t state, slong prec, slong mag_bits);

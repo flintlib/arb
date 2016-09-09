@@ -137,6 +137,11 @@ Basic manipulation
     Truncates *poly* to have length at most *n*, i.e. degree
     strictly smaller than *n*.
 
+.. function:: slong arb_poly_valuation(const arb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
+
 Conversions
 -------------------------------------------------------------------------------
 
@@ -233,6 +238,14 @@ Arithmetic
 .. function:: void arb_poly_sub(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong prec)
 
     Sets *C* to the difference of *A* and *B*.
+
+.. function:: void arb_poly_add_series(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the sum of *A* and *B*, truncated to length *len*.
+
+.. function:: void arb_poly_sub_series(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the difference of *A* and *B*, truncated to length *len*.
 
 .. function:: void arb_poly_neg(arb_poly_t C, const arb_poly_t A)
 
