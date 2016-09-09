@@ -24,7 +24,7 @@ acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_gro
         if (cond % 8 == 0)
         {
             ulong l2 = x->log[1];
-            f = n_remove(&l2, 2);
+            n_remove(&l2, 2);
             y->log[l++] = l2;
         }
     }
@@ -38,7 +38,7 @@ acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_gro
             if (cond % p == 0)
             {
                 lp = x->log[k];
-                f = n_remove(&lp, p);
+                n_remove(&lp, p);
                 y->log[l++] = lp;
             }
         }
