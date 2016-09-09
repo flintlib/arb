@@ -14,6 +14,7 @@
 void
 acb_dirichlet_conrey_init(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G) {
     x->log = flint_malloc(G->num * sizeof(ulong));
+    acb_dirichlet_conrey_one(x, G);
 }
 
 void

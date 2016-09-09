@@ -22,7 +22,7 @@ _acb_dirichlet_theta_arb_smallorder(acb_t res, const acb_dirichlet_group_t G, co
     acb_dirichlet_ui_chi_vec(a, G, chi, len);
 
     _acb_dirichlet_powers_init(z, chi->order.n, 0, 0, prec);
-    acb_dirichlet_qseries_arb_powers(res, xt, chi->parity, a, z, len, prec);
+    acb_dirichlet_qseries_arb_powers_smallorder(res, xt, chi->parity, a, z, len, prec);
     acb_dirichlet_powers_clear(z);
 
     flint_free(a);
