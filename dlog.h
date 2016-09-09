@@ -178,6 +178,8 @@ void dlog_1modpe_init(dlog_1modpe_t t, ulong a1, ulong p, ulong e, nmod_t pe);
 void dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n);
 /*#define dlog_bsgs_init(t, a, n, m) bsgs_table_init(t, a, n, m)*/
 
+ulong dlog_once(ulong b, ulong a, const nmod_t mod, ulong n);
+
 DLOG_INLINE void
 dlog_order23_clear(dlog_order23_t t)
 {
