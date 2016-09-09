@@ -91,6 +91,7 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
                 smooth, limcount, mod.n, logcost, logcount, sievecount, missed);
 #endif
     n_primes_clear(iter);
+    dlog_precomp_clear(pre);
     for (k = mod.n + 1; k < nv; k++)
         v[k] = v[k - mod.n];
 }
