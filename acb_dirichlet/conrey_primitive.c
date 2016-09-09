@@ -14,7 +14,7 @@
 void
 acb_dirichlet_conrey_primitive(acb_dirichlet_conrey_t y, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, ulong cond)
 {
-    int k, l, f;
+    slong k, l;
 
     l = 0;
     if (cond % 4 == 0)

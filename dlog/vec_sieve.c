@@ -19,7 +19,10 @@ void
 dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
     ulong smooth = 0, sievecount = 0, logcount = 0, missed = 0;
-    ulong logcost, limcount;
+    ulong logcost;
+#if 0
+    ulong limcount;
+#endif
     ulong k, p, p1, pmax, logm1;
     dlog_precomp_t pre;
     n_primes_t iter;
@@ -36,6 +39,7 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
     dlog_precomp_n_init(pre, a, mod.n, na, p1);
     logcost = pre->cost;
 
+#if 0
     if (logcost < 15)
     {
         /* p1 = pmax; */
@@ -45,6 +49,7 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
     {
         limcount = ceil(pow((double)mod.n,1./2.3) * 40 / logcost);
     }
+#endif
 
     /* take big power of gen */
     X = n_nextprime(3 * na / 2, 0) % na;
@@ -62,7 +67,7 @@ dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
         cost = pow(cost,cost);
         sievecount++;
         /* if (p < p1 || (wp = logp_sieve(w, nv, p, mod.n, logm1, order, logcost)) == NOT_FOUND) */
-        /*if (smooth < limcount || (wp = logp_sieve_factor(w, nv, p, mod.n, a, na, va, logm1, order, logcost)) == NOT_FOUND)*/
+        /* if (smooth < limcount || (wp = logp_sieve_factor(w, nv, p, mod.n, a, na, va, logm1, order, logcost)) == NOT_FOUND)*/
         if (logcost < cost || (vp = dlog_vec_pindex_factorgcd(v, nv, p, mod, aX, na, vaX, logm1, order, cost)) == DLOG_NOT_FOUND)
         {
             if (logcost < cost)
