@@ -11,7 +11,9 @@
 */
 
 #include "acb_dirichlet.h"
+#include "acb_poly.h"
 
+/* todo: should document or fix that it doesn't allow aliasing */
 void
 acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
@@ -20,6 +22,20 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     acb_t t, u, a;
     acb_ptr z;
     acb_dirichlet_conrey_t cn;
+    int deflate;
+
+    /* remove pole in Hurwitz zeta at s = 1 */
+    deflate = 0;
+    if (acb_is_one(s))
+    {
+        /* character is principal */
+        if (chi->x->n == 1)
+        {
+            acb_indeterminate(res);
+            return;
+        }
+        deflate = 1;
+    }
 
     acb_dirichlet_conrey_init(cn, G);
     acb_init(t);
@@ -39,7 +55,11 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
-        acb_hurwitz_zeta(u, s, a, prec);
+
+        if (deflate == 0)
+            acb_hurwitz_zeta(u, s, a, prec);
+        else
+            _acb_poly_zeta_cpx_series(u, s, a, 1, 1, prec);
 
         acb_addmul(t, z + chin, u, prec);
 
@@ -57,3 +77,4 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     acb_clear(u);
     acb_clear(a);
 }
+
