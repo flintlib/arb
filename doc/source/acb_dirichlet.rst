@@ -174,7 +174,7 @@ No discrete log computation is performed.
 
 .. function:: ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G)
 
-   return the number of primitive elements in *G*.
+   Return the number of primitive elements in *G*.
 
 .. function:: ulong acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
 
@@ -234,7 +234,7 @@ Roots of unity
 
 .. function:: void acb_dirichlet_vec_nth_roots(acb_ptr z, slong order, slong prec)
 
-   compute the vector ``1,z,z^2,\dots z^{\mathrm{order}-1}`` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
+   Compute the vector ``1,z,z^2,\dots z^{\mathrm{order}-1}`` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
 
    In order to avoid precision loss, this function does not simply compute powers of a primitive root.
 
@@ -453,20 +453,23 @@ L-functions
 
 .. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 
-   Compute `L(s,\chi)` for `s\neq 1`, using decomposition in terms of Hurwitz zeta function
+    Compute `L(s,\chi)` using decomposition in terms of the Hurwitz zeta function
 
-   .. math::
+    .. math::
 
-      L(s,\chi) = q^{-s}\sum_{k=1}^{q-1} \chi(k) \zeta(s,\frac kq)
+        L(s,\chi) = q^{-s}\sum_{k=1}^{q-1} \chi(k) \,\zeta\!\left(s,\frac kq\right).
 
-   This formula is slow for large *q*.
+    If `s = 1` and `\chi` is non-principal, the deflated Hurwitz zeta function
+    is used to avoid poles.
+
+    This formula is slow for large *q*.
 
 .. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_group_t G, slong prec)
 
-   Compute all values `L(s,\chi)` for `\chi` mod `q`, by Hurwitz formula and
-   discrete Fourier transform.
-   *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered Conrey
-   index. See :func:`acb_dirichlet_dft_conrey`.
+    Compute all values `L(s,\chi)` for `\chi` mod `q`, by Hurwitz formula and
+    discrete Fourier transform.
+    *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered Conrey
+    index. See :func:`acb_dirichlet_dft_conrey`.
 
 Implementation notes
 -------------------------------------------------------------------------------
