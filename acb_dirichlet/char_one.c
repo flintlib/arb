@@ -14,10 +14,12 @@
 void
 acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 {
+    slong k;
     acb_dirichlet_conrey_one(chi->x, G);
     chi->q = G->q;
     chi->conductor = 1;
     chi->parity = 0;
-    acb_dirichlet_char_set_expo(chi, G);
-    acb_dirichlet_char_normalize(chi, G);
+    for (k = 0; k < G->num; k++)
+        chi->expo[k] = 0;
+    nmod_init(&(chi->order), 1);
 }

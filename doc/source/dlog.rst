@@ -71,7 +71,7 @@ Evaluation
 
 .. function:: ulong dlog_precomp(const dlog_precomp_t pre, ulong b)
 
-   Returns `\log(b)` for the group described in *pre*
+   Returns `\log(b)` for the group described in *pre*.
 
 Vector evaluations
 -------------------------------------------------------------------------------
@@ -100,14 +100,14 @@ Algorithms
 
 Several discrete logarithms strategies are implemented:
 
-- Complete lookup table for small groups
+- Complete lookup table for small groups.
 
-- Baby-step giant-step table
+- Baby-step giant-step table.
 
-combined with mathematical reductions
+combined with mathematical reductions:
 
 - Pohlig-Hellman decomposition (Chinese remainder decomposition on the
-  order of the group and base `p` decomposition for primepower order)
+  order of the group and base `p` decomposition for primepower order).
 
 - p-adic log for primepower modulus `p^e`.
 
@@ -115,7 +115,7 @@ For *dlog_vec* functions which compute the vector of discrete logarithms
 of successive integers `1\dots n`:
 
 - A simple loop on group elements avoiding all logarithms is done when
-  the group size is comparable with the number of elements requested
+  the group size is comparable with the number of elements requested.
 
 - Otherwise the logarithms are computed on primes and propagated by
   Eratosthene-like sieving on composite numbers.

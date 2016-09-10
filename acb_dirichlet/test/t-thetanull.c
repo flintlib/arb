@@ -106,6 +106,7 @@ int main()
         } while (acb_dirichlet_char_next_primitive(chi, G) >= 0);
 
         _acb_vec_clear(z, G->expo);
+        _arb_vec_clear(kt, nv);
         _arb_vec_clear(t, nv);
         acb_clear(sum);
         arb_clear(eq);

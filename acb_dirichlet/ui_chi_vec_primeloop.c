@@ -51,7 +51,7 @@ acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, cons
 {
     slong k, l;
 
-    for (k = 1; k < nv; k++)
+    for (k = 0; k < nv; k++)
         v[k] = 0;
 
     if (G->neven)
