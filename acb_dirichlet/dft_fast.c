@@ -161,7 +161,7 @@ _acb_dft_cyc(acb_ptr w, acb_srcptr v, dft_cyc_step * cyc, slong num, slong prec)
         /* reorder */
         for (i = 0; i < m; i++)
             for (j = 0; j < M; j++)
-                w[j + M * i] = t[i + m * j];
+                acb_set(w + j + M * i, t + i + m * j);
         _acb_vec_clear(t, m * M);
     }
 }
@@ -216,7 +216,7 @@ _acb_dft_prod(acb_ptr w, acb_srcptr v, dft_prod_step * cyc, slong num, slong pre
         /* reorder */
         for (i = 0; i < m; i++)
             for (j = 0; j < M; j++)
-                w[j + M * i] = t[i + m * j];
+                acb_set(w + j + M * i, t + i + m * j);
         _acb_vec_clear(t, m * M);
     }
 }
