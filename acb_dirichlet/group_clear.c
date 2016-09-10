@@ -15,6 +15,17 @@
 void
 acb_dirichlet_group_clear(acb_dirichlet_group_t G)
 {
+    slong k;
+
+    for (k = 0; k < G->num; k++)
+    {
+        if (G->P[k].dlog != NULL)
+        {
+            dlog_precomp_clear(G->P[k].dlog);
+            flint_free(G->P[k].dlog);
+        }
+    }
+
     flint_free(G->P);
     flint_free(G->generators);
     flint_free(G->PHI);
