@@ -27,6 +27,7 @@ acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t c
 
         v = acb_dirichlet_ui_chi_conrey(G, chi, x);
 
+        acb_dirichlet_conrey_clear(x);
         return v;
     }
 }
