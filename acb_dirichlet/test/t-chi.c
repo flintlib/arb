@@ -120,6 +120,7 @@ int main()
         }
 
         acb_dirichlet_group_clear(G);
+        acb_dirichlet_char_clear(chi);
         acb_clear(zn1);
         acb_clear(zn2);
         acb_clear(zn1n2);
