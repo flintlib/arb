@@ -20,7 +20,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (iter = 0; iter < 3000; iter++)
+    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
     {
         acb_dirichlet_group_t G;
         acb_dirichlet_conrey_t x, y;
@@ -78,77 +78,77 @@ int main()
             abort();
         }
 
-        if (q % 4 == 2)
-            continue;
-
-        acb_dirichlet_conrey_first_primitive(x, G);
-        for (n = 1; acb_dirichlet_conrey_next_primitive(x, G) >= 0; n++);
-
-        ref = acb_dirichlet_number_primitive(G);
-        if (n != ref)
+        if (q % 4 != 2)
         {
-            flint_printf("FAIL: number of primitive elements\n\n");
-            flint_printf("q = %wu\n\n", q);
-            flint_printf("# primitive = %wu\n\n", ref);
-            flint_printf("loop index = %wu\n\n", n);
-            abort();
-        }
+            acb_dirichlet_conrey_first_primitive(x, G);
+            for (n = 1; acb_dirichlet_conrey_next_primitive(x, G) >= 0; n++);
 
-
-        /* some random elements, check log and exp */
-        for (n = 0; n < 30; n++)
-        {
-            slong k;
-            ulong m;
-
-            for (m = 1; n_gcd(m, q) > 1; m = n_randint(state, q));
-            acb_dirichlet_conrey_log(x, G, m);
-
-            if (m != acb_dirichlet_conrey_exp(x, G))
+            ref = acb_dirichlet_number_primitive(G);
+            if (n != ref)
             {
-                flint_printf("FAIL: conrey log and exp\n\n");
+                flint_printf("FAIL: number of primitive elements\n\n");
                 flint_printf("q = %wu\n\n", q);
-                flint_printf("m = %wu\n\n", m);
-                flint_printf("conrey = ");
-                acb_dirichlet_conrey_print(G, x);
-                flint_printf("\n\nnumber = %wu\n\n", x->n);
+                flint_printf("# primitive = %wu\n\n", ref);
+                flint_printf("loop index = %wu\n\n", n);
                 abort();
             }
 
-            for (k = 0; k < G->num; k++)
-                x->log[k] = n_randint(state, G->P[k].phi);
 
-            m = acb_dirichlet_conrey_exp(x, G);
-            acb_dirichlet_conrey_log(y, G, m);
-
-            if (!acb_dirichlet_conrey_eq(G, x, y))
+            /* some random elements, check log and exp */
+            for (n = 0; n < 30; n++)
             {
-                flint_printf("FAIL: conrey exp and log\n\n");
-                flint_printf("q = %wu\n\n", q);
-                flint_printf("conrey = ");
-                acb_dirichlet_conrey_print(G, x);
-                flint_printf("\n\nm = %wu\n\n", m);
-                flint_printf("log = ");
-                acb_dirichlet_conrey_print(G, y);
-                flint_printf("\n\nnumber = %wu\n\n", y->n);
-                abort();
-            }
+                slong k;
+                ulong m;
 
-            acb_dirichlet_conrey_next_primitive(x, G);
-            m = x->n;
+                for (m = 1; n_gcd(m, q) > 1; m = n_randint(state, q));
+                acb_dirichlet_conrey_log(x, G, m);
 
-            if (m != acb_dirichlet_conrey_exp(x, G))
-            {
-                flint_printf("FAIL: conrey number next primitive\n\n");
-                flint_printf("q = %wu\n\n", q);
-                flint_printf("conrey = ");
-                acb_dirichlet_conrey_print(G, y);
-                flint_printf(", m = %wu\n\n", y->n);
-                flint_printf("next primitive = ");
-                acb_dirichlet_conrey_print(G, x);
-                flint_printf(", m = %wu\n\n", m);
-                flint_printf("exp = %wu\n\n", x->n);
-                abort();
+                if (m != acb_dirichlet_conrey_exp(x, G))
+                {
+                    flint_printf("FAIL: conrey log and exp\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("m = %wu\n\n", m);
+                    flint_printf("conrey = ");
+                    acb_dirichlet_conrey_print(G, x);
+                    flint_printf("\n\nnumber = %wu\n\n", x->n);
+                    abort();
+                }
+
+                for (k = 0; k < G->num; k++)
+                    x->log[k] = n_randint(state, G->P[k].phi);
+
+                m = acb_dirichlet_conrey_exp(x, G);
+                acb_dirichlet_conrey_log(y, G, m);
+
+                if (!acb_dirichlet_conrey_eq(G, x, y))
+                {
+                    flint_printf("FAIL: conrey exp and log\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("conrey = ");
+                    acb_dirichlet_conrey_print(G, x);
+                    flint_printf("\n\nm = %wu\n\n", m);
+                    flint_printf("log = ");
+                    acb_dirichlet_conrey_print(G, y);
+                    flint_printf("\n\nnumber = %wu\n\n", y->n);
+                    abort();
+                }
+
+                acb_dirichlet_conrey_next_primitive(x, G);
+                m = x->n;
+
+                if (m != acb_dirichlet_conrey_exp(x, G))
+                {
+                    flint_printf("FAIL: conrey number next primitive\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("conrey = ");
+                    acb_dirichlet_conrey_print(G, y);
+                    flint_printf(", m = %wu\n\n", y->n);
+                    flint_printf("next primitive = ");
+                    acb_dirichlet_conrey_print(G, x);
+                    flint_printf(", m = %wu\n\n", m);
+                    flint_printf("exp = %wu\n\n", x->n);
+                    abort();
+                }
             }
         }
 
