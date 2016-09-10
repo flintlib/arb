@@ -255,10 +255,14 @@ void _acb_dirichlet_theta_argument_at_arb(arb_t xt, ulong q, const arb_t t, slon
 void acb_dirichlet_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec);
 void acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec);
 
+void acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+
+void _acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+void acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
 void acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec);
 
