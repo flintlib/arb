@@ -46,4 +46,7 @@ dlog_vec_eratos_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na,
 
     for (k = mod.n + 1; k < nv; k++)
         v[k] = v[k - mod.n];
+
+    dlog_precomp_clear(pre);
 }
+
