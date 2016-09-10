@@ -75,6 +75,20 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
 }
 
 void
+acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong prec)
+{
+    if (chi->parity)
+    {
+        arb_zero(acb_realref(res));
+        arb_sqrt_ui(acb_imagref(res), chi->q, prec);
+    }
+    else
+    {
+        arb_zero(acb_imagref(res));
+        arb_sqrt_ui(acb_realref(res), chi->q, prec);
+    }
+}
+void
 acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
     /* TODO: no need, factor also does it... */
@@ -84,16 +98,7 @@ acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     }
     else if (chi->order.n <= 2)
     {
-        if (chi->parity)
-        {
-            arb_sqrt_ui(acb_imagref(res), G->q, prec);
-            arb_zero(acb_realref(res));
-        }
-        else
-        {
-            arb_sqrt_ui(acb_realref(res), G->q, prec);
-            arb_zero(acb_imagref(res));
-        }
+        acb_dirichlet_gauss_sum_order2(res, chi, prec);
     }
     else if (G->num  > 1 && G->num > G->neven)
     {
