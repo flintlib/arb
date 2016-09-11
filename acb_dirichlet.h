@@ -271,6 +271,7 @@ void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const ac
 
 void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_group_t G, slong prec);
+void acb_dirichlet_l_incgam(acb_t res, const acb_t s, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
 /* Discrete Fourier Transform */
 
