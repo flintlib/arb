@@ -15,12 +15,13 @@
 void
 dlog_precomp_modpe_init(dlog_precomp_t pre, ulong a, ulong p, ulong e, ulong pe, ulong num)
 {
-    if ( pe < DLOG_TABLE_MODPE_LIM )
+    if (pe < DLOG_TABLE_MODPE_LIM)
     {
         dlog_precomp_small_init(pre, a, pe, pe - pe / p, num);
         return;
     }
-    else {
+    else
+    {
         if (e > 1)
         {
             pre->type = DLOG_MODPE;

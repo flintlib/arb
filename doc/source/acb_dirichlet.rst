@@ -168,9 +168,12 @@ Character type
 
 .. function:: void acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 
+    Initializes *chi* to an element of the group *G* and sets its value
+    to the principal character.
+
 .. function:: void acb_dirichlet_char_clear(acb_dirichlet_char_t chi)
 
-    Initializes and clear *chi*.
+    Clears *chi*.
 
 .. function:: void acb_dirichlet_char(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, ulong n)
 
@@ -188,6 +191,22 @@ Character type
 .. function:: acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)
 
    Return 1 if *chi* is the principal character mod *q*.
+
+.. function:: void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+
+    Sets *chi* to the principal character.
+
+.. function:: int acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+
+    Sets *x* to the next character in *G* with lexicographic Conrey ordering
+    (see :func:`acb_dirichlet_conrey_next`). The return value
+    is the index of the last updated exponent of *x*, or *-1* if the last
+    element has been reached.
+
+.. function:: int acb_dirichlet_char_next_primitive(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
+
+    Like :func:`acb_dirichlet_char_next`, but only generates primitive
+    characters.
 
 Character properties
 -------------------------------------------------------------------------------
@@ -226,10 +245,10 @@ No discrete log computation is performed.
 
 .. function:: ulong acb_dirichlet_char_order(const acb_dirichlet_char_t chi)
 
-   Return the order of `\chi_q(a,\cdot)` which is the order of `a\mod q`.
+   Return the order of `\chi_q(a,\cdot)` which is the order of `a\bmod q`.
    This number is precomputed for the *char* type.
 
-.. function:: acb_dirichlet_char_is_real(const acb_dirichlet_char_t chi)
+.. function:: int acb_dirichlet_char_is_real(const acb_dirichlet_char_t chi)
 
    Return 1 if *chi* is a real character (iff it has order `\leq 2`).
 
@@ -328,7 +347,7 @@ Gauss and Jacobi sums
 
    .. math::
 
-      G_q(a) = \sum_{x \mod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
+      G_q(a) = \sum_{x \bmod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
 
 .. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
 
@@ -336,7 +355,7 @@ Gauss and Jacobi sums
 
    .. math::
 
-      J_q(a,b) = \sum_{x \mod q} \chi_q(a, x)\chi_q(b, 1-x)
+      J_q(a,b) = \sum_{x \bmod q} \chi_q(a, x)\chi_q(b, 1-x)
 
 Theta sums
 -------------------------------------------------------------------------------
@@ -355,16 +374,16 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
 
    \Theta_q(a,t) = \sum_{n\geq 0} \chi_q(a, n) x(t)^{n^2}.
 
-.. function:: void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec);
+.. function:: void acb_dirichlet_chi_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec)
 
-.. function:: void acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec);
+.. function:: void acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec)
 
    Compute the theta series `\Theta_q(a,t)` for real argument `t>0`.
    Beware that if `t<1` the functional equation
 
    .. math::
 
-      t \theta(a,t) = \epsilon(\chi) \theta(\frac1a, \frac1t)
+      t \theta(a,t) = \epsilon(\chi) \theta\left(\frac1a, \frac1t\right)
 
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).

@@ -51,7 +51,7 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
-    for (bits = 10; bits <= 35; bits += 5)
+    for (bits = 10; bits <= FLINT_MIN(35, FLINT_BITS); bits += 5)
     {
 
         for (nv = 10; nv <= 10000; nv *= 10)
