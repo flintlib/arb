@@ -135,7 +135,7 @@ Basic manipulation
 .. function:: void arb_poly_truncate(arb_poly_t poly, slong n)
 
     Truncates *poly* to have length at most *n*, i.e. degree
-    strictly smaller than *n*.
+    strictly smaller than *n*. We require that *n* is nonnegative.
 
 .. function:: slong arb_poly_valuation(const arb_poly_t poly)
 
