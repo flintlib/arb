@@ -37,7 +37,7 @@ dlog_precomp_clear(dlog_precomp_t pre)
             dlog_order23_clear(pre->t.order23);
             break;
         default:
-            printf("THE TYPE IS %d\n", pre->type);
+            flint_printf("dlog_precomp_clear: unknown type %d\n", pre->type);
             abort();
             break;
     }

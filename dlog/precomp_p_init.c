@@ -10,13 +10,12 @@
 */
 
 #include "dlog.h"
-#include "math.h"
 
 /* we known the order is prime */
 void
 dlog_precomp_p_init(dlog_precomp_t pre, ulong a, ulong mod, ulong p, ulong num)
 {
-    if ( p < DLOG_TABLE_P_LIM )
+    if (p < DLOG_TABLE_P_LIM)
     {
         dlog_precomp_small_init(pre, a, mod, p, num);
     }

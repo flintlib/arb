@@ -21,7 +21,7 @@ dlog_precomp_small_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong n
     }
     else
     {
-        if ( mod < DLOG_TABLE_LIM )
+        if (mod < DLOG_TABLE_LIM)
         {
             pre->type = DLOG_TABLE;
             pre->cost = dlog_table_init(pre->t.table, a, mod);

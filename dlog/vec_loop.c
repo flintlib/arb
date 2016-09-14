@@ -26,6 +26,6 @@ dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
         vx = nmod_add(vx, va, order);
     }
     while (x != 1);
-    for(x = mod.n + 1; x < nv; x++)
+    for (x = mod.n + 1; x < nv; x++)
         v[x] = v[x - mod.n];
 }
