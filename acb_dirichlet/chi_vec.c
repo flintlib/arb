@@ -29,7 +29,7 @@ acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirich
         if (a[k] != ACB_DIRICHLET_CHI_NULL)
             acb_dirichlet_power(v + k, t, a[k], prec);
         else
-            *(v + k) = *(v + 0);
+            acb_zero(v + k);
     }
 
     acb_dirichlet_powers_clear(t);
