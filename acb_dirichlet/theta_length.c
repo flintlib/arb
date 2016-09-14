@@ -50,11 +50,11 @@ mag_tail_kexpk2_arb(mag_t res, const arb_t a, ulong n)
     {
         mag_t c;
         mag_init(c);
-        mag_mul_ui_lower(res, m, n*n-n+1);
+        mag_mul_ui_lower(res, m, n*n-n+1);  /* todo: possible overflow */
         mag_expinv(res, res);
         /* c = 2a(1+2a) */
-        mag_mul_ui(m, m, 2);
-        mag_set_ui(c, 1);
+        mag_mul_2exp_si(m, m, 1);
+        mag_one(c);
         mag_add_lower(c, m, c);
         mag_mul_lower(c, m, c);
         mag_div(res, res, c);
@@ -62,7 +62,7 @@ mag_tail_kexpk2_arb(mag_t res, const arb_t a, ulong n)
     }
     else
     {
-        mag_mul_ui_lower(res, m, n*n-n-1);
+        mag_mul_ui_lower(res, m, n*n-n-1);  /* todo: possible overflow */
         mag_expinv(res, res);
         mag_mul_ui(res, res, 2);
     }
