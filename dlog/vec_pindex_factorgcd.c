@@ -92,9 +92,9 @@ dlog_vec_pindex_factorgcd(ulong * v, ulong nv, ulong p, nmod_t mod, ulong a, ulo
         logr = (j) ? logm1 : 0;
         logr = nmod_add(logr, v[r[i]], order);
         for (i=0; i < ir; i++)
-            logr = nmod_add(logr, (re[i] * v[rp[i]]) % order.n, order);
+            logr = nmod_add(logr, nmod_mul(re[i], v[rp[i]], order), order);
         for (i=0; i < iu; i++)
-            logm = nmod_add(logm, (ue[i] * v[up[i]]) % order.n, order);
+            logm = nmod_add(logm, nmod_mul(ue[i], v[up[i]], order), order);
 
         return nmod_sub(logr, logm, order);
     }
