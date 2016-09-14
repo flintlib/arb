@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 int
-acb_dirichlet_conrey_eq(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
+acb_dirichlet_conrey_eq_deep(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
 {
     slong k;
 
