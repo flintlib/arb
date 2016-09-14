@@ -43,7 +43,7 @@ int main()
             {
                 int par;
                 ulong m, n;
-                ulong order, chim1, pairing, cond;
+                ulong order, chim1, pairing, cn, cm, cond;
 
                 do
                     m = n_randint(state, q);
@@ -53,7 +53,7 @@ int main()
                 acb_dirichlet_conrey_log(x, G, m);
                 acb_dirichlet_char_conrey(chi2, G, x);
 
-                if (!acb_dirichlet_char_eq(G, chi, chi2))
+                if (!acb_dirichlet_char_eq_deep(G, chi, chi2))
                 {
                     flint_printf("FAIL: init char\n\n");
                     flint_printf("q = %wu\n\n", q);
@@ -107,15 +107,18 @@ int main()
 
                 acb_dirichlet_char(chi2, G, n);
                 pairing = acb_dirichlet_ui_pairing(G, m, n);
+                cn = acb_dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order.n);
+                cm = acb_dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order.n);
 
-                if (pairing != acb_dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order.n)
-                        || pairing != acb_dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order.n))
+                if (pairing != cn || pairing != cm)
                 {
                     flint_printf("FAIL: pairing\n\n");
                     flint_printf("q = %wu\n\n", q);
                     flint_printf("m = %wu\n\n", m);
                     flint_printf("n = %wu\n\n", n);
                     flint_printf("chi(m,n) = %wu\n\n", pairing);
+                    flint_printf("chi(m)(n) = %wu\n\n", cn);
+                    flint_printf("chi(n)(m) = %wu\n\n", cm);
                     abort();
                 }
 
@@ -123,7 +126,7 @@ int main()
                 acb_dirichlet_char_next(chi, G);
                 acb_dirichlet_char_conrey(chi2, G, x);
 
-                if (!acb_dirichlet_char_eq(G, chi, chi2))
+                if (!acb_dirichlet_char_eq_deep(G, chi, chi2))
                 {
                     flint_printf("FAIL: next char\n\n");
                     flint_printf("q = %wu\n\n", q);
