@@ -18,7 +18,8 @@ dlog_precomp_n_init(dlog_precomp_t pre, ulong a, ulong mod, ulong n, ulong num)
 {
     if (n % 2 && n_is_probabprime(n))
         dlog_precomp_p_init(pre, a, mod, n, num);
-    else {
+    else
+    {
         if (n < DLOG_TABLE_N_LIM)
         {
            dlog_precomp_small_init(pre, a, mod, n, num);
