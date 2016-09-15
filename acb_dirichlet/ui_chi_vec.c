@@ -14,7 +14,7 @@
 void
 acb_dirichlet_ui_chi_vec(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
-    if (3 * nv > G->q)
+    if (2 * nv > G->q)
         acb_dirichlet_ui_chi_vec_loop(v, G, chi, nv);
     else
         acb_dirichlet_ui_chi_vec_primeloop(v, G, chi, nv);

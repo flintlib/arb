@@ -164,6 +164,7 @@ do_conreyplusorder(ulong q1, ulong q2)
 
     return n;
 }
+
 int main(int argc, char *argv[])
 {
     int out;
