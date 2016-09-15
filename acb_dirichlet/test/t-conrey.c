@@ -25,8 +25,7 @@ int main()
         acb_dirichlet_group_t G;
         acb_dirichlet_conrey_t x, y;
         ulong q, n, k, sum;
-        long ref;
-        /*int * bits;*/
+        slong ref;
 
         q = 1 + n_randint(state, 1000 * (1 + iter / 100));
 
@@ -39,43 +38,34 @@ int main()
         acb_dirichlet_conrey_one(x, G);
         sum = 1;
 
-#if 1
         for (n = 1; acb_dirichlet_conrey_next(x, G) >= 0; n++)
             sum += x->n * x->n;
-#else
-        /* iteration much faster than gcd below */
-        n = 1;
-        for (k = 2; k < G->q; k++)
-        {
-            if (n_gcd(k, G->q) > 1)
-                continue;
-            n++;
-            sum += k * k;
-        }
-#endif
 
-        /* use http://oeis.org/A053818 to check all elements
-         * are gone through */
-        ref = (q % 4 == 2) ? -2 : 1;
-        for (k = (G->neven == 2); k < G->num; k++)
-            ref = - ref * G->P[k].p;
-        ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
+        if (FLINT_BITS == 64 || q < 1024)
+        {
+            /* use http://oeis.org/A053818 to check all elements
+             * are gone through */
+            ref = (q % 4 == 2) ? -2 : 1;
+            for (k = (G->neven == 2); k < G->num; k++)
+                ref = - ref * G->P[k].p;
+            ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
 
-        if (n != G->phi_q)
-        {
-            flint_printf("FAIL: group size\n\n");
-            flint_printf("q = %wu\n\n", q);
-            flint_printf("phi(q) = %wu\n\n", G->phi_q);
-            flint_printf("loop index = %wu\n\n", n);
-            abort();
-        }
-        if (sum != ref && q > 1)
-        {
-            flint_printf("FAIL: sum test\n\n");
-            flint_printf("q = %wu\n\n", q);
-            flint_printf("sum k^2 = %wu\n\n", ref);
-            flint_printf("sum obtained = %wu\n\n", sum);
-            abort();
+            if (n != G->phi_q)
+            {
+                flint_printf("FAIL: group size\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("phi(q) = %wu\n\n", G->phi_q);
+                flint_printf("loop index = %wu\n\n", n);
+                abort();
+            }
+            if (sum != ref && q > 1)
+            {
+                flint_printf("FAIL: sum test\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("sum k^2 = %wu\n\n", ref);
+                flint_printf("sum obtained = %wu\n\n", sum);
+                abort();
+            }
         }
 
         if (q % 4 != 2)
@@ -92,7 +82,6 @@ int main()
                 flint_printf("loop index = %wu\n\n", n);
                 abort();
             }
-
 
             /* some random elements, check log and exp */
             for (n = 0; n < 30; n++)
