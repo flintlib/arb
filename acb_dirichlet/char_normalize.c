@@ -16,7 +16,8 @@ acb_dirichlet_char_set_expo(acb_dirichlet_char_t chi, const acb_dirichlet_group_
 {
     slong k;
     for (k = 0; k < G->num; k++)
-        chi->expo[k] = (chi->x->log[k] * G->PHI[k]) % G->expo;
+        /* no overflow: log[k] < phi[k] and G->expo = phi[k] * PHI[k] */
+        chi->expo[k] = chi->x->log[k] * G->PHI[k];
 }
 
 void

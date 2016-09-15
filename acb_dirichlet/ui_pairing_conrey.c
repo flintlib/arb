@@ -22,7 +22,7 @@ acb_dirichlet_ui_pairing_conrey(const acb_dirichlet_group_t G, const acb_dirichl
     x = 0;
 
     for (k = 0; k < G->num; k++)
-        x = (x + G->PHI[k] * a->log[k] * b->log[k]) % G->expo;
+        x = n_addmod(x, G->PHI[k] * n_mulmod2(a->log[k], b->log[k], G->P[k].phi), G->expo);
 
     return x;
 }
