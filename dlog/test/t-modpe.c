@@ -73,6 +73,10 @@ int main()
             }
 
             dlog_modpe_clear(modpe);
+
+            /* multiplication can overflow on 32-bit */
+            if ((double) pe * p > LIM)
+                break;
         }
     }
 

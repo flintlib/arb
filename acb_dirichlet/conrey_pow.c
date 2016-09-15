@@ -16,6 +16,6 @@ acb_dirichlet_conrey_pow(acb_dirichlet_conrey_t c, const acb_dirichlet_group_t G
 {
     ulong k;
     for (k = 0; k < G->num ; k++)
-      c->log[k] = (a->log[k]  * n) % G->P[k].phi;
+        c->log[k] = n_mulmod2(a->log[k], n, G->P[k].phi);
     c->n = nmod_pow_ui(a->n, n, G->mod);
 }

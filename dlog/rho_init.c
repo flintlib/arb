@@ -10,7 +10,6 @@
 */
 
 #include "dlog.h"
-#include <math.h>
 
 void
 dlog_rho_init(dlog_rho_t t, ulong a, ulong mod, ulong n)

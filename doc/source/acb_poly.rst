@@ -141,7 +141,7 @@ Basic properties and manipulation
 .. function:: void acb_poly_truncate(acb_poly_t poly, slong n)
 
     Truncates *poly* to have length at most *n*, i.e. degree
-    strictly smaller than *n*.
+    strictly smaller than *n*. We require that *n* is nonnegative.
 
 .. function:: slong acb_poly_valuation(const acb_poly_t poly)
 
@@ -364,7 +364,7 @@ Arithmetic
 
 .. function:: void _acb_poly_divrem(acb_ptr Q, acb_ptr R, acb_srcptr A, slong lenA, acb_srcptr B, slong lenB, slong prec)
 
-.. function:: void acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, slong prec)
+.. function:: int acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, slong prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
     a remainder `R` such that `A = BQ + R`. The implementation reverses the

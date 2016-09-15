@@ -120,7 +120,7 @@ int main()
                 m = acb_dirichlet_conrey_exp(x, G);
                 acb_dirichlet_conrey_log(y, G, m);
 
-                if (!acb_dirichlet_conrey_eq(G, x, y))
+                if (!acb_dirichlet_conrey_eq_deep(G, x, y))
                 {
                     flint_printf("FAIL: conrey exp and log\n\n");
                     flint_printf("q = %wu\n\n", q);
