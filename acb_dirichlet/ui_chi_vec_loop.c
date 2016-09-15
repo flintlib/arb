@@ -38,7 +38,7 @@ acb_dirichlet_ui_chi_vec_loop(ulong *v, const acb_dirichlet_group_t G, const acb
     }
 
     /* fix result outside primes */
-    /*acb_dirichlet_vec_set_null(v, G, nv);*/
+    /* acb_dirichlet_vec_set_null(v, G, nv);*/
     /* copy outside modulus */
 
     for (k = G->q; k < nv ; k++ )
