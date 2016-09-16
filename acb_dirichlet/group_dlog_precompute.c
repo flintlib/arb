@@ -18,11 +18,28 @@ acb_dirichlet_prime_group_dlog_precompute(acb_dirichlet_prime_group_struct * P, 
     dlog_precomp_modpe_init(P->dlog, P->g, P->p, P->e, P->pe.n, num);
 }
 
-
 void
 acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num)
 {
     slong k;
     for (k = 0; k < G->num; k++)
-        acb_dirichlet_prime_group_dlog_precompute(&G->P[k], num);
+    {
+        if (G->P[k].dlog == NULL)
+            acb_dirichlet_prime_group_dlog_precompute(&G->P[k], num);
+    }
+}
+
+void
+acb_dirichlet_group_dlog_clear(acb_dirichlet_group_t G)
+{
+    slong k;
+    for (k = 0; k < G->num; k++)
+    {
+        if (G->P[k].dlog != NULL)
+        {
+            dlog_precomp_clear(G->P[k].dlog);
+            flint_free(G->P[k].dlog);
+            G->P[k].dlog = NULL;
+        }
+    }
 }
