@@ -405,13 +405,13 @@ Gauss and Jacobi sums
 
 .. function:: void acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
 
-.. function:: void acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+.. function:: void acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
 
-.. function:: void acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+.. function:: void acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
 
 .. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
 
-.. function:: void acb_dirichlet_jacobi_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, ulong b, slong prec);
+.. function:: void acb_dirichlet_jacobi_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, ulong b, slong prec)
 
    Compute the Jacobi sum
 
