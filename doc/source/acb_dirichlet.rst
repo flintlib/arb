@@ -28,9 +28,15 @@ in going from residue classes mod *q* to exponents on a set
 of generators of the group.
 
 This implementation relies on the Conrey numbering scheme
-introduced in the LMFDB.
-We call *number* a residue class modulo *q*, and *index* the
-corresponding vector of exponents of Conrey generators.
+introduced in the LMFDB, which is an explicit choice of isomorphism
+
+.. math::
+
+   (\mathbb Z/q\mathbb Z)^\times & \to &\bigoplus_i \mathbb Z/\phi_i\mathbb Z \\
+   x & \mapsto & (e_i)
+
+We call *number* a residue class `x` modulo *q*, and *index* the
+corresponding vector `(e_i)` of exponents of Conrey generators.
 
 Going from an *index* to the corresponding *number* is a cheap
 operation while the converse requires computing discrete
@@ -70,7 +76,7 @@ logarithms.
 .. function:: void acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h)
 
    Given an already computed group *G* mod `q`, initialize its subgroup *H*
-   defined mod `h\mid q`. Precomputed discrete logs tables are kept.
+   defined mod `h\mid q`. Precomputed discrete log tables are kept.
 
 .. function:: void acb_dirichlet_group_clear(acb_dirichlet_group_t G)
 
@@ -125,10 +131,12 @@ Conrey elements
         } while (acb_dirichlet_conrey_next(x, G) >= 0);
 
 
-.. function:: int acb_dirichlet_conrey_eq(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
+.. function:: int acb_dirichlet_conrey_eq(const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
 
-   Return 1 if *x* equals *y*. This function checks both *number* and *index*,
-   writing ``(x->n == y->n)`` gives a faster check.
+.. function:: int acb_dirichlet_conrey_eq_deep(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
+
+   Return 1 if *x* equals *y*.
+   The second version checks every byte of the representation and is intended for testing only.
 
 Dirichlet characters
 -------------------------------------------------------------------------------
@@ -140,7 +148,15 @@ power of a primitive root of unity, the special value *ACB_DIRICHLET_CHI_NULL*
 encoding the zero value.
 
 The Conrey numbering scheme makes explicit the mathematical fact that
-the group *G* is isomorphic to its dual.
+the group *G* is isomorphic to its dual, so that a character is described by
+a *number*.
+
+.. math::
+
+   \begin{array}{ccccc}
+   (\mathbb Z/q\mathbb Z)^\times \times (\mathbb Z/q\mathbb Z)^\times & \to & \bigoplus_i \mathbb Z/\phi_i\mathbb Z \times \mathbb Z/\phi_i\mathbb Z & \to &\mathbb C \\
+   (m,n) & \mapsto& (a_i,b_i) &\mapsto& \chi_q(m,n) = \exp(2i\pi\sum \frac{a_ib_i}{\phi_i} )
+   \end{array}
 
 .. function:: ulong acb_dirichlet_ui_pairing(const acb_dirichlet_group_t G, ulong m, ulong n)
 
@@ -184,9 +200,12 @@ Character type
 
     Sets *chi* to the Dirichlet character of Conrey index *x*.
 
-.. function:: int acb_dirichlet_char_eq(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
+.. function:: int acb_dirichlet_char_eq(const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
+
+.. function:: int acb_dirichlet_char_eq_deep(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 
    Return 1 if *chi1* equals *chi2*.
+   The second version checks every byte of the representation and is intended for testing only.
 
 .. function:: acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)
 
@@ -263,7 +282,7 @@ unity.
 
 .. function:: ulong acb_dirichlet_ui_chi(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n)
 
-   Compute that value `\chi(a)` as the exponent mod the order of `\chi`.
+   Compute that value `\chi(n)` as the exponent mod the order of `\chi`.
 
 .. function:: void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
 
@@ -341,21 +360,68 @@ Character operations
 Gauss and Jacobi sums
 -------------------------------------------------------------------------------
 
+.. function:: void acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
 .. function:: void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_gauss_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, slong prec)
 
    Compute the Gauss sum
 
    .. math::
 
-      G_q(a) = \sum_{x \bmod q} \chi_q(a, x)e^{\frac{2i\pi x}q}
+      G_q(a) = \sum_{x \bmod q} \chi_q(a, x) e^{\frac{2i\pi x}q}
+
+   - the *naive* version computes the sum as defined.
+
+   - the *factor* version writes it as a product of local Gauss sums by chinese
+     remainder theorem.
+
+   - the *order2* version assumes *chi* is real and primitive and returns
+     `i^p\sqrt q` where `p` is the parity of `\chi`.
+
+   - the *theta* version assumes that *chi* is primitive to obtain the Gauss
+     sum by functional equation of the theta series at `t=1`. An abort will be
+     raised if the theta series vanishes at `t=1`. Only 4 exceptional
+     characters of conductor 300 and 600 are known to have this particularity,
+     and none with primepower modulus.
+
+   - the default version automatically combines the above methods.
+
+   - the *ui* version only takes the Conrey number *a* as parameter.
+
+.. function:: void acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
+
+.. function:: void acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+
+.. function:: void acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
 
 .. function:: void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1,  const acb_dirichlet_char_t chi2, slong prec)
+
+.. function:: void acb_dirichlet_jacobi_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, ulong b, slong prec);
 
    Compute the Jacobi sum
 
    .. math::
 
       J_q(a,b) = \sum_{x \bmod q} \chi_q(a, x)\chi_q(b, 1-x)
+
+   - the *naive* version computes the sum as defined.
+
+   - the *factor* version writes it as a product of local Jacobi sums
+
+   - the *gauss* version assumes `ab` is primitive and uses the formula
+     `J_q(a,b)G_q(ab) = G_q(a)G_q(b)`
+
+   - the default version automatically combines the above methods.
+
+   - the *ui* version only takes the Conrey numbers *a* and *b* as parameters.
 
 Theta sums
 -------------------------------------------------------------------------------

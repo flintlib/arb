@@ -88,6 +88,7 @@ acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong 
         arb_sqrt_ui(acb_realref(res), chi->q, prec);
     }
 }
+
 void
 acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 {
@@ -111,4 +112,14 @@ acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_diri
         else
             acb_dirichlet_gauss_sum_theta(res, G, chi, prec);
     }
+}
+
+void
+acb_dirichlet_gauss_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, slong prec)
+{
+    acb_dirichlet_char_t chi;
+    acb_dirichlet_char_init(chi, G);
+    acb_dirichlet_char(chi, G, a);
+    acb_dirichlet_gauss_sum(res, G, chi, prec);
+    acb_dirichlet_char_clear(chi);
 }
