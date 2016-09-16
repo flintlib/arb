@@ -72,6 +72,7 @@ void acb_dirichlet_group_init(acb_dirichlet_group_t G, ulong q);
 void acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h);
 void acb_dirichlet_group_clear(acb_dirichlet_group_t G);
 void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num);
+void acb_dirichlet_group_dlog_clear(acb_dirichlet_group_t G);
 
 /* properties of elements without log */
 

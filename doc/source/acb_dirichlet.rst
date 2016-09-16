@@ -76,11 +76,12 @@ logarithms.
 .. function:: void acb_dirichlet_subgroup_init(acb_dirichlet_group_t H, const acb_dirichlet_group_t G, ulong h)
 
    Given an already computed group *G* mod `q`, initialize its subgroup *H*
-   defined mod `h\mid q`. Precomputed discrete log tables are kept.
+   defined mod `h\mid q`. Precomputed discrete log tables are inherited.
 
 .. function:: void acb_dirichlet_group_clear(acb_dirichlet_group_t G)
 
-    Clears *G*.
+    Clears *G*. Remark this function does *not* clear the discrete logarithm
+    tables stored in *G* (which may be shared with another group).
 
 .. function:: void acb_dirichlet_group_dlog_precompute(acb_dirichlet_group_t G, ulong num)
 
@@ -88,6 +89,12 @@ logarithms.
     so as to minimize the complexity of *num* calls to discrete logarithms.
 
     If *num* gets very large, the entire group may be indexed.
+
+.. function:: void acb_dirichlet_group_dlog_clear(acb_dirichlet_group_t G, ulong num)
+
+   Clear discrete logarithm tables in *G*. When discrete logarithm tables are
+   shared with subgroups, those subgroups must be cleared before clearing the
+   tables.
 
 Conrey elements
 -------------------------------------------------------------------------------

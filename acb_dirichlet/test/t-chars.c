@@ -140,6 +140,8 @@ int main()
 
             }
 
+            acb_dirichlet_group_dlog_clear(G);
+
             acb_dirichlet_char_clear(chi);
             acb_dirichlet_char_clear(chi2);
             acb_dirichlet_conrey_clear(x);
