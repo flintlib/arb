@@ -259,6 +259,7 @@ void acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const a
 void acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec);
 
 void acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+ulong jacobi_one_prime(ulong p, ulong e, ulong pe, ulong cond);
 void acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
 void acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
 void acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
