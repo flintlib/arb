@@ -96,7 +96,7 @@ void acb_dirichlet_conrey_clear(acb_dirichlet_conrey_t x);
 void acb_dirichlet_conrey_print(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 
 ACB_DIRICHLET_INLINE void
-acb_dirichlet_conrey_copy(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t y)
+acb_dirichlet_conrey_set(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t y)
 {
     slong k;
     x->n = y->n;
@@ -109,6 +109,7 @@ acb_dirichlet_conrey_eq(const acb_dirichlet_conrey_t x, const acb_dirichlet_conr
 {
     return (x->n == y->n);
 }
+
 int acb_dirichlet_conrey_eq_deep(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y);
 int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
@@ -172,11 +173,26 @@ void acb_dirichlet_char_init(acb_dirichlet_char_t chi, const acb_dirichlet_group
 void acb_dirichlet_char_clear(acb_dirichlet_char_t chi);
 void acb_dirichlet_char_print(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi);
 
+ACB_DIRICHLET_INLINE void
+acb_dirichlet_char_set(acb_dirichlet_char_t chi1, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi2)
+{
+    slong k;
+
+    chi1->q = chi2->q;
+    chi1->conductor = chi2->conductor;
+    chi1->order = chi2->order;
+    chi1->parity = chi2->parity;
+    acb_dirichlet_conrey_set(chi1->x, G, chi2->x);
+    for (k = 0; k < G->num; k++)
+        chi1->expo[k] = chi2->expo[k];
+}
+
 ACB_DIRICHLET_INLINE int
 acb_dirichlet_char_eq(const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 {
     return (chi1->q == chi2->q && chi1->x->n == chi2->x->n);
 }
+
 int acb_dirichlet_char_eq_deep(const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2);
 ACB_DIRICHLET_INLINE int
 acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)

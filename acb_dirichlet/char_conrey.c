@@ -20,7 +20,7 @@ acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t 
     if (x == NULL)
         x = chi->x;
     else
-        acb_dirichlet_conrey_copy(chi->x, G, x);
+        acb_dirichlet_conrey_set(chi->x, G, x);
 
     chi->q = G->q;
     chi->parity = acb_dirichlet_conrey_parity(G, x);

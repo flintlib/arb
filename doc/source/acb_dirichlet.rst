@@ -120,9 +120,19 @@ Conrey elements
 
     Sets *x* to the *number* `1\in G`, having *index* `[0,\dots 0]`.
 
+.. function:: void acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+
+    Sets *x* to the first primitive element of *G*, having *index* `[1,\dots 1]`,
+    or `[0, 1, \dots 1]` if `8\mid q`.
+
+.. function:: void acb_dirichlet_conrey_set(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t y)
+
+    Sets *x* to the element *y*.
+
 .. function:: int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 
     Sets *x* to the next conrey index in *G* with lexicographic ordering.
+
     The return value
     is the index of the last updated exponent of *x*, or *-1* if the last
     element has been reached.
@@ -137,6 +147,10 @@ Conrey elements
             /* use Conrey element x */
         } while (acb_dirichlet_conrey_next(x, G) >= 0);
 
+.. function:: int acb_dirichlet_conrey_next_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
+
+    Same as :func:`acb_dirichlet_conrey_next`, but jumps to the next element
+    corresponding to a primitive character of *G*.
 
 .. function:: int acb_dirichlet_conrey_eq(const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
 
@@ -216,11 +230,15 @@ Character type
 
 .. function:: acb_dirichlet_char_is_principal(const acb_dirichlet_char_t chi)
 
-   Return 1 if *chi* is the principal character mod *q*.
+    Return 1 if *chi* is the principal character mod *q*.
 
 .. function:: void acb_dirichlet_char_one(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 
     Sets *chi* to the principal character.
+
+.. function:: void acb_dirichlet_char_set(acb_dirichlet_char_t chi1, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi2)
+
+    Sets *chi1* to the character *chi2*.
 
 .. function:: int acb_dirichlet_char_next(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G)
 
