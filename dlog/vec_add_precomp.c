@@ -10,18 +10,14 @@
 */
 
 #include "dlog.h"
-#include <math.h>
 
-#define vbs 0
-
-/* TODO: tune the limit dlog -> index calculus */
 void
-dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
+dlog_vec_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order)
 {
-    ulong p1 = 50; /* FIXME: tune this limit! */
-    dlog_precomp_t pre;
-
-    dlog_precomp_n_init(pre, a, mod.n, na, p1);
-    dlog_vec_sieve_precomp(v, nv, pre, a, va, mod, na, order);
-    dlog_precomp_clear(pre);
+    if (va == 0)
+        return;
+    if (na * DLOG_LOOP_MAX_FACTOR < nv)
+        dlog_vec_loop_add(v, nv, a, va, mod, na, order);
+    else
+        dlog_vec_sieve_add_precomp(v, nv, pre, a, va, mod, na, order);
 }

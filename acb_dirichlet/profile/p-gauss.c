@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
         acb_dirichlet_gauss_sum_theta,
         acb_dirichlet_gauss_sum,
         acb_dirichlet_gauss_sum };
-    char * name[5] = { "naive", "factor", "theta", "default", "default+log" };
+    char * name[5] = { "naive", "factor", "theta", "default", "precomp" };
 
     int i, ni = 5;
     ulong qmin[5] =  {  3,  50, 500, 1000, 10000 };
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 
                     acb_dirichlet_group_init(G, q);
                     if (l == 4)
-                        acb_dirichlet_group_dlog_precompute(G, q);
+                        acb_dirichlet_group_dlog_precompute(G, 1);
                     acb_dirichlet_char_init(chi, G);
                     acb_dirichlet_char_first_primitive(chi, G);
                     acb_init(res);
