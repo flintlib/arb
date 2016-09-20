@@ -62,7 +62,10 @@ acb_dirichlet_ui_chi_vec_primeloop(ulong *v, const acb_dirichlet_group_t G, cons
         acb_dirichlet_prime_group_struct P = G->P[l];
 
         /* FIXME: there may be some precomputed dlog in P if needed */
-        dlog_vec_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, chi->order);
+        if (P.dlog == NULL)
+            dlog_vec_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, chi->order);
+        else
+            dlog_vec_add_precomp(v, nv, P.dlog, P.g, chi->expo[l], P.pe, P.phi, chi->order);
 
     }
     acb_dirichlet_ui_vec_set_null(v, G, nv);

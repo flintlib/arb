@@ -259,4 +259,9 @@ void dlog_vec_sieve(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na
 void dlog_vec_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 
+
+void dlog_vec_sieve_precomp(ulong *v, ulong nv, dlog_precomp_t pre,  ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+
 #endif

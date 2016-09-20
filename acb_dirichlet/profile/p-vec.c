@@ -42,7 +42,7 @@ do_dlog_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_c
 }
 
 static void
-do_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_eratos(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
 	slong k, p, pmax;
 	n_primes_t iter;
@@ -81,12 +81,16 @@ int main(int argc, char *argv[])
     flint_rand_t state;
     slong r, nr;
 
-    int l, nf = 6;
-    do_f func[6] = { do_empty, acb_dirichlet_ui_chi_vec_loop, do_dlog_primeloop,
-        acb_dirichlet_ui_chi_vec_primeloop, do_sieve,
+    int l, nf = 9;
+    do_f func[9] = { do_empty, acb_dirichlet_ui_chi_vec_loop, do_dlog_primeloop,
+        acb_dirichlet_ui_chi_vec_primeloop, do_eratos,
+        acb_dirichlet_ui_chi_vec,
+        acb_dirichlet_ui_chi_vec,
+        acb_dirichlet_ui_chi_vec,
         acb_dirichlet_ui_chi_vec };
-    char * name[6] = { "char only", "big loop", "prime loops",
-        "prime dlog_vec", "manual sieve", "default" };
+    char * name[9] = { "char only", "big loop", "prime loops",
+        "prime dlog_vec", "manual eratos", "default",
+        "precomp 1", "precomp 20", "precomp 100" };
 
     int i, ni = 5;
     ulong qmin[5] =  {   2, 1000, 3000, 10000, 100000 };
@@ -131,11 +135,15 @@ int main(int argc, char *argv[])
         {
 
             if (out == LOG)
-                flint_printf("%wu * chi(rand, 1..%wu) for all %wu <= q <= %wu....\n", nr, nv[j], qmin[i], qmax[i]);
+                flint_printf("%wu * ui_chi(rand, 1..%wu) for all %wu <= q <= %wu....\n", nr, nv[j], qmin[i], qmax[i]);
 
             for (l = 0; l < nf; l++)
             {
                 ulong q;
+
+                /* eratos too slow */
+                if (l == 4 && i > 2)
+                    continue;
 
                 if (out == LOG)
                     flint_printf("%-14s ...  ", name[l]);
@@ -155,11 +163,17 @@ int main(int argc, char *argv[])
                     acb_dirichlet_group_init(G, q);
                     acb_dirichlet_char_init(chi, G);
 
+                    if (l >= 6)
+                        acb_dirichlet_group_dlog_precompute(G, (l == 6) ? 1 : (l==7) ? 20 : 100);
+
                     for (r = 0; r < nr; r++)
                     {
                         acb_dirichlet_char(chi, G, rand[r] % q);
                         func[l](v, G, chi, nv[j]);
                     }
+
+                    if (l >= 6)
+                        acb_dirichlet_group_dlog_clear(G);
 
                     acb_dirichlet_char_clear(chi);
                     acb_dirichlet_group_clear(G);
