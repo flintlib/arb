@@ -27,12 +27,13 @@ int main(int argc, char *argv[])
     flint_rand_t state;
     slong r, nr;
 
-    int l, nf = 4;
-    do_f func[4] = { acb_dirichlet_gauss_sum_naive,
+    int l, nf = 5;
+    do_f func[5] = { acb_dirichlet_gauss_sum_naive,
         acb_dirichlet_gauss_sum_factor,
         acb_dirichlet_gauss_sum_theta,
+        acb_dirichlet_gauss_sum,
         acb_dirichlet_gauss_sum };
-    char * name[4] = { "naive", "factor", "theta", "default" };
+    char * name[5] = { "naive", "factor", "theta", "default", "default+log" };
 
     int i, ni = 5;
     ulong qmin[5] =  {  3,  50, 500, 1000, 10000 };
@@ -94,6 +95,8 @@ int main(int argc, char *argv[])
                         continue;
 
                     acb_dirichlet_group_init(G, q);
+                    if (l == 4)
+                        acb_dirichlet_group_dlog_precompute(G, q);
                     acb_dirichlet_char_init(chi, G);
                     acb_dirichlet_char_first_primitive(chi, G);
                     acb_init(res);
@@ -104,6 +107,8 @@ int main(int argc, char *argv[])
 
                     acb_clear(res);
                     acb_dirichlet_char_clear(chi);
+                    if (l == 4)
+                        acb_dirichlet_group_dlog_clear(G);
                     acb_dirichlet_group_clear(G);
                 }
 

@@ -15,6 +15,7 @@ void
 acb_dirichlet_prime_group_dlog_precompute(acb_dirichlet_prime_group_struct * P, ulong num)
 {
     P->dlog = flint_malloc(sizeof(dlog_precomp_t));
+    /* even if e = 1 use modpe struct, more flexible if reused in bigger group */
     dlog_precomp_modpe_init(P->dlog, P->g, P->p, P->e, P->pe.n, num);
 }
 

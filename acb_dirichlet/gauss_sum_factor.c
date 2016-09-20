@@ -18,6 +18,7 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
     slong k;
     acb_t tmp;
 
+    /* early check */
     for (k = (G->neven == 2); k < G->num; k++)
     {
         /* if e > 1 and not primitive, 0 */
@@ -53,7 +54,7 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
 
         acb_dirichlet_char_conrey(chip, Gp, NULL);
 
-        /*  chi_pe(a, q/pe) * G_pe(a) */
+        /* chi_pe(a, q/pe) * G_pe(a) */
         acb_dirichlet_gauss_sum(tmp, Gp, chip, prec);
         acb_mul(res, res, tmp, prec);
 
