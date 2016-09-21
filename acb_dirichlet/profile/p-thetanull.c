@@ -184,12 +184,12 @@ int main(int argc, char *argv[])
             slong it = 0;
             /* look for vanishing theta values for prime power moduli */
             n_primes_init(iter);
-            n_primes_jump_after(iter, qmin - 1);
 
             while ((p = n_primes_next(iter)) < qmax)
             {
 
-                for (q = p; q < qmax; q *= p)
+                for (q = p; q < qmin; q*= p);
+                for (; q < qmax; q *= p)
                     check_q(q, odd, prec, digits, onlymod);
 
                 if (step && (it++ % step == 0))
