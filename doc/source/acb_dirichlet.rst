@@ -35,11 +35,11 @@ introduced in the LMFDB, which is an explicit choice of isomorphism
    (\mathbb Z/q\mathbb Z)^\times & \to &\bigoplus_i \mathbb Z/\phi_i\mathbb Z \\
    x & \mapsto & (e_i)
 
-We call *number* a residue class `x` modulo *q*, and *index* the
+We call *number* a residue class `x` modulo *q*, and *log* the
 corresponding vector `(e_i)` of exponents of Conrey generators.
 
-Going from an *index* to the corresponding *number* is a cheap
-operation while the converse requires computing discrete
+Going from a *log* to the corresponding *number* is a cheap
+operation called exp, while the converse requires computing discrete
 logarithms.
 
 .. type:: acb_dirichlet_group_struct
@@ -104,12 +104,12 @@ Conrey elements
 .. type:: acb_dirichlet_conrey_t
 
     Represents elements of the unit group mod *q*, keeping both the
-    *number* (residue class) and *index* (exponents on the group
+    *number* (residue class) and *log* (exponents on the group
     generators).
 
 .. function:: void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m)
 
-    Sets *x* to the element of number *m*, computing its index using discrete
+    Sets *x* to the element of number *m*, computing its log using discrete
     logarithm in *G*.
 
 .. function:: ulong acb_dirichlet_conrey_exp(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
@@ -118,11 +118,11 @@ Conrey elements
 
 .. function:: void acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 
-    Sets *x* to the *number* `1\in G`, having *index* `[0,\dots 0]`.
+    Sets *x* to the *number* `1\in G`, having *log* `[0,\dots 0]`.
 
 .. function:: void acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 
-    Sets *x* to the first primitive element of *G*, having *index* `[1,\dots 1]`,
+    Sets *x* to the first primitive element of *G*, having *log* `[1,\dots 1]`,
     or `[0, 1, \dots 1]` if `8\mid q`.
 
 .. function:: void acb_dirichlet_conrey_set(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t y)
@@ -131,13 +131,13 @@ Conrey elements
 
 .. function:: int acb_dirichlet_conrey_next(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G)
 
-    Sets *x* to the next conrey index in *G* with lexicographic ordering.
+    Sets *x* to the next conrey element in *G* with lexicographic ordering.
 
     The return value
     is the index of the last updated exponent of *x*, or *-1* if the last
     element has been reached.
 
-    This function allows to iterate on the elements of *G* looping on their *index*.
+    This function allows to iterate on the elements of *G* looping on their *log*.
     Note that it produces elements in seemingly random *number* order.
 
     The following template can be used to loop over all elements *x* in *G*::
@@ -151,6 +151,14 @@ Conrey elements
 
     Same as :func:`acb_dirichlet_conrey_next`, but jumps to the next element
     corresponding to a primitive character of *G*.
+
+.. function:: ulong acb_dirichlet_index_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
+
+    Returns the lexicographic index of *x* as an integer in `0\dots \varphi(q)`.
+
+.. function:: void acb_dirichlet_conrey_index(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong j)
+
+    Sets *x* to the Conrey element of lexicographic index *j*.
 
 .. function:: int acb_dirichlet_conrey_eq(const acb_dirichlet_conrey_t x, const acb_dirichlet_conrey_t y)
 
@@ -219,7 +227,7 @@ Character type
 
 .. function:: void acb_dirichlet_char_conrey(acb_dirichlet_char_t chi, const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x)
 
-    Sets *chi* to the Dirichlet character of Conrey index *x*.
+    Sets *chi* to the Dirichlet character corresponding to *x*.
 
 .. function:: int acb_dirichlet_char_eq(const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2)
 
@@ -256,7 +264,7 @@ Character properties
 -------------------------------------------------------------------------------
 
 As a consequence of the Conrey numbering, all these numbers are available at the
-level of *number* and *index*, and for *char*.
+level of *number* and Conrey *log* elements, and for *char*.
 No discrete log computation is performed.
 
 .. function:: ulong acb_dirichlet_number_primitive(const acb_dirichlet_group_t G)
@@ -523,25 +531,26 @@ the Fourier transform on Conrey labels as
    Compute the DFT of *v* using Conrey indices.
    This function assumes *v* and *w* are vectors
    of size *G->phi_q*, whose values correspond to a lexicographic ordering
-   of Conrey indices (as obtained using :func:`acb_dirichlet_conrey_next`).
+   of Conrey logs (as obtained using :func:`acb_dirichlet_conrey_next` or
+   by :func:`acb_dirichlet_index_conrey`).
 
    For example, if `q=15`, the Conrey elements are stored in following
    order
 
-   ============  =====================
-   index [e,f]     number = 7^e 11^f
-   ============  =====================
-   [0, 0]        1
-   [0, 1]        7
-   [0, 2]        4
-   [0, 3]        13
-   [0, 4]        1
-   [1, 0]        11
-   [1, 1]        2
-   [1, 2]        14
-   [1, 3]        8
-   [1, 4]        11
-   ============  =====================
+   =======  =============  =====================
+    index    log = [e,f]     number = 7^e 11^f
+   =======  =============  =====================
+      0       [0, 0]        1
+      1       [0, 1]        7
+      2       [0, 2]        4
+      3       [0, 3]        13
+      4       [0, 4]        1
+      5       [1, 0]        11
+      6       [1, 1]        2
+      7       [1, 2]        14
+      8       [1, 3]        8
+      9       [1, 4]        11
+   =======  =============  =====================
 
 .. function:: void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
 
@@ -606,21 +615,20 @@ L-functions
 
     Compute all values `L(s,\chi)` for `\chi` mod `q`, by Hurwitz formula and
     discrete Fourier transform.
-    *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered Conrey
-    index. See :func:`acb_dirichlet_dft_conrey`.
+    *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered
+    Conrey logs. See :func:`acb_dirichlet_dft_conrey`.
 
 Implementation notes
 -------------------------------------------------------------------------------
 
 The current implementation introduces a *char* type which contains a *conrey*
-index plus additional information which
+log plus additional information which
 
 - makes evaluation of a single character a bit faster
 
 - has some initialization cost.
 
-Even if it is straightforward to convert a *conrey* index to the
+Even if it is straightforward to convert a *conrey* log to the
 corresponding *char*, looping is faster at the
 level of Conrey representation. Things can be improved on this aspect
 but it makes code more intricate.
-

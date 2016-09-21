@@ -114,8 +114,12 @@ int acb_dirichlet_conrey_eq_deep(const acb_dirichlet_group_t G, const acb_dirich
 int acb_dirichlet_conrey_parity(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_conductor(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 ulong acb_dirichlet_conrey_order(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
+
 void acb_dirichlet_conrey_log(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong m);
 ulong acb_dirichlet_conrey_exp(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
+
+void acb_dirichlet_conrey_index(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G, ulong j);
+ulong acb_dirichlet_index_conrey(const acb_dirichlet_group_t G, const acb_dirichlet_conrey_t x);
 
 void acb_dirichlet_conrey_one(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
 void acb_dirichlet_conrey_first_primitive(acb_dirichlet_conrey_t x, const acb_dirichlet_group_t G);
