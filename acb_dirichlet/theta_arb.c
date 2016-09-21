@@ -89,5 +89,7 @@ acb_dirichlet_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     arb_add_error_mag(acb_imagref(res), e);
 
     mag_clear(e);
+
+    acb_mul_2exp_si(res, res, 1);
     arb_clear(xt);
 }
