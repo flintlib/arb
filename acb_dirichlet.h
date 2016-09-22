@@ -274,7 +274,7 @@ void acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, s
 void acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
-void _acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+void acb_dirichlet_root_number_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 void acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
 
 void acb_dirichlet_si_poly_evaluate(acb_t res, slong * v, slong len, const acb_t z, slong prec);
