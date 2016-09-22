@@ -598,6 +598,20 @@ Simple functions
 L-functions
 -------------------------------------------------------------------------------
 
+.. function:: void acb_dirichlet_root_number_theta(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+.. function:: void acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+
+   Sets *res* to the root number `\epsilon(\chi)` for a primitive character *chi*,
+   which appears in the functional equation (where `p` is the parity of `\chi`):
+
+   .. math::
+
+      \frac{q}{π})^{\frac{s+p}2}\Gamma(\frac{s+p}2) L(s, \chi) = \epsilon(\chi) \frac{q}{π})^{\frac{1-s+p}2}\Gamma(\frac{1-s+p}2) L(1 - s, \overline\chi)
+
+    The *theta* variant uses the evaluation at `t=1` of the Theta series.
+    The default version computes it via the gauss sum.
+
 .. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
 
     Compute `L(s,\chi)` using decomposition in terms of the Hurwitz zeta function

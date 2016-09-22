@@ -11,7 +11,6 @@
 
 #include "acb_dirichlet.h"
 
-/* TODO: product of local conductors */
 ulong
 acb_dirichlet_ui_conductor(const acb_dirichlet_group_t G, ulong a)
 {

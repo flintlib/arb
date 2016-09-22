@@ -27,7 +27,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const acb_dirichlet_group_t G, const ac
         acb_t iq;
         acb_init(iq);
         acb_dirichlet_gauss_sum_order2(iq, chi, prec);
-        _acb_dirichlet_root_number(res, G, chi, prec);
+        acb_dirichlet_root_number_theta(res, G, chi, prec);
         acb_mul(res, res, iq, prec);
         acb_clear(iq);
     }
