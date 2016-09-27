@@ -22,6 +22,7 @@ vec_extract(acb_srcptr v, slong step, slong len)
         res[k] = v[l];
     return res;
 }
+
 void
 _acb_dft_base(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong n, slong prec)
 {
