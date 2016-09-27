@@ -291,9 +291,27 @@ void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet
 
 /* Discrete Fourier Transform */
 
+#define CRT_MAX 15
+typedef struct
+{
+    int num;
+    nmod_t n;
+    slong m[CRT_MAX];
+    ulong M[CRT_MAX];
+    ulong vM[CRT_MAX];
+}
+crt_struct;
+
+typedef crt_struct crt_t[1];
+
+void crt_init(crt_t c, ulong n);
+
+void crt_decomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len);
+void crt_recomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len);
 void acb_dirichlet_vec_nth_roots(acb_ptr z, slong len, slong prec);
 void _acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, acb_srcptr z, slong len, slong prec);
 void acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
+void acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_fast(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
 
@@ -306,6 +324,14 @@ acb_vec_printd(acb_srcptr vec, slong len, slong digits)
     slong i;
     for (i = 0; i < len; i++)
         acb_printd(vec + i, digits), flint_printf("\n");
+}
+
+ACB_DIRICHLET_INLINE void
+acb_vec_printd_index(acb_srcptr vec, slong len, slong digits)
+{
+    slong i;
+    for (i = 0; i < len; i++)
+        flint_printf("[%ld] ",i), acb_printd(vec + i, digits), flint_printf("\n");
 }
 
 #ifdef __cplusplus

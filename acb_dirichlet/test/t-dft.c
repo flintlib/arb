@@ -54,7 +54,21 @@ int main()
                 abort();
             }
         }
-
+        acb_dirichlet_dft_crt(w2, v, q[k], prec);
+        for (i = 0; i < q[k]; i++)
+        {
+            if (!acb_overlaps(w1 + i, w2 + i))
+            {
+                flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
+                flint_printf("pol =\n");
+                acb_vec_printd(w1, q[k], digits);
+                flint_printf("crt =\n");
+                acb_vec_printd(w2, q[k], digits);
+                flint_printf("\n\n");
+                abort();
+            }
+        }
+ 
         _acb_vec_clear(v, q[k]);
         _acb_vec_clear(w1, q[k]);
         _acb_vec_clear(w2, q[k]);
