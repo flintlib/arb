@@ -141,3 +141,14 @@ acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
     crt_recomp(w, t, c, len);
     _acb_vec_clear(t, len);
 }
+
+void
+acb_dirichlet_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_crt_t crt, slong prec)
+{
+    acb_ptr t;
+    t = _acb_vec_init(crt->n);
+    crt_decomp(w, v, crt->c, crt->n);
+    acb_dirichlet_dft_step(t, w, crt->cyc, crt->c->num, prec);
+    crt_recomp(w, t, crt->c, crt->n);
+    _acb_vec_clear(t, crt->n);
+}
