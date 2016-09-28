@@ -39,7 +39,7 @@ int main()
             acb_set_si(v + i, i);
 
         acb_dirichlet_dft_pol(w1, v, q[k], prec);
-        acb_dirichlet_dft_fast(w2, v, q[k], prec);
+        acb_dirichlet_dft_cyc(w2, v, q[k], prec);
 
         for (i = 0; i < q[k]; i++)
         {

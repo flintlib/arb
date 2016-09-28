@@ -14,23 +14,18 @@
 
 /* all roots are already computed */
 void
-_acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, acb_srcptr z, slong len, slong prec)
+_acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec)
 {
-    /* FIXME: huge accuracy loss */
-#if 0
-    _acb_poly_evaluate_vec_fast(w, v, len, z, len, prec);
-#elif 0
-    _acb_poly_evaluate_vec_iter(w, v, len, z, len, prec);
-#else
     slong i, j;
+    acb_ptr wi;
+    acb_srcptr vj;
 
-    for (i = 0; i < len; i++)
+    for (i = 0, wi = w; i < len; i++, wi++)
     {
-        acb_zero(w + i);
-        for (j = 0; j < len; j++)
-            acb_addmul(w + i, v + j, z + (i * j % len), prec);
+        acb_zero(wi);
+        for (j = 0, vj = v; j < len; j++, vj += dv)
+            acb_addmul(wi, vj, z + dz * (i * j % len), prec);
     }
-#endif
 }
 
 void
@@ -39,6 +34,6 @@ acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec)
     acb_ptr z;
     z = _acb_vec_init(len);
     acb_dirichlet_vec_nth_roots(z, len, prec);
-    _acb_dirichlet_dft_pol(w, v, z, len, prec);
+    _acb_dirichlet_dft_pol(w, v, 1, z, 1, len, prec);
     _acb_vec_clear(z, len);
 }
