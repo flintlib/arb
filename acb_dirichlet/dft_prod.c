@@ -14,25 +14,25 @@
 acb_dirichlet_dft_step_ptr
 _acb_dirichlet_dft_steps_prod(slong * cyc, slong num, slong prec)
 {
-    slong i, len, dv;
+    slong i, len;
     acb_dirichlet_dft_step_ptr s;
     s = flint_malloc(num * sizeof(acb_dirichlet_dft_step_struct));
 
-    len = 1; dv = 1;
+    len = 1;
     for (i = 0; i < num; i++)
         len *= cyc[i];
 
     for (i = 0; i < num; i++)
     {
-        slong m = cyc[i];
-        len /= m;
+        slong m, M;
+        m = cyc[i];
+        M = (len /= m);
         s[i].m = m;
-        s[i].M = len;
-        s[i].dv = len;
+        s[i].M = M;
+        s[i].dv = M;
         s[i].dz = 0;
         s[i].z = NULL;
-        _acb_dirichlet_dft_precomp_init(s[i].pre, m, NULL, 0, len, prec);
-        dv *= m;
+        _acb_dirichlet_dft_precomp_init(s[i].pre, M, NULL, 0, m, prec);
     }
 
     return s;

@@ -11,14 +11,21 @@
 
 #include "acb_dirichlet.h"
 
+typedef void (*do_f) (acb_ptr w, acb_srcptr v, slong len, slong prec);
+
 int main()
 {
 
     slong k;
     slong prec = 100, digits = 30;
     slong nq = 13;
-    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
+    /*ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};*/
+    ulong q[13] = { 20, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
+
+    slong f, nf = 3;
+    do_f func[3] = { acb_dirichlet_dft_pol, acb_dirichlet_dft_cyc, acb_dirichlet_dft_crt };
+    char * name[3] = { "pol", "cyc", "crt" };
 
     flint_printf("dft....");
     fflush(stdout);
@@ -38,37 +45,32 @@ int main()
         for (i = 0; i < q[k]; i++)
             acb_set_si(v + i, i);
 
-        acb_dirichlet_dft_pol(w1, v, q[k], prec);
-        acb_dirichlet_dft_cyc(w2, v, q[k], prec);
+        for (f = 0; f < nf; f++)
+        {
 
-        for (i = 0; i < q[k]; i++)
-        {
-            if (!acb_overlaps(w1 + i, w2 + i))
+            acb_ptr w = (f == 0) ? w1 : w2;
+
+            flint_printf("\ndo dft %s on Z/%wuZ\n", name[f], q[k]);
+            func[f](w, v, q[k], prec);
+
+            if (f == 0)
+                continue;
+
+            for (i = 0; i < q[k]; i++)
             {
-                flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
-                flint_printf("pol =\n");
-                acb_vec_printd(w1, q[k], digits);
-                flint_printf("fast =\n");
-                acb_vec_printd(w2, q[k], digits);
-                flint_printf("\n\n");
-                abort();
+                if (!acb_overlaps(w1 + i, w2 + i))
+                {
+                    flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
+                    flint_printf("%s =\n", name[0]);
+                    acb_vec_printd(w1, q[k], digits);
+                    flint_printf("%s =\n", name[f]);
+                    acb_vec_printd(w2, q[k], digits);
+                    flint_printf("\n\n");
+                    abort();
+                }
             }
         }
-        acb_dirichlet_dft_crt(w2, v, q[k], prec);
-        for (i = 0; i < q[k]; i++)
-        {
-            if (!acb_overlaps(w1 + i, w2 + i))
-            {
-                flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
-                flint_printf("pol =\n");
-                acb_vec_printd(w1, q[k], digits);
-                flint_printf("crt =\n");
-                acb_vec_printd(w2, q[k], digits);
-                flint_printf("\n\n");
-                abort();
-            }
-        }
- 
+
         _acb_vec_clear(v, q[k]);
         _acb_vec_clear(w1, q[k]);
         _acb_vec_clear(w2, q[k]);
@@ -125,12 +127,12 @@ int main()
                 flint_printf("FAIL\n\n");
                 flint_printf("q = %wu\n", q[k]);
                 flint_printf("v [size %wu]\n", len);
-                acb_vec_printd(v, len, digits);
+                acb_vec_printd_index(v, len, digits);
                 flint_printf("\nDFT differ from index %ld / %ld \n", i, len);
                 flint_printf("\nnaive =\n");
-                acb_vec_printd(w1, len, digits);
+                acb_vec_printd_index(w1, len, digits);
                 flint_printf("\nfast =\n");
-                acb_vec_printd(w2, len, digits);
+                acb_vec_printd_index(w2, len, digits);
                 flint_printf("\n\n");
                 abort();
             }
