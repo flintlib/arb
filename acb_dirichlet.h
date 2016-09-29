@@ -325,6 +325,7 @@ typedef acb_dirichlet_dft_step_struct * acb_dirichlet_dft_step_ptr;
 typedef struct
 {
     slong n;
+    int zclear;
     acb_ptr z;
     slong num;
     acb_dirichlet_dft_step_ptr cyc;
@@ -358,6 +359,7 @@ typedef struct
 {
     slong n;
     slong dv;
+    int zclear;
     acb_ptr z;
     slong dz;
 }
@@ -376,7 +378,9 @@ typedef struct
         acb_dirichlet_dft_pol_t pol;
     } t;
 }
-acb_dirichlet_dft_pre_t;
+acb_dirichlet_dft_pre_struct;
+
+typedef acb_dirichlet_dft_pre_struct acb_dirichlet_dft_pre_t[1];
 
 /* covers both product and cyclic case */
 struct
@@ -387,7 +391,7 @@ acb_dirichlet_dft_step_struct
     /* card H */
     slong M;
     slong dv; /* = M for prod, also = M if cyc is reordered */
-    /* roots of unity, if needed */
+    /* pointer on some roots of unity, if needed */
     acb_srcptr z;
     /* index of mM in z */
     slong dz;
@@ -435,40 +439,34 @@ acb_dirichlet_dft_prod_init(acb_dirichlet_dft_prod_t t, slong * cyc, slong num, 
 
 void acb_dirichlet_dft_prod_clear(acb_dirichlet_dft_prod_t t);
 
-void _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, slong len, n_factor_t fac, slong dv, acb_ptr z, slong dz, slong prec);
-void _acb_dirichlet_dft_cyc_init(acb_dirichlet_dft_cyc_t t, slong len, slong dv, slong prec);
+void _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slong dv, acb_ptr z, slong dz, slong len, slong prec);
+void _acb_dirichlet_dft_cyc_init(acb_dirichlet_dft_cyc_t t, slong dv, slong len, slong prec);
 
 ACB_DIRICHLET_INLINE void
 acb_dirichlet_dft_cyc_init(acb_dirichlet_dft_cyc_t t, slong len, slong prec)
 {
-    _acb_dirichlet_dft_cyc_init(t, len, 1, prec);
+    _acb_dirichlet_dft_cyc_init(t, 1, len, prec);
 }
 
 void acb_dirichlet_dft_cyc_clear(acb_dirichlet_dft_cyc_t t);
 
-ACB_DIRICHLET_INLINE void
-_acb_dirichlet_dft_pol_init(acb_dirichlet_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec)
-{
-    pol->n = len;
-    pol->dv = dv;
-    pol->z = z;
-    pol->dz = dz;
-}
+void _acb_dirichlet_dft_pol_init(acb_dirichlet_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 
 ACB_DIRICHLET_INLINE void
 acb_dirichlet_dft_pol_init(acb_dirichlet_dft_pol_t pol, slong len, slong prec)
 {
-    pol->n = len;
-    pol->dv = 1;
-    pol->z = _acb_vec_init(len);
-    acb_dirichlet_vec_nth_roots(pol->z, len, prec);
-    pol->dz = 1;
+    _acb_dirichlet_dft_pol_init(pol, 1, NULL, 0, len, prec);
 }
 
 ACB_DIRICHLET_INLINE void
 acb_dirichlet_dft_pol_clear(acb_dirichlet_dft_pol_t pol)
 {
-    _acb_vec_clear(pol->z, pol->n);
+    if (pol->zclear)
+    {
+        flint_printf("  ## clearing pol [len=%ld]....", pol->n);
+        _acb_vec_clear(pol->z, pol->n);
+        flint_printf("done\n");
+    }
 }
 
 ACB_DIRICHLET_INLINE void
