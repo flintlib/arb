@@ -54,13 +54,12 @@ acb_dirichlet_dft_step(acb_ptr w, acb_srcptr v, acb_dirichlet_dft_step_ptr cyc, 
         }
 
 #if REORDER
-        /* reorder w to avoid shifting in next DFT */
+        /* reorder w to avoid dv shifts in next DFT */
         w2 = flint_malloc(m * M * sizeof(acb_struct)); 
         for (j = 0; j < M; j++)
             for (i = 0; i < m; i++)
                 w2[j + M * i] = w[i + m * j];
 #endif
-        
 
         /* M DFT of size m */
         for (j = 0; j < M; j++)

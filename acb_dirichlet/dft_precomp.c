@@ -41,7 +41,7 @@ _acb_dirichlet_dft_precomp_init(acb_dirichlet_dft_pre_t pre, slong dv, acb_ptr z
         else
         {
             pre->type = DFT_CRT;
-            acb_dirichlet_dft_crt_init(pre->t.crt, len, prec);
+            _acb_dirichlet_dft_crt_init(pre->t.crt, dv, len, prec);
         }
     }
 }

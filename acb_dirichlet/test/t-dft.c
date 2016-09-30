@@ -19,8 +19,7 @@ int main()
     slong k;
     slong prec = 100, digits = 30;
     slong nq = 13;
-    /*ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};*/
-    ulong q[13] = { 20, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
+    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
 
     slong f, nf = 3;
@@ -50,7 +49,6 @@ int main()
 
             acb_ptr w = (f == 0) ? w1 : w2;
 
-            flint_printf("\ndo dft %s on Z/%wuZ\n", name[f], q[k]);
             func[f](w, v, q[k], prec);
 
             if (f == 0)
