@@ -24,14 +24,17 @@ _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slo
 
     if (z == NULL)
     {
-        flint_printf("dft_cyc: compute roots of order %wu\n", t->n);
         z = _acb_vec_init(t->n);
         acb_dirichlet_vec_nth_roots(z, t->n, prec);
         dz = 1;
         t->zclear = 1;
     }
     else
+    {
+        if (DFT_VERB)
+            flint_printf("dft_cyc: roots of order %wu already computed\n", t->n);
         t->zclear = 0;
+    }
 
     t->z = z;
 

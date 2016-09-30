@@ -41,10 +41,9 @@ crt_print(const crt_t c)
     slong k;
     if (c->num == 0)
     {
-        flint_printf("trivial group, absurd\n");
+        flint_printf("trivial group\n");
         abort();
     }
-    flint_printf("crt decomp ");
     for (k = 0; k < c->num; k++)
         flint_printf("Z/%wuZ ", c->m[k]);
     flint_printf("\n");
@@ -100,7 +99,7 @@ reorder_from_crt(acb_srcptr v, crt_t c, ulong len)
 #endif
 
 void
-crt_decomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len)
+crt_decomp(acb_ptr y, acb_srcptr x, slong dv, const crt_t c, ulong len)
 {
     int j, e[CRT_MAX];
     ulong k, l;
@@ -111,8 +110,7 @@ crt_decomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len)
     l = 0;
     for(k = 0; k < len; k++)
     {
-        /*flint_printf("set y[%wu] = x[%wu]\n", k, l);*/
-        acb_set(y + k, x + l);
+        acb_set(y + k, x + l * dv);
         for (j = c->num - 1; j >= 0; e[j] = 0, j--)
         {
             e[j]++; l = nmod_add(l, c->vM[j], c->n);
@@ -145,17 +143,12 @@ crt_recomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len)
 }
 
 void
-acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
+_acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong dv, slong len, slong prec)
 {
-    crt_t c;
-    acb_ptr t;
-    t = _acb_vec_init(len);
-    crt_init(c, len);
-    crt_print(c);
-    crt_decomp(w, v, c, len);
-    acb_dirichlet_dft_prod(t, w, c->m, c->num, prec);
-    crt_recomp(w, t, c, len);
-    _acb_vec_clear(t, len);
+    crt->n = len;
+    crt_init(crt->c, len);
+    crt->dv = dv;
+    crt->cyc = _acb_dirichlet_dft_steps_prod(crt->c->m, crt->c->num, prec);
 }
 
 void
@@ -163,9 +156,21 @@ acb_dirichlet_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_c
 {
     acb_ptr t;
     t = _acb_vec_init(crt->n);
-    crt_print(crt->c);
-    crt_decomp(w, v, crt->c, crt->n);
+    crt_decomp(w, v, crt->dv, crt->c, crt->n);
     acb_dirichlet_dft_step(t, w, crt->cyc, crt->c->num, prec);
     crt_recomp(w, t, crt->c, crt->n);
     _acb_vec_clear(t, crt->n);
+}
+
+void
+acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
+{
+    crt_t c;
+    acb_ptr t;
+    t = _acb_vec_init(len);
+    crt_init(c, len);
+    crt_decomp(w, v, 1, c, len);
+    acb_dirichlet_dft_prod(t, w, c->m, c->num, prec);
+    crt_recomp(w, t, c, len);
+    _acb_vec_clear(t, len);
 }

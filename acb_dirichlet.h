@@ -316,7 +316,7 @@ typedef crt_struct crt_t[1];
 
 void crt_init(crt_t c, ulong n);
 
-void crt_decomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len);
+void crt_decomp(acb_ptr y, acb_srcptr x, slong dx, const crt_t c, ulong len);
 void crt_recomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len);
 
 typedef struct acb_dirichlet_dft_step_struct acb_dirichlet_dft_step_struct;
@@ -348,6 +348,7 @@ typedef struct
 {
     slong n;
     crt_t c;
+    slong dv;
     /* then a product */
     acb_dirichlet_dft_step_ptr cyc;
 }
@@ -401,6 +402,8 @@ acb_dirichlet_dft_step_struct
 };
 
 /*typedef acb_dirichlet_dft_pre_struct acb_dirichlet_dft_pre_t[1];*/
+
+#define DFT_VERB 0
 
 enum
 {
@@ -462,18 +465,17 @@ ACB_DIRICHLET_INLINE void
 acb_dirichlet_dft_pol_clear(acb_dirichlet_dft_pol_t pol)
 {
     if (pol->zclear)
-    {
-        flint_printf("  ## clearing pol [len=%ld]....", pol->n);
         _acb_vec_clear(pol->z, pol->n);
-        flint_printf("done\n");
-    }
 }
+
+void _acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong dv, slong len, slong prec);
 
 ACB_DIRICHLET_INLINE void
 acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong len, slong prec)
 {
     crt->n = len;
     crt_init(crt->c, len);
+    crt->dv = 1;
     crt->cyc = _acb_dirichlet_dft_steps_prod(crt->c->m, crt->c->num, prec);
 }
 
