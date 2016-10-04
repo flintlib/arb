@@ -13,6 +13,44 @@
 
 typedef void (*do_f) (acb_ptr w, acb_srcptr v, slong len, slong prec);
 
+void
+check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong digits, ulong q, char f1[], char f2[])
+{
+    slong i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (!acb_overlaps(w1 + i, w2 + i))
+        {
+            flint_printf("FAIL\n\n");
+            flint_printf("q = %wu, size = %wu\n", q, len);
+            flint_printf("\nDFT differ from index %ld / %ld \n", i, len);
+            flint_printf("\n%s =\n", f1);
+            acb_vec_printd_index(w1, len, digits);
+            flint_printf("\n%s =\n", f2);
+            acb_vec_printd_index(w2, len, digits);
+            flint_printf("\n\n");
+            abort();
+        }
+        else if (acb_rel_accuracy_bits(w1 + i) < 30
+                || acb_rel_accuracy_bits(w2 + i) < 30)
+        {
+            flint_printf("FAIL\n\n");
+            flint_printf("q = %wu\n", q);
+            flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
+            flint_printf("\nnaive =\n");
+            acb_printd(w1 + i, digits);
+            flint_printf("\nfast =\n");
+            acb_printd(w2 + i, digits);
+            flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
+                    acb_rel_accuracy_bits(w1 + i),
+                    acb_rel_accuracy_bits(w2 + i), prec);
+            abort();
+        }
+    }
+}
+
+
 int main()
 {
 
@@ -54,24 +92,28 @@ int main()
             if (f == 0)
                 continue;
 
-            for (i = 0; i < q[k]; i++)
-            {
-                if (!acb_overlaps(w1 + i, w2 + i))
-                {
-                    flint_printf("differ from index %ld / %ld \n\n",i,q[k]);
-                    flint_printf("%s =\n", name[0]);
-                    acb_vec_printd(w1, q[k], digits);
-                    flint_printf("%s =\n", name[f]);
-                    acb_vec_printd(w2, q[k], digits);
-                    flint_printf("\n\n");
-                    abort();
-                }
-            }
+            check_vec_eq_prec(w1, w2, q[k], prec, digits, q[k], name[0], name[f]);
+
         }
 
         _acb_vec_clear(v, q[k]);
         _acb_vec_clear(w1, q[k]);
         _acb_vec_clear(w2, q[k]);
+    }
+
+    /* radix2 dft */
+    for (k = 1; k < 12; k++)
+    {
+        slong n = 1 << k;
+        acb_ptr v, w1, w2;
+        v = w2 = _acb_vec_init(n);
+        w1 = _acb_vec_init(n);
+
+        acb_dirichlet_dft_pol(w1, v, n, prec);
+        acb_dirichlet_dft_rad2(v, k, prec);
+
+        check_vec_eq_prec(w1, w2, n, prec, digits, n, "pol", "rad2");
+
     }
 
     /* Dirichlet group DFT */
@@ -118,39 +160,7 @@ int main()
         /* dft */
         acb_dirichlet_dft_conrey(w2, v, G, prec);
 
-        for (i = 0; i < len; i++)
-        {
-            if (!acb_overlaps(w1 + i, w2 + i))
-            {
-                flint_printf("FAIL\n\n");
-                flint_printf("q = %wu\n", q[k]);
-                flint_printf("v [size %wu]\n", len);
-                acb_vec_printd_index(v, len, digits);
-                flint_printf("\nDFT differ from index %ld / %ld \n", i, len);
-                flint_printf("\nnaive =\n");
-                acb_vec_printd_index(w1, len, digits);
-                flint_printf("\nfast =\n");
-                acb_vec_printd_index(w2, len, digits);
-                flint_printf("\n\n");
-                abort();
-            }
-            else if (acb_rel_accuracy_bits(w1 + i) < 30
-                    || acb_rel_accuracy_bits(w2 + i) < 30)
-            {
-                flint_printf("FAIL\n\n");
-                flint_printf("q = %wu\n", q[k]);
-                flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
-                flint_printf("\nnaive =\n");
-                acb_printd(w1 + i, digits);
-                flint_printf("\nfast =\n");
-                acb_printd(w2 + i, digits);
-                flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
-                    acb_rel_accuracy_bits(w1 + i),
-                    acb_rel_accuracy_bits(w2 + i), prec
-                        );
-                abort();
-            }
-        }
+        check_vec_eq_prec(w1, w2, len, prec, digits, q[k], "naive", "group");
 
         _acb_vec_clear(v, len);
         _acb_vec_clear(w1, len);
