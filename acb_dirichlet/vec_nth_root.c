@@ -33,7 +33,7 @@ _acb_vec_set_powers_step(acb_ptr xs, slong n, slong len, slong step, slong prec)
 
 /* assume len = p^e and z has size >= len * step */
 void
-_acb_vec_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec)
+_acb_vec_nth_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec)
 {
     if (e <= 1)
     {
@@ -42,7 +42,7 @@ _acb_vec_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec
     else
     {
         slong q, r;
-        _acb_vec_roots_pe(z, p, e - 1, len / p, step * p, prec);
+        _acb_vec_nth_roots_pe(z, p, e - 1, len / p, step * p, prec);
         _acb_vec_set_powers_step(z, n_pow(p, e), p, step, prec);
 
         for (q = p; q < len; q += p)
@@ -72,7 +72,7 @@ acb_dirichlet_vec_nth_roots(acb_ptr z, slong len, slong prec)
        mp = len / pe;
        mq = len / q;
 
-       _acb_vec_roots_pe(z, p, e, pe, mp, prec);
+       _acb_vec_nth_roots_pe(z, p, e, pe, mp, prec);
 
        if (i > 0)
        {

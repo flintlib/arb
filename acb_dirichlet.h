@@ -251,6 +251,7 @@ void acb_dirichlet_powers_clear(acb_dirichlet_powers_t t);
 void acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec);
 
 void acb_dirichlet_nth_root(acb_t res, ulong order, slong prec);
+void _acb_vec_nth_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec);
 void acb_dirichlet_vec_nth_roots(acb_ptr z, slong len, slong prec);
 
 void acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec);
@@ -296,6 +297,7 @@ void _acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slo
 void acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec);
+void acb_dirichlet_dft_rad2(acb_ptr v, int e, slong prec);
 void acb_dirichlet_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
 
 void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec);
@@ -336,6 +338,17 @@ typedef acb_dirichlet_dft_cyc_struct acb_dirichlet_dft_cyc_t[1];
 
 typedef struct
 {
+    int e;
+    slong n; /* = 1 << e */
+    slong nz; /* = n but could be bigger */
+    acb_ptr z;
+}
+acb_dirichlet_dft_rad2_struct;
+
+typedef acb_dirichlet_dft_rad2_struct acb_dirichlet_dft_rad2_t[1];
+
+typedef struct
+{
     slong n;
     slong num;
     acb_dirichlet_dft_step_ptr cyc;
@@ -373,6 +386,7 @@ typedef struct
     int type;
     union
     {
+        acb_dirichlet_dft_rad2_t rad2;
         acb_dirichlet_dft_cyc_t cyc;
         acb_dirichlet_dft_prod_t prod;
         acb_dirichlet_dft_crt_t crt;
@@ -407,7 +421,7 @@ acb_dirichlet_dft_step_struct
 
 enum
 {
-    DFT_POL, DFT_CYC, DFT_PROD, DFT_CRT /*, DFT_2E, DFT_CONV */
+    DFT_POL, DFT_CYC, DFT_PROD, DFT_CRT , DFT_RAD2 /*, DFT_CONV */
 };
 
 void acb_dirichlet_dft_step(acb_ptr w, acb_srcptr v, acb_dirichlet_dft_step_ptr cyc, slong num, slong prec);
@@ -424,8 +438,11 @@ acb_dirichlet_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_c
 {
     acb_dirichlet_dft_step(w, v, cyc->cyc, cyc->num, prec);
 }
+void acb_dirichlet_dft_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec);
 void acb_dirichlet_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_crt_t crt, slong prec);
 void acb_dirichlet_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_prod_t prod, slong prec);
+
+void acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec);
 
 void _acb_dirichlet_dft_precomp_init(acb_dirichlet_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 void acb_dirichlet_dft_precomp_init(acb_dirichlet_dft_pre_t pre, slong len, slong prec);
@@ -468,6 +485,23 @@ acb_dirichlet_dft_pol_clear(acb_dirichlet_dft_pol_t pol)
         _acb_vec_clear(pol->z, pol->n);
 }
 
+ACB_DIRICHLET_INLINE void
+acb_dirichlet_dft_rad2_init(acb_dirichlet_dft_rad2_t t, int e, slong prec)
+{
+    t->e = e;
+    t->n = 1 << e;
+    t->nz = t->n >> 1;
+    t->z = _acb_vec_init(t->nz);
+    /* set n/2 roots of order n */
+    _acb_vec_nth_roots_pe(t->z, 2, e, t->nz, 1, prec);
+}
+
+ACB_DIRICHLET_INLINE void
+acb_dirichlet_dft_rad2_clear(acb_dirichlet_dft_rad2_t t)
+{
+    _acb_vec_clear(t->z, t->nz);
+}
+
 void _acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong dv, slong len, slong prec);
 
 ACB_DIRICHLET_INLINE void
@@ -485,7 +519,29 @@ acb_dirichlet_dft_crt_clear(acb_dirichlet_dft_crt_t crt)
     flint_free(crt->cyc);
 }
 
-/* utils */
+/* utils, could be moved elsewhere */
+
+ACB_DIRICHLET_INLINE void
+acb_swap_ri(acb_t x)
+{
+    arb_swap(acb_realref(x), acb_imagref(x));
+}
+
+ACB_DIRICHLET_INLINE void
+acb_vec_swap_ri(acb_ptr v, slong len)
+{
+    slong k;
+    for (k = 0; k < len; k++)
+        acb_swap_ri(v + k);
+}
+
+ACB_DIRICHLET_INLINE void
+_acb_vec_kronecker_mul(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong prec)
+{
+    slong k;
+    for (k = 0; k < len; k++)
+        acb_mul(z + k, x + k, y + k, prec);
+}
 
 ACB_DIRICHLET_INLINE void
 acb_vec_printd(acb_srcptr vec, slong len, slong digits)
