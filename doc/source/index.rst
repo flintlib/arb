@@ -118,10 +118,12 @@ modules.
    acb_hypgeom.rst
    arb_hypgeom.rst
    acb_modular.rst
+   dirichlet.rst
    acb_dirichlet.rst
    bernoulli.rst
    hypgeom.rst
    partitions.rst
+   acb_dft.rst
 
 Calculus
 ::::::::::::::::::::::::::::::::::::
