@@ -47,15 +47,15 @@ int main(int argc, char *argv[])
     for (q = qmin; q <= qmax; q++)
     {
         ulong k;
-        acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x;
+        dirichlet_group_t G;
+        dirichlet_conrey_t x;
         acb_ptr z;
 
         if (q % 4 == 2)
             continue;
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_conrey_init(x, G);
+        dirichlet_group_init(G, q);
+        dirichlet_conrey_init(x, G);
 
         z =  _acb_vec_init(G->phi_q);
 
@@ -64,11 +64,11 @@ int main(int argc, char *argv[])
         if (out)
         {
             k = 0;
-            acb_dirichlet_conrey_one(x, G);
-            while (acb_dirichlet_conrey_next(x, G) >= 0)
+            dirichlet_conrey_one(x, G);
+            while (dirichlet_conrey_next(x, G) >= 0)
             {
                 k++;
-                if (acb_dirichlet_conrey_conductor(G,x) < q)
+                if (dirichlet_conrey_conductor(G,x) < q)
                     continue;
                 flint_printf("%wu,%wu: ", q, x->n);
                 acb_printd(z + k, digits);
@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
         }
 
         _acb_vec_clear(z, G->phi_q);
-        acb_dirichlet_conrey_clear(x);
-        acb_dirichlet_group_clear(G);
+        dirichlet_conrey_clear(x);
+        dirichlet_group_clear(G);
     }
     acb_clear(s);
 
