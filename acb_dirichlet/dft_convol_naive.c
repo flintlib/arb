@@ -24,8 +24,8 @@ acb_dirichlet_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len,
         gy = g;
         acb_zero(wx);
         for (y = 0; y <= x; y++)
-            acb_addmul(wx, fx--, gy++, prec);
+            acb_addmul(wx, fx - y, g + y, prec);
         for (; y < len; y++)
-            acb_addmul(wx, f + x - y, g + y, prec);
+            acb_addmul(wx, fx + (len - y), g + y, prec);
     }
 }

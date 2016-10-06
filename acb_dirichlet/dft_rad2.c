@@ -38,13 +38,15 @@ acb_dirichlet_dft_rad2_reorder(acb_ptr v, slong n)
 
 /* remark: can use same rad2 with smaller power of 2 */
 void
-acb_dirichlet_dft_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec)
+acb_dirichlet_dft_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec)
 {
     slong j, k, l;
     slong n = rad2->n, nz = rad2->nz;
     acb_ptr p, vend = v + n, w = rad2->z;
     acb_t tmp;
     acb_init(tmp);
+
+    acb_dirichlet_dft_rad2_reorder(v, n);
 
     for (k = 1, l = nz; k < n; k <<= 1, l >>= 1)
         for (p = v; p < vend; p += k)
@@ -59,7 +61,7 @@ acb_dirichlet_dft_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong p
 }
 
 void
-acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec)
+acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec)
 {
     slong k, n = rad2->n;
     acb_dirichlet_dft_rad2_precomp(v, rad2, prec);

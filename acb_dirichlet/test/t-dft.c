@@ -60,9 +60,9 @@ int main()
     ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
 
-    slong f, nf = 3;
-    do_f func[3] = { acb_dirichlet_dft_pol, acb_dirichlet_dft_cyc, acb_dirichlet_dft_crt };
-    char * name[3] = { "pol", "cyc", "crt" };
+    slong f, nf = 4;
+    do_f func[4] = { acb_dirichlet_dft_pol, acb_dirichlet_dft_cyc, acb_dirichlet_dft_crt , acb_dirichlet_dft_bluestein };
+    char * name[4] = { "pol", "cyc", "crt", "bluestein" };
 
     flint_printf("dft....");
     fflush(stdout);
@@ -104,10 +104,13 @@ int main()
     /* radix2 dft */
     for (k = 1; k < 12; k++)
     {
-        slong n = 1 << k;
+        slong n = 1 << k, j;
         acb_ptr v, w1, w2;
         v = w2 = _acb_vec_init(n);
         w1 = _acb_vec_init(n);
+
+        for (j = 0; j < n; j++)
+            acb_set_si(v + k, k);
 
         acb_dirichlet_dft_pol(w1, v, n, prec);
         acb_dirichlet_dft_rad2(v, k, prec);

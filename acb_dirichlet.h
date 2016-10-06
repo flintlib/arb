@@ -298,7 +298,11 @@ void acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_rad2(acb_ptr v, int e, slong prec);
+void acb_dirichlet_dft_bluestein(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dirichlet_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
+
+void acb_dirichlet_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
+void acb_dirichlet_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 
 void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec);
 void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec);
@@ -346,6 +350,16 @@ typedef struct
 acb_dirichlet_dft_rad2_struct;
 
 typedef acb_dirichlet_dft_rad2_struct acb_dirichlet_dft_rad2_t[1];
+
+typedef struct
+{
+    slong n;
+    acb_ptr z;
+    acb_dirichlet_dft_rad2_t rad2;
+}
+acb_dirichlet_dft_bluestein_struct;
+
+typedef acb_dirichlet_dft_bluestein_struct acb_dirichlet_dft_bluestein_t[1];
 
 typedef struct
 {
@@ -438,11 +452,12 @@ acb_dirichlet_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_c
 {
     acb_dirichlet_dft_step(w, v, cyc->cyc, cyc->num, prec);
 }
-void acb_dirichlet_dft_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec);
+void acb_dirichlet_dft_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec);
 void acb_dirichlet_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_crt_t crt, slong prec);
 void acb_dirichlet_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_prod_t prod, slong prec);
 
-void acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, acb_dirichlet_dft_rad2_t rad2, slong prec);
+void acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec);
+void acb_dirichlet_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dirichlet_dft_rad2_t, slong prec);
 
 void _acb_dirichlet_dft_precomp_init(acb_dirichlet_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 void acb_dirichlet_dft_precomp_init(acb_dirichlet_dft_pre_t pre, slong len, slong prec);
@@ -502,6 +517,15 @@ acb_dirichlet_dft_rad2_clear(acb_dirichlet_dft_rad2_t t)
     _acb_vec_clear(t->z, t->nz);
 }
 
+void acb_dirichlet_dft_bluestein_init(acb_dirichlet_dft_bluestein_t t, slong n, slong prec);
+
+ACB_DIRICHLET_INLINE void
+acb_dirichlet_dft_bluestein_clear(acb_dirichlet_dft_bluestein_t t)
+{
+    _acb_vec_clear(t->z, t->n);
+    acb_dirichlet_dft_rad2_clear(t->rad2);
+}
+
 void _acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong dv, slong len, slong prec);
 
 ACB_DIRICHLET_INLINE void
@@ -541,6 +565,18 @@ _acb_vec_kronecker_mul(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong p
     slong k;
     for (k = 0; k < len; k++)
         acb_mul(z + k, x + k, y + k, prec);
+}
+
+/* z[k] = conj(x[k])*y[k] */
+ACB_DIRICHLET_INLINE void
+acb_vec_kronecker_mul_conj(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong prec)
+{
+    slong k;
+    for (k = 0; k < len; k++)
+    {
+        acb_conj(z + k, x + k);
+        acb_mul(z + k, z + k, y + k, prec);
+    }
 }
 
 ACB_DIRICHLET_INLINE void
