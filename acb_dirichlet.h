@@ -88,12 +88,6 @@ void acb_dirichlet_jacobi_sum(acb_t res, const dirichlet_group_t G, const dirich
 void acb_dirichlet_jacobi_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, ulong b, slong prec);
 
 void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
-void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const dirichlet_group_t G, slong prec);
-
-/* Discrete Fourier Transform */
-
-void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
-void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
 
 /* utils */
 

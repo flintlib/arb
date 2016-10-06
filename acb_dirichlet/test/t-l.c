@@ -14,77 +14,6 @@
 #define nq 5
 #define nx 3
 
-void
-test_dft(ulong q)
-{
-    ulong i;
-    slong prec = 100;
-    dirichlet_group_t G;
-    dirichlet_conrey_t x;
-    dirichlet_char_t chi;
-    acb_t s, z;
-    acb_ptr v;
-
-    dirichlet_group_init(G, q);
-    dirichlet_conrey_init(x, G);
-    dirichlet_char_init(chi, G);
-
-    acb_init(s);
-    acb_one(s);
-    acb_div_si(s, s, 2, prec);
-
-    v = _acb_vec_init(G->phi_q);
-
-    /* all at once */
-    acb_dirichlet_l_vec_hurwitz(v, s, G, prec);
-
-    /* check with complete loop */
-
-    i = 0;
-    acb_init(z);
-    dirichlet_conrey_one(x, G);
-    do {
-
-        dirichlet_char_conrey(chi, G, x);
-        acb_dirichlet_l_hurwitz(z, s, G, chi, prec);
-
-        if (!acb_overlaps(z, v + i))
-        {
-            flint_printf("\n L value differ");
-            flint_printf("\nL(1/2, %wu) single = ", x->n);
-            acb_printd(z, 20);
-            flint_printf("\nL(1/2, %wu) multi = ", x->n);
-            acb_printd(v + i, 20);
-            flint_printf("\n\n");
-            acb_vec_printd(v, G->phi_q, 10);
-            flint_printf("\n\n");
-        }
-        else if (acb_rel_accuracy_bits(z) < prec - 8
-                    || acb_rel_accuracy_bits(v + i) < prec - 8)
-        {
-                flint_printf("FAIL\n\n");
-                flint_printf("q = %wu\n", q);
-                flint_printf("\nL(1/2,chi_%wu(%wu,)) inaccurate\n", q, x->n);
-                flint_printf("\nsingle =\n");
-                acb_printd(z, 30);
-                flint_printf("\ndft =\n");
-                acb_printd(v + i, 30);
-                flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
-                    acb_rel_accuracy_bits(z),
-                    acb_rel_accuracy_bits(v + i), prec);
-                abort();
-         }
-
-        i++;
-    } while (dirichlet_conrey_next(x, G) >= 0);
-
-    acb_clear(s);
-    _acb_vec_clear(v, G->phi_q);
-    dirichlet_char_clear(chi);
-    dirichlet_conrey_clear(x);
-    dirichlet_group_clear(G);
-}
-
 int main()
 {
 
@@ -203,9 +132,6 @@ int main()
         }
         dirichlet_char_clear(chi);
         dirichlet_group_clear(G);
-
-        /* test using dft */
-        test_dft(q[i]);
 
     }
     acb_clear(ref);
