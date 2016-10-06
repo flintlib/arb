@@ -14,17 +14,17 @@
 
 void
 acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
-    const acb_dirichlet_group_t G, slong prec)
+    const dirichlet_group_t G, slong prec)
 {
     acb_t a, qs;
     acb_ptr zeta, z;
-    acb_dirichlet_conrey_t cn;
+    dirichlet_conrey_t cn;
     int deflate;
 
     /* remove pole in Hurwitz zeta at s = 1 */
     deflate = acb_is_one(s);
 
-    acb_dirichlet_conrey_init(cn, G);
+    dirichlet_conrey_init(cn, G);
     acb_init(qs);
     acb_init(a);
 
@@ -35,7 +35,7 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
     acb_pow(qs, qs, a, prec);
 
     zeta = z = _acb_vec_init(G->phi_q);
-    acb_dirichlet_conrey_one(cn, G);
+    dirichlet_conrey_one(cn, G);
     do {
 
         acb_set_ui(a, cn->n);
@@ -49,7 +49,7 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
         acb_mul(z, z, qs, prec);
 
         z++;
-    } while (acb_dirichlet_conrey_next(cn, G) >= 0);
+    } while (dirichlet_conrey_next(cn, G) >= 0);
 
     acb_dirichlet_dft_conrey(res, zeta, G, prec);
 
@@ -57,7 +57,7 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
     if (deflate)
         acb_indeterminate(res);
 
-    acb_dirichlet_conrey_clear(cn);
+    dirichlet_conrey_clear(cn);
     _acb_vec_clear(zeta, G->phi_q);
     acb_clear(qs);
     acb_clear(a);

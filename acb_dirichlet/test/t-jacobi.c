@@ -24,24 +24,24 @@ int main()
     for (q = 29 * 29; q > 1; q = q%2 ? 3*q+1 : q/2)
     {
         slong m1, m2;
-        acb_dirichlet_group_t G;
-        acb_dirichlet_char_t chi1, chi2;
+        dirichlet_group_t G;
+        dirichlet_char_t chi1, chi2;
 
         acb_t s1, s2;
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_char_init(chi1, G);
-        acb_dirichlet_char_init(chi2, G);
+        dirichlet_group_init(G, q);
+        dirichlet_char_init(chi1, G);
+        dirichlet_char_init(chi2, G);
 
         acb_init(s1);
         acb_init(s2);
 
-        acb_dirichlet_char_one(chi1, G);
+        dirichlet_char_one(chi1, G);
 
         for (m1 = 0; m1 < 50; m1++)
         {
 
-            acb_dirichlet_char_one(chi2, G);
+            dirichlet_char_one(chi2, G);
 
             for (m2 = 0; m2 < 50; m2++)
             {
@@ -60,25 +60,25 @@ int main()
                     flint_printf("\n");
                     flint_printf("cond = %wu, %wu, %wu\n",
                             chi1->conductor, chi2->conductor,
-                            acb_dirichlet_ui_conductor(G, nmod_mul(chi1->x->n, chi2->x->n, G->mod))
+                            dirichlet_ui_conductor(G, nmod_mul(chi1->x->n, chi2->x->n, G->mod))
                             );
                     abort();
                 }
-                if (acb_dirichlet_char_next(chi2, G) < 0)
+                if (dirichlet_char_next(chi2, G) < 0)
                     break;
 
             }
 
-            if (acb_dirichlet_char_next(chi1, G) < 0)
+            if (dirichlet_char_next(chi1, G) < 0)
                 break;
 
         }
 
         acb_clear(s1);
         acb_clear(s2);
-        acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi1);
-        acb_dirichlet_char_clear(chi2);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi1);
+        dirichlet_char_clear(chi2);
     }
 
     flint_cleanup();

@@ -30,27 +30,27 @@ int main()
 
     for (q = 2; q < 600; q ++)
     {
-        acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x;
-        acb_dirichlet_char_t chi;
+        dirichlet_group_t G;
+        dirichlet_conrey_t x;
+        dirichlet_char_t chi;
         ulong * v1, * v2, nv, k;
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_conrey_init(x, G);
-        acb_dirichlet_char_init(chi, G);
+        dirichlet_group_init(G, q);
+        dirichlet_conrey_init(x, G);
+        dirichlet_char_init(chi, G);
 
         nv = 100;
         v1 = flint_malloc(nv * sizeof(ulong));
         v2 = flint_malloc(nv * sizeof(ulong));
 
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_conrey_one(x, G);
 
         do {
 
-            acb_dirichlet_char_conrey(chi, G, x);
+            dirichlet_char_conrey(chi, G, x);
 
-            acb_dirichlet_ui_chi_vec_loop(v1, G, chi, nv);
-            acb_dirichlet_ui_chi_vec_primeloop(v2, G, chi, nv);
+            dirichlet_ui_chi_vec_loop(v1, G, chi, nv);
+            dirichlet_ui_chi_vec_primeloop(v2, G, chi, nv);
 
             if ((k = vec_diff(v1, v2, nv)))
             {
@@ -59,13 +59,13 @@ int main()
                 abort();
             }
 
-        } while (acb_dirichlet_conrey_next(x, G) >= 0);
+        } while (dirichlet_conrey_next(x, G) >= 0);
 
         flint_free(v1);
         flint_free(v2);
-        acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi);
-        acb_dirichlet_conrey_clear(x);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
+        dirichlet_conrey_clear(x);
     }
 
     flint_cleanup();

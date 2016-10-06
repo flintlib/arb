@@ -12,14 +12,14 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_ui_theta_arb(acb_t res, const acb_dirichlet_group_t G, ulong a, const arb_t t, slong prec)
+acb_dirichlet_ui_theta_arb(acb_t res, const dirichlet_group_t G, ulong a, const arb_t t, slong prec)
 {
-    acb_dirichlet_char_t chi;
+    dirichlet_char_t chi;
 
-    acb_dirichlet_char_init(chi, G);
-    acb_dirichlet_char(chi, G, a);
+    dirichlet_char_init(chi, G);
+    dirichlet_char(chi, G, a);
 
     acb_dirichlet_theta_arb(res, G, chi, t, prec);
 
-    acb_dirichlet_char_clear(chi);
+    dirichlet_char_clear(chi);
 }

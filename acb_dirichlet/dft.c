@@ -14,7 +14,7 @@
 
 /* dft, lexicographic conrey indexing, array size G->phi_q */
 void
-acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
+acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
 {
     slong k, l, * cyc;
     cyc = flint_malloc(G->num * sizeof(slong));
@@ -27,34 +27,34 @@ acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G,
 
 /* dft, number indexing, array size G->q */
 void
-acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const acb_dirichlet_group_t G, slong prec)
+acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
 {
     ulong i, len;
     acb_ptr t1, t2;
-    acb_dirichlet_conrey_t x;
+    dirichlet_conrey_t x;
 
     len = G->phi_q;
     t1 = flint_malloc(len * sizeof(acb_struct));
 
-    acb_dirichlet_conrey_init(x, G);
-    acb_dirichlet_conrey_one(x, G);
+    dirichlet_conrey_init(x, G);
+    dirichlet_conrey_one(x, G);
     for (i = 0; i < len; i++)
     {
         t1[i] = v[x->n];
-        acb_dirichlet_conrey_next(x, G);
+        dirichlet_conrey_next(x, G);
     };
 
     t2 = _acb_vec_init(len);
     acb_dirichlet_dft_conrey(t2, t1, G, prec);
 
-    acb_dirichlet_conrey_one(x, G);
+    dirichlet_conrey_one(x, G);
     for (i = 0; i < len; i++)
     {
         acb_set(w + x->n, t2 + i);
-        acb_dirichlet_conrey_next(x, G);
+        dirichlet_conrey_next(x, G);
     };
 
     _acb_vec_clear(t2, len);
-    acb_dirichlet_conrey_clear(x);
+    dirichlet_conrey_clear(x);
     flint_free(t1);
 }

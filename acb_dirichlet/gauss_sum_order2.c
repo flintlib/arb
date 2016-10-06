@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_gauss_sum_order2(acb_t res, const dirichlet_char_t chi, slong prec)
 {
     if (chi->parity)
     {

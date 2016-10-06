@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
+acb_dirichlet_jacobi_sum_factor(acb_t res,  const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2, slong prec)
 {
     slong k;
     acb_t tmp;
@@ -47,20 +47,20 @@ acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const
         }
         else
         {
-            acb_dirichlet_group_t Gp;
-            acb_dirichlet_char_t chi1p, chi2p;
+            dirichlet_group_t Gp;
+            dirichlet_char_t chi1p, chi2p;
 
-            acb_dirichlet_group_init(Gp, pe.n);
-            acb_dirichlet_char_init(chi1p, Gp);
-            acb_dirichlet_char_init(chi2p, Gp);
+            dirichlet_group_init(Gp, pe.n);
+            dirichlet_char_init(chi1p, Gp);
+            dirichlet_char_init(chi2p, Gp);
 
             chi1p->x->n = ap;
             chi1p->x->log[0] = chi1->x->log[k];
             chi2p->x->n = ap;
             chi2p->x->log[0] = chi2->x->log[k];
 
-            acb_dirichlet_char_conrey(chi1p, Gp, NULL);
-            acb_dirichlet_char_conrey(chi2p, Gp, NULL);
+            dirichlet_char_conrey(chi1p, Gp, NULL);
+            dirichlet_char_conrey(chi2p, Gp, NULL);
 
             /* TODO: work out gauss relations for e > 1 */
             if (p <= 100 || e > 1)
@@ -70,9 +70,9 @@ acb_dirichlet_jacobi_sum_factor(acb_t res,  const acb_dirichlet_group_t G, const
 
             acb_mul(res, res, tmp, prec);
 
-            acb_dirichlet_char_clear(chi1p);
-            acb_dirichlet_char_clear(chi2p);
-            acb_dirichlet_group_clear(Gp);
+            dirichlet_char_clear(chi1p);
+            dirichlet_char_clear(chi2p);
+            dirichlet_group_clear(Gp);
         }
     }
     acb_clear(tmp);

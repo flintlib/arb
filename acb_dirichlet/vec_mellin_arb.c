@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_vec_mellin_arb(acb_ptr res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong len, const arb_t t, slong n, slong prec)
+acb_dirichlet_vec_mellin_arb(acb_ptr res, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, const arb_t t, slong n, slong prec)
 {
     slong k;
     arb_t tk, xt, stk, st;

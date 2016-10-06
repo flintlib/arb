@@ -34,7 +34,7 @@ acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, con
     {
         arb_mul(dx, dx, x2, prec);
         arb_mul(xk2, xk2, dx, prec);
-        if (a[k] != ACB_DIRICHLET_CHI_NULL)
+        if (a[k] != DIRICHLET_CHI_NULL)
         {
             acb_dirichlet_power(zk, z, a[k], prec);
             if (parity)
@@ -76,7 +76,7 @@ acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity
     {
         arb_mul(dx, dx, x2, prec);
         arb_mul(xk2, xk2, dx, prec);
-        if (a[k] != ACB_DIRICHLET_CHI_NULL)
+        if (a[k] != DIRICHLET_CHI_NULL)
         {
            if (parity)
            {

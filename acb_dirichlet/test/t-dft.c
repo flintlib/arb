@@ -69,42 +69,42 @@ int main()
     for (k = 0; k < nq; k++)
     {
         slong i, j, len;
-        acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x, y;
+        dirichlet_group_t G;
+        dirichlet_conrey_t x, y;
         acb_t chiy;
         acb_ptr v, w1, w2;
 
-        acb_dirichlet_group_init(G, q[k]);
+        dirichlet_group_init(G, q[k]);
 
         len = G->phi_q;
         v = _acb_vec_init(len);
         w1 = _acb_vec_init(len);
         w2 = _acb_vec_init(len);
 
-        acb_dirichlet_conrey_init(x, G);
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_conrey_init(x, G);
+        dirichlet_conrey_one(x, G);
         for (i = 0; i < len; i++)
             acb_randtest_precise(v + i, state, prec, 0);
 
         /* naive */
         acb_init(chiy);
-        acb_dirichlet_conrey_init(y, G);
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_conrey_init(y, G);
+        dirichlet_conrey_one(x, G);
         for (i = 0;  i < len; i++)
         {
             acb_zero(w1 + i);
-            acb_dirichlet_conrey_one(y, G);
+            dirichlet_conrey_one(y, G);
             for (j = 0; j < len; j++)
             {
                 acb_dirichlet_pairing_conrey(chiy, G, x, y, prec);
                 acb_addmul(w1 + i, chiy, v + j, prec);
-                acb_dirichlet_conrey_next(y, G);
+                dirichlet_conrey_next(y, G);
             }
-            acb_dirichlet_conrey_next(x, G);
+            dirichlet_conrey_next(x, G);
         }
         acb_clear(chiy);
-        acb_dirichlet_conrey_clear(y);
-        acb_dirichlet_conrey_clear(x);
+        dirichlet_conrey_clear(y);
+        dirichlet_conrey_clear(x);
 
         /* dft */
         acb_dirichlet_dft_conrey(w2, v, G, prec);
@@ -115,7 +115,7 @@ int main()
         _acb_vec_clear(w1, len);
         _acb_vec_clear(w2, len);
 
-        acb_dirichlet_group_clear(G);
+        dirichlet_group_clear(G);
     }
 
     flint_randclear(state);

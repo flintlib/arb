@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_gauss_sum_factor(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
 
     slong k;
@@ -36,11 +36,11 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
     for (k = (G->neven == 2); k < G->num; k++)
     {
         ulong pe = G->P[k].pe.n;
-        acb_dirichlet_group_t Gp;
-        acb_dirichlet_char_t chip;
+        dirichlet_group_t Gp;
+        dirichlet_char_t chip;
 
-        acb_dirichlet_subgroup_init(Gp, G, pe);
-        acb_dirichlet_char_init(chip, Gp);
+        dirichlet_subgroup_init(Gp, G, pe);
+        dirichlet_char_init(chip, Gp);
 
         chip->x->n = chi->x->n % pe;
 
@@ -52,7 +52,7 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
         else
             chip->x->log[0] = chi->x->log[k];
 
-        acb_dirichlet_char_conrey(chip, Gp, NULL);
+        dirichlet_char_conrey(chip, Gp, NULL);
 
         /* chi_pe(a, q/pe) * G_pe(a) */
         acb_dirichlet_gauss_sum(tmp, Gp, chip, prec);
@@ -61,8 +61,8 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const acb_dirichlet_group_t G, const a
         acb_dirichlet_chi(tmp, Gp, chip, (G->q / pe) % pe, prec);
         acb_mul(res, res, tmp, prec);
 
-        acb_dirichlet_char_clear(chip);
-        acb_dirichlet_group_clear(Gp);
+        dirichlet_char_clear(chip);
+        dirichlet_group_clear(Gp);
     }
 
     if (G->q_even == 2)

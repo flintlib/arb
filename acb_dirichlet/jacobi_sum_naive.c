@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
+acb_dirichlet_jacobi_sum_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2, slong prec)
 {
 
     ulong k1, k2, m1, m2, g, e;
@@ -24,11 +24,11 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const a
     v1 = flint_malloc(G->q * sizeof(ulong));
     v2 = flint_malloc(G->q * sizeof(ulong));
 
-    acb_dirichlet_ui_vec_set_null(v1, G, G->q);
-    acb_dirichlet_ui_chi_vec_loop(v1, G, chi1, G->q);
+    dirichlet_ui_vec_set_null(v1, G, G->q);
+    dirichlet_ui_chi_vec_loop(v1, G, chi1, G->q);
 
-    acb_dirichlet_ui_vec_set_null(v2, G, G->q);
-    acb_dirichlet_ui_chi_vec_loop(v2, G, chi2, G->q);
+    dirichlet_ui_vec_set_null(v2, G, G->q);
+    dirichlet_ui_chi_vec_loop(v2, G, chi2, G->q);
 
     m1 = chi1->order.n;
     m2 = chi2->order.n;
@@ -44,8 +44,8 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const a
 
     for (k1 = 2, k2 = G->q - 1; k2 > 1; k1++, k2--)
     {
-        if (v1[k1] == ACB_DIRICHLET_CHI_NULL ||
-            v2[k2] == ACB_DIRICHLET_CHI_NULL)
+        if (v1[k1] == DIRICHLET_CHI_NULL ||
+            v2[k2] == DIRICHLET_CHI_NULL)
             continue;
         e = nmod_add(v1[k1] * m1, v2[k2] * m2, order);
         v[e]++;
