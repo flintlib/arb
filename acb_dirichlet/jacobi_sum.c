@@ -30,7 +30,7 @@ jacobi_one_prime(ulong p, ulong e, ulong pe, ulong cond)
 }
 
 static ulong
-jacobi_one(const acb_dirichlet_group_t G, ulong cond)
+jacobi_one(const dirichlet_group_t G, ulong cond)
 {
     slong k, r = 1;
 
@@ -41,7 +41,7 @@ jacobi_one(const acb_dirichlet_group_t G, ulong cond)
 }
 
 void
-acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
+acb_dirichlet_jacobi_sum(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2, slong prec)
 {
     if (G->q_even > 1)
     {
@@ -75,7 +75,7 @@ acb_dirichlet_jacobi_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dir
 }
 
 void
-acb_dirichlet_jacobi_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, ulong b, slong prec)
+acb_dirichlet_jacobi_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, ulong b, slong prec)
 {
     if (G->q_even > 1)
     {
@@ -83,27 +83,27 @@ acb_dirichlet_jacobi_sum_ui(acb_t res, const acb_dirichlet_group_t G, ulong a, u
     }
     else if (a == 1 || b == 1)
     {
-        ulong cond = (a == 1) ? acb_dirichlet_ui_conductor(G, b) : acb_dirichlet_ui_conductor(G, a);
+        ulong cond = (a == 1) ? dirichlet_ui_conductor(G, b) : dirichlet_ui_conductor(G, a);
         acb_set_si(res, jacobi_one(G, cond));
     }
     else if (nmod_mul(a, b, G->mod) == 1)
     {
         ulong n;
-        n = jacobi_one(G, acb_dirichlet_ui_conductor(G, a));
-        if (acb_dirichlet_ui_parity(G, a))
+        n = jacobi_one(G, dirichlet_ui_conductor(G, a));
+        if (dirichlet_ui_parity(G, a))
             acb_set_si(res, -n);
         else
             acb_set_si(res, n);
     }
     else
     {
-        acb_dirichlet_char_t chi1, chi2;
-        acb_dirichlet_char_init(chi1, G);
-        acb_dirichlet_char_init(chi2, G);
-        acb_dirichlet_char(chi1, G, a);
-        acb_dirichlet_char(chi2, G, b);
+        dirichlet_char_t chi1, chi2;
+        dirichlet_char_init(chi1, G);
+        dirichlet_char_init(chi2, G);
+        dirichlet_char(chi1, G, a);
+        dirichlet_char(chi2, G, b);
         acb_dirichlet_jacobi_sum(res, G, chi1, chi2, prec);
-        acb_dirichlet_char_clear(chi1);
-        acb_dirichlet_char_clear(chi2);
+        dirichlet_char_clear(chi1);
+        dirichlet_char_clear(chi2);
     }
 }

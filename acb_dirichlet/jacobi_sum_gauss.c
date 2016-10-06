@@ -13,14 +13,14 @@
 
 /* should use only for prime power modulus */
 void
-acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec)
+acb_dirichlet_jacobi_sum_gauss(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2, slong prec)
 {
     /* J_q(a,b)G_q(ab) = G_q(a)G_q(b) */
     acb_t tmp;
-    acb_dirichlet_char_t chi12;
+    dirichlet_char_t chi12;
 
-    acb_dirichlet_char_init(chi12, G);
-    acb_dirichlet_char_mul(chi12, G, chi1, chi2);
+    dirichlet_char_init(chi12, G);
+    dirichlet_char_mul(chi12, G, chi1, chi2);
 
     acb_init(tmp);
 
@@ -33,6 +33,6 @@ acb_dirichlet_jacobi_sum_gauss(acb_t res, const acb_dirichlet_group_t G, const a
     acb_dirichlet_gauss_sum(tmp, G, chi12, prec);
     acb_div(res, res, tmp, prec);
 
-    acb_dirichlet_char_clear(chi12);
+    dirichlet_char_clear(chi12);
     acb_clear(tmp);
 }

@@ -16,12 +16,12 @@
 /* todo: should document or fix that it doesn't allow aliasing */
 void
 acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
-    const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+    const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     ulong chin;
     acb_t t, u, a;
     acb_ptr z;
-    acb_dirichlet_conrey_t cn;
+    dirichlet_conrey_t cn;
     int deflate;
 
     /* remove pole in Hurwitz zeta at s = 1 */
@@ -37,12 +37,12 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
         deflate = 1;
     }
 
-    acb_dirichlet_conrey_init(cn, G);
+    dirichlet_conrey_init(cn, G);
     acb_init(t);
     acb_init(u);
     acb_init(a);
 
-    acb_dirichlet_conrey_one(cn, G);
+    dirichlet_conrey_one(cn, G);
     acb_zero(t);
 
     prec += n_clog(G->phi_q, 2);
@@ -51,7 +51,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     _acb_vec_nth_roots(z, chi->order.n, prec);
 
     do {
-        chin = acb_dirichlet_ui_chi_conrey(G, chi, cn);
+        chin = dirichlet_ui_chi_conrey(G, chi, cn);
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
@@ -63,14 +63,14 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
         acb_addmul(t, z + chin, u, prec);
 
-    } while (acb_dirichlet_conrey_next(cn, G) >= 0);
+    } while (dirichlet_conrey_next(cn, G) >= 0);
 
     acb_set_ui(u, G->q);
     acb_neg(a, s);
     acb_pow(u, u, a, prec);
     acb_mul(res, t, u, prec);
 
-    acb_dirichlet_conrey_clear(cn);
+    dirichlet_conrey_clear(cn);
 
     _acb_vec_clear(z, chi->order.n);
     acb_clear(t);

@@ -19,15 +19,15 @@ test_dft(ulong q)
 {
     ulong i;
     slong prec = 100;
-    acb_dirichlet_group_t G;
-    acb_dirichlet_conrey_t x;
-    acb_dirichlet_char_t chi;
+    dirichlet_group_t G;
+    dirichlet_conrey_t x;
+    dirichlet_char_t chi;
     acb_t s, z;
     acb_ptr v;
 
-    acb_dirichlet_group_init(G, q);
-    acb_dirichlet_conrey_init(x, G);
-    acb_dirichlet_char_init(chi, G);
+    dirichlet_group_init(G, q);
+    dirichlet_conrey_init(x, G);
+    dirichlet_char_init(chi, G);
 
     acb_init(s);
     acb_one(s);
@@ -42,10 +42,10 @@ test_dft(ulong q)
 
     i = 0;
     acb_init(z);
-    acb_dirichlet_conrey_one(x, G);
+    dirichlet_conrey_one(x, G);
     do {
 
-        acb_dirichlet_char_conrey(chi, G, x);
+        dirichlet_char_conrey(chi, G, x);
         acb_dirichlet_l_hurwitz(z, s, G, chi, prec);
 
         if (!acb_overlaps(z, v + i))
@@ -76,13 +76,13 @@ test_dft(ulong q)
          }
 
         i++;
-    } while (acb_dirichlet_conrey_next(x, G) >= 0);
+    } while (dirichlet_conrey_next(x, G) >= 0);
 
     acb_clear(s);
     _acb_vec_clear(v, G->phi_q);
-    acb_dirichlet_char_clear(chi);
-    acb_dirichlet_conrey_clear(x);
-    acb_dirichlet_group_clear(G);
+    dirichlet_char_clear(chi);
+    dirichlet_conrey_clear(x);
+    dirichlet_group_clear(G);
 }
 
 int main()
@@ -164,13 +164,13 @@ int main()
 
     for (i = 0; i < nq; i++)
     {
-        acb_dirichlet_group_t G;
-        acb_dirichlet_char_t chi;
+        dirichlet_group_t G;
+        dirichlet_char_t chi;
 
-        acb_dirichlet_group_init(G, q[i]);
-        acb_dirichlet_char_init(chi, G);
+        dirichlet_group_init(G, q[i]);
+        dirichlet_char_init(chi, G);
 
-        acb_dirichlet_char(chi, G, m[i]);
+        dirichlet_char(chi, G, m[i]);
 
         for (j = 0; j < nx; j++)
         {
@@ -201,8 +201,8 @@ int main()
             }
 
         }
-        acb_dirichlet_char_clear(chi);
-        acb_dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
+        dirichlet_group_clear(G);
 
         /* test using dft */
         test_dft(q[i]);

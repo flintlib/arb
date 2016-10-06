@@ -12,21 +12,21 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_chi_vec(acb_ptr v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv, slong prec)
+acb_dirichlet_chi_vec(acb_ptr v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv, slong prec)
 {
     slong k;
     ulong * a;
     acb_dirichlet_powers_t t;
 
     a = flint_malloc(nv * sizeof(ulong));
-    acb_dirichlet_ui_chi_vec(a, G, chi, nv);
+    dirichlet_ui_chi_vec(a, G, chi, nv);
 
     acb_dirichlet_powers_init(t, chi->order.n, nv, prec);
 
     acb_zero(v + 0);
     for (k = 0; k < nv; k++)
     {
-        if (a[k] != ACB_DIRICHLET_CHI_NULL)
+        if (a[k] != DIRICHLET_CHI_NULL)
             acb_dirichlet_power(v + k, t, a[k], prec);
         else
             acb_zero(v + k);

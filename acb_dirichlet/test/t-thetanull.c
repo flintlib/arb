@@ -27,8 +27,8 @@ int main()
 
     for (q = 3; q < 1000; q ++)
     {
-        acb_dirichlet_group_t G;
-        acb_dirichlet_char_t chi;
+        dirichlet_group_t G;
+        dirichlet_char_t chi;
         ulong * v, nv, k;
 
         acb_t sum;
@@ -41,8 +41,8 @@ int main()
             /* no primitive character mod q */
             continue;
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_char_init(chi, G);
+        dirichlet_group_init(G, q);
+        dirichlet_char_init(chi, G);
 
         z = _acb_vec_init(G->expo);
         _acb_vec_nth_roots(z, G->expo, prec);
@@ -65,19 +65,19 @@ int main()
 
         /* theta function on primitive characters */
         acb_init(sum);
-        acb_dirichlet_char_first_primitive(chi, G);
+        dirichlet_char_first_primitive(chi, G);
 
         do {
             ulong m;
             acb_zero(sum);
 
-            acb_dirichlet_ui_chi_vec(v, G, chi, nv);
+            dirichlet_ui_chi_vec(v, G, chi, nv);
 
             m = G->expo / chi->order.n;
-            tt = acb_dirichlet_char_parity(chi) ? kt : t;
+            tt = dirichlet_char_parity(chi) ? kt : t;
 
             for (k = 1; k < nv; k++)
-                if (v[k] != ACB_DIRICHLET_CHI_NULL)
+                if (v[k] != DIRICHLET_CHI_NULL)
                     acb_addmul_arb(sum, z + (v[k] * m), tt + k, prec);
 
             if ((q == 300 && (chi->x->n == 71 || chi->x->n == 131))
@@ -88,7 +88,7 @@ int main()
                 flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
                 acb_printd(sum, 10);
                 flint_printf("\n");
-                acb_dirichlet_char_print(G, chi);
+                dirichlet_char_print(G, chi);
                 flint_printf("\n");
                 abort();
                 }
@@ -98,12 +98,12 @@ int main()
                 flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
                 acb_printd(sum, 10);
                 flint_printf("\n");
-                acb_dirichlet_char_print(G, chi);
+                dirichlet_char_print(G, chi);
                 flint_printf("\n");
                 abort();
             }
 
-        } while (acb_dirichlet_char_next_primitive(chi, G) >= 0);
+        } while (dirichlet_char_next_primitive(chi, G) >= 0);
 
         _acb_vec_clear(z, G->expo);
         _arb_vec_clear(kt, nv);
@@ -111,8 +111,8 @@ int main()
         acb_clear(sum);
         arb_clear(eq);
         flint_free(v);
-        acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
     }
 
     flint_cleanup();
