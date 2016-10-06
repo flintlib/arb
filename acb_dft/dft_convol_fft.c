@@ -9,11 +9,11 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 /* assume np >= 2 * n - 1 */
 void
-acb_dirichlet_dft_convol_pad(acb_ptr fp, acb_ptr gp, acb_srcptr f, acb_srcptr g, slong n, slong np)
+acb_dft_convol_pad(acb_ptr fp, acb_ptr gp, acb_srcptr f, acb_srcptr g, slong n, slong np)
 {
     slong k;
 
@@ -38,17 +38,17 @@ acb_dirichlet_dft_convol_pad(acb_ptr fp, acb_ptr gp, acb_srcptr f, acb_srcptr g,
 }
 
 void
-acb_dirichlet_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
+acb_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
 {
     /* divide before to keep v const */
     _acb_vec_scalar_div_ui(w, v, len, len, prec);
     acb_vec_swap_ri(w, len);
-    acb_dirichlet_dft_cyc(w, w, len, prec);
+    acb_dft_cyc(w, w, len, prec);
     acb_vec_swap_ri(w, len);
 }
 
 void
-acb_dirichlet_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dirichlet_dft_rad2_t rad2, slong prec)
+acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dft_rad2_t rad2, slong prec)
 {
     slong np;
     acb_ptr fp, gp;
@@ -61,19 +61,19 @@ acb_dirichlet_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slo
 
     fp = _acb_vec_init(np);
     gp = _acb_vec_init(np);
-    acb_dirichlet_dft_convol_pad(fp, gp, f, g, len, np);
+    acb_dft_convol_pad(fp, gp, f, g, len, np);
 
     flint_printf("\nF\n");
     acb_vec_printd_index(fp, np, 10);
     flint_printf("\nG\n");
     acb_vec_printd_index(gp, np, 10);
 
-    acb_dirichlet_dft_rad2_precomp(fp, rad2, prec);
+    acb_dft_rad2_precomp(fp, rad2, prec);
 
     flint_printf("\nDFT F\n");
     acb_vec_printd_index(fp, np, 10);
 
-    acb_dirichlet_dft_rad2_precomp(gp, rad2, prec);
+    acb_dft_rad2_precomp(gp, rad2, prec);
 
     flint_printf("\nDFT G\n");
     acb_vec_printd_index(gp, np, 10);
@@ -83,7 +83,7 @@ acb_dirichlet_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slo
     flint_printf("\n(DFT F)(DFT G)=DFT(F*G)\n");
     acb_vec_printd_index(gp, np, 10);
 
-    acb_dirichlet_dft_inverse_rad2_precomp(gp, rad2, prec);
+    acb_dft_inverse_rad2_precomp(gp, rad2, prec);
 
     flint_printf("\nF*G\n");
     acb_vec_printd_index(gp, np, 10);
@@ -94,12 +94,12 @@ acb_dirichlet_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slo
 }
 
 void
-acb_dirichlet_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
+acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
 {
     int e;
-    acb_dirichlet_dft_rad2_t dft;
+    acb_dft_rad2_t dft;
     e = n_clog(2 * len - 1, 2);
-    acb_dirichlet_dft_rad2_init(dft, e, prec);
-    acb_dirichlet_dft_convol_rad2_precomp(w, f, g, len, dft, prec);
-    acb_dirichlet_dft_rad2_clear(dft);
+    acb_dft_rad2_init(dft, e, prec);
+    acb_dft_convol_rad2_precomp(w, f, g, len, dft, prec);
+    acb_dft_rad2_clear(dft);
 }

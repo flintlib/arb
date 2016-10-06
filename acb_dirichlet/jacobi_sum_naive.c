@@ -52,7 +52,7 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const acb_dirichlet_group_t G, const a
     }
 
     acb_init(z);
-    acb_dirichlet_nth_root(z, order.n, prec);
+    acb_nth_root(z, order.n, prec);
     acb_dirichlet_si_poly_evaluate(res, v, order.n, z, prec);
 
     acb_clear(z);

@@ -9,11 +9,11 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 /* swap each element with one with bit-reversed index */
 void
-acb_dirichlet_dft_rad2_reorder(acb_ptr v, slong n)
+acb_dft_rad2_reorder(acb_ptr v, slong n)
 {
     slong i, j, k, l;
 
@@ -38,7 +38,7 @@ acb_dirichlet_dft_rad2_reorder(acb_ptr v, slong n)
 
 /* remark: can use same rad2 with smaller power of 2 */
 void
-acb_dirichlet_dft_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec)
+acb_dft_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 {
     slong j, k, l;
     slong n = rad2->n, nz = rad2->nz;
@@ -46,7 +46,7 @@ acb_dirichlet_dft_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, s
     acb_t tmp;
     acb_init(tmp);
 
-    acb_dirichlet_dft_rad2_reorder(v, n);
+    acb_dft_rad2_reorder(v, n);
 
     for (k = 1, l = nz; k < n; k <<= 1, l >>= 1)
         for (p = v; p < vend; p += k)
@@ -61,20 +61,20 @@ acb_dirichlet_dft_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, s
 }
 
 void
-acb_dirichlet_dft_inverse_rad2_precomp(acb_ptr v, const acb_dirichlet_dft_rad2_t rad2, slong prec)
+acb_dft_inverse_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 {
     slong k, n = rad2->n;
-    acb_dirichlet_dft_rad2_precomp(v, rad2, prec);
+    acb_dft_rad2_precomp(v, rad2, prec);
     _acb_vec_scalar_mul_2exp_si(v, v, n, - rad2->e);
     for (k = 1; k < n / 2; k++)
         acb_swap(v + k, v + n - k);
 }
 
 void
-acb_dirichlet_dft_rad2(acb_ptr v, int e, slong prec)
+acb_dft_rad2(acb_ptr v, int e, slong prec)
 {
-    acb_dirichlet_dft_rad2_t rad2;
-    acb_dirichlet_dft_rad2_init(rad2, e, prec);
-    acb_dirichlet_dft_rad2_precomp(v, rad2, prec);
-    acb_dirichlet_dft_rad2_clear(rad2);
+    acb_dft_rad2_t rad2;
+    acb_dft_rad2_init(rad2, e, prec);
+    acb_dft_rad2_precomp(v, rad2, prec);
+    acb_dft_rad2_clear(rad2);
 }

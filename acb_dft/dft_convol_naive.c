@@ -9,10 +9,10 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 void
-acb_dirichlet_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
+acb_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
 {
     slong x, y;
     for (x = 0; x < len; x ++)

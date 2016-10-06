@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 static void
-_acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
+_acb_nth_root(acb_t res, ulong order, slong prec)
 {
     fmpq_t t;
     fmpq_init(t);
@@ -22,7 +22,7 @@ _acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
 }
 
 void
-acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
+acb_nth_root(acb_t res, ulong order, slong prec)
 {
     switch (order)
     {
@@ -36,7 +36,7 @@ acb_dirichlet_nth_root(acb_t res, ulong order, slong prec)
            acb_onei(res);
            break;
        default:
-           _acb_dirichlet_nth_root(res, order, prec);
+           _acb_nth_root(res, order, prec);
            break;
     }
 }

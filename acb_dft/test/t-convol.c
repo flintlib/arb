@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 typedef void (*do_f) (acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong prec);
 
@@ -61,7 +61,7 @@ int main()
     flint_rand_t state;
 
     slong f, nf = 2;
-    do_f func[2] = { acb_dirichlet_dft_convol_naive, acb_dirichlet_dft_convol_rad2 };
+    do_f func[2] = { acb_dft_convol_naive, acb_dft_convol_rad2 };
     char * name[4] = { "naive", "rad2" };
 
     flint_printf("convol....");

@@ -48,7 +48,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     prec += n_clog(G->phi_q, 2);
 
     z = _acb_vec_init(chi->order.n);
-    acb_dirichlet_vec_nth_roots(z, chi->order.n, prec);
+    _acb_vec_nth_roots(z, chi->order.n, prec);
 
     do {
         chin = acb_dirichlet_ui_chi_conrey(G, chi, cn);
