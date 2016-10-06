@@ -23,7 +23,7 @@ _acb_vec_set_powers_step(acb_ptr xs, slong n, slong len, slong step, slong prec)
         if (i == 0)
             acb_one(xs + j);
         else if (i == 1)
-            acb_dirichlet_nth_root(xs + j, n, prec);
+            acb_nth_root(xs + j, n, prec);
         else if (i % 2 == 0)
             acb_mul(xs + j, xs + j / 2, xs + j / 2, prec);
         else
@@ -52,7 +52,7 @@ _acb_vec_nth_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong 
 }
 
 void
-acb_dirichlet_vec_nth_roots(acb_ptr z, slong len, slong prec)
+_acb_vec_nth_roots(acb_ptr z, slong len, slong prec)
 {
    slong i, q;
    n_factor_t fac;

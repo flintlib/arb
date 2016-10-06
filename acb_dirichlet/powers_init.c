@@ -18,7 +18,7 @@ _acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong size, sl
     slong k;
     t->order = order;
     acb_init(t->z);
-    acb_dirichlet_nth_root(t->z, order, prec);
+    acb_nth_root(t->z, order, prec);
     t->size = size;
     t->depth = depth;
     if (depth)

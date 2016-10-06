@@ -9,14 +9,14 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
-acb_dirichlet_dft_step_ptr
-_acb_dirichlet_dft_steps_prod(slong * cyc, slong num, slong prec)
+acb_dft_step_ptr
+_acb_dft_steps_prod(slong * cyc, slong num, slong prec)
 {
     slong i, len;
-    acb_dirichlet_dft_step_ptr s;
-    s = flint_malloc(num * sizeof(acb_dirichlet_dft_step_struct));
+    acb_dft_step_ptr s;
+    s = flint_malloc(num * sizeof(acb_dft_step_struct));
 
     len = 1;
     for (i = 0; i < num; i++)
@@ -32,36 +32,36 @@ _acb_dirichlet_dft_steps_prod(slong * cyc, slong num, slong prec)
         s[i].dv = M;
         s[i].dz = 0;
         s[i].z = NULL;
-        _acb_dirichlet_dft_precomp_init(s[i].pre, M, NULL, 0, m, prec);
+        _acb_dft_precomp_init(s[i].pre, M, NULL, 0, m, prec);
     }
 
     return s;
 }
 
 void
-acb_dirichlet_dft_prod_clear(acb_dirichlet_dft_prod_t t)
+acb_dft_prod_clear(acb_dft_prod_t t)
 {
     slong i;
     for (i = 0; i < t->num; i++)
-        acb_dirichlet_dft_precomp_clear(t->cyc[i].pre);
+        acb_dft_precomp_clear(t->cyc[i].pre);
     flint_free(t->cyc);
 }
 
 
 void
-acb_dirichlet_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_prod_t prod, slong prec)
+acb_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dft_prod_t prod, slong prec)
 {
     if (prod->num == 0)
         acb_set(w + 0, v + 0);
     else
-        acb_dirichlet_dft_step(w, v, prod->cyc, prod->num, prec);
+        acb_dft_step(w, v, prod->cyc, prod->num, prec);
 }
 
 void
-acb_dirichlet_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec)
+acb_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec)
 {
-    acb_dirichlet_dft_prod_t t;
-    acb_dirichlet_dft_prod_init(t, cyc, num, prec);
-    acb_dirichlet_dft_prod_precomp(w, v, t, prec);
-    acb_dirichlet_dft_prod_clear(t);
+    acb_dft_prod_t t;
+    acb_dft_prod_init(t, cyc, num, prec);
+    acb_dft_prod_precomp(w, v, t, prec);
+    acb_dft_prod_clear(t);
 }

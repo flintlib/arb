@@ -9,24 +9,24 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 #define REORDER 0
 
 void
-acb_dirichlet_dft_step(acb_ptr w, acb_srcptr v, acb_dirichlet_dft_step_ptr cyc, slong num, slong prec)
+acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong prec)
 {
-    acb_dirichlet_dft_step_struct c;
+    acb_dft_step_struct c;
     if (num == 0)
     {
-        flint_printf("error: reached num = 0 in acb_dirichlet_dft_step\n");
+        flint_printf("error: reached num = 0 in acb_dft_step\n");
         abort(); /* or just copy v to w */
     }
     c = cyc[0];
     if (num == 1)
     {
-        acb_dirichlet_dft_precomp(w, v, c.pre, prec);
-        /*_acb_dirichlet_dft_base(w, v, c.dv, c.z, c.dz, c.m, prec);*/
+        acb_dft_precomp(w, v, c.pre, prec);
+        /*_acb_dft_base(w, v, c.dv, c.z, c.dz, c.m, prec);*/
     }
     else
     {
@@ -42,7 +42,7 @@ acb_dirichlet_dft_step(acb_ptr w, acb_srcptr v, acb_dirichlet_dft_step_ptr cyc, 
 
         /* m DFT of size M */
         for (i = 0; i < m; i++)
-            acb_dirichlet_dft_step(w + i * M, v + i * dv, cyc + 1, num - 1, prec);
+            acb_dft_step(w + i * M, v + i * dv, cyc + 1, num - 1, prec);
 
         /* twiddle if non trivial product */
         if (c.z != NULL)
@@ -63,7 +63,7 @@ acb_dirichlet_dft_step(acb_ptr w, acb_srcptr v, acb_dirichlet_dft_step_ptr cyc, 
 
         /* M DFT of size m */
         for (j = 0; j < M; j++)
-            acb_dirichlet_dft_precomp(t + m * j, w + j, c.pre, prec);
+            acb_dft_precomp(t + m * j, w + j, c.pre, prec);
 
         /* reorder */
         for (i = 0; i < m; i++)

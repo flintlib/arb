@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 void
 crt_init(crt_t c, ulong n)
@@ -143,34 +143,34 @@ crt_recomp(acb_ptr y, acb_srcptr x, const crt_t c, ulong len)
 }
 
 void
-_acb_dirichlet_dft_crt_init(acb_dirichlet_dft_crt_t crt, slong dv, slong len, slong prec)
+_acb_dft_crt_init(acb_dft_crt_t crt, slong dv, slong len, slong prec)
 {
     crt->n = len;
     crt_init(crt->c, len);
     crt->dv = dv;
-    crt->cyc = _acb_dirichlet_dft_steps_prod(crt->c->m, crt->c->num, prec);
+    crt->cyc = _acb_dft_steps_prod(crt->c->m, crt->c->num, prec);
 }
 
 void
-acb_dirichlet_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dirichlet_dft_crt_t crt, slong prec)
+acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec)
 {
     acb_ptr t;
     t = _acb_vec_init(crt->n);
     crt_decomp(w, v, crt->dv, crt->c, crt->n);
-    acb_dirichlet_dft_step(t, w, crt->cyc, crt->c->num, prec);
+    acb_dft_step(t, w, crt->cyc, crt->c->num, prec);
     crt_recomp(w, t, crt->c, crt->n);
     _acb_vec_clear(t, crt->n);
 }
 
 void
-acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
+acb_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
 {
     crt_t c;
     acb_ptr t;
     t = _acb_vec_init(len);
     crt_init(c, len);
     crt_decomp(w, v, 1, c, len);
-    acb_dirichlet_dft_prod(t, w, c->m, c->num, prec);
+    acb_dft_prod(t, w, c->m, c->num, prec);
     crt_recomp(w, t, c, len);
     _acb_vec_clear(t, len);
 }

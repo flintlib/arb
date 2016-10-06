@@ -9,10 +9,10 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb_dft.h"
 
 void
-_acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slong dv, acb_ptr z, slong dz, slong len, slong prec)
+_acb_dft_cyc_init_z_fac(acb_dft_cyc_t t, n_factor_t fac, slong dv, acb_ptr z, slong dz, slong len, slong prec)
 {
     slong i, j, num;
     t->n = len;
@@ -20,12 +20,12 @@ _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slo
     for (i = 0; i < fac.num; i++)
         num += fac.exp[i];
     t->num = num;
-    t->cyc = flint_malloc(num * sizeof(acb_dirichlet_dft_step_struct));
+    t->cyc = flint_malloc(num * sizeof(acb_dft_step_struct));
 
     if (z == NULL)
     {
         z = _acb_vec_init(t->n);
-        acb_dirichlet_vec_nth_roots(z, t->n, prec);
+        _acb_vec_nth_roots(z, t->n, prec);
         dz = 1;
         t->zclear = 1;
     }
@@ -53,9 +53,9 @@ _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slo
             t->cyc[num].dz = dz;
             /* TODO: ugly, reorder should solve this */
             if (num == t->num - 1)
-                _acb_dirichlet_dft_precomp_init(t->cyc[num].pre, dv, z, dz, m, prec);
+                _acb_dft_precomp_init(t->cyc[num].pre, dv, z, dz, m, prec);
             else
-                _acb_dirichlet_dft_precomp_init(t->cyc[num].pre, M, z, dz * M, m, prec);
+                _acb_dft_precomp_init(t->cyc[num].pre, M, z, dz * M, m, prec);
             dv *= m;
             dz *= m;
             num++;
@@ -64,30 +64,30 @@ _acb_dirichlet_dft_cyc_init_z_fac(acb_dirichlet_dft_cyc_t t, n_factor_t fac, slo
 }
 
 void
-_acb_dirichlet_dft_cyc_init(acb_dirichlet_dft_cyc_t t, slong dv, slong len, slong prec)
+_acb_dft_cyc_init(acb_dft_cyc_t t, slong dv, slong len, slong prec)
 {
     n_factor_t fac;
     n_factor_init(&fac);
     n_factor(&fac, len, 0);
-    _acb_dirichlet_dft_cyc_init_z_fac(t, fac, dv, NULL, 0, len, prec);
+    _acb_dft_cyc_init_z_fac(t, fac, dv, NULL, 0, len, prec);
 }
 
 void
-acb_dirichlet_dft_cyc_clear(acb_dirichlet_dft_cyc_t t)
+acb_dft_cyc_clear(acb_dft_cyc_t t)
 {
     slong i;
     for (i = 0; i < t->num; i++)
-        acb_dirichlet_dft_precomp_clear(t->cyc[i].pre);
+        acb_dft_precomp_clear(t->cyc[i].pre);
     if (t->zclear)
         _acb_vec_clear(t->z, t->n);
     flint_free(t->cyc);
 }
 
 void
-acb_dirichlet_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
+acb_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
 {
-    acb_dirichlet_dft_cyc_t cyc;
-    acb_dirichlet_dft_cyc_init(cyc, len, prec);
-    acb_dirichlet_dft_cyc_precomp(w, v, cyc, prec);
-    acb_dirichlet_dft_cyc_clear(cyc);
+    acb_dft_cyc_t cyc;
+    acb_dft_cyc_init(cyc, len, prec);
+    acb_dft_cyc_precomp(w, v, cyc, prec);
+    acb_dft_cyc_clear(cyc);
 }
