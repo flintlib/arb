@@ -12,11 +12,11 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_pairing(acb_t res, const acb_dirichlet_group_t G, ulong m, ulong n, slong prec)
+acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec)
 {
     ulong expo;
-    expo = acb_dirichlet_ui_pairing(G, m, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
+    expo = dirichlet_ui_pairing(G, m, n);
+    if (expo == DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
     {

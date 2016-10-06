@@ -23,15 +23,15 @@ int main()
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t zn1, zn2, zn1n2, zn1zn2;
-        acb_dirichlet_group_t G;
-        acb_dirichlet_char_t chi;
+        dirichlet_group_t G;
+        dirichlet_char_t chi;
         ulong q, m, n1, n2, iter2;
         int res;
 
         q = 1 + n_randint(state, 1000);
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_char_init(chi, G);
+        dirichlet_group_init(G, q);
+        dirichlet_char_init(chi, G);
         acb_init(zn1);
         acb_init(zn2);
         acb_init(zn1n2);
@@ -44,7 +44,7 @@ int main()
                 m = 1 + n_randint(state, q);
             } while (n_gcd(q, m) != 1);
 
-            acb_dirichlet_char(chi, G, m);
+            dirichlet_char(chi, G, m);
 
             n1 = n_randint(state, 1000);
             n2 = n_randint(state, 1000);
@@ -53,19 +53,19 @@ int main()
             acb_dirichlet_pairing(zn2, G, m, n1, 53);
             if (!acb_overlaps(zn1, zn2))
             {
-                acb_dirichlet_conrey_t x;
+                dirichlet_conrey_t x;
                 flint_printf("FAIL: overlap\n\n");
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("m = %wu\n\n", m);
                 flint_printf("n = %wu\n\n", n1);
                 flint_printf("char = "); acb_printd(zn1, 15); flint_printf("\n\n");
                 flint_printf("pairing = "); acb_printd(zn2, 15); flint_printf("\n\n");
-                acb_dirichlet_char_print(G, chi);
-                acb_dirichlet_conrey_init(x, G);
-                acb_dirichlet_conrey_log(x, G, m);
-                flint_printf("log(m) = "); acb_dirichlet_conrey_print(G, x);
-                acb_dirichlet_conrey_log(x, G, n1);
-                flint_printf("log(n1) = "); acb_dirichlet_conrey_print(G, x);
+                dirichlet_char_print(G, chi);
+                dirichlet_conrey_init(x, G);
+                dirichlet_conrey_log(x, G, m);
+                flint_printf("log(m) = "); dirichlet_conrey_print(G, x);
+                dirichlet_conrey_log(x, G, n1);
+                flint_printf("log(n1) = "); dirichlet_conrey_print(G, x);
                 abort();
             }
 
@@ -119,8 +119,8 @@ int main()
             }
         }
 
-        acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
         acb_clear(zn1);
         acb_clear(zn2);
         acb_clear(zn1n2);

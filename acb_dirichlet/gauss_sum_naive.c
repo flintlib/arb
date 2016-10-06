@@ -13,7 +13,7 @@
 #include "acb_poly.h"
 
 void
-acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_gauss_sum_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     acb_t z;
     acb_ptr v;
@@ -22,7 +22,7 @@ acb_dirichlet_gauss_sum_naive(acb_t res, const acb_dirichlet_group_t G, const ac
     acb_dirichlet_chi_vec(v, G, chi, G->q, prec);
 
     acb_init(z);
-    acb_dirichlet_nth_root(z, G->q, prec);
+    acb_nth_root(z, G->q, prec);
 
     _acb_poly_evaluate(res, v, G->q, z, prec);
 

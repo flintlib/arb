@@ -13,13 +13,13 @@
 #include "acb_poly.h"
 
 void
-_acb_dirichlet_theta_arb_smallorder(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
+_acb_dirichlet_theta_arb_smallorder(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
     ulong * a;
     acb_dirichlet_powers_t z;
 
     a = flint_malloc(len * sizeof(ulong));
-    acb_dirichlet_ui_chi_vec(a, G, chi, len);
+    dirichlet_ui_chi_vec(a, G, chi, len);
 
     _acb_dirichlet_powers_init(z, chi->order.n, 0, 0, prec);
     acb_dirichlet_qseries_arb_powers_smallorder(res, xt, chi->parity, a, z, len, prec);
@@ -29,7 +29,7 @@ _acb_dirichlet_theta_arb_smallorder(acb_t res, const acb_dirichlet_group_t G, co
 }
 
 void
-_acb_dirichlet_theta_arb_series(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
+_acb_dirichlet_theta_arb_series(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
     acb_ptr a;
     a = _acb_vec_init(len);
@@ -45,13 +45,13 @@ _acb_dirichlet_theta_arb_series(acb_t res, const acb_dirichlet_group_t G, const 
 }
 
 void
-_acb_dirichlet_theta_arb_naive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
+_acb_dirichlet_theta_arb_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
     ulong * a;
     acb_dirichlet_powers_t z;
 
     a = flint_malloc(len * sizeof(ulong));
-    acb_dirichlet_ui_chi_vec(a, G, chi, len);
+    dirichlet_ui_chi_vec(a, G, chi, len);
 
     acb_dirichlet_powers_init(z, chi->order.n, len, prec);
 
@@ -62,7 +62,7 @@ _acb_dirichlet_theta_arb_naive(acb_t res, const acb_dirichlet_group_t G, const a
 }
 
 void
-acb_dirichlet_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, const arb_t t, slong prec)
+acb_dirichlet_theta_arb(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t t, slong prec)
 {
     slong len;
     arb_t xt;
@@ -89,5 +89,7 @@ acb_dirichlet_theta_arb(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     arb_add_error_mag(acb_imagref(res), e);
 
     mag_clear(e);
+
+    acb_mul_2exp_si(res, res, 1);
     arb_clear(xt);
 }

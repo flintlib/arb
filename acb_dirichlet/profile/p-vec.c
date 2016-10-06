@@ -9,47 +9,40 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include <string.h>
 #include "acb_dirichlet.h"
 #include "profiler.h"
-typedef void (*dir_f) (ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
+
+#define LOG 0
+#define CSV 1
+#define JSON 2
+
+typedef void (*do_f) (ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
 
 static void
-dir_empty(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_empty(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
     return;
 }
 
 static void
-vecloop(dir_f dir, ulong minq, ulong maxq, ulong * rand, ulong nr, ulong * v, ulong nv)
+do_dlog_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
-    ulong q;
-    TIMEIT_ONCE_START
+    slong k, l;
 
-    for (q = minq; q <= maxq; q++)
+    for (k = 0; k < nv; k++)
+        v[k] = 0;
+
+    for (l = G->neven; l < G->num; l++)
     {
-        ulong r;
-        acb_dirichlet_group_t G;
-        acb_dirichlet_char_t chi;
-
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_char_init(chi, G);
-
-        for (r = 0; r < nr; r++)
-        {
-            acb_dirichlet_char(chi, G, rand[r] % q);
-            dir(v, G, chi, nv);
-        }
-
-        acb_dirichlet_char_clear(chi);
-        acb_dirichlet_group_clear(G);
+        acb_dirichlet_prime_group_struct P = G->P[l];
+        dlog_vec_loop_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, chi->order);
     }
-
-    TIMEIT_ONCE_STOP
-    flint_printf("\n");
+    acb_dirichlet_ui_vec_set_null(v, G, nv);
 }
 
 static void
-acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_eratos(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
 {
 	slong k, p, pmax;
 	n_primes_t iter;
@@ -80,60 +73,128 @@ acb_dirichlet_ui_chi_vec_sieve(ulong *v, const acb_dirichlet_group_t G, const ac
 	n_primes_clear(iter);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    slong iter, k, nv, nref, r, nr;
-    ulong minq, maxq;
+    int out;
+    ulong n, nref, maxq = 5000;
     ulong * rand;
-    int i, ni = 5;
-    ulong q[5] =  {   2, 1000, 3000, 10000, 100000 };
-    ulong qq[5] = { 500, 2000, 5000, 12000, 100500 };
-    ulong * v;
     flint_rand_t state;
+    slong r, nr;
+
+    int l, nf = 9;
+    do_f func[9] = { do_empty, acb_dirichlet_ui_chi_vec_loop, do_dlog_primeloop,
+        acb_dirichlet_ui_chi_vec_primeloop, do_eratos,
+        acb_dirichlet_ui_chi_vec,
+        acb_dirichlet_ui_chi_vec,
+        acb_dirichlet_ui_chi_vec,
+        acb_dirichlet_ui_chi_vec };
+    char * name[9] = { "char only", "big loop", "prime loops",
+        "prime dlog_vec", "manual eratos", "default",
+        "precomp 1", "precomp 20", "precomp 100" };
+
+    int i, ni = 5;
+    ulong qmin[5] =  {   2, 1000, 3000, 10000, 100000 };
+    ulong qmax[5] =  { 500, 2000, 5000, 12000, 100500 };
+
+    int j, nj = 3;
+    slong nv[3] = { 50, 300, 2000 };
 
     nr = 20;
 
     flint_randinit(state);
+
     rand = flint_malloc(nr * sizeof(ulong));
-    v = flint_malloc(nv * sizeof(ulong));
 
     for (r = 0; r < nr; r++)
         rand[r] = n_randprime(state, 42, 0);
 
-    for (i = 0; i < ni; i++)
+    if (argc < 2)
+        out = LOG;
+    else if (!strcmp(argv[1], "json"))
+        out = JSON;
+    else if (!strcmp(argv[1], "csv"))
+        out = CSV;
+    else if (!strcmp(argv[1], "log"))
+        out = LOG;
+    else
     {
-
-        ulong minq = q[i], maxq = qq[i];
-        nv = 2000;
-
-        flint_printf("%wu * chi(rand, 1..%wu) for all %wu <= q <= %wu....\n", nr, nv, minq, maxq);
-        fflush(stdout);
-
-        flint_printf("character only.......... ");
-        fflush(stdout);
-        vecloop(dir_empty, minq, maxq, rand, nr, v, nv);
-
-        flint_printf("big loop................ ");
-        fflush(stdout);
-        vecloop(acb_dirichlet_ui_chi_vec_loop, minq, maxq, rand, nr, v, nv);
-
-        flint_printf("med loop................ ");
-        fflush(stdout);
-        vecloop(acb_dirichlet_ui_chi_vec_primeloop, minq, maxq, rand, nr, v, nv);
-
-        flint_printf("sieve................... ");
-        fflush(stdout);
-        vecloop(acb_dirichlet_ui_chi_vec_sieve, minq, maxq, rand, nr, v, nv);
-
-        flint_printf("generic................. ");
-        fflush(stdout);
-        vecloop(acb_dirichlet_ui_chi_vec, minq, maxq, rand, nr, v, nv);
+        printf("usage: %s [log|csv|json]\n", argv[0]);
+        abort();
     }
 
-    flint_free(v);
+    if (out == CSV)
+        flint_printf("# %-12s, %7s, %7s, %7s, %7s\n","name", "num", "qmin", "qmax", "time");
+
+    for (j = 0; j < nj; j++)
+    {
+
+        ulong * v;
+        v = flint_malloc(nv[j] * sizeof(ulong));
+
+        for (i = 0; i < ni; i++)
+        {
+
+            if (out == LOG)
+                flint_printf("%wu * ui_chi(rand, 1..%wu) for all %wu <= q <= %wu....\n", nr, nv[j], qmin[i], qmax[i]);
+
+            for (l = 0; l < nf; l++)
+            {
+                ulong q;
+
+                /* eratos too slow */
+                if (l == 4 && i > 2)
+                    continue;
+
+                if (out == LOG)
+                    flint_printf("%-14s ...  ", name[l]);
+                else if (out == CSV)
+                    flint_printf("%-12s, %7d, %7d, %7d,   ", name[l], nv[j], qmin[i], qmax[i]);
+                else if (out == JSON)
+                    flint_printf("{ \"name\": \"%s\", \"num\": %d, \"qmin\": %d, \"qmax\": %d, \"time\": ",
+                            name[l], nv[j], qmin[i], qmax[i]);
+
+                TIMEIT_ONCE_START
+
+                for (q = qmin[i]; q <= qmax[i]; q++)
+                {
+                    acb_dirichlet_group_t G;
+                    acb_dirichlet_char_t chi;
+
+                    acb_dirichlet_group_init(G, q);
+                    acb_dirichlet_char_init(chi, G);
+
+                    if (l >= 6)
+                        acb_dirichlet_group_dlog_precompute(G, (l == 6) ? 1 : (l==7) ? 20 : 100);
+
+                    for (r = 0; r < nr; r++)
+                    {
+                        acb_dirichlet_char(chi, G, rand[r] % q);
+                        func[l](v, G, chi, nv[j]);
+                    }
+
+                    if (l >= 6)
+                        acb_dirichlet_group_dlog_clear(G);
+
+                    acb_dirichlet_char_clear(chi);
+                    acb_dirichlet_group_clear(G);
+                }
+
+                TIMEIT_ONCE_STOP
+
+                    if (out == JSON)
+                        flint_printf("}\n");
+                    else
+                        flint_printf("\n");
+            }
+
+        }
+        flint_free(v);
+
+    }
+
     flint_free(rand);
     flint_randclear(state);
+
     flint_cleanup();
-    flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

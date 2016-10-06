@@ -252,11 +252,16 @@ void dlog_vec_fill(ulong * v, ulong nv, ulong x);
 void dlog_vec_set_not_found(ulong *v, ulong nv, nmod_t mod);
 void dlog_vec_loop(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_loop_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_eratos_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_eratos(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_sieve_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_sieve(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec_add(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
-void dlog_vec(ulong *v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_eratos_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_eratos(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_add(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+
+
+void dlog_vec_sieve_precomp(ulong *v, ulong nv, dlog_precomp_t pre,  ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_sieve_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+void dlog_vec_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 
 #endif

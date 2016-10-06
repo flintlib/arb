@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-_acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_root_number_theta(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     arb_t x;
     acb_t eps;
@@ -29,7 +29,7 @@ _acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_d
 }
 
 void
-acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_root_number(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     if (chi->conductor < G->q)
     {
@@ -47,6 +47,6 @@ acb_dirichlet_root_number(acb_t res, const acb_dirichlet_group_t G, const acb_di
     }
     else
     {
-        _acb_dirichlet_root_number(res, G, chi, prec);
+        acb_dirichlet_root_number_theta(res, G, chi, prec);
     }
 }

@@ -18,7 +18,6 @@ apow_cmp(const apow_t * x, const apow_t * y)
     return (x->ak < y->ak) ? -1 : (x->ak > y->ak);
 }
 
-/* set size of table m=sqrt(nk) to compute k logs in a group of size n */
 ulong
 dlog_bsgs_init(dlog_bsgs_t t, ulong a, ulong mod, ulong n, ulong m)
 {

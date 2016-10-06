@@ -14,11 +14,11 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_chi(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, ulong n, slong prec)
+acb_dirichlet_chi(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, ulong n, slong prec)
 {
     ulong expo;
-    expo = acb_dirichlet_ui_chi(G, chi, n);
-    if (expo == ACB_DIRICHLET_CHI_NULL)
+    expo = dirichlet_ui_chi(G, chi, n);
+    if (expo == DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
     {

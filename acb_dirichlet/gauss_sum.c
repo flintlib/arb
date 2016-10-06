@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 static void
-gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
 
     slong k, mu = 1;
@@ -52,13 +52,13 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
     else
     {
 
-        acb_dirichlet_group_t G0;
-        acb_dirichlet_char_t chi0;
+        dirichlet_group_t G0;
+        dirichlet_char_t chi0;
         acb_t z;
 
-        acb_dirichlet_subgroup_init(G0, G, chi->conductor);
-        acb_dirichlet_char_init(chi0, G);
-        acb_dirichlet_char_primitive(chi0, G0, G, chi);
+        dirichlet_subgroup_init(G0, G, chi->conductor);
+        dirichlet_char_init(chi0, G);
+        dirichlet_char_primitive(chi0, G0, G, chi);
 
         acb_init(z);
         acb_dirichlet_gauss_sum(z, G0, chi0, prec);
@@ -68,28 +68,14 @@ gauss_sum_non_primitive(acb_t res, const acb_dirichlet_group_t G, const acb_diri
         acb_mul(res, res, z, prec);
         acb_mul_si(res, res, mu, prec);
 
-        acb_dirichlet_group_clear(G0);
-        acb_dirichlet_char_clear(chi0);
+        dirichlet_group_clear(G0);
+        dirichlet_char_clear(chi0);
         acb_clear(z);
     }
 }
 
 void
-acb_dirichlet_gauss_sum_order2(acb_t res, const acb_dirichlet_char_t chi, slong prec)
-{
-    if (chi->parity)
-    {
-        arb_zero(acb_realref(res));
-        arb_sqrt_ui(acb_imagref(res), chi->q, prec);
-    }
-    else
-    {
-        arb_zero(acb_imagref(res));
-        arb_sqrt_ui(acb_realref(res), chi->q, prec);
-    }
-}
-void
-acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec)
+acb_dirichlet_gauss_sum(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     /* TODO: no need, factor also does it... */
     if (chi->conductor != G->q)
@@ -111,4 +97,14 @@ acb_dirichlet_gauss_sum(acb_t res, const acb_dirichlet_group_t G, const acb_diri
         else
             acb_dirichlet_gauss_sum_theta(res, G, chi, prec);
     }
+}
+
+void
+acb_dirichlet_gauss_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, slong prec)
+{
+    dirichlet_char_t chi;
+    dirichlet_char_init(chi, G);
+    dirichlet_char(chi, G, a);
+    acb_dirichlet_gauss_sum(res, G, chi, prec);
+    dirichlet_char_clear(chi);
 }

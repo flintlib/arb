@@ -23,25 +23,25 @@ int main()
 
     for (q = 3; q < 250; q ++)
     {
-        acb_dirichlet_group_t G;
-        acb_dirichlet_conrey_t x;
-        acb_dirichlet_char_t chi;
+        dirichlet_group_t G;
+        dirichlet_conrey_t x;
+        dirichlet_char_t chi;
 
         acb_t s1, s2, s3, s4;
 
-        acb_dirichlet_group_init(G, q);
-        acb_dirichlet_conrey_init(x, G);
-        acb_dirichlet_char_init(chi, G);
+        dirichlet_group_init(G, q);
+        dirichlet_conrey_init(x, G);
+        dirichlet_char_init(chi, G);
 
         acb_init(s1);
         acb_init(s2);
         acb_init(s3);
         acb_init(s4);
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_conrey_one(x, G);
 
         while (1) {
 
-            acb_dirichlet_char_conrey(chi, G, x);
+            dirichlet_char_conrey(chi, G, x);
 
             acb_dirichlet_gauss_sum_naive(s1, G, chi, prec);
             acb_dirichlet_gauss_sum(s2, G, chi, prec);
@@ -67,7 +67,7 @@ int main()
                 abort();
             }
 
-            if (acb_dirichlet_conrey_next(x, G) < 0)
+            if (dirichlet_conrey_next(x, G) < 0)
                 break;
         }
         acb_clear(s1);
@@ -75,9 +75,9 @@ int main()
         acb_clear(s3);
         acb_clear(s4);
 
-        acb_dirichlet_group_clear(G);
-        acb_dirichlet_char_clear(chi);
-        acb_dirichlet_conrey_clear(x);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
+        dirichlet_conrey_clear(x);
     }
 
     flint_cleanup();
