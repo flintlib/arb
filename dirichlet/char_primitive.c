@@ -12,13 +12,13 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_primitive(dirichlet_char_t chi0, const dirichlet_group_t G0, const dirichlet_group_t G, const dirichlet_char_t chi)
+dirichlet_fullchar_primitive(dirichlet_fullchar_t chi0, const dirichlet_group_t G0, const dirichlet_group_t G, const dirichlet_fullchar_t chi)
 {
     chi0->q = chi->conductor;
     chi0->parity = chi->parity;
     chi0->conductor = chi->conductor;
-    dirichlet_conrey_primitive(chi0->x, G, chi->x, chi->conductor);
-    dirichlet_char_set_expo(chi0, G0);
+    dirichlet_char_primitive(chi0->x, G, chi->x, chi->conductor);
+    dirichlet_fullchar_set_expo(chi0, G0);
     /* optional: divide by gcd to obtain true order */
-    dirichlet_char_normalize(chi0, G0);
+    dirichlet_fullchar_normalize(chi0, G0);
 }

@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_conrey_next_primitive(dirichlet_conrey_t x, const dirichlet_group_t G)
+dirichlet_char_next_primitive(dirichlet_char_t x, const dirichlet_group_t G)
 {
     /* update index avoiding multiples of p except for first component
        if 8|q */

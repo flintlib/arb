@@ -26,7 +26,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_index(dirichlet_conrey_t x, const dirichlet_group_t G, ulong j)
+dirichlet_char_index(dirichlet_char_t x, const dirichlet_group_t G, ulong j)
 {
     slong k;
 
@@ -36,5 +36,5 @@ dirichlet_conrey_index(dirichlet_conrey_t x, const dirichlet_group_t G, ulong j)
         j = j / G->P[k].phi;
     }
 
-    dirichlet_conrey_exp(x, G);
+    dirichlet_char_exp(x, G);
 }

@@ -15,20 +15,20 @@ ulong
 dirichlet_ui_pairing(const dirichlet_group_t G, ulong m, ulong n)
 {
     ulong x;
-    dirichlet_conrey_t a, b;
+    dirichlet_char_t a, b;
 
     if (n_gcd(G->q, m) > 1 || n_gcd(G->q, n) > 1)
         return DIRICHLET_CHI_NULL;
 
-    dirichlet_conrey_init(a, G);
-    dirichlet_conrey_init(b, G);
-    dirichlet_conrey_log(a, G, m);
-    dirichlet_conrey_log(b, G, n);
+    dirichlet_char_init(a, G);
+    dirichlet_char_init(b, G);
+    dirichlet_char_log(a, G, m);
+    dirichlet_char_log(b, G, n);
 
-    x = dirichlet_ui_pairing_conrey(G, a, b);
+    x = dirichlet_ui_pairing_char(G, a, b);
 
-    dirichlet_conrey_clear(a);
-    dirichlet_conrey_clear(b);
+    dirichlet_char_clear(a);
+    dirichlet_char_clear(b);
 
     return x;
 }

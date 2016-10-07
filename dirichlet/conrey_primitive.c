@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_primitive(dirichlet_conrey_t y, const dirichlet_group_t G, const dirichlet_conrey_t x, ulong cond)
+dirichlet_char_primitive(dirichlet_char_t y, const dirichlet_group_t G, const dirichlet_char_t x, ulong cond)
 {
     slong k, l;
 

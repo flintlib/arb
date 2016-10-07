@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_ui_chi_vec(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
+dirichlet_ui_chi_vec(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv)
 {
     if (2 * nv > G->q)
         dirichlet_ui_chi_vec_loop(v, G, chi, nv);

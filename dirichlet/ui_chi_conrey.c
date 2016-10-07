@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_ui_chi_conrey(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_conrey_t x)
+dirichlet_ui_chi_char(const dirichlet_group_t G, const dirichlet_fullchar_t chi, const dirichlet_char_t x)
 {
         ulong v = 0, k;
 

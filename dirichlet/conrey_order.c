@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_conrey_order(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_char_order(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     ulong k, g;
     g = G->expo;

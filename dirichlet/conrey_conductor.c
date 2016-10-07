@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_conrey_conductor(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_char_conductor(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     int k, f;
     ulong cond = 1;

@@ -12,10 +12,10 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_init(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_init(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     slong k;
-    dirichlet_conrey_init(chi->x, G);
+    dirichlet_char_init(chi->x, G);
     chi->expo = flint_malloc(G->num * sizeof(ulong));
     chi->q = G->q;
     chi->conductor = 1;

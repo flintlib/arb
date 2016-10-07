@@ -12,12 +12,12 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_print(const dirichlet_group_t G, const dirichlet_char_t chi)
+dirichlet_fullchar_print(const dirichlet_group_t G, const dirichlet_fullchar_t chi)
 {
-    dirichlet_conrey_t x;
+    dirichlet_char_t x;
     flint_printf("chi_%wu(%wu,.) of order %wu, parity %wd, index ", G->q, chi->x->n, chi->order, chi->parity);
-    dirichlet_conrey_print(G, chi->x);
+    dirichlet_char_print(G, chi->x);
     flint_printf(" and exponents ");
     x->log = chi->expo;
-    dirichlet_conrey_print(G, x);
+    dirichlet_char_print(G, x);
 }

@@ -14,19 +14,19 @@
 /* char n has exponents  = log[k]*PHI[k] / gcd and order expo / gcd
  * so that log = expo[k] */
 void
-dirichlet_char_conrey(dirichlet_char_t chi, const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_fullchar_char(dirichlet_fullchar_t chi, const dirichlet_group_t G, const dirichlet_char_t x)
 {
     /* assume chi->x already set if x == NULL */
     if (x == NULL)
         x = chi->x;
     else
-        dirichlet_conrey_set(chi->x, G, x);
+        dirichlet_char_set(chi->x, G, x);
 
     chi->q = G->q;
-    chi->parity = dirichlet_conrey_parity(G, x);
-    chi->conductor = dirichlet_conrey_conductor(G, x);
+    chi->parity = dirichlet_char_parity(G, x);
+    chi->conductor = dirichlet_char_conductor(G, x);
 
-    dirichlet_char_set_expo(chi, G);
+    dirichlet_fullchar_set_expo(chi, G);
     /* optional: divide by gcd to obtain true order */
-    dirichlet_char_normalize(chi, G);
+    dirichlet_fullchar_normalize(chi, G);
 }

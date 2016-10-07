@@ -13,21 +13,21 @@
 
 /* loop over whole group */
 void
-dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
+dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv)
 {
     int j;
     ulong t;
     slong k;
-    dirichlet_conrey_t x;
-    dirichlet_conrey_init(x, G);
-    dirichlet_conrey_one(x, G);
+    dirichlet_char_t x;
+    dirichlet_char_init(x, G);
+    dirichlet_char_one(x, G);
 
     for (k = 0; k < nv; k++)
         v[k] = DIRICHLET_CHI_NULL;
 
     t = v[1] = 0;
 
-    while ( (j = dirichlet_conrey_next(x, G)) >= 0 )
+    while ( (j = dirichlet_char_next(x, G)) >= 0 )
     {
         /* exponents were modified up to j */
         for (k = G->num - 1; k >= j; k--)
@@ -44,5 +44,5 @@ dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_c
     for (k = G->q; k < nv ; k++ )
         v[k] = v[k - G->q];
 
-    dirichlet_conrey_clear(x);
+    dirichlet_char_clear(x);
 }

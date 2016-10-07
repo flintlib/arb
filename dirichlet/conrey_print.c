@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_print(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_char_print(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     slong k;
     if (G->num)

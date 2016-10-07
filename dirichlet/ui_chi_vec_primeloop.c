@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 static void
-chi_vec_evenpart(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
+chi_vec_evenpart(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv)
 {
 
     ulong c3, c4, x;
@@ -47,7 +47,7 @@ chi_vec_evenpart(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi
 
 /* loop over primary components */
 void
-dirichlet_ui_chi_vec_primeloop(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
+dirichlet_ui_chi_vec_primeloop(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv)
 {
     slong k, l;
 
