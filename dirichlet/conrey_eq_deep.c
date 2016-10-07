@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_conrey_eq_deep(const dirichlet_group_t G, const dirichlet_conrey_t x, const dirichlet_conrey_t y)
+dirichlet_char_eq_deep(const dirichlet_group_t G, const dirichlet_char_t x, const dirichlet_char_t y)
 {
     slong k;
 

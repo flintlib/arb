@@ -12,8 +12,8 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_clear(dirichlet_char_t chi)
+dirichlet_fullchar_clear(dirichlet_fullchar_t chi)
 {
-    dirichlet_conrey_clear(chi->x);
+    dirichlet_char_clear(chi->x);
     flint_free(chi->expo);
 }

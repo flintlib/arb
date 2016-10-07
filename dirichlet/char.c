@@ -12,8 +12,8 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char(dirichlet_char_t chi, const dirichlet_group_t G, ulong n)
+dirichlet_fullchar(dirichlet_fullchar_t chi, const dirichlet_group_t G, ulong n)
 {
-    dirichlet_conrey_log(chi->x, G, n);
-    dirichlet_char_conrey(chi, G, NULL);
+    dirichlet_char_log(chi->x, G, n);
+    dirichlet_fullchar_char(chi, G, NULL);
 }

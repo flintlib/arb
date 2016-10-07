@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_conrey_exp(dirichlet_conrey_t x, const dirichlet_group_t G)
+dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G)
 {
     ulong k, n = 1;
     for (k = 0; k < G->num; k++)

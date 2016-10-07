@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_conrey_next(dirichlet_conrey_t x, const dirichlet_group_t G)
+dirichlet_char_next(dirichlet_char_t x, const dirichlet_group_t G)
 {
     /* update index */
     int k;

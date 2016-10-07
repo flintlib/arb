@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
+dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_fullchar_t chi, ulong n)
 {
     if (n_gcd(G->q, n) > 1)
     {
@@ -21,13 +21,13 @@ dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
     else
     {
         ulong v;
-        dirichlet_conrey_t x;
-        dirichlet_conrey_init(x, G);
-        dirichlet_conrey_log(x, G, n);
+        dirichlet_char_t x;
+        dirichlet_char_init(x, G);
+        dirichlet_char_log(x, G, n);
 
-        v = dirichlet_ui_chi_conrey(G, chi, x);
+        v = dirichlet_ui_chi_char(G, chi, x);
 
-        dirichlet_conrey_clear(x);
+        dirichlet_char_clear(x);
         return v;
     }
 }

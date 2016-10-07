@@ -12,9 +12,9 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_first_primitive(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_first_primitive(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
-    dirichlet_conrey_first_primitive(chi->x, G);
-    dirichlet_char_conrey(chi, G, NULL);
-    dirichlet_char_normalize(chi, G);
+    dirichlet_char_first_primitive(chi->x, G);
+    dirichlet_fullchar_char(chi, G, NULL);
+    dirichlet_fullchar_normalize(chi, G);
 }

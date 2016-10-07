@@ -26,7 +26,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_index_conrey(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     slong k;
     ulong j = 0;

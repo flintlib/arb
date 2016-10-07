@@ -13,10 +13,8 @@
 
 #include "dirichlet.h"
 
-/* todo: modular arithmetic */
-
 ulong
-dirichlet_ui_pairing_conrey(const dirichlet_group_t G, const dirichlet_conrey_t a, const dirichlet_conrey_t b)
+dirichlet_ui_pairing_char(const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b)
 {
     ulong x, k;
     x = 0;

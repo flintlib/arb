@@ -12,10 +12,10 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_one(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_one(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     slong k;
-    dirichlet_conrey_one(chi->x, G);
+    dirichlet_char_one(chi->x, G);
     chi->q = G->q;
     chi->conductor = 1;
     chi->parity = 0;

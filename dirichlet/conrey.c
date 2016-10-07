@@ -12,12 +12,12 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_init(dirichlet_conrey_t x, const dirichlet_group_t G) {
+dirichlet_char_init(dirichlet_char_t x, const dirichlet_group_t G) {
     x->log = flint_malloc(G->num * sizeof(ulong));
-    dirichlet_conrey_one(x, G);
+    dirichlet_char_one(x, G);
 }
 
 void
-dirichlet_conrey_clear(dirichlet_conrey_t x) {
+dirichlet_char_clear(dirichlet_char_t x) {
     flint_free(x->log);
 }

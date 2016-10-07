@@ -16,7 +16,7 @@
 
 /* assume m is invertible */
 void
-dirichlet_conrey_log(dirichlet_conrey_t x, const dirichlet_group_t G, ulong m)
+dirichlet_char_log(dirichlet_char_t x, const dirichlet_group_t G, ulong m)
 {
     slong k;
     /* even part */

@@ -12,11 +12,11 @@
 #include "dirichlet.h"
 
 int
-dirichlet_char_next(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_next(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     int k;
-    k = dirichlet_conrey_next(chi->x, G);
-    dirichlet_char_conrey(chi, G, NULL);
+    k = dirichlet_char_next(chi->x, G);
+    dirichlet_fullchar_char(chi, G, NULL);
     /* return last index modified */
     return k;
 }

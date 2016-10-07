@@ -18,7 +18,6 @@
 #define DIRICHLET_INLINE static __inline__
 #endif
 
-#include "acb.h"
 #include "dlog.h"
 
 #ifdef __cplusplus
@@ -74,22 +73,22 @@ ulong dirichlet_ui_conductor(const dirichlet_group_t G, ulong a);
 int dirichlet_ui_parity(const dirichlet_group_t G, ulong a);
 ulong dirichlet_ui_order(const dirichlet_group_t G, ulong a);
 
-/* elements of the group, keep both number and log */
+/* characters, keep both number and log */
 typedef struct
 {
     ulong n;           /* number */
     ulong * log;       /* s.t. prod generators[k]^log[k] = number */
 }
-dirichlet_conrey_struct;
+dirichlet_char_struct;
 
-typedef dirichlet_conrey_struct dirichlet_conrey_t[1];
+typedef dirichlet_char_struct dirichlet_char_t[1];
 
-void dirichlet_conrey_init(dirichlet_conrey_t x, const dirichlet_group_t G);
-void dirichlet_conrey_clear(dirichlet_conrey_t x);
-void dirichlet_conrey_print(const dirichlet_group_t G, const dirichlet_conrey_t x);
+void dirichlet_char_init(dirichlet_char_t x, const dirichlet_group_t G);
+void dirichlet_char_clear(dirichlet_char_t x);
+void dirichlet_char_print(const dirichlet_group_t G, const dirichlet_char_t x);
 
 DIRICHLET_INLINE void
-dirichlet_conrey_set(dirichlet_conrey_t x, const dirichlet_group_t G, const dirichlet_conrey_t y)
+dirichlet_char_set(dirichlet_char_t x, const dirichlet_group_t G, const dirichlet_char_t y)
 {
     slong k;
     x->n = y->n;
@@ -98,38 +97,38 @@ dirichlet_conrey_set(dirichlet_conrey_t x, const dirichlet_group_t G, const diri
 }
 
 DIRICHLET_INLINE int
-dirichlet_conrey_eq(const dirichlet_conrey_t x, const dirichlet_conrey_t y)
+dirichlet_char_eq(const dirichlet_char_t x, const dirichlet_char_t y)
 {
     return (x->n == y->n);
 }
 
-int dirichlet_conrey_eq_deep(const dirichlet_group_t G, const dirichlet_conrey_t x, const dirichlet_conrey_t y);
-int dirichlet_conrey_parity(const dirichlet_group_t G, const dirichlet_conrey_t x);
-ulong dirichlet_conrey_conductor(const dirichlet_group_t G, const dirichlet_conrey_t x);
-ulong dirichlet_conrey_order(const dirichlet_group_t G, const dirichlet_conrey_t x);
+int dirichlet_char_eq_deep(const dirichlet_group_t G, const dirichlet_char_t x, const dirichlet_char_t y);
+int dirichlet_char_parity(const dirichlet_group_t G, const dirichlet_char_t x);
+ulong dirichlet_char_conductor(const dirichlet_group_t G, const dirichlet_char_t x);
+ulong dirichlet_char_order(const dirichlet_group_t G, const dirichlet_char_t x);
 
-void dirichlet_conrey_log(dirichlet_conrey_t x, const dirichlet_group_t G, ulong m);
-ulong dirichlet_conrey_exp(dirichlet_conrey_t x, const dirichlet_group_t G);
+void dirichlet_char_log(dirichlet_char_t x, const dirichlet_group_t G, ulong m);
+ulong dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G);
 
-void dirichlet_conrey_index(dirichlet_conrey_t x, const dirichlet_group_t G, ulong j);
-ulong dirichlet_index_conrey(const dirichlet_group_t G, const dirichlet_conrey_t x);
+void dirichlet_char_index(dirichlet_char_t x, const dirichlet_group_t G, ulong j);
+ulong dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x);
 
-void dirichlet_conrey_one(dirichlet_conrey_t x, const dirichlet_group_t G);
-void dirichlet_conrey_first_primitive(dirichlet_conrey_t x, const dirichlet_group_t G);
+void dirichlet_char_one(dirichlet_char_t x, const dirichlet_group_t G);
+void dirichlet_char_first_primitive(dirichlet_char_t x, const dirichlet_group_t G);
 
-int dirichlet_conrey_next(dirichlet_conrey_t x, const dirichlet_group_t G);
-int dirichlet_conrey_next_primitive(dirichlet_conrey_t x, const dirichlet_group_t G);
+int dirichlet_char_next(dirichlet_char_t x, const dirichlet_group_t G);
+int dirichlet_char_next_primitive(dirichlet_char_t x, const dirichlet_group_t G);
 
-void dirichlet_conrey_mul(dirichlet_conrey_t c, const dirichlet_group_t G, const dirichlet_conrey_t a, const dirichlet_conrey_t b);
-void dirichlet_conrey_pow(dirichlet_conrey_t c, const dirichlet_group_t G, const dirichlet_conrey_t a, ulong n);
-void dirichlet_conrey_primitive(dirichlet_conrey_t y, const dirichlet_group_t G, const dirichlet_conrey_t x, ulong cond);
+void dirichlet_char_mul(dirichlet_char_t c, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b);
+void dirichlet_char_pow(dirichlet_char_t c, const dirichlet_group_t G, const dirichlet_char_t a, ulong n);
+void dirichlet_char_primitive(dirichlet_char_t y, const dirichlet_group_t G, const dirichlet_char_t x, ulong cond);
 
 #define DIRICHLET_CHI_NULL UWORD_MAX
 
-ulong dirichlet_ui_pairing_conrey(const dirichlet_group_t G, const dirichlet_conrey_t a, const dirichlet_conrey_t b);
+ulong dirichlet_ui_pairing_char(const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b);
 ulong dirichlet_ui_pairing(const dirichlet_group_t G, ulong m, ulong n);
 
-void dirichlet_pairing_conrey(acb_t res, const dirichlet_group_t G, const dirichlet_conrey_t a, const dirichlet_conrey_t b, slong prec);
+void dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
 void dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec);
 
 /* introducing character type */
@@ -139,39 +138,39 @@ typedef struct
 {
     ulong q;           /* modulus */
     nmod_t order;       /* order */
-    dirichlet_conrey_t x;
+    dirichlet_char_t x;
     ulong * expo;      /* reduced exponents ( log[k] * PHI[k] / gcd( ) ) */
     int parity;        /* 0 for even char, 1 for odd */
     ulong conductor;
 }
-dirichlet_char_struct;
+dirichlet_fullchar_struct;
 
-typedef dirichlet_char_struct dirichlet_char_t[1];
+typedef dirichlet_fullchar_struct dirichlet_fullchar_t[1];
 
 DIRICHLET_INLINE ulong
-dirichlet_char_order(const dirichlet_char_t chi)
+dirichlet_fullchar_order(const dirichlet_fullchar_t chi)
 {
     return chi->order.n;
 }
 
 DIRICHLET_INLINE ulong
-dirichlet_char_conductor(const dirichlet_char_t chi)
+dirichlet_fullchar_conductor(const dirichlet_fullchar_t chi)
 {
     return chi->conductor;
 }
 
 DIRICHLET_INLINE int
-dirichlet_char_parity(const dirichlet_char_t chi)
+dirichlet_fullchar_parity(const dirichlet_fullchar_t chi)
 {
     return chi->parity;
 }
 
-void dirichlet_char_init(dirichlet_char_t chi, const dirichlet_group_t G);
-void dirichlet_char_clear(dirichlet_char_t chi);
-void dirichlet_char_print(const dirichlet_group_t G, const dirichlet_char_t chi);
+void dirichlet_fullchar_init(dirichlet_fullchar_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar_clear(dirichlet_fullchar_t chi);
+void dirichlet_fullchar_print(const dirichlet_group_t G, const dirichlet_fullchar_t chi);
 
 DIRICHLET_INLINE void
-dirichlet_char_set(dirichlet_char_t chi1, const dirichlet_group_t G, const dirichlet_char_t chi2)
+dirichlet_fullchar_set(dirichlet_fullchar_t chi1, const dirichlet_group_t G, const dirichlet_fullchar_t chi2)
 {
     slong k;
 
@@ -179,51 +178,51 @@ dirichlet_char_set(dirichlet_char_t chi1, const dirichlet_group_t G, const diric
     chi1->conductor = chi2->conductor;
     chi1->order = chi2->order;
     chi1->parity = chi2->parity;
-    dirichlet_conrey_set(chi1->x, G, chi2->x);
+    dirichlet_char_set(chi1->x, G, chi2->x);
     for (k = 0; k < G->num; k++)
         chi1->expo[k] = chi2->expo[k];
 }
 
 DIRICHLET_INLINE int
-dirichlet_char_eq(const dirichlet_char_t chi1, const dirichlet_char_t chi2)
+dirichlet_fullchar_eq(const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2)
 {
     return (chi1->q == chi2->q && chi1->x->n == chi2->x->n);
 }
 
-int dirichlet_char_eq_deep(const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2);
+int dirichlet_fullchar_eq_deep(const dirichlet_group_t G, const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2);
 DIRICHLET_INLINE int
-dirichlet_char_is_principal(const dirichlet_char_t chi)
+dirichlet_fullchar_is_principal(const dirichlet_fullchar_t chi)
 {
     return (chi->x->n == 1);
 }
 DIRICHLET_INLINE int
-dirichlet_char_is_real(const dirichlet_char_t chi)
+dirichlet_fullchar_is_real(const dirichlet_fullchar_t chi)
 {
     return (chi->order.n <= 2);
 }
 
-void dirichlet_char(dirichlet_char_t chi, const dirichlet_group_t G, ulong n);
-void dirichlet_char_conrey(dirichlet_char_t chi, const dirichlet_group_t G, const dirichlet_conrey_t x);
-void dirichlet_char_set_expo(dirichlet_char_t chi, const dirichlet_group_t G);
-void dirichlet_char_normalize(dirichlet_char_t chi, const dirichlet_group_t G);
-void dirichlet_char_denormalize(dirichlet_char_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar(dirichlet_fullchar_t chi, const dirichlet_group_t G, ulong n);
+void dirichlet_fullchar_char(dirichlet_fullchar_t chi, const dirichlet_group_t G, const dirichlet_char_t x);
+void dirichlet_fullchar_set_expo(dirichlet_fullchar_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar_normalize(dirichlet_fullchar_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar_denormalize(dirichlet_fullchar_t chi, const dirichlet_group_t G);
 
-void dirichlet_char_mul(dirichlet_char_t chi12, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2);
-void dirichlet_char_primitive(dirichlet_char_t chi0, const dirichlet_group_t G0, const dirichlet_group_t G, const dirichlet_char_t chi);
+void dirichlet_fullchar_mul(dirichlet_fullchar_t chi12, const dirichlet_group_t G, const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2);
+void dirichlet_fullchar_primitive(dirichlet_fullchar_t chi0, const dirichlet_group_t G0, const dirichlet_group_t G, const dirichlet_fullchar_t chi);
 
-void dirichlet_char_one(dirichlet_char_t chi, const dirichlet_group_t G);
-void dirichlet_char_first_primitive(dirichlet_char_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar_one(dirichlet_fullchar_t chi, const dirichlet_group_t G);
+void dirichlet_fullchar_first_primitive(dirichlet_fullchar_t chi, const dirichlet_group_t G);
 
-int dirichlet_char_next(dirichlet_char_t chi, const dirichlet_group_t G);
-int dirichlet_char_next_primitive(dirichlet_char_t chi, const dirichlet_group_t G);
+int dirichlet_fullchar_next(dirichlet_fullchar_t chi, const dirichlet_group_t G);
+int dirichlet_fullchar_next_primitive(dirichlet_fullchar_t chi, const dirichlet_group_t G);
 
-ulong dirichlet_ui_chi_conrey(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_conrey_t x);
-ulong dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n);
+ulong dirichlet_ui_chi_char(const dirichlet_group_t G, const dirichlet_fullchar_t chi, const dirichlet_char_t x);
+ulong dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_fullchar_t chi, ulong n);
 
 void dirichlet_ui_vec_set_null(ulong *v, const dirichlet_group_t G, slong nv);
-void dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv);
-void dirichlet_ui_chi_vec_primeloop(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv);
-void dirichlet_ui_chi_vec(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv);
+void dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv);
+void dirichlet_ui_chi_vec_primeloop(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv);
+void dirichlet_ui_chi_vec(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv);
 
 #ifdef __cplusplus
 }

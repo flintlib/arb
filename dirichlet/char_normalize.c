@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_set_expo(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_set_expo(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     slong k;
     for (k = 0; k < G->num; k++)
@@ -21,7 +21,7 @@ dirichlet_char_set_expo(dirichlet_char_t chi, const dirichlet_group_t G)
 }
 
 void
-dirichlet_char_normalize(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_normalize(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     ulong k, g;
     g = G->expo;
@@ -36,7 +36,7 @@ dirichlet_char_normalize(dirichlet_char_t chi, const dirichlet_group_t G)
 }
 
 void
-dirichlet_char_denormalize(dirichlet_char_t chi, const dirichlet_group_t G)
+dirichlet_fullchar_denormalize(dirichlet_fullchar_t chi, const dirichlet_group_t G)
 {
     ulong k, g;
     g = G->expo / chi->order.n;

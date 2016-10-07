@@ -12,8 +12,8 @@
 #include "dirichlet.h"
 
 void
-dirichlet_char_mul(dirichlet_char_t chi12, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2)
+dirichlet_fullchar_mul(dirichlet_fullchar_t chi12, const dirichlet_group_t G, const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2)
 {
-    dirichlet_conrey_mul(chi12->x, G, chi1->x, chi2->x);
-    dirichlet_char_conrey(chi12, G, NULL);
+    dirichlet_char_mul(chi12->x, G, chi1->x, chi2->x);
+    dirichlet_fullchar_char(chi12, G, NULL);
 }

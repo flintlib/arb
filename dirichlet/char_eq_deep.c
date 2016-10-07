@@ -12,9 +12,9 @@
 #include "dirichlet.h"
 
 int
-dirichlet_char_eq_deep(const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2)
+dirichlet_fullchar_eq_deep(const dirichlet_group_t G, const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2)
 {
-    dirichlet_conrey_t x, y;
+    dirichlet_char_t x, y;
 
     if (chi1->q != chi2->q)
         return 0;
@@ -25,13 +25,13 @@ dirichlet_char_eq_deep(const dirichlet_group_t G, const dirichlet_char_t chi1, c
     if (chi1->conductor != chi2->conductor)
         return 0;
 
-    if (!dirichlet_conrey_eq_deep(G, chi1->x, chi2->x))
+    if (!dirichlet_char_eq_deep(G, chi1->x, chi2->x))
         return 0;
 
     x->n = y->n = 1;
     x->log = chi1->expo;
     y->log = chi2->expo;
-    if (!dirichlet_conrey_eq_deep(G, x, y))
+    if (!dirichlet_char_eq_deep(G, x, y))
         return 0;
 
     return 1;

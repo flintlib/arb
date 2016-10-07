@@ -12,12 +12,12 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_first_primitive(dirichlet_conrey_t x, const dirichlet_group_t G)
+dirichlet_char_first_primitive(dirichlet_char_t x, const dirichlet_group_t G)
 {
     ulong k;
     if (G->q % 4 == 2)
     {
-        flint_printf("Exception (dirichlet_conrey_first_primitive). No primitive element mod %wu.\n",G->q);
+        flint_printf("Exception (dirichlet_char_first_primitive). No primitive element mod %wu.\n",G->q);
         abort();
     }
     x->n = 1;
