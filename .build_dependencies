@@ -8,9 +8,9 @@ make -j4 > /dev/null 2>&1
 make install
 cd ..
 
-wget http://www.mpfr.org/mpfr-current/mpfr-3.1.4.tar.bz2
-tar -xf mpfr-3.1.4.tar.bz2
-cd mpfr-3.1.4
+wget http://www.mpfr.org/mpfr-3.1.5/mpfr-3.1.5.tar.bz2
+tar -xf mpfr-3.1.5.tar.bz2
+cd mpfr-3.1.5
 ./configure --with-gmp=$HOME/deps --prefix=$HOME/deps --disable-static
 make -j4 > /dev/null 2>&1
 make install
