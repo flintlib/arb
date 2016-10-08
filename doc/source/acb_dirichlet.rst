@@ -195,7 +195,7 @@ L-functions
 
 .. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
-    Compute `L(s,\chi)` using decomposition in terms of the Hurwitz zeta function
+    Computes `L(s,\chi)` using decomposition in terms of the Hurwitz zeta function
 
     .. math::
 
@@ -205,3 +205,9 @@ L-functions
     is used to avoid poles.
 
     This formula is slow for large *q*.
+
+.. function:: void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+
+    Computes `L(s,\chi)` using a default choice of algorithm.
+    Currently, only the Hurwitz zeta formula is used.
+

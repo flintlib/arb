@@ -13,7 +13,6 @@
 #include "acb_dirichlet.h"
 #include "acb_poly.h"
 
-/* todo: should document or fix that it doesn't allow aliasing */
 void
 acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
