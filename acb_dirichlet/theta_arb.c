@@ -15,14 +15,18 @@
 void
 _acb_dirichlet_theta_arb_smallorder(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
+    ulong order;
     ulong * a;
+    int parity;
     acb_dirichlet_powers_t z;
 
+    parity = dirichlet_parity_char(G, chi);
+    order = dirichlet_order_char(G, chi);
     a = flint_malloc(len * sizeof(ulong));
-    dirichlet_ui_chi_vec(a, G, chi, len);
+    dirichlet_chi_vec_order(a, G, chi, order, len);
 
-    _acb_dirichlet_powers_init(z, chi->order.n, 0, 0, prec);
-    acb_dirichlet_qseries_arb_powers_smallorder(res, xt, chi->parity, a, z, len, prec);
+    _acb_dirichlet_powers_init(z, order, 0, 0, prec);
+    acb_dirichlet_qseries_arb_powers_smallorder(res, xt, parity, a, z, len, prec);
     acb_dirichlet_powers_clear(z);
 
     flint_free(a);
@@ -34,7 +38,7 @@ _acb_dirichlet_theta_arb_series(acb_t res, const dirichlet_group_t G, const diri
     acb_ptr a;
     a = _acb_vec_init(len);
     acb_dirichlet_chi_vec(a, G, chi, len, prec);
-    if (chi->parity)
+    if (dirichlet_parity_char(G, chi))
     {
         slong k;
         for (k = 2; k < len; k++)
@@ -47,15 +51,18 @@ _acb_dirichlet_theta_arb_series(acb_t res, const dirichlet_group_t G, const diri
 void
 _acb_dirichlet_theta_arb_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
-    ulong * a;
+    ulong order, * a;
     acb_dirichlet_powers_t z;
+    int parity;
 
+    parity = dirichlet_parity_char(G, chi);
+    order = dirichlet_order_char(G, chi);
     a = flint_malloc(len * sizeof(ulong));
-    dirichlet_ui_chi_vec(a, G, chi, len);
+    dirichlet_chi_vec_order(a, G, chi, order, len);
 
-    acb_dirichlet_powers_init(z, chi->order.n, len, prec);
+    acb_dirichlet_powers_init(z, order, len, prec);
 
-    acb_dirichlet_qseries_arb_powers_naive(res, xt, chi->parity, a, z, len, prec);
+    acb_dirichlet_qseries_arb_powers_naive(res, xt, parity, a, z, len, prec);
 
     acb_dirichlet_powers_clear(z);
     flint_free(a);
@@ -65,6 +72,7 @@ void
 acb_dirichlet_theta_arb(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t t, slong prec)
 {
     slong len;
+    ulong order;
     arb_t xt;
     mag_t e;
 
@@ -80,7 +88,8 @@ acb_dirichlet_theta_arb(acb_t res, const dirichlet_group_t G, const dirichlet_ch
     arb_exp(xt, xt, prec);
 
     /* TODO: tune this limit */
-    if (chi->order.n < 30)
+    order = dirichlet_order_char(G, chi);
+    if (order < 30)
         _acb_dirichlet_theta_arb_smallorder(res, G, chi, xt, len, prec);
     else
         _acb_dirichlet_theta_arb_naive(res, G, chi, xt, len, prec);

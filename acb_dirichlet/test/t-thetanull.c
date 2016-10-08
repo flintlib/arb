@@ -68,24 +68,22 @@ int main()
         dirichlet_char_first_primitive(chi, G);
 
         do {
-            ulong m;
+
             acb_zero(sum);
+            dirichlet_chi_vec(v, G, chi, nv);
 
-            dirichlet_ui_chi_vec(v, G, chi, nv);
-
-            m = G->expo / chi->order.n;
-            tt = dirichlet_char_parity(chi) ? kt : t;
+            tt = dirichlet_parity_char(G, chi) ? kt : t;
 
             for (k = 1; k < nv; k++)
                 if (v[k] != DIRICHLET_CHI_NULL)
-                    acb_addmul_arb(sum, z + (v[k] * m), tt + k, prec);
+                    acb_addmul_arb(sum, z + v[k], tt + k, prec);
 
-            if ((q == 300 && (chi->x->n == 71 || chi->x->n == 131))
-                    || (q == 600 && (chi->x->n == 11 || chi->x->n == 491)))
+            if ((q == 300 && (chi->n == 71 || chi->n == 131))
+                    || (q == 600 && (chi->n == 11 || chi->n == 491)))
             {
                 if (!acb_contains_zero(sum))
                 {
-                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
+                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->n);
                 acb_printd(sum, 10);
                 flint_printf("\n");
                 dirichlet_char_print(G, chi);
@@ -95,7 +93,7 @@ int main()
             }
             else if (acb_contains_zero(sum))
             {
-                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->x->n);
+                flint_printf("FAIL: Theta(chi_%wu(%wu))=", q, chi->n);
                 acb_printd(sum, 10);
                 flint_printf("\n");
                 dirichlet_char_print(G, chi);

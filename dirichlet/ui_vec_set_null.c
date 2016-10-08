@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 void
-dirichlet_ui_vec_set_null(ulong *v, const dirichlet_group_t G, slong nv)
+dirichlet_vec_set_null(ulong *v, const dirichlet_group_t G, slong nv)
 {
     slong k, l;
     if (G->q_even > 1)

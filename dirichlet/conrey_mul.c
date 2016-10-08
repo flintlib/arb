@@ -16,6 +16,6 @@ dirichlet_char_mul(dirichlet_char_t c, const dirichlet_group_t G, const dirichle
 {
     ulong k;
     for (k = 0; k < G->num ; k++)
-        c->log[k] = (a->log[k] + b->log[k]) % G->P[k].phi;
+        c->log[k] = nmod_add(a->log[k], b->log[k], G->P[k].phi);
     c->n = nmod_mul(a->n, b->n, G->mod);
 }

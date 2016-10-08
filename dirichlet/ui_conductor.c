@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_ui_conductor(const dirichlet_group_t G, ulong a)
+dirichlet_conductor_ui(const dirichlet_group_t G, ulong a)
 {
     slong k;
     ulong ap, cond;

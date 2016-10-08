@@ -25,7 +25,7 @@ acb_dirichlet_jacobi_sum_gauss(acb_t res, const dirichlet_group_t G, const diric
     acb_init(tmp);
 
     acb_dirichlet_gauss_sum(res, G, chi1, prec);
-    if (chi2->x->n == chi1->x->n)
+    if (chi2->n == chi1->n)
         acb_set(tmp, res);
     else
         acb_dirichlet_gauss_sum(tmp, G, chi2, prec);

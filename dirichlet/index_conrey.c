@@ -32,7 +32,7 @@ dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x)
     ulong j = 0;
 
     for (k = 0; k < G->num; k++)
-        j = j * G->P[k].phi + x->log[k];
+        j = j * G->P[k].phi.n + x->log[k];
 
     return j;
 }

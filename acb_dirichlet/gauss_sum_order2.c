@@ -12,16 +12,16 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_gauss_sum_order2(acb_t res, const dirichlet_char_t chi, slong prec)
+acb_dirichlet_gauss_sum_order2(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
-    if (chi->parity)
+    if (dirichlet_parity_char(G, chi))
     {
         arb_zero(acb_realref(res));
-        arb_sqrt_ui(acb_imagref(res), chi->q, prec);
+        arb_sqrt_ui(acb_imagref(res), G->q, prec);
     }
     else
     {
         arb_zero(acb_imagref(res));
-        arb_sqrt_ui(acb_realref(res), chi->q, prec);
+        arb_sqrt_ui(acb_realref(res), G->q, prec);
     }
 }

@@ -32,8 +32,8 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
 
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
-void acb_dirichlet_pairing_conrey(acb_t res, const dirichlet_group_t G, const dirichlet_conrey_t a, const dirichlet_conrey_t b, slong prec);
 void acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec);
+void acb_dirichlet_chi_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
 
 /* precompute powers of a root of unity */
 typedef struct
@@ -71,7 +71,7 @@ void acb_dirichlet_ui_theta_arb(acb_t res, const dirichlet_group_t G, ulong a, c
 
 void acb_dirichlet_gauss_sum_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_factor(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
-void acb_dirichlet_gauss_sum_order2(acb_t res, const dirichlet_char_t chi, slong prec);
+void acb_dirichlet_gauss_sum_order2(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum_theta(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 void acb_dirichlet_gauss_sum(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
