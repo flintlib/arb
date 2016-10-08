@@ -17,7 +17,7 @@ acb_dirichlet_ui_theta_arb(acb_t res, const dirichlet_group_t G, ulong a, const 
     dirichlet_char_t chi;
 
     dirichlet_char_init(chi, G);
-    dirichlet_char(chi, G, a);
+    dirichlet_char_log(chi, G, a);
 
     acb_dirichlet_theta_arb(res, G, chi, t, prec);
 

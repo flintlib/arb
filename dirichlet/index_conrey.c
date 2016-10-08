@@ -26,13 +26,13 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_index_conrey(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     slong k;
     ulong j = 0;
 
     for (k = 0; k < G->num; k++)
-        j = j * G->P[k].phi + x->log[k];
+        j = j * G->P[k].phi.n + x->log[k];
 
     return j;
 }

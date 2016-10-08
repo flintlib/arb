@@ -12,11 +12,11 @@
 #include "acb_dirichlet.h"
 
 static void
-gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, ulong cond, slong prec)
 {
 
     slong k, mu = 1;
-    ulong NN0 = G->q / chi->conductor;
+    ulong NN0 = G->q / cond;
 
     /* G(chi) = mu(N/N0)chi0(N/N0)G(chi0) */
 
@@ -45,7 +45,7 @@ gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_ch
             mu *= -1;
     }
 
-    if (chi->x->n == 1)
+    if (chi->n == 1)
     {
         acb_set_si(res, mu);
     }
@@ -56,15 +56,15 @@ gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_ch
         dirichlet_char_t chi0;
         acb_t z;
 
-        dirichlet_subgroup_init(G0, G, chi->conductor);
-        dirichlet_char_init(chi0, G);
-        dirichlet_char_primitive(chi0, G0, G, chi);
+        /* primitive char associated to chi */
+        dirichlet_subgroup_init(G0, G, cond);
+        dirichlet_char_init(chi0, G0);
+        dirichlet_char_lower(chi0, G0, chi, G);
 
         acb_init(z);
         acb_dirichlet_gauss_sum(z, G0, chi0, prec);
 
         acb_dirichlet_chi(res, G0, chi0, NN0, prec);
-
         acb_mul(res, res, z, prec);
         acb_mul_si(res, res, mu, prec);
 
@@ -77,14 +77,15 @@ gauss_sum_non_primitive(acb_t res, const dirichlet_group_t G, const dirichlet_ch
 void
 acb_dirichlet_gauss_sum(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
+    ulong cond = dirichlet_conductor_char(G, chi);
     /* TODO: no need, factor also does it... */
-    if (chi->conductor != G->q)
+    if (cond != G->q)
     {
-        gauss_sum_non_primitive(res, G, chi, prec);
+        gauss_sum_non_primitive(res, G, chi, cond, prec);
     }
-    else if (chi->order.n <= 2)
+    else if (dirichlet_char_is_real(G, chi))
     {
-        acb_dirichlet_gauss_sum_order2(res, chi, prec);
+        acb_dirichlet_gauss_sum_order2(res, G, chi, prec);
     }
     else if (G->num  > 1 && G->num > G->neven)
     {
@@ -92,6 +93,7 @@ acb_dirichlet_gauss_sum(acb_t res, const dirichlet_group_t G, const dirichlet_ch
     }
     else
     {
+        /* must be non primitive */
         if (acb_dirichlet_theta_length_d(G->q, 1, prec) > G->q)
             acb_dirichlet_gauss_sum_naive(res, G, chi, prec);
         else
@@ -104,7 +106,7 @@ acb_dirichlet_gauss_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, slong 
 {
     dirichlet_char_t chi;
     dirichlet_char_init(chi, G);
-    dirichlet_char(chi, G, a);
+    dirichlet_char_log(chi, G, a);
     acb_dirichlet_gauss_sum(res, G, chi, prec);
     dirichlet_char_clear(chi);
 }

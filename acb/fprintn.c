@@ -15,24 +15,36 @@
 void
 acb_fprintn(FILE * file, const acb_t z, long digits, ulong flags)
 {
-    arb_fprintn(file, acb_realref(z), digits, flags);
-
-    if ((arb_is_exact(acb_imagref(z)) || (flags & ARB_STR_NO_RADIUS))
-            && arf_sgn(arb_midref(acb_imagref(z))) < 0)
+    if (arb_is_zero(acb_imagref(z)))
     {
-        arb_t t;
-        arb_init(t);
-        arb_neg(t, acb_imagref(z));
-        flint_fprintf(file, " - ");
-        arb_fprintn(file, t, digits, flags);
-        arb_clear(t);
+        arb_fprintn(file, acb_realref(z), digits, flags);
+    }
+    else if (arb_is_zero(acb_realref(z)))
+    {
+        arb_fprintn(file, acb_imagref(z), digits, flags);
+        flint_fprintf(file, "*I");
     }
     else
     {
-        flint_fprintf(file, " + ");
-        arb_fprintn(file, acb_imagref(z), digits, flags);
-    }
+        arb_fprintn(file, acb_realref(z), digits, flags);
 
-    flint_fprintf(file, "*I");
+        if ((arb_is_exact(acb_imagref(z)) || (flags & ARB_STR_NO_RADIUS))
+                && arf_sgn(arb_midref(acb_imagref(z))) < 0)
+        {
+            arb_t t;
+            arb_init(t);
+            arb_neg(t, acb_imagref(z));
+            flint_fprintf(file, " - ");
+            arb_fprintn(file, t, digits, flags);
+            arb_clear(t);
+        }
+        else
+        {
+            flint_fprintf(file, " + ");
+            arb_fprintn(file, acb_imagref(z), digits, flags);
+        }
+
+        flint_fprintf(file, "*I");
+    }
 }
 

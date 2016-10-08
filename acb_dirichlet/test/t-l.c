@@ -99,7 +99,7 @@ int main()
         dirichlet_group_init(G, q[i]);
         dirichlet_char_init(chi, G);
 
-        dirichlet_char(chi, G, m[i]);
+        dirichlet_char_log(chi, G, m[i]);
 
         for (j = 0; j < nx; j++)
         {

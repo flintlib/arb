@@ -12,22 +12,23 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_ui_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
+dirichlet_pairing(const dirichlet_group_t G, ulong m, ulong n)
 {
-    if (n_gcd(G->q, n) > 1)
-    {
+    ulong x;
+    dirichlet_char_t a, b;
+
+    if (n_gcd(G->q, m) > 1 || n_gcd(G->q, n) > 1)
         return DIRICHLET_CHI_NULL;
-    }
-    else
-    {
-        ulong v;
-        dirichlet_conrey_t x;
-        dirichlet_conrey_init(x, G);
-        dirichlet_conrey_log(x, G, n);
 
-        v = dirichlet_ui_chi_conrey(G, chi, x);
+    dirichlet_char_init(a, G);
+    dirichlet_char_init(b, G);
+    dirichlet_char_log(a, G, m);
+    dirichlet_char_log(b, G, n);
 
-        dirichlet_conrey_clear(x);
-        return v;
-    }
+    x = dirichlet_pairing_char(G, a, b);
+
+    dirichlet_char_clear(a);
+    dirichlet_char_clear(b);
+
+    return x;
 }

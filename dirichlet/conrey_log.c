@@ -16,7 +16,7 @@
 
 /* assume m is invertible */
 void
-dirichlet_conrey_log(dirichlet_conrey_t x, const dirichlet_group_t G, ulong m)
+dirichlet_char_log(dirichlet_char_t x, const dirichlet_group_t G, ulong m)
 {
     slong k;
     /* even part */
@@ -39,7 +39,7 @@ dirichlet_conrey_log(dirichlet_conrey_t x, const dirichlet_group_t G, ulong m)
         dirichlet_prime_group_struct P = G->P[k];
         if (P.dlog == NULL)
         {
-            x->log[k] = dlog_once(m % P.pe.n, P.g, P.pe, P.phi);
+            x->log[k] = dlog_once(m % P.pe.n, P.g, P.pe, P.phi.n);
         }
         else
         {

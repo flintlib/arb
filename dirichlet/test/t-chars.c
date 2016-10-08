@@ -13,140 +13,137 @@
 
 int main()
 {
-    slong iter, bits;
+    slong iter;
     flint_rand_t state;
 
-    flint_printf("chars....");
+    flint_printf("char....");
     fflush(stdout);
     flint_randinit(state);
-    for (bits = 5; bits <= 30; bits += 5)
+
+    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
     {
+        dirichlet_group_t G;
+        dirichlet_char_t x, y;
+        ulong q, n, k, sum;
+        slong ref;
 
-        for (iter = 0; iter < 50; iter++)
+        q = 1 + n_randint(state, 1000 * (1 + iter / 100));
+
+        dirichlet_group_init(G, q);
+
+        dirichlet_char_init(x, G);
+        dirichlet_char_init(y, G);
+
+        /* check group size and elements */
+        dirichlet_char_one(x, G);
+        sum = 1;
+
+        for (n = 1; dirichlet_char_next(x, G) >= 0; n++)
+            sum += x->n * x->n;
+
+        if (FLINT_BITS == 64 || q < 1024)
         {
-            dirichlet_group_t G;
-            dirichlet_conrey_t x;
-            dirichlet_char_t chi, chi2;
-            ulong q, iter2;
+            /* use http://oeis.org/A053818 to check all elements
+             * are gone through */
+            ref = (q % 4 == 2) ? -2 : 1;
+            for (k = (G->neven == 2); k < G->num; k++)
+                ref = - ref * G->P[k].p;
+            ref = ( G->phi_q * (2 * q * q + ref) ) / 6;
 
-            q = 2 + n_randint(state, 1 << bits);
-
-            dirichlet_group_init(G, q);
-            dirichlet_conrey_init(x, G);
-            dirichlet_char_init(chi, G);
-            dirichlet_char_init(chi2, G);
-
-            dirichlet_group_dlog_precompute(G, 50);
-
-            /* check number char properties */
-            for (iter2 = 0; iter2 < 100; iter2++)
+            if (n != G->phi_q)
             {
-                int par;
-                ulong m, n;
-                ulong order, chim1, pairing, cn, cm, cond;
+                flint_printf("FAIL: group size\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("phi(q) = %wu\n\n", G->phi_q);
+                flint_printf("loop index = %wu\n\n", n);
+                abort();
+            }
+            if (sum != ref && q > 1)
+            {
+                flint_printf("FAIL: sum test\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("sum k^2 = %wu\n\n", ref);
+                flint_printf("sum obtained = %wu\n\n", sum);
+                abort();
+            }
+        }
 
-                do
-                    m = n_randint(state, q);
-                while (n_gcd(q, m) > 1);
+        if (q % 4 != 2)
+        {
+            dirichlet_char_first_primitive(x, G);
+            for (n = 1; dirichlet_char_next_primitive(x, G) >= 0; n++);
 
-                dirichlet_char(chi, G, m);
-                dirichlet_conrey_log(x, G, m);
-                dirichlet_char_conrey(chi2, G, x);
-
-                if (!dirichlet_char_eq_deep(G, chi, chi2))
-                {
-                    flint_printf("FAIL: init char\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    dirichlet_char_print(G, chi);
-                    flint_printf("\n");
-                    dirichlet_char_print(G, chi2);
-                    flint_printf("\n");
-                    abort();
-                }
-
-                order = dirichlet_ui_order(G, m);
-                if (order != chi->order.n)
-                {
-                    flint_printf("FAIL: order\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    flint_printf("order(m) = %wu\n\n", order);
-                    flint_printf("chi->order = %wu\n\n", chi->order);
-                    abort();
-                }
-
-                cond = dirichlet_ui_conductor(G, m);
-                if (cond != chi->conductor)
-                {
-                    flint_printf("FAIL: conductor\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    flint_printf("conductor(m) = %wu\n\n", cond);
-                    flint_printf("chi->conductor = %wu\n\n", chi->conductor);
-                    abort();
-                }
-
-                par = dirichlet_ui_parity(G, m);
-                chim1 = dirichlet_ui_chi(G, chi, q - 1);
-                if (dirichlet_char_parity(chi) != par || par != (chim1 != 0))
-                {
-                    flint_printf("FAIL: parity\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    flint_printf("chi(-1) = %wu\n\n", chim1);
-                    flint_printf("char_parity = %d", dirichlet_char_parity(chi));
-                    flint_printf("parity_ui = %d", par);
-                    dirichlet_char_print(G, chi);
-                    abort();
-                }
-
-                do
-                    n = n_randint(state, q);
-                while (n_gcd(q, n) > 1);
-
-                dirichlet_char(chi2, G, n);
-                pairing = dirichlet_ui_pairing(G, m, n);
-                cn = dirichlet_ui_chi(G, chi, n) * (G->expo / chi->order.n);
-                cm = dirichlet_ui_chi(G, chi2, m) * (G->expo / chi2->order.n);
-
-                if (pairing != cn || pairing != cm)
-                {
-                    flint_printf("FAIL: pairing\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    flint_printf("n = %wu\n\n", n);
-                    flint_printf("chi(m,n) = %wu\n\n", pairing);
-                    flint_printf("chi(m)(n) = %wu\n\n", cn);
-                    flint_printf("chi(n)(m) = %wu\n\n", cm);
-                    abort();
-                }
-
-                dirichlet_conrey_next(x, G);
-                dirichlet_char_next(chi, G);
-                dirichlet_char_conrey(chi2, G, x);
-
-                if (!dirichlet_char_eq_deep(G, chi, chi2))
-                {
-                    flint_printf("FAIL: next char\n\n");
-                    flint_printf("q = %wu\n\n", q);
-                    flint_printf("m = %wu\n\n", m);
-                    dirichlet_char_print(G, chi);
-                    flint_printf("\n");
-                    dirichlet_char_print(G, chi2);
-                    flint_printf("\n");
-                    abort();
-                }
-
+            ref = dirichlet_number_primitive(G);
+            if (n != ref)
+            {
+                flint_printf("FAIL: number of primitive elements\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("# primitive = %wu\n\n", ref);
+                flint_printf("loop index = %wu\n\n", n);
+                abort();
             }
 
-            dirichlet_group_dlog_clear(G);
+            /* some random elements, check log and exp */
+            for (n = 0; n < 30; n++)
+            {
+                slong k;
+                ulong m;
 
-            dirichlet_char_clear(chi);
-            dirichlet_char_clear(chi2);
-            dirichlet_conrey_clear(x);
-            dirichlet_group_clear(G);
+                for (m = 1; n_gcd(m, q) > 1; m = n_randint(state, q));
+                dirichlet_char_log(x, G, m);
+
+                if (m != dirichlet_char_exp(x, G))
+                {
+                    flint_printf("FAIL: char log and exp\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("m = %wu\n\n", m);
+                    flint_printf("char = ");
+                    dirichlet_char_print(G, x);
+                    flint_printf("\n\nnumber = %wu\n\n", x->n);
+                    abort();
+                }
+
+                for (k = 0; k < G->num; k++)
+                    x->log[k] = n_randint(state, G->P[k].phi.n);
+
+                m = dirichlet_char_exp(x, G);
+                dirichlet_char_log(y, G, m);
+
+                if (!dirichlet_char_eq_deep(G, x, y))
+                {
+                    flint_printf("FAIL: char exp and log\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("char = ");
+                    dirichlet_char_print(G, x);
+                    flint_printf("\n\nm = %wu\n\n", m);
+                    flint_printf("log = ");
+                    dirichlet_char_print(G, y);
+                    flint_printf("\n\nnumber = %wu\n\n", y->n);
+                    abort();
+                }
+
+                dirichlet_char_next_primitive(x, G);
+                m = x->n;
+
+                if (m != dirichlet_char_exp(x, G))
+                {
+                    flint_printf("FAIL: char number next primitive\n\n");
+                    flint_printf("q = %wu\n\n", q);
+                    flint_printf("char = ");
+                    dirichlet_char_print(G, y);
+                    flint_printf(", m = %wu\n\n", y->n);
+                    flint_printf("next primitive = ");
+                    dirichlet_char_print(G, x);
+                    flint_printf(", m = %wu\n\n", m);
+                    flint_printf("exp = %wu\n\n", x->n);
+                    abort();
+                }
+            }
         }
+
+        dirichlet_char_clear(x);
+        dirichlet_char_clear(y);
+        dirichlet_group_clear(G);
     }
 
     flint_randclear(state);

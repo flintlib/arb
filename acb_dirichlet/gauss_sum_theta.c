@@ -14,8 +14,9 @@
 void
 acb_dirichlet_gauss_sum_theta(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
-    if (chi->conductor < G->q || (G->q == 300 && (chi->x->n == 71 || chi->x->n == 131))
-            || (G->q == 600 && (chi->x->n == 11 || chi->x->n == 491)))
+    ulong cond = dirichlet_conductor_char(G, chi);
+    if (cond < G->q || (G->q == 300 && (chi->n == 71 || chi->n == 131))
+            || (G->q == 600 && (chi->n == 11 || chi->n == 491)))
     {
         flint_printf("gauss_sum_theta: non available for non primitive character"
                 "or exceptional characters chi_300(71,.), chi_300(131,.), "
@@ -26,7 +27,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const dirichlet_group_t G, const dirich
     {
         acb_t iq;
         acb_init(iq);
-        acb_dirichlet_gauss_sum_order2(iq, chi, prec);
+        acb_dirichlet_gauss_sum_order2(iq, G, chi, prec);
         acb_dirichlet_root_number_theta(res, G, chi, prec);
         acb_mul(res, res, iq, prec);
         acb_clear(iq);

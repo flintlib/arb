@@ -26,15 +26,15 @@
 #include "dirichlet.h"
 
 void
-dirichlet_conrey_index(dirichlet_conrey_t x, const dirichlet_group_t G, ulong j)
+dirichlet_char_index(dirichlet_char_t x, const dirichlet_group_t G, ulong j)
 {
     slong k;
 
-    for (k = 0; k < G->num; k++)
+    for (k = G->num - 1; k >= 0; k--)
     {
-        x->log[k] = j % G->P[k].phi;
-        j = j / G->P[k].phi;
+        x->log[k] = j % G->P[k].phi.n;
+        j = j / G->P[k].phi.n;
     }
 
-    dirichlet_conrey_exp(x, G);
+    dirichlet_char_exp(x, G);
 }

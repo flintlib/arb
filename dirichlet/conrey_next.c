@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_conrey_next(dirichlet_conrey_t x, const dirichlet_group_t G)
+dirichlet_char_next(dirichlet_char_t x, const dirichlet_group_t G)
 {
     /* update index */
     int k;
@@ -20,7 +20,7 @@ dirichlet_conrey_next(dirichlet_conrey_t x, const dirichlet_group_t G)
     {
         x->n = nmod_mul(x->n, G->generators[k], G->mod);
         x->log[k] += 1;
-        if (x->log[k] < G->P[k].phi)
+        if (x->log[k] < G->P[k].phi.n)
             break;
         x->log[k] = 0;
     }

@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_conrey_parity(const dirichlet_group_t G, const dirichlet_conrey_t x)
+dirichlet_parity_char(const dirichlet_group_t G, const dirichlet_char_t x)
 {
     int k, odd = 0;
     for (k = 0; k < G->num; k++)

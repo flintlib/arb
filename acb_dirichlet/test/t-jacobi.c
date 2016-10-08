@@ -52,15 +52,16 @@ int main()
                 if (!acb_overlaps(s1, s2))
                 {
                     flint_printf("FAIL: J_%wu(%wu,%wu)",
-                            q, chi1->x->n, chi2->x->n);
+                            q, chi1->n, chi2->n);
                     flint_printf("\nnaive ");
                     acb_printd(s1, 25);
                     flint_printf("\ndefault ");
                     acb_printd(s2, 25);
                     flint_printf("\n");
                     flint_printf("cond = %wu, %wu, %wu\n",
-                            chi1->conductor, chi2->conductor,
-                            dirichlet_ui_conductor(G, nmod_mul(chi1->x->n, chi2->x->n, G->mod))
+                            dirichlet_conductor_char(G, chi1),
+                            dirichlet_conductor_char(G, chi2),
+                            dirichlet_conductor_ui(G, nmod_mul(chi1->n, chi2->n, G->mod))
                             );
                     abort();
                 }

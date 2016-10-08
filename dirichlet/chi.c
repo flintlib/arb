@@ -11,12 +11,23 @@
 
 #include "dirichlet.h"
 
-int
-dirichlet_char_next(dirichlet_char_t chi, const dirichlet_group_t G)
+ulong
+dirichlet_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
 {
-    int k;
-    k = dirichlet_conrey_next(chi->x, G);
-    dirichlet_char_conrey(chi, G, NULL);
-    /* return last index modified */
-    return k;
+    if (n_gcd(G->q, n) > 1)
+    {
+        return DIRICHLET_CHI_NULL;
+    }
+    else
+    {
+        ulong v;
+        dirichlet_char_t x;
+        dirichlet_char_init(x, G);
+        dirichlet_char_log(x, G, n);
+
+        v = dirichlet_pairing_char(G, chi, x);
+
+        dirichlet_char_clear(x);
+        return v;
+    }
 }

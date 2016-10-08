@@ -45,12 +45,12 @@ dirichlet_prime_group_init(dirichlet_prime_group_struct * P, ulong p, int e)
         if (p == 2)
         {
             P->e = 2;
-            P->phi = 2;
+            nmod_init(&P->phi, 2);
             P->g = (1 << e) - 1;
         }
         else
         {
-            P->phi = 1 << (e - 2);
+            nmod_init(&P->phi, 1 << (e - 2));
             P->g = 5;
         }
     }
@@ -58,7 +58,7 @@ dirichlet_prime_group_init(dirichlet_prime_group_struct * P, ulong p, int e)
     {
         ulong pe1;
         pe1 = n_pow(p, e - 1);
-        P->phi = (p-1) * pe1;
+        nmod_init(&P->phi, (p-1) * pe1);
         nmod_init(&P->pe, p * pe1);
         P->g = primitive_root_p_and_p2(p);
     }
@@ -75,19 +75,19 @@ dirichlet_group_lift_generators(dirichlet_group_t G)
     if (G->neven)
     {
         G->phi_q = G->q_even / 2;
-        G->expo = P[G->neven - 1].phi;
+        G->expo = P[G->neven - 1].phi.n;
     }
     for (k = G->neven; k < G->num; k++)
     {
-        G->phi_q *= P[k].phi;
-        G->expo *= P[k].phi / n_gcd(G->expo, P[k].p - 1);
+        G->phi_q *= P[k].phi.n;
+        G->expo *= P[k].phi.n / n_gcd(G->expo, P[k].p - 1);
     }
 
     for (k = 0; k < G->num; k++)
     {
         nmod_t pe;
         ulong qpe, v;
-        G->PHI[k] = G->expo / G->P[k].phi;
+        G->PHI[k] = G->expo / G->P[k].phi.n;
         /* lift generators mod q */
         /* u * p^e + v * q/p^e = 1 -> g mod q = 1 + (g-1) * v*(q/p^e) */
         pe = G->P[k].pe;
@@ -199,6 +199,8 @@ dirichlet_subgroup_init(dirichlet_group_t H, const dirichlet_group_t G, ulong h)
                 H->P[j].e = s[k];
                 if (k == 0)
                     H->P[j].g = H->q_even - 1;
+                else
+                    nmod_init(&H->P[j].phi, H->q_even / 4);
             }
             j++;
     }
@@ -210,9 +212,11 @@ dirichlet_subgroup_init(dirichlet_group_t H, const dirichlet_group_t G, ulong h)
             H->P[j] = G->P[k];
             if (s[k] < G->P[k].e)
             {
-                ulong p = H->P[j].p;
+                ulong pf, p = H->P[j].p;
                 H->P[j].e = s[k];
-                nmod_init(&H->P[j].pe, n_pow(p, s[k]));
+                pf = n_pow(p, s[k]);
+                nmod_init(&H->P[j].pe, pf);
+                nmod_init(&H->P[j].phi, (p-1) * pf / p);
             }
             j++;
         }

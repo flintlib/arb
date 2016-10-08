@@ -11,9 +11,16 @@
 
 #include "dirichlet.h"
 
-void
-dirichlet_char(dirichlet_char_t chi, const dirichlet_group_t G, ulong n)
+ulong
+dirichlet_pairing_char(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_char_t x)
 {
-    dirichlet_conrey_log(chi->x, G, n);
-    dirichlet_char_conrey(chi, G, NULL);
+    ulong v = 0, k;
+    nmod_t order;
+
+    nmod_init(&order, G->expo);
+
+    for (k = 0; k < G->num; k++)
+        v = nmod_add(v, G->PHI[k] * nmod_mul(chi->log[k], x->log[k], G->P[k].phi), order);
+
+    return v;
 }
