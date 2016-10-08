@@ -166,7 +166,7 @@ Character type
 
     Same as :func:`dirichlet_char_next`, but jumps to the next primitive character of *G*.
 
-.. function:: ulong dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x);
+.. function:: ulong dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x)
 
     Returns the lexicographic index of the *log* of *x* as an integer in `0\dots \varphi(q)`.
 
