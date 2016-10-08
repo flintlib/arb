@@ -31,7 +31,7 @@ nmod_order_precomp(ulong a, nmod_t mod, ulong expo, n_factor_t fac)
 }
 
 ulong
-dirichlet_ui_order(const dirichlet_group_t G, ulong a)
+dirichlet_order_ui(const dirichlet_group_t G, ulong a)
 {
     n_factor_t fac;
 

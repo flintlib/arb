@@ -38,9 +38,9 @@ dirichlet_char_next_primitive(dirichlet_char_t x, const dirichlet_group_t G)
             x->n = nmod_mul(x->n, G->generators[k], G->mod);
             x->log[k]++;
         }
-        if (x->log[k] < G->P[k].phi)
+        if (x->log[k] < G->P[k].phi.n)
             break;
-        if (x->log[k] == G->P[k].phi)
+        if (x->log[k] == G->P[k].phi.n)
             x->n = nmod_mul(x->n, G->generators[k], G->mod);
         x->log[k] =  1;
 #else

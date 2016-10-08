@@ -28,15 +28,15 @@ acb_dirichlet_jacobi_sum_factor(acb_t res,  const dirichlet_group_t G, const dir
         p = G->P[k].p;
         e = G->P[k].e;
         pe = G->P[k].pe;
-        ap = chi1->x->n % pe.n;
-        bp = chi2->x->n % pe.n;
+        ap = chi1->n % pe.n;
+        bp = chi2->n % pe.n;
 
         if (ap == 1 || bp == 1 || nmod_mul(ap, bp, pe) == 1)
         {
             slong r;
             ulong cond;
 
-            cond = (ap == 1) ? chi2->conductor : chi1->conductor;
+            cond = (ap == 1) ? dirichlet_conductor_char(G, chi2) : dirichlet_conductor_char(G, chi1);
             r = jacobi_one_prime(p, e, pe.n, cond);
 
             /* chi(a,-1) if ap * bp = 1 */
@@ -54,13 +54,10 @@ acb_dirichlet_jacobi_sum_factor(acb_t res,  const dirichlet_group_t G, const dir
             dirichlet_char_init(chi1p, Gp);
             dirichlet_char_init(chi2p, Gp);
 
-            chi1p->x->n = ap;
-            chi1p->x->log[0] = chi1->x->log[k];
-            chi2p->x->n = ap;
-            chi2p->x->log[0] = chi2->x->log[k];
-
-            dirichlet_char_conrey(chi1p, Gp, NULL);
-            dirichlet_char_conrey(chi2p, Gp, NULL);
+            chi1p->n = ap;
+            chi1p->log[0] = chi1->log[k];
+            chi2p->n = ap;
+            chi2p->log[0] = chi2->log[k];
 
             /* TODO: work out gauss relations for e > 1 */
             if (p <= 100 || e > 1)

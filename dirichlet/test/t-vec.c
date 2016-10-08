@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "dirichlet.h"
 
 static ulong
 vec_diff(ulong * v, ulong * ref, ulong nv)
@@ -31,41 +31,55 @@ int main()
     for (q = 2; q < 600; q ++)
     {
         dirichlet_group_t G;
-        dirichlet_conrey_t x;
         dirichlet_char_t chi;
         ulong * v1, * v2, nv, k;
 
         dirichlet_group_init(G, q);
-        dirichlet_conrey_init(x, G);
         dirichlet_char_init(chi, G);
 
         nv = 100;
         v1 = flint_malloc(nv * sizeof(ulong));
         v2 = flint_malloc(nv * sizeof(ulong));
 
-        dirichlet_conrey_one(x, G);
+        dirichlet_char_one(chi, G);
 
         do {
 
-            dirichlet_char_conrey(chi, G, x);
+            ulong order;
 
-            dirichlet_ui_chi_vec_loop(v1, G, chi, nv);
-            dirichlet_ui_chi_vec_primeloop(v2, G, chi, nv);
+            dirichlet_chi_vec_loop(v1, G, chi, nv);
+            dirichlet_chi_vec_primeloop(v2, G, chi, nv);
 
             if ((k = vec_diff(v1, v2, nv)))
             {
-                flint_printf("FAIL: chi(%wu,%wu) = %wu != chi(%wu,%wu) = %wu mod %wu (modulus = %wu)\n",
-                        chi->x->n, k, v1[k], chi->x->n, k, v2[k], chi->order, q);
+                flint_printf("FAIL: chi_%wu(%wu,%wu) [mod %wu]\n", q, chi->n, k, G->expo);
+                flint_printf("vec_loop      -> %wu\n", v1[k]);
+                flint_printf("vec_primeloop -> %wu\n", v2[k]);
+                flint_printf("pairing        = %wu\n", dirichlet_pairing(G, chi->n, k));
                 abort();
             }
 
-        } while (dirichlet_conrey_next(x, G) >= 0);
+            order = dirichlet_order_char(G, chi);
+            dirichlet_chi_vec_loop_order(v1, G, chi, order, nv);
+            dirichlet_chi_vec_primeloop_order(v2, G, chi, order, nv);
+
+            if ((k = vec_diff(v1, v2, nv)))
+            {
+                flint_printf("FAIL: chi_%wu(%wu,%wu) [mod %wu]\n", q, chi->n, k, order);
+                flint_printf("vec_loop      -> %wu\n", v1[k]);
+                flint_printf("vec_primeloop -> %wu\n", v2[k]);
+                flint_printf("pairing        = %wu mod %wu\n", dirichlet_pairing(G, chi->n, k), G->expo);
+                abort();
+            }
+
+
+
+        } while (dirichlet_char_next(chi, G) >= 0);
 
         flint_free(v1);
         flint_free(v2);
         dirichlet_group_clear(G);
         dirichlet_char_clear(chi);
-        dirichlet_conrey_clear(x);
     }
 
     flint_cleanup();

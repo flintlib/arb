@@ -31,7 +31,7 @@ acb_dirichlet_root_number_theta(acb_t res, const dirichlet_group_t G, const diri
 void
 acb_dirichlet_root_number(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
-    if (chi->conductor < G->q)
+    if (dirichlet_conductor_char(G, chi) < G->q)
     {
         flint_printf("root number: need primitive character\n");
         abort();
@@ -40,7 +40,7 @@ acb_dirichlet_root_number(acb_t res, const dirichlet_group_t G, const dirichlet_
     {
         acb_t iq;
         acb_init(iq);
-        acb_dirichlet_gauss_sum_order2(iq, chi, prec);
+        acb_dirichlet_gauss_sum_order2(iq, G, chi, prec);
         acb_dirichlet_gauss_sum(res, G, chi, prec);
         acb_div(res, res, iq, prec);
         acb_clear(iq);

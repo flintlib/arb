@@ -11,9 +11,23 @@
 
 #include "dirichlet.h"
 
-void
-dirichlet_fullchar_mul(dirichlet_fullchar_t chi12, const dirichlet_group_t G, const dirichlet_fullchar_t chi1, const dirichlet_fullchar_t chi2)
+ulong
+dirichlet_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
 {
-    dirichlet_char_mul(chi12->x, G, chi1->x, chi2->x);
-    dirichlet_fullchar_char(chi12, G, NULL);
+    if (n_gcd(G->q, n) > 1)
+    {
+        return DIRICHLET_CHI_NULL;
+    }
+    else
+    {
+        ulong v;
+        dirichlet_char_t x;
+        dirichlet_char_init(x, G);
+        dirichlet_char_log(x, G, n);
+
+        v = dirichlet_chi_char(G, chi, x);
+
+        dirichlet_char_clear(x);
+        return v;
+    }
 }

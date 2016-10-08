@@ -11,16 +11,32 @@
 
 #include "dirichlet.h"
 
+static void
+dirichlet_exponents_char(ulong * expo, const dirichlet_group_t G, const dirichlet_char_t chi, ulong order)
+{
+    slong k;
+    ulong factor = G->expo / order;
+    for (k = 0; k < G->num; k++)
+        /* no overflow: log[k] < phi[k] and G->expo = phi[k] * PHI[k] */
+        expo[k] = (chi->log[k] * G->PHI[k]) / factor;
+}
+
 /* loop over whole group */
 void
-dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_fullchar_t chi, slong nv)
+dirichlet_chi_vec_loop_order(ulong * v, const dirichlet_group_t G, const dirichlet_char_t chi, ulong order, slong nv)
 {
     int j;
     ulong t;
     slong k;
+    ulong expo[MAX_FACTORS];
     dirichlet_char_t x;
+    nmod_t o;
+
     dirichlet_char_init(x, G);
     dirichlet_char_one(x, G);
+
+    dirichlet_exponents_char(expo, G, chi, order);
+    nmod_init(&o, order);
 
     for (k = 0; k < nv; k++)
         v[k] = DIRICHLET_CHI_NULL;
@@ -31,7 +47,7 @@ dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_f
     {
         /* exponents were modified up to j */
         for (k = G->num - 1; k >= j; k--)
-            t = nmod_add(t, chi->expo[k], chi->order);
+            t = nmod_add(t, expo[k], o);
 
         if (x->n < nv)
             v[x->n] = t;
@@ -45,4 +61,10 @@ dirichlet_ui_chi_vec_loop(ulong *v, const dirichlet_group_t G, const dirichlet_f
         v[k] = v[k - G->q];
 
     dirichlet_char_clear(x);
+}
+
+void
+dirichlet_chi_vec_loop(ulong * v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
+{
+    dirichlet_chi_vec_loop_order(v, G, chi, G->expo, nv);
 }

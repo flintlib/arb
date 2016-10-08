@@ -1,6 +1,4 @@
 /*
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
     Copyright (C) 2016 Pascal Molin
 
     This file is part of Arb.
@@ -14,13 +12,15 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_ui_pairing_char(const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b)
+dirichlet_chi_char(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_char_t x)
 {
-    ulong x, k;
-    x = 0;
+    ulong v = 0, k;
+    nmod_t order;
+
+    nmod_init(&order, G->expo);
 
     for (k = 0; k < G->num; k++)
-        x = n_addmod(x, G->PHI[k] * n_mulmod2(a->log[k], b->log[k], G->P[k].phi), G->expo);
+        v = nmod_add(v, G->PHI[k] * nmod_mul(chi->log[k], x->log[k], G->P[k].phi), order);
 
-    return x;
+    return v;
 }

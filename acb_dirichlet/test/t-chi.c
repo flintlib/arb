@@ -44,7 +44,7 @@ int main()
                 m = 1 + n_randint(state, q);
             } while (n_gcd(q, m) != 1);
 
-            dirichlet_char(chi, G, m);
+            dirichlet_char_log(chi, G, m);
 
             n1 = n_randint(state, 1000);
             n2 = n_randint(state, 1000);
@@ -53,7 +53,6 @@ int main()
             acb_dirichlet_pairing(zn2, G, m, n1, 53);
             if (!acb_overlaps(zn1, zn2))
             {
-                dirichlet_conrey_t x;
                 flint_printf("FAIL: overlap\n\n");
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("m = %wu\n\n", m);
@@ -61,11 +60,10 @@ int main()
                 flint_printf("char = "); acb_printd(zn1, 15); flint_printf("\n\n");
                 flint_printf("pairing = "); acb_printd(zn2, 15); flint_printf("\n\n");
                 dirichlet_char_print(G, chi);
-                dirichlet_conrey_init(x, G);
-                dirichlet_conrey_log(x, G, m);
-                flint_printf("log(m) = "); dirichlet_conrey_print(G, x);
-                dirichlet_conrey_log(x, G, n1);
-                flint_printf("log(n1) = "); dirichlet_conrey_print(G, x);
+                dirichlet_char_log(chi, G, m);
+                flint_printf("log(m) = "); dirichlet_char_print(G, chi);
+                dirichlet_char_log(chi, G, n1);
+                flint_printf("log(n1) = "); dirichlet_char_print(G, chi);
                 abort();
             }
 

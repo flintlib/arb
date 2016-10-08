@@ -22,7 +22,7 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const dirichlet_group_t G, const diric
     for (k = (G->neven == 2); k < G->num; k++)
     {
         /* if e > 1 and not primitive, 0 */
-        if (chi->x->log[k] % G->P[k].p == 0 && G->P[k].e > 1)
+        if (chi->log[k] % G->P[k].p == 0 && G->P[k].e > 1)
         {
             acb_zero(res);
             return;
@@ -42,17 +42,15 @@ acb_dirichlet_gauss_sum_factor(acb_t res, const dirichlet_group_t G, const diric
         dirichlet_subgroup_init(Gp, G, pe);
         dirichlet_char_init(chip, Gp);
 
-        chip->x->n = chi->x->n % pe;
+        chip->n = chi->n % pe;
 
         if (k == 1 && G->neven == 2)
         {
-            chip->x->log[0] = chi->x->log[0];
-            chip->x->log[1] = chi->x->log[1];
+            chip->log[0] = chi->log[0];
+            chip->log[1] = chi->log[1];
         }
         else
-            chip->x->log[0] = chi->x->log[k];
-
-        dirichlet_char_conrey(chip, Gp, NULL);
+            chip->log[0] = chi->log[k];
 
         /* chi_pe(a, q/pe) * G_pe(a) */
         acb_dirichlet_gauss_sum(tmp, Gp, chip, prec);

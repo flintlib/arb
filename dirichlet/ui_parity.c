@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 int
-dirichlet_ui_parity(const dirichlet_group_t G, ulong a)
+dirichlet_parity_ui(const dirichlet_group_t G, ulong a)
 {
     int par;
 

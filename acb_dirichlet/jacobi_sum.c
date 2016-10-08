@@ -47,16 +47,16 @@ acb_dirichlet_jacobi_sum(acb_t res, const dirichlet_group_t G, const dirichlet_c
     {
         acb_zero(res);
     }
-    else if (chi1->x->n == 1 || chi2->x->n == 1)
+    else if (chi1->n == 1 || chi2->n == 1)
     {
-        ulong cond = (chi1->x->n == 1) ? chi2->conductor : chi1->conductor;
+        ulong cond = (chi1->n == 1) ? dirichlet_conductor_char(G, chi2) : dirichlet_conductor_char(G, chi1);
         acb_set_si(res, jacobi_one(G, cond));
     }
-    else if (nmod_mul(chi1->x->n, chi2->x->n, G->mod) == 1)
+    else if (nmod_mul(chi1->n, chi2->n, G->mod) == 1)
     {
         ulong n;
-        n = jacobi_one(G, chi1->conductor);
-        if (chi1->parity)
+        n = jacobi_one(G, dirichlet_conductor_char(G, chi1));
+        if (dirichlet_parity_char(G, chi1))
             acb_set_si(res, -n);
         else
             acb_set_si(res, n);
@@ -83,14 +83,14 @@ acb_dirichlet_jacobi_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, ulong
     }
     else if (a == 1 || b == 1)
     {
-        ulong cond = (a == 1) ? dirichlet_ui_conductor(G, b) : dirichlet_ui_conductor(G, a);
+        ulong cond = (a == 1) ? dirichlet_conductor_ui(G, b) : dirichlet_conductor_ui(G, a);
         acb_set_si(res, jacobi_one(G, cond));
     }
     else if (nmod_mul(a, b, G->mod) == 1)
     {
         ulong n;
-        n = jacobi_one(G, dirichlet_ui_conductor(G, a));
-        if (dirichlet_ui_parity(G, a))
+        n = jacobi_one(G, dirichlet_conductor_ui(G, a));
+        if (dirichlet_parity_ui(G, a))
             acb_set_si(res, -n);
         else
             acb_set_si(res, n);
@@ -100,8 +100,8 @@ acb_dirichlet_jacobi_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, ulong
         dirichlet_char_t chi1, chi2;
         dirichlet_char_init(chi1, G);
         dirichlet_char_init(chi2, G);
-        dirichlet_char(chi1, G, a);
-        dirichlet_char(chi2, G, b);
+        dirichlet_char_log(chi1, G, a);
+        dirichlet_char_log(chi2, G, b);
         acb_dirichlet_jacobi_sum(res, G, chi1, chi2, prec);
         dirichlet_char_clear(chi1);
         dirichlet_char_clear(chi2);
