@@ -1,6 +1,5 @@
 /*
-    Copyright (C) 2015 Jonathan Bober
-    Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
     This file is part of Arb.
 
@@ -10,14 +9,10 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "dlog.h"
 
-void
-acb_dirichlet_group_clear(acb_dirichlet_group_t G)
+ulong
+dlog_table(const dlog_table_t t, ulong b)
 {
-    flint_free(G->primes);
-    flint_free(G->exponents);
-    flint_free(G->generators);
-    flint_free(G->PHI);
+    return t->table[b % t->mod];
 }
-

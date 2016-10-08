@@ -118,6 +118,7 @@ modules.
    acb_hypgeom.rst
    arb_hypgeom.rst
    acb_modular.rst
+   dirichlet.rst
    acb_dirichlet.rst
    bernoulli.rst
    hypgeom.rst
@@ -146,6 +147,7 @@ Mainly for internal use.
 
    fmpz_extras.rst
    bool_mat.rst
+   dlog.rst
    fmpr.rst
 
 Supplementary algorithm notes
