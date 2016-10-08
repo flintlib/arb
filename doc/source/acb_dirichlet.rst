@@ -34,6 +34,13 @@ Character evaluation
 
     Compute the *nv* first Dirichlet values.
 
+.. function:: void acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec)
+
+.. function:: void acb_dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec)
+
+    Sets *res* to the value of the Dirichlet pairing `\chi(m,n)` at numbers `m` and `n`.
+    The second form takes two characters as input.
+
 Gauss and Jacobi sums
 -------------------------------------------------------------------------------
 
@@ -180,7 +187,7 @@ L-functions
 
    .. math::
 
-      (\frac{q}{π})^{\frac{s+p}2}\Gamma(\frac{s+p}2) L(s, \chi) = \epsilon(\chi) (\frac{q}{π})^{\frac{1-s+p}2}\Gamma(\frac{1-s+p}2) L(1 - s, \overline\chi)
+      \left(\frac{q}{π}\right)^{\frac{s+p}2}\Gamma\left(\frac{s+p}2\right) L(s, \chi) = \epsilon(\chi) \left(\frac{q}{π}\right)^{\frac{1-s+p}2}\Gamma\left(\frac{1-s+p}2\right) L(1 - s, \overline\chi)
 
    - The *theta* variant uses the evaluation at `t=1` of the Theta series.
 

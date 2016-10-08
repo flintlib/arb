@@ -52,7 +52,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     _acb_vec_nth_roots(z, order, prec);
 
     do {
-        chin = dirichlet_chi_char(G, chi, cn) / mult;
+        chin = dirichlet_pairing_char(G, chi, cn) / mult;
 
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
