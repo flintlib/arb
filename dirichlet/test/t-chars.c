@@ -10,6 +10,7 @@
 */
 
 #include "dirichlet.h"
+#include "arb.h" /* for test_multiplier */
 
 int main()
 {
