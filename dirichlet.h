@@ -130,6 +130,7 @@ void dirichlet_char_lift(dirichlet_char_t y, const dirichlet_group_t G, const di
 #define DIRICHLET_CHI_NULL UWORD_MAX
 
 ulong dirichlet_pairing(const dirichlet_group_t G, ulong m, ulong n);
+ulong dirichlet_pairing_char(const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b);
 
 DIRICHLET_INLINE int
 dirichlet_char_is_principal(const dirichlet_char_t chi)
@@ -143,7 +144,6 @@ dirichlet_char_is_real(const dirichlet_group_t G, const dirichlet_char_t chi)
     return (nmod_mul(chi->n, chi->n, G->mod) == 1);
 }
 
-ulong dirichlet_chi_char(const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b);
 ulong dirichlet_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n);
 
 void dirichlet_vec_set_null(ulong *v, const dirichlet_group_t G, slong nv);

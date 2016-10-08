@@ -25,7 +25,7 @@ dirichlet_pairing(const dirichlet_group_t G, ulong m, ulong n)
     dirichlet_char_log(a, G, m);
     dirichlet_char_log(b, G, n);
 
-    x = dirichlet_chi_char(G, a, b);
+    x = dirichlet_pairing_char(G, a, b);
 
     dirichlet_char_clear(a);
     dirichlet_char_clear(b);

@@ -33,7 +33,7 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 
 void acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec);
-void acb_dirichlet_chi_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
+void acb_dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
 
 /* precompute powers of a root of unity */
 typedef struct

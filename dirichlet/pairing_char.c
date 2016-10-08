@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_chi_char(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_char_t x)
+dirichlet_pairing_char(const dirichlet_group_t G, const dirichlet_char_t chi, const dirichlet_char_t x)
 {
     ulong v = 0, k;
     nmod_t order;

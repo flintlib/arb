@@ -12,10 +12,10 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_chi_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec)
+acb_dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec)
 {
     ulong expo;
-    expo = dirichlet_chi_char(G, a, b);
+    expo = dirichlet_pairing_char(G, a, b);
     if (expo == DIRICHLET_CHI_NULL)
         acb_zero(res);
     else
