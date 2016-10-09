@@ -3,6 +3,13 @@
 Feature overview
 ===============================================================================
 
+Arb builds upon `FLINT <http://flintlib.org/>`_, which deals with
+efficient computation over exact domains such as the rational numbers and
+finite fields. Arb extends FLINT to cover computations with real
+and complex numbers. The problem when computing with real and complex numbers
+is that approximations (typically floating-point numbers) must be used,
+potentially leading to incorrect results.
+
 Ball arithmetic, also known as mid-rad interval arithmetic, is an
 extension of floating-point arithmetic in which an error bound is
 attached to each variable. This allows computing rigorously with
@@ -32,6 +39,13 @@ It also provides a more comprehensive low-level interface, giving
 the user full access to the internals. Finally, it implements a wider
 range of transcendental functions, covering a large portion of the
 special functions in standard reference works such as [NIST2012]_.
+
+Arb is designed for computer algebra and computational number
+theory, but may be useful in any area demanding
+reliable or precise numerical computing.
+Arb scales seamlessly from tens of digits up to billions of digits.
+Efficiency is achieved by low level optimizations and use of
+asymptotically fast algorithms.
 
 Arb contains:
 

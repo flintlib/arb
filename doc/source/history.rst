@@ -12,13 +12,13 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
-* http://fredrikj.net/arb/arb-2.8.1.pdf
-* http://fredrikj.net/arb/arb-2.8.0.pdf
-* http://fredrikj.net/arb/arb-2.7.0.pdf
-* http://fredrikj.net/arb/arb-2.6.0.pdf
-* http://fredrikj.net/arb/arb-2.5.0.pdf
-* http://fredrikj.net/arb/arb-2.4.0.pdf
-* http://fredrikj.net/arb/arb-2.3.0.pdf
+* http://arblib.org/arb-2.8.1.pdf
+* http://arblib.org/arb-2.8.0.pdf
+* http://arblib.org/arb-2.7.0.pdf
+* http://arblib.org/arb-2.6.0.pdf
+* http://arblib.org/arb-2.5.0.pdf
+* http://arblib.org/arb-2.4.0.pdf
+* http://arblib.org/arb-2.3.0.pdf
 
 2015-12-31 - version 2.8.1
 -------------------------------------------------------------------------------

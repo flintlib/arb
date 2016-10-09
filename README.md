@@ -8,7 +8,7 @@ GNU Lesser General Public License (LGPL), version 2.1 or later.
 
 ![arb logo](http://fredrikj.net/blog/2015/01/arb-2-5-0-released/arbtext.png)
 
-Documentation: http://fredrikj.net/arb/
+Documentation: http://arblib.org
 
 Development updates: http://fredrikj.net/blog/
 
@@ -70,7 +70,7 @@ can rely on Arb's automatic error bound tracking to get an output
 that is guaranteed to be accurate -- no error analysis
 needs to be done by the user.
 
-For several other example programs, see: http://fredrikj.net/arb/examples.html
+For more example programs, see: http://arblib.org/examples.html
 
 ## General features
 
@@ -140,7 +140,7 @@ Arb depends on FLINT (http://flintlib.org/), either
 GMP (http://gmplib.org) or MPIR (http://mpir.org),
 and MPFR (http://mpfr.org). 
 
-See http://fredrikj.net/arb/setup.html for instructions
+See http://arblib.org/setup.html for instructions
 on building and installing Arb directly from the source code.
 Arb might also be available (or coming soon) as a package for
 your Linux distribution.

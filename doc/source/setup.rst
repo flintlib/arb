@@ -36,7 +36,7 @@ Tarballs of released versions can be downloaded from https://github.com/fredrik-
 Alternatively, you can simply install Arb from a git checkout of https://github.com/fredrik-johansson/arb/.
 The master branch is generally safe to use (the test suite should pass at all
 times), and recommended for
-keeping up with the latest changes.
+keeping up with the latest improvements and bug fixes.
 
 Dependencies
 -------------------------------------------------------------------------------
