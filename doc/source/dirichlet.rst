@@ -216,7 +216,7 @@ level of *number* and *char* object. Both case require no discrete log computati
 
    Returns the order of `\chi_q(a,\cdot)` which is the order of `a\bmod q`.
 
-.. function:: int dirichlet_char_is_real(const dirichlet_char_t chi)
+.. function:: int dirichlet_char_is_real(const dirichlet_group_t G, const dirichlet_char_t chi)
 
    Returns 1 if *chi* is a real character (iff it has order `\leq 2`).
 

@@ -27,7 +27,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     deflate = 0;
     if (acb_is_one(s))
     {
-        if (dirichlet_char_is_principal(chi))
+        if (dirichlet_char_is_principal(G, chi))
         {
             acb_indeterminate(res);
             return;
