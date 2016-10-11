@@ -41,6 +41,38 @@ Character evaluation
     Sets *res* to the value of the Dirichlet pairing `\chi(m,n)` at numbers `m` and `n`.
     The second form takes two characters as input.
 
+Roots of unity
+-------------------------------------------------------------------------------
+
+.. type:: acb_dirichlet_powers_struct
+
+.. type:: acb_dirichlet_powers_t
+
+   This structure allows to compute *n* powers of a fixed root of unity of order *m*
+   using precomputations. Extremal cases are
+
+   - all powers are stored: `O(m)` initialization + storage, `O(n)` evaluations
+
+   - nothing stored: `O(1)` initialization + storage, `O(\log(m)n)` evaluations
+
+   - `k` step decomposition: `O(k m^{\frac1k})` init + storage, `O((k-1)n)` evaluations.
+
+   Currently, only baby-step giant-step decomposition (i.e. `k=2`)
+   is implemented, allowing to obtain each power using one multiplication.
+
+.. function:: void acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec)
+
+   Initialize the powers structure for *num* evaluations of powers of the root of unity
+   of order *order*.
+
+.. function:: void acb_dirichlet_powers_clear(acb_dirichlet_powers_t t)
+
+   Clears *t*.
+
+.. function:: void acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec)
+
+   Sets *z* to `x^n` where *t* contains precomputed powers of `x`.
+
 Gauss and Jacobi sums
 -------------------------------------------------------------------------------
 
@@ -138,6 +170,77 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).
 
+.. function:: ulong acb_dirichlet_theta_length(ulong q, const arb_t t, slong prec)
+
+   Compute the number of terms to be summed in the theta series of argument *t*
+   so that the tail is less than `2^{-\mathrm{prec}}`.
+
+.. function:: void acb_dirichlet_qseries_powers_naive(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+.. function:: void acb_dirichlet_qseries_powers_smallorder(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+   Compute the series `\sum n^p z^{a_n} x^{n^2}` for exponent list *a*,
+   precomputed powers *z* and parity *p* (being 0 or 1).
+
+   The *naive* version sums the series as defined, while the *smallorder*
+   variant evaluates the series on the quotient ring by a cyclotomic polynomial
+   before evaluating at the root of unity, ignoring its argument *z*.
+
+Discrete Fourier Transforms (DFT)
+-------------------------------------------------------------------------------
+
+Let *G* be a finite abelian group, and `\chi` a character of *G*.
+For any map `f:G\to\mathbb C`, the discrete fourier transform
+`\hat f:\hat G\to \mathbb C` is defined by
+
+.. math::
+
+   \hat f(\chi) = \sum_{x\in G}\chi(x)f(x)
+
+Fast Fourier Transform techniques allow to compute efficiently
+all values `\hat f(\chi)`.
+
+For a Dirichlet group `G` modulo `q`, we take advantage
+of the Conrey isomorphism `G \to \hat G` to consider the
+the Fourier transform on Conrey labels as
+
+.. math::
+
+   g(a) = \sum_{b\bmod q}\chi_q(a,b)f(b)
+
+
+.. function:: void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using Conrey indices.
+   This function assumes *v* and *w* are vectors
+   of size *G->phi_q*, whose values correspond to a lexicographic ordering
+   of Conrey logs (as obtained using :func:`dirichlet_conrey_next` or
+   by :func:`dirichlet_index_conrey`).
+
+   For example, if `q=15`, the Conrey elements are stored in following
+   order
+
+   =======  =============  =====================
+    index    log = [e,f]     number = 7^e 11^f
+   =======  =============  =====================
+      0       [0, 0]        1
+      1       [0, 1]        7
+      2       [0, 2]        4
+      3       [0, 3]        13
+      4       [0, 4]        1
+      5       [1, 0]        11
+      6       [1, 1]        2
+      7       [1, 2]        14
+      8       [1, 3]        8
+      9       [1, 4]        11
+   =======  =============  =====================
+
+.. function:: void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using Conrey numbers.
+   This function assumes *v* and *w* are vectors of size *G->q*.
+   All values at index not coprime to *G->q* are ignored.
+
 Euler products
 -------------------------------------------------------------------------------
 
@@ -216,3 +319,9 @@ L-functions
 
     Computes `L(s,\chi)` using a default choice of algorithm.
 
+.. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const dirichlet_group_t G, slong prec)
+
+    Compute all values `L(s,\chi)` for `\chi` mod `q`, by Hurwitz formula and
+    discrete Fourier transform.
+    *res* is assumed to have length *G->phi_q* and values are stored by lexicographically ordered
+    Conrey logs. See :func:`acb_dirichlet_dft_conrey`.
