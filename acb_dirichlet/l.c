@@ -16,6 +16,14 @@ void
 acb_dirichlet_l(acb_t res, const acb_t s,
     const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
-    acb_dirichlet_l_hurwitz(res, s, G, chi, prec);
+    /* this cutoff is probably too conservative when q is large */
+    if (arf_cmp_d(arb_midref(acb_realref(s)), 8 + 0.5 * prec / log(prec)) >= 0)
+    {
+        acb_dirichlet_l_euler_product(res, s, G, chi, prec);
+    }
+    else
+    {
+        acb_dirichlet_l_hurwitz(res, s, G, chi, prec);
+    }
 }
 

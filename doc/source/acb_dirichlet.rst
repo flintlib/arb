@@ -206,8 +206,13 @@ L-functions
 
     This formula is slow for large *q*.
 
+.. function:: void acb_dirichlet_l_euler_product(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+
+    Computes `L(s,\chi)` directly using the Euler product. This is
+    efficient if *s* has large positive real part. As implemented, this
+    function only gives a finite result if `\operatorname{re}(s) \ge 2`.
+
 .. function:: void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
     Computes `L(s,\chi)` using a default choice of algorithm.
-    Currently, only the Hurwitz zeta formula is used.
 
