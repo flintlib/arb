@@ -12,7 +12,7 @@
 #ifndef FMPR_H
 #define FMPR_H
 
-#if defined(__MINGW64__)
+#if defined(__MINGW64__) || defined(_MSC_VER)
 #include "stdint.h"
 #endif
 #include <stdio.h>

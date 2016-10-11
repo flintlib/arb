@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.7)
 
-project(arb)
+project(arb C)
 
 set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)" FORCE)
 
@@ -45,6 +45,10 @@ if (MSVC)
             set(${CompilerFlag} "${${CompilerFlag}} /DPTW32_STATIC_LIB")
         endif()
     endforeach()
+
+    if ("${LIBRARY_TYPE}" STREQUAL "dll")
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+    endif()
 endif()
 
 set (DEPS mpir mpfr pthreads flint2)
