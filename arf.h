@@ -343,6 +343,12 @@ int arf_cmp(const arf_t x, const arf_t y);
 
 int arf_cmpabs(const arf_t x, const arf_t y);
 
+int arf_cmp_si(const arf_t x, slong y);
+
+int arf_cmp_ui(const arf_t x, ulong y);
+
+int arf_cmp_d(const arf_t x, double y);
+
 ARF_INLINE void
 arf_swap(arf_t y, arf_t x)
 {
