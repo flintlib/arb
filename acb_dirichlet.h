@@ -92,6 +92,8 @@ void acb_dirichlet_l_euler_product(acb_t res, const acb_t s, const dirichlet_gro
 void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
+void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec);
+
 /* utils */
 
 ACB_DIRICHLET_INLINE void

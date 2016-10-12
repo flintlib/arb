@@ -138,32 +138,6 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).
 
-Euler products
--------------------------------------------------------------------------------
-
-.. function:: void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s, const signed char * chi, int mod, int reciprocal, slong prec)
-
-    Sets *res* to `L(s,\chi)` where `\chi` is a real Dirichlet character
-    given by the explicit list *chi* of character values at
-    0, 1, ..., *mod* - 1. If *reciprocal* is set, computes `1 / L(s,\chi)`
-    (this is faster if the reciprocal can be used directly).
-
-    This function uses the Euler product, and is only intended for use when
-    *s* is large. An error bound is computed via :func:`mag_hurwitz_zeta_uiui`.
-    Since
-
-    .. math ::
-
-        \frac{1}{L(s,\chi)} = \prod_{p} \left(1 - \frac{\chi(p)}{p^s}\right)
-                = \sum_{k=1}^{\infty} \frac{\mu(k)\chi(k)}{k^s}
-
-    and the truncated product gives all smooth-index terms in the series, we have
-
-    .. math ::
-
-        \left|\prod_{p < N} \left(1 - \frac{\chi(p)}{p^s}\right) - \frac{1}{L(s,\chi)}\right|
-        \le \sum_{k=N}^{\infty} \frac{1}{k^s} = \zeta(s,N).
-
 Simple functions
 -------------------------------------------------------------------------------
 
@@ -199,7 +173,7 @@ L-functions
 
     .. math::
 
-        L(s,\chi) = q^{-s}\sum_{k=1}^{q-1} \chi(k) \,\zeta\!\left(s,\frac kq\right).
+        L(s,\chi) = q^{-s}\sum_{k=1}^q \chi(k) \,\zeta\!\left(s,\frac kq\right).
 
     If `s = 1` and `\chi` is non-principal, the deflated Hurwitz zeta function
     is used to avoid poles.
@@ -208,11 +182,49 @@ L-functions
 
 .. function:: void acb_dirichlet_l_euler_product(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
+.. function:: void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s, const signed char * chi, int mod, int reciprocal, slong prec)
+
     Computes `L(s,\chi)` directly using the Euler product. This is
     efficient if *s* has large positive real part. As implemented, this
     function only gives a finite result if `\operatorname{re}(s) \ge 2`.
 
+    An error bound is computed via :func:`mag_hurwitz_zeta_uiui`.
+    If *s* is complex, replace it with its real part. Since
+
+    .. math ::
+
+        \frac{1}{L(s,\chi)} = \prod_{p} \left(1 - \frac{\chi(p)}{p^s}\right)
+                = \sum_{k=1}^{\infty} \frac{\mu(k)\chi(k)}{k^s}
+
+    and the truncated product gives all smooth-index terms in the series, we have
+
+    .. math ::
+
+        \left|\prod_{p < N} \left(1 - \frac{\chi(p)}{p^s}\right) - \frac{1}{L(s,\chi)}\right|
+        \le \sum_{k=N}^{\infty} \frac{1}{k^s} = \zeta(s,N).
+
+    The underscore version specialized for integer *s* assumes that `\chi` is
+    a real Dirichlet character given by the explicit list *chi* of character
+    values at 0, 1, ..., *mod* - 1. If *reciprocal* is set, it computes
+    `1 / L(s,\chi)` (this is faster if the reciprocal can be used directly).
+
 .. function:: void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
     Computes `L(s,\chi)` using a default choice of algorithm.
+
+.. function:: void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec)
+
+    Computes the Taylor expansion of `L(s,\chi)` to length *len*,
+    i.e. `L(s), L'(s), \ldots, L^{(len-1)}(s) / (len-1)!`.
+    If *deflate* is set, computes the expansion of
+
+    .. math ::
+
+        L(s,\chi) - \frac{\sum_{k=1}^q \chi(k)}{(s-1)q}
+
+    instead. If *chi* is a principal character, then this has the effect of
+    subtracting the pole with residue `\sum_{k=1}^q \chi(k) = \phi(q) / q`
+    that is located at `s = 1`. In particular, when evaluated at `s = 1`, this
+    gives the regular part of the Laurent expansion.
+    When *chi* is non-principal, *deflate* has no effect.
 
