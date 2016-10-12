@@ -6,7 +6,7 @@ addons:
       - texinfo
 
 os:
-  - osx
+  # - osx
   - linux
 
 compiler:
