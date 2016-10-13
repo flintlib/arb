@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 project(arb C)
 
-set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)" FORCE)
+set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)")
 
 set (BUILD_SHARED_LIBS yes CACHE BOOL "Build shared library or not")
 set (BUILD_TESTS yes CACHE BOOL "Build shared library or not")
@@ -35,7 +35,7 @@ if (MSVC)
         endforeach()
     endif()
     foreach(CompilerFlag CMAKE_C_FLAGS)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1")
     endforeach()
 
     foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)

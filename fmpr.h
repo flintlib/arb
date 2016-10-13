@@ -25,15 +25,7 @@
 #include "flint/config.h"
 #include "fmpz_extras.h"
 
-#ifdef HAVE_TLS
-#if HAVE_TLS
-#define TLS_PREFIX __thread
-#else
-#define TLS_PREFIX
-#endif
-#else
-#define TLS_PREFIX
-#endif
+#define TLS_PREFIX FLINT_TLS_PREFIX
 
 #define fmpr_rnd_t int
 #define FMPR_RND_DOWN 0
