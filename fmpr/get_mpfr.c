@@ -10,7 +10,6 @@
 */
 
 #include "fmpr.h"
-
 int
 fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
 {
@@ -32,7 +31,7 @@ fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
     else
     {
         if (!COEFF_IS_MPZ(*fmpr_manref(y)))
-#if defined(__MINGW64__) 
+#if defined(__MINGW64__) || defined(_MSC_VER)
             r = mpfr_set_sj_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);
 #else
             r = mpfr_set_si_2exp(x, *fmpr_manref(y), *fmpr_expref(y), rnd);

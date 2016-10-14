@@ -14,7 +14,7 @@
 
 /* defined in flint*/
 #define NUMBER_OF_SMALL_PARTITIONS 128
-extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
+FLINT_DLL extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS];
 
 slong partitions_hrr_needed_terms(double n);
 
