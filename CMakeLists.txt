@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.8.7)
 
 project(arb C)
 
-set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)")
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)" FORCE)
+endif ()
 
 set (BUILD_SHARED_LIBS yes CACHE BOOL "Build shared library or not")
 set (BUILD_TESTS yes CACHE BOOL "Build shared library or not")
@@ -86,27 +89,12 @@ foreach (LIB ${DEPS})
     set (DEP_INCLUDE_DIRS ${DEP_INCLUDE_DIRS} ${${HEADER_PKG}_INCLUDE_DIR})
 endforeach ()
 
-set (FOLDERS
-        acb
-        acb_calc
-        acb_dirichlet
-        acb_hypgeom
-        acb_mat
-        acb_modular
-        acb_poly
-        arb
-        arb_calc
-        arb_mat
-        arb_poly
-        arf
-        bernoulli
-        bool_mat
-        fmpz_extras
-        fmpr
-        hypgeom
-        mag
-        partitions
-)
+file(GLOB TEMP "*.h")
+
+foreach (TEMP_H ${TEMP})
+    get_filename_component(FOLDER ${TEMP_H} NAME_WE)
+    set(FOLDERS ${FOLDERS} ${FOLDER})
+endforeach()
 
 foreach (FOLDER ${FOLDERS})
     file(GLOB TEMP "${FOLDER}/*.c")
