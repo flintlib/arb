@@ -8,7 +8,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 set (BUILD_SHARED_LIBS yes CACHE BOOL "Build shared library or not")
-set (BUILD_TESTS yes CACHE BOOL "Build shared library or not")
+set (BUILD_TESTS no CACHE BOOL "Build tests or not")
 
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
         CMAKE_BUILD_TYPE STREQUAL "Release"))
@@ -68,7 +68,8 @@ set (flint2_header flint/flint.h)
 
 foreach (LIB ${DEPS})
     string (TOUPPER ${LIB} LIB_UPPER)
-    find_library(${LIB_UPPER}_LIBRARY NAMES ${${LIB}_lib} HINTS ../${LIB}/${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE})
+    find_library(${LIB_UPPER}_LIBRARY NAMES ${${LIB}_lib} HINTS ../${LIB}
+                 PATH_SUFFIXES ${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE} NO_DEFAULT_PATH)
     if (NOT ${LIB_UPPER}_LIBRARY)
         message(FATAL_ERROR "${LIB} library not found.")
     endif()
@@ -81,7 +82,8 @@ endforeach ()
 foreach (LIB ${DEPS})
     string(TOUPPER ${LIB} HEADER_PKG)
     set (HEADER ${${LIB}_header})
-    find_path(${HEADER_PKG}_INCLUDE_DIR NAMES ${HEADER} HINTS ../${LIB}/${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE})
+    find_path(${HEADER_PKG}_INCLUDE_DIR NAMES ${HEADER} HINTS ../${LIB}
+             PATH_SUFFIXES ${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE})
     if (NOT ${HEADER_PKG}_INCLUDE_DIR)
         message(FATAL_ERROR "${HEADER} header not found.")
     endif()
