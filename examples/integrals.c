@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     acb_set_si(b, 100);
     acb_calc_integrate_taylor(r, sinx, NULL, a, b, inr, outr, prec, 1.1 * prec);
     flint_printf("RESULT:\n");
-    acb_printd(r, digits); flint_printf("\n");
+    acb_printn(r, digits, 0); flint_printf("\n");
     TIMEIT_ONCE_STOP
 
     flint_printf("----------------------------------------------------------------\n");
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     acb_calc_integrate_taylor(s, elliptic, NULL, a, b, inr, outr, prec, 1.1 * prec);
     acb_add(r, r, s, prec);
     flint_printf("RESULT:\n");
-    acb_printd(r, digits); flint_printf("\n");
+    acb_printn(r, digits, 0); flint_printf("\n");
     TIMEIT_ONCE_STOP
 
     flint_printf("----------------------------------------------------------------\n");
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     acb_calc_integrate_taylor(r, bessel, NULL, a, b, inr, outr, prec, 3 * prec);
     acb_div(r, r, b, prec);
     flint_printf("RESULT:\n");
-    acb_printd(r, digits); flint_printf("\n");
+    acb_printn(r, digits, 0); flint_printf("\n");
     TIMEIT_ONCE_STOP
 
     acb_clear(r);

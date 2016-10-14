@@ -74,26 +74,6 @@ Memory management
 Basic manipulation
 -------------------------------------------------------------------------------
 
-.. function:: int acb_is_zero(const acb_t z)
-
-    Returns nonzero iff *z* is zero.
-
-.. function:: int acb_is_one(const acb_t z)
-
-    Returns nonzero iff *z* is exactly 1.
-
-.. function:: int acb_is_finite(const acb_t z)
-
-    Returns nonzero iff *z* certainly is finite.
-
-.. function:: int acb_is_exact(const acb_t z)
-
-    Returns nonzero iff *z* is exact.
-
-.. function:: int acb_is_int(const acb_t z)
-
-    Returns nonzero iff *z* is an exact integer.
-
 .. function:: void acb_zero(acb_t z)
 
 .. function:: void acb_one(acb_t z)
@@ -148,27 +128,38 @@ Basic manipulation
 Input and output
 -------------------------------------------------------------------------------
 
+The *acb_print...* functions print to standard output, while
+*acb_fprint...* functions print to the stream *file*.
+
 .. function:: void acb_print(const acb_t x)
+
+.. function:: void acb_fprint(FILE * file, const acb_t x)
 
     Prints the internal representation of *x*.
 
-.. function:: void acb_printd(const acb_t z, slong digits)
+.. function:: void acb_printd(const acb_t x, slong digits)
+
+.. function:: void acb_fprintd(FILE * file, const acb_t x, slong digits)
 
     Prints *x* in decimal. The printed value of the radius is not adjusted
     to compensate for the fact that the binary-to-decimal conversion
     of both the midpoint and the radius introduces additional error.
 
-.. function:: void acb_fprint(FILE * file, const acb_t x)
+.. function:: void acb_printn(const acb_t x, slong digits, ulong flags)
 
-    Prints the internal representation of *x* to the stream *file*.
+.. function:: void acb_fprintn(FILE * file, const acb_t x, slong digits, ulong flags)
 
-.. function:: void acb_fprintd(FILE * file, const acb_t z, slong digits)
+    Prints a nice decimal representation of *x*, using the format of
+    :func:`arb_get_str` (or the corresponding :func:`arb_printn`) for the 
+    real and imaginary parts.
 
-    Prints *x* in decimal to the stream *file*.
-    The printed value of the radius is not adjusted
-    to compensate for the fact that the binary-to-decimal conversion
-    of both the midpoint and the radius introduces additional error.
+    By default, the output shows the midpoint of both the real and imaginary
+    parts with a guaranteed error of at most one unit in the last decimal
+    place. In addition, explicit error bounds are printed so that the displayed
+    decimal interval is guaranteed to enclose *x*.
 
+    Any flags understood by :func:`arb_get_str` can be passed via *flags*
+    to control the format of the real and imaginary parts.
 
 Random number generation
 -------------------------------------------------------------------------------
@@ -194,6 +185,26 @@ Random number generation
 
 Precision and comparisons
 -------------------------------------------------------------------------------
+
+.. function:: int acb_is_zero(const acb_t z)
+
+    Returns nonzero iff *z* is zero.
+
+.. function:: int acb_is_one(const acb_t z)
+
+    Returns nonzero iff *z* is exactly 1.
+
+.. function:: int acb_is_finite(const acb_t z)
+
+    Returns nonzero iff *z* certainly is finite.
+
+.. function:: int acb_is_exact(const acb_t z)
+
+    Returns nonzero iff *z* is exact.
+
+.. function:: int acb_is_int(const acb_t z)
+
+    Returns nonzero iff *z* is an exact integer.
 
 .. function:: int acb_equal(const acb_t x, const acb_t y)
 
@@ -513,6 +524,10 @@ Powers and roots
     Sets `z = x^y`, computed using binary exponentiation if `y` if
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
     half-integer, and generally as `z = \exp(y \log x)`.
+
+.. function:: void acb_nth_root(acb_t res, ulong order, slong prec)
+
+    Sets *res* to `\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
 
 Exponentials and logarithms
 -------------------------------------------------------------------------------
@@ -912,6 +927,12 @@ Vector functions
 .. function:: void _acb_vec_set_powers(acb_ptr xs, const acb_t x, slong len, slong prec)
 
     Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
+
+.. function:: void _acb_vec_nth_roots(acb_ptr z, slong order, slong prec)
+
+    Sets *z* to the powers `1,z,z^2,\dots z^{\mathrm{order}-1}` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
+
+    In order to avoid precision loss, this function does not simply compute powers of a primitive root.
 
 .. function:: void _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, slong len)
 

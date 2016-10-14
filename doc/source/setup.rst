@@ -3,6 +3,31 @@
 Setup
 ===============================================================================
 
+Package managers
+-------------------------------------------------------------------------------
+
+The easiest way to install Arb including all dependencies is via ready-made
+packages available for various distributions.
+Note that some packages may not be up to date.
+
+* Debian / Ubuntu / Linux Mint
+
+  - https://packages.debian.org/source/sid/flint-arb
+
+* Fedora
+
+  - https://admin.fedoraproject.org/pkgdb/package/rpms/arb/
+
+* Arch Linux
+
+  - https://www.archlinux.org/packages/community/x86_64/arb/
+
+  - https://www.archlinux.org/packages/community/i686/arb/
+
+* Guix
+
+  - https://www.gnu.org/software/guix/packages/
+
 Download
 -------------------------------------------------------------------------------
 
@@ -11,7 +36,7 @@ Tarballs of released versions can be downloaded from https://github.com/fredrik-
 Alternatively, you can simply install Arb from a git checkout of https://github.com/fredrik-johansson/arb/.
 The master branch is generally safe to use (the test suite should pass at all
 times), and recommended for
-keeping up with the latest changes.
+keeping up with the latest improvements and bug fixes.
 
 Dependencies
 -------------------------------------------------------------------------------
@@ -24,25 +49,6 @@ Arb has the following dependencies:
 * FLINT (http://www.flintlib.org) version 2.4 or later. You may also
   use a git checkout of https://github.com/fredrik-johansson/flint2
 
-
-Installation as part of FLINT
--------------------------------------------------------------------------------
-
-With a sufficiently new version of FLINT, Arb can be compiled as a FLINT
-extension package.
-
-Simply put the Arb source directory somewhere, say ``/path/to/arb``.
-Then go to the FLINT source directory and build FLINT using::
-
-    ./configure --extensions=/path/to/arb <other options>
-    make
-    make check       (optional)
-    make install
-
-This is convenient, as Arb does not need to be
-configured or linked separately. Arb becomes part of the compiled FLINT
-library, and the Arb header files will be installed along with the other
-FLINT header files.
 
 Standalone installation
 -------------------------------------------------------------------------------
@@ -60,6 +66,30 @@ the default path ``/usr/local``, pass
 ``--with-gmp=...``, ``--with-mpfr=...`` or ``--with-flint=...`` with
 the correct path to configure (type ``./configure --help`` to show
 more options).
+
+After the installation, you may have to run ``ldconfig``.
+
+Installation as part of FLINT (deprecated)
+-------------------------------------------------------------------------------
+
+WARNING: this feature is being deprecated. Please install Arb as a separate
+library, as detailed above.
+
+With some versions of FLINT, Arb can be compiled as a FLINT
+extension package.
+
+Simply put the Arb source directory somewhere, say ``/path/to/arb``.
+Then go to the FLINT source directory and build FLINT using::
+
+    ./configure --extensions=/path/to/arb <other options>
+    make
+    make check       (optional)
+    make install
+
+This is convenient, as Arb does not need to be
+configured or linked separately. Arb becomes part of the compiled FLINT
+library, and the Arb header files will be installed along with the other
+FLINT header files.
 
 Building with MSVC
 -------------------------------------------------------------------------------
@@ -105,18 +135,17 @@ Here is an example program to get started using Arb:
 
 Compile it with::
 
-    gcc -larb test.c
+    gcc test.c -larb
 
-or (if Arb is built as part of FLINT)::
-
-    gcc -lflint test.c
+Depending on the environment, you may also have to pass
+the flags ``-lflint``, ``-lmpfr``, ``-lgmp`` to the compiler.
 
 If the Arb/FLINT header and library files are not in a standard location
-(``/usr/local`` on most systems), you may also have to pass options such as::
+(``/usr/local`` on most systems), you may also have to provide flags such as::
 
     -I/path/to/arb -I/path/to/flint -L/path/to/flint -L/path/to/arb
 
-to ``gcc``. Finally, to run the program, make sure that the linker
+Finally, to run the program, make sure that the linker
 can find the FLINT (and Arb) libraries. If they are installed in a
 nonstandard location, you can for example add this path to the
 ``LD_LIBRARY_PATH`` environment variable.

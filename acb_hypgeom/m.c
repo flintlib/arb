@@ -311,3 +311,9 @@ acb_hypgeom_m(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regula
     acb_set_round(res, res, prec);
 }
 
+void
+acb_hypgeom_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+{
+    acb_hypgeom_m(res, a, b, z, regularized, prec);
+}
+

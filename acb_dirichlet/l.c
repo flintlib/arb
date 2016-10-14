@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2016 Fredrik Johansson
+    Copyright (C) 2016 Pascal Molin
 
     This file is part of Arb.
 
@@ -13,39 +14,16 @@
 
 void
 acb_dirichlet_l(acb_t res, const acb_t s,
-    const acb_dirichlet_group_t G, ulong m, slong prec)
+    const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
-    acb_t chi, t, u, a;
-    ulong k;
-
-    acb_init(chi);
-    acb_init(t);
-    acb_init(u);
-    acb_init(a);
-
-    acb_zero(t);
-
-    for (k = 1; k <= G->q; k++)
+    /* this cutoff is probably too conservative when q is large */
+    if (arf_cmp_d(arb_midref(acb_realref(s)), 8 + 0.5 * prec / log(prec)) >= 0)
     {
-        acb_dirichlet_chi(chi, G, m, k, prec);
-
-        if (!acb_is_zero(chi))
-        {
-            acb_set_ui(a, k);
-            acb_div_ui(a, a, G->q, prec);
-            acb_hurwitz_zeta(u, s, a, prec);
-            acb_addmul(t, chi, u, prec);
-        }
+        acb_dirichlet_l_euler_product(res, s, G, chi, prec);
     }
-
-    acb_set_ui(u, G->q);
-    acb_neg(a, s);
-    acb_pow(u, u, a, prec);
-    acb_mul(res, t, u, prec);
-
-    acb_clear(chi);
-    acb_clear(t);
-    acb_clear(u);
-    acb_clear(a);
+    else
+    {
+        acb_dirichlet_l_hurwitz(res, s, G, chi, prec);
+    }
 }
 

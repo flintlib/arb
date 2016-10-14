@@ -60,7 +60,7 @@ poly_roots(const fmpz_poly_t poly,
 
         for (i = 0; i < deg; i++)
         {
-            acb_printd(roots + i, print_digits);
+            acb_printn(roots + i, print_digits, 0);
             flint_printf("\n");
         }
     }

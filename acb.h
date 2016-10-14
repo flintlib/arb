@@ -48,12 +48,7 @@ acb_init(acb_t x)
     arb_init(acb_imagref(x));
 }
 
-ACB_INLINE void
-acb_clear(acb_t x)
-{
-    arb_clear(acb_realref(x));
-    arb_clear(acb_imagref(x));
-}
+void acb_clear(acb_t x);
 
 ACB_INLINE acb_ptr
 _acb_vec_init(slong n)
@@ -1014,6 +1009,14 @@ acb_printd(const acb_t z, slong digits)
     acb_fprintd(stdout, z, digits);
 }
 
+void acb_fprintn(FILE * fp, const acb_t z, long digits, ulong flags);
+
+ACB_INLINE void
+acb_printn(const acb_t x, slong digits, ulong flags)
+{
+    acb_fprintn(stdout, x, digits, flags);
+}
+
 void acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
 
 void acb_randtest_special(acb_t z, flint_rand_t state, slong prec, slong mag_bits);
@@ -1131,6 +1134,11 @@ _acb_vec_get_unique_fmpz_vec(fmpz * res,  acb_srcptr vec, slong len)
 
 /* sort complex numbers in a nice-to-display order */
 void _acb_vec_sort_pretty(acb_ptr vec, slong len);
+
+/* roots of unity */
+void acb_nth_root(acb_t res, ulong order, slong prec);
+void _acb_vec_nth_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec);
+void _acb_vec_nth_roots(acb_ptr z, slong len, slong prec);
 
 #ifdef __cplusplus
 }

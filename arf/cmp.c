@@ -59,3 +59,25 @@ arf_cmp(const arf_t x, const arf_t y)
     return 0;
 }
 
+int arf_cmp_si(const arf_t x, slong y)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    return arf_cmp(x, t);
+}
+
+int arf_cmp_ui(const arf_t x, ulong y)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_cmp(x, t);
+}
+
+int arf_cmp_d(const arf_t x, double y)
+{
+    arf_t t;
+    arf_init(t); /* no need to free */
+    arf_set_d(t, y);
+    return arf_cmp(x, t);
+}
+

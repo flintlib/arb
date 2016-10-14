@@ -101,6 +101,12 @@ Basic properties and manipulation
 
     Sets *dest* to a copy of *src*, rounded to *prec* bits.
 
+.. function:: void acb_poly_set_trunc(acb_poly_t dest, const acb_poly_t src, slong n)
+
+.. function:: void acb_poly_set_trunc_round(acb_poly_t dest, const acb_poly_t src, slong n, slong prec)
+
+    Sets *dest* to a copy of *src*, truncated to length *n* and rounded to *prec* bits.
+
 .. function:: void acb_poly_set_coeff_si(acb_poly_t poly, slong n, slong c)
 
 .. function:: void acb_poly_set_coeff_acb(acb_poly_t poly, slong n, const acb_t c)
@@ -135,7 +141,12 @@ Basic properties and manipulation
 .. function:: void acb_poly_truncate(acb_poly_t poly, slong n)
 
     Truncates *poly* to have length at most *n*, i.e. degree
-    strictly smaller than *n*.
+    strictly smaller than *n*. We require that *n* is nonnegative.
+
+.. function:: slong acb_poly_valuation(const acb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -247,6 +258,14 @@ Arithmetic
 
     Sets *C* to the difference of *A* and *B*.
 
+.. function:: void acb_poly_add_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the sum of *A* and *B*, truncated to length *len*.
+
+.. function:: void acb_poly_sub_series(acb_poly_t C, const acb_poly_t A, const acb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the difference of *A* and *B*, truncated to length *len*.
+
 .. function:: void acb_poly_neg(acb_poly_t C, const acb_poly_t A)
 
     Sets *C* to the negation of *A*.
@@ -345,7 +364,7 @@ Arithmetic
 
 .. function:: void _acb_poly_divrem(acb_ptr Q, acb_ptr R, acb_srcptr A, slong lenA, acb_srcptr B, slong lenB, slong prec)
 
-.. function:: void acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, slong prec)
+.. function:: int acb_poly_divrem(acb_poly_t Q, acb_poly_t R, const acb_poly_t A, const acb_poly_t B, slong prec)
 
     Performs polynomial division with remainder, computing a quotient `Q` and
     a remainder `R` such that `A = BQ + R`. The implementation reverses the

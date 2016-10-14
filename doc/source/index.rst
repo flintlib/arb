@@ -1,47 +1,76 @@
-Welcome to Arb's documentation!
-===============================
+Arb - a C library for arbitrary-precision interval arithmetic
+=============================================================
 
 .. only:: latex
 
     Introduction
     ::::::::::::
 
-    Arb is a C library for arbitrary-precision floating-point ball arithmetic,
-    developed by `Fredrik Johansson <http://fredrikj.net/>`_
-    (fredrik.johansson@gmail.com).
-    It supports real and complex numbers, polynomials, power series, matrices,
-    and evaluation of many transcendental functions.
-    All is done with automatic, rigorous error bounds.
+    Welcome to Arb's documentation!
+    Arb is a C library for arbitrary-precision interval arithmetic,
+    using a midpoint-radius representation ("ball arithmetic").
+    It supports real and complex numbers, polynomials, power series,
+    matrices, and evaluation of many transcendental functions.
+    All operations are done with automatic, rigorous error bounds.
+    The code is thread-safe, portable, and extensively tested.
 
     Arb is free software distributed under the
     GNU Lesser General Public License (LGPL), version 2.1 or later
-    (see :ref:`license` for details).
+    (see :ref:`license`).
 
     The git repository is https://github.com/fredrik-johansson/arb/
 
-    The documentation website is http://fredrikj.net/arb/
+    Arb is developed by `Fredrik Johansson <http://fredrikj.net/>`_
+    (fredrik.johansson@gmail.com), with help from many
+    contributors (see :ref:`credits`).
+    Questions and discussion about Arb are welcome on the
+    `flint-devel <https://groups.google.com/d/forum/flint-devel>`_ mailing list.
+    There is also an `issue tracker <https://github.com/fredrik-johansson/arb/issues>`_
+    for bug reports and feature requests.
+    Development progress is sometimes covered on
+    `Fredrik's blog <http://fredrikj.net/blog/>`_.
+
+    This documentation is available in HTML format at http://arblib.org and in
+    PDF format at http://arblib.org/arb.pdf.
+    The version of the documentation you are currently reading was updated
+    |today| and describes Arb |version|.
+    Documentation for :ref:`specific release versions <history>`
+    is also available in PDF format.
 
 .. only:: html
 
         .. image:: _static/arbtext.png
 
-    Arb is a C library for arbitrary-precision floating-point ball arithmetic,
-    developed by `Fredrik Johansson <http://fredrikj.net/>`_
-    (fredrik.johansson@gmail.com).
-    It supports real and complex numbers, polynomials, power series, matrices,
-    and evaluation of many transcendental functions.
-    All is done with automatic, rigorous error bounds.
+    Welcome to Arb's documentation!
+    Arb is a C library for arbitrary-precision interval arithmetic,
+    using a midpoint-radius representation ("ball arithmetic").
+    It supports real and complex numbers, polynomials, power series,
+    matrices, and evaluation of many transcendental functions.
+    All operations are done with automatic, rigorous error bounds.
+    The code is thread-safe, portable, and extensively tested.
 
     Arb is free software distributed under the
     GNU Lesser General Public License (LGPL), version 2.1 or later
-    (see :ref:`license` for details).
+    (see :ref:`license`).
 
     The git repository is https://github.com/fredrik-johansson/arb/
 
-    The documentation website is http://fredrikj.net/arb/
+    Arb is developed by `Fredrik Johansson <http://fredrikj.net/>`_
+    (fredrik.johansson@gmail.com), with help from many
+    contributors (see :ref:`credits`).
+    Questions and discussion about Arb are welcome on the
+    `flint-devel <https://groups.google.com/d/forum/flint-devel>`_ mailing list.
+    There is also an `issue tracker <https://github.com/fredrik-johansson/arb/issues>`_
+    for bug reports and feature requests.
+    Development progress is sometimes covered on
+    `Fredrik's blog <http://fredrikj.net/blog/>`_.
 
-    A `PDF version <http://fredrikj.net/arb/arb.pdf>`_ of this documentation
-    is available (:ref:`older versions <history>`).
+    This documentation is available in HTML format at http://arblib.org and in
+    PDF format at http://arblib.org/arb.pdf.
+    The version of the documentation you are currently reading was updated
+    |today| and describes Arb |version|.
+    Documentation for :ref:`specific release versions <history>`
+    is also available in PDF format.
 
 General information
 ::::::::::::::::::::
@@ -116,7 +145,9 @@ modules.
    :maxdepth: 2
 
    acb_hypgeom.rst
+   arb_hypgeom.rst
    acb_modular.rst
+   dirichlet.rst
    acb_dirichlet.rst
    bernoulli.rst
    hypgeom.rst
@@ -145,6 +176,7 @@ Mainly for internal use.
 
    fmpz_extras.rst
    bool_mat.rst
+   dlog.rst
    fmpr.rst
 
 Supplementary algorithm notes

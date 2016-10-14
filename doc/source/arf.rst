@@ -324,6 +324,12 @@ Comparisons and bounds
 
 .. function:: int arf_cmp(const arf_t x, const arf_t y)
 
+.. function:: int arf_cmp_si(const arf_t x, slong y)
+
+.. function:: int arf_cmp_ui(const arf_t x, ulong y)
+
+.. function:: int arf_cmp_d(const arf_t x, double y)
+
     Returns negative, zero, or positive, depending on whether *x* is
     respectively smaller, equal, or greater compared to *y*.
     Comparison with NaN is undefined.

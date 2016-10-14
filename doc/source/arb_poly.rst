@@ -95,6 +95,12 @@ Basic manipulation
 
     Sets *dest* to a copy of *src*, rounded to *prec* bits.
 
+.. function:: void arb_poly_set_trunc(arb_poly_t dest, const arb_poly_t src, slong n)
+
+.. function:: void arb_poly_set_trunc_round(arb_poly_t dest, const arb_poly_t src, slong n, slong prec)
+
+    Sets *dest* to a copy of *src*, truncated to length *n* and rounded to *prec* bits.
+
 .. function:: void arb_poly_set_coeff_si(arb_poly_t poly, slong n, slong c)
 
 .. function:: void arb_poly_set_coeff_arb(arb_poly_t poly, slong n, const arb_t c)
@@ -129,7 +135,12 @@ Basic manipulation
 .. function:: void arb_poly_truncate(arb_poly_t poly, slong n)
 
     Truncates *poly* to have length at most *n*, i.e. degree
-    strictly smaller than *n*.
+    strictly smaller than *n*. We require that *n* is nonnegative.
+
+.. function:: slong arb_poly_valuation(const arb_poly_t poly)
+
+    Returns the degree of the lowest term that is not exactly zero in *poly*.
+    Returns -1 if *poly* is the zero polynomial.
 
 Conversions
 -------------------------------------------------------------------------------
@@ -227,6 +238,14 @@ Arithmetic
 .. function:: void arb_poly_sub(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong prec)
 
     Sets *C* to the difference of *A* and *B*.
+
+.. function:: void arb_poly_add_series(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the sum of *A* and *B*, truncated to length *len*.
+
+.. function:: void arb_poly_sub_series(arb_poly_t C, const arb_poly_t A, const arb_poly_t B, slong len, slong prec)
+
+    Sets *C* to the difference of *A* and *B*, truncated to length *len*.
 
 .. function:: void arb_poly_neg(arb_poly_t C, const arb_poly_t A)
 

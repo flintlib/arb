@@ -23,13 +23,15 @@ int main()
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t zn1, zn2, zn1n2, zn1zn2;
-        acb_dirichlet_group_t G;
+        dirichlet_group_t G;
+        dirichlet_char_t chi;
         ulong q, m, n1, n2, iter2;
         int res;
 
         q = 1 + n_randint(state, 1000);
 
-        acb_dirichlet_group_init(G, q);
+        dirichlet_group_init(G, q);
+        dirichlet_char_init(chi, G);
         acb_init(zn1);
         acb_init(zn2);
         acb_init(zn1n2);
@@ -42,12 +44,31 @@ int main()
                 m = 1 + n_randint(state, q);
             } while (n_gcd(q, m) != 1);
 
+            dirichlet_char_log(chi, G, m);
+
             n1 = n_randint(state, 1000);
             n2 = n_randint(state, 1000);
 
-            acb_dirichlet_chi(zn1, G, m, n1, 53);
-            acb_dirichlet_chi(zn2, G, m, n2, 53);
-            acb_dirichlet_chi(zn1n2, G, m, n1 * n2, 53);
+            acb_dirichlet_chi(zn1, G, chi, n1, 53);
+            acb_dirichlet_pairing(zn2, G, m, n1, 53);
+            if (!acb_overlaps(zn1, zn2))
+            {
+                flint_printf("FAIL: overlap\n\n");
+                flint_printf("q = %wu\n\n", q);
+                flint_printf("m = %wu\n\n", m);
+                flint_printf("n = %wu\n\n", n1);
+                flint_printf("char = "); acb_printd(zn1, 15); flint_printf("\n\n");
+                flint_printf("pairing = "); acb_printd(zn2, 15); flint_printf("\n\n");
+                dirichlet_char_print(G, chi);
+                dirichlet_char_log(chi, G, m);
+                flint_printf("log(m) = "); dirichlet_char_print(G, chi);
+                dirichlet_char_log(chi, G, n1);
+                flint_printf("log(n1) = "); dirichlet_char_print(G, chi);
+                abort();
+            }
+
+            acb_dirichlet_pairing(zn2, G, m, n2, 53);
+            acb_dirichlet_pairing(zn1n2, G, m, n1 * n2, 53);
             acb_mul(zn1zn2, zn1, zn2, 53);
 
             if (!acb_overlaps(zn1n2, zn1zn2))
@@ -74,7 +95,7 @@ int main()
             {
                 if (n_gcd(q, m) == 1)
                 {
-                    acb_dirichlet_chi(zn2, G, m, n1, 53);
+                    acb_dirichlet_pairing(zn2, G, m, n1, 53);
                     acb_add(zn1, zn1, zn2, 53);
                 }
             }
@@ -96,7 +117,8 @@ int main()
             }
         }
 
-        acb_dirichlet_group_clear(G);
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
         acb_clear(zn1);
         acb_clear(zn2);
         acb_clear(zn1n2);
@@ -108,4 +130,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-

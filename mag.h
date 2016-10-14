@@ -203,11 +203,7 @@ mag_init_set(mag_t x, const mag_t y)
     MAG_MAN(x) = MAG_MAN(y);
 }
 
-MAG_INLINE void
-mag_clear(mag_t x)
-{
-    fmpz_clear(MAG_EXPREF(x));
-}
+void mag_clear(mag_t x);
 
 MAG_INLINE void
 mag_swap(mag_t x, mag_t y)

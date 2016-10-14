@@ -221,6 +221,10 @@ Confluent hypergeometric functions
     `\mathbf{M}(a,b,z) = \frac{1}{\Gamma(b)} {}_1F_1(a,b,z)` if *regularized*
     is set.
 
+.. function:: void acb_hypgeom_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, int regularized, slong prec)
+
+    Alias for :func:`acb_hypgeom_m`.
+
 .. function:: void acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)
 
 .. function:: void acb_hypgeom_0f1_direct(acb_t res, const acb_t a, const acb_t z, int regularized, slong prec)

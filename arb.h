@@ -54,12 +54,7 @@ arb_init(arb_t x)
     mag_init(arb_radref(x));
 }
 
-ARB_INLINE void
-arb_clear(arb_t x)
-{
-    arf_clear(arb_midref(x));
-    mag_clear(arb_radref(x));
-}
+void arb_clear(arb_t x);
 
 ARB_INLINE arb_ptr
 _arb_vec_init(slong n)
