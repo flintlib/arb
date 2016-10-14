@@ -61,6 +61,28 @@ the default path ``/usr/local``, pass
 the correct path to configure (type ``./configure --help`` to show
 more options).
 
+Building with MSVC
+-------------------------------------------------------------------------------
+
+To compile arb with MSVC, compile MPIR, MPFR, pthreads-win32 and FLINT using
+MSVC. Install CMake >=2.8.7 and make sure it is the path. Then go to the Arb
+source directory and run::
+
+    mkdir build
+    cd build
+    cmake ..                                            # configure
+    cmake --build . --config Release                    # build
+    cmake --build . --config Release --target install   # install
+
+To build a Debug build, create a new build directory and pass
+``-DCMAKE_BUILD_TYPE=Debug`` to ``cmake``. Note that building a dll ibrary
+is not supported yet.
+
+If the dependencies are not found, pass ``-DCMAKE_PREFIX_PATH=/path/to/deps``
+to ``cmake`` to find the dependencies.
+
+To build tests add, pass ``-DBUILD_TESTS=yes`` to ``cmake`` and run `ctest`
+to run the tests.
 
 Running code
 -------------------------------------------------------------------------------
