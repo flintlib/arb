@@ -12,7 +12,11 @@
 #include "acb_poly.h"
 
 #ifndef __compar_fn_t
-typedef int (*__compar_fn_t) (__const void *, __const void *);
+#if defined(_MSC_VER)
+typedef int(*__compar_fn_t) (const void *, const void *);
+#else
+typedef int(*__compar_fn_t) (__const void *, __const void *);
+#endif
 #endif
 
 int arb_cmp_mid(const arb_t a, const arb_t b)
