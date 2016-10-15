@@ -14,10 +14,39 @@
 void
 acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
 {
-    if (acb_is_one(s))
+    if (!acb_is_finite(s))
     {
-        arb_const_log2(acb_realref(res), prec);
-        arb_zero(acb_imagref(res));
+        acb_indeterminate(res);
+    }
+    else if (arb_contains_si(acb_realref(s), 1) && arb_contains_zero(acb_imagref(s)))
+    {
+        if (acb_is_one(s))
+        {
+            arb_const_log2(acb_realref(res), prec);
+            arb_zero(acb_imagref(res));
+        }
+        else
+        {
+            mag_t m;
+            int is_real = acb_is_real(s);
+            mag_init(m);
+
+            /* Taylor coefficients at s = 1 are bounded by |c_k| < 1/4^k. */
+            acb_sub_ui(res, s, 1, prec);
+            acb_get_mag(m, res);
+            mag_mul_2exp_si(m, m, -2);
+            mag_geom_series(m, m, 1);
+
+            arb_const_log2(acb_realref(res), prec);
+            arb_zero(acb_imagref(res));
+
+            if (is_real)
+                arb_add_error_mag(acb_realref(res), m);
+            else
+                acb_add_error_mag(res, m);
+
+            mag_clear(m);
+        }
     }
     else
     {
@@ -34,3 +63,4 @@ acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
         acb_clear(t);
     }
 }
+
