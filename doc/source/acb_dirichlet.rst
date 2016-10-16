@@ -22,6 +22,44 @@ The code in other modules for computing the Riemann zeta function,
 Hurwitz zeta function and polylogarithm will possibly be migrated to this
 module in the future.
 
+Hurwitz zeta function
+-------------------------------------------------------------------------------
+
+.. type:: acb_dirichlet_hurwitz_precomp_struct
+
+.. type:: acb_dirichlet_hurwitz_precomp_t
+
+.. function:: void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, ulong A, ulong K, ulong N, slong prec)
+
+    Precomputes a grid of Taylor polynomials for fast evaluation of
+    `\zeta(s,a)` on `a \in (0,1]` with fixed *s*.
+    *A* is the initial shift to apply to *a*, *K* is the number of Taylor terms,
+    *N* is the number of grid points.  The precomputation requires *NK*
+    evaluations of the Hurwitz zeta function, and each subsequent evaluation
+    requires *2K* simple arithmetic operations (polynomial evaluation) plus
+    *A* powers. As *K* grows, the error is at most `O(1/(2AN)^K)`.
+
+    We require that *A*, *K* and *N* are all positive. Moreover, for a finite
+    error bound, we require `K+\operatorname{re}(s) > 1`.
+    To avoid an initial "bump" that steals precision
+    and slows convergence, *AN* should be at least roughly as large as `|s|`,
+    e.g. it is a good idea to have at least `AN > 0.5 |s|`.
+
+.. function:: void acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre)
+
+    Clears the precomputed data.
+
+.. function:: void acb_dirichlet_hurwitz_precomp_bound(mag_t res, const acb_t s, ulong A, ulong K, ulong N)
+
+    Computes an upper bound for the truncation error (not accounting for
+    roundoff error) when evaluating `\zeta(s,a)` with precomputation parameters
+    *A*, *K*, *N*, assuming that `0 < a \le 1`.
+    For details, see :ref:`algorithms_hurwitz`.
+
+.. function:: void acb_dirichlet_hurwitz_precomp_eval(acb_t res, const acb_dirichlet_hurwitz_precomp_t pre, ulong p, ulong q, slong prec)
+
+    Evaluates `\zeta(s,p/q)` using precomputed data, assuming that `0 < p/q \le 1`.
+
 Character evaluation
 -------------------------------------------------------------------------------
 

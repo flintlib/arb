@@ -1,6 +1,6 @@
 .. _algorithms_gamma:
 
-Algorithms for gamma functions
+Algorithms for the gamma function
 ===============================================================================
 
 The Stirling series

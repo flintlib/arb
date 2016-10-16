@@ -27,6 +27,24 @@
 extern "C" {
 #endif
 
+typedef struct
+{
+    acb_struct s;
+    mag_struct err;
+    acb_ptr coeffs;
+    slong A;
+    slong N;
+    slong K;
+}
+acb_dirichlet_hurwitz_precomp_struct;
+
+typedef acb_dirichlet_hurwitz_precomp_struct acb_dirichlet_hurwitz_precomp_t[1];
+
+void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, slong A, slong K, slong N, slong prec);
+void acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre);
+void acb_dirichlet_hurwitz_precomp_bound(mag_t res, const acb_t s, slong A, slong K, slong N);
+void acb_dirichlet_hurwitz_precomp_eval(acb_t res, const acb_dirichlet_hurwitz_precomp_t pre, ulong p, ulong q, slong prec);
+
 void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     const signed char * chi, int mod, int reciprocal, slong prec);
 

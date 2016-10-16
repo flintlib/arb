@@ -191,6 +191,7 @@ lengthy to reproduce in the documentation for each module.
    formulas.rst
    constants.rst
    gamma.rst
+   hurwitz.rst
    polylogarithms.rst
    hypergeometric.rst
    agm.rst
