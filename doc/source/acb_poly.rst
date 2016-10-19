@@ -614,6 +614,43 @@ Differentiation
     Sets *res* to the integral of *poly*.
 
 
+Transforms
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_borel_transform(acb_ptr res, acb_srcptr poly, slong len, slong prec)
+
+.. function:: void acb_poly_borel_transform(acb_poly_t res, const acb_poly_t poly, slong prec)
+
+    Computes the Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
+    to `\sum_k (a_k / k!) x^k`. The underscore method allows aliasing.
+
+.. function:: void _acb_poly_inv_borel_transform(acb_ptr res, acb_srcptr poly, slong len, slong prec)
+
+.. function:: void acb_poly_inv_borel_transform(acb_poly_t res, const acb_poly_t poly, slong prec)
+
+    Computes the inverse Borel transform of the input polynomial, mapping `\sum_k a_k x^k`
+    to `\sum_k a_k k! x^k`. The underscore method allows aliasing.
+
+.. function:: void _acb_poly_binomial_transform_basecase(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec)
+
+.. function:: void acb_poly_binomial_transform_basecase(acb_poly_t b, const acb_poly_t a, slong len, slong prec)
+
+.. function:: void _acb_poly_binomial_transform_convolution(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec)
+
+.. function:: void acb_poly_binomial_transform_convolution(acb_poly_t b, const acb_poly_t a, slong len, slong prec)
+
+.. function:: void _acb_poly_binomial_transform(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec)
+
+.. function:: void acb_poly_binomial_transform(acb_poly_t b, const acb_poly_t a, slong len, slong prec)
+
+    Computes the binomial transform of the input polynomial, truncating
+    the output to length *len*. See :func:`arb_poly_binomial_transform` for
+    details.
+
+    The underscore methods do not support aliasing, and assume that
+    the lengths are nonzero.
+
+
 Elementary functions
 -------------------------------------------------------------------------------
 

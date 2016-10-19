@@ -171,6 +171,30 @@ void _acb_poly_integral(acb_ptr res, acb_srcptr poly, slong len, slong prec);
 
 void acb_poly_integral(acb_poly_t res, const acb_poly_t poly, slong prec);
 
+/* Transforms */
+
+void acb_poly_borel_transform(acb_poly_t res, const acb_poly_t poly, slong prec);
+
+void _acb_poly_borel_transform(acb_ptr res, acb_srcptr poly, slong len, slong prec);
+
+void acb_poly_inv_borel_transform(acb_poly_t res, const acb_poly_t poly, slong prec);
+
+void _acb_poly_inv_borel_transform(acb_ptr res, acb_srcptr poly, slong len, slong prec);
+
+void _acb_poly_binomial_transform_basecase(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec);
+
+void acb_poly_binomial_transform_basecase(acb_poly_t b, const acb_poly_t a, slong len, slong prec);
+
+void _acb_poly_binomial_transform_convolution(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec);
+
+void acb_poly_binomial_transform_convolution(acb_poly_t b, const acb_poly_t a, slong len, slong prec);
+
+void _acb_poly_binomial_transform(acb_ptr b, acb_srcptr a, slong alen, slong len, slong prec);
+
+void acb_poly_binomial_transform(acb_poly_t b, const acb_poly_t a, slong len, slong prec);
+
+
+
 void acb_poly_set(acb_poly_t dest, const acb_poly_t src);
 
 void acb_poly_set_round(acb_poly_t dest, const acb_poly_t src, slong prec);
