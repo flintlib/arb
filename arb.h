@@ -1129,6 +1129,38 @@ void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 
 void arb_atan_arf_bb(arb_t z, const arf_t x, slong prec);
 
+ARB_INLINE slong
+arb_allocated_bytes(const arb_t x)
+{
+    return arf_allocated_bytes(arb_midref(x)) + mag_allocated_bytes(arb_radref(x));
+}
+
+ARB_INLINE slong
+_arb_vec_allocated_bytes(arb_srcptr vec, slong len)
+{
+    slong i, size;
+
+    size = len * sizeof(arb_struct);
+
+    for (i = 0; i < len; i++)
+        size += arb_allocated_bytes(vec + i);
+
+    return size;
+}
+
+ARB_INLINE double
+_arb_vec_estimate_allocated_bytes(slong len, slong prec)
+{
+    double size;
+
+    size = len * (double) sizeof(arb_struct);
+
+    if (prec > ARF_NOPTR_LIMBS * FLINT_BITS)
+        size += len * (double) ((prec + FLINT_BITS - 1) / FLINT_BITS) * sizeof(mp_limb_t);
+
+    return size;
+}
+
 #ifdef __cplusplus
 }
 #endif

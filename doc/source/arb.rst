@@ -103,6 +103,34 @@ Memory management
 
     Swaps *x* and *y* efficiently.
 
+.. function:: slong arb_allocated_bytes(const arb_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(arb_struct)`` to get the size of the object as a whole.
+
+.. function:: slong _arb_vec_allocated_bytes(arb_srcptr vec, slong len)
+
+    Returns the total number of bytes allocated for this vector, i.e. the
+    space taken up by the vector itself plus the sum of the internal heap
+    allocation sizes for all its member elements.
+
+.. function:: double _arb_vec_estimate_allocated_bytes(slong len, slong prec)
+
+    Estimates the number of bytes that need to be allocated for a vector of
+    *len* elements with *prec* bits of precision, including the space for
+    internal limb data.
+    This function returns a *double* to avoid overflow issues when both
+    *len* and *prec* are large.
+
+    This is only an approximation of the physical memory that will be used
+    by an actual vector. In practice, the space varies with the content
+    of the numbers; for example, zeros and small integers require no
+    internal heap allocation even if the precision is huge.
+    The estimate assumes that exponents will not be bignums.
+    The actual amount may also be higher or lower due to overhead in the
+    memory allocator or overcommitment by the operating system.
+
 Assignment and rounding
 -------------------------------------------------------------------------------
 

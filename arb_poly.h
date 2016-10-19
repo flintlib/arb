@@ -704,6 +704,12 @@ void _arb_poly_root_bound_fujiwara(mag_t bound, arb_srcptr poly, slong len);
 
 void arb_poly_root_bound_fujiwara(mag_t bound, arb_poly_t poly);
 
+ARB_POLY_INLINE slong
+arb_poly_allocated_bytes(const arb_poly_t x)
+{
+    return _arb_vec_allocated_bytes(x->coeffs, x->alloc);
+}
+
 /* Macros */
 
 

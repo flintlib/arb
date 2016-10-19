@@ -1140,6 +1140,24 @@ void acb_nth_root(acb_t res, ulong order, slong prec);
 void _acb_vec_nth_roots_pe(acb_ptr z, slong p, slong e, slong len, slong step, slong prec);
 void _acb_vec_nth_roots(acb_ptr z, slong len, slong prec);
 
+ACB_INLINE slong
+acb_allocated_bytes(const acb_t x)
+{
+    return arb_allocated_bytes(acb_realref(x)) + arb_allocated_bytes(acb_imagref(x));
+}
+
+ACB_INLINE slong
+_acb_vec_allocated_bytes(acb_srcptr vec, slong len)
+{
+    return _arb_vec_allocated_bytes((arb_srcptr) vec, 2 * len);
+}
+
+ACB_INLINE double
+_acb_vec_estimate_allocated_bytes(slong len, slong prec)
+{
+    return 2 * _arb_vec_estimate_allocated_bytes(len, prec);
+}
+
 #ifdef __cplusplus
 }
 #endif

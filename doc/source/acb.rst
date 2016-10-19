@@ -71,6 +71,25 @@ Memory management
 
     Clears an array of *n* initialized *acb_struct*:s.
 
+.. function:: slong acb_allocated_bytes(const acb_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(acb_struct)`` to get the size of the object as a whole.
+
+.. function:: slong _acb_vec_allocated_bytes(acb_srcptr vec, slong len)
+
+    Returns the total number of bytes allocated for this vector, i.e. the
+    space taken up by the vector itself plus the sum of the internal heap
+    allocation sizes for all its member elements.
+
+.. function:: double _acb_vec_estimate_allocated_bytes(slong len, slong prec)
+
+    Estimates the number of bytes that need to be allocated for a vector of
+    *len* elements with *prec* bits of precision, including the space for
+    internal limb data.
+    See comments for :func:`_arb_vec_estimate_allocated_bytes`.
+
 Basic manipulation
 -------------------------------------------------------------------------------
 

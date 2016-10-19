@@ -54,6 +54,12 @@ Memory management
 
     Strips any trailing coefficients which are identical to zero.
 
+.. function:: slong arb_poly_allocated_bytes(const arb_poly_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(arb_poly_struct)`` to get the size of the object as a whole.
+
 Basic manipulation
 -------------------------------------------------------------------------------
 

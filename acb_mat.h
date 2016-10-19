@@ -337,6 +337,12 @@ void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec);
 
 void acb_mat_trace(acb_t trace, const acb_mat_t mat, slong prec);
 
+ACB_MAT_INLINE slong
+acb_mat_allocated_bytes(const acb_mat_t x)
+{
+    return _acb_vec_allocated_bytes(x->entries, x->r * x->c) + x->r * sizeof(acb_ptr);
+}
+
 #ifdef __cplusplus
 }
 #endif

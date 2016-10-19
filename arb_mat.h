@@ -345,6 +345,11 @@ arb_mat_count_not_is_zero(const arb_mat_t mat)
     return size - arb_mat_count_is_zero(mat);
 }
 
+ARB_MAT_INLINE slong
+arb_mat_allocated_bytes(const arb_mat_t x)
+{
+    return _arb_vec_allocated_bytes(x->entries, x->r * x->c) + x->r * sizeof(arb_ptr);
+}
 
 #ifdef __cplusplus
 }

@@ -57,6 +57,12 @@ Memory management
 
     Swaps *poly1* and *poly2* efficiently.
 
+.. function:: slong acb_poly_allocated_bytes(const acb_poly_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(acb_poly_struct)`` to get the size of the object as a whole.
+
 
 Basic properties and manipulation
 -------------------------------------------------------------------------------

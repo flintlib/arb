@@ -28,6 +28,8 @@ void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, slong len, const acb_t c,
     acb_mul(res, src, c, prec);
 }
 
+/* todo: don't hardcode this */
+#define SIEVE_ALLOC_LIMIT 4e9   /* 4 GB */
 
 void
 _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulong N, ulong M, slong d, slong prec)
@@ -48,7 +50,7 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     acb_one(one);
 
     /* sum 1/(k+a)^(s+x) */
-    if (acb_is_one(a) && d <= 3)
+    if (acb_is_one(a) && d <= 3 && _acb_vec_estimate_allocated_bytes(d * N / 6, prec) < SIEVE_ALLOC_LIMIT)
         _acb_poly_powsum_one_series_sieved(sum, s, N, d, prec);
     else if (N > 50 && flint_get_num_threads() > 1)
         _acb_poly_powsum_series_naive_threaded(sum, s, a, one, N, d, prec);

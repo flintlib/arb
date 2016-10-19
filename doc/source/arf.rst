@@ -131,6 +131,12 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
+.. function:: slong arf_allocated_bytes(const arf_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(arf_struct)`` to get the size of the object as a whole.
+
 Special values
 -------------------------------------------------------------------------------
 

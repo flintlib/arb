@@ -1269,6 +1269,17 @@ int arf_sum(arf_t s, arf_srcptr terms, slong len, slong prec, arf_rnd_t rnd);
 double arf_get_d(const arf_t x, arf_rnd_t rnd);
 void arf_set_d(arf_t x, double v);
 
+ARF_INLINE slong
+arf_allocated_bytes(const arf_t x)
+{
+    slong size = fmpz_allocated_bytes(ARF_EXPREF(x));
+
+    if (ARF_HAS_PTR(x))
+        size += ARF_PTR_ALLOC(x) * sizeof(mp_limb_t);
+
+    return size;
+}
+
 #ifdef __cplusplus
 }
 #endif

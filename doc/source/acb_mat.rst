@@ -52,6 +52,11 @@ Memory management
 
     Clears the matrix, deallocating all entries.
 
+.. function:: slong acb_mat_allocated_bytes(const acb_mat_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(acb_mat_struct)`` to get the size of the object as a whole.
 
 Conversions
 -------------------------------------------------------------------------------

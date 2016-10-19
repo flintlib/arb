@@ -217,6 +217,15 @@ fmpz_min(fmpz_t z, const fmpz_t x, const fmpz_t y)
 
 void fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, mp_bitcnt_t shift);
 
+static __inline__ slong
+fmpz_allocated_bytes(const fmpz_t x)
+{
+    if (COEFF_IS_MPZ(*x))
+        return sizeof(__mpz_struct) + COEFF_TO_PTR(*x)->_mp_alloc * sizeof(mp_limb_t);
+    else
+        return 0;
+}
+
 #ifdef __cplusplus
 }
 #endif

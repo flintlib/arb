@@ -687,6 +687,11 @@ MAG_INLINE void mag_const_pi(mag_t res)
     mag_set_ui_2exp_si(res, 843314857, -28);
 }
 
+MAG_INLINE slong mag_allocated_bytes(const mag_t x)
+{
+    return fmpz_allocated_bytes(MAG_EXPREF(x));
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -753,6 +753,12 @@ void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t 
 void _acb_poly_erf_series(acb_ptr g, acb_srcptr h, slong hlen, slong n, slong prec);
 void acb_poly_erf_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec);
 
+ACB_POLY_INLINE slong
+acb_poly_allocated_bytes(const acb_poly_t x)
+{
+    return _acb_vec_allocated_bytes(x->coeffs, x->alloc);
+}
+
 #ifdef __cplusplus
 }
 #endif

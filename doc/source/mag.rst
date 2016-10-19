@@ -58,6 +58,12 @@ Memory management
 
     Clears a vector of length *n*.
 
+.. function:: slong mag_allocated_bytes(const mag_t x)
+
+    Returns the total number of bytes heap-allocated internally by this object.
+    The count excludes the size of the structure itself. Add
+    ``sizeof(mag_struct)`` to get the size of the object as a whole.
+
 Special values
 -------------------------------------------------------------------------------
 
