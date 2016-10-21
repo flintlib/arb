@@ -10,6 +10,7 @@
 */
 
 #include "acb_poly.h"
+#include "acb_dirichlet.h"
 
 /* res = src * (c + x) */
 void _acb_poly_mullow_cpx(acb_ptr res, acb_srcptr src, slong len, const acb_t c, slong trunc, slong prec)
@@ -50,8 +51,10 @@ _acb_poly_zeta_em_sum(acb_ptr z, const acb_t s, const acb_t a, int deflate, ulon
     acb_one(one);
 
     /* sum 1/(k+a)^(s+x) */
-    if (acb_is_one(a) && d <= 3 && _acb_vec_estimate_allocated_bytes(d * N / 6, prec) < SIEVE_ALLOC_LIMIT)
-        _acb_poly_powsum_one_series_sieved(sum, s, N, d, prec);
+    if (acb_is_one(a) && d <= 2 && _acb_vec_estimate_allocated_bytes(d * N / 6, prec) < SIEVE_ALLOC_LIMIT)
+        acb_dirichlet_powsum_sieved(sum, s, N, d, prec);
+    else if (acb_is_one(a) && d <= 4) /* todo: also better for slightly larger d, if N and prec large enough */
+        acb_dirichlet_powsum_smooth(sum, s, N, d, prec);
     else if (N > 50 && flint_get_num_threads() > 1)
         _acb_poly_powsum_series_naive_threaded(sum, s, a, one, N, d, prec);
     else

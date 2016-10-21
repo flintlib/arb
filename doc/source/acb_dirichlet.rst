@@ -51,6 +51,18 @@ Truncated L-series and power sums
     power series multiplications, it is only faster than the naive
     algorithm when *len* is small.
 
+.. function:: void acb_dirichlet_powsum_smooth(acb_ptr res, const acb_t s, ulong n, slong len, slong prec)
+
+    Sets *res* to `\sum_{k=1}^n k^{-(s+x)}`
+    as a power series in *x* truncated to length *len*.
+    This function performs partial sieving by adding multiples of 5-smooth *k*
+    into separate buckets. Asymptotically, this requires computing 4/15
+    of the powers, which is slower than *sieved*, but only requires
+    logarithmic extra space. It is also faster for large *len*, since most
+    power series multiplications are traded for additions.
+    A slightly bigger gain for larger *n* could be achieved by using more
+    small prime factors, at the expense of space.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 

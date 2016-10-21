@@ -31,6 +31,7 @@ void acb_dirichlet_powsum_term(acb_ptr res, arb_t log_prev, ulong * prev,
     const acb_t s, ulong k, int integer, int critical_line, slong len, slong prec);
 
 void acb_dirichlet_powsum_sieved(acb_ptr z, const acb_t s, ulong n, slong len, slong prec);
+void acb_dirichlet_powsum_smooth(acb_ptr z, const acb_t s, ulong n, slong len, slong prec);
 
 typedef struct
 {
