@@ -22,6 +22,35 @@ The code in other modules for computing the Riemann zeta function,
 Hurwitz zeta function and polylogarithm will possibly be migrated to this
 module in the future.
 
+Truncated L-series and power sums
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_powsum_term(acb_ptr res, arb_t log_prev, ulong * prev, const acb_t s, ulong k, int integer, int critical_line, slong len, slong prec)
+
+    Sets *res* to `k^{-(s+x)}` as a power series in *x* truncated to length *len*.
+    The flags *integer* and *critical_line* respectively specify optimizing
+    for *s* being an integer or having real part 1/2.
+
+    On input *log_prev* should contain the natural logarithm of the integer
+    at *prev*. If *prev* is close to *k*, this can be used to speed up
+    computations. If `\log(k)` is computed internally by this function, then
+    *log_prev* is overwritten by this value, and the integer at *prev* is
+    overwritten by *k*, allowing *log_prev* to be recycled for the next
+    term when evaluating a power sum.
+
+.. function:: void acb_dirichlet_powsum_sieved(acb_ptr res, const acb_t s, ulong n, slong len, slong prec)
+
+    Sets *res* to `\sum_{k=1}^n k^{-(s+x)}`
+    as a power series in *x* truncated to length *len*.
+    This function stores a table of powers that have already been calculated,
+    computing `(ij)^r` as `i^r j^r` whenever `k = ij` is
+    composite. As a further optimization, it groups all even `k` and
+    evaluates the sum as a polynomial in `2^{-(s+x)}`.
+    This scheme requires about `n / \log n` powers, `n / 2` multiplications,
+    and temporary storage of `n / 6` power series. Due to the extra
+    power series multiplications, it is only faster than the naive
+    algorithm when *len* is small.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 
