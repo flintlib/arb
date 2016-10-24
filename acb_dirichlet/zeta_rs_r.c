@@ -14,9 +14,9 @@
 void
 acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
 {
-    arb_ptr dk;
+    arb_ptr dk, pipow;
     acb_ptr Fp;
-    arb_t a, p;
+    arb_t a, p, api2, api2pow;
     acb_t U, S, u, v;
     fmpz_t N;
     mag_t err;
@@ -79,6 +79,8 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
 
     arb_init(a);
     arb_init(p);
+    arb_init(api2);
+    arb_init(api2pow);
 
     acb_init(U);
     acb_init(S);
@@ -89,6 +91,7 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
 
     dk = _arb_vec_init((3 * K) / 2 + 2);
     Fp = _acb_vec_init(3 * K + 1);
+    pipow = _arb_vec_init((3 * K) / 2 + 2);
 
     for (wp = 2 * prec; ; wp *= 2)
     {
@@ -139,6 +142,13 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
 
     acb_zero(S);
 
+    arb_const_pi(api2, wp);
+    _arb_vec_set_powers(pipow, api2, (3 * K) / 2 + 2, wp);
+    arb_mul(api2, api2, api2, wp);
+    arb_mul(api2, api2, a, wp);
+    arb_inv(api2, api2, wp);
+    arb_one(api2pow);
+
     for (k = 0; k <= K; k++)
     {
         acb_dirichlet_zeta_rs_d_coeffs(dk, acb_realref(s), k, wp);
@@ -146,22 +156,23 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
         acb_zero(u);
         for (j = 0; j <= (3 * k) / 2; j++)
         {
-            /* todo: precompute pi powers */
-            acb_const_pi(v, wp);
-            acb_div_onei(v, v);
-            acb_mul_2exp_si(v, v, -1);
-            acb_pow_ui(v, v, j, wp);
+            /* (pi/(2i))^j d^(k)_j F^(3k-2j)(p) */
+            arb_mul(acb_realref(v), pipow + j, dk + j, wp);
+            arb_mul_2exp_si(acb_realref(v), acb_realref(v), -j);
+            arb_zero(acb_imagref(v));
 
-            acb_mul_arb(v, v, dk + j, wp);
+            if (j % 4 == 1)
+                acb_div_onei(v, v);
+            else if (j % 4 == 2)
+                acb_neg(v, v);
+            else if (j % 4 == 3)
+                acb_mul_onei(v, v);
+
             acb_addmul(u, v, Fp + 3 * k - 2 * j, wp);
         }
 
-        acb_const_pi(v, wp);
-        acb_mul(v, v, v, wp);
-        acb_mul_arb(v, v, a, wp);
-        acb_pow_ui(v, v, k, wp);
-        acb_div(u, u, v, wp);
-        acb_add(S, S, u, wp);
+        acb_addmul_arb(S, u, api2pow, wp);
+        arb_mul(api2pow, api2pow, api2, wp);
     }
 
     acb_add_error_mag(S, err);
@@ -200,9 +211,12 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
 cleanup:
     _arb_vec_clear(dk, (3 * K) / 2 + 2);
     _acb_vec_clear(Fp, 3 * K + 1);
+    _arb_vec_clear(pipow, (3 * K) / 2 + 2);
 
     arb_clear(a);
     arb_clear(p);
+    arb_clear(api2);
+    arb_clear(api2pow);
 
     acb_clear(U);
     acb_clear(S);
