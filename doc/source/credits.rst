@@ -123,6 +123,8 @@ Bibliography
 
 (In the PDF edition, this section is empty. See the bibliography listing at the end of the document.)
 
+.. [Ari2011] \J. Arias de Reyna, "High precision computation of Riemann’s zeta function by the Riemann-Siegel formula, I", Mathematics of Computation 80 (2011), 995-1009
+
 .. [Arn2010] \J. Arndt, *Matters Computational*, Springer (2010), http://www.jjj.de/fxt/#fxtbook
 
 .. [BBC1997] \D. H. Bailey, J. M. Borwein and R. E. Crandall, "On the Khintchine constant", Mathematics of Computation 66 (1997) 417-431

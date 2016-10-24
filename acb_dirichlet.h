@@ -33,6 +33,12 @@ void acb_dirichlet_powsum_term(acb_ptr res, arb_t log_prev, ulong * prev,
 void acb_dirichlet_powsum_sieved(acb_ptr z, const acb_t s, ulong n, slong len, slong prec);
 void acb_dirichlet_powsum_smooth(acb_ptr z, const acb_t s, ulong n, slong len, slong prec);
 
+void acb_dirichlet_zeta_rs_f_coeffs(acb_ptr c, const arb_t p, slong N, slong prec);
+void acb_dirichlet_zeta_rs_d_coeffs(arb_ptr d, const arb_t sigma, slong k, slong prec);
+void acb_dirichlet_zeta_rs_bound(mag_t err, const acb_t s, slong K);
+void acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec);
+void acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec);
+
 typedef struct
 {
     acb_struct s;

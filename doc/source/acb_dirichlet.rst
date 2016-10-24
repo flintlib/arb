@@ -63,6 +63,64 @@ Truncated L-series and power sums
     A slightly bigger gain for larger *n* could be achieved by using more
     small prime factors, at the expense of space.
 
+Riemann zeta function and Riemann-Siegel formula
+-------------------------------------------------------------------------------
+
+The Riemann-Siegel (RS) formula is implemented closely following
+J. Arias de Reyna [Ari2011]_.
+For `s = \sigma + it` with `t > 0`, the expansion takes the form
+
+.. math ::
+
+    \zeta(s) = \mathcal{R}(s) + X(s) \mathcal{R}(1-s), \quad X(s) = \pi^{s-1/2} \frac{\Gamma((1-s)/2)}{\Gamma(s/2)}
+
+where
+
+.. math ::
+
+    \mathcal{R}(s) = \sum_{k=1}^N \frac{1}{k^s} + (-1)^{N-1} U a^{-\sigma} \left[ \sum_{k=0}^K \frac{C_k(p)}{a^k} + RS_K \right]
+
+.. math ::
+
+    U = \exp\left(-i\left[ \frac{t}{2} \log\left(\frac{t}{2\pi}\right)-\frac{t}{2}-\frac{\pi}{8} \right]\right), \quad
+    a = \sqrt{\frac{t}{2\pi}}, \quad N = \lfloor a \rfloor, \quad p = 1-2(a-N).
+
+The coefficients `C_k(p)` in the asymptotic part of the expansion
+are expressed in terms of certain auxiliary coefficients `d_j^{(k)}`
+and `F^{(j)}(p)`.
+Because of artificial discontinuities, *s* should be exact inside
+the evaluation (automatic reduction to the exact case is not yet implemented).
+
+.. function:: void acb_dirichlet_zeta_rs_f_coeffs(acb_ptr f, const arb_t p, slong n, slong prec)
+
+    Computes the coefficients `F^{(j)}(p)` for `0 \le j < n`.
+    Uses power series division. This method breaks down when `p = \pm 1/2`
+    (which is not problem if *s* is an exact floating-point number).
+
+.. function:: void acb_dirichlet_zeta_rs_d_coeffs(arb_ptr d, const arb_t sigma, slong k, slong prec)
+
+    Computes the coefficients `d_j^{(k)}` for `0 \le j \le \lfloor 3k/2 \rfloor + 1`.
+    On input, the array *d* must contain the coefficients for `d_j^{(k-1)}`
+    unless `k = 0`, and these coefficients will be updated in-place.
+
+.. function:: void acb_dirichlet_zeta_rs_bound(mag_t err, const acb_t s, slong K)
+
+    Bounds the error term `RS_K` following Theorem 4.2 in Arias de Reyna.
+
+.. function:: void acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
+
+    Computes `\mathcal{R}(s)` in the upper half plane. Uses precisely *K*
+    asymptotic terms in the RS formula if this input parameter is positive;
+    otherwise chooses the number of terms automatically based on *s* and the
+    precision.
+
+.. function:: void acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
+
+    Computes `\zeta(s)` using the Riemann-Siegel formula. Uses precisely
+    *K* asymptotic terms in the RS formula if this input parameter is positive;
+    otherwise chooses the number of terms automatically based on *s* and the
+    precision.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 
