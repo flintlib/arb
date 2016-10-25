@@ -343,6 +343,10 @@ int arf_cmp(const arf_t x, const arf_t y);
 
 int arf_cmpabs(const arf_t x, const arf_t y);
 
+int arf_cmpabs_ui(const arf_t x, ulong y);
+
+int arf_cmpabs_d(const arf_t x, double y);
+
 int arf_cmp_si(const arf_t x, slong y);
 
 int arf_cmp_ui(const arf_t x, ulong y);
@@ -464,14 +468,6 @@ arf_set_si(arf_t x, slong v)
     arf_set_ui(x, FLINT_ABS(v));
     if (v < 0)
         ARF_NEG(x);
-}
-
-ARF_INLINE int
-arf_cmpabs_ui(const arf_t x, ulong y)
-{
-    arf_t t;
-    arf_init_set_ui(t, y);  /* no need to free */
-    return arf_cmpabs(x, t);
 }
 
 ARF_INLINE void

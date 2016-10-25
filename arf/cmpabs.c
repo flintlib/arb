@@ -53,3 +53,18 @@ arf_cmpabs(const arf_t x, const arf_t y)
     return 0;
 }
 
+int arf_cmpabs_ui(const arf_t x, ulong y)
+{
+    arf_t t;
+    arf_init_set_ui(t, y); /* no need to free */
+    return arf_cmpabs(x, t);
+}
+
+int arf_cmpabs_d(const arf_t x, double y)
+{
+    arf_t t;
+    arf_init(t); /* no need to free */
+    arf_set_d(t, y);
+    return arf_cmpabs(x, t);
+}
+

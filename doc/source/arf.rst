@@ -344,6 +344,8 @@ Comparisons and bounds
 
 .. function:: int arf_cmpabs_ui(const arf_t x, ulong y)
 
+.. function:: int arf_cmpabs_d(const arf_t x, ulong y)
+
 .. function:: int arf_cmpabs_mag(const arf_t x, const mag_t y)
 
     Compares the absolute values of *x* and *y*.

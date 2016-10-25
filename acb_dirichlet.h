@@ -38,6 +38,7 @@ void acb_dirichlet_zeta_rs_d_coeffs(arb_ptr d, const arb_t sigma, slong k, slong
 void acb_dirichlet_zeta_rs_bound(mag_t err, const acb_t s, slong K);
 void acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec);
 void acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec);
+void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec);
 
 typedef struct
 {

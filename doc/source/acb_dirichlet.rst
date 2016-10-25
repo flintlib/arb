@@ -121,6 +121,10 @@ the evaluation (automatic reduction to the exact case is not yet implemented).
     otherwise chooses the number of terms automatically based on *s* and the
     precision.
 
+.. function:: void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
+
+    Computes `\zeta(s)` using an automatic choice of algorithm.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 

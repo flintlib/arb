@@ -11,6 +11,7 @@
 
 #include "acb.h"
 #include "acb_poly.h"
+#include "acb_dirichlet.h"
 
 void
 acb_zeta_si(acb_t z, slong s, slong prec)
@@ -46,55 +47,6 @@ acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, slong prec)
 void
 acb_zeta(acb_t z, const acb_t s, slong prec)
 {
-    acb_t a;
-    acb_init(a);
-    acb_one(a);
-
-    if (acb_is_int(s) &&
-        arf_cmpabs_2exp_si(arb_midref(acb_realref(s)), FLINT_BITS - 1) < 0)
-    {
-        acb_zeta_si(z, arf_get_si(arb_midref(acb_realref(s)), ARF_RND_DOWN), prec);
-        return;
-    }
-
-    if (arf_sgn(arb_midref(acb_realref(s))) < 0)
-    {
-        acb_t t, u, v;
-        slong wp = prec + 6;
-
-        acb_init(t);
-        acb_init(u);
-        acb_init(v);
-
-        acb_sub_ui(t, s, 1, wp);
-
-        /* 2 * (2pi)^(s-1) */
-        arb_const_pi(acb_realref(u), wp);
-        acb_mul_2exp_si(u, u, 1);
-        acb_pow(u, u, t, wp);
-        acb_mul_2exp_si(u, u, 1);
-
-        /* sin(pi*s/2) */
-        acb_mul_2exp_si(v, s, -1);
-        acb_sin_pi(v, v, wp);
-        acb_mul(u, u, v, wp);
-
-        /* gamma(1-s) zeta(1-s) */
-        acb_neg(t, t);
-        acb_gamma(v, t, wp);
-        acb_mul(u, u, v, wp);
-        acb_hurwitz_zeta(v, t, a, wp);
-        acb_mul(z, u, v, prec);
-
-        acb_clear(t);
-        acb_clear(u);
-        acb_clear(v);
-    }
-    else
-    {
-        acb_hurwitz_zeta(z, s, a, prec);
-    }
-
-    acb_clear(a);
+    acb_dirichlet_zeta(z, s, prec);
 }
 
