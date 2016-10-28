@@ -133,7 +133,7 @@ arb_log_base_ui(arb_t res, const arb_t x, ulong b, slong prec)
                     xlog = xlog / log(b_reduced);
                     n = (ulong) (xlog + 0.5);
 
-                    if (n >= 2 && FLINT_ABS(xlog - n) < 0.01)
+                    if (n >= 2 && fabs(xlog - n) < 0.01)
                     {
                         arb_init(t);
                         arb_ui_pow_ui(t, b_reduced, n, xbits + 10);
