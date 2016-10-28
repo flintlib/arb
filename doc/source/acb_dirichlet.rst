@@ -125,6 +125,13 @@ the evaluation (automatic reduction to the exact case is not yet implemented).
 
     Computes `\zeta(s)` using an automatic choice of algorithm.
 
+.. function:: void acb_dirichlet_zeta_bound(mag_t res, const acb_t s)
+
+    Computes an upper bound for `|\zeta(s)|` quickly. On the critical strip (and
+    slightly outside of it), formula (43.3) in [Rad1973]_ is used.
+    To the right, evaluating at the real part of *s* gives a trivial bound.
+    To the left, the functional equation is used.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 
