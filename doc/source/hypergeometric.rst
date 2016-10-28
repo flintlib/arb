@@ -3,6 +3,9 @@
 Algorithms for hypergeometric functions
 ===============================================================================
 
+The algorithms used to compute hypergeometric functions are
+described in [Joh2016]_. Here, we state the most important error bounds.
+
 .. _algorithms_hypergeometric_convergent:
 
 Convergent series

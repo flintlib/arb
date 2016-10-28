@@ -402,8 +402,9 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     `\theta_2 = \sum_{k(k+1) < N} q^{k(k+1)}`,
     `\theta_3 = \sum_{k^2 < N} q^{k^2}`,
     `\theta_4 = \sum_{k^2 < N} (-1)^k q^{k^2}`.
-    The *basecase* version uses a minimal addition sequence.
+    The *basecase* version uses a short addition sequence.
     The *rs* version uses rectangular splitting.
+    The algorithms are described in [EHJ2016]_.
 
 .. function:: void acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4, const acb_t q, slong prec)
 
@@ -449,6 +450,10 @@ The Dedekind eta function
     `q`, but will return useless intervals if convergence is not rapid.
     For general evaluation of the eta function, the user should only call
     this function after applying a suitable modular transformation.
+
+    The series is evaluated using either a short addition sequence or
+    rectangular splitting, depending on the number of terms.
+    The algorithms are described in [EHJ2016]_.
 
 .. function:: int acb_modular_epsilon_arg(const psl2z_t g)
 

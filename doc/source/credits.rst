@@ -60,6 +60,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Hrvoje Abraham - patches for MinGW compatibility
 * Julien Puydt - soname versioning support
 * Jeroen Demeyer - patch for major bug on PPC64
+* Isuru Fernando - continuous integration setup, support for cmake and MSVC builds
 
 Funding
 -------------------------------------------------------------------------------
@@ -96,6 +97,7 @@ The following software has been helpful in the development of Arb.
 * HolonomicFunctions (Christoph Koutschan), http://www.risc.jku.at/research/combinat/software/HolonomicFunctions/
 * Sphinx (George Brandl and others), http://sphinx.pocoo.org
 * CM (Andreas Enge), http://www.multiprecision.org/index.php?prog=cm
+* ore_algebra (Manuel Kauers, Maximilian Jaroschek, Fredrik Johansson), http://www.risc.jku.at/research/combinat/software/ore_algebra/
 
 Citing Arb
 -------------------------------------------------------------------------------
@@ -153,6 +155,8 @@ Bibliography
 
 .. [Dup2006] \R. Dupont. "Moyenne arithmético-géométrique, suites de Borchardt et applications." These de doctorat, École polytechnique, Palaiseau (2006). http://http://www.lix.polytechnique.fr/Labo/Regis.Dupont/these_soutenance.pdf
 
+.. [EHJ2016] \A. Enge, W. Hart and F. Johansson, "Short addition sequences for theta functions", preprint (2016), https://arxiv.org/abs/1608.06810
+
 .. [EM2004] \O. Espinosa and V. Moll, "A generalized polygamma function", Integral Transforms and Special Functions (2004), 101-115.
 
 .. [Fil1992] \S. Fillebrown, "Faster Computation of Bernoulli Numbers", Journal of Algorithms 13 (1992) 431-445
@@ -180,6 +184,8 @@ Bibliography
 .. [Joh2014c] \F. Johansson, "Efficient implementation of elementary functions in the medium-precision range", http://arxiv.org/abs/1410.7176
 
 .. [Joh2015] \F. Johansson, "Computing Bell numbers", http://fredrikj.net/blog/2015/08/computing-bell-numbers/
+
+.. [Joh2016] \F. Johansson, "Computing hypergeometric functions rigorously", preprint (2016), https://arxiv.org/abs/1606.06977
 
 .. [Kar1998] \E. A. Karatsuba, "Fast evaluation of the Hurwitz zeta function and Dirichlet L-series", Problems of Information Transmission 34:4 (1998), 342-353, http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=ppi&paperid=425&option_lang=eng
 
