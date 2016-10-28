@@ -11,9 +11,8 @@
 
 #include "acb_dirichlet.h"
 
-/* todo: decompose s into midpoint+radius */
 void
-acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
+acb_dirichlet_zeta_rs_mid(acb_t res, const acb_t s, slong K, slong prec)
 {
     acb_t R1, R2, X, t;
     slong wp;
@@ -82,3 +81,51 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
     acb_clear(t);
 }
 
+void
+acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
+{
+    if (acb_is_exact(s))
+    {
+        acb_dirichlet_zeta_rs_mid(res, s, K, prec);
+    }
+    else
+    {
+        acb_t t;
+        mag_t rad, R, err;
+
+        acb_init(t);
+        mag_init(rad);
+        mag_init(R);
+        mag_init(err);
+
+        /* rad = rad(s) */
+        mag_hypot(rad, arb_radref(acb_realref(s)), arb_radref(acb_imagref(s)));
+
+        /* R >= rad(s) */
+        mag_set_d(R, 0.125);
+        mag_max(R, R, rad);
+
+        /* mid(t) = mid(s); rad(t) = R */
+        acb_set(t, s);
+        mag_zero(arb_radref(acb_realref(t)));
+        mag_zero(arb_radref(acb_imagref(t)));
+
+        /* |zeta'(s)| <= |zeta(t)| / R */
+        acb_dirichlet_zeta_bound(err, t);
+        mag_div(err, err, R);
+        /* error <= |zeta'(s)| * rad(s) */
+        mag_mul(err, err, rad);
+
+        /* evaluate at midpoint */
+        mag_zero(arb_radref(acb_realref(t)));
+        mag_zero(arb_radref(acb_imagref(t)));
+        acb_dirichlet_zeta_rs_mid(res, t, K, prec);
+
+        acb_add_error_mag(res, err);
+
+        acb_clear(t);
+        mag_clear(rad);
+        mag_clear(R);
+        mag_clear(err);
+    }
+}

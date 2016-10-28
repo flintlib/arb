@@ -28,9 +28,7 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
 
     cutoff = 24.0 * prec * sqrt(prec);
 
-    /* todo: support non-exact s properly in RS */
-    if (acb_is_exact(s) &&
-        arf_cmpabs_d(arb_midref(acb_imagref(s)), cutoff) >= 0 &&
+    if (arf_cmpabs_d(arb_midref(acb_imagref(s)), cutoff) >= 0 &&
         arf_cmpabs_d(arb_midref(acb_realref(s)), 10 + prec * 0.1) <= 0)
     {
         acb_dirichlet_zeta_rs(res, s, 0, prec);
