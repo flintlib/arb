@@ -72,7 +72,7 @@ For `s = \sigma + it` with `t > 0`, the expansion takes the form
 
 .. math ::
 
-    \zeta(s) = \mathcal{R}(s) + X(s) \mathcal{R}(1-s), \quad X(s) = \pi^{s-1/2} \frac{\Gamma((1-s)/2)}{\Gamma(s/2)}
+    \zeta(s) = \mathcal{R}(s) + X(s) \overline{\mathcal{R}}(1-s), \quad X(s) = \pi^{s-1/2} \frac{\Gamma((1-s)/2)}{\Gamma(s/2)}
 
 where
 
