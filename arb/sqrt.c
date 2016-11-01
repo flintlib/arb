@@ -59,6 +59,33 @@ arb_sqrt(arb_t z, const arb_t x, slong prec)
     {
         arb_sqrt_arf(z, arb_midref(x), prec);
     }
+    else if (arf_is_special(arb_midref(x)) || arf_sgn(arb_midref(x)) < 0)
+    {
+        arb_indeterminate(z);
+    }
+    else if (ARB_IS_LAGOM(x) &&  /* fast path */
+            MAG_EXP(arb_radref(x)) < ARF_EXP(arb_midref(x)) - 20 &&
+            prec > 20)
+    {
+        mag_t t;
+        mag_init(t); /* no need to free */
+
+        inexact = arf_sqrt(arb_midref(z), arb_midref(x), prec, ARB_RND);
+
+        /* sqrt(x) - sqrt(x-r) <= 0.5 * r * rsqrt(x-r)  */
+        /* we have rsqrt(x-r) ~= 1/sqrt(x) */
+        arf_get_mag_lower(t, arb_midref(z));
+        /* note: we need to write rad(z) first to use fast_mul later */
+        mag_div(arb_radref(z), arb_radref(x), t);
+
+        /* 0.5 + eps corrects for errors */
+        MAG_MAN(t) = MAG_ONE_HALF + (MAG_ONE_HALF >> 16);
+        MAG_EXP(t) = 0;
+        mag_fast_mul(arb_radref(z), arb_radref(z), t);
+
+        if (inexact)
+            arf_mag_fast_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
+    }
     else if (arb_contains_negative(x))
     {
         arb_indeterminate(z);
