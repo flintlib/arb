@@ -61,27 +61,66 @@ arb_div_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
 void
 arb_div(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
-    mag_t zr, xm, ym, yl, yw;
     int inexact;
 
     if (arb_is_exact(y))
     {
         arb_div_arf(z, x, arb_midref(y), prec);
     }
-    else if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)))
+    else if (mag_is_inf(arb_radref(x)) || mag_is_inf(arb_radref(y)) || arf_is_zero(arb_midref(y)))
     {
         arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
         mag_inf(arb_radref(z));
     }
+    else if (ARB_IS_LAGOM(x) && ARB_IS_LAGOM(y) &&  /* fast path */
+            MAG_EXP(arb_radref(y)) < ARF_EXP(arb_midref(y)) - 20 && prec > 20)
+    {
+        mag_t t, u, v;
+        mag_init(t);  /* no need to free */
+        mag_init(u);
+        mag_init(v);
+
+        /*               (x*yrad + y*xrad)/(y*(y-yrad))
+             <=  (1+eps) (x*yrad + y*xrad)/y^2
+             <=  (1+eps) (x*yrad/y^2 + y*xrad/y^2)
+             <=  (1+eps) ((x/y)*yrad/y + xrad/y)
+             <=  (1+eps) ((x/y)*yrad + xrad)/y
+        */
+
+        /* t = y */
+        arf_get_mag_lower(t, arb_midref(y));
+
+        inexact = arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
+
+        /* u = x/y */
+        arf_get_mag(u, arb_midref(z));
+
+        /* v = (x/y)*yrad + xrad */
+        MAG_MAN(v) = MAG_MAN(arb_radref(x));
+        MAG_EXP(v) = MAG_EXP(arb_radref(x));
+        mag_fast_addmul(v, arb_radref(y), u);
+        /* v = v / y */
+        mag_div(arb_radref(z), v, t);
+
+        /* correct for errors */
+        MAG_MAN(t) = MAG_ONE_HALF + (MAG_ONE_HALF >> 16);
+        MAG_EXP(t) = 1;
+        mag_fast_mul(arb_radref(z), arb_radref(z), t);
+
+        if (inexact)
+            arf_mag_fast_add_ulp(arb_radref(z), arb_radref(z), arb_midref(z), prec);
+    }
     else
     {
+        mag_t zr, xm, ym, yl, yw;
+
         mag_init_set_arf(xm, arb_midref(x));
         mag_init_set_arf(ym, arb_midref(y));
         mag_init(zr);
         mag_init(yl);
         mag_init(yw);
 
-        /* (|x|*yrad + |y|*xrad)/(y*(|y|-yrad)) */
+        /* (|x|*yrad + |y|*xrad)/(|y|*(|y|-yrad)) */
         mag_mul(zr, xm, arb_radref(y));
         mag_addmul(zr, ym, arb_radref(x));
         arb_get_mag_lower(yw, y);
