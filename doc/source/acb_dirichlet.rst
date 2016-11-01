@@ -132,6 +132,14 @@ the evaluation (automatic reduction to the exact case is not yet implemented).
     To the right, evaluating at the real part of *s* gives a trivial bound.
     To the left, the functional equation is used.
 
+.. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
+
+    Sets *res* to the Dirichlet eta function
+    `\eta(s) = \sum_{k=1}^{\infty} (-1)^k / k^s = (1-2^{1-s}) \zeta(s)`,
+    also known as the alternating zeta function.
+    Note that the alternating character `\{1,-1\}` is not itself
+    a Dirichlet character.
+
 Hurwitz zeta function
 -------------------------------------------------------------------------------
 
@@ -285,17 +293,6 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
 
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).
-
-Simple functions
--------------------------------------------------------------------------------
-
-.. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
-
-    Sets *res* to the Dirichlet eta function
-    `\eta(s) = \sum_{k=1}^{\infty} (-1)^k / k^s = (1-2^{1-s}) \zeta(s)`,
-    also known as the alternating zeta function.
-    Note that the alternating character `\{1,-1\}` is not itself
-    a Dirichlet character.
 
 L-functions
 -------------------------------------------------------------------------------
