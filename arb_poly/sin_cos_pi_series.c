@@ -14,7 +14,7 @@
 #define TANGENT_CUTOFF 240
 
 void
-_arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, const arb_srcptr h, slong hlen, slong n, slong prec)
+_arb_poly_sin_cos_pi_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
