@@ -12,7 +12,7 @@
 #include "arb_poly.h"
 
 void
-_arb_poly_sinh_cosh_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen,
+_arb_poly_sinh_cosh_series_basecase(arb_ptr s, arb_ptr c, const arb_srcptr h, slong hlen,
         slong n, slong prec)
 {
     slong j, k, alen = FLINT_MIN(n, hlen);
