@@ -861,7 +861,7 @@ void arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bit
 extern TLS_PREFIX mp_ptr __arf_mul_tmp;
 extern TLS_PREFIX slong __arf_mul_alloc;
 
-extern void _arf_mul_tmp_cleanup(void);
+ARB_DLL extern void _arf_mul_tmp_cleanup(void);
 
 #define ARF_MUL_TMP_DECL \
     mp_limb_t tmp_stack[ARF_MUL_STACK_ALLOC]; \
@@ -957,7 +957,7 @@ arf_mul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 extern TLS_PREFIX mp_ptr __arf_add_tmp;
 extern TLS_PREFIX slong __arf_add_alloc;
 
-extern void _arf_add_tmp_cleanup(void);
+ARB_DLL extern void _arf_add_tmp_cleanup(void);
 
 #define ARF_ADD_TMP_DECL \
     mp_limb_t tmp_stack[ARF_ADD_STACK_ALLOC]; \

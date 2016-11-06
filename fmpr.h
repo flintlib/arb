@@ -27,6 +27,12 @@
 
 #define TLS_PREFIX FLINT_TLS_PREFIX
 
+#if defined(_MSC_VER) && defined(ARB_BUILD_DLL)
+#define ARB_DLL __declspec(dllexport)
+#else
+#define ARB_DLL FLINT_DLL
+#endif
+
 #define fmpr_rnd_t int
 #define FMPR_RND_DOWN 0
 #define FMPR_RND_UP 1

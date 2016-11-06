@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-extern const char * arb_version;
+ARB_DLL extern const char * arb_version;
 double arb_test_multiplier(void);
 
 typedef struct
@@ -993,10 +993,10 @@ _arb_vec_get_unique_fmpz_vec(fmpz * res,  arb_srcptr vec, slong len)
 #define ARB_ATAN_TAB2_PREC 4608
 #define ARB_ATAN_TAB2_LIMBS (ARB_ATAN_TAB2_PREC / FLINT_BITS)
 
-extern const mp_limb_t arb_atan_tab1[1 << ARB_ATAN_TAB1_BITS][ARB_ATAN_TAB1_LIMBS];
-extern const mp_limb_t arb_atan_tab21[1 << ARB_ATAN_TAB21_BITS][ARB_ATAN_TAB2_LIMBS];
-extern const mp_limb_t arb_atan_tab22[1 << ARB_ATAN_TAB22_BITS][ARB_ATAN_TAB2_LIMBS];
-extern const mp_limb_t arb_atan_pi2_minus_one[ARB_ATAN_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_atan_tab1[1 << ARB_ATAN_TAB1_BITS][ARB_ATAN_TAB1_LIMBS];
+ARB_DLL extern const mp_limb_t arb_atan_tab21[1 << ARB_ATAN_TAB21_BITS][ARB_ATAN_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_atan_tab22[1 << ARB_ATAN_TAB22_BITS][ARB_ATAN_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_atan_pi2_minus_one[ARB_ATAN_TAB2_LIMBS];
 
 void
 _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error,
@@ -1017,11 +1017,11 @@ void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
 #define ARB_LOG_TAB2_PREC 4608
 #define ARB_LOG_TAB2_LIMBS (ARB_LOG_TAB2_PREC / FLINT_BITS)
 
-extern const mp_limb_t arb_log_tab11[1 << ARB_LOG_TAB11_BITS][ARB_LOG_TAB1_LIMBS];
-extern const mp_limb_t arb_log_tab12[1 << ARB_LOG_TAB12_BITS][ARB_LOG_TAB1_LIMBS];
-extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TAB2_LIMBS];
-extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
-extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_log_tab11[1 << ARB_LOG_TAB11_BITS][ARB_LOG_TAB1_LIMBS];
+ARB_DLL extern const mp_limb_t arb_log_tab12[1 << ARB_LOG_TAB12_BITS][ARB_LOG_TAB1_LIMBS];
+ARB_DLL extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
 
 /* exponential implementation */
 
@@ -1039,9 +1039,9 @@ extern const mp_limb_t arb_log_log2_tab[ARB_LOG_TAB2_LIMBS];
 #define ARB_EXP_TAB2_PREC 4608
 #define ARB_EXP_TAB2_LIMBS (ARB_EXP_TAB2_PREC / FLINT_BITS)
 
-extern const mp_limb_t arb_exp_tab1[ARB_EXP_TAB1_NUM][ARB_EXP_TAB1_LIMBS];
-extern const mp_limb_t arb_exp_tab21[ARB_EXP_TAB21_NUM][ARB_EXP_TAB2_LIMBS];
-extern const mp_limb_t arb_exp_tab22[ARB_EXP_TAB22_NUM][ARB_EXP_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_exp_tab1[ARB_EXP_TAB1_NUM][ARB_EXP_TAB1_LIMBS];
+ARB_DLL extern const mp_limb_t arb_exp_tab21[ARB_EXP_TAB21_NUM][ARB_EXP_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_exp_tab22[ARB_EXP_TAB22_NUM][ARB_EXP_TAB2_LIMBS];
 
 void _arb_exp_taylor_naive(mp_ptr y, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N);
@@ -1078,12 +1078,12 @@ void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 #define ARB_SIN_COS_TAB2_PREC 4608
 #define ARB_SIN_COS_TAB2_LIMBS (ARB_SIN_COS_TAB2_PREC / FLINT_BITS)
 
-extern const mp_limb_t arb_sin_cos_tab1[2 * ARB_SIN_COS_TAB1_NUM][ARB_SIN_COS_TAB1_LIMBS];
-extern const mp_limb_t arb_sin_cos_tab21[2 * ARB_SIN_COS_TAB21_NUM][ARB_SIN_COS_TAB2_LIMBS];
-extern const mp_limb_t arb_sin_cos_tab22[2 * ARB_SIN_COS_TAB22_NUM][ARB_SIN_COS_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_sin_cos_tab1[2 * ARB_SIN_COS_TAB1_NUM][ARB_SIN_COS_TAB1_LIMBS];
+ARB_DLL extern const mp_limb_t arb_sin_cos_tab21[2 * ARB_SIN_COS_TAB21_NUM][ARB_SIN_COS_TAB2_LIMBS];
+ARB_DLL extern const mp_limb_t arb_sin_cos_tab22[2 * ARB_SIN_COS_TAB22_NUM][ARB_SIN_COS_TAB2_LIMBS];
 
 #define ARB_PI4_TAB_LIMBS (4608 / FLINT_BITS)
-extern const mp_limb_t arb_pi4_tab[ARB_PI4_TAB_LIMBS];
+ARB_DLL extern const mp_limb_t arb_pi4_tab[ARB_PI4_TAB_LIMBS];
 
 void _arb_sin_cos_taylor_naive(mp_ptr ysin, mp_ptr ycos, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N);

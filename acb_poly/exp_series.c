@@ -12,7 +12,7 @@
 #include "acb_poly.h"
 
 /* allow changing this from the test code */
-slong acb_poly_newton_exp_cutoff = 120;
+ARB_DLL slong acb_poly_newton_exp_cutoff = 120;
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
