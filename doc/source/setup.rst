@@ -105,8 +105,9 @@ source directory and run::
     cmake --build . --config Release --target install   # install
 
 To build a Debug build, create a new build directory and pass
-``-DCMAKE_BUILD_TYPE=Debug`` to ``cmake``. Note that building a dll library
-is not supported yet.
+``-DCMAKE_BUILD_TYPE=Debug`` to ``cmake``. To create a dll library, pass 
+``-DBUILD_SHARED_LIBS=yes`` to ``cmake``. Note that creating a dll library
+requires CMake >= 3.5.0
 
 If the dependencies are not found, pass ``-DCMAKE_PREFIX_PATH=/path/to/deps``
 to ``cmake`` to find the dependencies.
