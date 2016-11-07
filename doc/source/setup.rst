@@ -95,7 +95,7 @@ Building with MSVC
 -------------------------------------------------------------------------------
 
 To compile arb with MSVC, compile MPIR, MPFR, pthreads-win32 and FLINT using
-MSVC. Install CMake >=2.8.7 and make sure it is in the path. Then go to the Arb
+MSVC. Install CMake >=2.8.12 and make sure it is in the path. Then go to the Arb
 source directory and run::
 
     mkdir build
@@ -105,7 +105,7 @@ source directory and run::
     cmake --build . --config Release --target install   # install
 
 To build a Debug build, create a new build directory and pass
-``-DCMAKE_BUILD_TYPE=Debug`` to ``cmake``. To create a dll library, pass 
+``-DCMAKE_BUILD_TYPE=Debug`` to ``cmake``. To create a dll library, pass
 ``-DBUILD_SHARED_LIBS=yes`` to ``cmake``. Note that creating a dll library
 requires CMake >= 3.5.0
 
