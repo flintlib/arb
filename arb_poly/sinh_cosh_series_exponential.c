@@ -13,7 +13,7 @@
 
 void
 _arb_poly_sinh_cosh_series_exponential(arb_ptr s, arb_ptr c,
-    const arb_srcptr h, slong hlen, slong len, slong prec)
+    arb_srcptr h, slong hlen, slong len, slong prec)
 {
     arb_ptr t, u, v;
     arb_t s0, c0;

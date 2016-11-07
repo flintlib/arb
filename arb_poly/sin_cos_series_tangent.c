@@ -13,7 +13,7 @@
 
 void
 _arb_poly_sin_cos_series_tangent(arb_ptr s, arb_ptr c,
-        const arb_srcptr h, slong hlen, slong len, slong prec, int times_pi)
+        arb_srcptr h, slong hlen, slong len, slong prec, int times_pi)
 {
     arb_ptr t, u, v;
     arb_t s0, c0;

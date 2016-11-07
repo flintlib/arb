@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 2.8.12)
 
 project(arb C)
 
@@ -38,12 +38,12 @@ if (MSVC)
         endforeach()
     endif()
     foreach(CompilerFlag CMAKE_C_FLAGS)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1")
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1 /DFLINT_REENTRANT=0")
     endforeach()
 
     foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)
         if (BUILD_SHARED_LIBS)
-            set(${CompilerFlag} "${${CompilerFlag}} /DMSC_USE_DLL /DARB_BUILD_DLL /DPTW32_BUILD")
+            set(${CompilerFlag} "${${CompilerFlag}} /DMSC_USE_DLL")
         else ()
             set(${CompilerFlag} "${${CompilerFlag}} /DPTW32_STATIC_LIB")
         endif()
@@ -107,8 +107,8 @@ include_directories(BEFORE ${arb_SOURCE_DIR})
 include_directories(BEFORE ${DEP_INCLUDE_DIRS})
 
 add_library(arb ${SRC})
-
 target_link_libraries(arb ${DEPS})
+target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
 
 if(NOT MSVC)
     target_link_libraries(arb m)
