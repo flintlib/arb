@@ -6,8 +6,10 @@ addons:
       - texinfo
 
 os:
-  # - osx
+  - osx
   - linux
+
+osx_image: xcode7
 
 compiler:
   - gcc
