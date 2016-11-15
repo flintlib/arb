@@ -38,8 +38,8 @@ int main()
         arb_init(b);
         arb_init(c);
         fmpq_init(q);
-        mpfr_init2(t, prec + 100);
-        mpfr_init2(u, prec + 100);
+        mpfr_init2(t, prec + 200);
+        mpfr_init2(u, prec + 200);
 
         arb_randtest(a, state, 1 + n_randint(state, prec0), 6);
         arb_randtest(b, state, 1 + n_randint(state, prec0), 6);
