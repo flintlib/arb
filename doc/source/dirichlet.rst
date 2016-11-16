@@ -243,7 +243,7 @@ encoding the zero value.
 
 .. function:: ulong dirichlet_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n)
 
-   Compute that value `\chi(n)` as the exponent modulo *G->expo*.
+   Compute the value `\chi(n)` as the exponent modulo *G->expo*.
 
 .. function:: void dirichlet_chi_vec(ulong * v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
 
@@ -264,7 +264,7 @@ Character operations
 
 .. function:: void dirichlet_char_pow(dirichlet_char_t c, const dirichlet_group_t G, const dirichlet_char_t a, ulong n)
 
-   Take the power of some character.
+   Take the power of a character.
 
 .. function:: void dirichlet_char_lift(dirichlet_char_t chi_G, const dirichlet_group_t G, const dirichlet_char_t chi_H, const dirichlet_group_t H)
 
@@ -278,3 +278,4 @@ Character operations
 
     This requires `c(\chi_G)\mid q_H\mid q_G`, where `c(\chi_G)` is the
     conductor of `\chi_G` and `q_G, q_H` are the moduli of G and H.
+

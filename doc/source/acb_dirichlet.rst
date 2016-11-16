@@ -89,7 +89,7 @@ The coefficients `C_k(p)` in the asymptotic part of the expansion
 are expressed in terms of certain auxiliary coefficients `d_j^{(k)}`
 and `F^{(j)}(p)`.
 Because of artificial discontinuities, *s* should be exact inside
-the evaluation (automatic reduction to the exact case is not yet implemented).
+the evaluation.
 
 .. function:: void acb_dirichlet_zeta_rs_f_coeffs(acb_ptr f, const arb_t p, slong n, slong prec)
 
@@ -372,4 +372,27 @@ L-functions
     that is located at `s = 1`. In particular, when evaluated at `s = 1`, this
     gives the regular part of the Laurent expansion.
     When *chi* is non-principal, *deflate* has no effect.
+
+Hardy Z-functions
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_hardy_theta(acb_ptr res, const acb_t t, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+    Computes the phase function used to construct the Z-function.
+    We have
+
+    .. math ::
+
+        \theta(t) = -\frac{t}{2} \log(\pi/q) - \frac{\epsilon}{2}
+            + \frac{\log \Gamma((s+\delta)/2) - \log \Gamma((1-s+\delta)/2)}{2i}
+
+    where `s = 1/2+it`, `\delta` is the parity of *chi*, and `\epsilon`
+    is the root number as computed by :func:`acb_dirichlet_root_number`.
+    The first *len* terms in the Taylor expansion are written to the output.
+
+.. function:: void acb_dirichlet_hardy_z(acb_t res, const acb_t t, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+    Computes the Hardy Z-function, also known as the Riemann-Siegel Z-function
+    `Z(t) = e^{i \theta(t)} L(1/2+it)`, which is real-valued for real *t*.
+    The first *len* terms in the Taylor expansion are written to the output.
 

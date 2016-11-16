@@ -3,25 +3,51 @@
 #include <string.h>
 #include "arb_calc.h"
 #include "acb_hypgeom.h"
+#include "acb_dirichlet.h"
 #include "flint/profiler.h"
 
 slong eval_count = 0;
 
+typedef struct
+{
+    dirichlet_group_t * G;
+    dirichlet_char_t * chi;
+}
+z_param_struct;
+
 int
 z_function(arb_ptr out, const arb_t inp, void * params, slong order, slong prec)
 {
-    arb_struct x[2];
+    z_param_struct * par = params;
 
-    arb_init(x);
-    arb_init(x + 1);
+    if (par->G == NULL)
+    {
+        arb_struct x[2];
 
-    arb_set(x, inp);
-    arb_one(x + 1);
+        arb_init(x);
+        arb_init(x + 1);
 
-    _arb_poly_riemann_siegel_z_series(out, x, FLINT_MIN(2, order), order, prec);
+        arb_set(x, inp);
+        arb_one(x + 1);
 
-    arb_clear(x);
-    arb_clear(x + 1);
+        _arb_poly_riemann_siegel_z_series(out, x, FLINT_MIN(2, order), order, prec);
+
+        arb_clear(x);
+        arb_clear(x + 1);
+    }
+    else
+    {
+        acb_ptr tmp;
+        slong k;
+
+        tmp = _acb_vec_init(order);
+        acb_set_arb(tmp, inp);
+        acb_dirichlet_hardy_z(tmp, tmp, *(par->G), *(par->chi), order, prec);
+        for (k = 0; k < order; k++)
+            arb_set(out + k, acb_realref(tmp + k));
+
+        _acb_vec_clear(tmp, order);
+    }
 
     eval_count++;
     return 0;
@@ -152,7 +178,11 @@ int main(int argc, char *argv[])
     arf_interval_ptr blocks;
     arb_calc_func_t function;
     int * info;
-    int params;
+    void * params;
+    int param1;
+    z_param_struct param2;
+    dirichlet_group_t G;
+    dirichlet_char_t chi;
     slong digits, low_prec, high_prec, i, num, found_roots, found_unknown;
     slong maxdepth, maxeval, maxfound;
     int refine;
@@ -166,7 +196,7 @@ int main(int argc, char *argv[])
         flint_printf("real_roots function a b [-refine d] [-verbose] "
             "[-maxdepth n] [-maxeval n] [-maxfound n] [-prec n]\n");
         flint_printf("available functions:\n");
-        flint_printf("  0  Z(x), Riemann-Siegel Z-function\n");
+        flint_printf("  0  Z(x), Z-function (Riemann zeta or Dirichlet L-function)\n");
         flint_printf("  1  sin(x)\n");
         flint_printf("  2  sin(x^2)\n");
         flint_printf("  3  sin(1/x)\n");
@@ -174,15 +204,20 @@ int main(int argc, char *argv[])
         flint_printf("  5  Ai'(x), Airy function\n");
         flint_printf("  6  Bi(x), Airy function\n");
         flint_printf("  7  Bi'(x), Airy function\n");
+        flint_printf("With 0, specify optional Dirichlet character with [-character q n]\n");
         return 1;
     }
 
-    params = 0;
+    param1 = 0;
+    param2.G = NULL;
+    param2.chi = NULL;
+    params = &param1;
 
     switch (atoi(argv[1]))
     {
         case 0:
             function = z_function;
+            params = &param2;
             break;
         case 1:
             function = sin_x;
@@ -195,19 +230,19 @@ int main(int argc, char *argv[])
             break;
         case 4:
             function = airy;
-            params = 0;
+            param1 = 0;
             break;
         case 5:
             function = airy;
-            params = 1;
+            param1 = 1;
             break;
         case 6:
             function = airy;
-            params = 2;
+            param1 = 2;
             break;
         case 7:
             function = airy;
-            params = 3;
+            param1 = 3;
             break;
         default:
             flint_printf("require a function 0-7\n");
@@ -257,6 +292,14 @@ int main(int argc, char *argv[])
         {
             low_prec = atol(argv[i+1]);
         }
+        else if (!strcmp(argv[i], "-character"))
+        {
+            dirichlet_group_init(G, atol(argv[i+1]));
+            dirichlet_char_init(chi, G);
+            dirichlet_char_log(chi, G, atol(argv[i+2]));
+            param2.G = &G;
+            param2.chi = &chi;
+        }
     }
 
     high_prec = digits * 3.32192809488736 + 10;
@@ -280,7 +323,7 @@ int main(int argc, char *argv[])
     TIMEIT_ONCE_START
 
     num = arb_calc_isolate_roots(&blocks, &info, function,
-        &params, interval, maxdepth, maxeval, maxfound, low_prec);
+        params, interval, maxdepth, maxeval, maxfound, low_prec);
 
     for (i = 0; i < num; i++)
     {
@@ -302,7 +345,7 @@ int main(int argc, char *argv[])
             continue;
 
         if (arb_calc_refine_root_bisect(t,
-            function, &params, blocks + i, 5, low_prec)
+            function, params, blocks + i, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
             flint_printf("warning: some bisection steps failed!\n");
@@ -316,7 +359,7 @@ int main(int argc, char *argv[])
         }
 
         if (arb_calc_refine_root_bisect(blocks + i,
-            function, &params, t, 5, low_prec)
+            function, params, t, 5, low_prec)
             != ARB_CALC_SUCCESS)
         {
             flint_printf("warning: some bisection steps failed!\n");
@@ -330,10 +373,10 @@ int main(int argc, char *argv[])
         }
 
         arf_interval_get_arb(v, t, high_prec);
-        arb_calc_newton_conv_factor(C, function, &params, v, low_prec);
+        arb_calc_newton_conv_factor(C, function, params, v, low_prec);
 
         arf_interval_get_arb(w, blocks + i, high_prec);
-        if (arb_calc_refine_root_newton(z, function, &params,
+        if (arb_calc_refine_root_newton(z, function, params,
             w, v, C, 10, high_prec) != ARB_CALC_SUCCESS)
         {
             flint_printf("warning: some newton steps failed!\n");
@@ -356,6 +399,12 @@ int main(int argc, char *argv[])
         arf_interval_clear(blocks + i);
     flint_free(blocks);
     flint_free(info);
+
+    if (param2.G != NULL)
+    {
+        dirichlet_group_clear(G);
+        dirichlet_char_clear(chi);
+    }
 
     arf_interval_clear(t);
     arf_interval_clear(interval);
