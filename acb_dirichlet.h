@@ -130,7 +130,7 @@ void acb_dirichlet_hardy_theta(acb_ptr res, const acb_t t,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     slong len, slong prec);
 
-void acb_dirichlet_hardy_z(acb_t res, const acb_t t,
+void acb_dirichlet_hardy_z(acb_ptr res, const acb_t t,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     slong len, slong prec);
 

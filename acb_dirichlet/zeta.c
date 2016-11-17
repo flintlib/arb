@@ -13,6 +13,8 @@
 
 void acb_zeta_si(acb_t z, slong s, slong prec);
 
+/* todo: use euler product for complex s, and check efficiency
+   for large negative integers */
 void
 acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
 {

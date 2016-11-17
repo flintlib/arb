@@ -13,7 +13,7 @@
 #include "acb_poly.h"
 
 void
-acb_dirichlet_hardy_z(acb_t res, const acb_t t,
+acb_dirichlet_hardy_z(acb_ptr res, const acb_t t,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     slong len, slong prec)
 {
