@@ -118,6 +118,10 @@ Character type
 
     Clears *chi*.
 
+.. function:: void dirichlet_char_print(const dirichlet_group_t G, const dirichlet_char_t chi)
+
+    Prints the array of exponents representing this character.
+
 .. function:: void dirichlet_char_log(dirichlet_char_t x, const dirichlet_group_t G, ulong m)
 
     Sets *x* to the character of number *m*, computing its log using discrete
@@ -125,9 +129,9 @@ Character type
 
 .. function:: ulong dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G)
 
-    Computes and returns the number *m* corresponding to exponents in *chi*.
+    Computes and returns the number *m* corresponding to exponents in *x*.
 
-    Since *chi* should always contain its *number*, this function is for internal use
+    Since *x* should always contain its *number*, this function is for internal use
     only.
 
 .. function:: void dirichlet_char_one(dirichlet_char_t x, const dirichlet_group_t G)
