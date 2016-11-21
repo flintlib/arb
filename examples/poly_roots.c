@@ -47,8 +47,15 @@ poly_roots(const fmpz_poly_t poly,
         flint_printf("%wd isolated roots | ", isolated);
         TIMEIT_ONCE_STOP
 
-        if (isolated == deg && check_accuracy(roots, deg, target_prec))
+        if (isolated == deg && check_accuracy(roots, deg, target_prec) &&
+            acb_poly_validate_real_roots(roots, cpoly, prec))
         {
+            for (i = 0; i < deg; i++)
+            {
+                if (arb_contains_zero(acb_imagref(roots + i)))
+                    arb_zero(acb_imagref(roots + i));
+            }
+
             flint_printf("done!\n");
             break;
         }
