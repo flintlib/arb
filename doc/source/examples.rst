@@ -325,17 +325,14 @@ The program takes the following arguments::
 
     poly_roots [-refine d] [-print d] <poly>
 
-    Isolates all the complex roots of a polynomial with
-    integer coefficients. For convergence, the input polynomial
-    is required to be squarefree.
+    Isolates all the complex roots of a polynomial with integer coefficients.
 
-    If -refine d is passed, the roots are refined to an absolute
-    tolerance better than 10^(-d). By default, the roots are only
-    computed to sufficient accuracy to isolate them.
-    The refinement is not currently done efficiently.
+    If -refine d is passed, the roots are refined to an absolute tolerance
+    better than 10^(-d). By default, the roots are only computed to sufficient
+    accuracy to isolate them. The refinement is not currently done efficiently.
 
-    If -print d is passed, the computed roots are printed to
-    d decimals. By default, the roots are not printed.
+    If -print d is passed, the computed roots are printed to d decimals.
+    By default, the roots are not printed.
 
     The polynomial can be specified by passing the following as <poly>:
 
@@ -349,59 +346,105 @@ The program takes the following arguments::
     w <n>          Wilkinson polynomial W_n
     e <n>          Taylor series of exp(x) truncated to degree n
     m <n> <m>      The Mignotte-like polynomial x^n + (100x+1)^m, n > m
-    c0 c1 ... cn   c0 + c1 x + ... + cn x^n where all c:s are specified integers
+    coeffs <c0 c1 ... cn>        c0 + c1 x + ... + cn x^n
+
+    Concatenate to multiply polynomials, e.g.: p 5 t 6 coeffs 1 2 3
+    for P_5(x)*T_6(x)*(1+2x+3x^2)
 
 This finds the roots of the Wilkinson polynomial with roots at the
 positive integers 1, 2, ..., 100::
 
     > build/examples/poly_roots -print 15 w 100
-    prec=53: 0 isolated roots | cpu/wall(s): 0.42 0.426
-    prec=106: 0 isolated roots | cpu/wall(s): 1.37 1.368
-    prec=212: 0 isolated roots | cpu/wall(s): 1.48 1.485
-    prec=424: 100 isolated roots | cpu/wall(s): 0.61 0.611
+    computing squarefree factorization...
+    cpu/wall(s): 0.001 0.001
+    roots with multiplicity 1
+    searching for 100 roots, 100 deflated
+    prec=32: 0 isolated roots | cpu/wall(s): 0.098 0.098
+    prec=64: 0 isolated roots | cpu/wall(s): 0.247 0.247
+    prec=128: 0 isolated roots | cpu/wall(s): 0.498 0.497
+    prec=256: 0 isolated roots | cpu/wall(s): 0.713 0.713
+    prec=512: 100 isolated roots | cpu/wall(s): 0.104 0.105
     done!
-    (1 + 1.7285178043492e-125j)  +/-  (7.2e-122, 7.2e-122j)
-    (2 + 5.1605530263601e-122j)  +/-  (3.77e-118, 3.77e-118j)
-    (3 + -2.58115555871665e-118j)  +/-  (5.72e-115, 5.72e-115j)
-    (4 + 1.02141628524271e-115j)  +/-  (4.38e-112, 4.38e-112j)
-    (5 + 1.61326834094948e-113j)  +/-  (2.6e-109, 2.6e-109j)
-        ...
-    (95 + 4.15294196875447e-62j)  +/-  (6.66e-59, 6.66e-59j)
-    (96 + 3.54502401922667e-64j)  +/-  (7.37e-60, 7.37e-60j)
-    (97 + -1.67755595325625e-65j)  +/-  (6.4e-61, 6.4e-61j)
-    (98 + 2.04638822325299e-65j)  +/-  (4e-62, 4e-62j)
-    (99 + -2.73425468028238e-66j)  +/-  (1.71e-63, 1.71e-63j)
-    (100 + -1.00950111302288e-68j)  +/-  (3.24e-65, 3.24e-65j)
-    cpu/wall(s): 3.88 3.893
+    [1.00000000000000 +/- 3e-20]
+    [2.00000000000000 +/- 3e-19]
+    [3.00000000000000 +/- 1e-19]
+    [4.00000000000000 +/- 1e-19]
+    [5.00000000000000 +/- 1e-19]
+    ...
+    [96.0000000000000 +/- 1e-17]
+    [97.0000000000000 +/- 1e-17]
+    [98.0000000000000 +/- 3e-17]
+    [99.0000000000000 +/- 3e-17]
+    [100.000000000000 +/- 3e-17]
+    cpu/wall(s): 1.664 1.664
 
 This finds the roots of a Bernoulli polynomial which has both real
-and complex roots. Note that the program does not attempt to determine
-that the imaginary parts of the real roots really are zero (this could
-be done by verifying sign changes)::
+and complex roots::
 
     > build/examples/poly_roots -refine 100 -print 20 b 16
-    prec=53: 16 isolated roots | cpu/wall(s): 0 0.007
-    prec=106: 16 isolated roots | cpu/wall(s): 0 0.004
-    prec=212: 16 isolated roots | cpu/wall(s): 0 0.004
-    prec=424: 16 isolated roots | cpu/wall(s): 0 0.004
+    computing squarefree factorization...
+    cpu/wall(s): 0.001 0
+    roots with multiplicity 1
+    searching for 16 roots, 16 deflated
+    prec=32: 16 isolated roots | cpu/wall(s): 0.006 0.006
+    prec=64: 16 isolated roots | cpu/wall(s): 0.001 0.001
+    prec=128: 16 isolated roots | cpu/wall(s): 0.001 0.001
+    prec=256: 16 isolated roots | cpu/wall(s): 0.001 0.002
+    prec=512: 16 isolated roots | cpu/wall(s): 0.002 0.001
     done!
-    (-0.94308706466055783383 + -5.512272663168484603e-128j)  +/-  (2.2e-125, 2.2e-125j)
-    (-0.75534059252067985752 + 1.937401283040249068e-128j)  +/-  (1.09e-125, 1.09e-125j)
-    (-0.24999757119077421009 + -4.5347924422246038692e-130j)  +/-  (3.6e-127, 3.6e-127j)
-    (0.24999757152512726002 + 4.2191300761823281708e-129j)  +/-  (4.98e-127, 4.98e-127j)
-    (0.75000242847487273998 + 9.0360649917413170142e-128j)  +/-  (8.88e-126, 8.88e-126j)
-    (1.2499975711907742101 + 7.8804123808107088267e-127j)  +/-  (2.66e-124, 2.66e-124j)
-    (1.7553405925206798575 + 5.432465269253967768e-126j)  +/-  (6.23e-123, 6.23e-123j)
-    (1.9430870646605578338 + 3.3035377342500953239e-125j)  +/-  (7.05e-123, 7.05e-123j)
-    (-0.99509334829256233279 + 0.44547958157103608805j)  +/-  (5.5e-125, 5.5e-125j)
-    (-0.99509334829256233279 + -0.44547958157103608805j)  +/-  (5.46e-125, 5.46e-125j)
-    (1.9950933482925623328 + 0.44547958157103608805j)  +/-  (1.44e-122, 1.44e-122j)
-    (1.9950933482925623328 + -0.44547958157103608805j)  +/-  (1.43e-122, 1.43e-122j)
-    (-0.92177327714429290564 + -1.0954360955079385542j)  +/-  (9.31e-125, 9.31e-125j)
-    (-0.92177327714429290564 + 1.0954360955079385542j)  +/-  (1.02e-124, 1.02e-124j)
-    (1.9217732771442929056 + 1.0954360955079385542j)  +/-  (9.15e-123, 9.15e-123j)
-    (1.9217732771442929056 + -1.0954360955079385542j)  +/-  (8.12e-123, 8.12e-123j)
-    cpu/wall(s): 0.02 0.02
+    [-0.94308706466055783383 +/- 2.02e-21]
+    [-0.75534059252067985752 +/- 2.70e-21]
+    [-0.24999757119077421009 +/- 4.27e-21]
+    [0.24999757152512726002 +/- 4.43e-21]
+    [0.75000242847487273998 +/- 4.43e-21]
+    [1.2499975711907742101 +/- 1.43e-20]
+    [1.7553405925206798575 +/- 1.74e-20]
+    [1.9430870646605578338 +/- 3.21e-20]
+    [-0.99509334829256233279 +/- 9.42e-22] + [0.44547958157103608805 +/- 3.59e-21]*I
+    [-0.99509334829256233279 +/- 9.42e-22] + [-0.44547958157103608805 +/- 3.59e-21]*I
+    [1.9950933482925623328 +/- 1.10e-20] + [0.44547958157103608805 +/- 3.59e-21]*I
+    [1.9950933482925623328 +/- 1.10e-20] + [-0.44547958157103608805 +/- 3.59e-21]*I
+    [-0.92177327714429290564 +/- 4.68e-21] + [-1.0954360955079385542 +/- 1.71e-21]*I
+    [-0.92177327714429290564 +/- 4.68e-21] + [1.0954360955079385542 +/- 1.71e-21]*I
+    [1.9217732771442929056 +/- 3.54e-20] + [1.0954360955079385542 +/- 1.71e-21]*I
+    [1.9217732771442929056 +/- 3.54e-20] + [-1.0954360955079385542 +/- 1.71e-21]*I
+    cpu/wall(s): 0.011 0.012
+
+Roots are automatically separated by multiplicity by performing an initial
+squarefree factorization::
+
+    > build/examples/poly_roots -print 5 p 5 p 5 t 7 coeffs 1 5 10 10 5 1
+    computing squarefree factorization...
+    cpu/wall(s): 0 0
+    roots with multiplicity 1
+    searching for 6 roots, 3 deflated
+    prec=32: 3 isolated roots | cpu/wall(s): 0 0.001
+    done!
+    [-0.97493 +/- 2.10e-6]
+    [-0.78183 +/- 1.49e-6]
+    [-0.43388 +/- 3.75e-6]
+    [0.43388 +/- 3.75e-6]
+    [0.78183 +/- 1.49e-6]
+    [0.97493 +/- 2.10e-6]
+    roots with multiplicity 2
+    searching for 4 roots, 2 deflated
+    prec=32: 2 isolated roots | cpu/wall(s): 0 0
+    done!
+    [-0.90618 +/- 1.56e-7]
+    [-0.53847 +/- 6.91e-7]
+    [0.53847 +/- 6.91e-7]
+    [0.90618 +/- 1.56e-7]
+    roots with multiplicity 3
+    searching for 1 roots, 0 deflated
+    prec=32: 0 isolated roots | cpu/wall(s): 0 0
+    done!
+    0
+    roots with multiplicity 5
+    searching for 1 roots, 1 deflated
+    prec=32: 1 isolated roots | cpu/wall(s): 0 0
+    done!
+    -1.0000
+    cpu/wall(s): 0 0.001
 
 complex_plot.c
 -------------------------------------------------------------------------------

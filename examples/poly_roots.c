@@ -1,6 +1,7 @@
 /* This file is public domain. Author: Fredrik Johansson. */
 
 #include <string.h>
+#include <ctype.h>
 #include "acb.h"
 #include "acb_poly.h"
 #include "flint/arith.h"
@@ -75,7 +76,7 @@ fmpz_poly_deflate(fmpz_poly_t result, const fmpz_poly_t input, ulong deflation)
 }
 
 void
-poly_roots(const fmpz_poly_t poly,
+fmpz_poly_complex_roots_squarefree(const fmpz_poly_t poly,
     slong initial_prec,
     slong target_prec,
     slong print_digits)
@@ -84,19 +85,28 @@ poly_roots(const fmpz_poly_t poly,
     acb_poly_t cpoly, cpoly_deflated;
     fmpz_poly_t poly_deflated;
     acb_ptr roots, roots_deflated;
+    int removed_zero;
+
+    if (fmpz_poly_degree(poly) < 1)
+        return;
 
     fmpz_poly_init(poly_deflated);
     acb_poly_init(cpoly);
     acb_poly_init(cpoly_deflated);
 
-    /* try to write poly as poly_deflated(x^deflation) */
-    deflation = fmpz_poly_deflation(poly);
-    fmpz_poly_deflate(poly_deflated, poly, deflation);
+    /* try to write poly as poly_deflated(x^deflation), possibly multiplied by x */
+    removed_zero = fmpz_is_zero(poly->coeffs);
+    if (removed_zero)
+        fmpz_poly_shift_right(poly_deflated, poly, 1);
+    else
+        fmpz_poly_set(poly_deflated, poly);
+    deflation = fmpz_poly_deflation(poly_deflated);
+    fmpz_poly_deflate(poly_deflated, poly_deflated, deflation);
 
     deg = fmpz_poly_degree(poly);
     deg_deflated = fmpz_poly_degree(poly_deflated);
 
-    flint_printf("searching for %ld roots, %ld deflated\n", deg, deg_deflated);
+    flint_printf("searching for %wd roots, %wd deflated\n", deg, deg_deflated);
 
     roots = _acb_vec_init(deg);
     roots_deflated = _acb_vec_init(deg_deflated);
@@ -120,7 +130,7 @@ poly_roots(const fmpz_poly_t poly,
 
             if (deflation == 1)
             {
-                _acb_vec_set(roots, roots_deflated, deg);
+                _acb_vec_set(roots, roots_deflated, deg_deflated);
             }
             else  /* compute all nth roots */
             {
@@ -158,6 +168,10 @@ poly_roots(const fmpz_poly_t poly,
                 acb_clear(w);
                 acb_clear(w2);
             }
+
+            /* by assumption that poly is squarefree, must be just one */
+            if (removed_zero)
+                acb_zero(roots + deg_deflated * deflation);
 
             if (!check_accuracy(roots, deg, target_prec))
                 continue;
@@ -198,25 +212,23 @@ poly_roots(const fmpz_poly_t poly,
 
 int main(int argc, char *argv[])
 {
-    fmpz_poly_t f;
+    fmpz_poly_t f, g;
+    fmpz_poly_factor_t fac;
     fmpz_t t;
     slong compd, printd, i, j;
 
     if (argc < 2)
     {
-        flint_printf("poly_roots2 [-refine d] [-print d] <poly>\n\n");
+        flint_printf("poly_roots [-refine d] [-print d] <poly>\n\n");
 
-        flint_printf("Isolates all the complex roots of a polynomial with\n");
-        flint_printf("integer coefficients. For convergence, the input polynomial\n");
-        flint_printf("is required to be squarefree.\n\n");
+        flint_printf("Isolates all the complex roots of a polynomial with integer coefficients.\n\n");
 
-        flint_printf("If -refine d is passed, the roots are refined to an absolute\n");
-        flint_printf("tolerance better than 10^(-d). By default, the roots are only\n");
-        flint_printf("computed to sufficient accuracy to isolate them.\n");
-        flint_printf("The refinement is not currently done efficiently.\n\n");
+        flint_printf("If -refine d is passed, the roots are refined to an absolute tolerance\n");
+        flint_printf("better than 10^(-d). By default, the roots are only computed to sufficient\n");
+        flint_printf("accuracy to isolate them. The refinement is not currently done efficiently.\n\n");
 
-        flint_printf("If -print d is passed, the computed roots are printed to\n");
-        flint_printf("d decimals. By default, the roots are not printed.\n\n");
+        flint_printf("If -print d is passed, the computed roots are printed to d decimals.\n");
+        flint_printf("By default, the roots are not printed.\n\n");
 
         flint_printf("The polynomial can be specified by passing the following as <poly>:\n\n");
 
@@ -230,17 +242,21 @@ int main(int argc, char *argv[])
         flint_printf("w <n>          Wilkinson polynomial W_n\n");
         flint_printf("e <n>          Taylor series of exp(x) truncated to degree n\n");
         flint_printf("m <n> <m>      The Mignotte-like polynomial x^n + (100x+1)^m, n > m\n");
-        flint_printf("c0 c1 ... cn   c0 + c1 x + ... + cn x^n where all c:s are specified integers\n");
+        flint_printf("coeffs <c0 c1 ... cn>        c0 + c1 x + ... + cn x^n\n\n");
+
+        flint_printf("Concatenate to multiply polynomials, e.g.: p 5 t 6 coeffs 1 2 3\n");
+        flint_printf("for P_5(x)*T_6(x)*(1+2x+3x^2)\n\n");
 
         return 1;
     }
 
     compd = 0;
     printd = 0;
-    j = 0;
 
     fmpz_poly_init(f);
+    fmpz_poly_init(g);
     fmpz_init(t);
+    fmpz_poly_one(f);
 
     for (i = 1; i < argc; i++)
     {
@@ -257,89 +273,129 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "a"))
         {
             slong n = atol(argv[i+1]);
+            fmpz_poly_zero(g);
             for (j = 0; j <= n; j++)
-                fmpz_poly_set_coeff_ui(f, j, j+1);
-            break;
+                fmpz_poly_set_coeff_ui(g, j, j+1);
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "t"))
         {
-            arith_chebyshev_t_polynomial(f, atol(argv[i+1]));
-            break;
+            arith_chebyshev_t_polynomial(g, atol(argv[i+1]));
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "u"))
         {
-            arith_chebyshev_u_polynomial(f, atol(argv[i+1]));
-            break;
+            arith_chebyshev_u_polynomial(g, atol(argv[i+1]));
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "p"))
         {
-            fmpq_poly_t g;
-            fmpq_poly_init(g);
-            arith_legendre_polynomial(g, atol(argv[i+1]));
-            fmpq_poly_get_numerator(f, g);
-            fmpq_poly_clear(g);
-            break;
+            fmpq_poly_t h;
+            fmpq_poly_init(h);
+            arith_legendre_polynomial(h, atol(argv[i+1]));
+            fmpq_poly_get_numerator(g, h);
+            fmpz_poly_mul(f, f, g);
+            fmpq_poly_clear(h);
+            i++;
         }
         else if (!strcmp(argv[i], "c"))
         {
-            arith_cyclotomic_polynomial(f, atol(argv[i+1]));
-            break;
+            arith_cyclotomic_polynomial(g, atol(argv[i+1]));
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "s"))
         {
-            arith_swinnerton_dyer_polynomial(f, atol(argv[i+1]));
-            break;
+            arith_swinnerton_dyer_polynomial(g, atol(argv[i+1]));
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "b"))
         {
-            fmpq_poly_t g;
-            fmpq_poly_init(g);
-            arith_bernoulli_polynomial(g, atol(argv[i+1]));
-            fmpq_poly_get_numerator(f, g);
-            fmpq_poly_clear(g);
-            break;
+            fmpq_poly_t h;
+            fmpq_poly_init(h);
+            arith_bernoulli_polynomial(h, atol(argv[i+1]));
+            fmpq_poly_get_numerator(g, h);
+            fmpz_poly_mul(f, f, g);
+            fmpq_poly_clear(h);
+            i++;
         }
         else if (!strcmp(argv[i], "w"))
         {
             slong n = atol(argv[i+1]);
-            fmpz_poly_fit_length(f, n+2);
-            arith_stirling_number_1_vec(f->coeffs, n+1, n+2);
-            _fmpz_poly_set_length(f, n+2);
-            fmpz_poly_shift_right(f, f, 1);
-            break;
+            fmpz_poly_zero(g);
+            fmpz_poly_fit_length(g, n+2);
+            arith_stirling_number_1_vec(g->coeffs, n+1, n+2);
+            _fmpz_poly_set_length(g, n+2);
+            fmpz_poly_shift_right(g, g, 1);
+            fmpz_poly_mul(f, f, g);
+            i++;
         }
         else if (!strcmp(argv[i], "e"))
         {
-            fmpq_poly_t g;
-            fmpq_poly_init(g);
-            fmpq_poly_set_coeff_si(g, 0, 0);
-            fmpq_poly_set_coeff_si(g, 1, 1);
-            fmpq_poly_exp_series(g, g, atol(argv[i+1]) + 1);
-            fmpq_poly_get_numerator(f, g);
-            fmpq_poly_clear(g);
-            break;
+            fmpq_poly_t h;
+            fmpq_poly_init(h);
+            fmpq_poly_set_coeff_si(h, 0, 0);
+            fmpq_poly_set_coeff_si(h, 1, 1);
+            fmpq_poly_exp_series(h, h, atol(argv[i+1]) + 1);
+            fmpq_poly_get_numerator(g, h);
+            fmpz_poly_mul(f, f, g);
+            fmpq_poly_clear(h);
+            i++;
         }
         else if (!strcmp(argv[i], "m"))
         {
-            fmpz_poly_set_coeff_ui(f, 0, 1);
-            fmpz_poly_set_coeff_ui(f, 1, 100);
-            fmpz_poly_pow(f, f,  atol(argv[i+2]));
-            fmpz_poly_set_coeff_ui(f, atol(argv[i+1]), 1);
-            break;
+            fmpz_poly_zero(g);
+            fmpz_poly_set_coeff_ui(g, 0, 1);
+            fmpz_poly_set_coeff_ui(g, 1, 100);
+            fmpz_poly_pow(g, g,  atol(argv[i+2]));
+            fmpz_poly_set_coeff_ui(g, atol(argv[i+1]), 1);
+            fmpz_poly_mul(f, f, g);
+            i += 2;
         }
-        else
+        else if (!strcmp(argv[i], "coeffs"))
         {
-            fmpz_set_str(t, argv[i], 10);
-            fmpz_poly_set_coeff_fmpz(f, j, t);
-            j++;
+            fmpz_poly_zero(g);
+            i++;
+            j = 0;
+            while (i < argc)
+            {
+                if (fmpz_set_str(t, argv[i], 10) != 0)
+                {
+                    i--;
+                    break;
+                }
+
+                fmpz_poly_set_coeff_fmpz(g, j, t);
+                i++;
+                j++;
+            }
+            fmpz_poly_mul(f, f, g);
         }
     }
 
+    fmpz_poly_factor_init(fac);
+
+    flint_printf("computing squarefree factorization...\n");
     TIMEIT_ONCE_START
-    poly_roots(f, 32, compd * 3.32193 + 2, printd);
+    fmpz_poly_factor_squarefree(fac, f);
     TIMEIT_ONCE_STOP
 
+    TIMEIT_ONCE_START
+    for (i = 0; i < fac->num; i++)
+    {
+        flint_printf("roots with multiplicity %wd\n", fac->exp[i]);
+        fmpz_poly_complex_roots_squarefree(fac->p + i,
+            32, compd * 3.32193 + 2, printd);
+    }
+    TIMEIT_ONCE_STOP
+
+    fmpz_poly_factor_clear(fac);
     fmpz_poly_clear(f);
+    fmpz_poly_clear(g);
     fmpz_clear(t);
 
     flint_cleanup();
