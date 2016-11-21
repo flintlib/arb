@@ -20,36 +20,153 @@ int check_accuracy(acb_ptr vec, slong len, slong prec)
     return 1;
 }
 
+slong fmpz_poly_deflation(const fmpz_poly_t input)
+{
+    slong i, coeff, deflation;
+
+    if (input->length <= 1)
+        return input->length;
+
+    coeff = 1;
+    while (fmpz_is_zero(input->coeffs + coeff))
+        coeff++;
+
+    deflation = n_gcd(input->length - 1, coeff);
+
+    while ((deflation > 1) && (coeff + deflation < input->length))
+    {
+        for (i = 0; i < deflation - 1; i++)
+        {
+            coeff++;
+            if (!fmpz_is_zero(input->coeffs + coeff))
+                deflation = n_gcd(coeff, deflation);
+        }
+
+        if (i == deflation - 1)
+            coeff++;
+    }
+
+    return deflation;
+}
+
+void
+fmpz_poly_deflate(fmpz_poly_t result, const fmpz_poly_t input, ulong deflation)
+{
+    slong res_length, i;
+
+    if (deflation == 0)
+    {
+        flint_printf("Exception (fmpz_poly_deflate). Division by zero.\n");
+        abort();
+    }
+
+    if (input->length <= 1 || deflation == 1)
+    {
+        fmpz_poly_set(result, input);
+        return;
+    }
+
+    res_length = (input->length - 1) / deflation + 1;
+    fmpz_poly_fit_length(result, res_length);
+    for (i = 0; i < res_length; i++)
+        fmpz_set(result->coeffs + i, input->coeffs + i*deflation);
+
+    result->length = res_length;
+}
+
 void
 poly_roots(const fmpz_poly_t poly,
     slong initial_prec,
     slong target_prec,
     slong print_digits)
 {
-    slong i, prec, deg, isolated, maxiter;
-    acb_poly_t cpoly;
-    acb_ptr roots;
+    slong i, j, prec, deg, deg_deflated, isolated, maxiter, deflation;
+    acb_poly_t cpoly, cpoly_deflated;
+    fmpz_poly_t poly_deflated;
+    acb_ptr roots, roots_deflated;
 
-    deg = poly->length - 1;
-
+    fmpz_poly_init(poly_deflated);
     acb_poly_init(cpoly);
+    acb_poly_init(cpoly_deflated);
+
+    /* try to write poly as poly_deflated(x^deflation) */
+    deflation = fmpz_poly_deflation(poly);
+    fmpz_poly_deflate(poly_deflated, poly, deflation);
+
+    deg = fmpz_poly_degree(poly);
+    deg_deflated = fmpz_poly_degree(poly_deflated);
+
+    flint_printf("searching for %ld roots, %ld deflated\n", deg, deg_deflated);
+
     roots = _acb_vec_init(deg);
+    roots_deflated = _acb_vec_init(deg_deflated);
 
     for (prec = initial_prec; ; prec *= 2)
     {
-        acb_poly_set_fmpz_poly(cpoly, poly, prec);
-        maxiter = FLINT_MIN(FLINT_MAX(deg, 32), prec);
+        acb_poly_set_fmpz_poly(cpoly_deflated, poly_deflated, prec);
+        maxiter = FLINT_MIN(FLINT_MAX(deg_deflated, 32), prec);
 
         TIMEIT_ONCE_START
         flint_printf("prec=%wd: ", prec);
-        isolated = acb_poly_find_roots(roots, cpoly,
-            prec == initial_prec ? NULL : roots, maxiter, prec);
+        isolated = acb_poly_find_roots(roots_deflated, cpoly_deflated,
+            prec == initial_prec ? NULL : roots_deflated, maxiter, prec);
         flint_printf("%wd isolated roots | ", isolated);
         TIMEIT_ONCE_STOP
 
-        if (isolated == deg && check_accuracy(roots, deg, target_prec) &&
-            acb_poly_validate_real_roots(roots, cpoly, prec))
+        if (isolated == deg_deflated)
         {
+            if (!check_accuracy(roots_deflated, deg_deflated, target_prec))
+                continue;
+
+            if (deflation == 1)
+            {
+                _acb_vec_set(roots, roots_deflated, deg);
+            }
+            else  /* compute all nth roots */
+            {
+                acb_t w, w2;
+
+                acb_init(w);
+                acb_init(w2);
+
+                acb_nth_root(w, deflation, prec);
+                acb_nth_root(w2, 2 * deflation, prec);
+
+                for (i = 0; i < deg_deflated; i++)
+                {
+                    if (arf_sgn(arb_midref(acb_realref(roots_deflated + i))) > 0)
+                    {
+                        acb_root_ui(roots + i * deflation,
+                                    roots_deflated + i, deflation, prec);
+                    }
+                    else
+                    {
+                        acb_neg(roots + i * deflation, roots_deflated + i);
+                        acb_root_ui(roots + i * deflation,
+                            roots + i * deflation, deflation, prec);
+                        acb_mul(roots + i * deflation,
+                            roots + i * deflation, w2, prec);
+                    }
+
+                    for (j = 1; j < deflation; j++)
+                    {
+                        acb_mul(roots + i * deflation + j,
+                                roots + i * deflation + j - 1, w, prec);
+                    }
+                }
+
+                acb_clear(w);
+                acb_clear(w2);
+            }
+
+            if (!check_accuracy(roots, deg, target_prec))
+                continue;
+
+            acb_poly_set_fmpz_poly(cpoly, poly, prec);
+
+            if (!acb_poly_validate_real_roots(roots, cpoly, prec))
+                continue;
+
             for (i = 0; i < deg; i++)
             {
                 if (arb_contains_zero(acb_imagref(roots + i)))
@@ -72,8 +189,11 @@ poly_roots(const fmpz_poly_t poly,
         }
     }
 
+    fmpz_poly_clear(poly_deflated);
     acb_poly_clear(cpoly);
+    acb_poly_clear(cpoly_deflated);
     _acb_vec_clear(roots, deg);
+    _acb_vec_clear(roots_deflated, deg_deflated);
 }
 
 int main(int argc, char *argv[])
