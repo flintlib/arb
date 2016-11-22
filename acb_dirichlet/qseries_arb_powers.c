@@ -13,7 +13,7 @@
 #include "acb_poly.h"
 
 void
-acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec)
+acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_roots_t roots, slong len, slong prec)
 {
     slong k;
     arb_t xk2, dx, x2;
@@ -36,7 +36,7 @@ acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, con
         arb_mul(xk2, xk2, dx, prec);
         if (a[k] != DIRICHLET_CHI_NULL)
         {
-            acb_dirichlet_power(zk, z, a[k], prec);
+            acb_dirichlet_root(zk, roots, a[k], prec);
             if (parity)
                 acb_mul_si(zk, zk, k, prec);
             acb_addmul_arb(res, zk, xk2, prec);
@@ -51,10 +51,10 @@ acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, con
 
 /* small order, multiply by chi at the end */
 void
-acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec)
+acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_roots_t roots, slong len, slong prec)
 {
     slong k;
-    ulong order = z->order;
+    ulong order = roots->order;
     arb_t xk2, kxk2, dx, x2;
     acb_ptr t;
     arb_init(xk2);
@@ -90,8 +90,9 @@ acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity
         }
     }
 
-    /* now Hörner */
-    _acb_poly_evaluate(res, t, order, z->z, prec);
+    /* now Horner */
+    acb_dirichlet_root(res, roots, 1, prec);
+    _acb_poly_evaluate(res, t, order, res, prec);
 
     _acb_vec_clear(t, order);
     arb_clear(xk2);

@@ -12,13 +12,14 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_powers_clear(acb_dirichlet_powers_t t)
+acb_dirichlet_roots_clear(acb_dirichlet_roots_t t)
 {
     slong k;
 
     for (k = 0; k < t->depth; k++)
-        _acb_vec_clear(t->Z[k], t->size);
+        _acb_vec_clear(t->Z[k], t->size + 1);
 
     flint_free(t->Z);
     acb_clear(t->z);
 }
+

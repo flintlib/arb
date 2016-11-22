@@ -22,6 +22,38 @@ The code in other modules for computing the Riemann zeta function,
 Hurwitz zeta function and polylogarithm will possibly be migrated to this
 module in the future.
 
+Roots of unity
+-------------------------------------------------------------------------------
+
+.. type:: acb_dirichlet_roots_struct
+
+.. type:: acb_dirichlet_roots_t
+
+.. function:: void acb_dirichlet_roots_init(acb_dirichlet_roots_t roots, ulong n, slong num, slong prec)
+
+    Initializes *roots* with precomputed data for fast evaluation of roots of
+    unity `e^{2\pi i k/n}` of a fixed order *n*. The precomputation is
+    optimized for *num* evaluations.
+
+    For very small *num*, only the single root `e^{2\pi i/n}` will be
+    precomputed, which can then be raised to a power. For small *prec*
+    and large *n*, this method might even skip precomputing this single root
+    if it estimates that evaluating roots of unity from scratch will be faster
+    than powering.
+
+    If *num* is large enough, the whole set of roots in the first quadrant
+    will be precomputed at once. However, this is automatically avoided for
+    large *n* if too much memory would be used. For intermediate *num*,
+    baby-step giant-step tables are computed.
+
+.. function:: void acb_dirichlet_roots_clear(acb_dirichlet_roots_t roots)
+
+    Clears the structure.
+
+.. function:: void acb_dirichlet_root(acb_t res, const acb_dirichlet_roots_t roots, ulong k, slong prec)
+
+    Computes `e^{2\pi i k/n}`.
+
 Truncated L-series and power sums
 -------------------------------------------------------------------------------
 
@@ -383,7 +415,7 @@ Hardy Z-functions
 
     .. math ::
 
-        \theta(t) = -\frac{t}{2} \log(\pi/q) - \frac{\epsilon}{2}
+        \theta(t) = -\frac{t}{2} \log(\pi/q) - \frac{i \log(\epsilon)}{2}
             + \frac{\log \Gamma((s+\delta)/2) - \log \Gamma((1-s+\delta)/2)}{2i}
 
     where `s = 1/2+it`, `\delta` is the parity of *chi*, and `\epsilon`

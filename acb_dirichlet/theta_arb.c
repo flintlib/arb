@@ -18,16 +18,16 @@ _acb_dirichlet_theta_arb_smallorder(acb_t res, const dirichlet_group_t G, const 
     ulong order;
     ulong * a;
     int parity;
-    acb_dirichlet_powers_t z;
+    acb_dirichlet_roots_t z;
 
     parity = dirichlet_parity_char(G, chi);
     order = dirichlet_order_char(G, chi);
     a = flint_malloc(len * sizeof(ulong));
     dirichlet_chi_vec_order(a, G, chi, order, len);
 
-    _acb_dirichlet_powers_init(z, order, 0, 0, prec);
+    acb_dirichlet_roots_init(z, order, 0, prec);
     acb_dirichlet_qseries_arb_powers_smallorder(res, xt, parity, a, z, len, prec);
-    acb_dirichlet_powers_clear(z);
+    acb_dirichlet_roots_clear(z);
 
     flint_free(a);
 }
@@ -52,7 +52,7 @@ void
 _acb_dirichlet_theta_arb_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t xt, slong len, slong prec)
 {
     ulong order, * a;
-    acb_dirichlet_powers_t z;
+    acb_dirichlet_roots_t z;
     int parity;
 
     parity = dirichlet_parity_char(G, chi);
@@ -60,11 +60,11 @@ _acb_dirichlet_theta_arb_naive(acb_t res, const dirichlet_group_t G, const diric
     a = flint_malloc(len * sizeof(ulong));
     dirichlet_chi_vec_order(a, G, chi, order, len);
 
-    acb_dirichlet_powers_init(z, order, len, prec);
+    acb_dirichlet_roots_init(z, order, len, prec);
 
     acb_dirichlet_qseries_arb_powers_naive(res, xt, parity, a, z, len, prec);
 
-    acb_dirichlet_powers_clear(z);
+    acb_dirichlet_roots_clear(z);
     flint_free(a);
 }
 

@@ -67,31 +67,32 @@ void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
 void acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec);
 void acb_dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
 
-/* precompute powers of a root of unity */
+/* precompute roots of unity */
 typedef struct
 {
     ulong order;
+    ulong reduced_order;
     acb_t z;
     slong size;
     slong depth;
     acb_ptr * Z;
+    int use_pow;
 }
-acb_dirichlet_powers_struct;
+acb_dirichlet_roots_struct;
 
-typedef acb_dirichlet_powers_struct acb_dirichlet_powers_t[1];
+typedef acb_dirichlet_roots_struct acb_dirichlet_roots_t[1];
 
-void _acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong size, slong depth, slong prec);
-void acb_dirichlet_powers_init(acb_dirichlet_powers_t t, ulong order, slong num, slong prec);
-void acb_dirichlet_powers_clear(acb_dirichlet_powers_t t);
-void acb_dirichlet_power(acb_t z, const acb_dirichlet_powers_t t, ulong n, slong prec);
+void acb_dirichlet_roots_init(acb_dirichlet_roots_t t, ulong order, slong num, slong prec);
+void acb_dirichlet_roots_clear(acb_dirichlet_roots_t t);
+void acb_dirichlet_root(acb_t z, const acb_dirichlet_roots_t t, ulong n, slong prec);
 
 void acb_dirichlet_chi(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, ulong n, slong prec);
 void acb_dirichlet_chi_vec(acb_ptr v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv, slong prec);
 
 void acb_dirichlet_arb_quadratic_powers(arb_ptr v, slong nv, const arb_t x, slong prec);
 void acb_dirichlet_qseries_arb(acb_t res, acb_srcptr a, const arb_t x, slong len, slong prec);
-void acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
-void acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_powers_t z, slong len, slong prec);
+void acb_dirichlet_qseries_arb_powers_naive(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_roots_t z, slong len, slong prec);
+void acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity, const ulong *a, const acb_dirichlet_roots_t z, slong len, slong prec);
 
 ulong acb_dirichlet_theta_length_d(ulong q, double x, slong prec);
 ulong acb_dirichlet_theta_length(ulong q, const arb_t x, slong prec);
