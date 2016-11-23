@@ -310,3 +310,29 @@ Airy functions
     truncated to length *len*. As with the other Airy methods, any of the
     outputs can be *NULL*.
 
+Orthogonal polynomials and functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_chebyshev_t(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+.. function:: void arb_hypgeom_chebyshev_u(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+.. function:: void arb_hypgeom_jacobi_p(arb_t res, const arb_t n, const arb_t a, const arb_t b, const arb_t z, slong prec)
+
+.. function:: void arb_hypgeom_gegenbauer_c(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
+
+.. function:: void arb_hypgeom_laguerre_l(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
+
+.. function:: void arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes Chebyshev, Jacobi, Gegenbauer, Laguerre or Hermite polynomials,
+    or their extensions to non-integer orders.
+
+.. function:: void arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
+
+.. function:: void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
+
+    Computes Legendre functions of the first and second kind.
+    See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
+    for definitions.
+

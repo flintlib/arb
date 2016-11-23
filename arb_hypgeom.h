@@ -95,6 +95,16 @@ void arb_hypgeom_beta_lower(arb_t res, const arb_t a, const arb_t c, const arb_t
 void arb_hypgeom_beta_lower_series(arb_poly_t res, const arb_t a, const arb_t b, const arb_poly_t z, int regularized, slong len, slong prec);
 void _arb_hypgeom_beta_lower_series(arb_ptr res, const arb_t a, const arb_t b, arb_srcptr z, slong zlen, int regularized, slong len, slong prec);
 
+void arb_hypgeom_chebyshev_t(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_chebyshev_u(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_jacobi_p(arb_t res, const arb_t n, const arb_t a, const arb_t b, const arb_t z, slong prec);
+void arb_hypgeom_gegenbauer_c(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec);
+void arb_hypgeom_laguerre_l(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec);
+void arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec);
+void arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec);
+void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec);
+
+
 #ifdef __cplusplus
 }
 #endif
