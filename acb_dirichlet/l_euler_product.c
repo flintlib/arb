@@ -19,10 +19,11 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
 {
     arf_t left;
     slong wp, powprec, left_s;
-    ulong p, p_limit;
+    ulong val, p, p_limit;
     double p_needed_approx, powmag, logp, errmag;
     int is_real;
     acb_t t, u, v, c;
+    acb_dirichlet_roots_t roots;
     mag_t err;
 
     if (!acb_is_finite(s))
@@ -72,7 +73,10 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
         p_needed_approx = pow(2.0, ((double) prec) / left_s);
 
     p_needed_approx = FLINT_MIN(p_limit, p_needed_approx);
-    /* todo: use this to determine whether to precompute chi */
+
+    /* todo: use exponent of chi instead of G? */
+    acb_dirichlet_roots_init(roots, G->expo,
+        p_needed_approx / (1.0 + log(p_needed_approx)), wp);
 
     acb_init(t);
     acb_init(u);
@@ -96,10 +100,11 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
 
         powprec = FLINT_MAX(wp - powmag, 8);
 
-        acb_dirichlet_chi(c, G, chi, p, powprec);
+        val = dirichlet_chi(G, chi, p);
 
-        if (!acb_is_zero(c))
+        if (val != DIRICHLET_CHI_NULL)
         {
+            acb_dirichlet_root(c, roots, val, powprec);
             acb_set_ui(t, p);
             acb_pow(t, t, s, powprec);
             acb_set_round(u, v, powprec);
@@ -119,6 +124,7 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
 
     acb_inv(res, v, prec);
 
+    acb_dirichlet_roots_clear(roots);
     acb_clear(t);
     acb_clear(u);
     acb_clear(v);
