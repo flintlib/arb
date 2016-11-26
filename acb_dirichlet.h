@@ -46,6 +46,7 @@ typedef struct
     acb_struct s;
     mag_struct err;
     acb_ptr coeffs;
+    int deflate;
     slong A;
     slong N;
     slong K;
@@ -54,10 +55,11 @@ acb_dirichlet_hurwitz_precomp_struct;
 
 typedef acb_dirichlet_hurwitz_precomp_struct acb_dirichlet_hurwitz_precomp_t[1];
 
-void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, slong A, slong K, slong N, slong prec);
+void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, int deflate, slong A, slong K, slong N, slong prec);
 void acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre);
 void acb_dirichlet_hurwitz_precomp_bound(mag_t res, const acb_t s, slong A, slong K, slong N);
 void acb_dirichlet_hurwitz_precomp_eval(acb_t res, const acb_dirichlet_hurwitz_precomp_t pre, ulong p, ulong q, slong prec);
+void acb_dirichlet_hurwitz_precomp_choose_param(ulong * A, ulong * K, ulong * N, const acb_t s, double num_eval, slong prec);
 
 void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     const signed char * chi, int mod, int reciprocal, slong prec);
@@ -122,7 +124,9 @@ void acb_dirichlet_jacobi_sum_ui(acb_t res, const dirichlet_group_t G, ulong a, 
 
 void acb_dirichlet_l_euler_product(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
-void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
+void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_hurwitz_precomp_t precomp,
+    const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
+
 void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
 void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec);

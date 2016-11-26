@@ -15,6 +15,7 @@
 
 void
 acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
+    const acb_dirichlet_hurwitz_precomp_t precomp,
     const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     ulong order, chin, mult;
@@ -48,18 +49,26 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     order = dirichlet_order_char(G, chi);
     mult = G->expo / order;
     z = _acb_vec_init(order);
+    /* todo: use roots object */
     _acb_vec_nth_roots(z, order, prec);
 
     do {
         chin = dirichlet_pairing_char(G, chi, cn) / mult;
 
-        acb_set_ui(a, cn->n);
-        acb_div_ui(a, a, G->q, prec);
+        if (precomp == NULL)
+        {
+            acb_set_ui(a, cn->n);
+            acb_div_ui(a, a, G->q, prec);
 
-        if (deflate == 0)
-            acb_hurwitz_zeta(u, s, a, prec);
+            if (deflate == 0)
+                acb_hurwitz_zeta(u, s, a, prec);
+            else
+                _acb_poly_zeta_cpx_series(u, s, a, 1, 1, prec);
+        }
         else
-            _acb_poly_zeta_cpx_series(u, s, a, 1, 1, prec);
+        {
+            acb_dirichlet_hurwitz_precomp_eval(u, precomp, cn->n, G->q, prec);
+        }
 
         acb_addmul(t, z + chin, u, prec);
 

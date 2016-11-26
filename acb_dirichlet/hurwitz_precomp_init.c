@@ -10,16 +10,18 @@
 */
 
 #include "acb_dirichlet.h"
+#include "acb_poly.h"
 
 void
 acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre,
-        const acb_t s, slong A, slong K, slong N, slong prec)
+        const acb_t s, int deflate, slong A, slong K, slong N, slong prec)
 {
     slong i, k;
 
     if (A < 1 || K < 1 || N < 1)
         abort();
 
+    pre->deflate = deflate;
     pre->A = A;
     pre->K = K;
     pre->N = N;
@@ -61,7 +63,12 @@ acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre,
             for (k = 0; k < K; k++)
             {
                 acb_add_ui(t, s, k, prec);
-                acb_hurwitz_zeta(t, t, a, prec);
+
+                if (deflate && k == 0)
+                    _acb_poly_zeta_cpx_series(t, t, a, 1, 1, prec);
+                else
+                    acb_hurwitz_zeta(t, t, a, prec);
+
                 acb_mul(pre->coeffs + i * K + k,
                         pre->coeffs + i * K + k, t, prec);
             }

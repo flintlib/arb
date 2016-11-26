@@ -54,7 +54,7 @@ int main()
         }
 
         if (n_randint(state, 2))
-            acb_dirichlet_l_hurwitz(t, s, G, chi, prec);
+            acb_dirichlet_l_hurwitz(t, s, NULL, G, chi, prec);
         else
             acb_dirichlet_l_euler_product(t, s, G, chi, prec * 1.5);
 

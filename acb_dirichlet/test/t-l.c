@@ -46,7 +46,7 @@ int main()
         else
             acb_randtest(s, state, 2 + n_randint(state, 200), 2);
 
-        acb_dirichlet_l_hurwitz(t, s, G, chi, prec);
+        acb_dirichlet_l_hurwitz(t, s, NULL, G, chi, prec);
         acb_dirichlet_l(u, s, G, chi, prec);
 
         if (!acb_overlaps(t, u))

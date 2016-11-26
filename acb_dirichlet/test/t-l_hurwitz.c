@@ -112,7 +112,7 @@ int main()
                 abort();
             }
 
-            acb_dirichlet_l_hurwitz(res, x + j, G, chi, prec + 10);
+            acb_dirichlet_l_hurwitz(res, x + j, NULL, G, chi, prec + 10);
 
             if (!acb_contains(ref, res))
             {

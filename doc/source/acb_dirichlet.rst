@@ -179,7 +179,7 @@ Hurwitz zeta function
 
 .. type:: acb_dirichlet_hurwitz_precomp_t
 
-.. function:: void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, ulong A, ulong K, ulong N, slong prec)
+.. function:: void acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, int deflate, ulong A, ulong K, ulong N, slong prec)
 
     Precomputes a grid of Taylor polynomials for fast evaluation of
     `\zeta(s,a)` on `a \in (0,1]` with fixed *s*.
@@ -195,9 +195,21 @@ Hurwitz zeta function
     and slows convergence, *AN* should be at least roughly as large as `|s|`,
     e.g. it is a good idea to have at least `AN > 0.5 |s|`.
 
+    If *deflate* is set, the deflated Hurwitz zeta function is used,
+    removing the pole at `s = 1`.
+
 .. function:: void acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre)
 
     Clears the precomputed data.
+
+.. function:: void acb_dirichler_hurwitz_precomp_choose_param(ulong * A, ulong * K, ulong * N, const acb_t s, double num_eval, slong prec)
+
+    Chooses precomputation parameters *A*, *K* and *N* to minimize
+    the cost of *num_eval* evaluations of the Hurwitz zeta function
+    at argument *s* to precision *prec*.
+    If it is estimated that evaluating each Hurwitz zeta function from
+    scratch would be better than performing a precomputation, *A*, *K* and *N*
+    are all set to 0.
 
 .. function:: void acb_dirichlet_hurwitz_precomp_bound(mag_t res, const acb_t s, ulong A, ulong K, ulong N)
 
@@ -344,7 +356,7 @@ L-functions
 
    - The default version computes it via the gauss sum.
 
-.. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+.. function:: void acb_dirichlet_l_hurwitz(acb_t res, const acb_t s, const acb_dirichlet_hurwitz_precomp_t precomp, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
     Computes `L(s,\chi)` using decomposition in terms of the Hurwitz zeta function
 
@@ -355,7 +367,9 @@ L-functions
     If `s = 1` and `\chi` is non-principal, the deflated Hurwitz zeta function
     is used to avoid poles.
 
-    This formula is slow for large *q*.
+    If *precomp* is *NULL*, each Hurwitz zeta function value is computed
+    directly. If a pre-initialized *precomp* object is provided, this will be
+    used instead to evaluate the Hurwitz zeta function.
 
 .. function:: void acb_dirichlet_l_euler_product(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
