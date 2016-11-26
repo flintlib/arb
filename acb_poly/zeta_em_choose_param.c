@@ -46,7 +46,7 @@ _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s,
 
     if (!acb_is_one(a))
     {
-        /* estimate zeta(s,a) ~= a^-s */
+        /* estimate zeta(s,a) ~= a^-s -- todo: this can be very inaccurate */
         estimate_mag(tol, s, a, prec);
         mag_mul_2exp_si(tol, tol, -target);
     }
@@ -59,7 +59,7 @@ _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s,
     B = 2;
 
     /* Hack: allow evaluation very high up in the critical strip... */
-    if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(s)), 10) > 0)
+    if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(s)), 10) > 0 && acb_is_real(a))
         limit = UWORD_MAX / 4;
     else
         limit = 100 * target;  /* but normally, fail more quickly */
