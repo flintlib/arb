@@ -44,7 +44,7 @@ _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s,
     mag_init(Cbound);
     mag_init(tol);
 
-    if (!acb_is_one(a) && arf_cmp_2exp_si(arb_midref(acb_realref(s)), 3) > 0)
+    if (!acb_is_one(a))
     {
         /* estimate zeta(s,a) ~= a^-s */
         estimate_mag(tol, s, a, prec);
