@@ -27,6 +27,7 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     if (len <= 0)
         return;
 
+    /* todo: reflection formula */
     if (G->q == 1)
     {
         acb_init(a);

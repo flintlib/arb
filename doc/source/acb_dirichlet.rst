@@ -419,6 +419,13 @@ L-functions
     gives the regular part of the Laurent expansion.
     When *chi* is non-principal, *deflate* has no effect.
 
+.. function:: void _acb_dirichlet_l_series(acb_ptr res, acb_srcptr s, slong slen, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec)
+
+.. function:: void acb_dirichlet_l_series(acb_poly_t res, const acb_poly_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec)
+
+    Sets *res* to the power series `L(s,\chi)` where *s* is a given power series, truncating the result to length *len*.
+    See :func:`acb_dirichlet_l_jet` for the meaning of the *deflate* flag.
+
 Hardy Z-functions
 -------------------------------------------------------------------------------
 
@@ -441,4 +448,16 @@ Hardy Z-functions
     Computes the Hardy Z-function, also known as the Riemann-Siegel Z-function
     `Z(t) = e^{i \theta(t)} L(1/2+it)`, which is real-valued for real *t*.
     The first *len* terms in the Taylor expansion are written to the output.
+
+.. function:: void _acb_dirichlet_hardy_theta_series(acb_ptr res, acb_srcptr t, slong tlen, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+.. function:: void acb_dirichlet_hardy_theta_series(acb_poly_t res, const acb_poly_t t, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+    Sets *res* to the power series `\theta(t)` where *t* is a given power series, truncating the result to length *len*.
+
+.. function:: void _acb_dirichlet_hardy_z_series(acb_ptr res, acb_srcptr t, slong tlen, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+.. function:: void acb_dirichlet_hardy_z_series(acb_poly_t res, const acb_poly_t t, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
+
+    Sets *res* to the power series `Z(t)` where *t* is a given power series, truncating the result to length *len*.
 

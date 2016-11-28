@@ -21,6 +21,7 @@
 #endif
 
 #include "acb.h"
+#include "acb_poly.h"
 #include "dirichlet.h"
 
 #ifdef __cplusplus
@@ -131,6 +132,14 @@ void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const 
 
 void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec);
 
+void _acb_dirichlet_l_series(acb_ptr res, acb_srcptr s, slong slen,
+    const dirichlet_group_t G, const dirichlet_char_t chi,
+    int deflate, slong len, slong prec);
+
+void acb_dirichlet_l_series(acb_poly_t res, const acb_poly_t s,
+    const dirichlet_group_t G, const dirichlet_char_t chi,
+    int deflate, slong len, slong prec);
+
 void acb_dirichlet_hardy_theta(acb_ptr res, const acb_t t,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     slong len, slong prec);
@@ -139,6 +148,10 @@ void acb_dirichlet_hardy_z(acb_ptr res, const acb_t t,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     slong len, slong prec);
 
+void _acb_dirichlet_hardy_theta_series(acb_ptr res, acb_srcptr s, slong slen, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec);
+void acb_dirichlet_hardy_theta_series(acb_poly_t res, const acb_poly_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec);
+void _acb_dirichlet_hardy_z_series(acb_ptr res, acb_srcptr s, slong slen, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec);
+void acb_dirichlet_hardy_z_series(acb_poly_t res, const acb_poly_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec);
 
 /* utils */
 
