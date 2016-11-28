@@ -128,9 +128,9 @@ Old versions of the documentation
   * Added arf_root and improved speed of arb_root.
   * Tuned algorithm selection in arb_pow_fmpq.
 
-  * Other
+* Other
 
-    * Added documentation for arb and acb vector functions.
+  * Added documentation for arb and acb vector functions.
 
 2015-04-19 - version 2.6.0
 -------------------------------------------------------------------------------
