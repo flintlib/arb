@@ -93,7 +93,7 @@ int main()
                 for (m = 1; n_gcd(m, q) > 1; m = n_randint(state, q));
                 dirichlet_char_log(x, G, m);
 
-                if (m != dirichlet_char_exp(x, G))
+                if (m != _dirichlet_char_exp(x, G))
                 {
                     flint_printf("FAIL: char log and exp\n\n");
                     flint_printf("q = %wu\n\n", q);
@@ -107,7 +107,7 @@ int main()
                 for (k = 0; k < G->num; k++)
                     x->log[k] = n_randint(state, G->P[k].phi.n);
 
-                m = dirichlet_char_exp(x, G);
+                m = _dirichlet_char_exp(x, G);
                 dirichlet_char_log(y, G, m);
 
                 if (!dirichlet_char_eq_deep(G, x, y))
@@ -126,7 +126,7 @@ int main()
                 dirichlet_char_next_primitive(x, G);
                 m = x->n;
 
-                if (m != dirichlet_char_exp(x, G))
+                if (m != _dirichlet_char_exp(x, G))
                 {
                     flint_printf("FAIL: char number next primitive\n\n");
                     flint_printf("q = %wu\n\n", q);

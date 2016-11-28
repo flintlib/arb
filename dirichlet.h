@@ -110,7 +110,14 @@ ulong dirichlet_conductor_char(const dirichlet_group_t G, const dirichlet_char_t
 ulong dirichlet_order_char(const dirichlet_group_t G, const dirichlet_char_t x);
 
 void dirichlet_char_log(dirichlet_char_t x, const dirichlet_group_t G, ulong m);
-ulong dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G);
+
+DIRICHLET_INLINE ulong
+dirichlet_char_exp(const dirichlet_group_t G, const dirichlet_char_t x)
+{
+    return x->n;
+}
+
+ulong _dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G);
 
 void dirichlet_char_index(dirichlet_char_t x, const dirichlet_group_t G, ulong j);
 ulong dirichlet_index_char(const dirichlet_group_t G, const dirichlet_char_t x);

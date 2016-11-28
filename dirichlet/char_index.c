@@ -36,5 +36,5 @@ dirichlet_char_index(dirichlet_char_t x, const dirichlet_group_t G, ulong j)
         j = j / G->P[k].phi.n;
     }
 
-    dirichlet_char_exp(x, G);
+    _dirichlet_char_exp(x, G);
 }

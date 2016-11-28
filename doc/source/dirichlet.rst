@@ -127,12 +127,14 @@ Character type
     Sets *x* to the character of number *m*, computing its log using discrete
     logarithm in *G*.
 
-.. function:: ulong dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G)
+.. function:: ulong dirichlet_char_exp(const dirichlet_group_t G, const dirichlet_char_t x)
+
+    Returns the number *m* corresponding to exponents in *x*.
+
+.. function:: ulong _dirichlet_char_exp(dirichlet_char_t x, const dirichlet_group_t G)
 
     Computes and returns the number *m* corresponding to exponents in *x*.
-
-    Since *x* should always contain its *number*, this function is for internal use
-    only.
+    This function is for internal use.
 
 .. function:: void dirichlet_char_one(dirichlet_char_t x, const dirichlet_group_t G)
 

@@ -32,5 +32,5 @@ dirichlet_char_lift(dirichlet_char_t y, const dirichlet_group_t G, const dirichl
         }
     }
 
-    dirichlet_char_exp(y, G);
+    _dirichlet_char_exp(y, G);
 }
