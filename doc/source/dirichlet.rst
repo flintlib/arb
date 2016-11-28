@@ -224,6 +224,10 @@ level of *number* and *char* object. Both case require no discrete log computati
 
    Returns 1 if *chi* is a real character (iff it has order `\leq 2`).
 
+.. function:: int dirichlet_char_is_primitive(const dirichlet_group_t G, const dirichlet_char_t chi)
+
+   Returns 1 if *chi* is primitive (iff its conductor is exactly *q*).
+
 Character evaluation
 -------------------------------------------------------------------------------
 

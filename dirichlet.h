@@ -144,6 +144,12 @@ dirichlet_char_is_real(const dirichlet_group_t G, const dirichlet_char_t chi)
     return G->q <= 4 || (nmod_mul(chi->n, chi->n, G->mod) == 1);
 }
 
+DIRICHLET_INLINE int
+dirichlet_char_is_primitive(const dirichlet_group_t G, const dirichlet_char_t chi)
+{
+    return (dirichlet_conductor_char(G, chi) == G->q);
+}
+
 ulong dirichlet_chi(const dirichlet_group_t G, const dirichlet_char_t chi, ulong n);
 
 void dirichlet_vec_set_null(ulong *v, const dirichlet_group_t G, slong nv);
