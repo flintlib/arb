@@ -98,4 +98,5 @@ acb_dirichlet_qseries_arb_powers_smallorder(acb_t res, const arb_t x, int parity
     arb_clear(xk2);
     arb_clear(x2);
     arb_clear(dx);
+    arb_clear(kxk2);
 }
