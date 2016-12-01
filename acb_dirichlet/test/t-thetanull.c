@@ -45,7 +45,7 @@ int main()
         dirichlet_char_init(chi, G);
 
         z = _acb_vec_init(G->expo);
-        _acb_vec_nth_roots(z, G->expo, prec);
+        _acb_vec_unit_roots(z, G->expo, prec);
 
         nv = acb_dirichlet_theta_length_d(q, 1, prec);
         v = flint_malloc(nv * sizeof(ulong));

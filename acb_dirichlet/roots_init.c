@@ -74,7 +74,7 @@ acb_dirichlet_roots_init(acb_dirichlet_roots_t t, ulong order, slong num, slong 
     if (depth != 0)
     {
         acb_struct * z;
-        acb_nth_root(t->z, order, wp);
+        acb_unit_root(t->z, order, wp);
         z = t->z;
         t->Z = flint_malloc(depth * sizeof(acb_ptr));
 
@@ -100,7 +100,7 @@ acb_dirichlet_roots_init(acb_dirichlet_roots_t t, ulong order, slong num, slong 
             t->use_pow = (prec >= 16384);
 
         if (t->use_pow)
-            acb_nth_root(t->z, order, wp);
+            acb_unit_root(t->z, order, wp);
 
         t->Z = NULL;
     }

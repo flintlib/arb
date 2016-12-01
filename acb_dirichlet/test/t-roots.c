@@ -37,7 +37,7 @@ int main()
         acb_init(z);
 
         acb_dirichlet_roots_init(roots, n, n_randtest(state), prec);
-        acb_nth_root(y, n, prec);
+        acb_unit_root(y, n, prec);
 
         for (iter2 = 0; iter2 <= FLINT_MIN(n, 20); iter2++)
         {

@@ -60,7 +60,7 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     order = dirichlet_order_char(G, chi);
     mult = G->expo / order;
     z = _acb_vec_init(order);
-    _acb_vec_nth_roots(z, order, prec);
+    _acb_vec_unit_roots(z, order, prec);
 
     phi = 0;
     do

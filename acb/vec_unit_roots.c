@@ -13,7 +13,7 @@
 #include "acb_dirichlet.h"
 
 void
-_acb_vec_nth_roots(acb_ptr res, slong n, slong prec)
+_acb_vec_unit_roots(acb_ptr res, slong n, slong prec)
 {
     slong k, len, wp;
     acb_t t;
@@ -31,7 +31,7 @@ _acb_vec_nth_roots(acb_ptr res, slong n, slong prec)
     wp = prec + 6 + 2 * FLINT_BIT_COUNT(len);
 
     acb_init(t);
-    acb_nth_root(t, n, wp);
+    acb_unit_root(t, n, wp);
     _acb_vec_set_powers(res, t, len, wp);
     acb_clear(t);
     _acb_vec_set_round(res, res, len, prec);

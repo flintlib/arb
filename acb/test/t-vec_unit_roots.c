@@ -16,7 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("vec_nth_roots....");
+    flint_printf("vec_unit_roots....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -33,7 +33,7 @@ int main()
         acb_init(t);
         fmpq_init(q);
 
-        _acb_vec_nth_roots(vec, iter, prec);
+        _acb_vec_unit_roots(vec, iter, prec);
 
         for (k = 0; k < iter; k++)
         {

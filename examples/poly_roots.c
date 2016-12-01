@@ -139,8 +139,8 @@ fmpz_poly_complex_roots_squarefree(const fmpz_poly_t poly,
                 acb_init(w);
                 acb_init(w2);
 
-                acb_nth_root(w, deflation, prec);
-                acb_nth_root(w2, 2 * deflation, prec);
+                acb_unit_root(w, deflation, prec);
+                acb_unit_root(w2, 2 * deflation, prec);
 
                 for (i = 0; i < deg_deflated; i++)
                 {

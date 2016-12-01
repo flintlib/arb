@@ -51,7 +51,7 @@ acb_dirichlet_jacobi_sum_naive(acb_t res, const dirichlet_group_t G, const diric
     }
 
     acb_init(z);
-    acb_nth_root(z, g, prec);
+    acb_unit_root(z, g, prec);
     acb_dirichlet_si_poly_evaluate(res, v, g, z, prec);
 
     acb_clear(z);

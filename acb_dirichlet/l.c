@@ -55,7 +55,7 @@ acb_dirichlet_l(acb_t res, const acb_t s,
     {
         acb_dirichlet_zeta(res, s, prec);
     }
-    else if (dirichlet_conductor_char(G, chi) == G->q &&
+    else if (dirichlet_char_is_primitive(G, chi) &&
         (arf_cmp_d(arb_midref(acb_realref(s)), -0.5) < 0 ||
             (G->q != 1 && dirichlet_parity_char(G, chi) == 0 &&
                 arf_cmpabs_d(arb_midref(acb_imagref(s)), 0.125) < 0 &&

@@ -50,7 +50,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     mult = G->expo / order;
     z = _acb_vec_init(order);
     /* todo: use roots object */
-    _acb_vec_nth_roots(z, order, prec);
+    _acb_vec_unit_roots(z, order, prec);
 
     do {
         chin = dirichlet_pairing_char(G, chi, cn) / mult;

@@ -544,7 +544,7 @@ Powers and roots
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
     half-integer, and generally as `z = \exp(y \log x)`.
 
-.. function:: void acb_nth_root(acb_t res, ulong order, slong prec)
+.. function:: void acb_unit_root(acb_t res, ulong order, slong prec)
 
     Sets *res* to `\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
 
@@ -947,7 +947,7 @@ Vector functions
 
     Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
 
-.. function:: void _acb_vec_nth_roots(acb_ptr z, slong order, slong prec)
+.. function:: void _acb_vec_unit_roots(acb_ptr z, slong order, slong prec)
 
     Sets *z* to the powers `1,z,z^2,\dots z^{\mathrm{order}-1}` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
 

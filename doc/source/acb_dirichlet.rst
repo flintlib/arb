@@ -432,6 +432,8 @@ Hardy Z-functions
 For convenience, setting both *G* and *chi* to *NULL* in the following
 methods selects the Riemann zeta function.
 
+Currently, these methods require *chi* to be a primitive character.
+
 .. function:: void acb_dirichlet_hardy_theta(acb_ptr res, const acb_t t, const dirichlet_group_t G, const dirichlet_char_t chi, slong len, slong prec)
 
     Computes the phase function used to construct the Z-function.

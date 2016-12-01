@@ -22,7 +22,7 @@ acb_dirichlet_gauss_sum_naive(acb_t res, const dirichlet_group_t G, const dirich
     acb_dirichlet_chi_vec(v, G, chi, G->q, prec);
 
     acb_init(z);
-    acb_nth_root(z, G->q, prec);
+    acb_unit_root(z, G->q, prec);
 
     _acb_poly_evaluate(res, v, G->q, z, prec);
 
