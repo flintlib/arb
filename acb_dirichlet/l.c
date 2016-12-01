@@ -51,7 +51,7 @@ acb_dirichlet_l(acb_t res, const acb_t s,
     {
         acb_indeterminate(res);
     }
-    else if (G->q == 1)
+    else if (G == NULL || G->q == 1)
     {
         acb_dirichlet_zeta(res, s, prec);
     }
