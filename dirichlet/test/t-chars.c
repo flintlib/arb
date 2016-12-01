@@ -74,7 +74,7 @@ int main()
             dirichlet_char_first_primitive(x, G);
             for (n = 1; dirichlet_char_next_primitive(x, G) >= 0; n++);
 
-            ref = dirichlet_number_primitive(G);
+            ref = dirichlet_group_num_primitive(G);
             if (n != ref)
             {
                 flint_printf("FAIL: number of primitive elements\n\n");

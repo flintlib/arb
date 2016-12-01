@@ -71,7 +71,7 @@ int main()
         "-1.43652482351673593824956935036654893593947145947637807"
     };
 
-    flint_printf("l....");
+    flint_printf("l_hurwitz....");
     fflush(stdout);
 
     x = _acb_vec_init(nx);

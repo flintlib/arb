@@ -19,9 +19,9 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     ulong order, chin, mult;
-    acb_t t, u, a;
-    acb_ptr z;
+    acb_t t, u, a, w;
     dirichlet_char_t cn;
+    acb_dirichlet_roots_t roots;
     int deflate;
 
     /* remove pole in Hurwitz zeta at s = 1 */
@@ -40,6 +40,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
     acb_init(t);
     acb_init(u);
     acb_init(a);
+    acb_init(w);
 
     dirichlet_char_one(cn, G);
     acb_zero(t);
@@ -48,9 +49,7 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
     order = dirichlet_order_char(G, chi);
     mult = G->expo / order;
-    z = _acb_vec_init(order);
-    /* todo: use roots object */
-    _acb_vec_unit_roots(z, order, prec);
+    acb_dirichlet_roots_init(roots, order, dirichlet_group_size(G), prec);
 
     do {
         chin = dirichlet_pairing_char(G, chi, cn) / mult;
@@ -70,7 +69,8 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
             acb_dirichlet_hurwitz_precomp_eval(u, precomp, cn->n, G->q, prec);
         }
 
-        acb_addmul(t, z + chin, u, prec);
+        acb_dirichlet_root(w, roots, chin, prec);
+        acb_addmul(t, u, w, prec);
 
     } while (dirichlet_char_next(cn, G) >= 0);
 
@@ -81,9 +81,10 @@ acb_dirichlet_l_hurwitz(acb_t res, const acb_t s,
 
     dirichlet_char_clear(cn);
 
-    _acb_vec_clear(z, order);
+    acb_dirichlet_roots_clear(roots);
     acb_clear(t);
     acb_clear(u);
     acb_clear(a);
+    acb_clear(w);
 }
 

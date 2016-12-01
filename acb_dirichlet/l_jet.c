@@ -19,9 +19,10 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     int deflate, slong len, slong prec)
 {
     ulong order, chin, mult, phi;
-    acb_t a;
-    acb_ptr t, u, z;
+    acb_t a, w;
+    acb_ptr t, u;
     dirichlet_char_t cn;
+    acb_dirichlet_roots_t roots;
     int deflate_hurwitz;
 
     if (len <= 0)
@@ -52,6 +53,7 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     t = _acb_vec_init(len);
     u = _acb_vec_init(len + 2);
     acb_init(a);
+    acb_init(w);
 
     dirichlet_char_one(cn, G);
 
@@ -59,8 +61,7 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
 
     order = dirichlet_order_char(G, chi);
     mult = G->expo / order;
-    z = _acb_vec_init(order);
-    _acb_vec_unit_roots(z, order, prec);
+    acb_dirichlet_roots_init(roots, order, dirichlet_group_size(G), prec);
 
     phi = 0;
     do
@@ -69,7 +70,8 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
         acb_set_ui(a, cn->n);
         acb_div_ui(a, a, G->q, prec);
         _acb_poly_zeta_cpx_series(u, s, a, deflate_hurwitz, len, prec);
-        _acb_vec_scalar_addmul(t, u, len, z + chin, prec);
+        acb_dirichlet_root(w, roots, chin, prec);
+        _acb_vec_scalar_addmul(t, u, len, w, prec);
         phi++;
     }
     while (dirichlet_char_next(cn, G) >= 0);
@@ -112,9 +114,10 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
 
     dirichlet_char_clear(cn);
 
-    _acb_vec_clear(z, order);
+    acb_dirichlet_roots_clear(roots);
     _acb_vec_clear(t, len);
     _acb_vec_clear(u, len + 2);
     acb_clear(a);
+    acb_clear(w);
 }
 

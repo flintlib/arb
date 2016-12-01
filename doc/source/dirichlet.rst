@@ -82,6 +82,14 @@ Multiplicative group modulo *q*
     Clears *G*. Remark this function does *not* clear the discrete logarithm
     tables stored in *G* (which may be shared with another group).
 
+.. function:: ulong dirichlet_group_size(const dirichlet_group_t G)
+
+   Returns the number of elements in *G*, i.e. `\varphi(q)`.
+
+.. function:: ulong dirichlet_group_num_primitive(const dirichlet_group_t G)
+
+   Returns the number of primitive elements in *G*.
+
 .. function:: void dirichlet_group_dlog_precompute(dirichlet_group_t G, ulong num)
 
     Precompute decomposition and tables for discrete log computations in *G*,
@@ -193,10 +201,6 @@ Character properties
 
 As a consequence of the Conrey numbering, all these numbers are available at the
 level of *number* and *char* object. Both case require no discrete log computation.
-
-.. function:: ulong dirichlet_number_primitive(const dirichlet_group_t G)
-
-   Returns the number of primitive elements in *G*.
 
 .. function:: int dirichlet_char_is_principal(const dirichlet_group_t G, const dirichlet_char_t chi)
 

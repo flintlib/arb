@@ -12,7 +12,7 @@
 #include "dirichlet.h"
 
 ulong
-dirichlet_number_primitive(const dirichlet_group_t G)
+dirichlet_group_num_primitive(const dirichlet_group_t G)
 {
     if (G->q % 4 == 2)
         return 0;

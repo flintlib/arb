@@ -62,6 +62,8 @@ dirichlet_group_size(const dirichlet_group_t G)
     return G->phi_q;
 }
 
+ulong dirichlet_group_num_primitive(const dirichlet_group_t G);
+
 void dirichlet_group_init(dirichlet_group_t G, ulong q);
 void dirichlet_subgroup_init(dirichlet_group_t H, const dirichlet_group_t G, ulong h);
 void dirichlet_group_clear(dirichlet_group_t G);
@@ -70,7 +72,6 @@ void dirichlet_group_dlog_clear(dirichlet_group_t G);
 
 /* properties of elements without log */
 
-ulong dirichlet_number_primitive(const dirichlet_group_t G);
 ulong dirichlet_conductor_ui(const dirichlet_group_t G, ulong a);
 int dirichlet_parity_ui(const dirichlet_group_t G, ulong a);
 ulong dirichlet_order_ui(const dirichlet_group_t G, ulong a);
