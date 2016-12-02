@@ -94,7 +94,7 @@ rudimentary functionality for rigorous calculus based on AD
 
 Arb can compute a wide range of transcendental and special functions,
 including the gamma function, polygamma functions,
-Riemann zeta and Hurwitz zeta function, polylogarithm,
+Riemann zeta and Hurwitz zeta function, Dirichlet L-functions, polylogarithm,
 error function, Gauss hypergeometric function 2F1, confluent
 hypergeometric functions, Bessel functions, Airy functions,
 Legendre functions and other orthogonal polynomials,

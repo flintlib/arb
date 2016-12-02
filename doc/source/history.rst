@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.9.0.pdf
 * http://arblib.org/arb-2.8.1.pdf
 * http://arblib.org/arb-2.8.0.pdf
 * http://arblib.org/arb-2.7.0.pdf
@@ -19,6 +20,174 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2016-12-02 - version 2.9.0
+-------------------------------------------------------------------------------
+
+* License
+
+  * Changed license from GPL to LGPL.
+
+* Build system and compatibility
+
+  * Fixed FLINT includes to use flint/foo.h instead of foo.h, simplifying compilation on many systems.
+  * Added another alias for the dynamic library to fix make check on certain systems (contributed by Andreas Enge).
+  * Travis CI support (contributed by Isuru Fernando).
+  * Added support for ARB_TEST_MULTIPLIER environment variable to control the number of test iterations.
+  * Support building with CMake (contributed by Isuru Fernando).
+  * Support building with MSVC on Windows (contributed by Isuru Fernando).
+  * Fixed unsafe use of FLINT_ABS for slong -> ulong conversion in arf.h,
+    which caused failures on MIPS and ARM systems.
+
+* Basic arithmetic and methods
+
+  * Fixed mag_addmul(x,x,x) with x having a mantissa of all ones. This could
+    produce a non-normalized mag_t value, potentially leading to
+    incorrect results in arb and acb level arithmetic. This bug was caught by
+    new test code, and fortunately would have been hard to trigger accidentally.
+  * Added fasth paths for error bound calculations in arb_sqrt and arb_div, speeding up these operations significantly at low precision
+  * Added support for round-to-nearest in all arf methods.
+  * Added fprint methods (contributed by Alex Griffing).
+  * Added acb_printn and acb_fprintn methods to match arb_printn.
+  * Added arb_equal_si and acb_equal_si.
+  * Added arb_can_round_mpfr.
+  * Added arb_get_ubound_arf, arb_get_lbound_arf (contributed by Tommy Hofmann).
+  * Added sign function (arb_sgn).
+  * Added complex sign functions (acb_sgn, acb_csgn).
+  * Rewrote arb_contains_fmpq to make the test exact.
+  * Optimized mag_get_fmpq.
+  * Optimized arf_get_fmpz and added more robust test code.
+  * Rewrote arb_get_unique_fmpz and arb_get_interval_fmpz_2exp, reducing overhead, making them more robust with huge exponents, and documenting their behavior more carefully.
+  * Optimized arb_union.
+  * Optimized arf_is_int, arf_is_int_2exp_si and changed these from inline to normal functions.
+  * Added mag_const_pi, mag_sub, mag_expinv.
+  * Optimized binary-to-decimal conversion for huge exponents by using exponential function instead of binary powering.
+  * Added arb_intersection (contributed by Alex Griffing).
+  * Added arb_min, arb_max (contributed by Alex Griffing).
+  * Fixed a bug in arb_log and in test code on 64-bit Windows due to unsafe use of MPFR which only uses 32-bit exponents on Win64.
+  * Improved some test functions to reduce the chance of reporting spurious failures.
+  * Added squaring functions (arb_sqr, acb_sqr) (contributed by Ricky Farr).
+  * Added arf_frexp.
+  * Added arf_cmp_si, arf_cmp_ui, arf_cmp_d.
+  * Added methods to count allocated bytes (arb_allocated_bytes, _arb_vec_allocated_bytes, etc.).
+  * Added methods to predict memory usage for large vectors (_arb/_acb_vec_estimate_allocated_bytes).
+  * Changed clear() methods from inline to normal functions, giving 8% faster compilation and 25% smaller libarb.so.
+  * Added acb_unit_root and _acb_vec_unit_roots (contributed by Pascal Molin).
+
+* Polynomials
+
+  * Added sinh and cosh functions of power series (arb/acb_poly_sinh/cosh_series and sinh_cosh_series).
+  * Use basecase series inversion algorithm to improve speed and error bounds in arb/acb_poly_inv_series.
+  * Added functions for fast polynomial Taylor shift (arb_poly_taylor_shift, acb_poly_taylor_shift and variants).
+  * Fast handling of special cases in polynomial composition.
+  * Added acb_poly scalar mul and div convenience methods (contributed by Alex Griffing).
+  * Added set_trunc, set_trunc_round convenience methods.
+  * Added add_series, sub_series methods for truncating addition.
+  * Added polynomial is_zero, is_one, is_x, valuation convenience methods.
+  * Added hack to arb_poly_mullow and acb_poly_mullow to avoid overhead when doing an in-place multiplication with length at most 2.
+  * Added binomial and Borel transform methods for acb_poly.
+
+* Matrices
+
+  * Added Cholesky decomposition plus solving and inverse
+    for positive definite matrices (arb_mat_cho, arb_mat_spd_solve, arb_mat_spd_inv
+    and related methods) (contributed by Alex Griffing).
+  * Added LDL decomposition and inverse and solving based on LDL decomposition
+    for real matrices (arb_mat_ldl, arb_mat_solve_ldl_precomp, arb_mat_inv_ldl_precomp)
+    (contributed by Alex Griffing).
+  * Improved the entrywise error bounds in matrix exponential computation
+    to preserve sparsity and give exact entries where possible in many cases
+    (contributed by Alex Griffing).
+  * Added public functions for computing the truncated matrix exponential
+    Taylor series (arb_mat_exp_taylor_sum, acb_mat_exp_taylor_sum).
+  * Added functions related to sparsity structure (arb_mat_entrywise_is_zero,
+    arb_mat_count_is_zero, etc.) (contributed by Alex Griffing).
+  * Entrywise multiplication (arb_mat_mul_entrywise, acb_mat_mul_entrywise)
+    (contributed by Alex Griffing).
+  * Added is_empty and is_square convenience methods (contributed by Alex Griffing).
+  * Added the bool_mat helper module for matrices over the boolean semiring (contributed by Alex Griffing).
+  * Added Frobenius norm computation (contributed by Alex Griffing).
+
+* Miscellaneous special functions
+
+  * Added evaluation of Bernoulli polynomials (arb_bernoulli_poly_ui, acb_bernoulli_poly_ui).
+  * Added convenience function for evaluation of huge Bernoulli numbers (arb_bernoulli_fmpz).
+  * Added Euler numbers (arb_euler_number_ui, arb_euler_number_fmpz).
+  * Added fast approximate partition function (arb_partitions_fmpz/ui).
+  * Optimized partition function for n < 1000 by using recurrence for the low 64 bits.
+  * Improved the worst-case error bound in arb_atan.
+  * Added arb_log_base_ui.
+  * Added complex sinc function (acb_sinc).
+  * Special handling of z = 1 when computing polylogarithms.
+  * Fixed agm(-1,-1) to output 0 instead of indeterminate.
+  * Made working precision in arb_gamma and acb_gamma more sensitive to the input accuracy.
+
+* Hypergeometric functions
+
+  * Compute erf and erfc without cancellation problems for large or complex z.
+  * Avoid re-computing the square root of pi in several places.
+  * Added generalized hypergeometric function (acb_hypgeom_pfq).
+  * Implement binary splitting and rectangular splitting for evaluation of hypergeometric series with a power series parameter, greatly speeding up Y_n, K_n and other functions at high precision, as well as speeding up high-order parameter derivatives.
+  * Use binary splitting more aggressively in acb_hypgeom_pfq_sum to reduce error bound inflation.
+  * Asymptotic expansions of hypergeometric functions: more accurate parameter selection, and better handling of terminating cases.
+  * Tweaked algorithm selection and working precision in acb_hypgeom_m.
+  * Avoid dividing by the denominator of the next term in acb_hypgeom_sum, which would lead to a division by zero when evaluating hypergeometric polynomials.
+  * Fixed a bug in hypergeometric series evaluation resulting in near-integers not being skipped in some cases, leading to unnecessary loss of precision.
+  * Added series expansions of Airy functions (acb_hypgeom_airy_series, acb_hypgeom_airy_jet).
+  * Fixed a case where Airy functions accidentally chose the worst algorithm instead of the best one.
+  * Added functions for computing erf, erfc, erfi of power series in the acb_hypgeom module.
+  * Added series expansion of the logarithmic integral (acb_hypgeom_li_series).
+  * Added Fresnel integrals (acb_hypgeom_fresnel, acb_hypgeom_fresnel_series).
+  * Added the lower incomplete gamma function (acb_hypgeom_gamma_lower) (contributed by Alex Griffing).
+  * Added series expansion of the lower incomplete gamma function (acb_hypgeom_gamma_lower_series) (contributed by Alex Griffing).
+  * Added support for computing the regularized incomplete gamma functions.
+  * Use slightly sharper error bound for analytic continuation of 2F1.
+  * Added support for computing finite limits of 2F1 with inexact parameters differing by integers.
+  * Added the incomplete beta function (acb_hypgeom_beta_lower, acb_hypgeom_beta_lower_series)
+  * Improved acb_hypgeom_u to use a division-avoiding algorithm for small polynomial cases.
+  * Added arb_hypgeom module, wrapping the complex hypergeometric functions for more convenient use with the arb_t type.
+
+* Dirichlet L-functions and Riemann zeta function
+
+  * New module dirichlet for working algebraically with Dirichlet groups and characters (contributed by Pascal Molin).
+  * New module acb_dirichlet for numerical evaluation of Dirichlet characters and L-functions (contributed by Pascal Molin).
+  * Efficient representation and manipulation of Dirichlet characters using the Conrey representation (contributed by Pascal Molin).
+  * New module dlog for word-size discrete logarithm evaluation, used to support algorithms on Dirichlet characters (contributed by Pascal Molin).
+  * Methods for properties, evaluation, iteration, pairing, lift, lowering etc. of Dirichlet characters (contributed by Pascal Molin).
+  * Added acb_dirichlet_roots methods for fast evaluation of many roots of unity (contributed by Pascal Molin).
+  * Added acb_dirichlet_hurwitz_precomp methods for fast multi-evaluation of the Hurwitz zeta function for many parameter values.
+  * Added methods for computing Gauss, Jacobi and theta sums over Dirichlet characters (contributed by Pascal Molin).
+  * Added methods (acb_dirichlet_l, acb_dirichlet_l_jet, acb_dirichlet_l_series) for evaluation of Dirichlet L-functions and their derivatives.
+  * Implemented multiple algorithms for evaluation of Dirichlet L-functions depending on the argument (Hurwitz zeta function decomposition, Euler product, functional equation).
+  * Added methods (acb_dirichlet_hardy_z, acb_dirichlet_hardy_z_series, etc.) for computing the Hardy Z-function corresponding to a Dirichlet L-function.
+  * Added fast bound for Hurwitz zeta function (mag_hurwitz_zeta_uiui).
+  * Improved parameter selection in Hurwitz zeta function to target relative
+    instead of absolute error for large positive s.
+  * Improved parameter selection in Hurwitz zeta function to avoid computing
+    unnecessary Bernoulli numbers for large imaginary s.
+  * Added Dirichlet eta function (acb_dirichlet_eta).
+  * Implemented the Riemann-Siegel formula for faster evaluation of the Riemann zeta function at large height.
+  * Added smooth-index algorithm for the main sum when evaluating the Riemann zeta function, avoiding the high memory usage of the full sieving algorithm when the number of terms gets huge.
+  * Improved tuning for using the Euler product when computing the Riemann zeta function.
+
+* Example programs
+
+  * Added logistic map example program.
+  * Added lvalue example program.
+  * Improved poly_roots in several ways: identify roots that are exactly real,
+    automatically perform squarefree factorization, use power hack, and
+    allow specifying a product of polynomials as input on the command line.
+
+* Housekeeping
+
+  * New section in the documentation giving an introduction to ball arithmetic and using the library.
+  * Tidied, documented and added test code for the fmpz_extras module.
+  * Added proper documentation and test code for many helper methods.
+  * Removed the obsolete fmprb module entirely.
+  * Documented more algorithms and formulas.
+  * Clarified integer overflow issues and use of ARF_PREC_EXACT in the documentation.
+  * Added .gitignore file.
+  * Miscellaneous improvements to the documentation.
 
 2015-12-31 - version 2.8.1
 -------------------------------------------------------------------------------
