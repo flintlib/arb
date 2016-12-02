@@ -24,6 +24,16 @@ acb_dirichlet_hardy_z(acb_ptr res, const acb_t t,
     if (len <= 0)
         return;
 
+    /* use reflection formula -- todo for other characters */
+    if ((G == NULL || G->q == 1) && arf_sgn(arb_midref(acb_imagref(t))) > 0)
+    {
+        acb_neg(res, t);
+        acb_dirichlet_hardy_z(res, res, G, chi, len, prec);
+        for (k = 1; k < len; k += 2)
+            acb_neg(res + k, res + k);
+        return;
+    }
+
     v = _acb_vec_init(len);
     w = _acb_vec_init(len);
 

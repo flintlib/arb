@@ -21,7 +21,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         slong m, n1, n2, bits1, bits2, bits3;
         acb_poly_t S, A, B, C;
@@ -56,6 +56,8 @@ int main()
 
         acb_dirichlet_hardy_z_series(A, S, G, chi, n1, bits2);
         acb_poly_set(B, S);  /* aliasing */
+        if (q == 1 && n_randint(state, 2))
+            acb_poly_neg(B, B);
         acb_dirichlet_hardy_z_series(B, B, G, chi, n2, bits3);
 
         acb_poly_set(C, A);
