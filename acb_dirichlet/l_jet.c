@@ -13,6 +13,10 @@
 #include "acb_dirichlet.h"
 #include "acb_poly.h"
 
+/* todo: move implemetation to the acb_dirichlet module */
+void _acb_poly_zeta_cpx_reflect(acb_ptr t, const acb_t h,
+    const acb_t a, int deflate, slong len, slong prec);
+
 void
 acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     const dirichlet_group_t G, const dirichlet_char_t chi,
@@ -28,13 +32,20 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     if (len <= 0)
         return;
 
-    /* todo: reflection formula */
+    /* special-case Riemann zeta */
     if (G == NULL || G->q == 1)
     {
-        acb_init(a);
-        acb_one(a);
-        _acb_poly_zeta_cpx_series(res, s, a, deflate, len, prec);
-        acb_clear(a);
+        if (len == 1 && !deflate)
+        {
+            acb_dirichlet_zeta(res, s, prec);
+        }
+        else
+        {
+            acb_init(a);
+            acb_one(a);
+            _acb_poly_zeta_cpx_reflect(res, s, a, deflate, len, prec);
+            acb_clear(a);
+        }
         return;
     }
 

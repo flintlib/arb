@@ -78,29 +78,25 @@ _acb_poly_zeta_cpx_series(acb_ptr z, const acb_t s, const acb_t a, int deflate, 
 }
 
 void
-_acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int deflate, slong len, slong prec)
+_acb_poly_zeta_cpx_reflect(acb_ptr t, const acb_t h, const acb_t a, int deflate, slong len, slong prec)
 {
-    slong i;
-    acb_ptr t, u;
-
-    hlen = FLINT_MIN(hlen, len);
-
-    t = _acb_vec_init(len);
-    u = _acb_vec_init(len);
-
     /* use reflection formula */
     if (arf_sgn(arb_midref(acb_realref(h))) < 0 && acb_is_one(a))
     {
         /* zeta(s) = (2*pi)**s * sin(pi*s/2) / pi * gamma(1-s) * zeta(1-s) */
-        acb_t pi;
-        acb_ptr f, s1, s2, s3, s4;
+        acb_t pi, hcopy;
+        acb_ptr f, s1, s2, s3, s4, u;
+        slong i;
 
         acb_init(pi);
+        acb_init(hcopy);
         f = _acb_vec_init(2);
         s1 = _acb_vec_init(len);
         s2 = _acb_vec_init(len);
         s3 = _acb_vec_init(len);
         s4 = _acb_vec_init(len);
+        u = _acb_vec_init(len);
+        acb_set(hcopy, h);
 
         acb_const_pi(pi, prec);
 
@@ -118,13 +114,13 @@ _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int 
         _acb_vec_scalar_div(s2, s2, len, pi, prec);
 
         /* s3 = gamma(1-s) */
-        acb_sub_ui(f, h, 1, prec);
+        acb_sub_ui(f, hcopy, 1, prec);
         acb_neg(f, f);
         acb_set_si(f + 1, -1);
         _acb_poly_gamma_series(s3, f, 2, len, prec);
 
         /* s4 = zeta(1-s) */
-        acb_sub_ui(f, h, 1, prec);
+        acb_sub_ui(f, hcopy, 1, prec);
         acb_neg(f, f);
         _acb_poly_zeta_cpx_series(s4, f, a, 0, len, prec);
         for (i = 1; i < len; i += 2)
@@ -137,7 +133,7 @@ _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int 
         /* add 1/(1-(s+t)) = 1/(1-s) + t/(1-s)^2 + ... */
         if (deflate)
         {
-            acb_sub_ui(u, h, 1, prec);
+            acb_sub_ui(u, hcopy, 1, prec);
             acb_neg(u, u);
             acb_inv(u, u, prec);
             for (i = 1; i < len; i++)
@@ -146,16 +142,30 @@ _acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int 
         }
 
         acb_clear(pi);
+        acb_clear(hcopy);
         _acb_vec_clear(f, 2);
         _acb_vec_clear(s1, len);
         _acb_vec_clear(s2, len);
         _acb_vec_clear(s3, len);
         _acb_vec_clear(s4, len);
+        _acb_vec_clear(u, len);
     }
     else
     {
         _acb_poly_zeta_cpx_series(t, h, a, deflate, len, prec);
     }
+}
+
+void
+_acb_poly_zeta_series(acb_ptr res, acb_srcptr h, slong hlen, const acb_t a, int deflate, slong len, slong prec)
+{
+    acb_ptr t, u;
+    hlen = FLINT_MIN(hlen, len);
+
+    t = _acb_vec_init(len);
+    u = _acb_vec_init(len);
+
+    _acb_poly_zeta_cpx_reflect(t, h, a, deflate, len, prec);
 
     /* compose with nonconstant part */
     acb_zero(u);
