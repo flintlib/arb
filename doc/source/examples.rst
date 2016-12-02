@@ -3,6 +3,8 @@
 Example programs
 ===============================================================================
 
+.. highlight:: text
+
 The *examples* directory
 (https://github.com/fredrik-johansson/arb/tree/master/examples)
 contains several complete C programs, which are documented below. Running::
@@ -488,28 +490,80 @@ a portion of the critical strip with imaginary part between 100 and 140::
 
     > build/examples/complex_plot zeta -range -10 10 100 140 -size 256 512
 
-lcentral.c
+lvalue.c
 -------------------------------------------------------------------------------
 
-This program computes the central value of Dirichlet L functions for all
-primitive Dirichlet characters in some conductor range.
+This program evaluates Dirichlet L-functions. It takes the following input::
 
-Its arguments take the form::
+    > build/examples/lvalue
+    lvalue [-character q n] [-re a] [-im b] [-prec p] [-z] [-deflate] [-len l]
 
-    > build/examples/lcentral [--quiet] [--prec <bits>] qmin qmax
+    Print value of Dirichlet L-function at s = a+bi.
+    Default a = 0.5, b = 0, p = 53, (q, n) = (1, 0) (Riemann zeta)
+    [-z]       - compute Z(s) instead of L(s)
+    [-deflate] - remove singular term at s = 1
+    [-len l]   - compute l terms in Taylor series at s
 
-The values are indexed by (conductor,index) pairs, sample output::
+Evaluating the Riemann zeta function and
+the Dirichlet beta function at `s = 2`::
 
-    > build/examples/lcentral 3 8
-    3,2: (0.480867557696828626181220063235 + 0j)  +/-  (2.23e-30, 0j)
-    4,3: (0.6676914571896091766586909293 + 0j)  +/-  (9.87e-31, 0j)
-    5,2: (0.763747880117286878224512152639 + 0.216964767518860693638586593098j) +/-  (1.04e-30, 6.72e-31j)
-    5,4: (0.231750947504015755883383661761 + 0j)  +/-  (1.52e-30, 0j)
-    5,3: (0.763747880117286878224512152639 - 0.216964767518860693638586593098j) +/-  (1.04e-30, 6.72e-31j)
-    7,3: (0.71394334376831949285993820742 + 0.474902182771399382637452439346j) +/-  (1.15e-30, 8.87e-31j)
-    7,2: (0.310089362598367660591950525344 - 0.0726419313701779052456217124547j)  +/-  (1.14e-30, 8.51e-31j)
-    7,6: (1.14658566690370833367712697646 + 0j)  +/-  (1.56e-30, 0j)
-    7,4: (0.310089362598367660591950525344 + 0.0726419313701779052456217124547j)  +/-  (1.15e-30, 8.87e-31j)
-    7,5: (0.71394334376831949285993820742 - 0.474902182771399382637452439346j)  +/-  (1.19e-30, 8.51e-31j)
-    8,5: (0.373691712912547307381586950023 + 0j)  +/-  (1.07e-30, 0j)
-    8,3: (1.10042140952554837756713576997 + 0j)  +/-  (1.46e-30, 0j)
+    > build/examples/lvalue -re 2 -prec 128
+    L(s) = [1.64493406684822643647241516664602518922 +/- 4.37e-39]
+    cpu/wall(s): 0.001 0.001
+    virt/peak/res/peak(MB): 26.86 26.88 2.05 2.05
+
+    > build/examples/lvalue -character 4 3 -re 2 -prec 128
+    L(s) = [0.91596559417721901505460351493238411077 +/- 7.86e-39]
+    cpu/wall(s): 0.002 0.003
+    virt/peak/res/peak(MB): 26.86 26.88 2.31 2.31
+
+Evaluating the L-function for character number 101 modulo 1009
+at `s = 1/2` and `s = 1`::
+
+    > build/examples/lvalue -character 1009 101
+    L(s) = [-0.459256562383872 +/- 5.24e-16] + [1.346937111206009 +/- 3.03e-16]*I
+    cpu/wall(s): 0.012 0.012
+    virt/peak/res/peak(MB): 26.86 26.88 2.30 2.30
+
+    > build/examples/lvalue -character 1009 101 -re 1
+    L(s) = [0.657952586112728 +/- 6.02e-16] + [1.004145273214022 +/- 3.10e-16]*I
+    cpu/wall(s): 0.017 0.018
+    virt/peak/res/peak(MB): 26.86 26.88 2.30 2.30
+
+Computing the first few coefficients in the Laurent series of the
+Riemann zeta function at `s = 1`::
+
+    > build/examples/lvalue -re 1 -deflate -len 8
+    L(s) = [0.577215664901532861 +/- 5.29e-19]
+    L'(s) = [0.072815845483676725 +/- 2.68e-19]
+    [x^2] L(s+x) = [-0.004845181596436159 +/- 3.87e-19]
+    [x^3] L(s+x) = [-0.000342305736717224 +/- 4.20e-19]
+    [x^4] L(s+x) = [9.6890419394471e-5 +/- 2.40e-19]
+    [x^5] L(s+x) = [-6.6110318108422e-6 +/- 4.51e-20]
+    [x^6] L(s+x) = [-3.316240908753e-7 +/- 3.85e-20]
+    [x^7] L(s+x) = [1.0462094584479e-7 +/- 7.78e-21]
+    cpu/wall(s): 0.003 0.004
+    virt/peak/res/peak(MB): 26.86 26.88 2.30 2.30
+
+Evaluating the Riemann zeta function near the first nontrivial root::
+
+    > build/examples/lvalue -re 0.5 -im 14.134725
+    L(s) = [1.76743e-8 +/- 1.93e-14] + [-1.110203e-7 +/- 2.84e-14]*I
+    cpu/wall(s): 0.001 0.001
+    virt/peak/res/peak(MB): 26.86 26.88 2.31 2.31
+
+    > build/examples/lvalue -z -re 14.134725 -prec 200
+    Z(s) = [-1.12418349839417533300111494358128257497862927935658e-7 +/- 4.62e-58]
+    cpu/wall(s): 0.001 0.001
+    virt/peak/res/peak(MB): 26.86 26.88 2.57 2.57
+
+    > build/examples/lvalue -z -re 14.134725 -len 4
+    Z(s) = [-1.124184e-7 +/- 7.00e-14]
+    Z'(s) = [0.793160414884 +/- 4.09e-13]
+    [x^2] Z(s+x) = [0.065164586492 +/- 5.39e-13]
+    [x^3] Z(s+x) = [-0.020707762705 +/- 5.37e-13]
+    cpu/wall(s): 0.002 0.003
+    virt/peak/res/peak(MB): 26.86 26.88 2.57 2.57
+
+.. highlight:: c
+
