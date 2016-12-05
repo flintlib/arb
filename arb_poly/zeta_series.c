@@ -140,8 +140,8 @@ _arb_poly_zeta_series(arb_ptr res, arb_srcptr h, slong hlen, const arb_t a, int 
     _acb_vec_clear(z, len);
     _arb_vec_clear(t, len);
     _arb_vec_clear(u, len);
-    acb_init(cs);
-    acb_init(ca);
+    acb_clear(cs);
+    acb_clear(ca);
 }
 
 void

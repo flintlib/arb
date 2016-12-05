@@ -43,4 +43,7 @@ _acb_poly_div_root(acb_ptr Q, acb_t R, acb_srcptr A,
 
     acb_mul(r, r, c, prec);
     acb_add(R, r, t, prec);
+
+    acb_clear(r);
+    acb_clear(t);
 }

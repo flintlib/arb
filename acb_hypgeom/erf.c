@@ -79,7 +79,7 @@ acb_hypgeom_erf_1f1b(acb_t res, const acb_t z, slong prec)
     acb_clear(a);
     acb_clear(b);
     acb_clear(t);
-    acb_clear (w);
+    acb_clear(w);
 }
 
 void

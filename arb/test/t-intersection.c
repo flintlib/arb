@@ -189,6 +189,7 @@ int main()
         arb_clear(xy);
         arb_clear(yz);
         arb_clear(y);
+        arb_clear(v);
         arb_clear(w);
     }
 
