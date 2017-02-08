@@ -22,7 +22,8 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
         R_F(x,y,z) = \frac{1}{2}
             \int_0^{\infty} \frac{dt}{\sqrt{(t+x)(t+y)(t+z)}}
 
-    which is well-defined for `x,y,z \notin (-\infty,0)`, and with
+    where the square root extends continuously from the positive real axis.
+    The function is well-defined for `x,y,z \notin (-\infty,0)`, and with
     at most one of `x,y,z` being zero.
 
     In general, one or more duplication steps are applied until
