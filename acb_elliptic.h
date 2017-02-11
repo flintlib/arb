@@ -21,6 +21,10 @@ extern "C" {
 
 void acb_elliptic_rf(acb_t res, const acb_t x, const acb_t y, const acb_t z, int flags, slong prec);
 
+void acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y, const acb_t z, const acb_t p, int flags, slong prec);
+
+void acb_elliptic_rc1(acb_t res, const acb_t x, slong prec);
+
 #ifdef __cplusplus
 }
 #endif
