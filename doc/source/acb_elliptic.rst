@@ -33,8 +33,10 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
             \int_0^{\infty} \frac{dt}{\sqrt{(t+x)(t+y)(t+z)}}
 
     where the square root extends continuously from positive infinity.
-    The function is well-defined for `x,y,z \notin (-\infty,0)`, and with
+    The integral is well-defined for `x,y,z \notin (-\infty,0)`, and with
     at most one of `x,y,z` being zero.
+    When some parameters are negative real numbers, the function is
+    still defined by analytic continuation.
 
     In general, one or more duplication steps are applied until
     `x,y,z` are close enough to use a multivariate Taylor polynomial
@@ -74,12 +76,25 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     should verify the results.
 
     The special case `R_D(x, y, z) = R_J(x, y, z, z)`
-    may be computed by setting *y* and *z* to the same variable.
+    may be computed by setting *z* and *p* to the same variable.
     This case is handled specially to avoid redundant arithmetic operations.
     In this case, the algorithm is correct for all *x*, *y* and *z*.
 
     The *flags* parameter is reserved for future use and currently
     does nothing. Passing 0 results in default behavior.
+
+.. function:: void acb_elliptic_rg(acb_t res, const acb_t x, const acb_t y, const acb_t z, int flags, slong prec)
+
+    Evaluates the Carlson symmetric elliptic integral of the second kind
+
+    .. math ::
+
+        R_G(x,y,z) = \frac{1}{4} \int_0^{\infty}
+            \frac{t}{\sqrt{(t+x)(t+y)(t+z)}}
+            \left( \frac{x}{t+x} + \frac{y}{t+y} + \frac{z}{t+z}\right) dt.
+
+    The evaluation is done by expressing `R_G` in terms of `R_F` and `R_D`.
+    There are no restrictions on the variables.
 
 .. function:: void acb_elliptic_rc1(acb_t res, const acb_t x, slong prec)
 
