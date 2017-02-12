@@ -14,12 +14,48 @@ There may also exist points where a function should be well-defined
 but the implemented algorithm
 fails to produce a finite result due to artificial internal singularities.
 
+Complete elliptic integrals
+-------------------------------------------------------------------------------
+
+Legendre incomplete elliptic integrals
+-------------------------------------------------------------------------------
+
+.. function:: void acb_elliptic_f(acb_t res, const acb_t phi, const acb_t m, int pi, slong prec)
+
+    Evaluates the Legendre incomplete elliptic integral of the first kind,
+    given by
+
+     .. math ::
+
+        F(\phi,m) = \int_0^{\phi} \frac{dt}{\sqrt{1-m \sin^2 t}}
+                  = \int_0^{\sin \phi}
+            \frac{dt}{\left(\sqrt{1-t^2}\right)\left(\sqrt{1-mt^2}\right)}
+
+    on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
+    Outside this strip, the function extends quasi-periodically as
+
+    .. math ::
+
+        F(\phi + n \pi, m) = 2 n K(m) + F(\phi,m), n \in \mathbb{Z}.
+
+    Inside the standard strip, the function is computed via
+    the symmetric integral `R_F`.
+
+    If the flag *pi* is set to 1, the variable `\phi` is replaced by
+    `\pi \phi`, changing the quasiperiod to 1.
+
+    The function reduces to a complete elliptic integral of the first kind
+    when `\phi = \frac{\pi}{2}`; that is,
+    `F\left(\frac{\pi}{2}, m\right) = K(m)`.
+
 Carlson symmetric elliptic integrals
 -------------------------------------------------------------------------------
 
 Carlson symmetric forms are the preferred form of incomplete elliptic
 integrals, due to their neat properties and relatively
 simple computation based on duplication theorems.
+There are five named functions: `R_F, R_G, R_J`, and `R_C`, `R_D` which
+are special cases of `R_F` and `R_J` respectively.
 We largely follow the definitions and algorithms
 in [Car1995]_ and chapter 19 in [NIST2012]_.
 
@@ -51,6 +87,20 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     The *flags* parameter is reserved for future use and currently
     does nothing. Passing 0 results in default behavior.
 
+.. function:: void acb_elliptic_rg(acb_t res, const acb_t x, const acb_t y, const acb_t z, int flags, slong prec)
+
+    Evaluates the Carlson symmetric elliptic integral of the second kind
+
+    .. math ::
+
+        R_G(x,y,z) = \frac{1}{4} \int_0^{\infty}
+            \frac{t}{\sqrt{(t+x)(t+y)(t+z)}}
+            \left( \frac{x}{t+x} + \frac{y}{t+y} + \frac{z}{t+z}\right) dt
+
+    where the square root is taken continuously as in `R_F`.
+    The evaluation is done by expressing `R_G` in terms of `R_F` and `R_D`.
+    There are no restrictions on the variables.
+
 .. function:: void acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y, const acb_t z, const acb_t p, int flags, slong prec)
 
     Evaluates the Carlson symmetric elliptic integral of the third kind
@@ -58,9 +108,9 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     .. math ::
 
         R_J(x,y,z,p) = \frac{3}{2}
-            \int_0^{\infty} \frac{dt}{(t+p)\sqrt{(t+x)(t+y)(t+z)}}.
+            \int_0^{\infty} \frac{dt}{(t+p)\sqrt{(t+x)(t+y)(t+z)}}
 
-    where the square root is taken continuously as in `R_J`.
+    where the square root is taken continuously as in `R_F`.
 
     In general, one or more duplication steps are applied until
     `x,y,z,p` are close enough to use a multivariate Taylor polynomial
@@ -82,19 +132,6 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
 
     The *flags* parameter is reserved for future use and currently
     does nothing. Passing 0 results in default behavior.
-
-.. function:: void acb_elliptic_rg(acb_t res, const acb_t x, const acb_t y, const acb_t z, int flags, slong prec)
-
-    Evaluates the Carlson symmetric elliptic integral of the second kind
-
-    .. math ::
-
-        R_G(x,y,z) = \frac{1}{4} \int_0^{\infty}
-            \frac{t}{\sqrt{(t+x)(t+y)(t+z)}}
-            \left( \frac{x}{t+x} + \frac{y}{t+y} + \frac{z}{t+z}\right) dt.
-
-    The evaluation is done by expressing `R_G` in terms of `R_F` and `R_D`.
-    There are no restrictions on the variables.
 
 .. function:: void acb_elliptic_rc1(acb_t res, const acb_t x, slong prec)
 
