@@ -17,6 +17,44 @@ fails to produce a finite result due to artificial internal singularities.
 Complete elliptic integrals
 -------------------------------------------------------------------------------
 
+.. function:: void acb_elliptic_k(acb_t res, const acb_t m, slong prec)
+
+    Computes the complete elliptic integral of the first kind
+
+    .. math ::
+
+        K(m) = \int_0^{\pi/2} \frac{dt}{\sqrt{1-m \sin^2 t}}
+                  = \int_0^1
+            \frac{dt}{\left(\sqrt{1-t^2}\right)\left(\sqrt{1-mt^2}\right)}
+
+    using the arithmetic-geometric mean: `K(m) = \pi / (2 M(\sqrt{1-m}))`.
+
+.. function:: void acb_elliptic_k_jet(acb_ptr res, const acb_t m, slong len, slong prec)
+
+    Sets the coefficients in the array *res* to the power series expansion of the
+    complete elliptic integral of the first kind at the point *m* truncated to
+    length *len*, i.e. `K(m+x) \in \mathbb{C}[[x]]`.
+
+.. function:: void _acb_elliptic_k_series(acb_ptr res, acb_srcptr m, slong mlen, slong len, slong prec)
+
+.. function:: void acb_elliptic_k_series(acb_poly_t res, const acb_poly_t m, slong len, slong prec)
+
+    Sets *res* to the complete elliptic integral of the first kind of the
+    power series *m*, truncated to length *len*.
+
+.. function:: void acb_elliptic_e(acb_t res, const acb_t m, slong prec)
+
+    Computes the complete elliptic integral of the second kind
+
+     .. math ::
+
+        E(m) = \int_0^{\pi2} \sqrt{1-m \sin^2 t} \, dt =
+                    \int_0^1
+                    \frac{\sqrt{1-mt^2}}{\sqrt{1-t^2}} \, dt
+
+    using `E(m) = (1-m)(2m K'(m) + K(m))` (where the prime
+    denotes a derivative, not a complementary integral).
+
 .. function:: void acb_elliptic_pi(acb_t res, const acb_t n, const acb_t m, slong prec)
 
     Evaluates the complete elliptic integral of the third kind
@@ -211,4 +249,38 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     `R_C(1, 1+x) = \operatorname{atan}(\sqrt{x})/\sqrt{x} = {}_2F_1(1,1/2,3/2,-x)`,
     which is needed in the evaluation of `R_J`.
 
+Weierstrass elliptic function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_elliptic_p(acb_t res, const acb_t z, const acb_t tau, slong prec)
+
+    Computes Weierstrass's elliptic function
+
+    .. math ::
+
+        \wp(z, \tau) = \frac{1}{z^2} + \sum_{n^2+m^2 \ne 0}
+            \left[ \frac{1}{(z+m+n\tau)^2} - \frac{1}{(m+n\tau)^2} \right]
+
+    which satisfies `\wp(z, \tau) = \wp(z + 1, \tau) = \wp(z + \tau, \tau)`.
+    To evaluate the function efficiently, we use the formula
+
+    .. math ::
+
+        \wp(z, \tau) = \pi^2 \theta_2^2(0,\tau) \theta_3^2(0,\tau)
+            \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
+            \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
+
+.. function:: void acb_elliptic_p_jet(acb_ptr res, const acb_t z, const acb_t tau, slong len, slong prec)
+
+    Computes the formal power series `\wp(z + x, \tau) \in \mathbb{C}[[x]]`,
+    truncated to length *len*. In particular, with *len* = 2, simultaneously
+    computes `\wp(z, \tau), \wp'(z, \tau)` which together generate
+    the field of elliptic functions with periods 1 and `\tau`.
+
+.. function:: void _acb_elliptic_p_series(acb_ptr res, acb_srcptr z, slong zlen, const acb_t tau, slong len, slong prec)
+
+.. function:: void acb_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, slong len, slong prec)
+
+    Sets *res* to the Weierstrass elliptic function of the power series *z*,
+    with periods 1 and *tau*, truncated to length *len*.
 

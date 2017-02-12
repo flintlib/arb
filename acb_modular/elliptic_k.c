@@ -10,19 +10,11 @@
 */
 
 #include "acb_modular.h"
+#include "acb_elliptic.h"
 
 void
 acb_modular_elliptic_k(acb_t k, const acb_t m, slong prec)
 {
-    acb_t t;
-    acb_init(t);
-    acb_sub_ui(t, m, 1, prec);
-    acb_neg(t, t);
-    acb_sqrt(t, t, prec);
-    acb_agm1(k, t, prec);
-    acb_const_pi(t, prec);
-    acb_div(k, t, k, prec);
-    acb_mul_2exp_si(k, k, -1);
-    acb_clear(t);
+    acb_elliptic_k(k, m, prec);
 }
 

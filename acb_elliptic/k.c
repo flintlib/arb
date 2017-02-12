@@ -9,18 +9,20 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_poly.h"
-#include "acb_modular.h"
 #include "acb_elliptic.h"
 
 void
-_acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
+acb_elliptic_k(acb_t k, const acb_t m, slong prec)
 {
-    _acb_elliptic_k_series(res, z, zlen, len, prec);
+    acb_t t;
+    acb_init(t);
+    acb_sub_ui(t, m, 1, prec);
+    acb_neg(t, t);
+    acb_sqrt(t, t, prec);
+    acb_agm1(k, t, prec);
+    acb_const_pi(t, prec);
+    acb_div(k, t, k, prec);
+    acb_mul_2exp_si(k, k, -1);
+    acb_clear(t);
 }
 
-void
-acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, slong n, slong prec)
-{
-    acb_elliptic_k_series(res, z, n, prec);
-}

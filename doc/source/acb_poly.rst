@@ -1078,20 +1078,16 @@ Other special functions
     Sets *res* to the arithmetic-geometric mean of 1 and the power series *z*,
     truncated to length *n*.
 
+See the :ref:`acb_elliptic.h <acb-elliptic>` module for power series of elliptic functions.
+The following wrappers are available for backwards compatibility.
+
 .. function:: void _acb_poly_elliptic_k_series(acb_ptr res, acb_srcptr z, slong zlen, slong len, slong prec)
 
 .. function:: void acb_poly_elliptic_k_series(acb_poly_t res, const acb_poly_t z, slong n, slong prec)
 
-    Sets *res* to the complete elliptic integral of the first kind of the
-    power series *z*, truncated to length *n*.
-
 .. function:: void _acb_poly_elliptic_p_series(acb_ptr res, acb_srcptr z, slong zlen, const acb_t tau, slong len, slong prec)
 
 .. function:: void acb_poly_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, slong n, slong prec)
-
-    Sets *res* to the Weierstrass elliptic function of the power series *z*,
-    with periods 1 and *tau*, truncated to length *n*.
-
 
 Root-finding
 -------------------------------------------------------------------------------

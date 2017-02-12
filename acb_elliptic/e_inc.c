@@ -98,7 +98,7 @@ acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int times_pi, slon
         acb_t t;
         acb_init(t);
         acb_mul_2exp_si(t, phi, 1);
-        acb_modular_elliptic_e(res, m, prec);
+        acb_elliptic_e(res, m, prec);
         acb_mul(res, res, t, prec);
         acb_clear(t);
         return;
@@ -147,7 +147,7 @@ acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int times_pi, slon
         arb_floor(d, d, prec);
 
         /* w = 2 E(m) */
-        acb_modular_elliptic_e(w, m, prec);
+        acb_elliptic_e(w, m, prec);
         acb_mul_2exp_si(w, w, 1);
 
         /* z = phi - d * pi */
@@ -211,7 +211,7 @@ acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int times_pi, slon
             }
 
             /* w = 2 d E(m) */
-            acb_modular_elliptic_e(w, m, prec);
+            acb_elliptic_e(w, m, prec);
             acb_mul_arb(w, w, d, prec);
             acb_mul_2exp_si(w, w, 1);
         }

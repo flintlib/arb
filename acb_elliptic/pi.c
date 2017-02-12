@@ -70,7 +70,7 @@ acb_elliptic_pi(acb_t r, const acb_t n, const acb_t m, slong prec)
 {
     if (acb_is_zero(n))
     {
-        acb_modular_elliptic_k(r, m, prec);
+        acb_elliptic_k(r, m, prec);
     }
     else if (acb_is_zero(m))
     {

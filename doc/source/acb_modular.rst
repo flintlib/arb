@@ -4,7 +4,8 @@
 ===============================================================================
 
 This module provides methods for numerical evaluation of modular
-forms, Jacobi theta functions, and elliptic functions.
+forms and Jacobi theta functions. See :ref:`acb_elliptic.h <acb-elliptic>`
+for the closely related elliptic functions and integrals.
 
 In the context of this module, *tau* or `\tau` always denotes an
 element of the complex upper half-plane
@@ -524,54 +525,21 @@ Modular forms
     domain using theta functions, and then compute the Eisenstein series
     of higher index using a recurrence relation.
 
-
-Elliptic functions
+Elliptic integrals and functions
 -------------------------------------------------------------------------------
 
-.. function:: void acb_modular_elliptic_p(acb_t wp, const acb_t z, const acb_t tau, slong prec)
-
-    Computes Weierstrass's elliptic function
-
-    .. math ::
-
-        \wp(z, \tau) = \frac{1}{z^2} + \sum_{n^2+m^2 \ne 0}
-            \left[ \frac{1}{(z+m+n\tau)^2} - \frac{1}{(m+n\tau)^2} \right]
-
-    which satisfies `\wp(z, \tau) = \wp(z + 1, \tau) = \wp(z + \tau, \tau)`.
-    To evaluate the function efficiently, we use the formula
-
-    .. math ::
-
-        \wp(z, \tau) = \pi^2 \theta_2^2(0,\tau) \theta_3^2(0,\tau)
-            \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
-            \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
-
-.. function:: void acb_modular_elliptic_p_zpx(acb_ptr wp, const acb_t z, const acb_t tau, slong len, slong prec)
-
-    Computes the formal power series `\wp(z + x, \tau) \in \mathbb{C}[[x]]`,
-    truncated to length *len*. In particular, with *len* = 2, simultaneously
-    computes `\wp(z, \tau), \wp'(z, \tau)` which together generate
-    the field of elliptic functions with periods 1 and `\tau`.
-
-Elliptic integrals
--------------------------------------------------------------------------------
+See the :ref:`acb_elliptic.h <acb-elliptic>` module for elliptic integrals and functions.
+The following wrappers are available for backwards compatibility.
 
 .. function:: void acb_modular_elliptic_k(acb_t w, const acb_t m, slong prec)
 
-    Computes the complete elliptic integral of the first kind `K(m)`,
-    using the arithmetic-geometric mean: `K(m) = \pi / (2 M(\sqrt{1-m}))`.
-
 .. function:: void acb_modular_elliptic_k_cpx(acb_ptr w, const acb_t m, slong len, slong prec)
-
-    Sets the coefficients in the array *w* to the power series expansion of the
-    complete elliptic integral of the first kind at the point *m* truncated to
-    length *len*, i.e. `K(m+x) \in \mathbb{C}[[x]]`.
 
 .. function:: void acb_modular_elliptic_e(acb_t w, const acb_t m, slong prec)
 
-    Computes the complete elliptic integral of the second kind `E(m)`,
-    which is given by `E(m) = (1-m)(2m K'(m) + K(m))` (where the prime
-    denotes a derivative, not a complementary integral).
+.. function:: void acb_modular_elliptic_p(acb_t wp, const acb_t z, const acb_t tau, slong prec)
+
+.. function:: void acb_modular_elliptic_p_zpx(acb_ptr wp, const acb_t z, const acb_t tau, slong len, slong prec)
 
 Class polynomials
 -------------------------------------------------------------------------------

@@ -10,48 +10,11 @@
 */
 
 #include "acb_modular.h"
+#include "acb_elliptic.h"
 
 void
 acb_modular_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec)
 {
-    acb_struct t0[4], tz[4];
-    acb_t t;
-    int i;
-
-    acb_init(t);
-
-    for (i = 0; i < 4; i++)
-    {
-        acb_init(t0 + i);
-        acb_init(tz + i);
-    }
-
-    acb_modular_theta(tz + 0, tz + 1, tz + 2, tz + 3, z, tau, prec);
-    acb_zero(t);
-    acb_modular_theta(t0 + 0, t0 + 1, t0 + 2, t0 + 3, t, tau, prec);
-
-    acb_mul(t, t0 + 1, t0 + 2, prec);
-    acb_mul(t, t, tz + 3, prec);
-    acb_div(t, t, tz + 0, prec);
-    acb_mul(t, t, t, prec);
-
-    acb_pow_ui(t0 + 1, t0 + 1, 4, prec);
-    acb_pow_ui(t0 + 2, t0 + 2, 4, prec);
-    acb_add(r, t0 + 1, t0 + 2, prec);
-    acb_div_ui(r, r, 3, prec);
-
-    acb_sub(r, t, r, prec);
-
-    acb_const_pi(t, prec);
-    acb_mul(t, t, t, prec);
-    acb_mul(r, r, t, prec);
-
-    acb_clear(t);
-
-    for (i = 0; i < 4; i++)
-    {
-        acb_clear(t0 + i);
-        acb_clear(tz + i);
-    }
+    acb_elliptic_p(r, z, tau, prec);
 }
 
