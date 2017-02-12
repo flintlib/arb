@@ -29,6 +29,8 @@ void acb_elliptic_rc1(acb_t res, const acb_t x, slong prec);
 
 void acb_elliptic_f(acb_t res, const acb_t phi, const acb_t m, int times_pi, slong prec);
 
+void acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int times_pi, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

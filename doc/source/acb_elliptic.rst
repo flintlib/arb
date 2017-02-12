@@ -48,6 +48,34 @@ Legendre incomplete elliptic integrals
     when `\phi = \frac{\pi}{2}`; that is,
     `F\left(\frac{\pi}{2}, m\right) = K(m)`.
 
+.. function:: void acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int pi, slong prec)
+
+    Evaluates the Legendre incomplete elliptic integral of the second kind,
+    given by
+
+     .. math ::
+
+        E(\phi,m) = \int_0^{\phi} \sqrt{1-m \sin^2 t} \, dt =
+                    \int_0^{\sin z}
+                    \frac{\sqrt{1-mt^2}}{\sqrt{1-t^2}} \, dt
+
+    on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
+    Outside this strip, the function extends quasi-periodically as
+
+    .. math ::
+
+        E(\phi + n \pi, m) = 2 n E(m) + E(\phi,m), n \in \mathbb{Z}.
+
+    Inside the standard strip, the function is computed via
+    the symmetric integrals `R_F` and `R_D`.
+
+    If the flag *pi* is set to 1, the variable `\phi` is replaced by
+    `\pi \phi`, changing the quasiperiod to 1.
+
+    The function reduces to a complete elliptic integral of the second kind
+    when `\phi = \frac{\pi}{2}`; that is,
+    `E\left(\frac{\pi}{2}, m\right) = E(m)`.
+
 Carlson symmetric elliptic integrals
 -------------------------------------------------------------------------------
 
