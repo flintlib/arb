@@ -126,6 +126,22 @@ acb_elliptic_pi_inc(acb_t res, const acb_t n, const acb_t phi, const acb_t m, in
         return;
     }
 
+    /* Fixme: the exact argument reduction sometimes
+       does not work when re(phi) = k/2 and we end up exactly on a branch cut,
+       presumably due to getting the wrong sign in R_J? Should
+       investigate and find a better solution. */
+    if (times_pi && !acb_is_real(phi))
+    {
+        acb_init(z);
+        arb_init(pi);
+        arb_const_pi(pi, prec);
+        acb_mul_arb(z, phi, pi, prec);
+        acb_elliptic_pi_inc(res, n, z, m, 0, prec);
+        acb_clear(z);
+        arb_clear(pi);
+        return;
+    }
+
     arb_init(x);
     arb_init(d);
     arb_init(pi);

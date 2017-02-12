@@ -51,8 +51,10 @@ int main()
         fmpz_randtest(k, state, 1 + n_randint(state, 100));
         arb_const_pi(pi, FLINT_MAX(prec1, prec2));
 
+        if (n_randint(state, 2))
+            arb_set_d(acb_realref(z1), -4.5 + n_randint(state, 10));
+
         /* test Pi(n,z,m) = Pi(n, z+pi k, m) - 2 k Pi(n, m) */
-        fmpz_set_ui(k, 3);
 
         if (times_pi)
         {
