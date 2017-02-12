@@ -17,6 +17,21 @@ fails to produce a finite result due to artificial internal singularities.
 Complete elliptic integrals
 -------------------------------------------------------------------------------
 
+.. function:: void acb_elliptic_pi(acb_t res, const acb_t n, const acb_t m, slong prec)
+
+    Evaluates the complete elliptic integral of the third kind
+
+     .. math ::
+
+        \Pi(n, m) = \int_0^{\pi/2}
+            \frac{dt}{(1-n \sin^2 t) \sqrt{1-m \sin^2 t}} =
+            \int_0^1
+            \frac{dt}{(1-nt^2) \sqrt{1-t^2} \sqrt{1-mt^2}}.
+
+    This implementation currently uses the same algorithm as the corresponding
+    incomplete integral. It is therefore less efficient than the implementations
+    of the first two complete elliptic integrals which use the AGM.
+
 Legendre incomplete elliptic integrals
 -------------------------------------------------------------------------------
 
@@ -56,7 +71,7 @@ Legendre incomplete elliptic integrals
      .. math ::
 
         E(\phi,m) = \int_0^{\phi} \sqrt{1-m \sin^2 t} \, dt =
-                    \int_0^{\sin z}
+                    \int_0^{\sin \phi}
                     \frac{\sqrt{1-mt^2}}{\sqrt{1-t^2}} \, dt
 
     on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
@@ -75,6 +90,35 @@ Legendre incomplete elliptic integrals
     The function reduces to a complete elliptic integral of the second kind
     when `\phi = \frac{\pi}{2}`; that is,
     `E\left(\frac{\pi}{2}, m\right) = E(m)`.
+
+.. function:: void acb_elliptic_pi_inc(acb_t res, const acb_t n, const acb_t phi, const acb_t m, int pi, slong prec)
+
+    Evaluates the Legendre incomplete elliptic integral of the third kind,
+    given by
+
+     .. math ::
+
+        \Pi(n, \phi, m) = \int_0^{\phi}
+            \frac{dt}{(1-n \sin^2 t) \sqrt{1-m \sin^2 t}} =
+            \int_0^{\sin \phi}
+            \frac{dt}{(1-nt^2) \sqrt{1-t^2} \sqrt{1-mt^2}}
+
+    on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
+    Outside this strip, the function extends quasi-periodically as
+
+    .. math ::
+
+        \Pi(n, \phi + k \pi, m) = 2 k \Pi(n,m) + \Pi(n,\phi,m), k \in \mathbb{Z}.
+
+    Inside the standard strip, the function is computed via
+    the symmetric integrals `R_F` and `R_J`.
+
+    If the flag *pi* is set to 1, the variable `\phi` is replaced by
+    `\pi \phi`, changing the quasiperiod to 1.
+
+    The function reduces to a complete elliptic integral of the third kind
+    when `\phi = \frac{\pi}{2}`; that is,
+    `\Pi\left(n, \frac{\pi}{2}, m\right) = \Pi(n, m)`.
 
 Carlson symmetric elliptic integrals
 -------------------------------------------------------------------------------
