@@ -85,7 +85,7 @@ Legendre incomplete elliptic integrals
             \frac{dt}{\left(\sqrt{1-t^2}\right)\left(\sqrt{1-mt^2}\right)}
 
     on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
-    Outside this strip, the function extends quasi-periodically as
+    Outside this strip, the function extends quasiperiodically as
 
     .. math ::
 
@@ -113,7 +113,7 @@ Legendre incomplete elliptic integrals
                     \frac{\sqrt{1-mt^2}}{\sqrt{1-t^2}} \, dt
 
     on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
-    Outside this strip, the function extends quasi-periodically as
+    Outside this strip, the function extends quasiperiodically as
 
     .. math ::
 
@@ -142,7 +142,7 @@ Legendre incomplete elliptic integrals
             \frac{dt}{(1-nt^2) \sqrt{1-t^2} \sqrt{1-mt^2}}
 
     on the standard strip `-\pi/2 \le \operatorname{Re}(\phi) \le \pi/2`.
-    Outside this strip, the function extends quasi-periodically as
+    Outside this strip, the function extends quasiperiodically as
 
     .. math ::
 
@@ -249,7 +249,7 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     `R_C(1, 1+x) = \operatorname{atan}(\sqrt{x})/\sqrt{x} = {}_2F_1(1,1/2,3/2,-x)`,
     which is needed in the evaluation of `R_J`.
 
-Weierstrass elliptic function
+Weierstrass elliptic functions
 -------------------------------------------------------------------------------
 
 .. function:: void acb_elliptic_p(acb_t res, const acb_t z, const acb_t tau, slong prec)
@@ -283,4 +283,29 @@ Weierstrass elliptic function
 
     Sets *res* to the Weierstrass elliptic function of the power series *z*,
     with periods 1 and *tau*, truncated to length *len*.
+
+.. function:: void acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec)
+
+    Computes the Weierstrass zeta function
+
+    .. math ::
+
+        \zeta(z, \tau) = \frac{1}{z} + \sum_{n^2+m^2 \ne 0}
+            \left[ \frac{1}{z-m-n\tau} + \frac{1}{m+n\tau} + \frac{z}{(m+n\tau)^2} \right]
+
+    which is quasiperiodic with `\zeta(z + 1, \tau) = \zeta(z, \tau) + \zeta(1/2, \tau)`
+    and `\zeta(z + \tau, \tau) = \zeta(z, \tau) + \zeta(\tau/2, \tau)`.
+
+.. function:: void acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec)
+
+    Computes the Weierstrass sigma function
+
+    .. math ::
+
+        \sigma(z, \tau) = z \prod_{n^2+m^2 \ne 0}
+            \left[ \left(1-\frac{z}{m+n\tau}\right)
+               \exp\left(\frac{z}{m+n\tau} + \frac{z^2}{2(m+n\tau)^2} \right) \right]
+
+    which is quasiperiodic with `\sigma(z + 1, \tau) = -e^{2 \zeta(1/2, \tau) (z+1/2)} \sigma(z, \tau)`
+    and `\sigma(z + \tau, \tau) = -e^{2 \zeta(\tau/2, \tau) (z+\tau/2)} \sigma(z, \tau)`.
 

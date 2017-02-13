@@ -54,6 +54,10 @@ void _acb_elliptic_p_series(acb_ptr res, acb_srcptr z, slong zlen, const acb_t t
 
 void acb_elliptic_p_series(acb_poly_t res, const acb_poly_t z, const acb_t tau, slong len, slong prec);
 
+void acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec);
+
+void acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec);
+
 #ifdef __cplusplus
 }
 #endif
