@@ -3,6 +3,11 @@
 **acb_elliptic.h** -- elliptic integrals and functions of complex variables
 ===============================================================================
 
+This module supports computation of elliptic (doubly periodic) functions,
+and their inverses, elliptic integrals.
+See :ref:`acb_modular.h <acb-modular>` for the closely related modular forms
+and Jacobi theta functions.
+
 Warning: incomplete elliptic integrals have very complicated
 branch structure when extended to complex variables.
 For some functions in this module, branch cuts may be
@@ -252,6 +257,15 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
 Weierstrass elliptic functions
 -------------------------------------------------------------------------------
 
+Elliptic functions may be defined on a general lattice
+`\Lambda = \{m 2\omega_1 + n 2\omega_2\ : m, n \in \mathbb{Z}\}`
+with half-periods `\omega_1, \omega_2`.
+We simplify by setting
+`2\omega_1 = 1, 2\omega_2 = \tau` with `\operatorname{im}(\tau) > 0`.
+To evaluate the functions on a general lattice, it is enough to make a
+linear change of variables.
+The main reference is chapter 23 in [NIST2012]_.
+
 .. function:: void acb_elliptic_p(acb_t res, const acb_t z, const acb_t tau, slong prec)
 
     Computes Weierstrass's elliptic function
@@ -283,6 +297,31 @@ Weierstrass elliptic functions
 
     Sets *res* to the Weierstrass elliptic function of the power series *z*,
     with periods 1 and *tau*, truncated to length *len*.
+
+
+.. function:: void acb_elliptic_invariants(acb_t g2, acb_t g3, const acb_t tau, slong prec)
+
+    Computes the lattice invariants `g_2, g_3`. The Weierstrass elliptic
+    function satisfies the differential equation
+    `[\wp'(z, \tau)]^2 = 4 [\wp(z,\tau)]^3 - g_2 \wp(z,\tau) - g_3`.
+    Up to constant factors, the lattice invariants are the first two
+    Eisenstein series (see :func:`acb_modular_eisenstein`).
+
+.. function:: void acb_elliptic_roots(acb_t e1, acb_t e2, acb_t e3, const acb_t tau, slong prec)
+
+    Computes the lattice roots `e_1, e_2, e_3`, which are the roots of
+    the polynomial `4z^3 - g_2 z - g_3`.
+
+.. function:: void acb_elliptic_inv_p(acb_t res, const acb_t z, const acb_t tau, slong prec)
+
+    Computes the inverse of the Weierstrass elliptic function, which
+    satisfies `\wp(\wp^{-1}(z, \tau), \tau) = z`. This function is given
+    by the elliptic integral
+
+    .. math ::
+
+        \wp^{-1}(z, \tau) = \frac{1}{2} \int_z^{\infty} \frac{dt}{\sqrt{(t-e_1)(t-e_2)(t-e_3)}}
+            = R_F(z-e_1,z-e_2,z-e_3).
 
 .. function:: void acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec)
 

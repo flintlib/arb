@@ -58,6 +58,12 @@ void acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec);
 
 void acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec);
 
+void acb_elliptic_roots(acb_t e1, acb_t e2, acb_t e3, const acb_t tau, slong prec);
+
+void acb_elliptic_invariants(acb_t g2, acb_t g3, const acb_t tau, slong prec);
+
+void acb_elliptic_inv_p(acb_t res, const acb_t z, const acb_t tau, slong prec);
+
 #ifdef __cplusplus
 }
 #endif
