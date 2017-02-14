@@ -19,8 +19,8 @@ acb_elliptic_rf(acb_t res, const acb_t x, const acb_t y, const acb_t z,
 {
     acb_t xx, yy, zz, sx, sy, sz, t;
     acb_t X, Y, Z, E2, E3;
-    mag_t err, err2;
-    slong k;
+    mag_t err, err2, prev_err;
+    slong k, wp, accx, accy, accz;
 
     if (!acb_is_finite(x) || !acb_is_finite(y) || !acb_is_finite(z))
     {
@@ -40,42 +40,60 @@ acb_elliptic_rf(acb_t res, const acb_t x, const acb_t y, const acb_t z,
     acb_init(t);
     mag_init(err);
     mag_init(err2);
+    mag_init(prev_err);
 
     acb_set(xx, x);
     acb_set(yy, y);
     acb_set(zz, z);
 
+    wp = prec + 20;
+
     /* must do at least one iteration */
     for (k = 0; k < prec; k++)
     {
-        acb_sqrt(sx, xx, prec);
-        acb_sqrt(sy, yy, prec);
-        acb_sqrt(sz, zz, prec);
+        accx = acb_rel_accuracy_bits(xx);
+        accy = acb_rel_accuracy_bits(yy);
+        accz = acb_rel_accuracy_bits(zz);
 
-        acb_add(t, sy, sz, prec);
-        acb_mul(t, t, sx, prec);
-        acb_addmul(t, sy, sz, prec);
+        wp = FLINT_MAX(accx, accy);
+        wp = FLINT_MAX(wp, accz);
+        wp = FLINT_MAX(wp, 0);
+        wp = FLINT_MIN(wp, prec);
+        wp += 20;
 
-        acb_add(xx, xx, t, prec);
-        acb_add(yy, yy, t, prec);
-        acb_add(zz, zz, t, prec);
+        acb_sqrt(sx, xx, wp);
+        acb_sqrt(sy, yy, wp);
+        acb_sqrt(sz, zz, wp);
+
+        acb_add(t, sy, sz, wp);
+        acb_mul(t, t, sx, wp);
+        acb_addmul(t, sy, sz, wp);
+
+        acb_add(xx, xx, t, wp);
+        acb_add(yy, yy, t, wp);
+        acb_add(zz, zz, t, wp);
 
         acb_mul_2exp_si(xx, xx, -2);
         acb_mul_2exp_si(yy, yy, -2);
         acb_mul_2exp_si(zz, zz, -2);
 
         /* Close enough? Quick estimate based on |x-y|/|x| and |x-z|/|x| */
-        acb_sub(t, xx, yy, prec);
+        /* We also terminate if there is no improvement. */
+
+        acb_sub(t, xx, yy, wp);
         acb_get_mag(err, t);
-        acb_sub(t, xx, zz, prec);
+        acb_sub(t, xx, zz, wp);
         acb_get_mag(err2, t);
         mag_max(err, err, err2);
         acb_get_mag_lower(err2, xx);
         mag_div(err, err, err2);
         mag_pow_ui(err, err, 8);
 
-        if (mag_cmp_2exp_si(err, -prec) < 0)
+        if (mag_cmp_2exp_si(err, -prec) < 0 ||
+                (k > 2 && mag_cmp(err, prev_err) > 0))
             break;
+
+        mag_set(prev_err, err);
     }
 
     /* X = 1-x/t, Y = 1-y/t, Z = -X-Y, t = (x+y+z)/3 */
@@ -142,7 +160,7 @@ acb_elliptic_rf(acb_t res, const acb_t x, const acb_t y, const acb_t z,
         acb_add_error_mag(sx, err);
 
     acb_rsqrt(t, t, prec);
-    acb_mul(res, t, sx, prec);
+    acb_mul(res, sx, t, prec);
 
     acb_clear(xx); acb_clear(yy); acb_clear(zz);
     acb_clear(sx); acb_clear(sy); acb_clear(sz);
@@ -150,5 +168,6 @@ acb_elliptic_rf(acb_t res, const acb_t x, const acb_t y, const acb_t z,
     acb_clear(t);
     mag_clear(err);
     mag_clear(err2);
+    mag_clear(prev_err);
 }
 
