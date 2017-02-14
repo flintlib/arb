@@ -225,6 +225,10 @@ Precision and comparisons
 
     Returns nonzero iff *z* is an exact integer.
 
+.. function:: int acb_is_int_2exp_si(const acb_t x, slong e)
+
+    Returns nonzero iff *z* exactly equals `n 2^e` for some integer *n*.
+
 .. function:: int acb_equal(const acb_t x, const acb_t y)
 
     Returns nonzero iff *x* and *y* are identical as sets, i.e.

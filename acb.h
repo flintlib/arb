@@ -110,6 +110,12 @@ acb_is_int(const acb_t z)
     return arb_is_zero(acb_imagref(z)) && arb_is_int(acb_realref(z));
 }
 
+ACB_INLINE int
+acb_is_int_2exp_si(const acb_t z, slong e)
+{
+    return arb_is_zero(acb_imagref(z)) && arb_is_int_2exp_si(acb_realref(z), e);
+}
+
 ACB_INLINE void
 acb_zero(acb_t z)
 {

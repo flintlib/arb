@@ -291,6 +291,13 @@ arb_is_int(const arb_t x)
 }
 
 ARB_INLINE int
+arb_is_int_2exp_si(const arb_t x, slong e)
+{
+    return mag_is_zero(arb_radref(x)) &&
+           arf_is_int_2exp_si(arb_midref(x), e);
+}
+
+ARB_INLINE int
 arb_contains_zero(const arb_t x)
 {
     return arf_cmpabs_mag(arb_midref(x), arb_radref(x)) <= 0;

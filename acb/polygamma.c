@@ -30,7 +30,7 @@ acb_polygamma(acb_t res, const acb_t s, const acb_t z, slong prec)
         acb_gamma(u, t, prec);
         acb_hurwitz_zeta(t, t, z, prec);
 
-        if (arf_is_int_2exp_si(arb_midref(acb_realref(s)), 1))
+        if (acb_is_int_2exp_si(s, 1))
             acb_neg(t, t);
 
         acb_mul(res, t, u, prec);

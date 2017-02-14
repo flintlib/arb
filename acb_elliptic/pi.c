@@ -113,9 +113,7 @@ acb_elliptic_pi_inc(acb_t res, const acb_t n, const acb_t phi, const acb_t m, in
         return;
     }
 
-    if (acb_is_zero(phi) || (times_pi && acb_is_real(phi)
-        && arb_is_exact(acb_realref(phi)) && 
-        arf_is_int_2exp_si(arb_midref(acb_realref(phi)), -1)))
+    if (acb_is_zero(phi) || (times_pi && acb_is_int_2exp_si(phi, -1)))
     {
         acb_t t;
         acb_init(t);

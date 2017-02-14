@@ -523,6 +523,10 @@ Comparisons
 
     Returns nonzero iff *x* is an exact integer.
 
+.. function:: int arb_is_int_2exp_si(const arb_t x, slong e)
+
+    Returns nonzero iff *x* exactly equals `n 2^e` for some integer *n*.
+
 .. function:: int arb_equal(const arb_t x, const arb_t y)
 
     Returns nonzero iff *x* and *y* are equal as balls, i.e. have both the
