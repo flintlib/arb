@@ -17,7 +17,10 @@ acb_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec)
 {
     acb_struct t0[4], tz[4];
     acb_t t;
-    int i;
+    int i, real;
+
+    real = acb_is_real(z) && arb_is_int_2exp_si(acb_realref(tau), -1) &&
+                arb_is_positive(acb_imagref(tau));
 
     acb_init(t);
 
@@ -46,6 +49,9 @@ acb_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec)
     acb_const_pi(t, prec);
     acb_mul(t, t, t, prec);
     acb_mul(r, r, t, prec);
+
+    if (real)
+        arb_zero(acb_imagref(r));
 
     acb_clear(t);
 

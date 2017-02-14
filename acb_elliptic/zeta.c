@@ -40,13 +40,22 @@ void
 acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec)
 {
     acb_ptr t;
+    int real;
+
+    real = acb_is_real(z) && arb_is_int_2exp_si(acb_realref(tau), -1) &&
+                arb_is_positive(acb_imagref(tau));
+
     t = _acb_vec_init(8);
+
     acb_modular_theta_zpx_notransform(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
     eta1(t + 2, NULL, tau, prec);
     acb_mul_2exp_si(t + 2, t + 2, 1);
     acb_mul(t + 2, t + 2, z, prec);
     acb_div(t, t + 1, t, prec);
     acb_add(res, t, t + 2, prec);
+    if (real)
+        arb_zero(acb_imagref(res));
+
     _acb_vec_clear(t, 8);
 }
 
@@ -55,7 +64,13 @@ void
 acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec)
 {
     acb_ptr t;
+    int real;
+
+    real = acb_is_real(z) && arb_is_int_2exp_si(acb_realref(tau), -1) &&
+                arb_is_positive(acb_imagref(tau));
+
     t = _acb_vec_init(8);
+
     acb_modular_theta_zpx_notransform(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
     eta1(t + 2, t + 3, tau, prec);
     acb_mul(t + 4, z, z, prec);
@@ -63,6 +78,9 @@ acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec)
     acb_exp(t + 2, t + 2, prec);
     acb_div(t, t, t + 3, prec);
     acb_mul(res, t, t + 2, prec);
+    if (real)
+        arb_zero(acb_imagref(res));
+
     _acb_vec_clear(t, 8);
 }
 

@@ -51,6 +51,8 @@ acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong p
     acb_t t01, t02, t03, t04;
     acb_ptr tz1, tz2, tz3, tz4;
     acb_t t;
+    int real;
+    slong k;
 
     if (len < 1)
         return;
@@ -60,6 +62,9 @@ acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong p
         acb_elliptic_p(r, z, tau, prec);
         return;
     }
+
+    real = acb_is_real(z) && arb_is_int_2exp_si(acb_realref(tau), -1) &&
+                arb_is_positive(acb_imagref(tau));
 
     acb_init(t);
 
@@ -98,6 +103,12 @@ acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong p
     acb_const_pi(t, prec);
     acb_mul(t, t, t, prec);
     _acb_vec_scalar_mul(r, tz1, len, t, prec);
+
+    if (real)
+    {
+        for (k = 0; k < len; k++)
+            arb_zero(acb_imagref(r + k));
+    }
 
     acb_clear(t);
 
