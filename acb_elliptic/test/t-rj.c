@@ -122,7 +122,41 @@ int main()
         acb_randtest(x, state, 1 + n_randint(state, 300), 1 + n_randint(state, 30));
         acb_randtest(y, state, 1 + n_randint(state, 300), 1 + n_randint(state, 30));
         acb_randtest(z, state, 1 + n_randint(state, 300), 1 + n_randint(state, 30));
+
+        acb_elliptic_rj(r1, x, y, z, z, 0, prec1);
+        acb_set(p, z);
+        acb_elliptic_rj(r2, x, y, z, p, 0, prec2);
+
+        if (!acb_overlaps(r1, r2))
+        {
+            flint_printf("FAIL: overlap R_D\n\n");
+            flint_printf("x = "); acb_printd(x, 30); flint_printf("\n\n");
+            flint_printf("y = "); acb_printd(y, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("p = "); acb_printd(p, 30); flint_printf("\n\n");
+            flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
+            flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
+            abort();
+        }
+
         acb_randtest(p, state, 1 + n_randint(state, 300), 1 + n_randint(state, 30));
+
+        /* apply conditions that make the algorithm valid */
+        if (n_randint(state, 2))
+        {
+            if (arb_is_zero(acb_imagref(y)))
+                arb_one(acb_imagref(y));
+            acb_conj(z, y);
+            arb_zero(acb_imagref(x));
+            arb_abs(acb_realref(x), acb_realref(x));
+        }
+        else
+        {
+            arb_abs(acb_realref(x), acb_realref(x));
+            arb_abs(acb_realref(y), acb_realref(y));
+            arb_abs(acb_realref(z), acb_realref(z));
+            arb_abs(acb_realref(p), acb_realref(p));
+        }
 
         acb_elliptic_rj(r1, x, y, z, p, 0, prec1);
 
@@ -151,22 +185,6 @@ int main()
         if (!acb_overlaps(r1, r2))
         {
             flint_printf("FAIL: overlap\n\n");
-            flint_printf("x = "); acb_printd(x, 30); flint_printf("\n\n");
-            flint_printf("y = "); acb_printd(y, 30); flint_printf("\n\n");
-            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
-            flint_printf("p = "); acb_printd(p, 30); flint_printf("\n\n");
-            flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
-            flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
-            abort();
-        }
-
-        acb_elliptic_rj(r1, x, y, z, z, 0, prec1);
-        acb_set(p, z);
-        acb_elliptic_rj(r2, x, y, z, p, 0, prec2);
-
-        if (!acb_overlaps(r1, r2))
-        {
-            flint_printf("FAIL: overlap R_D\n\n");
             flint_printf("x = "); acb_printd(x, 30); flint_printf("\n\n");
             flint_printf("y = "); acb_printd(y, 30); flint_printf("\n\n");
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
