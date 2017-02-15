@@ -16,6 +16,7 @@ acb_sqrt(acb_t y, const acb_t x, slong prec)
 {
     arb_t r, t, u;
     slong wp;
+    int done;
 
 #define a acb_realref(x)
 #define b acb_imagref(x)
@@ -64,32 +65,70 @@ acb_sqrt(acb_t y, const acb_t x, slong prec)
     arb_init(t);
     arb_init(u);
 
+    /* r = |a+bi| */
     acb_abs(r, x, wp);
-    arb_add(t, r, a, wp);
 
-    if (arb_rel_accuracy_bits(t) > 8)
+    done = 0;
+
+    if (arf_sgn(arb_midref(a)) >= 0)
     {
-        /* sqrt(a+bi) = sqrt((r+a)/2) + b/sqrt(2*(r+a))*i, r = |a+bi| */
+        arb_add(t, r, a, wp);
 
-        arb_mul_2exp_si(u, t, 1);
-        arb_sqrt(u, u, wp);
-        arb_div(d, b, u, prec);
+        if (arb_rel_accuracy_bits(t) > 8)
+        {
+            /* sqrt(a+bi) = sqrt((r+a)/2) + b/sqrt(2*(r+a))*i */
+            arb_mul_2exp_si(u, t, 1);
+            arb_sqrt(u, u, wp);
+            arb_div(d, b, u, prec);
 
-        arb_set_round(c, u, prec);
-        arb_mul_2exp_si(c, c, -1);
+            arb_set_round(c, u, prec);
+            arb_mul_2exp_si(c, c, -1);
+            done = 1;
+        }
+        else
+        {
+            arb_sub(u, r, a, wp);
+        }
+    }
+    else if (!arb_contains_zero(b))
+    {
+        arb_sub(u, r, a, wp);
+
+        if (arb_rel_accuracy_bits(u) > 8)
+        {
+            /* sqrt(a+bi) = |b|/sqrt(2*(r-a)) + sgn(b)*sqrt((r-a)/2)*i */
+            int sgn = arf_sgn(arb_midref(b));
+
+            arb_mul_2exp_si(t, u, 1);
+            arb_sqrt(t, t, wp);
+            arb_div(c, b, t, prec);
+            arb_abs(c, c);
+
+            arb_set_round(d, t, prec);
+            arb_mul_2exp_si(d, d, -1);
+            if (sgn < 0)
+                arb_neg(d, d);
+            done = 1;
+        }
+        else
+        {
+            arb_add(t, r, a, wp);
+        }
     }
     else
     {
-        /*
-            sqrt(a+bi) = sqrt((r+a)/2) + (b/|b|)*sqrt((r-a)/2)*i
-                                         (sign)
-        */
-
-        arb_mul_2exp_si(t, t, -1);
-
+        arb_add(t, r, a, wp);
         arb_sub(u, r, a, wp);
-        arb_mul_2exp_si(u, u, -1);
+    }
 
+    /* t = r+a, u = r-a */
+
+    if (!done)
+    {
+        /* sqrt(a+bi) = sqrt((r+a)/2) + (b/|b|)*sqrt((r-a)/2)*i
+                                        (sign)                      */
+        arb_mul_2exp_si(t, t, -1);
+        arb_mul_2exp_si(u, u, -1);
         arb_sqrtpos(c, t, prec);
 
         if (arb_is_nonnegative(b))
