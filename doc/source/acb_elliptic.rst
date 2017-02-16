@@ -231,14 +231,17 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     `x,y,z,p` are close enough to use a multivariate Taylor polynomial
     of total degree 7.
 
-    The duplication algorithm might not be correct for all possible
-    combinations of complex variables, i.e. taking square roots
-    during the computation might introduce spurious branch cuts.
+    The duplication algorithm is not correct for all possible
+    combinations of complex variables, since the square roots taken
+    during the computation can introduce spurious branch cuts.
     According to [Car1995]_, a sufficient (but not necessary) condition
     for correctness is that *x*, *y*, *z* have nonnegative
     real part and that *p* has positive real part.
-    In other cases, the algorithm *may* still be correct, but the user
-    should verify the results.
+
+    In other cases, the algorithm *might* still be correct, but no attempt
+    is made to check this; it is up to the user to verify that
+    the duplication algorithm is appropriate for the given parameters
+    before calling this function.
 
     The special case `R_D(x, y, z) = R_J(x, y, z, z)`
     may be computed by setting *z* and *p* to the same variable.
