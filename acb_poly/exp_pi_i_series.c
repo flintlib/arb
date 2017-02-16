@@ -43,7 +43,7 @@ _acb_poly_exp_pi_i_series(acb_ptr f, acb_srcptr h, slong hlen, slong len, slong 
         acb_exp_pi_i(t + hlen, h, prec);
         _acb_poly_exp_series(f, t, hlen, len, prec);
         _acb_vec_scalar_mul(f, f, len, t + hlen, prec);
-        _acb_vec_clear(t, hlen);
+        _acb_vec_clear(t, hlen + 1);
     }
 }
 
