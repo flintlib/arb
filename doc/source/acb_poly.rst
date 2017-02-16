@@ -784,6 +784,14 @@ Elementary functions
     The underscore methods support aliasing and allow the input to be
     shorter than the output, but require the lengths to be nonzero.
 
+.. function:: void _acb_poly_exp_pi_i_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void acb_poly_exp_pi_i_series(acb_poly_t f, const acb_poly_t h, slong n, slong prec)
+
+    Sets *f* to the power series `\exp(\pi i h)` truncated to length *n*.
+    The underscore method supports aliasing and allows the input to be
+    shorter than the output, but requires the lengths to be nonzero.
+
 .. function:: void _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec, int times_pi)
 
 .. function:: void acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, slong n, slong prec, int times_pi)

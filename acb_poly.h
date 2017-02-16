@@ -580,6 +580,9 @@ void acb_poly_exp_series_basecase(acb_poly_t f, const acb_poly_t h, slong n, slo
 void _acb_poly_exp_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec);
 void acb_poly_exp_series(acb_poly_t f, const acb_poly_t h, slong n, slong prec);
 
+void _acb_poly_exp_pi_i_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec);
+void acb_poly_exp_pi_i_series(acb_poly_t f, const acb_poly_t h, slong n, slong prec);
+
 void _acb_poly_sinh_cosh_series_basecase(acb_ptr s, acb_ptr c, const acb_srcptr h, slong hlen, slong n, slong prec);
 void acb_poly_sinh_cosh_series_basecase(acb_poly_t s, acb_poly_t c, const acb_poly_t h, slong n, slong prec);
 void _acb_poly_sinh_cosh_series_exponential(acb_ptr s, acb_ptr c, const acb_srcptr h, slong hlen, slong n, slong prec);
