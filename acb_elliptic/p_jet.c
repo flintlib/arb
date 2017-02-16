@@ -14,38 +14,6 @@
 #include "acb_poly.h"
 
 void
-acb_modular_theta_zpx_notransform(acb_ptr theta1, acb_ptr theta2,
-    acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau,
-    slong len, slong prec)
-{
-    acb_t q, q4, w;
-    int w_is_unit;
-
-    acb_init(q);
-    acb_init(q4);
-    acb_init(w);
-
-    /* compute q_{1/4}, q */
-    acb_mul_2exp_si(q4, tau, -2);
-    acb_exp_pi_i(q4, q4, prec);
-    acb_pow_ui(q, q4, 4, prec);
-
-    /* compute w */
-    acb_exp_pi_i(w, z, prec);
-    w_is_unit = arb_is_zero(acb_imagref(z));
-
-    /* evaluate theta functions */
-    acb_modular_theta_sum(theta1, theta2, theta3, theta4,
-        w, w_is_unit, q, len, prec);
-    _acb_vec_scalar_mul(theta1, theta1, len, q4, prec);
-    _acb_vec_scalar_mul(theta2, theta2, len, q4, prec);
-
-    acb_clear(q);
-    acb_clear(q4);
-    acb_clear(w);
-}
-
-void
 acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong prec)
 {
     acb_t t01, t02, t03, t04;
@@ -78,14 +46,14 @@ acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong p
     tz3 = _acb_vec_init(len);
     tz4 = _acb_vec_init(len);
 
-    acb_modular_theta_zpx_notransform(tz1, tz2, tz3, tz4, z, tau, len, prec);
+    acb_modular_theta_jet(tz1, tz2, tz3, tz4, z, tau, len, prec);
 
     /* [theta_4(z) / theta_1(z)]^2 */
     _acb_poly_div_series(tz2, tz4, len, tz1, len, len, prec);
     _acb_poly_mullow(tz1, tz2, len, tz2, len, len, prec);
 
     acb_zero(t);
-    acb_modular_theta_notransform(t01, t02, t03, t04, t, tau, prec);
+    acb_modular_theta(t01, t02, t03, t04, t, tau, prec);
 
     /* [theta_2(0) * theta_3(0)] ^2 */
     acb_mul(t, t02, t03, prec);

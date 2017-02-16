@@ -12,11 +12,6 @@
 #include "acb_elliptic.h"
 #include "acb_modular.h"
 
-void
-acb_modular_theta_zpx_notransform(acb_ptr theta1, acb_ptr theta2,
-    acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau,
-    slong len, slong prec);
-
 /* eta1 = (-1/6) theta1'''(0) / theta1'(0) */
 static void
 eta1(acb_t res, acb_t theta1, const acb_t tau, slong prec)
@@ -25,7 +20,7 @@ eta1(acb_t res, acb_t theta1, const acb_t tau, slong prec)
     acb_t z;
     acb_init(z);
     theta = _acb_vec_init(16);
-    acb_modular_theta_zpx_notransform(theta,
+    acb_modular_theta_jet(theta,
         theta + 4, theta + 8, theta + 12, z, tau, 4, prec);
     if (theta1 != NULL)
         acb_set(theta1, theta + 1);
@@ -47,7 +42,7 @@ acb_elliptic_zeta(acb_t res, const acb_t z, const acb_t tau, slong prec)
 
     t = _acb_vec_init(8);
 
-    acb_modular_theta_zpx_notransform(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
+    acb_modular_theta_jet(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
     eta1(t + 2, NULL, tau, prec);
     acb_mul_2exp_si(t + 2, t + 2, 1);
     acb_mul(t + 2, t + 2, z, prec);
@@ -71,7 +66,7 @@ acb_elliptic_sigma(acb_t res, const acb_t z, const acb_t tau, slong prec)
 
     t = _acb_vec_init(8);
 
-    acb_modular_theta_zpx_notransform(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
+    acb_modular_theta_jet(t, t + 2, t + 4, t + 6, z, tau, 2, prec);
     eta1(t + 2, t + 3, tau, prec);
     acb_mul(t + 4, z, z, prec);
     acb_mul(t + 2, t + 2, t + 4, prec);

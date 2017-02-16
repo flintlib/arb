@@ -154,6 +154,14 @@ void acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t theta3, acb_t theta4, const acb_t z, const acb_t tau,
     slong prec);
 
+void acb_modular_theta_jet_notransform(acb_ptr theta1, acb_ptr theta2,
+    acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau,
+    slong len, slong prec);
+
+void acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
+    acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau,
+    slong len, slong prec);
+
 void acb_modular_j(acb_t z, const acb_t tau, slong prec);
 
 int acb_modular_epsilon_arg(const psl2z_t g);
