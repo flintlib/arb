@@ -18,9 +18,19 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
     arf_t one_minus_eps;
     acb_t tau_prime, t1, t2, t3, t4, q;
     slong m, n;
+    int real;
 
     if (len < 1)
         return;
+
+    if (!arb_is_positive(acb_imagref(tau)) || !arb_is_finite(acb_realref(tau)))
+    {
+        _acb_vec_indeterminate(r, len);
+        return;
+    }
+
+
+    real = arb_is_int_2exp_si(acb_realref(tau), -1);
 
     psl2z_init(g);
     arf_init(one_minus_eps);
@@ -108,6 +118,13 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
             acb_mul(t2, t1, t2, prec);
             acb_mul(r + 1, r + 1, t2, prec);
         }
+    }
+
+    if (real)
+    {
+        arb_zero(acb_imagref(r));
+        if (len > 1)
+            arb_zero(acb_imagref(r + 1));
     }
 
     /* compute more coefficients using recurrence */
