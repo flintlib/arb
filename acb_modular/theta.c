@@ -55,6 +55,64 @@ acb_modular_theta(acb_t theta1, acb_t theta2,
     acb_t z_prime, tau_prime, q, q4, w, A, B;
     acb_struct thetas[4];
     int w_is_unit, R[4], S[4], C;
+    int t1r, t1i, t2r, t2i, t3r, t4r;
+
+    if (!acb_is_finite(z) || !acb_is_finite(tau) ||
+        !arb_is_positive(acb_imagref(tau)))
+    {
+        acb_indeterminate(theta1);
+        acb_indeterminate(theta2);
+        acb_indeterminate(theta3);
+        acb_indeterminate(theta4);
+        return;
+    }
+
+    /*
+    special cases when real(tau) is an integer n:
+
+    z is real:
+        theta1    real      if n mod 4 = 0
+        theta1    imaginary if n mod 4 = 2
+        theta2    real      if n mod 4 = 0
+        theta2    imaginary if n mod 4 = 2
+        theta3    real      always
+        theta4    real      always
+
+    z is imaginary:
+        theta1    real      if n mod 4 = 2
+        theta1    imaginary if n mod 4 = 0
+        theta2    real      if n mod 4 = 0
+        theta2    imaginary if n mod 4 = 2
+        theta3    real      always
+        theta4    real      always
+    */
+    t1r = t1i = t2r = t2i = t3r = t4r = 0;
+
+    if (arb_is_int(acb_realref(tau)))
+    {
+        int val;
+
+        if (arb_is_int_2exp_si(acb_realref(tau), 2))
+            val = 2;
+        else if  (arb_is_int_2exp_si(acb_realref(tau), 1))
+            val = 1;
+        else
+            val = 0;
+
+        if (arb_is_zero(acb_imagref(z)))
+        {
+            t3r = t4r = 1;
+            if (val == 2) t1r = t2r = 1;
+            if (val == 1) t1i = t2i = 1;
+        }
+
+        if (arb_is_zero(acb_realref(z)))
+        {
+            t3r = t4r = 1;
+            if (val == 2) t1i = t2r = 1;
+            if (val == 1) t1r = t2i = 1;
+        }
+    }
 
     psl2z_init(g);
     fmpq_init(t);
@@ -140,6 +198,13 @@ acb_modular_theta(acb_t theta1, acb_t theta2,
         acb_mul(theta3, theta3, A, prec);
         acb_mul(theta4, theta4, A, prec);
     }
+
+    if (t1r) arb_zero(acb_imagref(theta1));
+    if (t1i) arb_zero(acb_realref(theta1));
+    if (t2r) arb_zero(acb_imagref(theta2));
+    if (t2i) arb_zero(acb_realref(theta2));
+    if (t3r) arb_zero(acb_imagref(theta3));
+    if (t4r) arb_zero(acb_imagref(theta4));
 
     psl2z_clear(g);
     fmpq_clear(t);

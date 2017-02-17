@@ -39,6 +39,14 @@ int main()
 
         acb_randtest(tau, state, prec0, e0);
         acb_randtest(z, state, prec0, e0);
+        arb_abs(acb_imagref(tau), acb_imagref(tau));
+
+        if (n_randint(state, 3) == 0)
+            arb_set_si(acb_realref(tau), -10 + n_randint(state, 20));
+        if (n_randint(state, 3) == 0)
+            arb_zero(acb_imagref(z));
+        if (n_randint(state, 3) == 0)
+            arb_zero(acb_realref(z));
 
         acb_modular_theta(t1, t2, t3, t4, z, tau, prec1);
         acb_modular_theta_notransform(t1b, t2b, t3b, t4b, z, tau, prec2);
