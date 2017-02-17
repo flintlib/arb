@@ -29,7 +29,6 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
         return;
     }
 
-
     real = arb_is_int_2exp_si(acb_realref(tau), -1);
 
     psl2z_init(g);

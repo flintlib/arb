@@ -17,6 +17,15 @@ acb_modular_j(acb_t z, const acb_t tau, slong prec)
     psl2z_t g;
     arf_t one_minus_eps;
     acb_t tau_prime, t2, t3, t4, q;
+    int real;
+
+    if (!arb_is_positive(acb_imagref(tau)) || !arb_is_finite(acb_realref(tau)))
+    {
+        acb_indeterminate(z);
+        return;
+    }
+
+    real = arb_is_int_2exp_si(acb_realref(tau), -1);
 
     psl2z_init(g);
     arf_init(one_minus_eps);
@@ -58,6 +67,9 @@ acb_modular_j(acb_t z, const acb_t tau, slong prec)
 
     acb_div(z, t2, z, prec);
     acb_mul_2exp_si(z, z, 5);
+
+    if (real)
+        arb_zero(acb_imagref(z));
 
     psl2z_clear(g);
     arf_clear(one_minus_eps);
