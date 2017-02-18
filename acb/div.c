@@ -79,7 +79,7 @@ acb_div(acb_t z, const acb_t x, const acb_t y, slong prec)
     }
     else
     {
-        if (prec > 256 && acb_bits(y) <= prec / 2)
+        if (prec > 256 && acb_bits(y) <= prec / 2 && acb_is_exact(y))
         {
             arb_t t, u, v;
 
