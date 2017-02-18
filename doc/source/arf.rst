@@ -596,6 +596,11 @@ Addition and multiplication
     Sets `z = z - x \times y`, rounded to *prec* bits in the direction specified by *rnd*,
     returning nonzero iff the operation is inexact.
 
+.. function:: int arf_sosq(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
+
+    Sets `z = x^2 + y^2`, rounded to *prec* bits in the direction specified by *rnd*,
+    returning nonzero iff the operation is inexact.
+
 Summation
 -------------------------------------------------------------------------------
 
