@@ -11,36 +11,6 @@
 
 #include "acb_modular.h"
 
-double
-mag_get_log2_d_approx(const mag_t x)
-{
-    if (mag_is_zero(x))
-    {
-        return COEFF_MIN;
-    }
-    else if (mag_is_inf(x))
-    {
-        return COEFF_MAX;
-    }
-    else if (COEFF_IS_MPZ(MAG_EXP(x)))
-    {
-        if (fmpz_sgn(MAG_EXPREF(x)) < 0)
-            return COEFF_MIN;
-        else
-            return COEFF_MAX;
-    }
-    else
-    {
-        slong e = MAG_EXP(x);
-
-        if (e < -20 || e > 20)
-            return e;
-        else
-            return e + 1.4426950408889634074 *
-                mag_d_log_upper_bound(MAG_MAN(x) * ldexp(1.0, -MAG_BITS));
-    }
-}
-
 void
 acb_modular_theta_sum(acb_ptr theta1,
                           acb_ptr theta2,
@@ -84,7 +54,7 @@ acb_modular_theta_sum(acb_ptr theta1,
         acb_inv(v, w, prec);
 
     acb_get_mag(qmag, q);
-    log2q_approx = mag_get_log2_d_approx(qmag);
+    log2q_approx = mag_get_d_log2_approx(qmag);
 
     if (w_is_unit)
     {
@@ -97,7 +67,7 @@ acb_modular_theta_sum(acb_ptr theta1,
         acb_get_mag(wmag, w);
         acb_get_mag(vmag, v);
         mag_max(wmag, wmag, vmag);
-        log2w_approx = mag_get_log2_d_approx(wmag);
+        log2w_approx = mag_get_d_log2_approx(wmag);
     }
 
     if (log2q_approx >= 0.0)

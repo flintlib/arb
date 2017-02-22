@@ -11,8 +11,6 @@
 
 #include "acb_modular.h"
 
-double mag_get_log2_d_approx(const mag_t x);
-
 static const int pentagonal_best_m[] = {
   2, 5, 7, 11, 13, 17, 19, 23, 25, 35,
   55, 65, 77, 91, 119, 133, 143, 175, 275, 325,
@@ -227,7 +225,7 @@ acb_modular_eta_sum(acb_t eta, const acb_t q, slong prec)
     q_is_real = arb_is_zero(acb_imagref(q));
 
     acb_get_mag(qmag, q);
-    log2q_approx = mag_get_log2_d_approx(qmag);
+    log2q_approx = mag_get_d_log2_approx(qmag);
 
     if (log2q_approx >= 0.0)
     {

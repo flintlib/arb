@@ -11,8 +11,6 @@
 
 #include "acb_modular.h"
 
-double mag_get_log2_d_approx(const mag_t x);
-
 void
 acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
     const acb_t q, slong N, slong prec)
@@ -125,7 +123,7 @@ acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
     acb_modular_fill_addseq(tab, N);
 
     acb_get_mag(qmag, q);
-    log2q_approx = mag_get_log2_d_approx(qmag);
+    log2q_approx = mag_get_d_log2_approx(qmag);
 
     for (k = 0; k < N; k++)
     {

@@ -11,8 +11,6 @@
 
 #include "acb_hypgeom.h"
 
-double mag_get_log2_d_approx(const mag_t x);
-
 #define D_ABS(x) ((x) < 0.0 ? (-(x)) : (x))
 
 int
@@ -108,7 +106,7 @@ acb_hypgeom_pfq_choose_n_max(acb_srcptr a, slong p,
     bim = bre + q;
 
     acb_get_mag(zmag, z);
-    log2_z = mag_get_log2_d_approx(zmag);
+    log2_z = mag_get_d_log2_approx(zmag);
 
     n_skip = 1;
     n_min = 1;
@@ -217,7 +215,7 @@ acb_hypgeom_pfq_series_choose_n(const acb_poly_struct * a, slong p,
     bim = bre + q;
 
     acb_get_mag(zmag, z->coeffs);
-    log2_z = mag_get_log2_d_approx(zmag);
+    log2_z = mag_get_d_log2_approx(zmag);
 
     n_skip = 1;
     n_min = 1;

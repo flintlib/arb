@@ -546,6 +546,8 @@ MAG_INLINE void mag_set_d(mag_t z, double x)
 
 double mag_get_d(const mag_t z);
 
+double mag_get_d_log2_approx(const mag_t x);
+
 /* TODO: document */
 double mag_d_log_upper_bound(double x);
 double mag_d_log_lower_bound(double x);

@@ -11,8 +11,6 @@
 
 #include "acb_modular.h"
 
-double mag_get_log2_d_approx(const mag_t x);
-
 static const int square_best_m[] = {
   2, 3, 4, 8, 12, 16, 32, 48, 80, 96, 
   112, 144, 240, 288, 336, 480, 560, 576, 720, 1008, 
@@ -95,7 +93,7 @@ acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
 
     mag_init(qmag);
     acb_get_mag(qmag, q);
-    log2q_approx = mag_get_log2_d_approx(qmag);
+    log2q_approx = mag_get_d_log2_approx(qmag);
     mag_clear(qmag);
 
     acb_init(tmp1);

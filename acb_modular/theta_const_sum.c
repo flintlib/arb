@@ -11,8 +11,6 @@
 
 #include "acb_modular.h"
 
-double mag_get_log2_d_approx(const mag_t x);
-
 void
 acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4,
     const acb_t q, slong prec)
@@ -26,7 +24,7 @@ acb_modular_theta_const_sum(acb_t theta2, acb_t theta3, acb_t theta4,
     mag_init(err);
 
     acb_get_mag(qmag, q);
-    log2q_approx = mag_get_log2_d_approx(qmag);
+    log2q_approx = mag_get_d_log2_approx(qmag);
 
     is_real = arb_is_zero(acb_imagref(q));
     is_real_or_imag = is_real || arb_is_zero(acb_realref(q));
