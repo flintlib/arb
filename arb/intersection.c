@@ -17,7 +17,7 @@ arb_intersection(arb_t z, const arb_t x, const arb_t y, slong prec)
     arf_t left, right, t, xr, yr;
     int result;
 
-    if (arf_is_nan(arb_midref(x)) || arf_is_nan(arb_midref(y)))
+    if (arb_is_indeterminate(x) || arb_is_indeterminate(y))
     {
         arb_indeterminate(z);
         return 1;

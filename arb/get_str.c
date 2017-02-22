@@ -308,7 +308,7 @@ arb_get_str_parts(int * negative, char **mid_digits, fmpz_t mid_exp,
 
         fmpz_zero(mid_exp);
         *mid_digits = flint_malloc(4);
-        if (arf_is_nan(arb_midref(x)))
+        if (arb_is_indeterminate(x))
             strcpy(*mid_digits, "nan");
         else
             strcpy(*mid_digits, "0");
@@ -439,7 +439,7 @@ char * arb_get_str(const arb_t x, slong n, ulong flags)
     {
         res = flint_malloc(10);
 
-        if (arf_is_nan(arb_midref(x)))
+        if (arb_is_indeterminate(x))
             strcpy(res, "nan");
         else
             strcpy(res, "[+/- inf]");

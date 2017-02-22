@@ -515,6 +515,10 @@ Comparisons
     Returns nonzero iff the midpoint and radius of *x* are both finite
     floating-point numbers, i.e. not infinities or NaN.
 
+.. function:: int arb_is_indeterminate(const arb_t x)
+
+    Returns nonzero iff the midpoint of *x* is NaN.
+
 .. function:: int arb_is_exact(const arb_t x)
 
     Returns nonzero iff the radius of *x* is zero.

@@ -33,7 +33,7 @@ int main()
         arb_get_mag(m, a);
         MAG_CHECK_BITS(m)
 
-        if (arf_is_nan(arb_midref(a)))
+        if (arb_is_indeterminate(a))
             arf_nan(arb_midref(b));
         else
             arf_zero(arb_midref(b));

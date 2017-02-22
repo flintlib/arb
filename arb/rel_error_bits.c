@@ -19,7 +19,7 @@ arb_rel_error_bits(const arb_t x)
 
     if (mag_is_zero(arb_radref(x)))
     {
-        if (arf_is_nan(arb_midref(x)))
+        if (arb_is_indeterminate(x))
             return ARF_PREC_EXACT;
         else
             return -ARF_PREC_EXACT;

@@ -23,8 +23,8 @@ arb_contains(const arb_t x, const arb_t y)
     if (arb_is_exact(y))
         return arb_contains_arf(x, arb_midref(y));
 
-    if (arf_is_nan(arb_midref(y)))
-        return arf_is_nan(arb_midref(x));
+    if (arb_is_indeterminate(y))
+        return arb_is_indeterminate(x);
 
     arf_init(t);
     arf_init(u);
