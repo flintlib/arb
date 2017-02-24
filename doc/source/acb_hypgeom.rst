@@ -1076,3 +1076,56 @@ Orthogonal polynomials and functions
     This function is a polynomial in `\cos(\theta)` and `\sin(\theta)`.
     We evaluate it using :func:`acb_hypgeom_legendre_p_uiui_rec`.
 
+Dilogarithm
+-------------------------------------------------------------------------------
+
+The dilogarithm function
+is given by `\operatorname{Li}_2(z) = -\int_0^z \frac{\log(1-t)}{t} dt = z {}_3F_2(1,1,1,2,2,z)`.
+
+.. function :: void acb_hypgeom_dilog_bernoulli(acb_t res, const acb_t z, slong prec)
+
+    Computes the dilogarithm using a series expansion in `w = \log(z)`,
+    with rate of convergence `|w/(2\pi)|^n`. This provides good convergence
+    near `z = e^{\pm i \pi / 3}`, where hypergeometric series expansions fail.
+    Since the coefficients involve Bernoulli numbers, this method should
+    only be used at moderate precision.
+
+.. function:: void acb_hypgeom_dilog_zero_taylor(acb_t res, const acb_t z, slong prec)
+
+    Computes the dilogarithm for *z* close to 0 using the hypergeometric series
+    (effective only when `|z| \ll 1`).
+
+.. function:: void acb_hypgeom_dilog_zero(acb_t res, const acb_t z, slong prec)
+
+    Computes the dilogarithm for *z* close to 0, using the bit-burst algorithm
+    instead of the hypergeometric series directly at very high precision.
+
+.. function:: void acb_hypgeom_dilog_transform(acb_t res, const acb_t z, int algorithm, slong prec)
+
+    Computes the dilogarithm by applying one of the transformations
+    `1/z`, `1-z`, `z/(z-1)`, `1/(1-z)`, indexed by *algorithm* from 1 to 4,
+    and calling :func:`acb_hypgeom_dilog_zero` with the reduced variable.
+    Alternatively, for *algorithm* between 5 and 7, starts from the
+    respective point `\pm i`, `(1\pm i)/2`, `(1\pm i)/2` (with the sign
+    chosen according to the midpoint of *z*)
+    and computes the dilogarithm by the bit-burst method.
+
+.. function:: void acb_hypgeom_dilog_continuation(acb_t res, const acb_t a, const acb_t z, slong prec)
+
+    Computes `\operatorname{Li}_2(z) - \operatorname{Li}_2(a)` using
+    Taylor expansion at *a*. Binary splitting is used. Both *a* and *z*
+    should be well isolated from the points 0 and 1, except that *a* may
+    be exactly 0. If the straight line path from *a* to *b* crosses the branch
+    cut, this method provides continuous analytic continuation instead of
+    computing the principal branch.
+
+.. function:: void acb_hypgeom_dilog_bitburst(acb_t res, acb_t z0, const acb_t z, slong prec)
+
+    Sets *z0* to a point with short bit expansion close to *z* and sets
+    *res* to `\operatorname{Li}_2(z) - \operatorname{Li}_2(z_0)`, computed
+    using the bit-burst algorithm.
+
+.. function:: void acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec)
+
+    Computes the dilogarithm using a default algorithm choice.
+

@@ -10,6 +10,7 @@
 */
 
 #include "acb_poly.h"
+#include "acb_hypgeom.h"
 
 /* note: will not return a wrong value, as arf_get_si aborts on overflow */
 slong
@@ -57,30 +58,15 @@ int
 polylog_is_real(const acb_t s, const acb_t z)
 {
     if (!arb_is_zero(acb_imagref(s)))
-    {
         return 0;
-    }
     else if (!arb_is_zero(acb_imagref(z)))
-    {
         return 0;
-    }
+    else if (arb_contains_si(acb_realref(z), 1))
+        return 0;
+    else if (acb_is_int(s) && arb_is_nonpositive(acb_realref(s)))
+        return 1;
     else
-    {
-        fmpz_t one;
-        int res;
-
-        fmpz_init(one);
-        fmpz_one(one);
-
-        if (arb_contains_fmpz(acb_realref(z), one))
-            res = 0;
-        else
-            res = (arf_cmp_2exp_si(arb_midref(acb_realref(z)), 0) < 0);
-
-        fmpz_clear(one);
-
-        return res;
-    }
+        return (arf_cmp_2exp_si(arb_midref(acb_realref(z)), 0) < 0);
 }
 
 void
@@ -89,7 +75,7 @@ _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, slong len, s
     acb_ptr e1, e2, z1, z2, e1z1, e2z2;
     acb_t t, u, v;
     slong k, len2;
-    int deflate_zeta, deflate_gamma;
+    int deflate_zeta, deflate_gamma, is_real;
 
     if (!acb_is_finite(s) || !acb_is_finite(z))
     {
@@ -111,6 +97,8 @@ _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, slong len, s
 
         return;
     }
+
+    is_real = polylog_is_real(s, z);
 
     acb_init(t);
     acb_init(u);
@@ -218,6 +206,10 @@ _acb_poly_polylog_cpx_zeta(acb_ptr w, const acb_t s, const acb_t z, slong len, s
     for (k = 1; k < len; k += 2)
         acb_neg(w + k, w + k);
 
+    if (is_real)
+        if (acb_is_finite(w))
+            arb_zero(acb_imagref(w));
+
     _acb_vec_clear(e1, len + 1);
     _acb_vec_clear(e2, len + 1);
     _acb_vec_clear(z1, len + 1);
@@ -260,7 +252,7 @@ _acb_poly_polylog_cpx_small(acb_ptr w, const acb_t s, const acb_t z, slong len, 
         mag_rfac_ui(errf, k);
         mag_mul(err, err, errf);
 
-        if (is_real)
+        if (is_real && mag_is_finite(err))
             arb_add_error_mag(acb_realref(w + k), err);
         else
             acb_add_error_mag(w + k, err);
@@ -276,6 +268,12 @@ void
 _acb_poly_polylog_cpx(acb_ptr w, const acb_t s, const acb_t z, slong len, slong prec)
 {
     mag_t zmag;
+
+    if (len == 1 && acb_equal_si(s, 2))
+    {
+        acb_hypgeom_dilog(w, z, prec);
+        return;
+    }
 
     mag_init(zmag);
     acb_get_mag(zmag, z);

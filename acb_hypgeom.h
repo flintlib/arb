@@ -244,6 +244,14 @@ void acb_hypgeom_chebyshev_t(acb_t res, const acb_t n, const acb_t z, slong prec
 void acb_hypgeom_chebyshev_u(acb_t res, const acb_t n, const acb_t z, slong prec);
 void acb_hypgeom_spherical_y(acb_t res, slong n, slong m, const acb_t theta, const acb_t phi, slong prec);
 
+void acb_hypgeom_dilog_bernoulli(acb_t res, const acb_t z, slong prec);
+void acb_hypgeom_dilog_continuation(acb_t res, const acb_t a, const acb_t z, slong prec);
+void acb_hypgeom_dilog_bitburst(acb_t res, acb_t z0, const acb_t z, slong prec);
+void acb_hypgeom_dilog_transform(acb_t res, const acb_t z, int algorithm, slong prec);
+void acb_hypgeom_dilog_zero_taylor(acb_t res, const acb_t z, slong prec);
+void acb_hypgeom_dilog_zero(acb_t res, const acb_t z, slong prec);
+void acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec);
+
 #ifdef __cplusplus
 }
 #endif
