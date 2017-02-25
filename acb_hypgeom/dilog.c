@@ -16,7 +16,7 @@ acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec)
 {
     double a, b, best, mz, mz1, t, u;
     int algorithm;
-    slong acc;
+    slong acc, inprec;
 
     if (!acb_is_finite(z))
     {
@@ -34,6 +34,7 @@ acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec)
     acc = FLINT_MAX(acc, 0);
     acc = FLINT_MIN(acc, prec);
     prec = FLINT_MIN(prec, acc + 30);
+    inprec = prec;
 
     /* first take care of exponents that may overflow doubles */
     if (arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), -20) <= 0 &&
@@ -49,6 +50,8 @@ acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec)
         acb_hypgeom_dilog_transform(res, z, 1, prec);
         return;
     }
+
+    prec = 1.005 * prec + 5;
 
     a = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
     b = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
@@ -149,5 +152,7 @@ acb_hypgeom_dilog(acb_t res, const acb_t z, slong prec)
         acb_hypgeom_dilog_transform(res, z, algorithm, prec);
     else /* (algorithm == 8) */
         acb_hypgeom_dilog_bernoulli(res, z, prec);
+
+    acb_set_round(res, res, inprec);
 }
 
