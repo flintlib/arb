@@ -172,7 +172,7 @@ the evaluation.
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
 
-Hurwitz zeta function
+Hurwitz zeta function precomputation
 -------------------------------------------------------------------------------
 
 .. type:: acb_dirichlet_hurwitz_precomp_struct
@@ -222,7 +222,7 @@ Hurwitz zeta function
 
     Evaluates `\zeta(s,p/q)` using precomputed data, assuming that `0 < p/q \le 1`.
 
-Character evaluation
+Dirichlet character evaluation
 -------------------------------------------------------------------------------
 
 .. function:: void acb_dirichlet_chi(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, ulong n, slong prec)
@@ -241,7 +241,7 @@ Character evaluation
     Sets *res* to the value of the Dirichlet pairing `\chi(m,n)` at numbers `m` and `n`.
     The second form takes two characters as input.
 
-Gauss and Jacobi sums
+Dirichlet character Gauss, Jacobi and theta sums
 -------------------------------------------------------------------------------
 
 .. function:: void acb_dirichlet_gauss_sum_naive(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
@@ -307,23 +307,6 @@ Gauss and Jacobi sums
 
    - the *ui* version only takes the Conrey numbers *a* and *b* as parameters.
 
-Theta sums
--------------------------------------------------------------------------------
-
-We call *theta series* of a Dirichlet character the quadratic series
-
-.. math::
-
-   \Theta_q(a) = \sum_{n\geq 0} \chi_q(a, n) n^p x^{n^2}
-
-where `p` is the parity of the character `\chi_q(a,\cdot)`.
-
-For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
-
-.. math::
-
-   \Theta_q(a,t) = \sum_{n\geq 0} \chi_q(a, n) x(t)^{n^2}.
-
 .. function:: void acb_dirichlet_chi_theta_arb(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, const arb_t t, slong prec)
 
 .. function:: void acb_dirichlet_ui_theta_arb(acb_t res, const dirichlet_group_t G, ulong a, const arb_t t, slong prec)
@@ -338,7 +321,21 @@ For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
    should be used, which is not done automatically (to avoid recomputing the
    Gauss sum).
 
-L-functions
+    We call *theta series* of a Dirichlet character the quadratic series
+
+    .. math::
+
+       \Theta_q(a) = \sum_{n\geq 0} \chi_q(a, n) n^p x^{n^2}
+
+    where `p` is the parity of the character `\chi_q(a,\cdot)`.
+
+    For `\Re(t)>0` we write `x(t)=\exp(-\frac{\pi}{N}t^2)` and define
+
+    .. math::
+
+       \Theta_q(a,t) = \sum_{n\geq 0} \chi_q(a, n) x(t)^{n^2}.
+
+Dirichlet L-functions
 -------------------------------------------------------------------------------
 
 .. function:: void acb_dirichlet_root_number_theta(acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
