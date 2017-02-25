@@ -22,6 +22,7 @@ acb_hypgeom_dilog_bernoulli(acb_t res, const acb_t z, slong prec)
     fmpz_t c, d;
     mag_t m, err;
     double lm;
+    int real;
 
     acb_init(s);
     acb_init(w);
@@ -30,6 +31,13 @@ acb_hypgeom_dilog_bernoulli(acb_t res, const acb_t z, slong prec)
     fmpz_init(d);
     mag_init(m);
     mag_init(err);
+
+    real = 0;
+    if (acb_is_real(z))
+    {
+        arb_sub_ui(acb_realref(w), acb_realref(z), 1, 30);
+        real = arb_is_nonpositive(acb_realref(w));
+    }
 
     acb_log(w, z, prec);
     acb_get_mag(m, w);
@@ -75,6 +83,8 @@ acb_hypgeom_dilog_bernoulli(acb_t res, const acb_t z, slong prec)
         acb_add(res, s, w, prec);
 
         acb_add_error_mag(res, err);
+        if (real)
+            arb_zero(acb_imagref(res));
     }
     else
     {
