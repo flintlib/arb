@@ -269,12 +269,7 @@ arb_printn(const arb_t x, slong digits, ulong flags)
     arb_fprintn(stdout, x, digits, flags);
 }
 
-ARB_INLINE void
-arb_mul_2exp_si(arb_t y, const arb_t x, slong e)
-{
-    arf_mul_2exp_si(arb_midref(y), arb_midref(x), e);
-    mag_mul_2exp_si(arb_radref(y), arb_radref(x), e);
-}
+void arb_mul_2exp_si(arb_t y, const arb_t x, slong e);
 
 ARB_INLINE void
 arb_mul_2exp_fmpz(arb_t y, const arb_t x, const fmpz_t e)
