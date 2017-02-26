@@ -50,26 +50,8 @@ acb_init(acb_t x)
 
 void acb_clear(acb_t x);
 
-ACB_INLINE acb_ptr
-_acb_vec_init(slong n)
-{
-    slong i;
-    acb_ptr v = (acb_ptr) flint_malloc(sizeof(acb_struct) * n);
-
-    for (i = 0; i < n; i++)
-        acb_init(v + i);
-
-    return v;
-}
-
-ACB_INLINE void
-_acb_vec_clear(acb_ptr v, slong n)
-{
-    slong i;
-    for (i = 0; i < n; i++)
-        acb_clear(v + i);
-    flint_free(v);
-}
+acb_ptr _acb_vec_init(slong n);
+void _acb_vec_clear(acb_ptr v, slong n);
 
 ACB_INLINE arb_ptr acb_real_ptr(acb_t z) { return acb_realref(z); }
 ACB_INLINE arb_ptr acb_imag_ptr(acb_t z) { return acb_imagref(z); }

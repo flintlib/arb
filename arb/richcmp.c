@@ -163,3 +163,79 @@ int arb_ge(const arb_t x, const arb_t y)
     return res;
 }
 
+int
+arb_contains_zero(const arb_t x)
+{
+    return arf_cmpabs_mag(arb_midref(x), arb_radref(x)) <= 0;
+}
+
+int
+arb_is_nonzero(const arb_t x)
+{
+    return !arb_contains_zero(x);
+}
+
+int
+arb_is_positive(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) > 0) &&
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
+         !arf_is_nan(arb_midref(x));
+}
+
+int
+arb_is_nonnegative(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) >= 0) &&
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
+         !arf_is_nan(arb_midref(x));
+}
+
+int
+arb_is_negative(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) < 0) &&
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
+         !arf_is_nan(arb_midref(x));
+}
+
+int
+arb_is_nonpositive(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) <= 0) &&
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
+         !arf_is_nan(arb_midref(x));
+}
+
+int
+arb_contains_negative(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) < 0) ||
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
+        || arf_is_nan(arb_midref(x));
+}
+
+int
+arb_contains_nonpositive(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) <= 0) ||
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
+        || arf_is_nan(arb_midref(x));
+}
+
+int
+arb_contains_positive(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) > 0) ||
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
+        || arf_is_nan(arb_midref(x));
+}
+
+int
+arb_contains_nonnegative(const arb_t x)
+{
+    return (arf_sgn(arb_midref(x)) >= 0) ||
+        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
+        || arf_is_nan(arb_midref(x));
+}
+

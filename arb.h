@@ -56,26 +56,8 @@ arb_init(arb_t x)
 
 void arb_clear(arb_t x);
 
-ARB_INLINE arb_ptr
-_arb_vec_init(slong n)
-{
-    slong i;
-    arb_ptr v = (arb_ptr) flint_malloc(sizeof(arb_struct) * n);
-
-    for (i = 0; i < n; i++)
-        arb_init(v + i);
-
-    return v;
-}
-
-ARB_INLINE void
-_arb_vec_clear(arb_ptr v, slong n)
-{
-    slong i;
-    for (i = 0; i < n; i++)
-        arb_clear(v + i);
-    flint_free(v);
-}
+arb_ptr _arb_vec_init(slong n);
+void _arb_vec_clear(arb_ptr v, slong n);
 
 ARB_INLINE arf_ptr arb_mid_ptr(arb_t z) { return arb_midref(z); }
 ARB_INLINE mag_ptr arb_rad_ptr(arb_t z) { return arb_radref(z); }
@@ -99,6 +81,7 @@ arb_equal_si(const arb_t x, slong y)
     return arf_equal_si(arb_midref(x), y) && mag_is_zero(arb_radref(x));
 }
 
+/* implementations are in arb/richcmp.c */
 int arb_eq(const arb_t x, const arb_t y);
 int arb_ne(const arb_t x, const arb_t y);
 int arb_lt(const arb_t x, const arb_t y);
@@ -292,81 +275,17 @@ arb_is_int_2exp_si(const arb_t x, slong e)
            arf_is_int_2exp_si(arb_midref(x), e);
 }
 
-ARB_INLINE int
-arb_contains_zero(const arb_t x)
-{
-    return arf_cmpabs_mag(arb_midref(x), arb_radref(x)) <= 0;
-}
-
-ARB_INLINE int
-arb_is_nonzero(const arb_t x)
-{
-    return !arb_contains_zero(x);
-}
-
-ARB_INLINE int
-arb_is_positive(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) > 0) &&
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
-         !arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_is_nonnegative(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) >= 0) &&
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
-         !arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_is_negative(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) < 0) &&
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) < 0) &&
-         !arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_is_nonpositive(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) <= 0) &&
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) <= 0) &&
-         !arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_contains_negative(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) < 0) ||
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
-        || arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_contains_nonpositive(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) <= 0) ||
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
-        || arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_contains_positive(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) > 0) ||
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) > 0)
-        || arf_is_nan(arb_midref(x));
-}
-
-ARB_INLINE int
-arb_contains_nonnegative(const arb_t x)
-{
-    return (arf_sgn(arb_midref(x)) >= 0) ||
-        (arf_mag_cmpabs(arb_radref(x), arb_midref(x)) >= 0)
-        || arf_is_nan(arb_midref(x));
-}
+/* implementations are in arb/richcmp.c */
+int arb_contains_zero(const arb_t x);
+int arb_is_nonzero(const arb_t x);
+int arb_is_positive(const arb_t x);
+int arb_is_nonnegative(const arb_t x);
+int arb_is_negative(const arb_t x);
+int arb_is_nonpositive(const arb_t x);
+int arb_contains_negative(const arb_t x);
+int arb_contains_nonpositive(const arb_t x);
+int arb_contains_positive(const arb_t x);
+int arb_contains_nonnegative(const arb_t x);
 
 void arb_get_mag_lower(mag_t z, const arb_t x);
 
