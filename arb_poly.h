@@ -544,8 +544,10 @@ void _arb_poly_sqrt_series(arb_ptr g,
 void arb_poly_sqrt_series(arb_poly_t g, const arb_poly_t h, slong n, slong prec);
 
 void _arb_poly_log_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec);
-
 void arb_poly_log_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec);
+
+void _arb_poly_log1p_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec);
+void arb_poly_log1p_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec);
 
 void _arb_poly_atan_series(arb_ptr res, arb_srcptr f, slong flen, slong n, slong prec);
 

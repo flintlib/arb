@@ -568,8 +568,10 @@ void _acb_poly_sqrt_series(acb_ptr g, acb_srcptr h, slong hlen, slong len, slong
 void acb_poly_sqrt_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec);
 
 void _acb_poly_log_series(acb_ptr res, acb_srcptr f, slong flen, slong n, slong prec);
-
 void acb_poly_log_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec);
+
+void _acb_poly_log1p_series(acb_ptr res, acb_srcptr f, slong flen, slong n, slong prec);
+void acb_poly_log1p_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec);
 
 void _acb_poly_atan_series(acb_ptr res, acb_srcptr f, slong flen, slong n, slong prec);
 

@@ -746,6 +746,12 @@ Elementary functions
     The underscore method supports aliasing of the input and output
     arrays. It requires that *flen* and *n* are greater than zero.
 
+.. function:: void _acb_poly_log1p_series(acb_ptr res, acb_srcptr f, slong flen, slong n, slong prec)
+
+.. function:: void acb_poly_log1p_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
+
+    Computes the power series `\log(1+f)`, with better accuracy when the constant term of *f* is small.
+
 .. function:: void _acb_poly_atan_series(acb_ptr res, acb_srcptr f, slong flen, slong n, slong prec)
 
 .. function:: void acb_poly_atan_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec)
