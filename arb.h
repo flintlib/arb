@@ -89,12 +89,7 @@ int arb_le(const arb_t x, const arb_t y);
 int arb_gt(const arb_t x, const arb_t y);
 int arb_ge(const arb_t x, const arb_t y);
 
-ARB_INLINE void
-arb_zero(arb_t x)
-{
-    arf_zero(arb_midref(x));
-    mag_zero(arb_radref(x));
-}
+void arb_zero(arb_t x);
 
 ARB_INLINE int
 arb_is_zero(const arb_t x)
@@ -123,18 +118,9 @@ arb_zero_pm_inf(arb_t x)
     mag_inf(arb_radref(x));
 }
 
-ARB_INLINE void
-arb_indeterminate(arb_t x)
-{
-    arf_nan(arb_midref(x));
-    mag_inf(arb_radref(x));
-}
+void arb_indeterminate(arb_t x);
 
-ARB_INLINE int
-arb_is_finite(const arb_t x)
-{
-    return arf_is_finite(arb_midref(x)) && mag_is_finite(arb_radref(x));
-}
+int arb_is_finite(const arb_t x);
 
 void arb_set(arb_t x, const arb_t y);
 
@@ -176,33 +162,13 @@ arb_set_arf(arb_t x, const arf_t y)
     mag_zero(arb_radref(x));
 }
 
-ARB_INLINE void
-arb_set_si(arb_t x, slong y)
-{
-    arf_set_si(arb_midref(x), y);
-    mag_zero(arb_radref(x));
-}
+void arb_set_si(arb_t x, slong y);
 
-ARB_INLINE void
-arb_set_ui(arb_t x, ulong y)
-{
-    arf_set_ui(arb_midref(x), y);
-    mag_zero(arb_radref(x));
-}
+void arb_set_ui(arb_t x, ulong y);
 
-ARB_INLINE void
-arb_set_d(arb_t x, double y)
-{
-    arf_set_d(arb_midref(x), y);
-    mag_zero(arb_radref(x));
-}
+void arb_set_d(arb_t x, double y);
 
-ARB_INLINE void
-arb_set_fmpz(arb_t x, const fmpz_t y)
-{
-    arf_set_fmpz(arb_midref(x), y);
-    mag_zero(arb_radref(x));
-}
+void arb_set_fmpz(arb_t x, const fmpz_t y);
 
 ARB_INLINE void
 arb_set_fmpz_2exp(arb_t x, const fmpz_t y, const fmpz_t exp)
@@ -221,12 +187,7 @@ arb_is_one(const arb_t f)
     return arf_is_one(arb_midref(f)) && mag_is_zero(arb_radref(f));
 }
 
-ARB_INLINE void
-arb_one(arb_t f)
-{
-    arf_one(arb_midref(f));
-    mag_zero(arb_radref(f));
-}
+void arb_one(arb_t f);
 
 void arb_fprint(FILE * file, const arb_t x);
 
