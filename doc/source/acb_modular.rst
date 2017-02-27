@@ -436,7 +436,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     Evaluates the Jacobi theta functions along with their derivatives
     with respect to *z*, writing the first *len* coefficients in the power
     series `\theta_i(z+x,\tau) \in \mathbb{C}[[x]]` to
-    each respcetive output variable. The *notransform* version does not
+    each respective output variable. The *notransform* version does not
     move `\tau` to the fundamental domain during the computation.
 
 The Dedekind eta function
