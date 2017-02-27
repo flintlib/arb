@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.10.0.pdf
 * http://arblib.org/arb-2.9.0.pdf
 * http://arblib.org/arb-2.8.1.pdf
 * http://arblib.org/arb-2.8.0.pdf
@@ -20,6 +21,46 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2017-02-27 - version 2.10.0
+-------------------------------------------------------------------------------
+
+* General
+
+  * Changed a large number of methods from inline functions to normal
+    functions, substantially reducing the size of the built library.
+  * Fixed a few minor memory leaks (missing clear() calls).
+
+* Basic arithmetic
+
+  * Added arb_is_int_2exp_si and acb_is_int_2exp_si.
+  * Added arf_sosq for computing x^2+y^2 of floating-point numbers.
+  * Improved error bounds for complex square roots in the left half plane.
+  * Improved error bounds for complex reciprocal (acb_inv) and division.
+  * Added the internal helper mag_get_d_log2_approx as a public method.
+
+* Elliptic functions and integrals
+
+  * New module acb_elliptic.h for elliptic functions and integrals.
+  * Added complete elliptic integral of the third kind.
+  * Added Legendre incomplete elliptic integrals (first, second, third kinds).
+  * Added Carlson symmetric incomplete elliptic integrals (RF, RC, RG, RJ, RD).
+  * Added Weierstrass elliptic zeta and sigma functions.
+  * Added inverse Weierstrass elliptic p-function.
+  * Added utility functions for computing the Weierstrass invariants and lattice roots.
+  * Improved computation of derivatives of Jacobi theta functions by
+    using modular transformations, and added a main evaluation function
+    (acb_modular_theta_jet).
+  * Improved detection of pure real or pure imaginary parts in various cases
+    of evaluating theta and modular functions.
+
+* Other special functions
+
+  * New, far more efficient implementation of the dilogarithm function (acb_polylog with s = 2).
+  * Fixed an issue in the Hurwitz zeta function leading to unreasonable
+    slowdown for certain complex input.
+  * Added add acb_poly_exp_pi_i_series.
+  * Added arb_poly_log1p_series, acb_poly_log1p_series.
 
 2016-12-02 - version 2.9.0
 -------------------------------------------------------------------------------
