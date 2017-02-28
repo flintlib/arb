@@ -76,7 +76,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("ai1 = "); acb_printd(ai1, 30); flint_printf("\n\n");
             flint_printf("ai2 = "); acb_printd(ai2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!acb_overlaps(aip1, aip2))
@@ -85,7 +85,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("aip1 = "); acb_printd(aip1, 30); flint_printf("\n\n");
             flint_printf("aip2 = "); acb_printd(aip2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!acb_overlaps(bi1, bi2))
@@ -94,7 +94,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("bi1 = "); acb_printd(bi1, 30); flint_printf("\n\n");
             flint_printf("bi2 = "); acb_printd(bi2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!acb_overlaps(bip1, bip2))
@@ -103,7 +103,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("bip1 = "); acb_printd(bip1, 30); flint_printf("\n\n");
             flint_printf("bip2 = "); acb_printd(bip2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_mul(w, ai1, bip1, prec1);
@@ -120,7 +120,7 @@ int main()
             flint_printf("bi1  = "); acb_printd(bi1, 30); flint_printf("\n\n");
             flint_printf("bip1 = "); acb_printd(bip1, 30); flint_printf("\n\n");
             flint_printf("w = ");  acb_printd(w, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mask = n_randlimb(state);
@@ -144,7 +144,7 @@ int main()
             flint_printf("bi2 = "); acb_printd(bi2, 30); flint_printf("\n\n");
             flint_printf("bip1 = "); acb_printd(bip1, 30); flint_printf("\n\n");
             flint_printf("bip2 = "); acb_printd(bip2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(z); acb_clear(t); acb_clear(w);

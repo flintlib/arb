@@ -63,7 +63,7 @@ int main()
                 flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
-                abort();
+                flint_abort();
             }
         }
 
@@ -115,7 +115,7 @@ int main()
                 flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
-                abort();
+                flint_abort();
             }
         }
 
@@ -167,7 +167,7 @@ int main()
                 flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
-                abort();
+                flint_abort();
             }
         }
 
@@ -219,7 +219,7 @@ int main()
                 flint_printf("FAIL: i = %wd, bits = %wd, prec = %wd\n", i, bits, prec);
                 mpfr_printf("y1 = %.1500Rg\n", y1);
                 mpfr_printf("y2 = %.1500Rg\n", y2);
-                abort();
+                flint_abort();
             }
         }
 

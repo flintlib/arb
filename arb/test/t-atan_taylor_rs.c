@@ -73,7 +73,7 @@ int main()
             flint_mpn_debug(y1, xn);
             flint_printf("y2 =");
             flint_mpn_debug(y2, xn);
-            abort();
+            flint_abort();
         }
 
         flint_free(x);

@@ -47,7 +47,7 @@ int main()
             if (!bool_mat_equal(D, C))
             {
                 flint_printf("FAIL (aliasing 1)\n");
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(A);
@@ -73,7 +73,7 @@ int main()
             if (!bool_mat_equal(D, C))
             {
                 flint_printf("FAIL (aliasing 2)\n");
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(A);
@@ -130,7 +130,7 @@ int main()
             {
                 flint_printf("FAIL (associativity)\n");
                 flint_printf("m, n, k, l = %wd, %wd, %wd, %wd\n", m, n, k, l);
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(lhs);
@@ -152,7 +152,7 @@ int main()
             {
                 flint_printf("FAIL (left distributivity)\n");
                 flint_printf("m, n, k, l = %wd, %wd, %wd, %wd\n", m, n, k, l);
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(lhs);
@@ -174,7 +174,7 @@ int main()
             {
                 flint_printf("FAIL (right distributivity)\n");
                 flint_printf("m, n, k, l = %wd, %wd, %wd, %wd\n", m, n, k, l);
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(lhs);
@@ -195,7 +195,7 @@ int main()
             {
                 flint_printf("FAIL (left identity)\n");
                 flint_printf("k = %wd, l = %wd\n", k, l);
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(one);
@@ -216,7 +216,7 @@ int main()
             {
                 flint_printf("FAIL (right identity)\n");
                 flint_printf("m = %wd, n = %wd\n", m, n);
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(one);

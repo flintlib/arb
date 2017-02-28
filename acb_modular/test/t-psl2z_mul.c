@@ -53,7 +53,7 @@ int main()
             flint_printf("h = "); psl2z_print(h); flint_printf("\n");
             flint_printf("u = "); psl2z_print(u); flint_printf("\n");
             flint_printf("v = "); psl2z_print(v); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         psl2z_clear(f);

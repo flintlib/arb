@@ -112,7 +112,7 @@ int main()
             flint_printf("S2 = "); acb_poly_printd(S2, 15); flint_printf("\n\n");
             flint_printf("C1 = "); acb_poly_printd(C1, 15); flint_printf("\n\n");
             flint_printf("C2 = "); acb_poly_printd(C2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(X);

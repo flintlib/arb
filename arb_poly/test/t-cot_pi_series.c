@@ -53,7 +53,7 @@ int main()
             flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
             flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); arb_poly_printd(B, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_cot_pi_series(S, S, n1, bits2);
@@ -61,7 +61,7 @@ int main()
         if (!arb_poly_overlaps(A, S))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(S);

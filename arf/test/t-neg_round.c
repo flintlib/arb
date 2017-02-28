@@ -96,7 +96,7 @@ int main()
                 flint_printf("y = "); arf_print(y); flint_printf("\n\n");
                 flint_printf("z = "); arf_print(z); flint_printf("\n\n");
                 flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-                abort();
+                flint_abort();
             }
 
             if (!arf_is_special(x))
@@ -115,7 +115,7 @@ int main()
                 flint_printf("y = "); arf_print(y); flint_printf("\n\n");
                 flint_printf("z = "); arf_print(z); flint_printf("\n\n");
                 flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-                abort();
+                flint_abort();
             }
 
             mpfr_clear(g1);

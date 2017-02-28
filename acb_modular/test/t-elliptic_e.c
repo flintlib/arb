@@ -63,7 +63,7 @@ int main()
             flint_printf("E = "); acb_printd(E, 30); flint_printf("\n\n");
             flint_printf("Ep = "); acb_printd(Ep, 30); flint_printf("\n\n");
             flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(m);

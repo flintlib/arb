@@ -53,7 +53,7 @@ int main()
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             flint_printf("d = "); arb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);
@@ -91,7 +91,7 @@ int main()
             flint_printf("FAIL (aliasing)\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

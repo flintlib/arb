@@ -110,7 +110,7 @@ int main()
             flint_printf("z1 = "); acb_printd(z1, 30); flint_printf("\n\n");
             flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(z0);

@@ -92,7 +92,7 @@ int main()
                     {
                         flint_printf("FAIL: log(%wu,%wu) mod %wu: %s->%w != %s->%w\n",
                                 k, a, p, n[iref], ref[k], n[f], v[k]);
-                        abort();
+                        flint_abort();
                     }
                 }
 

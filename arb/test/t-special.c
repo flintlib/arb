@@ -11,7 +11,7 @@
 
 #include "arb.h"
 
-#define ASSERT(cond) if (!(cond)) { flint_printf("FAIL: %d\n", __LINE__); abort(); }
+#define ASSERT(cond) if (!(cond)) { flint_printf("FAIL: %d\n", __LINE__); flint_abort(); }
 
 int main()
 {

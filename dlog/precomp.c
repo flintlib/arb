@@ -37,7 +37,7 @@ dlog_precomp(const dlog_precomp_t pre, ulong b)
         return dlog_order23(pre->t.order23, b);
         break;
       default:
-        abort();
+        flint_abort();
         break;
     }
 }

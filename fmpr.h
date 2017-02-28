@@ -727,7 +727,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             flint_printf("exception: mpfr overflow\n"); \
-            abort(); \
+            flint_abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
         if (r == 0) \
@@ -753,7 +753,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             flint_printf("exception: mpfr overflow\n"); \
-            abort(); \
+            flint_abort(); \
         } \
         fmpr_set_mpfr(y, __u); \
         if (r == 0) \
@@ -779,7 +779,7 @@ fmpr_is_int_2exp_si(const fmpr_t x, slong e)
         if (mpfr_overflow_p() || mpfr_underflow_p()) \
         { \
             flint_printf("exception: mpfr overflow\n"); \
-            abort(); \
+            flint_abort(); \
         } \
         fmpr_set_mpfr(y1, __u); \
         r1 = prec - fmpz_bits(fmpr_manref(y1)); \

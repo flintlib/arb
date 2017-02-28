@@ -42,7 +42,7 @@ main(void)
             flint_printf("FAIL:\n");
             acb_poly_printd(a, 10), flint_printf("\n\n");
             acb_poly_printd(b, 10), flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);
@@ -68,7 +68,7 @@ main(void)
             flint_printf("FAIL:\n");
             acb_poly_printd(a, 10), flint_printf("\n\n");
             acb_poly_printd(b, 10), flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);
@@ -96,7 +96,7 @@ main(void)
             acb_poly_printd(a, 10), flint_printf("\n\n");
             acb_poly_printd(b, 10), flint_printf("\n\n");
             acb_poly_printd(c, 10), flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);

@@ -63,7 +63,7 @@ int main()
                             dirichlet_conductor_char(G, chi2),
                             dirichlet_conductor_ui(G, nmod_mul(chi1->n, chi2->n, G->mod))
                             );
-                    abort();
+                    flint_abort();
                 }
                 if (dirichlet_char_next(chi2, G) < 0)
                     break;

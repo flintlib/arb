@@ -58,7 +58,7 @@ int main()
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("t = "); fmpr_print(t); flint_printf("\n\n");
             flint_printf("u = "); fmpr_print(u); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);
@@ -112,7 +112,7 @@ int main()
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             flint_printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);
@@ -180,7 +180,7 @@ int main()
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
             flint_printf("returned: %wd, %d\n", res, mpfr_res);
-            abort();
+            flint_abort();
         }
 
         /* check error bound */
@@ -209,7 +209,7 @@ int main()
                 flint_printf("z_exact = "); fmpr_print(z_exact); flint_printf("\n\n");
                 flint_printf("true_error = "); fmpr_print(true_error); flint_printf("\n\n");
                 flint_printf("error_bound = "); fmpr_print(error_bound); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             fmpr_clear(z_exact);

@@ -45,7 +45,7 @@ int main()
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
-            abort();
+            flint_abort();
         }
 
         if (res1)
@@ -61,7 +61,7 @@ int main()
                 flint_printf("x = "); arf_print(x); flint_printf("\n\n");
                 flint_printf("y = "); arf_print(y); flint_printf("\n\n");
                 flint_printf("res1 = %d\n\n", res1);
-                abort();
+                flint_abort();
             }
         }
 
@@ -80,7 +80,7 @@ int main()
                 flint_printf("x = "); arf_print(x); flint_printf("\n\n");
                 flint_printf("y = "); arf_print(y); flint_printf("\n\n");
                 flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
-                abort();
+                flint_abort();
             }
         }
 

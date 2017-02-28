@@ -143,7 +143,7 @@ _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
             {
                 /* I believe this cannot happen (should prove it) */
                 flint_printf("mod log(2): unexpected carry\n");
-                abort();
+                flint_abort();
             }
 
             mpn_sub_n(w, dp + tn, rp + tn, wn);

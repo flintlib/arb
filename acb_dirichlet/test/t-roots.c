@@ -51,7 +51,7 @@ int main()
                 flint_printf("iter = %wd  n = %wu  k = %wu  prec = %wd\n\n", iter, n, k, prec);
                 flint_printf("x = "); acb_printn(x, 30, 0); flint_printf("\n\n");
                 flint_printf("z = "); acb_printn(z, 30, 0); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

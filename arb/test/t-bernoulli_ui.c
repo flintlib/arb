@@ -44,7 +44,7 @@ int main()
             flint_printf("n = %wu\n\n", n);
             flint_printf("b1 = "); arb_print(b1); flint_printf("\n\n");
             flint_printf("b2 = "); arb_print(b2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acc1 = arb_rel_accuracy_bits(b1);
@@ -57,7 +57,7 @@ int main()
             flint_printf("prec2 = %wd\n", prec2);
             flint_printf("b1 = "); arb_printd(b1, prec1 / 3.33); flint_printf("\n\n");
             flint_printf("b2 = "); arb_printd(b2, prec2 / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(b1);

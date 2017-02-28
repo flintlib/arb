@@ -54,7 +54,7 @@ int main()
             flint_printf("mid = "); fmpz_print(mid); flint_printf("\n\n");
             flint_printf("rad = "); fmpz_print(rad); flint_printf("\n\n");
             flint_printf("exp = "); fmpz_print(exp); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (arb_is_finite(x) && !arb_contains(y, x))
@@ -65,7 +65,7 @@ int main()
             flint_printf("mid = "); fmpz_print(mid); flint_printf("\n\n");
             flint_printf("rad = "); fmpz_print(rad); flint_printf("\n\n");
             flint_printf("exp = "); fmpz_print(exp); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

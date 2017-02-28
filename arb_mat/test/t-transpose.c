@@ -44,7 +44,7 @@ int main()
         {
             flint_printf("FAIL\n\n");
             flint_printf("m = %wd, n = %wd\n", m, n);
-            abort();
+            flint_abort();
         }
 
         if (arb_mat_nrows(a) == arb_mat_ncols(a))
@@ -55,7 +55,7 @@ int main()
             if (!arb_mat_equal(a, c))
             {
                 flint_printf("FAIL (aliasing)\n\n");
-                abort();
+                flint_abort();
             }
         }
 

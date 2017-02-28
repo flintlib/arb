@@ -81,7 +81,7 @@ int main()
                 flint_printf("frobenius_norm(A)^2 = \n");
                 arb_print(a); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             arb_clear(a);
@@ -115,7 +115,7 @@ int main()
                 flint_printf("bound_frobenius_norm(A)^2 = \n");
                 mag_print(b); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             mag_clear(b);
@@ -174,7 +174,7 @@ int main()
                 flint_printf("bound_frobenius_norm(A) = \n");
                 mag_printd(frobenius, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             mag_clear(low);
@@ -202,7 +202,7 @@ int main()
                 flint_printf("frobenius_norm(A) = \n");
                 arb_printd(frobenius, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             arb_clear(frobenius);

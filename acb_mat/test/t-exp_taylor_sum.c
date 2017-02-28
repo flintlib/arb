@@ -59,7 +59,7 @@ int main()
             flint_printf("S1 = \n"); acb_mat_printd(S1, 15); flint_printf("\n\n");
             flint_printf("S2 = \n"); acb_mat_printd(S2, 15); flint_printf("\n\n");
             flint_printf("S3 = \n"); acb_mat_printd(S3, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_mat_exp_taylor_sum(A, A, N, prec1);
@@ -67,7 +67,7 @@ int main()
         if (!acb_mat_overlaps(A, S1))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_mat_clear(A);

@@ -66,7 +66,7 @@ int main()
                 flint_printf("FAIL: product does not equal polynomial\n");
                 acb_poly_printd(A, 15); flint_printf("\n\n");
                 acb_poly_printd(B, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -79,7 +79,7 @@ int main()
                 acb_poly_printd(A, 15); flint_printf("\n\n");
                 acb_printd(roots + i, 15); flint_printf("\n\n");
                 acb_printd(t, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

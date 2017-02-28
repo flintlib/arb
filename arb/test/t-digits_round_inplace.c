@@ -75,7 +75,7 @@ int main()
                 flint_printf("err = "); fmpz_print(err); flint_printf("\n\n");
                 flint_printf("out = "); fmpz_print(out); flint_printf("\n\n");
                 flint_printf(" t  = "); fmpz_print(t); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -20,7 +20,7 @@ arb_zeta_ui_bernoulli(arb_t x, ulong n, slong prec)
     slong wp;
 
     if (n % 2)
-        abort();
+        flint_abort();
 
     wp = prec + FLINT_BIT_COUNT(n) + 2;
 

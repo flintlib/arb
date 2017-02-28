@@ -47,7 +47,7 @@ int main()
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
             flint_printf("b = "); acb_printd(b, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check sinh(asinh(x)) = x */
@@ -58,7 +58,7 @@ int main()
             flint_printf("FAIL: functional equation\n\n");
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             flint_printf("b = "); acb_printd(b, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_asinh(x, x, prec1);
@@ -68,7 +68,7 @@ int main()
             flint_printf("FAIL: aliasing\n\n");
             flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(x);

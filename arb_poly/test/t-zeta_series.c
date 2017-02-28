@@ -71,7 +71,7 @@ int main()
             flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
             flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); arb_poly_printd(B, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check zeta(s,a) = zeta(s,a+1) + a^(-s) */
@@ -92,14 +92,14 @@ int main()
             flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
             flint_printf("A = "); arb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("E = "); arb_poly_printd(A, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_zeta_series(S, S, a, deflate, n1, bits2);
         if (!arb_poly_overlaps(A, S))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(S);

@@ -94,7 +94,7 @@ int main()
             flint_printf("x = %.20g\n", x);
             flint_printf("y = %.20g\n", y);
             flint_printf("z = %.20g\n", z);
-            abort();
+            flint_abort();
         }
 
         mpfr_clear(t);

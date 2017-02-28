@@ -63,7 +63,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (n_randint(state, 2))
@@ -73,7 +73,7 @@ int main()
             if (!mag_equal(xb, zb))
             {
                 flint_printf("FAIL (aliasing 1)\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -83,7 +83,7 @@ int main()
             if (!mag_equal(yb, zb))
             {
                 flint_printf("FAIL (aliasing 2)\n\n");
-                abort();
+                flint_abort();
             }
         }
 

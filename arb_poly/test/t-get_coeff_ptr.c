@@ -44,7 +44,7 @@ main(void)
             flint_printf("A = "), arb_poly_printd(A, 10), flint_printf("\n\n");
             flint_printf("a = "), arb_print(a), flint_printf("\n\n");
             flint_printf("n = %wd\n\n", n);
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(A);

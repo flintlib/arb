@@ -66,7 +66,7 @@ int main()
                 flint_printf("wp = "); acb_printd(wp + i, 15); flint_printf("\n\n");
                 flint_printf("wpd = "); acb_printd(wpd + i, 15); flint_printf("\n\n");
                 flint_printf("wp3 = "); acb_printd(wp3 + i, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -112,7 +112,7 @@ int main()
                 flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
                 flint_printf("wp1 = "); acb_printd(wp1 + i, 15); flint_printf("\n\n");
                 flint_printf("wp2 = "); acb_printd(wp2 + i, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

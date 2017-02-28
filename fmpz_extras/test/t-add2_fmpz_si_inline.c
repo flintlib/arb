@@ -48,7 +48,7 @@ int main()
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
             flint_printf("%wd\n\n", e);
-            abort();
+            flint_abort();
         }
 
         fmpz_add2_fmpz_si_inline(a, a, b, e);
@@ -60,7 +60,7 @@ int main()
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
             flint_printf("%wd\n\n", e);
-            abort();
+            flint_abort();
         }
         fmpz_randtest(a, state, 1 + n_randint(state, 200));
 
@@ -75,7 +75,7 @@ int main()
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
             flint_printf("%wd\n\n", e);
-            abort();
+            flint_abort();
         }
 
         fmpz_add(d, a, a);
@@ -89,7 +89,7 @@ int main()
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
             flint_printf("%wd\n\n", e);
-            abort();
+            flint_abort();
         }
 
         fmpz_add(d, a, a);
@@ -103,7 +103,7 @@ int main()
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
             flint_printf("%wd\n\n", e);
-            abort();
+            flint_abort();
         }
 
         fmpz_clear(a);

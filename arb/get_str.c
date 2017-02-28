@@ -181,7 +181,7 @@ _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, 
     if (n < 1)
     {
         flint_printf("_arb_digits_round_inplace: require n >= 1\n");
-        abort();
+        flint_abort();
     }
 
     m = strlen(s);
@@ -251,7 +251,7 @@ _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, 
         if (!borrow)
         {
             flint_printf("expected borrow!\n");
-            abort();
+            flint_abort();
         }
 
         fmpz_set_str(error, s + n, 10);

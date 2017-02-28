@@ -57,7 +57,7 @@ int main()
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("phi(q) = %wu\n\n", G->phi_q);
                 flint_printf("loop index = %wu\n\n", n);
-                abort();
+                flint_abort();
             }
             if (sum != ref && q > 1)
             {
@@ -65,7 +65,7 @@ int main()
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("sum k^2 = %wu\n\n", ref);
                 flint_printf("sum obtained = %wu\n\n", sum);
-                abort();
+                flint_abort();
             }
         }
 
@@ -81,7 +81,7 @@ int main()
                 flint_printf("q = %wu\n\n", q);
                 flint_printf("# primitive = %wu\n\n", ref);
                 flint_printf("loop index = %wu\n\n", n);
-                abort();
+                flint_abort();
             }
 
             /* some random elements, check log and exp */
@@ -101,7 +101,7 @@ int main()
                     flint_printf("char = ");
                     dirichlet_char_print(G, x);
                     flint_printf("\n\nnumber = %wu\n\n", x->n);
-                    abort();
+                    flint_abort();
                 }
 
                 for (k = 0; k < G->num; k++)
@@ -120,7 +120,7 @@ int main()
                     flint_printf("log = ");
                     dirichlet_char_print(G, y);
                     flint_printf("\n\nnumber = %wu\n\n", y->n);
-                    abort();
+                    flint_abort();
                 }
 
                 dirichlet_char_next_primitive(x, G);
@@ -137,7 +137,7 @@ int main()
                     dirichlet_char_print(G, x);
                     flint_printf(", m = %wu\n\n", m);
                     flint_printf("exp = %wu\n\n", x->n);
-                    abort();
+                    flint_abort();
                 }
             }
         }

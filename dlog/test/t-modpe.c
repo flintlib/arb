@@ -68,7 +68,7 @@ int main()
                     flint_printf("FAIL modpe: %wu^%wu = %wu [%wu^%wu]\n\n",
                             a, l, b, p, e);
                     flint_printf("modpe returned %wu\n\n", x);
-                    abort();
+                    flint_abort();
                 }
             }
 

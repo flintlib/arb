@@ -105,7 +105,7 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
         else if (type != 1)
         {
             flint_printf("unsupported 'type' %d for legendre p\n", type);
-            abort();
+            flint_abort();
         }
 
         acb_mul_2exp_si(c, m, -1);

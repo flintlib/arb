@@ -38,7 +38,7 @@ int main()
             flint_printf("FAIL (containment):\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acc1 = arb_rel_accuracy_bits(x);
@@ -52,7 +52,7 @@ int main()
             flint_printf("x: %wd, y = %wd\n\n", acc1, acc2);
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_trim(x, x);
@@ -62,7 +62,7 @@ int main()
             flint_printf("FAIL (aliasing):\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

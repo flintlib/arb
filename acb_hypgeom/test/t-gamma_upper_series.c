@@ -67,7 +67,7 @@ int main()
             flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
             flint_printf("C = "); acb_poly_printd(C, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* f(h(x)) = -exp(-h(x)) h(x)^(s-1) */
@@ -135,7 +135,7 @@ int main()
             flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
             flint_printf("C = "); acb_poly_printd(C, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_hypgeom_gamma_upper_series(S, s, S, regularized, n1, bits2);
@@ -146,7 +146,7 @@ int main()
             flint_printf("regularized = %d\n\n", regularized);
             flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
             flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(S);

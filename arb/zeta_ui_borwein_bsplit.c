@@ -152,7 +152,7 @@ arb_zeta_ui_borwein_bsplit(arb_t x, ulong s, slong prec)
     if (s == 1)
     {
         flint_printf("zeta_ui_borwein_bsplit: zeta(1)");
-        abort();
+        flint_abort();
     }
 
     n = prec / ERROR_B + 2;

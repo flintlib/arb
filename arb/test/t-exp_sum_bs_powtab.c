@@ -56,7 +56,7 @@ int main()
             flint_printf("Q = "); fmpz_print(T); flint_printf("\n\n");
             flint_printf("V = "); fmpq_print(V); flint_printf("\n\n");
             flint_printf("S = "); fmpq_print(S); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpz_clear(x);

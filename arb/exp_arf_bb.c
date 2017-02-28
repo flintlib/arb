@@ -61,7 +61,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
 
     if (arf_is_special(x))
     {
-        abort();
+        flint_abort();
     }
 
     mag = arf_abs_bound_lt_2exp_si(x);
@@ -72,7 +72,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
     if (mag > 200 || mag < -2 * prec - 100)
     {
         flint_printf("arb_exp_arf_bb: unexpectedly large/small input\n");
-        abort();
+        flint_abort();
     }
 
     if (prec < 100000000)

@@ -28,7 +28,7 @@ int main()
         if (bool_mat_is_nilpotent(A))
         {
             flint_printf("FAIL (empty)\n");
-            abort();
+            flint_abort();
         }
         bool_mat_clear(A);
     }
@@ -47,7 +47,7 @@ int main()
         {
             flint_printf("FAIL (nilpotent by construction)\n");
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);
@@ -72,7 +72,7 @@ int main()
             flint_printf("FAIL (A^m)\n");
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n");
             flint_printf("B = \n"); bool_mat_print(B); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);

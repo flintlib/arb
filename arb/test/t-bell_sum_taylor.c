@@ -52,7 +52,7 @@ int main()
             flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
             flint_printf("s1 = "); arb_printn(s1, 100, 0); flint_printf("\n\n");
             flint_printf("s2 = "); arb_printn(s2, 100, 0); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(s1);

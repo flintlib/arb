@@ -89,7 +89,7 @@ int main()
             flint_printf("yb = "); mag_printd(yb, 15); flint_printf("\n\n");
             flint_printf("z = "); arb_printd(z, 15); flint_printf("\n\n");
             flint_printf("r = "); arb_printd(r, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mag_polylog_tail(xb, xb, s, d, N);
@@ -97,7 +97,7 @@ int main()
         if (!mag_equal(xb, yb))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         mag_clear(xb);

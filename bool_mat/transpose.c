@@ -20,7 +20,7 @@ bool_mat_transpose(bool_mat_t B, const bool_mat_t A)
         bool_mat_ncols(B) != bool_mat_nrows(A))
     {
         flint_printf("bool_mat_transpose: Incompatible dimensions.\n");
-        abort();
+        flint_abort();
     }
 
     if (bool_mat_is_empty(A))

@@ -25,7 +25,7 @@ bs_num_terms(slong mag, slong prec)
     slong N;
 
     if (mag >= 0)
-        abort();
+        flint_abort();
 
     N = 0;
 
@@ -166,7 +166,7 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 
     if (arf_is_special(x))
     {
-        abort();
+        flint_abort();
     }
 
     if (ARF_SGNBIT(x))
@@ -186,7 +186,7 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
     if (FLINT_ABS(mag) > 2 * prec + 100)
     {
         flint_printf("arb_atan_arf_bb: unexpectedly large/small input\n");
-        abort();
+        flint_abort();
     }
 
     /* approximate by x - x^3 / 3 or pi/2 - 1/x + (1/3)/x^3 */

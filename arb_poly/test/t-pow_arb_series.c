@@ -75,7 +75,7 @@ int main()
             flint_printf("h1 = "); arb_poly_printd(h1, 15); flint_printf("\n\n");
             flint_printf("h2 = "); arb_poly_printd(h2, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_pow_arb_series(f, f, c, trunc, prec);
@@ -83,7 +83,7 @@ int main()
         if (!arb_poly_overlaps(f, h1))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(f);

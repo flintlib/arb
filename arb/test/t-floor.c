@@ -50,7 +50,7 @@ int main()
             flint_printf("x = "); fmpq_print(x); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_floor(a, a, prec);
@@ -60,7 +60,7 @@ int main()
             flint_printf("FAIL: aliasing\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

@@ -29,7 +29,7 @@ dlog_single(ulong b, ulong a, const nmod_t mod, ulong n)
 
         flint_printf("FAIL[dlog single]: log(%wu,%wu) mod %wu not found (size %wu)\n",
                 b, a, mod.n, n);
-        abort();
+        flint_abort();
     }
     else
     {
@@ -50,7 +50,7 @@ dlog_quotient(const dlog_rho_t t, ulong e, ulong f, ulong g, ulong b)
     {
         flint_printf("FAIL[dlog quotient]: trivial relation e = %wu, f = %wu mod %wu\n",
                 e, f, n.n);
-        abort();
+        flint_abort();
     }
 
     nmod_init(&n, n.n / g);

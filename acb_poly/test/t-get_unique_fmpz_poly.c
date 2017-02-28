@@ -56,7 +56,7 @@ int main()
                     flint_printf("A = "); fmpz_poly_print(A); flint_printf("\n\n");
                     flint_printf("B = "); fmpz_poly_print(B); flint_printf("\n\n");
                     flint_printf("a = "); acb_poly_printd(a, 15); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 break;

@@ -52,7 +52,7 @@ int main()
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
             flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

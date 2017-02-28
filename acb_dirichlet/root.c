@@ -88,7 +88,7 @@ acb_dirichlet_root(acb_t z, const acb_dirichlet_roots_t t, ulong k, slong prec)
         }
 
         if (k != 0)
-            abort();
+            flint_abort();
 
         acb_set_round(z, z, prec);
     }

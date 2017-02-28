@@ -58,7 +58,7 @@ int main()
             flint_printf("tau2 = "); acb_print(tau2); flint_printf("\n\n");
             flint_printf("z1 = "); acb_print(z1); flint_printf("\n\n");
             flint_printf("z2 = "); acb_print(z2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_modular_j(tau1, tau1, prec2);
@@ -70,7 +70,7 @@ int main()
             flint_printf("tau2 = "); acb_print(tau2); flint_printf("\n\n");
             flint_printf("z1 = "); acb_print(z1); flint_printf("\n\n");
             flint_printf("z2 = "); acb_print(z2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau1);
@@ -102,7 +102,7 @@ int main()
             flint_printf("FAIL (value 1)\n");
             flint_printf("tau = "); acb_print(tau); flint_printf("\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_set_ui(tau, 2);
@@ -116,7 +116,7 @@ int main()
             flint_printf("FAIL (value 2)\n");
             flint_printf("tau = "); acb_print(tau); flint_printf("\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau);

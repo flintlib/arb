@@ -53,7 +53,7 @@ int main()
             flint_printf("p/q = %wu/%wu", p, q); flint_printf("\n\n");
             flint_printf("s1 = "); arb_printd(s1, 15); flint_printf("\n\n");
             flint_printf("s2 = "); arb_printd(s2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!arb_overlaps(c1, c2))
@@ -62,7 +62,7 @@ int main()
             flint_printf("p/q = %wu/%wu", p, q); flint_printf("\n\n");
             flint_printf("c1 = "); arb_printd(c1, 15); flint_printf("\n\n");
             flint_printf("c2 = "); arb_printd(c2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (arb_rel_accuracy_bits(s1) < prec - 2)
@@ -72,7 +72,7 @@ int main()
             flint_printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(s1));
             flint_printf("s1 = "); arb_printd(s1, 15); flint_printf("\n\n");
             flint_printf("s2 = "); arb_printd(s2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (arb_rel_accuracy_bits(c1) < prec - 2)
@@ -82,7 +82,7 @@ int main()
             flint_printf("prec=%wd eff=%wd\n", prec, arb_rel_accuracy_bits(c1));
             flint_printf("c1 = "); arb_printd(c1, 15); flint_printf("\n\n");
             flint_printf("c2 = "); arb_printd(c2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(s1);

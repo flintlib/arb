@@ -19,7 +19,7 @@ arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec)
     if (!arb_mat_is_square(mat))
     {
         flint_printf("arb_mat_trace: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     if (arb_mat_is_empty(mat))

@@ -68,7 +68,7 @@ int main()
             flint_printf("c = "); fmpz_print(c); flint_printf("\n\n");
             flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
             flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpz_clear(a);

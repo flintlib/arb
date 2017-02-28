@@ -20,7 +20,7 @@ arb_mat_inv_ldl_precomp(arb_mat_t X, const arb_mat_t L, slong prec)
         arb_mat_ncols(X) != arb_mat_ncols(L))
     {
         flint_printf("arb_mat_inv_ldl_precomp: incompatible dimensions\n");
-        abort();
+        flint_abort();
     }
 
     if (arb_mat_is_empty(L))
@@ -37,7 +37,7 @@ arb_mat_inv_ldl_precomp(arb_mat_t X, const arb_mat_t L, slong prec)
     if (X == L)
     {
         flint_printf("arb_mat_inv_ldl_precomp: unsupported aliasing\n");
-        abort();
+        flint_abort();
     }
 
     /* invert a 2x2 or larger matrix given its L * D * L^T decomposition */

@@ -75,7 +75,7 @@ int main()
             flint_printf("s2 = "); arf_print(s2); flint_printf("\n\n");
             flint_printf("s3 = "); arf_print(s3); flint_printf("\n\n");
             flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
-            abort();
+            flint_abort();
         }
 
         arf_sub(err, s1, s2, ARF_PREC_EXACT, ARF_RND_DOWN);
@@ -100,7 +100,7 @@ int main()
             flint_printf("error: "); arf_print(err); flint_printf("\n\n");
             flint_printf("error bound: "); mag_print(err_bound); flint_printf("\n\n");
             flint_printf("res1 = %d, res2 = %d\n\n", res1, res2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(s1);

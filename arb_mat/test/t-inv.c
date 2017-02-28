@@ -54,7 +54,7 @@ int main()
                 flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -76,7 +76,7 @@ int main()
                         flint_printf("FAIL: failed to converge at 10000 bits\n");
                         flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
                         flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
-                        abort();
+                        flint_abort();
                     }
                     prec *= 2;
                 }
@@ -94,7 +94,7 @@ int main()
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             /* test aliasing */
@@ -104,7 +104,7 @@ int main()
                 flint_printf("FAIL (aliasing)\n");
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

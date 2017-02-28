@@ -88,7 +88,7 @@ int main()
                 flint_printf("\n");
                 dirichlet_char_print(G, chi);
                 flint_printf("\n");
-                abort();
+                flint_abort();
                 }
             }
             else if (acb_contains_zero(sum))
@@ -98,7 +98,7 @@ int main()
                 flint_printf("\n");
                 dirichlet_char_print(G, chi);
                 flint_printf("\n");
-                abort();
+                flint_abort();
             }
 
         } while (dirichlet_char_next_primitive(chi, G) >= 0);

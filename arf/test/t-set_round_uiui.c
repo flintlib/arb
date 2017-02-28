@@ -75,7 +75,7 @@ int main()
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

@@ -33,7 +33,7 @@ bsplit(acb_ptr VA, const acb_t z, const acb_t z2,
         slong m;
         acb_ptr VB;
 
-        if (h <= k) abort();
+        if (h <= k) flint_abort();
 
         m = k + (h - k) / 2;
         VB = _acb_vec_init(7);

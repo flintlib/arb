@@ -80,7 +80,7 @@ int main()
                 flint_printf("nmax = %wd, n = %wd\n", nmax, n);
                 flint_printf("m1 = %wu mod %wu\n", m1, p);
                 flint_printf("m2 = %wu mod %wu\n", m2, p);
-                abort();
+                flint_abort();
             }
         }
 

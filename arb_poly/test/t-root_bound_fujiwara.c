@@ -64,7 +64,7 @@ int main()
                 flint_printf("root = "); arb_printd(roots + i, 15); flint_printf("\n\n");
                 flint_printf("mag1 = "); mag_printd(mag1, 10); flint_printf("\n\n");
                 flint_printf("mag2 = "); mag_printd(mag2, 10); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -50,7 +50,7 @@ int main()
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = %.17g\n\n", y);
             flint_printf("z = "); arf_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);
@@ -90,7 +90,7 @@ int main()
             flint_printf("y = %.17g\n\n", y);
             flint_printf("z = "); arf_print(z); flint_printf("\n\n");
             flint_printf("w = "); arf_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);
@@ -138,7 +138,7 @@ int main()
             flint_printf("d2 = %.17g\n\n", d2);
             flint_printf("r1 = "); arf_print(r1); flint_printf("\n\n");
             flint_printf("r2 = "); arf_print(r2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

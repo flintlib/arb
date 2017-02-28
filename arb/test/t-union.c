@@ -44,7 +44,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
             flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (n_randint(state, 2))
@@ -64,7 +64,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
             flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

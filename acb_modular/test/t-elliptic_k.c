@@ -85,7 +85,7 @@ int main()
                             flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
                             flint_printf("t = "); acb_printd(t, 15); flint_printf("\n\n");
                             flint_printf("w1 = "); acb_printd(w1 + j, 15); flint_printf("\n\n");
-                            abort();
+                            flint_abort();
                         }
                     }
                 }
@@ -145,7 +145,7 @@ int main()
                 flint_printf("z2 = "); acb_printd(z2, 30); flint_printf("\n\n");
                 flint_printf("m1 = "); acb_printd(m1, 30); flint_printf("\n\n");
                 flint_printf("m2 = "); acb_printd(m2, 30); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

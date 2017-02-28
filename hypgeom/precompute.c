@@ -81,7 +81,7 @@ hypgeom_root_norm(const fmpz_poly_t P)
     }
 
     if (!fmpz_fits_si(A))
-        abort();
+        flint_abort();
 
     res = fmpz_get_si(A);
 

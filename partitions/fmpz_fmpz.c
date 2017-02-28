@@ -100,7 +100,7 @@ partitions_fmpz_fmpz_hrr(fmpz_t p, const fmpz_t n, int use_doubles)
         flint_printf("not unique!\n");
         arb_printd(x, 50);
         flint_printf("\n");
-        abort();
+        flint_abort();
     }
 
     arb_clear(x);

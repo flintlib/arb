@@ -87,7 +87,7 @@ int main()
             flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
             flint_printf("z3 = "); acb_printd(z3, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_modular_lambda(tau1, tau1, prec2);
@@ -99,7 +99,7 @@ int main()
             flint_printf("tau2 = "); acb_printd(tau2, 15); flint_printf("\n\n");
             flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau1);

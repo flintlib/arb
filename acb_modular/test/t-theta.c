@@ -70,7 +70,7 @@ int main()
             flint_printf("t4  = "); acb_printd(t4, 15); flint_printf("\n\n");
             flint_printf("t4b = "); acb_printd(t4b, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         acb_clear(t1); acb_clear(t2); acb_clear(t3); acb_clear(t4);

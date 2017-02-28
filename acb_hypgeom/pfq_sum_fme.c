@@ -79,7 +79,7 @@ evaluate(acb_poly_t A, acb_srcptr a, slong p, const acb_t z, slong n, slong prec
     }
     else if (p != 0)
     {
-        abort();
+        flint_abort();
     }
 
     if (z != NULL)

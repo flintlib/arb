@@ -49,7 +49,7 @@ int main()
             flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
             flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
             flint_printf("z = "); arf_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

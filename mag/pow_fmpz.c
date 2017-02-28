@@ -16,7 +16,7 @@ mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
 {
     if (fmpz_sgn(e) < 0)
     {
-        abort();
+        flint_abort();
     }
     else if (!COEFF_IS_MPZ(*e))
     {

@@ -63,7 +63,7 @@ int main()
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             flint_printf("y = "); acb_printd(y, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         /* aliasing */
@@ -71,7 +71,7 @@ int main()
         if (!acb_contains_fmpq(x, Y))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(F);

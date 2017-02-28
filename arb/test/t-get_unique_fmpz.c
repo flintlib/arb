@@ -55,7 +55,7 @@ int main()
                     flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
                     flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
                     flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
             }
             else
@@ -68,7 +68,7 @@ int main()
                     flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
                     flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
                     flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }
@@ -98,7 +98,7 @@ int main()
                 flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
                 flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
                 flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             if (unique)
@@ -112,7 +112,7 @@ int main()
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
                     flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
                     flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 fmpz_add_ui(b, y, 1);
@@ -121,7 +121,7 @@ int main()
                     flint_printf("FAIL (contains a + 1):\n\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
                     flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 fmpz_sub_ui(b, y, 1);
@@ -130,7 +130,7 @@ int main()
                     flint_printf("FAIL (contains a - 1):\n\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
                     flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }

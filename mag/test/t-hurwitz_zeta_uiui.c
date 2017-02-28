@@ -64,7 +64,7 @@ int main()
             flint_printf("zb = "); mag_printd(zb, 15); flint_printf("\n\n");
             flint_printf("z = "); arb_printd(z, 15); flint_printf("\n\n");
             flint_printf("r = "); arb_printd(r, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mag_clear(zb);

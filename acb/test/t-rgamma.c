@@ -45,7 +45,7 @@ int main()
             flint_printf("a = "); acb_print(a); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check 1/gamma(z+1) = 1/gamma(z)/z */
@@ -59,7 +59,7 @@ int main()
             flint_printf("a = "); acb_print(a); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

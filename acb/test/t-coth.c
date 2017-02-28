@@ -49,7 +49,7 @@ int main()
             flint_printf("x = "); acb_print(x); flint_printf("\n\n");
             flint_printf("a = "); acb_print(a); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check coth(x+y) = (1 + coth(x) coth(y)) / (coth(x) + coth(y)) */
@@ -69,7 +69,7 @@ int main()
             flint_printf("y = "); acb_print(y); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_coth(x, x, prec1);
@@ -79,7 +79,7 @@ int main()
             flint_printf("FAIL: aliasing\n\n");
             flint_printf("a = "); acb_print(a); flint_printf("\n\n");
             flint_printf("x = "); acb_print(x); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(x);

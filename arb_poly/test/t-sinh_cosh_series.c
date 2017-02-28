@@ -119,7 +119,7 @@ int main()
             flint_printf("d = "); arb_poly_printd(d, 15); flint_printf("\n\n");
             flint_printf("d = "); arb_poly_printd(e, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(a);

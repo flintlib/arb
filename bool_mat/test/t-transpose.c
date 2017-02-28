@@ -47,7 +47,7 @@ int main()
             {
                 flint_printf("FAIL (involution)\n");
                 flint_printf("m = %wd, n = %wd\n", m, n);
-                abort();
+                flint_abort();
             }
             bool_mat_clear(c);
         }
@@ -60,7 +60,7 @@ int main()
             if (!bool_mat_equal(a, b))
             {
                 flint_printf("FAIL (aliasing)\n");
-                abort();
+                flint_abort();
             }
         }
 

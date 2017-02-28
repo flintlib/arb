@@ -80,7 +80,7 @@ int main()
                 flint_printf("zbound = "); mag_printd(zbound, 10); flint_printf("\n\n");
                 flint_printf("x = "); arb_printn(x, 50, 0); flint_printf("\n\n");
                 flint_printf("y = "); arb_printn(y, 50, 0); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

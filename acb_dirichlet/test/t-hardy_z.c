@@ -72,7 +72,7 @@ int main()
                 flint_printf("s = "); acb_printn(s, 50, 0); flint_printf("\n\n");
                 flint_printf("r1 = "); acb_printn(vec1 + i, 50, 0); flint_printf("\n\n");
                 flint_printf("r2 = "); acb_printn(vec2 + i, 50, 0); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -86,7 +86,7 @@ int main()
                     flint_printf("iter = %wd  q = %wu  k = %wu  i = %wd\n\n", iter, q, k, i);
                     flint_printf("s = "); acb_printn(s, 50, 0); flint_printf("\n\n");
                     flint_printf("r1 = "); acb_printn(vec1 + i, 50, 0); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }
@@ -101,7 +101,7 @@ int main()
                     flint_printf("iter = %wd  q = %wu  k = %wu  i = %wd\n\n", iter, q, k, i);
                     flint_printf("s = "); acb_printn(s, 50, 0); flint_printf("\n\n");
                     flint_printf("r1 = "); acb_printn(vec2 + i, 50, 0); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }

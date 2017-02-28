@@ -59,7 +59,7 @@ int main()
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mag_pow_fmpz(xb, xb, e);
@@ -70,7 +70,7 @@ int main()
             flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
             mag_print(xb); flint_printf("\n\n");
             mag_print(yb); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

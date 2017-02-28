@@ -41,7 +41,7 @@ int main()
             flint_printf("aa = "); mpfr_printf("%.50Rg", aa); flint_printf("\n\n");
             flint_printf("bb = "); mpfr_printf("%.50Rg", bb); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

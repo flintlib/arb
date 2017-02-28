@@ -44,7 +44,7 @@ int main()
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             flint_printf("y1 = "); acb_printd(y1, 15); flint_printf("\n\n");
             flint_printf("y2 = "); acb_printd(y2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(f);

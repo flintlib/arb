@@ -20,7 +20,7 @@ check_eq(ulong p1, ulong p2, ulong q, ulong m, char * fct1, char * fct2)
         flint_printf("chi_%wu(%wu,.)\n\n", q, m);
         flint_printf("%s = %wu\n\n", fct1, p1);
         flint_printf("%s = %wu\n\n", fct2, p2);
-        abort();
+        flint_abort();
     }
 }
 
@@ -106,7 +106,7 @@ int main()
                     flint_printf("psi(index) = %wu\n\n", psi->n);
                     flint_printf("psi = "); dirichlet_char_print(G, psi);
                     flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 /* lift to higher modulus */
@@ -137,7 +137,7 @@ int main()
                     flint_printf("\n\nq = %wu\n\npsi = ", q);
                     dirichlet_char_print(G, psi);
                     flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 q3 = dirichlet_conductor_char(G, chi) * random_divisor(state, G);
@@ -179,7 +179,7 @@ int main()
                     flint_printf("chi(m,n) = %wu\n\n", pairing);
                     flint_printf("chi(m)(n) = %wu\n\n", cn);
                     flint_printf("chi(n)(m) = %wu\n\n", cm);
-                    abort();
+                    flint_abort();
                 }
 
             }

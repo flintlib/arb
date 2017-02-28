@@ -93,7 +93,7 @@ int main()
             flint_printf("wa1 = "); acb_poly_printd(wa1, 30); flint_printf("\n\n");
             flint_printf("wb1 = "); acb_poly_printd(wb1, 30); flint_printf("\n\n");
             flint_printf("pt = "); acb_poly_printd(pt, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* test I(a,b;z) = 1-I(b,a,1-z) */
@@ -129,7 +129,7 @@ int main()
             flint_printf("z = ");  acb_poly_printd(z, 30); flint_printf("\n\n");
             flint_printf("w = "); acb_poly_printd(w, 30); flint_printf("\n\n");
             flint_printf("pt = "); acb_poly_printd(pt, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

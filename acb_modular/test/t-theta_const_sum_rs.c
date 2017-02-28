@@ -61,7 +61,7 @@ int main()
             flint_printf("t3b = "); acb_printd(t3b, 50); flint_printf("\n\n");
             flint_printf("t4a = "); acb_printd(t4a, 50); flint_printf("\n\n");
             flint_printf("t4b = "); acb_printd(t4b, 50); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(q);

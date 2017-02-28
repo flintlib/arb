@@ -19,7 +19,7 @@ arb_mat_transpose(arb_mat_t B, const arb_mat_t A)
     if (arb_mat_nrows(B) != arb_mat_ncols(A) || arb_mat_ncols(B) != arb_mat_nrows(A))
     {
         flint_printf("Exception (arb_mat_transpose). Incompatible dimensions.\n");
-        abort();
+        flint_abort();
     }
 
     if (arb_mat_is_empty(A))

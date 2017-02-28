@@ -20,7 +20,7 @@ acb_dirichlet_hurwitz_precomp_eval(acb_t res,
     acb_t a, t;
 
     if (p > q)
-        abort();
+        flint_abort();
 
     acb_init(a);
     acb_init(t);

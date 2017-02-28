@@ -65,7 +65,7 @@ bool_mat_is_nilpotent(const bool_mat_t A)
     if (!bool_mat_is_square(A))
     {
         flint_printf("bool_mat_is_nilpotent: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     if (bool_mat_is_empty(A))

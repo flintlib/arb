@@ -61,7 +61,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("res1 = "); acb_printd(res1, 30); flint_printf("\n\n");
             flint_printf("res2 = "); acb_printd(res2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(n);

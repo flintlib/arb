@@ -56,7 +56,7 @@ int main()
             flint_printf("FAIL: containment (sin)\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!arb_contains_mpfr(c, u))
@@ -64,7 +64,7 @@ int main()
             flint_printf("FAIL: containment (cos)\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);
@@ -117,7 +117,7 @@ int main()
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             flint_printf("d = "); arb_print(d); flint_printf("\n\n");
             flint_printf("e = "); arb_print(e); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check sin(a)^2 + cos(a)^2 = 1 */
@@ -132,7 +132,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

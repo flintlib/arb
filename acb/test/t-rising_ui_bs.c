@@ -52,7 +52,7 @@ int main()
             flint_printf("xn = "); acb_print(xn); flint_printf("\n\n");
             flint_printf("y = "); acb_print(y); flint_printf("\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(x);
@@ -85,7 +85,7 @@ int main()
             flint_printf("x = "); acb_print(x); flint_printf("\n\n");
             flint_printf("y = "); acb_print(y); flint_printf("\n\n");
             flint_printf("n = %wu\n", n);
-            abort();
+            flint_abort();
         }
 
         acb_clear(x);

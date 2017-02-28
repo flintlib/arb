@@ -46,7 +46,7 @@ int main()
             flint_printf("z1 = "); arb_printd(z1, prec / 3.33); flint_printf("\n\n");
             flint_printf("z2 = "); arb_printd(z2, prec / 3.33); flint_printf("\n\n");
             flint_printf("z3 = "); arb_printd(z3, prec / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         accuracy = arb_rel_accuracy_bits(z3);
@@ -56,7 +56,7 @@ int main()
             flint_printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
             flint_printf("n1 = %wu, n2 = %wu\n\n", n1, n2);
             flint_printf("z3 = "); arb_printd(z3, prec / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(z1);

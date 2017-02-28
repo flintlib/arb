@@ -54,7 +54,7 @@ int main()
             flint_printf("iter = %wd, prec = %wd\n\n", iter, prec);
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_expm1(a, a, prec);
@@ -65,7 +65,7 @@ int main()
             flint_printf("iter = %wd, prec = %wd\n\n", iter, prec);
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);
@@ -105,7 +105,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
@@ -123,7 +123,7 @@ int main()
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             flint_printf("d = "); arb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

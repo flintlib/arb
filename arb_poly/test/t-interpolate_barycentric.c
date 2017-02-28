@@ -74,7 +74,7 @@ int main()
             flint_printf("P = "); fmpq_poly_print(P); flint_printf("\n\n");
             flint_printf("R = "); arb_poly_printd(R, 15); flint_printf("\n\n");
             flint_printf("S = "); arb_poly_printd(S, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(P);

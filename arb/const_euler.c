@@ -217,7 +217,7 @@ arb_log_ui_smooth(arb_t s, ulong n, slong prec)
     while (m % 5 == 0) { m /= 5; k++; }
 
     if (m != 1)
-        abort();
+        flint_abort();
 
     arb_init(t);
 

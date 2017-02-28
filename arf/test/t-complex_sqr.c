@@ -65,7 +65,7 @@ int main()
                     flint_printf("e2 = "); arf_print(e2); flint_printf("\n\n");
                     flint_printf("f2 = "); arf_print(f2); flint_printf("\n\n");
                     flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                    abort();
+                    flint_abort();
                 }
                 break;
 
@@ -81,7 +81,7 @@ int main()
                     flint_printf("e1 = "); arf_print(e1); flint_printf("\n\n");
                     flint_printf("f1 = "); arf_print(f1); flint_printf("\n\n");
                     flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                    abort();
+                    flint_abort();
                 }
                 break;
             }

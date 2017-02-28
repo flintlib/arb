@@ -53,7 +53,7 @@ int main()
             if (!(arf_is_zero(x) || fmpz_cmp_si(b, -ARF_PREC_EXACT) <= 0))
             {
                 flint_printf("FAIL (small/zero)\n\n");
-                abort();
+                flint_abort();
             }
         }
         else if (c == ARF_PREC_EXACT)
@@ -62,7 +62,7 @@ int main()
                 fmpz_cmp_si(b, ARF_PREC_EXACT) >= 0))
             {
                 flint_printf("FAIL (large/inf/nan)\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -73,7 +73,7 @@ int main()
                 flint_printf("x = "); arf_print(x); flint_printf("\n\n");
                 flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
                 flint_printf("c = %wd\n\n", c);
-                abort();
+                flint_abort();
             }
         }
 

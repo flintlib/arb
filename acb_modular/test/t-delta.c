@@ -51,7 +51,7 @@ int main()
             flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
             flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_modular_delta(tau, tau, prec1);
@@ -62,7 +62,7 @@ int main()
             flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
             flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau);

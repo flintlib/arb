@@ -43,7 +43,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("a = "); fmpz_print(a);
             flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_set_fmpz_2exp(y, b, exp);
@@ -53,7 +53,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b);
             flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (fmpz_is_even(a) && fmpz_is_even(b) &&
@@ -64,7 +64,7 @@ int main()
             flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
             flint_printf(" exp = "); fmpz_print(exp); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

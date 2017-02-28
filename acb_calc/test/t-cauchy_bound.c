@@ -72,7 +72,7 @@ int main()
             flint_printf("r = %wd, prec = %wd, maxdepth = %wd\n\n", r, prec, maxdepth);
             arb_printd(b, 15); flint_printf("\n\n");
             arb_printd(ans, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(b);
