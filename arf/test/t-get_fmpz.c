@@ -51,7 +51,7 @@ int main()
             flint_printf("z = "); fmpz_print(z); flint_printf("\n\n");
             flint_printf("z2 = "); fmpz_print(z2); flint_printf("\n\n");
             flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);
@@ -90,7 +90,7 @@ int main()
             flint_printf("z = "); fmpz_print(z); flint_printf("\n\n");
             flint_printf("z2 = "); fmpz_print(z2); flint_printf("\n\n");
             flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);
@@ -154,7 +154,7 @@ int main()
             flint_printf("z = "); fmpz_print(z); flint_printf("\n\n");
             flint_printf("z2 = "); fmpz_print(z2); flint_printf("\n\n");
             flint_printf("ret1 = %d, ret2 = %d\n\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

@@ -68,7 +68,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (n > 0 && (acc2 < FLINT_MIN(prec, acc1) - 10) &&
@@ -80,7 +80,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

@@ -80,7 +80,7 @@ acb_poly_compose_series_brent_kung(acb_poly_t res,
     {
         flint_printf("exception: compose_series: inner "
                 "polynomial must have zero constant term\n");
-        abort();
+        flint_abort();
     }
 
     if (len1 == 0 || n == 0)

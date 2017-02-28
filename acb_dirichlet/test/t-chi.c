@@ -64,7 +64,7 @@ int main()
                 flint_printf("log(m) = "); dirichlet_char_print(G, chi);
                 dirichlet_char_log(chi, G, n1);
                 flint_printf("log(n1) = "); dirichlet_char_print(G, chi);
-                abort();
+                flint_abort();
             }
 
             acb_dirichlet_pairing(zn2, G, m, n2, 53);
@@ -82,7 +82,7 @@ int main()
                 flint_printf("zn2 = "); acb_printd(zn2, 15); flint_printf("\n\n");
                 flint_printf("zn1n2 = "); acb_printd(zn1n2, 15); flint_printf("\n\n");
                 flint_printf("zn1zn2 = "); acb_printd(zn1zn2, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -113,7 +113,7 @@ int main()
                 flint_printf("phi = %wu\n\n", n_euler_phi(q));
                 flint_printf("n1 = %wu\n\n", n1);
                 flint_printf("zn1 = "); acb_printd(zn1, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

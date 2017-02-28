@@ -21,7 +21,7 @@ acb_dirichlet_gauss_sum_theta(acb_t res, const dirichlet_group_t G, const dirich
         flint_printf("gauss_sum_theta: non available for non primitive character"
                 "or exceptional characters chi_300(71,.), chi_300(131,.), "
                 "chi_600(11,.) and chi_600(491,.)\n");
-        abort();
+        flint_abort();
     }
     else
     {

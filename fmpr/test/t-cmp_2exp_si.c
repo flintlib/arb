@@ -46,7 +46,7 @@ int main()
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

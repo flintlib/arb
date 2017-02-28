@@ -40,7 +40,7 @@ int main()
             flint_printf("FAIL: containment\n\n");
             flint_printf("prec = %wd\n", prec);
             flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         accuracy = arb_rel_accuracy_bits(r);
@@ -50,7 +50,7 @@ int main()
             flint_printf("FAIL: poor accuracy\n\n");
             flint_printf("prec = %wd\n", prec);
             flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(r);

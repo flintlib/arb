@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("usage: %s [log|csv|json]\n", argv[0]);
-        abort();
+        flint_abort();
     }
 
     for (i = 0; i < ni; i++)

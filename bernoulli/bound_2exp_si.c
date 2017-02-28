@@ -79,7 +79,7 @@ bernoulli_bound_2exp_si(ulong n)
         if (hi || n > (UWORD(1) << (FLINT_BITS - 6)))
         {
             flint_printf("bernoulli_bound_2exp_si: n too large\n");
-            abort();
+            flint_abort();
         }
 
         l = (lo >> LOG_PREC) + 1;

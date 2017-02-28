@@ -52,7 +52,7 @@ int main()
             flint_printf("b = "); acb_printd(b, 30); flint_printf("\n\n");
             flint_printf("c = "); acb_printd(c, 30); flint_printf("\n\n");
             flint_printf("d = "); acb_printd(d, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_set(c, a);
@@ -65,7 +65,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

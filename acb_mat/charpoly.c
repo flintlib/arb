@@ -85,7 +85,7 @@ void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec)
     if (mat->r != mat->c)
     {
         flint_printf("Exception (acb_mat_charpoly).  Non-square matrix.\n");
-        abort();
+        flint_abort();
     }
 
     acb_poly_fit_length(cp, mat->r + 1);

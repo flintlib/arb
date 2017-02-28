@@ -45,7 +45,7 @@ int main()
             flint_printf("g = "); psl2z_print(g); flint_printf("\n");
             flint_printf("h = "); psl2z_print(h); flint_printf("\n");
             flint_printf("i = "); psl2z_print(i); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         psl2z_inv(f, f);
@@ -55,7 +55,7 @@ int main()
             flint_printf("FAIL (aliasing)\n");
             flint_printf("f = "); psl2z_print(f); flint_printf("\n");
             flint_printf("g = "); psl2z_print(g); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         psl2z_clear(f);

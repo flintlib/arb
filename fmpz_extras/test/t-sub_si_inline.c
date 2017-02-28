@@ -45,7 +45,7 @@ int main()
             flint_printf("%wd", b); flint_printf("\n\n");
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpz_sub_si_inline(a, a, b);
@@ -56,7 +56,7 @@ int main()
             flint_printf("%wd", b); flint_printf("\n\n");
             fmpz_print(c); flint_printf("\n\n");
             fmpz_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpz_clear(a);

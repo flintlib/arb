@@ -43,7 +43,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
             flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
-            abort();
+            flint_abort();
         }
 
         acb_randtest_special(z, state, 1 + n_randint(state, 200), 1 + n_randint(state, 200));
@@ -63,7 +63,7 @@ int main()
             flint_printf("FAIL: swapping\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
             flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
-            abort();
+            flint_abort();
         }
 
         acb_randtest_special(z, state, 1 + n_randint(state, 200), 1 + n_randint(state, 200));
@@ -87,7 +87,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("z = "); acb_print(z); flint_printf("\n\n");
             flint_printf("a1 = %wd, a2 = %wd\n\n", a1, a2);
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

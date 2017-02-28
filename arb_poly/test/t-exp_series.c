@@ -62,7 +62,7 @@ int main()
             flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);
@@ -116,7 +116,7 @@ int main()
             flint_printf("a = "); arb_poly_printd(a, 15); flint_printf("\n\n");
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);
@@ -181,7 +181,7 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);

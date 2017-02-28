@@ -65,7 +65,7 @@ int main()
                 flint_printf("X = "); fmpz_print(X); flint_printf("\n\n");
                 flint_printf("Y = "); fmpz_print(Y); flint_printf("\n\n");
                 flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
-                abort();
+                flint_abort();
             }
         }
 
@@ -106,7 +106,7 @@ int main()
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
             flint_printf("cmp1 = %d, cmp2 = %d\n\n", cmp1, cmp2);
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

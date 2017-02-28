@@ -92,7 +92,7 @@ int main()
             flint_printf("s2 = "); acb_poly_printd(s2, 15); flint_printf("\n\n");
             acb_poly_sub(s1, s1, s2, prec1);
             flint_printf("diff = "); acb_poly_printd(s1, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(z);

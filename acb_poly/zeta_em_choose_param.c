@@ -78,7 +78,7 @@ _acb_poly_zeta_em_choose_param(mag_t bound, ulong * N, ulong * M, const acb_t s,
             A *= 2;
             B *= 2;
 
-            if (B == 0) abort();
+            if (B == 0) flint_abort();
 
             _acb_poly_zeta_em_bound1(Bbound, s, a, B, choose_M(B, target), d, prec);
         }

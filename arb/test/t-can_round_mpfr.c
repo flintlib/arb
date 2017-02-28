@@ -63,7 +63,7 @@ int main()
                 flint_printf("x = "); mpfr_dump(x); flint_printf("\n");
                 flint_printf("y1 = "); mpfr_dump(y1); flint_printf("\n");
                 flint_printf("y2 = "); mpfr_dump(y2); flint_printf("\n");
-                abort();
+                flint_abort();
             }
         }
 

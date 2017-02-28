@@ -62,7 +62,7 @@ int main()
                 flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
                 flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
                 flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             arb_set_fmpq(acb_realref(z), x, prec);
@@ -84,7 +84,7 @@ int main()
                 flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
                 flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
                 flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             /* success */
@@ -105,7 +105,7 @@ int main()
             flint_printf("w = "); acb_printd(w, 50); flint_printf("\n\n");
             flint_printf("w2 = "); acb_printd(w2, 50); flint_printf("\n\n");
             flint_printf("g = "); psl2z_print(g); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_clear(x);

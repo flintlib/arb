@@ -55,7 +55,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_randtest(c, state, 1 + n_randint(state, 1000), 200);
@@ -76,7 +76,7 @@ int main()
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
             flint_printf("e = "); acb_print(e); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_pow(c, a, b, prec1);
@@ -90,7 +90,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_set(d, b);
@@ -103,7 +103,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("d = "); acb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

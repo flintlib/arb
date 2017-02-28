@@ -46,7 +46,7 @@ int main()
                 flint_printf("n = %wu  k = %wd\n\n", iter, k);
                 flint_printf("vec = "); acb_printn(vec + k, 30, 0); flint_printf("\n\n");
                 flint_printf("t = "); acb_printn(t, 30, 0); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -83,7 +83,7 @@ int main()
         {
             flint_printf("error while setting x[%ld] <- %s+I*%s\n",
                     j, x_r[j], x_i[j]);
-            abort();
+            flint_abort();
         }
 
     }
@@ -109,7 +109,7 @@ int main()
             {
                 flint_printf("error while setting ref <- %s+I*%s\n",
                         ref_r[i * nx + j], ref_i[i * nx + j]);
-                abort();
+                flint_abort();
             }
 
             acb_dirichlet_l_hurwitz(res, x + j, NULL, G, chi, prec + 10);
@@ -126,7 +126,7 @@ int main()
                     flint_printf("\nl(chi,x) = ");
                     acb_printd(res, 54);
                     flint_printf("\n\n");
-                    abort();
+                    flint_abort();
             }
 
         }

@@ -75,7 +75,7 @@ int main()
                 flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
                 flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
                 flint_printf("p2 = "); acb_printd(p2, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -143,7 +143,7 @@ int main()
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
             flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
             flint_printf("p2 = "); acb_printd(p2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau);

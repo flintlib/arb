@@ -89,7 +89,7 @@ int main()
             flint_printf("res3 = "); acb_printd(res3, 30); flint_printf("\n\n");
             flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
             flint_printf("u = "); acb_printd(u, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(n);

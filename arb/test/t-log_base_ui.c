@@ -57,7 +57,7 @@ int main()
             flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
             flint_printf("bx = "); arb_printd(bx, 30); flint_printf("\n\n");
             flint_printf("lbx = "); arb_printd(lbx, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_log_base_ui(bx, bx, b, prec);
@@ -69,7 +69,7 @@ int main()
             flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
             flint_printf("bx = "); arb_printd(bx, 30); flint_printf("\n\n");
             flint_printf("lbx = "); arb_printd(lbx, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* test exact computation of log_{b^(2^r)}(b^n)*/
@@ -97,7 +97,7 @@ int main()
                 flint_printf("bx = "); arb_printd(bx, 30); flint_printf("\n\n");
                 flint_printf("lbx = "); arb_printd(lbx, 30); flint_printf("\n\n");
                 flint_printf("lbx1 = "); arb_printd(lbx1, 30); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             if (arb_is_exact(lbx))

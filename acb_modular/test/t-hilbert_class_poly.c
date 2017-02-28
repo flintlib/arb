@@ -138,7 +138,7 @@ int main()
                 flint_printf("D = %wd\n", -i);
                 flint_printf("c = %wu\n", c);
                 flint_printf("expected = %d\n", (int) hilbert_poly_values[i]);
-                abort();
+                flint_abort();
             }
         }
 
@@ -154,7 +154,7 @@ int main()
                 flint_printf("D = %wd\n", -i);
                 flint_printf("c = %wu\n", c);
                 flint_printf("expected = %d\n", (int) hilbert_poly_values_2[2*i+1]);
-                abort();
+                flint_abort();
             }
         }
 

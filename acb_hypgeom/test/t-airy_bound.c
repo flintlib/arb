@@ -115,7 +115,7 @@ int main()
             flint_printf("bpi = "); acb_printd(bip, 20); flint_printf("\n");
             flint_printf("bipm = "); mag_printd(bipm, 10); printf("\n");
             flint_printf("bipb = "); mag_printd(bipb, 10); printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(ai);

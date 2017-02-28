@@ -21,14 +21,14 @@ bool_mat_transitive_closure(bool_mat_t dest, const bool_mat_t src)
         bool_mat_ncols(dest) != bool_mat_ncols(src))
     {
         flint_printf("bool_mat_transitive_closure: incompatible dimensions\n");
-        abort();
+        flint_abort();
     }
 
     dim = bool_mat_nrows(src);
     if (dim != bool_mat_ncols(src))
     {
         flint_printf("bool_mat_transitive_closure: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     bool_mat_set(dest, src);

@@ -21,7 +21,7 @@ mag_set_d_2exp_fmpz(mag_t z, double c, const fmpz_t exp)
     else if (c > 1e300 || c < 0.0) /* not implemented */
     {
         flint_printf("mag_set_d_2exp_fmpz\n");
-        abort();
+        flint_abort();
     }
     else
     {

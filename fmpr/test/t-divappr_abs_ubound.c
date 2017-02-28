@@ -49,7 +49,7 @@ int main()
             fmpr_printd(b, prec / 3.32); flint_printf("\n");
             fmpr_printd(c, prec / 3.32); flint_printf("\n");
             fmpr_printd(d, prec / 3.32); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(a);

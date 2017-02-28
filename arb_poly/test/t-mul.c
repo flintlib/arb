@@ -64,7 +64,7 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_set(d, a);
@@ -72,7 +72,7 @@ int main()
         if (!arb_poly_equal(d, c))
         {
             flint_printf("FAIL (aliasing 1)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_set(d, b);
@@ -80,7 +80,7 @@ int main()
         if (!arb_poly_equal(d, c))
         {
             flint_printf("FAIL (aliasing 2)\n\n");
-            abort();
+            flint_abort();
         }
 
         /* test squaring */
@@ -95,7 +95,7 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_mul(a, a, a, rbits3);
@@ -107,7 +107,7 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("d = "); arb_poly_printd(d, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);

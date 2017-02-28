@@ -46,7 +46,7 @@ int main()
         if (!acb_poly_overlaps(c, d))
         {
             flint_printf("FAIL\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_add_si(a, a, v, 2 + n_randint(state, 200));
@@ -54,7 +54,7 @@ int main()
         if (!acb_poly_overlaps(a, d))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);

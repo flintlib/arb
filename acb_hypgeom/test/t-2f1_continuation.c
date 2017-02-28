@@ -120,7 +120,7 @@ int main()
                 flint_printf("Computed F and F':\n");
                 flint_printf("h1 = "); acb_printd(h1, 30); flint_printf("\n\n");
                 flint_printf("h2 = "); acb_printd(h2, 30); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

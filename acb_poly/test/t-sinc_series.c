@@ -57,7 +57,7 @@ int main()
             flint_printf("a = "); acb_poly_printd(a, 50); flint_printf("\n\n");
             flint_printf("b = "); acb_poly_printd(b, 50); flint_printf("\n\n");
             flint_printf("c = "); acb_poly_printd(c, 50); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* check x sinc(x) = sin(x) */
@@ -71,7 +71,7 @@ int main()
             flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
             flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_sinc_series(a, a, n1, rbits2);
@@ -79,7 +79,7 @@ int main()
         if (!acb_poly_overlaps(a, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);

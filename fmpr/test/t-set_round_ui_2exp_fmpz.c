@@ -70,7 +70,7 @@ int main()
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("ret1 = %wd, ret2 = %wd\n\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         fmpz_clear(man);

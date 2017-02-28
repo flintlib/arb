@@ -19,7 +19,7 @@ bool_mat_pow_ui(bool_mat_t B, const bool_mat_t A, ulong exp)
     if (!bool_mat_is_square(A))
     {
         flint_printf("bool_mat_pow_ui: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     if (bool_mat_is_empty(A))

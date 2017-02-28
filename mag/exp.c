@@ -35,7 +35,7 @@ static __inline__ double
 _mag_d_exp_upper_reduced(double u)
 {
     if (u < -0.375 || u > 0.375)
-        abort();
+        flint_abort();
 
     return d_polyval(inverse_factorials, 11, u) + 1e-12;
 }

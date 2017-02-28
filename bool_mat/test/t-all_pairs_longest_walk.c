@@ -45,8 +45,8 @@ void
 _bool_mat_permute(bool_mat_t B, const bool_mat_t A, const slong *perm)
 {
     slong n, i, j;
-    if (!bool_mat_is_square(A)) abort(); /* assert */
-    if (A == B) abort(); /* assert */
+    if (!bool_mat_is_square(A)) flint_abort(); /* assert */
+    if (A == B) flint_abort(); /* assert */
     n = bool_mat_nrows(A);
     for (i = 0; i < n; i++)
     {
@@ -62,8 +62,8 @@ void
 _fmpz_mat_permute(fmpz_mat_t B, const fmpz_mat_t A, const slong *perm)
 {
     slong n, i, j;
-    if (!fmpz_mat_is_square(A)) abort(); /* assert */
-    if (A == B) abort(); /* assert */
+    if (!fmpz_mat_is_square(A)) flint_abort(); /* assert */
+    if (A == B) flint_abort(); /* assert */
     n = fmpz_mat_nrows(A);
     for (i = 0; i < n; i++)
     {
@@ -166,7 +166,7 @@ int main()
             flint_printf("FAIL (entrywise)\n");
             bool_mat_print(A); flint_printf("\n");
             fmpz_mat_print_pretty(B); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         /* nilpotency degree */
@@ -178,7 +178,7 @@ int main()
                 bool_mat_print(A); flint_printf("\n");
                 fmpz_mat_print_pretty(B); flint_printf("\n");
                 flint_printf("nildegree=%wd degree=%wd\n", nildegree, degree);
-                abort();
+                flint_abort();
             }
         }
 
@@ -207,7 +207,7 @@ int main()
                 fmpz_mat_print_pretty(B); flint_printf("\n");
                 bool_mat_print(U); flint_printf("\n");
                 bool_mat_print(V); flint_printf("\n");
-                abort();
+                flint_abort();
             }
 
             bool_mat_clear(U);
@@ -237,7 +237,7 @@ int main()
                 fmpz_mat_print_pretty(B); flint_printf("\n");
                 fmpz_mat_print_pretty(C); flint_printf("\n");
                 fmpz_mat_print_pretty(D); flint_printf("\n");
-                abort();
+                flint_abort();
             }
 
             flint_free(perm);
@@ -274,7 +274,7 @@ int main()
             bool_mat_print(A); flint_printf("\n");
             fmpz_mat_print_pretty(B); flint_printf("\n");
             fmpz_mat_print_pretty(C); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);
@@ -305,7 +305,7 @@ int main()
                     bool_mat_print(A); flint_printf("\n");
                     fmpz_mat_print_pretty(B); flint_printf("\n");
                     flint_printf("m=%wd length=%wd\n", m, length);
-                    abort();
+                    flint_abort();
                 }
 
                 for (i = 0; i < m; i++)
@@ -318,7 +318,7 @@ int main()
                             flint_printf("FAIL (directed path)\n");
                             bool_mat_print(A); flint_printf("\n");
                             fmpz_mat_print_pretty(B); flint_printf("\n");
-                            abort();
+                            flint_abort();
                         }
                     }
                 }
@@ -335,7 +335,7 @@ int main()
                     bool_mat_print(A); flint_printf("\n");
                     fmpz_mat_print_pretty(B); flint_printf("\n");
                     flint_printf("m=%wd length=%wd\n", m, length);
-                    abort();
+                    flint_abort();
                 }
 
                 for (i = 0; i < m; i++)
@@ -347,7 +347,7 @@ int main()
                             flint_printf("FAIL (directed cycle)\n");
                             bool_mat_print(A); flint_printf("\n");
                             fmpz_mat_print_pretty(B); flint_printf("\n");
-                            abort();
+                            flint_abort();
                         }
                     }
                 }

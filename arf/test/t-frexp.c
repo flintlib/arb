@@ -56,7 +56,7 @@ int main()
             printf("z = "); arf_print(z); printf("\n\n");
             printf("e = "); fmpz_print(e); printf("\n\n");
             printf("f = "); fmpz_print(f); printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_frexp(x, f, x);
@@ -69,7 +69,7 @@ int main()
             printf("z = "); arf_print(z); printf("\n\n");
             printf("e = "); fmpz_print(e); printf("\n\n");
             printf("f = "); fmpz_print(f); printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

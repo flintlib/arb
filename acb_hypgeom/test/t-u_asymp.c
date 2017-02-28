@@ -88,7 +88,7 @@ int main()
             flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
             flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         /* Check contiguous relation
@@ -119,7 +119,7 @@ int main()
             flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
             flint_printf("t = "); acb_printd(t, 100); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         /* Test U(a,b,z) = gamma(1-b)/gamma(a-b+1) M(a,b,z)
@@ -171,7 +171,7 @@ int main()
             flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
             flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         /* Test special value: b = a+1 */
@@ -189,7 +189,7 @@ int main()
             flint_printf("n1 = %wd, n2 = %wd, prec1 = %wd, prec2 = %wd\n", n1, n2, prec1, prec2);
             flint_printf("U1 = "); acb_printd(U1, 100); flint_printf("\n");
             flint_printf("U2 = "); acb_printd(U2, 100); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

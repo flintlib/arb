@@ -56,7 +56,7 @@ int main()
             flint_printf("s = "); acb_printn(s, 100, 0); flint_printf("\n\n");
             flint_printf("t = "); acb_printn(t, 100, 0); flint_printf("\n\n");
             flint_printf("u = "); acb_printn(u, 100, 0); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         dirichlet_char_clear(chi);

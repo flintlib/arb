@@ -59,7 +59,7 @@ int main()
             flint_printf("c = "); acb_printd(c, 15); flint_printf("\n\n");
             flint_printf("d = "); acb_printd(d, 15); flint_printf("\n\n");
             flint_printf("e = "); acb_printd(e, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_chebyshev_u_ui(b, n, b, prec);
@@ -71,7 +71,7 @@ int main()
             flint_printf("a = "); acb_printd(a, 15); flint_printf("\n\n");
             flint_printf("b = "); acb_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); acb_printd(c, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_randtest(a, state, 1 + n_randint(state, 300), 5);
@@ -89,7 +89,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (n == 0)
@@ -105,7 +105,7 @@ int main()
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(a);

@@ -91,7 +91,7 @@ int main()
             flint_printf("E*F = \n"); arb_mat_printd(EF, 15); flint_printf("\n\n");
             flint_printf("G   = \n"); arb_mat_printd(G, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_clear(c);

@@ -78,7 +78,7 @@ int main()
             flint_printf("FAIL!\n");
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_floor(x, x);
@@ -88,7 +88,7 @@ int main()
             flint_printf("FAIL (aliasing)!\n");
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y = "); arf_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arf_clear(x);

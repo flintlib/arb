@@ -67,7 +67,7 @@ _arb_exp_taylor_bound(slong mag, slong prec)
     if (mag > -2)
     {
         flint_printf("_arb_exp_taylor_bound: too large input %wd\n", mag);
-        abort();
+        flint_abort();
     }
 
     for (i = 1; ; i++)

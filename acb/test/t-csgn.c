@@ -55,7 +55,7 @@ int main()
             flint_printf("x = "); acb_printd(x, 15); flint_printf("\n\n");
             flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
             flint_printf("y = "); acb_printd(y, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(x);

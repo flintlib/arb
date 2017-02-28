@@ -49,7 +49,7 @@ int main()
             flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
             flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
             flint_printf("s = "); arb_printd(s, prec / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (!(fmpz_is_one(fmpq_denref(q)) && fmpz_sgn(fmpq_numref(q)) <= 0)
@@ -63,7 +63,7 @@ int main()
                 flint_printf("prec = %wd\n", prec);
                 flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
                 flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

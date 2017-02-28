@@ -52,7 +52,7 @@ int main()
             flint_printf("x = "); arf_print(x); flint_printf("\n\n");
             flint_printf("y1 = "); arb_print(y1); flint_printf("\n\n");
             flint_printf("y2 = "); arb_print(y2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acc1 = arb_rel_accuracy_bits(y1);
@@ -68,7 +68,7 @@ int main()
                 flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
                 flint_printf("y1 = "); arb_printd(y1, 50); flint_printf("\n\n");
                 flint_printf("y2 = "); arb_printd(y2, 50); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

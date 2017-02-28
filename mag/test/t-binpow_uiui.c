@@ -51,7 +51,7 @@ int main()
             flint_printf("n = %wu\n\n", n);
             flint_printf("x = "); fmpr_printd(x, 10); flint_printf("\n\n");
             flint_printf("y = "); fmpr_printd(y, 10); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

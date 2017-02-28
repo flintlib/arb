@@ -54,7 +54,7 @@ main(void)
             flint_printf("Matrix B:\n"), arb_mat_printd(B, 15), flint_printf("\n");
             flint_printf("cp(AB) = "), arb_poly_printd(f, 15), flint_printf("\n");
             flint_printf("cp(BA) = "), arb_poly_printd(g, 15), flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         arb_mat_clear(A);

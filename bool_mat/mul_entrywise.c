@@ -20,7 +20,7 @@ bool_mat_mul_entrywise(bool_mat_t C, const bool_mat_t A, const bool_mat_t B)
         bool_mat_ncols(A) != bool_mat_ncols(B))
     {
         flint_printf("bool_mat_mul_entrywise: incompatible dimensions\n");
-        abort();
+        flint_abort();
     }
 
     for (i = 0; i < bool_mat_nrows(A); i++)

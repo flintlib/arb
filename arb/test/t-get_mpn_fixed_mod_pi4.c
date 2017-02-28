@@ -67,7 +67,7 @@ int main()
             if (fmpz_fdiv_ui(q, 8) != octant)
             {
                 flint_printf("bad octant\n");
-                abort();
+                flint_abort();
             }
 
             _arf_set_mpn_fixed(arb_midref(wb), w, wn, wn, 0, FLINT_BITS * wn, ARB_RND);
@@ -87,7 +87,7 @@ int main()
                 flint_printf("q = "); fmpz_print(q); flint_printf("\n\n");
                 flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
                 flint_printf("t = "); arb_printd(t, 50); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             arb_const_pi(t, prec2);
@@ -99,7 +99,7 @@ int main()
                 flint_printf("FAIL (expected 0 <= w < pi/4)\n");
                 flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
                 flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

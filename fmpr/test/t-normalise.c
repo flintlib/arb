@@ -64,7 +64,7 @@ int main()
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("ret1 = %wd, ret2 = %wd\n", ret1, ret2);
-            abort();
+            flint_abort();
         }
 
         fmpr_sub(err, x, xcopy, FMPR_PREC_EXACT, FMPR_RND_DOWN);
@@ -79,7 +79,7 @@ int main()
             flint_printf("error: "); fmpr_print(err); flint_printf("\n\n");
             flint_printf("error bound: "); fmpr_print(err_bound); flint_printf("\n\n");
             flint_printf("ret = %wd\n", ret1);
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

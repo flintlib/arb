@@ -59,7 +59,7 @@ int main()
             flint_printf("Atrace = \n"); acb_printd(Atrace, 15); flint_printf("\n\n");
             flint_printf("Atrace = \n"); acb_print(Atrace); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_mat_clear(Q);
@@ -110,7 +110,7 @@ int main()
 
             flint_printf("trace(ab) = \n"); acb_printd(trab, 15); flint_printf("\n\n");
             flint_printf("trace(ba) = \n"); acb_printd(trba, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(trab);

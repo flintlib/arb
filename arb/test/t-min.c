@@ -84,7 +84,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
             flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* aliasing */
@@ -108,7 +108,7 @@ int main()
                 flint_printf("x = "); arb_print(x); flint_printf("\n\n");
                 flint_printf("y = "); arb_print(y); flint_printf("\n\n");
                 flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

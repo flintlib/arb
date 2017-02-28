@@ -43,7 +43,7 @@ int main()
         {
             flint_printf("FAIL: accuracy (reflection formula)\n\n");
             acb_poly_printd(a, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);
@@ -88,7 +88,7 @@ int main()
             flint_printf("b = "); acb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         /* check loggamma(a) + log(a) = loggamma(a+1) */
@@ -108,14 +108,14 @@ int main()
             flint_printf("c = "); acb_poly_printd(c, 15); flint_printf("\n\n");
             flint_printf("d = "); acb_poly_printd(d, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         acb_poly_lgamma_series(a, a, n1, rbits2);
         if (!acb_poly_overlaps(a, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);

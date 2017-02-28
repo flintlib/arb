@@ -25,7 +25,7 @@ fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
         else
         {
             flint_printf("fmpr_get_fmpz: cannot convert infinity or nan to integer\n");
-            abort();
+            flint_abort();
         }
     }
 
@@ -52,7 +52,7 @@ fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
         else
         {
             flint_printf("fmpr_get_fmpz: number too large to convert to integer\n");
-            abort();
+            flint_abort();
         }
     }
 

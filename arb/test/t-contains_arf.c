@@ -61,7 +61,7 @@ int main()
             flint_printf("bm = "); fmpq_print(bm); flint_printf("\n\n");
             flint_printf("t = "); fmpq_print(t); flint_printf("\n\n");
             flint_printf("c1 = %d, c2 = %d\n\n", c1, c2);
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

@@ -74,7 +74,7 @@ int main()
                 flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
                 flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
                 flint_printf("p2 = "); acb_printd(p2, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -126,7 +126,7 @@ int main()
             flint_printf("z2 = "); acb_printd(z2, 15); flint_printf("\n\n");
             flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
             flint_printf("p2 = "); acb_printd(p2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_modular_elliptic_p(z1, z1, tau, prec1);
@@ -137,7 +137,7 @@ int main()
             flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
             flint_printf("z1 = "); acb_printd(z1, 15); flint_printf("\n\n");
             flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau);

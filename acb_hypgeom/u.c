@@ -68,7 +68,7 @@ acb_hypgeom_u_si_rec(acb_t res, slong a, const acb_t b, const acb_t z, slong pre
     acb_t u0, u1, t;
 
     if (a > 0)
-        abort();
+        flint_abort();
 
     if (a == 0)
     {

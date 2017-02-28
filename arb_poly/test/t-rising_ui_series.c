@@ -79,7 +79,7 @@ int main()
             flint_printf("h1h2 = "); arb_poly_printd(h1h2, 15); flint_printf("\n\n");
             flint_printf("h3 = "); arb_poly_printd(h3, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_rising_ui_series(f, f, a, trunc, bits);
@@ -96,7 +96,7 @@ int main()
             flint_printf("f = "); arb_poly_printd(f, 15); flint_printf("\n\n");
             flint_printf("h1 = "); arb_poly_printd(h1, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(f);

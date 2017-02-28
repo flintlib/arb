@@ -1214,7 +1214,7 @@ arf_mag_add_ulp(mag_t z, const mag_t x, const arf_t y, slong prec)
     if (ARF_IS_SPECIAL(y))
     {
         flint_printf("error: ulp error not defined for special value!\n");
-        abort();
+        flint_abort();
     }
     else if (MAG_IS_LAGOM(z) && MAG_IS_LAGOM(x) && ARF_IS_LAGOM(y))
     {
@@ -1236,7 +1236,7 @@ arf_mag_set_ulp(mag_t z, const arf_t y, slong prec)
     if (ARF_IS_SPECIAL(y))
     {
         flint_printf("error: ulp error not defined for special value!\n");
-        abort();
+        flint_abort();
     }
     else
     {

@@ -26,7 +26,7 @@ fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
     else if (COEFF_IS_MPZ(*fmpr_expref(y)))
     {
         flint_printf("exception: exponent too large to convert to mpfr");
-        abort();
+        flint_abort();
     }
     else
     {
@@ -42,7 +42,7 @@ fmpr_get_mpfr(mpfr_t x, const fmpr_t y, mpfr_rnd_t rnd)
         if (!mpfr_regular_p(x))
         {
             flint_printf("exception: exponent too large to convert to mpfr");
-            abort();
+            flint_abort();
         }
     }
 

@@ -299,7 +299,7 @@ acb_hypgeom_legendre_q(acb_t res, const acb_t n, const acb_t m,
     else
     {
         flint_printf("unsupported 'type' %d for legendre q\n", type);
-        abort();
+        flint_abort();
     }
 }
 

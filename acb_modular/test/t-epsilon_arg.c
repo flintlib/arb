@@ -85,7 +85,7 @@ int main()
             flint_printf("g = "); psl2z_print(g); flint_printf("\n");
             flint_printf("x = "); fmpq_print(x); flint_printf("\n");
             flint_printf("y = "); fmpq_print(y); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         psl2z_clear(g);

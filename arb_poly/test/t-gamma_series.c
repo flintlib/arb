@@ -62,7 +62,7 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         /* check gamma(a) * a = gamma(a+1) */
@@ -82,14 +82,14 @@ int main()
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
             flint_printf("d = "); arb_poly_printd(d, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_gamma_series(a, a, n1, rbits2);
         if (!arb_poly_overlaps(a, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);

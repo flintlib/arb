@@ -102,7 +102,7 @@ int main()
                         flint_printf("   %d \n", info[i]);
                     }
 
-                    abort();
+                    flint_abort();
                 }
             }
         }
@@ -128,7 +128,7 @@ int main()
                         flint_printf("   %d \n", info[i]);
                     }
 
-                    abort();
+                    flint_abort();
                 }
             }
         }

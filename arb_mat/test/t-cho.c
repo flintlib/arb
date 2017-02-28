@@ -16,7 +16,7 @@ _fmpq_mat_randtest_positive_semidefinite(fmpq_mat_t mat, flint_rand_t state, mp_
 {
     slong n;
     fmpq_mat_t R, RT;
-    if (!fmpq_mat_is_square(mat)) abort(); /* assert */
+    if (!fmpq_mat_is_square(mat)) flint_abort(); /* assert */
     n = fmpq_mat_nrows(mat);
     fmpq_mat_init(R, n, n);
     fmpq_mat_init(RT, n, n);
@@ -157,7 +157,7 @@ int main()
                         flint_printf("n = %wd, prec = %wd\n", n, prec);
                         flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
                         flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
-                        abort();
+                        flint_abort();
                     }
                     prec *= 2;
                 }
@@ -179,7 +179,7 @@ int main()
                 flint_printf("U = \n"); arb_mat_printd(U, 15); flint_printf("\n\n");
                 flint_printf("L*U = \n"); arb_mat_printd(T, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
         }
 

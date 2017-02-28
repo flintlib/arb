@@ -82,7 +82,7 @@ int main()
             flint_printf("b = "); acb_mat_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); acb_mat_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         /* test aliasing with a */
@@ -94,7 +94,7 @@ int main()
             if (!acb_mat_equal(d, c))
             {
                 flint_printf("FAIL (aliasing 1)\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -107,7 +107,7 @@ int main()
             if (!acb_mat_equal(d, c))
             {
                 flint_printf("FAIL (aliasing 2)\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -175,7 +175,7 @@ int main()
                 _acb_mat_nprintd("(a*b)*d", lhs);
                 _acb_mat_nprintd("a*(b*d)", rhs);
 
-                abort();
+                flint_abort();
             }
 
             acb_mat_clear(lhs);
@@ -205,7 +205,7 @@ int main()
                 _acb_mat_nprintd("a*(b + c)", lhs);
                 _acb_mat_nprintd("a*b + b*c", rhs);
 
-                abort();
+                flint_abort();
             }
 
             acb_mat_clear(lhs);
@@ -235,7 +235,7 @@ int main()
                 _acb_mat_nprintd("(b + c)*d", lhs);
                 _acb_mat_nprintd("b*d + c*d", rhs);
 
-                abort();
+                flint_abort();
             }
 
             acb_mat_clear(lhs);
@@ -261,7 +261,7 @@ int main()
                 _acb_mat_nprintd("identity * d", lhs);
                 _acb_mat_nprintd("d", d);
 
-                abort();
+                flint_abort();
             }
 
             acb_mat_clear(one);
@@ -287,7 +287,7 @@ int main()
                 _acb_mat_nprintd("a * identity", lhs);
                 _acb_mat_nprintd("a", a);
 
-                abort();
+                flint_abort();
             }
 
             acb_mat_clear(one);

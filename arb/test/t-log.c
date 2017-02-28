@@ -59,7 +59,7 @@ int main()
             flint_printf("FAIL: containment\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_log(a, a, prec);
@@ -67,7 +67,7 @@ int main()
         if (!arb_equal(a, b))
         {
             flint_printf("FAIL: aliasing\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);
@@ -114,7 +114,7 @@ int main()
             flint_printf("FAIL: containment\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_log(a, a, prec);
@@ -122,7 +122,7 @@ int main()
         if (!arb_equal(a, b))
         {
             flint_printf("FAIL: aliasing\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);
@@ -164,14 +164,14 @@ int main()
             flint_printf("ab = "); arb_print(ab); flint_printf("\n\n");
             flint_printf("lab = "); arb_print(lab); flint_printf("\n\n");
             flint_printf("lalb = "); arb_print(lalb); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_log(a, a, prec);
         if (!arb_overlaps(a, la))
         {
             flint_printf("FAIL: aliasing\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

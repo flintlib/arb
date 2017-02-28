@@ -44,7 +44,7 @@ int main()
         if (!arb_poly_contains(c, a))
         {
             flint_printf("FAIL (containment)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_set(d, a);
@@ -52,7 +52,7 @@ int main()
         if (!arb_poly_equal(d, b))
         {
             flint_printf("FAIL (aliasing 1)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_set(d, b);
@@ -60,7 +60,7 @@ int main()
         if (!arb_poly_equal(d, c))
         {
             flint_printf("FAIL (aliasing 2)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(a);

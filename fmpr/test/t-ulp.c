@@ -50,7 +50,7 @@ int main()
             flint_printf("ulp = "); fmpr_print(ulp); flint_printf("\n");
             flint_printf("a = "); fmpr_print(a); flint_printf("\n");
             flint_printf("b = "); fmpr_print(b); flint_printf("\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

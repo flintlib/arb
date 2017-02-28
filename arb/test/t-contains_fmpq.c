@@ -82,7 +82,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpq_print(y); flint_printf("\n\n");
             flint_printf("c1 = %d, c2 = %d\n\n", c1, c2);
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

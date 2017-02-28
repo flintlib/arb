@@ -58,7 +58,7 @@ fmpz_poly_deflate(fmpz_poly_t result, const fmpz_poly_t input, ulong deflation)
     if (deflation == 0)
     {
         flint_printf("Exception (fmpz_poly_deflate). Division by zero.\n");
-        abort();
+        flint_abort();
     }
 
     if (input->length <= 1 || deflation == 1)

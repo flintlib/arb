@@ -37,7 +37,7 @@ int main()
                     !bool_mat_any(C) || !bool_mat_all(C))
                 {
                     flint_printf("FAIL (zero matrix)\n");
-                    abort();
+                    flint_abort();
                 }
                 bool_mat_clear(zero);
                 bool_mat_clear(C);
@@ -59,7 +59,7 @@ int main()
                 !bool_mat_any(C) || bool_mat_all(C))
             {
                 flint_printf("FAIL (identity matrix)\n");
-                abort();
+                flint_abort();
             }
             bool_mat_clear(one);
             bool_mat_clear(C);
@@ -86,7 +86,7 @@ int main()
             (bool_mat_all(C) && bool_mat_any(A)))
         {
             flint_printf("FAIL\n");
-            abort();
+            flint_abort();
         }
 
         /* involution */
@@ -98,7 +98,7 @@ int main()
             if (!bool_mat_equal(A, CC))
             {
                 flint_printf("FAIL (involution)\n");
-                abort();
+                flint_abort();
             }
             bool_mat_clear(CC);
         }
@@ -108,7 +108,7 @@ int main()
         if (!bool_mat_equal(A, C))
         {
             flint_printf("FAIL (aliasing)\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);

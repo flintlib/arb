@@ -72,7 +72,7 @@ int main()
                     flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
                     flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
                     flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                    abort();
+                    flint_abort();
                 }
                 break;
 
@@ -89,7 +89,7 @@ int main()
                     flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
                     flint_printf("v = "); fmpr_print(v); flint_printf("\n\n");
                     flint_printf("r1 = %wd, r2 = %wd\n", r1, r2);
-                    abort();
+                    flint_abort();
                 }
                 break;
             }

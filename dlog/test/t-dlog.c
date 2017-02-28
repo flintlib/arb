@@ -63,7 +63,7 @@ int main()
                 flint_printf("\n\nFAIL: log(%wu,%wu) mod %wu\n\n",k,a,p);
                 flint_printf("once: %wu\ntable: %wu\nbsgs: %wu\ncrt: %wu\nprecomp1: %wu\nprecomp100: %wu\n\n",
                         l0, l1, l2, l3, l4, l5);
-                abort();
+                flint_abort();
             }
         }
         dlog_table_clear(table);

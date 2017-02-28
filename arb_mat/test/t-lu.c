@@ -86,7 +86,7 @@ int main()
                     if (prec > 10000)
                     {
                         flint_printf("FAIL: failed to converge at 10000 bits\n");
-                        abort();
+                        flint_abort();
                     }
                     prec *= 2;
                 }
@@ -122,7 +122,7 @@ int main()
                 flint_printf("U = \n"); arb_mat_printd(U, 15); flint_printf("\n\n");
                 flint_printf("P*L*U = \n"); arb_mat_printd(T, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
         }
 

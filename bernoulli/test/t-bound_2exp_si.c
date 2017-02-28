@@ -44,7 +44,7 @@ int main()
             flint_printf("FAIL: %wd\n", i);
             fmpr_print(t); flint_printf("\n\n");
             flint_printf("%wd\n", bound); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
     }
 
@@ -61,7 +61,7 @@ int main()
         {
             flint_printf("FAIL: %wd\n", i);
             flint_printf("%wd: %f %f %f\n", i, a, b, (float) a / b);
-            abort();
+            flint_abort();
         }
     }
 

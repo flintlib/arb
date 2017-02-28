@@ -76,7 +76,7 @@ int main()
             flint_printf("Adet = \n"); acb_printd(Adet, 15); flint_printf("\n\n");
             flint_printf("Adet = \n"); acb_print(Adet); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         fmpq_mat_clear(Q);

@@ -50,7 +50,7 @@ int main()
             flint_printf("y = "); fmpz_print(y); flint_printf("\n\n");
             flint_printf("e = "); fmpz_print(e); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
         if (!arb_is_finite(x) || !arb_is_finite(r))
         {
             flint_printf("unable to parse input string!\n");
-            abort();
+            flint_abort();
         }
 
         for (i = 0; i < n; i++)

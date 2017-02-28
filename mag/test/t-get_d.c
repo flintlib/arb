@@ -47,7 +47,7 @@ int main()
                 flint_printf("x = "); mag_print(x); flint_printf("\n\n");
                 flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
                 flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -58,7 +58,7 @@ int main()
                 flint_printf("x = "); mag_print(x); flint_printf("\n\n");
                 flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
                 flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -74,7 +74,7 @@ int main()
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("z = "); fmpz_print(z); flint_printf("\n\n");
             flint_printf("z2 = "); fmpz_print(z2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

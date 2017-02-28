@@ -24,7 +24,7 @@ arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong p
     if (ac != br || ar != arb_mat_nrows(C) || bc != arb_mat_ncols(C))
     {
         flint_printf("arb_mat_mul: incompatible dimensions\n");
-        abort();
+        flint_abort();
     }
 
     if (br == 0)

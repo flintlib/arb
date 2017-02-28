@@ -71,7 +71,7 @@ int main()
             flint_printf("q = "); acb_poly_printd(q, 15); flint_printf("\n\n");
             flint_printf("r = "); acb_poly_printd(r, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         acb_poly_divrem(a, r, a, b, rbits3);
@@ -85,7 +85,7 @@ int main()
         if (!acb_poly_equal(b, q))
         {
             flint_printf("FAIL (aliasing q, b)\n\n");
-            abort();
+            flint_abort();
         }
         acb_poly_set_fmpq_poly(b, B, rbits2);
 
@@ -93,7 +93,7 @@ int main()
         if (!acb_poly_equal(a, r))
         {
             flint_printf("FAIL (aliasing r, a)\n\n");
-            abort();
+            flint_abort();
         }
         acb_poly_set_fmpq_poly(a, A, rbits1);
 
@@ -101,7 +101,7 @@ int main()
         if (!acb_poly_equal(b, r))
         {
             flint_printf("FAIL (aliasing r, b)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);

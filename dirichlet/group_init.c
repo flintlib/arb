@@ -26,7 +26,7 @@ primitive_root_p_and_p2(ulong p)
     if (p > UWORD(1000000000000))
     {
         printf("primitive root: p > 10^12 not implemented");
-        abort();
+        flint_abort();
     }
 #endif
 

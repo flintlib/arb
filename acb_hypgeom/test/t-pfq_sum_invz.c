@@ -72,7 +72,7 @@ int main()
             flint_printf("s2 = "); acb_printd(s2, 15); flint_printf("\n\n");
             flint_printf("t1 = "); acb_printd(t1, 15); flint_printf("\n\n");
             flint_printf("t2 = "); acb_printd(t2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         _acb_vec_clear(a, p);

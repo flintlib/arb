@@ -55,14 +55,14 @@ arb_mat_cho(arb_mat_t L, const arb_mat_t A, slong prec)
     if (!arb_mat_is_square(A))
     {
         flint_printf("arb_mat_cho: a square matrix is required\n");
-        abort();
+        flint_abort();
     }
 
     if (arb_mat_nrows(L) != arb_mat_nrows(A) ||
         arb_mat_ncols(L) != arb_mat_ncols(A))
     {
         flint_printf("arb_mat_cho: incompatible dimensions\n");
-        abort();
+        flint_abort();
     }
 
     if (arb_mat_is_empty(A))

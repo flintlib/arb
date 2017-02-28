@@ -78,7 +78,7 @@ int main()
             flint_mpn_debug(y1s, xn);
             flint_printf("y2s =");
             flint_mpn_debug(y2s, xn);
-            abort();
+            flint_abort();
         }
 
         cmp = mpn_cmp(y1c, y2c, xn);
@@ -108,7 +108,7 @@ int main()
             flint_mpn_debug(y1c, xn);
             flint_printf("y2c =");
             flint_mpn_debug(y2c, xn);
-            abort();
+            flint_abort();
         }
 
         flint_free(x);

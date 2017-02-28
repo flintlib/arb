@@ -65,7 +65,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_set(z, x);
@@ -91,7 +91,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_set(z, y);
@@ -117,7 +117,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_set(z, x);
@@ -143,7 +143,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("z = "); fmpr_print(z); flint_printf("\n\n");
             flint_printf("w = "); fmpr_print(w); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

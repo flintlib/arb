@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     if (n_gcd(q, n) != 1)
     {
         flint_printf("need gcd(q,n) = 1 to define a character\n");
-        abort();
+        flint_abort();
     }
 
     z = _acb_vec_init(len);

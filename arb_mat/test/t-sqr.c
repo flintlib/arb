@@ -58,7 +58,7 @@ int main()
             flint_printf("a = "); arb_mat_printd(a, 15); flint_printf("\n\n");
             flint_printf("b = "); arb_mat_printd(b, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         /* test aliasing */
@@ -67,7 +67,7 @@ int main()
         if (!arb_mat_equal(c, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_mat_clear(A);

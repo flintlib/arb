@@ -38,7 +38,7 @@ dlog_precomp_clear(dlog_precomp_t pre)
             break;
         default:
             flint_printf("dlog_precomp_clear: unknown type %d\n", pre->type);
-            abort();
+            flint_abort();
             break;
     }
 }

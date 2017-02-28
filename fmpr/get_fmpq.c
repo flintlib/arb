@@ -21,7 +21,7 @@ fmpr_get_fmpq(fmpq_t y, const fmpr_t x)
     else if (fmpr_is_special(x) || COEFF_IS_MPZ(*fmpr_expref(x)))
     {
         flint_printf("exception: fmpr_get_fmpq: cannot convert to rational\n");
-        abort();
+        flint_abort();
     }
     else
     {

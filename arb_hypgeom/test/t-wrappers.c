@@ -19,7 +19,7 @@ TEST(const arb_t x1, const arb_t x2, const char * s)
         flint_printf("FAIL: %s\n", s);
         arb_printn(x1, 30, 0); printf("\n\n");
         arb_printn(x2, 30, 0); printf("\n\n");
-        abort();
+        flint_abort();
     }
 }
 

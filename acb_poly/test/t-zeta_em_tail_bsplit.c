@@ -57,7 +57,7 @@ int main()
                 flint_printf("Na = "); acb_printd(Na, prec / 3.33); flint_printf("\n\n");
                 flint_printf("z1 = "); acb_printd(z1 + i, prec / 3.33); flint_printf("\n\n");
                 flint_printf("z2 = "); acb_printd(z2 + i, prec / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

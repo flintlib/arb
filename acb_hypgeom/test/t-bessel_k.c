@@ -83,7 +83,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         switch (n_randint(state, 3))
@@ -124,7 +124,7 @@ int main()
             flint_printf("w1 = "); acb_printd(w1, 30); flint_printf("\n\n");
             flint_printf("w2 = "); acb_printd(w2, 30); flint_printf("\n\n");
             flint_printf("t = "); acb_printd(t, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(nu0);

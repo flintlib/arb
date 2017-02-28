@@ -50,7 +50,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
     if (!acb_mat_is_square(A))
     {
         flint_printf("acb_mat_exp: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     if (acb_mat_is_empty(A))
@@ -157,7 +157,7 @@ acb_mat_exp(acb_mat_t B, const acb_mat_t A, slong prec)
             fmpz_mat_t W;
             fmpz_mat_init(W, dim, dim);
             w = bool_mat_all_pairs_longest_walk(W, S);
-            if (w + 1 != nildegree) abort(); /* assert */
+            if (w + 1 != nildegree) flint_abort(); /* assert */
             for (i = 0; i < dim; i++)
             {
                 for (j = 0; j < dim; j++)

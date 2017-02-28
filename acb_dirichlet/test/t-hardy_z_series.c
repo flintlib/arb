@@ -70,7 +70,7 @@ int main()
             flint_printf("S = "); acb_poly_printd(S, 15); flint_printf("\n\n");
             flint_printf("A = "); acb_poly_printd(A, 15); flint_printf("\n\n");
             flint_printf("B = "); acb_poly_printd(B, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(S);

@@ -66,7 +66,7 @@ int main()
             flint_printf("y = "); fmpr_printd(y, 15); flint_printf("\n\n");
             flint_printf("z = "); fmpr_printd(z, 15); flint_printf("\n\n");
             flint_printf("z2 = "); fmpr_printd(z2, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mag_expm1(xb, xb);
@@ -74,7 +74,7 @@ int main()
         if (!mag_equal(xb, yb))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

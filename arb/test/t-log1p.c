@@ -52,7 +52,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* compare with log */
@@ -66,7 +66,7 @@ int main()
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");
             flint_printf("d = "); arb_print(d); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_log1p(a, a, prec1);
@@ -76,7 +76,7 @@ int main()
             flint_printf("FAIL: aliasing\n\n");
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

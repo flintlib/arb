@@ -19,7 +19,7 @@ bool_mat_trace(const bool_mat_t mat)
     if (!bool_mat_is_square(mat))
     {
         flint_printf("bool_mat_trace: a square matrix is required!\n");
-        abort();
+        flint_abort();
     }
 
     if (bool_mat_is_empty(mat))

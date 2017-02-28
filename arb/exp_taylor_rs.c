@@ -1201,7 +1201,7 @@ void _arb_exp_taylor_rs(mp_ptr y, mp_limb_t * error,
     if (N >= FACTORIAL_TAB_SIZE - 1)
     {
         flint_printf("_arb_exp_taylor_rs: N too large!\n");
-        abort();
+        flint_abort();
     }
 
     if (N <= 3)

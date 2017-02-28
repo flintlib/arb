@@ -240,7 +240,7 @@ acb_modular_theta_sum(acb_ptr theta1,
             else
             {
                 flint_printf("exponent not in addition sequence!\n");
-                abort();
+                flint_abort();
             }
         }
 

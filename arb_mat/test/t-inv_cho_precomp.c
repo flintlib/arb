@@ -16,7 +16,7 @@ _fmpq_mat_randtest_positive_semidefinite(fmpq_mat_t mat, flint_rand_t state, mp_
 {
     slong n;
     fmpq_mat_t R, RT;
-    if (!fmpq_mat_is_square(mat)) abort(); /* assert */
+    if (!fmpq_mat_is_square(mat)) flint_abort(); /* assert */
     n = fmpq_mat_nrows(mat);
     fmpq_mat_init(R, n, n);
     fmpq_mat_init(RT, n, n);
@@ -95,7 +95,7 @@ int main()
                 flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -117,7 +117,7 @@ int main()
                         flint_printf("FAIL: failed to converge at 10000 bits\n");
                         flint_printf("Q = \n"); fmpq_mat_print(Q); flint_printf("\n\n");
                         flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
-                        abort();
+                        flint_abort();
                     }
                     prec *= 2;
                 }
@@ -135,7 +135,7 @@ int main()
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             /* test aliasing */
@@ -145,7 +145,7 @@ int main()
                 flint_printf("FAIL (aliasing)\n");
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("Ainv = \n"); arb_mat_printd(Ainv, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -64,7 +64,7 @@ int main()
             flint_printf("s2 = "); acb_print(s2); flint_printf("\n\n");
             flint_printf("t1 = "); acb_print(t1); flint_printf("\n\n");
             flint_printf("t2 = "); acb_print(t2); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         _acb_vec_clear(a, p);

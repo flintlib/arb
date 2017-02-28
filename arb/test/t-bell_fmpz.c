@@ -56,7 +56,7 @@ int main()
             flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
             flint_printf("b1 = "); arb_printn(b1, 50, 0); flint_printf("\n\n");
             flint_printf("b2 = "); arb_printn(b2, 50, 0); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acc1 = arb_rel_accuracy_bits(b1);
@@ -70,7 +70,7 @@ int main()
             flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
             flint_printf("b1 = "); arb_printn(b1, 50, 0); flint_printf("\n\n");
             flint_printf("b2 = "); arb_printn(b2, 50, 0); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(b1);

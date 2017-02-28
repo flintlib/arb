@@ -183,7 +183,7 @@ acb_hypgeom_dilog_transform(acb_t res, const acb_t z, int algorithm, slong prec)
     else
     {
         flint_printf("unknown algorithm\n");
-        abort();
+        flint_abort();
     }
 
     acb_clear(t);

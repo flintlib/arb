@@ -45,7 +45,7 @@ int main()
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("m = "); mag_print(m); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

@@ -70,7 +70,7 @@ int main()
                 flint_printf("x = "); acb_printd(x + i, 15); flint_printf("\n\n");
                 flint_printf("y = "); acb_printd(y + i, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
         }
 

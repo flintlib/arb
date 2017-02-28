@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("usage: %s [log|csv|json]\n", argv[0]);
-        abort();
+        flint_abort();
     }
 
     flint_randinit(state);

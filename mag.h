@@ -139,7 +139,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
     if (MAG_MAN(rr) != 0 && FLINT_BIT_COUNT(MAG_MAN(rr)) != MAG_BITS) \
     { \
         flint_printf("FAIL: wrong number of bits in mantissa!\n"); \
-        abort(); \
+        flint_abort(); \
     }
 
 /* Note: assumes mantissa either has the right number of bits, or

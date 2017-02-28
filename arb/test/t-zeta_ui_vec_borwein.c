@@ -49,7 +49,7 @@ int main()
                 flint_printf("n = %wu\n\n", n + i * step);
                 flint_printf("r = "); arb_printd(r + i, prec / 3.33); flint_printf("\n\n");
                 flint_printf("s = "); mpfr_printf("%.275Rf\n", s); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             accuracy = arb_rel_accuracy_bits(r + i);
@@ -59,7 +59,7 @@ int main()
                 flint_printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec);
                 flint_printf("n = %wu\n\n", n + i * step);
                 flint_printf("r = "); arb_printd(r + i, prec / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

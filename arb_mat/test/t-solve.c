@@ -60,7 +60,7 @@ int main()
                 flint_printf("QX = \n"); fmpq_mat_print(QX); flint_printf("\n\n");
                 flint_printf("QB = \n"); fmpq_mat_print(QB); flint_printf("\n\n");
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
         else
@@ -85,7 +85,7 @@ int main()
                         flint_printf("QX = \n"); fmpq_mat_print(QX); flint_printf("\n\n");
                         flint_printf("QB = \n"); fmpq_mat_print(QB); flint_printf("\n\n");
                         flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
-                        abort();
+                        flint_abort();
                     }
                     prec *= 2;
                 }
@@ -105,7 +105,7 @@ int main()
                 flint_printf("B = \n"); arb_mat_printd(B, 15); flint_printf("\n\n");
                 flint_printf("X = \n"); arb_mat_printd(X, 15); flint_printf("\n\n");
 
-                abort();
+                flint_abort();
             }
 
             /* test aliasing */
@@ -116,7 +116,7 @@ int main()
                 flint_printf("A = \n"); arb_mat_printd(A, 15); flint_printf("\n\n");
                 flint_printf("B = \n"); arb_mat_printd(B, 15); flint_printf("\n\n");
                 flint_printf("X = \n"); arb_mat_printd(X, 15); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

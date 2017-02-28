@@ -76,7 +76,7 @@ int main()
                         flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
                         flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
                         flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
-                        abort();
+                        flint_abort();
                     }
                 }
             }
@@ -98,7 +98,7 @@ int main()
             flint_printf("n = "); acb_printd(n, 30); flint_printf("\n\n");
             flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
             flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_elliptic_pi(r1, n, m, prec1);
@@ -119,7 +119,7 @@ int main()
             flint_printf("m = "); acb_printd(m, 30); flint_printf("\n\n");
             flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
             flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(n);

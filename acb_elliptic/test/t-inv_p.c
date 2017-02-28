@@ -49,7 +49,7 @@ int main()
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("w = "); acb_printd(w, 30); flint_printf("\n\n");
             flint_printf("pw = "); acb_printd(pw, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(tau);

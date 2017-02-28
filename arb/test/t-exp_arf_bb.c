@@ -78,7 +78,7 @@ int main()
             flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
             flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
             flint_printf("z = "); arb_printd(z, 50); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (arb_rel_accuracy_bits(z) < prec - 2)
@@ -88,7 +88,7 @@ int main()
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("y = "); arb_print(y); flint_printf("\n\n");
             flint_printf("z = "); arb_print(z); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_exp_arf_bb(x, arb_midref(x), prec, 0);
@@ -96,7 +96,7 @@ int main()
         if (!arb_overlaps(x, z))
         {
             flint_printf("FAIL: aliasing\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

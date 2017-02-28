@@ -17,7 +17,7 @@ arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x)
     if (!arb_is_finite(x))
     {
         printf("arb_get_interval_fmpz_2exp: expected finite input\n");
-        abort();
+        flint_abort();
     }
     else if (arb_is_exact(x))
     {
@@ -49,7 +49,7 @@ arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x)
         if (FLINT_ABS(shift) >= WORD_MAX / 2)
         {
             printf("arb_get_interval_fmpz_2exp: too large shift\n");
-            abort();
+            flint_abort();
         }
 
         if (shift >= 0)

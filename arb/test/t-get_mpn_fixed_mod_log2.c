@@ -73,7 +73,7 @@ int main()
                 flint_printf("q = "); fmpz_print(q); flint_printf("\n\n");
                 flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
                 flint_printf("t = "); arb_printd(t, 50); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
 
             arb_const_log2(t, prec2);
@@ -84,7 +84,7 @@ int main()
                 flint_printf("FAIL (expected 0 <= w < log(2))\n");
                 flint_printf("x = "); arf_printd(x, 50); flint_printf("\n\n");
                 flint_printf("w = "); arb_printd(wb, 50); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

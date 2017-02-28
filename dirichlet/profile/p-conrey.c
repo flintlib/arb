@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("usage: %s [log|csv|json]\n", argv[0]);
-        abort();
+        flint_abort();
     }
 
     if (out == CSV)
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
             else if (n != nref)
             {
                 flint_printf("FAIL: wrong number of elements %wu != %wu\n\n",n, nref);
-                abort();
+                flint_abort();
             }
 
             if (out == JSON)

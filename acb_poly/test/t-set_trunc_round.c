@@ -61,7 +61,7 @@ main(void)
             acb_poly_printd(c, 50), flint_printf("\n\n");
             acb_poly_printd(d, 50), flint_printf("\n\n");
             acb_poly_printd(e, 50), flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(a);

@@ -60,7 +60,7 @@ int main()
                 acb_printd(s3, 25);
                 flint_printf("\ntheta ");
                 acb_printd(s4, 25);
-                abort();
+                flint_abort();
             }
 
             if (dirichlet_char_next(chi, G) < 0)

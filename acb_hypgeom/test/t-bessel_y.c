@@ -83,7 +83,7 @@ int main()
             flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
             flint_printf("jv1 = "); acb_printd(jv1, 30); flint_printf("\n\n");
             flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         /* Y_n(-z) = (-1)^n [Y_n(z) - (2/pi) [log(z) - log(-z)] J_v(z)] */
@@ -118,7 +118,7 @@ int main()
             flint_printf("yv1 = "); acb_printd(yv1, 30); flint_printf("\n\n");
             flint_printf("jv = "); acb_printd(jv, 30); flint_printf("\n\n");
             flint_printf("r = "); acb_printd(r, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(nu);

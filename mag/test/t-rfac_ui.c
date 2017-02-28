@@ -50,7 +50,7 @@ int main()
             flint_printf("n = %wu\n\n", n);
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

@@ -56,7 +56,7 @@ int main()
                 flint_printf("vec_loop      -> %wu\n", v1[k]);
                 flint_printf("vec_primeloop -> %wu\n", v2[k]);
                 flint_printf("pairing        = %wu\n", dirichlet_pairing(G, chi->n, k));
-                abort();
+                flint_abort();
             }
 
             order = dirichlet_order_char(G, chi);
@@ -69,7 +69,7 @@ int main()
                 flint_printf("vec_loop      -> %wu\n", v1[k]);
                 flint_printf("vec_primeloop -> %wu\n", v2[k]);
                 flint_printf("pairing        = %wu mod %wu\n", dirichlet_pairing(G, chi->n, k), G->expo);
-                abort();
+                flint_abort();
             }
 
 

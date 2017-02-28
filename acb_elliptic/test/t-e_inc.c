@@ -102,7 +102,7 @@ int main()
             flint_printf("r1 = "); acb_printd(r1, 30); flint_printf("\n\n");
             flint_printf("r2 = "); acb_printd(r2, 30); flint_printf("\n\n");
             flint_printf("r3 = "); acb_printd(r3, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_clear(z1);

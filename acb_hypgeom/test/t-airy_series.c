@@ -67,7 +67,7 @@ int main()
             flint_printf("bi = "); acb_poly_printd(bi, 30); flint_printf("\n\n");
             flint_printf("bip = "); acb_poly_printd(bip, 30); flint_printf("\n\n");
             flint_printf("w = "); acb_poly_printd(w, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         mask = n_randlimb(state);
@@ -103,7 +103,7 @@ int main()
             flint_printf("bi2 = "); acb_poly_printd(bi2, 30); flint_printf("\n\n");
             flint_printf("bip = "); acb_poly_printd(bip, 30); flint_printf("\n\n");
             flint_printf("bip2 = "); acb_poly_printd(bip2, 30); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         acb_poly_clear(ai); acb_poly_clear(aip);

@@ -59,7 +59,7 @@ int main()
                 flint_printf("a = %wd, b = %wd, n = %wd\n\n", aa, bb, n);
                 flint_printf("res = "); arb_printd(res + n, 30); flint_printf("\n\n");
                 flint_printf("s = "); arb_printd(s, 30); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

@@ -30,5 +30,5 @@ dlog_bsgs(const dlog_bsgs_t t, ulong b)
     flint_printf("Exception (dlog_bsgs).  discrete log not found.\n");
     flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found (a^-m=%wu)\n",
             t->m, t->g, t->mod.n, b, t->am);
-    abort();
+    flint_abort();
 }

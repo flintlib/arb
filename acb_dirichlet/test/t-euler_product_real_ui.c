@@ -88,7 +88,7 @@ int main()
             flint_printf("chi: %d\n", choice);
             flint_printf("res1 = "); arb_printd(res1, prec1 / 3.33); flint_printf("\n\n");
             flint_printf("res2 = "); arb_printd(res2, prec2 / 3.33); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         if (s >= 6 && prec1 < 2 * s * log(s))
@@ -99,7 +99,7 @@ int main()
             {
                 flint_printf("FAIL: accuracy = %wd, prec = %wd\n\n", accuracy, prec1);
                 flint_printf("res1 = "); arb_printd(res1, prec1 / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -117,7 +117,7 @@ int main()
                 flint_printf("chi: %d\n", choice);
                 flint_printf("res1 = "); arb_printd(res1, prec1 / 3.33); flint_printf("\n\n");
                 flint_printf("res2 = "); arb_printd(res2, prec2 / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

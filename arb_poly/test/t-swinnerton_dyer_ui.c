@@ -41,7 +41,7 @@ int main()
         if (!arb_poly_get_unique_fmpz_poly(c, a))
         {
             flint_printf("FAIL (uniqueness)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_set_fmpz_poly(b, c, prec);
@@ -61,7 +61,7 @@ int main()
         if (!arb_contains_zero(y))
         {
             flint_printf("FAIL (containment)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_swinnerton_dyer_ui(b, n, 2 + n_randint(state, 1000));
@@ -69,7 +69,7 @@ int main()
         if (!arb_poly_overlaps(a, b))
         {
             flint_printf("FAIL (overlap)\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_poly_clear(a);

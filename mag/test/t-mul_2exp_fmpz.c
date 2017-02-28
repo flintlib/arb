@@ -54,7 +54,7 @@ int main()
             flint_printf("x = "); fmpr_printd(x, 15); flint_printf("\n\n");
             flint_printf("y = "); fmpr_printd(y, 15); flint_printf("\n\n");
             flint_printf("z = "); fmpr_printd(z, 15); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

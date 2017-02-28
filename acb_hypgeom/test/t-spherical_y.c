@@ -133,7 +133,7 @@ int main()
                     flint_printf("n = %wd, m = %wd\n", n, m);
                     flint_printf("z = "); acb_printd(z, 20); flint_printf("\n\n");
                     flint_printf("w = "); acb_printd(w, 20); flint_printf("\n\n");
-                    abort();
+                    flint_abort();
                 }
 
                 i++;

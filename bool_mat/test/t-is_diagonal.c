@@ -34,7 +34,7 @@ int main()
                 if (!bool_mat_is_diagonal(zero))
                 {
                     flint_printf("FAIL (zero matrix)\n");
-                    abort();
+                    flint_abort();
                 }
                 bool_mat_clear(zero);
             }
@@ -52,7 +52,7 @@ int main()
             if (!bool_mat_is_diagonal(one))
             {
                 flint_printf("FAIL (identity matrix)\n");
-                abort();
+                flint_abort();
             }
             bool_mat_clear(one);
         }
@@ -75,7 +75,7 @@ int main()
             {
                 flint_printf("FAIL (random diagonal)\n");
                 flint_printf("A:\n"); bool_mat_print(A); flint_printf("\n");
-                abort();
+                flint_abort();
             }
         }
 
@@ -92,7 +92,7 @@ int main()
                 {
                     flint_printf("FAIL (random non-diagonal)\n");
                     flint_printf("A:\n"); bool_mat_print(A); flint_printf("\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }

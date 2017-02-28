@@ -153,7 +153,7 @@ int main()
             flint_printf("op = %d\n\n", op);
             flint_printf("res1 (cmp)      = %d\n\n", res1);
             flint_printf("res2 (fallback) = %d\n\n", res2);
-            abort();
+            flint_abort();
         }
 
         arb_clear(a);

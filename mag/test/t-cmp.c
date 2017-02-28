@@ -49,7 +49,7 @@ int main()
             flint_printf("y = "); fmpr_print(y); flint_printf("\n\n");
             flint_printf("xb = "); mag_print(xb); flint_printf("\n\n");
             flint_printf("yb = "); mag_print(yb); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpr_clear(x);

@@ -67,7 +67,7 @@ int main()
             flint_printf("x = "); arb_printd(x, 50); flint_printf("\n\n");
             flint_printf("s = %s", s); flint_printf("\n\n");
             flint_printf("y = "); arb_printd(y, 50); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         flint_free(s);

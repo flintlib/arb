@@ -78,7 +78,7 @@ int main()
                 flint_printf("a = "); acb_printd(a, prec1 / 3.33); flint_printf("\n\n");
                 flint_printf("z1 = "); acb_printd(z1 + i, prec1 / 3.33); flint_printf("\n\n");
                 flint_printf("z2 = "); acb_printd(z2 + i, prec2 / 3.33); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
         }
 

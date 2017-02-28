@@ -30,7 +30,7 @@ int main()
         {
             flint_printf("FAIL (empty)\n");
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
         bool_mat_clear(A);
     }
@@ -47,7 +47,7 @@ int main()
             {
                 flint_printf("FAIL (zero)\n");
                 flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
             bool_mat_clear(A);
         }
@@ -65,7 +65,7 @@ int main()
             {
                 flint_printf("FAIL (one)\n");
                 flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
-                abort();
+                flint_abort();
             }
             bool_mat_clear(A);
         }
@@ -87,7 +87,7 @@ int main()
         {
             flint_printf("FAIL (diagonal has a non-zero entry)\n");
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         for (i = 0; i < n; i++)
@@ -98,7 +98,7 @@ int main()
         {
             flint_printf("FAIL (diagonal is zero)\n");
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);
@@ -126,7 +126,7 @@ int main()
             flint_printf("A = \n"); bool_mat_print(A); flint_printf("\n\n");
             flint_printf("B = \n"); bool_mat_print(B); flint_printf("\n\n");
             flint_printf("A+B = \n"); bool_mat_print(C); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);
@@ -160,7 +160,7 @@ int main()
             flint_printf("B = \n"); bool_mat_print(B); flint_printf("\n\n");
             flint_printf("AB = \n"); bool_mat_print(AB); flint_printf("\n\n");
             flint_printf("BA = \n"); bool_mat_print(BA); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         bool_mat_clear(A);

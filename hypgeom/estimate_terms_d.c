@@ -40,7 +40,7 @@ hypgeom_estimate_terms(const mag_t z, int r, slong prec)
         if (t >= 1)
         {
             flint_printf("z must be smaller than 1\n");
-            abort();
+            flint_abort();
         }
 
         y = (log(1-t) - prec * LOG2) / log(t) + 1;
@@ -54,7 +54,7 @@ hypgeom_estimate_terms(const mag_t z, int r, slong prec)
     if (y >= WORD_MAX / 2)
     {
         flint_printf("error: series will converge too slowly\n");
-        abort();
+        flint_abort();
     }
 
     return y;

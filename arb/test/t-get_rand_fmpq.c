@@ -36,7 +36,7 @@ int main()
             flint_printf("FAIL:\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
             flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
-            abort();
+            flint_abort();
         }
 
         arb_clear(x);

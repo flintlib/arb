@@ -43,7 +43,7 @@ _fmpr_normalise_naive(fmpz_t man, fmpz_t exp, slong prec, fmpr_rnd_t rnd)
 
             if (rnd == FMPR_RND_NEAR)
             {
-                abort();
+                flint_abort();
             }
             else if (rnd == FMPR_RND_DOWN)
             {

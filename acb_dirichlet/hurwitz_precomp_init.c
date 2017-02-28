@@ -19,7 +19,7 @@ acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre,
     slong i, k;
 
     if (A < 1 || K < 1 || N < 1)
-        abort();
+        flint_abort();
 
     pre->deflate = deflate;
     pre->A = A;

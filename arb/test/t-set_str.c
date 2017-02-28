@@ -187,7 +187,7 @@ int main()
             flint_printf("FAIL (valid input): %s\n", testdata_floats[i]);
             arb_printd(t, 15); flint_printf("\n");
             arb_printd(u, 15); flint_printf("\n");
-            abort();
+            flint_abort();
         }
     }
 
@@ -240,7 +240,7 @@ int main()
                     flint_printf("FAIL (valid input): %s\n", tmp);
                     arb_printd(t, 15); flint_printf("\n");
                     arb_printd(u, 15); flint_printf("\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }
@@ -256,7 +256,7 @@ int main()
         {
             flint_printf("FAIL (invalid input): %s\n", testdata_invalid[i]);
             arb_printd(t, 15); flint_printf("\n");
-            abort();
+            flint_abort();
         }
     }
 
@@ -288,7 +288,7 @@ int main()
                 {
                     flint_printf("FAIL (invalid input): %s\n", tmp);
                     arb_printd(t, 15); flint_printf("\n");
-                    abort();
+                    flint_abort();
                 }
             }
         }

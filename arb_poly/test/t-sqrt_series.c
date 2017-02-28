@@ -58,14 +58,14 @@ int main()
             flint_printf("b = "); arb_poly_printd(b, 15); flint_printf("\n\n");
             flint_printf("c = "); arb_poly_printd(c, 15); flint_printf("\n\n");
 
-            abort();
+            flint_abort();
         }
 
         arb_poly_sqrt_series(a, a, n, rbits2);
         if (!arb_poly_equal(a, b))
         {
             flint_printf("FAIL (aliasing)\n\n");
-            abort();
+            flint_abort();
         }
 
         fmpq_poly_clear(A);
