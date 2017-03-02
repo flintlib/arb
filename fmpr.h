@@ -25,6 +25,12 @@
 #include "flint/config.h"
 #include "fmpz_extras.h"
 
+#ifndef flint_abort
+#if __FLINT_RELEASE <= 20502
+#define flint_abort abort
+#endif
+#endif
+
 #define TLS_PREFIX FLINT_TLS_PREFIX
 
 #if defined(_MSC_VER) && defined(ARB_BUILD_DLL)
