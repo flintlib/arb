@@ -20,6 +20,12 @@
 extern "C" {
 #endif
 
+#ifndef flint_abort
+#if __FLINT_RELEASE <= 20502
+#define flint_abort abort
+#endif
+#endif
+
 /* currently defined in the arb module, but global to the library */
 double arb_test_multiplier(void);
 

@@ -27,6 +27,12 @@
 #include "fmpr.h"
 #include "mag.h"
 
+#ifndef flint_abort
+#if __FLINT_RELEASE <= 20502
+#define flint_abort abort
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
