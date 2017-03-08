@@ -756,11 +756,104 @@ void acb_rising_ui_rec(acb_t y, const acb_t x, ulong n, slong prec);
 void acb_rising_ui(acb_t z, const acb_t x, ulong n, slong prec);
 void acb_rising(acb_t z, const acb_t x, const acb_t n, slong prec);
 
+ACB_INLINE void
+acb_falling_ui_bs(acb_t y, const acb_t x, ulong n, slong prec)
+{
+    acb_neg(y, x);
+    acb_rising_ui_bs(y, y, n, prec);
+
+    if (n % 2)
+        acb_neg(y, y);
+}
+
+ACB_INLINE void
+acb_falling_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, slong prec)
+{
+    acb_neg(y, x);
+    acb_rising_ui_rs(y, y, n, m, prec);
+
+    if (n % 2)
+        acb_neg(y, y);
+}
+
+ACB_INLINE void
+acb_falling_ui_rec(acb_t y, const acb_t x, ulong n, slong prec)
+{
+    acb_neg(y, x);
+    acb_rising_ui_rec(y, y, n, prec);
+
+    if (n % 2)
+        acb_neg(y, y);
+}
+
+ACB_INLINE void
+acb_falling_ui(acb_t z, const acb_t x, ulong n, slong prec)
+{
+    acb_neg(z, x);
+    acb_rising_ui(z, z, n, prec);
+
+    if (n % 2)
+        acb_neg(z, z);    
+}
+
+void acb_falling(acb_t z, const acb_t x, const acb_t n, slong prec);
+
 void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec);
 void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, slong prec);
 void acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec);
 
+ACB_INLINE void
+acb_falling2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
+{
+    acb_neg(v, x);
+    acb_rising2_ui_bs(u, v, v, n, prec);
+
+    if (n % 2)
+    {
+        acb_neg(u, u);
+        acb_neg(v, v);
+    }
+}
+
+ACB_INLINE void
+acb_falling2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, slong prec)
+{
+    acb_neg(v, x);
+    acb_rising2_ui_rs(u, v, v, n, m, prec);
+
+    if (n % 2)
+    {
+        acb_neg(u, u);
+        acb_neg(v, v);
+    }
+}
+
+ACB_INLINE void
+acb_falling2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
+{
+    acb_neg(v, x);
+    acb_rising2_ui(u, v, v, n, prec);
+
+    if (n % 2)
+    {
+        acb_neg(u, u);
+        acb_neg(v, v);
+    }
+}
+
 void acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n);
+
+ACB_INLINE void
+acb_falling_ui_get_mag(mag_t bound, const acb_t s, ulong n)
+{
+    acb_t tmp;
+    acb_init(tmp);
+
+    acb_neg(tmp, s);
+    acb_rising_ui_get_mag(bound, tmp, n);
+
+    acb_clear(tmp);
+}
 
 void acb_gamma(acb_t y, const acb_t x, slong prec);
 void acb_rgamma(acb_t y, const acb_t x, slong prec);
