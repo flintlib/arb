@@ -155,6 +155,8 @@ Bibliography
 
 .. [CP2005] \R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, second edition, Springer (2005).
 
+.. [CGHJK1996] \R. M. Corless, G. H. Gonnet, D. E. Hare, D. J. Jeffrey and D. E. Knuth, "On the Lambert W function", Advances in Computational Mathematics, 5(1) (1996), 329-359
+
 .. [Dup2006] \R. Dupont. "Moyenne arithmético-géométrique, suites de Borchardt et applications." These de doctorat, École polytechnique, Palaiseau (2006). http://http://www.lix.polytechnique.fr/Labo/Regis.Dupont/these_soutenance.pdf
 
 .. [EHJ2016] \A. Enge, W. Hart and F. Johansson, "Short addition sequences for theta functions", preprint (2016), https://arxiv.org/abs/1608.06810

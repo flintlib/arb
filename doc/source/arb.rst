@@ -1100,6 +1100,28 @@ For further implementation details, see :ref:`algorithms_constants`.
 
     Computes Apery's constant `\zeta(3)`.
 
+Lambert W function
+-------------------------------------------------------------------------------
+
+.. function:: void arb_lambertw(arb_t res, const arb_t x, int flags, slong prec)
+
+    Computes the Lambert W function, which solves the equation `w e^w = x`.
+
+    The Lambert W function has infinitely many complex branches `W_k(x)`,
+    two of which are real on a part of the real line.
+    The principal branch `W_0(x)` is selected by setting *flags* to 0, and the
+    `W_{-1}` branch is selected by setting *flags* to 1.
+    The principal branch is real-valued for `x \ge -1/e`
+    (taking values in `[-1,+\infty)`) and the `W_{-1}` branch is real-valued
+    for `-1/e \le x < 0` and takes values in `(-\infty,-1]`.
+    Elsewhere, the Lambert W function is complex and
+    cannot be evaluated by this implementation.
+
+    The implementation first computes a floating-point approximation
+    heuristically and then computes a rigorously certified enclosure around
+    this approximation. Some asymptotic cases are handled specially.
+    The main reference is [CGHJK1996]_.
+
 Gamma function and factorials
 -------------------------------------------------------------------------------
 
@@ -1625,3 +1647,4 @@ Vector functions
     Calls :func:`arb_get_unique_fmpz` elementwise and returns nonzero if
     all entries can be rounded uniquely to integers. If any entry in *vec*
     cannot be rounded uniquely to an integer, returns zero.
+
