@@ -260,6 +260,10 @@ Precision and comparisons
 
     Returns nonzero iff *x* and *y* have some point in common.
 
+.. function:: void acb_union(acb_t z, const acb_t x, const acb_t y, slong prec)
+
+    Sets *z* to a complex interval containing both *x* and *y*.
+
 .. function:: void acb_get_abs_ubound_arf(arf_t u, const acb_t z, slong prec)
 
     Sets *u* to an upper bound for the absolute value of *z*, computed
@@ -671,6 +675,44 @@ Inverse hyperbolic functions
 .. function:: void acb_atanh(acb_t res, const acb_t z, slong prec)
 
     Sets *res* to `\operatorname{atanh}(z) = -i \operatorname{atan}(iz)`.
+
+Lambert W function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_lambertw_asymp(acb_t res, const acb_t z, const fmpz_t k, slong L, slong M, slong prec)
+
+    Sets *res* to the Lambert W function `W_k(z)` computed using *L* and *M*
+    terms in the bivariate series giving the asymptotic expansion at
+    zero or infinity. This algorithm is valid
+    everywhere, but the error bound is only finite when `|\log(z)|` is
+    sufficiently large.
+
+.. function:: int acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
+
+    Tests if *w* definitely lies in the image of the branch `W_k(z)`.
+    This function is used internally to verify that a computed approximation
+    of the Lambert W function lies on the intended branch. Note that this will
+    necessarily evaluate to false for points exactly on (or overlapping) the
+    branch cuts, where a different algorithm has to be used.
+
+.. function:: void acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t k)
+
+    Sets *res* to an upper bound for `|W_k'(z)|`. The input *ez1* should
+    contain the precomputed value of `ez+1`.
+
+    Along the real line, the directional derivative of `W_k(z)` is understood
+    to be taken. As a result, the user must handle the branch cut
+    discontinuity separately when using this function to bound perturbations
+    in the value of `W_k(z)`.
+
+.. function:: void acb_lambertw(acb_t res, const acb_t z, const fmpz_t k, int flags, slong prec)
+
+    Sets *res* to the Lambert W function `W_k(z)` where the index *k* selects
+    an arbitrary branch (with `k = 0` giving the principal branch).
+    The placement of branch cuts follows [CGHJK1996]_.
+
+    The *flags* argument is currently unused. In a future version, it might
+    allow further control over branch cuts.
 
 Rising factorials
 -------------------------------------------------------------------------------

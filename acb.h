@@ -391,6 +391,13 @@ acb_get_rad_ubound_arf(arf_t u, const acb_t z, slong prec)
     arf_mul_2exp_si(u, u, 1);
 }
 
+ACB_INLINE void
+acb_union(acb_t res, const acb_t x, const acb_t y, slong prec)
+{
+    arb_union(acb_realref(res), acb_realref(x), acb_realref(y), prec);
+    arb_union(acb_imagref(res), acb_imagref(x), acb_imagref(y), prec);
+}
+
 void acb_arg(arb_t r, const acb_t z, slong prec);
 
 void acb_sgn(acb_t res, const acb_t z, slong prec);
@@ -781,6 +788,11 @@ void acb_polylog_si(acb_t w, slong s, const acb_t z, slong prec);
 
 void acb_agm1(acb_t m, const acb_t z, slong prec);
 void acb_agm1_cpx(acb_ptr m, const acb_t z, slong len, slong prec);
+
+void acb_lambertw_asymp(acb_t res, const acb_t z, const fmpz_t k, slong L, slong M, slong prec);
+int acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec);
+void acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t k);
+void acb_lambertw(acb_t res, const acb_t z, const fmpz_t k, int flags, slong prec);
 
 ACB_INLINE void
 acb_sqr(acb_t res, const acb_t val, slong prec)
