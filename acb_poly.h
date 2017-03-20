@@ -650,6 +650,9 @@ void acb_poly_tan_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec);
 void _acb_poly_sinc_series(acb_ptr g, acb_srcptr h, slong hlen, slong n, slong prec);
 void acb_poly_sinc_series(acb_poly_t g, const acb_poly_t h, slong n, slong prec);
 
+void _acb_poly_lambertw_series(acb_ptr res, acb_srcptr z, slong zlen, const fmpz_t k, int flags, slong len, slong prec);
+void acb_poly_lambertw_series(acb_poly_t res, const acb_poly_t z, const fmpz_t k, int flags, slong len, slong prec);
+
 void _acb_poly_gamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec);
 
 void acb_poly_gamma_series(acb_poly_t res, const acb_poly_t f, slong n, slong prec);

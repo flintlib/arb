@@ -963,6 +963,18 @@ Powers and elementary functions
     Sets *c* to the sinc function of the power series *h*, truncated
     to length *n*.
 
+Lambert W function
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_poly_lambertw_series(arb_ptr res, arb_srcptr z, slong zlen, int flags, slong len, slong prec)
+
+.. function:: void arb_poly_lambertw_series(arb_poly_t res, const arb_poly_t z, int flags, slong len, slong prec)
+
+    Sets *res* to the Lambert W function of the power series *z*.
+    If *flags* is 0, the principal branch is computed; if *flags* is 1,
+    the second real branch `W_{-1}(z)` is computed.
+    The underscore method allows aliasing, but assumes that the lengths are nonzero.
+
 Gamma function and factorials
 -------------------------------------------------------------------------------
 

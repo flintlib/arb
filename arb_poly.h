@@ -656,6 +656,9 @@ void arb_poly_evaluate2_acb_rectangular(acb_t y, acb_t z, const arb_poly_t f, co
 void _arb_poly_evaluate2_acb(acb_t y, acb_t z, arb_srcptr f, slong len, const acb_t x, slong prec);
 void arb_poly_evaluate2_acb(acb_t y, acb_t z, const arb_poly_t f, const acb_t x, slong prec);
 
+void _arb_poly_lambertw_series(arb_ptr res, arb_srcptr z, slong zlen, int flags, slong len, slong prec);
+void arb_poly_lambertw_series(arb_poly_t res, const arb_poly_t z, int flags, slong len, slong prec);
+
 void _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_poly_gamma_series(arb_poly_t res, const arb_poly_t f, slong n, slong prec);
 

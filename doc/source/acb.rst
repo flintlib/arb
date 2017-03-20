@@ -708,7 +708,7 @@ Lambert W function
 .. function:: void acb_lambertw(acb_t res, const acb_t z, const fmpz_t k, int flags, slong prec)
 
     Sets *res* to the Lambert W function `W_k(z)` where the index *k* selects
-    an arbitrary branch (with `k = 0` giving the principal branch).
+    the branch (with `k = 0` giving the principal branch).
     The placement of branch cuts follows [CGHJK1996]_.
 
     The *flags* argument is currently unused. In a future version, it might

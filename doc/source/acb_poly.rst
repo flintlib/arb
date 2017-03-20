@@ -912,6 +912,17 @@ Elementary functions
     Sets *s* to the sinc function of the power series *h*, truncated
     to length *n*.
 
+Lambert W function
+-------------------------------------------------------------------------------
+
+.. function:: void _acb_poly_lambertw_series(acb_ptr res, acb_srcptr z, slong zlen, const fmpz_t k, int flags, slong len, slong prec)
+
+.. function:: void acb_poly_lambertw_series(acb_poly_t res, const acb_poly_t z, const fmpz_t k, int flags, slong len, slong prec)
+
+    Sets *res* to branch *k* of the Lambert W function of the power series *z*.
+    The argument *flags* is reserved for future use.
+    The underscore method allows aliasing, but assumes that the lengths are nonzero.
+
 Gamma function
 -------------------------------------------------------------------------------
 
