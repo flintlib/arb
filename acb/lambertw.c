@@ -374,7 +374,7 @@ acb_lambertw_cleared_cut(acb_t res, const acb_t z, const fmpz_t k, int flags, sl
     acb_t ez1;
     acb_init(ez1);
 
-    /* compute z*e + 1 */
+    /* compute e*z + 1 */
     arb_const_e(acb_realref(ez1), prec);
     acb_mul(ez1, ez1, z, prec);
     acb_add_ui(ez1, ez1, 1, prec);
@@ -409,6 +409,81 @@ acb_lambertw_cleared_cut(acb_t res, const acb_t z, const fmpz_t k, int flags, sl
     }
 
     acb_clear(ez1);
+}
+
+/* Extremely close to the branch point at -1/e, use the series expansion directly. */
+int
+acb_lambertw_try_near_branch_point(acb_t res, const acb_t z,
+    const acb_t ez1, const fmpz_t k, int flags, slong prec)
+{
+    if (fmpz_is_zero(k) || (fmpz_is_one(k) && arb_is_negative(acb_imagref(z)))
+                        || (fmpz_equal_si(k, -1) && arb_is_nonnegative(acb_imagref(z))))
+    {
+        if (acb_contains_zero(ez1) ||
+            (arf_cmpabs_2exp_si(arb_midref(acb_realref(ez1)), -prec / 4.5) < 0 &&
+             arf_cmpabs_2exp_si(arb_midref(acb_imagref(ez1)), -prec / 4.5) < 0))
+        {
+            acb_t t;
+            acb_init(t);
+            acb_mul_2exp_si(t, ez1, 1);
+            acb_sqrt(t, t, prec);
+            if (!fmpz_is_zero(k))
+                acb_neg(t, t);
+            acb_lambertw_branchpoint_series(res, t, 1, prec);
+            acb_clear(t);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+void
+acb_lambertw_cleared_cut_fix_small(acb_t res, const acb_t z,
+    const acb_t ez1, const fmpz_t k, int flags, slong prec)
+{
+    acb_t zz, zmid, zmide1;
+    arf_t eps;
+
+    acb_init(zz);
+    acb_init(zmid);
+    acb_init(zmide1);
+    arf_init(eps);
+
+    arf_mul_2exp_si(eps, arb_midref(acb_realref(z)), -prec);
+    acb_set(zz, z);
+
+    if (arf_sgn(arb_midref(acb_realref(zz))) < 0 &&
+        (!fmpz_is_zero(k) || arf_sgn(arb_midref(acb_realref(ez1))) < 0) &&
+        arf_cmpabs(arb_midref(acb_imagref(zz)), eps) < 0)
+    {
+        /* now the value must be in [0,2eps] */
+        arf_get_mag(arb_radref(acb_imagref(zz)), eps);
+        arf_set_mag(arb_midref(acb_imagref(zz)), arb_radref(acb_imagref(zz)));
+
+        if (arf_sgn(arb_midref(acb_imagref(z))) >= 0)
+        {
+            acb_lambertw_cleared_cut(res, zz, k, flags, prec);
+        }
+        else
+        {
+            fmpz_t kk;
+            fmpz_init(kk);
+            fmpz_neg(kk, k);
+            acb_lambertw_cleared_cut(res, zz, kk, flags, prec);
+            acb_conj(res, res);
+            fmpz_clear(kk);
+        }
+    }
+    else
+    {
+        acb_lambertw_cleared_cut(res, zz, k, flags, prec);
+    }
+
+    acb_clear(zz);
+    acb_clear(zmid);
+    acb_clear(zmide1);
+    arf_clear(eps);
 }
 
 void
@@ -483,77 +558,56 @@ _acb_lambertw(acb_t res, const acb_t z, const acb_t ez1, const fmpz_t k, int fla
     }
 
     /* Extremely close to the branch point at -1/e, use the series expansion directly. */
-    if (fmpz_is_zero(k) || (fmpz_is_one(k) && arb_is_negative(acb_imagref(z)))
-                        || (fmpz_equal_si(k, -1) && arb_is_nonnegative(acb_imagref(z))))
+    if (acb_lambertw_try_near_branch_point(res, z, ez1, k, flags, goal))
     {
-        if (acb_contains_zero(ez1) ||
-            (arf_cmpabs_2exp_si(arb_midref(acb_realref(ez1)), -goal / 4.5) < 0 &&
-             arf_cmpabs_2exp_si(arb_midref(acb_imagref(ez1)), -goal / 4.5) < 0))
-        {
-            acb_t t;
-            acb_init(t);
-            acb_mul_2exp_si(t, ez1, 1);
-            acb_sqrt(t, t, goal);
-            if (!fmpz_is_zero(k))
-                acb_neg(t, t);
-            acb_lambertw_branchpoint_series(res, t, 1, goal);
-            acb_set_round(res, res, prec);
-            acb_clear(t);
-            return;
-        }
+        acb_set_round(res, res, prec);
+        return;
     }
 
-    /* todo: compute union of two results */
+    /* compute union of both sides */
     if (acb_lambertw_branch_crossing(z, ez1, k))
     {
-        acb_indeterminate(res);
+        acb_t za, zb, eza1, ezb1;
+        fmpz_t kk;
+
+        acb_init(za);
+        acb_init(zb);
+        acb_init(eza1);
+        acb_init(ezb1);
+        fmpz_init(kk);
+
+        fmpz_neg(kk, k);
+
+        acb_set(za, z);
+        acb_conj(zb, z);
+        arb_nonnegative_part(acb_imagref(za), acb_imagref(za));
+        arb_nonnegative_part(acb_imagref(zb), acb_imagref(zb));
+
+        acb_set(eza1, ez1);
+        acb_conj(ezb1, ez1);
+        arb_nonnegative_part(acb_imagref(eza1), acb_imagref(eza1));
+        arb_nonnegative_part(acb_imagref(ezb1), acb_imagref(ezb1));
+
+        /* Check series expansion again, because now there is no crossing. */
+        if (!acb_lambertw_try_near_branch_point(res, za, eza1, k, flags, goal))
+            acb_lambertw_cleared_cut_fix_small(za, za, eza1, k, flags, goal);
+
+        if (!acb_lambertw_try_near_branch_point(res, zb, ezb1, kk, flags, goal))
+            acb_lambertw_cleared_cut_fix_small(zb, zb, ezb1, kk, flags, goal);
+
+        acb_conj(zb, zb);
+        acb_union(res, za, zb, prec);
+
+        acb_clear(za);
+        acb_clear(zb);
+        acb_clear(eza1);
+        acb_clear(ezb1);
+        fmpz_clear(kk);
     }
     else
     {
-        acb_t zz, zmid, zmide1;
-        arf_t eps;
-
-        acb_init(zz);
-        acb_init(zmid);
-        acb_init(zmide1);
-        arf_init(eps);
-
-        arf_mul_2exp_si(eps, arb_midref(acb_realref(z)), -goal);
-        acb_set(zz, z);
-
-        if (arf_sgn(arb_midref(acb_realref(zz))) < 0 &&
-            (!fmpz_is_zero(k) || arf_sgn(arb_midref(acb_realref(ez1))) < 0) &&
-            arf_cmpabs(arb_midref(acb_imagref(zz)), eps) < 0)
-        {
-            /* now the value must be in [0,2eps] */
-            arf_get_mag(arb_radref(acb_imagref(zz)), eps);
-            arf_set_mag(arb_midref(acb_imagref(zz)), arb_radref(acb_imagref(zz)));
-
-            if (arf_sgn(arb_midref(acb_imagref(z))) >= 0)
-            {
-                acb_lambertw_cleared_cut(res, zz, k, flags, goal);
-            }
-            else
-            {
-                fmpz_t kk;
-                fmpz_init(kk);
-                fmpz_neg(kk, k);
-                acb_lambertw_cleared_cut(res, zz, kk, flags, goal);
-                acb_conj(res, res);
-                fmpz_clear(kk);
-            }
-        }
-        else
-        {
-            acb_lambertw_cleared_cut(res, zz, k, flags, goal);
-        }
-
+        acb_lambertw_cleared_cut_fix_small(res, z, ez1, k, flags, goal);
         acb_set_round(res, res, prec);
-
-        acb_clear(zz);
-        acb_clear(zmid);
-        acb_clear(zmide1);
-        arf_clear(eps);
     }
 }
 

@@ -342,6 +342,14 @@ Radius and interval operations
     Otherwise zero is returned and the value of *z* is undefined.
     If *x* or *y* contains NaN, the result is NaN.
 
+.. function:: void arb_nonnegative_part(arb_t res, const arb_t x)
+
+    Sets *res* to the intersection of *x* with `[0,\infty]`. If *x* is
+    nonnegative, an exact copy is made. If *x* is finite and contains negative
+    numbers, an interval of the form `[r/2 \pm r/2]` is produced, which
+    certainly contains no negative points.
+    In the special case when *x* is strictly negative, *res* is set to zero.
+
 .. function:: void arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec)
 
     Sets *u* to the upper bound for the absolute value of *x*,
@@ -1114,8 +1122,8 @@ Lambert W function
     The principal branch is real-valued for `x \ge -1/e`
     (taking values in `[-1,+\infty)`) and the `W_{-1}` branch is real-valued
     for `-1/e \le x < 0` and takes values in `(-\infty,-1]`.
-    Elsewhere, the Lambert W function is complex and
-    cannot be evaluated by this implementation.
+    Elsewhere, the Lambert W function is complex and :func:`acb_lambertw`
+    should be used.
 
     The implementation first computes a floating-point approximation
     heuristically and then computes a rigorously certified enclosure around

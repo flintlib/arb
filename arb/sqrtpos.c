@@ -11,38 +11,6 @@
 
 #include "arb.h"
 
-static __inline__ void
-arb_nonnegative_part(arb_t z, const arb_t x, slong prec)
-{
-    if (arb_contains_negative(x))
-    {
-        arf_t t;
-        arf_init(t);
-
-        arf_set_mag(t, arb_radref(x));
-        arf_add(arb_midref(z), arb_midref(x), t, MAG_BITS, ARF_RND_CEIL);
-
-        if (arf_sgn(arb_midref(z)) <= 0)
-        {
-            mag_zero(arb_radref(z));
-        }
-        else
-        {
-            arf_mul_2exp_si(arb_midref(z), arb_midref(z), -1);
-            arf_get_mag(arb_radref(z), arb_midref(z));
-
-            /* XXX: needed since arf_get_mag is inexact */
-            arf_set_mag(arb_midref(z), arb_radref(z));
-        }
-
-        arf_clear(t);
-    }
-    else
-    {
-        arb_set(z, x);
-    }
-}
-
 void
 arb_sqrtpos(arb_t z, const arb_t x, slong prec)
 {
@@ -81,6 +49,6 @@ arb_sqrtpos(arb_t z, const arb_t x, slong prec)
         arb_sqrt(z, x, prec);
     }
 
-    arb_nonnegative_part(z, z, prec);
+    arb_nonnegative_part(z, z);
 }
 

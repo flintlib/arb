@@ -327,6 +327,8 @@ arb_get_lbound_arf(arf_t u, const arb_t x, long prec)
     arf_sub(u, arb_midref(x), t, prec, ARF_RND_FLOOR);
 }
 
+void arb_nonnegative_part(arb_t res, const arb_t x);
+
 slong arb_rel_error_bits(const arb_t x);
 
 ARB_INLINE slong
