@@ -45,7 +45,8 @@ acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t
     }
 
     /* Compute correction near the branch point */
-    if (fmpz_is_zero(k) || fmpz_equal_si(k,-1) ||
+    if (fmpz_is_zero(k) ||
+        (fmpz_equal_si(k,-1) && !arb_is_negative(acb_imagref(z))) ||
         (fmpz_is_one(k) && !arb_is_nonnegative(acb_imagref(z))))
     {
         acb_t b;

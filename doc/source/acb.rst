@@ -711,8 +711,26 @@ Lambert W function
     the branch (with `k = 0` giving the principal branch).
     The placement of branch cuts follows [CGHJK1996]_.
 
-    The *flags* argument is currently unused. In a future version, it might
-    allow further control over branch cuts.
+    If *flags* is nonzero, nonstandard branch cuts are used.
+
+    If *flags* is set to *ACB_LAMBERTW_LEFT*, computes `W_{\mathrm{left}|k}(z)`
+    which corresponds to `W_k(z)` in the upper
+    half plane and `W_{k+1}(z)` in the lower half plane, connected continuously
+    to the left of the branch points.
+    In other words, the branch cut on `(-\infty,0)` is rotated counterclockwise
+    to `(0,+\infty)`.
+    (For `k = -1` and `k = 0`, there is also a branch cut on `(-1/e,0)`,
+    continuous from below instead of from above to maintain counterclockwise
+    continuity.)
+
+    If *flags* is set to *ACB_LAMBERTW_MIDDLE*, computes
+    `W_{\mathrm{middle}}(z)` which corresponds to
+    `W_{-1}(z)` in the upper half plane and `W_{1}(z)` in the lower half
+    plane, connected continuously through `(-1/e,0)` with branch cuts
+    on `(-\infty,-1/e)` and `(0,+\infty)`. `W_{\mathrm{middle}}(z)` extends the
+    real analytic function `W_{-1}(x)` defined on `(-1/e,0)` to a complex
+    analytic function, whereas the standard branch `W_{-1}(z)` has a branch
+    cut along the real segment.
 
 Rising factorials
 -------------------------------------------------------------------------------

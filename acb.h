@@ -789,6 +789,9 @@ void acb_polylog_si(acb_t w, slong s, const acb_t z, slong prec);
 void acb_agm1(acb_t m, const acb_t z, slong prec);
 void acb_agm1_cpx(acb_ptr m, const acb_t z, slong len, slong prec);
 
+#define ACB_LAMBERTW_LEFT 2
+#define ACB_LAMBERTW_MIDDLE 4
+
 void acb_lambertw_asymp(acb_t res, const acb_t z, const fmpz_t k, slong L, slong M, slong prec);
 int acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec);
 void acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t k);

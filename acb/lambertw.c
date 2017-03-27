@@ -612,11 +612,171 @@ _acb_lambertw(acb_t res, const acb_t z, const acb_t ez1, const fmpz_t k, int fla
 }
 
 void
+acb_lambertw_middle(acb_t res, const acb_t z, slong prec)
+{
+    fmpz_t k;
+
+    if (acb_contains_zero(z))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    fmpz_init(k);
+    fmpz_set_si(k, -1);
+
+    if (arb_is_positive(acb_imagref(z)))
+    {
+        acb_lambertw(res, z, k, 0, prec);
+    }
+    else if (arb_is_negative(acb_imagref(z)))
+    {
+        acb_conj(res, z);
+        acb_lambertw(res, res, k, 0, prec);
+        acb_conj(res, res);
+    }
+    else if (arb_is_negative(acb_realref(z)))
+    {
+        if (arb_is_nonnegative(acb_imagref(z)))
+        {
+            acb_lambertw(res, z, k, 0, prec);
+        }
+        else if (arb_is_negative(acb_imagref(z)))
+        {
+            acb_conj(res, z);
+            acb_lambertw(res, res, k, 0, prec);
+            acb_conj(res, res);
+        }
+        else
+        {
+            acb_t za, zb;
+            acb_init(za);
+            acb_init(zb);
+            acb_set(za, z);
+            acb_conj(zb, z);
+            arb_nonnegative_part(acb_imagref(za), acb_imagref(za));
+            arb_nonnegative_part(acb_imagref(zb), acb_imagref(zb));
+            acb_lambertw(za, za, k, 0, prec);
+            acb_lambertw(zb, zb, k, 0, prec);
+            acb_conj(zb, zb);
+            acb_union(res, za, zb, prec);
+            acb_clear(za);
+            acb_clear(zb);
+        }
+    }
+    else /* re is positive */
+    {
+        if (arb_is_positive(acb_imagref(z)))
+        {
+            acb_lambertw(res, z, k, 0, prec);
+        }
+        else if (arb_is_nonpositive(acb_imagref(z)))
+        {
+            acb_conj(res, z);
+            acb_lambertw(res, res, k, 0, prec);
+            acb_conj(res, res);
+        }
+        else
+        {
+            acb_t za, zb;
+            acb_init(za);
+            acb_init(zb);
+            acb_set(za, z);
+            acb_conj(zb, z);
+            arb_nonnegative_part(acb_imagref(za), acb_imagref(za));
+            arb_nonnegative_part(acb_imagref(zb), acb_imagref(zb));
+            acb_lambertw(za, za, k, 0, prec);
+            acb_lambertw(zb, zb, k, 0, prec);
+            acb_conj(zb, zb);
+            acb_union(res, za, zb, prec);
+            acb_clear(za);
+            acb_clear(zb);
+        }
+    }
+
+    fmpz_clear(k);
+}
+
+void
+acb_lambertw_left(acb_t res, const acb_t z, const fmpz_t k, slong prec)
+{
+    if (acb_contains_zero(z) && !(fmpz_equal_si(k, -1) && acb_is_real(z)))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    if (arb_is_positive(acb_imagref(z)))
+    {
+        acb_lambertw(res, z, k, 0, prec);
+    }
+    else if (arb_is_nonpositive(acb_imagref(z)))
+    {
+        fmpz_t kk;
+        fmpz_init(kk);
+        fmpz_add_ui(kk, k, 1);
+        fmpz_neg(kk, kk);
+
+        acb_conj(res, z);
+        acb_lambertw(res, res, kk, 0, prec);
+        acb_conj(res, res);
+
+        fmpz_clear(kk);
+    }
+    else
+    {
+        acb_t za, zb;
+        fmpz_t kk;
+
+        acb_init(za);
+        acb_init(zb);
+        fmpz_init(kk);
+
+        acb_set(za, z);
+        acb_conj(zb, z);
+
+        arb_nonnegative_part(acb_imagref(za), acb_imagref(za));
+        arb_nonnegative_part(acb_imagref(zb), acb_imagref(zb));
+
+        fmpz_add_ui(kk, k, 1);
+        fmpz_neg(kk, kk);
+
+        acb_lambertw(za, za, k, 0, prec);
+        acb_lambertw(zb, zb, kk, 0, prec);
+        acb_conj(zb, zb);
+
+        acb_union(res, za, zb, prec);
+
+        acb_clear(za);
+        acb_clear(zb);
+        fmpz_clear(kk);
+    }
+}
+
+void
 acb_lambertw(acb_t res, const acb_t z, const fmpz_t k, int flags, slong prec)
 {
     acb_t ez1;
 
-    if (!acb_is_finite(z) || (!fmpz_is_zero(k) && acb_contains_zero(z)))
+    if (!acb_is_finite(z))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    if (flags == ACB_LAMBERTW_LEFT)
+    {
+        acb_lambertw_left(res, z, k, prec);
+        return;
+    }
+
+    if (flags == ACB_LAMBERTW_MIDDLE)
+    {
+        acb_lambertw_middle(res, z, prec);
+        return;
+    }
+
+    if (acb_contains_zero(z) && !fmpz_is_zero(k))
     {
         acb_indeterminate(res);
         return;
@@ -628,6 +788,8 @@ acb_lambertw(acb_t res, const acb_t z, const fmpz_t k, int flags, slong prec)
     arb_const_e(acb_realref(ez1), prec);
     acb_mul(ez1, ez1, z, prec);
     acb_add_ui(ez1, ez1, 1, prec);
+
+    /* Compute standard branches */
 
     /* use real code when possible */
     if (acb_is_real(z) && arb_is_positive(acb_realref(ez1)) &&

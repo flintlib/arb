@@ -25,6 +25,7 @@ int main()
     {
         acb_t x1, x2, t, w1, w2;
         slong prec1, prec2, ebits;
+        int flags;
         fmpz_t k;
 
         acb_init(x1);
@@ -54,6 +55,21 @@ int main()
         acb_randtest(w2, state, 1 + n_randint(state, 1000), ebits);
         fmpz_randtest(k, state, ebits);
 
+        flags = 0;
+
+        switch (n_randint(state, 10))
+        {
+            case 0:
+                flags = ACB_LAMBERTW_LEFT;
+                break;
+            case 1:
+                flags = ACB_LAMBERTW_MIDDLE;
+                fmpz_set_si(k, -1);
+                break;
+            default:
+                break;
+        }
+
         if (n_randint(state, 4) == 0)
         {
             arb_const_e(acb_realref(t), 2 * prec1);
@@ -71,27 +87,27 @@ int main()
             acb_sub(x2, x2, t, 2 * prec1);
         }
 
-        if (n_randint(state, 4) == 0)
+        if (n_randint(state, 4) == 0 && flags == 0)
             acb_lambertw_asymp(w1, x1, k,
                 1 + n_randint(state, 10), 1 + n_randint(state, 10), prec1);
         else
-            acb_lambertw(w1, x1, k, 0, prec1);
+            acb_lambertw(w1, x1, k, flags, prec1);
 
         if (n_randint(state, 2))
         {
             acb_set(w2, x2);
-            acb_lambertw(w2, w2, k, 0, prec1);
+            acb_lambertw(w2, w2, k, flags, prec1);
         }
         else
         {
-            acb_lambertw(w2, x2, k, 0, prec1);
+            acb_lambertw(w2, x2, k, flags, prec1);
         }
 
         if (!acb_overlaps(w1, w2))
         {
             flint_printf("FAIL: overlap\n\n");
-            flint_printf("iter %wd, branch = ", iter); fmpz_print(k);
-            flint_printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
+            flint_printf("iter %wd, flags = %d, branch = ", flags, iter); fmpz_print(k);
+            flint_printf(" prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
             flint_printf("x1 = "); acb_printd(x1, 50); flint_printf("\n\n");
             flint_printf("x2 = "); acb_printd(x2, 50); flint_printf("\n\n");
             flint_printf("w1 = "); acb_printd(w1, 50); flint_printf("\n\n");
@@ -105,7 +121,7 @@ int main()
         if (!acb_contains(t, x1))
         {
             flint_printf("FAIL: functional equation\n\n");
-            flint_printf("iter %wd, branch = ", iter); fmpz_print(k);
+            flint_printf("iter %wd, flags = %d, branch = ", flags, iter); fmpz_print(k);
             flint_printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
             flint_printf("x1 = "); acb_printd(x1, 50); flint_printf("\n\n");
             flint_printf("x2 = "); acb_printd(x2, 50); flint_printf("\n\n");
@@ -119,14 +135,20 @@ int main()
         {
             acb_conj(x2, x1);
             fmpz_neg(k, k);
-            acb_lambertw(w2, x2, k, 0, prec2);
+            if (flags == 2)
+                fmpz_sub_ui(k, k, 1);
+
+            acb_lambertw(w2, x2, k, flags, prec2);
+
+            if (flags == 2)
+                fmpz_add_ui(k, k, 1);
             fmpz_neg(k, k);
             acb_conj(w2, w2);
 
             if (!acb_overlaps(w1, w2))
             {
                 flint_printf("FAIL: conjugation\n\n");
-                flint_printf("iter %wd, branch = ", iter); fmpz_print(k);
+                flint_printf("iter %wd, flags = %d, branch = ", flags, iter); fmpz_print(k);
                 flint_printf("prec1 = %wd, prec2 = %wd\n\n", prec1, prec2);
                 flint_printf("x1 = "); acb_printd(x1, 50); flint_printf("\n\n");
                 flint_printf("x2 = "); acb_printd(x2, 50); flint_printf("\n\n");
