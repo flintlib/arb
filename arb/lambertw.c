@@ -157,10 +157,10 @@ arb_lambertw_bound_prime(mag_t w, const arb_t x, int branch, slong prec)
 }
 
 /* Given an approximation w for W(x), compute a rigorous error bound.
-   The precomputed residual r = w e^w - x is optional. */
+   The precomputed value ew = e^w is optional. */
 void
 arb_lambertw_bound_error(mag_t res, const arb_t x, const arf_t w,
-        const arb_t residual, int branch, slong prec)
+        const arb_t ew, int branch, slong prec)
 {
     arb_t r, x2;
     mag_t m;
@@ -177,30 +177,30 @@ arb_lambertw_bound_error(mag_t res, const arb_t x, const arf_t w,
     arb_init(x2);
     mag_init(m);
 
-    if (residual != NULL)
+    if (ew != NULL)
     {
-        arb_set(r, residual);
+        arb_set(r, ew);
     }
     else
     {
-        /* r = w e^w - x */
         arb_set_arf(r, w);
         arb_exp(r, r, prec);
-        arb_mul_arf(r, r, w, prec);
-        arb_sub(r, r, x, prec);
     }
+
+    /* x2 = w e^w */
+    arb_mul_arf(x2, r, w, prec);
+    /* r = x2 - x */
+    arb_sub(r, x2, x, prec);
 
     arb_get_mag(m, r);
 
     /* x2 = min(x, x+r) (W'(t) is decreasing with t) */
     if (branch == 0)
     {
-        arb_add(x2, r, x, prec);
         arb_min(x2, x, x2, prec);
     }
     else
     {
-        arb_add(x2, r, x, prec);
         arb_union(x2, x, x2, prec);
     }
 
@@ -254,19 +254,17 @@ arb_lambertw_halley_step(arb_t res, const arb_t x, const arf_t w,
 
     if (certify)
     {
-        arb_t r;
-        arb_init(r);
-        /* Compute the residual r = t e^t - x. We already have e^w, so
+        arb_t et;
+        arb_init(et);
+        /* Inverse: x2 = t e^t. We already have e^w, so
            compute e^t = e^w e^(t-w). */
-        arb_set_arf(r, w);
-        arb_sub_arf(r, r, t, prec);
-        arb_neg(r, r);
-        arb_exp(r, r, prec);
-        arb_mul(r, r, ew, prec);
-        arb_mul_arf(r, r, t, prec);
-        arb_sub(r, r, x, prec);
-        arb_lambertw_bound_error(err, x, t, r, branch, prec);
-        arb_clear(r);
+        arb_set_arf(et, w);
+        arb_sub_arf(et, et, t, prec);
+        arb_neg(et, et);
+        arb_exp(et, et, prec);
+        arb_mul(et, et, ew, prec);
+        arb_lambertw_bound_error(err, x, t, et, branch, prec);
+        arb_clear(et);
     }
 
     arf_swap(arb_midref(res), t);
