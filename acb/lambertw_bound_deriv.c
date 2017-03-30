@@ -14,26 +14,92 @@
 void
 acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t k)
 {
-    mag_t t, u;
+    mag_t t, u, v;
 
     mag_init(t);
     mag_init(u);
+    mag_init(v);
 
-    /* Main approximation: W'(z) ~ 1/|z|  */
     if (fmpz_is_zero(k))
     {
-        /* 1/(1+|z|) */
-        acb_get_mag_lower(res, z);
-        mag_one(t);
-        mag_add_lower(res, res, t);
-        mag_div(res, t, res);
+        acb_get_mag(t, z);
+
+        /* |z| <= 64 */
+        if (mag_cmp_2exp_si(t, 6) < 0)
+        {
+            /* 2.25 / sqrt(|t|) / sqrt(1+|t|), t = |ez+1| */
+            acb_get_mag_lower(t, ez1);
+            mag_one(u);
+            mag_add_lower(u, u, t);
+            mag_mul_lower(t, t, u);
+            mag_rsqrt(t, t);
+
+            if (arb_is_positive(acb_realref(ez1)))
+            {
+                mag_mul_ui(t, t, 135);      /* x0.9375 for small improvement */
+                mag_mul_2exp_si(t, t, -6);
+            }
+            else
+            {
+                mag_mul_ui(t, t, 9);
+                mag_mul_2exp_si(t, t, -2);
+            }
+
+            mag_set(res, t);
+        }
+        else
+        {
+            acb_get_mag_lower(t, z);
+
+            if (mag_cmp_2exp_si(t, 2) >= 0)
+            {
+                mag_one(u);
+                mag_div(res, u, t);
+            }
+            else   /* unlikely */
+            {
+                acb_get_mag_lower(u, ez1);
+                mag_rsqrt(u, u);
+                mag_mul_2exp_si(u, u, -1);
+                mag_add_ui(u, u, 1);
+                mag_mul_ui(u, u, 3);
+                mag_div(res, u, t);
+            }
+        }
     }
     else if (fmpz_is_pm1(k))
     {
-        /* 2/|z| */
-        mag_set_ui(t, 2);
-        acb_get_mag_lower(res, z);
-        mag_div(res, t, res);
+        if (arb_is_nonnegative(acb_realref(z)) ||
+            (fmpz_is_one(k) && arb_is_nonnegative(acb_imagref(z))) ||
+            (fmpz_equal_si(k, -1) && arb_is_negative(acb_imagref(z))))
+        {
+            /* (1 + 1/(4+|z|^2))/|z| */
+            acb_get_mag_lower(t, z);
+            mag_mul_lower(u, t, t);
+            mag_set_ui_lower(v, 4);
+            mag_add_lower(u, u, v);
+            mag_one(v);
+            mag_div(u, v, u);
+            mag_add(u, u, v);
+            mag_div(res, u, t);
+        }
+        else
+        {
+            /* (1 + 0.71875/sqrt(|e*z+1|)) / |z| */
+            acb_get_mag_lower(t, ez1);
+            mag_rsqrt(t, t);
+            mag_mul_ui(t, t, 23);
+            mag_mul_2exp_si(t, t, -5);
+            mag_one(u);
+            mag_add(t, t, u);
+            acb_get_mag_lower(u, z);
+            mag_div(res, t, u);
+        }
+
+        mag_clear(t);
+        mag_clear(u);
+        mag_clear(v);
+        return;
     }
     else
     {
@@ -44,48 +110,8 @@ acb_lambertw_bound_deriv(mag_t res, const acb_t z, const acb_t ez1, const fmpz_t
         mag_div(res, t, res);
     }
 
-    /* Compute correction near the branch point */
-    if (fmpz_is_zero(k) ||
-        (fmpz_equal_si(k,-1) && !arb_is_negative(acb_imagref(z))) ||
-        (fmpz_is_one(k) && !arb_is_nonnegative(acb_imagref(z))))
-    {
-        acb_t b;
-        acb_init(b);
-
-        if (fmpz_is_zero(k))
-        {
-            /* [-4,1] + [-2,2]i */
-            arf_set_si_2exp_si(arb_midref(acb_realref(b)), -3, -1);
-            mag_set_ui_2exp_si(arb_radref(acb_realref(b)), 5, -1);
-            arf_zero(arb_midref(acb_imagref(b)));
-            mag_set_ui(arb_radref(acb_imagref(b)), 2);
-        }
-        else
-        {
-            /* k = 1   [-1/2,-1/4] + [-1/8,0) i */
-            /* k = -1  [-1/2,-1/4] + [0,1/8] i */
-            arf_set_si_2exp_si(arb_midref(acb_realref(b)), -3, -3);
-            mag_set_ui_2exp_si(arb_radref(acb_realref(b)), 1, -3);
-            if (fmpz_is_one(k))
-                arf_set_si_2exp_si(arb_midref(acb_imagref(b)), -1, -4);
-            else
-                arf_set_ui_2exp_si(arb_midref(acb_imagref(b)), 1, -4);
-            mag_set_ui_2exp_si(arb_radref(acb_imagref(b)), 1, -4);
-        }
-
-        if (acb_overlaps(z, b))
-        {
-            /* add 2/sqrt(|ez+1|) */
-            acb_get_mag_lower(u, ez1);
-            mag_rsqrt(u, u);
-            mag_mul_2exp_si(u, u, 1);
-            mag_add(res, res, u);
-        }
-
-        acb_clear(b);
-    }
-
     mag_clear(t);
     mag_clear(u);
+    mag_clear(v);
 }
 
