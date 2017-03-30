@@ -420,8 +420,8 @@ acb_lambertw_try_near_branch_point(acb_t res, const acb_t z,
                         || (fmpz_equal_si(k, -1) && arb_is_nonnegative(acb_imagref(z))))
     {
         if (acb_contains_zero(ez1) ||
-            (arf_cmpabs_2exp_si(arb_midref(acb_realref(ez1)), -prec / 4.5) < 0 &&
-             arf_cmpabs_2exp_si(arb_midref(acb_imagref(ez1)), -prec / 4.5) < 0))
+            (arf_cmpabs_2exp_si(arb_midref(acb_realref(ez1)), -prec / 4.5 - 6) < 0 &&
+             arf_cmpabs_2exp_si(arb_midref(acb_imagref(ez1)), -prec / 4.5 - 6) < 0))
         {
             acb_t t;
             acb_init(t);
