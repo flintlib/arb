@@ -35,11 +35,10 @@ acb_lambertw_branch_crossing(const acb_t z, const acb_t ez1, const fmpz_t k)
 
 /* todo: remove radii */
 void
-acb_lambertw_halley_step(acb_t res, const acb_t z, const acb_t w, slong prec)
+acb_lambertw_halley_step(acb_t res, acb_t ew, const acb_t z, const acb_t w, slong prec)
 {
-    acb_t ew, t, u, v;
+    acb_t t, u, v;
 
-    acb_init(ew);
     acb_init(t);
     acb_init(u);
     acb_init(v);
@@ -61,7 +60,6 @@ acb_lambertw_halley_step(acb_t res, const acb_t z, const acb_t w, slong prec)
 
     acb_swap(res, t);
 
-    acb_clear(ew);
     acb_clear(t);
     acb_clear(u);
     acb_clear(v);
@@ -245,12 +243,15 @@ acb_lambertw_initial(acb_t res, const acb_t z, const acb_t ez1, const fmpz_t k, 
 void acb_lambertw_main(acb_t res, const acb_t z,
                 const acb_t ez1, const fmpz_t k, int flags, slong prec)
 {
-    acb_t w, t;
+    acb_t w, t, oldw, ew;
     mag_t err;
     slong i, wp, accuracy, ebits, kbits, mbits, wp_initial, extraprec;
+    int have_ew;
 
     acb_init(t);
     acb_init(w);
+    acb_init(oldw);
+    acb_init(ew);
     mag_init(err);
 
     /* We need higher precision for large k, large exponents, or very close
@@ -275,6 +276,10 @@ void acb_lambertw_main(acb_t res, const acb_t z,
     mag_zero(arb_radref(acb_realref(w)));
     mag_zero(arb_radref(acb_imagref(w)));
 
+    /* We should be able to compute e^w for the final certification
+       during the Halley iteration. */
+    have_ew = 0;
+
     for (i = 0; i < 5 + FLINT_BIT_COUNT(prec + extraprec); i++)
     {
         /* todo: should we restart? */
@@ -285,7 +290,8 @@ void acb_lambertw_main(acb_t res, const acb_t z,
         wp = FLINT_MAX(wp, 40);
         wp += extraprec;
 
-        acb_lambertw_halley_step(t, z, w, wp);
+        acb_set(oldw, w);
+        acb_lambertw_halley_step(t, ew, z, w, wp);
 
         /* estimate the error (conservatively) */
         acb_sub(w, w, t, wp);
@@ -301,7 +307,14 @@ void acb_lambertw_main(acb_t res, const acb_t z,
         accuracy = FLINT_MAX(accuracy, 0);
 
         if (accuracy > prec + extraprec)
+        {
+            /* e^w = e^oldw * e^(w-oldw) */
+            acb_sub(t, w, oldw, wp);
+            acb_exp(t, t, wp);
+            acb_mul(ew, ew, t, wp);
+            have_ew = 1;
             break;
+        }
 
         mag_zero(arb_radref(acb_realref(w)));
         mag_zero(arb_radref(acb_imagref(w)));
@@ -323,8 +336,11 @@ void acb_lambertw_main(acb_t res, const acb_t z,
         mag_init(err);
         mag_init(rad);
 
-        /* todo: avoid recomputing e^w */
-        acb_exp(t, w, wp);
+        if (have_ew)
+            acb_set(t, ew);
+        else
+            acb_exp(t, w, wp);
+        /* t = w e^w */
         acb_mul(t, t, w, wp);
 
         acb_sub(r, t, z, wp);
@@ -365,6 +381,8 @@ void acb_lambertw_main(acb_t res, const acb_t z,
 
     acb_clear(t);
     acb_clear(w);
+    acb_clear(oldw);
+    acb_clear(ew);
     mag_clear(err);
 }
 

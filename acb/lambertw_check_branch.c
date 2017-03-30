@@ -11,9 +11,8 @@
 
 #include "acb.h"
 
-/* todo: use reduced precision test first */
 int
-acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
+_acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
 {
     arb_t t, u, v, a, b;
     int res = 0;
@@ -84,5 +83,14 @@ acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
     arb_clear(b);
 
     return res;
+}
+
+int
+acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
+{
+    if (prec > 64 && _acb_lambertw_check_branch(w, k, 32))
+        return 1;
+
+    return _acb_lambertw_check_branch(w, k, prec);
 }
 
