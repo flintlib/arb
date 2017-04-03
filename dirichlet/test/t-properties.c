@@ -110,7 +110,9 @@ int main()
                 }
 
                 /* lift to higher modulus */
-                q2 = q * (1 + n_randint(state, 100));
+                do {
+                    q2 = q * (1 + n_randint(state, 100));
+                } while (q2 % q); /* in case of overflow */
 
                 dirichlet_group_init(G2, q2);
                 dirichlet_char_init(chi2, G2);
@@ -140,23 +142,29 @@ int main()
                     flint_abort();
                 }
 
+                /* choose q3 s.t. conductor | q3 | q */
                 q3 = dirichlet_conductor_char(G, chi) * random_divisor(state, G);
                 q3 = n_gcd(q, q3);
 
-                dirichlet_group_init(G3, q3);
-                dirichlet_char_init(chi3, G3);
-                dirichlet_char_lower(chi3, G3, chi2, G2);
+                /* discard if overflow */
+                if (q3 % p1 == 0)
+                {
+                    dirichlet_group_init(G3, q3);
+                    dirichlet_char_init(chi3, G3);
+                    dirichlet_char_lower(chi3, G3, chi2, G2);
 
-                p1 = dirichlet_conductor_char(G, chi);
-                p2 = dirichlet_conductor_char(G3, chi3);
-                check_eq(p1, p2, q, m, "conductor chi", "conductor lower");
+                    p1 = dirichlet_conductor_char(G, chi);
+                    p2 = dirichlet_conductor_char(G3, chi3);
+                    check_eq(p1, p2, q, m, "conductor chi", "conductor lower");
 
-                p1 = dirichlet_order_char(G, chi);
-                p2 = dirichlet_order_char(G3, chi3);
-                check_eq(p1, p2, q, m, "order chi", "order lower");
+                    p1 = dirichlet_order_char(G, chi);
+                    p2 = dirichlet_order_char(G3, chi3);
+                    check_eq(p1, p2, q, m, "order chi", "order lower");
 
-                dirichlet_char_clear(chi3);
-                dirichlet_group_clear(G3);
+                    dirichlet_char_clear(chi3);
+                    dirichlet_group_clear(G3);
+                }
+
                 dirichlet_char_clear(chi2);
                 dirichlet_group_clear(G2);
 
