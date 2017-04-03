@@ -98,8 +98,8 @@ dirichlet_group_lift_generators(dirichlet_group_t G)
                 G->P[k].g, G->P[k].pe.n, G->q, G->P[k].e);
         }
         v = nmod_inv(qpe % pe.n, pe);
-        /* no overflow since v * qpe < q */
-        G->generators[k] = (1 + (G->P[k].g-1) * v * qpe) % G->q;
+        /* v * qpe < q */
+        G->generators[k] = (1 + nmod_mul(G->P[k].g-1, v * qpe, G->mod)) % G->q;
     }
 }
 
