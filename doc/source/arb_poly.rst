@@ -157,7 +157,7 @@ Conversions
 
 .. function:: void arb_poly_set_si(arb_poly_t poly, slong src)
 
-    Sets *poly* to *src*, rounding the coefficients to *prec* bits.
+    Sets *poly* to *src*.
 
 
 Input and output
