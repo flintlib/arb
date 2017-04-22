@@ -313,7 +313,7 @@ Radius and interval operations
 
 .. function:: void arb_get_rad_arb(arb_t r, const arb_t x)
 
-    Sets *m* to the radius of *x*.
+    Sets *r* to the radius of *x*.
 
 .. function:: void arb_add_error_arf(arb_t x, const arf_t err)
 
@@ -862,7 +862,7 @@ Powers and roots
 
 .. function:: void arb_pow(arb_t z, const arb_t x, const arb_t y, slong prec)
 
-    Sets `z = x^y`, computed using binary exponentiation if `y` if
+    Sets `z = x^y`, computed using binary exponentiation if `y` is
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
     half-integer, and generally as `z = \exp(y \log x)`.
 
