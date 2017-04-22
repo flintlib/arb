@@ -586,7 +586,7 @@ arb_lambertw(arb_t res, const arb_t x, int flags, slong prec)
     else
     {
         slong k, padding, nextstep, maxstep, *steps;
-        double rate;
+        double rate, nearm1;
 
         steps = flint_malloc(sizeof(slong) * FLINT_BITS);
 
@@ -596,6 +596,21 @@ arb_lambertw(arb_t res, const arb_t x, int flags, slong prec)
            This is heuristic. A better analysis should be possible. */
         rate = 2.0 + 1.0 / (1.0 + 0.01 * ebits);
         padding = 6 * ebits2;
+
+        /* extra padding near -1/e */
+        nearm1 = arf_get_d(arb_midref(w), ARF_RND_DOWN);
+        if (fabs(nearm1 + 1.0) < 0.01)
+        {
+            arf_add_ui(arb_midref(t), arb_midref(w), 1, 30, ARF_RND_DOWN);
+
+            if (arf_is_zero(arb_midref(t)))
+                padding += prec;
+            else
+            {
+                slong ee = -ARF_EXP(arb_midref(t));
+                padding += FLINT_MIN(FLINT_MAX(2 * ee, 0), prec);
+            }
+        }
 
         maxstep = 0;
         steps[0] = wp;

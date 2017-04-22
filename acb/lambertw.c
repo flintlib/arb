@@ -263,8 +263,19 @@ void acb_lambertw_main(acb_t res, const acb_t z,
     else
         ebits = fmpz_bits(MAG_EXPREF(err));
 
-    acb_get_mag(err, ez1);
-    mbits = fmpz_bits(MAG_EXPREF(err));
+    if (fmpz_is_zero(k) || (fmpz_is_one(k) && arb_is_negative(acb_imagref(z)))
+                        || (fmpz_equal_si(k, -1) && arb_is_nonnegative(acb_imagref(z))))
+    {
+        acb_get_mag(err, ez1);
+        mbits = -MAG_EXP(err);
+        mbits = FLINT_MAX(mbits, 0);
+        mbits = FLINT_MIN(mbits, prec);
+    }
+    else
+    {
+        mbits = 0;
+    }
+
     kbits = fmpz_bits(k);
 
     extraprec = FLINT_MAX(ebits, kbits);

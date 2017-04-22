@@ -24,9 +24,25 @@ _acb_lambertw_check_branch(const acb_t w, const fmpz_t k, slong prec)
     arb_init(b);
 
     /* t = x sinc(y), v = -cos(y) */
-    arb_sinc(t, acb_imagref(w), prec);
+    if (arb_is_exact(acb_imagref(w)))
+    {
+        if (arb_is_zero(acb_imagref(w)))
+        {
+            arb_one(t);
+            arb_one(v);
+        }
+        else
+        {
+            arb_sin_cos(t, v, acb_imagref(w), prec);
+            arb_div(t, t, acb_imagref(w), prec);
+        }
+    }
+    else
+    {
+        arb_sinc(t, acb_imagref(w), prec);
+        arb_cos(v, acb_imagref(w), prec);
+    }
     arb_mul(t, t, acb_realref(w), prec);
-    arb_cos(v, acb_imagref(w), prec);
     arb_neg(v, v);
 
     /* u = y / pi, with conjugate relation for k */
