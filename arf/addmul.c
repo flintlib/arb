@@ -16,7 +16,7 @@ arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
 {
     mp_size_t xn, yn, zn, tn, alloc;
     mp_srcptr xptr, yptr, zptr;
-    mp_ptr tptr, tptr2;
+    mp_ptr tptr;
     fmpz_t texp;
     slong shift;
     int tsgnbit, inexact;
@@ -55,9 +55,7 @@ arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
     shift = _fmpz_sub_small(ARF_EXPREF(z), texp);
 
     alloc = tn = xn + yn;
-    ARF_MUL_TMP_ALLOC(tptr2, alloc)
-    tptr = tptr2;
-
+    ARF_MUL_TMP_ALLOC(tptr, alloc)
     ARF_MPN_MUL(tptr, xptr, xn, yptr, yn);
 
     tn -= (tptr[0] == 0);
@@ -70,7 +68,7 @@ arf_addmul(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd)
         inexact = _arf_add_mpn(z, tptr, tn, tsgnbit, texp,
             zptr, zn, ARF_SGNBIT(z), -shift, prec, rnd);
 
-    ARF_MUL_TMP_FREE(tptr2, alloc)
+    ARF_MUL_TMP_FREE(tptr, alloc)
     fmpz_clear(texp);
 
     return inexact;
@@ -81,7 +79,7 @@ arf_addmul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, slong prec, arf_rnd_t rnd
 {
     mp_size_t xn, yn, zn, tn, alloc;
     mp_srcptr xptr, yptr, zptr;
-    mp_ptr tptr, tptr2;
+    mp_ptr tptr;
     fmpz_t texp, yexp;
     slong shift;
     int tsgnbit, ysgnbit, inexact;
@@ -124,9 +122,7 @@ arf_addmul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, slong prec, arf_rnd_t rnd
     tsgnbit = ARF_SGNBIT(x) ^ ysgnbit;
 
     alloc = tn = xn + yn;
-    ARF_MUL_TMP_ALLOC(tptr2, alloc)
-    tptr = tptr2;
-
+    ARF_MUL_TMP_ALLOC(tptr, alloc);
     ARF_MPN_MUL(tptr, xptr, xn, yptr, yn);
 
     shift = (tptr[tn - 1] == 0) * FLINT_BITS;
@@ -142,7 +138,7 @@ arf_addmul_mpz(arf_ptr z, arf_srcptr x, const mpz_t y, slong prec, arf_rnd_t rnd
         inexact = _arf_add_mpn(z, tptr, tn, tsgnbit, texp,
             zptr, zn, ARF_SGNBIT(z), -shift, prec, rnd);
 
-    ARF_MUL_TMP_FREE(tptr2, alloc)
+    ARF_MUL_TMP_FREE(tptr, alloc)
     fmpz_clear(texp);
 
     return inexact;
