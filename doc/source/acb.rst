@@ -572,6 +572,10 @@ Exponentials and logarithms
 
     Sets `v = \exp(z)` and `w = \exp(-z)`.
 
+.. function:: void acb_expm1(acb_t res, const acb_t z, slong prec)
+
+    Computes `\exp(z)-1`, using an accurate method when `z \approx 0`.
+
 .. function:: void acb_log(acb_t y, const acb_t z, slong prec)
 
     Sets *y* to the principal branch of the natural logarithm of *z*,
