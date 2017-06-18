@@ -16,28 +16,24 @@ dlog_precomp(const dlog_precomp_t pre, ulong b)
 {
     if (b == 1)
         return 0;
+
     switch (pre->type)
     {
-      case DLOG_MODPE:
-        return dlog_modpe(pre->t.modpe, b);
-        break;
-      case DLOG_CRT:
-        return dlog_crt(pre->t.crt, b);
-        break;
-      case DLOG_POWER:
-        return dlog_power(pre->t.power, b);
-        break;
-      case DLOG_TABLE:
-        return dlog_table(pre->t.table, b);
-        break;
-      case DLOG_BSGS:
-        return dlog_bsgs(pre->t.bsgs, b);
-        break;
-      case DLOG_23:
-        return dlog_order23(pre->t.order23, b);
-        break;
-      default:
-        flint_abort();
-        break;
+        case DLOG_MODPE:
+            return dlog_modpe(pre->t.modpe, b);
+        case DLOG_CRT:
+            return dlog_crt(pre->t.crt, b);
+        case DLOG_POWER:
+            return dlog_power(pre->t.power, b);
+        case DLOG_TABLE:
+            return dlog_table(pre->t.table, b);
+        case DLOG_BSGS:
+            return dlog_bsgs(pre->t.bsgs, b);
+        case DLOG_23:
+            return dlog_order23(pre->t.order23, b);
+        default:
+            flint_abort();
     }
+
+    return 0; /* dummy return because flint_abort() is not declared noreturn */
 }

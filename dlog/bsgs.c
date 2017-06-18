@@ -31,4 +31,5 @@ dlog_bsgs(const dlog_bsgs_t t, ulong b)
     flint_printf("   table size %wu, cosize %wu mod %wu. %wu not found (a^-m=%wu)\n",
             t->m, t->g, t->mod.n, b, t->am);
     flint_abort();
+    return 0; /* dummy return because flint_abort() is not declared noreturn */
 }

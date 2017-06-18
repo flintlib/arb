@@ -32,6 +32,7 @@ arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd)
     {
         flint_printf("exception: exponent too large to convert to mpfr");
         flint_abort();
+        r = 0; /* dummy return because flint_abort() is not declared noreturn */
     }
     else
     {

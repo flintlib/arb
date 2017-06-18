@@ -30,6 +30,7 @@ dlog_single(ulong b, ulong a, const nmod_t mod, ulong n)
         flint_printf("FAIL[dlog single]: log(%wu,%wu) mod %wu not found (size %wu)\n",
                 b, a, mod.n, n);
         flint_abort();
+        return 0; /* dummy return because flint_abort() is not declared noreturn */
     }
     else
     {

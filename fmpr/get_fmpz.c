@@ -53,6 +53,7 @@ fmpr_get_fmpz(fmpz_t z, const fmpr_t x, fmpr_rnd_t rnd)
         {
             flint_printf("fmpr_get_fmpz: number too large to convert to integer\n");
             flint_abort();
+            return; /* dummy return because flint_abort() is not declared noreturn */
         }
     }
 
