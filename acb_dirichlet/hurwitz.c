@@ -29,6 +29,22 @@ acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec)
         return;
     }
 
+    if (acb_is_int(s) && arf_sgn(arb_midref(acb_realref(s))) < 0 &&
+        arf_cmpabs_ui(arb_midref(acb_realref(s)), prec / 2) < 0)
+    {
+        slong n = arf_get_si(arb_midref(acb_realref(s)), ARF_RND_FLOOR);
+
+        acb_bernoulli_poly_ui(res, 1 - n, a, prec);
+        acb_div_si(res, res, n - 1, prec);
+        return;
+    }
+
+    if (arb_contains_zero(acb_imagref(s)) && arb_contains_si(acb_realref(s), 1))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
     _acb_poly_zeta_cpx_series(res, s, a, 0, 1, prec);
 }
 

@@ -37,6 +37,12 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
         return;
     }
 
+    if (arb_contains_zero(acb_imagref(s)) && arb_contains_si(acb_realref(s), 1))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
     cutoff = 24.0 * prec * sqrt(prec);
 
     if (arf_cmpabs_d(arb_midref(acb_imagref(s)), cutoff) >= 0 &&
