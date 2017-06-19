@@ -172,6 +172,16 @@ the evaluation.
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
 
+Hurwitz zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec)
+
+    Computes the Hurwitz zeta function `\zeta(s, a)`.
+    This function automatically delegates to the code for the Riemann zeta function
+    when `a = 1`. Some other special cases may also be handled by direct
+    formulas. In general, Euler-Maclaurin summation is used.
+
 Hurwitz zeta function precomputation
 -------------------------------------------------------------------------------
 

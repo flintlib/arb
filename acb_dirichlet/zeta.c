@@ -13,12 +13,21 @@
 
 void acb_zeta_si(acb_t z, slong s, slong prec);
 
+static void
+_acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
+{
+    acb_t a;
+    acb_init(a);
+    acb_one(a);
+    _acb_poly_zeta_cpx_series(res, s, a, 0, 1, prec);
+    acb_clear(a);
+}
+
 /* todo: use euler product for complex s, and check efficiency
    for large negative integers */
 void
 acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
 {
-    acb_t a;
     double cutoff;
 
     if (acb_is_int(s) &&
@@ -36,9 +45,6 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
         acb_dirichlet_zeta_rs(res, s, 0, prec);
         return;
     }
-
-    acb_init(a);
-    acb_one(a);
 
     if (arf_sgn(arb_midref(acb_realref(s))) < 0)
     {
@@ -66,7 +72,7 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
         acb_neg(t, t);
         acb_gamma(v, t, wp);
         acb_mul(u, u, v, wp);
-        acb_hurwitz_zeta(v, t, a, wp);
+        _acb_dirichlet_zeta(v, t, prec);
         acb_mul(res, u, v, prec);
 
         acb_clear(t);
@@ -75,9 +81,7 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
     }
     else
     {
-        acb_hurwitz_zeta(res, s, a, prec);
+        _acb_dirichlet_zeta(res, s, prec);
     }
-
-    acb_clear(a);
 }
 

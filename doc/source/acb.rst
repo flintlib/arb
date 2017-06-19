@@ -891,11 +891,15 @@ Zeta function
     Note: for computing derivatives with respect to `s`,
     use :func:`acb_poly_zeta_series` or related methods.
 
+    This is a wrapper of :func:`acb_dirichlet_zeta`.
+
 .. function:: void acb_hurwitz_zeta(acb_t z, const acb_t s, const acb_t a, slong prec)
 
     Sets *z* to the value of the Hurwitz zeta function `\zeta(s, a)`.
     Note: for computing derivatives with respect to `s`,
     use :func:`acb_poly_zeta_series` or related methods.
+
+    This is a wrapper of :func:`acb_dirichlet_hurwitz`.
 
 .. function:: void acb_bernoulli_poly_ui(acb_t res, ulong n, const acb_t x, slong prec)
 
