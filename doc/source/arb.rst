@@ -975,6 +975,10 @@ Trigonometric functions
 
     Sets `z = \operatorname{sinc}(x) = \sin(x) / x`.
 
+.. function:: void arb_sinc_pi(arb_t z, const arb_t x, slong prec)
+
+    Sets `z = \operatorname{sinc}(\pi x) = \sin(\pi x) / (\pi x)`.
+
 Inverse trigonometric functions
 -------------------------------------------------------------------------------
 

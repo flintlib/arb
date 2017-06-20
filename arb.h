@@ -507,6 +507,7 @@ void arb_sin_cos_pi_fmpq(arb_t s, arb_t c, const fmpq_t x, slong prec);
 void arb_sin_pi_fmpq(arb_t s, const fmpq_t x, slong prec);
 void arb_cos_pi_fmpq(arb_t c, const fmpq_t x, slong prec);
 void arb_sinc(arb_t z, const arb_t x, slong prec);
+void arb_sinc_pi(arb_t z, const arb_t x, slong prec);
 void arb_sinh(arb_t z, const arb_t x, slong prec);
 void arb_cosh(arb_t z, const arb_t x, slong prec);
 void arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, slong prec);
