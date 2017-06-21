@@ -337,6 +337,12 @@ void _arb_poly_product_roots(arb_ptr poly, arb_srcptr xs, slong n, slong prec);
 
 void arb_poly_product_roots(arb_poly_t poly, arb_srcptr xs, slong n, slong prec);
 
+void _arb_poly_product_roots_complex(arb_ptr poly, arb_srcptr r, slong rn,
+    acb_srcptr c, slong cn, slong prec);
+
+void arb_poly_product_roots_complex(arb_poly_t poly,
+        arb_srcptr r, slong rn, acb_srcptr c, slong cn, slong prec);
+
 arb_ptr * _arb_poly_tree_alloc(slong len);
 
 void _arb_poly_tree_free(arb_ptr * tree, slong len);

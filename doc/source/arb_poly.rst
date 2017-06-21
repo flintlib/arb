@@ -560,6 +560,26 @@ Product trees
 
     Generates the polynomial `(x-x_0)(x-x_1)\cdots(x-x_{n-1})`.
 
+.. function:: void _arb_poly_product_roots_complex(arb_ptr poly, arb_srcptr r, slong rn, acb_srcptr c, slong cn, slong prec)
+
+.. function:: void arb_poly_product_roots_complex(arb_poly_t poly, arb_srcptr r, slong rn, acb_srcptr c, slong cn, slong prec)
+
+    Generates the polynomial
+
+    .. math ::
+
+        \left(\prod_{i=0}^{rn-1} (x-r_i)\right) \left(\prod_{i=0}^{cn-1} (x-c_i)(x-\bar{c_i})\right)
+
+    having *rn* real roots given by the array *r* and having `2cn` complex roots
+    in conjugate pairs given by the length-*cn* array *c*.
+    Either *rn* or *cn* or both may be zero.
+
+    Note that only one representative from each complex conjugate pair
+    is supplied (unless a pair is supposed to
+    be repeated with higher multiplicity).
+    To construct a polynomial from complex roots where the conjugate pairs
+    have not been distinguished, use :func:`acb_poly_product_roots` instead.
+
 .. function:: arb_ptr * _arb_poly_tree_alloc(slong len)
 
     Returns an initialized data structured capable of representing a
