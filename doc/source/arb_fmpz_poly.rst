@@ -77,6 +77,7 @@ Polynomial roots
     do a squarefree factorization (which also gives the correct multiplicities
     of the roots)::
 
+        fmpz_poly_factor_t fac;
         fmpz_poly_factor_init(fac);
         fmpz_poly_factor_squarefree(fac, poly);
 
@@ -93,7 +94,7 @@ Polynomial roots
 
     All roots are refined to a relative accuracy of at least *prec* bits.
     The output values will generally have higher actual precision,
-    depending on the precision used internally the algorithm.
+    depending on the precision used internally by the algorithm.
 
     This implementation should be adequate for general use, but it is not
     currently competitive with state-of-the-art isolation
