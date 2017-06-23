@@ -49,7 +49,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     real = (n % 2) == 1;
 
     /* first estimate precision crudely based on d and n */
-    initial_prec = n * log(2 * d) * 1.4426950408889 * 1.01 + 20;
+    initial_prec = n * log(2 * d) * 1.4426950408889 * 1.03 + 20;
     initial_prec = FLINT_MAX(initial_prec, 48);
 
     /* if high, start lower to get a good estimate */
@@ -139,7 +139,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
                 mag_max(mmax, mmax, m);
             }
 
-            prec = mag_get_d_log2_approx(mmax) * 1.01 + 20;
+            prec = mag_get_d_log2_approx(mmax) * 1.03 + 20;
 
             if (prec < 2 * initial_prec)
                 prec = 2 * initial_prec;
