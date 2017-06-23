@@ -26,6 +26,8 @@
 #include "arb_poly.h"
 #include "acb_poly.h"
 
+#define ARB_FMPZ_POLY_ROOTS_VERBOSE 1
+
 void _arb_fmpz_poly_evaluate_acb_horner(acb_t res, const fmpz * f, slong len, const acb_t x, slong prec);
 void arb_fmpz_poly_evaluate_acb_horner(acb_t res, const fmpz_poly_t f, const acb_t a, slong prec);
 void _arb_fmpz_poly_evaluate_acb_rectangular(acb_t res, const fmpz * f, slong len, const acb_t x, slong prec);
@@ -39,6 +41,11 @@ void _arb_fmpz_poly_evaluate_arb_rectangular(arb_t res, const fmpz * f, slong le
 void arb_fmpz_poly_evaluate_arb_rectangular(arb_t res, const fmpz_poly_t f, const arb_t a, slong prec);
 void _arb_fmpz_poly_evaluate_arb(arb_t res, const fmpz * f, slong len, const arb_t x, slong prec);
 void arb_fmpz_poly_evaluate_arb(arb_t res, const fmpz_poly_t f, const arb_t a, slong prec);
+
+void arb_fmpz_poly_deflate(fmpz_poly_t result, const fmpz_poly_t input, ulong deflation);
+ulong arb_fmpz_poly_deflation(const fmpz_poly_t input);
+
+void arb_fmpz_poly_complex_roots(acb_ptr roots, const fmpz_poly_t poly, int flags, slong target_prec);
 
 void arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n);
 

@@ -49,6 +49,56 @@ Evaluation
     at the given real or complex number, respectively using Horner's rule, rectangular
     splitting, or a default algorithm choice.
 
+Utility methods
+-------------------------------------------------------------------------------
+
+.. function:: ulong arb_fmpz_poly_deflation(const fmpz_poly_t poly)
+
+    Finds the maximal exponent by which *poly* can be deflated.
+
+.. function:: void arb_fmpz_poly_deflate(fmpz_poly_t res, const fmpz_poly_t poly, ulong deflation)
+
+    Sets *res* to a copy of *poly* deflated by the exponent *deflation*.
+
+Polynomial roots
+-------------------------------------------------------------------------------
+
+.. function:: void arb_fmpz_poly_complex_roots(acb_ptr roots, const fmpz_poly_t poly, int flags, slong prec)
+
+    Writes to *roots* all the real and complex roots of the polynomial *poly*,
+    computed to *prec* accurate bits.
+    The real roots are written first in ascending order (with
+    the imaginary parts set exactly to zero). The following
+    nonreal roots are written in arbitrary order, but with conjugate pairs
+    grouped together (the root in the upper plane leading
+    the root in the lower plane).
+
+    The input polynomial *must* be squarefree. For a general polynomial,
+    do a squarefree factorization (which also gives the correct multiplicities
+    of the roots)::
+
+        fmpz_poly_factor_init(fac);
+        fmpz_poly_factor_squarefree(fac, poly);
+
+        for (i = 0; i < fac->num; i++)
+        {
+            deg = fmpz_poly_degree(fac->p + i);
+            flint_printf("%wd roots of multiplicity %wd\n", deg, fac->exp[i]);
+            roots = _acb_vec_init(deg);
+            arb_fmpz_poly_complex_roots(roots, fac->p + i, 0, prec);
+            _acb_vec_clear(roots, deg);
+        }
+
+        fmpz_poly_factor_clear(fac);
+
+    All roots are refined to a relative accuracy of at least *prec* bits.
+    The output values will generally have higher actual precision,
+    depending on the precision used internally the algorithm.
+
+    This implementation should be adequate for general use, but it is not
+    currently competitive with state-of-the-art isolation
+    methods for finding real roots alone.
+
 Special polynomials
 -------------------------------------------------------------------------------
 

@@ -3,219 +3,18 @@
 #include <string.h>
 #include <ctype.h>
 #include "acb.h"
-#include "acb_poly.h"
+#include "arb_fmpz_poly.h"
 #include "flint/arith.h"
 #include "flint/profiler.h"
-
-int check_accuracy(acb_ptr vec, slong len, slong prec)
-{
-    slong i;
-
-    for (i = 0; i < len; i++)
-    {
-        if (mag_cmp_2exp_si(arb_radref(acb_realref(vec + i)), -prec) >= 0
-         || mag_cmp_2exp_si(arb_radref(acb_imagref(vec + i)), -prec) >= 0)
-            return 0;
-    }
-
-    return 1;
-}
-
-slong fmpz_poly_deflation(const fmpz_poly_t input)
-{
-    slong i, coeff, deflation;
-
-    if (input->length <= 1)
-        return input->length;
-
-    coeff = 1;
-    while (fmpz_is_zero(input->coeffs + coeff))
-        coeff++;
-
-    deflation = n_gcd(input->length - 1, coeff);
-
-    while ((deflation > 1) && (coeff + deflation < input->length))
-    {
-        for (i = 0; i < deflation - 1; i++)
-        {
-            coeff++;
-            if (!fmpz_is_zero(input->coeffs + coeff))
-                deflation = n_gcd(coeff, deflation);
-        }
-
-        if (i == deflation - 1)
-            coeff++;
-    }
-
-    return deflation;
-}
-
-void
-fmpz_poly_deflate(fmpz_poly_t result, const fmpz_poly_t input, ulong deflation)
-{
-    slong res_length, i;
-
-    if (deflation == 0)
-    {
-        flint_printf("Exception (fmpz_poly_deflate). Division by zero.\n");
-        flint_abort();
-    }
-
-    if (input->length <= 1 || deflation == 1)
-    {
-        fmpz_poly_set(result, input);
-        return;
-    }
-
-    res_length = (input->length - 1) / deflation + 1;
-    fmpz_poly_fit_length(result, res_length);
-    for (i = 0; i < res_length; i++)
-        fmpz_set(result->coeffs + i, input->coeffs + i*deflation);
-
-    result->length = res_length;
-}
-
-void
-fmpz_poly_complex_roots_squarefree(const fmpz_poly_t poly,
-    slong initial_prec,
-    slong target_prec,
-    slong print_digits)
-{
-    slong i, j, prec, deg, deg_deflated, isolated, maxiter, deflation;
-    acb_poly_t cpoly, cpoly_deflated;
-    fmpz_poly_t poly_deflated;
-    acb_ptr roots, roots_deflated;
-    int removed_zero;
-
-    if (fmpz_poly_degree(poly) < 1)
-        return;
-
-    fmpz_poly_init(poly_deflated);
-    acb_poly_init(cpoly);
-    acb_poly_init(cpoly_deflated);
-
-    /* try to write poly as poly_deflated(x^deflation), possibly multiplied by x */
-    removed_zero = fmpz_is_zero(poly->coeffs);
-    if (removed_zero)
-        fmpz_poly_shift_right(poly_deflated, poly, 1);
-    else
-        fmpz_poly_set(poly_deflated, poly);
-    deflation = fmpz_poly_deflation(poly_deflated);
-    fmpz_poly_deflate(poly_deflated, poly_deflated, deflation);
-
-    deg = fmpz_poly_degree(poly);
-    deg_deflated = fmpz_poly_degree(poly_deflated);
-
-    flint_printf("searching for %wd roots, %wd deflated\n", deg, deg_deflated);
-
-    roots = _acb_vec_init(deg);
-    roots_deflated = _acb_vec_init(deg_deflated);
-
-    for (prec = initial_prec; ; prec *= 2)
-    {
-        acb_poly_set_fmpz_poly(cpoly_deflated, poly_deflated, prec);
-        maxiter = FLINT_MIN(FLINT_MAX(deg_deflated, 32), prec);
-
-        TIMEIT_ONCE_START
-        flint_printf("prec=%wd: ", prec);
-        isolated = acb_poly_find_roots(roots_deflated, cpoly_deflated,
-            prec == initial_prec ? NULL : roots_deflated, maxiter, prec);
-        flint_printf("%wd isolated roots | ", isolated);
-        TIMEIT_ONCE_STOP
-
-        if (isolated == deg_deflated)
-        {
-            if (!check_accuracy(roots_deflated, deg_deflated, target_prec))
-                continue;
-
-            if (deflation == 1)
-            {
-                _acb_vec_set(roots, roots_deflated, deg_deflated);
-            }
-            else  /* compute all nth roots */
-            {
-                acb_t w, w2;
-
-                acb_init(w);
-                acb_init(w2);
-
-                acb_unit_root(w, deflation, prec);
-                acb_unit_root(w2, 2 * deflation, prec);
-
-                for (i = 0; i < deg_deflated; i++)
-                {
-                    if (arf_sgn(arb_midref(acb_realref(roots_deflated + i))) > 0)
-                    {
-                        acb_root_ui(roots + i * deflation,
-                                    roots_deflated + i, deflation, prec);
-                    }
-                    else
-                    {
-                        acb_neg(roots + i * deflation, roots_deflated + i);
-                        acb_root_ui(roots + i * deflation,
-                            roots + i * deflation, deflation, prec);
-                        acb_mul(roots + i * deflation,
-                            roots + i * deflation, w2, prec);
-                    }
-
-                    for (j = 1; j < deflation; j++)
-                    {
-                        acb_mul(roots + i * deflation + j,
-                                roots + i * deflation + j - 1, w, prec);
-                    }
-                }
-
-                acb_clear(w);
-                acb_clear(w2);
-            }
-
-            /* by assumption that poly is squarefree, must be just one */
-            if (removed_zero)
-                acb_zero(roots + deg_deflated * deflation);
-
-            if (!check_accuracy(roots, deg, target_prec))
-                continue;
-
-            acb_poly_set_fmpz_poly(cpoly, poly, prec);
-
-            if (!acb_poly_validate_real_roots(roots, cpoly, prec))
-                continue;
-
-            for (i = 0; i < deg; i++)
-            {
-                if (arb_contains_zero(acb_imagref(roots + i)))
-                    arb_zero(acb_imagref(roots + i));
-            }
-
-            flint_printf("done!\n");
-            break;
-        }
-    }
-
-    if (print_digits != 0)
-    {
-        _acb_vec_sort_pretty(roots, deg);
-
-        for (i = 0; i < deg; i++)
-        {
-            acb_printn(roots + i, print_digits, 0);
-            flint_printf("\n");
-        }
-    }
-
-    fmpz_poly_clear(poly_deflated);
-    acb_poly_clear(cpoly);
-    acb_poly_clear(cpoly_deflated);
-    _acb_vec_clear(roots, deg);
-    _acb_vec_clear(roots_deflated, deg_deflated);
-}
 
 int main(int argc, char *argv[])
 {
     fmpz_poly_t f, g;
     fmpz_poly_factor_t fac;
     fmpz_t t;
-    slong compd, printd, i, j;
+    acb_ptr roots;
+    slong compd, printd, i, j, deg;
+    int flags;
 
     if (argc < 2)
     {
@@ -252,6 +51,7 @@ int main(int argc, char *argv[])
 
     compd = 0;
     printd = 0;
+    flags = ARB_FMPZ_POLY_ROOTS_VERBOSE;
 
     fmpz_poly_init(f);
     fmpz_poly_init(g);
@@ -387,9 +187,23 @@ int main(int argc, char *argv[])
     TIMEIT_ONCE_START
     for (i = 0; i < fac->num; i++)
     {
-        flint_printf("roots with multiplicity %wd\n", fac->exp[i]);
-        fmpz_poly_complex_roots_squarefree(fac->p + i,
-            32, compd * 3.32193 + 2, printd);
+        deg = fmpz_poly_degree(fac->p + i);
+
+        flint_printf("%wd roots with multiplicity %wd\n", deg, fac->exp[i]);
+        roots = _acb_vec_init(deg);
+
+        arb_fmpz_poly_complex_roots(roots, fac->p + i, flags, compd * 3.32193 + 2);
+
+        if (printd)
+        {
+            for (i = 0; i < deg; i++)
+            {
+                acb_printn(roots + i, printd, 0);
+                flint_printf("\n");
+            }
+        }
+
+        _acb_vec_clear(roots, deg);
     }
     TIMEIT_ONCE_STOP
 
