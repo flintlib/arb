@@ -121,6 +121,7 @@ on polynomials, without introducing a separate power series type.
 
    arb_poly.rst
    acb_poly.rst
+   arb_fmpz_poly.rst
 
 Matrices
 ::::::::::::::::::::::::::::::::::::
