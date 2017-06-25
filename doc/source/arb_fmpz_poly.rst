@@ -11,7 +11,7 @@ requiring use of Arb real or complex numbers.
 Some methods output real or complex numbers while others
 use real and complex numbers internally to produce an exact result.
 This module also contains some useful helper functions not specifically
-related to real and complex numbers that are useful elsewhere in Arb.
+related to real and complex numbers.
 
 Note that methods that combine Arb *polynomials* and FLINT polynomials
 are found in the respective Arb polynomial modules, such as
@@ -74,8 +74,8 @@ Polynomial roots
     the root in the lower plane).
 
     The input polynomial *must* be squarefree. For a general polynomial,
-    do a squarefree factorization (which also gives the correct multiplicities
-    of the roots)::
+    compute the squarefree part `f / \gcd(f,f')` or do a full squarefree
+    factorization to obtain the multiplicities of the roots::
 
         fmpz_poly_factor_t fac;
         fmpz_poly_factor_init(fac);
@@ -99,6 +99,10 @@ Polynomial roots
     This implementation should be adequate for general use, but it is not
     currently competitive with state-of-the-art isolation
     methods for finding real roots alone.
+
+    The following *flags* are supported:
+
+    * *ARB_FMPZ_POLY_ROOTS_VERBOSE*
 
 Special polynomials
 -------------------------------------------------------------------------------

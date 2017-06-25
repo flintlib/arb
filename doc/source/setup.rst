@@ -67,7 +67,32 @@ the default path ``/usr/local``, pass
 the correct path to configure (type ``./configure --help`` to show
 more options).
 
-After the installation, you may have to run ``ldconfig``.
+After the installation, you may have to run ``ldconfig``
+to make sure that the system's dynamic linker finds the library.
+
+On a multicore system, ``make`` can be run with the ``-j`` flag to build
+in parallel. For example, use ``make -j4`` on a quad-core machine.
+
+Running tests
+-------------------------------------------------------------------------------
+
+After running ``make``, it is recommended to also run ``make check``
+to verify that all unit tests pass.
+
+By default, the unit tests run a large number of iterations to improve
+the chances of detecting subtle problems.
+The whole test suite might take around 20 minutes on a single core
+(``make -jN check`` if you have more cores to spare).
+If you are in a hurry, you can adjust the number of test iterations via
+the ``ARB_TEST_MULTIPLIER`` environment variable. For example, the following
+will only run 10% of the default iterations::
+
+    export ARB_TEST_MULTIPLIER=0.1
+    make check
+
+It is also possible to run the unit tests for a single module, for instance::
+
+    make check MOD=arb_poly
 
 Installation as part of FLINT (deprecated)
 -------------------------------------------------------------------------------
