@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.11.0.pdf
 * http://arblib.org/arb-2.10.0.pdf
 * http://arblib.org/arb-2.9.0.pdf
 * http://arblib.org/arb-2.8.1.pdf
@@ -21,6 +22,32 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2017-07-09 - version 2.11.0
+-------------------------------------------------------------------------------
+
+* Special functions
+
+  * Added the Lambert W function (arb_lambertw, acb_lambertw, arb_poly_lambertw_series, acb_poly_lambertw_series). All complex branches and evaluation of derivatives are supported.
+  * Added the acb_expm1 method, complementing arb_expm1.
+  * Added arb_sinc_pi, acb_sinc_pi.
+  * Optimized handling of more special cases in the Hurwitz zeta function.
+
+* Polynomials
+
+  * Added the arb_fmpz_poly module to provide Arb methods for FLINT integer polynomials.
+  * Added methods for evaluating an fmpz_poly at arb_t and acb_t arguments.
+  * Added arb_fmpz_poly_complex_roots for computing the real and complex roots of an integer polynomial, turning the functionality previously available in the poly_roots.c example program into a proper library function.
+  * Added a method (arb_fmpz_poly_gauss_period_minpoly) for constructing minimal polynomials of Gaussian periods.
+  * Added arb_poly_product_roots_complex for constructing a real polynomial from complex conjugate roots.
+
+* Miscellaneous
+
+  * Fixed test code in the dirichlet module for 32-bit systems (contributed by Pascal Molin).
+  * Use flint_abort() instead of abort() (contributed by Tommy Hofmann).
+  * Fixed the static library install path (contributed by François Bissey).
+  * Made arb_nonnegative_part() a publicly documented method.
+  * Arb now requires FLINT version 2.5 or later.
 
 2017-02-27 - version 2.10.0
 -------------------------------------------------------------------------------

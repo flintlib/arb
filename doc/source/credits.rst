@@ -61,6 +61,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Julien Puydt - soname versioning support
 * Jeroen Demeyer - patch for major bug on PPC64
 * Isuru Fernando - continuous integration setup, support for cmake and MSVC builds
+* François Bissey - build system patches
 
 Funding
 -------------------------------------------------------------------------------
