@@ -321,7 +321,8 @@ poly_roots.c
 -------------------------------------------------------------------------------
 
 This program finds the complex roots of an integer polynomial
-by calling :func:`acb_poly_find_roots` with increasing
+by calling :func:`arb_fmpz_poly_complex_roots`, which in turn calls
+:func:`acb_poly_find_roots` with increasing
 precision until the roots certainly have been isolated.
 The program takes the following arguments::
 
@@ -329,7 +330,7 @@ The program takes the following arguments::
 
     Isolates all the complex roots of a polynomial with integer coefficients.
 
-    If -refine d is passed, the roots are refined to an absolute tolerance
+    If -refine d is passed, the roots are refined to a relative tolerance
     better than 10^(-d). By default, the roots are only computed to sufficient
     accuracy to isolate them. The refinement is not currently done efficiently.
 

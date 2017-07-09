@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
         flint_printf("Isolates all the complex roots of a polynomial with integer coefficients.\n\n");
 
-        flint_printf("If -refine d is passed, the roots are refined to an absolute tolerance\n");
+        flint_printf("If -refine d is passed, the roots are refined to a relative tolerance\n");
         flint_printf("better than 10^(-d). By default, the roots are only computed to sufficient\n");
         flint_printf("accuracy to isolate them. The refinement is not currently done efficiently.\n\n");
 
@@ -196,9 +196,9 @@ int main(int argc, char *argv[])
 
         if (printd)
         {
-            for (i = 0; i < deg; i++)
+            for (j = 0; j < deg; j++)
             {
-                acb_printn(roots + i, printd, 0);
+                acb_printn(roots + j, printd, 0);
                 flint_printf("\n");
             }
         }
