@@ -1132,7 +1132,8 @@ Lambert W function
     The implementation first computes a floating-point approximation
     heuristically and then computes a rigorously certified enclosure around
     this approximation. Some asymptotic cases are handled specially.
-    The main reference is [CGHJK1996]_.
+    The algorithm used to compute the Lambert W function is described
+    in [Joh2017b]_, which follows the main ideas in [CGHJK1996]_.
 
 Gamma function and factorials
 -------------------------------------------------------------------------------

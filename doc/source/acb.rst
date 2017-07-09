@@ -740,6 +740,9 @@ Lambert W function
     analytic function, whereas the standard branch `W_{-1}(z)` has a branch
     cut along the real segment.
 
+    The algorithm used to compute the Lambert W function is described
+    in [Joh2017b]_.
+
 Rising factorials
 -------------------------------------------------------------------------------
 

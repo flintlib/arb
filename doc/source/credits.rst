@@ -102,23 +102,29 @@ The following software has been helpful in the development of Arb.
 Citing Arb
 -------------------------------------------------------------------------------
 
-If you wish to cite Arb in a scientific paper, the following reference can be used (you may also cite the manual or the website directly):
+To cite Arb in a scientific paper, the following reference can be used:
 
-\F. Johansson. "Arb: a C library for ball arithmetic", *ACM Communications in Computer Algebra*, 47(4):166-169, 2013.
+\F. Johansson. "Arb: efficient arbitrary-precision midpoint-radius interval arithmetic", *IEEE Transactions on Computers*, 66(8):1281-1292, 2017. DOI: `10.1109/TC.2017.2690633 <https://doi.org/10.1109/TC.2017.2690633>`_.
 
 In BibTeX format::
 
-  @article{Johansson2013arb,
-    title={{A}rb: a {C} library for ball arithmetic},
-    author={F. Johansson},
-    journal={ACM Communications in Computer Algebra},
-    volume={47},
-    number={4},
-    pages={166--169},
-    year={2013},
-    publisher={ACM}
+  @article{Johansson2017arb,
+    author = {F. Johansson},
+    title = {Arb: efficient arbitrary-precision midpoint-radius interval arithmetic},
+    journal = {IEEE Transactions on Computers},
+    year = {2017},
+    volume = {66},
+    issue = {8},
+    pages = {1281--1292},
+    doi = {10.1109/TC.2017.2690633},
   }
 
+Alternatively, the Arb manual or website can be cited directly.
+
+The *IEEE Transactions on Computers* paper supersedes the following extended abstract,
+which is now outdated:
+
+\F. Johansson. "Arb: a C library for ball arithmetic", *ACM Communications in Computer Algebra*, 47(4):166-169, 2013.
 
 Bibliography
 -------------------------------------------------------------------------------
@@ -190,6 +196,10 @@ Bibliography
 .. [Joh2015] \F. Johansson, "Computing Bell numbers", http://fredrikj.net/blog/2015/08/computing-bell-numbers/
 
 .. [Joh2016] \F. Johansson, "Computing hypergeometric functions rigorously", preprint (2016), https://arxiv.org/abs/1606.06977
+
+.. [Joh2017a] \F. Johansson. "Arb: efficient arbitrary-precision midpoint-radius interval arithmetic", IEEE Transactions on Computers, 66(8):1281-1292 (2017). https://doi.org/10.1109/TC.2017.2690633
+
+.. [Joh2017b] \F. Johansson, "Computing the Lambert W function in arbitrary-precision complex interval arithmetic", preprint (2017), https://arxiv.org/abs/1705.03266
 
 .. [Kar1998] \E. A. Karatsuba, "Fast evaluation of the Hurwitz zeta function and Dirichlet L-series", Problems of Information Transmission 34:4 (1998), 342-353, http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=ppi&paperid=425&option_lang=eng
 
