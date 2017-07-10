@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.11.1.pdf
 * http://arblib.org/arb-2.11.0.pdf
 * http://arblib.org/arb-2.10.0.pdf
 * http://arblib.org/arb-2.9.0.pdf
@@ -22,6 +23,11 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2017-07-10 - version 2.11.1
+-------------------------------------------------------------------------------
+
+* Avoid use of a function that was unavailable in the latest public FLINT release
 
 2017-07-09 - version 2.11.0
 -------------------------------------------------------------------------------
