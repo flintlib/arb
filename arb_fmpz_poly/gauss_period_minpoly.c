@@ -15,7 +15,7 @@
 void
 arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
 {
-    ulong k, d, e, g, gk;
+    ulong k, d, e, g, gk, qinv;
     ulong * es;
     slong prec, initial_prec;
     int done, real;
@@ -38,6 +38,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     }
 
     g = n_primitive_root_prime(q);
+    qinv = n_preinvert_limb(2 * q);
 
     es = flint_malloc(sizeof(ulong) * d);
     lower_plane = flint_calloc(n, sizeof(int));
@@ -87,7 +88,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
             {
                 for (e = 0; e < d / 2; e++)
                 {
-                    acb_dirichlet_root(t, zeta, n_mulmod2(gk, es[e], 2 * q), prec);
+                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], 2 * q, qinv), prec);
                     acb_mul_2exp_si(t, t, 1);  /* compute conjugates */
                     acb_add(u, u, t, prec);
                 }
@@ -98,7 +99,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
             {
                 for (e = 0; e < d; e++)
                 {
-                    acb_dirichlet_root(t, zeta, n_mulmod2(gk, es[e], 2 * q), prec);
+                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], 2 * q, qinv), prec);
                     acb_add(u, u, t, prec);
                 }
 
