@@ -58,7 +58,8 @@ int main()
 
                         for (e = 0; e < d; e++)
                         {
-                            acb_dirichlet_root(t, zeta, n_mulmod2(gk, n_powmod2(g, n * e, 2 * q), 2 * q), prec);
+                            acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk,
+                                n_powmod2(g, n * e, 2 * q), 2 * q, n_preinvert_limb(2 * q)), prec);
                             acb_add(u, u, t, prec);
                         }
 
