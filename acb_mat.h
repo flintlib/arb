@@ -150,6 +150,10 @@ void acb_mat_sub(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slon
 
 void acb_mat_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec);
 
+void acb_mat_mul_classical(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec);
+
+void acb_mat_mul_threaded(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec);
+
 void acb_mat_mul_entrywise(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec);
 
 void acb_mat_sqr(acb_mat_t res, const acb_mat_t mat, slong prec);

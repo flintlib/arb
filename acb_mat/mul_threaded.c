@@ -9,14 +9,14 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "arb_mat.h"
+#include "acb_mat.h"
 #include "pthread.h"
 
 typedef struct
 {
-    arb_ptr * C;
-    const arb_ptr * A;
-    const arb_ptr * B;
+    acb_ptr * C;
+    const acb_ptr * A;
+    const acb_ptr * B;
     slong ar0;
     slong ar1;
     slong bc0;
@@ -24,23 +24,23 @@ typedef struct
     slong br;
     slong prec;
 }
-arb_mat_mul_arg_t;
+acb_mat_mul_arg_t;
 
 void *
-_arb_mat_mul_thread(void * arg_ptr)
+_acb_mat_mul_thread(void * arg_ptr)
 {
-    arb_mat_mul_arg_t arg = *((arb_mat_mul_arg_t *) arg_ptr);
+    acb_mat_mul_arg_t arg = *((acb_mat_mul_arg_t *) arg_ptr);
     slong i, j, k;
 
     for (i = arg.ar0; i < arg.ar1; i++)
     {
         for (j = arg.bc0; j < arg.bc1; j++)
         {
-            arb_mul(arg.C[i] + j, arg.A[i] + 0, arg.B[0] + j, arg.prec);
+            acb_mul(arg.C[i] + j, arg.A[i] + 0, arg.B[0] + j, arg.prec);
 
             for (k = 1; k < arg.br; k++)
             {
-                arb_addmul(arg.C[i] + j, arg.A[i] + k, arg.B[k] + j, arg.prec);
+                acb_addmul(arg.C[i] + j, arg.A[i] + k, arg.B[k] + j, arg.prec);
             }
         }
     }
@@ -50,42 +50,42 @@ _arb_mat_mul_thread(void * arg_ptr)
 }
 
 void
-arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
+acb_mat_mul_threaded(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
 {
     slong ar, ac, br, bc, i, num_threads;
     pthread_t * threads;
-    arb_mat_mul_arg_t * args;
+    acb_mat_mul_arg_t * args;
 
-    ar = arb_mat_nrows(A);
-    ac = arb_mat_ncols(A);
-    br = arb_mat_nrows(B);
-    bc = arb_mat_ncols(B);
+    ar = acb_mat_nrows(A);
+    ac = acb_mat_ncols(A);
+    br = acb_mat_nrows(B);
+    bc = acb_mat_ncols(B);
 
-    if (ac != br || ar != arb_mat_nrows(C) || bc != arb_mat_ncols(C))
+    if (ac != br || ar != acb_mat_nrows(C) || bc != acb_mat_ncols(C))
     {
-        flint_printf("arb_mat_mul_threaded: incompatible dimensions\n");
+        flint_printf("acb_mat_mul_threaded: incompatible dimensions\n");
         flint_abort();
     }
 
     if (br == 0)
     {
-        arb_mat_zero(C);
+        acb_mat_zero(C);
         return;
     }
 
     if (A == C || B == C)
     {
-        arb_mat_t T;
-        arb_mat_init(T, ar, bc);
-        arb_mat_mul_threaded(T, A, B, prec);
-        arb_mat_swap(T, C);
-        arb_mat_clear(T);
+        acb_mat_t T;
+        acb_mat_init(T, ar, bc);
+        acb_mat_mul_threaded(T, A, B, prec);
+        acb_mat_swap(T, C);
+        acb_mat_clear(T);
         return;
     }
 
     num_threads = flint_get_num_threads();
     threads = flint_malloc(sizeof(pthread_t) * num_threads);
-    args = flint_malloc(sizeof(arb_mat_mul_arg_t) * num_threads);
+    args = flint_malloc(sizeof(acb_mat_mul_arg_t) * num_threads);
 
     for (i = 0; i < num_threads; i++)
     {
@@ -111,7 +111,7 @@ arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong pr
         args[i].br = br;
         args[i].prec = prec;
 
-        pthread_create(&threads[i], NULL, _arb_mat_mul_thread, &args[i]);
+        pthread_create(&threads[i], NULL, _acb_mat_mul_thread, &args[i]);
     }
 
     for (i = 0; i < num_threads; i++)

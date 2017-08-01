@@ -195,8 +195,18 @@ Arithmetic
 
 .. function:: void acb_mat_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
+.. function:: void acb_mat_mul_classical(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
+
+.. function:: void acb_mat_mul_threaded(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
+
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
+
+    The *threaded* version splits the computation
+    over the number of threads returned by *flint_get_num_threads()*.
+    The default version automatically calls the *threaded* version
+    if the matrices are sufficiently large and more than one thread
+    can be used.
 
 .. function:: void acb_mat_mul_entrywise(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
