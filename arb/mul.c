@@ -66,6 +66,12 @@ arb_mul(arb_t z, const arb_t x, const arb_t y, slong prec)
     mag_t zr, xm, ym;
     int inexact;
 
+    if (x == y)
+    {
+        arb_sqr(z, x, prec);
+        return;
+    }
+
     if (arb_is_exact(x))
     {
         arb_mul_arf(z, y, arb_midref(x), prec);

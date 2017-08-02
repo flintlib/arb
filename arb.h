@@ -425,6 +425,7 @@ void arb_mul_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
 void arb_mul_si(arb_t z, const arb_t x, slong y, slong prec);
 void arb_mul_ui(arb_t z, const arb_t x, ulong y, slong prec);
 void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec);
+void arb_sqr(arb_t res, const arb_t val, slong prec);
 
 void arb_addmul(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
@@ -597,12 +598,6 @@ void arb_partitions_fmpz(arb_t res, const fmpz_t n, slong prec);
 void arb_partitions_ui(arb_t res, ulong n, slong prec);
 
 void arb_lambertw(arb_t res, const arb_t x, int flags, slong prec);
-
-ARB_INLINE void
-arb_sqr(arb_t res, const arb_t val, slong prec)
-{
-    arb_mul(res, val, val, prec);
-}
 
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX slong name ## _cached_prec = 0; \

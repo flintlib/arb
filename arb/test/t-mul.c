@@ -279,11 +279,11 @@ int main()
 
             case 1:
                 arb_set(y, x);
-                arb_mul(z, x, y, prec);
+                arb_mul_naive(z, x, x, prec);
                 arb_mul(v, x, x, prec);
 
-                if (!arf_equal(arb_midref(z), arb_midref(v))
-                    || !mag_close(arb_radref(z), arb_radref(v)))
+                /* todo: restore comparison of radii, but only check one direction */
+                if (!arb_overlaps(v, z))
                 {
                     flint_printf("FAIL (aliasing 1)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
