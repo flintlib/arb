@@ -126,6 +126,7 @@ _fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
 #define MAG_BITS 30
 
 #define MAG_ONE_HALF (UWORD(1) << (MAG_BITS - 1))
+#define MAG_LIMB_MAX ((UWORD(1) << (MAG_BITS)) - 1)
 
 static __inline__ mp_limb_t
 __mag_fixmul32(mp_limb_t x, mp_limb_t y)
@@ -136,7 +137,7 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
 }
 
 #if FLINT_BITS == 64
-#define MAG_FIXMUL(x, y) (((x) * (y)) >> MAG_BITS)
+#define MAG_FIXMUL(x, y) ((((mp_limb_t)(x)) * ((mp_limb_t)(y))) >> MAG_BITS)
 #else
 #define MAG_FIXMUL(x, y) __mag_fixmul32((x), (y))
 #endif
@@ -181,6 +182,151 @@ __mag_fixmul32(mp_limb_t x, mp_limb_t y)
         mp_limb_t __t = !(MAG_MAN(x) >> (MAG_BITS - 1)); \
         MAG_MAN(x) = (MAG_MAN(x) << __t); \
         MAG_EXP(x) -= __t; \
+    } while (0)
+
+/* Fast macros for mag arithmetic. In the following, we work with
+   (man,exp) pairs. It is assumed that man has *exactly* MAG_BITS bits on
+   input and output, unless otherwise noted. In particular, we always assume
+   that the magnitude is nonzero (handling zero has to be done separately
+   by the caller). Input and output variables can be either mp_limb_t or
+   unsigned int (to save register space). */
+
+/* todo: check if comparisons are better than shifts for carry tests */
+
+/* Set (r,rexp) for an upper bound for (bman,bexp) where b is the top
+   limb of bman. It is assumed that b is aligned to the top bit. */
+#define MAG_SET_ARF_TOP_LIMB(r, rexp, b, bexp) \
+    do { \
+        unsigned int __t1, __t2; \
+        __t1 = ((b) >> (FLINT_BITS - MAG_BITS)) + LIMB_ONE; \
+        __t2 = (__t1) >> MAG_BITS; \
+        (r) = __t1 >> __t2; \
+        (rexp) = (bexp) + __t2; \
+    } while (0)
+
+/* Set (r,rexp) to the value 2^exp */
+#define MAG_SET_2EXP(r, rexp, exp) \
+    do { \
+        (r) = 1 << (MAG_BITS - 1); \
+        (rexp) = (exp) + WORD(1); \
+    } while (0)
+
+/* set (r,rexp) to (a,aexp) * (b,bexp) */
+#define MAG_MUL(r, rexp, a, aexp, b, bexp) \
+    do { \
+        unsigned int __t1, __t2; \
+        __t1 = MAG_FIXMUL(a, b) + 1; \
+        __t2 = !(__t1 >> (MAG_BITS - 1)); \
+        (r) = __t1 << __t2; \
+        (rexp) = (aexp) + (bexp) - __t2; \
+    } while (0)
+
+/* set (r,rexp) to (a,aexp) + (b,bexp) */
+/* Using branches seems to be faster than avoiding them. */
+#define MAG_ADD(r, rexp, a, aexp, b, bexp) \
+    do { \
+        unsigned int __t1, __t2; \
+        slong __shift, __rexp; \
+        __shift = (aexp) - (bexp); \
+        if (__shift >= 0) \
+        { \
+            __rexp = (aexp); __t1 = (a); __t2 = (b); \
+        } \
+        else \
+        { \
+            __rexp = (bexp); __t1 = (b); __t2 = (a); __shift = -__shift; \
+        } \
+        if (__shift < MAG_BITS) \
+            __t1 += ((__t2) >> __shift); \
+        __t2 = __t1 >> MAG_BITS; \
+        __t1 = (__t1 >> __t2) + 1; \
+        __rexp += __t2; \
+        __t2 = __t1 >> MAG_BITS; \
+        __t1 = __t1 >> __t2; \
+        __rexp += __t2; \
+        (r) = __t1; \
+        (rexp) = __rexp; \
+    } while (0)
+
+/* set (r,rexp) to (a,aexp) + (b,bexp) */
+/* Use extra fast path when b is much smaller than a. */
+#define MAG_ADD_LIKELY_SMALL(r, rexp, a, aexp, b, bexp) \
+    do { \
+        if ((bexp) <= (aexp) - MAG_BITS && (a) != MAG_LIMB_MAX) \
+        { \
+            (r) = (a) + 1; \
+            (rexp) = (aexp); \
+        } \
+        else \
+        { \
+            MAG_ADD(r, rexp, a, aexp, b, bexp); \
+        } \
+    } while (0)
+
+/* set (r,rexp) to (a,aexp) + 2^bexp */
+#define MAG_ADD_2EXP(r, rexp, a, aexp, bexp) \
+    MAG_ADD(r, rexp, (a), (aexp), (1<<(MAG_BITS-1)), ((bexp)+1))
+
+/* set (r,rexp) to (a,aexp) + (c,cexp) * (d,dexp) */
+#define MAG_ADDMUL(r, rexp, a, aexp, c, cexp, d, dexp) \
+    do { \
+        unsigned int __t1, __t2, __t3; \
+        slong __shift, __exp1, __exp2, __rexp; \
+        __exp1 = (aexp); \
+        __exp2 = (cexp) + (dexp); \
+        if (__exp1 >= __exp2) \
+        { \
+            __shift = __exp1 - __exp2; \
+            if (__shift >= MAG_BITS) \
+                __t1 = (a) + (unsigned int) 1; \
+            else \
+                __t1 = (a) + (((unsigned int) MAG_FIXMUL(c, d)) >> __shift) + 1; \
+            __rexp = __exp1; \
+        } \
+        else \
+        { \
+            __shift = __exp2 - __exp1; \
+            if (__shift >= MAG_BITS) \
+                __t1 = (unsigned int) MAG_FIXMUL(c, d) + 2; \
+            else \
+                __t1 = (unsigned int) MAG_FIXMUL(c, d) + (((unsigned int) a) >> __shift) + 2; \
+            __rexp = __exp2; \
+        } \
+        __t2 = !(__t1 >> (MAG_BITS - 1)); \
+        __t3 = __t1 >> MAG_BITS; \
+        (r) = ((__t1 << __t2) >> __t3) + (__t3 & __t1); \
+        (rexp) = __rexp + __t3 - __t2; \
+    } while (0)
+
+/* set (r,rexp) to (a,aexp) * (b,bexp) + (c,cexp) * (d,dexp) */
+#define MAG_MULADDMUL(r, rexp, a, aexp, b, bexp, c, cexp, d, dexp) \
+    do { \
+        unsigned int __t1, __t2, __t3; \
+        slong __shift, __exp1, __exp2, __rexp; \
+        __exp1 = (aexp) + (bexp); \
+        __exp2 = (cexp) + (dexp); \
+        if (__exp1 >= __exp2) \
+        { \
+            __shift = __exp1 - __exp2; \
+            if (__shift >= MAG_BITS) \
+                __t1 = (unsigned int) MAG_FIXMUL(a, b) + 2; \
+            else \
+                __t1 = (unsigned int) MAG_FIXMUL(a, b) + (((unsigned int) MAG_FIXMUL(c, d)) >> __shift) + 2; \
+            __rexp = __exp1; \
+        } \
+        else \
+        { \
+            __shift = __exp2 - __exp1; \
+            if (__shift >= MAG_BITS) \
+                __t1 = (unsigned int) MAG_FIXMUL(c, d) + 2; \
+            else \
+                __t1 = (unsigned int) MAG_FIXMUL(c, d) + (((unsigned int) MAG_FIXMUL(a, b)) >> __shift) + 2; \
+            __rexp = __exp2; \
+        } \
+        __t2 = !(__t1 >> (MAG_BITS - 1)); \
+        __t3 = __t1 >> MAG_BITS; \
+        (r) = ((__t1 << __t2) >> __t3) + (__t3 & __t1); \
+        (rexp) = __rexp + __t3 - __t2; \
     } while (0)
 
 
