@@ -155,9 +155,10 @@ acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
 void
 acb_agm1_deriv_diff(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 {
-    mag_t err, t;
+    mag_t err, t, C;
     fmpz_t rexp, hexp;
-    slong wp;
+    acb_t u, v;
+    slong wp, qexp;
     int isreal;
 
     if (!acb_is_exact(z) || !acb_is_finite(z) ||
@@ -176,9 +177,13 @@ acb_agm1_deriv_diff(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
        D = 1/r,
        and 0 < r < |z|
 
-        M(z+h) - M(z)
-       |------------- - M'(z)|  <=  C D^2 h / (1 - D h)
-               h
+        M(z+h) - M(z-h)
+       |--------------- - M'(z)|  <=  D^3 h^2 / (1 - D h)
+              2h
+
+        M(z+h) + M(z-h)
+       |--------------- - M(z)|   <=  D^2 h^2 / (1 - D h)
+               2
 
        h D < 1.
     */
@@ -187,54 +192,88 @@ acb_agm1_deriv_diff(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
     fmpz_init(rexp);
     mag_init(err);
     mag_init(t);
+    mag_init(C);
+    acb_init(u);
+    acb_init(v);
 
     /* choose r = 2^rexp such that r < |z| */
     acb_get_mag_lower(t, z);
     fmpz_sub_ui(rexp, MAG_EXPREF(t), 2);
 
-    /* Choose h = 2^hexp with hexp = rexp - (prec + 5).
-       D = 2^-rexp
-       C D^2 h / (1 - D h) <= C * 2^(-5-prec-rexp+1)
+    /* Choose h = r/q = 2^hexp = 2^(rexp-qexp)
+       with qexp = floor(prec/2) + 5
+
+       D = 1/r = 2^-rexp
+
+       f(z)  error <= C D^2 h^2 / (1-Dh)
+       f'(z) error <= C D^3 h^2 / (1-Dh)
+
+       1/(1-Dh) < 2, hence:
+
+       f(z)  error <  2 C D^2 h^2 = C 2^(1-2*qexp)
+       f'(z) error <  2 C D^3 h^2 = C 2^(1-rexp-2*qexp)
     */
 
-    /* err = C = max(1, |z| + r) */
-    acb_get_mag(err, z);
+    /* C = max(1, |z| + r) */
+    acb_get_mag(C, z);
     mag_one(t);
     mag_mul_2exp_fmpz(t, t, rexp);
-    mag_add(err, err, t);
+    mag_add(C, C, t);
     mag_one(t);
-    mag_max(err, err, t);
+    mag_max(C, C, t);
 
-    /* multiply by 2^(-5-prec-rexp+1) (use hexp as temp) */
-    fmpz_set_si(hexp, 1 - 5 - prec);
-    fmpz_sub(hexp, hexp, rexp);
-    mag_mul_2exp_fmpz(err, err, hexp);
+    qexp = prec / 2 + 5;
+    /*
+    if (fmpz_sgn(rexp) < 0)
+        qexp += fmpz_bits(rexp);
+    */
 
-    /* choose h = 2^hexp */
-    fmpz_sub_ui(hexp, rexp, prec + 5);
+    /* compute h = 2^hexp */
+    fmpz_sub_ui(hexp, rexp, qexp);
 
-    /* compute finite difference */
-    wp = 2 * prec + 10;
-    acb_agm1_basecase(Mz, z, wp);
-    acb_one(Mzp);
-    acb_mul_2exp_fmpz(Mzp, Mzp, hexp);
-    acb_add(Mzp, Mzp, z, wp);
-    acb_agm1_basecase(Mzp, Mzp, wp);
-    acb_sub(Mzp, Mzp, Mz, prec);
+    /* compute finite differences */
+    wp = prec + qexp + 5;
+
+    acb_one(u);
+    acb_mul_2exp_fmpz(u, u, hexp);
+    acb_add(u, z, u, wp);
+    acb_agm1_basecase(u, u, wp);
+
+    acb_one(v);
+    acb_mul_2exp_fmpz(v, v, hexp);
+    acb_sub(v, z, v, wp);
+    acb_agm1_basecase(v, v, wp);
+
+    acb_add(Mz, u, v, prec);
+    acb_sub(Mzp, u, v, prec);
+    acb_mul_2exp_si(Mz, Mz, -1);
+    acb_mul_2exp_si(Mzp, Mzp, -1);
     fmpz_neg(hexp, hexp);
     acb_mul_2exp_fmpz(Mzp, Mzp, hexp);
+
+    /* add error */
+    mag_mul_2exp_si(err, C, 1 - 2 * qexp);
+
+    if (isreal)
+        arb_add_error_mag(acb_realref(Mz), err);
+    else
+        acb_add_error_mag(Mz, err);
+
+    fmpz_neg(rexp, rexp);
+    mag_mul_2exp_fmpz(err, err, rexp);
 
     if (isreal)
         arb_add_error_mag(acb_realref(Mzp), err);
     else
         acb_add_error_mag(Mzp, err);
 
-    acb_set_round(Mz, Mz, prec);
-
     fmpz_clear(hexp);
     fmpz_clear(rexp);
     mag_clear(err);
     mag_clear(t);
+    mag_clear(C);
+    acb_clear(u);
+    acb_clear(v);
 }
 
 /*
@@ -369,7 +408,13 @@ acb_agm1_deriv(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 
     if (arf_sgn(arb_midref(acb_realref(z))) >= 0)
     {
-        acb_agm1_deriv_right(Mz, Mzp, z, prec);
+        if (acb_is_one(z))
+        {
+            acb_one(Mz);
+            acb_mul_2exp_si(Mzp, Mz, -1);
+        }
+        else
+            acb_agm1_deriv_right(Mz, Mzp, z, prec);
     }
     else
     {

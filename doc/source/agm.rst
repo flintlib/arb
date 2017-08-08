@@ -54,11 +54,15 @@ choose *r* to be of the order `|z| / 4`). Taylor expansion now gives
 
     \left|\frac{M(z+h) - M(z)}{h} - M'(z)\right| \le \frac{C D^2 h}{1 - D h}
 
+    \left|\frac{M(z+h) - M(z-h)}{2h} - M'(z)\right| \le \frac{C D^3 h^2}{1 - D h}
+
+    \left|\frac{M(z+h) + M(z-h)}{2} - M(z)\right| \le \frac{C D^2 h^2}{1 - D h}
+
 assuming that *h* is chosen so that it satisfies `h D < 1`.
 
-The forward finite difference requires two function evaluations
-at doubled precision. It would be more efficient to use a central difference
-(this could be implemented in the future).
+The forward finite difference would require two function evaluations
+at doubled precision. We use the central difference as it
+only requires 1.5 times the precision.
 
 When *z* is not exact, we evaluate at the midpoint as above
 and bound the propagated error using derivatives.
