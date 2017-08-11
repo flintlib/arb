@@ -22,7 +22,6 @@ arf_set_d(arf_t x, double v)
 
     u.uf = v;
     h = u.ul;
-
     sign = h >> 63;
     exp = (h << 1) >> 53;
     frac = (h << 12) >> 12;
@@ -30,6 +29,7 @@ arf_set_d(arf_t x, double v)
     if (exp == 0 && frac == 0)
     {
         arf_zero(x);
+        return;
     }
     else if (exp == 0x7ff)
     {
@@ -44,16 +44,28 @@ arf_set_d(arf_t x, double v)
         {
             arf_nan(x);
         }
+        return;
     }
-    else
+
+    /* handle subnormals */
+    if (exp == 0 && frac != 0)
     {
-        real_exp = exp - 1023 - 52;
-
-        frac |= (UWORD(1) << 52);
-        real_man = sign ? (-frac) : frac;
-
-        arf_set_si_2exp_si(x, real_man, real_exp);
+        int exp2;
+        v = frexp(v, &exp2);
+        u.uf = v;
+        h = u.ul;
+        sign = h >> 63;
+        exp = (h << 1) >> 53;
+        frac = (h << 12) >> 12;
+        exp += exp2;
     }
+
+    real_exp = exp - 1023 - 52;
+
+    frac |= (UWORD(1) << 52);
+    real_man = sign ? (-frac) : frac;
+
+    arf_set_si_2exp_si(x, real_man, real_exp);
 #else
     mpfr_t t;
     mp_limb_t tmp[2];

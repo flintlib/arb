@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/double_extras.h"
 #include "fmpr.h"
 
 void
@@ -21,7 +22,6 @@ fmpr_set_d(fmpr_t x, double v)
 
     u.uf = v;
     h = u.ul;
-
     sign = h >> 63;
     exp = (h << 1) >> 53;
     frac = (h << 12) >> 12;
@@ -29,6 +29,7 @@ fmpr_set_d(fmpr_t x, double v)
     if (exp == 0 && frac == 0)
     {
         fmpr_zero(x);
+        return;
     }
     else if (exp == 0x7ff)
     {
@@ -43,16 +44,28 @@ fmpr_set_d(fmpr_t x, double v)
         {
             fmpr_nan(x);
         }
+        return;
     }
-    else
+
+    /* handle subnormals */
+    if (exp == 0 && frac != 0)
     {
-        real_exp = exp - 1023 - 52;
-
-        frac |= (UWORD(1) << 52);
-        real_man = sign ? (-frac) : frac;
-
-        fmpr_set_si_2exp_si(x, real_man, real_exp);
+        int exp2;
+        v = frexp(v, &exp2);
+        u.uf = v;
+        h = u.ul;
+        sign = h >> 63;
+        exp = (h << 1) >> 53;
+        frac = (h << 12) >> 12;
+        exp += exp2;
     }
+
+    real_exp = exp - 1023 - 52;
+
+    frac |= (UWORD(1) << 52);
+    real_man = sign ? (-frac) : frac;
+
+    fmpr_set_si_2exp_si(x, real_man, real_exp);
 #else
     mpfr_t t;
     mp_limb_t tmp[2];
