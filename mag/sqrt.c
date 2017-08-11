@@ -11,6 +11,21 @@
 
 #include "mag.h"
 
+/* requires that x is positive and finite */
+#define MAG_SET_D_2EXP(man, exp, x, xexp) \
+    do { \
+        int __cexp; \
+        double __x; \
+        int __fix; \
+        mp_limb_t __man; \
+        __x = frexp((x), &__cexp); \
+        __man = (mp_limb_t)(__x * (double)(LIMB_ONE << MAG_BITS)) + 1; \
+        __fix = __man >> (MAG_BITS); \
+        __man = (__man >> __fix) + __fix; \
+        (man) = __man; \
+        (exp) = (xexp) + __cexp + __fix; \
+    } while (0);
+
 void
 mag_sqrt(mag_t y, const mag_t x)
 {
@@ -21,13 +36,14 @@ mag_sqrt(mag_t y, const mag_t x)
     else
     {
         double t;
-        fmpz e;
+        slong e;
 
         t = MAG_MAN(x) * ldexp(1.0, -MAG_BITS);
-        e = MAG_EXP(x);
 
-        if (!COEFF_IS_MPZ(e))
+        if (MAG_IS_LAGOM(x))
         {
+            e = MAG_EXP(x);
+
             if (e % 2 != 0)
             {
                 e = (e - 1) >> 1;
@@ -37,8 +53,10 @@ mag_sqrt(mag_t y, const mag_t x)
             {
                 e >>= 1;
             }
+
             t = sqrt(t) * (1 + 1e-13);
-            mag_set_d_2exp_fmpz(y, t, &e);
+            _fmpz_demote(MAG_EXPREF(y));
+            MAG_SET_D_2EXP(MAG_MAN(y), MAG_EXP(y), t, e);
         }
         else
         {
@@ -50,3 +68,47 @@ mag_sqrt(mag_t y, const mag_t x)
         }
     }
 }
+
+void
+mag_sqrt_lower(mag_t y, const mag_t x)
+{
+    if (mag_is_special(x))
+    {
+        mag_set(y, x);
+    }
+    else
+    {
+        double t;
+        slong e;
+
+        t = MAG_MAN(x) * ldexp(1.0, -MAG_BITS);
+
+        if (MAG_IS_LAGOM(x))
+        {
+            e = MAG_EXP(x);
+
+            if (e % 2 != 0)
+            {
+                e = (e - 1) >> 1;
+                t *= 2.0;
+            }
+            else
+            {
+                e >>= 1;
+            }
+
+            t = sqrt(t) * (1 - 1e-13);
+            _fmpz_demote(MAG_EXPREF(y));
+            MAG_SET_D_2EXP_LOWER(MAG_MAN(y), MAG_EXP(y), t, e);
+        }
+        else
+        {
+            if (fmpz_is_odd(MAG_EXPREF(x)))
+                t *= 2.0;
+            fmpz_fdiv_q_2exp(MAG_EXPREF(y), MAG_EXPREF(x), 1);
+            t = sqrt(t) * (1 - 1e-13);
+            mag_set_d_2exp_fmpz_lower(y, t, MAG_EXPREF(y));
+        }
+    }
+}
+

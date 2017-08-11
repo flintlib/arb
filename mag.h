@@ -468,7 +468,41 @@ mag_fast_add_2exp_si(mag_t z, const mag_t x, slong e)
     }
 }
 
+/* requires that x is positive and finite */
+#define MAG_SET_D_2EXP(man, exp, x, xexp) \
+    do { \
+        int __cexp; \
+        double __x; \
+        int __fix; \
+        mp_limb_t __man; \
+        __x = frexp((x), &__cexp); \
+        __man = (mp_limb_t)(__x * (double)(LIMB_ONE << MAG_BITS)) + 1; \
+        __fix = __man >> (MAG_BITS); \
+        __man = (__man >> __fix) + __fix; \
+        (man) = __man; \
+        (exp) = (xexp) + __cexp + __fix; \
+    } while (0);
+
+/* requires that x is positive and finite */
+#define MAG_SET_D_2EXP_LOWER(man, exp, x, xexp) \
+    do { \
+        int __cexp; \
+        double __x; \
+        int __fix; \
+        mp_limb_t __man; \
+        __x = frexp((x), &__cexp); \
+        __man = (mp_limb_t)(__x * (double)(LIMB_ONE << MAG_BITS)) - 1; \
+        __fix = __man < MAG_ONE_HALF; \
+        __man = (__man << __fix); \
+        (man) = __man; \
+        (exp) = (xexp) + __cexp - __fix; \
+    } while (0);
+
+void mag_set_d(mag_t z, double x);
+void mag_set_d_lower(mag_t z, double x);
 void mag_set_d_2exp_fmpz(mag_t z, double c, const fmpz_t exp);
+void mag_set_d_2exp_fmpz_lower(mag_t z, double c, const fmpz_t exp);
+
 void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t man, const fmpz_t exp);
 
 #include "fmpr.h"
@@ -542,14 +576,6 @@ _mag_vec_clear(mag_ptr v, slong n)
     flint_free(v);
 }
 
-MAG_INLINE void mag_set_d(mag_t z, double x)
-{
-    fmpz_t e;
-    fmpz_init(e);
-    mag_set_d_2exp_fmpz(z, x, e);
-    fmpz_clear(e);
-}
-
 double mag_get_d(const mag_t z);
 
 double mag_get_d_log2_approx(const mag_t x);
@@ -589,6 +615,7 @@ void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
 void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 
 void mag_sqrt(mag_t y, const mag_t x);
+void mag_sqrt_lower(mag_t y, const mag_t x);
 void mag_rsqrt(mag_t y, const mag_t x);
 
 void mag_root(mag_t y, const mag_t x, ulong n);

@@ -163,6 +163,14 @@ Conversions
 
     Sets *z* to an upper bound for `|x| \times 2^y`.
 
+.. function:: void mag_set_d_lower(mag_t y, double x)
+
+    Sets *y* to a lower bound for `|x|`.
+
+.. function:: void mag_set_d_2exp_fmpz_lower(mag_t z, double x, const fmpz_t y)
+
+    Sets *z* to a lower bound for `|x| \times 2^y`.
+
 .. function:: void mag_get_fmpr(fmpr_t y, const mag_t x)
 
     Sets *y* exactly to *x*.
@@ -310,6 +318,10 @@ Powers and logarithms
 .. function:: void mag_rsqrt(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `1/\sqrt{x}`.
+
+.. function:: void mag_sqrt_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `\sqrt{x}`.
 
 .. function:: void mag_hypot(mag_t z, const mag_t x, const mag_t y)
 

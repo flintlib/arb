@@ -63,10 +63,12 @@ int main()
         mag_init(m);
 
         x = d_randtest2(state);
-        x = ldexp(x, 100 - n_randint(state, 200));
+        x = ldexp(x, 1100 - n_randint(state, 2200));
 
-        if (n_randint(state, 100) == 0)
-            x = 0.0;
+        if (n_randint(state, 100) == 0) x = 0.0;
+        if (n_randint(state, 100) == 0) x = D_INF;
+        if (n_randint(state, 100) == 0) x = D_NAN;
+        if (n_randint(state, 2)) x = -x;
 
         fmpr_set_d(a, x);
         mag_set_d(m, x);
@@ -82,6 +84,24 @@ int main()
         if (!(fmpr_cmpabs(a, b) <= 0 && fmpr_cmpabs(b, c) <= 0))
         {
             flint_printf("FAIL\n\n");
+            flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
+            flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
+            flint_printf("c = "); fmpr_print(c); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        mag_set_d_lower(m, x);
+        mag_get_fmpr(b, m);
+
+        fmpr_set(c, a);
+        fmpr_mul_ui(c, c, 1023, MAG_BITS, FMPR_RND_DOWN);
+        fmpr_mul_2exp_si(c, c, -10);
+
+        MAG_CHECK_BITS(m)
+
+        if (!(fmpr_cmpabs(c, b) <= 0 && fmpr_cmpabs(b, a) <= 0))
+        {
+            flint_printf("FAIL (lower)\n\n");
             flint_printf("a = "); fmpr_print(a); flint_printf("\n\n");
             flint_printf("b = "); fmpr_print(b); flint_printf("\n\n");
             flint_printf("c = "); fmpr_print(c); flint_printf("\n\n");

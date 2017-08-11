@@ -9,32 +9,68 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/double_extras.h"
 #include "mag.h"
 
 void
 mag_set_d_2exp_fmpz(mag_t z, double c, const fmpz_t exp)
 {
+    if (c < 0.0)
+        c = -c;
+
     if (c == 0.0)
     {
         mag_zero(z);
     }
-    else if (c > 1e300 || c < 0.0) /* not implemented */
+    else if ((c != c) || c == D_INF)
     {
-        flint_printf("mag_set_d_2exp_fmpz\n");
-        flint_abort();
+        mag_inf(z);
     }
     else
     {
-        int cexp, fix;
-        mp_limb_t man;
+        slong cexp = *exp;
 
-        c = frexp(c, &cexp);
-
-        man = (mp_limb_t)(c * (double)(LIMB_ONE << MAG_BITS)) + 1;
-
-        fix = man >> (MAG_BITS);
-        man = (man >> fix) + fix;  /* XXX: need +fix? */
-        MAG_MAN(z) = man;
-        _fmpz_add_fast(MAG_EXPREF(z), exp, cexp + fix);
+        if (cexp >= MAG_MIN_LAGOM_EXP && cexp <= MAG_MAX_LAGOM_EXP)
+        {
+            _fmpz_demote(MAG_EXPREF(z));
+            MAG_SET_D_2EXP(MAG_MAN(z), MAG_EXP(z), c, cexp);
+        }
+        else
+        {
+            MAG_SET_D_2EXP(MAG_MAN(z), cexp, c, 0);
+            fmpz_add_si(MAG_EXPREF(z), exp, cexp);
+        }
     }
 }
+
+void
+mag_set_d_2exp_fmpz_lower(mag_t z, double c, const fmpz_t exp)
+{
+    if (c < 0.0)
+        c = -c;
+
+    if (c == 0.0 || (c != c))
+    {
+        mag_zero(z);
+    }
+    else if (c == D_INF)
+    {
+        mag_inf(z);
+    }
+    else
+    {
+        slong cexp = *exp;
+
+        if (cexp >= MAG_MIN_LAGOM_EXP && cexp <= MAG_MAX_LAGOM_EXP)
+        {
+            _fmpz_demote(MAG_EXPREF(z));
+            MAG_SET_D_2EXP_LOWER(MAG_MAN(z), MAG_EXP(z), c, cexp);
+        }
+        else
+        {
+            MAG_SET_D_2EXP_LOWER(MAG_MAN(z), cexp, c, 0);
+            fmpz_add_si(MAG_EXPREF(z), exp, cexp);
+        }
+    }
+}
+
