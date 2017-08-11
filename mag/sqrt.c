@@ -11,21 +11,6 @@
 
 #include "mag.h"
 
-/* requires that x is positive and finite */
-#define MAG_SET_D_2EXP(man, exp, x, xexp) \
-    do { \
-        int __cexp; \
-        double __x; \
-        int __fix; \
-        mp_limb_t __man; \
-        __x = frexp((x), &__cexp); \
-        __man = (mp_limb_t)(__x * (double)(LIMB_ONE << MAG_BITS)) + 1; \
-        __fix = __man >> (MAG_BITS); \
-        __man = (__man >> __fix) + __fix; \
-        (man) = __man; \
-        (exp) = (xexp) + __cexp + __fix; \
-    } while (0);
-
 void
 mag_sqrt(mag_t y, const mag_t x)
 {
