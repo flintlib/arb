@@ -17,6 +17,17 @@ arb_rel_error_bits(const arb_t x)
     fmpz_t t;
     slong result;
 
+    /* fast path for small exponents */
+    if (ARB_IS_LAGOM(x))
+    {
+        if (mag_is_zero(arb_radref(x)))
+            return -ARF_PREC_EXACT;
+        else if (arf_is_special(arb_midref(x)))
+            return ARF_PREC_EXACT;
+        else
+            return MAG_EXP(arb_radref(x)) + 1 - ARF_EXP(arb_midref(x));
+    }
+
     if (mag_is_zero(arb_radref(x)))
     {
         if (arf_is_nan(arb_midref(x)))
