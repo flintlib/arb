@@ -21,7 +21,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c;
         fmpq_t q, r;
@@ -78,6 +78,64 @@ int main()
         fmpq_clear(r);
         mpfr_clear(t);
         mpfr_clear(u);
+    }
+
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    {
+        arb_t x1, x2, y1, y2, r1, r2;
+        slong prec1, prec2;
+
+        arb_init(x1);
+        arb_init(x2);
+        arb_init(y1);
+        arb_init(y2);
+        arb_init(r1);
+        arb_init(r2);
+
+        arb_randtest_special(x1, state, 1 + n_randint(state, 200), 100);
+        arb_randtest_special(y1, state, 1 + n_randint(state, 200), 100);
+
+        if (n_randint(state, 2))
+        {
+            arb_randtest_special(r1, state, 1 + n_randint(state, 200), 100);
+            arb_randtest_special(r2, state, 1 + n_randint(state, 200), 100);
+        }
+        else
+        {
+            arb_zero(r1);
+            arb_zero(r2);
+        }
+
+        prec1 = 2 + n_randint(state, 200);
+        prec2 = 2 + n_randint(state, 200);
+
+        arb_add(x2, x1, r1, prec2);
+        arb_sub(x2, x2, r1, prec2);
+
+        arb_add(y2, y1, r2, prec2);
+        arb_sub(y2, y2, r2, prec2);
+
+        arb_agm(r1, x1, y1, prec1);
+        arb_agm(r2, x2, y2, prec2);
+
+        if (!arb_overlaps(r1, r2))
+        {
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("x1 = "); arb_printn(x1, 30, 0); flint_printf("\n\n");
+            flint_printf("x2 = "); arb_printn(x2, 30, 0); flint_printf("\n\n");
+            flint_printf("y1 = "); arb_printn(y1, 30, 0); flint_printf("\n\n");
+            flint_printf("y2 = "); arb_printn(y2, 30, 0); flint_printf("\n\n");
+            flint_printf("r1 = "); arb_printn(r1, 30, 0); flint_printf("\n\n");
+            flint_printf("r2 = "); arb_printn(r2, 30, 0); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(x1);
+        arb_clear(x2);
+        arb_clear(y1);
+        arb_clear(y2);
+        arb_clear(r1);
+        arb_clear(r2);
     }
 
     flint_randclear(state);

@@ -31,11 +31,29 @@ which is computed as `\sqrt{ab}, i \sqrt{-ab}, -i \sqrt{-ab}, \sqrt{a} \sqrt{b}`
 respectively if both *a* and *b* have positive real part, nonnegative
 imaginary part, nonpositive imaginary part, or otherwise.
 
-It is shown in [Dup2006]_, p. 87 that, for *z* with nonnegative real part,
-`|M(z) - a_n| \le |a_n - b_n|`.
+The iteration should be terminated when `a_n` and `b_n` are close enough.
+For positive real variables, we can simply take lower and upper bounds
+to get a correct enclosure at this point. For complex variables, it is shown
+in [Dup2006]_, p. 87 that, for *z* with nonnegative real part,
+`|M(z) - a_n| \le |a_n - b_n|`, giving a convenient error bound.
 
-A small improvement would be to switch to a series
-expansion for the last one or two steps.
+Rather than running the AGM iteration until `a_n` and `b_n` agree to
+`p` bits, it is slightly more efficient to iterate until
+they agree to about `p/10` bits and finish with a series expansion.
+With `z = (a-b)/(a+b)`, we have
+
+.. math ::
+
+    \operatorname{agm}(a,b) = \frac{(a+b) \pi}{4 K(z^2)},
+
+valid at least when `|z| < 1` and `a, b` have nonnegative real part,
+and
+
+.. math ::
+
+    \frac{\pi}{4 K(z^2)} = \tfrac{1}{2} - \tfrac{1}{8} z^2 - \tfrac{5}{128} z^4 - \tfrac{11}{512} z^6 - \tfrac{469}{32768} z^8 + \ldots
+
+where the tail is bounded by `\sum_{k=10}^{\infty} |z|^k/64`.
 
 First derivative
 ------------------------------------------------------------------------------
