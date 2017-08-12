@@ -73,12 +73,47 @@ sqrtmul(acb_t c, const acb_t a, const acb_t b, slong prec)
     }
 }
 
+static void
+acb_agm_close_taylor(acb_t res, acb_t z, acb_t z2,
+    const acb_t aplusb, const acb_t aminusb,
+    const mag_t err, slong prec)
+{
+    acb_div(z, aminusb, aplusb, prec);
+    acb_sqr(z, z, prec);
+    acb_sqr(z2, z, prec);
+
+    acb_mul_si(res, z2, -469, prec);
+    acb_addmul_si(res, z, -704, prec);
+    acb_mul(res, res, z2, prec);
+    acb_addmul_si(res, z2, -1280, prec);
+    acb_mul_2exp_si(z, z, 12);
+    acb_sub(res, res, z, prec);
+    acb_add_ui(res, res, 16384, prec);
+    acb_mul_2exp_si(res, res, -15);
+
+    acb_add_error_mag(res, err);
+
+    acb_mul(res, res, aplusb, prec);
+}
+
 void
 acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
 {
     acb_t a, b, t, u;
-    mag_t err;
+    mag_t err, err2;
     int isreal;
+
+    isreal = acb_is_real(z) && arb_is_nonnegative(acb_realref(z));
+
+    if (isreal)
+    {
+        acb_init(a);
+        acb_one(a);
+        arb_agm(acb_realref(res), acb_realref(a), acb_realref(z), prec);
+        arb_zero(acb_imagref(res));
+        acb_clear(a);
+        return;
+    }
 
     if (acb_is_zero(z))
     {
@@ -107,20 +142,43 @@ acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
         return;
     }
 
-    isreal = acb_is_real(z) && arb_is_nonnegative(acb_realref(z));
-
     acb_init(a);
     acb_init(b);
     acb_init(t);
     acb_init(u);
     mag_init(err);
+    mag_init(err2);
 
     acb_one(a);
     acb_set_round(b, z, prec);
 
-    while (!acb_overlaps(a, b))
+    while (1)
     {
+        acb_sub(u, a, b, prec);
+
+        if (acb_contains_zero(u))
+        {
+            /* Dupont's thesis, p. 87: |M(z) - a_n| <= |a_n - b_n| */
+            acb_set(res, a);
+            acb_get_mag(err, u);
+            acb_add_error_mag(res, err);
+            break;
+        }
+
         acb_add(t, a, b, prec);
+
+        acb_get_mag(err, u);
+        acb_get_mag_lower(err2, t);
+        mag_div(err, err, err2);
+        mag_geom_series(err, err, 10);
+        mag_mul_2exp_si(err, err, -6);
+
+        if (mag_cmp_2exp_si(err, -prec) < 0)
+        {
+            acb_agm_close_taylor(res, a, b, t, u, err, prec);
+            break;
+        }
+
         acb_mul_2exp_si(t, t, -1);
 
         sqrtmul(u, a, b, prec);
@@ -129,23 +187,12 @@ acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
         acb_swap(u, b);
     }
 
-    /* Dupont's thesis, p. 87:
-       |M(z) - a_n| <= |a_n - b_n| */
-    acb_sub(t, a, b, prec);
-    acb_get_mag(err, t);
-
-    if (isreal)
-        arb_add_error_mag(acb_realref(a), err);
-    else
-        acb_add_error_mag(a, err);
-
-    acb_set(res, a);
-
     acb_clear(a);
     acb_clear(b);
     acb_clear(t);
     acb_clear(u);
     mag_clear(err);
+    mag_clear(err2);
 }
 
 /*
