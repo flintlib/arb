@@ -190,8 +190,7 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     still defined by analytic continuation.
 
     In general, one or more duplication steps are applied until
-    `x,y,z` are close enough to use a multivariate Taylor polynomial
-    of total degree 7.
+    `x,y,z` are close enough to use a multivariate Taylor series.
 
     The special case `R_C(x, y) = R_F(x, y, y) = \frac{1}{2} \int_0^{\infty} (t+x)^{-1/2} (t+y)^{-1} dt`
     may be computed by
