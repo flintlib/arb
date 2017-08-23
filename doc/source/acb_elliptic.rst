@@ -227,8 +227,7 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     where the square root is taken continuously as in `R_F`.
 
     In general, one or more duplication steps are applied until
-    `x,y,z,p` are close enough to use a multivariate Taylor polynomial
-    of total degree 7.
+    `x,y,z,p` are close enough to use a multivariate Taylor series.
 
     The duplication algorithm is not correct for all possible
     combinations of complex variables, since the square roots taken

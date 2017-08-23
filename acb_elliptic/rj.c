@@ -11,6 +11,204 @@
 
 #include "acb_elliptic.h"
 
+static const unsigned short den_ratio_tab[512] = {
+    1,1,14,3,44,13,10,17,152,1,46,1,12,29,62,1,
+    16,37,2,41,172,1,94,7,8,53,2,1,236,61,2,1,
+    2144,1,142,73,20,1,158,3,664,1,2,89,4,1,2,97,
+    16,101,206,1,428,109,2,113,8,1,2,11,4,1,254,1,
+    8384,1,2,137,556,1,2,1,8,149,302,1,4,157,2,1,
+    2608,1,334,13,4,173,2,1,1432,181,2,1,4,1,382,193,
+    32,197,398,1,4,1,2,1,1688,1,2,1,4,1,446,1,
+    3632,229,2,233,4,1,478,241,24,1,2,1,1004,1,2,257,
+    128,1,526,1,4,269,542,1,8,277,2,281,1132,1,2,17,
+    16,293,2,1,4,1,2,1,2456,1,622,313,4,317,2,1,
+    32,1,2,1,1324,1,2,337,8,1,14,1,1388,349,2,353,
+    16,1,718,19,4,1,734,1,8,373,10,1,1516,1,766,1,
+    64,389,2,1,4,397,2,401,8,1,2,409,4,1,2,1,
+    6704,421,2,1,4,1,862,433,8,1,878,1,1772,1,2,449,
+    32,1,2,457,4,461,926,1,3736,1,2,1,4,1,958,1,
+    16,1,974,1,1964,1,2,1,3992,1,1006,1,4,509,2,1,
+    256,1,2,521,2092,1,2,23,8,1,2,1,4,541,2,1,
+    8752,1,2,1,4,557,2,1,4504,1,2,569,2284,1,2,577,
+    32,1,2,1,2348,1,2,593,8,1,1198,601,4,1,1214,1,
+    16,613,2,617,2476,1,2,1,8,1,1262,1,4,1,2,641,
+    41152,1,1294,1,4,653,2,1,5272,661,2,1,4,1,2,673,
+    16,677,2,1,2732,1,2,1,5528,1,2,1,4,701,2,1,
+    32,709,2,1,4,1,1438,1,8,1,1454,3,4,733,2,1,
+    11824,1,1486,1,4,1,1502,1,8,757,2,761,4,1,2,769,
+    128,773,2,1,4,1,2,1,6296,1,2,1,4,797,2,1,
+    16,1,2,809,3244,1,2,1,8,821,1646,1,3308,829,2,1,
+    32,1,1678,29,4,1,2,1,8,853,2,857,3436,1,1726,1,
+    16,1,2,1,4,877,2,881,7064,1,1774,1,4,1,2,1,
+    64,1,2,1,3628,1,1822,1,8,1,1838,1,4,1,2,929,
+    16,1,2,937,4,941,2,1,7576,1,2,953,4,1,2,31,
+    32,1,1934,1,3884,1,2,977,8,1,1966,1,4,1,1982,1,
+    16,997,2,1,4,1,2,1009,8,1013,2,1,4076,1021,2,1
+};
+
+static __inline__ slong fdiv(slong x, slong y)
+{
+    if (x < 0)
+        return -1;
+    else
+        return x / y;
+}
+
+void
+acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
+                const acb_t E4, const acb_t E5, slong nterms, slong prec)
+{
+    slong m2, m3, m4, m5, m2start, m3start, m4start, m5start, NMAX, N, M;
+    slong m2dim, m3dim;
+    acb_t s2, s3, s4, s5;
+    acb_ptr powtab;
+    fmpz_t c2, c3, c4, c5, den, t;
+
+    acb_init(s2);
+    acb_init(s3);
+    acb_init(s4);
+    acb_init(s5);
+    fmpz_init(c2);
+    fmpz_init(c3);
+    fmpz_init(c4);
+    fmpz_init(c5);
+    fmpz_init(den);
+    fmpz_init(t);
+
+    NMAX = nterms - 1;
+
+    m2dim = NMAX / 2 + 1;
+    m3dim = NMAX / 3 + 1;
+
+    powtab = _acb_vec_init(m2dim * m3dim);
+
+    /* Compute universal denominator */
+    fmpz_one(den);
+    for (N = 1; N <= NMAX; N++)
+        fmpz_mul_ui(den, den, den_ratio_tab[N]);
+
+    /* Precompute powers of E2 and E3 */
+    for (m2 = 0; m2 <= NMAX / 2; m2++)
+    {
+        for (m3 = 0; m3 <= fdiv(NMAX - 2 * m2, 3); m3++)
+        {
+            slong i, j, k;
+
+            i = m3 * m2dim + m2;
+
+            if (m2 <= 1 && m3 <= 1)
+            {
+                if (m2 == 0 && m3 == 0)
+                    acb_one(powtab + i);
+                else if (m2 == 0 && m3 == 1)
+                    acb_set(powtab + i, E3);
+                else if (m2 == 1 && m3 == 0)
+                    acb_set(powtab + i, E2);
+                else
+                    acb_mul(powtab + i, E2, E3, prec);
+            }
+            else
+            {
+                j = (m3 / 2) * m2dim + (m2 / 2);
+                k = (m3 - (m3 / 2)) * m2dim + (m2 - (m2 / 2));
+                acb_mul(powtab + i, powtab + j, powtab + k, prec);
+            }
+        }
+    }
+
+    acb_zero(s5);
+    m5start = NMAX / 5;
+    fmpz_mul_ui(c5, den, 3);
+    for (m5 = 0; m5 < m5start; m5++)
+    {
+        fmpz_mul_ui(c5, c5, 2 * m5 + 1);
+        fmpz_divexact_ui(c5, c5, 2 * m5 + 2);
+    }
+
+    for (m5 = m5start; m5 >= 0; m5--)
+    {
+        acb_zero(s4);
+        m4start = fdiv(NMAX - 5 * m5, 4);
+        if (m5 != m5start)
+        {
+            fmpz_mul_ui(c5, c5, 2 * m5 + 2);
+            fmpz_divexact_ui(c5, c5, 2 * m5 + 1);
+        }
+        fmpz_set(c4, c5);
+        for (m4 = 0; m4 < m4start; m4++)
+        {
+            fmpz_mul_ui(c4, c4, 2 * m5 + 2 * m4 + 1);
+            fmpz_divexact_ui(c4, c4, 2 * m4 + 2);
+        }
+
+        for (m4 = m4start; m4 >= 0; m4--)
+        {
+            acb_zero(s3);
+            m3start = fdiv(NMAX - 5 * m5 - 4 * m4, 3);
+            if (m4 != m4start)
+            {
+                fmpz_mul_ui(c4, c4, 2 * m4 + 2);
+                fmpz_divexact_ui(c4, c4, 2 * m5 + 2 * m4 + 1);
+            }
+            fmpz_set(c3, c4);
+
+            for (m3 = 0; m3 <= m3start; m3++)
+            {
+                m2start = fdiv(NMAX - 5 * m5 - 4 * m4 - 3 * m3, 2);
+                fmpz_set(c2, c3);
+                for (m2 = 0; m2 <= m2start; m2++)
+                {
+                    M = m5 + m4 + m3 + m2;
+                    N = 5 * m5 + 4 * m4 + 3 * m3 + 2 * m2;
+
+                    if (N > NMAX)
+                        flint_abort();
+
+                    fmpz_divexact_ui(t, c2, 2 * N + 3);
+                    if ((M + N) % 2)
+                        fmpz_neg(t, t);
+
+                    acb_addmul_fmpz(s3, powtab + m3 * m2dim + m2, t, prec);
+
+                    if (m2 < m2start)
+                    {
+                        fmpz_mul_ui(c2, c2, 2 * m5 + 2 * m4 + 2 * m3 + 2 * m2 + 1);
+                        fmpz_divexact_ui(c2, c2, 2 * m2 + 2);
+                    }
+                }
+
+                if (m3 < m3start)
+                {
+                    fmpz_mul_ui(c3, c3, 2 * m5 + 2 * m4 + 2 * m3 + 1);
+                    fmpz_divexact_ui(c3, c3, 2 * m3 + 2);
+                }
+            }
+
+            /* Horner with respect to E4. */
+            acb_mul(s4, s4, E4, prec);
+            acb_add(s4, s4, s3, prec);
+        }
+
+        /* Horner with respect to E5. */
+        acb_mul(s5, s5, E5, prec);
+        acb_add(s5, s5, s4, prec);
+    }
+
+    acb_div_fmpz(res, s5, den, prec);
+
+    _acb_vec_clear(powtab, m2dim * m3dim);
+    acb_clear(s2);
+    acb_clear(s3);
+    acb_clear(s4);
+    acb_clear(s5);
+    fmpz_clear(c2);
+    fmpz_clear(c3);
+    fmpz_clear(c4);
+    fmpz_clear(c5);
+    fmpz_clear(den);
+    fmpz_clear(t);
+}
+
 void
 acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
             const acb_t z, const acb_t p, int flags, slong prec)
@@ -18,8 +216,8 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     acb_t xx, yy, zz, pp, sx, sy, sz, sp, t, d, delta, S;
     acb_t A, AA, X, Y, Z, P, E2, E3, E4, E5;
     mag_t err, err2, prev_err;
-    slong k, wp, accx, accy, accz, accp;
-    int rd;
+    slong k, wp, accx, accy, accz, accp, order;
+    int rd, real;
 
     if (!acb_is_finite(x) || !acb_is_finite(y) || !acb_is_finite(z) ||
         !acb_is_finite(p))
@@ -54,7 +252,24 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     acb_set(pp, p);
     acb_zero(S);
 
-    wp = prec + 20;
+    real = acb_is_real(x) && acb_is_real(y) && acb_is_real(z) && acb_is_real(p) &&
+           arb_is_nonnegative(acb_realref(x)) && arb_is_nonnegative(acb_realref(y)) &&
+           arb_is_nonnegative(acb_realref(z)) && arb_is_nonnegative(acb_realref(p));
+
+    order = 5; /* will be set later */
+
+    /* First guess precision based on the inputs. */
+    /* This does not account for mixing. */
+    accx = acb_rel_accuracy_bits(xx);
+    accy = acb_rel_accuracy_bits(yy);
+    accz = acb_rel_accuracy_bits(zz);
+    accp = acb_rel_accuracy_bits(pp);
+    accx = FLINT_MAX(accx, accy);
+    accx = FLINT_MAX(accx, accz);
+    accx = FLINT_MAX(accx, accp);
+    if (accx < prec - 20)
+        prec = FLINT_MAX(2, accx + 20);
+    wp = prec + 4 + FLINT_BIT_COUNT(prec);
 
     if (!rd)
     {
@@ -82,18 +297,6 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     /* must do at least one iteration */
     for (k = 0; k < prec; k++)
     {
-        accx = acb_rel_accuracy_bits(xx);
-        accy = acb_rel_accuracy_bits(yy);
-        accz = acb_rel_accuracy_bits(zz);
-        accp = acb_rel_accuracy_bits(pp);
-
-        wp = FLINT_MAX(accx, accy);
-        wp = FLINT_MAX(wp, accz);
-        wp = FLINT_MAX(wp, accp);
-        wp = FLINT_MAX(wp, 0);
-        wp = FLINT_MIN(wp, prec);
-        wp += 20;
-
         acb_sqrt(sx, xx, wp);
         acb_sqrt(sy, yy, wp);
         acb_sqrt(sz, zz, wp);
@@ -148,6 +351,35 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
             acb_add(S, S, t, wp);
         }
 
+        /* Improve precision estimate and set expansion order. */
+        /* Should this done for other k also? */
+        if (k == 0)
+        {
+            accx = acb_rel_accuracy_bits(xx);
+            accy = acb_rel_accuracy_bits(yy);
+            accz = acb_rel_accuracy_bits(zz);
+            accp = acb_rel_accuracy_bits(pp);
+            accx = FLINT_MAX(accx, accy);
+            accx = FLINT_MAX(accx, accz);
+            accx = FLINT_MAX(accx, accp);
+            if (accx < prec - 20)
+                prec = FLINT_MAX(2, accx + 20);
+            wp = prec + 4 + FLINT_BIT_COUNT(prec);
+
+            if (!rd)
+                if (real)
+                    order = 2.3 * pow(prec, 0.34);
+                else
+                    order = 2.5 * pow(prec, 0.35);
+            else
+                if (real)
+                    order = 2.0 * pow(prec, 0.33);
+                else
+                    order = 2.2 * pow(prec, 0.33);
+            order = FLINT_MIN(order, 500);
+            order = FLINT_MAX(order, 5);
+        }
+
         /* Close enough? */
         acb_sub(t, xx, yy, wp);
         acb_get_mag(err, t);
@@ -163,7 +395,7 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
         acb_get_mag_lower(err2, xx);
         mag_div(err, err, err2);
 
-        mag_pow_ui(err, err, 8);
+        mag_pow_ui(err, err, order);
 
         if (mag_cmp_2exp_si(err, -prec) < 0 ||
                 (k > 2 && mag_cmp(err, prev_err) > 0))
@@ -229,48 +461,20 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     mag_max(err, err, err2);
     mag_mul_ui(err, err, 9);
     mag_mul_2exp_si(err, err, -3);
-    mag_geom_series(err, err, 8);
+    mag_geom_series(err, err, order);
     mag_mul_2exp_si(err, err, 1);
 
-    /*
-    1 + (-255255*E2**3 + 675675*E2**2*E3 + 417690*E2**2 - 706860*E2*E3
-        + 612612*E2*E4 - 540540*E2*E5 - 875160*E2 + 306306*E3**2 - 540540*E3*E4
-        + 680680*E3 - 556920*E4 + 471240*E5)/4084080
-    =
-    1 + (E2*(E2*(-255255*E2 + 675675*E3 + 417690) - 706860*E3
-        + 612612*E4 - 540540*E5 - 875160) + E3*(306306*E3 - 540540*E4
-        + 680680) - 556920*E4 + 471240*E5)/4084080
-    */
-    acb_set_ui(sx, 417690);
-    acb_addmul_ui(sx, E3, 675675, prec);
-    acb_submul_ui(sx, E2, 255255, prec);
-    acb_mul(sx, sx, E2, prec);
-    acb_submul_ui(sx, E3, 706860, prec);
-    acb_addmul_ui(sx, E4, 612612, prec);
-    acb_submul_ui(sx, E5, 540540, prec);
-    acb_sub_ui(sx, sx, 875160, prec);
-    acb_mul(sx, sx, E2, prec);
-
-    acb_set_ui(sy, 680680);
-    acb_submul_ui(sy, E4, 540540, prec);
-    acb_addmul_ui(sy, E3, 306306, prec);
-    acb_addmul(sx, sy, E3, prec);
-
-    acb_addmul_ui(sx, E5, 471240, prec);
-    acb_submul_ui(sx, E4, 556920, prec);
-    acb_div_ui(sx, sx, 4084080, prec);
-
-    acb_add_ui(sx, sx, 1, prec);
+    acb_elliptic_rj_taylor_sum(sx, E2, E3, E4, E5, order, wp);
 
     if (acb_is_real(X) && acb_is_real(Y) && acb_is_real(Z))
         arb_add_error_mag(acb_realref(sx), err);
     else
         acb_add_error_mag(sx, err);
 
-    acb_rsqrt(t, AA, prec);
-    acb_div(t, t, AA, prec);
+    acb_rsqrt(t, AA, wp);
+    acb_div(t, t, AA, wp);
     acb_mul_2exp_si(t, t, -2 * k);
-    acb_mul(t, t, sx, prec);
+    acb_mul(t, t, sx, wp);
 
     acb_addmul_ui(t, S, 6, prec);
 
