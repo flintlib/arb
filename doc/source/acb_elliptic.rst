@@ -53,7 +53,7 @@ Complete elliptic integrals
 
      .. math ::
 
-        E(m) = \int_0^{\pi2} \sqrt{1-m \sin^2 t} \, dt =
+        E(m) = \int_0^{\pi/2} \sqrt{1-m \sin^2 t} \, dt =
                     \int_0^1
                     \frac{\sqrt{1-mt^2}}{\sqrt{1-t^2}} \, dt
 
