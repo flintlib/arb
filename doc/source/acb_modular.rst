@@ -427,6 +427,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
 
     Evaluates the Jacobi theta functions `\theta_i(z,\tau)`, `i = 1, 2, 3, 4`
     simultaneously. This function moves `\tau` to the fundamental domain
+    and then also reduces `z` modulo `\tau`
     before calling :func:`acb_modular_theta_sum`.
 
 .. function:: void acb_modular_theta_jet_notransform(acb_ptr theta1, acb_ptr theta2, acb_ptr theta3, acb_ptr theta4, const acb_t z, const acb_t tau, slong len, slong prec)
@@ -437,7 +438,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     with respect to *z*, writing the first *len* coefficients in the power
     series `\theta_i(z+x,\tau) \in \mathbb{C}[[x]]` to
     each respective output variable. The *notransform* version does not
-    move `\tau` to the fundamental domain during the computation.
+    move `\tau` to the fundamental domain or reduce `z` during the computation.
 
 The Dedekind eta function
 -------------------------------------------------------------------------------

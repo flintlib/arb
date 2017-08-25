@@ -64,7 +64,7 @@ acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
     acb_t z_prime, tau_prime, q, q4, w, A;
     acb_ptr B;
     acb_ptr thetas[4];
-    int w_is_unit, R[4], S[4], C;
+    int w_is_unit, R[4], S[4], C, rescale;
     slong k;
 
     if (len == 0)
@@ -85,7 +85,8 @@ acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
     acb_modular_fundamental_domain_approx(tau_prime, g, tau,
         one_minus_eps, prec);
 
-    if (psl2z_is_one(g))
+    if (psl2z_is_one(g) &&
+            arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 4) <= 0)
     {
         acb_modular_theta_jet_notransform(theta1, theta2, theta3, theta4,
             z, tau, len, prec);
@@ -110,9 +111,13 @@ acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
         if (C == 0)
         {
             acb_set(z_prime, z);
+            acb_one(A);
+            rescale = 0;
         }
         else
         {
+            rescale = 1;
+
             /* B = 1/(c*tau+d) (temporarily) */
             acb_mul_fmpz(B, tau, &g->c, prec);
             acb_add_fmpz(B, B, &g->d, prec);
@@ -144,9 +149,72 @@ acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
             acb_mul(B, z_prime, z, prec);
             acb_mul_fmpz(B, B, &g->c, prec);
 
-            /* B = exp(-pi i c (z+x)^2/(c*tau+d)) */
-            _acb_poly_exp_pi_i_series(B, B, FLINT_MIN(len, 3), len, prec);
+            /* we will have B = exp(-pi i c (z+x)^2/(c*tau+d))
+               after computing the exponential later */
         }
+
+        /* reduce z_prime modulo tau_prime if the imaginary part is large */
+        if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(z_prime)), 4) > 0)
+        {
+            arb_t nn;
+            arb_init(nn);
+            arf_div(arb_midref(nn), arb_midref(acb_imagref(z_prime)),
+                arb_midref(acb_imagref(tau_prime)), prec, ARF_RND_DOWN);
+            arf_mul_2exp_si(arb_midref(nn), arb_midref(nn), 1);
+            arf_add_ui(arb_midref(nn), arb_midref(nn), 1, prec, ARF_RND_DOWN);
+            arf_mul_2exp_si(arb_midref(nn), arb_midref(nn), -1);
+            arf_floor(arb_midref(nn), arb_midref(nn));
+
+            /* transform z_prime further */
+            acb_submul_arb(z_prime, tau_prime, nn, prec);
+
+            /* add -tau n^2 - 2n(z+x)' to B */
+            arb_mul_2exp_si(nn, nn, 1);
+            acb_submul_arb(B, z_prime, nn, prec);
+            if (len >= 2)
+            {
+                acb_t u;
+                acb_init(u);
+
+                /* the x picks up a factor -1/(tau*c+d) */
+                if (rescale)
+                {
+                    acb_mul_fmpz(u, tau, &g->c, prec);
+                    acb_add_fmpz(u, u, &g->d, prec);
+                    acb_inv(u, u, prec);
+                    acb_neg(u, u);
+                    acb_mul_arb(u, u, nn, prec);
+                    acb_sub(B + 1, B + 1, u, prec);
+                }
+                else
+                {
+                    acb_sub_arb(B + 1, B + 1, nn, prec);
+                }
+
+                acb_clear(u);
+            }
+            arb_mul_2exp_si(nn, nn, -1);
+            arb_sqr(nn, nn, prec);
+            acb_submul_arb(B, tau_prime, nn, prec);
+
+            /* theta1, theta4 pick up factors (-1)^n */
+            if (!arf_is_int_2exp_si(arb_midref(nn), 1))
+            {
+                int i;
+                for (i = 0; i < 4; i++)
+                {
+                    if (S[i] == 0 || S[i] == 3)
+                        R[i] += 4;
+                }
+            }
+
+            C = 1;
+
+            arb_clear(nn);
+        }
+
+        if (C != 0)
+            _acb_poly_exp_pi_i_series(B, B, FLINT_MIN(len, 3), len, prec);
 
         /* compute q_{1/4}, q */
         acb_mul_2exp_si(q4, tau_prime, -2);
@@ -162,8 +230,9 @@ acb_modular_theta_jet(acb_ptr theta1, acb_ptr theta2,
             w, w_is_unit, q, len, prec);
 
         /* correct for change of variables */
-        if (C != 0)
+        if (rescale)
         {
+            /* [-1/(tau*c+d)]]^k */
             acb_mul_fmpz(z_prime, tau, &g->c, prec);
             acb_add_fmpz(z_prime, z_prime, &g->d, prec);
             acb_inv(z_prime, z_prime, prec);

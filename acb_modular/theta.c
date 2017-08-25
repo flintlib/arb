@@ -140,6 +140,7 @@ acb_modular_theta(acb_t theta1, acb_t theta2,
     if (C == 0)
     {
         acb_set(z_prime, z);
+        acb_one(A);
     }
     else
     {
@@ -157,17 +158,58 @@ acb_modular_theta(acb_t theta1, acb_t theta2,
         acb_sqrt(A, A, prec);
 
         /* B = exp(-pi i c z^2/(c*tau+d)) */
+        /* we first compute the argument here */
         if (acb_is_zero(z))
         {
-            acb_one(B);
+            acb_zero(B);
         }
         else
         {
             acb_mul(B, z_prime, z, prec);
             acb_mul_fmpz(B, B, &g->c, prec);
-            acb_exp_pi_i(B, B, prec);
         }
     }
+
+    /* reduce z_prime modulo tau_prime if the imaginary part is large */
+    if (arf_cmpabs_2exp_si(arb_midref(acb_imagref(z_prime)), 4) > 0)
+    {
+        arb_t nn;
+        arb_init(nn);
+        arf_div(arb_midref(nn), arb_midref(acb_imagref(z_prime)),
+            arb_midref(acb_imagref(tau_prime)), prec, ARF_RND_DOWN);
+        arf_mul_2exp_si(arb_midref(nn), arb_midref(nn), 1);
+        arf_add_ui(arb_midref(nn), arb_midref(nn), 1, prec, ARF_RND_DOWN);
+        arf_mul_2exp_si(arb_midref(nn), arb_midref(nn), -1);
+        arf_floor(arb_midref(nn), arb_midref(nn));
+
+        /* transform z_prime further */
+        acb_submul_arb(z_prime, tau_prime, nn, prec);
+
+        /* add -tau n^2 - 2nz to B */
+        arb_mul_2exp_si(nn, nn, 1);
+        acb_submul_arb(B, z_prime, nn, prec);
+        arb_mul_2exp_si(nn, nn, -1);
+        arb_sqr(nn, nn, prec);
+        acb_submul_arb(B, tau_prime, nn, prec);
+
+        /* theta1, theta4 pick up factors (-1)^n */
+        if (!arf_is_int_2exp_si(arb_midref(nn), 1))
+        {
+            int i;
+            for (i = 0; i < 4; i++)
+            {
+                if (S[i] == 0 || S[i] == 3)
+                    R[i] += 4;
+            }
+        }
+
+        C = 1;
+
+        arb_clear(nn);
+    }
+
+    if (C != 0)
+        acb_exp_pi_i(B, B, prec);
 
     /* compute q_{1/4}, q */
     acb_mul_2exp_si(q4, tau_prime, -2);

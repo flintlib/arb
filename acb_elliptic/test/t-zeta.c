@@ -64,13 +64,28 @@ int main()
         {
             acb_set_dddd(z, testdata[i][0], 0.0, testdata[i][1], 0.0);
             acb_set_dddd(tau, testdata[i][2], 0.0, testdata[i][3], 0.0);
-            acb_set_dddd(p2, testdata[i][4], EPS, testdata[i][5], EPS);
+            if (i == NUM_TESTS - 1) /* sensitive to rounding errors in doubles */
+                acb_set_dddd(p2, testdata[i][4], 1e-6, testdata[i][5], 1e-6);
+            else
+                acb_set_dddd(p2, testdata[i][4], EPS, testdata[i][5], EPS);
 
             acb_elliptic_zeta(p1, z, tau, 2 + n_randint(state, 400));
 
             if (!acb_overlaps(p1, p2))
             {
                 flint_printf("FAIL (test value)\n");
+                flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
+                flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
+                flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
+                flint_printf("p2 = "); acb_printd(p2, 15); flint_printf("\n\n");
+                flint_abort();
+            }
+
+            acb_elliptic_zeta(p2, z, tau, 2 + n_randint(state, 800));
+
+            if (!acb_overlaps(p1, p2))
+            {
+                flint_printf("FAIL (test value 2)\n");
                 flint_printf("tau = "); acb_printd(tau, 15); flint_printf("\n\n");
                 flint_printf("z = "); acb_printd(z, 15); flint_printf("\n\n");
                 flint_printf("p1 = "); acb_printd(p1, 15); flint_printf("\n\n");
