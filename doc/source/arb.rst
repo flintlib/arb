@@ -1579,6 +1579,22 @@ Internals for computing elementary functions
     is applied repeatedly instead of integrating a differential
     equation for the arctangent, as this appears to be more efficient.
 
+.. function:: void arb_sin_cos_arf_generic(arb_t s, arb_t c, const arf_t x, slong prec)
+
+    Computes the sine and cosine of *x* using a generic strategy.
+    This is called internally by the main sin and cos functions
+    when the internal precision for argument reduction or series
+    evaluation is exhausted.
+
+    Provided that `|x| < \pi / 2 - \varepsilon`, this function
+    currently either uses a generic version of the rectangular splitting 
+    algorithm implemented using *arb* arithmetic, or calls MPFR, depending
+    on the precision.
+
+    Otherwise, it uses `\pi` to reduce the argument to the first octant
+    and evaluates the sin and cos functions recursively (this call cannot
+    result in infinite recursion).
+
 Vector functions
 -------------------------------------------------------------------------------
 

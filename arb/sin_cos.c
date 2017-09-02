@@ -15,151 +15,6 @@
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))
 
-static void
-_arf_sin(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
-{
-    mpfr_t xf, zf;
-    mp_ptr zptr, tmp;
-    mp_srcptr xptr;
-    mp_size_t xn, zn, val;
-    TMP_INIT;
-    TMP_START;
-
-    zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
-    tmp = TMP_ALLOC(zn * sizeof(mp_limb_t));
-
-    ARF_GET_MPN_READONLY(xptr, xn, x);
-
-    xf->_mpfr_d = (mp_ptr) xptr;
-    xf->_mpfr_prec = xn * FLINT_BITS;
-    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
-    xf->_mpfr_exp = ARF_EXP(x);
-
-    zf->_mpfr_d = tmp;
-    zf->_mpfr_prec = prec;
-    zf->_mpfr_sign = 1;
-    zf->_mpfr_exp = 0;
-
-    mpfr_set_emin(MPFR_EMIN_MIN);
-    mpfr_set_emax(MPFR_EMAX_MAX);
-
-    mpfr_sin(zf, xf, arf_rnd_to_mpfr(rnd));
-
-    val = 0;
-    while (tmp[val] == 0)
-        val++;
-
-    ARF_GET_MPN_WRITE(zptr, zn - val, z);
-    flint_mpn_copyi(zptr, tmp + val, zn - val);
-    if (zf->_mpfr_sign < 0)
-        ARF_NEG(z);
-
-    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
-
-    TMP_END;
-}
-
-static void
-_arf_cos(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
-{
-    mpfr_t xf, zf;
-    mp_ptr zptr, tmp;
-    mp_srcptr xptr;
-    mp_size_t xn, zn, val;
-    TMP_INIT;
-    TMP_START;
-
-    zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
-    tmp = TMP_ALLOC(zn * sizeof(mp_limb_t));
-
-    ARF_GET_MPN_READONLY(xptr, xn, x);
-
-    xf->_mpfr_d = (mp_ptr) xptr;
-    xf->_mpfr_prec = xn * FLINT_BITS;
-    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
-    xf->_mpfr_exp = ARF_EXP(x);
-
-    zf->_mpfr_d = tmp;
-    zf->_mpfr_prec = prec;
-    zf->_mpfr_sign = 1;
-    zf->_mpfr_exp = 0;
-
-    mpfr_set_emin(MPFR_EMIN_MIN);
-    mpfr_set_emax(MPFR_EMAX_MAX);
-
-    mpfr_cos(zf, xf, arf_rnd_to_mpfr(rnd));
-
-    val = 0;
-    while (tmp[val] == 0)
-        val++;
-
-    ARF_GET_MPN_WRITE(zptr, zn - val, z);
-    flint_mpn_copyi(zptr, tmp + val, zn - val);
-    if (zf->_mpfr_sign < 0)
-        ARF_NEG(z);
-
-    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
-
-    TMP_END;
-}
-
-static void
-_arf_sin_cos(arf_t z, arf_t w, const arf_t x, slong prec, arf_rnd_t rnd)
-{
-    mpfr_t xf, zf, wf;
-    mp_ptr zptr, wptr, tmp, tmp2;
-    mp_srcptr xptr;
-    mp_size_t xn, zn, wn, val;
-    TMP_INIT;
-    TMP_START;
-
-    zn = wn = (prec + FLINT_BITS - 1) / FLINT_BITS;
-    tmp = TMP_ALLOC(2 * zn * sizeof(mp_limb_t));
-    tmp2 = tmp + zn;
-
-    ARF_GET_MPN_READONLY(xptr, xn, x);
-
-    xf->_mpfr_d = (mp_ptr) xptr;
-    xf->_mpfr_prec = xn * FLINT_BITS;
-    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
-    xf->_mpfr_exp = ARF_EXP(x);
-
-    zf->_mpfr_d = tmp;
-    zf->_mpfr_prec = prec;
-    zf->_mpfr_sign = 1;
-    zf->_mpfr_exp = 0;
-
-    wf->_mpfr_d = tmp2;
-    wf->_mpfr_prec = prec;
-    wf->_mpfr_sign = 1;
-    wf->_mpfr_exp = 0;
-
-    mpfr_set_emin(MPFR_EMIN_MIN);
-    mpfr_set_emax(MPFR_EMAX_MAX);
-
-    mpfr_sin_cos(zf, wf, xf, arf_rnd_to_mpfr(rnd));
-
-    val = 0;
-    while (tmp[val] == 0)
-        val++;
-    ARF_GET_MPN_WRITE(zptr, zn - val, z);
-    flint_mpn_copyi(zptr, tmp + val, zn - val);
-    if (zf->_mpfr_sign < 0)
-        ARF_NEG(z);
-    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
-
-    val = 0;
-    while (tmp2[val] == 0)
-        val++;
-    ARF_GET_MPN_WRITE(wptr, wn - val, w);
-    flint_mpn_copyi(wptr, tmp2 + val, wn - val);
-    if (wf->_mpfr_sign < 0)
-        ARF_NEG(w);
-    fmpz_set_si(ARF_EXPREF(w), wf->_mpfr_exp);
-
-    TMP_END;
-}
-
 void
 arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
 {
@@ -193,22 +48,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     /* Too high precision to use table -- use generic algorithm */
     if (wp > ARB_SIN_COS_TAB2_PREC)
     {
-        if (want_sin && want_cos)
-        {
-            _arf_sin_cos(arb_midref(zsin), arb_midref(zcos), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
-            arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
-        }
-        else if (want_sin)
-        {
-            _arf_sin(arb_midref(zsin), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
-        }
-        else
-        {
-            _arf_cos(arb_midref(zcos), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
-        }
+        arb_sin_cos_arf_generic(zsin, zcos, x, prec);
         return;
     }
 
@@ -226,22 +66,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     if (_arb_get_mpn_fixed_mod_pi4(w, NULL, &octant, &error, x, wn) == 0)
     {
         /* may run out of precision for pi/4 */
-        if (want_sin && want_cos)
-        {
-            _arf_sin_cos(arb_midref(zsin), arb_midref(zcos), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
-            arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
-        }
-        else if (want_sin)
-        {
-            _arf_sin(arb_midref(zsin), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
-        }
-        else
-        {
-            _arf_cos(arb_midref(zcos), x, prec, ARB_RND);
-            arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
-        }
+        arb_sin_cos_arf_generic(zsin, zcos, x, prec);
         TMP_END;
         return;
     }

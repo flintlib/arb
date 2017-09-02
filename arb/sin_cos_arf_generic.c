@@ -1,0 +1,518 @@
+/*
+    Copyright (C) 2017 Fredrik Johansson
+
+    This file is part of Arb.
+
+    Arb is free software: you can redistribute it and/or modify it under
+    the terms of the GNU Lesser General Public License (LGPL) as published
+    by the Free Software Foundation; either version 2.1 of the License, or
+    (at your option) any later version.  See <http://www.gnu.org/licenses/>.
+*/
+
+#include "arb.h"
+
+slong _arb_get_exp_pos(const slong * tab, slong step);
+
+static void
+arb_zero_pm_one(arb_t res)
+{
+    arf_zero(arb_midref(res));
+    mag_one(arb_radref(res));
+}
+
+static void
+_arf_sin(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
+{
+    mpfr_t xf, zf;
+    mp_ptr zptr, tmp;
+    mp_srcptr xptr;
+    mp_size_t xn, zn, val;
+    TMP_INIT;
+    TMP_START;
+
+    zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
+    tmp = TMP_ALLOC(zn * sizeof(mp_limb_t));
+
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    xf->_mpfr_d = (mp_ptr) xptr;
+    xf->_mpfr_prec = xn * FLINT_BITS;
+    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
+    xf->_mpfr_exp = ARF_EXP(x);
+
+    zf->_mpfr_d = tmp;
+    zf->_mpfr_prec = prec;
+    zf->_mpfr_sign = 1;
+    zf->_mpfr_exp = 0;
+
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
+
+    mpfr_sin(zf, xf, arf_rnd_to_mpfr(rnd));
+
+    val = 0;
+    while (tmp[val] == 0)
+        val++;
+
+    ARF_GET_MPN_WRITE(zptr, zn - val, z);
+    flint_mpn_copyi(zptr, tmp + val, zn - val);
+    if (zf->_mpfr_sign < 0)
+        ARF_NEG(z);
+
+    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
+
+    TMP_END;
+}
+
+static void
+_arf_cos(arf_t z, const arf_t x, slong prec, arf_rnd_t rnd)
+{
+    mpfr_t xf, zf;
+    mp_ptr zptr, tmp;
+    mp_srcptr xptr;
+    mp_size_t xn, zn, val;
+    TMP_INIT;
+    TMP_START;
+
+    zn = (prec + FLINT_BITS - 1) / FLINT_BITS;
+    tmp = TMP_ALLOC(zn * sizeof(mp_limb_t));
+
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    xf->_mpfr_d = (mp_ptr) xptr;
+    xf->_mpfr_prec = xn * FLINT_BITS;
+    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
+    xf->_mpfr_exp = ARF_EXP(x);
+
+    zf->_mpfr_d = tmp;
+    zf->_mpfr_prec = prec;
+    zf->_mpfr_sign = 1;
+    zf->_mpfr_exp = 0;
+
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
+
+    mpfr_cos(zf, xf, arf_rnd_to_mpfr(rnd));
+
+    val = 0;
+    while (tmp[val] == 0)
+        val++;
+
+    ARF_GET_MPN_WRITE(zptr, zn - val, z);
+    flint_mpn_copyi(zptr, tmp + val, zn - val);
+    if (zf->_mpfr_sign < 0)
+        ARF_NEG(z);
+
+    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
+
+    TMP_END;
+}
+
+static void
+_arf_sin_cos(arf_t z, arf_t w, const arf_t x, slong prec, arf_rnd_t rnd)
+{
+    mpfr_t xf, zf, wf;
+    mp_ptr zptr, wptr, tmp, tmp2;
+    mp_srcptr xptr;
+    mp_size_t xn, zn, wn, val;
+    TMP_INIT;
+    TMP_START;
+
+    zn = wn = (prec + FLINT_BITS - 1) / FLINT_BITS;
+    tmp = TMP_ALLOC(2 * zn * sizeof(mp_limb_t));
+    tmp2 = tmp + zn;
+
+    ARF_GET_MPN_READONLY(xptr, xn, x);
+
+    xf->_mpfr_d = (mp_ptr) xptr;
+    xf->_mpfr_prec = xn * FLINT_BITS;
+    xf->_mpfr_sign = ARF_SGNBIT(x) ? -1 : 1;
+    xf->_mpfr_exp = ARF_EXP(x);
+
+    zf->_mpfr_d = tmp;
+    zf->_mpfr_prec = prec;
+    zf->_mpfr_sign = 1;
+    zf->_mpfr_exp = 0;
+
+    wf->_mpfr_d = tmp2;
+    wf->_mpfr_prec = prec;
+    wf->_mpfr_sign = 1;
+    wf->_mpfr_exp = 0;
+
+    mpfr_set_emin(MPFR_EMIN_MIN);
+    mpfr_set_emax(MPFR_EMAX_MAX);
+
+    mpfr_sin_cos(zf, wf, xf, arf_rnd_to_mpfr(rnd));
+
+    val = 0;
+    while (tmp[val] == 0)
+        val++;
+    ARF_GET_MPN_WRITE(zptr, zn - val, z);
+    flint_mpn_copyi(zptr, tmp + val, zn - val);
+    if (zf->_mpfr_sign < 0)
+        ARF_NEG(z);
+    fmpz_set_si(ARF_EXPREF(z), zf->_mpfr_exp);
+
+    val = 0;
+    while (tmp2[val] == 0)
+        val++;
+    ARF_GET_MPN_WRITE(wptr, wn - val, w);
+    flint_mpn_copyi(wptr, tmp2 + val, wn - val);
+    if (wf->_mpfr_sign < 0)
+        ARF_NEG(w);
+    fmpz_set_si(ARF_EXPREF(w), wf->_mpfr_exp);
+
+    TMP_END;
+}
+
+void
+_arb_sin_cos_arf_via_mpfr(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
+{
+    if (zsin != NULL && zcos != NULL)
+    {
+        _arf_sin_cos(arb_midref(zsin), arb_midref(zcos), x, prec, ARB_RND);
+        arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
+        arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
+    }
+    else if (zsin != NULL)
+    {
+        _arf_sin(arb_midref(zsin), x, prec, ARB_RND);
+        arf_mag_set_ulp(arb_radref(zsin), arb_midref(zsin), prec);
+    }
+    else
+    {
+        _arf_cos(arb_midref(zcos), x, prec, ARB_RND);
+        arf_mag_set_ulp(arb_radref(zcos), arb_midref(zcos), prec);
+    }
+}
+
+/* Computes sin(x) or cos(x) using Taylor series truncated at x^N exclusive.
+   Computes error bound automatically. Does not allow aliasing of s and x.  */
+void
+arb_sin_cos_taylor_sum_rs(arb_t s, const arb_t x, slong N, int cosine, slong prec)
+{
+    mag_t err;
+    mag_init(err);
+
+    arb_get_mag(err, x);
+    mag_exp_tail(err, err, N);
+
+    if (N == 0 || (!cosine && N == 1))
+    {
+        arb_zero(s);
+    }
+    else if (cosine && N <= 2)
+    {
+        arb_one(s);
+    }
+    else if (!cosine && N <= 3) /* x */
+    {
+        arb_set_round(s, x, prec);
+    }
+    else if (cosine && N <= 4)  /* 1 - x^2/2 */
+    {
+        arb_mul(s, x, x, prec / 2 + 4);
+        arb_mul_2exp_si(s, s, -1);
+        arb_sub_ui(s, s, 1, prec);
+        arb_neg(s, s);
+    }
+    else if (!cosine && N <= 5) /* x - x^3/6 */
+    {
+        arb_mul(s, x, x, prec / 2 + 4);
+        arb_div_ui(s, s, 6, prec / 2 + 4);
+        arb_mul(s, s, x, prec / 2 + 4);
+        arb_sub(s, x, s, prec);
+    }
+    else
+    {
+        arb_ptr tpow;
+        slong j, k, m, M, tp, xmag;
+        mp_limb_t c, d, chi, clo;
+
+        xmag = arf_abs_bound_lt_2exp_si(arb_midref(x));
+
+        /* Convert to order as a series in x^2. */
+        if (cosine)
+            M = (N + 1) / 2;
+        else
+            M = N / 2;
+
+        m = n_sqrt(M);
+
+        /* not intended (and not 32-bit safe...) */
+        if (M > 30000)
+        {
+            flint_abort();
+        }
+
+        tpow = _arb_vec_init(m + 1);
+
+        arb_mul(s, x, x, prec);
+        _arb_vec_set_powers(tpow, s, m + 1, prec);
+        arb_zero(s);
+
+        c = 1;
+        j = (M - 1) % m;
+
+        for (k = M - 1; k >= 0; k--)
+        {
+            tp = prec - 2 * k * (-xmag) + 10;
+            tp = FLINT_MAX(tp, 2);
+            tp = FLINT_MIN(tp, prec);
+
+            if (cosine)
+                d = (2 * k - 1) * (2 * k);
+            else
+                d = (2 * k) * (2 * k + 1);
+
+            if (k != 0)
+            {
+                umul_ppmm(chi, clo, c, d);
+
+                if (chi != 0)
+                {
+                    arb_div_ui(s, s, c, tp);
+                    c = 1;
+                }
+            }
+
+            if (k % 2 == 0)
+                arb_addmul_ui(s, tpow + j, c, tp);
+            else
+                arb_submul_ui(s, tpow + j, c, tp);
+
+            if (k != 0)
+            {
+                c *= d;
+
+                if (j == 0)
+                {
+                    arb_mul(s, s, tpow + m, tp);
+                    j = m - 1;
+                }
+                else
+                {
+                    j--;
+                }
+            }
+        }
+
+        arb_div_ui(s, s, c, prec);
+        if (!cosine)
+            arb_mul(s, s, x, prec);
+
+        _arb_vec_clear(tpow, m + 1);
+    }
+
+    arb_add_error_mag(s, err);
+    mag_clear(err);
+}
+
+void
+arb_sin_cos_arf_rs_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec)
+{
+    slong q, xmag, wp, k, N;
+    arb_t s, t;
+    int negate;
+
+    if (arf_is_zero(x))
+    {
+        if (res_sin != NULL)
+            arb_zero(res_sin);
+        if (res_cos != NULL)
+            arb_one(res_cos);
+        return;
+    }
+
+    xmag = arf_abs_bound_lt_2exp_si(x);
+
+    /* x + O(x^3), 1 + O(x^2) */
+    if (xmag < -(prec / 2) - 4)
+    {
+        arb_init(t);
+        arf_set(arb_midref(t), x);
+        if (res_sin != NULL)
+            arb_sin_cos_taylor_sum_rs(res_sin, t, 3, 0, prec);
+        if (res_cos != NULL)
+            arb_sin_cos_taylor_sum_rs(res_cos, t, 2, 1, prec);
+        arb_clear(t);
+        return;
+    }
+
+    xmag = FLINT_MAX(xmag, -prec);
+
+    /* could include sanity test, but we assume that the function
+       gets called with a valid |x| < pi/2
+    if (xmag > 0)
+    {
+        if (res_sin != NULL)
+            arb_indeterminate(res_sin);
+        if (res_cos != NULL)
+            arb_indeterminate(res_cos);
+        return;
+    }
+     */
+
+    arb_init(s);
+    arb_init(t);
+
+    negate = arf_sgn(x) < 0;
+
+    /* generic tuning value */
+    q = 4.5 * pow(prec, 0.2);
+    q = FLINT_MAX(q, 6);
+    /* adjust to magnitude */
+    q = FLINT_MAX(0, xmag + q);
+    /* don't do a redundant square root */
+    if (q <= 2)
+        q = 0;
+
+    wp = prec + 10 + 2 * FLINT_BIT_COUNT(prec);
+
+    /* t = x/2^q */
+    arf_mul_2exp_si(arb_midref(t), x, -q);
+
+    if (q == 0 && res_sin != NULL)
+    {
+        /* compute cos from sin since the square root has less cancellation */
+        wp += (-xmag);
+        N = _arb_exp_taylor_bound(xmag, wp);
+        arb_sin_cos_taylor_sum_rs(s, t, N, 0, wp);
+
+        if (res_sin != NULL)
+            arb_set_round(res_sin, s, prec);
+
+        if (res_cos != NULL)
+        {
+            arb_mul(t, s, s, wp);
+            arb_sub_ui(t, t, 1, wp);
+            arb_neg(t, t);
+            arb_sqrt(res_cos, t, prec);
+        }
+    }
+    else
+    {
+        /* compute sin from cos */
+        wp = prec + 10 + 2 * FLINT_BIT_COUNT(prec);
+        wp += 2 * (q - xmag);  /* todo: too much when only computing cos? */
+
+        N = _arb_exp_taylor_bound(xmag - q, wp);
+        arb_sin_cos_taylor_sum_rs(s, t, N, 1, wp);
+
+        for (k = 0; k < q; k++)
+        {
+            arb_mul(s, s, s, wp);
+            arb_mul_2exp_si(s, s, 1);
+            arb_sub_ui(s, s, 1, wp);
+        }
+
+        if (res_cos != NULL)
+            arb_set_round(res_cos, s, prec);
+
+        if (res_sin != NULL)
+        {
+            arb_mul(s, s, s, wp);
+            arb_sub_ui(s, s, 1, wp);
+            arb_neg(s, s);
+            arb_sqrtpos(res_sin, s, prec);
+            if (negate)
+                arb_neg(res_sin, res_sin);
+        }
+    }
+
+    arb_clear(s);
+    arb_clear(t);
+}
+
+void
+arb_sin_cos_arf_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec)
+{
+    arb_t pi4, t, u;
+    fmpz_t q;
+    slong wp, mag;
+    int octant, swapsincos, sinnegative, cosnegative, negative;
+
+    mag = arf_abs_bound_lt_2exp_si(x);
+
+    if (mag > FLINT_MAX(65536, 4 * prec))
+    {
+        if (res_sin != NULL)
+            arb_zero_pm_one(res_sin);
+        if (res_cos != NULL)
+            arb_zero_pm_one(res_cos);
+    }
+    else if (mag <= 0)  /* todo: compare with pi/4-eps instead? */
+    {
+        /* todo: implement bit-burst algorithm here also */
+        if (prec < 90000 || mag < -prec / 16 ||
+            /* rs is faster for even smaller prec/N than this but has high memory usage */
+            (prec < 100000000 && mag < -prec / 128))
+            arb_sin_cos_arf_rs_generic(res_sin, res_cos, x, prec);
+        else
+            _arb_sin_cos_arf_via_mpfr(res_sin, res_cos, x, prec);
+    }
+    else
+    {
+        arb_init(pi4);
+        arb_init(t);
+        arb_init(u);
+        fmpz_init(q);
+
+        wp = prec + mag + 10;
+        negative = arf_sgn(x) < 0;
+
+        arb_const_pi(pi4, wp);
+        arb_mul_2exp_si(pi4, pi4, -2);
+        arb_set_arf(t, x);
+        arb_abs(t, t);
+        arb_div(u, t, pi4, wp);
+        arf_get_fmpz(q, arb_midref(u), ARF_RND_DOWN);
+        arb_submul_fmpz(t, pi4, q, wp);
+        octant = fmpz_fdiv_ui(q, 8);
+        if (octant & 1)
+            arb_sub(t, pi4, t, wp);
+
+        arb_clear(pi4);
+        arb_clear(u);
+
+        sinnegative = (octant >= 4) ^ negative;
+        cosnegative = (octant >= 2 && octant <= 5);
+        swapsincos = (octant == 1 || octant == 2 || octant == 5 || octant == 6);
+
+        /* guard against infinite recursion */
+        if (arf_cmpabs_2exp_si(arb_midref(t), 0) > 0)
+        {
+            flint_printf("mod pi/4 reduction unexpectedly failed!\n");
+            flint_abort();
+        }
+
+        /* todo: allow NULL in arb_sin_cos and simplify here */
+        if (swapsincos)
+        {
+            if (res_sin != NULL && res_cos != NULL)
+                arb_sin_cos(res_cos, res_sin, t, prec);
+            else if (res_sin != NULL)
+                arb_cos(res_sin, t, prec);
+            else
+                arb_sin(res_cos, t, prec);
+        }
+        else
+        {
+            if (res_sin != NULL && res_cos != NULL)
+                arb_sin_cos(res_sin, res_cos, t, prec);
+            else if (res_sin != NULL)
+                arb_sin(res_sin, t, prec);
+            else
+                arb_cos(res_cos, t, prec);
+        }
+
+        if (sinnegative && res_sin != NULL)
+            arb_neg(res_sin, res_sin);
+        if (cosnegative && res_cos != NULL)
+            arb_neg(res_cos, res_cos);
+
+        arb_clear(t);
+        fmpz_clear(q);
+    }
+}
+
