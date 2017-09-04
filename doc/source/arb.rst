@@ -1582,18 +1582,24 @@ Internals for computing elementary functions
 .. function:: void arb_sin_cos_arf_generic(arb_t s, arb_t c, const arf_t x, slong prec)
 
     Computes the sine and cosine of *x* using a generic strategy.
-    This is called internally by the main sin and cos functions
-    when the internal precision for argument reduction or series
-    evaluation is exhausted.
+    This function gets called internally by the main sin and cos functions
+    when the precision for argument reduction or series evaluation
+    based on lookup tables is exhausted.
 
-    Provided that `|x| < \pi / 2 - \varepsilon`, this function
-    currently either uses a generic version of the rectangular splitting 
-    algorithm implemented using *arb* arithmetic, or calls MPFR, depending
-    on the precision.
-
-    Otherwise, it uses `\pi` to reduce the argument to the first octant
-    and evaluates the sin and cos functions recursively (this call cannot
+    This function first performs a cheap test to see if
+    `|x| < \pi / 2 - \varepsilon`. If the test fails, it uses
+    `\pi` to reduce the argument to the first octant,
+    and then evaluates the sin and cos functions recursively (this call cannot
     result in infinite recursion).
+
+    If no argument reduction is needed, this function uses a generic version
+    of the rectangular splitting algorithm if the precision is not too high,
+    and otherwise invokes the asymptotically fast bit-burst algorithm.
+
+.. function:: void arb_sin_cos_arf_bb(arb_t s, arb_t c, const arf_t x, slong prec)
+
+    Computes the sine and cosine of *x* using the bit-burst algorithm.
+    It is required that `|x| < \pi / 2` (this is not checked).
 
 Vector functions
 -------------------------------------------------------------------------------

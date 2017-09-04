@@ -46,7 +46,7 @@ int main()
 
         arb_sin_cos(s1, c1, x, prec);
 
-        switch (n_randint(state, 2))
+        switch (n_randint(state, 6))
         {
             case 0:
                 arb_sin_cos_arf_generic(s2, c2, arb_midref(x), prec);
@@ -131,7 +131,7 @@ int main()
 
         arb_sin_cos(s1, c1, x, prec);
 
-        switch (n_randint(state, 2))
+        switch (n_randint(state, 6))
         {
             case 0:
                 arb_sin_cos_arf_rs_generic(s2, c2, arb_midref(x), prec);

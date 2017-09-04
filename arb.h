@@ -982,6 +982,7 @@ void _arb_sin_cos_taylor_rs(mp_ptr ysin, mp_ptr ycos,
 int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
     mp_limb_t * error, const arf_t x, mp_size_t wn);
 
+void arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec);
 void arb_sin_cos_arf_rs_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec);
 void arb_sin_cos_arf_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec);
 
