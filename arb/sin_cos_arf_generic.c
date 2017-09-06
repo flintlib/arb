@@ -11,8 +11,6 @@
 
 #include "arb.h"
 
-slong _arb_get_exp_pos(const slong * tab, slong step);
-
 static void
 arb_zero_pm_one(arb_t res)
 {

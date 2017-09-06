@@ -1541,6 +1541,11 @@ Internals for computing elementary functions
     resulting in slightly higher memory usage but better speed. For best
     efficiency, *N* should have many trailing zero bits.
 
+.. function:: void arb_exp_arf_rs_generic(arb_t res, const arf_t x, slong prec, int minus_one)
+
+    Computes the exponential function using a generic version of the rectangular
+    splitting strategy, intended for intermediate precision.
+
 .. function:: void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)
 
 .. function:: void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x, mp_bitcnt_t r, slong N)

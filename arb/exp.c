@@ -77,8 +77,12 @@ arb_exp_arf_overflow(arb_t z, slong expbound, int negative, int minus_one, slong
 static void
 arb_exp_arf_fallback(arb_t z, const arf_t x, slong mag, slong prec, int minus_one)
 {
-    if (mag > 64)
+    /* reduce by log(2) if needed, but avoid computing log(2) unnecessarily at
+       extremely high precision */
+    if (mag > 64 || (mag > 8 && prec < 1000000))
         arb_exp_arf_huge(z, x, mag, prec, minus_one);
+    else if (prec < 19000)
+        arb_exp_arf_rs_generic(z, x, prec, minus_one);
     else
         arb_exp_arf_bb(z, x, prec, minus_one);
 }

@@ -937,6 +937,7 @@ void _arb_exp_taylor_rs(mp_ptr y, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N);
 
 void arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one);
+void arb_exp_arf_rs_generic(arb_t res, const arf_t x, slong prec, int minus_one);
 
 int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
                                                 const arf_t x, mp_size_t wn);
