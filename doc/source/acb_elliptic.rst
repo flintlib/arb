@@ -283,7 +283,7 @@ The main reference is chapter 23 in [NIST2012]_.
 
         \wp(z, \tau) = \pi^2 \theta_2^2(0,\tau) \theta_3^2(0,\tau)
             \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
-            \frac{\pi^2}{3} \left[ \theta_3^4(0,\tau) + \theta_3^4(0,\tau)\right].
+            \frac{\pi^2}{3} \left[ \theta_2^4(0,\tau) + \theta_3^4(0,\tau)\right].
 
 .. function:: void acb_elliptic_p_jet(acb_ptr res, const acb_t z, const acb_t tau, slong len, slong prec)
 
