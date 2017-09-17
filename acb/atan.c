@@ -61,18 +61,49 @@ acb_atan(acb_t r, const acb_t z, slong prec)
             acb_log1p(t, t, prec);
             acb_log1p(u, u, prec);
             acb_sub(t, t, u, prec);
+            acb_mul_onei(t, t);
+            acb_mul_2exp_si(r, t, -1);
         }
-        else
+        else if (acb_is_exact(z))
         {
             acb_onei(t);
             acb_sub(t, t, z, prec);
             acb_div(t, z, t, prec);
             acb_mul_2exp_si(t, t, 1);
             acb_log1p(t, t, prec);
+            acb_mul_onei(t, t);
+            acb_mul_2exp_si(r, t, -1);
         }
+        else
+        {
+            mag_t err, err2;
+            mag_init(err);
+            mag_init(err2);
 
-        acb_mul_onei(t, t);
-        acb_mul_2exp_si(r, t, -1);
+            /* atan'(z) = 1/(1+z^2) = 1/((z+i)(z-i)) */
+            acb_onei(t);
+            acb_add(t, z, t, prec);
+            acb_get_mag_lower(err, t);
+
+            acb_onei(t);
+            acb_sub(t, z, t, prec);
+            acb_get_mag_lower(err2, t);
+
+            mag_mul_lower(err, err, err2);
+
+            mag_hypot(err2, arb_radref(acb_realref(z)), arb_radref(acb_imagref(z)));
+            mag_div(err, err2, err);
+
+            arf_set(arb_midref(acb_realref(t)), arb_midref(acb_realref(z)));
+            arf_set(arb_midref(acb_imagref(t)), arb_midref(acb_imagref(z)));
+            mag_zero(arb_radref(acb_realref(t)));
+            mag_zero(arb_radref(acb_imagref(t)));
+            acb_atan(r, t, prec);
+            acb_add_error_mag(r, err);
+
+            mag_clear(err);
+            mag_clear(err2);
+        }
 
         acb_clear(t);
         acb_clear(u);
