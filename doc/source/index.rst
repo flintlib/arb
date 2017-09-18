@@ -154,6 +154,7 @@ modules.
    bernoulli.rst
    hypgeom.rst
    partitions.rst
+   acb_dft.rst
 
 Calculus
 ::::::::::::::::::::::::::::::::::::
