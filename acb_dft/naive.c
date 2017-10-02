@@ -14,7 +14,7 @@
 
 /* all roots are already computed */
 void
-_acb_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec)
+_acb_dft_naive(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec)
 {
     slong i, j;
     acb_ptr wi;
@@ -29,17 +29,17 @@ _acb_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong le
 }
 
 void
-acb_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec)
+acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec)
 {
     acb_ptr z;
     z = _acb_vec_init(len);
     _acb_vec_unit_roots(z, len, prec);
-    _acb_dft_pol(w, v, 1, z, 1, len, prec);
+    _acb_dft_naive(w, v, 1, z, 1, len, prec);
     _acb_vec_clear(z, len);
 }
 
 void
-_acb_dft_pol_init(acb_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec)
+_acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec)
 {
     pol->n = len;
     pol->dv = dv;
@@ -47,7 +47,7 @@ _acb_dft_pol_init(acb_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, s
     if (z == NULL)
     {
         if (DFT_VERB)
-            flint_printf("warning: init z[%ld] in dft_pol, should be avoided\n",len);
+            flint_printf("warning: init z[%ld] in dft_naive, should be avoided\n",len);
         pol->z = _acb_vec_init(len);
         _acb_vec_unit_roots(pol->z, len, prec);
         pol->dz = 1;

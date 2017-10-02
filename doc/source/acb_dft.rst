@@ -49,7 +49,7 @@ If `G=\mathbb Z/n\mathbb Z`, we compute the DFT according to the usual conventio
 
    w_x = \sum_{y\bmod n} v_y e^{-\frac{2iπ}nxy}
 
-.. function:: void acb_dirichlet_dft_pol(acb_ptr w, acb_srcptr v, slong n, slong prec)
+.. function:: void acb_dirichlet_dft_naive(acb_ptr w, acb_srcptr v, slong n, slong prec)
 
 .. function:: void acb_dirichlet_dft_crt(acb_ptr w, acb_srcptr v, slong n, slong prec)
 

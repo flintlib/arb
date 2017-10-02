@@ -61,7 +61,7 @@ int main()
     flint_rand_t state;
 
     slong f, nf = 3;
-    do_f func[4] = { acb_dft_pol, acb_dft_cyc, acb_dft_crt , acb_dft_bluestein };
+    do_f func[4] = { acb_dft_naive, acb_dft_cyc, acb_dft_crt , acb_dft_bluestein };
     char * name[4] = { "pol", "cyc", "crt", "bluestein" };
 
     flint_printf("dft....");
@@ -112,7 +112,7 @@ int main()
         for (j = 0; j < n; j++)
             acb_set_si(v + k, k);
 
-        acb_dft_pol(w1, v, n, prec);
+        acb_dft_naive(w1, v, n, prec);
         acb_dft_rad2(v, k, prec);
 
         check_vec_eq_prec(w1, w2, n, prec, digits, n, "pol", "rad2");

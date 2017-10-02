@@ -25,8 +25,8 @@
 extern "C" {
 #endif
 
-void _acb_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec);
-void acb_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
+void _acb_dft_naive(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec);
+void acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_rad2(acb_ptr v, int e, slong prec);
@@ -120,9 +120,9 @@ typedef struct
     acb_ptr z;
     slong dz;
 }
-acb_dft_pol_struct;
+acb_dft_naive_struct;
 
-typedef acb_dft_pol_struct acb_dft_pol_t[1];
+typedef acb_dft_naive_struct acb_dft_naive_t[1];
 
 typedef struct
 {
@@ -133,7 +133,7 @@ typedef struct
         acb_dft_cyc_t cyc;
         acb_dft_prod_t prod;
         acb_dft_crt_t crt;
-        acb_dft_pol_t pol;
+        acb_dft_naive_t pol;
     } t;
 }
 acb_dft_pre_struct;
@@ -172,9 +172,9 @@ void acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slon
 void acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec);
 
 ACB_DFT_INLINE void
-acb_dft_pol_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pol_t pol, slong prec)
+acb_dft_naive_precomp(acb_ptr w, acb_srcptr v, const acb_dft_naive_t pol, slong prec)
 {
-    _acb_dft_pol(w, v, pol->dv, pol->z, pol->dz, pol->n, prec);
+    _acb_dft_naive(w, v, pol->dv, pol->z, pol->dz, pol->n, prec);
 }
 ACB_DFT_INLINE void
 acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec)
@@ -214,16 +214,16 @@ acb_dft_cyc_init(acb_dft_cyc_t t, slong len, slong prec)
 
 void acb_dft_cyc_clear(acb_dft_cyc_t t);
 
-void _acb_dft_pol_init(acb_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec);
+void _acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 
 ACB_DFT_INLINE void
-acb_dft_pol_init(acb_dft_pol_t pol, slong len, slong prec)
+acb_dft_naive_init(acb_dft_naive_t pol, slong len, slong prec)
 {
-    _acb_dft_pol_init(pol, 1, NULL, 0, len, prec);
+    _acb_dft_naive_init(pol, 1, NULL, 0, len, prec);
 }
 
 ACB_DFT_INLINE void
-acb_dft_pol_clear(acb_dft_pol_t pol)
+acb_dft_naive_clear(acb_dft_naive_t pol)
 {
     if (pol->zclear)
         _acb_vec_clear(pol->z, pol->n);

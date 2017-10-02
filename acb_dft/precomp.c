@@ -23,7 +23,7 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
     {
         /* TODO: need convolution if len is large */
         pre->type = DFT_POL;
-        _acb_dft_pol_init(pre->t.pol, dv, z, dz, len, prec);
+        _acb_dft_naive_init(pre->t.pol, dv, z, dz, len, prec);
     }
     else
     {
@@ -58,7 +58,7 @@ acb_dft_precomp_clear(acb_dft_pre_t pre)
     switch (pre->type)
     {
         case DFT_POL:
-            acb_dft_pol_clear(pre->t.pol);
+            acb_dft_naive_clear(pre->t.pol);
             break;
         case DFT_CYC:
             acb_dft_cyc_clear(pre->t.cyc);
@@ -82,7 +82,7 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
     switch (pre->type)
     {
         case DFT_POL:
-            acb_dft_pol_precomp(w, v, pre->t.pol, prec);
+            acb_dft_naive_precomp(w, v, pre->t.pol, prec);
             break;
         case DFT_CYC:
             acb_dft_cyc_precomp(w, v, pre->t.cyc, prec);
