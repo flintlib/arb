@@ -83,7 +83,7 @@ typedef acb_dft_rad2_struct acb_dft_rad2_t[1];
 typedef struct
 {
     slong n;
-    acb_ptr z;
+    acb_ptr z; /* z[k] = e(k^2/2n) */
     acb_dft_rad2_t rad2;
 }
 acb_dft_bluestein_struct;

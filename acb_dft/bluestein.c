@@ -19,6 +19,8 @@ acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
     acb_ptr z2n;
     int e = n_clog(2 * n - 1, 2);
     acb_dft_rad2_init(t->rad2, e, prec);
+
+    /* compute z[k] = e(-k^2/2n) */
     z2n = _acb_vec_init(2 * n);
     _acb_vec_unit_roots(z2n, 2 * n, prec);
     nmod_init(&n2, 2 * n);
@@ -26,30 +28,42 @@ acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
     t->z = _acb_vec_init(n);
     for (k = 0, k2 = 0; k < n; k++)
     {
-        acb_conj(t->z + k, z2n + k2);
+        acb_set(t->z + k, z2n + k2);
         k2 = nmod_add(k2, 2 * k + 1, n2);
     }
+
     _acb_vec_clear(z2n, 2 * n);
 }
 
 void
 acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec)
 {
-    slong n = t->n;
-    acb_ptr vz, wz, z;
+    slong k, n = t->n, np = t->rad2->n;
+    acb_ptr fp, gp, z;
     z = t->z;
-    /* TODO: allocate directly length 2^e and pad */
 
-    vz = _acb_vec_init(n);
-    acb_vec_kronecker_mul_conj(vz, z, v, n, prec);
+    fp = _acb_vec_init(np);
+    _acb_vec_kronecker_mul(fp, z, v, n, prec);
 
-    wz = _acb_vec_init(n);
-    acb_dft_convol_rad2_precomp(wz, vz, z, n, t->rad2, prec);
+    gp = _acb_vec_init(np);
+    acb_one(gp + 0);
+    for (k = 1; k < n; k++)
+    {
+        acb_conj(gp + k, z + k);
+        acb_set(gp + np - k, gp + k);
+    }
 
-    acb_vec_kronecker_mul_conj(w, z, wz, n, prec);
+    acb_dft_rad2_precomp(fp, t->rad2, prec);
+    acb_dft_rad2_precomp(gp, t->rad2, prec);
 
-    _acb_vec_clear(wz, n);
-    _acb_vec_clear(vz, n);
+    _acb_vec_kronecker_mul(gp, gp, fp, np, prec);
+
+    acb_dft_inverse_rad2_precomp(gp, t->rad2, prec);
+
+    _acb_vec_kronecker_mul(w, z, gp, n, prec);
+
+    _acb_vec_clear(fp, n);
+    _acb_vec_clear(gp, n);
 }
 
 void

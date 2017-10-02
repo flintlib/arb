@@ -60,9 +60,9 @@ int main()
     ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
 
-    slong f, nf = 3;
+    slong f, nf = 4;
     do_f func[4] = { acb_dft_naive, acb_dft_cyc, acb_dft_crt , acb_dft_bluestein };
-    char * name[4] = { "pol", "cyc", "crt", "bluestein" };
+    char * name[4] = { "naive", "cyc", "crt", "bluestein" };
 
     flint_printf("dft....");
     fflush(stdout);

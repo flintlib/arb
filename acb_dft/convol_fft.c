@@ -56,7 +56,14 @@ acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, co
 
     fp = _acb_vec_init(np);
     gp = _acb_vec_init(np);
-    acb_dft_convol_pad(fp, gp, f, g, len, np);
+
+    if (len == np)
+    {
+        _acb_vec_set(fp, f, len);
+        _acb_vec_set(gp, g, len);
+    }
+    else
+        acb_dft_convol_pad(fp, gp, f, g, len, np);
 
     acb_dft_rad2_precomp(fp, rad2, prec);
     acb_dft_rad2_precomp(gp, rad2, prec);
