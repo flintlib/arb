@@ -14,7 +14,7 @@
 
 /* dft, lexicographic conrey indexing, array size G->phi_q */
 void
-acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
+acb_dirichlet_dft_index(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
 {
     slong k, l, * cyc;
     cyc = flint_malloc(G->num * sizeof(slong));
@@ -45,7 +45,7 @@ acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec
     };
 
     t2 = _acb_vec_init(len);
-    acb_dirichlet_dft_conrey(t2, t1, G, prec);
+    acb_dirichlet_dft_index(t2, t1, G, prec);
 
     dirichlet_char_one(x, G);
     for (i = 0; i < len; i++)

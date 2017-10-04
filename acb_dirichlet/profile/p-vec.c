@@ -17,37 +17,41 @@
 #define CSV 1
 #define JSON 2
 
-typedef void (*do_f) (ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv);
+typedef void (*do_f) (ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv);
 
 static void
-do_empty(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_empty(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
 {
     return;
 }
 
 static void
-do_dlog_primeloop(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_dlog_primeloop(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
 {
     slong k, l;
+	nmod_t order;
+	nmod_init(&order, dirichlet_order_char(G, chi));
 
     for (k = 0; k < nv; k++)
         v[k] = 0;
 
     for (l = G->neven; l < G->num; l++)
     {
-        acb_dirichlet_prime_group_struct P = G->P[l];
-        dlog_vec_loop_add(v, nv, P.g, chi->expo[l], P.pe, P.phi, chi->order);
+        dirichlet_prime_group_struct P = G->P[l];
+        dlog_vec_loop_add(v, nv, P.g, chi->log[l], P.pe, P.phi.n, order);
     }
-    acb_dirichlet_ui_vec_set_null(v, G, nv);
+    dirichlet_vec_set_null(v, G, nv);
 }
 
 static void
-do_eratos(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong nv)
+do_eratos(ulong *v, const dirichlet_group_t G, const dirichlet_char_t chi, slong nv)
 {
 	slong k, p, pmax;
+	nmod_t order;
 	n_primes_t iter;
 
 	n_primes_init(iter);
+	nmod_init(&order, dirichlet_order_char(G, chi));
 
 	pmax = (nv < G->q) ? nv : G->q;
 	v[1] = 0;
@@ -57,16 +61,16 @@ do_eratos(ulong *v, const acb_dirichlet_group_t G, const acb_dirichlet_char_t ch
 		if (G->q % p == 0)
 		{
 			for (k = p; k < nv; k += p)
-				v[k] = ACB_DIRICHLET_CHI_NULL;
+				v[k] = DIRICHLET_CHI_NULL;
 		}
 		else
 		{
 			long chip;
-			chip = acb_dirichlet_ui_chi(G, chi, p);
+			chip = dirichlet_chi(G, chi, p);
 
 			for (k = p; k < nv; k += p)
 				if (v[k] != -1)
-					 v[k] = nmod_add(v[k], chip, chi->order);
+					 v[k] = nmod_add(v[k], chip, order);
 		}
 	}
 
@@ -82,15 +86,26 @@ int main(int argc, char *argv[])
     slong r, nr;
 
     int l, nf = 9;
-    do_f func[9] = { do_empty, acb_dirichlet_ui_chi_vec_loop, do_dlog_primeloop,
-        acb_dirichlet_ui_chi_vec_primeloop, do_eratos,
-        acb_dirichlet_ui_chi_vec,
-        acb_dirichlet_ui_chi_vec,
-        acb_dirichlet_ui_chi_vec,
-        acb_dirichlet_ui_chi_vec };
-    char * name[9] = { "char only", "big loop", "prime loops",
-        "prime dlog_vec", "manual eratos", "default",
-        "precomp 1", "precomp 20", "precomp 100" };
+    do_f func[9] = {
+        do_empty,
+        dirichlet_chi_vec_loop,
+        do_dlog_primeloop,
+        dirichlet_chi_vec_primeloop,
+        do_eratos,
+        dirichlet_chi_vec,
+        dirichlet_chi_vec,
+        dirichlet_chi_vec,
+        dirichlet_chi_vec };
+    char * name[9] = {
+        "char only",
+        "big loop",
+        "prime loops",
+        "prime dlog_vec",
+        "manual eratos",
+        "default",
+        "precomp 1",
+        "precomp 20",
+        "precomp 100" };
 
     int i, ni = 5;
     ulong qmin[5] =  {   2, 1000, 3000, 10000, 100000 };
@@ -157,26 +172,26 @@ int main(int argc, char *argv[])
 
                 for (q = qmin[i]; q <= qmax[i]; q++)
                 {
-                    acb_dirichlet_group_t G;
-                    acb_dirichlet_char_t chi;
+                    dirichlet_group_t G;
+                    dirichlet_char_t chi;
 
-                    acb_dirichlet_group_init(G, q);
-                    acb_dirichlet_char_init(chi, G);
+                    dirichlet_group_init(G, q);
+                    dirichlet_char_init(chi, G);
 
                     if (l >= 6)
-                        acb_dirichlet_group_dlog_precompute(G, (l == 6) ? 1 : (l==7) ? 20 : 100);
+                        dirichlet_group_dlog_precompute(G, (l == 6) ? 1 : (l==7) ? 20 : 100);
 
                     for (r = 0; r < nr; r++)
                     {
-                        acb_dirichlet_char(chi, G, rand[r] % q);
+                        dirichlet_char_log(chi, G, rand[r] % q);
                         func[l](v, G, chi, nv[j]);
                     }
 
                     if (l >= 6)
-                        acb_dirichlet_group_dlog_clear(G);
+                        dirichlet_group_dlog_clear(G);
 
-                    acb_dirichlet_char_clear(chi);
-                    acb_dirichlet_group_clear(G);
+                    dirichlet_char_clear(chi);
+                    dirichlet_group_clear(G);
                 }
 
                 TIMEIT_ONCE_STOP

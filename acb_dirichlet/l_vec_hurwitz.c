@@ -58,7 +58,7 @@ acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s,
         z++;
     } while (dirichlet_char_next(cn, G) >= 0);
 
-    acb_dirichlet_dft_conrey(res, zeta, G, prec);
+    acb_dirichlet_dft_index(res, zeta, G, prec);
 
     /* restore pole for the principal character */
     if (deflate)

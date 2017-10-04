@@ -106,7 +106,7 @@ int main()
         }
 
         /* dft */
-        acb_dirichlet_dft_conrey(w2, v, G, prec);
+        acb_dirichlet_dft_index(w2, v, G, prec);
 
         check_vec_eq_prec(w1, w2, len, prec, digits, q[k], "naive", "group");
 

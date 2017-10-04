@@ -159,7 +159,7 @@ void acb_dirichlet_hardy_z_series(acb_poly_t res, const acb_poly_t s, const diri
 
 /* Discrete Fourier Transform */
 
-void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
+void acb_dirichlet_dft_index(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
 void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
 
 /* utils */
