@@ -336,3 +336,10 @@ Orthogonal polynomials and functions
     See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
     for definitions.
 
+Hypergeometric sequences
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec)
+
+    Computes the central binomial coefficient `{2n \choose n}`.
+

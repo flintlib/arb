@@ -806,7 +806,7 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
     wp = FLINT_MIN(prec, acc + 20);
     wp = FLINT_MAX(wp, 2);
     wp = wp + FLINT_BIT_COUNT(wp);
- 
+
     arb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 0, wp);
 
     arb_init(t);
