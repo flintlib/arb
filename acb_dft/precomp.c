@@ -22,8 +22,18 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
     if (n_is_prime(len))
     {
         /* TODO: need convolution if len is large */
-        pre->type = DFT_POL;
-        _acb_dft_naive_init(pre->t.pol, dv, z, dz, len, prec);
+        if (len < 20)
+        {
+            pre->type = DFT_NAIVE;
+            _acb_dft_naive_init(pre->t.naive, dv, z, dz, len, prec);
+        }
+        else
+        {
+            pre->type = DFT_CONV;
+            /* FIXME: do not recompute the same bluestein
+             * scheme over and over */
+            acb_dft_bluestein_init(pre->t.bluestein, len, prec);
+        }
     }
     else
     {
@@ -57,8 +67,8 @@ acb_dft_precomp_clear(acb_dft_pre_t pre)
 {
     switch (pre->type)
     {
-        case DFT_POL:
-            acb_dft_naive_clear(pre->t.pol);
+        case DFT_NAIVE:
+            acb_dft_naive_clear(pre->t.naive);
             break;
         case DFT_CYC:
             acb_dft_cyc_clear(pre->t.cyc);
@@ -68,6 +78,9 @@ acb_dft_precomp_clear(acb_dft_pre_t pre)
             break;
         case DFT_CRT:
             acb_dft_crt_clear(pre->t.crt);
+            break;
+        case DFT_CONV:
+            acb_dft_bluestein_clear(pre->t.bluestein);
             break;
         default:
             flint_printf("acb_dft_clear: unknown strategy code %i\n", pre->type);
@@ -81,8 +94,8 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
 {
     switch (pre->type)
     {
-        case DFT_POL:
-            acb_dft_naive_precomp(w, v, pre->t.pol, prec);
+        case DFT_NAIVE:
+            acb_dft_naive_precomp(w, v, pre->t.naive, prec);
             break;
         case DFT_CYC:
             acb_dft_cyc_precomp(w, v, pre->t.cyc, prec);
@@ -92,6 +105,9 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
             break;
         case DFT_CRT:
             acb_dft_crt_precomp(w, v, pre->t.crt, prec);
+            break;
+        case DFT_CONV:
+            acb_dft_bluestein_precomp(w, v, pre->t.bluestein, prec);
             break;
         default:
             flint_printf("acb_dft_precomp: unknown strategy code %i\n", pre->type);

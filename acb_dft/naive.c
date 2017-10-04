@@ -60,4 +60,3 @@ _acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong le
         pol->zclear = 0;
     }
 }
-

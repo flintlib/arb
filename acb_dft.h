@@ -133,7 +133,8 @@ typedef struct
         acb_dft_cyc_t cyc;
         acb_dft_prod_t prod;
         acb_dft_crt_t crt;
-        acb_dft_naive_t pol;
+        acb_dft_naive_t naive;
+        acb_dft_bluestein_t bluestein;
     } t;
 }
 acb_dft_pre_struct;
@@ -164,7 +165,7 @@ acb_dft_step_struct
 
 enum
 {
-    DFT_POL, DFT_CYC, DFT_PROD, DFT_CRT , DFT_RAD2 /*, DFT_CONV */
+    DFT_NAIVE, DFT_CYC, DFT_PROD, DFT_CRT , DFT_RAD2 , DFT_CONV
 };
 
 void acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong prec);
@@ -184,6 +185,7 @@ acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec
 void acb_dft_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec);
 void acb_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dft_prod_t prod, slong prec);
+void acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec);
 
 void acb_dft_inverse_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dft_rad2_t, slong prec);
