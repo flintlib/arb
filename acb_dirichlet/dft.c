@@ -58,4 +58,3 @@ acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec
     dirichlet_char_clear(x);
     flint_free(t1);
 }
-

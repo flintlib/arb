@@ -81,7 +81,7 @@ int main()
         w1 = _acb_vec_init(len);
         w2 = _acb_vec_init(len);
         acb_init(chiy);
-        acb_dirichlet_roots_init(roots, len, len, prec);
+        acb_dirichlet_roots_init(roots, G->expo, len, prec);
 
         dirichlet_char_init(x, G);
         dirichlet_char_init(y, G);
@@ -126,4 +126,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
