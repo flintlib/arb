@@ -194,6 +194,8 @@ void _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slo
 void acb_dft_precomp_init(acb_dft_pre_t pre, slong len, slong prec);
 void acb_dft_precomp_clear(acb_dft_pre_t pre);
 
+void acb_dft(acb_ptr w, acb_srcptr v, slong len, slong prec);
+
 acb_dft_step_ptr _acb_dft_steps_prod(slong * m, slong num, slong prec);
 
 ACB_DFT_INLINE void
@@ -299,6 +301,7 @@ _acb_vec_kronecker_mul(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong p
         acb_mul(z + k, x + k, y + k, prec);
 }
 
+/* FIXME: no longer used */
 /* z[k] = conj(x[k])*y[k] */
 ACB_DFT_INLINE void
 acb_vec_kronecker_mul_conj(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong prec)

@@ -21,8 +21,7 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
     }
     if (n_is_prime(len))
     {
-        /* TODO: need convolution if len is large */
-        if (len < 20)
+        if (len < 100)
         {
             pre->type = DFT_NAIVE;
             _acb_dft_naive_init(pre->t.naive, dv, z, dz, len, prec);
@@ -31,7 +30,7 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
         {
             pre->type = DFT_CONV;
             /* FIXME: do not recompute the same bluestein
-             * scheme over and over */
+             * scheme if needed several times */
             acb_dft_bluestein_init(pre->t.bluestein, len, prec);
         }
     }
@@ -114,4 +113,13 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
             abort();
             break;
     }
+}
+
+void
+acb_dft(acb_ptr w, acb_srcptr v, slong len, slong prec)
+{
+    acb_dft_pre_t t;
+    acb_dft_precomp_init(t, len, prec);
+    acb_dft_precomp(w, v, t, prec);
+    acb_dft_precomp_clear(t);
 }
