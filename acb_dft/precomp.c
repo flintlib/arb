@@ -45,8 +45,16 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
         if (fac.num == 1)
         {
             /* TODO: could be p^e, or 2^e */
-            pre->type = DFT_CYC;
-            _acb_dft_cyc_init_z_fac(pre->t.cyc, fac, dv, z, dz, len, prec);
+            if (fac.p[0] == 2)
+            {
+                pre->type = DFT_RAD2;
+                acb_dft_rad2_init(pre->t.rad2, fac.exp[0], prec);
+            }
+            else
+            {
+                pre->type = DFT_CYC;
+                _acb_dft_cyc_init_z_fac(pre->t.cyc, fac, dv, z, dz, len, prec);
+            }
         }
         else
         {
@@ -79,6 +87,9 @@ acb_dft_precomp_clear(acb_dft_pre_t pre)
         case DFT_CRT:
             acb_dft_crt_clear(pre->t.crt);
             break;
+        case DFT_RAD2:
+            acb_dft_rad2_clear(pre->t.rad2);
+            break;
         case DFT_CONV:
             acb_dft_bluestein_clear(pre->t.bluestein);
             break;
@@ -105,6 +116,10 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
             break;
         case DFT_CRT:
             acb_dft_crt_precomp(w, v, pre->t.crt, prec);
+            break;
+        case DFT_RAD2:
+            _acb_vec_set(w, v, pre->n);
+            acb_dft_rad2_precomp(w, pre->t.rad2, prec);
             break;
         case DFT_CONV:
             acb_dft_bluestein_precomp(w, v, pre->t.bluestein, prec);

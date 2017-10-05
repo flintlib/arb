@@ -38,16 +38,6 @@ acb_dft_convol_pad(acb_ptr fp, acb_ptr gp, acb_srcptr f, acb_srcptr g, slong n, 
 }
 
 void
-acb_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
-{
-    /* divide before to keep v const */
-    _acb_vec_scalar_div_ui(w, v, len, len, prec);
-    acb_vec_swap_ri(w, len);
-    acb_dft_cyc(w, w, len, prec);
-    acb_vec_swap_ri(w, len);
-}
-
-void
 acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dft_rad2_t rad2, slong prec)
 {
     slong np;

@@ -91,3 +91,13 @@ acb_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
     acb_dft_cyc_precomp(w, v, cyc, prec);
     acb_dft_cyc_clear(cyc);
 }
+
+void
+acb_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
+{
+    /* divide before to keep v const */
+    _acb_vec_scalar_div_ui(w, v, len, len, prec);
+    acb_vec_swap_ri(w, len);
+    acb_dft_cyc(w, w, len, prec);
+    acb_vec_swap_ri(w, len);
+}
