@@ -336,6 +336,11 @@ Orthogonal polynomials and functions
     See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
     for definitions.
 
+.. function:: void arb_hypgeom_legendre_p_ui(arb_t res, ulong n, const arb_t x, slong K, slong prec)
+
+    Evaluates the ordinary Legendre polynomial `P_n(x)` using the asymptotic
+    expansion on `(-1,1)`, taking exactly *K* terms of the asymptotic series.
+
 Hypergeometric sequences
 -------------------------------------------------------------------------------
 

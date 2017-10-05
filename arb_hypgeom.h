@@ -104,6 +104,8 @@ void arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec)
 void arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec);
 void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec);
 
+void arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slong prec);
+
 void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec);
 
 #ifdef __cplusplus
