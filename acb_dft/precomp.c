@@ -14,6 +14,7 @@
 void
 _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong len, slong prec)
 {
+    pre->n = len;
     if (len <= 1)
     {
         flint_printf("precomp init: trivial group. abort.\n");

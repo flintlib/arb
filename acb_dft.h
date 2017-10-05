@@ -126,6 +126,7 @@ typedef acb_dft_naive_struct acb_dft_naive_t[1];
 
 typedef struct
 {
+    slong n;
     int type;
     union
     {
