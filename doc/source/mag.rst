@@ -384,6 +384,10 @@ Special functions
 
     Sets *z* to an upper bound for `1/n!`.
 
+.. function:: void mag_bin_uiui(mag_t res, ulong n, ulong k)
+
+    Sets *res* to an upper bound for the binomial coefficient `{n \choose k}`.
+
 .. function:: void mag_bernoulli_div_fac_ui(mag_t z, ulong n)
 
     Sets *z* to an upper bound for `|B_n| / n!` where `B_n` denotes

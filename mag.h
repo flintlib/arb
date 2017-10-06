@@ -607,6 +607,7 @@ void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
 void mag_fac_ui(mag_t z, ulong n);
 void mag_rfac_ui(mag_t z, ulong n);
+void mag_bin_uiui(mag_t res, ulong n, ulong k);
 
 /* TODO: test */
 void mag_bernoulli_div_fac_ui(mag_t z, ulong n);
