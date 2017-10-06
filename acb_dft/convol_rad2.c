@@ -55,12 +55,12 @@ acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, co
     else
         acb_dft_convol_pad(fp, gp, f, g, len, np);
 
-    acb_dft_rad2_precomp(fp, rad2, prec);
-    acb_dft_rad2_precomp(gp, rad2, prec);
+    acb_dft_rad2_precomp_inplace(fp, rad2, prec);
+    acb_dft_rad2_precomp_inplace(gp, rad2, prec);
 
     _acb_vec_kronecker_mul(gp, gp, fp, np, prec);
 
-    acb_dft_inverse_rad2_precomp(gp, rad2, prec);
+    acb_dft_inverse_rad2_precomp_inplace(gp, rad2, prec);
 
     _acb_vec_set(w, gp, len);
     _acb_vec_clear(fp, np);
@@ -77,4 +77,3 @@ acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec
     acb_dft_convol_rad2_precomp(w, f, g, len, dft, prec);
     acb_dft_rad2_clear(dft);
 }
-

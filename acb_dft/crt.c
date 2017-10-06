@@ -156,6 +156,11 @@ acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec
 {
     acb_ptr t;
     t = _acb_vec_init(crt->n);
+    if (w == v)
+    {
+        _acb_vec_set(t, v, crt->n);
+        v = t;
+    }
     crt_decomp(w, v, crt->dv, crt->c, crt->n);
     acb_dft_step(t, w, crt->cyc, crt->c->num, prec);
     crt_recomp(w, t, crt->c, crt->n);
@@ -168,6 +173,11 @@ acb_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec)
     crt_t c;
     acb_ptr t;
     t = _acb_vec_init(len);
+    if (w == v)
+    {
+        _acb_vec_set(t, v, len);
+        v = t;
+    }
     crt_init(c, len);
     crt_decomp(w, v, 1, c, len);
     acb_dft_prod(t, w, c->m, c->num, prec);

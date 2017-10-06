@@ -40,6 +40,12 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
 
         t = _acb_vec_init(m * M);
 
+        if (w == v)
+        {
+            _acb_vec_set(t, v, m * M);
+            v = t;
+        }
+
         /* m DFT of size M */
         for (i = 0; i < m; i++)
             acb_dft_step(w + i * M, v + i * dv, cyc + 1, num - 1, prec);

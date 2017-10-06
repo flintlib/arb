@@ -12,7 +12,7 @@
 #include "acb_dft.h"
 
 void
-acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
+_acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec)
 {
     nmod_t n2;
     slong k, k2;
@@ -29,6 +29,7 @@ acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
     _acb_vec_unit_roots(z2n, 2 * n, prec);
     nmod_init(&n2, 2 * n);
     t->n = n;
+    t->dv = dv;
     t->z = _acb_vec_init(n);
     for (k = 0, k2 = 0; k < n; k++)
     {
@@ -42,12 +43,12 @@ acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
 void
 acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec)
 {
-    slong k, n = t->n, np = t->rad2->n;
+    slong k, n = t->n, np = t->rad2->n, dv = t->dv;
     acb_ptr fp, gp, z;
     z = t->z;
 
     fp = _acb_vec_init(np);
-    _acb_vec_kronecker_mul(fp, z, v, n, prec);
+    _acb_vec_kronecker_mul_step(fp, z, v, dv, n, prec);
 
     gp = _acb_vec_init(np);
     acb_one(gp + 0);
@@ -57,12 +58,12 @@ acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, 
         acb_set(gp + np - k, gp + k);
     }
 
-    acb_dft_rad2_precomp(fp, t->rad2, prec);
-    acb_dft_rad2_precomp(gp, t->rad2, prec);
+    acb_dft_rad2_precomp_inplace(fp, t->rad2, prec);
+    acb_dft_rad2_precomp_inplace(gp, t->rad2, prec);
 
     _acb_vec_kronecker_mul(gp, gp, fp, np, prec);
 
-    acb_dft_inverse_rad2_precomp(gp, t->rad2, prec);
+    acb_dft_inverse_rad2_precomp_inplace(gp, t->rad2, prec);
 
     _acb_vec_kronecker_mul(w, z, gp, n, prec);
 

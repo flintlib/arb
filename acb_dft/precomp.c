@@ -32,7 +32,7 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
             pre->type = DFT_CONV;
             /* FIXME: do not recompute the same bluestein
              * scheme if needed several times */
-            acb_dft_bluestein_init(pre->t.bluestein, len, prec);
+            _acb_dft_bluestein_init(pre->t.bluestein, dv, len, prec);
         }
     }
     else
@@ -44,11 +44,11 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
 
         if (fac.num == 1)
         {
-            /* TODO: could be p^e, or 2^e */
+            /* TODO: could be p^e, or 2^e, but with dv shift */
             if (fac.p[0] == 2)
             {
                 pre->type = DFT_RAD2;
-                acb_dft_rad2_init(pre->t.rad2, fac.exp[0], prec);
+                _acb_dft_rad2_init(pre->t.rad2, dv, fac.exp[0], prec);
             }
             else
             {
@@ -118,8 +118,7 @@ acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
             acb_dft_crt_precomp(w, v, pre->t.crt, prec);
             break;
         case DFT_RAD2:
-            _acb_vec_set(w, v, pre->n);
-            acb_dft_rad2_precomp(w, pre->t.rad2, prec);
+            acb_dft_rad2_precomp(w, v, pre->t.rad2, prec);
             break;
         case DFT_CONV:
             acb_dft_bluestein_precomp(w, v, pre->t.bluestein, prec);
@@ -138,4 +137,43 @@ acb_dft(acb_ptr w, acb_srcptr v, slong len, slong prec)
     acb_dft_precomp_init(t, len, prec);
     acb_dft_precomp(w, v, t, prec);
     acb_dft_precomp_clear(t);
+}
+
+void
+acb_dft_inverse_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
+{
+#if 0
+    acb_ptr v2;
+    v2 = _acb_vec_init(pre->n);
+    /* divide before to keep v const */
+    _acb_vec_scalar_div_ui(v2, v, pre->n, pre->n, prec);
+    acb_vec_swap_ri(v2, pre->n);
+    acb_dft_precomp(w, v2, pre, prec);
+    acb_vec_swap_ri(w, pre->n);
+#else
+    slong k;
+    acb_dft_precomp(w, v, pre, prec);
+    for (k = 1; 2 * k < pre->n; k++)
+        acb_swap(w + k, w + pre->n - k);
+    _acb_vec_scalar_div_ui(w, w, pre->n, pre->n, prec);
+#endif
+}
+void
+acb_dft_inverse(acb_ptr w, acb_srcptr v, slong len, slong prec)
+{
+#if 0
+    acb_ptr v2;
+    v2 = _acb_vec_init(len);
+    /* divide before to keep v const */
+    _acb_vec_scalar_div_ui(v2, v, len, len, prec);
+    acb_vec_swap_ri(v2, len);
+    acb_dft(w, v2, len, prec);
+    acb_vec_swap_ri(w, len);
+#else
+    slong k;
+    acb_dft(w, v, len, prec);
+    for (k = 1; 2 * k < len; k++)
+        acb_swap(w + k, w + len - k);
+    _acb_vec_scalar_div_ui(w, w, len, len, prec);
+#endif
 }

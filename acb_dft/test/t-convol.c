@@ -38,9 +38,9 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
             flint_printf("FAIL\n\n");
             flint_printf("q = %wu\n", q);
             flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
-            flint_printf("\nnaive =\n");
+            flint_printf("\n%s =\n", f1);
             acb_printd(w1 + i, digits);
-            flint_printf("\nfast =\n");
+            flint_printf("\n%s =\n", f2);
             acb_printd(w2 + i, digits);
             flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
                     acb_rel_accuracy_bits(w1 + i),
@@ -60,9 +60,9 @@ int main()
     ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
     flint_rand_t state;
 
-    slong f, nf = 2;
-    do_f func[2] = { acb_dft_convol_naive, acb_dft_convol_rad2 };
-    char * name[4] = { "naive", "rad2" };
+    slong f, nf = 3;
+    do_f func[3] = { acb_dft_convol_naive, acb_dft_convol_rad2, acb_dft_convol_dft };
+    char * name[3] = { "naive", "rad2", "dft" };
 
     flint_printf("convol....");
     fflush(stdout);
