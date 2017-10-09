@@ -336,10 +336,28 @@ Orthogonal polynomials and functions
     See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
     for definitions.
 
-.. function:: void arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slong prec)
+.. function:: void arb_hypgeom_legendre_p_ui_zero(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
 
-    Evaluates the ordinary Legendre polynomial `P_n(x)` using the asymptotic
-    expansion on `(-1,1)`, taking exactly *K* terms of the asymptotic series.
+.. function:: void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
+
+.. function:: void arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
+
+.. function:: void arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
+
+    Evaluates the ordinary Legendre polynomial `P_n(x)`. If *res_prime* is
+    non-NULL, simultaneously evaluates the derivative `P'_n(x)`.
+
+    The versions *zero*, *one* respectively use the hypergeometric series
+    expansions at `x = 0` and `x = 1` while the *asymp* version uses an
+    asymptotic series on `(-1,1)` intended for large *n*. The parameter *K*
+    specifies the exact number of expansion terms to use (if the series
+    expansion truncated at this point does not give the exact polynomial,
+    an error bound is computed automatically).
+
+    The default version attempts to choose the best algorithm automatically.
+    It also estimates the amount of cancellation in the hypergeometric series
+    and increases the working precision to compensate, bounding the
+    propagated error using derivative bounds.
 
 Hypergeometric sequences
 -------------------------------------------------------------------------------

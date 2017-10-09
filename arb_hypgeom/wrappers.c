@@ -576,26 +576,6 @@ arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec)
 }
 
 void
-arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
-{
-    acb_t t, u, v;
-    acb_init(t);
-    acb_init(u);
-    acb_init(v);
-    arb_set(acb_realref(t), n);
-    arb_set(acb_realref(u), m);
-    arb_set(acb_realref(v), z);
-    acb_hypgeom_legendre_p(t, t, u, v, type, prec);
-    if (acb_is_finite(t) && acb_is_real(t))
-        arb_swap(res, acb_realref(t));
-    else
-        arb_indeterminate(res);
-    acb_clear(t);
-    acb_clear(u);
-    acb_clear(v);
-}
-
-void
 arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
 {
     acb_t t, u, v;

@@ -23,18 +23,21 @@ int main()
 
     for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
-        arb_t x, r1, r2, r3, s;
+        arb_t x, r1, r1p, r2, r2p, r3, s;
         ulong n;
         slong prec1, prec2, K, K2, K3;
 
         arb_init(x);
         arb_init(r1);
+        arb_init(r1p);
         arb_init(r2);
+        arb_init(r2p);
         arb_init(r3);
         arb_init(s);
 
         n = n_randtest(state) % 500;
         K = n_randint(state, 50);
+        K2 = n_randint(state, 500);
         prec1 = 2 + n_randint(state, 1000);
         prec2 = 2 + n_randint(state, 500);
 
@@ -43,20 +46,19 @@ int main()
         if (n_randint(state, 2))
             mag_zero(arb_radref(x));
 
-        arb_set_ui(r1, n);
-        arb_set_ui(r2, 0);
-        /* todo: replace with a different implementation later */
-        arb_hypgeom_legendre_p(r2, r1, r2, x, 0, prec1);
+        arb_hypgeom_legendre_p_ui_asymp(r1, r1p, n, x, K, prec1);
 
-        arb_hypgeom_legendre_p_ui_asymp(r1, n, x, K, prec2);
+        arb_hypgeom_legendre_p_ui_one(r2, r2p, n, x, K2, prec2);
 
-        if (!arb_overlaps(r1, r2))
+        if (!arb_overlaps(r1, r2) || !arb_overlaps(r1p, r2p))
         {
             flint_printf("FAIL: overlap\n\n");
             flint_printf("n = %wu, K = %wd\n\n", n, K);
             flint_printf("x = "); arb_printn(x, 50, 0); flint_printf("\n\n");
             flint_printf("r1 = "); arb_printn(r1, 50, 0); flint_printf("\n\n");
             flint_printf("r2 = "); arb_printn(r2, 50, 0); flint_printf("\n\n");
+            flint_printf("r1p = "); arb_printn(r1p, 50, 0); flint_printf("\n\n");
+            flint_printf("r2p = "); arb_printn(r2p, 50, 0); flint_printf("\n\n");
             flint_abort();
         }
 
@@ -68,17 +70,17 @@ int main()
         K3 = n_randint(state, 50);
 
         /* test (2n+1) x P_n(x) - n P_(n-1)(x) = (n+1) P_(n+1)(x) */
-        arb_hypgeom_legendre_p_ui_asymp(r1, n, x, K, prec2);
+        arb_hypgeom_legendre_p_ui_asymp(r1, NULL, n, x, K, prec2);
         arb_mul(r1, r1, x, prec2);
         arb_set_ui(r2, n);
         arb_add_ui(r2, r2, n, prec2);
         arb_add_ui(r2, r2, 1, prec2);
         arb_mul(r1, r1, r2, prec2);
 
-        arb_hypgeom_legendre_p_ui_asymp(r2, n - 1, x, K2, prec2);
+        arb_hypgeom_legendre_p_ui_asymp(r2, NULL, n - 1, x, K2, prec2);
         arb_mul_ui(r2, r2, n, prec2);
 
-        arb_hypgeom_legendre_p_ui_asymp(r3, n + 1, x, K3, prec2);
+        arb_hypgeom_legendre_p_ui_asymp(r3, NULL, n + 1, x, K3, prec2);
         arb_mul_ui(r3, r3, n + 1, prec2);
 
         arb_sub(s, r1, r2, prec2);
@@ -97,7 +99,9 @@ int main()
 
         arb_clear(x);
         arb_clear(r1);
+        arb_clear(r1p);
         arb_clear(r2);
+        arb_clear(r2p);
         arb_clear(r3);
         arb_clear(s);
     }

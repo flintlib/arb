@@ -10,6 +10,7 @@
 */
 
 #include "acb_hypgeom.h"
+#include "arb_hypgeom.h"
 
 void
 acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
@@ -20,6 +21,16 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
     if (!acb_is_finite(z))
     {
         acb_indeterminate(res);
+        return;
+    }
+
+    if (acb_is_real(z) && acb_is_zero(m) && acb_is_int(n) &&
+        arf_sgn(arb_midref(acb_realref(n))) >= 0 &&
+        arf_cmpabs_2exp_si(arb_midref(acb_realref(n)), FLINT_BITS - 1) < 0)
+    {
+        arb_hypgeom_legendre_p_ui(acb_realref(res), NULL,
+            arf_get_si(arb_midref(acb_realref(n)), ARF_RND_DOWN), acb_realref(z), prec);
+        arb_zero(acb_imagref(res));
         return;
     }
 

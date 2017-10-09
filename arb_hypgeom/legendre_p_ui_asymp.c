@@ -43,21 +43,15 @@ static void QQ(fmpz_t res, ulong n, slong k)
 }
 
 static void
-asymp_series(acb_t res, ulong n, const acb_t x, slong K, slong prec)
+asymp_series(acb_t res, ulong n, acb_srcptr xpow, slong m, slong K, slong prec)
 {
-    slong j, k, khi, klo, m, u, r;
+    slong j, k, khi, klo, u, r;
     acb_t s;
-    acb_ptr xpow;
     fmpz_t cc, dd;
-
-    m = n_sqrt(K);
 
     acb_init(s);
     fmpz_init(cc);
     fmpz_init(dd);
-    xpow = _acb_vec_init(m + 1);
-
-    _acb_vec_set_powers(xpow, x, m + 1, prec);
 
     k = K - 1;
     while (k >= 1)
@@ -107,7 +101,6 @@ asymp_series(acb_t res, ulong n, const acb_t x, slong K, slong prec)
 
     acb_add_ui(res, s, 1, prec);
 
-    _acb_vec_clear(xpow, m + 1);
     acb_clear(s);
     fmpz_clear(cc);
     fmpz_clear(dd);
@@ -193,25 +186,16 @@ arb_abs_le_ui(const arb_t x, ulong n)
 }
 
 void
-arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slong prec)
+_arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x,
+    const arb_t y, acb_srcptr w4pow, const arb_t binom, slong m, slong K, slong prec)
 {
-    arb_t y, t, u;
-    acb_t w, s, z;
+    arb_t t, u;
+    acb_t s, z;
     fmpz_t e;
     mag_t err;
 
-    if (!arb_abs_le_ui(x, 1))
-    {
-        arb_indeterminate(res);
-        return;
-    }
-
-    K = FLINT_MAX(K, 1);
-
-    arb_init(y);
     arb_init(t);
     arb_init(u);
-    acb_init(w);
     acb_init(s);
     acb_init(z);
     mag_init(err);
@@ -221,18 +205,8 @@ arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slon
     arb_set_d(u, 0.5);
     arb_add_ui(u, u, n, prec);
 
-    /* y = sqrt(1-x^2) */
-    arb_one(y);
-    arb_submul(y, x, x, 2 * prec);
-    arb_sqrt(y, y, prec);
-
     arb_get_mag_lower(err, y);
     _arb_hypgeom_legendre_p_ui_asymp_error(err, n, err, K);
-
-    /* w = 1 - (x/y)i */
-    arb_one(acb_realref(w));
-    arb_div(acb_imagref(w), x, y, prec);
-    arb_neg(acb_imagref(w), acb_imagref(w));
 
     /* z = (x + yi)^(n+0.5) * (1-i) */
     arb_set(acb_realref(z), x);
@@ -243,16 +217,13 @@ arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slon
     acb_mul(z, z, s, prec);
 
     /* main series */
-    acb_mul_2exp_si(s, w, -2);
-    asymp_series(s, n, s, K, prec);
+    asymp_series(s, n, w4pow, m, K, prec);
 
     /* we will use Re(z * s) */
     acb_mul(z, z, s, prec);
 
     /* prefactor: t = 4^n / (pi * sqrt(y) * (n+0.5) binomial(2n,n)) */
-    arb_hypgeom_central_bin_ui(t, n, prec);
-
-    arb_mul(t, t, u, prec);
+    arb_mul(t, binom, u, prec);
     arb_sqrt(u, y, prec);
     arb_mul(t, t, u, prec);
     arb_const_pi(u, prec);
@@ -266,13 +237,105 @@ arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x, slong K, slon
 
     arb_add_error_mag(res, err);
 
-    arb_clear(y);
     arb_clear(t);
     arb_clear(u);
-    acb_clear(w);
     acb_clear(s);
     acb_clear(z);
     mag_clear(err);
     fmpz_clear(e);
+}
+
+void
+arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res2, ulong n, const arb_t x, slong K, slong prec)
+{
+    arb_t y, binom;
+    acb_t w;
+    acb_ptr w4pow;
+    slong m;
+
+    if (n == 0)
+    {
+        if (res != NULL) arb_one(res);
+        if (res2 != NULL) arb_zero(res2);
+        return;
+    }
+
+    if (!arb_abs_le_ui(x, 1))
+    {
+        if (res != NULL) arb_indeterminate(res);
+        if (res2 != NULL) arb_indeterminate(res2);
+        return;
+    }
+
+    K = FLINT_MAX(K, 1);
+
+    if (res2 != NULL)
+        m = n_sqrt(2 * K);
+    else
+        m = n_sqrt(K);
+
+    arb_init(y);
+    arb_init(binom);
+    acb_init(w);
+    w4pow = _acb_vec_init(m + 1);
+
+    /* y = sqrt(1-x^2) */
+    arb_one(y);
+    arb_submul(y, x, x, 2 * prec);
+    arb_sqrt(y, y, prec);
+
+    /* w = 1 - (x/y)i */
+    arb_one(acb_realref(w));
+    arb_div(acb_imagref(w), x, y, prec);
+    arb_neg(acb_imagref(w), acb_imagref(w));
+
+    acb_mul_2exp_si(w, w, -2);
+    _acb_vec_set_powers(w4pow, w, m + 1, prec);
+
+    /* binomial(2n,n) */
+    arb_hypgeom_central_bin_ui(binom, n, prec);
+
+    if (res2 == NULL)
+    {
+        _arb_hypgeom_legendre_p_ui_asymp(res, n, x, y, w4pow, binom, m, K, prec);
+    }
+    else
+    {
+        arb_t t, u, v;
+
+        arb_init(t);
+        arb_init(u);
+        arb_init(v);
+
+        _arb_hypgeom_legendre_p_ui_asymp(t, n, x, y, w4pow, binom, m, K, prec);
+
+        /* recurrence for central binomial */
+        arb_mul_ui(binom, binom, n, prec);
+        arb_set_ui(u, n);
+        arb_mul_2exp_si(u, u, 2);
+        arb_sub_ui(u, u, 2, prec);
+        arb_div(binom, binom, u, prec);
+
+        _arb_hypgeom_legendre_p_ui_asymp(u, n - 1, x, y, w4pow, binom, m, K, prec);
+
+        /* P' = n (P[n-1] - x P) / (1 - x^2) */
+        arb_submul(u, t, x, prec);
+        arb_mul(v, x, x, 2 * prec);
+        arb_neg(v, v);
+        arb_add_ui(v, v, 1, prec);
+        arb_div(u, u, v, prec);
+        arb_mul_ui(res2, u, n, prec);
+        if (res != NULL)
+            arb_set(res, t);
+
+        arb_clear(t);
+        arb_clear(u);
+        arb_clear(v);
+    }
+
+    arb_clear(y);
+    arb_clear(binom);
+    acb_clear(w);
+    _acb_vec_clear(w4pow, m + 1);
 }
 
