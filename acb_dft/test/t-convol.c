@@ -56,8 +56,8 @@ int main()
 
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 13;
-    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
+    slong nq = 15;
+    ulong q[15] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 256, 308, 335, 344, 961};
     flint_rand_t state;
 
     slong f, nf = 3;
