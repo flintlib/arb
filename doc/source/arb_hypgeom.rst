@@ -361,11 +361,33 @@ Orthogonal polynomials and functions
     specifies the exact number of expansion terms to use (if the series
     expansion truncated at this point does not give the exact polynomial,
     an error bound is computed automatically).
+    The asymptotic expansion with error bounds is given in [Bog2012]_.
 
     The default version attempts to choose the best algorithm automatically.
     It also estimates the amount of cancellation in the hypergeometric series
     and increases the working precision to compensate, bounding the
     propagated error using derivative bounds.
+
+.. function:: void arb_hypgeom_legendre_p_ui_root(arb_t res, arb_t weight, ulong n, ulong k, slong prec)
+
+    Sets *res* to the *k*-th root of the Legendre polynomial `P_n(x)`.
+    We index the roots in decreasing order
+
+    .. math ::
+
+        1 > x_0 > x_1 > \ldots > x_{n-1} > -1
+
+    (which corresponds to ordering the roots of `P_n(\cos(\theta))`
+    in order of increasing `\theta`).
+    If *weight* is non-NULL, it is set to the weight corresponding
+    to the node `x_k` for Gaussian quadrature on `[-1,1]`.
+    Note that only `\lceil n / 2 \rceil` roots need to be computed,
+    since the remaining roots are given by `x_k = -x_{n-1-k}`.
+
+    We compute an enclosing interval using an asymptotic approximation followed
+    by some number of Newton iterations, using the error bounds given
+    in [Pet1999]_. If very high precision is requested, the root is
+    subsequently refined using Newton steps with doubling working precision.
 
 Hypergeometric sequences
 -------------------------------------------------------------------------------

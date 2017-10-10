@@ -142,9 +142,11 @@ Bibliography
 
 .. [BBC2000] \J. Borwein, D. M. Bradley and R. E. Crandall, "Computational strategies for the Riemann zeta function", Journal of Computational and Applied Mathematics 121 (2000) 247-296
 
-.. [BZ1992]_ \J. Borwein and I. Zucker, "Fast evaluation of the gamma function for small rational fractions using complete elliptic integrals of the first kind", IMA Journal of Numerical Analysis 12 (1992) 519-526
+.. [BZ1992] \J. Borwein and I. Zucker, "Fast evaluation of the gamma function for small rational fractions using complete elliptic integrals of the first kind", IMA Journal of Numerical Analysis 12 (1992) 519-526
 
-.. [Bor1987]_ \P. Borwein, "Reduced complexity evaluation of hypergeometric functions", Journal of Approximation Theory 50:3 (1987)
+.. [Bog2012] \I. Bogaert, B. Michiels and J. Fostier, "O(1) computation of Legendre polynomials and Gauss-Legendre nodes and weights for parallel computing", SIAM Journal on Scientific Computing 34:3 (2012), C83-C101
+
+.. [Bor1987] \P. Borwein, "Reduced complexity evaluation of hypergeometric functions", Journal of Approximation Theory 50:3 (1987)
 
 .. [Bor2000] \P. Borwein, "An Efficient Algorithm for the Riemann Zeta Function", Constructive experimental and nonlinear analysis, CMS Conference Proc. 27 (2000) 29-34, http://www.cecm.sfu.ca/personal/pborwein/PAPERS/P155.pdf
 
@@ -215,6 +217,8 @@ Bibliography
 .. [Olv1997] \F. Olver, *Asymptotics and special functions*, AKP Classics, AK Peters Ltd., Wellesley, MA, 1997. Reprint of the 1974 original.
 
 .. [Rad1973] \H. Rademacher, *Topics in analytic number theory*, Springer, 1973.
+
+.. [Pet1999] \K. Petras, "On the computation of the Gauss-Legendre quadrature formula with a given precision", Journal of Computational and Applied Mathematics 112 (1999), 253-267
 
 .. [PS1973] \M. S. Paterson and L. J. Stockmeyer, "On the number of nonscalar multiplications necessary to evaluate polynomials", SIAM J. Comput (1973)
 
