@@ -336,6 +336,14 @@ Orthogonal polynomials and functions
     See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
     for definitions.
 
+.. function:: void arb_hypgeom_legendre_p_ui_deriv_bound(mag_t dp, mag_t dp2, ulong n, const arb_t x, const arb_t x2sub1)
+
+    Sets *dp* to an upper bound for `P'_n(x)` and *dp2* to an upper
+    bound for `P''_n(x)` on given *x* assumed to represent a real
+    number with `|x| \le 1`. The variable *x2sub1* must contain
+    the precomputed value `1-x^2` (or `x^2-1`). This method is used
+    internally to bound the propagated error for Legendre polynomials.
+
 .. function:: void arb_hypgeom_legendre_p_ui_zero(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
 
 .. function:: void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
