@@ -274,17 +274,19 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
         }
         else if (FLINT_MIN(cost_zero, cost_one) < (1e6 * prec) * prec && n < UWORD_MAX / 4)
         {
-            mag_t t, u, err1, err2;
+            mag_t t, u, err1, err2, xrad;
             arb_t xmid;
 
             mag_init(t);
             mag_init(u);
             mag_init(err1);
             mag_init(err2);
+            mag_init(xrad);
             arb_init(xmid);
 
             arf_set(arb_midref(xmid), arb_midref(x));
             mag_zero(arb_radref(xmid));
+            mag_set(xrad, arb_radref(x));
 
             /* |P'(x)| <= min(n(n+1)/2, n/sqrt(1-x^2)) */
             arb_get_mag_lower(u, x2sub1);
@@ -293,7 +295,7 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
             mag_mul_2exp_si(t, t, -1);
             mag_max(t, t, u);
             mag_mul_ui(t, t, n);
-            mag_mul(err1, t, arb_radref(x));
+            mag_mul(err1, t, xrad);
 
             if (cost_zero < cost_one)
                 arb_hypgeom_legendre_p_ui_zero(res, res_prime, n, xmid, K_zero, wp + cancellation_zero);
@@ -320,6 +322,7 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
                 mag_mul_ui(t, t, n - 1);
                 mag_mul_2exp_si(t, t, -3);
                 mag_min(err2, err2, t);
+                mag_mul(err2, err2, xrad);
 
                 arb_add_error_mag(res_prime, err2);
                 arb_set_round(res_prime, res_prime, prec);
@@ -329,6 +332,7 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
             mag_clear(u);
             mag_clear(err1);
             mag_clear(err2);
+            mag_clear(xrad);
             arb_clear(xmid);
         }
         else if (asymp_error < -2.0)

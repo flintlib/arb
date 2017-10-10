@@ -16,7 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("legendre_p_ui_one....");
+    flint_printf("legendre_p_ui....");
     fflush(stdout);
 
     flint_randinit(state);
