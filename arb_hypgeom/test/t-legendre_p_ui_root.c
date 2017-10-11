@@ -10,6 +10,7 @@
 */
 
 #include "arb_hypgeom.h"
+#include "flint/arith.h"
 
 int main()
 {
@@ -53,7 +54,8 @@ int main()
         }
 
         arb_poly_product_roots(pol, roots, n, prec);
-        fmpq_poly_legendre_p(pol2, n);
+        /* fmpq_poly_legendre_p(pol2, n); */
+        arith_legendre_polynomial(pol2, n);
         arb_set_fmpz(s, pol2->coeffs + n);
         arb_div_fmpz(s, s, pol2->den, prec);
         arb_poly_scalar_mul(pol, pol, s, prec);
