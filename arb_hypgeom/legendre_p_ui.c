@@ -84,6 +84,7 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
     double yy, log2nsy, log2k, size;
     slong wp;
     slong d, k, K_zero, K_one, K_asymp;
+    int basecase_ok;
 
     if (!arb_is_finite(x) || n > UWORD_MAX / 4)
     {
@@ -135,6 +136,53 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
         return;
     }
 
+    xx = arf_get_d(arb_midref(x), ARF_RND_UP);
+
+    /* Use basecase recurrence? */
+    /* The following tests are not very elegant, and not completely accurate
+       either, but they are fast in the common case. */
+    if (res_prime != NULL)
+    {
+        basecase_ok = ((xx < 0.999999 && n < 10 && prec < 2000) ||
+                       (xx < 0.999999 && n < 50 && prec < 1000) ||
+                       (xx < 0.9999 && n < 100 && prec < 1000) ||
+                       (xx < 0.999  && n < 300 && prec < 1000) ||
+                       (xx < 0.9 && n < 300 && prec < 600))
+                   && ((xx > 0.00001 && n < 10 && prec < 2000) ||
+                       (xx > 0.00001 && n < 60 && prec < 1000) ||
+                       (xx > 0.01 && n < 200 && prec < 1000) ||
+                       (xx > 0.1 && n < 300 && prec < 1000));
+    }
+    else if (prec < 500)
+    {
+        basecase_ok = ((xx < 0.999999 && n < 20) ||
+                       (xx < 0.999 && n < 60) ||
+                       (xx < 0.9 && n < 100))
+                   && ((xx > 0.00001 && n < 20) ||
+                       (xx > 0.01 && n < 60) ||
+                       (xx > 0.1 && n < 100));
+    }
+    else
+    {
+        basecase_ok = 0;
+    }
+
+    if (basecase_ok)
+    {
+        mag_t t;
+        mag_init(t);
+        arb_get_mag(t, x);
+        if (mag_cmp_2exp_si(t, 0) >= 0)
+            basecase_ok = 0;
+        mag_clear(t);
+    }
+
+    if (basecase_ok)
+    {
+        arb_hypgeom_legendre_p_ui_rec(res, res_prime, n, x, prec);
+        return;
+    }
+
     arb_init(xsub1);
     arb_init(x2sub1);
 
@@ -144,10 +192,10 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
     arb_sub_ui(x2sub1, x2sub1, 1, prec + 10);
     arb_neg(x2sub1, x2sub1);
 
+    /* use series at 1 unless |x| < 1-eps */
     if (!arb_is_negative(xsub1) ||
         arf_cmp_d(arb_midref(xsub1), ldexp(1.0, -2 * FLINT_BIT_COUNT(n))) > 0)
     {
-        /* use series at 1 */
         if (arf_cmp_d(arb_midref(xsub1), 2.0) >= 0)
         {
             if (n < 10000.0 * prec && n < UWORD_MAX / 4)
@@ -155,7 +203,7 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
             else
                 K_one = 1;
         }
-        else
+        else  /* check for early convergence */
         {
             xxsub1 = arf_get_d(arb_midref(xsub1), ARF_RND_UP);
             log2u = log(fabs(xxsub1) * 0.5) * 1.44269504088896;
@@ -182,9 +230,6 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
                     }
                 }
             }
-
-            if (size >= 0.0)
-                K_one = 1;
         }
 
         arb_hypgeom_legendre_p_ui_one(res, res_prime, n, x, K_one, prec);
@@ -195,7 +240,6 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
         cost_one = 1e100;
         cost_asymp = 1e100;
 
-        xx = arf_get_d(arb_midref(x), ARF_RND_UP);
         xx = FLINT_MAX(xx, 1e-50);
         xxsub1 = arf_get_d(arb_midref(xsub1), ARF_RND_UP);
 

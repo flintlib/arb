@@ -105,6 +105,7 @@ void arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t
 void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec);
 
 void arb_hypgeom_legendre_p_ui_deriv_bound(mag_t dp, mag_t dp2, ulong n, const arb_t x, const arb_t x2sub1);
+void arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec);
 void arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res2, ulong n, const arb_t x, slong K, slong prec);
 void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res2, ulong n, const arb_t x, slong K, slong prec);
 void arb_hypgeom_legendre_p_ui_zero(arb_t res, arb_t res2, ulong n, const arb_t x, slong K, slong prec);

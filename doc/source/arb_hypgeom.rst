@@ -339,7 +339,7 @@ Orthogonal polynomials and functions
 .. function:: void arb_hypgeom_legendre_p_ui_deriv_bound(mag_t dp, mag_t dp2, ulong n, const arb_t x, const arb_t x2sub1)
 
     Sets *dp* to an upper bound for `P'_n(x)` and *dp2* to an upper
-    bound for `P''_n(x)` on given *x* assumed to represent a real
+    bound for `P''_n(x)` given *x* assumed to represent a real
     number with `|x| \le 1`. The variable *x2sub1* must contain
     the precomputed value `1-x^2` (or `x^2-1`). This method is used
     internally to bound the propagated error for Legendre polynomials.
@@ -349,6 +349,8 @@ Orthogonal polynomials and functions
 .. function:: void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
 
 .. function:: void arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
+
+.. function:: void arb_hypgeom_legendre_p_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
 
 .. function:: void arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
 
@@ -362,6 +364,9 @@ Orthogonal polynomials and functions
     expansion truncated at this point does not give the exact polynomial,
     an error bound is computed automatically).
     The asymptotic expansion with error bounds is given in [Bog2012]_.
+    The *rec* version uses the forward recurrence implemented using
+    fixed-point arithmetic; it is only intended for the interval `(-1,1)`,
+    moderate *n* and modest precision.
 
     The default version attempts to choose the best algorithm automatically.
     It also estimates the amount of cancellation in the hypergeometric series
