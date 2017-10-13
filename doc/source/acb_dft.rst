@@ -141,6 +141,8 @@ For functions `f` and `g` on `G` we consider the convolution
 
 .. function:: void acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
 
+.. function:: void acb_dft_convol(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec)
+
    Sets *w* to the convolution of *f* and *g* of length *len*.
 
    The *naive* version simply uses the definition.
@@ -153,3 +155,6 @@ For functions `f` and `g` on `G` we consider the convolution
       \widehat{f \star g}(\chi) = \hat f(\chi)\hat g(\chi)
 
    to compute it using three radix 2 FFT.
+
+   The default version uses radix 2 FFT unless *len* is a product of small
+   primes where a non padded fft is faster.

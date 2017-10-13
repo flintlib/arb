@@ -26,16 +26,18 @@ int main(int argc, char *argv[])
     flint_rand_t state;
     slong r, nr;
 
-    int l, nf = 3;
-    do_f func[3] = {
+    int l, nf = 4;
+    do_f func[4] = {
         acb_dft_convol_naive,
         acb_dft_convol_dft,
         acb_dft_convol_rad2,
+        acb_dft_convol,
     };
-    char * name[3] = {
+    char * name[4] = {
         "naive",
         "dft",
-        "rad2"
+        "rad2",
+        "default"
     };
 
     int i, ni = 14;
