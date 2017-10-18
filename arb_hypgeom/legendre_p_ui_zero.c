@@ -11,63 +11,55 @@
 
 #include "arb_hypgeom.h"
 
-#define BIG (1 << (FLINT_BITS / 2 - 2))
-
-static __inline__ void PP(fmpz_t r, ulong n, ulong k)
-{
-    slong sigma = n % 2 ? 1 : -1;
-    ulong d = n / 2;
-
-    if (n < BIG && k < BIG)
-    {
-        fmpz_set_ui(r, (d - k + 1) * (2 * d + 2 * k + sigma));
-    }
-    else
-    {
-        fmpz_set_ui(r, d - k + 1);
-        fmpz_mul_ui(r, r, 2 * d + 2 * k + sigma);
-    }
-}
-
-static __inline__ void QQ(fmpz_t r, ulong n, ulong k)
-{
-    slong sigma = n % 2 ? 1 : -1;
-
-    if (k < BIG)
-    {
-        fmpz_set_ui(r, k * (2 * k + sigma));
-    }
-    else
-    {
-        fmpz_set_ui(r, k);
-        fmpz_mul_ui(r, r, 2 * k + sigma);
-    }
-}
+#define UNROLL 4
 
 static void
 sum_rs_inner(arb_t s, arb_srcptr xpow, slong m, ulong n, slong K, slong prec)
 {
     slong j, k, khi, klo, u, r;
-    fmpz_t cc, dd;
+    ulong d;
+    slong sigma;
+    fmpz * c;
 
-    fmpz_init(cc);
-    fmpz_init(dd);
+    sigma = n % 2 ? 1 : -1;
+    d = n / 2;
 
     arb_zero(s);
-    fmpz_zero(cc);
+    c = _fmpz_vec_init(UNROLL + 1);
 
     k = K - 1;
     while (k >= 1)
     {
-        u = FLINT_MIN(5, k);
+        u = FLINT_MIN(UNROLL, k);
+
         khi = k;
         klo = k - u + 1;
 
-        PP(cc, n, khi);
-        for (j = klo; j < khi; j++)
+        for (j = klo; j <= khi; j++)
         {
-            PP(dd, n, j);
-            fmpz_mul(cc, cc, dd);
+            ulong aa = (d - j + 1);
+            ulong bb = (2 * d + 2 * j + sigma);
+
+            if (j == klo)
+                fmpz_ui_mul_ui(c + khi - j, aa, bb);
+            else
+                fmpz_mul2_uiui(c + khi - j, c + khi - j + 1, aa, bb);
+        }
+
+        for (j = khi; j >= klo; j--)
+        {
+            ulong aa = (j);
+            ulong bb = (2 * j + sigma);
+
+            if (j == khi)
+            {
+                fmpz_ui_mul_ui(c + u, aa, bb);
+            }
+            else
+            {
+                fmpz_mul(c + khi - j, c + khi - j, c + u);
+                fmpz_mul2_uiui(c + u, c + u, aa, bb);
+            }
         }
 
         while (k >= klo)
@@ -76,28 +68,23 @@ sum_rs_inner(arb_t s, arb_srcptr xpow, slong m, ulong n, slong K, slong prec)
             if (k == khi)
             {
                 arb_add(s, s, xpow + r, prec);
-                arb_mul_fmpz(s, s, cc, prec);
+                arb_mul_fmpz(s, s, c + khi - k, prec);
             }
             else if (r == 0)
-                arb_add_fmpz(s, s, cc, prec);
+                arb_add_fmpz(s, s, c + khi - k, prec);
             else
-                arb_addmul_fmpz(s, xpow + r, cc, prec);
+                arb_addmul_fmpz(s, xpow + r, c + khi - k, prec);
 
             if (r == 0 && k != 0)
                 arb_mul(s, s, xpow + m, prec);
 
-            PP(dd, n, k);
-            fmpz_divexact(cc, cc, dd);
-            QQ(dd, n, k);
-            fmpz_mul(cc, cc, dd);
             k--;
         }
 
-        arb_div_fmpz(s, s, cc, prec);
+        arb_div_fmpz(s, s, c + u, prec);
     }
 
-    fmpz_clear(cc);
-    fmpz_clear(dd);
+    _fmpz_vec_clear(c, UNROLL + 1);
 }
 
 static void

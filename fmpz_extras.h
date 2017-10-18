@@ -173,6 +173,20 @@ _fmpz_size(const fmpz_t f)
 }
 
 static __inline__ void
+fmpz_ui_mul_ui(fmpz_t r, ulong a, ulong b)
+{
+    if (a < (UWORD(1) << (FLINT_BITS / 2)) && b < (UWORD(1) << (FLINT_BITS / 2)))
+    {
+        fmpz_set_ui(r, a * b);
+    }
+    else
+    {
+        fmpz_set_ui(r, a);
+        fmpz_mul_ui(r, r, b);
+    }
+}
+
+static __inline__ void
 fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
 {
     if (e <= 1)

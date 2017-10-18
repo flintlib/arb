@@ -28,6 +28,10 @@ Convenience methods
 
     Sets *z* to `x / 2^{exp}`, rounded away from zero.
 
+.. function:: void fmpz_ui_mul_ui(fmpz_t x, ulong a, ulong b)
+
+    Sets *x* to *a* times *b*.
+
 .. function:: void fmpz_ui_pow_ui(fmpz_t x, ulong b, ulong e)
 
     Sets *x* to *b* raised to the power *e*.

@@ -11,60 +11,77 @@
 
 #include "arb_hypgeom.h"
 
-#define BIG (1 << (FLINT_BITS / 2 - 2))
-
-static void PP(fmpz_t res, ulong n, slong k)
-{
-    /* (2 * k - 1) * (2 * k - 1) */
-    if (k < BIG)
-    {
-        fmpz_set_ui(res, (2 * k - 1) * (2 * k - 1));
-    }
-    else
-    {
-        fmpz_set_ui(res, 2 * k - 1);
-        fmpz_mul_ui(res, res, 2 * k - 1);
-    }
-}
-
-static void QQ(fmpz_t res, ulong n, slong k)
-{
-    if (k < BIG && n < BIG)
-    {
-        fmpz_set_ui(res, k * (2 * k + 2 * n + 1));
-    }
-    else
-    {
-        fmpz_set_ui(res, n);
-        fmpz_mul_2exp(res, res, 1);
-        fmpz_add_ui(res, res, 2 * k + 1);
-        fmpz_mul_ui(res, res, k);
-    }
-}
+#define UNROLL 4
 
 static void
 asymp_series(acb_t res, ulong n, acb_srcptr xpow, slong m, slong K, slong prec)
 {
     slong j, k, khi, klo, u, r;
+    fmpz * c;
     acb_t s;
-    fmpz_t cc, dd;
 
     acb_init(s);
-    fmpz_init(cc);
-    fmpz_init(dd);
+    c = _fmpz_vec_init(UNROLL + 1);
 
     k = K - 1;
     while (k >= 1)
     {
-        u = FLINT_MIN(5, k);
+        u = FLINT_MIN(UNROLL, k);
+
         khi = k;
         klo = k - u + 1;
 
-        PP(cc, n, khi);
-        for (j = klo; j < khi; j++)
+        for (j = klo; j <= khi; j++)
         {
-            PP(dd, n, j);
-            fmpz_mul(cc, cc, dd);
+            ulong aa = (2 * j - 1);
+            ulong bb = (2 * j - 1);
+
+            if (j == klo)
+                fmpz_ui_mul_ui(c + khi - j, aa, bb);
+            else
+                fmpz_mul2_uiui(c + khi - j, c + khi - j + 1, aa, bb);
+        }
+
+        for (j = khi; j >= klo; j--)
+        {
+            ulong aa = (j);
+            ulong bb = (2 * j + 2 * n + 1);
+
+            if (n < UWORD_MAX / 8)
+            {
+                if (j == khi)
+                {
+                    fmpz_ui_mul_ui(c + u, aa, bb);
+                }
+                else
+                {
+                    fmpz_mul(c + khi - j, c + khi - j, c + u);
+                    fmpz_mul2_uiui(c + u, c + u, aa, bb);
+                }
+            }
+            else
+            {
+                fmpz_t t;
+                fmpz_init(t);
+
+                fmpz_set_ui(t, n);
+                fmpz_add_ui(t, t, j);
+                fmpz_mul_2exp(t, t, 1);
+                fmpz_add_ui(t, t, 1);
+
+                if (j == khi)
+                {
+                    fmpz_mul_ui(c + u, t, aa);
+                }
+                else
+                {
+                    fmpz_mul(c + khi - j, c + khi - j, c + u);
+                    fmpz_mul_ui(t, t, aa);
+                    fmpz_mul(c + u, c + u, t);
+                }
+
+                fmpz_clear(t);
+            }
         }
 
         while (k >= klo)
@@ -74,36 +91,30 @@ asymp_series(acb_t res, ulong n, acb_srcptr xpow, slong m, slong K, slong prec)
             if (k == khi)
             {
                 acb_add(s, s, xpow + r, prec);
-                acb_mul_fmpz(s, s, cc, prec);
+                acb_mul_fmpz(s, s, c + khi - k, prec);
             }
             else if (r == 0)
             {
-                acb_add_fmpz(s, s, cc, prec);
+                acb_add_fmpz(s, s, c + khi - k, prec);
             }
             else
             {
-                acb_addmul_fmpz(s, xpow + r, cc, prec);
+                acb_addmul_fmpz(s, xpow + r, c + khi - k, prec);
             }
 
             if (r == 0 && k != 0)
                 acb_mul(s, s, xpow + m, prec);
 
-            PP(dd, n, k);
-            fmpz_divexact(cc, cc, dd);
-            QQ(dd, n, k);
-            fmpz_mul(cc, cc, dd);
-
             k--;
         }
 
-        acb_div_fmpz(s, s, cc, prec);
+        acb_div_fmpz(s, s, c + u, prec);
     }
 
     acb_add_ui(res, s, 1, prec);
 
     acb_clear(s);
-    fmpz_clear(cc);
-    fmpz_clear(dd);
+    _fmpz_vec_clear(c, UNROLL + 1);
 }
 
 
