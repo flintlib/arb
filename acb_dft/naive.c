@@ -75,7 +75,7 @@ acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec)
     _acb_vec_clear(z, len);
 }
 
-    void
+void
 _acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec)
 {
     pol->n = len;

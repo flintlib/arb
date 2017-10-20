@@ -6,6 +6,9 @@
 *Warning: the interfaces in this module are experimental and may change
 without notice.*
 
+Discrete Fourier Transform
+-------------------------------------------------------------------------------
+
 Let *G* be a finite abelian group, and `\chi` a character of *G*.
 For any map `f:G\to\mathbb C`, the discrete fourier transform
 `\hat f:\hat G\to \mathbb C` is defined by
@@ -13,6 +16,14 @@ For any map `f:G\to\mathbb C`, the discrete fourier transform
 .. math::
 
    \hat f(\chi) = \sum_{x\in G}\overline{\chi(x)}f(x)
+
+Note that by inversion formula
+
+.. math::
+
+   \widehat{\hat f}(\chi) = \#G\times f(\chi^{-1})
+
+it is straightforward to recover `f` from its DFT `\hat f`.
 
 Fast Fourier Transform techniques allow to compute efficiently
 all values `\hat f(\chi)` by reusing common computations.
@@ -30,14 +41,6 @@ appropriate translates of `f`), then `M` DFT on `G/H`, one for
 each restriction `\chi_{H}`.
 
 This decomposition can be done recursively.
-
-Note that by inversion formula
-
-.. math::
-
-   \widehat{\hat f}(\chi) = \#G\times f(\chi^{-1})
-
-it is straightforward to recover `f` from its DFT `\hat f`.
 
 DFT on Z/nZ
 -------------------------------------------------------------------------------
@@ -70,6 +73,24 @@ If `G=\mathbb Z/n\mathbb Z`, we compute the DFT according to the usual conventio
    The *bluestein* version converts the computation to a radix 2 one using Bluestein's convolution trick.
 
    The default version uses an automatic choice of algorithm (in most cases *crt*).
+
+.. function:: void acb_dft_inverse(acb_ptr w, acb_srcptr v, slong n, slong prec)
+
+   Compute the inverse DFT of *v* into *w*.
+
+.. function:: void acb_dft_rad2(acb_ptr w, acb_srcptr v, int e, slong prec)
+
+.. function:: void acb_dft_rad2_inplace(acb_ptr w, int e, slong prec)
+
+   Computes the DFT of *v* into *w*, where *v* and *w* have size $2^e$,
+   using a radix 2 FFT. The ``inplace`` version corresponds to *v=w*.
+
+.. function:: void acb_dft_inverse_rad2(acb_ptr w, acb_srcptr v, int e, slong prec)
+
+.. function:: void acb_dft_inverse_rad2_inplace(acb_ptr w, int e, slong prec)
+
+   Computes the inverse DFT of *v* into *w*, where *v* and *w* have size $2^e$,
+   using a radix 2 FFT. The ``inplace`` version corresponds to *v=w*.
 
 DFT on products
 -------------------------------------------------------------------------------
@@ -128,6 +149,10 @@ should be reused.
    Computes the DFT of the sequence *v* into *w* by applying the precomputed scheme
    *pre*. Both *v* and *w* must have length *pre->n*.
 
+.. function:: void acb_dft_inverse_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec)
+
+   Compute the inverse DFT of *v* into *w*.
+
 Convolution
 -------------------------------------------------------------------------------
 
@@ -157,4 +182,4 @@ For functions `f` and `g` on `G` we consider the convolution
    to compute it using three radix 2 FFT.
 
    The default version uses radix 2 FFT unless *len* is a product of small
-   primes where a non padded fft is faster.
+   primes where a non padded FFT is faster.
