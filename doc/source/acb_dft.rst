@@ -190,11 +190,12 @@ Naive algorithm
 
 .. type:: acb_dft_naive_t
 
-   Stores a table of roots of unity.
-
 .. function:: void acb_dft_naive_init(acb_dft_naive_t t, slong len, slong prec)
 
 .. function:: void acb_dft_naive_clear(acb_dft_naive_t t)
+
+   Stores a table of roots of unity in *t*.
+   The length *len* is stored as *t->n*.
 
 .. function:: void acb_dft_naive_precomp(acb_ptr w, acb_srcptr v, const acb_dft_naive_t t, slong prec)
 
@@ -218,6 +219,7 @@ CRT decomposition
 
    Initialize a CRT decomposition of `\mathbb Z/n\mathbb Z` as a direct product
    of cyclic groups.
+   The length *len* is stored as *t->n*.
 
 .. function:: void acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t t, slong prec)
 
@@ -241,6 +243,7 @@ Cooley-Tuckey decomposition
 .. function:: void acb_dft_cyc_clear(acb_dft_cyc_t t)
 
    Initialize a decomposition of `\mathbb Z/n\mathbb Z` into cyclic subgroups.
+   The length *len* is stored as *t->n*.
 
 .. function:: void acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t t, slong prec)
 
@@ -263,13 +266,11 @@ Radix 2 decomposition
 
 .. type:: acb_dft_rad2_t
 
-   Stores a radix 2 FFT of size `2^e`.
-
 .. function:: void acb_dft_rad2_init(acb_dft_rad2_t t, int e, slong prec)
 
 .. function:: void acb_dft_rad2_clear(acb_dft_rad2_t t)
 
-   Initialize and clear a radix 2 FFT of size `2^e`.
+   Initialize and clear a radix 2 FFT of size `2^e`, stored as *t->n*.
 
 .. function:: void acb_dft_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t t, slong prec)
 
@@ -287,9 +288,8 @@ Bluestein transform
 
 .. type:: acb_dft_bluestein_t
 
-   Stores a Bluestein scheme for some length *n* : that is a :ref:`acb_dft_rad2_t` of size
+   Stores a Bluestein scheme for some length *n* : that is a :type:`acb_dft_rad2_t` of size
    `2^e \geq 2n-1` and a size *n* array of convolution factors.
-   The value *n* is stored.
 
 .. function:: void acb_dft_bluestein_init(acb_dft_bluestein_t t, slong len, slong prec)
  
