@@ -24,9 +24,6 @@ _acb_dft_naive(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong 
     {
         flint_printf("\n_acb_dft_naive: does not accept aliasing\n");
         abort();
-        v1 = _acb_vec_init(len);
-        _acb_vec_set(v1, v, len);
-        v =  v1;
     }
  
     for (i = 0, wi = w; i < len; i++, wi++)
@@ -72,6 +69,7 @@ acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec)
 
     if (v1)
         _acb_vec_clear(v1, len);
+
     _acb_vec_clear(z, len);
 }
 

@@ -249,7 +249,7 @@ acb_dft_rad2_init(acb_dft_rad2_t t, int e, slong prec)
 ACB_DFT_INLINE void
 acb_dft_rad2_clear(acb_dft_rad2_t t)
 {
-    _acb_vec_clear(t->z, 2 * t->nz);
+    _acb_vec_clear(t->z, t->n);
 }
 
 void _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec);
@@ -268,21 +268,8 @@ acb_dft_bluestein_clear(acb_dft_bluestein_t t)
 }
 
 void _acb_dft_crt_init(acb_dft_crt_t crt, slong dv, slong len, slong prec);
-
-ACB_DFT_INLINE void
-acb_dft_crt_init(acb_dft_crt_t crt, slong len, slong prec)
-{
-    crt->n = len;
-    crt_init(crt->c, len);
-    crt->dv = 1;
-    crt->cyc = _acb_dft_steps_prod(crt->c->m, crt->c->num, prec);
-}
-
-ACB_DFT_INLINE void
-acb_dft_crt_clear(acb_dft_crt_t crt)
-{
-    flint_free(crt->cyc);
-}
+void acb_dft_crt_init(acb_dft_crt_t crt, slong len, slong prec);
+void acb_dft_crt_clear(acb_dft_crt_t crt);
 
 /* utils, could be moved elsewhere */
 

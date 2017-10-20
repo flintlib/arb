@@ -152,6 +152,24 @@ _acb_dft_crt_init(acb_dft_crt_t crt, slong dv, slong len, slong prec)
 }
 
 void
+acb_dft_crt_init(acb_dft_crt_t crt, slong len, slong prec)
+{
+    crt->n = len;
+    crt_init(crt->c, len);
+    crt->dv = 1;
+    crt->cyc = _acb_dft_steps_prod(crt->c->m, crt->c->num, prec);
+}
+
+void
+acb_dft_crt_clear(acb_dft_crt_t crt)
+{
+    slong i;
+    for (i = 0; i < crt->c->num; i++)
+        acb_dft_precomp_clear(crt->cyc[i].pre);
+    flint_free(crt->cyc);
+}
+
+void
 acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec)
 {
     acb_ptr t;

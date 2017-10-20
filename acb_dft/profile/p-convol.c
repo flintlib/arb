@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
 
             _acb_vec_clear(u, len[i]);
             _acb_vec_clear(v, len[i]);
+            _acb_vec_clear(w, len[i]);
         }
 
     }

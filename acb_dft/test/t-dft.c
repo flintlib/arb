@@ -130,6 +130,9 @@ int main()
 
         check_vec_eq_prec(w1, w2, n, prec, digits, n, "rad2", "pol", "rad2");
 
+        _acb_vec_clear(v, n);
+        _acb_vec_clear(w1, n);
+
     }
 
     flint_randclear(state);
