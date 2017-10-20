@@ -18,9 +18,8 @@ _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec)
     slong k, k2;
     acb_ptr z2n;
     int e = n_clog(2 * n - 1, 2);
-#if DFT_VERB
-    flint_printf("\n init bluestein e = %i", e);
-#endif
+    if (DFT_VERB)
+        flint_printf("dft_bluestein: init z[2^%i]\n", e);
     acb_dft_rad2_init(t->rad2, e, prec);
 
     /* compute z[k] = e(-k^2/2n) */

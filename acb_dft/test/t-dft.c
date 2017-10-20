@@ -54,13 +54,13 @@ int main()
 {
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 15;
-    ulong q[15] = { 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 308, 335, 525, 961};
+    slong nq = 17;
+    ulong q[17] = { 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 125, 308, 335, 525, 961, 1225};
     flint_rand_t state;
 
-    slong f, nf = 4;
-    do_f func[4] = { acb_dft_naive, acb_dft_cyc, acb_dft_crt, acb_dft_bluestein };
-    char * name[4] = { "naive", "cyc", "crt", "bluestein" };
+    slong f, nf = 5;
+    do_f func[5] = { acb_dft_naive, acb_dft_cyc, acb_dft_crt, acb_dft_bluestein, acb_dft };
+    char * name[5] = { "naive", "cyc", "crt", "bluestein", "default" };
 
     flint_printf("dft....");
     fflush(stdout);
@@ -85,6 +85,9 @@ int main()
         {
 
             acb_ptr w = (f == 0) ? w1 : w2;
+
+            if (DFT_VERB)
+                flint_printf("\n%s %wu\n", name[f], q[k]);
 
             func[f](w, v, q[k], prec);
 

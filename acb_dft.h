@@ -63,8 +63,8 @@ typedef acb_dft_step_struct * acb_dft_step_ptr;
 typedef struct
 {
     slong n;
-    int zclear;
     acb_ptr z;
+    int zclear;
     slong num;
     acb_dft_step_ptr cyc;
 }

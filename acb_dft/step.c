@@ -56,7 +56,13 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
             acb_ptr wi;
             for (wi = w + M, i = 1; i < m; i++, wi += M)
                 for (j = 1; j < M; j++)
+                {
+                    if (DFT_VERB)
+                        flint_printf("z[%wu*%wu]",dz,i*j);
                     acb_mul(wi + j, wi + j, z + dz * i * j, prec);
+                }
+            if (DFT_VERB)
+                flint_printf("\n");
         }
 
 #if REORDER
