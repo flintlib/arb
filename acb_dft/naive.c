@@ -60,7 +60,7 @@ acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec)
     _acb_vec_unit_roots(z, len, prec);
     if (w == v)
     {
-        acb_ptr v1 = _acb_vec_init(len);
+        v1 = _acb_vec_init(len);
         _acb_vec_set(v1, v, len);
         v =  v1;
     }
