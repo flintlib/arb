@@ -54,8 +54,8 @@ int main()
 {
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 17;
-    ulong q[17] = { 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 125, 308, 335, 525, 961, 1225};
+    slong nq = 19;
+    ulong q[19] = { 0, 1, 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 125, 308, 335, 525, 961, 1225};
     flint_rand_t state;
 
     slong f, nf = 5;
@@ -103,10 +103,8 @@ int main()
             check_vec_eq_prec(w1, w2, q[k], prec, digits, q[k], "no alias", name[0], name[f]);
         }
 
-        /*
         acb_dft_inverse(w2, w1, q[k], prec);
-        check_vec_eq_prec(v, w2, q[k], prec, digits, q[k], "original", "inverse");
-        */
+        check_vec_eq_prec(v, w2, q[k], prec, digits, q[k], "inverse", "original", "inverse");
 
         _acb_vec_clear(v, q[k]);
         _acb_vec_clear(w1, q[k]);
@@ -115,7 +113,7 @@ int main()
     }
 
     /* radix2 dft */
-    for (k = 1; k < 12; k++)
+    for (k = 0; k < 12; k++)
     {
         slong n = 1 << k, j;
         acb_ptr v, w1, w2;

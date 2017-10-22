@@ -17,10 +17,10 @@ _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong le
     pre->n = len;
     if (len <= 1)
     {
-        flint_printf("precomp init: trivial group. abort.\n");
-        abort();
+        pre->type = DFT_NAIVE;
+        _acb_dft_naive_init(pre->t.naive, dv, z, dz, len, prec);
     }
-    if (n_is_prime(len))
+    else if (n_is_prime(len))
     {
         if (len < 100)
         {

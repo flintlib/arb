@@ -51,9 +51,7 @@ acb_dft_prod_clear(acb_dft_prod_t t)
 void
 acb_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dft_prod_t prod, slong prec)
 {
-    if (prod->num == 0)
-        acb_set(w + 0, v + 0);
-    else
+    if (prod->num >= 1)
         acb_dft_step(w, v, prod->cyc, prod->num, prec);
 }
 

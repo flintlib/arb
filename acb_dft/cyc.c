@@ -70,7 +70,10 @@ _acb_dft_cyc_init(acb_dft_cyc_t t, slong dv, slong len, slong prec)
 {
     n_factor_t fac;
     n_factor_init(&fac);
-    n_factor(&fac, len, 0);
+    if (len)
+        n_factor(&fac, len, 1);
+    else
+        fac.num = 0;
     _acb_dft_cyc_init_z_fac(t, fac, dv, NULL, 0, len, prec);
 }
 
@@ -83,6 +86,18 @@ acb_dft_cyc_clear(acb_dft_cyc_t t)
     if (t->zclear)
         _acb_vec_clear(t->z, t->n);
     flint_free(t->cyc);
+}
+
+void
+acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec)
+{
+    if (cyc->num == 0)
+    {
+        if (cyc->n == 1)
+            acb_set(w, v);
+    }
+    else
+        acb_dft_step(w, v, cyc->cyc, cyc->num, prec);
 }
 
 void

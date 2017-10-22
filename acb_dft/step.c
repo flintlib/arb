@@ -19,8 +19,9 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
     acb_dft_step_struct c;
     if (num == 0)
     {
+        /* only possible if len = 0 */
         flint_printf("error: reached num = 0 in acb_dft_step\n");
-        abort(); /* or just copy v to w */
+        return;
     }
     c = cyc[0];
     if (num == 1)

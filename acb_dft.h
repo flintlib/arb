@@ -179,11 +179,8 @@ void acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slon
 void acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec);
 void acb_dft_inverse_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec);
 void acb_dft_naive_precomp(acb_ptr w, acb_srcptr v, const acb_dft_naive_t pol, slong prec);
-ACB_DFT_INLINE void
-acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec)
-{
-    acb_dft_step(w, v, cyc->cyc, cyc->num, prec);
-}
+void acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec);
+
 void acb_dft_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec);

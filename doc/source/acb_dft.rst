@@ -225,7 +225,7 @@ CRT decomposition
 
    Sets *w* to the DFT of *v* of size *t->n*, using the CRT decomposition scheme *t*.
 
-Cooley-Tuckey decomposition
+Cooley-Tukey decomposition
 ...............................................................................
 
 .. function:: void acb_dft_cyc(acb_ptr w, acb_srcptr v, slong n, slong prec)
