@@ -95,6 +95,7 @@ int main()
             if (DFT_VERB)
                 flint_printf("\n%s %wu\n", name[f], len);
 
+            /* compute DFT */
             func[f](w, v, len, prec);
 
             /* check aliasing */
@@ -103,14 +104,19 @@ int main()
 
             check_vec_eq_prec(w1, w3, len, prec, digits, len, "alias", name[0], name[f]);
 
+
             if (f == 0)
-                continue;
-
-            check_vec_eq_prec(w1, w2, len, prec, digits, len, "no alias", name[0], name[f]);
+            {
+                /* check inverse */
+                acb_dft_inverse(w2, w1, len, prec);
+                check_vec_eq_prec(v, w2, len, prec, digits, len, "inverse", "original", "inverse");
+            }
+            else
+            {
+                /* check non aliased */
+                check_vec_eq_prec(w1, w2, len, prec, digits, len, "no alias", name[0], name[f]);
+            }
         }
-
-        acb_dft_inverse(w2, w1, len, prec);
-        check_vec_eq_prec(v, w2, len, prec, digits, len, "inverse", "original", "inverse");
 
         _acb_vec_clear(v, len);
         _acb_vec_clear(w1, len);

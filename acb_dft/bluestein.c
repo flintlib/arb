@@ -10,33 +10,90 @@
 */
 
 #include "acb_dft.h"
+#include "acb_modular.h"
+
+/* z[k] = z^(k^2), z a 2n-th root of unity */
+static void
+_acb_vec_bluestein_factors(acb_ptr z, slong n, slong prec)
+{
+    /* this function is used mostly with prime-power n
+     * so the set of squares has index 2 only.
+     * computing an addition sequence does not considerably improve things */
+    if (n < 30)
+    {
+        slong k, k2;
+        acb_ptr z2n;
+        nmod_t n2;
+
+        z2n = _acb_vec_init(2 * n);
+        _acb_vec_unit_roots(z2n, 2 * n, prec);
+        nmod_init(&n2, 2 * n);
+
+        for (k = 0, k2 = 0; k < n; k++)
+        {
+            acb_set(z + k, z2n + k2);
+            k2 = nmod_add(k2, 2 * k + 1, n2);
+        }
+
+        _acb_vec_clear(z2n, 2 * n);
+    }
+    else
+    {
+        nmod_t n2;
+        slong k, k2, dk;
+        slong * v, * s;
+        acb_ptr t;
+        s = flint_malloc(n * sizeof(slong));
+        v = flint_malloc((n + 1)* sizeof(slong));
+        t = _acb_vec_init(n + 1);
+        nmod_init(&n2, 2 * n);
+
+        for (k = 0; k < n; k++)
+            v[k] = 0;
+        for (k = 0, k2 = 0, dk = 1; k < n; k++)
+        {
+            s[k] = k2;
+            if (k2 < n)
+                v[k2] = -1;
+            else
+                v[2 * n - k2] = -1;
+
+            k2 = nmod_add(k2, dk, n2);
+            dk = nmod_add(dk, 2, n2);
+        }
+        acb_modular_fill_addseq(v, n);
+
+        acb_one(t + 0);
+        acb_unit_root(t + 1, 2 * n, prec);
+        acb_set_si(t + n, -1);
+        for (k = 2; k < n; k++)
+            if (v[k])
+                acb_mul(t + k, t + v[k], t + k - v[k], prec);
+        for (k = 0; k < n; k++)
+        {
+            if (s[k] <= n)
+                acb_set(z + k, t + s[k]);
+            else
+                acb_conj(z + k, t + 2 * n - s[k]);
+        }
+        _acb_vec_clear(t, n + 1);
+        flint_free(s);
+        flint_free(v);
+    }
+}
 
 void
 _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec)
 {
-    nmod_t n2;
-    slong k, k2;
-    acb_ptr z2n;
     int e = n_clog(2 * n - 1, 2);
     if (DFT_VERB)
         flint_printf("dft_bluestein: init z[2^%i]\n", e);
     acb_dft_rad2_init(t->rad2, e, prec);
 
-    /* compute z[k] = e(-k^2/2n) */
-    /* TODO: check if this can be improved */
-    z2n = _acb_vec_init(2 * n);
-    _acb_vec_unit_roots(z2n, 2 * n, prec);
-    nmod_init(&n2, 2 * n);
     t->n = n;
     t->dv = dv;
     t->z = _acb_vec_init(n);
-    for (k = 0, k2 = 0; k < n; k++)
-    {
-        acb_set(t->z + k, z2n + k2);
-        k2 = nmod_add(k2, 2 * k + 1, n2);
-    }
-
-    _acb_vec_clear(z2n, 2 * n);
+    _acb_vec_bluestein_factors(t->z, n, prec);
 }
 
 void
