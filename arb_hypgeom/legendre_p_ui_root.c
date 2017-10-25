@@ -193,22 +193,15 @@ arb_hypgeom_legendre_p_ui_root(arb_t res, arb_t weight, ulong n, ulong k, slong 
         {
             wp = steps[step] + padding;
 
+            /* Interval Newton update: mid(x) - f(mid(x)) / f'(x) */
+            /* We compute f'(mid(x)) and use the bound on f'' to get f'(x) */
             arb_set(v, res);
-            mag_set(err, arb_radref(v));
+            mag_mul(err, p2b, arb_radref(v));
             mag_zero(arb_radref(v));
-
             arb_hypgeom_legendre_p_ui(t, u, n, v, wp);
+            arb_add_error_mag(u, err);
             arb_div(t, t, u, wp);
             arb_sub(v, v, t, wp);
-
-            /* Newton error bound: 0.5 f''(xi)/f'(x_k) e_k^2 */
-            mag_mul(err, err, err);
-            arb_get_mag_lower(err2, u);
-            mag_div(err, err, err2);
-            mag_mul_2exp_si(err, err, -1);
-            mag_mul(err, err, p2b);
-
-            arb_add_error_mag(v, err);
 
             if (!arb_contains(v0, v))
             {

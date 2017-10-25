@@ -392,7 +392,8 @@ Orthogonal polynomials and functions
     We compute an enclosing interval using an asymptotic approximation followed
     by some number of Newton iterations, using the error bounds given
     in [Pet1999]_. If very high precision is requested, the root is
-    subsequently refined using Newton steps with doubling working precision.
+    subsequently refined using interval Newton steps with doubling working
+    precision.
 
 Hypergeometric sequences
 -------------------------------------------------------------------------------
