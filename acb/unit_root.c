@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_dirichlet.h"
+#include "acb.h"
 
 static void
 _acb_unit_root(acb_t res, ulong order, slong prec)
