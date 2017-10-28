@@ -18,6 +18,13 @@ arb_sinh(arb_t s, const arb_t x, slong prec)
     {
         arb_zero(s);
     }
+    else if (!arb_is_finite(x))
+    {
+        if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(s);
+        else
+            arb_zero_pm_inf(s);
+    }
     else
     {
         arb_t t;
@@ -25,7 +32,8 @@ arb_sinh(arb_t s, const arb_t x, slong prec)
 
         arb_init(t);
 
-        if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0)
+        if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0 &&
+               mag_cmp_2exp_si(arb_radref(x), -4) <= 0)
         {
             arb_expm1(s, x, wp);
             arb_add_ui(t, s, 1, wp);
@@ -50,6 +58,13 @@ arb_cosh(arb_t c, const arb_t x, slong prec)
     {
         arb_one(c);
     }
+    else if (!arb_is_finite(x))
+    {
+        if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(c);
+        else
+            arb_zero_pm_inf(c);
+    }
     else
     {
         arb_t t;
@@ -73,6 +88,19 @@ arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, slong prec)
         arb_zero(s);
         arb_one(c);
     }
+    else if (!arb_is_finite(x))
+    {
+        if (arf_is_nan(arb_midref(x)))
+        {
+            arb_indeterminate(s);
+            arb_indeterminate(c);
+        }
+        else
+        {
+            arb_zero_pm_inf(s);
+            arb_zero_pm_inf(c);
+        }
+    }
     else
     {
         slong wp = prec + 4;
@@ -80,7 +108,8 @@ arb_sinh_cosh(arb_t s, arb_t c, const arb_t x, slong prec)
         arb_t t;
         arb_init(t);
 
-        if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0)
+        if (arf_cmpabs_2exp_si(arb_midref(x), -1) <= 0 &&
+            mag_cmp_2exp_si(arb_radref(x), -4) <= 0)
         {
             arb_expm1(s, x, wp);
             arb_add_ui(t, s, 1, wp);
