@@ -37,6 +37,7 @@ void acb_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
 void acb_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol_dft(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
+void acb_dft_convol_mullow(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 
 #define CRT_MAX 15

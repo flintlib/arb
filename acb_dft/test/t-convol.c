@@ -60,9 +60,9 @@ int main()
     ulong nr = 5;
     flint_rand_t state;
 
-    slong f, nf = 3;
-    do_f func[3] = { acb_dft_convol_naive, acb_dft_convol_rad2, acb_dft_convol_dft };
-    char * name[3] = { "naive", "rad2", "dft" };
+    slong f, nf = 4;
+    do_f func[4] = { acb_dft_convol_naive, acb_dft_convol_rad2, acb_dft_convol_dft, acb_dft_convol_mullow };
+    char * name[4] = { "naive", "rad2", "dft", "mullow" };
 
     flint_printf("convol....");
     fflush(stdout);
