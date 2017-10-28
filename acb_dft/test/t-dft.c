@@ -133,7 +133,7 @@ int main()
         w1 = _acb_vec_init(n);
 
         for (j = 0; j < n; j++)
-            acb_set_si(v + k, k);
+            acb_set_si_si(v + j, j, j + 2);
 
         acb_dft_naive(w1, v, n, prec);
         acb_dft_rad2_inplace(w2, k, prec);

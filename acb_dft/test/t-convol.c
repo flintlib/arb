@@ -86,8 +86,13 @@ int main()
 
         for (i = 0; i < len; i++)
         {
-            acb_set_si(x + i, n_randint(state, len));
-            acb_set_si(y + i, n_randint(state, len));
+#if 1
+            acb_set_si(x + i, n_randint(state, 4 * len));
+            acb_set_si(y + i, n_randint(state, 4 * len));
+#else
+            acb_set_si_si(x + i, n_randint(state, 4 * len), n_randint(state, 4 * len));
+            acb_set_si_si(y + i, n_randint(state, 4 * len), n_randint(state, 4 * len));
+#endif
         }
 
         for (f = 0; f < nf; f++)
@@ -115,5 +120,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
-
