@@ -90,6 +90,7 @@ typedef struct
     slong n;
     slong dv;
     acb_ptr z; /* z[k] = e(k^2/2n) */
+    acb_ptr g; /* g[k] = dft( z ) */
     acb_dft_rad2_t rad2;
 }
 acb_dft_bluestein_struct;
@@ -262,6 +263,7 @@ ACB_DFT_INLINE void
 acb_dft_bluestein_clear(acb_dft_bluestein_t t)
 {
     _acb_vec_clear(t->z, t->n);
+    _acb_vec_clear(t->g, t->rad2->n);
     acb_dft_rad2_clear(t->rad2);
 }
 

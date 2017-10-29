@@ -86,46 +86,49 @@ _acb_vec_bluestein_factors(acb_ptr z, slong n, slong prec)
 void
 _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec)
 {
+    acb_ptr z, g;
+    slong k, n2;
     int e = n_clog(2 * n - 1, 2);
+
     if (DFT_VERB)
         flint_printf("dft_bluestein: init z[2^%i]\n", e);
+
     acb_dft_rad2_init(t->rad2, e, prec);
 
     t->n = n;
     t->dv = dv;
-    t->z = _acb_vec_init(n);
+
+    t->z = z = _acb_vec_init(n);
     _acb_vec_bluestein_factors(t->z, n, prec);
+
+    n2 = t->rad2->n;
+    t->g = g = _acb_vec_init(n2);
+    acb_one(g + 0);
+    for (k = 1; k < n; k++)
+    {
+        acb_conj(g + k, z + k);
+        acb_set(g + n2 - k, g + k);
+    }
+    acb_dft_rad2_precomp_inplace(g, t->rad2, prec);
 }
 
 void
 acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec)
 {
-    slong k, n = t->n, np = t->rad2->n, dv = t->dv;
-    acb_ptr fp, gp, z;
-    z = t->z;
+    slong n = t->n, np = t->rad2->n, dv = t->dv;
+    acb_ptr fp;
 
     fp = _acb_vec_init(np);
-    _acb_vec_kronecker_mul_step(fp, z, v, dv, n, prec);
-
-    gp = _acb_vec_init(np);
-    acb_one(gp + 0);
-    for (k = 1; k < n; k++)
-    {
-        acb_conj(gp + k, z + k);
-        acb_set(gp + np - k, gp + k);
-    }
+    _acb_vec_kronecker_mul_step(fp, t->z, v, dv, n, prec);
 
     acb_dft_rad2_precomp_inplace(fp, t->rad2, prec);
-    acb_dft_rad2_precomp_inplace(gp, t->rad2, prec);
+    _acb_vec_kronecker_mul(fp, t->g, fp, np, prec);
 
-    _acb_vec_kronecker_mul(gp, gp, fp, np, prec);
+    acb_dft_inverse_rad2_precomp_inplace(fp, t->rad2, prec);
 
-    acb_dft_inverse_rad2_precomp_inplace(gp, t->rad2, prec);
-
-    _acb_vec_kronecker_mul(w, z, gp, n, prec);
+    _acb_vec_kronecker_mul(w, t->z, fp, n, prec);
 
     _acb_vec_clear(fp, n);
-    _acb_vec_clear(gp, n);
 }
 
 void
