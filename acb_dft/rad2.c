@@ -39,6 +39,11 @@ acb_dft_rad2_reorder(acb_ptr v, slong n)
 void
 _acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec)
 {
+    if (e < 0)
+    {
+        flint_printf("acb_dft_rad2_init: need e >= 0");
+        abort();
+    }
     t->e = e;
     t->n = 1 << e;
     t->dv = dv;

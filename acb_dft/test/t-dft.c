@@ -56,7 +56,7 @@ int main()
     slong prec = 100, digits = 30;
     slong nq = 19;
     ulong q[19] = { 0, 1, 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 125, 308, 335, 525, 961, 1225};
-    slong nr = 10;
+    slong nr = 5;
     flint_rand_t state;
 
     slong f, nf = 5;
@@ -71,13 +71,13 @@ int main()
     /* cyclic dft */
     for (k = 0; k < nq + nr; k++)
     {
-        slong i, len;
+        slong i, len, f0;
         acb_ptr v, w1, w2, w3;
 
         if (k < nq)
             len = q[k];
         else
-            len = n_randint(state, 2000);
+            len = n_randint(state, 1000);
 
         v = _acb_vec_init(len);
         w1 = _acb_vec_init(len);
@@ -87,10 +87,13 @@ int main()
         for (i = 0; i < len; i++)
             acb_set_si_si(v + i, i, 3 - i);
 
-        for (f = 0; f < nf; f++)
+        /* avoid naive for long transforms */
+        f0 = (len > 50);
+
+        for (f = f0; f < nf; f++)
         {
 
-            acb_ptr w = (f == 0) ? w1 : w2;
+            acb_ptr w = (f == f0) ? w1 : w2;
 
             if (DFT_VERB)
                 flint_printf("\n%s %wu\n", name[f], len);
@@ -98,23 +101,25 @@ int main()
             /* compute DFT */
             func[f](w, v, len, prec);
 
-            /* check aliasing */
-            _acb_vec_set(w3, v, len);
-            func[f](w3, w3, len, prec);
+            if (len < 500)
+            {
+                /* check aliasing */
+                _acb_vec_set(w3, v, len);
+                func[f](w3, w3, len, prec);
 
-            check_vec_eq_prec(w1, w3, len, prec, digits, len, "alias", name[0], name[f]);
+                check_vec_eq_prec(w1, w3, len, prec, digits, len, "alias", name[0], name[f]);
+            }
 
-
-            if (f == 0)
+            if (f > f0)
+            {
+                /* check non aliased */
+                check_vec_eq_prec(w1, w2, len, prec, digits, len, "no alias", name[0], name[f]);
+            }
+            else
             {
                 /* check inverse */
                 acb_dft_inverse(w2, w1, len, prec);
                 check_vec_eq_prec(v, w2, len, prec, digits, len, "inverse", "original", "inverse");
-            }
-            else
-            {
-                /* check non aliased */
-                check_vec_eq_prec(w1, w2, len, prec, digits, len, "no alias", name[0], name[f]);
             }
         }
 
@@ -125,7 +130,7 @@ int main()
     }
 
     /* radix2 dft */
-    for (k = 0; k < 12; k++)
+    for (k = 0; k < 11; k++)
     {
         slong n = 1 << k, j;
         acb_ptr v, w1, w2;
@@ -135,10 +140,10 @@ int main()
         for (j = 0; j < n; j++)
             acb_set_si_si(v + j, j, j + 2);
 
-        acb_dft_naive(w1, v, n, prec);
+        acb_dft_cyc(w1, v, n, prec);
         acb_dft_rad2_inplace(w2, k, prec);
 
-        check_vec_eq_prec(w1, w2, n, prec, digits, n, "rad2", "pol", "rad2");
+        check_vec_eq_prec(w1, w2, n, prec, digits, n, "rad2", "cyc", "rad2");
 
         _acb_vec_clear(v, n);
         _acb_vec_clear(w1, n);
