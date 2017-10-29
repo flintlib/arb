@@ -57,7 +57,7 @@ acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec)
     acb_ptr z, v1 = NULL;
 
     z = _acb_vec_init(len);
-    _acb_vec_unit_roots(z, len, -len, prec);
+    _acb_vec_unit_roots(z, -len, len, prec);
     if (w == v)
     {
         v1 = _acb_vec_init(len);
@@ -84,7 +84,7 @@ _acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong le
         if (DFT_VERB)
             flint_printf("dft_naive: init z[%ld]\n",len);
         pol->z = _acb_vec_init(len);
-        _acb_vec_unit_roots(pol->z, len, -len, prec);
+        _acb_vec_unit_roots(pol->z, -len, len, prec);
         pol->dz = 1;
         pol->zclear = 1;
     }

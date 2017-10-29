@@ -26,7 +26,7 @@ _acb_vec_bluestein_factors(acb_ptr z, slong n, slong prec)
         nmod_t n2;
 
         z2n = _acb_vec_init(2 * n);
-        _acb_vec_unit_roots(z2n, 2 * n, -2 * n, prec);
+        _acb_vec_unit_roots(z2n, -2 * n, 2 * n, prec);
         nmod_init(&n2, 2 * n);
 
         for (k = 0, k2 = 0; k < n; k++)

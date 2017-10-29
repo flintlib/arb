@@ -51,7 +51,7 @@ int main()
             acb_init(t);
             fmpq_init(q);
 
-            _acb_vec_unit_roots(vec, len, order, prec);
+            _acb_vec_unit_roots(vec, order, len, prec);
 
             for (k = 0; k < len; k++)
             {

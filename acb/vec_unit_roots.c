@@ -13,7 +13,7 @@
 #include "acb.h"
 
 void
-_acb_vec_unit_roots(acb_ptr res, slong len, slong n, slong prec)
+_acb_vec_unit_roots(acb_ptr res, slong n, slong len, slong prec)
 {
     int conj = 0;
     slong k, len1, wp;

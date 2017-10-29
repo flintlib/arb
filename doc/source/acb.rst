@@ -1026,7 +1026,7 @@ Vector functions
 
     Sets *xs* to the powers `1, x, x^2, \ldots, x^{len-1}`.
 
-.. function:: void _acb_vec_unit_roots(acb_ptr z, slong len, slong order, slong prec)
+.. function:: void _acb_vec_unit_roots(acb_ptr z, slong order, slong len, slong prec)
 
     Sets *z* to the powers `1,z,z^2,\dots z^{\mathrm{len}-1}` where `z=\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
     *order* can be taken negative.

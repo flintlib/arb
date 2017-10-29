@@ -27,7 +27,7 @@ _acb_dft_cyc_init_z_fac(acb_dft_cyc_t t, n_factor_t fac, slong dv, acb_ptr z, sl
         if (DFT_VERB)
             flint_printf("dft_cyc: init z[%wu]\n", t->n);
         z = _acb_vec_init(t->n);
-        _acb_vec_unit_roots(z, t->n, -t->n, prec);
+        _acb_vec_unit_roots(z, -t->n, t->n, prec);
         dz = 1;
         t->zclear = 1;
     }

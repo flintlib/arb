@@ -50,7 +50,7 @@ _acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec)
     t->nz = t->n >> 1;
     t->z = _acb_vec_init(t->nz);
     /* set n/2 roots of order n */
-    _acb_vec_unit_roots(t->z, t->nz, -t->n, prec);
+    _acb_vec_unit_roots(t->z, -t->n, t->nz, prec);
 }
 
 /* remark: can use same rad2 with smaller power of 2 */
