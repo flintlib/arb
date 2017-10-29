@@ -364,24 +364,22 @@ Dirichlet character Gauss, Jacobi and theta sums
 Discrete Fourier transforms (DFT)
 -------------------------------------------------------------------------------
 
-Let *G* be a finite abelian group, and `\chi` a character of *G*.
-For any map `f:G\to\mathbb C`, the discrete fourier transform
-`\hat f:\hat G\to \mathbb C` is defined by
+If `f` is a function `\mathbb Z/q\mathbb Z\to \mathbb C`,
+its discrete Fourier transform is the function
+defined on Dirichlet characters mod `q` by
 
 .. math::
 
-   \hat f(\chi) = \sum_{x\in G}\chi(x)f(x)
+   \hat f(\chi) = \sum_{x\mod q}\overline{\chi(x)}f(x)
 
-Fast Fourier transform techniques allow to compute efficiently
-all values `\hat f(\chi)`.
+See the :ref:`acb_dft` module.
 
-For a Dirichlet group `G` modulo `q`, we take advantage
-of the Conrey isomorphism `G \to \hat G` to consider the
-the Fourier transform on Conrey labels as
+Here we take advantage of the Conrey isomorphism `G \to \hat G`
+to consider the Fourier transform on Conrey labels as
 
 .. math::
 
-   g(a) = \sum_{b\bmod q}\chi_q(a,b)f(b)
+   g(a) = \sum_{b\bmod q}\overline{\chi_q(a,b)}f(b)
 
 
 .. function:: void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)

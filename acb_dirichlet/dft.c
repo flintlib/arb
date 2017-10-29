@@ -16,13 +16,22 @@
 void
 acb_dirichlet_dft_index(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
 {
-    slong k, l, * cyc;
-    cyc = flint_malloc(G->num * sizeof(slong));
-    for (k = 0, l = G->num - 1; l >= 0; k++, l--)
-        cyc[k] = G->P[k].phi.n;
+    if (G->phi_q == 1)
+    {
+        acb_set(w, v);
+    }
+    else
+    {
+        slong k, l, * cyc;
 
-    acb_dft_prod(w, v, cyc, G->num, prec);
-    flint_free(cyc);
+
+        cyc = flint_malloc(G->num * sizeof(slong));
+        for (k = 0, l = G->num - 1; l >= 0; k++, l--)
+            cyc[k] = G->P[k].phi.n;
+
+        acb_dft_prod(w, v, cyc, G->num, prec);
+        flint_free(cyc);
+    }
 }
 
 /* dft, number indexing, array size G->q */
