@@ -123,6 +123,14 @@ on polynomials, without introducing a separate power series type.
    acb_poly.rst
    arb_fmpz_poly.rst
 
+Transforms
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   acb_dft.rst
+
 Matrices
 ::::::::::::::::::::::::::::::::::::
 
@@ -154,7 +162,6 @@ modules.
    bernoulli.rst
    hypgeom.rst
    partitions.rst
-   acb_dft.rst
 
 Calculus
 ::::::::::::::::::::::::::::::::::::

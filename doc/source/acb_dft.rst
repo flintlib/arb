@@ -1,15 +1,12 @@
 .. _acb-dft:
 
-**acb_dft.h** -- Discrete Fourier Transform on finite abelian groups
+**acb_dft.h** -- Discrete Fourier transform
 ===================================================================================
 
 *Warning: the interfaces in this module are experimental and may change
 without notice.*
 
 All functions support aliasing.
-
-Discrete Fourier Transform
--------------------------------------------------------------------------------
 
 Let *G* be a finite abelian group, and `\chi` a character of *G*.
 For any map `f:G\to\mathbb C`, the discrete fourier transform
@@ -19,7 +16,7 @@ For any map `f:G\to\mathbb C`, the discrete fourier transform
 
    \hat f(\chi) = \sum_{x\in G}\overline{\chi(x)}f(x)
 
-Note that by inversion formula
+Note that by the inversion formula
 
 .. math::
 
@@ -27,7 +24,7 @@ Note that by inversion formula
 
 it is straightforward to recover `f` from its DFT `\hat f`.
 
-DFT on Z/nZ
+Main DFT functions
 -------------------------------------------------------------------------------
 
 If `G=\mathbb Z/n\mathbb Z`, we compute the DFT according to the usual convention
@@ -161,7 +158,7 @@ For functions `f` and `g` on `G` we consider the convolution
 FFT algorithms
 -------------------------------------------------------------------------------
 
-Fast Fourier Transform techniques allow to compute efficiently
+Fast Fourier transform techniques allow to compute efficiently
 all values `\hat f(\chi)` by reusing common computations.
 
 Specifically, if `H\triangleleft G` is a subgroup of size `M` and index

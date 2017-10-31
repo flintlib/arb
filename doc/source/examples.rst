@@ -566,5 +566,55 @@ Evaluating the Riemann zeta function near the first nontrivial root::
     cpu/wall(s): 0.002 0.003
     virt/peak/res/peak(MB): 26.86 26.88 2.57 2.57
 
+lcentral.c
+-------------------------------------------------------------------------------
+
+This program computes the central value `L(1/2)` for each Dirichlet L-function
+character modulo *q* for each *q* in the range *qmin* to *qmax*. Usage::
+
+    > build/examples/lcentral
+    Computes central values (s = 0.5) of Dirichlet L-functions.
+
+    usage: build/examples/lcentral [--quiet] [--check] [--prec <bits>] qmin qmax
+
+The first few values::
+
+    > build/examples/lcentral 1 8
+    3,2: [0.48086755769682862618122006324 +/- 7.35e-30]
+    4,3: [0.66769145718960917665869092930 +/- 1.62e-30]
+    5,2: [0.76374788011728687822451215264 +/- 2.32e-30] + [0.21696476751886069363858659310 +/- 3.06e-30]*I
+    5,4: [0.23175094750401575588338366176 +/- 2.21e-30]
+    5,3: [0.76374788011728687822451215264 +/- 2.32e-30] + [-0.21696476751886069363858659310 +/- 3.06e-30]*I
+    7,3: [0.71394334376831949285993820742 +/- 1.21e-30] + [0.47490218277139938263745243935 +/- 4.52e-30]*I
+    7,2: [0.31008936259836766059195052534 +/- 5.29e-30] + [-0.07264193137017790524562171245 +/- 5.48e-30]*I
+    7,6: [1.14658566690370833367712697646 +/- 1.95e-30]
+    7,4: [0.31008936259836766059195052534 +/- 5.29e-30] + [0.07264193137017790524562171245 +/- 5.48e-30]*I
+    7,5: [0.71394334376831949285993820742 +/- 1.21e-30] + [-0.47490218277139938263745243935 +/- 4.52e-30]*I
+    8,5: [0.37369171291254730738158695002 +/- 4.01e-30]
+    8,3: [1.10042140952554837756713576997 +/- 3.37e-30]
+    cpu/wall(s): 0.002 0.003
+    virt/peak/res/peak(MB): 26.32 26.34 2.35 2.35
+
+Testing a large *q*::
+
+    > build/examples/lcentral --quiet --check --prec 256 100000 100000
+    cpu/wall(s): 1.668 1.667
+    virt/peak/res/peak(MB): 35.67 46.66 11.67 22.61
+
+It is conjectured that the central value never vanishes. Running with ``--check``
+verifies that the interval certainly is nonzero. This can fail with
+insufficient precision::
+
+    > build/examples/lcentral --check --prec 15 100000 100000
+    100000,71877: [0.1 +/- 0.0772] + [+/- 0.136]*I
+    100000,90629: [2e+0 +/- 0.106] + [+/- 0.920]*I
+    100000,28133: [+/- 0.811] + [-2e+0 +/- 0.501]*I
+    100000,3141: [0.8 +/- 0.0407] + [-0.1 +/- 0.0243]*I
+    100000,53189: [4.0 +/- 0.0826] + [+/- 0.107]*I
+    100000,53253: [1.9 +/- 0.0855] + [-3.9 +/- 0.0681]*I
+    Value could be zero!
+    100000,53381: [+/- 0.0329] + [+/- 0.0413]*I
+    Aborted
+
 .. highlight:: c
 

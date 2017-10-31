@@ -372,7 +372,7 @@ defined on Dirichlet characters mod `q` by
 
    \hat f(\chi) = \sum_{x\mod q}\overline{\chi(x)}f(x)
 
-See the :ref:`acb_dft` module.
+See the :ref:`acb-dft` module.
 
 Here we take advantage of the Conrey isomorphism `G \to \hat G`
 to consider the Fourier transform on Conrey labels as

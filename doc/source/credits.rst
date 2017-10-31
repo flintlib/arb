@@ -36,7 +36,7 @@ on FLINT 2.0 (with particular credit to Bill Hart and Sebastian Pancratz).
 
 The following authors have developed major new features.
 
-* Pascal Molin - Dirichlet characters, Dirichlet L-functions, discrete logarithm computation
+* Pascal Molin - discrete Fourier transform (DFT), Dirichlet characters, Dirichlet L-functions, discrete logarithm computation
 * Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, Cholesky decomposition, miscellaneous patches
 
 Several people have contributed patches, bug reports, or substantial feedback.
