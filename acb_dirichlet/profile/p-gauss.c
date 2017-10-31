@@ -17,7 +17,7 @@
 #define CSV 1
 #define JSON 2
 
-typedef void (*do_f) (acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi, slong prec);
+typedef void (*do_f) (acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
 int main(int argc, char *argv[])
 {
@@ -87,29 +87,29 @@ int main(int argc, char *argv[])
 
                 for (q = qmin[i]; q <= qmax[i]; q++)
                 {
-                    acb_dirichlet_group_t G;
-                    acb_dirichlet_char_t chi;
+                    dirichlet_group_t G;
+                    dirichlet_char_t chi;
                     acb_t res;
 
                     if (q % 4 == 2)
                         continue;
 
-                    acb_dirichlet_group_init(G, q);
+                    dirichlet_group_init(G, q);
                     if (l == 4)
-                        acb_dirichlet_group_dlog_precompute(G, 1);
-                    acb_dirichlet_char_init(chi, G);
-                    acb_dirichlet_char_first_primitive(chi, G);
+                        dirichlet_group_dlog_precompute(G, 1);
+                    dirichlet_char_init(chi, G);
+                    dirichlet_char_first_primitive(chi, G);
                     acb_init(res);
 
                         do {
                             func[l](res, G, chi, prec[j]);
-                        } while (acb_dirichlet_char_next_primitive(chi, G) >= 0);
+                        } while (dirichlet_char_next_primitive(chi, G) >= 0);
 
                     acb_clear(res);
-                    acb_dirichlet_char_clear(chi);
+                    dirichlet_char_clear(chi);
                     if (l == 4)
-                        acb_dirichlet_group_dlog_clear(G);
-                    acb_dirichlet_group_clear(G);
+                        dirichlet_group_dlog_clear(G);
+                    dirichlet_group_clear(G);
                 }
 
             TIMEIT_ONCE_STOP

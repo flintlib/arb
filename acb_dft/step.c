@@ -18,10 +18,7 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
 {
     acb_dft_step_struct c;
     if (num == 0)
-    {
-        flint_printf("error: reached num = 0 in acb_dft_step\n");
-        abort(); /* or just copy v to w */
-    }
+        return;
     c = cyc[0];
     if (num == 1)
     {
@@ -40,6 +37,12 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
 
         t = _acb_vec_init(m * M);
 
+        if (w == v)
+        {
+            _acb_vec_set(t, v, m * M);
+            v = t;
+        }
+
         /* m DFT of size M */
         for (i = 0; i < m; i++)
             acb_dft_step(w + i * M, v + i * dv, cyc + 1, num - 1, prec);
@@ -50,7 +53,13 @@ acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong pre
             acb_ptr wi;
             for (wi = w + M, i = 1; i < m; i++, wi += M)
                 for (j = 1; j < M; j++)
+                {
+                    if (DFT_VERB)
+                        flint_printf("z[%wu*%wu]",dz,i*j);
                     acb_mul(wi + j, wi + j, z + dz * i * j, prec);
+                }
+            if (DFT_VERB)
+                flint_printf("\n");
         }
 
 #if REORDER

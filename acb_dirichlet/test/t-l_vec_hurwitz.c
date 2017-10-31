@@ -77,6 +77,7 @@ int main()
                 flint_printf("\n\n");
                 acb_vec_printd(v, G->phi_q, 10);
                 flint_printf("\n\n");
+                abort();
             }
             else if (acb_rel_accuracy_bits(z) < prec - 8
                         || acb_rel_accuracy_bits(v + i) < prec - 8)

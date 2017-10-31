@@ -38,32 +38,32 @@ acb_dft_convol_pad(acb_ptr fp, acb_ptr gp, acb_srcptr f, acb_srcptr g, slong n, 
 }
 
 void
-acb_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
-{
-    /* divide before to keep v const */
-    _acb_vec_scalar_div_ui(w, v, len, len, prec);
-    acb_vec_swap_ri(w, len);
-    acb_dft_cyc(w, w, len, prec);
-    acb_vec_swap_ri(w, len);
-}
-
-void
 acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dft_rad2_t rad2, slong prec)
 {
     slong np;
     acb_ptr fp, gp;
     np = rad2->n;
 
+    if (len <= 0)
+        return;
+
     fp = _acb_vec_init(np);
     gp = _acb_vec_init(np);
-    acb_dft_convol_pad(fp, gp, f, g, len, np);
 
-    acb_dft_rad2_precomp(fp, rad2, prec);
-    acb_dft_rad2_precomp(gp, rad2, prec);
+    if (len == np)
+    {
+        _acb_vec_set(fp, f, len);
+        _acb_vec_set(gp, g, len);
+    }
+    else
+        acb_dft_convol_pad(fp, gp, f, g, len, np);
+
+    acb_dft_rad2_precomp_inplace(fp, rad2, prec);
+    acb_dft_rad2_precomp_inplace(gp, rad2, prec);
 
     _acb_vec_kronecker_mul(gp, gp, fp, np, prec);
 
-    acb_dft_inverse_rad2_precomp(gp, rad2, prec);
+    acb_dft_inverse_rad2_precomp_inplace(gp, rad2, prec);
 
     _acb_vec_set(w, gp, len);
     _acb_vec_clear(fp, np);
@@ -75,9 +75,14 @@ acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec
 {
     int e;
     acb_dft_rad2_t dft;
-    e = n_clog(2 * len - 1, 2);
+    /* catch power of 2 */
+    if (len <= 0)
+        return;
+    else if ((len & (len - 1)) == 0)
+        e = n_clog(len, 2);
+    else
+        e = n_clog(2 * len - 1, 2);
     acb_dft_rad2_init(dft, e, prec);
     acb_dft_convol_rad2_precomp(w, f, g, len, dft, prec);
     acb_dft_rad2_clear(dft);
 }
-

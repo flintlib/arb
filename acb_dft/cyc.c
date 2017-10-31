@@ -24,8 +24,10 @@ _acb_dft_cyc_init_z_fac(acb_dft_cyc_t t, n_factor_t fac, slong dv, acb_ptr z, sl
 
     if (z == NULL)
     {
+        if (DFT_VERB)
+            flint_printf("dft_cyc: init z[%wu]\n", t->n);
         z = _acb_vec_init(t->n);
-        _acb_vec_unit_roots(z, t->n, prec);
+        _acb_vec_unit_roots(z, -t->n, t->n, prec);
         dz = 1;
         t->zclear = 1;
     }
@@ -68,7 +70,10 @@ _acb_dft_cyc_init(acb_dft_cyc_t t, slong dv, slong len, slong prec)
 {
     n_factor_t fac;
     n_factor_init(&fac);
-    n_factor(&fac, len, 0);
+    if (len)
+        n_factor(&fac, len, 1);
+    else
+        fac.num = 0;
     _acb_dft_cyc_init_z_fac(t, fac, dv, NULL, 0, len, prec);
 }
 
@@ -84,10 +89,32 @@ acb_dft_cyc_clear(acb_dft_cyc_t t)
 }
 
 void
+acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec)
+{
+    if (cyc->num == 0)
+    {
+        if (cyc->n == 1)
+            acb_set(w, v);
+    }
+    else
+        acb_dft_step(w, v, cyc->cyc, cyc->num, prec);
+}
+
+void
 acb_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
 {
     acb_dft_cyc_t cyc;
     acb_dft_cyc_init(cyc, len, prec);
     acb_dft_cyc_precomp(w, v, cyc, prec);
     acb_dft_cyc_clear(cyc);
+}
+
+void
+acb_dft_inverse_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec)
+{
+    /* divide before to keep v const */
+    _acb_vec_scalar_div_ui(w, v, len, len, prec);
+    acb_vec_swap_ri(w, len);
+    acb_dft_cyc(w, w, len, prec);
+    acb_vec_swap_ri(w, len);
 }

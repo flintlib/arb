@@ -36,9 +36,26 @@ acb_dft_rad2_reorder(acb_ptr v, slong n)
 
 }
 
+void
+_acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec)
+{
+    if (e < 0)
+    {
+        flint_printf("acb_dft_rad2_init: need e >= 0");
+        abort();
+    }
+    t->e = e;
+    t->n = 1 << e;
+    t->dv = dv;
+    t->nz = t->n >> 1;
+    t->z = _acb_vec_init(t->nz);
+    /* set n/2 roots of order n */
+    _acb_vec_unit_roots(t->z, -t->n, t->nz, prec);
+}
+
 /* remark: can use same rad2 with smaller power of 2 */
 void
-acb_dft_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
+acb_dft_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 {
     slong j, k, l;
     slong n = rad2->n, nz = rad2->nz;
@@ -61,20 +78,38 @@ acb_dft_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 }
 
 void
-acb_dft_inverse_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
+acb_dft_inverse_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 {
     slong k, n = rad2->n;
-    acb_dft_rad2_precomp(v, rad2, prec);
+    acb_dft_rad2_precomp_inplace(v, rad2, prec);
     _acb_vec_scalar_mul_2exp_si(v, v, n, - rad2->e);
     for (k = 1; k < n / 2; k++)
         acb_swap(v + k, v + n - k);
 }
 
 void
-acb_dft_rad2(acb_ptr v, int e, slong prec)
+acb_dft_rad2_inplace(acb_ptr v, int e, slong prec)
 {
     acb_dft_rad2_t rad2;
     acb_dft_rad2_init(rad2, e, prec);
-    acb_dft_rad2_precomp(v, rad2, prec);
+    acb_dft_rad2_precomp_inplace(v, rad2, prec);
+    acb_dft_rad2_clear(rad2);
+}
+
+void
+acb_dft_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, slong prec)
+{
+    slong k;
+    for (k = 0; k < rad2->n; k++, v += rad2->dv)
+        acb_set(w + k, v + 0);
+    acb_dft_rad2_precomp_inplace(w, rad2, prec);
+}
+
+void
+acb_dft_rad2(acb_ptr w, acb_srcptr v, int e, slong prec)
+{
+    acb_dft_rad2_t rad2;
+    acb_dft_rad2_init(rad2, e, prec);
+    acb_dft_rad2_precomp(w, v, rad2, prec);
     acb_dft_rad2_clear(rad2);
 }

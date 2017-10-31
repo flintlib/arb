@@ -25,16 +25,20 @@
 extern "C" {
 #endif
 
-void _acb_dft_pol(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec);
-void acb_dft_pol(acb_ptr w, acb_srcptr v, slong len, slong prec);
+void _acb_dft_naive(acb_ptr w, acb_srcptr v, slong dv, acb_srcptr z, slong dz, slong len, slong prec);
+void acb_dft_naive(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_crt(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_cyc(acb_ptr w, acb_srcptr v, slong len, slong prec);
-void acb_dft_rad2(acb_ptr v, int e, slong prec);
+void acb_dft_rad2_inplace(acb_ptr v, int e, slong prec);
+void acb_dft_rad2(acb_ptr w, acb_srcptr v, int e, slong prec);
 void acb_dft_bluestein(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
 
 void acb_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
+void acb_dft_convol_dft(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
+void acb_dft_convol_mullow(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
+void acb_dft_convol(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 
 #define CRT_MAX 15
 typedef struct
@@ -60,8 +64,8 @@ typedef acb_dft_step_struct * acb_dft_step_ptr;
 typedef struct
 {
     slong n;
-    int zclear;
     acb_ptr z;
+    int zclear;
     slong num;
     acb_dft_step_ptr cyc;
 }
@@ -73,6 +77,7 @@ typedef struct
 {
     int e;
     slong n; /* = 1 << e */
+    slong dv;
     slong nz; /* = n but could be bigger */
     acb_ptr z;
 }
@@ -83,7 +88,9 @@ typedef acb_dft_rad2_struct acb_dft_rad2_t[1];
 typedef struct
 {
     slong n;
-    acb_ptr z;
+    slong dv;
+    acb_ptr z; /* z[k] = e(k^2/2n) */
+    acb_ptr g; /* g[k] = dft( z ) */
     acb_dft_rad2_t rad2;
 }
 acb_dft_bluestein_struct;
@@ -120,12 +127,13 @@ typedef struct
     acb_ptr z;
     slong dz;
 }
-acb_dft_pol_struct;
+acb_dft_naive_struct;
 
-typedef acb_dft_pol_struct acb_dft_pol_t[1];
+typedef acb_dft_naive_struct acb_dft_naive_t[1];
 
 typedef struct
 {
+    slong n;
     int type;
     union
     {
@@ -133,7 +141,8 @@ typedef struct
         acb_dft_cyc_t cyc;
         acb_dft_prod_t prod;
         acb_dft_crt_t crt;
-        acb_dft_pol_t pol;
+        acb_dft_naive_t naive;
+        acb_dft_bluestein_t bluestein;
     } t;
 }
 acb_dft_pre_struct;
@@ -164,33 +173,32 @@ acb_dft_step_struct
 
 enum
 {
-    DFT_POL, DFT_CYC, DFT_PROD, DFT_CRT , DFT_RAD2 /*, DFT_CONV */
+    DFT_NAIVE, DFT_CYC, DFT_PROD, DFT_CRT , DFT_RAD2 , DFT_CONV
 };
 
 void acb_dft_step(acb_ptr w, acb_srcptr v, acb_dft_step_ptr cyc, slong num, slong prec);
 
 void acb_dft_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec);
+void acb_dft_inverse_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pre_t pre, slong prec);
+void acb_dft_naive_precomp(acb_ptr w, acb_srcptr v, const acb_dft_naive_t pol, slong prec);
+void acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec);
 
-ACB_DFT_INLINE void
-acb_dft_pol_precomp(acb_ptr w, acb_srcptr v, const acb_dft_pol_t pol, slong prec)
-{
-    _acb_dft_pol(w, v, pol->dv, pol->z, pol->dz, pol->n, prec);
-}
-ACB_DFT_INLINE void
-acb_dft_cyc_precomp(acb_ptr w, acb_srcptr v, const acb_dft_cyc_t cyc, slong prec)
-{
-    acb_dft_step(w, v, cyc->cyc, cyc->num, prec);
-}
-void acb_dft_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
+void acb_dft_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
+void acb_dft_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec);
 void acb_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dft_prod_t prod, slong prec);
+void acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec);
 
-void acb_dft_inverse_rad2_precomp(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
+void acb_dft_inverse_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
+void acb_dft_inverse_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_convol_rad2_precomp(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, const acb_dft_rad2_t, slong prec);
 
 void _acb_dft_precomp_init(acb_dft_pre_t pre, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 void acb_dft_precomp_init(acb_dft_pre_t pre, slong len, slong prec);
 void acb_dft_precomp_clear(acb_dft_pre_t pre);
+
+void acb_dft(acb_ptr w, acb_srcptr v, slong len, slong prec);
+void acb_dft_inverse(acb_ptr w, acb_srcptr v, slong len, slong prec);
 
 acb_dft_step_ptr _acb_dft_steps_prod(slong * m, slong num, slong prec);
 
@@ -214,64 +222,54 @@ acb_dft_cyc_init(acb_dft_cyc_t t, slong len, slong prec)
 
 void acb_dft_cyc_clear(acb_dft_cyc_t t);
 
-void _acb_dft_pol_init(acb_dft_pol_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec);
+void _acb_dft_naive_init(acb_dft_naive_t pol, slong dv, acb_ptr z, slong dz, slong len, slong prec);
 
 ACB_DFT_INLINE void
-acb_dft_pol_init(acb_dft_pol_t pol, slong len, slong prec)
+acb_dft_naive_init(acb_dft_naive_t pol, slong len, slong prec)
 {
-    _acb_dft_pol_init(pol, 1, NULL, 0, len, prec);
+    _acb_dft_naive_init(pol, 1, NULL, 0, len, prec);
 }
 
 ACB_DFT_INLINE void
-acb_dft_pol_clear(acb_dft_pol_t pol)
+acb_dft_naive_clear(acb_dft_naive_t pol)
 {
     if (pol->zclear)
         _acb_vec_clear(pol->z, pol->n);
 }
 
+void _acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec);
+
 ACB_DFT_INLINE void
 acb_dft_rad2_init(acb_dft_rad2_t t, int e, slong prec)
 {
-    t->e = e;
-    t->n = 1 << e;
-    t->nz = t->n >> 1;
-    t->z = _acb_vec_init(2 * t->nz);
-    /* set n/2 roots of order n */
-    /* xxx: don't compute twice the number */
-    _acb_vec_unit_roots(t->z, t->n, prec);
+    _acb_dft_rad2_init(t, 1, e, prec);
 }
 
 ACB_DFT_INLINE void
 acb_dft_rad2_clear(acb_dft_rad2_t t)
 {
-    _acb_vec_clear(t->z, 2 * t->nz);
+    _acb_vec_clear(t->z, t->nz);
 }
 
-void acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec);
+void _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec);
+
+ACB_DFT_INLINE void
+acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
+{
+    _acb_dft_bluestein_init(t, 1, n, prec);
+}
 
 ACB_DFT_INLINE void
 acb_dft_bluestein_clear(acb_dft_bluestein_t t)
 {
     _acb_vec_clear(t->z, t->n);
+    _acb_vec_clear(t->g, t->rad2->n);
     acb_dft_rad2_clear(t->rad2);
 }
 
 void _acb_dft_crt_init(acb_dft_crt_t crt, slong dv, slong len, slong prec);
-
-ACB_DFT_INLINE void
-acb_dft_crt_init(acb_dft_crt_t crt, slong len, slong prec)
-{
-    crt->n = len;
-    crt_init(crt->c, len);
-    crt->dv = 1;
-    crt->cyc = _acb_dft_steps_prod(crt->c->m, crt->c->num, prec);
-}
-
-ACB_DFT_INLINE void
-acb_dft_crt_clear(acb_dft_crt_t crt)
-{
-    flint_free(crt->cyc);
-}
+void acb_dft_crt_init(acb_dft_crt_t crt, slong len, slong prec);
+void acb_dft_crt_clear(acb_dft_crt_t crt);
 
 /* utils, could be moved elsewhere */
 
@@ -297,15 +295,13 @@ _acb_vec_kronecker_mul(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong p
         acb_mul(z + k, x + k, y + k, prec);
 }
 
-/* z[k] = conj(x[k])*y[k] */
 ACB_DFT_INLINE void
-acb_vec_kronecker_mul_conj(acb_ptr z, acb_srcptr x, acb_srcptr y, slong len, slong prec)
+_acb_vec_kronecker_mul_step(acb_ptr z, acb_srcptr x, acb_srcptr y, slong step, slong len, slong prec)
 {
     slong k;
     for (k = 0; k < len; k++)
     {
-        acb_conj(z + k, x + k);
-        acb_mul(z + k, z + k, y + k, prec);
+        acb_mul(z + k, x + k, y + k * step, prec);
     }
 }
 

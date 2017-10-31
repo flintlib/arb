@@ -81,12 +81,11 @@ int main()
         w1 = _acb_vec_init(len);
         w2 = _acb_vec_init(len);
         acb_init(chiy);
-        acb_dirichlet_roots_init(roots, len, len, prec);
+        acb_dirichlet_roots_init(roots, G->expo, len, prec);
 
         dirichlet_char_init(x, G);
         dirichlet_char_init(y, G);
 
-        dirichlet_char_one(x, G);
         for (i = 0; i < len; i++)
             acb_randtest_precise(v + i, state, prec, 0);
 
@@ -99,6 +98,7 @@ int main()
             for (j = 0; j < len; j++)
             {
                 acb_dirichlet_root(chiy, roots, dirichlet_pairing_char(G, x, y), prec);
+                acb_conj(chiy, chiy);
                 acb_addmul(w1 + i, chiy, v + j, prec);
                 dirichlet_char_next(y, G);
             }
@@ -106,7 +106,7 @@ int main()
         }
 
         /* dft */
-        acb_dirichlet_dft_conrey(w2, v, G, prec);
+        acb_dirichlet_dft_index(w2, v, G, prec);
 
         check_vec_eq_prec(w1, w2, len, prec, digits, q[k], "naive", "group");
 
@@ -126,4 +126,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-

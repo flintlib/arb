@@ -14,7 +14,7 @@
 typedef void (*do_f) (acb_ptr w, acb_srcptr v, slong len, slong prec);
 
 void
-check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong digits, ulong q, char f1[], char f2[])
+check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong digits, ulong q, char d[], char f1[], char f2[])
 {
     slong i;
 
@@ -24,7 +24,7 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
         {
             flint_printf("FAIL\n\n");
             flint_printf("q = %wu, size = %wu\n", q, len);
-            flint_printf("\nDFT differ from index %ld / %ld \n", i, len);
+            flint_printf("\nDFT %s differ from index %ld / %ld \n", d, i, len);
             flint_printf("\n%s =\n", f1);
             acb_vec_printd_index(w1, len, digits);
             flint_printf("\n%s =\n", f2);
@@ -32,15 +32,15 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
             flint_printf("\n\n");
             abort();
         }
-        else if (acb_rel_accuracy_bits(w1 + i) < 30
-                || acb_rel_accuracy_bits(w2 + i) < 30)
+        else if (!acb_is_zero(w1+i) && (acb_rel_accuracy_bits(w1 + i) < 30
+                || acb_rel_accuracy_bits(w2 + i) < 30))
         {
             flint_printf("FAIL\n\n");
             flint_printf("q = %wu\n", q);
             flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
-            flint_printf("\nnaive =\n");
+            flint_printf("\n%s =\n", f1);
             acb_printd(w1 + i, digits);
-            flint_printf("\nfast =\n");
+            flint_printf("\n%s =\n", f2);
             acb_printd(w2 + i, digits);
             flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
                     acb_rel_accuracy_bits(w1 + i),
@@ -50,19 +50,18 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
     }
 }
 
-
 int main()
 {
-
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 13;
-    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
+    slong nq = 19;
+    ulong q[19] = { 0, 1, 2, 3, 4, 5, 6, 23, 10, 15, 16, 30, 59, 125, 308, 335, 525, 961, 1225};
+    slong nr = 5;
     flint_rand_t state;
 
-    slong f, nf = 3;
-    do_f func[4] = { acb_dft_pol, acb_dft_cyc, acb_dft_crt , acb_dft_bluestein };
-    char * name[4] = { "pol", "cyc", "crt", "bluestein" };
+    slong f, nf = 5;
+    do_f func[5] = { acb_dft_naive, acb_dft_cyc, acb_dft_crt, acb_dft_bluestein, acb_dft };
+    char * name[5] = { "naive", "cyc", "crt", "bluestein", "default" };
 
     flint_printf("dft....");
     fflush(stdout);
@@ -70,39 +69,68 @@ int main()
     flint_randinit(state);
 
     /* cyclic dft */
-    for (k = 0; k < nq; k++)
+    for (k = 0; k < nq + nr; k++)
     {
-        slong i;
-        acb_ptr v, w1, w2;
+        slong i, len, f0;
+        acb_ptr v, w1, w2, w3;
 
-        v = _acb_vec_init(q[k]);
-        w1 = _acb_vec_init(q[k]);
-        w2 = _acb_vec_init(q[k]);
+        if (k < nq)
+            len = q[k];
+        else
+            len = n_randint(state, 1000);
 
-        for (i = 0; i < q[k]; i++)
-            acb_set_si(v + i, i);
+        v = _acb_vec_init(len);
+        w1 = _acb_vec_init(len);
+        w2 = _acb_vec_init(len);
+        w3 = _acb_vec_init(len);
 
-        for (f = 0; f < nf; f++)
+        for (i = 0; i < len; i++)
+            acb_set_si_si(v + i, i, 3 - i);
+
+        /* avoid naive for long transforms */
+        f0 = (len > 50);
+
+        for (f = f0; f < nf; f++)
         {
 
-            acb_ptr w = (f == 0) ? w1 : w2;
+            acb_ptr w = (f == f0) ? w1 : w2;
 
-            func[f](w, v, q[k], prec);
+            if (DFT_VERB)
+                flint_printf("\n%s %wu\n", name[f], len);
 
-            if (f == 0)
-                continue;
+            /* compute DFT */
+            func[f](w, v, len, prec);
 
-            check_vec_eq_prec(w1, w2, q[k], prec, digits, q[k], name[0], name[f]);
+            if (len < 500)
+            {
+                /* check aliasing */
+                _acb_vec_set(w3, v, len);
+                func[f](w3, w3, len, prec);
 
+                check_vec_eq_prec(w1, w3, len, prec, digits, len, "alias", name[0], name[f]);
+            }
+
+            if (f > f0)
+            {
+                /* check non aliased */
+                check_vec_eq_prec(w1, w2, len, prec, digits, len, "no alias", name[0], name[f]);
+            }
+            else
+            {
+                /* check inverse */
+                acb_dft_inverse(w2, w1, len, prec);
+                check_vec_eq_prec(v, w2, len, prec, digits, len, "inverse", "original", "inverse");
+            }
         }
 
-        _acb_vec_clear(v, q[k]);
-        _acb_vec_clear(w1, q[k]);
-        _acb_vec_clear(w2, q[k]);
+        _acb_vec_clear(v, len);
+        _acb_vec_clear(w1, len);
+        _acb_vec_clear(w2, len);
+        _acb_vec_clear(w3, len);
     }
 
     /* radix2 dft */
-    for (k = 1; k < 12; k++)
+    for (k = 0; k < 11; k++)
     {
         slong n = 1 << k, j;
         acb_ptr v, w1, w2;
@@ -110,12 +138,15 @@ int main()
         w1 = _acb_vec_init(n);
 
         for (j = 0; j < n; j++)
-            acb_set_si(v + k, k);
+            acb_set_si_si(v + j, j, j + 2);
 
-        acb_dft_pol(w1, v, n, prec);
-        acb_dft_rad2(v, k, prec);
+        acb_dft_cyc(w1, v, n, prec);
+        acb_dft_rad2_inplace(w2, k, prec);
 
-        check_vec_eq_prec(w1, w2, n, prec, digits, n, "pol", "rad2");
+        check_vec_eq_prec(w1, w2, n, prec, digits, n, "rad2", "cyc", "rad2");
+
+        _acb_vec_clear(v, n);
+        _acb_vec_clear(w1, n);
 
     }
 
@@ -124,4 +155,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-

@@ -38,9 +38,9 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
             flint_printf("FAIL\n\n");
             flint_printf("q = %wu\n", q);
             flint_printf("\nDFT inaccurate from index %ld / %ld \n", i, len);
-            flint_printf("\nnaive =\n");
+            flint_printf("\n%s =\n", f1);
             acb_printd(w1 + i, digits);
-            flint_printf("\nfast =\n");
+            flint_printf("\n%s =\n", f2);
             acb_printd(w2 + i, digits);
             flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
                     acb_rel_accuracy_bits(w1 + i),
@@ -50,43 +50,49 @@ check_vec_eq_prec(acb_srcptr w1, acb_srcptr w2, slong len, slong prec, slong dig
     }
 }
 
-
 int main()
 {
 
     slong k;
     slong prec = 100, digits = 30;
-    slong nq = 13;
-    ulong q[13] = { 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 308, 335, 961};
+    slong nq = 17;
+    ulong q[17] = { 0, 1, 2, 3, 4, 5, 6, 23, 10, 15, 30, 59, 256, 308, 335, 344, 961};
+    ulong nr = 5;
     flint_rand_t state;
 
-    slong f, nf = 2;
-    do_f func[2] = { acb_dft_convol_naive, acb_dft_convol_rad2 };
-    char * name[4] = { "naive", "rad2" };
+    slong f, nf = 4;
+    do_f func[4] = { acb_dft_convol_naive, acb_dft_convol_rad2, acb_dft_convol_dft, acb_dft_convol_mullow };
+    char * name[4] = { "naive", "rad2", "dft", "mullow" };
 
     flint_printf("convol....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (k = 0; k < nq; k++)
+    for (k = 0; k < nq + nr; k++)
     {
-        slong i;
+        slong i, len;
         acb_ptr z1, z2, x, y;
 
-        z1 = _acb_vec_init(q[k]);
-        z2 = _acb_vec_init(q[k]);
-        x = _acb_vec_init(q[k]);
-        y = _acb_vec_init(q[k]);
+        if (k < nq)
+            len = q[k];
+        else
+            len = n_randint(state, 2000);
 
-        for (i = 0; i < q[k]; i++)
+        z1 = _acb_vec_init(len);
+        z2 = _acb_vec_init(len);
+        x = _acb_vec_init(len);
+        y = _acb_vec_init(len);
+
+        for (i = 0; i < len; i++)
         {
-            acb_set_si(x + i, q[k] - i);
-            acb_set_si(y + i, i * i);
-            /*
-            acb_set_si(x + i, n_randint(state, q[k]));
-            acb_set_si(y + i, n_randint(state, q[k]));
-            */
+#if 1
+            acb_set_si(x + i, n_randint(state, 4 * len));
+            acb_set_si(y + i, n_randint(state, 4 * len));
+#else
+            acb_set_si_si(x + i, n_randint(state, 4 * len), n_randint(state, 4 * len));
+            acb_set_si_si(y + i, n_randint(state, 4 * len), n_randint(state, 4 * len));
+#endif
         }
 
         for (f = 0; f < nf; f++)
@@ -94,19 +100,19 @@ int main()
 
             acb_ptr z = (f == 0) ? z1 : z2;
 
-            func[f](z, x, y, q[k], prec);
+            func[f](z, x, y, len, prec);
 
             if (f == 0)
                 continue;
 
-            check_vec_eq_prec(z1, z2, q[k], prec, digits, q[k], name[0], name[f]);
+            check_vec_eq_prec(z1, z2, len, prec, digits, len, name[0], name[f]);
 
         }
 
-        _acb_vec_clear(x, q[k]);
-        _acb_vec_clear(y, q[k]);
-        _acb_vec_clear(z1, q[k]);
-        _acb_vec_clear(z2, q[k]);
+        _acb_vec_clear(x, len);
+        _acb_vec_clear(y, len);
+        _acb_vec_clear(z1, len);
+        _acb_vec_clear(z2, len);
     }
 
     flint_randclear(state);
@@ -114,5 +120,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
-

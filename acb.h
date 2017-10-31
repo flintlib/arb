@@ -1142,7 +1142,7 @@ void _acb_vec_sort_pretty(acb_ptr vec, slong len);
 
 /* roots of unity */
 void acb_unit_root(acb_t res, ulong order, slong prec);
-void _acb_vec_unit_roots(acb_ptr z, slong len, slong prec);
+void _acb_vec_unit_roots(acb_ptr z, slong order, slong len, slong prec);
 
 ACB_INLINE slong
 acb_allocated_bytes(const acb_t x)
