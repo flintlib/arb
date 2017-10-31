@@ -23,23 +23,11 @@ acb_dirichlet_l_general(acb_t res, const acb_t s,
     }
     else
     {
-        ulong A, K, N;
-        slong wp;
-
-        wp = prec + n_clog(G->phi_q, 2);
-        acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s, G->phi_q, wp);
-
-        if (A == 0)
-        {
-            acb_dirichlet_l_hurwitz(res, s, NULL, G, chi, prec);
-        }
-        else
-        {
-            acb_dirichlet_hurwitz_precomp_t pre;
-            acb_dirichlet_hurwitz_precomp_init(pre, s, acb_is_one(s), A, K, N, wp);
-            acb_dirichlet_l_hurwitz(res, s, pre, G, chi, prec);
-            acb_dirichlet_hurwitz_precomp_clear(pre);
-        }
+        slong wp = prec + n_clog(G->phi_q, 2);
+        acb_dirichlet_hurwitz_precomp_t pre;
+        acb_dirichlet_hurwitz_precomp_init_num(pre, s, acb_is_one(s), G->phi_q, wp);
+        acb_dirichlet_l_hurwitz(res, s, pre, G, chi, prec);
+        acb_dirichlet_hurwitz_precomp_clear(pre);
     }
 }
 

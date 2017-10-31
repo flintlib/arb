@@ -199,7 +199,11 @@ Hurwitz zeta function precomputation
     requires *2K* simple arithmetic operations (polynomial evaluation) plus
     *A* powers. As *K* grows, the error is at most `O(1/(2AN)^K)`.
 
-    We require that *A*, *K* and *N* are all positive. Moreover, for a finite
+    This function can be called with *A* set to zero, in which case
+    no Taylor series precomputation is performed. This means that evaluation
+    will be identical to calling :func:`acb_dirichlet_hurwitz` directly.
+
+    Otherwise, we require that *A*, *K* and *N* are all positive. For a finite
     error bound, we require `K+\operatorname{re}(s) > 1`.
     To avoid an initial "bump" that steals precision
     and slows convergence, *AN* should be at least roughly as large as `|s|`,
@@ -207,6 +211,12 @@ Hurwitz zeta function precomputation
 
     If *deflate* is set, the deflated Hurwitz zeta function is used,
     removing the pole at `s = 1`.
+
+.. function:: void acb_dirichlet_hurwitz_precomp_init_num(acb_dirichlet_hurwitz_precomp_t pre, const acb_t s, int deflate, double num_eval, slong prec)
+
+    Initializes *pre*, choosing the parameters *A*, *K*, and *N*
+    automatically to minimize the cost of *num_eval* evaluations of the
+    Hurwitz zeta function at argument *s* to precision *prec*.
 
 .. function:: void acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre)
 

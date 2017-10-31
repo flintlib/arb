@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     slong prec = 100, digits = 30;
     ulong qmin, qmax, q;
     acb_t s;
-    ulong A, K, N;
     acb_dirichlet_hurwitz_precomp_t pre;
 
     if (argc < 3)
@@ -53,10 +52,8 @@ int main(int argc, char *argv[])
     acb_one(s);
     acb_div_si(s, s, 2, prec);
 
-    acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s,
+    acb_dirichlet_hurwitz_precomp_init_num(pre, s, 0,
         (qmax - qmin + 1) * 0.5 * qmax, prec);
-    if (A != 0)
-        acb_dirichlet_hurwitz_precomp_init(pre, s, 0, A, K, N, prec);
 
     for (q = qmin; q <= qmax; q++)
     {
@@ -73,7 +70,7 @@ int main(int argc, char *argv[])
 
         z =  _acb_vec_init(G->phi_q);
 
-        acb_dirichlet_l_vec_hurwitz(z, s, (A == 0) ? NULL : pre, G, prec);
+        acb_dirichlet_l_vec_hurwitz(z, s, pre, G, prec);
 
         if (out || check)
         {
@@ -107,8 +104,7 @@ int main(int argc, char *argv[])
         dirichlet_group_clear(G);
     }
 
-    if (A != 0)
-        acb_dirichlet_hurwitz_precomp_clear(pre);
+    acb_dirichlet_hurwitz_precomp_clear(pre);
 
     acb_clear(s);
 

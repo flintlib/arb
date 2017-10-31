@@ -18,18 +18,26 @@ acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre,
 {
     slong i, k;
 
-    if (A < 1 || K < 1 || N < 1)
-        flint_abort();
-
     pre->deflate = deflate;
     pre->A = A;
     pre->K = K;
     pre->N = N;
+
+    acb_init(&pre->s);
+    acb_set(&pre->s, s);
+
+    if (A == 0)
+        return;
+
+    if (A < 1 || K < 1 || N < 1)
+    {
+        flint_printf("hurwitz_precomp_init: require A, K, N >= 1 (unless A == 0)\n");
+        flint_abort();
+    }
+
     pre->coeffs = _acb_vec_init(N * K);
 
     mag_init(&pre->err);
-    acb_init(&pre->s);
-    acb_set(&pre->s, s);
 
     acb_dirichlet_hurwitz_precomp_bound(&pre->err, s, A, K, N);
 
@@ -77,5 +85,14 @@ acb_dirichlet_hurwitz_precomp_init(acb_dirichlet_hurwitz_precomp_t pre,
         acb_clear(t);
         acb_clear(a);
     }
+}
+
+void
+acb_dirichlet_hurwitz_precomp_init_num(acb_dirichlet_hurwitz_precomp_t pre,
+        const acb_t s, int deflate, double num_eval, slong prec)
+{
+    ulong A, K, N;
+    acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s, num_eval, prec);
+    acb_dirichlet_hurwitz_precomp_init(pre, s, deflate, A, K, N, prec);
 }
 

@@ -15,7 +15,11 @@ void
 acb_dirichlet_hurwitz_precomp_clear(acb_dirichlet_hurwitz_precomp_t pre)
 {
     acb_clear(&pre->s);
-    mag_clear(&pre->err);
-    _acb_vec_clear(pre->coeffs, pre->N * pre->K);
+
+    if (pre->A != 0)
+    {
+        mag_clear(&pre->err);
+        _acb_vec_clear(pre->coeffs, pre->N * pre->K);
+    }
 }
 

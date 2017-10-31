@@ -43,6 +43,7 @@ int main()
         acb_init(z2);
 
         acb_randtest(s, state, 1 + n_randint(state, 200), 2);
+
         acb_dirichlet_hurwitz_precomp_init(pre, s, deflate, A, K, N, prec1);
 
         for (i = 0; i < 10; i++)

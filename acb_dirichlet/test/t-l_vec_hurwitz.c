@@ -45,13 +45,18 @@ int main()
 
         v = _acb_vec_init(G->phi_q);
 
-        acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s, G->phi_q, prec);
-
-        if (A != 0)
+        if (n_randint(state, 2))
+        {
+            acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s, G->phi_q, prec);
             acb_dirichlet_hurwitz_precomp_init(pre, s, acb_is_one(s), A, K, N, prec);
+        }
+        else
+        {
+            acb_dirichlet_hurwitz_precomp_init_num(pre, s, acb_is_one(s), G->phi_q, prec);
+        }
 
         /* all at once */
-        if (A != 0 && n_randint(state, 2))
+        if (n_randint(state, 2))
             acb_dirichlet_l_vec_hurwitz(v, s, pre, G, prec);
         else
             acb_dirichlet_l_vec_hurwitz(v, s, NULL, G, prec);
@@ -103,8 +108,7 @@ int main()
         dirichlet_char_clear(chi);
         dirichlet_group_clear(G);
 
-        if (A != 0)
-            acb_dirichlet_hurwitz_precomp_clear(pre);
+        acb_dirichlet_hurwitz_precomp_clear(pre);
     }
 
     flint_randclear(state);

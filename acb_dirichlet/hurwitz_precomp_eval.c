@@ -20,7 +20,25 @@ acb_dirichlet_hurwitz_precomp_eval(acb_t res,
     acb_t a, t;
 
     if (p > q)
+    {
+        flint_printf("hurwitz_precomp_eval: require p <= n\n");
         flint_abort();
+    }
+
+    if (pre->A == 0)
+    {
+        acb_init(a);
+        acb_set_ui(a, p);
+        acb_div_ui(a, a, q, prec);
+
+        if (pre->deflate == 0)
+            acb_hurwitz_zeta(res, &pre->s, a, prec);
+        else
+            _acb_poly_zeta_cpx_series(res, &pre->s, a, 1, 1, prec);
+
+        acb_clear(a);
+        return;
+    }
 
     acb_init(a);
     acb_init(t);
