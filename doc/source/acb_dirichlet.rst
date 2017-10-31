@@ -321,15 +321,15 @@ Dirichlet character Gauss, Jacobi and theta sums
 
 .. function:: void acb_dirichlet_ui_theta_arb(acb_t res, const dirichlet_group_t G, ulong a, const arb_t t, slong prec)
 
-   Compute the theta series `\Theta_q(a,t)` for real argument `t>0`.
-   Beware that if `t<1` the functional equation
+    Compute the theta series `\Theta_q(a,t)` for real argument `t>0`.
+    Beware that if `t<1` the functional equation
 
-   .. math::
+    .. math::
 
-      t \theta(a,t) = \epsilon(\chi) \theta\left(\frac1a, \frac1t\right)
+        t \theta(a,t) = \epsilon(\chi) \theta\left(\frac1a, \frac1t\right)
 
-   should be used, which is not done automatically (to avoid recomputing the
-   Gauss sum).
+    should be used, which is not done automatically (to avoid recomputing the
+    Gauss sum).
 
     We call *theta series* of a Dirichlet character the quadratic series
 
@@ -344,6 +344,75 @@ Dirichlet character Gauss, Jacobi and theta sums
     .. math::
 
        \Theta_q(a,t) = \sum_{n\geq 0} \chi_q(a, n) x(t)^{n^2}.
+
+.. function:: ulong acb_dirichlet_theta_length(ulong q, const arb_t t, slong prec)
+
+   Compute the number of terms to be summed in the theta series of argument *t*
+   so that the tail is less than `2^{-\mathrm{prec}}`.
+
+.. function:: void acb_dirichlet_qseries_powers_naive(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+.. function:: void acb_dirichlet_qseries_powers_smallorder(acb_t res, const arb_t x, int p, const ulong * a, const acb_dirichlet_powers_t z, slong len, slong prec)
+
+   Compute the series `\sum n^p z^{a_n} x^{n^2}` for exponent list *a*,
+   precomputed powers *z* and parity *p* (being 0 or 1).
+
+   The *naive* version sums the series as defined, while the *smallorder*
+   variant evaluates the series on the quotient ring by a cyclotomic polynomial
+   before evaluating at the root of unity, ignoring its argument *z*.
+
+Discrete Fourier transforms (DFT)
+-------------------------------------------------------------------------------
+
+If `f` is a function `\mathbb Z/q\mathbb Z\to \mathbb C`,
+its discrete Fourier transform is the function
+defined on Dirichlet characters mod `q` by
+
+.. math::
+
+   \hat f(\chi) = \sum_{x\mod q}\overline{\chi(x)}f(x)
+
+See the :ref:`acb_dft` module.
+
+Here we take advantage of the Conrey isomorphism `G \to \hat G`
+to consider the Fourier transform on Conrey labels as
+
+.. math::
+
+   g(a) = \sum_{b\bmod q}\overline{\chi_q(a,b)}f(b)
+
+
+.. function:: void acb_dirichlet_dft_conrey(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using Conrey indices.
+   This function assumes *v* and *w* are vectors
+   of size *G->phi_q*, whose values correspond to a lexicographic ordering
+   of Conrey logs (as obtained using :func:`dirichlet_char_next` or
+   by :func:`dirichlet_char_index`).
+
+   For example, if `q=15`, the Conrey elements are stored in following
+   order
+
+   =======  =============  =====================
+    index    log = [e,f]     number = 7^e 11^f
+   =======  =============  =====================
+      0       [0, 0]        1
+      1       [0, 1]        7
+      2       [0, 2]        4
+      3       [0, 3]        13
+      4       [0, 4]        1
+      5       [1, 0]        11
+      6       [1, 1]        2
+      7       [1, 2]        14
+      8       [1, 3]        8
+      9       [1, 4]        11
+   =======  =============  =====================
+
+.. function:: void acb_dirichlet_dft(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec)
+
+   Compute the DFT of *v* using Conrey numbers.
+   This function assumes *v* and *w* are vectors of size *G->q*.
+   All values at index not coprime to *G->q* are ignored.
 
 Dirichlet L-functions
 -------------------------------------------------------------------------------
@@ -409,6 +478,18 @@ Dirichlet L-functions
 .. function:: void acb_dirichlet_l(acb_t res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
     Computes `L(s,\chi)` using a default choice of algorithm.
+
+.. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_hurwitz_precomp_t precomp, const dirichlet_group_t G, slong prec)
+
+    Compute all values `L(s,\chi)` for `\chi` mod `q`, using the
+    Hurwitz zeta function and a discrete Fourier transform.
+    The output *res* is assumed to have length *G->phi_q* and values
+    are stored by lexicographically ordered
+    Conrey logs. See :func:`acb_dirichlet_dft_conrey`.
+
+    If *precomp* is *NULL*, each Hurwitz zeta function value is computed
+    directly. If a pre-initialized *precomp* object is provided, this will be
+    used instead to evaluate the Hurwitz zeta function.
 
 .. function:: void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec)
 

@@ -32,47 +32,23 @@ do_gcd(ulong q1, ulong q2)
 }
 
 static ulong
-do_conrey(ulong q1, ulong q2)
+do_char(ulong q1, ulong q2)
 {
     ulong n, q;
 
     for (n = 0, q = q1; q <= q2; q++)
     {
         dirichlet_group_t G;
-        dirichlet_conrey_t x;
+        dirichlet_char_t x;
 
         dirichlet_group_init(G, q);
-        dirichlet_conrey_init(x, G);
+        dirichlet_char_init(x, G);
 
-        dirichlet_conrey_one(x, G);
+        dirichlet_char_one(x, G);
         n++;
+        for (; dirichlet_char_next(x, G) >= 0; n++);
 
-        for (; dirichlet_conrey_next(x, G) >= 0; n++);
-        dirichlet_conrey_clear(x);
-        dirichlet_group_clear(G);
-    }
-
-    return n;
-}
-
-static ulong
-do_chars(ulong q1, ulong q2)
-{
-    ulong n, q;
-
-    for (n = 0, q = q1; q <= q2; q++)
-    {
-        dirichlet_group_t G;
-        dirichlet_char_t chi;
-
-        dirichlet_group_init(G, q);
-        dirichlet_char_init(chi, G);
-
-        dirichlet_char_one(chi, G);
-        n++;
-        for (; dirichlet_char_next(chi, G) >= 0; n++);
-
-        dirichlet_char_clear(chi);
+        dirichlet_char_clear(x);
         dirichlet_group_clear(G);
     }
 
@@ -100,7 +76,7 @@ do_gcdpluscond(ulong q1, ulong q2)
                     break;
 
             if (i == G->num)
-                dirichlet_ui_conductor(G, k);
+                dirichlet_conductor_ui(G, k);
         }
 
         n += G->phi_q;
@@ -112,25 +88,25 @@ do_gcdpluscond(ulong q1, ulong q2)
 }
 
 static ulong
-do_conreypluscond(ulong q1, ulong q2)
+do_charpluscond(ulong q1, ulong q2)
 {
     ulong n, q, k;
 
     for (n = 0, q = q1; q <= q2; q++)
     {
         dirichlet_group_t G;
-        dirichlet_conrey_t x;
+        dirichlet_char_t x;
 
         dirichlet_group_init(G, q);
-        dirichlet_conrey_init(x, G);
+        dirichlet_char_init(x, G);
 
-        dirichlet_conrey_one(x, G);
+        dirichlet_char_one(x, G);
         n++;
 
-        for (; dirichlet_conrey_next(x, G) >= 0; n++)
-            dirichlet_conrey_conductor(G, x);
+        for (; dirichlet_char_next(x, G) >= 0; n++)
+            dirichlet_conductor_char(G, x);
 
-        dirichlet_conrey_clear(x);
+        dirichlet_char_clear(x);
         dirichlet_group_clear(G);
 
     }
@@ -139,25 +115,25 @@ do_conreypluscond(ulong q1, ulong q2)
 }
 
 static ulong
-do_conreyplusorder(ulong q1, ulong q2)
+do_charplusorder(ulong q1, ulong q2)
 {
     ulong n, q, k;
 
     for (n = 0, q = q1; q <= q2; q++)
     {
         dirichlet_group_t G;
-        dirichlet_conrey_t x;
+        dirichlet_char_t x;
 
         dirichlet_group_init(G, q);
-        dirichlet_conrey_init(x, G);
+        dirichlet_char_init(x, G);
 
-        dirichlet_conrey_one(x, G);
+        dirichlet_char_one(x, G);
         n++;
 
-        for (; dirichlet_conrey_next(x, G) >= 0; n++)
-            dirichlet_conrey_order(G, x);
+        for (; dirichlet_char_next(x, G) >= 0; n++)
+            dirichlet_order_char(G, x);
 
-        dirichlet_conrey_clear(x);
+        dirichlet_char_clear(x);
         dirichlet_group_clear(G);
 
     }
@@ -170,11 +146,21 @@ int main(int argc, char *argv[])
     int out;
     ulong n, nref, maxq = 5000;
 
-    int l, nf = 6;
-    do_f func[6] = { do_gcd, do_conrey, do_chars,
-        do_gcdpluscond, do_conreypluscond, do_conreyplusorder  };
-    char * name[6] = { "gcd", "conrey", "chars",
-        "gcd + cond", "conrey + cond", "conrey + order"  };
+    int l, nf = 5;
+    do_f func[5] = {
+        do_gcd,
+        do_char,
+        do_gcdpluscond,
+        do_charpluscond,
+        do_charplusorder
+    };
+    char * name[5] = {
+        "gcd",
+        "char",
+        "gcd + cond",
+        "char + cond",
+        "char + order"
+    };
 
     int i, ni = 5;
     ulong qmin[5] = { 2,   1000, 10000, 100000, 1000000 };

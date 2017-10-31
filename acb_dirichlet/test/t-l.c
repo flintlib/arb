@@ -61,6 +61,7 @@ int main()
 
         dirichlet_char_clear(chi);
         dirichlet_group_clear(G);
+
         acb_clear(s);
         acb_clear(t);
         acb_clear(u);

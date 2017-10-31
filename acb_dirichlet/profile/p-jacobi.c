@@ -17,7 +17,7 @@
 #define CSV 1
 #define JSON 2
 
-typedef void (*do_f) (acb_t res, const acb_dirichlet_group_t G, const acb_dirichlet_char_t chi1, const acb_dirichlet_char_t chi2, slong prec);
+typedef void (*do_f) (acb_t res, const dirichlet_group_t G, const dirichlet_char_t chi1, const dirichlet_char_t chi2, slong prec);
 
 int main(int argc, char *argv[])
 {
@@ -83,29 +83,29 @@ int main(int argc, char *argv[])
 
                 for (q = qmin[i]; q <= qmax[i]; q+=2)
                 {
-                    acb_dirichlet_group_t G;
-                    acb_dirichlet_char_t chi1, chi2;
+                    dirichlet_group_t G;
+                    dirichlet_char_t chi1, chi2;
                     acb_t res;
 
-                    acb_dirichlet_group_init(G, q);
-                    acb_dirichlet_char_init(chi1, G);
-                    acb_dirichlet_char_init(chi2, G);
+                    dirichlet_group_init(G, q);
+                    dirichlet_char_init(chi1, G);
+                    dirichlet_char_init(chi2, G);
                     acb_init(res);
 
                     do {
                         slong c = 0;
 
-                        acb_dirichlet_char_set(chi2, G, chi1);
+                        dirichlet_char_set(chi2, G, chi1);
                         do {
                             func[l](res, G, chi1, chi2, prec[j]);
-                        } while (acb_dirichlet_char_next(chi2, G) >= 0 && c++ < 30);
+                        } while (dirichlet_char_next(chi2, G) >= 0 && c++ < 30);
 
-                    } while (acb_dirichlet_char_next(chi1, G) >= 0);
+                    } while (dirichlet_char_next(chi1, G) >= 0);
 
                     acb_clear(res);
-                    acb_dirichlet_char_clear(chi1);
-                    acb_dirichlet_char_clear(chi2);
-                    acb_dirichlet_group_clear(G);
+                    dirichlet_char_clear(chi1);
+                    dirichlet_char_clear(chi2);
+                    dirichlet_group_clear(G);
                 }
 
             TIMEIT_ONCE_STOP

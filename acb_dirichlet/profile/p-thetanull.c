@@ -21,14 +21,14 @@ static int usage(char *argv[])
 static void
 value(ulong q, ulong a, slong prec, slong digits)
 {
-    acb_dirichlet_group_t G;
-    acb_dirichlet_char_t chi;
+    dirichlet_group_t G;
+    dirichlet_char_t chi;
     acb_t res;
     arb_t one;
 
-    acb_dirichlet_group_init(G, q);
-    acb_dirichlet_char_init(chi, G);
-    acb_dirichlet_char(chi, G, a);
+    dirichlet_group_init(G, q);
+    dirichlet_char_init(chi, G);
+    dirichlet_char_log(chi, G, a);
     acb_init(res);
     arb_init(one);
 
@@ -40,8 +40,8 @@ value(ulong q, ulong a, slong prec, slong digits)
 
     arb_clear(one);
     acb_clear(res);
-    acb_dirichlet_group_clear(G);
-    acb_dirichlet_char_clear(chi);
+    dirichlet_group_clear(G);
+    dirichlet_char_clear(chi);
 }
 
 static void
@@ -49,10 +49,10 @@ check_q(ulong q, int odd, slong prec, slong digits, int onlymod)
 {
     slong s;
     ulong k, len;
-    acb_dirichlet_group_t G;
-    acb_dirichlet_conrey_t x;
-    acb_dirichlet_group_init(G, q);
-    acb_dirichlet_conrey_init(x, G);
+    dirichlet_group_t G;
+    dirichlet_char_t x;
+    dirichlet_group_init(G, q);
+    dirichlet_char_init(x, G);
     acb_ptr theta, z;
     arb_t z1;
     arb_ptr t;
@@ -73,21 +73,21 @@ check_q(ulong q, int odd, slong prec, slong digits, int onlymod)
     for (s = 0; s <= odd; s++)
     {
         k = 0;
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_char_one(x, G);
         do {
             acb_set_arb(z + k, t + x->n);
             k++;
-        } while (acb_dirichlet_conrey_next(x, G) >= 0);
+        } while (dirichlet_char_next(x, G) >= 0);
 
-        acb_dirichlet_dft_conrey(theta, z, G, prec);
+        acb_dirichlet_dft_index(theta, z, G, prec);
 
         /* check zeros */
-        acb_dirichlet_conrey_one(x, G);
+        dirichlet_char_one(x, G);
         for (k = 0; k < G->phi_q; k++)
         {
             if (acb_contains_zero(theta + k)
-                    && acb_dirichlet_conrey_conductor(G, x) == q
-                    && acb_dirichlet_conrey_parity(G, x) == s)
+                    && dirichlet_conductor_char(G, x) == q
+                    && dirichlet_parity_char(G, x) == s)
             {
                 if (onlymod)
                 {
@@ -100,7 +100,7 @@ check_q(ulong q, int odd, slong prec, slong digits, int onlymod)
                     flint_printf("\n");
                 }
             }
-            acb_dirichlet_conrey_next(x, G);
+            dirichlet_char_next(x, G);
         }
 
         if (odd)
@@ -116,8 +116,8 @@ check_q(ulong q, int odd, slong prec, slong digits, int onlymod)
     _acb_vec_clear(theta, G->phi_q);
     _acb_vec_clear(z, G->phi_q);
     arb_clear(z1);
-    acb_dirichlet_conrey_clear(x);
-    acb_dirichlet_group_clear(G);
+    dirichlet_char_clear(x);
+    dirichlet_group_clear(G);
 }
 
 
