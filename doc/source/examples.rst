@@ -616,5 +616,51 @@ insufficient precision::
     100000,53381: [+/- 0.0329] + [+/- 0.0413]*I
     Aborted
 
+quadrature.c
+-------------------------------------------------------------------------------
+
+This program computes integrals using subdivision and the Gauss-Legendre
+quadrature formula with rigorous error bounds.
+See the source file for more information about the implementation.
+Example invocation::
+
+    > build/examples/quadrature
+    Compute integrals using subdivision and Gauss-Legendre quadrature.
+    Usage: quadrature [-prec p] [-tol eps] [-twice]
+
+    -prec p    - precision in bits (default p = 333)
+    -tol eps   - approximate absolute error goal (default 2^-p)
+    -twice     - run twice (to see overhead of computing nodes)
+
+
+    Computing I = int_0^100 sin(x) dx
+    cpu/wall(s): 0.009 0.009
+    I = [0.137681127712316065898061486049157464489915991464489170719837887307278911949073375896904894315723 +/- 9.65e-97]
+
+    Computing I = 4 int_0^1 1/(1+x^2) dx
+    cpu/wall(s): 0.004 0.004
+    I = [3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421171 +/- 4.96e-98]
+
+    Computing I = 4 int_0^1 sqrt(1-x^2) dx
+    cpu/wall(s): 0.022 0.022
+    I = [3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421171 +/- 5.16e-98]
+
+    Computing I = int_0^8 sin(x+exp(x)) dx
+    cpu/wall(s): 0.021 0.021
+    I = [0.34740017265724780787951215911989312465745625486618018388549271361674821398878532052968510434660 +/- 5.97e-96]
+
+    Computing I = int_0^100 floor(x) dx
+    cpu/wall(s): 0.1 0.1
+    I = [4950.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 +/- 1.42e-93]
+
+    Computing I = int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx
+    cpu/wall(s): 0.051 0.051
+    I = [11.147310550057139733915902084255301415775813549800589418261584268232061665808482234384871404010464 +/- 3.47e-97]
+
+    Computing I = 1/(2 pi i) int zeta(s) ds  (closed path around s = 1)
+    cpu/wall(s): 0.877 0.876
+    I = [1.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 +/- 9.82e-99] + [+/- 4.16e-99]*I
+
+
 .. highlight:: c
 
