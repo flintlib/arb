@@ -21,6 +21,9 @@
 extern "C" {
 #endif
 
+#define ACB_CALC_VERBOSE  1
+#define ACB_CALC_VERY_VERBOSE 3
+
 typedef int (*acb_calc_func_t)(acb_ptr out,
     const acb_t inp, void * param, slong order, slong prec);
 
@@ -38,6 +41,19 @@ int acb_calc_integrate_taylor(acb_t res,
     const arf_t inner_radius,
     const arf_t outer_radius,
     slong accuracy_goal, slong prec);
+
+void
+acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
+    const acb_t a, const acb_t b,
+    slong goal, const mag_t tol,
+    slong deg_limit, slong eval_limit, slong depth_limit,
+    int flags,
+    slong prec);
+
+slong
+acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
+        const acb_t a, const acb_t b, const mag_t tol,
+        slong deg_limit, int flags, slong prec);
 
 #ifdef __cplusplus
 }
