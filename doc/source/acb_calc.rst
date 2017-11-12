@@ -35,10 +35,9 @@ Types, macros and constants
     coefficients in *out* to non-finite values otherwise.
 
     For algorithms that do not rely on derivatives, *func* will always
-    get called with *order* = 0, in which case the user only needs to
-    implement evaluation of the single function value `f(z)`.
-    In the special case *order* = 1, the user only needs to implement
-    evaluation of `f(z)` (without derivatives), but must verify
+    get called with *order* = 0 or *order* = 1, in which case the user
+    only needs to implement evaluation of the direct function value `f(z)`
+    (without derivatives). With *order* = 1, *func* must verify
     holomorphicity (unlike the *order* = 0 case).
 
     If *f* is built from field operations and meromorphic functions, then
@@ -189,7 +188,7 @@ Integration
 
     - *eval_limit* - maximum number of function evaluations.
       If a zero or negative value is provided, the limit is set to a default
-      value which currently equals `1000 \cdot \text{prec}`.
+      value which currently equals `1000 \cdot \text{prec} + \text{prec}^2`.
 
       This is the main parameter used to limit the amount of work before
       aborting due to possible slow convergence or non-convergence.

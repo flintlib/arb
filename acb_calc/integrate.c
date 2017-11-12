@@ -75,7 +75,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     depth_limit = FLINT_MAX(depth_limit, 1);
 
     if (eval_limit <= 0)
-        eval_limit = 1000 * prec;
+        eval_limit = 1000 * prec + prec * prec;
     eval_limit = FLINT_MAX(eval_limit, 1);
 
     goal = FLINT_MAX(goal, 0);
@@ -130,7 +130,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
             /* We know that the result is real. */
             real_error = acb_is_finite(t) && acb_is_real(t);
 
-            feval = acb_calc_integrate_gl_auto_deg(t, f, param, as + depth - 1,
+            feval = acb_calc_integrate_gl_auto_deg(u, f, param, as + depth - 1,
                                 bs + depth - 1, new_tol, deg_limit, flags, prec);
             eval += feval;
 
@@ -138,12 +138,12 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
             if (feval > 0)
             {
                 if (real_error)
-                    arb_zero(acb_imagref(t));
+                    arb_zero(acb_imagref(u));
 
-                acb_add(s, s, t, prec);
+                acb_add(s, s, u, prec);
 
                 /* Adjust absolute tolerance based on new information. */
-                acb_get_mag_lower(tmpm, t);
+                acb_get_mag_lower(tmpm, u);
                 mag_mul_2exp_si(tmpm, tmpm, -goal);
                 mag_max(new_tol, new_tol, tmpm);
 

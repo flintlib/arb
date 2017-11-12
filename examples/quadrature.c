@@ -285,19 +285,59 @@ f_exp(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = exp(-z^2) */
+int
+f_gaussian(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_mul(res, z, z, prec);
+    acb_neg(res, res);
+    acb_exp(res, res, prec);
+
+    return 0;
+}
+
+int
+f_monster(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+
+    acb_exp(t, z, prec);
+    acb_holomorphic_floor(res, t, order != 0, prec);
+
+    if (acb_is_finite(res))
+    {
+        acb_sub(res, t, res, prec);
+        acb_add(t, t, z, prec);
+        acb_sin(t, t, prec);
+        acb_mul(res, res, t, prec);
+    }
+
+    acb_clear(t);
+
+    return 0;
+}
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 13
+#define NUM_INTEGRALS 15
 
 const char * descr[NUM_INTEGRALS] =
 {
     "int_0^100 sin(x) dx",
     "4 int_0^1 1/(1+x^2) dx",
-    "4 int_1^{10^100} 1/(1+x^2) dx",
+    "2 int_0^{inf} 1/(1+x^2) dx   (using domain truncation)",
     "4 int_0^1 sqrt(1-x^2) dx",
-    "4 int_0^8 sin(x+exp(x)) dx",
+    "int_0^8 sin(x+exp(x)) dx",
     "int_0^100 floor(x) dx",
     "int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx",
     "1/(2 pi i) int zeta(s) ds  (closed path around s = 1)",
@@ -306,6 +346,8 @@ const char * descr[NUM_INTEGRALS] =
     "int_1^{1+1000i} gamma(x) dx",
     "int_{-10}^{10} sin(x) + exp(-200-x^2) dx",
     "int_{-1020}^{-1000} exp(x) dx  (use -tol 0 for relative error)",
+    "int_0^{inf} exp(-x^2) dx   (using domain truncation)",
+    "int_0^8 (exp(x)-floor(exp(x))) sin(x+exp(x)) dx  (use higher -eval)",
 };
 
 int main(int argc, char *argv[])
@@ -415,11 +457,12 @@ int main(int argc, char *argv[])
                 break;
 
             case 2:
-                acb_set_d(a, 1);
-                acb_set_ui(b, 10);
-                acb_pow_ui(b, b, 100, prec);
+                acb_set_d(a, 0);
+                acb_one(b);
+                acb_mul_2exp_si(b, b, goal);
                 acb_calc_integrate(s, f_atanderiv, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
-                acb_mul_2exp_si(s, s, 2);
+                arb_add_error_2exp_si(acb_realref(s), -goal);
+                acb_mul_2exp_si(s, s, 1);
                 break;
 
             case 3:
@@ -504,6 +547,22 @@ int main(int argc, char *argv[])
                 acb_set_d(a, -1020.0);
                 acb_set_d(b, -1010.0);
                 acb_calc_integrate(s, f_exp, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                break;
+
+            case 13:
+                acb_set_d(a, 0);
+                acb_set_d(b, ceil(sqrt(goal * 0.693147181) + 1.0));
+                acb_calc_integrate(s, f_gaussian, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_mul(b, b, b, prec);
+                acb_neg(b, b);
+                acb_exp(b, b, prec);
+                arb_add_error(acb_realref(s), acb_realref(b));
+                break;
+
+            case 14:
+                acb_set_d(a, 0.0);
+                acb_set_d(b, 8.0);
+                acb_calc_integrate(s, f_monster, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
                 break;
 
             default:
