@@ -24,6 +24,8 @@ extern "C" {
 #define ACB_CALC_VERBOSE  1
 #define ACB_CALC_VERY_VERBOSE 3
 
+#define ACB_CALC_INTEGRATE_HEAP 8
+
 typedef int (*acb_calc_func_t)(acb_ptr out,
     const acb_t inp, void * param, slong order, slong prec);
 

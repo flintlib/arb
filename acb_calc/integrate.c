@@ -49,6 +49,61 @@ quad_simple(acb_t res, acb_calc_func_t f, void * param,
     mag_clear(tmpm);
 }
 
+static void
+heap_up(acb_ptr as, acb_ptr bs, acb_ptr vs, mag_ptr ms, slong n)
+{
+    slong i, max, l, r;
+    i = 0;
+    for (;;)
+    {
+        max = i;
+        l = 2 * i + 1;
+        r = 2 * i + 2;
+        if (l < n && mag_cmp(ms + l, ms + max) > 0)
+            max = l;
+        if (r < n && mag_cmp(ms + r, ms + max) > 0)
+            max = r;
+        if (max != i)
+        {
+            acb_swap(as + i, as + max);
+            acb_swap(bs + i, bs + max);
+            acb_swap(vs + i, vs + max);
+            mag_swap(ms + i, ms + max);
+            i = max;
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
+static void
+heap_down(acb_ptr as, acb_ptr bs, acb_ptr vs, mag_ptr ms, slong n)
+{
+    slong j, k;
+
+    k = n - 1;
+    j = (k - 1) / 2;
+
+    while (k > 0 && mag_cmp(ms + j, ms + k) < 0)
+    {
+        acb_swap(as + j, as + k);
+        acb_swap(bs + j, bs + k);
+        acb_swap(vs + j, vs + k);
+        mag_swap(ms + j, ms + k);
+        k = j;
+        j = (j - 1) / 2;
+    }
+}
+
+static int
+_acb_overlaps(acb_t tmp, const acb_t a, const acb_t b, slong prec)
+{
+    acb_sub(tmp, a, b, prec);
+    return acb_contains_zero(tmp);
+}
+
 void
 acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b,
@@ -58,10 +113,11 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     slong prec)
 {
     acb_ptr as, bs, vs;
+    mag_ptr ms;
     acb_t s, t, u;
     mag_t tmpm, tmpn, new_tol;
-    slong depth, depth_max, eval, feval;
-    int stopping, real_error;
+    slong depth, depth_max, eval, feval, top;
+    int stopping, real_error, use_heap;
 
     acb_init(s);
     acb_init(t);
@@ -82,14 +138,19 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     if (deg_limit <= 0)
         deg_limit = 0.5 * goal + 10;
 
+    use_heap = (flags & ACB_CALC_INTEGRATE_HEAP);
+
     /* todo: allocate dynamically */
     as = _acb_vec_init(depth_limit);
     bs = _acb_vec_init(depth_limit);
     vs = _acb_vec_init(depth_limit);
+    ms = _mag_vec_init(depth_limit);
 
+    /* Compute initial crude estimate for the whole interval. */
     acb_set(as, a);
     acb_set(bs, b);
     quad_simple(vs, f, param, as, bs, prec);
+    mag_hypot(ms, arb_radref(acb_realref(vs)), arb_radref(acb_imagref(vs)));
 
     depth = depth_max = 1;
     eval = 1;
@@ -112,26 +173,36 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
             continue;
         }
 
-        acb_set(t, vs + depth - 1);
-        mag_hypot(tmpm, arb_radref(acb_realref(t)), arb_radref(acb_imagref(t)));
-        acb_sub(u, as + depth - 1, bs + depth - 1, prec);
+        if (use_heap)
+            top = 0;
+        else
+            top = depth - 1;
 
         /* We are done with this subinterval. */
-        if (mag_cmp(tmpm, new_tol) < 0 || acb_contains_zero(u) || stopping)
+        if (mag_cmp(ms + top, new_tol) < 0 ||
+            _acb_overlaps(u, as + top, bs + top, prec) || stopping)
         {
-            acb_add(s, s, t, prec);
+            acb_add(s, s, vs + top, prec);
             depth--;
+            if (use_heap && depth > 0)
+            {
+                acb_swap(as, as + depth);
+                acb_swap(bs, bs + depth);
+                acb_swap(vs, vs + depth);
+                mag_swap(ms, ms + depth);
+                heap_up(as, bs, vs, ms, depth);
+            }
             continue;
         }
 
         /* Attempt using Gauss-Legendre rule. */
-        if (acb_is_finite(t))
+        if (acb_is_finite(vs + top))
         {
             /* We know that the result is real. */
-            real_error = acb_is_finite(t) && acb_is_real(t);
+            real_error = acb_is_finite(vs + top) && acb_is_real(vs + top);
 
-            feval = acb_calc_integrate_gl_auto_deg(u, f, param, as + depth - 1,
-                                bs + depth - 1, new_tol, deg_limit, flags, prec);
+            feval = acb_calc_integrate_gl_auto_deg(u, f, param,
+                as + top, bs + top, new_tol, deg_limit, flags, prec);
             eval += feval;
 
             /* We are done with this subinterval. */
@@ -141,13 +212,20 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
                     arb_zero(acb_imagref(u));
 
                 acb_add(s, s, u, prec);
-
                 /* Adjust absolute tolerance based on new information. */
                 acb_get_mag_lower(tmpm, u);
                 mag_mul_2exp_si(tmpm, tmpm, -goal);
                 mag_max(new_tol, new_tol, tmpm);
 
                 depth--;
+                if (use_heap && depth > 0)
+                {
+                    acb_swap(as, as + depth);
+                    acb_swap(bs, bs + depth);
+                    acb_swap(vs, vs + depth);
+                    mag_swap(ms, ms + depth);
+                    heap_up(as, bs, vs, ms, depth);
+                }
                 continue;
             }
         }
@@ -161,33 +239,54 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
         }
 
         /* Bisection. */
-        /* Interval (num) becomes [mid, b]. */
-        acb_set(bs + depth, bs + depth - 1);
-        acb_add(as + depth, as + depth - 1, bs + depth - 1, prec);
+        /* Interval [depth] becomes [mid, b]. */
+        acb_set(bs + depth, bs + top);
+        acb_add(as + depth, as + top, bs + top, prec);
         acb_mul_2exp_si(as + depth, as + depth, -1);
-        /* Interval (num-1) becomes [a, mid]. */
-        acb_set(bs + depth - 1, as + depth);
 
-        quad_simple(vs + depth - 1, f, param, as + depth - 1, bs + depth - 1, prec);
+        /* Interval [top] becomes [a, mid]. */
+        acb_set(bs + top, as + depth);
+
+#if 0
+        printf("new intervals:\n");
+        acb_printn(as, 10, ARB_STR_NO_RADIUS); printf(" ");
+        acb_printn(bs, 10, ARB_STR_NO_RADIUS); printf(",    ");
+        acb_printn(as + depth, 10, ARB_STR_NO_RADIUS); printf(" ");
+        acb_printn(bs + depth, 10, ARB_STR_NO_RADIUS); printf("\n");
+#endif
+
+        /* Evaluate on [a, mid] */
+        quad_simple(vs + top, f, param, as + top, bs + top, prec);
+        mag_hypot(ms + top, arb_radref(acb_realref(vs + top)), arb_radref(acb_imagref(vs + top)));
+        eval++;
+        /* Adjust absolute tolerance based on new information. */
+        acb_get_mag_lower(tmpm, vs + top);
+        mag_mul_2exp_si(tmpm, tmpm, -goal);
+        mag_max(new_tol, new_tol, tmpm);
+
+        /* Evaluate on [mid, b] */
         quad_simple(vs + depth, f, param, as + depth, bs + depth, prec);
-        eval += 2;
-
-        /* Move the interval with the larger error to the top of the queue. */
-        mag_hypot(tmpm, arb_radref(acb_realref(vs + depth - 1)),
-            arb_radref(acb_imagref(vs + depth - 1)));
-        mag_hypot(tmpn, arb_radref(acb_realref(vs + depth)),
-            arb_radref(acb_imagref(vs + depth)));
-        if (mag_cmp(tmpm, tmpn) > 0)
-        {
-            acb_swap(as + depth, as + depth - 1);
-            acb_swap(bs + depth, bs + depth - 1);
-            acb_swap(vs + depth, vs + depth - 1);
-        }
-
+        mag_hypot(ms + depth, arb_radref(acb_realref(vs + depth)), arb_radref(acb_imagref(vs + depth)));
+        eval++;
         /* Adjust absolute tolerance based on new information. */
         acb_get_mag_lower(tmpm, vs + depth);
         mag_mul_2exp_si(tmpm, tmpm, -goal);
         mag_max(new_tol, new_tol, tmpm);
+
+        /* Make the interval with the larger error the priority. */
+        if (mag_cmp(ms + top, ms + depth) < 0)
+        {
+            acb_swap(as + top, as + depth);
+            acb_swap(bs + top, bs + depth);
+            acb_swap(vs + top, vs + depth);
+            mag_swap(ms + top, ms + depth);
+        }
+
+        if (use_heap)
+        {
+            heap_up(as, bs, vs, ms, depth);
+            heap_down(as, bs, vs, ms, depth + 1);
+        }
 
         depth++;
         depth_max = FLINT_MAX(depth, depth_max);
@@ -204,6 +303,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     _acb_vec_clear(as, depth_limit);
     _acb_vec_clear(bs, depth_limit);
     _acb_vec_clear(vs, depth_limit);
+    _mag_vec_clear(ms, depth_limit);
     acb_clear(s);
     acb_clear(t);
     acb_clear(u);

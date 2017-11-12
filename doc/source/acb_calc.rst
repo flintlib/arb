@@ -203,13 +203,20 @@ Integration
       If a zero or negative value is provided, the limit is set to the
       default value `2 \cdot \text{prec}`.
       This limits the number of recursive bisections around any single point.
-      There is typically no reason to use a non-default value.
+      Warning: the memory usage increases proportionally.
 
     - *flags* - additional options
 
         *ACB_CALC_VERBOSE*          - print some information
 
         *ACB_CALC_VERY_VERBOSE*      - print even more information
+
+        *ACB_CALC_INTEGRATE_HEAP*   - Use a heap to prioritize the segment
+        with the largest error globally. In this case *depth_limit* becomes
+        the maximum size of the heap. This sometimes gives better results
+        in case of convergence failure around an isolated point, but can
+        lead to a much larger array of subintervals (requiring a higher
+        *depth_limit*) when many global bisections are needed.
 
 .. function:: slong acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const mag_t tol, slong deg_limit, int flags, slong prec)
 

@@ -341,7 +341,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^100 floor(x) dx",
     "int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx",
     "1/(2 pi i) int zeta(s) ds  (closed path around s = 1)",
-    "int_0^1 x sin(1/x) dx  (slow convergence)",
+    "int_0^1 x sin(1/x) dx  (slow convergence, use -heap and/or -tol)",
     "int_0^10000 x^1000 exp(-x) dx",
     "int_1^{1+1000i} gamma(x) dx",
     "int_{-10}^{10} sin(x) + exp(-200-x^2) dx",
@@ -426,6 +426,10 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "-verbose2"))
         {
             flags |= ACB_CALC_VERY_VERBOSE;
+        }
+        else if (!strcmp(argv[i], "-heap"))
+        {
+            flags |= ACB_CALC_INTEGRATE_HEAP;
         }
     }
 
