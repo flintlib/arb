@@ -734,6 +734,24 @@ acb_coth(acb_t y, const acb_t x, slong prec)
     acb_mul_onei(y, y);
 }
 
+void acb_sech(acb_t r, const acb_t z, slong prec);
+void acb_csch(acb_t r, const acb_t z, slong prec);
+
+ACB_INLINE void
+acb_sec(acb_t y, const acb_t x, slong prec)
+{
+    acb_mul_onei(y, x);
+    acb_sech(y, y, prec);
+}
+
+ACB_INLINE void
+acb_csc(acb_t y, const acb_t x, slong prec)
+{
+    acb_mul_onei(y, x);
+    acb_csch(y, y, prec);
+    acb_mul_onei(y, y);
+}
+
 void acb_sin_pi(acb_t r, const acb_t z, slong prec);
 void acb_cos_pi(acb_t r, const acb_t z, slong prec);
 void acb_sin_cos_pi(acb_t s, acb_t c, const acb_t z, slong prec);

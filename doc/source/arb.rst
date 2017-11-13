@@ -971,6 +971,14 @@ Trigonometric functions
 
     Sets `y = \cot(\pi x)`.
 
+.. function:: void arb_sec(arb_t res, const arb_t x, slong prec)
+
+    Computes `\sec(x) = 1 / \cos(x)`.
+
+.. function:: void arb_csc(arb_t res, const arb_t x, slong prec)
+
+    Computes `\csc(x) = 1 / \sin(x)`.
+
 .. function:: void arb_sinc(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{sinc}(x) = \sin(x) / x`.
@@ -1042,6 +1050,14 @@ Hyperbolic functions
 
     Sets `y = \coth(x) = \cosh(x) / \sinh(x)`, evaluated using
     the same strategy as :func:`arb_tanh`.
+
+.. function:: void arb_sech(arb_t res, const arb_t x, slong prec)
+
+    Computes `\operatorname{sech}(x) = 1 / \cosh(x)`.
+
+.. function:: void arb_csch(arb_t res, const arb_t x, slong prec)
+
+    Computes `\operatorname{csch}(x) = 1 / \sinh(x)`.
 
 Inverse hyperbolic functions
 -------------------------------------------------------------------------------

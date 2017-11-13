@@ -630,6 +630,14 @@ Trigonometric functions
     Sets `s = \cot(\pi z)`. Uses the same algorithm as :func:`acb_cot`,
     but evaluates the sine and cosine accurately via :func:`arb_sin_cos_pi`.
 
+.. function:: void acb_sec(acb_t res, const acb_t z, slong prec)
+
+    Computes `\sec(z) = 1 / \cos(z)`.
+
+.. function:: void acb_csc(acb_t res, const acb_t z, slong prec)
+
+    Computes `\csc(x) = 1 / \sin(z)`.
+
 .. function:: void acb_sinc(acb_t s, const acb_t z, slong prec)
 
     Sets `s = \operatorname{sinc}(x) = \sin(z) / z`.
@@ -668,6 +676,14 @@ Hyperbolic functions
 
     Respectively computes `\sinh(z) = -i\sin(iz)`, `\cosh(z) = \cos(iz)`,
     `\tanh(z) = -i\tan(iz)`, `\coth(z) = i\cot(iz)`.
+
+.. function:: void acb_sech(acb_t res, const acb_t z, slong prec)
+
+    Computes `\operatorname{sech}(z) = 1 / \cosh(z)`.
+
+.. function:: void acb_csch(acb_t res, const arb_t z, slong prec)
+
+    Computes `\operatorname{csch}(z) = 1 / \sinh(z)`.
 
 Inverse hyperbolic functions
 -------------------------------------------------------------------------------

@@ -521,6 +521,12 @@ void arb_acos(arb_t z, const arb_t x, slong prec);
 void arb_atanh(arb_t z, const arb_t x, slong prec);
 void arb_asinh(arb_t z, const arb_t x, slong prec);
 void arb_acosh(arb_t z, const arb_t x, slong prec);
+
+void arb_sec(arb_t res, const arb_t x, slong prec);
+void arb_csc(arb_t res, const arb_t x, slong prec);
+void arb_sech(arb_t res, const arb_t x, slong prec);
+void arb_csch(arb_t res, const arb_t x, slong prec);
+
 void arb_fac_ui(arb_t z, ulong n, slong prec);
 void arb_doublefac_ui(arb_t z, ulong n, slong prec);
 void arb_bin_ui(arb_t z, const arb_t n, ulong k, slong prec);
