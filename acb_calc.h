@@ -44,7 +44,7 @@ int acb_calc_integrate_taylor(acb_t res,
     const arf_t outer_radius,
     slong accuracy_goal, slong prec);
 
-void
+int
 acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b,
     slong goal, const mag_t tol,
@@ -52,10 +52,11 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     int flags,
     slong prec);
 
-slong
-acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
-        const acb_t a, const acb_t b, const mag_t tol,
-        slong deg_limit, int flags, slong prec);
+int
+acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
+    acb_calc_func_t f, void * param,
+    const acb_t a, const acb_t b, const mag_t tol,
+    slong deg_limit, int flags, slong prec);
 
 #ifdef __cplusplus
 }

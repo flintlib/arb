@@ -111,25 +111,26 @@ acb_calc_gl_node(arb_t x, arb_t w, slong i, slong k, slong prec)
     arb_set_round(w, gl_cache->gl_weights[i] + kk, prec);
 }
 
-slong
-acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
-        const acb_t a, const acb_t b, const mag_t tol,
-        slong deg_limit, int flags, slong prec)
+int
+acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
+    acb_calc_func_t f, void * param,
+    const acb_t a, const acb_t b, const mag_t tol,
+    slong deg_limit, int flags, slong prec)
 {
     acb_t mid, delta, wide;
     mag_t tmpm;
-    slong success;
+    slong status;
     acb_t s, v;
-    mag_t M, X, Y, rho, err, t;
+    mag_t M, X, Y, rho, err, t, best_rho;
     slong k, Xexp;
     slong i, n, best_n;
 
-    success = 0;
+    status = ARB_CALC_NO_CONVERGENCE;
 
     if (deg_limit <= 0)
     {
         acb_indeterminate(res);
-        return 0;
+        return status;
     }
 
     acb_init(mid);
@@ -153,8 +154,10 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
     mag_init(rho);
     mag_init(t);
     mag_init(err);
+    mag_init(best_rho);
 
     best_n = -1;
+    eval_count[0] = 0;
 
     mag_inf(err);
 
@@ -185,6 +188,7 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
         acb_add(wide, wide, mid, prec);
 
         f(v, wide, param, 1, prec);
+        eval_count[0]++;
 
         /* no chance */
         if (!acb_is_finite(v))
@@ -211,12 +215,13 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
 
             if (mag_cmp(t, tol) < 0)
             {
-                success = 1;
+                status = ARB_CALC_SUCCESS;
 
                 /* The best so far. */
                 if (best_n == -1 || n < best_n)
                 {
                     mag_set(err, t);
+                    mag_set(best_rho, rho);
                     best_n = n;
                 }
 
@@ -228,21 +233,21 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
     }
 
     /* Evaluate best found Gauss-Legendre quadrature rule. */
-    if (success)
+    if (status == ARB_CALC_SUCCESS)
     {
         arb_t x, w;
         arb_init(x);
         arb_init(w);
 
-        /* Return value. */
-        success = best_n;
-
         if ((flags & ACB_CALC_VERY_VERBOSE) == ACB_CALC_VERY_VERBOSE)
         {
+            acb_get_mag(tmpm, delta);
             flint_printf("  {GL deg %ld on [", best_n);
-            acb_printn(a, 20, ARB_STR_NO_RADIUS); flint_printf(", ");
-            acb_printn(b, 20, ARB_STR_NO_RADIUS);
-            flint_printf("], tol "); mag_printd(tol, 10);
+            acb_printn(a, 10, ARB_STR_NO_RADIUS); flint_printf(", ");
+            acb_printn(b, 10, ARB_STR_NO_RADIUS);
+            flint_printf("], delta "); mag_printd(tmpm, 5);
+            flint_printf(", rho "); mag_printd(best_rho, 5);
+            flint_printf(", tol "); mag_printd(tol, 3);
             flint_printf("}\n");
         }
 
@@ -264,11 +269,17 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
             acb_addmul_arb(s, v, w, prec);
         }
 
+        eval_count[0] += best_n;
+
         acb_mul(res, s, delta, prec);
         acb_add_error_mag(res, err);
 
         arb_clear(x);
         arb_clear(w);
+    }
+    else
+    {
+        acb_indeterminate(res);
     }
 
     acb_clear(s);
@@ -279,12 +290,13 @@ acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t f, void * param,
     mag_clear(rho);
     mag_clear(t);
     mag_clear(err);
+    mag_clear(best_rho);
 
     acb_clear(mid);
     acb_clear(delta);
     acb_clear(wide);
     mag_clear(tmpm);
 
-    return success;
+    return status;
 }
 

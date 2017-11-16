@@ -98,7 +98,7 @@ Types, macros and constants
 Integration
 -------------------------------------------------------------------------------
 
-.. function:: void acb_calc_integrate(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, slong goal, const mag_t tol, slong deg_limit, slong eval_limit, slong depth_limit, int flags, slong prec)
+.. function:: int acb_calc_integrate(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, slong goal, const mag_t tol, slong deg_limit, slong eval_limit, slong depth_limit, int flags, slong prec)
 
     Computes a rigorous enclosure of the integral
 
@@ -113,6 +113,9 @@ Integration
     To compute improper integrals, the user should therefore truncate the path
     of integration manually (or make a regularizing change of variables,
     if possible).
+
+    Returns *ARB_CALC_SUCCESS* (0) if the integration converged on all
+    subintervals and *ARB_CALC_NO_CONVERGENCE* otherwise.
 
     By default, the integrand *func* will only be called with *order* = 0
     or *order* = 1; that is, derivatives are not required.
@@ -218,13 +221,14 @@ Integration
         lead to a much larger array of subintervals (requiring a higher
         *depth_limit*) when many global bisections are needed.
 
-.. function:: slong acb_calc_integrate_gl_auto_deg(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const mag_t tol, slong deg_limit, int flags, slong prec)
+.. function:: int acb_calc_integrate_gl_auto_deg(acb_t res, slong * num_eval, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const mag_t tol, slong deg_limit, int flags, slong prec)
 
     Attempts to compute `I = \int_a^b f(t) dt` using a single application
     of Gauss-Legendre quadrature with automatic determination of the
     quadrature degree so that the error is smaller than *tol*.
-    Returns a positive integer *n* indicating that the integral has
-    been evaluated successfully, or returns 0 if the tolerance could not be met.
+    Returns *ARB_CALC_SUCCESS* if the integral has been evaluated successfully
+    or *ARB_CALC_NO_CONVERGENCE* if the tolerance could not be met.
+    The total number of function evaluations is written to *num_eval*.
 
     For the interval `[-1,1]`, the error of the *n*-point Gauss-Legendre
     rule is bounded by

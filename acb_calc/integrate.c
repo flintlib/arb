@@ -104,7 +104,7 @@ _acb_overlaps(acb_t tmp, const acb_t a, const acb_t b, slong prec)
     return acb_contains_zero(tmp);
 }
 
-void
+int
 acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b,
     slong goal, const mag_t tol,
@@ -117,7 +117,10 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     acb_t s, t, u;
     mag_t tmpm, tmpn, new_tol;
     slong depth, depth_max, eval, feval, top;
-    int stopping, real_error, use_heap;
+    slong leaf_interval_count;
+    int stopping, real_error, use_heap, status, gl_status;
+
+    status = ARB_CALC_SUCCESS;
 
     acb_init(s);
     acb_init(t);
@@ -155,6 +158,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     depth = depth_max = 1;
     eval = 1;
     stopping = 0;
+    leaf_interval_count = 0;
 
     /* Adjust absolute tolerance based on new information. */
     acb_get_mag_lower(tmpm, vs);
@@ -169,6 +173,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
         {
             if (flags & ACB_CALC_VERBOSE)
                 flint_printf("stopping at eval_limit %wd\n", eval_limit);
+            status = ARB_CALC_NO_CONVERGENCE;
             stopping = 1;
             continue;
         }
@@ -183,6 +188,8 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
             _acb_overlaps(u, as + top, bs + top, prec) || stopping)
         {
             acb_add(s, s, vs + top, prec);
+            leaf_interval_count++;
+
             depth--;
             if (use_heap && depth > 0)
             {
@@ -201,17 +208,19 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
             /* We know that the result is real. */
             real_error = acb_is_finite(vs + top) && acb_is_real(vs + top);
 
-            feval = acb_calc_integrate_gl_auto_deg(u, f, param,
+            gl_status = acb_calc_integrate_gl_auto_deg(u, &feval, f, param,
                 as + top, bs + top, new_tol, deg_limit, flags, prec);
             eval += feval;
 
             /* We are done with this subinterval. */
-            if (feval > 0)
+            if (gl_status == ARB_CALC_SUCCESS)
             {
                 if (real_error)
                     arb_zero(acb_imagref(u));
 
                 acb_add(s, s, u, prec);
+                leaf_interval_count++;
+
                 /* Adjust absolute tolerance based on new information. */
                 acb_get_mag_lower(tmpm, u);
                 mag_mul_2exp_si(tmpm, tmpm, -goal);
@@ -234,6 +243,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
         {
             if (flags & ACB_CALC_VERBOSE)
                 flint_printf("stopping at depth_limit %wd\n", depth_limit);
+            status = ARB_CALC_NO_CONVERGENCE;
             stopping = 1;
             continue;
         }
@@ -246,14 +256,6 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
 
         /* Interval [top] becomes [a, mid]. */
         acb_set(bs + top, as + depth);
-
-#if 0
-        printf("new intervals:\n");
-        acb_printn(as, 10, ARB_STR_NO_RADIUS); printf(" ");
-        acb_printn(bs, 10, ARB_STR_NO_RADIUS); printf(",    ");
-        acb_printn(as + depth, 10, ARB_STR_NO_RADIUS); printf(" ");
-        acb_printn(bs + depth, 10, ARB_STR_NO_RADIUS); printf("\n");
-#endif
 
         /* Evaluate on [a, mid] */
         quad_simple(vs + top, f, param, as + top, bs + top, prec);
@@ -294,8 +296,8 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
 
     if (flags & ACB_CALC_VERBOSE)
     {
-        flint_printf("depth %wd/%wd, eval %wd/%wd\n",
-            depth_max, depth_limit, eval, eval_limit);
+        flint_printf("depth %wd/%wd, eval %wd/%wd, %wd leaf intervals\n",
+            depth_max, depth_limit, eval, eval_limit, leaf_interval_count);
     }
 
     acb_set(res, s);
@@ -310,5 +312,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     mag_clear(tmpm);
     mag_clear(tmpn);
     mag_clear(new_tol);
+
+    return status;
 }
 
