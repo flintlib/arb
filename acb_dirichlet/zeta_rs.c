@@ -92,6 +92,12 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
     {
         acb_t t;
         mag_t rad, R, err;
+        slong acc;
+
+        acc = acb_rel_accuracy_bits(s);
+        acc = FLINT_MAX(acc, 0);
+        acc = FLINT_MIN(acc, prec);
+        prec = FLINT_MIN(prec, acc + 20);
 
         acb_init(t);
         mag_init(rad);
@@ -101,18 +107,16 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
         /* rad = rad(s) */
         mag_hypot(rad, arb_radref(acb_realref(s)), arb_radref(acb_imagref(s)));
 
-        /* R >= rad(s) */
-        mag_set_d(R, 0.125);
-        mag_max(R, R, rad);
-
-        /* mid(t) = mid(s); rad(t) = R */
+        /* s +/- R */
+        mag_set_ui_2exp_si(R, 1, -3);
         acb_set(t, s);
-        mag_zero(arb_radref(acb_realref(t)));
-        mag_zero(arb_radref(acb_imagref(t)));
+        mag_add(arb_radref(acb_realref(t)), arb_radref(acb_realref(t)), R);
+        mag_add(arb_radref(acb_imagref(t)), arb_radref(acb_imagref(t)), R);
 
-        /* |zeta'(s)| <= |zeta(t)| / R */
+        /* |zeta'(s)| <= |zeta(s +/- R)| / R */
         acb_dirichlet_zeta_bound(err, t);
         mag_div(err, err, R);
+
         /* error <= |zeta'(s)| * rad(s) */
         mag_mul(err, err, rad);
 

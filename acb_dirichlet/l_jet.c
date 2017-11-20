@@ -36,16 +36,9 @@ acb_dirichlet_l_jet(acb_ptr res, const acb_t s,
     if (G == NULL || G->q == 1)
     {
         if (len == 1 && !deflate)
-        {
             acb_dirichlet_zeta(res, s, prec);
-        }
         else
-        {
-            acb_init(a);
-            acb_one(a);
-            _acb_poly_zeta_cpx_reflect(res, s, a, deflate, len, prec);
-            acb_clear(a);
-        }
+            acb_dirichlet_zeta_jet(res, s, deflate, len, prec);
         return;
     }
 
