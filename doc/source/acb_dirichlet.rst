@@ -95,7 +95,35 @@ Truncated L-series and power sums
     A slightly bigger gain for larger *n* could be achieved by using more
     small prime factors, at the expense of space.
 
-Riemann zeta function and Riemann-Siegel formula
+Riemann zeta function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
+
+    Computes `\zeta(s)` using an automatic choice of algorithm.
+
+.. function:: void acb_dirichlet_zeta_jet(acb_t res, const acb_t s, int deflate, slong len, slong prec)
+
+    Computes the first *len* terms of the Taylor series of the Riemann zeta
+    function at *s*. If *deflate* is nonzero, computes the deflated
+    function `\zeta(s) - 1/(s-1)` instead.
+
+.. function:: void acb_dirichlet_zeta_bound(mag_t res, const acb_t s)
+
+    Computes an upper bound for `|\zeta(s)|` quickly. On the critical strip (and
+    slightly outside of it), formula (43.3) in [Rad1973]_ is used.
+    To the right, evaluating at the real part of *s* gives a trivial bound.
+    To the left, the functional equation is used.
+
+.. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
+
+    Sets *res* to the Dirichlet eta function
+    `\eta(s) = \sum_{k=1}^{\infty} (-1)^k / k^s = (1-2^{1-s}) \zeta(s)`,
+    also known as the alternating zeta function.
+    Note that the alternating character `\{1,-1\}` is not itself
+    a Dirichlet character.
+
+Riemann-Siegel formula
 -------------------------------------------------------------------------------
 
 The Riemann-Siegel (RS) formula is implemented closely following
@@ -153,24 +181,12 @@ the evaluation.
     otherwise chooses the number of terms automatically based on *s* and the
     precision.
 
-.. function:: void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
+.. function:: void acb_dirichlet_zeta_jet_rs(acb_t res, const acb_t s, slong len, slong prec)
 
-    Computes `\zeta(s)` using an automatic choice of algorithm.
-
-.. function:: void acb_dirichlet_zeta_bound(mag_t res, const acb_t s)
-
-    Computes an upper bound for `|\zeta(s)|` quickly. On the critical strip (and
-    slightly outside of it), formula (43.3) in [Rad1973]_ is used.
-    To the right, evaluating at the real part of *s* gives a trivial bound.
-    To the left, the functional equation is used.
-
-.. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
-
-    Sets *res* to the Dirichlet eta function
-    `\eta(s) = \sum_{k=1}^{\infty} (-1)^k / k^s = (1-2^{1-s}) \zeta(s)`,
-    also known as the alternating zeta function.
-    Note that the alternating character `\{1,-1\}` is not itself
-    a Dirichlet character.
+    Computes the first *len* terms of the Taylor series of the Riemann zeta
+    function at *s* using the Riemann siegel formula. This function currently
+    only supports *len* = 1 or *len* = 2. A finite difference is used
+    to compute the first derivative.
 
 Hurwitz zeta function
 -------------------------------------------------------------------------------
