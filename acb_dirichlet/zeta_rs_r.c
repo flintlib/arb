@@ -20,7 +20,7 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
     acb_t U, S, u, v;
     fmpz_t N;
     mag_t err;
-    slong j, k, wp;
+    slong j, k, wp, K_limit;
 
     /* determinate K automatically */
     if (K <= 0)
@@ -41,7 +41,10 @@ acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec)
         best_log2err = 1e300;
 
         /* todo: also break if too slow rate of decay? */
-        for (K = 1; K < 10 + prec * 0.25; K++)
+        K_limit = 10 + prec * 0.25;
+        K_limit += pow(t, 0.2);  /* possibly useful for off-strip evaluation */
+
+        for (K = 1; K < K_limit; K++)
         {
             if (sigma < 0 && K + sigma < 3)
                 continue;

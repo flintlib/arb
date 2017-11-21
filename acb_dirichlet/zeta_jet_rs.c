@@ -115,12 +115,15 @@ acb_dirichlet_zeta_jet_rs(acb_ptr res, const acb_t s, slong len, slong prec)
     {
         acb_t t, u;
         mag_t r, R, err0, err1, der1, der2, M;
+
+        /*
         slong acc;
 
         acc = acb_rel_accuracy_bits(s);
         acc = FLINT_MAX(acc, 0);
         acc = FLINT_MIN(acc, prec);
         prec = FLINT_MIN(prec, acc + 20);
+        */
 
         /*
         assume s = m +/- r

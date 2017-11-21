@@ -18,11 +18,11 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
     const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 {
     arf_t left;
-    slong wp, powprec, left_s;
+    slong wp, powprec, left_s, acc;
     ulong val, p, p_limit;
     double p_needed_approx, powmag, logp, errmag;
-    int is_real;
-    acb_t t, u, v, c;
+    int is_real, is_int;
+    acb_t t, u, v, c, negs;
     acb_dirichlet_roots_t roots;
     mag_t err;
 
@@ -60,6 +60,13 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
 
     left_s = arf_get_si(left, ARF_RND_FLOOR);
 
+    /* Adjust precision based on possible accuracy. */
+    acc = acb_rel_accuracy_bits(s);
+    acc = FLINT_MAX(acc, 0);
+    acc = FLINT_MIN(acc, prec);
+    acc += left_s;
+    prec = FLINT_MIN(prec, acc + 10);
+
     /* Heuristic. */
     wp = prec + FLINT_BIT_COUNT(prec) + (prec / left_s) + 4;
 
@@ -82,7 +89,11 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
     acb_init(u);
     acb_init(v);
     acb_init(c);
+    acb_init(negs);
 
+    is_int = acb_is_int(s);
+
+    acb_neg(negs, s);
     acb_one(v);
 
     for (p = 2; p < p_limit; p = n_nextprime(p, 1))
@@ -106,9 +117,20 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
         {
             acb_dirichlet_root(c, roots, val, powprec);
             acb_set_ui(t, p);
-            acb_pow(t, t, s, powprec);
-            acb_set_round(u, v, powprec);
-            acb_div(t, u, t, powprec);
+
+            if (is_int)
+            {
+                acb_pow(t, t, s, powprec);
+                acb_set_round(u, v, powprec);
+                acb_div(t, u, t, powprec);
+            }
+            else
+            {
+                acb_pow(t, t, negs, powprec);
+                acb_set_round(u, v, powprec);
+                acb_mul(t, u, t, powprec);
+            }
+
             acb_mul(t, t, c, powprec);
             acb_sub(v, v, t, wp);
         }
@@ -129,6 +151,7 @@ acb_dirichlet_l_euler_product(acb_t res, const acb_t s,
     acb_clear(u);
     acb_clear(v);
     acb_clear(c);
+    acb_clear(negs);
     arf_clear(left);
 }
 
