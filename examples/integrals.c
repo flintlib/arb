@@ -12,6 +12,7 @@
 #include "arb_hypgeom.h"
 #include "acb_hypgeom.h"
 #include "acb_dirichlet.h"
+#include "acb_modular.h"
 #include "acb_calc.h"
 
 /* ------------------------------------------------------------------------- */
@@ -155,7 +156,7 @@ f_rump(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
-/* f(z) = |z^4 + 10z^3 + 19z^2 + 6z - 6| exp(z)   (for real z) --
+/* f(z) = |z^4 + 10z^3 + 19z^2 - 6z - 6| exp(z)   (for real z) --
    Helfgott's integral on MathOverflow */
 int
 f_helfgott(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
@@ -199,7 +200,7 @@ f_zeta(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
 /* f(z) = z sin(1/z), assume on real interval */
 int
-f_essing(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+f_essing2(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
     if (order > 1)
         flint_abort();  /* Would be needed for Taylor method. */
@@ -217,6 +218,28 @@ f_essing(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     }
 
     acb_mul(res, res, z, prec);
+
+    return 0;
+}
+
+/* f(z) = sin(1/z), assume on real interval */
+int
+f_essing(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    if ((order == 0) && acb_is_real(z) && arb_contains_zero(acb_realref(z)))
+    {
+        /* todo: arb_zero_pm_one, arb_unit_interval? */
+        acb_zero(res);
+        mag_one(arb_radref(acb_realref(res)));
+    }
+    else
+    {
+        acb_inv(res, z, prec);
+        acb_sin(res, res, prec);
+    }
 
     return 0;
 }
@@ -388,11 +411,106 @@ f_sech3(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = -log(z) / (1 + z) */
+int
+f_log_div1p(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+    acb_add_ui(t, z, 1, prec);
+    acb_log(res, z, prec);
+    acb_div(res, res, t, prec);
+    acb_neg(res, res);
+
+    acb_clear(t);
+
+    return 0;
+}
+
+/* f(z) = z exp(-z) / (1 + exp(-z)) */
+int
+f_log_div1p_transformed(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+    acb_neg(t, z);
+    acb_exp(t, t, prec);
+    acb_add_ui(res, t, 1, prec);
+    acb_div(res, t, res, prec);
+    acb_mul(res, res, z, prec);
+
+    acb_clear(t);
+
+    return 0;
+}
+
+int
+f_elliptic_p_laurent_n(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    slong n;
+    acb_t tau;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    n = ((slong *)(param))[0];
+
+    acb_init(tau);
+    acb_onei(tau);
+
+    acb_modular_elliptic_p(res, z, tau, prec);
+
+    if (n + 1 < 0)
+    {
+        acb_pow_ui(tau, z, -n - 1, prec);
+        acb_mul(res, res, tau, prec);
+    }
+    else  /* note: acb_pow_si is currently bad; do it this way */
+    {
+        acb_inv(tau, z, prec);
+        acb_pow_ui(tau, tau, n + 1, prec);
+        acb_mul(res, res, tau, prec);
+    }
+
+    acb_clear(tau);
+
+    return 0;
+}
+
+/* f(z) = zeta'(z) / zeta(z) */
+int
+f_zeta_frac(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_struct t[2];
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+    acb_init(t + 1);
+
+    acb_dirichlet_zeta_jet(t, z, 0, 2, prec);
+    acb_div(res, t + 1, t, prec);
+
+    acb_clear(t);
+    acb_clear(t + 1);
+
+    return 0;
+}
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 18
+#define NUM_INTEGRALS 23
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -404,6 +522,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^100 floor(x) dx",
     "int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx",
     "1/(2 pi i) int zeta(s) ds  (closed path around s = 1)",
+    "int_0^1 sin(1/x) dx  (slow convergence, use -heap and/or -tol)",
     "int_0^1 x sin(1/x) dx  (slow convergence, use -heap and/or -tol)",
     "int_0^10000 x^1000 exp(-x) dx",
     "int_1^{1+1000i} gamma(x) dx",
@@ -414,33 +533,70 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^8 (exp(x)-floor(exp(x))) sin(x+exp(x)) dx  (use higher -eval)",
     "int_0^{inf} sech(x) dx   (using domain truncation)",
     "int_0^{inf} sech^3(x) dx   (using domain truncation)",
+    "int_0^1 -log(x)/(1+x) dx   (using domain truncation)",
+    "int_0^{inf} x exp(-x)/(1+exp(-x)) dx   (using domain truncation)",
+    "int_C wp(x)/x^(11) dx   (contour for 10th Laurent coefficient of Weierstrass p-function)",
+    "N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle"
 };
 
 int main(int argc, char *argv[])
 {
     acb_t s, t, a, b;
     mag_t tol;
-    slong prec, goal, deg_limit, eval_limit, depth_limit;
+    slong prec, goal;
+    slong N;
     int integral, ifrom, ito;
-    int i, twice, havetol, flags;
+    int i, twice, havegoal, havetol;
+    acb_calc_integrate_opt_t options;
 
-    flint_printf("Compute integrals using subdivision and Gauss-Legendre quadrature.\n");
-    flint_printf("Usage: quadrature [-i n] [-prec p] [-tol eps] [-twice]\n\n");
-    flint_printf("-i n       - compute integral In (0 <= n <= %d)\n", NUM_INTEGRALS - 1);
-    flint_printf("-prec p    - precision in bits (default p = 333)\n");
-    flint_printf("-tol eps   - approximate absolute error goal (default 2^-p)\n");
-    flint_printf("-twice     - run twice (to see overhead of computing nodes)\n");
-    flint_printf("\n\n");
+    ifrom = ito = -1;
 
-    prec = 333;
+    for (i = 1; i < argc; i++)
+    {
+        if (!strcmp(argv[i], "-i"))
+        {
+            if (!strcmp(argv[i+1], "all"))
+            {
+                ifrom = 0;
+                ito = NUM_INTEGRALS - 1;
+            }
+            else
+            {
+                ifrom = ito = atol(argv[i+1]);
+                if (ito < 0 || ito >= NUM_INTEGRALS)
+                    flint_abort();
+            }
+        }
+    }
+
+    if (ifrom == -1)
+    {
+        flint_printf("Compute integrals using acb_calc_integrate.\n");
+        flint_printf("Usage: integrals -i n [-prec p] [-tol eps] [-twice] [...]\n\n");
+        flint_printf("-i n       - compute integral n (0 <= n <= %d), or \"-i all\"\n", NUM_INTEGRALS - 1);
+        flint_printf("-prec p    - precision in bits (default p = 64)\n");
+        flint_printf("-goal p    - approximate relative accuracy goal (default p)\n");
+        flint_printf("-tol eps   - approximate absolute error goal (default 2^-p)\n");
+        flint_printf("-twice     - run twice (to see overhead of computing nodes)\n");
+        flint_printf("-heap      - use heap for subinterval queue\n");
+        flint_printf("-verbose   - show information\n");
+        flint_printf("-verbose2  - show more information\n");
+        flint_printf("-deg n     - use quadrature degree up to n\n");
+        flint_printf("-eval n    - limit number of function evaluations to n\n");
+        flint_printf("-depth n   - limit subinterval queue size to n\n\n");
+        flint_printf("Implemented integrals:\n");
+        for (integral = 0; integral < NUM_INTEGRALS; integral++)
+            flint_printf("I%d = %s\n", integral, descr[integral]);
+        flint_printf("\n");
+        return 1;
+    }
+
+    acb_calc_integrate_opt_init(options);
+
+    prec = 64;
     twice = 0;
-    ifrom = 0;
-    ito = NUM_INTEGRALS - 1;
-    havetol = 0;
-    deg_limit = -1;
-    eval_limit = -1;
-    depth_limit = -1;
-    flags = 0;
+    goal = 0;
+    havetol = havegoal = 0;
 
     acb_init(a);
     acb_init(b);
@@ -458,6 +614,16 @@ int main(int argc, char *argv[])
         {
             twice = 1;
         }
+        else if (!strcmp(argv[i], "-goal"))
+        {
+            goal = atol(argv[i+1]);
+            if (goal < 0)
+            {
+                flint_printf("expected goal >= 0\n");
+                return 1;
+            }
+            havegoal = 1;
+        }
         else if (!strcmp(argv[i], "-tol"))
         {
             arb_t x;
@@ -467,39 +633,34 @@ int main(int argc, char *argv[])
             arb_clear(x);
             havetol = 1;
         }
-        else if (!strcmp(argv[i], "-i"))
-        {
-            ifrom = ito = atol(argv[i+1]);
-            if (ito < 0 || ito >= NUM_INTEGRALS)
-                flint_abort();
-        }
         else if (!strcmp(argv[i], "-deg"))
         {
-            deg_limit = atol(argv[i+1]);
+            options->deg_limit = atol(argv[i+1]);
         }
         else if (!strcmp(argv[i], "-eval"))
         {
-            eval_limit = atol(argv[i+1]);
+            options->eval_limit = atol(argv[i+1]);
         }
         else if (!strcmp(argv[i], "-depth"))
         {
-            depth_limit = atol(argv[i+1]);
+            options->depth_limit = atol(argv[i+1]);
         }
         else if (!strcmp(argv[i], "-verbose"))
         {
-            flags |= ACB_CALC_VERBOSE;
+            options->verbose = 1;
         }
         else if (!strcmp(argv[i], "-verbose2"))
         {
-            flags |= ACB_CALC_VERY_VERBOSE;
+            options->verbose = 2;
         }
         else if (!strcmp(argv[i], "-heap"))
         {
-            flags |= ACB_CALC_INTEGRATE_HEAP;
+            options->use_heap = 1;
         }
     }
 
-    goal = prec;
+    if (!havegoal)
+        goal = prec;
 
     if (!havetol)
         mag_set_ui_2exp_si(tol, 1, -prec);
@@ -516,13 +677,13 @@ int main(int argc, char *argv[])
             case 0:
                 acb_set_d(a, 0);
                 acb_set_d(b, 100);
-                acb_calc_integrate(s, f_sin, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_sin, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 1:
                 acb_set_d(a, 0);
                 acb_set_d(b, 1);
-                acb_calc_integrate(s, f_atanderiv, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_atanderiv, NULL, a, b, goal, tol, options, prec);
                 acb_mul_2exp_si(s, s, 2);
                 break;
 
@@ -530,7 +691,7 @@ int main(int argc, char *argv[])
                 acb_set_d(a, 0);
                 acb_one(b);
                 acb_mul_2exp_si(b, b, goal);
-                acb_calc_integrate(s, f_atanderiv, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_atanderiv, NULL, a, b, goal, tol, options, prec);
                 arb_add_error_2exp_si(acb_realref(s), -goal);
                 acb_mul_2exp_si(s, s, 1);
                 break;
@@ -538,26 +699,26 @@ int main(int argc, char *argv[])
             case 3:
                 acb_set_d(a, 0);
                 acb_set_d(b, 1);
-                acb_calc_integrate(s, f_circle, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_circle, NULL, a, b, goal, tol, options, prec);
                 acb_mul_2exp_si(s, s, 2);
                 break;
 
             case 4:
                 acb_set_d(a, 0);
                 acb_set_d(b, 8);
-                acb_calc_integrate(s, f_rump, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_rump, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 5:
-                acb_set_d(a, 0);
-                acb_set_d(b, 100);
-                acb_calc_integrate(s, f_floor, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d(a, 1);
+                acb_set_d(b, 101);
+                acb_calc_integrate(s, f_floor, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 6:
                 acb_set_d(a, 0);
                 acb_set_d(b, 1);
-                acb_calc_integrate(s, f_helfgott, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_helfgott, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 7:
@@ -565,22 +726,22 @@ int main(int argc, char *argv[])
 
                 acb_set_d_d(a, -1.0, -1.0);
                 acb_set_d_d(b, 2.0, -1.0);
-                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, options, prec);
                 acb_add(s, s, t, prec);
 
                 acb_set_d_d(a, 2.0, -1.0);
                 acb_set_d_d(b, 2.0, 1.0);
-                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, options, prec);
                 acb_add(s, s, t, prec);
 
                 acb_set_d_d(a, 2.0, 1.0);
                 acb_set_d_d(b, -1.0, 1.0);
-                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, options, prec);
                 acb_add(s, s, t, prec);
 
                 acb_set_d_d(a, -1.0, 1.0);
                 acb_set_d_d(b, -1.0, -1.0);
-                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(t, f_zeta, NULL, a, b, goal, tol, options, prec);
                 acb_add(s, s, t, prec);
 
                 acb_const_pi(t, prec);
@@ -592,69 +753,75 @@ int main(int argc, char *argv[])
             case 8:
                 acb_set_d(a, 0);
                 acb_set_d(b, 1);
-                acb_calc_integrate(s, f_essing, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_essing, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 9:
                 acb_set_d(a, 0);
-                acb_set_d(b, 10000);
-                acb_calc_integrate(s, f_factorial1000, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d(b, 1);
+                acb_calc_integrate(s, f_essing2, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 10:
-                acb_set_d_d(a, 1.0, 0.0);
-                acb_set_d_d(b, 1.0, 1000.0);
-                acb_calc_integrate(s, f_gamma, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d(a, 0);
+                acb_set_d(b, 10000);
+                acb_calc_integrate(s, f_factorial1000, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 11:
-                acb_set_d(a, -10.0);
-                acb_set_d(b, 10.0);
-                acb_calc_integrate(s, f_sin_plus_small, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d_d(a, 1.0, 0.0);
+                acb_set_d_d(b, 1.0, 1000.0);
+                acb_calc_integrate(s, f_gamma, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 12:
-                acb_set_d(a, -1020.0);
-                acb_set_d(b, -1010.0);
-                acb_calc_integrate(s, f_exp, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d(a, -10.0);
+                acb_set_d(b, 10.0);
+                acb_calc_integrate(s, f_sin_plus_small, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 13:
+                acb_set_d(a, -1020.0);
+                acb_set_d(b, -1010.0);
+                acb_calc_integrate(s, f_exp, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 14:
                 acb_set_d(a, 0);
                 acb_set_d(b, ceil(sqrt(goal * 0.693147181) + 1.0));
-                acb_calc_integrate(s, f_gaussian, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_gaussian, NULL, a, b, goal, tol, options, prec);
                 acb_mul(b, b, b, prec);
                 acb_neg(b, b);
                 acb_exp(b, b, prec);
                 arb_add_error(acb_realref(s), acb_realref(b));
                 break;
 
-            case 14:
-                acb_set_d(a, 0.0);
-                acb_set_d(b, 1.0);
-                acb_calc_integrate(s, f_wolfram, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
-                break;
-
             case 15:
                 acb_set_d(a, 0.0);
-                acb_set_d(b, 8.0);
-                acb_calc_integrate(s, f_monster, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_set_d(b, 1.0);
+                acb_calc_integrate(s, f_wolfram, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 16:
+                acb_set_d(a, 0.0);
+                acb_set_d(b, 8.0);
+                acb_calc_integrate(s, f_monster, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 17:
                 acb_set_d(a, 0);
                 acb_set_d(b, ceil(goal * 0.693147181 + 1.0));
-                acb_calc_integrate(s, f_sech, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_sech, NULL, a, b, goal, tol, options, prec);
                 acb_neg(b, b);
                 acb_exp(b, b, prec);
                 acb_mul_2exp_si(b, b, 1);
                 arb_add_error(acb_realref(s), acb_realref(b));
                 break;
 
-            case 17:
+            case 18:
                 acb_set_d(a, 0);
                 acb_set_d(b, ceil(goal * 0.693147181 / 3.0 + 2.0));
-                acb_calc_integrate(s, f_sech3, NULL, a, b, goal, tol, deg_limit, eval_limit, depth_limit, flags, prec);
+                acb_calc_integrate(s, f_sech3, NULL, a, b, goal, tol, options, prec);
                 acb_neg(b, b);
                 acb_mul_ui(b, b, 3, prec);
                 acb_exp(b, b, prec);
@@ -663,9 +830,98 @@ int main(int argc, char *argv[])
                 arb_add_error(acb_realref(s), acb_realref(b));
                 break;
 
+            case 19:
+                if (goal < 0)
+                    abort();
+                /* error bound 2^-N (1+N) when truncated at 2^-N */
+                N = goal + FLINT_BIT_COUNT(goal);
+                acb_one(a);
+                acb_mul_2exp_si(a, a, -N);
+                acb_one(b);
+                acb_calc_integrate(s, f_log_div1p, NULL, a, b, goal, tol, options, prec);
+                acb_set_ui(b, N + 1);
+                acb_mul_2exp_si(b, b, -N);
+                arb_add_error(acb_realref(s), acb_realref(b));
+                break;
+
+           case 20:
+                if (goal < 0)
+                    abort();
+                /* error bound (N+1) exp(-N) when truncated at N */
+                N = goal + FLINT_BIT_COUNT(goal);
+                acb_zero(a);
+                acb_set_ui(b, N);
+                acb_calc_integrate(s, f_log_div1p_transformed, NULL, a, b, goal, tol, options, prec);
+                acb_neg(b, b);
+                acb_exp(b, b, prec);
+                acb_mul_ui(b, b, N + 1, prec);
+                arb_add_error(acb_realref(s), acb_realref(b));
+                break;
+
+            case 21:
+
+                acb_zero(s);
+
+                N = 10;
+
+                acb_set_d_d(a, 0.5, -0.5);
+                acb_set_d_d(b, 0.5, 0.5);
+                acb_calc_integrate(t, f_elliptic_p_laurent_n, &N, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_set_d_d(a, 0.5, 0.5);
+                acb_set_d_d(b, -0.5, 0.5);
+                acb_calc_integrate(t, f_elliptic_p_laurent_n, &N, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_set_d_d(a, -0.5, 0.5);
+                acb_set_d_d(b, -0.5, -0.5);
+                acb_calc_integrate(t, f_elliptic_p_laurent_n, &N, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_set_d_d(a, -0.5, -0.5);
+                acb_set_d_d(b, 0.5, -0.5);
+                acb_calc_integrate(t, f_elliptic_p_laurent_n, &N, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_const_pi(t, prec);
+                acb_div(s, s, t, prec);
+                acb_mul_2exp_si(s, s, -1);
+                acb_div_onei(s, s);
+                break;
+
+            case 22:
+
+                acb_zero(s);
+
+                N = 1000;
+
+                acb_set_d_d(a, 100.0, 0.0);
+                acb_set_d_d(b, 100.0, N);
+                acb_calc_integrate(t, f_zeta_frac, NULL, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_set_d_d(a, 100, N);
+                acb_set_d_d(b, 0.5, N);
+                acb_calc_integrate(t, f_zeta_frac, NULL, a, b, goal, tol, options, prec);
+                acb_add(s, s, t, prec);
+
+                acb_div_onei(s, s);
+                arb_zero(acb_imagref(s));
+
+                acb_set_ui(t, N);
+                acb_dirichlet_hardy_theta(t, t, NULL, NULL, 1, prec);
+                acb_add(s, s, t, prec);
+
+                acb_const_pi(t, prec);
+                acb_div(s, s, t, prec);
+                acb_add_ui(s, s, 1, prec);
+                break;
+
             default:
                 abort();
             }
+
             TIMEIT_ONCE_STOP
         }
         flint_printf("I%d = ", integral);

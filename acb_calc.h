@@ -21,21 +21,14 @@
 extern "C" {
 #endif
 
-#define ACB_CALC_VERBOSE  1
-#define ACB_CALC_VERY_VERBOSE 3
-
-#define ACB_CALC_INTEGRATE_HEAP 8
-
 typedef int (*acb_calc_func_t)(acb_ptr out,
     const acb_t inp, void * param, slong order, slong prec);
 
-/* Bounds */
+/* Integration (old) */
 
 void acb_calc_cauchy_bound(arb_t bound, acb_calc_func_t func,
     void * param, const acb_t x, const arb_t radius,
     slong maxdepth, slong prec);
-
-/* Integration */
 
 int acb_calc_integrate_taylor(acb_t res,
     acb_calc_func_t func, void * param,
@@ -44,19 +37,34 @@ int acb_calc_integrate_taylor(acb_t res,
     const arf_t outer_radius,
     slong accuracy_goal, slong prec);
 
+/* Integration */
+
+typedef struct
+{
+    slong deg_limit;
+    slong eval_limit;
+    slong depth_limit;
+    int use_heap;
+    int verbose;
+}
+acb_calc_integrate_opt_struct;
+
+typedef acb_calc_integrate_opt_struct acb_calc_integrate_opt_t[1];
+
+void acb_calc_integrate_opt_init(acb_calc_integrate_opt_t options);
+
 int
 acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b,
     slong goal, const mag_t tol,
-    slong deg_limit, slong eval_limit, slong depth_limit,
-    int flags,
+    const acb_calc_integrate_opt_t options,
     slong prec);
 
 int
 acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
     acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b, const mag_t tol,
-    slong deg_limit, int flags, slong prec);
+    slong deg_limit, int verbose, slong prec);
 
 #ifdef __cplusplus
 }

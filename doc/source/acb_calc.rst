@@ -47,8 +47,9 @@ Types, macros and constants
     However, manual action is needed for bounded functions with branch cuts.
     For example, when evaluating `\sqrt{z}`, the output must be set to
     an non-finite value if `z` overlaps with the branch cut `[-\infty,0]`.
-    The easiest solution is to use holomorphy-testing versions of atomic
-    functions.
+    The easiest way to accomplish this is to use versions of basic
+    functions (sqrt, log, pow, etc.) that test holomorphicity of their
+    arguments individually.
 
     For example, here we define a piecewise holomorphic extension
     of the function
@@ -98,7 +99,7 @@ Types, macros and constants
 Integration
 -------------------------------------------------------------------------------
 
-.. function:: int acb_calc_integrate(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, slong goal, const mag_t tol, slong deg_limit, slong eval_limit, slong depth_limit, int flags, slong prec)
+.. function:: int acb_calc_integrate(acb_t res, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, slong rel_goal, const mag_t abs_tol, const acb_calc_integrate_opt_t options, slong prec)
 
     Computes a rigorous enclosure of the integral
 
@@ -113,9 +114,9 @@ Integration
     To compute improper integrals, the user should therefore truncate the path
     of integration manually (or make a regularizing change of variables,
     if possible).
-
-    Returns *ARB_CALC_SUCCESS* (0) if the integration converged on all
-    subintervals and *ARB_CALC_NO_CONVERGENCE* otherwise.
+    Returns *ARB_CALC_SUCCESS* if the integration converged to the
+    target accuracy on all subintervals, and returns
+    *ARB_CALC_NO_CONVERGENCE* otherwise.
 
     By default, the integrand *func* will only be called with *order* = 0
     or *order* = 1; that is, derivatives are not required.
@@ -137,89 +138,135 @@ Integration
     discontinuities while providing exponential convergence for typical
     piecewise holomorphic integrands.
 
-    On each subinterval, the algorithm attempts to
-    achieve a relative error of `2^{-\text{goal}}` or an absolute error of
-    *tol*, whichever is larger. The parameters *goal* and *tol* are only
-    guidelines; the cumulative error may be larger than both the prescribed
+    The following parameters control accuracy:
+
+    - *rel_goal* - relative accuracy goal as a number of bits, i.e.
+      target a relative error of `\varepsilon_{rel} = 2^{-\text{rel_goal}}`
+      (note the sign: *rel_goal* should be nonnegative).
+
+    - *abs_tol* - absolute accuracy goal as a :type:`mag_t` describing
+      the error tolerance, i.e.
+      target an absolute error of `\varepsilon_{abs} = \text{abs_tol}`.
+
+    - *prec* - working precision. This is the working precision used to
+      evaluate the integrand and manipulate interval endpoints.
+      As currently implemented, the algorithm does not attempt to adjust the
+      working precision by itself, and adaptive
+      control of the working precision must be handled by the user.
+
+    For typical usage, set *rel_goal* = *prec* and *abs_tol* = `2^{-\text{prec}}`.
+    It usually only makes sense to have *rel_goal* between 0 and *prec*.
+
+    The algorithm attempts to achieve an error of
+    `\max(\varepsilon_{abs}, M \varepsilon_{rel})` on each subinterval,
+    where *M* is the magnitude of the integral.
+    These parameters are only guidelines; the cumulative error may be larger
+    than both the prescribed
     absolute and relative error goals, depending on the number of
     subdivisions, cancellation between segments of the integral, and numerical
     errors in the evaluation of the integrand.
 
-    The following parameters control the integration.
+    To compute tiny integrals with high relative accuracy, one should set
+    `\varepsilon_{abs} \approx M \varepsilon_{rel}` where *M* is a known
+    estimate of the magnitude. Setting `\varepsilon_{abs}` to 0 is also
+    allowed, forcing use of a relative instead of an absolute tolerance goal.
+    This can be handy for exponentially small or
+    large functions of unknown magnitude. It is recommended to avoid
+    setting `\varepsilon_{abs}` very small
+    if possible since the algorithm might need many extra
+    subdivisions to estimate *M* automatically; if the approximate
+    magnitude can be estimated by some external means (for example if
+    a midpoint-width or endpoint-width estimate is known to be accurate),
+    providing an appropriate `\varepsilon_{abs} \approx M \varepsilon_{rel}`
+    will be more efficient.
 
-    - *prec* - working precision. This is the working precision used to
-      evaluate the integrand and manipulate interval endpoints.
+    If the integral has very large magnitude, setting the absolute
+    tolerance to a corresponding large value is recommended for best
+    performance, but it is not necessary for convergence since the absolute
+    tolerance is increased automatically during the execution of the
+    algorithm if the partial integrals are found to have larger error.
 
-    - *goal* - relative accuracy goal as a nonnegative number of bits, i.e.
-      target a relative error of `2^{-\text{goal}}`. This parameter can
-      simply be set to *prec* (or a slightly smaller value) in most situations.
+    Additional options for the integration can be provided via the *options*
+    parameter (documented below). To use all defaults, *NULL* can be passed
+    for *options*.
 
-    - *tol* - absolute tolerance goal (specified as a :type:`mag_t`).
-      In general, *tol* should be set to about `2^{-\text{goal}}` times
-      an estimate for the magnitude of the integral. For typical
-      integrals which will have magnitude within a few orders of magnitude
-      of unity, `\text{tol} = 2^{-\text{goal}}` works well enough.
-      Of course, if the integral has very small magnitude, the absolute
-      tolerance must be set to a small value to get high relative accuracy.
+Options for integration
+...............................................................................
 
-      If the integral has very large magnitude, setting the absolute
-      tolerance to a corresponding large value is recommended for best
-      performance, but it is not necessary for convergence since the absolute
-      tolerance is increased automatically during the execution of the
-      algorithm if the partial integrals are found to have larger error.
+.. type:: acb_calc_integrate_opt_struct
 
-      Setting *tol* to 0 is allowed and forces use of a relative instead of an
-      absolute tolerance goal, which can be handy for exponentially small or
-      large functions of unknown magnitude. It is recommended to avoid this
-      solution if possible since the algorithm might need many extra
-      subdivisions to determine an initial scale; if the approximate
-      magnitude can be estimated by some external means (for example if
-      a midpoint-width or endpoint-width estimate is known to be accurate),
-      the caller should set *tol* to `2^{-\text{goal}}`
-      times such an external estimate for best performance.
+.. type:: acb_calc_integrate_opt_t
 
-    - *deg_limit* - maximum quadrature degree for each subinterval.
-      If a zero or negative value is provided, the limit is set to a default
-      value which currently equals `0.5 \cdot \text{goal} + 10` for
-      Gauss-Legendre quadrature.
+    This structure contains several fields, explained below.
+    An *acb_calc_integrate_opt_t* is defined as an array of
+    *acb_calc_integrate_opt_struct*
+    of length 1, permitting it to be passed by reference.
+    An *acb_calc_integrate_opt_t* must be initialized before use, which sets
+    all fields to 0 or *NULL*. For fields that have not been set to other
+    values, the integration algorithm will choose defaults automatically
+    (based on the precision and accuracy goals).
+    This structure will most likely be extended in the future to
+    accommodate more options.
 
-      A higher quadrature degree can be beneficial for functions that
-      are holomorphic on a large domain around the integration path
-      and yet behave irregularly, such as entire functions with a high
-      amount of oscillation. The drawback of increasing the degree is that
-      the precomputation time for quadrature nodes increases.
+    .. member:: slong deg_limit
 
-    - *eval_limit* - maximum number of function evaluations.
-      If a zero or negative value is provided, the limit is set to a default
-      value which currently equals `1000 \cdot \text{prec} + \text{prec}^2`.
+        Maximum quadrature degree for each subinterval.
+        If a zero or negative value is provided, the limit is set to a default
+        value which currently equals `0.5 \cdot \min(\text{prec}, \text{rel_goal}) + 10` for
+        Gauss-Legendre quadrature.
+        A higher quadrature degree can be beneficial for functions that
+        are holomorphic on a large domain around the integration path
+        and yet behave irregularly, such as oscillatory entire functions.
+        The drawback of increasing the degree is that
+        the precomputation time for quadrature nodes increases.
 
-      This is the main parameter used to limit the amount of work before
-      aborting due to possible slow convergence or non-convergence.
-      (This limit is only taken as a rough guideline, and the actual number of
-      function evaluations may be slightly higher depending on the
-      actual subdivisions.)
-      A lower limit allows aborting faster. A higher limit may be needed
-      for integrands with many discontinuities or many singularities
-      close to the integration path.
+    .. member:: slong eval_limit
 
-    - *depth_limit* - maximum subdivision depth.
-      If a zero or negative value is provided, the limit is set to the
-      default value `2 \cdot \text{prec}`.
-      This limits the number of recursive bisections around any single point.
-      Warning: the memory usage increases proportionally.
+        Maximum number of function evaluations.
+        If a zero or negative value is provided, the limit is set to a default
+        value which currently equals `1000 \cdot \text{prec} + \text{prec}^2`.
+        This is the main parameter used to limit the amount of work before
+        aborting due to possible slow convergence or non-convergence.
+        A lower limit allows aborting faster. A higher limit may be needed
+        for integrands with many discontinuities or many singularities
+        close to the integration path.
+        This limit is only taken as a rough guideline, and the actual number of
+        function evaluations may be slightly higher depending on the
+        actual subdivisions.
 
-    - *flags* - additional options
+    .. member:: slong depth_limit
 
-        *ACB_CALC_VERBOSE*          - print some information
+        Maximum search depth for adaptive subdivision. Technically, this is not
+        the limit on the local bisection depth but the limit on the number
+        of simultaneously queued subintervals.
+        If a zero or negative value is provided, the limit is set to the
+        default value `2 \cdot \text{prec}`.
+        Warning: memory usage may increase in proportion to this limit.
 
-        *ACB_CALC_VERY_VERBOSE*      - print even more information
+    .. member:: int use_heap
 
-        *ACB_CALC_INTEGRATE_HEAP*   - Use a heap to prioritize the segment
-        with the largest error globally. In this case *depth_limit* becomes
-        the maximum size of the heap. This sometimes gives better results
-        in case of convergence failure around an isolated point, but can
+        By default (if set to 0), new subintervals generated by adaptive
+        bisection will be appended to the top of a stack.
+        If set to 1, a binary heap will be used to maintain a priority queue
+        where the subintervals with larger error have higher priority.
+        This sometimes gives better results
+        in case of convergence failure, but can
         lead to a much larger array of subintervals (requiring a higher
         *depth_limit*) when many global bisections are needed.
+
+    .. member:: int verbose
+
+        If set to 1, some information about the overall integration process
+        is printed to standard output. If set to 2, information about each
+        subinterval is printed.
+
+.. function:: void acb_calc_integrate_opt_init(acb_calc_integrate_opt_t options)
+
+    Initializes *options* for use, setting all fields to 0 indicating
+    default values.
+
+Local integration algorithms
+-------------------------------------------------------------------------------
 
 .. function:: int acb_calc_integrate_gl_auto_deg(acb_t res, slong * num_eval, acb_calc_func_t func, void * param, const acb_t a, const acb_t b, const mag_t tol, slong deg_limit, int flags, slong prec)
 
@@ -240,8 +287,7 @@ Integration
     if `f` is holomorphic with `|f(z)| \le M` inside the ellipse *E*
     with foci `\pm 1` and semiaxes
     `X` and `Y = \sqrt{X^2 - 1}` such that `\rho = X + Y`
-    with `\rho > 1`
-    (See Trefethen, "Is Gauss Quadrature Better than Clenshaw-Curtis?").
+    with `\rho > 1` [Tre2008]_.
 
     For an arbitrary interval, we use `\int_a^b f(t) dt = \int_{-1}^1 g(t) dt`
     where `g(t) = \Delta f(\Delta t + m)`,

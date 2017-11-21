@@ -115,7 +115,7 @@ int
 acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
     acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b, const mag_t tol,
-    slong deg_limit, int flags, slong prec)
+    slong deg_limit, int verbose, slong prec)
 {
     acb_t mid, delta, wide;
     mag_t tmpm;
@@ -130,6 +130,7 @@ acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
     if (deg_limit <= 0)
     {
         acb_indeterminate(res);
+        eval_count[0] = 0;
         return status;
     }
 
@@ -239,7 +240,7 @@ acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
         arb_init(x);
         arb_init(w);
 
-        if ((flags & ACB_CALC_VERY_VERBOSE) == ACB_CALC_VERY_VERBOSE)
+        if (verbose)
         {
             acb_get_mag(tmpm, delta);
             flint_printf("  {GL deg %ld on [", best_n);

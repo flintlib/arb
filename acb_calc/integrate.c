@@ -108,17 +108,25 @@ int
 acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     const acb_t a, const acb_t b,
     slong goal, const mag_t tol,
-    slong deg_limit, slong eval_limit, slong depth_limit,
-    int flags,
+    const acb_calc_integrate_opt_t options,
     slong prec)
 {
     acb_ptr as, bs, vs;
     mag_ptr ms;
     acb_t s, t, u;
     mag_t tmpm, tmpn, new_tol;
+    slong depth_limit, eval_limit, deg_limit;
     slong depth, depth_max, eval, feval, top;
     slong leaf_interval_count;
-    int stopping, real_error, use_heap, status, gl_status;
+    slong alloc;
+    int stopping, real_error, use_heap, status, gl_status, verbose;
+
+    if (options == NULL)
+    {
+        acb_calc_integrate_opt_t opt;
+        acb_calc_integrate_opt_init(opt);
+        return acb_calc_integrate(res, f, param, a, b, goal, tol, opt, prec);
+    }
 
     status = ARB_CALC_SUCCESS;
 
@@ -129,25 +137,29 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     mag_init(tmpn);
     mag_init(new_tol);
 
+    depth_limit = options->depth_limit;
     if (depth_limit <= 0)
         depth_limit = 2 * prec;
     depth_limit = FLINT_MAX(depth_limit, 1);
 
+    eval_limit = options->eval_limit;
     if (eval_limit <= 0)
         eval_limit = 1000 * prec + prec * prec;
     eval_limit = FLINT_MAX(eval_limit, 1);
 
     goal = FLINT_MAX(goal, 0);
+    deg_limit = options->deg_limit;
     if (deg_limit <= 0)
-        deg_limit = 0.5 * goal + 10;
+        deg_limit = 0.5 * FLINT_MIN(goal, prec) + 10;
 
-    use_heap = (flags & ACB_CALC_INTEGRATE_HEAP);
+    verbose = options->verbose;
+    use_heap = options->use_heap;
 
-    /* todo: allocate dynamically */
-    as = _acb_vec_init(depth_limit);
-    bs = _acb_vec_init(depth_limit);
-    vs = _acb_vec_init(depth_limit);
-    ms = _mag_vec_init(depth_limit);
+    alloc = 4;
+    as = _acb_vec_init(alloc);
+    bs = _acb_vec_init(alloc);
+    vs = _acb_vec_init(alloc);
+    ms = _mag_vec_init(alloc);
 
     /* Compute initial crude estimate for the whole interval. */
     acb_set(as, a);
@@ -171,7 +183,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     {
         if (stopping == 0 && eval >= eval_limit - 1)
         {
-            if (flags & ACB_CALC_VERBOSE)
+            if (verbose > 0)
                 flint_printf("stopping at eval_limit %wd\n", eval_limit);
             status = ARB_CALC_NO_CONVERGENCE;
             stopping = 1;
@@ -205,16 +217,16 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
         /* Attempt using Gauss-Legendre rule. */
         if (acb_is_finite(vs + top))
         {
-            /* We know that the result is real. */
-            real_error = acb_is_finite(vs + top) && acb_is_real(vs + top);
-
             gl_status = acb_calc_integrate_gl_auto_deg(u, &feval, f, param,
-                as + top, bs + top, new_tol, deg_limit, flags, prec);
+                as + top, bs + top, new_tol, deg_limit, verbose > 1, prec);
             eval += feval;
 
             /* We are done with this subinterval. */
             if (gl_status == ARB_CALC_SUCCESS)
             {
+                /* We know that the result is real. */
+                real_error = acb_is_finite(vs + top) && acb_is_real(vs + top);
+
                 if (real_error)
                     arb_zero(acb_imagref(u));
 
@@ -241,11 +253,28 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
 
         if (depth >= depth_limit - 1)
         {
-            if (flags & ACB_CALC_VERBOSE)
+            if (verbose > 0)
                 flint_printf("stopping at depth_limit %wd\n", depth_limit);
             status = ARB_CALC_NO_CONVERGENCE;
             stopping = 1;
             continue;
+        }
+
+        if (depth >= alloc - 1)
+        {
+            slong k;
+            as = flint_realloc(as, 2 * alloc * sizeof(acb_struct));
+            bs = flint_realloc(bs, 2 * alloc * sizeof(acb_struct));
+            vs = flint_realloc(vs, 2 * alloc * sizeof(acb_struct));
+            ms = flint_realloc(ms, 2 * alloc * sizeof(mag_struct));
+            for (k = alloc; k < 2 * alloc; k++)
+            {
+                acb_init(as + k);
+                acb_init(bs + k);
+                acb_init(vs + k);
+                mag_init(ms + k);
+            }
+            alloc *= 2;
         }
 
         /* Bisection. */
@@ -294,7 +323,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
         depth_max = FLINT_MAX(depth, depth_max);
     }
 
-    if (flags & ACB_CALC_VERBOSE)
+    if (verbose > 0)
     {
         flint_printf("depth %wd/%wd, eval %wd/%wd, %wd leaf intervals\n",
             depth_max, depth_limit, eval, eval_limit, leaf_interval_count);
@@ -302,10 +331,10 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
 
     acb_set(res, s);
 
-    _acb_vec_clear(as, depth_limit);
-    _acb_vec_clear(bs, depth_limit);
-    _acb_vec_clear(vs, depth_limit);
-    _mag_vec_clear(ms, depth_limit);
+    _acb_vec_clear(as, alloc);
+    _acb_vec_clear(bs, alloc);
+    _acb_vec_clear(vs, alloc);
+    _mag_vec_clear(ms, alloc);
     acb_clear(s);
     acb_clear(t);
     acb_clear(u);
