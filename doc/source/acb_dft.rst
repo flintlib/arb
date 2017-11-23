@@ -31,7 +31,7 @@ If `G=\mathbb Z/n\mathbb Z`, we compute the DFT according to the usual conventio
 
 .. math::
 
-   w_x = \sum_{y\bmod n} v_y e^{-\frac{2iπ}nxy}
+   w_x = \sum_{y\bmod n} v_y e^{-\frac{2i \pi}nxy}
 
 .. function:: void acb_dft(acb_ptr w, acb_srcptr v, slong n, slong prec)
 
@@ -90,7 +90,7 @@ Characters are product of component characters and the DFT reads
 .. math::
 
    \hat f(x_1,\dots x_r) = \sum_{y_1\dots y_r} f(y_1,\dots y_r)
-   e^{-2iπ\sum\frac{x_i y_i}{n_i}}
+   e^{-2i \pi \sum\frac{x_i y_i}{n_i}}
 
 We assume that `f` is given by a vector of length `\prod n_i` corresponding
 to a lexicographic ordering of the values `y_1,\dots y_r`, and the computation
@@ -297,3 +297,4 @@ Bluestein transform
 .. function:: void acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec)
 
    Sets *w* to the DFT of *v* of size *t->n*, using the precomputed Bluestein scheme *t*.
+

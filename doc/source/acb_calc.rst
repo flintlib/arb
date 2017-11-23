@@ -95,6 +95,7 @@ Types, macros and constants
             return 0;
         }
 
+    See the demo program ``examples/integrals.c`` for more examples.
 
 Integration
 -------------------------------------------------------------------------------
@@ -141,12 +142,13 @@ Integration
     The following parameters control accuracy:
 
     - *rel_goal* - relative accuracy goal as a number of bits, i.e.
-      target a relative error of `\varepsilon_{rel} = 2^{-\text{rel_goal}}`
+      target a relative error less than `\varepsilon_{rel} = 2^{-r}`
+      where *r* = *rel_goal*
       (note the sign: *rel_goal* should be nonnegative).
 
     - *abs_tol* - absolute accuracy goal as a :type:`mag_t` describing
       the error tolerance, i.e.
-      target an absolute error of `\varepsilon_{abs} = \text{abs_tol}`.
+      target an absolute error less than `\varepsilon_{abs}` = *abs_tol*.
 
     - *prec* - working precision. This is the working precision used to
       evaluate the integrand and manipulate interval endpoints.
@@ -154,7 +156,7 @@ Integration
       working precision by itself, and adaptive
       control of the working precision must be handled by the user.
 
-    For typical usage, set *rel_goal* = *prec* and *abs_tol* = `2^{-\text{prec}}`.
+    For typical usage, set *rel_goal* = *prec* and *abs_tol* = `2^{-prec}`.
     It usually only makes sense to have *rel_goal* between 0 and *prec*.
 
     The algorithm attempts to achieve an error of
@@ -212,7 +214,7 @@ Options for integration
 
         Maximum quadrature degree for each subinterval.
         If a zero or negative value is provided, the limit is set to a default
-        value which currently equals `0.5 \cdot \min(\text{prec}, \text{rel_goal}) + 10` for
+        value which currently equals `0.5 \cdot \min(prec, rel\_goal) + 10` for
         Gauss-Legendre quadrature.
         A higher quadrature degree can be beneficial for functions that
         are holomorphic on a large domain around the integration path
@@ -224,7 +226,7 @@ Options for integration
 
         Maximum number of function evaluations.
         If a zero or negative value is provided, the limit is set to a default
-        value which currently equals `1000 \cdot \text{prec} + \text{prec}^2`.
+        value which currently equals `1000 \cdot prec + prec^2`.
         This is the main parameter used to limit the amount of work before
         aborting due to possible slow convergence or non-convergence.
         A lower limit allows aborting faster. A higher limit may be needed
