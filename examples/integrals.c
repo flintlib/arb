@@ -506,11 +506,55 @@ f_zeta_frac(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+int
+f_lambertw(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+
+    prec = FLINT_MIN(prec, acb_rel_accuracy_bits(z) + 10);
+
+    if (order != 0)
+    {
+        /* check for branch cut */
+        arb_const_e(acb_realref(t), prec);
+        acb_inv(t, t, prec);
+        acb_add(t, t, z, prec);
+
+        if (arb_contains_zero(acb_imagref(t)) &&
+            arb_contains_nonpositive(acb_realref(t)))
+        {
+            acb_indeterminate(t);
+        }
+    }
+
+    if (acb_is_finite(t))
+    {
+        fmpz_t k;
+        fmpz_init(k);
+        acb_lambertw(res, z, k, 0, prec);
+        fmpz_clear(k);
+    }
+    else
+    {
+        acb_indeterminate(res);
+    }
+
+    acb_clear(t);
+
+    return 0;
+}
+
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 23
+#define NUM_INTEGRALS 24
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -527,7 +571,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^10000 x^1000 exp(-x) dx",
     "int_1^{1+1000i} gamma(x) dx",
     "int_{-10}^{10} sin(x) + exp(-200-x^2) dx",
-    "int_{-1020}^{-1000} exp(x) dx  (use -tol 0 for relative error)",
+    "int_{-1020}^{-1010} exp(x) dx  (use -tol 0 for relative error)",
     "int_0^{inf} exp(-x^2) dx   (using domain truncation)",
     "int_0^1 sech(10(x-0.2))^2 + sech(100(x-0.4))^4 + sech(1000(x-0.6))^6 dx",
     "int_0^8 (exp(x)-floor(exp(x))) sin(x+exp(x)) dx  (use higher -eval)",
@@ -536,7 +580,8 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^1 -log(x)/(1+x) dx   (using domain truncation)",
     "int_0^{inf} x exp(-x)/(1+exp(-x)) dx   (using domain truncation)",
     "int_C wp(x)/x^(11) dx   (contour for 10th Laurent coefficient of Weierstrass p-function)",
-    "N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle"
+    "N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle",
+    "int_0^{1000} W_0(x) dx",
 };
 
 int main(int argc, char *argv[])
@@ -916,6 +961,12 @@ int main(int argc, char *argv[])
                 acb_const_pi(t, prec);
                 acb_div(s, s, t, prec);
                 acb_add_ui(s, s, 1, prec);
+                break;
+
+            case 23:
+                acb_set_d(a, 0.0);
+                acb_set_d(b, 1000.0);
+                acb_calc_integrate(s, f_lambertw, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:
