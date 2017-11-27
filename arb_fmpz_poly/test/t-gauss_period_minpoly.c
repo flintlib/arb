@@ -28,7 +28,19 @@ int main()
         fmpz_poly_t pol;
         fmpz_poly_init(pol);
 
-        for (q = 0; q < 1000; q++)
+        /* test q = 0 separately; see issue #194 */
+        for (n = 0; n < 100; n++)
+        {
+            fmpz_poly_one(pol);
+            arb_fmpz_poly_gauss_period_minpoly(pol, 0, n);
+            if (!fmpz_poly_is_zero(pol))
+            {
+                flint_printf("FAIL (q = 0)\n");
+                flint_abort();
+            }
+        }
+
+        for (q = 1; q < 1000; q++)
         {
             acb_dirichlet_roots_t zeta;
             prec = 100 + n_randint(state, 500);
