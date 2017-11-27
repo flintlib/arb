@@ -69,8 +69,17 @@ arb_pow(arb_t z, const arb_t x, const arb_t y, slong prec)
             else
             {
                 arf_get_fmpz_fixed_si(e, ymid, -1);
-                arb_sqrt(z, x, prec + fmpz_bits(e));
-                arb_pow_fmpz_binexp(z, z, e, prec);
+                if (fmpz_sgn(e) >= 0)
+                {
+                    arb_sqrt(z, x, prec + fmpz_bits(e));
+                    arb_pow_fmpz_binexp(z, z, e, prec);
+                }
+                else
+                {
+                    fmpz_neg(e, e);
+                    arb_rsqrt(z, x, prec + fmpz_bits(e));
+                    arb_pow_fmpz_binexp(z, z, e, prec);
+                }
             }
 
             fmpz_clear(e);

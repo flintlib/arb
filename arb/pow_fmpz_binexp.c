@@ -39,8 +39,18 @@ arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
         fmpz_t f;
         fmpz_init(f);
         fmpz_neg(f, e);
-        arb_pow_fmpz_binexp(y, b, f, prec + 2);
-        arb_inv(y, y, prec);
+
+        if (arb_is_exact(b))
+        {
+            arb_pow_fmpz_binexp(y, b, f, prec + 2);
+            arb_inv(y, y, prec);
+        }
+        else
+        {
+            arb_inv(y, b, prec + fmpz_bits(e) + 2);
+            arb_pow_fmpz_binexp(y, y, f, prec);
+        }
+
         fmpz_clear(f);
         return;
     }

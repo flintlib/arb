@@ -468,17 +468,8 @@ f_elliptic_p_laurent_n(acb_ptr res, const acb_t z, void * param, slong order, sl
 
     acb_modular_elliptic_p(res, z, tau, prec);
 
-    if (n + 1 < 0)
-    {
-        acb_pow_ui(tau, z, -n - 1, prec);
-        acb_mul(res, res, tau, prec);
-    }
-    else  /* note: acb_pow_si is currently bad; do it this way */
-    {
-        acb_inv(tau, z, prec);
-        acb_pow_ui(tau, tau, n + 1, prec);
-        acb_mul(res, res, tau, prec);
-    }
+    acb_pow_si(tau, z, -n - 1, prec);
+    acb_mul(res, res, tau, prec);
 
     acb_clear(tau);
 

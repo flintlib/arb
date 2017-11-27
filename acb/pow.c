@@ -56,8 +56,18 @@ acb_pow_fmpz_binexp(acb_t y, const acb_t b, const fmpz_t e, slong prec)
         fmpz_t f;
         fmpz_init(f);
         fmpz_neg(f, e);
-        acb_pow_fmpz_binexp(y, b, f, prec + 2);
-        acb_inv(y, y, prec);
+
+        if (acb_is_exact(b))
+        {
+            acb_pow_fmpz_binexp(y, b, f, prec + 2);
+            acb_inv(y, y, prec);
+        }
+        else
+        {
+            acb_inv(y, b, prec + fmpz_bits(e) + 2);
+            acb_pow_fmpz_binexp(y, y, f, prec);
+        }
+
         fmpz_clear(f);
         return;
     }
@@ -180,8 +190,17 @@ acb_pow_arb(acb_t z, const acb_t x, const arb_t y, slong prec)
             else
             {
                 arf_get_fmpz_fixed_si(e, ymid, -1);
-                acb_sqrt(z, x, prec + fmpz_bits(e));
-                acb_pow_fmpz_binexp(z, z, e, prec);
+                if (fmpz_sgn(e) >= 0)
+                {
+                    acb_sqrt(z, x, prec + fmpz_bits(e));
+                    acb_pow_fmpz_binexp(z, z, e, prec);
+                }
+                else
+                {
+                    fmpz_neg(e, e);
+                    acb_rsqrt(z, x, prec + fmpz_bits(e));
+                    acb_pow_fmpz_binexp(z, z, e, prec);
+                }
             }
 
             fmpz_clear(e);
