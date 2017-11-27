@@ -462,6 +462,10 @@ The program takes the parameters::
 
 Defaults parameters are `[-10,10] + [-10,10]i` and *xn* = *yn* = 512.
 
+A color function can be selected with -color. Valid options
+are 0 (phase=hue, magnitude=brightness) and 1 (phase only,
+white-gold-black-blue-white counterclockwise).
+
 The output is written to ``arbplot.ppm``. If you have ImageMagick,
 run ``convert arbplot.ppm arbplot.png`` to get a PNG.
 
@@ -616,51 +620,70 @@ insufficient precision::
     100000,53381: [+/- 0.0329] + [+/- 0.0413]*I
     Aborted
 
-quadrature.c
+integrals.c
 -------------------------------------------------------------------------------
 
-This program computes integrals using subdivision and the Gauss-Legendre
-quadrature formula with rigorous error bounds.
-See the source file for more information about the implementation.
-Example invocation::
+This program computes integrals using :func:`acb_calc_integrate`.
+Invoking the program without parameters shows usage::
 
-    > build/examples/quadrature
-    Compute integrals using subdivision and Gauss-Legendre quadrature.
-    Usage: quadrature [-prec p] [-tol eps] [-twice]
+    > build/examples/integrals
+    Compute integrals using acb_calc_integrate.
+    Usage: integrals -i n [-prec p] [-tol eps] [-twice] [...]
 
-    -prec p    - precision in bits (default p = 333)
+    -i n       - compute integral n (0 <= n <= 23), or "-i all"
+    -prec p    - precision in bits (default p = 64)
+    -goal p    - approximate relative accuracy goal (default p)
     -tol eps   - approximate absolute error goal (default 2^-p)
     -twice     - run twice (to see overhead of computing nodes)
+    -heap      - use heap for subinterval queue
+    -verbose   - show information
+    -verbose2  - show more information
+    -deg n     - use quadrature degree up to n
+    -eval n    - limit number of function evaluations to n
+    -depth n   - limit subinterval queue size to n
 
+    Implemented integrals:
+    I0 = int_0^100 sin(x) dx
+    I1 = 4 int_0^1 1/(1+x^2) dx
+    I2 = 2 int_0^{inf} 1/(1+x^2) dx   (using domain truncation)
+    I3 = 4 int_0^1 sqrt(1-x^2) dx
+    I4 = int_0^8 sin(x+exp(x)) dx
+    I5 = int_0^100 floor(x) dx
+    I6 = int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx
+    I7 = 1/(2 pi i) int zeta(s) ds  (closed path around s = 1)
+    I8 = int_0^1 sin(1/x) dx  (slow convergence, use -heap and/or -tol)
+    I9 = int_0^1 x sin(1/x) dx  (slow convergence, use -heap and/or -tol)
+    I10 = int_0^10000 x^1000 exp(-x) dx
+    I11 = int_1^{1+1000i} gamma(x) dx
+    I12 = int_{-10}^{10} sin(x) + exp(-200-x^2) dx
+    I13 = int_{-1020}^{-1010} exp(x) dx  (use -tol 0 for relative error)
+    I14 = int_0^{inf} exp(-x^2) dx   (using domain truncation)
+    I15 = int_0^1 sech(10(x-0.2))^2 + sech(100(x-0.4))^4 + sech(1000(x-0.6))^6 dx
+    I16 = int_0^8 (exp(x)-floor(exp(x))) sin(x+exp(x)) dx  (use higher -eval)
+    I17 = int_0^{inf} sech(x) dx   (using domain truncation)
+    I18 = int_0^{inf} sech^3(x) dx   (using domain truncation)
+    I19 = int_0^1 -log(x)/(1+x) dx   (using domain truncation)
+    I20 = int_0^{inf} x exp(-x)/(1+exp(-x)) dx   (using domain truncation)
+    I21 = int_C wp(x)/x^(11) dx   (contour for 10th Laurent coefficient of Weierstrass p-function)
+    I22 = N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle
+    I23 = int_0^{1000} W_0(x) dx
 
-    Computing I = int_0^100 sin(x) dx
-    cpu/wall(s): 0.009 0.009
-    I = [0.137681127712316065898061486049157464489915991464489170719837887307278911949073375896904894315723 +/- 9.65e-97]
+A few examples::
 
-    Computing I = 4 int_0^1 1/(1+x^2) dx
-    cpu/wall(s): 0.004 0.004
-    I = [3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421171 +/- 4.96e-98]
+    build/examples/integrals -i 4
+    I4 = int_0^8 sin(x+exp(x)) dx ...
+    cpu/wall(s): 0.02 0.02
+    I4 = [0.34740017265725 +/- 3.95e-15]
 
-    Computing I = 4 int_0^1 sqrt(1-x^2) dx
-    cpu/wall(s): 0.022 0.022
-    I = [3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421171 +/- 5.16e-98]
+    > build/examples/integrals -i 3 -prec 333 -tol 1e-80
+    I3 = 4 int_0^1 sqrt(1-x^2) dx ...
+    cpu/wall(s): 0.024 0.024
+    I3 = [3.141592653589793238462643383279502884197169399375105820974944592307816406286209 +/- 4.24e-79]
 
-    Computing I = int_0^8 sin(x+exp(x)) dx
-    cpu/wall(s): 0.021 0.021
-    I = [0.34740017265724780787951215911989312465745625486618018388549271361674821398878532052968510434660 +/- 5.97e-96]
-
-    Computing I = int_0^100 floor(x) dx
-    cpu/wall(s): 0.1 0.1
-    I = [4950.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 +/- 1.42e-93]
-
-    Computing I = int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx
-    cpu/wall(s): 0.051 0.051
-    I = [11.147310550057139733915902084255301415775813549800589418261584268232061665808482234384871404010464 +/- 3.47e-97]
-
-    Computing I = 1/(2 pi i) int zeta(s) ds  (closed path around s = 1)
-    cpu/wall(s): 0.877 0.876
-    I = [1.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 +/- 9.82e-99] + [+/- 4.16e-99]*I
-
+    > build/examples/integrals -i 9 -heap
+    I9 = int_0^1 x sin(1/x) dx  (slow convergence, use -heap and/or -tol) ...
+    cpu/wall(s): 0.019 0.018
+    I9 = [0.3785300 +/- 3.17e-8]
 
 .. highlight:: c
 
