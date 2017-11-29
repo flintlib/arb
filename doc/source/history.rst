@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.12.0.pdf
 * http://arblib.org/arb-2.11.1.pdf
 * http://arblib.org/arb-2.11.0.pdf
 * http://arblib.org/arb-2.10.0.pdf
@@ -23,6 +24,95 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2017-11-29 - version 2.12.0
+-------------------------------------------------------------------------------
+
+* Numerical integration
+
+  * Added a new function (acb_calc_integrate) for rigorous numerical
+    integration using adaptive subdivision and Gauss-Legendre quadrature. This
+    largely obsoletes the old integration code using Taylor series.
+  * Added new integrals.c example program (old example program moved to
+    integrals_taylor.c).
+
+* Discrete Fourier transforms
+
+  * Added acb_dft module with various FFT algorithm implementations, including
+    top level O(n log n) acb_dft and acb_dft_inverse functions
+    (contributed by Pascal Molin).
+
+* Legendre polynomials
+
+  * Added arb_hypgeom_legendre_p_ui for fast and accurate evaluation of
+    Legendre polynomials. This is also used automatically by the Legendre
+    functions, where it is substantially faster and gives better error
+    bounds than the generic algorithm.
+  * Added arb_hypgeom_legendre_p_ui_root for fast computation of Legendre
+    polynomial roots and Gauss-Legendre quadrature nodes (used internally
+    by the new integration code).
+  * Added arb_hypgeom_central_bin_ui for fast computation of central
+    binomial coefficients (used internally for Legendre polynomials).
+
+* Dirichlet L-functions and zeta functions
+
+  * Fixed a bug in the Riemann zeta function involving a too small error
+    bound in the implementation of the Riemann-Siegel formula for inexact
+    input. This bug could result in a too small enclosure when evaluating the
+    Riemann zeta function at an argument of large imaginary height without
+    also computing derivatives, if the input interval was very wide.
+  * Add acb_dirichlet_zeta_jet; also made computation of the first derivative
+    of Riemann zeta function use the Riemann-Siegel formula where appropriate.
+  * Added acb_dirichlet_l_vec_hurwitz for fast simultaneous evaluation of
+    Dirichlet L-functions for multiple characters using Hurwitz zeta function
+    and FFT (contributed by Pascal Molin).
+  * Simplified interface for using hurwitz_precomp functions.
+  * Added lcentral.c example program (contributed by Pascal Molin).
+  * Improved error bounds when evaluating Dirichlet L-functions using
+    Euler product.
+
+* Elementary functions
+
+  * Faster custom implementation of sin, cos at 4600 bits and above
+    instead of using MPFR (30-40% asymptotic improvement, up to a factor
+    two speedup).
+  * Faster code for exp between 4600 and 19000 bits.
+  * Improved error bounds for acb_atan by using derivative.
+  * Improved error bounds for arb_sinh_cosh, arb_sinh and arb_cosh when
+    the input has a small midpoint and large radius.
+  * Added reciprocal trigonometric and hyperbolic functions (arb_sec, arb_csc,
+    arb_sech, arb_csch, acb_sec, acb_csc, acb_sech, acb_csch).
+  * Changed the interface of _acb_vec_unit_roots to take an extra length
+    parameter (compatibility-breaking change).
+  * Improved arb_pow and acb_pow with an inexact base and a negative integer
+    or negative half-integer exponent; the inverse is now computed before
+    performing binary exponentiation in this case to avoid spurious blow-up.
+
+* Elliptic functions
+
+  * Improved Jacobi theta functions to reduce the argument modulo the lattice
+    parameter, greatly improving speed and numerical stability for large input.
+  * Optimized arb_agm by using a final series expansion and using special code
+    for wide intervals.
+  * Optimized acb_agm1 by using a final series expansion and using special code
+    for positive real input.
+  * Optimized derivative of AGM for high precision by using a central
+    difference instead of a forward difference.
+  * Optimized acb_elliptic_rf and acb_elliptic_rj for high precision by using
+    a variable length series expansion.
+
+* Other
+
+  * Fixed incorrect handling of subnormals in arf_set_d.
+  * Added mag_bin_uiui for bounding binomial coefficients.
+  * Added mag_set_d_lower, mag_sqrt_lower, mag_set_d_2exp_fmpz_lower.
+  * Implemented multithreaded complex matrix multiplication.
+  * Optimized arb_rel_accuracy_bits by adding fast path.
+  * Fixed a spurious floating-point exception (division by zero) in the
+    t-gauss_period_minpoly test program triggered by new code optimizations
+    in recent versions of GCC that are unsafe together with FLINT inline
+    assembly functions (a workaround was added to the test code, and a proper
+    fix for the assembly code has been added to FLINT).
 
 2017-07-10 - version 2.11.1
 -------------------------------------------------------------------------------

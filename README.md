@@ -86,9 +86,8 @@ including methods for composition, reversion, product trees,
 multipoint evaluation and interpolation, complex root isolation,
 and transcendental functions of power series.
 
-Arb has partial support for automatic differentiation (AD), and includes
-rudimentary functionality for rigorous calculus based on AD
-(including real root isolation and complex integration).
+Other features include root isolation for real functions, rigorous numerical
+integration of complex functions, and discrete Fourier transforms (DFTs).
 
 ## Special functions
 
@@ -98,10 +97,10 @@ Riemann zeta and Hurwitz zeta function, Dirichlet L-functions, polylogarithm,
 error function, Gauss hypergeometric function 2F1, confluent
 hypergeometric functions, Bessel functions, Airy functions,
 Legendre functions and other orthogonal polynomials,
-exponential and trigonometric integrals, incomplete gamma function,
-Jacobi theta functions, modular functions, Weierstrass elliptic function,
-complete elliptic integrals, arithmetic-geometric mean,
-Bernoulli numbers, partition function, Barnes G-function.
+exponential and trigonometric integrals, incomplete gamma and beta functions,
+Jacobi theta functions, modular functions, Weierstrass elliptic functions,
+complete and incomplete elliptic integrals, arithmetic-geometric mean,
+Bernoulli numbers, partition function, Barnes G-function, Lambert W function.
 
 ## Speed
 
