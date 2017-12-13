@@ -14,10 +14,28 @@
 void
 acb_get_mag_lower(mag_t z, const acb_t x)
 {
-    arf_t t;
-    arf_init(t);
-    acb_get_abs_lbound_arf(t, x, MAG_BITS);
-    arf_get_mag_lower(z, t);
-    arf_clear(t);
+    if (arb_is_zero(acb_imagref(x)))
+    {
+        arb_get_mag_lower(z, acb_realref(x));
+    }
+    else if (arb_is_zero(acb_realref(x)))
+    {
+        arb_get_mag_lower(z, acb_imagref(x));
+    }
+    else
+    {
+        mag_t t;
+        mag_init(t);
+
+        arb_get_mag_lower(t, acb_realref(x));
+        arb_get_mag_lower(z, acb_imagref(x));
+
+        mag_mul_lower(t, t, t);
+        mag_mul_lower(z, z, z);
+        mag_add_lower(z, z, t);
+        mag_sqrt_lower(z, z);
+
+        mag_clear(t);
+    }
 }
 
