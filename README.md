@@ -161,3 +161,6 @@ A separate wrapper of transcendental functions for use with the
 C99 `complex double` type is available
 (<https://github.com/fredrik-johansson/arbcmath>).
 
+Other third-party wrappers include:
+* Java wrapper using JNA: https://github.com/crowlogic/arb/
+* Another Julia interface: https://github.com/JuliaArbTypes/ArbFloats.jl
