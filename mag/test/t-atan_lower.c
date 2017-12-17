@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2017 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,17 +11,33 @@
 
 #include "mag.h"
 
+slong
+fmpr_atan(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
+{
+    if (fmpr_is_zero(x))
+    {
+        fmpr_zero(y);
+        return FMPR_RESULT_EXACT;
+    }
+    else
+    {
+        slong r;
+        CALL_MPFR_FUNC(r, mpfr_atan, y, x, prec, rnd);
+        return r;
+    }
+}
+
 int main()
 {
     slong iter;
     flint_rand_t state;
 
-    flint_printf("sqrt_lower....");
+    flint_printf("atan_lower....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         fmpr_t x, y, z, z2;
         mag_t xb, yb;
@@ -34,15 +50,15 @@ int main()
         mag_init(xb);
         mag_init(yb);
 
-        mag_randtest_special(xb, state, 1 + n_randint(state, 200));
-        mag_randtest_special(yb, state, 1 + n_randint(state, 200));
+        mag_randtest_special(xb, state, 25);
+        mag_randtest_special(yb, state, 25);
 
-        mag_sqrt_lower(yb, xb);
+        mag_atan_lower(yb, xb);
 
         mag_get_fmpr(x, xb);
         mag_get_fmpr(y, yb);
 
-        fmpr_sqrt(z, x, MAG_BITS, FMPR_RND_DOWN);
+        fmpr_atan(z, x, MAG_BITS, FMPR_RND_DOWN);
         fmpr_mul_ui(z2, z, 1023, MAG_BITS, FMPR_RND_DOWN);
         fmpr_mul_2exp_si(z2, z2, -10);
 
@@ -59,7 +75,7 @@ int main()
             flint_abort();
         }
 
-        mag_sqrt_lower(xb, xb);
+        mag_atan_lower(xb, xb);
 
         if (!mag_equal(xb, yb))
         {
@@ -81,3 +97,4 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
+

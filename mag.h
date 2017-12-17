@@ -605,6 +605,12 @@ void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e);
 
+void mag_const_pi(mag_t res);
+void mag_const_pi_lower(mag_t res);
+
+void mag_atan(mag_t res, const mag_t x);
+void mag_atan_lower(mag_t res, const mag_t x);
+
 void mag_fac_ui(mag_t z, ulong n);
 void mag_rfac_ui(mag_t z, ulong n);
 void mag_bin_uiui(mag_t res, ulong n, ulong k);
@@ -716,11 +722,6 @@ mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
     mag_set_fmpz_lower(t, y);
     mag_div(z, x, t);
     mag_clear(t);
-}
-
-MAG_INLINE void mag_const_pi(mag_t res)
-{
-    mag_set_ui_2exp_si(res, 843314857, -28);
 }
 
 MAG_INLINE slong mag_allocated_bytes(const mag_t x)

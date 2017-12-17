@@ -372,9 +372,17 @@ Powers and logarithms
 Special functions
 -------------------------------------------------------------------------------
 
-.. function:: void mag_const_pi(mag_t z)
+.. function:: void mag_const_pi(mag_t res)
 
-    Sets *z* to an upper bound for `\pi`.
+.. function:: void mag_const_pi_lower(mag_t res)
+
+    Sets *res* to an upper (respectively lower) bound for `\pi`.
+
+.. function:: void mag_atan(mag_t res, const mag_t x)
+
+.. function:: void mag_atan_lower(mag_t res, const mag_t x)
+
+    Sets *res* to an upper (respectively lower) bound for `\operatorname{atan}(x)`.
 
 .. function:: void mag_fac_ui(mag_t z, ulong n)
 
