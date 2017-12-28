@@ -41,13 +41,10 @@ arb_atan2(arb_t r, const arb_t b, const arb_t a, slong prec)
         else
         {
             /* both positive and negative -- argument will be in [0, pi] */
-            arb_t t;
-            arb_init(t);
-            arb_const_pi(t, prec);
-            arb_mul_2exp_si(t, t, -1);
-            arb_set(r, t);
-            arb_add_error(r, t);
-            arb_clear(t);
+            mag_const_pi(arb_radref(r));
+            arf_set_mag(arb_midref(r), arb_radref(r));
+            arb_set_round(r, r, prec);
+            arb_mul_2exp_si(r, r, -1);
         }
     }
     /* an imaginary number */
@@ -69,13 +66,9 @@ arb_atan2(arb_t r, const arb_t b, const arb_t a, slong prec)
         else
         {
             /* both positive and negative -- argument will be in 0 +/- pi/2 */
-            arb_t t;
-            arb_init(t);
-            arb_const_pi(t, MAG_BITS);
-            arb_mul_2exp_si(t, t, -1);
-            arb_zero(r);
-            arb_add_error(r, t);
-            arb_clear(t);
+            arf_zero(arb_midref(r));
+            mag_const_pi(arb_radref(r));
+            mag_mul_2exp_si(arb_radref(r), arb_radref(r), -1);
         }
     }
     /* strictly in the right half-plane -- atan(b/a) */
@@ -112,12 +105,8 @@ arb_atan2(arb_t r, const arb_t b, const arb_t a, slong prec)
     /* overlaps the nonpositive half-axis -- [-pi, pi] */
     else
     {
-        arb_t t;
-        arb_init(t);
-        arb_const_pi(t, MAG_BITS);
-        arb_zero(r);
-        arb_add_error(r, t);
-        arb_clear(t);
+        arf_zero(arb_midref(r));
+        mag_const_pi(arb_radref(r));
     }
 }
 
