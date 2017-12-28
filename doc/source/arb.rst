@@ -404,12 +404,18 @@ Radius and interval operations
     to check that the midpoint and radius of *x* both are within a
     reasonable range before calling this method.
 
+.. function:: void arb_set_interval_mag(arb_t x, const mag_t a, const mag_t b, slong prec)
+
 .. function:: void arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, slong prec)
 
 .. function:: void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, slong prec)
 
     Sets *x* to a ball containing the interval `[a, b]`. We
     require that `a \le b`.
+
+.. function:: void arb_set_interval_neg_pos_mag(arb_t x, const mag_t a, const mag_t b, slong prec)
+
+    Sets *x* to a ball containing the interval `[-a, b]`.
 
 .. function:: void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, slong prec)
 

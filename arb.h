@@ -397,6 +397,9 @@ void arb_set_interval_mpfr(arb_t x, const mpfr_t a, const mpfr_t b, slong prec);
 void arb_get_interval_arf(arf_t a, arf_t b, const arb_t x, slong prec);
 void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x);
 
+void arb_set_interval_mag(arb_t res, const mag_t a, const mag_t b, slong prec);
+void arb_set_interval_neg_pos_mag(arb_t res, const mag_t a, const mag_t b, slong prec);
+
 void arb_union(arb_t z, const arb_t x, const arb_t y, slong prec);
 int arb_intersection(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_get_rand_fmpq(fmpq_t q, flint_rand_t state, const arb_t x, slong bits);
