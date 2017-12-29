@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2012-2017 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -21,7 +21,8 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    /* Compare with MPFR */
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
         fmpq_t q;
@@ -64,7 +65,7 @@ int main()
         mpfr_clear(t);
     }
 
-    /* check large arguments */
+    /* Check large arguments. */
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c, d;
@@ -112,8 +113,8 @@ int main()
         arb_clear(d);
     }
 
-    /* higher precision */
-    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
+    /* Compare with MPFR, higher precision. */
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
         fmpq_t q;
@@ -158,8 +159,7 @@ int main()
         mpfr_clear(t);
     }
 
-    /* higher precision */
-    /* check large arguments */
+    /* Higher precision + large arguments. */
     for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c, d;
@@ -207,8 +207,45 @@ int main()
         arb_clear(d);
     }
 
+    /* Check wide arguments. */
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    {
+        arb_t a, b, c, d;
+
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+
+        arb_randtest_precise(a, state, 1 + n_randint(state, 1000), 100);
+        arb_randtest_precise(b, state, 1 + n_randint(state, 1000), 100);
+        if (n_randint(state, 2))
+            arb_add(a, a, b, 2 + n_randint(state, 1000));
+        arb_union(d, a, b, 2 + n_randint(state, 1000));
+
+        arb_atan(a, a, 2 + n_randint(state, 2000));
+        arb_atan(b, b, 2 + n_randint(state, 2000));
+        arb_atan(c, d, 2 + n_randint(state, 2000));
+
+        if (!arb_overlaps(c, a) || !arb_overlaps(c, b))
+        {
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
+
