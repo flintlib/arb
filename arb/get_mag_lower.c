@@ -14,17 +14,20 @@
 static __inline__ void
 _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
 {
-    if (mag_is_inf(rad) || arf_is_zero(mid))
+    if (arf_is_special(mid) || mag_is_special(rad))
     {
-        mag_zero(z);
-    }
-    else if (mag_is_zero(rad))
-    {
-        arf_get_mag_lower(z, mid);
-    }
-    else if (!arf_is_finite(mid))
-    {
-        mag_inf(z);
+        if (mag_is_zero(rad))
+        {
+            arf_get_mag_lower(z, mid);
+        }
+        else if (arf_is_inf(mid) && mag_is_finite(rad))
+        {
+            mag_inf(z);
+        }
+        else
+        {
+            mag_zero(z);
+        }
     }
     else
     {

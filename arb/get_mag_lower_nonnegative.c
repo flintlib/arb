@@ -14,13 +14,24 @@
 static __inline__ void
 _arb_get_mag_lower_nonnegative(mag_t z, const arf_t mid, const mag_t rad)
 {
-    if (mag_is_inf(rad) || arf_is_special(mid) || arf_sgn(mid) < 0)
+    if (arf_sgn(mid) < 0)
     {
         mag_zero(z);
     }
-    else if (mag_is_zero(rad))
+    else if (arf_is_special(mid) || mag_is_special(rad))
     {
-         arf_get_mag_lower(z, mid);
+        if (mag_is_zero(rad))
+        {
+            arf_get_mag_lower(z, mid);
+        }
+        else if (arf_is_pos_inf(mid) && mag_is_finite(rad))
+        {
+            mag_inf(z);
+        }
+        else
+        {
+            mag_zero(z);
+        }
     }
     else
     {
