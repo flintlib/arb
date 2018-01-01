@@ -16,7 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("div....");
+    flint_printf("div_lower....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -42,18 +42,19 @@ int main()
         mag_get_fmpr(x, xb);
         mag_get_fmpr(y, yb);
 
-        fmpr_div(z, x, y, MAG_BITS + 10, FMPR_RND_UP);
-        fmpr_mul_ui(z2, z, 1025, MAG_BITS, FMPR_RND_UP);
+        fmpr_div(z, x, y, MAG_BITS + 10, FMPR_RND_DOWN);
+
+        fmpr_mul_ui(z2, z, 1023, MAG_BITS, FMPR_RND_DOWN);
         fmpr_mul_2exp_si(z2, z2, -10);
 
-        mag_div(zb, xb, yb);
+        mag_div_lower(zb, xb, yb);
         mag_get_fmpr(w, zb);
 
         MAG_CHECK_BITS(xb)
         MAG_CHECK_BITS(yb)
         MAG_CHECK_BITS(zb)
 
-        if (!(fmpr_cmpabs(z, w) <= 0 && fmpr_cmpabs(w, z2) <= 0))
+        if (!(fmpr_cmpabs(z2, w) <= 0 && fmpr_cmpabs(w, z) <= 0))
         {
             flint_printf("FAIL\n\n");
             flint_printf("x = "); fmpr_print(x); flint_printf("\n\n");

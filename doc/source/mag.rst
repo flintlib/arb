@@ -242,6 +242,18 @@ Arithmetic
 
     Sets *z* to an upper bound for `x / y`.
 
+.. function:: void mag_div_lower(mag_t z, const mag_t x, const mag_t y)
+
+    Sets *z* to a lower bound for `x / y`.
+
+.. function:: void mag_inv(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `1 / x`.
+
+.. function:: void mag_inv_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `1 / x`.
+
 .. function:: void mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
 
 .. function:: void mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)

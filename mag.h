@@ -298,6 +298,25 @@ void mag_add_ui(mag_t z, const mag_t x, ulong y);
 void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e);
 
 void mag_div(mag_t z, const mag_t x, const mag_t y);
+void mag_div_lower(mag_t z, const mag_t x, const mag_t y);
+
+MAG_INLINE void
+mag_inv(mag_t res, const mag_t x)
+{
+    mag_t t;
+    mag_init(t); /* no need to free */
+    mag_one(t);
+    mag_div(res, t, x);
+}
+
+MAG_INLINE void
+mag_inv_lower(mag_t res, const mag_t x)
+{
+    mag_t t;
+    mag_init(t); /* no need to free */
+    mag_one(t);
+    mag_div_lower(res, t, x);
+}
 
 MAG_INLINE void
 mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
