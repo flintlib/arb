@@ -354,6 +354,24 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `\log(n)`.
 
+.. function:: void mag_log(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `\log(\max(1,x))`.
+
+.. function:: void mag_log_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `\log(\max(1,x))`.
+
+.. function:: void mag_neg_log(mag_t z, const mag_t x)
+
+    Sets *z* to an upper bound for `-\log(\min(1,x))`, i.e. an upper
+    bound for `|\log(x)|` for `x \le 1`.
+
+.. function:: void mag_neg_log_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `-\log(\min(1,x))`, i.e. a lower
+    bound for `|\log(x)|` for `x \le 1`.
+
 .. function:: void mag_exp(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `\exp(x)`.

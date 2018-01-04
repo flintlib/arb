@@ -607,6 +607,11 @@ void mag_log1p(mag_t z, const mag_t x);
 
 void mag_log_ui(mag_t t, ulong n);
 
+void mag_log(mag_t z, const mag_t x);
+void mag_log_lower(mag_t z, const mag_t x);
+void mag_neg_log(mag_t z, const mag_t x);
+void mag_neg_log_lower(mag_t z, const mag_t x);
+
 void mag_exp_maglim(mag_t y, const mag_t x, slong maglim);
 
 MAG_INLINE void
