@@ -47,6 +47,7 @@ arb_log(arb_t res, const arb_t x, slong prec)
             slong acc;
 
             acc = arb_rel_accuracy_bits(x);
+            acc = FLINT_MIN(acc, prec);
             acc += fmpz_bits(MAG_EXPREF(t));
 
             if (acc < 20)
