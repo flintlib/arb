@@ -648,6 +648,7 @@ void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t man, const fmpz_t exp);
 void mag_sqrt(mag_t y, const mag_t x);
 void mag_sqrt_lower(mag_t y, const mag_t x);
 void mag_rsqrt(mag_t y, const mag_t x);
+void mag_rsqrt_lower(mag_t y, const mag_t x);
 
 void mag_root(mag_t y, const mag_t x, ulong n);
 

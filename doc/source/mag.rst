@@ -327,13 +327,17 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `\sqrt{x}`.
 
+.. function:: void mag_sqrt_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `\sqrt{x}`.
+
 .. function:: void mag_rsqrt(mag_t z, const mag_t x)
 
     Sets *z* to an upper bound for `1/\sqrt{x}`.
 
-.. function:: void mag_sqrt_lower(mag_t z, const mag_t x)
+.. function:: void mag_rsqrt_lower(mag_t z, const mag_t x)
 
-    Sets *z* to a lower bound for `\sqrt{x}`.
+    Sets *z* to an lower bound for `1/\sqrt{x}`.
 
 .. function:: void mag_hypot(mag_t z, const mag_t x, const mag_t y)
 
