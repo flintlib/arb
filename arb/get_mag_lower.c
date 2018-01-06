@@ -40,46 +40,58 @@ _arb_get_mag_lower(mag_t z, const arf_t mid, const mag_t rad)
         {
             mag_zero(z);
         }
-        else if (shift <= 1) /* can be cancellation */
-        {
-            arf_t t;
-            arf_init(t);
-
-            arf_set_mag(t, rad);
-
-            if (arf_sgn(mid) > 0)
-            {
-                arf_sub(t, mid, t, MAG_BITS, ARF_RND_DOWN);
-            }
-            else
-            {
-                arf_add(t, mid, t, MAG_BITS, ARF_RND_DOWN);
-                arf_neg(t, t);
-            }
-
-            if (arf_sgn(t) <= 0)
-                mag_zero(z);
-            else
-                arf_get_mag_lower(z, t);
-
-            arf_clear(t);
-        }
         else
         {
-            mp_limb_t m;
+            mp_limb_t m, xm, rm;
 
-            ARF_GET_TOP_LIMB(m, mid);
-            m = m >> (FLINT_BITS - MAG_BITS);
+            ARF_GET_TOP_LIMB(xm, mid);
+            xm = xm >> (FLINT_BITS - MAG_BITS);
 
             if (shift <= MAG_BITS)
-                m = m - (MAG_MAN(rad) >> shift) - 1;
+                rm = (MAG_MAN(rad) >> shift) + 1;
             else
-                m = m - 1;
+                rm = 1;
 
-            fix = !(m >> (MAG_BITS - 1));
-            m <<= fix;
-            MAG_MAN(z) = m;
-            _fmpz_add_fast(MAG_EXPREF(z), MAG_EXPREF(mid), -fix);
+            m = xm - rm;
+
+            if (shift > 1)  /* more than one bit cancellation not possible */
+            {
+                fix = !(m >> (MAG_BITS - 1));
+                m <<= fix;
+                MAG_MAN(z) = m;
+                _fmpz_add_fast(MAG_EXPREF(z), MAG_EXPREF(mid), -fix);
+            }
+            else if (rm < xm && m > (1 << (MAG_BITS - 4))) /* not too much cancellation */
+            {
+                fix = MAG_BITS - FLINT_BIT_COUNT(m);
+                m <<= fix;
+                MAG_MAN(z) = m;
+                _fmpz_add_fast(MAG_EXPREF(z), MAG_EXPREF(mid), -fix);
+            }
+            else
+            {
+                arf_t t;
+                arf_init(t);
+
+                arf_set_mag(t, rad);
+
+                if (arf_sgn(mid) > 0)
+                {
+                    arf_sub(t, mid, t, MAG_BITS, ARF_RND_DOWN);
+                }
+                else
+                {
+                    arf_add(t, mid, t, MAG_BITS, ARF_RND_DOWN);
+                    arf_neg(t, t);
+                }
+
+                if (arf_sgn(t) <= 0)
+                    mag_zero(z);
+                else
+                    arf_get_mag_lower(z, t);
+
+                arf_clear(t);
+            }
         }
     }
 }
