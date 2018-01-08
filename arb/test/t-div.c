@@ -180,6 +180,59 @@ int main()
             flint_abort();
         }
 
+        if (arf_is_nan(arb_midref(a)) || arf_is_nan(arb_midref(b)) ||
+            arb_contains_zero(b) || (!arb_is_finite(a) && !arb_is_finite(b)))
+        {
+            if (!arf_is_nan(arb_midref(c)) || !mag_is_inf(arb_radref(c)))
+            {
+                flint_printf("FAIL: special value 1\n\n");
+                flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+                flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+                flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
+        if (!arb_is_finite(a) && !arb_contains_zero(a) && !arb_contains_zero(b)
+            && arb_is_finite(b))
+        {
+            if (!arf_is_inf(arb_midref(c)) || !mag_is_zero(arb_radref(c)) ||
+                arf_sgn(arb_midref(a)) * arf_sgn(arb_midref(b)) != arf_sgn(arb_midref(c)))
+            {
+                flint_printf("FAIL: special value 2\n\n");
+                flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+                flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+                flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
+        if (!arb_is_finite(a) && !arf_is_nan(arb_midref(a)) &&
+            arb_contains_zero(a) &&
+            !arb_contains_zero(b) && arb_is_finite(b))
+        {
+            if (!arf_is_zero(arb_midref(c)) || !mag_is_inf(arb_radref(c)))
+            {
+                flint_printf("FAIL: special value 3\n\n");
+                flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+                flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+                flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
+        if (arb_is_finite(a) && !arb_is_finite(b) && !arb_contains_zero(b))
+        {
+            if (!arb_is_zero(c))
+            {
+                flint_printf("FAIL: special value 4\n\n");
+                flint_printf("a = "); arb_printd(a, 15); flint_printf("\n\n");
+                flint_printf("b = "); arb_printd(b, 15); flint_printf("\n\n");
+                flint_printf("c = "); arb_printd(c, 15); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
         arb_clear(a);
         arb_clear(b);
         arb_clear(c);

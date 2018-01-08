@@ -71,7 +71,7 @@ int main()
             flint_abort();
         }
 
-        if (n > 0 && (acc2 < FLINT_MIN(prec, acc1) - 10) &&
+        if (n > 0 && acc1 > 1 && (acc2 < FLINT_MIN(prec, acc1) - 10) &&
                 !(acc1 == -ARF_PREC_EXACT && acc2 == -ARF_PREC_EXACT))
         {
             flint_printf("FAIL: poor accuracy\n\n");
