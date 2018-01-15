@@ -540,12 +540,42 @@ f_lambertw(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(x) = max(sin(x), cos(x)) */
+int
+f_max_sin_cos(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(s);
+    acb_init(c);
+
+    acb_sin_cos(s, c, z, prec);
+
+    acb_sub(res, s, c, prec);
+
+    if (arb_is_positive(acb_realref(res)))
+        acb_set(res, s);
+    else if (arb_is_negative(acb_realref(res)))
+        acb_set(res, c);
+    else if (order == 0)
+        acb_union(res, s, c, prec);
+    else
+        acb_indeterminate(res);
+
+    acb_clear(s);
+    acb_clear(c);
+
+    return 0;
+}
 
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 24
+#define NUM_INTEGRALS 25
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -573,6 +603,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_C wp(x)/x^(11) dx   (contour for 10th Laurent coefficient of Weierstrass p-function)",
     "N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle",
     "int_0^{1000} W_0(x) dx",
+    "int_0^pi max(sin(x), cos(x)) dx",
 };
 
 int main(int argc, char *argv[])
@@ -958,6 +989,12 @@ int main(int argc, char *argv[])
                 acb_set_d(a, 0.0);
                 acb_set_d(b, 1000.0);
                 acb_calc_integrate(s, f_lambertw, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 24:
+                acb_set_d(a, 0.0);
+                acb_const_pi(b, prec);
+                acb_calc_integrate(s, f_max_sin_cos, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:
