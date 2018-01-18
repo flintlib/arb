@@ -38,13 +38,13 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     }
 
     g = n_primitive_root_prime(q);
-    qinv = n_preinvert_limb(2 * q);
+    qinv = n_preinvert_limb(q);
 
     es = flint_malloc(sizeof(ulong) * d);
     lower_plane = flint_calloc(n, sizeof(int));
 
     for (e = 0; e < d; e++)
-        es[e] = n_powmod2(g, n * e, 2 * q);
+        es[e] = n_powmod2(g, n * e, q);
 
     /* either all roots are real, or all roots are complex */
     real = (n % 2) == 1;
@@ -81,14 +81,14 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
             if (lower_plane[k])
                 continue;
 
-            gk = n_powmod2(g, k, 2 * q);
+            gk = n_powmod2(g, k, q);
             acb_zero(u);
 
             if (real)
             {
                 for (e = 0; e < d / 2; e++)
                 {
-                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], 2 * q, qinv), prec);
+                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], q, qinv), prec);
                     acb_mul_2exp_si(t, t, 1);  /* compute conjugates */
                     acb_add(u, u, t, prec);
                 }
@@ -99,7 +99,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
             {
                 for (e = 0; e < d; e++)
                 {
-                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], 2 * q, qinv), prec);
+                    acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], q, qinv), prec);
                     acb_add(u, u, t, prec);
                 }
 
