@@ -22,7 +22,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     int * lower_plane;
 
     if (n == 0 || !n_is_prime(q) || ((q - 1) % n) != 0 ||
-            n_gcd_full(n, (q - 1) / n) != 1 || q >= ULONG_MAX / 2)
+            n_gcd_full(n, (q - 1) / n) != 1)
     {
         fmpz_poly_zero(res);
         return;
