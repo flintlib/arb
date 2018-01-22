@@ -540,7 +540,7 @@ f_lambertw(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
-/* f(x) = max(sin(x), cos(x)) */
+/* f(z) = max(sin(z), cos(z)) */
 int
 f_max_sin_cos(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
@@ -571,11 +571,38 @@ f_max_sin_cos(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = erf(z/sqrt(0.0002)*0.5 +1.5)*exp(-z), example provided by Silviu-Ioan Filip */
+int
+f_erf_bent(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+
+    acb_set_ui(t, 1250);
+    acb_sqrt(t, t, prec);
+    acb_mul(t, t, z, prec);
+    acb_set_d(res, 1.5);
+    acb_add(res, res, t, prec);
+    acb_hypgeom_erf(res, res, prec);
+
+    acb_neg(t, z);
+    acb_exp(t, t, prec);
+    acb_mul(res, res, t, prec);
+
+    acb_clear(t);
+
+    return 0;
+}
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 25
+#define NUM_INTEGRALS 26
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -604,6 +631,7 @@ const char * descr[NUM_INTEGRALS] =
     "N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle",
     "int_0^{1000} W_0(x) dx",
     "int_0^pi max(sin(x), cos(x)) dx",
+    "int_{-1}^1 erf(x/sqrt(0.0002)*0.5+1.5)*exp(-x) dx",
 };
 
 int main(int argc, char *argv[])
@@ -995,6 +1023,12 @@ int main(int argc, char *argv[])
                 acb_set_d(a, 0.0);
                 acb_const_pi(b, prec);
                 acb_calc_integrate(s, f_max_sin_cos, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 25:
+                acb_set_si(a, -1);
+                acb_set_si(b, 1);
+                acb_calc_integrate(s, f_erf_bent, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:
