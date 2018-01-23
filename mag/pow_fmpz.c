@@ -45,3 +45,37 @@ mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
     }
 }
 
+void
+mag_pow_fmpz_lower(mag_t z, const mag_t x, const fmpz_t e)
+{
+    if (fmpz_sgn(e) < 0)
+    {
+        flint_abort();
+    }
+    else if (!COEFF_IS_MPZ(*e))
+    {
+        mag_pow_ui_lower(z, x, fmpz_get_ui(e));
+    }
+    else
+    {
+        mag_t y;
+        mp_srcptr elimbs;
+        slong i, bits;
+
+        mag_init_set(y, x);
+        bits = fmpz_bits(e);
+        elimbs = COEFF_TO_PTR(*e)->_mp_d;
+
+        for (i = bits - 2; i >= 0; i--)
+        {
+            mag_mul_lower(y, y, y);
+
+            if ((elimbs[i / FLINT_BITS] >> (i % FLINT_BITS)) & 1)
+                mag_mul_lower(y, y, x);
+        }
+
+        mag_swap(z, y);
+        mag_clear(y);
+    }
+}
+

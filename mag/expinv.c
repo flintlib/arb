@@ -11,6 +11,11 @@
 
 #include "mag.h"
 
+/* defined in exp.c */
+void _mag_exp_d(mag_t res, double x, int roundup);
+void mag_exp_huge(mag_t res, const mag_t x);
+void mag_exp_huge_lower(mag_t res, const mag_t x);
+
 void
 mag_expinv(mag_t res, const mag_t x)
 {
@@ -22,43 +27,60 @@ mag_expinv(mag_t res, const mag_t x)
     {
         mag_zero(res);
     }
-    else if (fmpz_sgn(MAG_EXPREF(x)) <= 0)
+    else if (mag_cmp_2exp_si(x, 24) >= 0)
     {
-        mag_one(res);
+        mag_exp_huge_lower(res, x);
+        mag_inv(res, res);
     }
-    else if (fmpz_cmp_ui(MAG_EXPREF(x), 2 * MAG_BITS) > 0)
+    else if (COEFF_IS_MPZ(MAG_EXP(x)))
     {
-        fmpz_t t;
-        fmpz_init(t);
-
-        /* If x > 2^60, exp(-x) < 2^(-2^60 / log(2))  */
-        /* -1/log(2) < -369/256 */
-        fmpz_set_si(t, -369);
-        fmpz_mul_2exp(t, t, 2 * MAG_BITS - 8);
-
         mag_one(res);
-        mag_mul_2exp_fmpz(res, res, t);
-
-        fmpz_clear(t);
     }
     else
     {
-        fmpz_t t;
         slong e = MAG_EXP(x);
 
-        fmpz_init(t);
-        fmpz_set_ui(t, MAG_MAN(x));
-
-        if (e >= MAG_BITS)
-            fmpz_mul_2exp(t, t, e - MAG_BITS);
+        if (e <= -MAG_BITS)
+            mag_one(res);
         else
-            fmpz_tdiv_q_2exp(t, t, MAG_BITS - e);
+            _mag_exp_d(res, -ldexp(MAG_MAN(x), e - MAG_BITS), 1);
+    }
+}
 
-        /* upper bound for 1/e */
-        mag_set_ui_2exp_si(res, 395007543, -30);
+void
+mag_expinv_lower(mag_t res, const mag_t x)
+{
+    if (mag_is_zero(x))
+    {
+        mag_one(res);
+    }
+    else if (mag_is_inf(x))
+    {
+        mag_zero(res);
+    }
+    else if (mag_cmp_2exp_si(x, 24) >= 0)
+    {
+        mag_exp_huge(res, x);
+        mag_inv_lower(res, res);
+    }
+    else if (COEFF_IS_MPZ(MAG_EXP(x)))
+    {
+        /* 1 - eps */
+        MAG_MAN(res) = (1 << MAG_BITS) - 1;
+        fmpz_zero(MAG_EXPREF(res));
+    }
+    else
+    {
+        slong e = MAG_EXP(x);
 
-        mag_pow_fmpz(res, res, t);
-        fmpz_clear(t);
+        if (e < -MAG_BITS)
+        {
+            /* 1 - eps */
+            MAG_MAN(res) = (1 << MAG_BITS) - 1;
+            fmpz_zero(MAG_EXPREF(res));
+        }
+        else
+            _mag_exp_d(res, -ldexp(MAG_MAN(x), e - MAG_BITS), 0);
     }
 }
 

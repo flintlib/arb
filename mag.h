@@ -552,6 +552,9 @@ mag_printd(const mag_t x, slong d)
 
 void mag_get_fmpq(fmpq_t y, const mag_t x);
 
+void mag_get_fmpz(fmpz_t res, const mag_t x);
+void mag_get_fmpz_lower(fmpz_t res, const mag_t x);
+
 int mag_cmp(const mag_t x, const mag_t y);
 
 int mag_cmp_2exp_si(const mag_t x, slong e);
@@ -612,22 +615,19 @@ void mag_log_lower(mag_t z, const mag_t x);
 void mag_neg_log(mag_t z, const mag_t x);
 void mag_neg_log_lower(mag_t z, const mag_t x);
 
-void mag_exp_maglim(mag_t y, const mag_t x, slong maglim);
+void mag_exp(mag_t y, const mag_t x);
+void mag_exp_lower(mag_t y, const mag_t x);
 
-MAG_INLINE void
-mag_exp(mag_t y, const mag_t x)
-{
-    mag_exp_maglim(y, x, 128);
-}
+void mag_expinv(mag_t res, const mag_t x);
+void mag_expinv_lower(mag_t y, const mag_t x);
 
 void mag_expm1(mag_t y, const mag_t x);
 void mag_exp_tail(mag_t z, const mag_t x, ulong N);
 
-void mag_expinv(mag_t res, const mag_t x);
-
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e);
+void mag_pow_fmpz_lower(mag_t z, const mag_t x, const fmpz_t e);
 
 void mag_const_pi(mag_t res);
 void mag_const_pi_lower(mag_t res);

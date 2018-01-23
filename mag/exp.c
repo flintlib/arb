@@ -31,17 +31,92 @@ static const double inverse_factorials[] = {
     7.6471637318198164759e-13
 };
 
-static __inline__ double
-_mag_d_exp_upper_reduced(double u)
+/* warning: requires |x| < 2^24 or thereabout */
+void
+_mag_exp_d(mag_t res, double x, int roundup)
 {
-    if (u < -0.375 || u > 0.375)
+    double u, nlog2, eps, eps2;
+    slong n;
+
+    if (roundup)
+    {
+        eps = 1e-13;
+        eps2 = 6e-13;
+    }
+    else
+    {
+        eps = -1e-13;
+        eps2 = -6e-13;
+    }
+
+    n = floor(x * 1.4426950408889634074 + 0.5);
+
+    /* does not need to be exact */
+    /* perturbed in opposite direction before subtraction */
+    if (n >= 0)
+        nlog2 = n * 0.69314718055994530942 * (1.0 - eps);
+    else
+        nlog2 = n * 0.69314718055994530942 * (1.0 + eps);
+
+    /* perturbed (assuming |u| < 1 for absolute error to be valid) */
+    u = x - nlog2 + eps;
+
+    if (u >= -0.375 && u <= 0.375)
+        u = d_polyval(inverse_factorials, 11, u) + eps2;
+    else
         flint_abort();
 
-    return d_polyval(inverse_factorials, 11, u) + 1e-12;
+    if (roundup)
+        mag_set_d(res, u);
+    else
+        mag_set_d_lower(res, u);
+
+    MAG_EXP(res) += n;  /* assumes x not too large */
 }
 
 void
-mag_exp_maglim(mag_t y, const mag_t x, slong maglim)
+mag_exp_huge(mag_t res, const mag_t x)
+{
+    if (mag_cmp_2exp_si(x, 128) <= 0)
+    {
+        fmpz_t t;
+        fmpz_init(t);
+        mag_get_fmpz(t, x);
+        MAG_MAN(res) = 729683223; /* upper bound for e */
+        fmpz_set_ui(MAG_EXPREF(res), 2);
+        mag_pow_fmpz(res, res, t);
+        fmpz_clear(t);
+    }
+    else
+    {
+        mag_inf(res);
+    }
+}
+
+void
+mag_exp_huge_lower(mag_t res, const mag_t x)
+{
+    fmpz_t t;
+    fmpz_init(t);
+
+    if (mag_cmp_2exp_si(x, 128) <= 0)
+    {
+        mag_get_fmpz_lower(t, x);
+    }
+    else
+    {
+        fmpz_one(t);
+        fmpz_mul_2exp(t, t, 128);
+    }
+
+    MAG_MAN(res) = 729683222; /* lower bound for e */
+    fmpz_set_ui(MAG_EXPREF(res), 2);
+    mag_pow_fmpz_lower(res, res, t);
+    fmpz_clear(t);
+}
+
+void
+mag_exp(mag_t y, const mag_t x)
 {
     if (mag_is_special(x))
     {
@@ -78,46 +153,54 @@ mag_exp_maglim(mag_t y, const mag_t x, slong maglim)
         }
         else if (e < 24)
         {
-            double t, u;
-            ulong n;
-
-            t = ldexp(MAG_MAN(x), e - MAG_BITS);
-
-            /* does not need to be exact */
-            n = (ulong)(t * 1.4426950408889634074 + 0.5);
-            /* here u must be rounded up */
-            u = t - n * (0.69314718055994530942 * (1.0 - 1e-13)) + 1e-13;
-
-            u = _mag_d_exp_upper_reduced(u);
-            fmpz_set_ui(MAG_EXPREF(y), n);
-            mag_set_d_2exp_fmpz(y, u, MAG_EXPREF(y));
-        }
-        else if (e > maglim)
-        {
-            mag_inf(y);
+            _mag_exp_d(y, ldexp(MAG_MAN(x), e - MAG_BITS), 1);
         }
         else
         {
-            /* we really want a multiprecision algorithm
-               here for huge n, but for most purposes, it's fine to just
-               get a few leading digits of the *exponent* accurately */
-            fmpz_t t;
-            fmpz_init(t);
-
-            fmpz_set_ui(t, MAG_MAN(x));
-
-            if (e >= MAG_BITS)
-                fmpz_mul_2exp(t, t, e - MAG_BITS);
-            else
-                fmpz_cdiv_q_2exp(t, t, MAG_BITS - e);
-
-            /* upper bound for e */
-            MAG_MAN(y) = 729683223;
-            fmpz_set_ui(MAG_EXPREF(y), 2);
-
-            mag_pow_fmpz(y, y, t);
-            fmpz_clear(t);
+            mag_exp_huge(y, x);
         }
     }
 }
+
+void
+mag_exp_lower(mag_t y, const mag_t x)
+{
+    if (mag_is_special(x))
+    {
+        if (mag_is_zero(x))
+            mag_one(y);
+        else
+            mag_inf(y);
+    }
+    else if (COEFF_IS_MPZ(MAG_EXP(x)))
+    {
+        if (fmpz_sgn(MAG_EXPREF(x)) > 0)
+            mag_exp_huge_lower(y, x);
+        else
+            mag_one(y);
+    }
+    else
+    {
+        slong e = MAG_EXP(x);
+
+        if (e <= -MAG_BITS)
+        {
+            mag_one(y);
+        }
+        else if (e <= -(MAG_BITS / 2))
+        {
+            MAG_MAN(y) = MAG_ONE_HALF + (MAG_MAN(x) >> (1 - e));
+            fmpz_one(MAG_EXPREF(y));
+        }
+        else if (e < 24)
+        {
+            _mag_exp_d(y, ldexp(MAG_MAN(x), e - MAG_BITS), 0);
+        }
+        else
+        {
+            mag_exp_huge_lower(y, x);
+        }
+    }
+}
+
 

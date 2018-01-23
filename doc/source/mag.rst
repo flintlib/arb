@@ -177,7 +177,27 @@ Conversions
 
 .. function:: void mag_get_fmpq(fmpq_t y, const mag_t x)
 
-    Sets *y* exactly to *x*. Assumes that no overflow occurs.
+    Sets *y* exactly to *x*. This user must check in advance that *x* is
+    of reasonable magnitude before calling this function. If *x* is infinite or
+    has a bignum exponent, an abort will be raised. If the exponent otherwise
+    is too large or too small, the available memory could be exhausted
+    resulting in undefined behavior.
+
+.. function:: void mag_get_fmpz(fmpz_t y, const mag_t x)
+
+    Sets *y* to the ceiling of *x*. This user must check in advance that *x* is
+    of reasonable magnitude before calling this function. If *x* is infinite or
+    has a bignum exponent, an abort will be raised. If the exponent otherwise
+    is too large or too small, the available memory could be exhausted
+    resulting in undefined behavior.
+
+.. function:: void mag_get_fmpz_lower(fmpz_t y, const mag_t x)
+
+    Sets *y* to the floor of *x*. This user must check in advance that *x* is
+    of reasonable magnitude before calling this function. If *x* is infinite or
+    has a bignum exponent, an abort will be raised. If the exponent otherwise
+    is too large or too small, the available memory could be exhausted
+    resulting in undefined behavior.
 
 .. function:: double mag_get_d(const mag_t x)
 
@@ -321,7 +341,9 @@ Powers and logarithms
 
 .. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
 
-    Sets *z* to a lower bound for `x^e`.
+.. function:: void mag_pow_fmpz_lower(mag_t z, const mag_t x, const fmpz_t e)
+
+    Sets *z* to a lower bound for `x^e`. Requires `e \ge 0`.
 
 .. function:: void mag_sqrt(mag_t z, const mag_t x)
 
@@ -380,11 +402,17 @@ Powers and logarithms
 
     Sets *z* to an upper bound for `\exp(x)`.
 
+.. function:: void mag_exp_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `\exp(x)`.
+
 .. function:: void mag_expinv(mag_t z, const mag_t x)
 
-    Sets *z* to an upper bound for `\exp(-x)`. As currently implemented,
-    the bound is computed crudely by rounding *x* down to an integer
-    before approximating the exponential.
+    Sets *z* to an upper bound for `\exp(-x)`.
+
+.. function:: void mag_expinv_lower(mag_t z, const mag_t x)
+
+    Sets *z* to a lower bound for `\exp(-x)`.
 
 .. function:: void mag_expm1(mag_t z, const mag_t x)
 
