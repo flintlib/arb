@@ -12,6 +12,7 @@
 #include "arb.h"
 
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
+#define MAGLIM(prec) FLINT_MAX(128, 2 * (prec))
 
 void
 arb_exp_arf_huge(arb_t z, const arf_t x, slong mag, slong prec, int minus_one)
@@ -87,11 +88,9 @@ arb_exp_arf_fallback(arb_t z, const arf_t x, slong mag, slong prec, int minus_on
         arb_exp_arf_bb(z, x, prec, minus_one);
 }
 
-static void
-arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one)
+void
+arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one, slong maglim)
 {
-    slong maglim = FLINT_MAX(128, 2 * prec);
-
     if (arf_is_special(x))
     {
         if (minus_one)
@@ -375,7 +374,7 @@ arb_exp(arb_t z, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
-        arb_exp_arf(z, arb_midref(x), prec, 0);
+        arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
     }
     else
     {
@@ -387,7 +386,7 @@ arb_exp(arb_t z, const arb_t x, slong prec)
             mag_init_set(t, arb_radref(x));
             mag_init(u);
 
-            arb_exp_arf(z, arb_midref(x), prec, 0);
+            arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
             mag_expm1(t, t);
             arb_get_mag(u, z);
             mag_addmul(arb_radref(z), t, u);
@@ -404,7 +403,7 @@ arb_exp(arb_t z, const arb_t x, slong prec)
 
             arf_add(t, arb_midref(x), t, MAG_BITS, ARF_RND_CEIL);
 
-            arb_exp_arf(z, t, prec, 0);
+            arb_exp_arf(z, t, prec, 0, MAGLIM(prec));
 
             arb_get_mag(arb_radref(z), z);
             arf_zero(arb_midref(z));
@@ -419,7 +418,7 @@ arb_expm1(arb_t z, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
-        arb_exp_arf(z, arb_midref(x), prec, 1);
+        arb_exp_arf(z, arb_midref(x), prec, 1, MAGLIM(prec));
     }
     else
     {
@@ -433,7 +432,7 @@ arb_expm1(arb_t z, const arb_t x, slong prec)
             mag_init(one);
             mag_one(one);
 
-            arb_exp_arf(z, arb_midref(x), prec, 1);
+            arb_exp_arf(z, arb_midref(x), prec, 1, MAGLIM(prec));
 
             mag_expm1(t, t);
             arb_get_mag(u, z);
@@ -457,7 +456,7 @@ arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec)
 {
     if (arb_is_exact(x))
     {
-        arb_exp_arf(z, arb_midref(x), prec, 0);
+        arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
         arb_inv(w, z, prec);
     }
     else
@@ -470,7 +469,7 @@ arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec)
             mag_init_set(t, arb_radref(x));
             mag_init(u);
 
-            arb_exp_arf(z, arb_midref(x), prec, 0);
+            arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
             arb_inv(w, z, prec);
 
             mag_expm1(t, t);
