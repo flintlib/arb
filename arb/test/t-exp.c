@@ -11,6 +11,26 @@
 
 #include "arb.h"
 
+/* check accuracy compared to reference algorithm */
+void arb_exp_simple(arb_t res, const arb_t x, slong prec)
+{
+    mag_t t, u;
+
+    mag_init_set(t, arb_radref(x));
+    mag_init(u);
+
+    arf_set(arb_midref(res), arb_midref(x));
+    mag_zero(arb_radref(res));
+    arb_exp(res, x, prec);
+
+    mag_expm1(t, t);
+    arb_get_mag(u, res);
+    mag_addmul(arb_radref(res), t, u);
+
+    mag_clear(t);
+    mag_clear(u);
+}
+
 int main()
 {
     slong iter;
@@ -21,6 +41,134 @@ int main()
 
     flint_randinit(state);
 
+    /* check large arguments + compare with exp_simple */
+    for (iter = 0; iter < 100000 *arb_test_multiplier(); iter++)
+    {
+        arb_t a, b, c, d;
+        slong prec0, prec1, prec2, acc1, acc2;
+
+        if (iter % 10 == 0)
+            prec0 = 10000;
+        else
+            prec0 = 1000;
+
+        prec1 = 2 + n_randint(state, prec0);
+        prec2 = 2 + n_randint(state, prec0);
+
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+
+        arb_randtest_special(a, state, 1 + n_randint(state, prec0), 100);
+        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
+
+        arb_exp(b, a, prec1);
+        arb_exp(c, a, prec2);
+        arb_exp_simple(d, a, prec1);
+
+        if (!arb_overlaps(b, c) || !arb_overlaps(b, d) || !arb_overlaps(c, d))
+        {
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        /* compare accuracy with exp_simple */
+        acc1 = arb_rel_accuracy_bits(b);
+        acc2 = arb_rel_accuracy_bits(d);
+
+        if (acc2 > 0 && acc1 < acc2 - 1)
+        {
+            flint_printf("FAIL: accuracy\n\n");
+            flint_printf("prec1 = %wd, acc1 = %wd, acc2 = %wd\n\n", prec1, acc1, acc2);
+            flint_printf("a = "); arb_printd(a, 50); flint_printf("\n\n");
+            flint_printf("b = "); arb_printd(b, 50); flint_printf("\n\n");
+            flint_printf("d = "); arb_printd(d, 50); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
+
+        /* check exp(a)*exp(b) = exp(a+b) */
+        arb_exp(c, a, prec1);
+        arb_exp(d, b, prec1);
+        arb_mul(c, c, d, prec1);
+
+        arb_add(d, a, b, prec1);
+        arb_exp(d, d, prec1);
+
+        if (!arb_overlaps(c, d))
+        {
+            flint_printf("FAIL: functional equation\n\n");
+            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
+            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+    }
+
+    /* test union */
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    {
+        arb_t a, b, c, d, e;
+        slong prec0, prec1, prec2, prec3, prec4;
+
+        if (iter % 10 == 0)
+            prec0 = 10000;
+        else
+            prec0 = 1000;
+
+        prec1 = 2 + n_randint(state, prec0);
+        prec2 = 2 + n_randint(state, prec0);
+        prec3 = 2 + n_randint(state, prec0);
+        prec4 = 2 + n_randint(state, prec0);
+
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+        arb_init(e);
+
+        arb_randtest_special(a, state, 1 + n_randint(state, prec0), 200);
+        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 200);
+        arb_randtest_special(c, state, 1 + n_randint(state, prec0), 200);
+        arb_randtest_special(d, state, 1 + n_randint(state, prec0), 200);
+        arb_randtest_special(e, state, 1 + n_randint(state, prec0), 200);
+
+        arb_exp(c, a, prec1);
+        arb_exp(d, b, prec2);
+        arb_union(e, a, b, prec3);
+        arb_exp(e, e, prec4);
+
+        if (!arb_overlaps(e, c) || !arb_overlaps(e, d))
+        {
+            flint_printf("FAIL: union\n\n");
+            flint_printf("a = "); arb_printn(a, 1000, 0); flint_printf("\n\n");
+            flint_printf("b = "); arb_printn(b, 1000, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 1000, 0); flint_printf("\n\n");
+            flint_printf("d = "); arb_printn(d, 1000, 0); flint_printf("\n\n");
+            flint_printf("e = "); arb_printn(e, 1000, 0); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+        arb_clear(e);
+    }
+
+    /* comparison with mpfr */
     for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b;
@@ -72,66 +220,6 @@ int main()
         arb_clear(b);
         fmpq_clear(q);
         mpfr_clear(t);
-    }
-
-    /* check large arguments */
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
-    {
-        arb_t a, b, c, d;
-        slong prec0, prec1, prec2;
-
-        if (iter % 10 == 0)
-            prec0 = 10000;
-        else
-            prec0 = 1000;
-
-        prec1 = 2 + n_randint(state, prec0);
-        prec2 = 2 + n_randint(state, prec0);
-
-        arb_init(a);
-        arb_init(b);
-        arb_init(c);
-        arb_init(d);
-
-        arb_randtest_special(a, state, 1 + n_randint(state, prec0), 100);
-        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
-
-        arb_exp(b, a, prec1);
-        arb_exp(c, a, prec2);
-
-        if (!arb_overlaps(b, c))
-        {
-            flint_printf("FAIL: overlap\n\n");
-            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
-            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            flint_abort();
-        }
-
-        arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
-
-        /* check exp(a)*exp(b) = exp(a+b) */
-        arb_exp(c, a, prec1);
-        arb_exp(d, b, prec1);
-        arb_mul(c, c, d, prec1);
-
-        arb_add(d, a, b, prec1);
-        arb_exp(d, d, prec1);
-
-        if (!arb_overlaps(c, d))
-        {
-            flint_printf("FAIL: functional equation\n\n");
-            flint_printf("a = "); arb_print(a); flint_printf("\n\n");
-            flint_printf("b = "); arb_print(b); flint_printf("\n\n");
-            flint_printf("c = "); arb_print(c); flint_printf("\n\n");
-            flint_printf("d = "); arb_print(d); flint_printf("\n\n");
-            flint_abort();
-        }
-
-        arb_clear(a);
-        arb_clear(b);
-        arb_clear(c);
-        arb_clear(d);
     }
 
     flint_randclear(state);
