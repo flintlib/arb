@@ -45,16 +45,16 @@ arb_hypgeom_legendre_p_ui_deriv_bound(mag_t dp, mag_t dp2, ulong n, const arb_t 
     mag_mul(dp, dp, c);             /* dp >= c*sqrt(n)/(1-x^2)^(3/4) */
 
     mag_mul(dp2, dp, u);
-    mag_mul_ui(dp2, dp2, 2);        /* dp2 >= 2*c*n^(3/2)/(1-x^2)^(5/4) */
+    mag_mul_2exp_si(dp2, dp2, 1);   /* dp2 >= 2*c*n^(3/2)/(1-x^2)^(5/4) */
 
     mag_set_ui(t, n);
     mag_add_ui(t, t, 1);
     mag_mul(t, t, t);               /* t >= (n+1)^2 */
-    mag_div_ui(u, t, 2);            /* u >= (n+1)^2/2 */
+    mag_mul_2exp_si(u, t, -1);      /* u >= (n+1)^2/2 */
     mag_min(dp, dp, u);             /* |P'(x)| <= dp */
 
     mag_mul(t, t, t);
-    mag_div_ui(u, t, 8);
+    mag_mul_2exp_si(u, t, -3);
     mag_min(dp2, dp2, u);           /* |P''(x)| <= dp2 */
 
     mag_clear(c);
