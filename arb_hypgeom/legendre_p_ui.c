@@ -26,52 +26,40 @@ static double log2_bin_uiui_fast(ulong n, ulong k)
     return n * htab[FLINT_MIN(k, 15)];
 }
 
+/* x is unused but part of the API */
 void
 arb_hypgeom_legendre_p_ui_deriv_bound(mag_t dp, mag_t dp2, ulong n, const arb_t x, const arb_t x2sub1)
 {
-    mag_t t, u, xm, x2sub1m;
+    mag_t c, t, u;
 
+    mag_init(c);
     mag_init(t);
     mag_init(u);
-    mag_init(xm);
-    mag_init(x2sub1m);
 
-    arb_get_mag(xm, x);
-    arb_get_mag_lower(x2sub1m, x2sub1);
+    arb_get_mag_lower(t, x2sub1);
+    mag_rsqrt(t, t);                /* t >= 1/(1-x^2)^(1/2) */
+    mag_mul_ui(u, t, n);            /* u >= n/(1-x^2)^(1/2) */
+    mag_set_ui_2exp_si(c, 409, -8); /* c >= 2^(3/2)/sqrt(pi) */
+    mag_sqrt(dp, u);
+    mag_mul(dp, dp, t);
+    mag_mul(dp, dp, c);             /* dp >= c*sqrt(n)/(1-x^2)^(3/4) */
 
-    /* |P'(x)| <= min(n(n+1)/2, n/sqrt(1-x^2)) */
-    mag_set_ui(t, n);
-    mag_add_ui(t, t, 1);
-    mag_mul_2exp_si(t, t, -1);
-    mag_rsqrt(u, x2sub1m);
-    mag_max(t, t, u);
-    mag_mul_ui(dp, t, n);
-
-    /* |P''(x)| <= min((n+2)(n+1)n(n-1)/8, (2x|P'(x)| + n(n+1))/(1-x^2)) */
-    mag_mul(dp2, dp, xm);
-    mag_mul_2exp_si(dp2, dp2, 1);
+    mag_mul(dp2, dp, u);
+    mag_mul_ui(dp2, dp2, 2);        /* dp2 >= 2*c*n^(3/2)/(1-x^2)^(5/4) */
 
     mag_set_ui(t, n);
     mag_add_ui(t, t, 1);
-    mag_mul_ui(t, t, n);
-    mag_add(dp2, dp2, t);
-    mag_div(dp2, dp2, x2sub1m);
+    mag_mul(t, t, t);               /* t >= (n+1)^2 */
+    mag_div_ui(u, t, 2);            /* u >= (n+1)^2/2 */
+    mag_min(dp, dp, u);             /* |P'(x)| <= dp */
 
-    mag_set_ui(t, n);
-    mag_add_ui(t, t, 2);
-    mag_set_ui(u, n);
-    mag_add_ui(u, u, 1);
-    mag_mul(t, t, u);
-    mag_mul_ui(t, t, n);
-    mag_mul_ui(t, t, n - 1);
-    mag_mul_2exp_si(t, t, -3);
-    mag_min(dp2, dp2, t);
+    mag_mul(t, t, t);
+    mag_div_ui(u, t, 8);
+    mag_min(dp2, dp2, u);           /* |P''(x)| <= dp2 */
 
-
+    mag_clear(c);
     mag_clear(t);
     mag_clear(u);
-    mag_clear(xm);
-    mag_clear(x2sub1m);
 }
 
 void
