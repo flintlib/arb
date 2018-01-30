@@ -220,9 +220,18 @@ _arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x,
     _arb_hypgeom_legendre_p_ui_asymp_error(err, n, err, K);
 
     /* z = (x + yi)^(n+0.5) * (1-i) */
-    arb_set(acb_realref(z), x);
-    arb_set(acb_imagref(z), y);
-    acb_pow_arb(z, z, u, prec);
+    if (n < 256)
+    {
+        arb_set(acb_realref(z), x);
+        arb_set(acb_imagref(z), y);
+        acb_pow_arb(z, z, u, prec);
+    }
+    else
+    {
+        arb_atan2(t, y, x, prec);
+        arb_mul(t, t, u, prec);
+        arb_sin_cos(acb_imagref(z), acb_realref(z), t, prec);
+    }
     arb_one(acb_realref(s));
     arb_set_si(acb_imagref(s), -1);
     acb_mul(z, z, s, prec);

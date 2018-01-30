@@ -122,13 +122,13 @@ _arb_hypgeom_legendre_p_ui_zero(arb_t res, ulong n,
 
     if (n % 2 == 0)
     {
-        arb_bin_uiui(s, 2 * d, d, prec2);
+        arb_hypgeom_central_bin_ui(s, d, prec2);
         arb_mul(res, res, s, prec2);
         arb_mul_2exp_si(res, res, -n);
     }
     else
     {
-        arb_bin_uiui(s, 2 * d + 2, d + 1, prec2);
+        arb_hypgeom_central_bin_ui(s, d + 1, prec2);
         arb_mul(res, res, s, prec2);
         arb_mul_ui(res, res, d + 1, prec2);
         arb_mul_2exp_si(res, res, -n);

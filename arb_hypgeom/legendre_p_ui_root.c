@@ -203,7 +203,7 @@ arb_hypgeom_legendre_p_ui_root(arb_t res, arb_t weight, ulong n, ulong k, slong 
             arb_div(t, t, u, wp);
             arb_sub(v, v, t, wp);
 
-            if (!arb_contains(v0, v))
+            if (mag_cmp(arb_radref(v), arb_radref(res)) >= 0)
             {
                 /* flint_printf("unexpected Newton iteration failure...\n"); */
                 break;

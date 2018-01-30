@@ -15,7 +15,7 @@ void
 arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
 {
     slong wp;
-    ulong k;
+    ulong k, den, thr;
     mpz_t p0, p1, xx, tt;
     fmpz_t fxx;
     int error;
@@ -61,7 +61,7 @@ arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x
     wp = -arf_abs_bound_lt_2exp_si(arb_midref(x));
     wp = FLINT_MAX(wp, 0);
     wp = FLINT_MIN(wp, prec);
-    wp += prec + 4 + 2 * FLINT_BIT_COUNT(n);
+    wp += prec + 2 * FLINT_BIT_COUNT(n + 2);
 
     arb_mul(x2sub1, x, x, ARF_PREC_EXACT);
     arb_neg(x2sub1, x2sub1);
@@ -78,16 +78,26 @@ arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x
     mpz_mul_2exp(p0, p0, wp);
     mpz_set(p1, xx);
 
+    thr = 1ul << (FLINT_BITS - FLINT_BIT_COUNT(n));
+    den = 1;
     for (k = 1; k < n; k++)
     {
         mpz_mul(tt, p1, xx);
         mpz_tdiv_q_2exp(tt, tt, wp);
-        mpz_mul_ui(p0, p0, k);
+        mpz_mul_ui(p0, p0, k*k);
         mpz_neg(p0, p0);
         mpz_addmul_ui(p0, tt, 2 * k + 1);
-        mpz_tdiv_q_ui(p0, p0, k + 1);
         mpz_swap(p0, p1);
+        den *= k;
+        if (den >= thr)
+        {
+            mpz_tdiv_q_ui(p0, p0, den);
+            mpz_tdiv_q_ui(p1, p1, den);
+            den = 1;
+        }
     }
+    mpz_tdiv_q_ui(p0, p0, den);
+    mpz_tdiv_q_ui(p1, p1, den*n);
 
     if (!mag_is_zero(xrad))
     {
