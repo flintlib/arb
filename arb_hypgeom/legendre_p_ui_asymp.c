@@ -220,7 +220,7 @@ _arb_hypgeom_legendre_p_ui_asymp(arb_t res, ulong n, const arb_t x,
     _arb_hypgeom_legendre_p_ui_asymp_error(err, n, err, K);
 
     /* z = (x + yi)^(n+0.5) * (1-i) */
-    if (n < 256)
+    if (n < 256 || prec > 2000)
     {
         arb_set(acb_realref(z), x);
         arb_set(acb_imagref(z), y);

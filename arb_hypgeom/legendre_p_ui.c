@@ -140,6 +140,11 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
                        (xx > 0.00001 && n < 60 && prec < 1000) ||
                        (xx > 0.01 && n < 200 && prec < 1000) ||
                        (xx > 0.1 && n < 400 && prec < 1000));
+
+        /* the recurrence also performs better when n ~= prec */
+        if (!basecase_ok)
+            basecase_ok = (xx > 0.1 && xx < 0.99 && n < 800
+                && prec > 0.4 * n && prec < 1.5 * n);
     }
     else if (prec < 500)
     {
@@ -149,6 +154,10 @@ arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, sl
                    && ((xx > 0.00001 && n < 20) ||
                        (xx > 0.01 && n < 60) ||
                        (xx > 0.1 && n < 100));
+
+        if (!basecase_ok)
+            basecase_ok = (xx > 0.1 && xx < 0.99 && n < 300
+                && prec > 0.4 * n && prec < 1.5 * n);
     }
     else
     {
