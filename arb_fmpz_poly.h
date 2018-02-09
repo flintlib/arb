@@ -26,6 +26,10 @@
 #include "arb_poly.h"
 #include "acb_poly.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ARB_FMPZ_POLY_ROOTS_VERBOSE 1
 
 void _arb_fmpz_poly_evaluate_acb_horner(acb_t res, const fmpz * f, slong len, const acb_t x, slong prec);
@@ -54,5 +58,9 @@ void arb_fmpz_poly_cos_minpoly(fmpz_poly_t res, ulong n)
 }
 
 void arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

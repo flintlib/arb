@@ -29,6 +29,10 @@
 #include "flint/ulong_extras.h"
 #include "flint/nmod_vec.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     DLOG_MODPE, DLOG_CRT, DLOG_POWER, DLOG_BSGS, DLOG_TABLE, DLOG_23
@@ -271,5 +275,9 @@ void dlog_vec(ulong * v, ulong nv, ulong a, ulong va, nmod_t mod, ulong na, nmod
 void dlog_vec_sieve_precomp(ulong *v, ulong nv, dlog_precomp_t pre,  ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_sieve_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
 void dlog_vec_add_precomp(ulong *v, ulong nv, dlog_precomp_t pre, ulong a, ulong va, nmod_t mod, ulong na, nmod_t order);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
