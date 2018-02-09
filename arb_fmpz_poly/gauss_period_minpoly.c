@@ -19,10 +19,9 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     ulong * es;
     slong prec, initial_prec;
     int done, real;
-    int * lower_plane;
 
     if (n == 0 || !n_is_prime(q) || ((q - 1) % n) != 0 ||
-            n_gcd_full(n, (q - 1) / n) != 1 || q >= ULONG_MAX / 2)
+            n_gcd_full(n, (q - 1) / n) != 1)
     {
         fmpz_poly_zero(res);
         return;
@@ -41,7 +40,6 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     qinv = n_preinvert_limb(q);
 
     es = flint_malloc(sizeof(ulong) * d);
-    lower_plane = flint_calloc(n, sizeof(int));
 
     for (e = 0; e < d; e++)
         es[e] = n_powmod2(g, n * e, q);
@@ -64,50 +62,47 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
         arb_ptr roots;
         acb_ptr croots;
         acb_t t, u;
-        slong root_index;
+        arb_t v;
 
-        acb_dirichlet_roots_init(zeta, q, n * d, prec);
+        acb_dirichlet_roots_init(zeta, q, (n * d) / 2, prec);
         roots = _arb_vec_init(n);
         croots = (acb_ptr) roots;
 
         acb_init(t);
-        acb_init(u);
+        if (!real)
+            acb_init(u);
+        else
+            arb_init(v);
         arb_poly_init(pz);
 
-        root_index = 0;
-
-        for (k = 0; k < n; k++)
+        for (k = 0; k < (real ? n : n / 2); k++)
         {
-            if (lower_plane[k])
-                continue;
-
             gk = n_powmod2(g, k, q);
-            acb_zero(u);
 
             if (real)
             {
+                arb_zero(v);
+
                 for (e = 0; e < d / 2; e++)
                 {
                     acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], q, qinv), prec);
-                    acb_mul_2exp_si(t, t, 1);  /* compute conjugates */
-                    acb_add(u, u, t, prec);
+                    arb_add(v, v, acb_realref(t), prec);
                 }
 
-                arb_set(roots + k, acb_realref(u));
+                arb_mul_2exp_si(v, v, 1);  /* compute conjugates */
+                arb_set(roots + k, v);
             }
             else
             {
+                acb_zero(u);
+
                 for (e = 0; e < d; e++)
                 {
                     acb_dirichlet_root(t, zeta, n_mulmod2_preinv(gk, es[e], q, qinv), prec);
                     acb_add(u, u, t, prec);
                 }
 
-                if (arb_is_negative(acb_imagref(u)))
-                {
-                    lower_plane[k] = 1;
-                }
-                else if (arb_contains_zero(acb_imagref(u)))
+                if (arb_contains_zero(acb_imagref(u)))
                 {
                     /* todo: could increase precision */
                     flint_printf("fail! imaginary part should be nonzero\n");
@@ -115,8 +110,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
                 }
                 else
                 {
-                    acb_set(croots + root_index, u);
-                    root_index++;
+                    acb_set(croots + k, u);
                 }
             }
         }
@@ -124,7 +118,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
         if (real)
             arb_poly_product_roots(pz, roots, n, prec);
         else
-            arb_poly_product_roots_complex(pz, NULL, 0, croots, root_index, prec);
+            arb_poly_product_roots_complex(pz, NULL, 0, croots, n / 2, prec);
 
         done = arb_poly_get_unique_fmpz_poly(res, pz);
 
@@ -156,11 +150,13 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
         acb_dirichlet_roots_clear(zeta);
         _arb_vec_clear(roots, n);
         acb_clear(t);
-        acb_clear(u);
+        if (!real)
+            acb_clear(u);
+        else
+            arb_clear(v);
         arb_poly_clear(pz);
     }
 
     flint_free(es);
-    flint_free(lower_plane);
 }
 
