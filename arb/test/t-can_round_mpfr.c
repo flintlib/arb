@@ -53,7 +53,11 @@ int main()
 
         if (arb_can_round_mpfr(t, prec, rnd))
         {
+#if MPFR_VERSION_MAJOR >= 4
+            r1 = mpfr_rootn_ui(y1, x, 4, rnd);
+#else
             r1 = mpfr_root(y1, x, 4, rnd);
+#endif
             r2 = arf_get_mpfr(y2, arb_midref(t), rnd);
 
             if (r1 != r2 || !mpfr_equal_p(y1, y2))

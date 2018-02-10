@@ -63,7 +63,11 @@ fmpr_root(fmpr_t y, const fmpr_t x, ulong k, slong prec, fmpr_rnd_t rnd)
         fmpz_set(fmpr_manref(t), fmpr_manref(x));
         fmpz_set(fmpr_expref(t), b);
 
+#if MPFR_VERSION_MAJOR >= 4
+        CALL_MPFR_FUNC_K(r, mpfr_rootn_ui, y, t, k, prec, rnd);
+#else
         CALL_MPFR_FUNC_K(r, mpfr_root, y, t, k, prec, rnd);
+#endif
 
         fmpr_mul_2exp_fmpz(y, y, a);
 

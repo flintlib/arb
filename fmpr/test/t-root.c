@@ -11,6 +11,11 @@
 
 #include "fmpr.h"
 
+#if MPFR_VERSION_MAJOR >= 4
+#define func_mpfr_root mpfr_rootn_ui
+#else
+#define func_mpfr_root mpfr_root
+#endif
 
 int main()
 {
@@ -52,19 +57,19 @@ int main()
         switch (n_randint(state, 4))
         {
             case 0:
-                mpfr_root(Z, X, k, MPFR_RNDZ);
+                func_mpfr_root(Z, X, k, MPFR_RNDZ);
                 fmpr_root(z, x, k, bits, FMPR_RND_DOWN);
                 break;
             case 1:
-                mpfr_root(Z, X, k, MPFR_RNDA);
+                func_mpfr_root(Z, X, k, MPFR_RNDA);
                 fmpr_root(z, x, k, bits, FMPR_RND_UP);
                 break;
             case 2:
-                mpfr_root(Z, X, k, MPFR_RNDD);
+                func_mpfr_root(Z, X, k, MPFR_RNDD);
                 fmpr_root(z, x, k, bits, FMPR_RND_FLOOR);
                 break;
             case 3:
-                mpfr_root(Z, X, k, MPFR_RNDU);
+                func_mpfr_root(Z, X, k, MPFR_RNDU);
                 fmpr_root(z, x, k, bits, FMPR_RND_CEIL);
                 break;
         }
