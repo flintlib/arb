@@ -51,25 +51,15 @@ Types, macros and constants
     functions (sqrt, log, pow, etc.) that test holomorphicity of their
     arguments individually.
 
+    The built-in methods :func:`acb_real_abs`, :func:`acb_real_sgn`,
+    :func:`acb_real_heaviside`, :func:`acb_real_floor`, :func:`acb_real_ceil`,
+    :func:`acb_real_max`, :func:`acb_real_min` provide piecewise holomorphic
+    functions that are useful for integrating piecewise-defined real functions.
+
     For example, here we define a piecewise holomorphic extension
     of the function
     `f(z) = \sqrt{\lfloor z \rfloor}` (for simplicity, without implementing
     derivatives)::
-
-        /* Floor function on R extended to a piecewise holomorphic function in
-           vertical strips. */
-        void holomorphic_floor(acb_t res, const acb_t z, int holomorphic, slong prec)
-        {
-            if (!acb_is_finite(z) || (holomorphic && arb_contains_int(acb_realref(z))))
-            {
-                acb_indeterminate(res);
-            }
-            else
-            {
-                arb_floor(acb_realref(res), acb_realref(z), prec);
-                arb_set_round(acb_imagref(res), acb_imagref(z), prec);
-            }
-        }
 
         /* Square root function on C with detection of the branch cut. */
         void holomorphic_sqrt(acb_t res, const acb_t z, int holomorphic, slong prec)
@@ -90,7 +80,7 @@ Types, macros and constants
         {
             if (order > 1) flint_abort();  /* derivatives not implemented */
 
-            holomorphic_floor(out, inp, order != 0, prec);
+            acb_real_floor(out, inp, order != 0, prec);
             holomorphic_sqrt(out, out, order != 0, prec);
             return 0;
         }

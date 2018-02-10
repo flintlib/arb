@@ -387,6 +387,8 @@ Arithmetic
 
 .. function:: void acb_neg(acb_t z, const acb_t x)
 
+.. function:: void acb_neg_round(acb_t z, const acb_t x, slong prec)
+
     Sets *z* to the negation of *x*.
 
 .. function:: void acb_conj(acb_t z, const acb_t x)
@@ -978,6 +980,63 @@ Other special functions
     Simultaneously evaluates `a = T_n(x), b = T_{n-1}(x)` or
     `a = U_n(x), b = U_{n-1}(x)`.
     Aliasing between *a*, *b* and *x* is not permitted.
+
+Piecewise real functions
+-------------------------------------------------------------------------------
+
+The following methods extend common piecewise real functions to piecewise
+complex analytic functions, useful together with the
+:ref:`acb_calc.h <acb-calc>` module.
+If *analytic* is set, evaluation on a discontinuity or non-analytic point
+gives a NaN result.
+
+.. function:: void acb_real_abs(acb_t res, const acb_t z, int analytic, slong prec)
+
+    The absolute value is extended to `+z` in the right half plane and
+    `-z` in the left half plane, with a discontinuity on the vertical line
+    `\operatorname{Re}(z) = 0`.
+
+.. function:: void acb_real_sgn(acb_t res, const acb_t z, int analytic, slong prec)
+
+    The sign function is extended to `+1` in the right half plane and
+    `-1` in the left half plane, with a discontinuity on the vertical line
+    `\operatorname{Re}(z) = 0`.
+    If *analytic* is not set, this is effectively the same function as
+    :func:`acb_csgn`.
+
+.. function:: void acb_real_heaviside(acb_t res, const acb_t z, int analytic, slong prec)
+
+    The Heaviside step function (or unit step function) is extended to `+1` in
+    the right half plane and `0` in the left half plane, with a discontinuity on
+    the vertical line `\operatorname{Re}(z) = 0`.
+
+.. function:: void acb_real_floor(acb_t res, const acb_t z, int analytic, slong prec)
+
+    The floor function is extended to a piecewise constant function
+    equal to `n` in the strips with real part `(n,n+1)`, with discontinuities
+    on the vertical lines `\operatorname{Re}(z) = n`.
+
+.. function:: void acb_real_ceil(acb_t res, const acb_t z, int analytic, slong prec)
+
+    The ceiling function is extended to a piecewise constant function
+    equal to `n+1` in the strips with real part `(n,n+1)`, with discontinuities
+    on the vertical lines `\operatorname{Re}(z) = n`.
+
+.. function:: void acb_real_max(acb_t res, const acb_t x, const acb_t y, int analytic, slong prec)
+
+    The real function `\max(x,y)` is extended to a piecewise analytic function
+    of two variables by returning `x` when
+    `\operatorname{Re}(x) \ge \operatorname{Re}(y)`
+    and returning `y` when `\operatorname{Re}(x) < \operatorname{Re}(y)`,
+    with discontinuities where `\operatorname{Re}(x) = \operatorname{Re}(y)`.
+
+.. function:: void acb_real_min(acb_t res, const acb_t x, const acb_t y, int analytic, slong prec)
+
+    The real function `\min(x,y)` is extended to a piecewise analytic function
+    of two variables by returning `x` when
+    `\operatorname{Re}(x) \le \operatorname{Re}(y)`
+    and returning `y` when `\operatorname{Re}(x) > \operatorname{Re}(y)`,
+    with discontinuities where `\operatorname{Re}(x) = \operatorname{Re}(y)`.
 
 Vector functions
 -------------------------------------------------------------------------------

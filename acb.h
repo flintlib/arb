@@ -404,6 +404,14 @@ void acb_sgn(acb_t res, const acb_t z, slong prec);
 
 void acb_csgn(arb_t res, const acb_t z);
 
+void acb_real_abs(acb_t res, const acb_t z, int analytic, slong prec);
+void acb_real_sgn(acb_t res, const acb_t z, int analytic, slong prec);
+void acb_real_heaviside(acb_t res, const acb_t z, int analytic, slong prec);
+void acb_real_floor(acb_t res, const acb_t z, int analytic, slong prec);
+void acb_real_ceil(acb_t res, const acb_t z, int analytic, slong prec);
+void acb_real_max(acb_t res, const acb_t x, const acb_t y, int analytic, slong prec);
+void acb_real_min(acb_t res, const acb_t x, const acb_t y, int analytic, slong prec);
+
 ACB_INLINE void
 acb_add(acb_t z, const acb_t x, const acb_t y, slong prec)
 {

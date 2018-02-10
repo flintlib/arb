@@ -11,36 +11,6 @@
 
 #include "acb_calc.h"
 
-/* Absolute value function on R extended to a holomorphic function in the left
-   and right half planes. */
-void
-acb_holomorphic_abs(acb_ptr res, const acb_t z, int holomorphic, slong prec)
-{
-    if (!acb_is_finite(z) || (holomorphic && arb_contains_zero(acb_realref(z))))
-    {
-        acb_indeterminate(res);
-    }
-    else
-    {
-        if (arb_is_nonnegative(acb_realref(z)))
-        {
-            acb_set_round(res, z, prec);
-        }
-        else if (arb_is_negative(acb_realref(z)))
-        {
-            acb_neg_round(res, z, prec);
-        }
-        else
-        {
-            acb_t t;
-            acb_init(t);
-            acb_neg(t, res);
-            acb_union(res, z, t, prec);
-            acb_clear(t);
-        }
-    }
-}
-
 /* Square root function on C with detection of the branch cut. */
 void
 acb_holomorphic_sqrt(acb_ptr res, const acb_t z, int holomorphic, slong prec)
@@ -150,7 +120,7 @@ f_helfgott(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     acb_mul(res, res, z, prec);
     acb_add_si(res, res, -6, prec);
 
-    acb_holomorphic_abs(res, res, order != 0, prec);
+    acb_real_abs(res, res, order != 0, prec);
 
     if (acb_is_finite(res))
     {
@@ -225,6 +195,120 @@ f_wolfram(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
     return 0;
 }
+
+/* more tests for the individual acb_real_* functions */
+
+/* abs(sin(x))*cos(1+x) */
+int
+f_abs(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+    acb_init(s);
+    acb_init(c);
+    acb_sin(s, z, prec);
+    acb_add_ui(c, z, 1, prec);
+    acb_cos(c, c, prec);
+    acb_real_abs(s, s, order != 0, prec);
+    acb_mul(res, s, c, prec);
+    acb_clear(s);
+    acb_clear(c);
+    return 0;
+}
+
+/* sign(sin(x))*cos(1+x) */
+int
+f_sgn(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+    acb_init(s);
+    acb_init(c);
+    acb_sin(s, z, prec);
+    acb_add_ui(c, z, 1, prec);
+    acb_cos(c, c, prec);
+    acb_real_sgn(s, s, order != 0, prec);
+    acb_mul(res, s, c, prec);
+    acb_clear(s);
+    acb_clear(c);
+    return 0;
+}
+
+/* heaviside(sin(x))*cos(1+x) */
+int
+f_heaviside(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+    acb_init(s);
+    acb_init(c);
+    acb_sin(s, z, prec);
+    acb_add_ui(c, z, 1, prec);
+    acb_cos(c, c, prec);
+    acb_real_heaviside(s, s, order != 0, prec);
+    acb_mul(res, s, c, prec);
+    acb_clear(s);
+    acb_clear(c);
+    return 0;
+}
+
+/* floor(x-5) cos(1+x) */
+int
+f_floor(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t c;
+    acb_init(c);
+    acb_add_ui(c, z, 1, prec);
+    acb_cos(c, c, prec);
+
+    acb_sub_ui(res, z, 5, prec);
+    acb_real_floor(res, res, order != 0, prec);
+
+    acb_mul(res, res, c, prec);
+    acb_clear(c);
+    return 0;
+}
+
+/* ceil(x-5) cos(1+x) */
+int
+f_ceil(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t c;
+    acb_init(c);
+    acb_add_ui(c, z, 1, prec);
+    acb_cos(c, c, prec);
+    acb_sub_ui(res, z, 5, prec);
+    acb_real_ceil(res, res, order != 0, prec);
+    acb_mul(res, res, c, prec);
+    acb_clear(c);
+    return 0;
+}
+
+/* max(sin(x),cos(x)) */
+int
+f_max(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+    acb_init(s);
+    acb_init(c);
+    acb_sin_cos(s, c, z, prec);
+    acb_real_max(res, s, c, order != 0, prec);
+    acb_clear(s);
+    acb_clear(c);
+    return 0;
+}
+
+/* min(sin(x),cos(x)) */
+int
+f_min(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+    acb_init(s);
+    acb_init(c);
+    acb_sin_cos(s, c, z, prec);
+    acb_real_min(res, s, c, order != 0, prec);
+    acb_clear(s);
+    acb_clear(c);
+    return 0;
+}
+
 
 int main()
 {
@@ -383,6 +467,108 @@ int main()
         acb_clear(a);
         acb_clear(b);
         acb_clear(t);
+        mag_clear(tol);
+    }
+
+    /* more tests for the individual real extensions */
+    {
+        acb_t a, b, z, w;
+        slong prec;
+        mag_t tol;
+
+        acb_init(a);
+        acb_init(b);
+        acb_init(z);
+        acb_init(w);
+        mag_clear(tol);
+
+        acb_zero(a);
+        acb_set_ui(b, 10);
+
+        prec = 53;
+        mag_set_ui_2exp_si(tol, 1, -prec);
+
+        acb_calc_integrate(z, f_abs, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-1.3517710956465318592 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (abs)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_sgn, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-4.8903066871045720895 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (sgn)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_heaviside, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-3.3658839392315860266 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (heaviside)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_floor, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-0.36232328857344524392 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 16)
+        {
+            flint_printf("FAIL (floor)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_ceil, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-2.2037844799320452076 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 16)
+        {
+            flint_printf("FAIL (ceil)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_max, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "5.0817122161957375987 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (max)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_min, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-3.7866617980086549598 +/- 1e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (min)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_clear(a);
+        acb_clear(b);
+        acb_clear(z);
+        acb_clear(w);
         mag_clear(tol);
     }
 

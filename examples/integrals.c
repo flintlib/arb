@@ -19,52 +19,6 @@
 /*  Useful helper functions                                                  */
 /* ------------------------------------------------------------------------- */
 
-/* Absolute value function on R extended to a holomorphic function in the left
-   and right half planes. */
-void
-acb_holomorphic_abs(acb_ptr res, const acb_t z, int holomorphic, slong prec)
-{
-    if (!acb_is_finite(z) || (holomorphic && arb_contains_zero(acb_realref(z))))
-    {
-        acb_indeterminate(res);
-    }
-    else
-    {
-        if (arb_is_nonnegative(acb_realref(z)))
-        {
-            acb_set_round(res, z, prec);
-        }
-        else if (arb_is_negative(acb_realref(z)))
-        {
-            acb_neg_round(res, z, prec);
-        }
-        else
-        {
-            acb_t t;
-            acb_init(t);
-            acb_neg(t, res);
-            acb_union(res, z, t, prec);
-            acb_clear(t);
-        }
-    }
-}
-
-/* Floor function on R extended to a piecewise holomorphic function in
-   vertical strips. */
-void
-acb_holomorphic_floor(acb_ptr res, const acb_t z, int holomorphic, slong prec)
-{
-    if (!acb_is_finite(z) || (holomorphic && arb_contains_int(acb_realref(z))))
-    {
-        acb_indeterminate(res);
-    }
-    else
-    {
-        arb_floor(acb_realref(res), acb_realref(z), prec);
-        arb_set_round(acb_imagref(res), acb_imagref(z), prec);
-    }
-}
-
 /* Square root function on C with detection of the branch cut. */
 void
 acb_holomorphic_sqrt(acb_ptr res, const acb_t z, int holomorphic, slong prec)
@@ -104,7 +58,7 @@ f_floor(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     if (order > 1)
         flint_abort();  /* Would be needed for Taylor method. */
 
-    acb_holomorphic_floor(res, z, order != 0, prec);
+    acb_real_floor(res, z, order != 0, prec);
 
     return 0;
 }
@@ -172,7 +126,7 @@ f_helfgott(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     acb_mul(res, res, z, prec);
     acb_add_si(res, res, -6, prec);
 
-    acb_holomorphic_abs(res, res, order != 0, prec);
+    acb_real_abs(res, res, order != 0, prec);
 
     if (acb_is_finite(res))
     {
@@ -333,7 +287,7 @@ f_monster(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     acb_init(t);
 
     acb_exp(t, z, prec);
-    acb_holomorphic_floor(res, t, order != 0, prec);
+    acb_real_floor(res, t, order != 0, prec);
 
     if (acb_is_finite(res))
     {
@@ -553,17 +507,7 @@ f_max_sin_cos(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     acb_init(c);
 
     acb_sin_cos(s, c, z, prec);
-
-    acb_sub(res, s, c, prec);
-
-    if (arb_is_positive(acb_realref(res)))
-        acb_set(res, s);
-    else if (arb_is_negative(acb_realref(res)))
-        acb_set(res, c);
-    else if (order == 0)
-        acb_union(res, s, c, prec);
-    else
-        acb_indeterminate(res);
+    acb_real_max(res, s, c, order != 0, prec);
 
     acb_clear(s);
     acb_clear(c);
