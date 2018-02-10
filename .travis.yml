@@ -18,9 +18,12 @@ compiler:
 script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
         brew update;
-        brew install gcc48;
-        export CC=gcc-4.8;
-        export CXX=g++-4.8;
+        brew install gcc;
+        brew link --overwrite gcc;
+        export CC=gcc;
+        export CXX=g++;
+        gcc --version;
+        g++ --version;
     fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export ARB_TEST_MULTIPLIER=0.1;
