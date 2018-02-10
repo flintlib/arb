@@ -24,7 +24,6 @@ int main()
 
     for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
     {
-        ulong A, K, N;
         ulong i, q;
         slong prec;
         dirichlet_group_t G;
@@ -47,6 +46,7 @@ int main()
 
         if (n_randint(state, 2))
         {
+            ulong A, K, N;
             acb_dirichlet_hurwitz_precomp_choose_param(&A, &K, &N, s, G->phi_q, prec);
             acb_dirichlet_hurwitz_precomp_init(pre, s, acb_is_one(s), A, K, N, prec);
         }
@@ -62,13 +62,12 @@ int main()
             acb_dirichlet_l_vec_hurwitz(v, s, NULL, G, prec);
 
         /* check with complete loop */
-
         i = 0;
         acb_init(z);
         dirichlet_char_one(chi, G);
         do {
-            if (A != 0 && n_randint(state, 2))
-                acb_dirichlet_l_vec_hurwitz(v, s, pre, G, prec);
+            if (n_randint(state, 2))
+                acb_dirichlet_l_hurwitz(z, s, pre, G, chi, prec);
             else
                 acb_dirichlet_l_hurwitz(z, s, NULL, G, chi, prec);
 
