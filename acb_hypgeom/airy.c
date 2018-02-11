@@ -102,8 +102,8 @@ estimate_airy(double x, double y, int ai)
 
 /* error propagation based on derivatives */
 void
-acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
-    const acb_t z, slong n, slong prec)
+acb_hypgeom_airy_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
+    const acb_t z, slong n, int algo, slong prec)
 {
     mag_t aib, aipb, bib, bipb, zb, rad;
     acb_t zz;
@@ -124,7 +124,10 @@ acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
     acb_get_mag(zb, z);
 
     acb_hypgeom_airy_bound(aib, aipb, bib, bipb, z);
-    acb_hypgeom_airy_direct(ai, aip, bi, bip, zz, n, prec);
+    if (algo == 0)
+        acb_hypgeom_airy_direct(ai, aip, bi, bip, zz, n, prec);
+    else
+        acb_hypgeom_airy_asymp(ai, aip, bi, bip, zz, n, prec);
 
     if (ai != NULL)
     {
@@ -174,6 +177,24 @@ acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
 }
 
 void
+acb_hypgeom_airy_direct_prop(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
+    const acb_t z, slong n, slong prec)
+{
+    acb_hypgeom_airy_prop(ai, aip, bi, bip, z, n, 0, prec);
+}
+
+void
+acb_hypgeom_airy_asymp2(acb_t ai, acb_t aip, acb_t bi, acb_t bip,
+    const acb_t z, slong n, slong prec)
+{
+    /* avoid singularity in asymptotic expansion near 0 */
+    if (acb_rel_accuracy_bits(z) > 3)
+        acb_hypgeom_airy_asymp(ai, aip, bi, bip, z, n, prec);
+    else
+        acb_hypgeom_airy_prop(ai, aip, bi, bip, z, n, 1, prec);
+}
+
+void
 acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong prec)
 {
     arf_srcptr re, im;
@@ -210,7 +231,10 @@ acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong 
             n = wp / (-zmag) + 1;
         }
 
-        acb_hypgeom_airy_direct(ai, aip, bi, bip, z, n, wp);
+        if (acb_is_exact(z))
+            acb_hypgeom_airy_direct(ai, aip, bi, bip, z, n, wp);
+        else
+            acb_hypgeom_airy_direct_prop(ai, aip, bi, bip, z, n, wp);
     }  /* huge input -- use asymptotics and pick n without overflowing */
     else if ((arf_cmpabs_2exp_si(re, 64) > 0 || arf_cmpabs_2exp_si(im, 64) > 0))
     {
@@ -227,7 +251,7 @@ acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong 
             n = FLINT_MAX(n, 1);
         }
 
-        acb_hypgeom_airy_asymp(ai, aip, bi, bip, z, n, wp);
+        acb_hypgeom_airy_asymp2(ai, aip, bi, bip, z, n, wp);
     }
     else /* moderate input */
     {
@@ -239,14 +263,18 @@ acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong 
 
         if (zmag >= 4.0 && (n = asymp_pick_terms(wp, log(zmag))) != -1)
         {
-            acb_hypgeom_airy_asymp(ai, aip, bi, bip, z, n, wp);
+            acb_hypgeom_airy_asymp2(ai, aip, bi, bip, z, n, wp);
         }
         else if (zmag <= 1.5)
         {
             t = 3 * (wp * LOG2) / (2 * z15 * EXP1);
             t = (wp * LOG2) / (2 * d_lambertw(t));
             n = FLINT_MAX(t + 1, 2);
-            acb_hypgeom_airy_direct(ai, aip, bi, bip, z, n, wp);
+
+            if (acb_is_exact(z))
+                acb_hypgeom_airy_direct(ai, aip, bi, bip, z, n, wp);
+            else
+                acb_hypgeom_airy_direct_prop(ai, aip, bi, bip, z, n, wp);
         }
         else
         {

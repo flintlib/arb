@@ -542,11 +542,25 @@ f_erf_bent(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = Ai(z) */
+int
+f_airy_ai(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+
+    acb_hypgeom_airy(res, NULL, NULL, NULL, z, prec);
+
+    return 0;
+}
+
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 26
+#define NUM_INTEGRALS 27
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -576,6 +590,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^{1000} W_0(x) dx",
     "int_0^pi max(sin(x), cos(x)) dx",
     "int_{-1}^1 erf(x/sqrt(0.0002)*0.5+1.5)*exp(-x) dx",
+    "int_{-10}^10 Ai(x) dx",
 };
 
 int main(int argc, char *argv[])
@@ -973,6 +988,12 @@ int main(int argc, char *argv[])
                 acb_set_si(a, -1);
                 acb_set_si(b, 1);
                 acb_calc_integrate(s, f_erf_bent, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 26:
+                acb_set_si(a, -10);
+                acb_set_si(b, 10);
+                acb_calc_integrate(s, f_airy_ai, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:
