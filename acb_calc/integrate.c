@@ -150,7 +150,7 @@ acb_calc_integrate(acb_t res, acb_calc_func_t f, void * param,
     goal = FLINT_MAX(goal, 0);
     deg_limit = options->deg_limit;
     if (deg_limit <= 0)
-        deg_limit = 0.5 * FLINT_MIN(goal, prec) + 10;
+        deg_limit = 0.5 * FLINT_MIN(goal, prec) + 60;
 
     verbose = options->verbose;
     use_heap = options->use_heap;

@@ -204,7 +204,7 @@ Options for integration
 
         Maximum quadrature degree for each subinterval.
         If a zero or negative value is provided, the limit is set to a default
-        value which currently equals `0.5 \cdot \min(prec, rel\_goal) + 10` for
+        value which currently equals `0.5 \cdot \min(prec, rel\_goal) + 60` for
         Gauss-Legendre quadrature.
         A higher quadrature degree can be beneficial for functions that
         are holomorphic on a large domain around the integration path
