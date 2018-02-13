@@ -21,6 +21,6 @@ acb_real_floor(acb_t res, const acb_t z, int analytic, slong prec)
     else
     {
         arb_floor(acb_realref(res), acb_realref(z), prec);
-        arb_set_round(acb_imagref(res), acb_imagref(z), prec);
+        arb_zero(acb_imagref(res));
     }
 }
