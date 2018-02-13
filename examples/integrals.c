@@ -569,7 +569,7 @@ const char * descr[NUM_INTEGRALS] =
     "2 int_0^{inf} 1/(1+x^2) dx   (using domain truncation)",
     "4 int_0^1 sqrt(1-x^2) dx",
     "int_0^8 sin(x+exp(x)) dx",
-    "int_0^100 floor(x) dx",
+    "int_1^101 floor(x) dx",
     "int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx",
     "1/(2 pi i) int zeta(s) ds  (closed path around s = 1)",
     "int_0^1 sin(1/x) dx  (slow convergence, use -heap and/or -tol)",
