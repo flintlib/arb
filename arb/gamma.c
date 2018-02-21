@@ -807,7 +807,30 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
     wp = FLINT_MAX(wp, 2);
     wp = wp + FLINT_BIT_COUNT(wp);
 
-    arb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 0, wp);
+    if (acc < 3)  /* try to avoid divisions blowing up */
+    {
+        if (arf_cmp_d(arb_midref(x), -0.5) < 0)
+        {
+            reflect = 1;
+            r = 0;
+        }
+        else if (arf_cmp_si(arb_midref(x), 1) < 0)
+        {
+            reflect = 0;
+            r = 1;
+        }
+        else
+        {
+            reflect = 0;
+            r = 0;
+        }
+
+        n = 1;
+    }
+    else
+    {
+        arb_gamma_stirling_choose_param(&reflect, &r, &n, x, 1, 0, wp);
+    }
 
     arb_init(t);
     arb_init(u);
@@ -815,7 +838,6 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
 
     if (reflect)
     {
-        /* gamma(x) = (rf(1-x, r) * pi) / (gamma(1-x+r) sin(pi x)) */
         arb_sub_ui(t, x, 1, wp);
         arb_neg(t, t);
         arb_rising_ui_rec(u, t, r, wp);
@@ -823,23 +845,47 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
         arb_mul(u, u, v, wp);
         arb_add_ui(t, t, r, wp);
         arb_gamma_stirling_eval(v, t, n, 0, wp);
-        arb_exp(v, v, wp);
-        arb_sin_pi(t, x, wp);
-        arb_mul(v, v, t, wp);
+
+        if (inverse)
+        {
+            /* rgamma(x) = gamma(1-x+r) sin(pi x) / ((rf(1-x, r) * pi) */
+            arb_exp(v, v, wp);
+            arb_sin_pi(t, x, wp);
+            arb_mul(v, v, t, wp);
+            arb_mul(y, u, v, wp);
+            arb_div(y, v, u, prec);
+        }
+        else
+        {
+            /* gamma(x) = (rf(1-x, r) * pi) rgamma(1-x+r) csc(pi x) */
+            arb_neg(v, v);
+            arb_exp(v, v, wp);
+            arb_sin_pi(t, x, wp);   /* todo: write a csc_pi function */
+            arb_div(v, v, t, wp);
+            arb_mul(y, v, u, prec);
+        }
     }
     else
     {
-        /* gamma(x) = gamma(x+r) / rf(x,r) */
         arb_add_ui(t, x, r, wp);
         arb_gamma_stirling_eval(u, t, n, 0, wp);
-        arb_exp(u, u, prec);
-        arb_rising_ui_rec(v, x, r, wp);
-    }
 
-    if (inverse)
-        arb_div(y, v, u, prec);
-    else
-        arb_div(y, u, v, prec);
+        if (inverse)
+        {
+            /* rgamma(x) = rf(x,r) rgamma(x+r) */
+            arb_neg(u, u);
+            arb_exp(u, u, prec);
+            arb_rising_ui_rec(v, x, r, wp);
+            arb_mul(y, v, u, prec);
+        }
+        else
+        {
+            /* gamma(x) = gamma(x+r) / rf(x,r) */
+            arb_exp(u, u, prec);
+            arb_rising_ui_rec(v, x, r, wp);
+            arb_div(y, u, v, prec);
+        }
+    }
 
     arb_clear(t);
     arb_clear(u);
