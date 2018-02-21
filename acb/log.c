@@ -11,30 +11,6 @@
 
 #include "acb.h"
 
-static int
-close_to_one(const acb_t z)
-{
-    mp_limb_t top;
-
-    if (arf_abs_bound_lt_2exp_si(arb_midref(acb_imagref(z))) > -3)
-        return 0;
-
-    if (ARF_EXP(arb_midref(acb_realref(z))) == 0)
-    {
-        ARF_GET_TOP_LIMB(top, arb_midref(acb_realref(z)));
-
-        return (top >> (FLINT_BITS - 4)) == 15;
-    }
-    else if (ARF_EXP(arb_midref(acb_realref(z))) == 1)
-    {
-        ARF_GET_TOP_LIMB(top, arb_midref(acb_realref(z)));
-
-        return (top >> (FLINT_BITS - 4)) == 8;
-    }
-
-    return 0;
-}
-
 void
 acb_log(acb_t r, const acb_t z, slong prec)
 {
@@ -82,47 +58,27 @@ acb_log(acb_t r, const acb_t z, slong prec)
     }
     else
     {
-        arb_t t, u;
-
-        arb_init(t);
-        arb_init(u);
-
-        if (close_to_one(z))
+        if (r != z)
         {
-            arb_sub_ui(u, a, 1, prec + 8);
-            arb_mul(t, u, u, prec + 8);
-            arb_addmul(t, b, b, prec + 8);
-            arb_mul_2exp_si(u, u, 1);
-            arb_add(t, t, u, prec + 8);
-
-            arb_log1p(t, t, prec);
-            arb_mul_2exp_si(t, t, -1);
+            arb_log_hypot(acb_realref(r), a, b, prec);
+            if (arb_is_finite(acb_realref(r)))
+                arb_atan2(acb_imagref(r), b, a, prec);
+            else
+                arb_indeterminate(acb_imagref(r));
         }
         else
         {
-            arb_mul(t, a, a, prec + 8);
-            arb_addmul(t, b, b, prec + 8);
-
-            if (arb_contains_zero(t) || arf_sgn(arb_midref(t)) < 0)
-                arb_zero_pm_inf(t);
+            arb_t t;
+            arb_init(t);
+            arb_log_hypot(t, a, b, prec);
+            if (arb_is_finite(t))
+                arb_atan2(acb_imagref(r), b, a, prec);
             else
-                arb_log(t, t, prec);
-
-            arb_mul_2exp_si(t, t, -1);
+                arb_indeterminate(acb_imagref(r));
+            arb_swap(acb_realref(r), t);
+            arb_clear(t);
         }
-
-        acb_arg(u, z, prec);
-
-        arb_swap(acb_realref(r), t);
-        arb_swap(acb_imagref(r), u);
-
-        arb_clear(t);
-        arb_clear(u);
     }
-
-    if (!acb_is_finite(r))
-        acb_indeterminate(r);
-
 #undef a
 #undef b
 }

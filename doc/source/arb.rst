@@ -909,6 +909,10 @@ Exponentials and logarithms
 
     Sets *res* to `\log_b(x)`. The result is computed exactly when possible.
 
+.. function:: void arb_log_hypot(arb_t res, const arb_t x, const arb_t y, slong prec)
+
+    Sets *res* to `\log(\sqrt{x^2+y^2})`.
+
 .. function:: void arb_exp(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \exp(x)`. Error propagation is done using the following rule:
