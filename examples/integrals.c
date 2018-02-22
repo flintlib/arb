@@ -16,26 +16,6 @@
 #include "acb_calc.h"
 
 /* ------------------------------------------------------------------------- */
-/*  Useful helper functions                                                  */
-/* ------------------------------------------------------------------------- */
-
-/* Square root function on C with detection of the branch cut. */
-void
-acb_holomorphic_sqrt(acb_ptr res, const acb_t z, int holomorphic, slong prec)
-{
-    if (!acb_is_finite(z) || (holomorphic &&
-        arb_contains_zero(acb_imagref(z)) &&
-        arb_contains_nonpositive(acb_realref(z))))
-    {
-        acb_indeterminate(res);
-    }
-    else
-    {
-        acb_sqrt(res, z, prec);
-    }
-}
-
-/* ------------------------------------------------------------------------- */
 /*  Example integrands                                                       */
 /* ------------------------------------------------------------------------- */
 
@@ -72,12 +52,7 @@ f_circle(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
     acb_one(res);
     acb_submul(res, z, z, prec);
-    acb_holomorphic_sqrt(res, res, order != 0, prec);
-
-    /* Rounding could give |z| = 1 + eps near the endpoints, but we assume
-       that the interval is [-1,1] which really makes f real.  */
-    if (order == 0)
-        arb_zero(acb_imagref(res));
+    acb_real_sqrtpos(res, res, order != 0, prec);
 
     return 0;
 }
@@ -304,7 +279,7 @@ f_monster(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
 /* f(z) = sech(10(x-0.2))^2 + sech(100(x-0.4))^4 + sech(1000(x-0.6))^6 */
 int
-f_wolfram(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+f_spike(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
     acb_t a, b, c;
 
@@ -853,7 +828,7 @@ int main(int argc, char *argv[])
             case 15:
                 acb_set_d(a, 0.0);
                 acb_set_d(b, 1.0);
-                acb_calc_integrate(s, f_wolfram, NULL, a, b, goal, tol, options, prec);
+                acb_calc_integrate(s, f_spike, NULL, a, b, goal, tol, options, prec);
                 break;
 
             case 16:

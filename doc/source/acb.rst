@@ -517,6 +517,11 @@ Powers and roots
     `\sqrt{a+bi} = u/2 + ib/u, u = \sqrt{2(|a+bi|+a)}`,
     requiring two real square root extractions.
 
+.. function:: void acb_sqrt_analytic(acb_t r, const acb_t z, int analytic, slong prec)
+
+    Computes the square root. If *analytic* is set, gives a NaN-containing
+    result if *z* touches the branch cut.
+
 .. function:: void acb_rsqrt(acb_t r, const acb_t z, slong prec)
 
     Sets *r* to the reciprocal square root of *z*.
@@ -524,6 +529,11 @@ Powers and roots
     a single real reciprocal square root is needed. Generally, we use the
     formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
     requiring one real square root and one real reciprocal square root.
+
+.. function:: void acb_sqrt_analytic(acb_t r, const acb_t z, int analytic, slong prec)
+
+    Computes the reciprocal square root. If *analytic* is set, gives a
+    NaN-containing result if *z* touches the branch cut.
 
 .. function:: void acb_quadratic_roots_fmpz(acb_t r1, acb_t r2, const fmpz_t a, const fmpz_t b, const fmpz_t c, slong prec)
 
@@ -554,6 +564,12 @@ Powers and roots
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
     half-integer, and generally as `z = \exp(y \log x)`.
 
+.. function:: void acb_pow_analytic(acb_t r, const acb_t x, const acb_t y, int analytic, slong prec)
+
+    Computes the power `x^y`. If *analytic* is set, gives a
+    NaN-containing result if *x* touches the branch cut (unless *y* is
+    an integer).
+
 .. function:: void acb_unit_root(acb_t res, ulong order, slong prec)
 
     Sets *res* to `\exp(\frac{2i\pi}{\mathrm{order}})` to precision *prec*.
@@ -583,6 +599,11 @@ Exponentials and logarithms
     Sets *y* to the principal branch of the natural logarithm of *z*,
     computed as
     `\log(a+bi) = \frac{1}{2} \log(a^2 + b^2) + i \operatorname{arg}(a+bi)`.
+
+.. function:: void acb_log_analytic(acb_t r, const acb_t z, int analytic, slong prec)
+
+    Computes the natural logarithm. If *analytic* is set, gives a
+    NaN-containing result if *z* touches the branch cut.
 
 .. function:: void acb_log1p(acb_t z, const acb_t x, slong prec)
 
@@ -1037,6 +1058,16 @@ gives a NaN result.
     `\operatorname{Re}(x) \le \operatorname{Re}(y)`
     and returning `y` when `\operatorname{Re}(x) > \operatorname{Re}(y)`,
     with discontinuities where `\operatorname{Re}(x) = \operatorname{Re}(y)`.
+
+.. function:: void acb_real_sqrtpos(acb_t res, const acb_t z, int analytic, slong prec)
+
+    Extends the real square root function on `[0,+\infty)` to the usual
+    complex square root on the cut plane. Like :func:`arb_sqrtpos`, only
+    the nonnegative part of *z* is considered if *z* is purely real
+    and *analytic* is not set. This useful for integrating `\sqrt{f(x)}`
+    where it is known that `f(x) \ge 0`: unlike :func:`acb_sqrt_analytic`,
+    no spurious imaginary terms `[\pm \varepsilon] i` are created when the
+    balls computed for `f(x)` straddle zero.
 
 Vector functions
 -------------------------------------------------------------------------------

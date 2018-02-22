@@ -233,3 +233,17 @@ acb_pow(acb_t z, const acb_t x, const acb_t y, slong prec)
     }
 }
 
+void
+acb_pow_analytic(acb_ptr res, const acb_t z, const acb_t w, int analytic, slong prec)
+{
+    if (analytic && !acb_is_int(w) && arb_contains_zero(acb_imagref(z)) &&
+        !arb_is_positive(acb_realref(z)))
+    {
+        acb_indeterminate(res);
+    }
+    else
+    {
+        acb_pow(res, z, w, prec);
+    }
+}
+

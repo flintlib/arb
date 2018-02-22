@@ -11,22 +11,6 @@
 
 #include "acb_calc.h"
 
-/* Square root function on C with detection of the branch cut. */
-void
-acb_holomorphic_sqrt(acb_ptr res, const acb_t z, int holomorphic, slong prec)
-{
-    if (!acb_is_finite(z) || (holomorphic &&
-        arb_contains_zero(acb_imagref(z)) &&
-        arb_contains_nonpositive(acb_realref(z))))
-    {
-        acb_indeterminate(res);
-    }
-    else
-    {
-        acb_sqrt(res, z, prec);
-    }
-}
-
 int
 f_zero(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
@@ -48,7 +32,6 @@ f_indet(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
     return 0;
 }
-
 
 int
 f_cube(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
@@ -73,6 +56,51 @@ f_sin(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 }
 
 int
+f_sqrt(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_sqrt_analytic(res, z, order != 0, prec);
+
+    return 0;
+}
+
+int
+f_rsqrt(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_rsqrt_analytic(res, z, order != 0, prec);
+
+    return 0;
+}
+
+int
+f_log(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_log_analytic(res, z, order != 0, prec);
+
+    return 0;
+}
+
+int
+f_pow_pi(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_const_pi(res, prec);
+    acb_pow_analytic(res, z, res, order != 0, prec);
+
+    return 0;
+}
+
+int
 f_circle(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
     if (order > 1)
@@ -80,12 +108,7 @@ f_circle(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
     acb_one(res);
     acb_submul(res, z, z, prec);
-    acb_holomorphic_sqrt(res, res, order != 0, prec);
-
-    /* Rounding could give |z| = 1 + eps near the endpoints, but we assume
-       that the interval is [-1,1] which really makes f real.  */
-    if (order == 0)
-        arb_zero(acb_imagref(res));
+    acb_real_sqrtpos(res, res, order != 0, prec);
 
     return 0;
 }
@@ -160,7 +183,7 @@ f_essing2(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 
 /* f(z) = sech(10(x-0.2))^2 + sech(100(x-0.4))^4 + sech(1000(x-0.6))^6 */
 int
-f_wolfram(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+f_spike(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
 {
     acb_t a, b, c;
 
@@ -323,7 +346,7 @@ int main()
     for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         acb_t ans, res, a, b, t;
-        slong goal, prec;
+        slong goal, prec, abs_goal;
         mag_t tol;
         acb_calc_integrate_opt_t opt;
         int integral;
@@ -338,7 +361,8 @@ int main()
 
         goal = 2 + n_randint(state, 300);
         prec = 2 + n_randint(state, 300);
-        mag_set_ui_2exp_si(tol, n_randint(state, 2), -n_randint(state, 300));
+        abs_goal = n_randint(state, 300);
+        mag_set_ui_2exp_si(tol, n_randint(state, 2), -abs_goal);
 
         opt->eval_limit = n_randint(state, 10000);
 
@@ -434,7 +458,7 @@ int main()
                 acb_swap(a, b);
                 acb_neg(ans, ans);
             }
-            acb_calc_integrate(res, f_wolfram, NULL, a, b, goal, tol, opt, prec);
+            acb_calc_integrate(res, f_spike, NULL, a, b, goal, tol, opt, prec);
         }
         else if (integral == 7)
         {
@@ -443,7 +467,7 @@ int main()
             acb_zero(ans);
             acb_calc_integrate(res, f_zero, NULL, a, b, goal, tol, opt, prec);
         }
-        else
+        else if (integral == 8)
         {
             acb_randtest_special(a, state, 1 + n_randint(state, 200), 2);
             acb_randtest_special(b, state, 1 + n_randint(state, 200), 2);
@@ -470,7 +494,7 @@ int main()
         mag_clear(tol);
     }
 
-    /* more tests for the individual real extensions */
+    /* more tests for the individual real extensions and branched functions */
     {
         acb_t a, b, z, w;
         slong prec;
@@ -480,7 +504,7 @@ int main()
         acb_init(b);
         acb_init(z);
         acb_init(w);
-        mag_clear(tol);
+        mag_init(tol);
 
         acb_zero(a);
         acb_set_ui(b, 10);
@@ -560,6 +584,121 @@ int main()
         if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
         {
             flint_printf("FAIL (min)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        prec = 64;
+        mag_set_ui_2exp_si(tol, 1, -prec);
+
+        acb_set_ui(a, 10);
+        acb_set_ui(b, 11);
+        acb_calc_integrate(z, f_sqrt, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "3.2400640614837366802 +/- 1.65e-20", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (sqrt)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_rsqrt, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "0.30869426037404103423 +/- 2.08e-21", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (rsqrt)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_log, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "2.3509970708416191445 +/- 1.47e-21", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (log)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_pow_pi, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "1619.0628341842463436 +/- 2.79e-17", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 10)
+        {
+            flint_printf("FAIL (pow_pi)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_set_d_d(a, -10, -1);
+        acb_set_d_d(b, -10, +1);
+        acb_zero(w);
+
+        acb_calc_integrate(z, f_sqrt, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_imagref(w), "0.15801534879296271761 +/- 4.91e-21", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 25)
+        {
+            flint_printf("FAIL (sqrt 2)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_rsqrt, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_imagref(w), "0.015762235473606564294 +/- 2.80e-22", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 25)
+        {
+            flint_printf("FAIL (rsqrt 2)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_log, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_imagref(w), "4.6084935666644999985 +/- 4.69e-20", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 25)
+        {
+            flint_printf("FAIL (log 2)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        acb_calc_integrate(z, f_pow_pi, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_imagref(w), "-2660.1245860252382407 +/- 8.64e-18", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 25)
+        {
+            flint_printf("FAIL (pow_pi 2)\n");
+            flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
+            flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
+            flint_abort();
+        }
+
+        prec = 100;
+        mag_set_ui_2exp_si(tol, 1, -prec);
+
+        acb_set_d_d(a, -100, -1);
+        acb_set_d_d(b, -100, +2);
+        acb_zero(w);
+        acb_calc_integrate(z, f_log, NULL, a, b, prec, tol, NULL, prec);
+        arb_set_str(acb_realref(w), "-3.12659390337983876281336380373 +/- 3.97e-30", prec);
+        arb_set_str(acb_imagref(w), "13.8156605414673448203655975232 +/- 2.39e-29", prec);
+
+        if (!acb_overlaps(z, w) || acb_rel_accuracy_bits(z) < prec - 25)
+        {
+            flint_printf("FAIL (log 3)\n");
             flint_printf("z = "); acb_printn(z, 20,  0); flint_printf("\n");
             flint_printf("w = "); acb_printn(w, 20,  0); flint_printf("\n");
             flint_abort();

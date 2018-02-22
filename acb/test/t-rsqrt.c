@@ -49,6 +49,20 @@ int main()
             flint_abort();
         }
 
+        acb_log(c, a, FLINT_MIN(prec, 200));
+        acb_mul_2exp_si(c, c, -1);
+        acb_neg(c, c);
+        acb_exp(c, c, FLINT_MIN(prec, 200));
+
+        if (!acb_overlaps(c, b))
+        {
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("a = "); acb_print(a); flint_printf("\n\n");
+            flint_printf("b = "); acb_print(b); flint_printf("\n\n");
+            flint_printf("c = "); acb_print(c); flint_printf("\n\n");
+            flint_abort();
+        }
+
         acb_rsqrt(a, a, prec);
         if (!acb_equal(a, b))
         {
