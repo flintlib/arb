@@ -38,6 +38,7 @@ The following authors have developed major new features.
 
 * Pascal Molin - discrete Fourier transform (DFT), Dirichlet characters, Dirichlet L-functions, discrete logarithm computation
 * Alex Griffing - sinc function, matrix trace, improved matrix squaring, boolean matrices, improved structured matrix exponentials, Cholesky decomposition, miscellaneous patches
+* Marc Mezzarobba - fast evaluation of Legendre polynomials, work on Arb interface in Sage, bug reports, feedback
 
 Several people have contributed patches, bug reports, or substantial feedback.
 This list (ordered by time of first contribution) is probably incomplete.
@@ -52,7 +53,6 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Andrew Booker - bug reports, feedback
 * Francesco Biscani - C++ compatibility fixes, feedback
 * Clemens Heuberger - work on Arb interface in Sage, feedback
-* Marc Mezzarobba - work on Arb interface in Sage, bug reports, feedback
 * Ricky Farr - convenience functions, feedback
 * Marcello Seri - fix for static builds on OS X
 * Tommy Hofmann - matrix transpose, comparison, other utility methods, Julia interface
@@ -62,6 +62,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Jeroen Demeyer - patch for major bug on PPC64
 * Isuru Fernando - continuous integration setup, support for cmake and MSVC builds
 * François Bissey - build system patches
+* Jean-Pierre Flori - code simplifications for Gauss periods, feedback
 
 Funding
 -------------------------------------------------------------------------------
@@ -203,6 +204,10 @@ Bibliography
 .. [Joh2017a] \F. Johansson. "Arb: efficient arbitrary-precision midpoint-radius interval arithmetic", IEEE Transactions on Computers, 66(8):1281-1292 (2017). https://doi.org/10.1109/TC.2017.2690633
 
 .. [Joh2017b] \F. Johansson, "Computing the Lambert W function in arbitrary-precision complex interval arithmetic", preprint (2017), https://arxiv.org/abs/1705.03266
+
+.. [Joh2018a] \F. Johansson, "Numerical integration in arbitrary-precision ball arithmetic", preprint (2018), https://arxiv.org/abs/1802.07942
+
+.. [JM2018] \F. Johansson and M. Mezzarobba, "Fast and rigorous arbitrary-precision computation of Gauss-Legendre quadrature nodes and weights", preprint (2018), https://arxiv.org/abs/1802.03948
 
 .. [Kar1998] \E. A. Karatsuba, "Fast evaluation of the Hurwitz zeta function and Dirichlet L-series", Problems of Information Transmission 34:4 (1998), 342-353, http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=ppi&paperid=425&option_lang=eng
 

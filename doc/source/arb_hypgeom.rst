@@ -357,6 +357,8 @@ Orthogonal polynomials and functions
     Evaluates the ordinary Legendre polynomial `P_n(x)`. If *res_prime* is
     non-NULL, simultaneously evaluates the derivative `P'_n(x)`.
 
+    The overall algorithm is described in [JM2018]_.
+
     The versions *zero*, *one* respectively use the hypergeometric series
     expansions at `x = 0` and `x = 1` while the *asymp* version uses an
     asymptotic series on `(-1,1)` intended for large *n*. The parameter *K*

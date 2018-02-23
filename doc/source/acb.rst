@@ -530,7 +530,7 @@ Powers and roots
     formula `1/\sqrt{a+bi} = ((a+r) - bi)/v, r = |a+bi|, v = \sqrt{r |a+bi+r|^2}`,
     requiring one real square root and one real reciprocal square root.
 
-.. function:: void acb_sqrt_analytic(acb_t r, const acb_t z, int analytic, slong prec)
+.. function:: void acb_rsqrt_analytic(acb_t r, const acb_t z, int analytic, slong prec)
 
     Computes the reciprocal square root. If *analytic* is set, gives a
     NaN-containing result if *z* touches the branch cut.
@@ -1064,7 +1064,7 @@ gives a NaN result.
     Extends the real square root function on `[0,+\infty)` to the usual
     complex square root on the cut plane. Like :func:`arb_sqrtpos`, only
     the nonnegative part of *z* is considered if *z* is purely real
-    and *analytic* is not set. This useful for integrating `\sqrt{f(x)}`
+    and *analytic* is not set. This is useful for integrating `\sqrt{f(x)}`
     where it is known that `f(x) \ge 0`: unlike :func:`acb_sqrt_analytic`,
     no spurious imaginary terms `[\pm \varepsilon] i` are created when the
     balls computed for `f(x)` straddle zero.

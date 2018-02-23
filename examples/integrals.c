@@ -530,12 +530,109 @@ f_airy_ai(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+int
+f_horror(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(s);
+    acb_init(t);
+
+    acb_real_floor(res, z, order != 0, prec);
+
+    if (acb_is_finite(res))
+    {
+        acb_sub(res, z, res, prec);
+        acb_set_d(t, 0.5);
+        acb_sub(res, res, t, prec);
+        acb_sin_cos(s, t, z, prec);
+        acb_real_max(s, s, t, order != 0, prec);
+        acb_mul(res, res, s, prec);
+    }
+
+    acb_clear(s);
+    acb_clear(t);
+
+    return 0;
+}
+
+/* f(z) = sqrt(z) */
+int
+f_sqrt(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_sqrt_analytic(res, z, order != 0, prec);
+
+    return 0;
+}
+
+/* f(z) = exp(-z^2+iz) */
+int
+f_gaussian_twist(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_mul_onei(res, z);
+    acb_submul(res, z, z, prec);
+    acb_exp(res, res, prec);
+
+    return 0;
+}
+
+/* f(z) = exp(-z) Ai(-z) */
+int
+f_exp_airy(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+    acb_neg(t, z);
+    acb_hypgeom_airy(res, NULL, NULL, NULL, t, prec);
+    acb_exp(t, t, prec);
+    acb_mul(res, res, t, prec);
+    acb_clear(t);
+
+    return 0;
+}
+
+/* f(z) = z sin(z) / (1 + cos(z)^2) */
+int
+f_sin_cos_frac(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t s, c;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(s);
+    acb_init(c);
+
+    acb_sin_cos(s, c, z, prec);
+    acb_mul(c, c, c, prec);
+    acb_add_ui(c, c, 1, prec);
+    acb_mul(s, s, z, prec);
+    acb_div(res, s, c, prec);
+
+    acb_clear(s);
+    acb_clear(c);
+
+    return 0;
+}
 
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 27
+#define NUM_INTEGRALS 32
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -566,6 +663,11 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^pi max(sin(x), cos(x)) dx",
     "int_{-1}^1 erf(x/sqrt(0.0002)*0.5+1.5)*exp(-x) dx",
     "int_{-10}^10 Ai(x) dx",
+    "int_0^10 (x-floor(x)-1/2) max(sin(x),cos(x)) dx",
+    "int_{-1-i}^{-1+i} sqrt(x) dx",
+    "int_0^{inf} exp(-x^2+ix) dx   (using domain truncation)",
+    "int_0^{inf} exp(-x) Ai(-x) dx   (using domain truncation)",
+    "int_0^pi x sin(x) / (1 + cos(x)^2) dx",
 };
 
 int main(int argc, char *argv[])
@@ -969,6 +1071,45 @@ int main(int argc, char *argv[])
                 acb_set_si(a, -10);
                 acb_set_si(b, 10);
                 acb_calc_integrate(s, f_airy_ai, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 27:
+                acb_set_si(a, 0);
+                acb_set_si(b, 10);
+                acb_calc_integrate(s, f_horror, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 28:
+                acb_set_d_d(a, -1, -1);
+                acb_set_d_d(b, -1, 1);
+                acb_calc_integrate(s, f_sqrt, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 29:
+                acb_set_d(a, 0);
+                acb_set_d(b, ceil(sqrt(goal * 0.693147181) + 1.0));
+                acb_calc_integrate(s, f_gaussian_twist, NULL, a, b, goal, tol, options, prec);
+                acb_mul(b, b, b, prec);
+                acb_neg(b, b);
+                acb_exp(b, b, prec);
+                arb_add_error(acb_realref(s), acb_realref(b));
+                arb_add_error(acb_imagref(s), acb_realref(b));
+                break;
+
+            case 30:
+                acb_set_d(a, 0);
+                acb_set_d(b, ceil(goal * 0.693147181 + 1.0));
+                acb_calc_integrate(s, f_exp_airy, NULL, a, b, goal, tol, options, prec);
+                acb_neg(b, b);
+                acb_exp(b, b, prec);
+                acb_mul_2exp_si(b, b, 1);
+                arb_add_error(acb_realref(s), acb_realref(b));
+                break;
+
+            case 31:
+                acb_zero(a);
+                acb_const_pi(b, prec);
+                acb_calc_integrate(s, f_sin_cos_frac, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:

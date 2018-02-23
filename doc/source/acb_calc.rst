@@ -6,6 +6,7 @@
 This module provides functions for operations of calculus
 over the complex numbers (intended to include root-finding,
 integration, and so on).
+The numerical integration code is described in [Joh2018a]_.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -51,20 +52,16 @@ Types, macros and constants
     functions (sqrt, log, pow, etc.) that test holomorphicity of their
     arguments individually.
 
-    The built-in methods :func:`acb_real_abs`, :func:`acb_real_sgn`,
-    :func:`acb_real_heaviside`, :func:`acb_real_floor`, :func:`acb_real_ceil`,
-    :func:`acb_real_max`, :func:`acb_real_min` provide piecewise holomorphic
-    functions that are useful for integrating piecewise-defined real functions.
-
-    For example, here we define a piecewise holomorphic extension
-    of the function
-    `f(z) = \sqrt{\lfloor z \rfloor}` (for simplicity, without implementing
-    derivatives)::
+    Some functions with branch cut detection are available as builtins:
+    see :func:`acb_sqrt_analytic`,
+    :func:`acb_rsqrt_analytic`, :func:`acb_log_analytic`,
+    :func:`acb_pow_analytic`. It is not difficult to write custom functions
+    of this type, using the following pattern::
 
         /* Square root function on C with detection of the branch cut. */
-        void holomorphic_sqrt(acb_t res, const acb_t z, int holomorphic, slong prec)
+        void sqrt_analytic(acb_t res, const acb_t z, int analytic, slong prec)
         {
-            if (!acb_is_finite(z) || (holomorphic &&
+            if (analytic &&
                 arb_contains_zero(acb_imagref(z)) &&
                 arb_contains_nonpositive(acb_realref(z))))
             {
@@ -76,14 +73,27 @@ Types, macros and constants
             }
         }
 
+    The built-in methods :func:`acb_real_abs`, :func:`acb_real_sgn`,
+    :func:`acb_real_heaviside`, :func:`acb_real_floor`, :func:`acb_real_ceil`,
+    :func:`acb_real_max`, :func:`acb_real_min` provide piecewise holomorphic
+    functions that are useful for integrating piecewise-defined real functions.
+
+    For example, here we define a piecewise holomorphic extension
+    of the function
+    `f(z) = \sqrt{\lfloor z \rfloor}` (for simplicity, without implementing
+    derivatives)::
+
         int func(acb_ptr out, const acb_t inp, void * param, slong order, slong prec)
         {
             if (order > 1) flint_abort();  /* derivatives not implemented */
 
             acb_real_floor(out, inp, order != 0, prec);
-            holomorphic_sqrt(out, out, order != 0, prec);
+            acb_sqrt_analytic(out, out, order != 0, prec);
             return 0;
         }
+
+    (Here, :func:`acb_real_sqrtpos` may be slightly better if it is
+    known that *z* will be nonnegative on the path.)
 
     See the demo program ``examples/integrals.c`` for more examples.
 
