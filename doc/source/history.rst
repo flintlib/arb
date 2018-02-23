@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.13.0.pdf
 * http://arblib.org/arb-2.12.0.pdf
 * http://arblib.org/arb-2.11.1.pdf
 * http://arblib.org/arb-2.11.0.pdf
@@ -24,6 +25,105 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2018-02-23 -- version 2.13.0
+-------------------------------------------------------------------------------
+
+* Major bugs
+
+  * Fixed rounding direction in arb_get_abs_lbound_arf() which in some cases
+    could result in an invalid lower bound being returned, and added forgotten
+    test code for this and related functions (reported by deinst). Although
+    this bug could lead to incorrect results, it probably had limited impact in
+    practice (explaining why it was not caught indirectly by other test code)
+    since a single rounding in the wrong direction in this operation generally
+    will be dwarfed by multiple roundings in the correct direction in
+    surrounding operations.
+
+* Important notes about bounds
+
+  * Many functions have been modified to compute tighter enclosures
+    when the input balls are wide. In most cases the bounds should be
+    improved, but there may be some regressions. Bug reports about any
+    significant regressions are welcome.
+  * Division by zero in arb_div() has been changed to return [NaN +/- inf]
+    instead of [+/- inf]. This change might be reverted in the future if it
+    proves to be too inconvenient. In either case, users should only assume
+    that division by zero produces something non-finite, and user code that
+    depends on division by zero to produce [0 +/- inf] should be modified to
+    handle zero-containing denominators as a separate case.
+
+* Improvements to arithmetic and elementary functions
+
+  * Faster implementation of acb_get_mag_lower().
+  * Optimized arb_get_mag_lower(), arb_get_mag_lower_nonnegative().
+  * Added arb_set_interval_mag() and arb_set_interval_neg_pos_mag() for
+    constructing an arb_t from a pair of mag_t endpoints.
+  * Added mag_const_pi_lower(), mag_atan(), mag_atan_lower().
+  * Added mag_div_lower(), mag_inv(), mag_inv_lower().
+  * Added mag_sqrt_lower() and mag_rsqrt_lower().
+  * Added mag_log(), mag_log_lower(), mag_neg_log(), mag_neg_log_lower().
+  * Added mag_exp_lower(), mag_expinv_lower() and tweaked mag_exp().
+  * Added mag_pow_fmpz_lower(), mag_get_fmpz(), mag_get_fmpz_lower().
+  * Improved arb_exp() for wide input.
+  * Improved arb_log() for wide input.
+  * Improved arb_sqrt() for wide input.
+  * Improved arb_rsqrt() for wide input.
+  * Improved arb_div() for wide input.
+  * Improved arb_atan() for wide input and slightly optimized arb_atan2()
+    for input spanning multiple signs.
+  * Improved acb_rsqrt() for wide input and improved stability of this
+    function generally in the left half plane.
+  * Added arb_log_hypot() and improved acb_log() for wide input.
+  * Slightly optimized trigonometric functions (acb_sin(), acb_sin_pi(),
+    acb_cos(), acb_cos_pi(), acb_sin_cos(), acb_sin_cos_pi()) for pure real or
+    imaginary input.
+
+* Special functions
+
+  * Slightly improved bounds for gamma function (arb_gamma(), acb_gamma(),
+    arb_rgamma(), acb_rgamma()) for wide input.
+  * Improved bounds for Airy functions for wide input.
+  * Simplifications to code for computing Gauss period minimal polynomials
+    (contributed by Jean-Pierre Flori).
+  * Optimized arb_hypgeom_legendre_p_ui() further by avoiding divisions in the
+    basecase recurrence and computing the prefactor more quickly in the
+    asymptotic series (contributed by Marc Mezzarobba).
+  * Small further optimization of arb_hypgeom_legendre_p_ui_root()
+    (contributed by Marc Mezzarobba).
+  * Improved derivative bounds for Legendre polynomials (contributed by
+    Marc Mezzarobba).
+
+* Numerical integration
+
+  * Increased default quadrature deg_limit at low precision to improve
+    performance for integration of functions without singularities near the
+    path.
+  * Added several more integrals to examples/integrals.c
+  * Added utility functions acb_real_abs(), acb_real_sgn(),
+    acb_real_heaviside(), acb_real_floor(), acb_real_ceil(), acb_real_min(),
+    acb_real_max(), acb_real_sqrtpos(), useful for numerical integration.
+  * Added utility functions acb_sqrt_analytic(), acb_rsqrt_analytic(),
+    acb_log_analytic(), acb_pow_analytic() with branch cut detection, useful
+    for numerical integration.
+
+* Build system and compatibility issues
+
+  * Removed -Wl flag from Makefile.subdirs to fix "-r and -pie may not be used
+    together" compilation error on some newer Linux distributions (reported
+    by many users).
+  * Fixed broken test code for l_vec_hurwitz which resulted in spurious
+    failures on 32-bit systems (originally reported by Thierry Monteil on
+    Sage trac).
+  * Avoid using deprecated MPFR function mpfr_root() with MPFR
+    versions >= 4.0.0.
+  * Remark: the recently released MPFR 4.0.0 has a bug in mpfr_div() leading
+    to test failures in Arb (though not affecting correctness of Arb itself).
+    Users should make sure to install the patched version MPFR 4.0.1.
+  * Added missing C++ include guards in arb_fmpz_poly.h and dlog.h (reported
+    by Marc Mezzarobba).
+  * Fixed Travis builds on Mac OS again (contributed by Isuru Fernando).
+  * Added missing declaration for arb_bell_ui() (reported by numsys).
 
 2017-11-29 - version 2.12.0
 -------------------------------------------------------------------------------

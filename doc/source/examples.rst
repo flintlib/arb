@@ -648,7 +648,7 @@ Invoking the program without parameters shows usage::
     I2 = 2 int_0^{inf} 1/(1+x^2) dx   (using domain truncation)
     I3 = 4 int_0^1 sqrt(1-x^2) dx
     I4 = int_0^8 sin(x+exp(x)) dx
-    I5 = int_0^100 floor(x) dx
+    I5 = int_1^101 floor(x) dx
     I6 = int_0^1 |x^4+10x^3+19x^2-6x-6| exp(x) dx
     I7 = 1/(2 pi i) int zeta(s) ds  (closed path around s = 1)
     I8 = int_0^1 sin(1/x) dx  (slow convergence, use -heap and/or -tol)
@@ -667,6 +667,14 @@ Invoking the program without parameters shows usage::
     I21 = int_C wp(x)/x^(11) dx   (contour for 10th Laurent coefficient of Weierstrass p-function)
     I22 = N(1000) = count zeros with 0 < t <= 1000 of zeta(s) using argument principle
     I23 = int_0^{1000} W_0(x) dx
+    I24 = int_0^pi max(sin(x), cos(x)) dx
+    I25 = int_{-1}^1 erf(x/sqrt(0.0002)*0.5+1.5)*exp(-x) dx
+    I26 = int_{-10}^10 Ai(x) dx
+    I27 = int_0^10 (x-floor(x)-1/2) max(sin(x),cos(x)) dx
+    I28 = int_{-1-i}^{-1+i} sqrt(x) dx
+    I29 = int_0^{inf} exp(-x^2+ix) dx   (using domain truncation)
+    I30 = int_0^{inf} exp(-x) Ai(-x) dx   (using domain truncation)
+    I31 = int_0^pi x sin(x) / (1 + cos(x)^2) dx
 
 A few examples::
 
