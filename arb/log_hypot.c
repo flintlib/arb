@@ -81,11 +81,22 @@ arb_log_hypot(arb_t res, const arb_t a, const arb_t b, slong prec)
         arb_t y;
         arb_init(x);
         arb_init(y);
-        arb_sub_ui(y, a, 1, prec + 8);
-        arb_mul(x, y, y, prec + 8);
-        arb_addmul(x, b, b, prec + 8);
-        arb_mul_2exp_si(y, y, 1);
-        arb_add(x, x, y, prec + 8);
+        if (arf_sgn(arb_midref(a)) > 0)
+        {
+            arb_sub_ui(y, a, 1, prec + 8);
+            arb_mul(x, y, y, prec + 8);
+            arb_addmul(x, b, b, prec + 8);
+            arb_mul_2exp_si(y, y, 1);
+            arb_add(x, x, y, prec + 8);
+        }
+        else
+        {
+            arb_add_ui(y, a, 1, prec + 8);
+            arb_mul(x, y, y, prec + 8);
+            arb_addmul(x, b, b, prec + 8);
+            arb_mul_2exp_si(y, y, 1);
+            arb_sub(x, x, y, prec + 8);
+        }
         arb_log1p(res, x, prec);
         arb_mul_2exp_si(res, res, -1);
         arb_clear(x);
