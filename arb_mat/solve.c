@@ -88,29 +88,51 @@ int arb_mat_solve_precond_precomp(arb_mat_t X, const arb_mat_t A,
     mag_init(d);
     if (_mag_err_complement(d, R, A, prec))
     {
-        arb_mat_t B_prime, B_error, C;
-        mag_t num_err, elem_err_bound;
+        arb_mat_t C;
 
-        arb_mat_init(B_prime, n, m);
-        arb_mat_init(B_error, n, m);
         arb_mat_init(C, n, m);
-        mag_init(num_err);
-        mag_init(elem_err_bound);
+        {
+            arb_mat_t B_prime, B_error;
 
-        arb_mat_mul(B_prime, A, T, prec);
-        arb_mat_sub(B_error, B, B_prime, prec);
-        arb_mat_mul(C, R, B_error, prec);
+            arb_mat_init(B_prime, n, m);
+            arb_mat_init(B_error, n, m);
 
-        arb_mat_bound_inf_norm(num_err, C);
-        mag_div(elem_err_bound, num_err, d);
+            arb_mat_mul(B_prime, A, T, prec);
+            arb_mat_sub(B_error, B, B_prime, prec);
+            arb_mat_mul(C, R, B_error, prec);
+
+            arb_mat_clear(B_prime);
+            arb_mat_clear(B_error);
+        }
+
+        /* Each column gets its own error bound. */
         arb_mat_set(X, T);
-        arb_mat_add_error_mag(X, elem_err_bound);
+        {
+            int i, j;
+            mag_t e, err;
 
-        arb_mat_clear(B_prime);
-        arb_mat_clear(B_error);
+            mag_init(e);
+            mag_init(err);
+
+            for (j = 0; j < m; j++)
+            {
+                for (i = 0; i < n; i++)
+                {
+                    arb_get_mag(e, arb_mat_entry(C, i, j));
+                    mag_max(err, err, e);
+                }
+                mag_div(err, err, d);
+                for (i = 0; i < n; i++)
+                {
+                    arb_add_error_mag(arb_mat_entry(X, i, j), err);
+                }
+            }
+
+            mag_clear(e);
+            mag_clear(err);
+        }
+
         arb_mat_clear(C);
-        mag_clear(num_err);
-        mag_clear(elem_err_bound);
 
         result = 1;
     }
