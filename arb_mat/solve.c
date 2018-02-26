@@ -116,6 +116,7 @@ int arb_mat_solve_precond_precomp(arb_mat_t X, const arb_mat_t A,
 
             for (j = 0; j < m; j++)
             {
+                mag_zero(err);
                 for (i = 0; i < n; i++)
                 {
                     arb_get_mag(e, arb_mat_entry(C, i, j));
