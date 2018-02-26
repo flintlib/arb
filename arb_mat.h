@@ -116,6 +116,28 @@ arb_mat_is_square(const arb_mat_t mat)
     return (mat->r == mat->c);
 }
 
+/* Radius and interval operations */
+
+ARB_MAT_INLINE void
+arb_mat_get_mid(arb_mat_t B, const arb_mat_t A)
+{
+    slong i, j;
+
+    for (i = 0; i < arb_mat_nrows(A); i++)
+        for (j = 0; j < arb_mat_ncols(A); j++)
+            arb_get_mid_arb(arb_mat_entry(B, i, j), arb_mat_entry(A, i, j));
+}
+
+ARB_MAT_INLINE void
+arb_mat_add_error_mag(arb_mat_t mat, const mag_t err)
+{
+    slong i, j;
+
+    for (i = 0; i < arb_mat_nrows(mat); i++)
+        for (j = 0; j < arb_mat_ncols(mat); j++)
+            arb_add_error_mag(arb_mat_entry(mat, i, j), err);
+}
+
 /* Special matrices */
 
 void arb_mat_zero(arb_mat_t mat);
@@ -288,6 +310,17 @@ void arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm,
     const arb_mat_t A, const arb_mat_t B, slong prec);
 
 int arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
+
+int arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
+
+int arb_mat_solve_precond(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
+
+int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec);
+
+void arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm,
+    const arb_mat_t A, const arb_mat_t B, slong prec);
+
+int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
 
 int arb_mat_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
