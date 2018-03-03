@@ -23,7 +23,7 @@ crt_init(crt_t c, ulong n)
     else
         fac.num = 0;
 
-    nmod_init(&c->n, n);
+    nmod_init(&c->n, FLINT_MAX(n, 1));
 
     c->num = fac.num;
     for (k = 0; k < fac.num; k++)
