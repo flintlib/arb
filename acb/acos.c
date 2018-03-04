@@ -32,6 +32,7 @@ acb_acos(acb_t res, const acb_t z, slong prec)
                 arb_clear(one);
                 return;
             }
+            arb_clear(one);
         }
         acb_t t;
         acb_init(t);
