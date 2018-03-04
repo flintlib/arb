@@ -20,9 +20,6 @@ acb_acos(acb_t res, const acb_t z, slong prec)
     }
     else
     {
-        acb_t t;
-        acb_init(t);
-        acb_asin(res, z, prec);
         if (arb_is_zero(acb_imagref(z)))
         {
             arb_t one;
@@ -30,22 +27,18 @@ acb_acos(acb_t res, const acb_t z, slong prec)
             arb_one(one);
             if (arb_gt(acb_realref(z), one))
             {
+                acb_asin(res, z, prec);
                 arb_zero(acb_realref(res));
+                arb_clear(one);
+                return;
             }
-            else
-            {
-                acb_const_pi(t, prec);
-                acb_mul_2exp_si(t, t, -1);
-                acb_sub(res, t, res, prec);
-            }
-            arb_clear(one);
         }
-        else
-        {
-            acb_const_pi(t, prec);
-            acb_mul_2exp_si(t, t, -1);
-            acb_sub(res, t, res, prec);
-        }
+        acb_t t;
+        acb_init(t);
+        acb_asin(res, z, prec);
+        acb_const_pi(t, prec);
+        acb_mul_2exp_si(t, t, -1);
+        acb_sub(res, t, res, prec);
         acb_clear(t);
     }
 }
