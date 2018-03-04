@@ -32,6 +32,21 @@ acb_acosh(acb_t res, const acb_t z, slong prec)
         acb_add(t, t, z, prec);
         acb_log(res, t, prec);
 
+        if (arb_is_zero(acb_imagref(z)))
+        {
+            arb_t one, abs;
+            arb_init(one);
+            arb_init(abs);
+            arb_one(one);
+            arb_abs(abs, acb_realref(z));
+            if (arb_lt(abs, one))
+            {
+                arb_zero(acb_realref(res));
+            }
+            arb_clear(one);
+            arb_clear(abs);
+        }
+
         acb_clear(t);
         acb_clear(u);
     }
