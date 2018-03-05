@@ -22,26 +22,22 @@ acb_acos(acb_t res, const acb_t z, slong prec)
     {
         acb_t t;
         acb_init(t);
-        if (arb_is_zero(acb_imagref(z)))
+        acb_one(t);
+        if (arb_is_zero(acb_imagref(z))
+                && arb_gt(acb_realref(z), acb_realref(t)))
         {
-            arb_t one;
-            arb_init(one);
-            arb_one(one);
-            if (arb_gt(acb_realref(z), one))
-            {
-                acb_asin(res, z, prec);
-                acb_neg(res, res);
-                arb_zero(acb_realref(res));
-                arb_clear(one);
-                arb_clear(t);
-                return;
-            }
-            arb_clear(one);
+            /* pure imaginary on (1,inf) */
+            acb_asin(res, z, prec);
+            acb_neg(res, res);
+            arb_zero(acb_realref(res));
         }
-        acb_asin(res, z, prec);
-        acb_const_pi(t, prec);
-        acb_mul_2exp_si(t, t, -1);
-        acb_sub(res, t, res, prec);
+        else
+        {
+            acb_asin(res, z, prec);
+            acb_const_pi(t, prec);
+            acb_mul_2exp_si(t, t, -1);
+            acb_sub(res, t, res, prec);
+        }
         acb_clear(t);
     }
 }
