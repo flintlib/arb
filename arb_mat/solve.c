@@ -108,7 +108,7 @@ int arb_mat_solve_precond_precomp(arb_mat_t X, const arb_mat_t A,
         /* Each column gets its own error bound. */
         arb_mat_set(X, T);
         {
-            int i, j;
+            slong i, j;
             mag_t e, err;
 
             mag_init(e);
@@ -264,7 +264,7 @@ arb_mat_solve_d(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 
         if (mag_cmp_2exp_si(d, 0) < 0)
         {
-            int i, j;
+            slong i, j;
             mag_t e, err;
 
             mag_init(e);
