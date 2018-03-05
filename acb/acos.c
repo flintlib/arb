@@ -22,6 +22,22 @@ acb_acos(acb_t res, const acb_t z, slong prec)
     {
         acb_t t;
         acb_init(t);
+        if (arb_is_zero(acb_imagref(z)))
+        {
+            arb_t one;
+            arb_init(one);
+            arb_one(one);
+            if (arb_gt(acb_realref(z), one))
+            {
+                acb_asin(res, z, prec);
+                acb_neg(res, res);
+                arb_zero(acb_realref(res));
+                arb_clear(one);
+                arb_clear(t);
+                return;
+            }
+            arb_clear(one);
+        }
         acb_asin(res, z, prec);
         acb_const_pi(t, prec);
         acb_mul_2exp_si(t, t, -1);
