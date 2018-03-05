@@ -29,9 +29,8 @@ acb_acos(acb_t res, const acb_t z, slong prec)
             arb_one(one);
             if (arb_gt(acb_realref(z), one))
             {
-                acb_zero(t);
                 acb_asin(res, z, prec);
-                acb_sub(res, t, res, prec);
+                acb_neg(res, res);
                 arb_zero(acb_realref(res));
                 arb_clear(one);
                 arb_clear(t);
