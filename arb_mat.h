@@ -170,6 +170,8 @@ void arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slo
 
 void arb_mat_mul_entrywise(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec);
 
+void arb_mat_submul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec);
+
 void arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec);
 
 void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec);
@@ -313,11 +315,8 @@ int arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 
 int arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
 
-int arb_mat_solve_precond(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
-
-int arb_mat_solve_c(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
-
-int arb_mat_solve_d(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
+int arb_mat_solve_preapprox(arb_mat_t X, const arb_mat_t A,
+    const arb_mat_t B, const arb_mat_t R, const arb_mat_t T, slong prec);
 
 int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec);
 

@@ -38,159 +38,9 @@ arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
     return result;
 }
 
-/*
- * Helper function to compute a lower bound of 1 - inf_norm(I - A*B).
- * Returns zero when this lower bound is zero.
- */
-int _mag_err_complement(mag_t m,
-    const arb_mat_t A, const arb_mat_t B, slong prec)
-{
-    slong n;
-    arb_mat_t AB, E;
-    mag_t err;
-
-    n = arb_mat_nrows(A);
-
-    mag_init(err);
-    arb_mat_init(AB, n, n);
-    arb_mat_init(E, n, n);
-
-    arb_mat_mul(AB, A, B, prec);
-    arb_mat_one(E);
-    arb_mat_sub(E, E, AB, prec);
-    arb_mat_bound_inf_norm(err, E);
-    mag_one(m);
-    mag_sub_lower(m, m, err);
-
-    mag_clear(err);
-    arb_mat_clear(AB);
-    arb_mat_clear(E);
-
-    return !mag_is_zero(m);
-}
-
-int arb_mat_solve_precond_precomp(arb_mat_t X, const arb_mat_t A,
-    const arb_mat_t B, const arb_mat_t R, const arb_mat_t T, slong prec)
-{
-    int result;
-    slong m, n;
-    mag_t d;
-
-    result = 0;
-
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(X);
-
-    if (n == 0 || m == 0)
-        return 1;
-
-    /* Use Theorem 10.2 of Rump in Acta Numerica 2010 */
-    mag_init(d);
-    if (_mag_err_complement(d, R, A, prec))
-    {
-        arb_mat_t C;
-
-        arb_mat_init(C, n, m);
-        {
-            arb_mat_t B_prime, B_error;
-
-            arb_mat_init(B_prime, n, m);
-            arb_mat_init(B_error, n, m);
-
-            arb_mat_mul(B_prime, A, T, prec);
-            arb_mat_sub(B_error, B, B_prime, prec);
-            arb_mat_mul(C, R, B_error, prec);
-
-            arb_mat_clear(B_prime);
-            arb_mat_clear(B_error);
-        }
-
-        /* Each column gets its own error bound. */
-        arb_mat_set(X, T);
-        {
-            slong i, j;
-            mag_t e, err;
-
-            mag_init(e);
-            mag_init(err);
-
-            for (j = 0; j < m; j++)
-            {
-                mag_zero(err);
-                for (i = 0; i < n; i++)
-                {
-                    arb_get_mag(e, arb_mat_entry(C, i, j));
-                    mag_max(err, err, e);
-                }
-                mag_div(err, err, d);
-                for (i = 0; i < n; i++)
-                {
-                    arb_add_error_mag(arb_mat_entry(X, i, j), err);
-                }
-            }
-
-            mag_clear(e);
-            mag_clear(err);
-        }
-
-        arb_mat_clear(C);
-
-        result = 1;
-    }
-
-    mag_clear(d);
-
-    return result;
-}
 
 int
-arb_mat_solve_precond(arb_mat_t X,
-    const arb_mat_t A, const arb_mat_t B, slong prec)
-{
-    int result;
-    slong m, n;
-    arb_mat_t R, T;
-
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(X);
-
-    if (n == 0 || m == 0)
-        return 1;
-
-    arb_mat_init(R, n, n);
-    arb_mat_init(T, n, m);
-    {
-        slong *perm;
-        arb_mat_t I, LU;
-
-        perm = _perm_init(n);
-        arb_mat_init(I, n, n);
-        arb_mat_init(LU, n, n);
-
-        arb_mat_one(I);
-        result = arb_mat_approx_lu(perm, LU, A, prec);
-        if (result)
-        {
-            arb_mat_approx_solve_lu_precomp(R, perm, LU, I, prec);
-            arb_mat_approx_solve_lu_precomp(T, perm, LU, B, prec);
-        }
-
-        _perm_clear(perm);
-        arb_mat_clear(I);
-        arb_mat_clear(LU);
-    }
-
-    if (result)
-        result = arb_mat_solve_precond_precomp(X, A, B, R, T, prec);
-
-    arb_mat_clear(R);
-    arb_mat_clear(T);
-
-    return result;
-}
-
-int
-arb_mat_solve_c(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+_arb_mat_solve_c(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     int result;
     slong m, n;
@@ -230,7 +80,7 @@ arb_mat_solve_c(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 }
 
 int
-arb_mat_solve_d(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+_arb_mat_solve_d(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     int result;
     slong m, n;
@@ -311,5 +161,13 @@ arb_mat_solve_d(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 int
 arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    return arb_mat_solve_lu(X, A, B, prec);
+    slong n = arb_mat_nrows(A);
+    slong m = arb_mat_ncols(B);
+
+    if (n <= 4 || prec > 10.0 * n)
+        return arb_mat_solve_lu(X, A, B, prec);
+    else if (m < 0.1 * n + 1)
+        return _arb_mat_solve_c(X, A, B, prec);
+    else
+        return _arb_mat_solve_d(X, A, B, prec);
 }
