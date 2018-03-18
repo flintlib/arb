@@ -30,7 +30,20 @@ acb_acosh(acb_t res, const acb_t z, slong prec)
         acb_sqrt(u, u, prec);
         acb_mul(t, t, u, prec);
         acb_add(t, t, z, prec);
-        acb_log(res, t, prec);
+
+        if (!arb_is_zero(acb_imagref(z)))
+        {
+            acb_log(res, t, prec);
+        }
+        else
+        {
+            /* pure imaginary on (-1,1) */
+            arb_abs(acb_realref(u), acb_realref(z));
+            arb_one(acb_imagref(u));
+            acb_log(res, t, prec);
+            if (arb_lt(acb_realref(u), acb_imagref(u)))
+                arb_zero(acb_realref(res));
+        }
 
         acb_clear(t);
         acb_clear(u);
