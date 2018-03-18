@@ -279,8 +279,12 @@ Gaussian elimination and solving
 
 .. function:: int arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 
+.. function:: int arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+.. function:: int arb_mat_solve_precond(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
     Solves `AX = B` where `A` is a nonsingular `n \times n` matrix
-    and `X` and `B` are `n \times m` matrices, using LU decomposition.
+    and `X` and `B` are `n \times m` matrices.
 
     If `m > 0` and `A` cannot be inverted numerically (indicating either that
     `A` is singular or that the precision is insufficient), the values in the

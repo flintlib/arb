@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2018 arbguest
+    Copyright (C) 2012 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -12,7 +12,7 @@
 #include "arb_mat.h"
 
 int
-arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     int result;
     slong n, m, *perm;
@@ -27,10 +27,10 @@ arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong pr
     perm = _perm_init(n);
     arb_mat_init(LU, n, n);
 
-    result = arb_mat_approx_lu(perm, LU, A, prec);
+    result = arb_mat_lu(perm, LU, A, prec);
 
     if (result)
-        arb_mat_approx_solve_lu_precomp(X, perm, LU, B, prec);
+        arb_mat_solve_lu_precomp(X, perm, LU, B, prec);
 
     arb_mat_clear(LU);
     _perm_clear(perm);

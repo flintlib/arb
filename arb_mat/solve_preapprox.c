@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2018 arbguest
 
     This file is part of Arb.
 
@@ -19,14 +19,17 @@ int _mag_err_complement(mag_t m,
     const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     slong n;
-    arb_mat_t E;
+    arb_mat_t I, E;
     mag_t err;
 
     n = arb_mat_nrows(A);
 
+    arb_mat_init(I, n, n);
+    arb_mat_one(I);
+
     arb_mat_init(E, n, n);
-    arb_mat_one(E);
-    arb_mat_submul(E, A, B, prec);
+    arb_mat_mul(E, A, B, prec);
+    arb_mat_sub(E, I, E, prec);
 
     mag_init(err);
     arb_mat_bound_inf_norm(err, E);
@@ -35,6 +38,7 @@ int _mag_err_complement(mag_t m,
     mag_sub_lower(m, m, err);
 
     mag_clear(err);
+    arb_mat_clear(I);
     arb_mat_clear(E);
 
     return !mag_is_zero(m);
