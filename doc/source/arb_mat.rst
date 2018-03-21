@@ -279,11 +279,29 @@ Gaussian elimination and solving
 
 .. function:: int arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 
+.. function:: int arb_mat_solve_lu(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+.. function:: int arb_mat_solve_precond(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
     Solves `AX = B` where `A` is a nonsingular `n \times n` matrix
-    and `X` and `B` are `n \times m` matrices, using LU decomposition.
+    and `X` and `B` are `n \times m` matrices.
 
     If `m > 0` and `A` cannot be inverted numerically (indicating either that
     `A` is singular or that the precision is insufficient), the values in the
+    output matrix are left undefined and zero is returned. A nonzero return
+    value guarantees that `A` is invertible and that the exact solution
+    matrix is contained in the output.
+
+.. function:: int arb_mat_solve_preapprox(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, const arb_mat_t R, const arb_mat_t T, slong prec)
+
+    Solves `AX = B` where `A` is a nonsingular `n \times n` matrix
+    and `X` and `B` are `n \times m` matrices, given an approximation
+    `R` of the matrix inverse of `A`, and given the approximation `T`
+    of the solution `X`.
+
+    If `m > 0` and `A` cannot be inverted numerically (indicating either that
+    `A` is singular or that the precision is insufficient, or that `R` is
+    not a close enough approximation of the inverse of `A`), the values in the
     output matrix are left undefined and zero is returned. A nonzero return
     value guarantees that `A` is invertible and that the exact solution
     matrix is contained in the output.

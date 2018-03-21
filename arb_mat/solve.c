@@ -14,26 +14,10 @@
 int
 arb_mat_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    int result;
-    slong n, m, *perm;
-    arb_mat_t LU;
+    slong n = arb_mat_nrows(A);
 
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(X);
-
-    if (n == 0 || m == 0)
-        return 1;
-
-    perm = _perm_init(n);
-    arb_mat_init(LU, n, n);
-
-    result = arb_mat_lu(perm, LU, A, prec);
-
-    if (result)
-        arb_mat_solve_lu_precomp(X, perm, LU, B, prec);
-
-    arb_mat_clear(LU);
-    _perm_clear(perm);
-
-    return result;
+    if (n <= 4 || prec > 10.0 * n)
+        return arb_mat_solve_lu(X, A, B, prec);
+    else
+        return arb_mat_solve_precond(X, A, B, prec);
 }
