@@ -628,11 +628,40 @@ f_sin_cos_frac(acb_ptr res, const acb_t z, void * param, slong order, slong prec
     return 0;
 }
 
+/* f(z) = sin((1/1000 + (1-z)^2)^(-3/2)), example from Mioara Joldes' thesis
+                                          (suggested by Nicolas Brisebarre) */
+int
+f_sin_near_essing(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t t, u;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_init(t);
+    acb_init(u);
+
+    acb_sub_ui(t, z, 1, prec);
+    acb_neg(t, t);
+    acb_mul(t, t, t, prec);
+    acb_one(u);
+    acb_div_ui(u, u, 1000, prec);
+    acb_add(t, t, u, prec);
+    acb_set_d(u, -1.5);
+    acb_pow_analytic(t, t, u, order != 0, prec);
+    acb_sin(res, t, prec);
+
+    acb_clear(t);
+    acb_clear(u);
+
+    return 0;
+}
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 32
+#define NUM_INTEGRALS 33
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -668,6 +697,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^{inf} exp(-x^2+ix) dx   (using domain truncation)",
     "int_0^{inf} exp(-x) Ai(-x) dx   (using domain truncation)",
     "int_0^pi x sin(x) / (1 + cos(x)^2) dx",
+    "int_0^3 sin(0.001 + (1-x)^2)^(-3/2)) dx  (slow convergence, use higher -eval)",
 };
 
 int main(int argc, char *argv[])
@@ -1110,6 +1140,12 @@ int main(int argc, char *argv[])
                 acb_zero(a);
                 acb_const_pi(b, prec);
                 acb_calc_integrate(s, f_sin_cos_frac, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 32:
+                acb_zero(a);
+                acb_set_ui(b, 3);
+                acb_calc_integrate(s, f_sin_near_essing, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:
