@@ -111,14 +111,16 @@ void acb_hypgeom_bessel_j_0f1(acb_t res, const acb_t nu, const acb_t z, slong pr
 void acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec);
 void acb_hypgeom_bessel_j(acb_t res, const acb_t nu, const acb_t z, slong prec);
 
-void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec);
-void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec);
+void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec);
+void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec);
 void acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, slong prec);
+void acb_hypgeom_bessel_i_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec);
 
-void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec);
-void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, slong len, slong prec);
-void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec);
+void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec);
+void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t n, const acb_poly_t z, int scaled, slong len, slong prec);
+void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec);
 void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec);
+void acb_hypgeom_bessel_k_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec);
 
 void acb_hypgeom_bessel_y(acb_t res, const acb_t nu, const acb_t z, slong prec);
 void acb_hypgeom_bessel_jy(acb_t res1, acb_t res2, const acb_t nu, const acb_t z, slong prec);

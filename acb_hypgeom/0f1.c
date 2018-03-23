@@ -37,7 +37,7 @@ acb_hypgeom_0f1_asymp(acb_t res, const acb_t a, const acb_t z, int regularized, 
     if (neg)
         acb_hypgeom_bessel_j_asymp(v, u, v, prec);
     else
-        acb_hypgeom_bessel_i_asymp(v, u, v, prec);
+        acb_hypgeom_bessel_i_asymp(v, u, v, 0, prec);
 
     acb_neg(u, u);
     acb_pow(t, t, u, prec);

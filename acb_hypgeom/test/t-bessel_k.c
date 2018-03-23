@@ -25,6 +25,7 @@ int main()
     {
         acb_t nu0, nu1, nu2, z, w0, w1, w2, t, u;
         slong prec0, prec1, prec2;
+        int scaled;
 
         acb_init(nu0);
         acb_init(nu1);
@@ -40,6 +41,7 @@ int main()
         prec1 = 2 + n_randint(state, 700);
         prec2 = 2 + n_randint(state, 700);
 
+        scaled = n_randint(state, 2);
         acb_randtest_param(nu0, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(w0, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
@@ -55,30 +57,37 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_k_asymp(w0, nu0, z, prec0);
+                acb_hypgeom_bessel_k_asymp(w0, nu0, z, scaled, prec0);
                 break;
             case 1:
-                acb_hypgeom_bessel_k_0f1(w0, nu0, z, prec0);
+                acb_hypgeom_bessel_k_0f1(w0, nu0, z, scaled, prec0);
                 break;
             default:
-                acb_hypgeom_bessel_k(w0, nu0, z, prec0);
+                if (scaled)
+                    acb_hypgeom_bessel_k_scaled(w0, nu0, z, prec0);
+                else
+                    acb_hypgeom_bessel_k(w0, nu0, z, prec0);
         }
 
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_k_asymp(w1, nu0, z, prec1);
+                acb_hypgeom_bessel_k_asymp(w1, nu0, z, scaled, prec1);
                 break;
             case 1:
-                acb_hypgeom_bessel_k_0f1(w1, nu0, z, prec1);
+                acb_hypgeom_bessel_k_0f1(w1, nu0, z, scaled, prec1);
                 break;
             default:
-                acb_hypgeom_bessel_k(w1, nu0, z, prec1);
+                if (scaled)
+                    acb_hypgeom_bessel_k_scaled(w1, nu0, z, prec1);
+                else
+                    acb_hypgeom_bessel_k(w1, nu0, z, prec1);
         }
 
         if (!acb_overlaps(w0, w1))
         {
             flint_printf("FAIL: consistency\n\n");
+            flint_printf("scaled = %d\n\n", scaled);
             flint_printf("nu = "); acb_printd(nu0, 30); flint_printf("\n\n");
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("w0 = "); acb_printd(w0, 30); flint_printf("\n\n");
@@ -89,25 +98,40 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_k_asymp(w1, nu1, z, prec1);
+                acb_hypgeom_bessel_k_asymp(w1, nu1, z, scaled, prec1);
                 break;
             case 1:
-                acb_hypgeom_bessel_k_0f1(w1, nu1, z, prec1);
+                acb_hypgeom_bessel_k_0f1(w1, nu1, z, scaled, prec1);
                 break;
             default:
-                acb_hypgeom_bessel_k(w1, nu1, z, prec1);
+                if (scaled)
+                    acb_hypgeom_bessel_k_scaled(w1, nu1, z, prec1);
+                else
+                    acb_hypgeom_bessel_k(w1, nu1, z, prec1);
         }
 
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_k_asymp(w2, nu2, z, prec2);
+                acb_hypgeom_bessel_k_asymp(w2, nu2, z, scaled, prec2);
                 break;
             case 1:
-                acb_hypgeom_bessel_k_0f1(w2, nu2, z, prec2);
+                acb_hypgeom_bessel_k_0f1(w2, nu2, z, scaled, prec2);
                 break;
             default:
-                acb_hypgeom_bessel_k(w2, nu2, z, prec2);
+                if (scaled)
+                {
+                    acb_hypgeom_bessel_k(w2, nu2, z, prec2);
+                    acb_exp(t, z, prec2);
+                    acb_mul(w2, w2, t, prec2);
+                }
+                else
+                {
+                    acb_hypgeom_bessel_k_scaled(w2, nu2, z, prec2);
+                    acb_neg(t, z);
+                    acb_exp(t, t, prec2);
+                    acb_mul(w2, w2, t, prec2);
+                }
         }
 
         acb_mul(t, w1, nu1, prec0);

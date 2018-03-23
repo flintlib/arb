@@ -25,6 +25,7 @@ int main()
     {
         acb_t nu, z, jv, iv, t;
         slong prec;
+        int scaled;
 
         acb_init(nu);
         acb_init(z);
@@ -33,6 +34,7 @@ int main()
         acb_init(t);
 
         prec = 2 + n_randint(state, 500);
+        scaled = n_randint(state, 2);
 
         acb_randtest_param(nu, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 10));
         acb_randtest(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
@@ -40,13 +42,16 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(iv, nu, z, prec);
+                acb_hypgeom_bessel_i_asymp(iv, nu, z, scaled, prec);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(iv, nu, z, prec);
+                acb_hypgeom_bessel_i_0f1(iv, nu, z, scaled, prec);
                 break;
             default:
-                acb_hypgeom_bessel_i(iv, nu, z, prec);
+                if (scaled)
+                    acb_hypgeom_bessel_i_scaled(iv, nu, z, prec);
+                else
+                    acb_hypgeom_bessel_i(iv, nu, z, prec);
         }
 
         acb_mul_onei(t, z);
@@ -57,9 +62,17 @@ int main()
         acb_pow(t, t, nu, prec);
         acb_div(jv, jv, t, prec);
 
+        if (scaled)
+        {
+            acb_neg(t, z);
+            acb_exp(t, t, prec);
+            acb_mul(jv, jv, t, prec);
+        }
+
         if (!acb_overlaps(iv, jv))
         {
             flint_printf("FAIL: consistency with bessel_j\n\n");
+            flint_printf("scaled = %d\n\n", scaled);
             flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
             flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
             flint_printf("iv = "); acb_printd(iv, 30); flint_printf("\n\n");
@@ -105,10 +118,10 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w0, nu0, z, prec0);
+                acb_hypgeom_bessel_i_asymp(w0, nu0, z, 0, prec0);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w0, nu0, z, prec0);
+                acb_hypgeom_bessel_i_0f1(w0, nu0, z, 0, prec0);
                 break;
             default:
                 acb_hypgeom_bessel_i(w0, nu0, z, prec0);
@@ -117,10 +130,10 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w1, nu0, z, prec1);
+                acb_hypgeom_bessel_i_asymp(w1, nu0, z, 0, prec1);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w1, nu0, z, prec1);
+                acb_hypgeom_bessel_i_0f1(w1, nu0, z, 0, prec1);
                 break;
             default:
                 acb_hypgeom_bessel_i(w1, nu0, z, prec1);
@@ -139,10 +152,10 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w1, nu1, z, prec1);
+                acb_hypgeom_bessel_i_asymp(w1, nu1, z, 0, prec1);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w1, nu1, z, prec1);
+                acb_hypgeom_bessel_i_0f1(w1, nu1, z, 0, prec1);
                 break;
             default:
                 acb_hypgeom_bessel_i(w1, nu1, z, prec1);
@@ -151,13 +164,22 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w2, nu2, z, prec2);
+                acb_hypgeom_bessel_i_asymp(w2, nu2, z, 0, prec2);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w2, nu2, z, prec2);
+                acb_hypgeom_bessel_i_0f1(w2, nu2, z, 0, prec2);
                 break;
             default:
-                acb_hypgeom_bessel_i(w2, nu2, z, prec2);
+                if (n_randint(state, 2))
+                {
+                    acb_hypgeom_bessel_i(w2, nu2, z, prec2);
+                }
+                else
+                {
+                    acb_hypgeom_bessel_i_scaled(w2, nu2, z, prec2);
+                    acb_exp(t, z, prec2);
+                    acb_mul(w2, w2, t, prec2);
+                }
         }
 
         acb_mul(t, w1, nu1, prec0);
@@ -182,10 +204,10 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w2, t, z, prec2);
+                acb_hypgeom_bessel_i_asymp(w2, t, z, 0, prec2);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w2, t, z, prec2);
+                acb_hypgeom_bessel_i_0f1(w2, t, z, 0, prec2);
                 break;
             default:
                 acb_hypgeom_bessel_i(w2, t, z, prec2);
@@ -197,10 +219,10 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                acb_hypgeom_bessel_i_asymp(w2, t, z, prec2);
+                acb_hypgeom_bessel_i_asymp(w2, t, z, 0, prec2);
                 break;
             case 1:
-                acb_hypgeom_bessel_i_0f1(w2, t, z, prec2);
+                acb_hypgeom_bessel_i_0f1(w2, t, z, 0, prec2);
                 break;
             default:
                 acb_hypgeom_bessel_i(w2, t, z, prec2);

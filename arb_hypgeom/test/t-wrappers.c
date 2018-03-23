@@ -194,8 +194,16 @@ int main()
         arb_set_str(v, "[0.75761498638991 +/- 4.63e-15]", prec);
         TEST(r, v, "bessel_i");
 
+        arb_hypgeom_bessel_i_scaled(r, a, z, prec);
+        arb_set_str(v, "[0.357871979425934 +/- 8.04e-16]", prec);
+        TEST(r, v, "bessel_i");
+
         arb_hypgeom_bessel_k(r, a, z, prec);
         arb_set_str(v, "[0.68361006034952 +/- 7.89e-15]", prec);
+        TEST(r, v, "bessel_k");
+
+        arb_hypgeom_bessel_k_scaled(r, a, z, prec);
+        arb_set_str(v, "[1.4472025091165 +/- 4.23e-14]", prec);
         TEST(r, v, "bessel_k");
 
         arb_hypgeom_airy(r, NULL, NULL, NULL, z, prec);

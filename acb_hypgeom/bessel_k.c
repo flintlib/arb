@@ -12,7 +12,7 @@
 #include "acb_hypgeom.h"
 
 void
-acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
+acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
 {
     acb_t t, a, b, w;
 
@@ -32,9 +32,12 @@ acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     acb_hypgeom_u_asymp(t, a, b, w, -1, prec);
 
-    acb_neg(w, z);
-    acb_exp(w, w, prec);    
-    acb_mul(t, t, w, prec);
+    if (!scaled)
+    {
+        acb_neg(a, z);
+        acb_exp(a, a, prec);
+        acb_mul(t, t, a, prec);
+    }
 
     acb_mul_2exp_si(w, z, 1);
     acb_rsqrt(w, w, prec);
@@ -52,7 +55,7 @@ acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
 void
 acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
     const acb_poly_t nu, const acb_poly_t z,
-    slong len, slong prec)
+    int scaled, slong len, slong prec)
 {
     acb_poly_t s, u, A, B;
     acb_poly_struct b[2];
@@ -101,6 +104,12 @@ acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
         acb_poly_shift_right(B, B, 1);
     }
 
+    if (scaled)
+    {
+        acb_poly_exp_series(u, z, len, prec);
+        acb_poly_mullow(A, A, u, len, prec);
+    }
+
     acb_poly_div_series(res, A, B, len, prec);
 
     arb_const_pi(c, prec);
@@ -116,7 +125,7 @@ acb_hypgeom_bessel_k_0f1_series(acb_poly_t res,
 }
 
 void
-acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
+acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
 {
     if (acb_is_int(nu))
     {
@@ -130,7 +139,7 @@ acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
         acb_poly_set_coeff_si(nux, 1, 1);
         acb_poly_set_acb(zx, z);
 
-        acb_hypgeom_bessel_k_0f1_series(rx, nux, zx, 1, prec);
+        acb_hypgeom_bessel_k_0f1_series(rx, nux, zx, scaled, 1, prec);
 
         acb_poly_get_coeff_acb(res, rx, 0);
 
@@ -176,8 +185,16 @@ acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
         acb_mul(t, t, nu, prec);
         acb_div(u, u, t, prec);
 
-        acb_sub(res, v, u, prec);
-        acb_mul_2exp_si(res, res, -1);
+        acb_sub(v, v, u, prec);
+        acb_mul_2exp_si(v, v, -1);
+
+        if (scaled)
+        {
+            acb_exp(t, z, prec);
+            acb_mul(v, v, t, prec);
+        }
+
+        acb_set(res, v);
 
         acb_clear(t);
         acb_clear(u);
@@ -198,9 +215,26 @@ acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     if (mag_cmp_2exp_si(zmag, 4) < 0 ||
         (mag_cmp_2exp_si(zmag, 64) < 0 && 2 * mag_get_d(zmag) < prec))
-        acb_hypgeom_bessel_k_0f1(res, nu, z, prec);
+        acb_hypgeom_bessel_k_0f1(res, nu, z, 0, prec);
     else
-        acb_hypgeom_bessel_k_asymp(res, nu, z, prec);
+        acb_hypgeom_bessel_k_asymp(res, nu, z, 0, prec);
+
+    mag_clear(zmag);
+}
+
+void
+acb_hypgeom_bessel_k_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec)
+{
+    mag_t zmag;
+
+    mag_init(zmag);
+    acb_get_mag(zmag, z);
+
+    if (mag_cmp_2exp_si(zmag, 4) < 0 ||
+        (mag_cmp_2exp_si(zmag, 64) < 0 && 2 * mag_get_d(zmag) < prec))
+        acb_hypgeom_bessel_k_0f1(res, nu, z, 1, prec);
+    else
+        acb_hypgeom_bessel_k_asymp(res, nu, z, 1, prec);
 
     mag_clear(zmag);
 }

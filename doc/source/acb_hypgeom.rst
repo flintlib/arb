@@ -413,11 +413,16 @@ Bessel functions
     construct the Bessel functions of the third kind (Hankel functions)
     `H_{\nu}^{(1)}(z), H_{\nu}^{(2)}(z) = J_{\nu}(z) \pm i Y_{\nu}(z)`.
 
-.. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
+Modified Bessel functions
+-------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
+.. function:: void acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
+
+.. function:: void acb_hypgeom_bessel_i_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
 
 .. function:: void acb_hypgeom_bessel_i(acb_t res, const acb_t nu, const acb_t z, slong prec)
+
+.. function:: void acb_hypgeom_bessel_i_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the first kind
     `I_{\nu}(z) = z^{\nu} (iz)^{-\nu} J_{\nu}(iz)` respectively using
@@ -431,7 +436,10 @@ Bessel functions
 
     or an automatic algorithm choice.
 
-.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
+    The *scaled* version computes the function `e^{-z} I_{\nu}(z)`. The *asymp*
+    and *0f1* functions implement both variants and allow choosing with a flag.
+
+.. function:: void acb_hypgeom_bessel_k_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
 
     Computes the modified Bessel function of the second kind via
     via :func:`acb_hypgeom_u_asymp`. For all `\nu` and all `z \ne 0`, we have
@@ -441,7 +449,9 @@ Bessel functions
         K_{\nu}(z) = \left(\frac{2z}{\pi}\right)^{-1/2} e^{-z}
             U^{*}(\nu+\tfrac{1}{2}, 2\nu+1, 2z).
 
-.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, slong len, slong prec)
+    If *scaled* is set, computes the function `e^{z} K_{\nu}(z)`.
+
+.. function:: void acb_hypgeom_bessel_k_0f1_series(acb_poly_t res, const acb_poly_t nu, const acb_poly_t z, int scaled, slong len, slong prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)`
     as a power series truncated to length *len*,
@@ -462,7 +472,9 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu[0]` is nonexact
     and contains an integer.
 
-.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, slong prec)
+    If *scaled* is set, computes the function `e^{z} K_{\nu}(z)`.
+
+.. function:: void acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, slong prec)
 
     Computes the modified Bessel function of the second kind from
 
@@ -483,10 +495,16 @@ Bessel functions
     As currently implemented, the output is indeterminate if `\nu` is nonexact
     and contains an integer.
 
+    If *scaled* is set, computes the function `e^{z} K_{\nu}(z)`.
+
 .. function:: void acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)` using
     an automatic algorithm choice.
+
+.. function:: void acb_hypgeom_bessel_k_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec)
+
+    Computes the function `e^{z} K_{\nu}(z)`.
 
 Airy functions
 -------------------------------------------------------------------------------

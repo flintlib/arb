@@ -278,9 +278,17 @@ Bessel functions
     Computes the modified Bessel function of the first kind
     `I_{\nu}(z) = z^{\nu} (iz)^{-\nu} J_{\nu}(iz)`.
 
+.. function:: void arb_hypgeom_bessel_i_scaled(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the function `e^{-z} I_{\nu}(z)`.
+
 .. function:: void arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec)
 
     Computes the modified Bessel function of the second kind `K_{\nu}(z)`.
+
+.. function:: void arb_hypgeom_bessel_k_scaled(arb_t res, const arb_t nu, const arb_t z, slong prec)
+
+    Computes the function `e^{z} K_{\nu}(z)`.
 
 Airy functions
 -------------------------------------------------------------------------------

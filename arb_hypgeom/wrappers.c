@@ -374,6 +374,23 @@ arb_hypgeom_bessel_i(arb_t res, const arb_t nu, const arb_t z, slong prec)
 }
 
 void
+arb_hypgeom_bessel_i_scaled(arb_t res, const arb_t nu, const arb_t z, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), nu);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_bessel_i_scaled(t, t, u, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
 arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec)
 {
     acb_t t, u;
@@ -382,6 +399,23 @@ arb_hypgeom_bessel_k(arb_t res, const arb_t nu, const arb_t z, slong prec)
     arb_set(acb_realref(t), nu);
     arb_set(acb_realref(u), z);
     acb_hypgeom_bessel_k(t, t, u, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+}
+
+void
+arb_hypgeom_bessel_k_scaled(arb_t res, const arb_t nu, const arb_t z, slong prec)
+{
+    acb_t t, u;
+    acb_init(t);
+    acb_init(u);
+    arb_set(acb_realref(t), nu);
+    arb_set(acb_realref(u), z);
+    acb_hypgeom_bessel_k_scaled(t, t, u, prec);
     if (acb_is_finite(t) && acb_is_real(t))
         arb_swap(res, acb_realref(t));
     else
