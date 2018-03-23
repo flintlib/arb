@@ -657,11 +657,59 @@ f_sin_near_essing(acb_ptr res, const acb_t z, void * param, slong order, slong p
     return 0;
 }
 
+/* f(z) = exp(-z) (I_0(z/k))^k, from Bruno Salvy */
+int
+f_scaled_bessel(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    acb_t nu;
+
+    ulong k = ((ulong *) param)[0];
+
+    acb_init(nu);
+    acb_div_ui(res, z, k, prec);
+    acb_hypgeom_bessel_i_scaled(res, nu, res, prec);
+    acb_pow_ui(res, res, k, prec);
+    acb_clear(nu);
+
+    return 0;
+}
+
+/*
+Bound for scaled Bessel function: 2/(2 pi x)^(1/2)
+Bound for tail of integral: 2 N (k / (pi N))^(k / 2) / (k - 2).
+*/
+void
+scaled_bessel_tail_bound(arb_t b, ulong k, const arb_t N, slong prec)
+{
+    arb_const_pi(b, prec);
+    arb_mul(b, b, N, prec);
+    arb_ui_div(b, k, b, prec);
+    arb_sqrt(b, b, prec);
+    arb_pow_ui(b, b, k, prec);
+    arb_mul(b, b, N, prec);
+    arb_mul_ui(b, b, 2, prec);
+    arb_div_ui(b, b, k - 2, prec);
+}
+
+void
+scaled_bessel_select_N(arb_t N, ulong k, slong prec)
+{
+    slong e;
+    double f = log(k/3.14159265358979)/log(2);
+
+    e = 1;
+    while ((k / 2.0) * (e - f) - e < prec + 5)
+        e++;
+
+    arb_one(N);
+    arb_mul_2exp_si(N, N, e);
+}
+
 /* ------------------------------------------------------------------------- */
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 33
+#define NUM_INTEGRALS 35
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -698,6 +746,8 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^{inf} exp(-x) Ai(-x) dx   (using domain truncation)",
     "int_0^pi x sin(x) / (1 + cos(x)^2) dx",
     "int_0^3 sin(0.001 + (1-x)^2)^(-3/2)) dx  (slow convergence, use higher -eval)",
+    "int_0^{inf} exp(-x) I_0(x/3)^3 dx   (using domain truncation)",
+    "int_0^{inf} exp(-x) I_0(x/15)^{15} dx   (using domain truncation)",
 };
 
 int main(int argc, char *argv[])
@@ -706,6 +756,7 @@ int main(int argc, char *argv[])
     mag_t tol;
     slong prec, goal;
     slong N;
+    ulong k;
     int integral, ifrom, ito;
     int i, twice, havegoal, havetol;
     acb_calc_integrate_opt_t options;
@@ -1146,6 +1197,26 @@ int main(int argc, char *argv[])
                 acb_zero(a);
                 acb_set_ui(b, 3);
                 acb_calc_integrate(s, f_sin_near_essing, NULL, a, b, goal, tol, options, prec);
+                break;
+
+            case 33:
+                acb_zero(a);
+                acb_zero(b);
+                k = 3;
+                scaled_bessel_select_N(acb_realref(b), k, prec);
+                acb_calc_integrate(s, f_scaled_bessel, &k, a, b, goal, tol, options, prec);
+                scaled_bessel_tail_bound(acb_realref(a), k, acb_realref(b), prec);
+                arb_add_error(acb_realref(s), acb_realref(a));
+                break;
+
+            case 34:
+                acb_zero(a);
+                acb_zero(b);
+                k = 15;
+                scaled_bessel_select_N(acb_realref(b), k, prec);
+                acb_calc_integrate(s, f_scaled_bessel, &k, a, b, goal, tol, options, prec);
+                scaled_bessel_tail_bound(acb_realref(a), k, acb_realref(b), prec);
+                arb_add_error(acb_realref(s), acb_realref(a));
                 break;
 
             default:
