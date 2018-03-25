@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2013, 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -20,6 +20,82 @@ int main()
     fflush(stdout);
 
     flint_randinit(state);
+
+    /* check union */
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    {
+        acb_t a, b, c, x, ra, rb, rc, rx;
+
+        acb_init(a);
+        acb_init(b);
+        acb_init(c);
+        acb_init(x);
+        acb_init(ra);
+        acb_init(rb);
+        acb_init(rc);
+        acb_init(rx);
+
+        acb_randtest_precise(a, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest_precise(b, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest_precise(c, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest(ra, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest(rb, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest(rc, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+        acb_randtest(rx, state, 1 + n_randint(state, 500), 1 + n_randint(state, 80));
+
+        acb_union(x, a, b, 2 + n_randint(state, 500));
+        acb_union(x, x, c, 2 + n_randint(state, 500));
+        acb_rsqrt(rx, x, 2 + n_randint(state, 500));
+
+        acb_rsqrt(ra, a, 2 + n_randint(state, 500));
+        acb_rsqrt(rb, b, 2 + n_randint(state, 500));
+        acb_rsqrt(rc, c, 2 + n_randint(state, 500));
+
+        if (!acb_overlaps(rx, ra))
+        {
+            flint_printf("FAIL: overlap a\n\n");
+            flint_printf("a = "); acb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); acb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); acb_printn(c, 50, 0); flint_printf("\n\n");
+            flint_printf("x = "); acb_printn(x, 50, 0); flint_printf("\n\n");
+            flint_printf("ra = "); acb_printn(ra, 50, 0); flint_printf("\n\n");
+            flint_printf("rx = "); acb_printn(rx, 50, 0); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        if (!acb_overlaps(rx, rb))
+        {
+            flint_printf("FAIL: overlap b\n\n");
+            flint_printf("a = "); acb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); acb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); acb_printn(c, 50, 0); flint_printf("\n\n");
+            flint_printf("x = "); acb_printn(x, 50, ARB_STR_MORE); flint_printf("\n\n");
+            flint_printf("rb = "); acb_printn(rb, 50, ARB_STR_MORE); flint_printf("\n\n");
+            flint_printf("rx = "); acb_printn(rx, 50, ARB_STR_MORE); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        if (!acb_overlaps(rx, rc))
+        {
+            flint_printf("FAIL: overlap c\n\n");
+            flint_printf("a = "); acb_printn(a, 50, 0); flint_printf("\n\n");
+            flint_printf("b = "); acb_printn(b, 50, 0); flint_printf("\n\n");
+            flint_printf("c = "); acb_printn(c, 50, 0); flint_printf("\n\n");
+            flint_printf("x = "); acb_printn(x, 50, 0); flint_printf("\n\n");
+            flint_printf("rc = "); acb_printn(rc, 50, 0); flint_printf("\n\n");
+            flint_printf("rx = "); acb_printn(rx, 50, 0); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        acb_clear(a);
+        acb_clear(b);
+        acb_clear(c);
+        acb_clear(x);
+        acb_clear(ra);
+        acb_clear(rb);
+        acb_clear(rc);
+        acb_clear(rx);
+    }
 
     /* check (a^(-1/2))^(-2) = a */
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)

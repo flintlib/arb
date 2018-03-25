@@ -571,6 +571,18 @@ f_sqrt(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = 1/sqrt(z) */
+int
+f_rsqrt(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_rsqrt_analytic(res, z, order != 0, prec);
+
+    return 0;
+}
+
 /* f(z) = exp(-z^2+iz) */
 int
 f_gaussian_twist(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
@@ -709,7 +721,7 @@ scaled_bessel_select_N(arb_t N, ulong k, slong prec)
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 35
+#define NUM_INTEGRALS 36
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -748,6 +760,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^3 sin(0.001 + (1-x)^2)^(-3/2)) dx  (slow convergence, use higher -eval)",
     "int_0^{inf} exp(-x) I_0(x/3)^3 dx   (using domain truncation)",
     "int_0^{inf} exp(-x) I_0(x/15)^{15} dx   (using domain truncation)",
+    "int_{-1-i}^{-1+i} 1/sqrt(x) dx",
 };
 
 int main(int argc, char *argv[])
@@ -1217,6 +1230,12 @@ int main(int argc, char *argv[])
                 acb_calc_integrate(s, f_scaled_bessel, &k, a, b, goal, tol, options, prec);
                 scaled_bessel_tail_bound(acb_realref(a), k, acb_realref(b), prec);
                 arb_add_error(acb_realref(s), acb_realref(a));
+                break;
+
+            case 35:
+                acb_set_d_d(a, -1, -1);
+                acb_set_d_d(b, -1, 1);
+                acb_calc_integrate(s, f_rsqrt, NULL, a, b, goal, tol, options, prec);
                 break;
 
             default:

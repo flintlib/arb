@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2013, 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,8 +11,334 @@
 
 #include "acb.h"
 
-static void
-_acb_rsqrt1(acb_t y, const acb_t x, slong prec)
+/* r - |m| */
+void
+arb_get_mag_reverse(mag_t res, const arb_t x)
+{
+    mag_t t;
+    mag_init(t);
+    arf_get_mag_lower(t, arb_midref(x));
+    mag_sub(res, arb_radref(x), t);
+    mag_clear(t);
+}
+
+void
+mag_add_ui_lower(mag_t res, const mag_t x, ulong y)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui_lower(t, y);  /* no need to free */
+    mag_add_lower(res, x, t);
+}
+
+/* upper bound for re(rsqrt(x+yi)) / |rsqrt(x+yi)|,
+   given upper bound for x, lower bound for y */
+void
+mag_rsqrt_re_quadrant1_upper(mag_t res, const mag_t x, const mag_t y)
+{
+    if (mag_is_zero(x))
+    {
+        mag_one(res);
+        mag_mul_2exp_si(res, res, -1);
+    }
+    else
+    {
+        mag_t t, u;
+        mag_init(t);
+        mag_init(u);
+
+        /* t = (y/x)^2 -- the result is a decreasing function of t */
+        mag_div_lower(t, y, x);
+        mag_mul_lower(t, t, t);
+
+        /* (rsqrt(t^2+1)+1)/2 */
+        mag_add_ui_lower(u, t, 1);
+        mag_rsqrt(u, u);
+        mag_add_ui(u, u, 1);
+        mag_mul_2exp_si(res, u, -1);
+
+        mag_clear(t);
+        mag_clear(u);
+    }
+
+    mag_sqrt(res, res);
+}
+
+/* lower bound for re(rsqrt(x+yi)) / |rsqrt(x+yi)|,
+   given lower bound for x, upper bound for y */
+void
+mag_rsqrt_re_quadrant1_lower(mag_t res, const mag_t x, const mag_t y)
+{
+    if (mag_is_zero(x))
+    {
+        mag_one(res);
+        mag_mul_2exp_si(res, res, -1);
+    }
+    else
+    {
+        mag_t t, u;
+        mag_init(t);
+        mag_init(u);
+
+        /* t = (y/x)^2 -- the result is a decreasing function of t */
+        mag_div(t, y, x);
+        mag_mul(t, t, t);
+
+        /* (rsqrt(t^2+1)+1)/2 */
+        mag_add_ui(u, t, 1);
+        mag_rsqrt_lower(u, u);
+        mag_add_ui_lower(u, u, 1);
+        mag_mul_2exp_si(res, u, -1);
+
+        mag_clear(t);
+        mag_clear(u);
+    }
+
+    mag_sqrt_lower(res, res);
+}
+
+/* upper bound for re(rsqrt(-x+yi)) / |rsqrt(x+yi)|,
+   given lower bound for -x, upper bound for y */
+void
+mag_rsqrt_re_quadrant2_upper(mag_t res, const mag_t x, const mag_t y)
+{
+    if (mag_is_zero(x))
+    {
+        mag_one(res);
+        mag_mul_2exp_si(res, res, -1);
+    }
+    else
+    {
+        mag_t t, u, v;
+        mag_init(t);
+        mag_init(u);
+        mag_init(v);
+
+        /* t = (y/x)^2 -- the result is an increasing function of t */
+        mag_div(t, y, x);
+        mag_mul(t, t, t);
+
+        /* t / (2*(t+1)*(rsqrt(t+1)+1)) */
+        mag_add_ui(u, t, 1);
+        mag_rsqrt_lower(v, u);
+        mag_add_ui_lower(v, v, 1);
+        mag_add_ui_lower(u, t, 1);
+        mag_mul_lower(v, v, u);
+        mag_mul_2exp_si(v, v, 1);
+        mag_div(res, t, v);
+
+        mag_clear(t);
+        mag_clear(u);
+        mag_clear(v);
+    }
+
+    mag_sqrt(res, res);
+}
+
+/* lower bound for re(rsqrt(-x+yi)) / |rsqrt(x+yi)|,
+   given upper bound for -x, lower bound for y */
+void
+mag_rsqrt_re_quadrant2_lower(mag_t res, const mag_t x, const mag_t y)
+{
+    if (mag_is_zero(x))
+    {
+        mag_one(res);
+        mag_mul_2exp_si(res, res, -1);
+    }
+    else
+    {
+        mag_t t, u, v;
+        mag_init(t);
+        mag_init(u);
+        mag_init(v);
+
+        /* t = (y/x)^2 -- the result is an increasing function of t */
+        mag_div_lower(t, y, x);
+        mag_mul_lower(t, t, t);
+
+        /* t / (2*(t+1)*(rsqrt(t+1)+1)) */
+        mag_add_ui_lower(u, t, 1);
+        mag_rsqrt(v, u);
+        mag_add_ui(v, v, 1);
+        mag_add_ui(u, t, 1);
+        mag_mul(v, v, u);
+        mag_mul_2exp_si(v, v, 1);
+        mag_div_lower(res, t, v);
+
+        mag_clear(t);
+        mag_clear(u);
+        mag_clear(v);
+    }
+
+    mag_sqrt_lower(res, res);
+}
+
+void
+acb_rsqrt_wide(acb_t res, const acb_t z, slong prec)
+{
+    mag_t ax, ay, bx, by, cx, cy, dx, dy, am, bm;
+    mag_t one;
+
+    mag_init(ax); mag_init(ay); mag_init(bx); mag_init(by);
+    mag_init(cx); mag_init(cy); mag_init(dx); mag_init(dy);
+    mag_init(am); mag_init(bm);
+    mag_init(one);
+
+    mag_one(one);
+
+    /* magnitude */
+    acb_get_mag(am, z);
+    mag_rsqrt_lower(am, am);
+    acb_get_mag_lower(bm, z);
+    mag_rsqrt(bm, bm);
+
+    /* upper or lower half plane */
+    if (arb_is_nonnegative(acb_imagref(z)) || arb_is_negative(acb_imagref(z)))
+    {
+        if (arb_is_nonnegative(acb_realref(z)))
+        {
+            arb_get_mag_lower(ax, acb_realref(z));
+            arb_get_mag(ay, acb_imagref(z));
+            arb_get_mag(bx, acb_realref(z));
+            arb_get_mag_lower(by, acb_imagref(z));
+
+            mag_rsqrt_re_quadrant2_lower(cx, bx, by);
+            mag_rsqrt_re_quadrant2_upper(dx, ax, ay);
+
+            /* equivalent but more expensive than pythagoras
+            mag_rsqrt_re_quadrant1_lower(ax, ax, ay);
+            mag_rsqrt_re_quadrant1_upper(bx, bx, by);
+            */
+
+            mag_mul(ax, dx, dx);
+            mag_sub_lower(ax, one, ax);
+            mag_sqrt_lower(ax, ax);
+            mag_mul_lower(bx, cx, cx);
+            mag_sub(bx, one, bx);
+            mag_sqrt(bx, bx);
+        }
+        else
+        {
+            if (arb_is_nonpositive(acb_realref(z)))
+            {
+                arb_get_mag(ax, acb_realref(z));
+                arb_get_mag_lower(ay, acb_imagref(z));
+                arb_get_mag_lower(bx, acb_realref(z));
+                arb_get_mag(by, acb_imagref(z));
+
+                /* equivalent but more expensive than pythagoras
+                mag_rsqrt_re_quadrant1_lower(cx, bx, by);
+                mag_rsqrt_re_quadrant1_upper(dx, ax, ay);
+                */
+
+                mag_rsqrt_re_quadrant2_lower(ax, ax, ay);
+                mag_rsqrt_re_quadrant2_upper(bx, bx, by);
+            }
+            else if (arf_sgn(arb_midref(acb_realref(z))) >= 0)
+            {
+                arb_get_mag_reverse(ax, acb_realref(z));
+                arb_get_mag_lower(ay, acb_imagref(z));
+                arb_get_mag(bx, acb_realref(z));
+                arb_get_mag_lower(by, acb_imagref(z));
+
+                mag_rsqrt_re_quadrant2_lower(ax, ax, ay);
+                mag_rsqrt_re_quadrant1_upper(bx, bx, by);
+            }
+            else
+            {
+                arb_get_mag(ax, acb_realref(z));
+                arb_get_mag_lower(ay, acb_imagref(z));
+                arb_get_mag_reverse(bx, acb_realref(z));
+                arb_get_mag_lower(by, acb_imagref(z));
+
+                mag_rsqrt_re_quadrant2_lower(ax, ax, ay);
+                mag_rsqrt_re_quadrant1_upper(bx, bx, by);
+            }
+
+            /* pythagoras */
+            mag_mul(cx, bx, bx);
+            mag_sub_lower(cx, one, bx);
+            mag_sqrt_lower(cx, cx);
+            mag_mul_lower(dx, ax, ax);
+            mag_sub(dx, one, dx);
+            mag_sqrt(dx, dx);
+        }
+
+        mag_mul_lower(ax, ax, am);
+        mag_mul_lower(cx, cx, am);
+        mag_mul(bx, bx, bm);
+        mag_mul(dx, dx, bm);
+
+        if (arf_sgn(arb_midref(acb_imagref(z))) > 0)
+        {
+            arb_set_interval_mag(acb_realref(res), ax, bx, prec);
+            arb_set_interval_mag(acb_imagref(res), cx, dx, prec);
+            arf_neg(arb_midref(acb_imagref(res)), arb_midref(acb_imagref(res)));
+        }
+        else
+        {
+            arb_set_interval_mag(acb_realref(res), ax, bx, prec);
+            arb_set_interval_mag(acb_imagref(res), cx, dx, prec);
+        }
+    }
+    else if (arb_is_positive(acb_realref(z)))
+    {
+        /* right half plane, straddling real line */
+        int symmetric;
+
+        symmetric = arf_is_zero(arb_midref(acb_imagref(z)));
+
+        arb_get_mag_lower(ax, acb_realref(z));
+        arb_get_mag(dy, acb_imagref(z));
+        arb_get_mag_reverse(cy, acb_imagref(z));
+
+        if (!symmetric)
+            mag_rsqrt_re_quadrant2_lower(cx, ax, cy);
+        mag_rsqrt_re_quadrant2_upper(dx, ax, dy);
+
+        mag_one(bx);
+        /* mag_rsqrt_re_quadrant1_lower(ax, ax, dy); */
+        mag_mul(ax, dx, dx);
+        mag_sub_lower(ax, one, ax);
+        mag_sqrt_lower(ax, ax);
+
+        mag_mul_lower(ax, ax, am);
+        mag_mul(bx, bx, bm);
+        mag_mul(cx, cx, bm);
+        mag_mul(dx, dx, bm);
+
+        if (symmetric)
+            arb_set_interval_neg_pos_mag(acb_imagref(res), dx, dx, prec);
+        else if (arf_sgn(arb_midref(acb_imagref(z))) > 0)
+            arb_set_interval_neg_pos_mag(acb_imagref(res), dx, cx, prec);
+        else
+            arb_set_interval_neg_pos_mag(acb_imagref(res), cx, dx, prec);
+
+        arb_set_interval_mag(acb_realref(res), ax, bx, prec);
+    }
+    else   /* left half plane, straddling branch cut */
+    {
+        mag_zero(ax);
+        arb_get_mag_lower(bx, acb_realref(z));
+        arb_get_mag(by, acb_imagref(z));
+        mag_rsqrt_re_quadrant2_upper(bx, bx, by);
+
+        mag_mul_lower(ax, ax, am);
+        mag_mul(bx, bx, bm);
+        arb_set_interval_mag(acb_realref(res), ax, bx, prec);
+
+        /* cx, dx = 1,1 */
+        arb_set_interval_neg_pos_mag(acb_imagref(res), bm, bm, prec);
+    }
+
+    mag_clear(ax); mag_clear(ay); mag_clear(bx); mag_clear(by);
+    mag_clear(cx); mag_clear(cy); mag_clear(dx); mag_clear(dy);
+    mag_clear(am); mag_clear(bm);
+    mag_clear(one);
+}
+
+void
+acb_rsqrt_precise(acb_t y, const acb_t x, slong prec)
 {
 #define a acb_realref(x)
 #define b acb_imagref(x)
@@ -62,51 +388,21 @@ _acb_rsqrt1(acb_t y, const acb_t x, slong prec)
 #undef d
 }
 
-static void
-_acb_rsqrt(acb_t y, const acb_t x, slong prec)
-{
-    if (acb_rel_accuracy_bits(x) > 10)
-    {
-        _acb_rsqrt1(y, x, prec);
-    }
-    else if (acb_contains_zero(x))
-    {
-        acb_indeterminate(y);
-    }
-    else
-    {
-        /* use derivative (todo: compute better bounds) */
-        mag_t t, u;
-
-        mag_init(t);
-        mag_init(u);
-
-        acb_get_mag_lower(t, x);
-
-        mag_rsqrt(u, t);
-        mag_div(u, u, t);
-        mag_hypot(t, arb_radref(acb_realref(x)), arb_radref(acb_imagref(x)));
-        mag_mul(u, u, t);
-
-        acb_set(y, x);
-        mag_zero(arb_radref(acb_realref(y)));
-        mag_zero(arb_radref(acb_imagref(y)));
-
-        _acb_rsqrt1(y, y, prec);
-        acb_add_error_mag(y, u);
-
-        mag_clear(t);
-        mag_clear(u);
-    }
-}
-
 void
 acb_rsqrt(acb_t y, const acb_t x, slong prec)
 {
+    slong acc;
+
 #define a acb_realref(x)
 #define b acb_imagref(x)
 #define c acb_realref(y)
 #define d acb_imagref(y)
+
+    if (acb_contains_zero(x))
+    {
+        acb_indeterminate(y);
+        return;
+    }
 
     if (arb_is_zero(b))
     {
@@ -145,33 +441,34 @@ acb_rsqrt(acb_t y, const acb_t x, slong prec)
         }
     }
 
-    if (arb_is_positive(a))
+    acc = acb_rel_accuracy_bits(x);
+
+    if (acc < 25)
     {
-        _acb_rsqrt(y, x, prec);
-    }
-    else if (arb_is_nonnegative(b))
-    {
-        acb_neg(y, x);
-        _acb_rsqrt(y, y, prec);
-        acb_div_onei(y, y);
-    }
-    else if (arb_is_negative(b))
-    {
-        acb_neg(y, x);
-        _acb_rsqrt(y, y, prec);
-        acb_mul_onei(y, y);
+        acb_rsqrt_wide(y, x, prec);
     }
     else
     {
-        /* todo: more elegant solution? */
-        acb_t t;
-        acb_init(t);
-        acb_neg(y, x);
-        _acb_rsqrt(y, y, prec);
-        acb_mul_onei(t, y);
-        acb_div_onei(y, y);
-        acb_union(y, y, t, prec);
-        acb_clear(t);
+        if (arb_is_positive(a))
+        {
+            acb_rsqrt_precise(y, x, prec);
+        }
+        else if (arb_is_nonnegative(b))
+        {
+            acb_neg(y, x);
+            acb_rsqrt_precise(y, y, prec);
+            acb_div_onei(y, y);
+        }
+        else if (arb_is_negative(b))
+        {
+            acb_neg(y, x);
+            acb_rsqrt_precise(y, y, prec);
+            acb_mul_onei(y, y);
+        }
+        else
+        {
+            acb_rsqrt_wide(y, x, prec);
+        }
     }
 
 #undef a
