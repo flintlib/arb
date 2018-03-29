@@ -56,6 +56,7 @@ void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
     else if (arf_sgn(arb_midref(acb_realref(s))) < 0)
     {
         acb_t t;
+        acb_init(t);
         acb_sub_ui(t, s, 1, prec);
         acb_neg(t, t);
         _acb_dirichlet_xi(res, t, prec);
