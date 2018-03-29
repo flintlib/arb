@@ -123,6 +123,12 @@ Riemann zeta function
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
 
+.. function:: void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
+
+    Sets *res* to the Riemann xi function
+    `\xi(s) = \frac{1}{2} s (s-1) \pi^{-s/2} \Gamma(\frac{1}{2} s) \zeta(s)`.
+    The functional equation for xi is `\xi(1-s) = \xi(s)`.
+
 Riemann-Siegel formula
 -------------------------------------------------------------------------------
 

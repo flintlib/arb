@@ -16,7 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("riemann_xi....");
+    flint_printf("xi....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -36,8 +36,8 @@ int main()
         arb_randtest_precise(acb_realref(a), state, 1 + n_randint(state, 1000), 3);
         arb_randtest_precise(acb_imagref(a), state, 1 + n_randint(state, 1000), 3);
 
-        acb_riemann_xi(b, a, prec1);
-        acb_riemann_xi(c, a, prec2);
+        acb_dirichlet_xi(b, a, prec1);
+        acb_dirichlet_xi(c, a, prec2);
 
         if (!acb_overlaps(b, c))
         {
@@ -48,10 +48,22 @@ int main()
             flint_abort();
         }
 
-        /* check riemann_xi(s) = riemann_xi(1-s) */
+        acb_set(c, a);
+        acb_dirichlet_xi(c, c, prec1);
+
+        if (!acb_equal(b, c))
+        {
+            flint_printf("FAIL: aliasing\n\n");
+            flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
+            flint_printf("b = "); acb_printd(b, 30); flint_printf("\n\n");
+            flint_printf("c = "); acb_printd(c, 30); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        /* check xi(s) = xi(1-s) */
         acb_sub_ui(c, a, 1, prec1);
         acb_neg(c, c);
-        acb_riemann_xi(c, c, prec1);
+        acb_dirichlet_xi(c, c, prec1);
 
         if (!acb_overlaps(b, c))
         {

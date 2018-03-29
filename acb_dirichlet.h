@@ -45,8 +45,6 @@ void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec);
 void acb_dirichlet_zeta_jet_rs(acb_ptr res, const acb_t s, slong len, slong prec);
 void acb_dirichlet_zeta_jet(acb_t res, const acb_t s, int deflate, slong len, slong prec);
 
-void acb_riemann_xi(acb_t res, const acb_t s, slong prec);
-
 void acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec);
 
 typedef struct
@@ -74,6 +72,8 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     const signed char * chi, int mod, int reciprocal, slong prec);
 
 void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec);
+
+void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec);
 
 void acb_dirichlet_pairing(acb_t res, const dirichlet_group_t G, ulong m, ulong n, slong prec);
 void acb_dirichlet_pairing_char(acb_t res, const dirichlet_group_t G, const dirichlet_char_t a, const dirichlet_char_t b, slong prec);
