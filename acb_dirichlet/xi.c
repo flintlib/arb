@@ -41,7 +41,6 @@ _acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
     acb_clear(z3);
 }
 
-/* todo: interval containing 1 */
 void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
 {
     if (!acb_is_finite(s))
@@ -53,7 +52,9 @@ void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
         acb_one(res);
         acb_mul_2exp_si(res, res, -1);
     }
-    else if (arf_sgn(arb_midref(acb_realref(s))) < 0)
+    else if (arf_sgn(arb_midref(acb_realref(s))) < 0 ||
+        (arb_contains_si(acb_realref(s), 1) && /* also intervals around s = 1 */
+        arb_contains_zero(acb_imagref(s))))
     {
         acb_t t;
         acb_init(t);
@@ -67,3 +68,4 @@ void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
         _acb_dirichlet_xi(res, s, prec);
     }
 }
+
