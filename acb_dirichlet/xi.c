@@ -56,12 +56,9 @@ void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
         (arb_contains_si(acb_realref(s), 1) && /* also intervals around s = 1 */
         arb_contains_zero(acb_imagref(s))))
     {
-        acb_t t;
-        acb_init(t);
-        acb_sub_ui(t, s, 1, prec);
-        acb_neg(t, t);
-        _acb_dirichlet_xi(res, t, prec);
-        acb_clear(t);
+        acb_sub_ui(res, s, 1, prec);
+        acb_neg(res, res);
+        _acb_dirichlet_xi(res, res, prec);
     }
     else
     {
