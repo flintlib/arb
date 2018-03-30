@@ -52,7 +52,8 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
         return;
     }
 
-    if (arf_sgn(arb_midref(acb_realref(s))) < 0)
+    if ((arf_sgn(arb_midref(acb_realref(s))) < 0) &&
+        !acb_contains_zero(s))
     {
         acb_t t, u, v;
         slong wp = prec + 6;
