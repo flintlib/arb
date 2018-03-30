@@ -21,23 +21,31 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 500 * arb_test_multiplier(); iter++)
     {
         acb_t a, b, c;
         slong prec1, prec2;
 
-        prec1 = 2 + n_randint(state, 1000);
-        prec2 = prec1 + 30;
+        prec1 = 2 + n_randint(state, 100);
+        prec2 = 2 + n_randint(state, 100);
 
         acb_init(a);
         acb_init(b);
         acb_init(c);
 
-        arb_randtest_precise(acb_realref(a), state, 1 + n_randint(state, 1000), 3);
-        arb_randtest_precise(acb_imagref(a), state, 1 + n_randint(state, 1000), 3);
+        acb_randtest_precise(a, state, 1 + n_randint(state, 1000), 3);
 
         acb_dirichlet_xi(b, a, prec1);
-        acb_dirichlet_xi(c, a, prec2);
+
+        if (n_randint(state, 2))
+        {
+            acb_dirichlet_xi(c, a, prec2);
+        }
+        else  /* test aliasing */
+        {
+            acb_set(c, a);
+            acb_dirichlet_xi(c, c, prec2);
+        }
 
         if (!acb_overlaps(b, c))
         {
@@ -45,18 +53,6 @@ int main()
             flint_printf("a = "); acb_print(a); flint_printf("\n\n");
             flint_printf("b = "); acb_print(b); flint_printf("\n\n");
             flint_printf("c = "); acb_print(c); flint_printf("\n\n");
-            flint_abort();
-        }
-
-        acb_set(c, a);
-        acb_dirichlet_xi(c, c, prec1);
-
-        if (!acb_equal(b, c))
-        {
-            flint_printf("FAIL: aliasing\n\n");
-            flint_printf("a = "); acb_printd(a, 30); flint_printf("\n\n");
-            flint_printf("b = "); acb_printd(b, 30); flint_printf("\n\n");
-            flint_printf("c = "); acb_printd(c, 30); flint_printf("\n\n");
             flint_abort();
         }
 
