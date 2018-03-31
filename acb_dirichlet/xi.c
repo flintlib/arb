@@ -52,7 +52,8 @@ void acb_dirichlet_xi(acb_t res, const acb_t s, slong prec)
         acb_one(res);
         acb_mul_2exp_si(res, res, -1);
     }
-    else if (arf_sgn(arb_midref(acb_realref(s))) < 0 ||
+    else if ((arf_sgn(arb_midref(acb_realref(s))) < 0 &&
+        !acb_contains_zero(s)) ||
         (arb_contains_si(acb_realref(s), 1) && /* also intervals around s = 1 */
         arb_contains_zero(acb_imagref(s))))
     {
