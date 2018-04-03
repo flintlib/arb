@@ -47,6 +47,8 @@ void acb_dirichlet_zeta_jet(acb_t res, const acb_t s, int deflate, slong len, sl
 
 void acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec);
 
+void acb_dirichlet_stieltjes(acb_t res, const fmpz_t n, const acb_t a, slong prec);
+
 typedef struct
 {
     acb_struct s;

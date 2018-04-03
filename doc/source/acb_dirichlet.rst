@@ -118,7 +118,7 @@ Riemann zeta function
 .. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
 
     Sets *res* to the Dirichlet eta function
-    `\eta(s) = \sum_{k=1}^{\infty} (-1)^k / k^s = (1-2^{1-s}) \zeta(s)`,
+    `\eta(s) = \sum_{k=1}^{\infty} (-1)^{k+1} / k^s = (1-2^{1-s}) \zeta(s)`,
     also known as the alternating zeta function.
     Note that the alternating character `\{1,-1\}` is not itself
     a Dirichlet character.
@@ -263,6 +263,32 @@ Hurwitz zeta function precomputation
 .. function:: void acb_dirichlet_hurwitz_precomp_eval(acb_t res, const acb_dirichlet_hurwitz_precomp_t pre, ulong p, ulong q, slong prec)
 
     Evaluates `\zeta(s,p/q)` using precomputed data, assuming that `0 < p/q \le 1`.
+
+Stieltjes constants
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_stieltjes(acb_t res, const fmpz_t n, const acb_t a, slong prec)
+
+    Given a nonnegative integer *n*, sets *res* to the generalized Stieltjes constant
+    `\gamma_n(a)` which is the coefficient in the Laurent series of the
+    Hurwitz zeta function at the pole
+
+    .. math ::
+
+        \zeta(s,a) = \frac{1}{s-1} + \sum_{n=0}^\infty \frac{(-1)^n}{n!} \gamma_n(a) (s-1)^n.
+
+    With `a = 1`, this gives the ordinary Stieltjes constants for the
+    Riemann zeta function.
+
+    This function uses an integral representation if `a = 1`
+    to permit fast computation for extremely large *n*.
+    If `a \ne 1` (or *n* is moderate and the precision is high), it falls back
+    to evaluating the Hurwitz zeta function of a power series and reading off
+    the last coefficient. If `a \ne 1`, large *n* will be extremely slow.
+    Also note that for computing a range of values
+    `\gamma_0(a), \ldots, \gamma_n(a)`, it is
+    generally more efficient to evaluate the Hurwitz zeta function series
+    expansion once at `s = 1` than to call this function repeatedly.
 
 Dirichlet character evaluation
 -------------------------------------------------------------------------------
