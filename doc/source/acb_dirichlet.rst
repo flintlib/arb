@@ -1,6 +1,6 @@
 .. _acb-dirichlet:
 
-**acb_dirichlet.h** -- Dirichlet L-functions, zeta functions, and related functions
+**acb_dirichlet.h** -- Dirichlet L-functions, Riemann zeta and related functions
 ===================================================================================
 
 *Warning: the interfaces in this module are experimental and may change

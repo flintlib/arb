@@ -440,7 +440,7 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     each respective output variable. The *notransform* version does not
     move `\tau` to the fundamental domain or reduce `z` during the computation.
 
-The Dedekind eta function
+Dedekind eta function
 -------------------------------------------------------------------------------
 
 .. function:: void acb_modular_addseq_eta(slong * exponents, slong * aindex, slong * bindex, slong num)

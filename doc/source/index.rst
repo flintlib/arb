@@ -1,4 +1,4 @@
-Arb - a C library for arbitrary-precision interval arithmetic
+Arb - a C library for arbitrary-precision ball arithmetic
 =============================================================
 
 .. only:: latex
@@ -7,11 +7,14 @@ Arb - a C library for arbitrary-precision interval arithmetic
     ::::::::::::
 
     Welcome to Arb's documentation!
-    Arb is a C library for arbitrary-precision interval arithmetic,
-    using a midpoint-radius representation ("ball arithmetic").
-    It supports real and complex numbers, polynomials, power series,
-    matrices, and evaluation of many transcendental functions.
-    All operations are done with automatic, rigorous error bounds.
+    Arb is a C library for rigorous real and complex arithmetic with arbitrary precision.
+    Arb tracks numerical errors automatically using
+    *ball arithmetic*, a form of interval arithmetic based on a midpoint-radius
+    representation.
+    On top of this, Arb provides a wide range of mathematical functionality, including polynomials,
+    power series, matrices, integration, root-finding, and transcendental functions.
+    Arb is designed with efficiency as a primary goal, and is usually competitive with or faster
+    than other arbitrary-precision packages.
     The code is thread-safe, portable, and extensively tested.
 
     Arb is free software distributed under the
@@ -32,21 +35,25 @@ Arb - a C library for arbitrary-precision interval arithmetic
 
     This documentation is available in HTML format at http://arblib.org and in
     PDF format at http://arblib.org/arb.pdf.
-    The version of the documentation you are currently reading was updated
+    This edition of the documentation was updated
     |today| and describes Arb |version|.
     Documentation for :ref:`specific release versions <history>`
     is also available in PDF format.
 
 .. only:: html
 
-        .. image:: _static/arbtext.png
+        .. image:: _static/banner.jpg
+            :align: center
 
     Welcome to Arb's documentation!
-    Arb is a C library for arbitrary-precision interval arithmetic,
-    using a midpoint-radius representation ("ball arithmetic").
-    It supports real and complex numbers, polynomials, power series,
-    matrices, and evaluation of many transcendental functions.
-    All operations are done with automatic, rigorous error bounds.
+    Arb is a C library for rigorous real and complex arithmetic with arbitrary precision.
+    Arb tracks numerical errors automatically using
+    *ball arithmetic*, a form of interval arithmetic based on a midpoint-radius
+    representation.
+    On top of this, Arb provides a wide range of mathematical functionality, including polynomials,
+    power series, matrices, integration, root-finding, and many transcendental functions.
+    Arb is designed with efficiency as a primary goal, and is usually competitive with or faster
+    than other arbitrary-precision packages.
     The code is thread-safe, portable, and extensively tested.
 
     Arb is free software distributed under the
@@ -67,7 +74,7 @@ Arb - a C library for arbitrary-precision interval arithmetic
 
     This documentation is available in HTML format at http://arblib.org and in
     PDF format at http://arblib.org/arb.pdf.
-    The version of the documentation you are currently reading was updated
+    This edition of the documentation was updated
     |today| and describes Arb |version|.
     Documentation for :ref:`specific release versions <history>`
     is also available in PDF format.
@@ -82,13 +89,23 @@ General information
    setup.rst
    using.rst
    issues.rst
+   credits.rst
+
+Example programs
+::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
    examples.rst
 
 Floating-point numbers
 ::::::::::::::::::::::::::::::::::::
 
-The radius and midpoint of a ball are represented using two specialized
-floating-point types.
+Arb uses two custom floating-point types in its implementation of ball
+arithmetic. The radius of a ball is represented using the type *mag_t* which is
+unsigned and has a fixed precision. The midpoint is represented using the
+type *arf_t* which has arbitrary precision.
 
 .. toctree::
    :maxdepth: 2
@@ -101,7 +118,7 @@ Real and complex numbers
 
 Real numbers (*arb_t*) are represented as midpoint-radius intervals,
 also known as balls. Complex numbers (*acb_t*) are represented in rectangular
-form, with balls for the real and imaginary parts.
+form, with *arb_t* balls for the real and imaginary parts.
 
 .. toctree::
    :maxdepth: 2
@@ -121,6 +138,10 @@ on polynomials, without introducing a separate power series type.
 
    arb_poly.rst
    acb_poly.rst
+
+.. toctree::
+   :maxdepth: 2
+
    arb_fmpz_poly.rst
 
 Transforms
@@ -143,7 +164,7 @@ Rudimentary linear algebra is supported.
    arb_mat.rst
    acb_mat.rst
 
-Higher mathematical functions
+Special functions
 ::::::::::::::::::::::::::::::::::::
 
 These modules implement mathematical functions with complexity
@@ -206,13 +227,8 @@ lengthy to reproduce in the documentation for each module.
    hypergeometric.rst
    agm.rst
 
-History, credits and references
+Version history
 :::::::::::::::::::::::::::::::::
-
-.. toctree::
-   :maxdepth: 2
-
-   credits.rst
 
 .. toctree::
    :maxdepth: 1

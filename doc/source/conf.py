@@ -104,12 +104,26 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'default'
-#html_theme = 'pyramid'
+
+html_context = {
+    'css_files': ['_static/default.css'],
+}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {'sidebarwidth' : 300}
+html_theme_options = {
+    'sidebarwidth' : 280,
+    'collapsiblesidebar': True,
+    'bodyfont': "'arial', sans-serif",
+    'headfont': "'arial', sans-serif",
+    'sidebarbtncolor': '#666',
+    'sidebarbgcolor': '#444',
+    'sidebarlinkcolor': '#ddd',
+    'relbarbgcolor': '#333',
+    'footerbgcolor': '#333',
+    'headbgcolor': '#fff',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -123,7 +137,7 @@ html_theme_options = {'sidebarwidth' : 300}
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/arbwhite.png"
+#html_logo = "_static/arbwhite.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

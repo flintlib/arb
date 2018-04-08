@@ -71,6 +71,8 @@ internal representation of numbers (using limb arrays).
 Arb uses the following FLINT types for exact (integral and rational)
 arbitrary-size values. For details, refer to the FLINT documentation.
 
+.. type:: fmpz
+
 .. type:: fmpz_t
 
     The FLINT multi-precision integer type uses an inline representation for small
@@ -79,6 +81,10 @@ arbitrary-size values. For details, refer to the FLINT documentation.
     automatically to a GMP integer for larger values.
     The *fmpz_t* type is functionally identical to the GMP *mpz_t*
     type, but faster for small values.
+
+    An :type:`fmpz_t` is defined as an array of length one of type
+    :type:`fmpz` (which is just an alias for :type:`slong`),
+    permitting an :type:`fmpz_t` to be passed by reference.
 
 .. type:: fmpq_t
 
@@ -236,7 +242,7 @@ Use of hardware floating-point arithmetic
 Arb uses hardware floating-point arithmetic (the ``double`` type in C) in two
 different ways.
 
-Firstly, ``double`` arithmetic as well as transcendental ``libm`` functions
+First, ``double`` arithmetic as well as transcendental ``libm`` functions
 (such as ``exp``, ``log``) are used to select parameters heuristically
 in various algorithms. Such heuristic use of approximate arithmetic does not
 affect correctness: when any error bounds depend on the parameters, the error
@@ -245,7 +251,7 @@ in the floating-point arithmetic on a particular machine could cause an
 algorithm to become inefficient due to inefficient parameters being
 selected.
 
-Secondly, ``double`` arithmetic is used internally for some rigorous error bound
+Second, ``double`` arithmetic is used internally for some rigorous error bound
 calculations. To guarantee correctness, we make the following assumptions.
 With the stated exceptions, these should hold on all commonly used platforms.
 
