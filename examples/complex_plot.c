@@ -4,6 +4,7 @@
 #include "acb.h"
 #include "acb_hypgeom.h"
 #include "acb_modular.h"
+#include "acb_elliptic.h"
 #include "flint/profiler.h"
 
 /* some useful color operations */
@@ -311,6 +312,70 @@ modj(acb_t res, const acb_t z, slong prec)
 }
 
 void
+modjq(acb_t res, const acb_t z, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+    acb_log(res, z, prec);
+    acb_const_pi(t, prec);
+    acb_div(res, res, t, prec);
+    acb_mul_2exp_si(res, res, -1);
+    acb_div_onei(res, res);
+    acb_modular_j(res, res, prec);
+    acb_div_ui(res, res, 1728, prec);
+    acb_clear(t);
+}
+
+void
+modetaq(acb_t res, const acb_t z, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+    acb_log(res, z, prec);
+    acb_const_pi(t, prec);
+    acb_div(res, res, t, prec);
+    acb_mul_2exp_si(res, res, -1);
+    acb_div_onei(res, res);
+    acb_modular_eta(res, res, prec);
+    acb_clear(t);
+}
+
+void
+modlambdaq(acb_t res, const acb_t z, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+    acb_log(res, z, prec);
+    acb_const_pi(t, prec);
+    acb_div(res, res, t, prec);
+    acb_mul_2exp_si(res, res, -1);
+    acb_div_onei(res, res);
+    acb_modular_lambda(res, res, prec);
+    acb_clear(t);
+}
+
+void
+ellipp(acb_t res, const acb_t z, slong prec)
+{
+    acb_onei(res);
+    acb_elliptic_p(res, z, res, prec);
+}
+
+void
+ellipzeta(acb_t res, const acb_t z, slong prec)
+{
+    acb_onei(res);
+    acb_elliptic_zeta(res, z, res, prec);
+}
+
+void
+ellipsigma(acb_t res, const acb_t z, slong prec)
+{
+    acb_onei(res);
+    acb_elliptic_sigma(res, z, res, prec);
+}
+
+void
 fresnels(acb_t res, const acb_t z, slong prec)
 {
     acb_hypgeom_fresnel(res, NULL, z, 0, prec);
@@ -354,24 +419,31 @@ int main(int argc, char *argv[])
         printf("run [convert arbplot.ppm arbplot.png] to get a PNG.\n\n");
 
         printf("Function codes <func> are:\n");
-        printf("  sin      - Sine\n");
-        printf("  gamma    - Gamma function\n");
-        printf("  digamma  - Digamma function\n");
-        printf("  lgamma   - Logarithmic gamma function\n");
-        printf("  zeta     - Riemann zeta function\n");
-        printf("  erf      - Error function\n");
-        printf("  ai       - Airy function Ai\n");
-        printf("  bi       - Airy function Bi\n");
-        printf("  besselj  - Bessel function J_0\n");
-        printf("  bessely  - Bessel function Y_0\n");
-        printf("  besseli  - Bessel function I_0\n");
-        printf("  besselk  - Bessel function K_0\n");
-        printf("  modj     - Modular j-function\n");
-        printf("  modeta   - Dedekind eta function\n");
-        printf("  barnesg  - Barnes G-function\n");
-        printf("  agm      - Arithmetic geometric mean\n");
-        printf("  fresnels - Fresnel integral S\n");
-        printf("  fresnelc - Fresnel integral C\n\n");
+        printf("  sin        - Sine\n");
+        printf("  gamma      - Gamma function\n");
+        printf("  digamma    - Digamma function\n");
+        printf("  lgamma     - Logarithmic gamma function\n");
+        printf("  zeta       - Riemann zeta function\n");
+        printf("  erf        - Error function\n");
+        printf("  ai         - Airy function Ai\n");
+        printf("  bi         - Airy function Bi\n");
+        printf("  besselj    - Bessel function J_0\n");
+        printf("  bessely    - Bessel function Y_0\n");
+        printf("  besseli    - Bessel function I_0\n");
+        printf("  besselk    - Bessel function K_0\n");
+        printf("  modj       - Modular j-function\n");
+        printf("  modjq      - Modular j-function (as function of q)\n");
+        printf("  modeta     - Dedekind eta function\n");
+        printf("  modetaq    - Dedekind eta function (as function of q)\n");
+        printf("  modlambda  - Modular lambda function\n");
+        printf("  modlambdaq - Modular lambda function (as function of q)\n");
+        printf("  ellipp     - Weierstrass elliptic function (on square lattice)\n");
+        printf("  ellipzeta  - Weierstrass elliptic function (on square lattice)\n");
+        printf("  ellipsigma - Weierstrass elliptic function (on square lattice)\n");
+        printf("  barnesg    - Barnes G-function\n");
+        printf("  agm        - Arithmetic geometric mean\n");
+        printf("  fresnels   - Fresnel integral S\n");
+        printf("  fresnelc   - Fresnel integral C\n\n");
 
         return 1;
     }
@@ -405,77 +477,55 @@ int main(int argc, char *argv[])
             i++;
         }
         else if (!strcmp(argv[i], "sin"))
-        {
             func = acb_sin;
-        }
         else if (!strcmp(argv[i], "gamma"))
-        {
             func = acb_gamma;
-        }
         else if (!strcmp(argv[i], "digamma"))
-        {
             func = acb_digamma;
-        }
         else if (!strcmp(argv[i], "lgamma"))
-        {
             func = acb_lgamma;
-        }
         else if (!strcmp(argv[i], "zeta"))
-        {
             func = acb_zeta;
-        }
         else if (!strcmp(argv[i], "erf"))
-        {
             func = acb_hypgeom_erf;
-        }
         else if (!strcmp(argv[i], "ai"))
-        {
             func = ai;
-        }
         else if (!strcmp(argv[i], "bi"))
-        {
             func = bi;
-        }
         else if (!strcmp(argv[i], "besselj"))
-        {
             func = besselj;
-        }
         else if (!strcmp(argv[i], "bessely"))
-        {
             func = bessely;
-        }
         else if (!strcmp(argv[i], "besseli"))
-        {
             func = besseli;
-        }
         else if (!strcmp(argv[i], "besselk"))
-        {
             func = besselk;
-        }
         else if (!strcmp(argv[i], "modj"))
-        {
             func = modj;
-        }
+        else if (!strcmp(argv[i], "modjq"))
+            func = modjq;
         else if (!strcmp(argv[i], "modeta"))
-        {
             func = acb_modular_eta;
-        }
+        else if (!strcmp(argv[i], "modetaq"))
+            func = modetaq;
+        else if (!strcmp(argv[i], "modlambda"))
+            func = acb_modular_lambda;
+        else if (!strcmp(argv[i], "modlambdaq"))
+            func = modlambdaq;
+        else if (!strcmp(argv[i], "ellipp"))
+            func = ellipp;
+        else if (!strcmp(argv[i], "ellipzeta"))
+            func = ellipzeta;
+        else if (!strcmp(argv[i], "ellipsigma"))
+            func = ellipsigma;
         else if (!strcmp(argv[i], "barnesg"))
-        {
             func = acb_barnes_g;
-        }
         else if (!strcmp(argv[i], "agm"))
-        {
             func = acb_agm1;
-        }
         else if (!strcmp(argv[i], "fresnels"))
-        {
             func = fresnels;
-        }
         else if (!strcmp(argv[i], "fresnelc"))
-        {
             func = fresnelc;
-        }
         else
         {
             printf("unknown option: %s\n", argv[i]);
