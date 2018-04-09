@@ -19,16 +19,24 @@ integer *e* such that
 The internal representation of an :type:`arf_t` stores the
 exponent in the latter format.
 
-Except where otherwise noted, the output of an operation is the
-floating-point number obtained by viewing the inputs as exact numbers,
-in principle carrying out the mathematical operation exactly, and rounding the
-resulting real number to the nearest representable floating-point
-number whose mantissa has at most the specified number of bits, in
-the specified direction of rounding. Some operations are always
-or optionally done exactly.
-Functions that might round the result return an :type:`int` flag
-which will have the value 0 if the result is exact and 1 if
-the result is inexact (rounded).
+Except where otherwise noted, functions have the following semantics:
+
+* Functions taking *prec* and *rnd* parameters at the end of the argument list
+  and returning an :type:`int` flag round the result in the output variable
+  to *prec* bits in the direction specified by *rnd*. The return flag
+  is 0 if the result is exact
+  (not rounded) and 1 if the result is inexact (rounded).
+  Correct rounding is guaranteed: the result is the floating-point number
+  obtained by viewing the inputs as exact numbers, in principle carrying out
+  the mathematical operation exactly, and rounding the resulting real number
+  to the nearest representable floating-point number whose mantissa has at
+  most the specified number of bits, in the specified direction of rounding.
+  In particular, the error is at most 1 ulp with directed rounding mode
+  and 0.5 ulp when rounding to nearest.
+
+* Other functions perform the operation exactly.
+
+Since exponents are bignums, overflow or underflow cannot occur.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -504,8 +512,7 @@ Addition and multiplication
 
 .. function:: int arf_neg_round(arf_t res, const arf_t x, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `-x`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `-x`.
 
 .. function:: int arf_add(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -515,13 +522,11 @@ Addition and multiplication
 
 .. function:: int arf_add_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x + y`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `x + y`.
 
 .. function:: int arf_add_fmpz_2exp(arf_t res, const arf_t x, const fmpz_t y, const fmpz_t e, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x + y 2^e`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `x + y 2^e`.
 
 .. function:: int arf_sub(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -531,8 +536,7 @@ Addition and multiplication
 
 .. function:: int arf_sub_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x - y`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `x - y`.
 
 .. function:: void arf_mul_2exp_si(arf_t res, const arf_t x, slong e)
 
@@ -550,8 +554,7 @@ Addition and multiplication
 
 .. function:: int arf_mul_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x \cdot y`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `x \cdot y`.
 
 .. function:: int arf_addmul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -564,8 +567,6 @@ Addition and multiplication
 .. function:: int arf_addmul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
     Performs a fused multiply-add `z = z + x \cdot y`, updating *z* in-place.
-    The result is rounded to *prec* bits in the direction specified by *rnd*,
-    and the function nonzero iff the operation is inexact.
 
 .. function:: int arf_submul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -577,14 +578,11 @@ Addition and multiplication
 
 .. function:: int arf_submul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Performs a fused multiply-subtract `z = z + x \cdot y`, updating *z* in-place.
-    The result is rounded to *prec* bits in the direction specified by *rnd*,
-    and the function nonzero iff the operation is inexact.
+    Performs a fused multiply-subtract `z = z - x \cdot y`, updating *z* in-place.
 
 .. function:: int arf_sosq(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x^2 + y^2`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact.
+    Sets *res* to `x^2 + y^2`, rounded to *prec* bits in the direction specified by *rnd*.
 
 Summation
 -------------------------------------------------------------------------------
@@ -630,22 +628,19 @@ Square roots
 
 .. function:: int arf_sqrt_fmpz(arf_t res, const fmpz_t x, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `\sqrt{x}`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact. The result is NaN if *x* is negative.
+    Sets *res* to `\sqrt{x}`. The result is NaN if *x* is negative.
 
 .. function:: int arf_rsqrt(arf_t res, const arf_t x, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `1/\sqrt{x}`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact. The result is NaN if *x* is
+    Sets *res* to `1/\sqrt{x}`. The result is NaN if *x* is
     negative, and `+\infty` if *x* is zero.
 
 .. function:: int arf_root(arf_t res, const arf_t x, ulong k, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x^{1/k}`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact. The result is NaN if *x* is negative.
+    Sets *res* to `x^{1/k}`. The result is NaN if *x* is negative.
     Warning: this function is a wrapper around the MPFR root function.
     It gets slow and uses much memory for large *k*.
-    Consider working with :func:`arb_root` for large *k* instead of using this
+    Consider working with :func:`arb_root_ui` for large *k* instead of using this
     function directly.
 
 Complex arithmetic

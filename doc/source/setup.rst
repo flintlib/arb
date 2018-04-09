@@ -8,7 +8,7 @@ Package managers
 
 The easiest way to install Arb including all dependencies is via ready-made
 packages available for various distributions.
-Note that some packages may not be up to date.
+Note that some package managers may not have the latest version of Arb.
 
 * Debian / Ubuntu / Linux Mint
 
@@ -22,11 +22,17 @@ Note that some packages may not be up to date.
 
   - https://www.archlinux.org/packages/community/x86_64/arb/
 
-  - https://www.archlinux.org/packages/community/i686/arb/
-
 * Guix
 
-  - https://www.gnu.org/software/guix/packages/
+  - https://www.gnu.org/software/guix/packages/A/
+
+* Anaconda
+
+  - https://anaconda.org/conda-forge/arb
+
+Installing SageMath or Nemo (see below) will also create an installation
+of Arb local to those systems. It is possible to link user code to
+that installation by setting the proper paths.
 
 Download
 -------------------------------------------------------------------------------
@@ -34,9 +40,9 @@ Download
 Tarballs of released versions can be downloaded from https://github.com/fredrik-johansson/arb/releases
 
 Alternatively, you can simply install Arb from a git checkout of https://github.com/fredrik-johansson/arb/.
-The master branch is generally safe to use (the test suite should pass at all
-times), and recommended for
-keeping up with the latest improvements and bug fixes.
+The master branch is recommended for keeping up with the latest improvements and bug fixes
+and should be safe to use at all times (only stable code that passes the test suite
+gets merged into the git master).
 
 Dependencies
 -------------------------------------------------------------------------------
@@ -94,28 +100,6 @@ It is also possible to run the unit tests for a single module, for instance::
 
     make check MOD=arb_poly
 
-Installation as part of FLINT (deprecated)
--------------------------------------------------------------------------------
-
-WARNING: this feature is being deprecated. Please install Arb as a separate
-library, as detailed above.
-
-With some versions of FLINT, Arb can be compiled as a FLINT
-extension package.
-
-Simply put the Arb source directory somewhere, say ``/path/to/arb``.
-Then go to the FLINT source directory and build FLINT using::
-
-    ./configure --extensions=/path/to/arb <other options>
-    make
-    make check       (optional)
-    make install
-
-This is convenient, as Arb does not need to be
-configured or linked separately. Arb becomes part of the compiled FLINT
-library, and the Arb header files will be installed along with the other
-FLINT header files.
-
 Building with MSVC
 -------------------------------------------------------------------------------
 
@@ -137,7 +121,7 @@ requires CMake >= 3.5.0
 If the dependencies are not found, pass ``-DCMAKE_PREFIX_PATH=/path/to/deps``
 to ``cmake`` to find the dependencies.
 
-To build tests add, pass ``-DBUILD_TESTS=yes`` to ``cmake`` and run `ctest`
+To build tests add, pass ``-DBUILD_TESTS=yes`` to ``cmake`` and run ``ctest``
 to run the tests.
 
 Running code
@@ -180,4 +164,31 @@ The output of the example program should be something like the following::
 
     [3.1415926535897932384626433832795028841971693993751 +/- 6.28e-50]
     Computed with arb-2.4.0
+
+Computer algebra systems and wrappers
+-------------------------------------------------------------------------------
+
+SageMath (http://sagemath.org/) includes Arb as a standard package and
+contains a high-level Python interface. Refer to the SageMath documentation:
+
+* RealBallField: http://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/real_arb.html
+* ComplexBallField: http://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/complex_arb.html
+
+Nemo (http://nemocas.org/) is a computer algebra package for the
+Julia programming language which includes a high-level Julia interface to Arb.
+The Nemo installation script will create a local installation of
+Arb along with other dependencies.
+
+* Real balls: http://nemocas.github.io/Nemo.jl/latest/arb.html
+* Complex balls: http://nemocas.github.io/Nemo.jl/latest/acb.html
+
+Other wrappers are also available:
+
+* An experimental standalone Python interface to FLINT and Arb (not requiring SageMath): https://github.com/fredrik-johansson/python-flint
+* A Java wrapper using JNA: https://github.com/crowlogic/arb/
+* Another Julia interface: https://github.com/JuliaArbTypes/ArbFloats.jl
+
+Since the various wrappers add some overhead and do not expose all the
+functionality in Arb, you may consider using them to try out Arb and prototype
+algorithms while doing a final implementation in C.
 
