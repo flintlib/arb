@@ -3,16 +3,41 @@
 **mag.h** -- fixed-precision unsigned floating-point numbers for bounds
 ===============================================================================
 
-The :type:`mag_t` type is an unsigned floating-point type with a
+The :type:`mag_t` type holds an unsigned floating-point number with a
 fixed-precision mantissa (30 bits) and an arbitrary-precision
 exponent (represented as an :type:`fmpz_t`), suited for
-representing and rigorously manipulating magnitude bounds efficiently.
-Operations always produce a strict upper or lower bound, but for performance
-reasons, no attempt is made to compute the best possible bound
-(in general, a result may a few ulps larger/smaller than the optimal value).
-The special values zero and positive infinity are supported (but not NaN).
-Applications requiring more flexibility (such as correct rounding, or
-higher precision) should use the :type:`arf_t` type instead.
+representing magnitude bounds.
+The special values zero and positive infinity are supported, but not NaN.
+
+Operations that involve rounding will always produce a valid upper bound,
+or a lower bound if the function name has the suffix *lower*.
+For performance reasons, no attempt is made to compute the best possible bounds:
+in general, a bound may be several ulps larger/smaller than the optimal bound.
+Some functions such as :func:`mag_set` and :func:`mag_mul_2exp_si` are always
+exact and therefore do not require separate *lower* versions.
+
+A common mistake is to forget computing a lower bound for the argument
+of a decreasing function that is meant to be bounded from above,
+or vice versa. For example, to compute and upper bound for `(x+1)/(y+1)`,
+the parameter *x* should initially be an upper bound while *y* should be
+a lower bound, and one should do::
+
+    mag_add_ui(tmp1, x, 1);
+    mag_add_ui_lower(tmp2, y, 1);
+    mag_div(res, tmp1, tmp2);
+
+For a lower bound of the same expression, *x* should be a lower bound while
+*y* should be an upper bound, and one should do::
+
+    mag_add_ui_lower(tmp1, x, 1);
+    mag_add_ui(tmp2, y, 1);
+    mag_div_lower(res, tmp1, tmp2);
+
+Applications requiring floating-point arithmetic with more flexibility
+(such as correct rounding, or higher precision) should use the :type:`arf_t`
+type instead. For calculations where a complex alternation between upper and
+lower bounds is necessary, it may be cleaner to use :type:`arb_t`
+arithmetic and convert to a :type:`mag_t` bound only in the end.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -38,17 +63,9 @@ Memory management
 
     Clears the variable *x*, freeing or recycling its allocated memory.
 
-.. function:: void mag_init_set(mag_t x, const mag_t y)
-
-    Initializes *x* and sets it to the value of *y*.
-
 .. function:: void mag_swap(mag_t x, mag_t y)
 
     Swaps *x* and *y* efficiently.
-
-.. function:: void mag_set(mag_t x, const mag_t y)
-
-    Sets *x* to the value of *y*.
 
 .. function:: mag_ptr _mag_vec_init(slong n)
 
@@ -67,17 +84,17 @@ Memory management
 Special values
 -------------------------------------------------------------------------------
 
-.. function:: void mag_zero(mag_t x)
+.. function:: void mag_zero(mag_t res)
 
-    Sets *x* to zero.
+    Sets *res* to zero.
 
-.. function:: void mag_one(mag_t x)
+.. function:: void mag_one(mag_t res)
 
-    Sets *x* to one.
+    Sets *res* to one.
 
-.. function:: void mag_inf(mag_t x)
+.. function:: void mag_inf(mag_t res)
 
-    Sets *x* to positive infinity.
+    Sets *res* to positive infinity.
 
 .. function:: int mag_is_special(const mag_t x)
 
@@ -94,7 +111,81 @@ Special values
 .. function:: int mag_is_finite(const mag_t x)
 
     Returns nonzero iff *x* is not positive infinity (since there is no
-    NaN value, this function is exactly the negation of :func:`mag_is_inf`).
+    NaN value, this function is exactly the logical negation of :func:`mag_is_inf`).
+
+Assignment and conversions
+-------------------------------------------------------------------------------
+
+.. function:: void mag_init_set(mag_t res, const mag_t x)
+
+    Initializes *res* and sets it to the value of *x*. This operation is always exact.
+
+.. function:: void mag_set(mag_t res, const mag_t x)
+
+    Sets *res* to the value of *x*. This operation is always exact.
+
+.. function:: void mag_set_d(mag_t res, double x)
+
+.. function:: void mag_set_fmpr(mag_t res, const fmpr_t x)
+
+.. function:: void mag_set_ui(mag_t res, ulong x)
+
+.. function:: void mag_set_fmpz(mag_t res, const fmpz_t x)
+
+    Sets *res* to an upper bound for `|x|`. The operation may be inexact
+    even if *x* is exactly representable.
+
+.. function:: void mag_set_d_lower(mag_t res, double x)
+
+.. function:: void mag_set_ui_lower(mag_t res, ulong x)
+
+.. function:: void mag_set_fmpz_lower(mag_t res, const fmpz_t x)
+
+    Sets *res* to a lower bound for `|x|`.
+    The operation may be inexact even if *x* is exactly representable.
+
+.. function:: void mag_set_d_2exp_fmpz(mag_t res, double x, const fmpz_t y)
+
+.. function:: void mag_set_fmpz_2exp_fmpz(mag_t res, const fmpz_t x, const fmpz_t y)
+
+.. function:: void mag_set_ui_2exp_si(mag_t res, ulong x, slong y)
+
+    Sets *res* to an upper bound for `|x| \cdot 2^y`.
+
+.. function:: void mag_set_d_2exp_fmpz_lower(mag_t res, double x, const fmpz_t y)
+
+.. function:: void mag_set_fmpz_2exp_fmpz_lower(mag_t res, const fmpz_t x, const fmpz_t y)
+
+    Sets *res* to a lower bound for `|x| \cdot 2^y`.
+
+.. function:: double mag_get_d(const mag_t x)
+
+    Returns a *double* giving an upper bound for *x*.
+
+.. function:: double mag_get_d_log2_approx(const mag_t x)
+
+    Returns a *double* approximating `\log_2(x)`, suitable for estimating
+    magnitudes (warning: not a rigorous bound).
+    The value is clamped between *COEFF_MIN* and *COEFF_MAX*.
+
+.. function:: void mag_get_fmpr(fmpr_t res, const mag_t x)
+
+    Sets *res* exactly to *x*.
+
+.. function:: void mag_get_fmpq(fmpq_t res, const mag_t x)
+
+.. function:: void mag_get_fmpz(fmpz_t res, const mag_t x)
+
+.. function:: void mag_get_fmpz_lower(fmpz_t res, const mag_t x)
+
+    Sets *res*, respectively, to the exact rational number represented by *x*,
+    the integer exactly representing the ceiling function of *x*, or the
+    integer exactly representing the floor function of *x*.
+
+    These functions are unsafe: the user must check in advance that *x* is of
+    reasonable magnitude. If *x* is infinite or has a bignum exponent, an
+    abort will be raised. If the exponent otherwise is too large or too small,
+    the available memory could be exhausted resulting in undefined behavior.
 
 Comparisons
 -------------------------------------------------------------------------------
@@ -113,11 +204,11 @@ Comparisons
     Returns negative, zero, or positive, depending on whether *x*
     is smaller, equal, or larger than `2^y`.
 
-.. function:: void mag_min(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_min(mag_t res, const mag_t x, const mag_t y)
 
-.. function:: void mag_max(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_max(mag_t res, const mag_t x, const mag_t y)
 
-    Sets *z* respectively to the smaller or the larger of *x* and *y*.
+    Sets *res* respectively to the smaller or the larger of *x* and *y*.
 
 Input and output
 -------------------------------------------------------------------------------
@@ -133,166 +224,91 @@ Input and output
 Random generation
 -------------------------------------------------------------------------------
 
-.. function:: void mag_randtest(mag_t x, flint_rand_t state, slong expbits)
+.. function:: void mag_randtest(mag_t res, flint_rand_t state, slong expbits)
 
-    Sets *x* to a random finite value, with an exponent up to *expbits* bits large.
+    Sets *res* to a random finite value, with an exponent up to *expbits* bits large.
 
-.. function:: void mag_randtest_special(mag_t x, flint_rand_t state, slong expbits)
+.. function:: void mag_randtest_special(mag_t res, flint_rand_t state, slong expbits)
 
-    Like :func:`mag_randtest`, but also sometimes sets *x* to
-    infinity.
-
-Conversions
--------------------------------------------------------------------------------
-
-.. function:: void mag_set_d(mag_t y, double x)
-
-.. function:: void mag_set_fmpr(mag_t y, const fmpr_t x)
-
-.. function:: void mag_set_ui(mag_t y, ulong x)
-
-.. function:: void mag_set_fmpz(mag_t y, const fmpz_t x)
-
-    Sets *y* to an upper bound for `|x|`.
-
-.. function:: void mag_set_d_2exp_fmpz(mag_t z, double x, const fmpz_t y)
-
-.. function:: void mag_set_fmpz_2exp_fmpz(mag_t z, const fmpz_t x, const fmpz_t y)
-
-.. function:: void mag_set_ui_2exp_si(mag_t z, ulong x, slong y)
-
-    Sets *z* to an upper bound for `|x| \times 2^y`.
-
-.. function:: void mag_set_d_lower(mag_t y, double x)
-
-    Sets *y* to a lower bound for `|x|`.
-
-.. function:: void mag_set_d_2exp_fmpz_lower(mag_t z, double x, const fmpz_t y)
-
-    Sets *z* to a lower bound for `|x| \times 2^y`.
-
-.. function:: void mag_get_fmpr(fmpr_t y, const mag_t x)
-
-    Sets *y* exactly to *x*.
-
-.. function:: void mag_get_fmpq(fmpq_t y, const mag_t x)
-
-    Sets *y* exactly to *x*. This user must check in advance that *x* is
-    of reasonable magnitude before calling this function. If *x* is infinite or
-    has a bignum exponent, an abort will be raised. If the exponent otherwise
-    is too large or too small, the available memory could be exhausted
-    resulting in undefined behavior.
-
-.. function:: void mag_get_fmpz(fmpz_t y, const mag_t x)
-
-    Sets *y* to the ceiling of *x*. This user must check in advance that *x* is
-    of reasonable magnitude before calling this function. If *x* is infinite or
-    has a bignum exponent, an abort will be raised. If the exponent otherwise
-    is too large or too small, the available memory could be exhausted
-    resulting in undefined behavior.
-
-.. function:: void mag_get_fmpz_lower(fmpz_t y, const mag_t x)
-
-    Sets *y* to the floor of *x*. This user must check in advance that *x* is
-    of reasonable magnitude before calling this function. If *x* is infinite or
-    has a bignum exponent, an abort will be raised. If the exponent otherwise
-    is too large or too small, the available memory could be exhausted
-    resulting in undefined behavior.
-
-.. function:: double mag_get_d(const mag_t x)
-
-    Returns a *double* giving an upper bound for *x*.
-
-.. function:: double mag_get_d_log2_approx(const mag_t x)
-
-    Returns a *double* approximating `\log_2(x)`, suitable for estimating
-    magnitudes (not for rigorous bounds).
-    The value is clamped between COEFF_MIN and COEFF_MAX.
-
-.. function:: void mag_set_ui_lower(mag_t z, ulong x)
-
-.. function:: void mag_set_fmpz_lower(mag_t z, const fmpz_t x)
-
-    Sets *y* to a lower bound for `|x|`.
-
-.. function:: void mag_set_fmpz_2exp_fmpz_lower(mag_t z, const fmpz_t x, const fmpz_t y)
-
-    Sets *z* to a lower bound for `|x| \times 2^y`.
+    Like :func:`mag_randtest`, but also sometimes sets *res* to infinity.
 
 Arithmetic
 -------------------------------------------------------------------------------
 
-.. function:: void mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
+.. function:: void mag_add(mag_t res, const mag_t x, const mag_t y)
 
-.. function:: void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+.. function:: void mag_add_ui(mag_t res, const mag_t x, ulong y)
 
-    Sets *z* to `x \times 2^y`. This operation is exact.
+    Sets *res* to an upper bound for `x + y`.
 
-.. function:: void mag_mul(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_add_lower(mag_t res, const mag_t x, const mag_t y)
 
-.. function:: void mag_mul_ui(mag_t z, const mag_t x, ulong y)
+.. function:: void mag_add_ui_lower(mag_t res, const mag_t x, ulong y)
 
-.. function:: void mag_mul_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+    Sets *res* to a lower bound for `x + y`.
 
-    Sets *z* to an upper bound for `xy`.
+.. function:: void mag_add_2exp_fmpz(mag_t res, const mag_t x, const fmpz_t e)
 
-.. function:: void mag_add(mag_t z, const mag_t x, const mag_t y)
+    Sets *res* to an upper bound for `x + 2^e`.
 
-.. function:: void mag_add_ui(mag_t z, const mag_t x, ulong y)
+.. function:: void mag_add_ui_2exp_si(mag_t res, const mag_t x, ulong y, slong e)
 
-    Sets *z* to an upper bound for `x + y`.
+    Sets *res* to an upper bound for `x + y 2^e`.
+
+.. function:: void mag_sub(mag_t res, const mag_t x, const mag_t y)
+
+    Sets *res* to an upper bound for `\max(x-y, 0)`.
+
+.. function:: void mag_sub_lower(mag_t res, const mag_t x, const mag_t y)
+
+    Sets *res* to a lower bound for `\max(x-y, 0)`.
+
+.. function:: void mag_mul_2exp_si(mag_t res, const mag_t x, slong y)
+
+.. function:: void mag_mul_2exp_fmpz(mag_t res, const mag_t x, const fmpz_t y)
+
+    Sets *res* to `x \cdot 2^y`. This operation is exact.
+
+.. function:: void mag_mul(mag_t res, const mag_t x, const mag_t y)
+
+.. function:: void mag_mul_ui(mag_t res, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz(mag_t res, const mag_t x, const fmpz_t y)
+
+    Sets *res* to an upper bound for `xy`.
+
+.. function:: void mag_mul_lower(mag_t res, const mag_t x, const mag_t y)
+
+.. function:: void mag_mul_ui_lower(mag_t res, const mag_t x, ulong y)
+
+.. function:: void mag_mul_fmpz_lower(mag_t res, const mag_t x, const fmpz_t y)
+
+    Sets *res* to a lower bound for `xy`.
 
 .. function:: void mag_addmul(mag_t z, const mag_t x, const mag_t y)
 
     Sets *z* to an upper bound for `z + xy`.
 
-.. function:: void mag_add_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t e)
+.. function:: void mag_div(mag_t res, const mag_t x, const mag_t y)
 
-    Sets *z* to an upper bound for `x + 2^e`.
+.. function:: void mag_div_ui(mag_t res, const mag_t x, ulong y)
 
-.. function:: void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e)
+.. function:: void mag_div_fmpz(mag_t res, const mag_t x, const fmpz_t y)
 
-    Sets *z* to an upper bound for `x + y 2^e`.
+    Sets *res* to an upper bound for `x / y`.
 
-.. function:: void mag_div(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_div_lower(mag_t res, const mag_t x, const mag_t y)
 
-.. function:: void mag_div_ui(mag_t z, const mag_t x, ulong y)
+    Sets *res* to a lower bound for `x / y`.
 
-.. function:: void mag_div_fmpz(mag_t z, const mag_t x, const fmpz_t y)
+.. function:: void mag_inv(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `x / y`.
+    Sets *res* to an upper bound for `1 / x`.
 
-.. function:: void mag_div_lower(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_inv_lower(mag_t res, const mag_t x)
 
-    Sets *z* to a lower bound for `x / y`.
+    Sets *res* to a lower bound for `1 / x`.
 
-.. function:: void mag_inv(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `1 / x`.
-
-.. function:: void mag_inv_lower(mag_t z, const mag_t x)
-
-    Sets *z* to a lower bound for `1 / x`.
-
-.. function:: void mag_mul_lower(mag_t z, const mag_t x, const mag_t y)
-
-.. function:: void mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
-
-.. function:: void mag_mul_fmpz_lower(mag_t z, const mag_t x, const fmpz_t y)
-
-    Sets *z* to a lower bound for `xy`.
-
-.. function:: void mag_add_lower(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to a lower bound for `x + y`.
-
-.. function:: void mag_sub(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to an upper bound for `\max(x-y, 0)`.
-
-.. function:: void mag_sub_lower(mag_t z, const mag_t x, const mag_t y)
-
-    Sets *z* to a lower bound for `\max(x-y, 0)`.
 
 Fast, unsafe arithmetic
 -------------------------------------------------------------------------------
@@ -306,126 +322,124 @@ as they will be overwritten directly (thus leaking memory).
 
     Initialises *x* and sets it to the value of *y*.
 
-.. function:: void mag_fast_zero(mag_t x)
+.. function:: void mag_fast_zero(mag_t res)
 
-    Sets *x* to zero.
+    Sets *res* to zero.
 
 .. function:: int mag_fast_is_zero(const mag_t x)
 
     Returns nonzero iff *x* to zero.
 
-.. function:: void mag_fast_mul(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_fast_mul(mag_t res, const mag_t x, const mag_t y)
 
-    Sets *z* to an upper bound for `xy`.
+    Sets *res* to an upper bound for `xy`.
 
 .. function:: void mag_fast_addmul(mag_t z, const mag_t x, const mag_t y)
 
     Sets *z* to an upper bound for `z + xy`.
 
-.. function:: void mag_fast_add_2exp_si(mag_t z, const mag_t x, slong e)
+.. function:: void mag_fast_add_2exp_si(mag_t res, const mag_t x, slong e)
 
-    Sets *z* to an upper bound for `x + 2^e`.
+    Sets *res* to an upper bound for `x + 2^e`.
 
-.. function:: void mag_fast_mul_2exp_si(mag_t z, const mag_t x, slong e)
+.. function:: void mag_fast_mul_2exp_si(mag_t res, const mag_t x, slong e)
 
-    Sets *z* to an upper bound for `x 2^e`.
+    Sets *res* to an upper bound for `x 2^e`.
 
 Powers and logarithms
 -------------------------------------------------------------------------------
 
-.. function:: void mag_pow_ui(mag_t z, const mag_t x, ulong e)
+.. function:: void mag_pow_ui(mag_t res, const mag_t x, ulong e)
 
-.. function:: void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
+.. function:: void mag_pow_fmpz(mag_t res, const mag_t x, const fmpz_t e)
 
-    Sets *z* to an upper bound for `x^e`. Requires `e \ge 0`.
+    Sets *res* to an upper bound for `x^e`. Requires `e \ge 0`.
 
-.. function:: void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e)
+.. function:: void mag_pow_ui_lower(mag_t res, const mag_t x, ulong e)
 
-.. function:: void mag_pow_fmpz_lower(mag_t z, const mag_t x, const fmpz_t e)
+.. function:: void mag_pow_fmpz_lower(mag_t res, const mag_t x, const fmpz_t e)
 
-    Sets *z* to a lower bound for `x^e`. Requires `e \ge 0`.
+    Sets *res* to a lower bound for `x^e`. Requires `e \ge 0`.
 
-.. function:: void mag_sqrt(mag_t z, const mag_t x)
+.. function:: void mag_sqrt(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `\sqrt{x}`.
+    Sets *res* to an upper bound for `\sqrt{x}`.
 
-.. function:: void mag_sqrt_lower(mag_t z, const mag_t x)
+.. function:: void mag_sqrt_lower(mag_t res, const mag_t x)
 
-    Sets *z* to a lower bound for `\sqrt{x}`.
+    Sets *res* to a lower bound for `\sqrt{x}`.
 
-.. function:: void mag_rsqrt(mag_t z, const mag_t x)
+.. function:: void mag_rsqrt(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `1/\sqrt{x}`.
+    Sets *res* to an upper bound for `1/\sqrt{x}`.
 
-.. function:: void mag_rsqrt_lower(mag_t z, const mag_t x)
+.. function:: void mag_rsqrt_lower(mag_t res, const mag_t x)
 
-    Sets *z* to an lower bound for `1/\sqrt{x}`.
+    Sets *res* to an lower bound for `1/\sqrt{x}`.
 
-.. function:: void mag_hypot(mag_t z, const mag_t x, const mag_t y)
+.. function:: void mag_hypot(mag_t res, const mag_t x, const mag_t y)
 
-    Sets *z* to an upper bound for `\sqrt{x^2 + y^2}`.
+    Sets *res* to an upper bound for `\sqrt{x^2 + y^2}`.
 
-.. function:: void mag_root(mag_t z, const mag_t x, ulong n)
+.. function:: void mag_root(mag_t res, const mag_t x, ulong n)
 
-    Sets *z* to an upper bound for `x^{1/n}`. 
-    We evaluate `\exp(\log(1+2^{kn}x)/n) 2^{-k}`, where *k* is chosen
-    so that `2^{kn}x \approx 2^{30}`.
+    Sets *res* to an upper bound for `x^{1/n}`. 
 
-.. function:: void mag_log1p(mag_t z, const mag_t x)
+.. function:: void mag_log(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `\log(1+x)`. The bound is computed
-    accurately for small *x*.
+    Sets *res* to an upper bound for `\log(\max(1,x))`.
 
-.. function:: void mag_log_ui(mag_t z, ulong n)
+.. function:: void mag_log_lower(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `\log(n)`.
+    Sets *res* to a lower bound for `\log(\max(1,x))`.
 
-.. function:: void mag_log(mag_t z, const mag_t x)
+.. function:: void mag_neg_log(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `\log(\max(1,x))`.
-
-.. function:: void mag_log_lower(mag_t z, const mag_t x)
-
-    Sets *z* to a lower bound for `\log(\max(1,x))`.
-
-.. function:: void mag_neg_log(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `-\log(\min(1,x))`, i.e. an upper
+    Sets *res* to an upper bound for `-\log(\min(1,x))`, i.e. an upper
     bound for `|\log(x)|` for `x \le 1`.
 
-.. function:: void mag_neg_log_lower(mag_t z, const mag_t x)
+.. function:: void mag_neg_log_lower(mag_t res, const mag_t x)
 
-    Sets *z* to a lower bound for `-\log(\min(1,x))`, i.e. a lower
+    Sets *res* to a lower bound for `-\log(\min(1,x))`, i.e. a lower
     bound for `|\log(x)|` for `x \le 1`.
 
-.. function:: void mag_exp(mag_t z, const mag_t x)
+.. function:: void mag_log_ui(mag_t res, ulong n)
 
-    Sets *z* to an upper bound for `\exp(x)`.
+    Sets *res* to an upper bound for `\log(n)`.
 
-.. function:: void mag_exp_lower(mag_t z, const mag_t x)
+.. function:: void mag_log1p(mag_t res, const mag_t x)
 
-    Sets *z* to a lower bound for `\exp(x)`.
-
-.. function:: void mag_expinv(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `\exp(-x)`.
-
-.. function:: void mag_expinv_lower(mag_t z, const mag_t x)
-
-    Sets *z* to a lower bound for `\exp(-x)`.
-
-.. function:: void mag_expm1(mag_t z, const mag_t x)
-
-    Sets *z* to an upper bound for `\exp(x) - 1`. The bound is computed
+    Sets *res* to an upper bound for `\log(1+x)`. The bound is computed
     accurately for small *x*.
 
-.. function:: void mag_exp_tail(mag_t z, const mag_t x, ulong N)
+.. function:: void mag_exp(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `\sum_{k=N}^{\infty} x^k / k!`.
+    Sets *res* to an upper bound for `\exp(x)`.
 
-.. function:: void mag_binpow_uiui(mag_t z, ulong m, ulong n)
+.. function:: void mag_exp_lower(mag_t res, const mag_t x)
 
-    Sets *z* to an upper bound for `(1 + 1/m)^n`.
+    Sets *res* to a lower bound for `\exp(x)`.
+
+.. function:: void mag_expinv(mag_t res, const mag_t x)
+
+    Sets *res* to an upper bound for `\exp(-x)`.
+
+.. function:: void mag_expinv_lower(mag_t res, const mag_t x)
+
+    Sets *res* to a lower bound for `\exp(-x)`.
+
+.. function:: void mag_expm1(mag_t res, const mag_t x)
+
+    Sets *res* to an upper bound for `\exp(x) - 1`. The bound is computed
+    accurately for small *x*.
+
+.. function:: void mag_exp_tail(mag_t res, const mag_t x, ulong N)
+
+    Sets *res* to an upper bound for `\sum_{k=N}^{\infty} x^k / k!`.
+
+.. function:: void mag_binpow_uiui(mag_t res, ulong m, ulong n)
+
+    Sets *res* to an upper bound for `(1 + 1/m)^n`.
 
 .. function:: void mag_geom_series(mag_t res, const mag_t x, ulong N)
 
@@ -446,71 +460,35 @@ Special functions
 
     Sets *res* to an upper (respectively lower) bound for `\operatorname{atan}(x)`.
 
-.. function:: void mag_fac_ui(mag_t z, ulong n)
+.. function:: void mag_fac_ui(mag_t res, ulong n)
 
-    Sets *z* to an upper bound for `n!`.
+    Sets *res* to an upper bound for `n!`.
 
-.. function:: void mag_rfac_ui(mag_t z, ulong n)
+.. function:: void mag_rfac_ui(mag_t res, ulong n)
 
-    Sets *z* to an upper bound for `1/n!`.
+    Sets *res* to an upper bound for `1/n!`.
 
 .. function:: void mag_bin_uiui(mag_t res, ulong n, ulong k)
 
     Sets *res* to an upper bound for the binomial coefficient `{n \choose k}`.
 
-.. function:: void mag_bernoulli_div_fac_ui(mag_t z, ulong n)
+.. function:: void mag_bernoulli_div_fac_ui(mag_t res, ulong n)
 
-    Sets *z* to an upper bound for `|B_n| / n!` where `B_n` denotes
+    Sets *res* to an upper bound for `|B_n| / n!` where `B_n` denotes
     a Bernoulli number.
 
-.. function:: void mag_polylog_tail(mag_t u, const mag_t z, slong s, ulong d, ulong N)
+.. function:: void mag_polylog_tail(mag_t res, const mag_t z, slong s, ulong d, ulong N)
 
-    Sets *u* to an upper bound for
+    Sets *res* to an upper bound for
 
     .. math ::
 
         \sum_{k=N}^{\infty} \frac{z^k \log^d(k)}{k^s}.
 
+    The bounding strategy is described in :ref:`algorithms_polylogarithms`.
     Note: in applications where `s` in this formula may be
     real or complex, the user can simply
     substitute any convenient integer `s'` such that `s' \le \operatorname{Re}(s)`.
-
-    Denote the terms by `T(k)`. We pick a nonincreasing function `U(k)` such that
-
-    .. math ::
-
-        \frac{T(k+1)}{T(k)} = z \left(\frac{k}{k+1}\right)^s 
-            \left( \frac{\log(k+1)}{\log(k)} \right)^d \le U(k).
-
-    Then, as soon as `U(N) < 1`,
-
-    .. math ::
-
-        \sum_{k=N}^{\infty} T(k)
-            \le T(N) \sum_{k=0}^{\infty} U(N)^k = \frac{T(N)}{1 - U(N)}.
-
-    In particular, we take
-
-    .. math ::
-
-        U(k) = z \; B(k, \max(0, -s)) \; B(k \log(k), d)
-
-    where `B(m,n) = (1 + 1/m)^n`. This follows from the bounds
-
-    .. math ::
-
-        \left(\frac{k}{k+1}\right)^{s}
-        \le \begin{cases}
-            1                    & \text{if }         s \ge 0 \\
-            (1 + 1/k)^{-s}  & \text{if }         s < 0.
-            \end{cases}
-
-    and
-
-    .. math ::
-
-        \left( \frac{\log(k+1)}{\log(k)} \right)^d \le
-            \left(1 + \frac{1}{k \log(k)}\right)^d.
 
 .. function:: void mag_hurwitz_zeta_uiui(mag_t res, ulong s, ulong a)
 

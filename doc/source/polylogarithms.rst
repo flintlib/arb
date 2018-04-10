@@ -31,7 +31,44 @@ where
         T(k) = \frac{z^k \log^d(k)}{k^s}.
 
 The remainder term `\left| \sum_{k=N}^{\infty} T(k) \right|` is bounded
-via :func:`mag_polylog_tail`.
+via the following strategy, implemented in :func:`mag_polylog_tail`.
+
+Denote the terms by `T(k)`. We pick a nonincreasing function `U(k)` such that
+
+.. math ::
+
+    \frac{T(k+1)}{T(k)} = z \left(\frac{k}{k+1}\right)^s
+        \left( \frac{\log(k+1)}{\log(k)} \right)^d \le U(k).
+
+Then, as soon as `U(N) < 1`,
+
+.. math ::
+
+    \sum_{k=N}^{\infty} T(k)
+        \le T(N) \sum_{k=0}^{\infty} U(N)^k = \frac{T(N)}{1 - U(N)}.
+
+In particular, we take
+
+.. math ::
+
+    U(k) = z \; B(k, \max(0, -s)) \; B(k \log(k), d)
+
+where `B(m,n) = (1 + 1/m)^n`. This follows from the bounds
+
+.. math ::
+
+    \left(\frac{k}{k+1}\right)^{s}
+    \le \begin{cases}
+        1                    & \text{if }         s \ge 0 \\
+        (1 + 1/k)^{-s}  & \text{if }         s < 0.
+        \end{cases}
+
+and
+
+.. math ::
+
+    \left( \frac{\log(k+1)}{\log(k)} \right)^d \le
+        \left(1 + \frac{1}{k \log(k)}\right)^d.
 
 Expansion for general z
 -------------------------------------------------------------------------------
