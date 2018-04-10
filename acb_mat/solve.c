@@ -14,27 +14,10 @@
 int
 acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 {
-    int result;
-    slong n, m, *perm;
-    acb_mat_t LU;
+    slong n = acb_mat_nrows(A);
 
-    n = acb_mat_nrows(A);
-    m = acb_mat_ncols(X);
-
-    if (n == 0 || m == 0)
-        return 1;
-
-    perm = _perm_init(n);
-    acb_mat_init(LU, n, n);
-
-    result = acb_mat_lu(perm, LU, A, prec);
-
-    if (result)
-        acb_mat_solve_lu_precomp(X, perm, LU, B, prec);
-
-    acb_mat_clear(LU);
-    _perm_clear(perm);
-
-    return result;
+    if (n <= 4 || prec > 10.0 * n)
+        return acb_mat_solve_lu(X, A, B, prec);
+    else
+        return acb_mat_solve_precond(X, A, B, prec);
 }
-

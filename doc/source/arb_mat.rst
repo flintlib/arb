@@ -292,6 +292,24 @@ Gaussian elimination and solving
     value guarantees that `A` is invertible and that the exact solution
     matrix is contained in the output.
 
+    Three algorithms are provided:
+
+    * The *lu* version performs LU decomposition directly in ball arithmetic.
+      This is fast, but the bounds typically blow up exponentially with *n*,
+      even if the system is well-conditioned. This algorithm is usually
+      the best choice at very high precision.
+    * The *precond* version computes an approximate inverse to precondition
+      the system. This is usually several times slower than direct LU
+      decomposition, but the bounds do not blow up with *n* if the system is
+      well-conditioned. This algorithm is usually
+      the best choice for large systems at low to moderate precision.
+    * The default version selects between *lu* and *precomp* automatically.
+
+    The automatic choice should be reasonable most of the time, but users
+    may benefit from trying either *lu* or *precond* in specific applications.
+    For example, the *lu* solver often performs better for ill-conditioned
+    systems where use of very high precision is unavoidable.
+
 .. function:: int arb_mat_solve_preapprox(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, const arb_mat_t R, const arb_mat_t T, slong prec)
 
     Solves `AX = B` where `A` is a nonsingular `n \times n` matrix

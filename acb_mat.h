@@ -124,6 +124,33 @@ acb_mat_is_square(const acb_mat_t mat)
     return (mat->r == mat->c);
 }
 
+/* Radius and interval operations */
+
+ACB_MAT_INLINE void
+acb_mat_get_mid(acb_mat_t B, const acb_mat_t A)
+{
+    slong i, j;
+
+    for (i = 0; i < acb_mat_nrows(A); i++)
+    {
+        for (j = 0; j < acb_mat_ncols(A); j++)
+        {
+            arb_get_mid_arb(acb_realref(acb_mat_entry(B, i, j)), acb_realref(acb_mat_entry(A, i, j)));
+            arb_get_mid_arb(acb_imagref(acb_mat_entry(B, i, j)), acb_imagref(acb_mat_entry(A, i, j)));
+        }
+    }
+}
+
+ACB_MAT_INLINE void
+acb_mat_add_error_mag(acb_mat_t mat, const mag_t err)
+{
+    slong i, j;
+
+    for (i = 0; i < acb_mat_nrows(mat); i++)
+        for (j = 0; j < acb_mat_ncols(mat); j++)
+            acb_add_error_mag(acb_mat_entry(mat, i, j), err);
+}
+
 /* Special matrices */
 
 void acb_mat_zero(acb_mat_t mat);
@@ -323,7 +350,17 @@ int acb_mat_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
 void acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm,
     const acb_mat_t A, const acb_mat_t B, slong prec);
 
+int acb_mat_solve_lu(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
+
 int acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
+
+int acb_mat_solve_precond(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
+
+int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
+
+void acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t A, const acb_mat_t B, slong prec);
+
+int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
 
 int acb_mat_inv(acb_mat_t X, const acb_mat_t A, slong prec);
 

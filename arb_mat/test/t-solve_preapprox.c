@@ -76,7 +76,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         fmpq_mat_t QA, QB, QR, QT, QE, QX;
         arb_mat_t A, B, R, T, X;

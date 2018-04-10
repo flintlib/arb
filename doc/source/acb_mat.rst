@@ -293,14 +293,36 @@ Gaussian elimination and solving
 
 .. function:: int acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 
+.. function:: int acb_mat_solve_lu(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
+
+.. function:: int acb_mat_solve_precond(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
+
     Solves `AX = B` where `A` is a nonsingular `n \times n` matrix
-    and `X` and `B` are `n \times m` matrices, using LU decomposition.
+    and `X` and `B` are `n \times m` matrices.
 
     If `m > 0` and `A` cannot be inverted numerically (indicating either that
     `A` is singular or that the precision is insufficient), the values in the
     output matrix are left undefined and zero is returned. A nonzero return
     value guarantees that `A` is invertible and that the exact solution
     matrix is contained in the output.
+
+    Three algorithms are provided:
+
+    * The *lu* version performs LU decomposition directly in ball arithmetic.
+      This is fast, but the bounds typically blow up exponentially with *n*,
+      even if the system is well-conditioned. This algorithm is usually
+      the best choice at very high precision.
+    * The *precond* version computes an approximate inverse to precondition
+      the system. This is usually several times slower than direct LU
+      decomposition, but the bounds do not blow up with *n* if the system is
+      well-conditioned. This algorithm is usually
+      the best choice for large systems at low to moderate precision.
+    * The default version selects between *lu* and *precomp* automatically.
+
+    The automatic choice should be reasonable most of the time, but users
+    may benefit from trying either *lu* or *precond* in specific applications.
+    For example, the *lu* solver often performs better for ill-conditioned
+    systems where use of very high precision is unavoidable.
 
 .. function:: int acb_mat_inv(acb_mat_t X, const acb_mat_t A, slong prec)
 
