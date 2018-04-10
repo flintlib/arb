@@ -22,15 +22,6 @@ arb_get_mag_reverse(mag_t res, const arb_t x)
     mag_clear(t);
 }
 
-void
-mag_add_ui_lower(mag_t res, const mag_t x, ulong y)
-{
-    mag_t t;
-    mag_init(t);
-    mag_set_ui_lower(t, y);  /* no need to free */
-    mag_add_lower(res, x, t);
-}
-
 /* upper bound for re(rsqrt(x+yi)) / |rsqrt(x+yi)|,
    given upper bound for x, lower bound for y */
 void

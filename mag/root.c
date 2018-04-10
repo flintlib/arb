@@ -38,6 +38,9 @@ mag_root(mag_t y, const mag_t x, ulong n)
         fmpz_init_set_ui(e, MAG_BITS);
         fmpz_init(f);
 
+        /* We evaluate exp(log(1+2^(kn)x)/n) 2^-k where k is chosen
+           so that 2^(kn) x ~= 2^30. TODO: this rewriting is probably
+           unnecessary with the new exp/log functions. */
         fmpz_sub(e, e, MAG_EXPREF(x));
         fmpz_cdiv_q_ui(e, e, n);
         fmpz_mul_ui(f, e, n);

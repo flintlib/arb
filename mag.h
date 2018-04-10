@@ -294,6 +294,7 @@ void mag_add(mag_t z, const mag_t x, const mag_t y);
 void mag_add_lower(mag_t z, const mag_t x, const mag_t y);
 
 void mag_add_ui(mag_t z, const mag_t x, ulong y);
+void mag_add_ui_lower(mag_t res, const mag_t x, ulong y);
 
 void mag_add_ui_2exp_si(mag_t z, const mag_t x, ulong y, slong e);
 

@@ -20,4 +20,12 @@ mag_add_ui(mag_t y, const mag_t x, ulong k)
     mag_add(y, x, t);
 }
 
+void
+mag_add_ui_lower(mag_t res, const mag_t x, ulong k)
+{
+    mag_t t;
+    mag_init(t);
+    mag_set_ui_lower(t, k);  /* no need to free */
+    mag_add_lower(res, x, t);
+}
 
