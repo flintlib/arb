@@ -11,6 +11,9 @@
 
 #include "acb_dirichlet.h"
 
+void acb_dirichlet_stieltjes_integral(acb_t res, const fmpz_t n, const acb_t a, slong prec);
+void acb_dirichlet_stieltjes_em(acb_t res, const fmpz_t n, const acb_t a, slong prec);
+
 int main()
 {
     slong iter;
@@ -26,6 +29,7 @@ int main()
         acb_t b1, b2, a;
         fmpz_t n;
         slong prec1, prec2, acc1, acc2;
+        int alg1, alg2;
 
         fmpz_init(n);
         acb_init(b1);
@@ -50,20 +54,47 @@ int main()
         }
         else
         {
-            acb_randtest_precise(a, state, 400, 2);
+            acb_randtest_precise(a, state, 400, 3);
             fmpz_randtest(n, state, 7);
             fmpz_abs(n, n);
             prec1 = 2 + n_randint(state, 400);
             prec2 = 2 + n_randint(state, 400);
         }
 
-        acb_dirichlet_stieltjes(b1, n, a, prec1);
-        acb_dirichlet_stieltjes(b2, n, a, prec2);
+        alg1 = n_randint(state, 3);
+        alg2 = n_randint(state, 3);
+
+        if (fmpz_cmp_ui(n, 40) >= 0)
+        {
+            alg1 = 1 + n_randint(state, 2);
+            alg2 = 1 + n_randint(state, 2);
+        }
+        else
+        {
+            alg1 = n_randint(state, 3);
+            alg2 = n_randint(state, 3);
+        }
+
+        if (alg1 == 0)
+            acb_dirichlet_stieltjes_em(b1, n, a, prec1);
+        else if (alg1 == 1)
+            acb_dirichlet_stieltjes_integral(b1, n, a, prec1);
+        else
+            acb_dirichlet_stieltjes(b1, n, a, prec1);
+
+        if (alg2 == 0)
+            acb_dirichlet_stieltjes_em(b2, n, a, prec2);
+        else if (alg2 == 1)
+            acb_dirichlet_stieltjes_integral(b2, n, a, prec2);
+        else
+            acb_dirichlet_stieltjes(b2, n, a, prec2);
 
         if (!acb_overlaps(b1, b2))
         {
             flint_printf("FAIL: overlap\n\n");
+            flint_printf("iter = %wd, alg1 = %d, alg2 = %d\n\n", iter, alg1, alg2);
             flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
+            flint_printf("a = "); acb_printn(a, 100, 0); flint_printf("\n\n");
             flint_printf("b1 = "); acb_printn(b1, 1000, 0); flint_printf("\n\n");
             flint_printf("b2 = "); acb_printn(b2, 1000, 0); flint_printf("\n\n");
             flint_abort();

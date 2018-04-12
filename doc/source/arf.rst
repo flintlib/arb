@@ -31,7 +31,7 @@ Except where otherwise noted, functions have the following semantics:
   the mathematical operation exactly, and rounding the resulting real number
   to the nearest representable floating-point number whose mantissa has at
   most the specified number of bits, in the specified direction of rounding.
-  In particular, the error is at most 1 ulp with directed rounding mode
+  In particular, the error is at most 1 ulp with directed rounding modes
   and 0.5 ulp when rounding to nearest.
 
 * Other functions perform the operation exactly.

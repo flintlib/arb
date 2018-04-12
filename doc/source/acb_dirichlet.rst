@@ -280,15 +280,16 @@ Stieltjes constants
     With `a = 1`, this gives the ordinary Stieltjes constants for the
     Riemann zeta function.
 
-    This function uses an integral representation if `a = 1`
-    to permit fast computation for extremely large *n*.
-    If `a \ne 1` (or *n* is moderate and the precision is high), it falls back
-    to evaluating the Hurwitz zeta function of a power series and reading off
-    the last coefficient. If `a \ne 1`, large *n* will be extremely slow.
-    Also note that for computing a range of values
+    This function uses an integral representation to permit fast computation
+    for extremely large *n*. If *n* is moderate and the precision is high enough,
+    it falls back to evaluating the Hurwitz zeta function of a power series
+    and reading off the last coefficient.
+
+    Note that for computing a range of values
     `\gamma_0(a), \ldots, \gamma_n(a)`, it is
     generally more efficient to evaluate the Hurwitz zeta function series
-    expansion once at `s = 1` than to call this function repeatedly.
+    expansion once at `s = 1` than to call this function repeatedly,
+    unless *n* is extremely large (at least several hundred).
 
 Dirichlet character evaluation
 -------------------------------------------------------------------------------

@@ -14,71 +14,10 @@
 #include "acb_dirichlet.h"
 #include "acb_calc.h"
 
-/* The integrand. */
-int _f_stieltjes(acb_ptr res, const acb_t x, void * param, slong order, slong prec);
-
-/* Compute the approximate saddle point. */
+/* Bound the quadratic Taylor error term. */
 static void
-stieltjes_omega(acb_t omega, const fmpz_t n1, slong prec)
-{
-    acb_t t, u;
-    fmpz_t k;
-
-    acb_init(t);
-    acb_init(u);
-    fmpz_init(k);
-
-    arb_set_fmpz(acb_imagref(t), n1);
-    acb_const_pi(u, prec);
-    acb_mul_2exp_si(u, u, 1);
-    acb_div(u, t, u, prec);
-    acb_lambertw(t, u, k, 0, prec);
-    acb_div(t, u, t, prec);
-    acb_mul_2exp_si(t, t, 1);
-    acb_sub_ui(t, t, 1, prec);
-    acb_neg(t, t);
-    acb_mul_onei(t, t);
-    acb_mul_2exp_si(t, t, -1);
-
-    acb_set(omega, t);
-
-    acb_clear(t);
-    acb_clear(u);
-    fmpz_clear(k);
-}
-
-/* Compute an approximation of the magnitude of gamma_n (given n1 = n+1). */
-static void
-stieltjes_mag_approx(arb_t C, mag_t tol, const fmpz_t n1)
-{
-    slong prec;
-    acb_t w, v, q;
-
-    prec = 32 + 2 * fmpz_bits(n1);
-
-    acb_init(w);
-    acb_init(v);
-    acb_init(q);
-
-    stieltjes_omega(w, n1, prec);
-    _f_stieltjes(v, w, (void *) n1, 0, prec);
-
-    acb_set_fmpz(q, n1);
-    acb_sqrt(q, q, prec);
-    acb_mul(v, v, q, prec);
-
-    acb_get_mag(tol, v);
-
-    arb_set(C, acb_imagref(w));
-    mag_zero(arb_radref(C));
-
-    acb_clear(w);
-    acb_clear(v);
-    acb_clear(q);
-}
-
-static void
-stieltjes_bound_quadratic_term(arb_t B, const acb_t z, const fmpz_t n1, slong prec)
+stieltjes_bound_quadratic_term(arb_t B, const acb_t z,
+        const fmpz_t n1, const acb_t alpha, slong prec)
 {
     acb_t t, log_t;
     mag_t b, c, d;
@@ -90,10 +29,9 @@ stieltjes_bound_quadratic_term(arb_t B, const acb_t z, const fmpz_t n1, slong pr
     mag_init(d);
 
     /* g''(z) = (n+1)(1+1/log(t)) / (t^2 log(t)) */
-    /* t = 1/2 + iz, log_t = log(t) */
+    /* t = alpha + iz, log_t = log(t) */
     acb_mul_onei(t, z);
-    acb_set_d(log_t, 0.5);
-    acb_add(t, t, log_t, prec);
+    acb_add(t, t, alpha, prec);
     acb_log(log_t, t, prec);
 
     acb_get_mag_lower(b, t);
@@ -128,7 +66,8 @@ stieltjes_bound_quadratic_term(arb_t B, const acb_t z, const fmpz_t n1, slong pr
 }
 
 static void
-stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1, slong prec)
+stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1,
+        const acb_t alpha, slong prec)
 {
     acb_t m, t, log_t, u, v;
     acb_t g0, g1, g2;
@@ -152,19 +91,18 @@ stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1, slong prec)
     mag_zero(arb_radref(acb_realref(m)));
     mag_zero(arb_radref(acb_imagref(m)));
 
-    /* t = 1/2 + im */
+    /* t = alpha + im */
     acb_mul_onei(t, m);
-    acb_set_d(u, 0.5);
-    acb_add(t, t, u, prec);
+    acb_add(t, t, alpha, prec);
 
-    /* log_t = log(1/2+im) */
+    /* log_t = log(alpha+im) */
     acb_log(log_t, t, prec);
 
     /* u = x - m */
     acb_sub(u, x, m, prec);
     acb_get_mag(D, u);
 
-    /* g0 = g(m) = (n+1) log(log(1/2+im)) - 2 pi m */
+    /* g0 = g(m) = (n+1) log(log(alpha+im)) - 2 pi m */
     acb_log(g0, log_t, prec);
     acb_mul_fmpz(g0, g0, n1, prec);
     acb_const_pi(v, prec);
@@ -172,7 +110,7 @@ stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1, slong prec)
     acb_mul_2exp_si(v, v, 1);
     acb_sub(g0, g0, v, prec);
 
-    /* g1 = g'(m) (x-m); g'(m) = i(n+1)/((1/2+im) log(1/2+im)) - 2 pi */
+    /* g1 = g'(m) (x-m); g'(m) = i(n+1)/((alpha+im) log(alpha+im)) - 2 pi */
     acb_mul(g1, t, log_t, prec);
     acb_inv(g1, g1, prec);
     acb_mul_fmpz(g1, g1, n1, prec);
@@ -185,7 +123,7 @@ stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1, slong prec)
     acb_abs(acb_realref(g1), g1, prec);
     arb_zero(acb_imagref(g1));
 
-    stieltjes_bound_quadratic_term(acb_realref(g2), x, n1, prec);
+    stieltjes_bound_quadratic_term(acb_realref(g2), x, n1, alpha, prec);
 
     acb_exp(g0, g0, prec);
     acb_exp(g1, g1, prec);
@@ -215,7 +153,8 @@ stieltjes_bound_large3(arb_t B, const acb_t x, const fmpz_t n1, slong prec)
 }
 
 static void
-stieltjes_bound_large(acb_t res, const acb_t x, const fmpz_t n1, slong prec)
+stieltjes_bound_large(acb_t res, const acb_t x,
+    const fmpz_t n1, const acb_t alpha, slong prec)
 {
     arb_t B;
     mag_t t;
@@ -225,7 +164,7 @@ stieltjes_bound_large(acb_t res, const acb_t x, const fmpz_t n1, slong prec)
 
     prec = FLINT_MIN(prec, 30 + fmpz_bits(n1));
 
-    stieltjes_bound_large3(B, x, n1, prec);
+    stieltjes_bound_large3(B, x, n1, alpha, prec);
     arb_get_mag(t, B);
     acb_zero(res);
     arb_add_error_mag(acb_realref(res), t);
@@ -235,23 +174,18 @@ stieltjes_bound_large(acb_t res, const acb_t x, const fmpz_t n1, slong prec)
     mag_clear(t);
 }
 
-int
-_f_stieltjes(acb_ptr res, const acb_t x, void * param, slong order, slong prec)
+static void
+stieltjes_integrand(acb_t res, const acb_t x, const fmpz_t n1,
+                            const acb_t alpha, int analytic, slong prec)
 {
     acb_t t, u;
-    const fmpz * n1;
-
-    if (order > 1)
-        flint_abort();  /* Would be needed for Taylor method. */
-
-    n1 = (const fmpz *)(param);
 
     acb_init(t);
     acb_init(u);
 
     acb_mul_onei(t, x);
-    acb_set_d(u, 0.5);
-    acb_add(t, t, u, prec);
+    acb_add(t, t, alpha, prec);
+
     acb_set_ui(u, 5);
 
     /* check branch cut of logarithm */
@@ -259,12 +193,11 @@ _f_stieltjes(acb_ptr res, const acb_t x, void * param, slong order, slong prec)
     {
         acb_indeterminate(res);
     }
-    else if ((order == 1 || acb_rel_accuracy_bits(x) < prec - 10)
-        && arb_gt(acb_realref(t), acb_realref(u))
-        && arb_is_positive(acb_imagref(t)))
+    else if ((analytic || acb_rel_accuracy_bits(t) < prec - 10)
+        && arb_gt(acb_realref(x), acb_realref(u)))
     {
-        /* note: requires re(t) > 1, im(t) > 0 */
-        stieltjes_bound_large(res, x, n1, prec);
+        /* note: requires re(x) > 1 */
+        stieltjes_bound_large(res, x, n1, alpha, prec);
     }
     else
     {
@@ -287,6 +220,89 @@ _f_stieltjes(acb_ptr res, const acb_t x, void * param, slong order, slong prec)
 
     acb_clear(t);
     acb_clear(u);
+}
+
+typedef struct
+{
+    const fmpz * n1;
+    const acb_struct * alpha;
+}
+_stieltjes_param;
+
+/* Compute the approximate saddle point. */
+static void
+stieltjes_omega(acb_t omega, const fmpz_t n1, const acb_t alpha, slong prec)
+{
+    acb_t t, u;
+    fmpz_t k;
+
+    acb_init(t);
+    acb_init(u);
+    fmpz_init(k);
+
+    /* u = (n+1)i / (2pi) */
+    arb_set_fmpz(acb_imagref(t), n1);
+    acb_const_pi(u, prec);
+    acb_mul_2exp_si(u, u, 1);
+    acb_div(u, t, u, prec);
+
+    /* u / W(u) */
+    acb_lambertw(t, u, k, 0, prec);
+    acb_div(t, u, t, prec);
+
+    acb_sub(t, alpha, t, prec);
+    acb_mul_onei(t, t);
+
+    acb_set(omega, t);
+
+    acb_clear(t);
+    acb_clear(u);
+    fmpz_clear(k);
+}
+
+/* Compute an approximation of the magnitude of gamma_n. */
+static void
+stieltjes_mag_approx(arb_t C, mag_t tol, const fmpz_t n1, const acb_t alpha)
+{
+    slong prec;
+    acb_t w, v, q;
+
+    prec = 32 + 2 * fmpz_bits(n1);
+
+    acb_init(w);
+    acb_init(v);
+    acb_init(q);
+
+    stieltjes_omega(w, n1, alpha, prec);
+    stieltjes_integrand(v, w, n1, alpha, 0, prec);
+
+    acb_set_fmpz(q, n1);
+    acb_sqrt(q, q, prec);
+    acb_mul(v, v, q, prec);
+
+    acb_get_mag(tol, v);
+
+    arb_set(C, acb_imagref(w));
+    mag_zero(arb_radref(C));
+
+    acb_clear(w);
+    acb_clear(v);
+    acb_clear(q);
+}
+
+int
+_f_stieltjes(acb_ptr res, const acb_t x, void * param, slong order, slong prec)
+{
+    const fmpz * n1;
+    const acb_struct * alpha;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    n1 = ((const _stieltjes_param *) param)->n1;
+    alpha = ((const _stieltjes_param *) param)->alpha;
+
+    stieltjes_integrand(res, x, n1, alpha, order != 0, prec);
 
     return 0;
 }
@@ -323,13 +339,13 @@ stieltjes_mag(double n)
 
 static double _hypot(double x, double y) { return sqrt(x * x + y * y); }
 
-/* log2 magnitude of integrand at x+yi */
+/* log2 magnitude of integrand at z = x+yi; alpha = a+bi */
 static double
-integrand_mag(double n, double x, double y)
+integrand_mag(double n, double x, double y, double a, double b)
 {
     double t, u;
-    t = log(_hypot(0.5 - y, x));
-    u = atan2(x, 0.5 - y);
+    t = log(_hypot(a - y, b + x));
+    u = atan2(b + x, a - y);
     t = log(_hypot(t,u)) * (n+1) - 2.0 * 3.1415926535897932 * x;
     return t * 1.44269504088896341;
 }
@@ -348,8 +364,8 @@ find_x_maximizing_mag(double n, double y)
         xma = xa + (xb - xa) / 3;
         xmb = xb - (xb - xa) / 3;
 
-        ma = integrand_mag(n, xma, y);
-        mb = integrand_mag(n, xmb, y);
+        ma = integrand_mag(n, xma, y, 0.5, 0.0);
+        mb = integrand_mag(n, xmb, y, 0.5, 0.0);
 
         if (ma < mb)
             xa = xma;
@@ -361,60 +377,127 @@ find_x_maximizing_mag(double n, double y)
 }
 
 static void
-stieltjes_choose_N(arb_t N, const fmpz_t n1, slong prec)
+stieltjes_choose_N(arb_t N, const fmpz_t n1, const acb_t alpha, slong prec)
 {
     if (fmpz_bits(n1) < 30)
     {
-        double nn, NN;
+        double nn, NN, aa, bb;
+
         nn = fmpz_get_d(n1) - 1.0;
         NN = FLINT_MAX(nn, 4);
-        while (integrand_mag(nn, NN, 0.0) > -prec - 20)
+
+        aa = arf_get_d(arb_midref(acb_realref(alpha)), ARF_RND_DOWN);
+        bb = arf_get_d(arb_midref(acb_imagref(alpha)), ARF_RND_DOWN);
+
+        while (integrand_mag(nn, NN, 0.0, aa, bb) > -prec - 20)
+        {
             NN *= 2.0;
+
+            if (NN > 1e30)
+                break;
+        }
+
         arb_set_d(N, NN);
     }
     else
     {
+        /* todo: account for huge alpha? */
         arb_set_fmpz(N, n1);
     }
 }
 
 static void
-stieltjes_tail_bound(mag_t bound, const arb_t N, const fmpz_t n1)
+stieltjes_tail_bound(mag_t bound, const arb_t N, const fmpz_t n1, const acb_t alpha)
 {
     slong prec;
-    arb_t x, y;
+    arb_t x, y, D;
+    acb_t aNi, logaNi;
+    mag_t t, u;
+
+    prec = MAG_BITS + fmpz_bits(n1);
+
     arb_init(x);
     arb_init(y);
-    prec = MAG_BITS + fmpz_bits(n1);
-    arb_set(x, N);
-    arb_mul_2exp_si(x, x, 1);
-    arb_const_pi(y, prec);
-    arb_mul(y, y, x, prec);
-    arb_neg(y, y);
-    arb_exp(y, y, prec);
-    arb_log(x, x, prec);
-    arb_pow_fmpz(x, x, n1, prec);
-    arb_mul(x, x, y, prec);
-    arb_get_mag(bound, x);
+    arb_init(D);
+    acb_init(aNi);
+    acb_init(logaNi);
+    mag_init(t);
+    mag_init(u);
+
+    /* alpha + Ni */
+    acb_set(aNi, alpha);
+    arb_add(acb_imagref(aNi), acb_imagref(aNi), N, prec);
+
+    /* log(alpha + Ni) */
+    acb_log(logaNi, aNi, prec);
+
+    /* check (n+1)/(|alpha+Ni) log(alpha + Ni)|) < 2 */
+    acb_get_mag_lower(t, aNi);
+    acb_get_mag_lower(u, logaNi);
+    mag_mul_lower(t, t, u);
+    mag_inv(t, t);
+    mag_mul_fmpz(t, t, n1);
+
+    /* also check N >= |im(alpha)| */
+    arb_abs(x, acb_imagref(alpha));
+
+    if (mag_cmp_2exp_si(t, 1) >= 0 || !arb_ge(N, x))
+    {
+        mag_inf(bound);
+    }
+    else
+    {
+        /* exp(-2 pi x) */
+        arb_set(x, N);
+        arb_mul_2exp_si(x, x, 1);
+        arb_const_pi(y, prec);
+        arb_mul(y, y, x, prec);
+        arb_neg(y, y);
+        arb_exp(y, y, prec);
+
+        /* |log|^(n+1) */
+        acb_get_mag(t, logaNi);
+        arf_set_mag(arb_midref(x), t);
+        mag_zero(arb_radref(x));
+        arb_pow_fmpz(x, x, n1, prec);
+        arb_mul(x, x, y, prec);
+
+        arb_get_mag(bound, x);
+    }
+
     arb_clear(x);
     arb_clear(y);
+    arb_clear(D);
+    acb_clear(aNi);
+    acb_clear(logaNi);
+    mag_clear(t);
+    mag_clear(u);
 }
 
 void
-acb_dirichlet_stieltjes_integral(arb_t res, const fmpz_t n1, slong prec)
+_acb_dirichlet_stieltjes_integral2(acb_t res, const fmpz_t n, const acb_t alpha, slong prec)
 {
     double gamma_mag, max_mag, cancellation, xa;
+    fmpz_t n1;
     acb_t a, b, v, w;
     slong wp;
     mag_t tol, bound;
     acb_calc_integrate_opt_t opt;
+    _stieltjes_param param;
     /* integration points */
     arb_t M, N, C;
 
+    /* required for the integral representation to be valid */
+    if (!arb_is_positive(acb_realref(alpha)))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    fmpz_init(n1);
     arb_init(M);
     arb_init(N);
     arb_init(C);
-
     acb_init(a);
     acb_init(b);
     acb_init(v);
@@ -422,17 +505,24 @@ acb_dirichlet_stieltjes_integral(arb_t res, const fmpz_t n1, slong prec)
     mag_init(tol);
     mag_init(bound);
 
+    fmpz_add_ui(n1, n, 1);
+
+    param.n1 = n1;
+    param.alpha = alpha;
+
     arb_set_ui(M, 10);
 
-    stieltjes_choose_N(N, n1, prec);
-    stieltjes_tail_bound(bound, N, n1);
+    stieltjes_choose_N(N, n1, alpha, prec);
+    stieltjes_tail_bound(bound, N, n1, alpha);
 
-    if (fmpz_cmp_ui(n1, 5000) < 0)
+    if (acb_is_real(alpha) &&
+        arf_cmpabs_2exp_si(arb_midref(acb_realref(alpha)), 2) < 0 &&
+        fmpz_cmp_ui(n1, 5000) < 0)
     {
         double nn = fmpz_get_ui(n1) - 1;
         gamma_mag = stieltjes_mag(nn);
         xa = find_x_maximizing_mag(nn, 0.0);
-        max_mag = integrand_mag(nn, xa, 0.0);
+        max_mag = integrand_mag(nn, xa, 0.0, 0.5, 0.0);
         cancellation = FLINT_MAX(0, max_mag - gamma_mag);
 
         if (cancellation < 10 + 0.1 * prec)
@@ -443,13 +533,13 @@ acb_dirichlet_stieltjes_integral(arb_t res, const fmpz_t n1, slong prec)
         }
         else
         {
-            stieltjes_mag_approx(C, tol, n1);
+            stieltjes_mag_approx(C, tol, n1, alpha);
             cancellation = 0;
         }
     }
     else
     {
-        stieltjes_mag_approx(C, tol, n1);
+        stieltjes_mag_approx(C, tol, n1, alpha);
         cancellation = 0;
     }
 
@@ -468,52 +558,136 @@ acb_dirichlet_stieltjes_integral(arb_t res, const fmpz_t n1, slong prec)
     {
         acb_zero(a);
         acb_set_arb(b, N);
-        acb_calc_integrate(w, _f_stieltjes, (void *) n1, a, b, wp, tol, opt, wp);
+        acb_calc_integrate(w, _f_stieltjes, &param, a, b, wp, tol, opt, wp);
         acb_add(v, v, w, wp);
     }
     else
     {
         acb_zero(a);                 /* a = 0 */
         acb_set_arb(b, M);           /* b = M */
-        acb_calc_integrate(w, _f_stieltjes, (void *) n1, a, b, wp, tol, opt, wp);
+        acb_calc_integrate(w, _f_stieltjes, &param, a, b, wp, tol, opt, wp);
         acb_add(v, v, w, wp);
 
         acb_set(a, b);
         acb_set_arb(b, M);
         arb_set(acb_imagref(b), C);  /* b = M + i C */
-        acb_calc_integrate(w, _f_stieltjes, (void *) n1, a, b, wp, tol, opt, wp);
+        acb_calc_integrate(w, _f_stieltjes, &param, a, b, wp, tol, opt, wp);
         acb_add(v, v, w, wp);
 
         acb_set(a, b);
         arb_set(acb_realref(b), N);  /* b = N + i C */
-        acb_calc_integrate(w, _f_stieltjes, (void *) n1, a, b, wp, tol, opt, wp);
+        acb_calc_integrate(w, _f_stieltjes, &param, a, b, wp, tol, opt, wp);
         acb_add(v, v, w, wp);
 
         acb_set(a, b);
         arb_zero(acb_imagref(b));    /* b = N */
-        acb_calc_integrate(w, _f_stieltjes, (void *) n1, a, b, wp, tol, opt, wp);
+        acb_calc_integrate(w, _f_stieltjes, &param, a, b, wp, tol, opt, wp);
         acb_add(v, v, w, wp);
     }
 
-    arb_add_error_mag(acb_realref(v), bound);
+    acb_add_error_mag(v, bound);
 
     acb_const_pi(b, wp);
     acb_mul(v, v, b, wp);
     acb_div_fmpz(v, v, n1, wp);
     acb_neg(v, v);
 
-    arb_set_round(res, acb_realref(v), prec);
+    if (acb_is_real(alpha))
+        arb_zero(acb_imagref(v));
 
+    acb_set_round(res, v, prec);
+
+    fmpz_clear(n1);
     acb_clear(a);
     acb_clear(b);
     acb_clear(v);
     acb_clear(w);
     mag_clear(tol);
     mag_clear(bound);
-
     arb_clear(M);
     arb_clear(N);
     arb_clear(C);
+}
+
+void
+_acb_dirichlet_stieltjes_integral(acb_t res, const fmpz_t n, const acb_t a, slong prec)
+{
+    acb_t alpha;
+    acb_init(alpha);
+
+    /* alpha = a-1/2 */
+    acb_set_d(alpha, 0.5);
+    acb_sub(alpha, a, alpha, prec);
+
+    if (acb_is_real(a))
+    {
+        acb_conj(alpha, alpha);
+        _acb_dirichlet_stieltjes_integral2(res, n, alpha, prec);
+    }
+    else
+    {
+        acb_t r1, r2;
+        acb_init(r1);
+        acb_init(r2);
+
+        _acb_dirichlet_stieltjes_integral2(r1, n, alpha, prec);
+        acb_conj(alpha, alpha);
+        _acb_dirichlet_stieltjes_integral2(r2, n, alpha, prec);
+        acb_conj(r2, r2);
+        acb_add(res, r1, r2, prec);
+        acb_mul_2exp_si(res, res, -1);
+
+        acb_clear(r1);
+        acb_clear(r2);
+    }
+
+    acb_clear(alpha);
+}
+
+void
+acb_dirichlet_stieltjes_integral(acb_t res, const fmpz_t n, const acb_t a, slong prec)
+{
+    /* the algorithm only works for re(a) > 1/2 */
+    if (arf_cmp_si(arb_midref(acb_realref(a)), 1) < 0)
+    {
+        slong k, m, wp;
+        acb_t ak, t, s;
+
+        if (arf_cmp_si(arb_midref(acb_realref(a)), -prec) < 0)
+        {
+            acb_indeterminate(res);
+            return;
+        }
+
+        m = 1 - arf_get_si(arb_midref(acb_realref(a)), ARF_RND_FLOOR);
+
+        acb_init(ak);
+        acb_init(t);
+        acb_init(s);
+
+        wp = prec + 2 * fmpz_bits(n);
+
+        for (k = 0; k < m; k++)
+        {
+            acb_add_si(ak, a, k, wp);
+            acb_log(t, ak, wp);
+            acb_pow_fmpz(t, t, n, wp);
+            acb_div(t, t, ak, wp);
+            acb_add(s, s, t, wp);
+        }
+
+        acb_add_si(ak, a, m, wp);
+        _acb_dirichlet_stieltjes_integral(t, n, ak, prec);
+        acb_add(res, s, t, prec);
+
+        acb_clear(s);
+        acb_clear(t);
+        acb_clear(ak);
+    }
+    else
+    {
+        _acb_dirichlet_stieltjes_integral(res, n, a, prec);
+    }
 }
 
 void
@@ -569,17 +743,19 @@ acb_dirichlet_stieltjes(acb_t res, const fmpz_t n, const acb_t a, slong prec)
         flint_abort();
     }
 
+    /* undefined at a = 0, -1, -2, ... */
+    if (acb_contains_int(a) && !arb_is_positive(acb_realref(a)))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
     cutoff = FLINT_MAX(100, prec / 2);
     cutoff = FLINT_MIN(cutoff, 10000);
 
     if (acb_is_one(a) && fmpz_cmp_ui(n, cutoff) >= 0)
     {
-        fmpz_t n1;
-        fmpz_init(n1);
-        fmpz_add_ui(n1, n, 1);
-        acb_dirichlet_stieltjes_integral(acb_realref(res), n1, prec);
-        arb_zero(acb_imagref(res));
-        fmpz_clear(n1);
+        acb_dirichlet_stieltjes_integral(res, n, a, prec);
     }
     else
     {
