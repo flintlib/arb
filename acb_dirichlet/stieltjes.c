@@ -431,15 +431,16 @@ stieltjes_tail_bound(mag_t bound, const arb_t N, const fmpz_t n1, const acb_t al
     /* log(alpha + Ni) */
     acb_log(logaNi, aNi, prec);
 
-    /* check (n+1)/(|alpha+Ni) log(alpha + Ni)|) < 2 */
+    /* check (n+1)/(|alpha+Ni| log(alpha + Ni)|) < 2 */
     acb_get_mag_lower(t, aNi);
     acb_get_mag_lower(u, logaNi);
     mag_mul_lower(t, t, u);
     mag_inv(t, t);
     mag_mul_fmpz(t, t, n1);
 
-    /* also check N >= |im(alpha)| */
+    /* also check N >= |im(alpha)| + 2 */
     arb_abs(x, acb_imagref(alpha));
+    arb_add_ui(x, x, 2, prec);
 
     if (mag_cmp_2exp_si(t, 1) >= 0 || !arb_ge(N, x))
     {
@@ -447,7 +448,7 @@ stieltjes_tail_bound(mag_t bound, const arb_t N, const fmpz_t n1, const acb_t al
     }
     else
     {
-        /* exp(-2 pi x) */
+        /* exp(-2 pi N) */
         arb_set(x, N);
         arb_mul_2exp_si(x, x, 1);
         arb_const_pi(y, prec);
