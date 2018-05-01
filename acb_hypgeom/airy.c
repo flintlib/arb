@@ -227,7 +227,7 @@ acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong 
                 zmag = fmpz_get_d(ARF_EXPREF(re));
             else
                 zmag = fmpz_get_d(ARF_EXPREF(im));
-            zmag = (zmag + 1) * (1.0 / LOG2);
+            zmag = 3.0 * zmag + 1;
             n = wp / (-zmag) + 1;
         }
 
@@ -246,7 +246,7 @@ acb_hypgeom_airy(acb_t ai, acb_t aip, acb_t bi, acb_t bip, const acb_t z, slong 
         {
             x = fmpz_get_d(ARF_EXPREF(re));
             y = fmpz_get_d(ARF_EXPREF(im));
-            zmag = (FLINT_MAX(x, y) - 2) * (1.0 / LOG2);
+            zmag = (FLINT_MAX(x, y) - 2) * LOG2;
             n = asymp_pick_terms(wp, zmag);
             n = FLINT_MAX(n, 1);
         }
