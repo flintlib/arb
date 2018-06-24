@@ -144,6 +144,12 @@ void arb_mat_zero(arb_mat_t mat);
 
 void arb_mat_one(arb_mat_t mat);
 
+void arb_mat_ones(arb_mat_t mat);
+
+void arb_mat_hilbert(arb_mat_t mat, slong prec);
+
+void arb_mat_dct(arb_mat_t mat, int type, slong prec);
+
 void arb_mat_transpose(arb_mat_t mat1, const arb_mat_t mat2);
 
 /* Norms */

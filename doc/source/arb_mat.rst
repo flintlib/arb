@@ -141,6 +141,30 @@ Special matrices
     Sets the entries on the main diagonal to ones,
     and all other entries to zero.
 
+.. function:: void arb_mat_ones(arb_mat_t mat)
+
+    Sets all entries in the matrix to ones.
+
+.. function:: void arb_mat_hilbert(arb_mat_t mat)
+
+    Sets *mat* to the Hilbert matrix, which has entries `A_{j,k} = 1/(j+k+1)`.
+
+.. function:: void arb_mat_dct(arb_mat_t mat, int type, slong prec)
+
+    Sets *mat* to the DCT (discrete cosine transform) matrix of order *n*
+    where *n* is the smallest dimension of *mat* (if *mat* is not square,
+    the matrix is extended periodically along the larger dimension).
+    There are many different conventions for defining DCT matrices; here,
+    we use the normalized "DCT-II" transform matrix
+
+    .. math ::
+
+        A_{j,k} = \sqrt{\frac{2}{n}} \cos\left(\frac{\pi j}{n} \left(k+\frac{1}{2}\right)\right)
+
+    which satisfies `A^{-1} = A^T`.
+    The *type* parameter is currently ignored and should be set to 0.
+    In the future, it might be used to select a different convention.
+
 Transpose
 -------------------------------------------------------------------------------
 

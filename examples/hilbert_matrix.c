@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     arb_mat_t A;
     arb_t det;
-    slong i, j, prec, n;
+    slong prec, n;
 
     if (argc < 2)
     {
@@ -24,15 +24,7 @@ int main(int argc, char *argv[])
 
     for (prec = 20; ; prec *= 2)
     {
-        for (i = 0; i < n; i++)
-        {
-            for (j = 0; j < n; j++)
-            {
-                arb_set_ui(arb_mat_entry(A, i, j), 1),
-                arb_div_ui(arb_mat_entry(A, i, j),
-                    arb_mat_entry(A, i, j), i + j + 1, prec);
-            }
-        }
+        arb_mat_hilbert(A, prec);
 
         flint_printf("prec=%wd: ", prec);
 
