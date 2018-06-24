@@ -59,7 +59,7 @@ acb_modular_eisenstein(acb_ptr r, const acb_t tau, slong len, slong prec)
     acb_mul(t4, t4, t4, prec);
 
     /* c2 = pi^4 * (a^8 + b^8 + c^8) / 30 */
-    /* c3 = pi^6 * (b^12 + c^12 - 3a^8 * (b^4+c^4)) / 180 */
+    /* c3 = pi^6 * (b^12 + c^12 - 3a^8 * (b^4+c^4)) / 189 */
 
     /* r = a^8 */
     acb_mul(r, t2, t2, prec);
