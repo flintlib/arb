@@ -149,6 +149,34 @@ Special matrices
 
     Sets *mat* to the Hilbert matrix, which has entries `A_{j,k} = 1/(j+k+1)`.
 
+.. function:: void arb_mat_pascal(arb_mat_t mat, int triangular, slong prec)
+
+    Sets *mat* to a Pascal matrix, whose entries are binomial coefficients.
+    If *triangular* is 0, constructs a full symmetric matrix
+    with the rows of Pascal's triangle as successive antidiagonals.
+    If *triangular* is 1, constructs the upper triangular matrix with
+    the rows of Pascal's triangle as columns, and if *triangular* is -1,
+    constructs the lower triangular matrix with the rows of Pascal's
+    triangle as rows.
+
+    The entries are computed using recurrence relations.
+    When the dimensions get large, some precision loss is possible; in that
+    case, the user may wish to create the matrix at slightly higher precision
+    and then round it to the final precision.
+
+.. function:: void arb_mat_stirling(arb_mat_t mat, int kind, slong prec)
+
+    Sets *mat* to a Stirling matrix, whose entries are Stirling numbers.
+    If *kind* is 0, the entries are set to the unsigned Stirling numbers
+    of the first kind. If *kind* is 1, the entries are set to the signed
+    Stirling numbers of the first kind. If *kind* is 2, the entries are
+    set to the Stirling numbers of the second kind.
+
+    The entries are computed using recurrence relations.
+    When the dimensions get large, some precision loss is possible; in that
+    case, the user may wish to create the matrix at slightly higher precision
+    and then round it to the final precision.
+
 .. function:: void arb_mat_dct(arb_mat_t mat, int type, slong prec)
 
     Sets *mat* to the DCT (discrete cosine transform) matrix of order *n*
