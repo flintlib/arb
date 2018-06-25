@@ -14,17 +14,25 @@
 void
 arb_mat_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    if (flint_get_num_threads() > 1 &&
-        ((double) arb_mat_nrows(A) *
-         (double) arb_mat_nrows(B) *
-         (double) arb_mat_ncols(B) *
-         (double) prec > 100000))
+    if (arb_mat_nrows(A) >= 8 && arb_mat_ncols(A) >= 8 &&
+        arb_mat_ncols(B) >= 8)
     {
-        arb_mat_mul_threaded(C, A, B, prec);
+        arb_mat_mul_block(C, A, B, prec);
     }
     else
     {
-        arb_mat_mul_classical(C, A, B, prec);
+        if (flint_get_num_threads() > 1 &&
+            ((double) arb_mat_nrows(A) *
+             (double) arb_mat_nrows(B) *
+             (double) arb_mat_ncols(B) *
+             (double) prec > 100000))
+        {
+            arb_mat_mul_threaded(C, A, B, prec);
+        }
+        else
+        {
+            arb_mat_mul_classical(C, A, B, prec);
+        }
     }
 }
 
