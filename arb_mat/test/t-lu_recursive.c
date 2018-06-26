@@ -27,19 +27,53 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("lu....");
+    flint_printf("lu_recursive....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    /* Dummy test with rectangular matrices. Rectangular matrices are
+       not actually supported (the output may be bogus), but the algorithm
+       should at least not crash. */
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
+    {
+        slong m, n, prec;
+        slong *perm;
+        arb_mat_t A, LU;
+
+        n = n_randint(state, 20);
+        m = n_randint(state, 20);
+        prec = 2 + n_randint(state, 200);
+
+        arb_mat_init(A, n, m);
+        arb_mat_init(LU, n, m);
+        perm = _perm_init(n);
+
+        arb_mat_randtest(A, state, prec, 10);
+
+        if (n_randint(state, 2))
+        {
+            arb_mat_lu_recursive(perm, LU, A, prec);
+        }
+        else
+        {
+            arb_mat_set(LU, A);
+            arb_mat_lu_recursive(perm, LU, LU, prec);
+        }
+
+        arb_mat_clear(A);
+        arb_mat_clear(LU);
+        _perm_clear(perm);
+    }
+
+    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
     {
         fmpq_mat_t Q;
         arb_mat_t A, LU, P, L, U, T;
         slong i, j, n, qbits, prec, *perm;
         int q_invertible, r_invertible;
 
-        n = n_randint(state, 10);
+        n = n_randint(state, 20);
         qbits = 1 + n_randint(state, 100);
         prec = 2 + n_randint(state, 202);
 
@@ -58,7 +92,7 @@ int main()
         if (!q_invertible)
         {
             arb_mat_set_fmpq_mat(A, Q, prec);
-            r_invertible = arb_mat_lu(perm, LU, A, prec);
+            r_invertible = arb_mat_lu_recursive(perm, LU, A, prec);
             if (r_invertible)
             {
                 flint_printf("FAIL: matrix is singular over Q but not over R\n");
@@ -76,7 +110,7 @@ int main()
             while (1)
             {
                 arb_mat_set_fmpq_mat(A, Q, prec);
-                r_invertible = arb_mat_lu(perm, LU, A, prec);
+                r_invertible = arb_mat_lu_recursive(perm, LU, A, prec);
                 if (r_invertible)
                 {
                     break;

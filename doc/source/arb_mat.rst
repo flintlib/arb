@@ -58,6 +58,16 @@ Memory management
     The count excludes the size of the structure itself. Add
     ``sizeof(arb_mat_struct)`` to get the size of the object as a whole.
 
+.. function:: void arb_mat_window_init(arb_mat_t window, const arb_mat_t mat, slong r1, slong c1, slong r2, slong c2)
+
+    Initializes *window* to a window matrix into the submatrix of *mat*
+    starting at the corner at row *r1* and column *c1* (inclusive) and ending
+    at row *r2* and column *c2* (exclusive).
+
+.. function:: void arb_mat_window_clear(arb_mat_t window)
+
+    Frees the submatrix.
+
 Conversions
 -------------------------------------------------------------------------------
 
@@ -239,16 +249,24 @@ Arithmetic
 
 .. function:: void arb_mat_mul_threaded(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 
+.. function:: void arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
+
 .. function:: void arb_mat_mul(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec)
 
     Sets *res* to the matrix product of *mat1* and *mat2*. The operands must have
     compatible dimensions for matrix multiplication.
 
-    The *threaded* version splits the computation
-    over the number of threads returned by *flint_get_num_threads()*.
-    The default version automatically calls the *threaded* version
-    if the matrices are sufficiently large and more than one thread
-    can be used.
+    The *classical* version performs matrix multiplication in the trivial way.
+
+    The *block* version decomposes the input matrices into one or several
+    blocks of uniformly scaled matrices and multiplies 
+    large blocks via *fmpz_mat_mul*. It also invokes
+    :func:`_arb_mat_addmul_rad_mag_fast` for the radius matrix multiplications.
+
+    The *threaded* version performs classical multiplication but splits the
+    computation over the number of threads returned by *flint_get_num_threads()*.
+
+    The default version chooses an algorithm automatically.
 
 .. function:: void arb_mat_mul_entrywise(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 
@@ -267,6 +285,14 @@ Arithmetic
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
     is a square matrix.
 
+.. function:: void _arb_mat_addmul_rad_mag_fast(arb_mat_t C, mag_srcptr A, mag_srcptr B, slong ar, slong ac, slong bc)
+
+    Helper function for matrix multiplication.
+    Adds to the radii of *C* the matrix product of the matrices represented
+    by *A* and *B*, where *A* is a linear array of coefficients in row-major
+    order and *B* is a linear array of coefficients in column-major order. 
+    This function assumes that all exponents are small and is unsafe
+    for general use.
 
 Scalar arithmetic
 -------------------------------------------------------------------------------
@@ -303,6 +329,10 @@ Scalar arithmetic
 Gaussian elimination and solving
 -------------------------------------------------------------------------------
 
+.. function:: int arb_mat_lu_classical(slong * perm, arb_mat_t LU, const arb_mat_t A, slong prec)
+
+.. function:: int arb_mat_lu_recursive(slong * perm, arb_mat_t LU, const arb_mat_t A, slong prec)
+
 .. function:: int arb_mat_lu(slong * perm, arb_mat_t LU, const arb_mat_t A, slong prec)
 
     Given an `n \times n` matrix `A`, computes an LU decomposition `PLU = A`
@@ -322,6 +352,33 @@ Gaussian elimination and solving
     In this case, either the matrix is singular, the input matrix was
     computed to insufficient precision, or the LU decomposition was
     attempted at insufficient precision.
+
+    The *classical* version uses Gaussian elimination directly while
+    the *recursive* version performs the computation in a block recursive
+    way to benefit from fast matrix multiplication. The default version
+    chooses an algorithm automatically.
+
+.. function:: void arb_mat_solve_tril_classical(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_solve_tril_recursive(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_solve_triu_classical(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_solve_triu_recursive(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_solve_triu(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
+
+    Solves the lower triangular system `LX = B` or the upper triangular system
+    `UX = B`, respectively. If *unit* is set, the main diagonal of *L* or *U*
+    is taken to consist of all ones, and in that case the actual entries on
+    the diagonal are not read at all and can contain other data.
+
+    The *classical* versions perform the computations iteratively while the
+    *recursive* versions perform the computations in a block recursive
+    way to benefit from fast matrix multiplication. The default versions
+    choose an algorithm automatically.
 
 .. function:: void arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm, const arb_mat_t LU, const arb_mat_t B, slong prec)
 

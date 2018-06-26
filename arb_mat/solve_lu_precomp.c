@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012,2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -44,6 +44,15 @@ arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm,
                     arb_mat_entry(B, perm[i], c));
             }
         }
+    }
+
+    /* todo: solve_tril and solve_triu have some overhead; should be
+       able to eliminate the basecase code below */
+    if (n >= 8 && m >= 8)
+    {
+        arb_mat_solve_tril(X, A, X, 1, prec);
+        arb_mat_solve_triu(X, A, X, 0, prec);
+        return;
     }
 
     for (c = 0; c < m; c++)
