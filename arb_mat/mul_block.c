@@ -311,7 +311,7 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
     B_density = B_density / (N * P);
 
     /* Don't shift too far when creating integer block matrices. */
-    max_offset = 0.25 * FLINT_MIN(prec, FLINT_MAX(A_bits, B_bits)) + 128;
+    max_offset = 0.5 * FLINT_MIN(prec, FLINT_MAX(A_bits, B_bits)) + 128;
 
     /* Avoid block algorithm for extremely sparse high-precision matrices? */
     /* Warning: this cutoff may be completely bogus... */
