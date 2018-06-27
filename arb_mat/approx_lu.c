@@ -11,14 +11,6 @@
 
 #include "arb_mat.h"
 
-void
-arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U,
-                                    const arb_mat_t B, int unit, slong prec);
-
-void
-arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L,
-                                    const arb_mat_t B, int unit, slong prec);
-
 static void
 _apply_permutation(slong * AP, arb_mat_t A, slong * P,
     slong n, slong offset)
