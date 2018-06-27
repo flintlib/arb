@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2018 arbguest
+    Copyright (C) 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,15 +12,15 @@
 
 #include "arb_mat.h"
 
-void
-_arb_approx_submul(arb_t z, const arb_t x, const arb_t y, slong prec)
+static void
+arb_approx_submul(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     arf_submul(arb_midref(z),
                arb_midref(x), arb_midref(y), prec, ARF_RND_DOWN);
 }
 
-void
-_arb_approx_div(arb_t z, const arb_t x, const arb_t y, slong prec)
+static void
+arb_approx_div(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
 }
@@ -61,6 +62,15 @@ arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm,
 
     arb_mat_get_mid(X, X);
 
+    /* todo: solve_tril and solve_triu have some overhead; should be
+       able to eliminate the basecase code below */
+    if (n >= 8 && m >= 8)
+    {
+        arb_mat_approx_solve_tril(X, A, X, 1, prec);
+        arb_mat_approx_solve_triu(X, A, X, 0, prec);
+        return;
+    }
+
     for (c = 0; c < m; c++)
     {
         /* solve Ly = b */
@@ -68,7 +78,7 @@ arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm,
         {
             for (j = 0; j < i; j++)
             {
-                _arb_approx_submul(arb_mat_entry(X, i, c),
+                arb_approx_submul(arb_mat_entry(X, i, c),
                     arb_mat_entry(A, i, j), arb_mat_entry(X, j, c), prec);
             }
         }
@@ -78,12 +88,13 @@ arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm,
         {
             for (j = i + 1; j < n; j++)
             {
-                _arb_approx_submul(arb_mat_entry(X, i, c),
+                arb_approx_submul(arb_mat_entry(X, i, c),
                     arb_mat_entry(A, i, j), arb_mat_entry(X, j, c), prec);
             }
 
-            _arb_approx_div(arb_mat_entry(X, i, c), arb_mat_entry(X, i, c),
+            arb_approx_div(arb_mat_entry(X, i, c), arb_mat_entry(X, i, c),
                 arb_mat_entry(A, i, i), prec);
         }
     }
 }
+
