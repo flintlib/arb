@@ -408,7 +408,7 @@ Gaussian elimination and solving
       even if the system is well-conditioned. This algorithm is usually
       the best choice at very high precision.
     * The *precond* version computes an approximate inverse to precondition
-      the system. This is usually several times slower than direct LU
+      the system [HS1967]_. This is usually several times slower than direct LU
       decomposition, but the bounds do not blow up with *n* if the system is
       well-conditioned. This algorithm is usually
       the best choice for large systems at low to moderate precision.

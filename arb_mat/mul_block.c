@@ -217,9 +217,10 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
     slong M, N, P;
     slong *A_min, *A_max, *B_min, *B_max;
+    short *A_bits, *B_bits;
     slong *A_bot, *B_bot;
-    slong block_start, block_end, i, j, bot, max_offset;
-    slong b, A_bits, B_bits;
+    slong block_start, block_end, i, j, bot, top, max_height;
+    slong b, A_max_bits, B_max_bits;
     arb_srcptr t;
     int A_exact, B_exact;
     double A_density, B_density;
@@ -258,15 +259,24 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         return;
     }
 
+    /* bottom exponents of A */
     A_bot = flint_malloc(sizeof(slong) * M * N);
+    /* minimum bottom exponent in current row */
     A_min = flint_malloc(sizeof(slong) * M);
+    /* maximum top exponent in current row */
     A_max = flint_malloc(sizeof(slong) * M);
+
     B_bot = flint_malloc(sizeof(slong) * N * P);
     B_min = flint_malloc(sizeof(slong) * P);
     B_max = flint_malloc(sizeof(slong) * P);
 
+    /* save space using shorts to store the bit sizes temporarily;
+       the block algorithm will not be used at extremely high precision */
+    A_bits = flint_malloc(sizeof(short) * M * N);
+    B_bits = flint_malloc(sizeof(short) * N * P);
+
     A_exact = B_exact = 1;
-    A_bits = B_bits = 0;
+    A_max_bits = B_max_bits = 0;
     A_density = B_density = 0;
 
     /* Build table of bottom exponents (WORD_MIN signifies a zero),
@@ -277,12 +287,16 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         {
             t = arb_mat_entry(A, i, j);
             if (arf_is_zero(arb_midref(t)))
+            {
                 A_bot[i * N + j] = WORD_MIN;
+                A_bits[i * N + j] = 0;
+            }
             else
             {
                 b = arf_bits(arb_midref(t));
                 A_bot[i * N + j] = ARF_EXP(arb_midref(t)) - b; 
-                A_bits = FLINT_MAX(A_bits, b);
+                A_bits[i * N + j] = b;
+                A_max_bits = FLINT_MAX(A_max_bits, b);
                 A_density++;
             }
             A_exact = A_exact && mag_is_zero(arb_radref(t));
@@ -295,12 +309,16 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         {
             t = arb_mat_entry(B, i, j);
             if (arf_is_zero(arb_midref(t)))
+            {
                 B_bot[i * P + j] = WORD_MIN;
+                B_bits[i * P + j] = 0;
+            }
             else
             {
                 b = arf_bits(arb_midref(t));
                 B_bot[i * P + j] = ARF_EXP(arb_midref(t)) - b;
-                B_bits = FLINT_MAX(B_bits, b);
+                B_bits[i * P + j] = b;
+                B_max_bits = FLINT_MAX(B_max_bits, b);
                 B_density++;
             }
             B_exact = B_exact && mag_is_zero(arb_radref(t));
@@ -311,11 +329,12 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
     B_density = B_density / (N * P);
 
     /* Don't shift too far when creating integer block matrices. */
-    max_offset = 0.5 * FLINT_MIN(prec, FLINT_MAX(A_bits, B_bits)) + 128;
+    max_height = 1.25 * FLINT_MIN(prec, FLINT_MAX(A_max_bits, B_max_bits)) + 192;
 
-    /* Avoid block algorithm for extremely sparse high-precision matrices? */
-    /* Warning: this cutoff may be completely bogus... */
-    if (A_density < 0.1 && B_density < 0.1 && max_offset > 512)
+    /* Avoid block algorithm for extremely high-precision matrices? */
+    /* Warning: these cutoffs are completely bogus... */
+    if (A_max_bits > 8000 || B_max_bits > 8000 ||
+        (A_density < 0.1 && B_density < 0.1 && max_height > 1024))
     {
         flint_free(A_bot);
         flint_free(A_max);
@@ -323,6 +342,8 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         flint_free(B_bot);
         flint_free(B_max);
         flint_free(B_min);
+        flint_free(A_bits);
+        flint_free(B_bits);
         arb_mat_mul_classical(C, A, B, prec);
         return;
     }
@@ -331,15 +352,22 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
     while (block_start < N)
     {
         /* Find a run of columns of A and rows of B such that the
-           bottom exponents differ by at most max_offset. */
+           bottom exponents differ by at most max_height. */
 
         block_end = block_start + 1;  /* index is exclusive block_end */
 
         /* begin with this column of A and row of B */
         for (i = 0; i < M; i++)
+        {
             A_max[i] = A_min[i] = A_bot[i * N + block_start];
+            A_max[i] += (slong) A_bits[i * N + block_start];
+        }
+
         for (i = 0; i < P; i++)
+        {
             B_max[i] = B_min[i] = B_bot[block_start * P + i];
+            B_max[i] += (slong) B_bits[block_start * P + i];
+        }
 
         while (block_end < N)
         {
@@ -348,9 +376,9 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
             /* End block if memory would be excessive. */
             /* Necessary? */
             /* Should also do initial check above, if C alone is too large. */
-            size = (block_end - block_start) * M * (double) A_bits;
-            size += (block_end - block_start) * P * (double) B_bits;
-            size += (M * P) * (double) (A_bits + B_bits);
+            size = (block_end - block_start) * M * (double) A_max_bits;
+            size += (block_end - block_start) * P * (double) B_max_bits;
+            size += (M * P) * (double) (A_max_bits + B_max_bits);
             size /= 8.0;
             if (size > 2e9)
                 goto blocks_built;
@@ -362,8 +390,9 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
                 /* zeros are irrelevant */
                 if (bot == WORD_MIN || A_max[i] == WORD_MIN)
                     continue;
+                top = bot + (slong) A_bits[i * N + block_end];
                 /* jump will be too big */
-                if (bot > A_min[i] + max_offset || bot < A_max[i] - max_offset)
+                if (top > A_min[i] + max_height || bot < A_max[i] - max_height)
                     goto blocks_built;
             }
 
@@ -373,7 +402,8 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
                 bot = B_bot[block_end * P + i];
                 if (bot == WORD_MIN || B_max[i] == WORD_MIN)
                     continue;
-                if (bot > B_min[i] + max_offset || bot < B_max[i] - max_offset)
+                top = bot + (slong) B_bits[block_end * P + i];
+                if (top > B_min[i] + max_height || bot < B_max[i] - max_height)
                     goto blocks_built;
             }
 
@@ -381,30 +411,32 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
             for (i = 0; i < M; i++)
             {
                 bot = A_bot[i * N + block_end];
+                top = bot + (slong) A_bits[i * N + block_end];
                 if (A_max[i] == WORD_MIN)
                 {
-                    A_max[i] = bot;
+                    A_max[i] = top;
                     A_min[i] = bot;
                 }
                 else if (bot != WORD_MIN)
                 {
                     if (bot < A_min[i]) A_min[i] = bot;
-                    if (bot > A_max[i]) A_max[i] = bot;
+                    if (top > A_max[i]) A_max[i] = top;
                 }
             }
 
             for (i = 0; i < P; i++)
             {
                 bot = B_bot[block_end * P + i];
+                top = bot + (slong) B_bits[block_end * P + i];
                 if (B_max[i] == WORD_MIN)
                 {
-                    B_max[i] = bot;
+                    B_max[i] = top;
                     B_min[i] = bot;
                 }
                 else if (bot != WORD_MIN)
                 {
                     if (bot < B_min[i]) B_min[i] = bot;
-                    if (bot > B_max[i]) B_max[i] = bot;
+                    if (top > B_max[i]) B_max[i] = top;
                 }
             }
 
@@ -424,6 +456,8 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
     flint_free(B_bot);
     flint_free(B_max);
     flint_free(B_min);
+    flint_free(A_bits);
+    flint_free(B_bits);
 
     /* Radius multiplications */
     if (!A_exact || !B_exact)
