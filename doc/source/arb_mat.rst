@@ -444,13 +444,29 @@ Gaussian elimination and solving
     A nonzero return value guarantees that the matrix is invertible
     and that the exact inverse is contained in the output.
 
+.. function:: void arb_mat_det_lu(arb_t det, const arb_mat_t A, slong prec)
+
+.. function:: void arb_mat_det_precond(arb_t det, const arb_mat_t A, slong prec)
+
 .. function:: void arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 
-    Computes the determinant of the matrix, using Gaussian elimination
-    with partial pivoting. If at some point an invertible pivot element
-    cannot be found, the elimination is stopped and the magnitude of the
-    determinant of the remaining submatrix is bounded using
-    Hadamard's inequality.
+    Sets *det* to the determinant of the matrix *A*.
+
+    The *lu* version uses Gaussian elimination with partial pivoting. If at
+    some point an invertible pivot element cannot be found, the elimination is
+    stopped and the magnitude of the determinant of the remaining submatrix
+    is bounded using Hadamard's inequality.
+
+    The *precond* version computes an approximate LU factorization of *A*
+    and multiplies by the inverse *L* and *U* martices as preconditioners
+    to obtain a matrix close to the identity matrix [Rum2010]_. An enclosure
+    for this determinant is computed using Gershgorin circles. This is about
+    four times slower than direct Gaussian elimination, but much more
+    numerically stable.
+
+    The default version automatically selects between the *lu* and *precond*
+    versions and additionally handles small or triangular matrices
+    by direct formulas.
 
 Cholesky decomposition and solving
 -------------------------------------------------------------------------------

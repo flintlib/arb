@@ -360,6 +360,8 @@ int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slon
 
 int arb_mat_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
+void arb_mat_det_lu(arb_t det, const arb_mat_t A, slong prec);
+void arb_mat_det_precond(arb_t det, const arb_mat_t A, slong prec);
 void arb_mat_det(arb_t det, const arb_mat_t A, slong prec);
 
 int _arb_mat_cholesky_banachiewicz(arb_mat_t A, slong prec);

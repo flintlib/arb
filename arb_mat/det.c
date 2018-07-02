@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,119 +11,86 @@
 
 #include "arb_mat.h"
 
-slong
-arb_mat_gauss_partial(arb_mat_t A, slong prec)
+static void
+_arb_mat_det_cofactor_2x2(arb_t t, const arb_mat_t A, slong prec)
 {
-    arb_t e;
-    arb_ptr * a;
-    slong j, m, n, r, rank, row, col, sign;
-
-    m = A->r;
-    n = A->c;
-    a = A->rows;
-    rank = row = col = 0;
-    sign = 1;
-
-    arb_init(e);
-
-    while (row < m && col < n)
-    {
-        r = arb_mat_find_pivot_partial(A, row, m, col);
-
-        if (r == -1)
-        {
-            break;
-        }
-        else if (r != row)
-        {
-            arb_mat_swap_rows(A, NULL, row, r);
-            sign *= -1;
-        }
-
-        rank++;
-
-        for (j = row + 1; j < m; j++)
-        {
-            arb_div(e, a[j] + col, a[row] + col, prec);
-            arb_neg(e, e);
-            _arb_vec_scalar_addmul(a[j] + col + 1, a[row] + col + 1, n - col - 1, e, prec);
-        }
-
-        row++;
-        col++;
-    }
-
-    arb_clear(e);
-
-    return rank * sign;
+    arb_mul   (t, arb_mat_entry(A, 0, 0), arb_mat_entry(A, 1, 1), prec);
+    arb_submul(t, arb_mat_entry(A, 0, 1), arb_mat_entry(A, 1, 0), prec);
 }
 
-void
-arb_vec_get_arf_2norm_squared_bound(arf_t s, arb_srcptr vec, slong len, slong prec)
+static void
+_arb_mat_det_cofactor_3x3(arb_t t, const arb_mat_t A, slong prec)
 {
-    slong i;
-    arf_t t;
+    arb_t a;
+    arb_init(a);
 
-    arf_init(t);
-    arf_zero(s);
+    arb_mul   (a, arb_mat_entry(A, 1, 0), arb_mat_entry(A, 2, 1), prec);
+    arb_submul(a, arb_mat_entry(A, 1, 1), arb_mat_entry(A, 2, 0), prec);
+    arb_mul   (t, a, arb_mat_entry(A, 0, 2), prec);
 
-    for (i = 0; i < len; i++)
-    {
-        arb_get_abs_ubound_arf(t, vec + i, prec);
-        arf_addmul(s, t, t, prec, ARF_RND_UP);
-    }
+    arb_mul   (a, arb_mat_entry(A, 1, 2), arb_mat_entry(A, 2, 0), prec);
+    arb_submul(a, arb_mat_entry(A, 1, 0), arb_mat_entry(A, 2, 2), prec);
+    arb_addmul(t, a, arb_mat_entry(A, 0, 1), prec);
 
-    arf_clear(t);
+    arb_mul   (a, arb_mat_entry(A, 1, 1), arb_mat_entry(A, 2, 2), prec);
+    arb_submul(a, arb_mat_entry(A, 1, 2), arb_mat_entry(A, 2, 1), prec);
+    arb_addmul(t, a, arb_mat_entry(A, 0, 0), prec);
+
+    arb_clear(a);
 }
 
-void
-arb_mat_det_inplace(arb_t det, arb_mat_t A, slong prec)
+int
+arb_mat_is_finite(const arb_mat_t A)
 {
-    slong i, n, sign, rank;
+    slong i, j, n, m;
 
     n = arb_mat_nrows(A);
-    rank = arb_mat_gauss_partial(A, prec);
-    sign = (rank < 0) ? -1 : 1;
-    rank = FLINT_ABS(rank);
+    m = arb_mat_ncols(A);
 
-    arb_set_si(det, sign);
-    for (i = 0; i < rank; i++)
-        arb_mul(det, det, arb_mat_entry(A, i, i), prec);
+    for (i = 0; i < n; i++)
+        for (j = 0; j < m; j++)
+            if (!arb_is_finite(arb_mat_entry(A, i, j)))
+                return 0;
 
-    /* bound unreduced part using Hadamard's inequality */
-    if (rank < n)
-    {
-        arf_t t;
-        arf_t d;
-        arb_t b;
+    return 1;
+}
 
-        arf_init(t);
-        arf_init(d);
-        arb_init(b);
+int
+arb_mat_is_tril(const arb_mat_t A)
+{
+    slong i, j, n, m;
 
-        arf_one(d);
+    n = arb_mat_nrows(A);
+    m = arb_mat_ncols(A);
 
-        for (i = rank; i < n; i++)
-        {
-            arb_vec_get_arf_2norm_squared_bound(t, A->rows[i] + rank,  n - rank, MAG_BITS);
-            arf_mul(d, d, t, MAG_BITS, ARF_RND_UP);
-        }
+    for (i = 1; i < n; i++)
+        for (j = 0; j < FLINT_MIN(i, m); j++)
+            if (!arb_is_zero(arb_mat_entry(A, i, j)))
+                return 0;
 
-        arf_sqrt(d, d, MAG_BITS, ARF_RND_UP);
-        arb_add_error_arf(b, d);
+    return 1;
+}
 
-        arb_mul(det, det, b, prec);
+int
+arb_mat_is_triu(const arb_mat_t A)
+{
+    slong i, j, n, m;
 
-        arf_clear(d);
-        arf_clear(t);
-        arb_clear(b);
-    }
+    n = arb_mat_nrows(A);
+    m = arb_mat_ncols(A);
+
+    for (i = 0; i < n; i++)
+        for (j = i + 1; j < m; j++)
+            if (!arb_is_zero(arb_mat_entry(A, i, j)))
+                return 0;
+
+    return 1;
 }
 
 void
 arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 {
-    slong n;
+    slong k, n;
 
     if (!arb_mat_is_square(A))
     {
@@ -139,19 +106,33 @@ arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
     }
     else if (n == 1)
     {
-        arb_set(det, arb_mat_entry(A, 0, 0));
+        arb_set_round(det, arb_mat_entry(A, 0, 0), prec);
     }
     else if (n == 2)
     {
-        arb_mul(det, arb_mat_entry(A, 0, 0), arb_mat_entry(A, 1, 1), prec);
-        arb_submul(det, arb_mat_entry(A, 0, 1), arb_mat_entry(A, 1, 0), prec);
+        _arb_mat_det_cofactor_2x2(det, A, prec);
+    }
+    else if (!arb_mat_is_finite(A))
+    {
+        arb_indeterminate(det);
+    }
+    else if (arb_mat_is_tril(A) || arb_mat_is_triu(A))
+    {
+        arb_set(det, arb_mat_entry(A, 0, 0));
+        for (k = 1; k < n; k++)
+            arb_mul(det, det, arb_mat_entry(A, k, k), prec);
+    }
+    else if (n == 3)
+    {
+        _arb_mat_det_cofactor_3x3(det, A, prec);
+        /* note: 4x4 performs worse than LU */
     }
     else
     {
-        arb_mat_t T;
-        arb_mat_init(T, arb_mat_nrows(A), arb_mat_ncols(A));
-        arb_mat_set(T, A);
-        arb_mat_det_inplace(det, T, prec);
-        arb_mat_clear(T);
+        if (n <= 10 || prec > 10.0 * n)
+            arb_mat_det_lu(det, A, prec);
+        else
+            arb_mat_det_precond(det, A, prec);
     }
 }
+
