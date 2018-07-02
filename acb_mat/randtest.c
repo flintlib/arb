@@ -14,15 +14,23 @@
 void
 acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits)
 {
-    slong i, j;
+    slong i, j, density;
+
+    density = n_randint(state, 100);
 
     if (n_randint(state, 2))
         for (i = 0; i < acb_mat_nrows(mat); i++)
             for (j = 0; j < acb_mat_ncols(mat); j++)
-                acb_randtest(acb_mat_entry(mat, i, j), state, prec, mag_bits);
+                if (n_randint(state, 100) < density)
+                    acb_randtest(acb_mat_entry(mat, i, j), state, prec, mag_bits);
+                else
+                    acb_zero(acb_mat_entry(mat, i, j));
     else
         for (i = 0; i < acb_mat_nrows(mat); i++)
             for (j = 0; j < acb_mat_ncols(mat); j++)
-                acb_randtest_precise(acb_mat_entry(mat, i, j), state, prec, mag_bits);
+                if (n_randint(state, 100) < density)
+                    acb_randtest_precise(acb_mat_entry(mat, i, j), state, prec, mag_bits);
+                else
+                    acb_zero(acb_mat_entry(mat, i, j));
 }
 
