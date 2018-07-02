@@ -56,7 +56,7 @@ arb_mat_is_finite(const arb_mat_t A)
 }
 
 int
-arb_mat_is_tril(const arb_mat_t A)
+arb_mat_is_triu(const arb_mat_t A)
 {
     slong i, j, n, m;
 
@@ -72,7 +72,7 @@ arb_mat_is_tril(const arb_mat_t A)
 }
 
 int
-arb_mat_is_triu(const arb_mat_t A)
+arb_mat_is_tril(const arb_mat_t A)
 {
     slong i, j, n, m;
 
