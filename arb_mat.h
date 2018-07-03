@@ -194,9 +194,8 @@ void arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong 
 
 void arb_mat_mul_entrywise(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec);
 
-void arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec);
-
 void arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec);
+void arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec);
 
 void arb_mat_pow_ui(arb_mat_t B, const arb_mat_t A, ulong exp, slong prec);
 

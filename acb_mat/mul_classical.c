@@ -16,6 +16,12 @@ acb_mat_mul_classical(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong p
 {
     slong ar, ac, br, bc, i, j, k;
 
+    if (A == B)
+    {
+        acb_mat_sqr_classical(C, A, prec);
+        return;
+    }
+
     ar = acb_mat_nrows(A);
     ac = acb_mat_ncols(A);
     br = acb_mat_nrows(B);

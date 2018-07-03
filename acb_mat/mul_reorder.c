@@ -44,8 +44,7 @@ clear_shallow(arb_mat_t X)
             arb_init(arb_mat_entry(X, i, j));
 }
 
-/* todo: only use if prec (also look at bits!) < 3200 (except of course: pure real/...) */
-
+/* todo: squaring optimizations */
 void
 acb_mat_mul_reorder(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
 {

@@ -14,15 +14,6 @@
 void
 arb_mat_sqr(arb_mat_t B, const arb_mat_t A, slong prec)
 {
-    double d = (double) arb_mat_nrows(A);
-
-    if (flint_get_num_threads() > 1 && d*d*d * (double) prec > 100000)
-    {
-        arb_mat_mul_threaded(B, A, A, prec);   /* todo: sqr threaded */
-    }
-    else
-    {
-        arb_mat_sqr_classical(B, A, prec);
-    }
+    arb_mat_mul(B, A, A, prec);
 }
 
