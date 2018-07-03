@@ -157,7 +157,20 @@ void acb_mat_zero(acb_mat_t mat);
 
 void acb_mat_one(acb_mat_t mat);
 
+void acb_mat_ones(acb_mat_t mat);
+
+void acb_mat_dft(acb_mat_t res, int kind, slong prec);
+
 void acb_mat_transpose(acb_mat_t mat1, const acb_mat_t mat2);
+
+void acb_mat_conjugate(acb_mat_t mat1, const acb_mat_t mat2);
+
+ACB_MAT_INLINE void
+acb_mat_conjugate_transpose(acb_mat_t mat1, const acb_mat_t mat2)
+{
+    acb_mat_transpose(mat1, mat2);
+    acb_mat_conjugate(mat1, mat1);
+}
 
 /* Norms */
 

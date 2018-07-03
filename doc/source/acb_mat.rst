@@ -150,6 +150,24 @@ Special matrices
     Sets the entries on the main diagonal to ones,
     and all other entries to zero.
 
+.. function:: void acb_mat_ones(acb_mat_t mat)
+
+    Sets all entries in the matrix to ones.
+
+.. function:: void arb_mat_dft(arb_mat_t mat, int type, slong prec)
+
+    Sets *mat* to the DFT (discrete Fourier transform) matrix of order *n*
+    where *n* is the smallest dimension of *mat* (if *mat* is not square,
+    the matrix is extended periodically along the larger dimension).
+    Here, we use the normalized DFT matrix
+
+    .. math ::
+
+        A_{j,k} = \frac{\omega^{jk}}{\sqrt{n}}, \quad \omega = e^{-2\pi i/n}.
+
+    The *type* parameter is currently ignored and should be set to 0.
+    In the future, it might be used to select a different convention.
+
 Transpose
 -------------------------------------------------------------------------------
 
@@ -157,6 +175,15 @@ Transpose
 
     Sets *dest* to the exact transpose *src*. The operands must have
     compatible dimensions. Aliasing is allowed.
+
+.. function:: void acb_mat_conjugate_transpose(acb_mat_t dest, const acb_mat_t src)
+
+    Sets *dest* to the conjugate transpose of *src*. The operands must have
+    compatible dimensions. Aliasing is allowed.
+
+.. function:: void acb_mat_conjugate(acb_mat_t dest, const acb_mat_t src)
+
+    Sets *dest* to the elementwise complex conjugate of *src*.
 
 Norms
 -------------------------------------------------------------------------------

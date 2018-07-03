@@ -40,7 +40,7 @@ acb_mat_sqr_classical(acb_mat_t B, const acb_mat_t A, slong prec)
     {
         acb_mat_t T;
         acb_mat_init(T, n, n);
-        acb_mat_sqr(T, A, prec);
+        acb_mat_sqr_classical(T, A, prec);
         acb_mat_swap(T, B);
         acb_mat_clear(T);
         return;

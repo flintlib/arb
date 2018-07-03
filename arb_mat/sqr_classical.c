@@ -40,7 +40,7 @@ arb_mat_sqr_classical(arb_mat_t B, const arb_mat_t A, slong prec)
     {
         arb_mat_t T;
         arb_mat_init(T, n, n);
-        arb_mat_sqr(T, A, prec);
+        arb_mat_sqr_classical(T, A, prec);
         arb_mat_swap(T, B);
         arb_mat_clear(T);
         return;
