@@ -28,8 +28,8 @@ int main()
         slong n, m, qbits, prec;
         int q_invertible, r_invertible, r_invertible2;
 
-        n = n_randint(state, 8);
-        m = n_randint(state, 8);
+        n = n_randint(state, 10);
+        m = n_randint(state, 10);
         qbits = 1 + n_randint(state, 30);
         prec = 2 + n_randint(state, 200);
 

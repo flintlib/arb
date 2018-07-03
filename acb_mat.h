@@ -66,6 +66,16 @@ acb_mat_swap(acb_mat_t mat1, acb_mat_t mat2)
     *mat2 = t;
 }
 
+/* Window matrices */
+
+void acb_mat_window_init(acb_mat_t window, const acb_mat_t mat, slong r1, slong c1, slong r2, slong c2);
+
+ARB_MAT_INLINE void
+acb_mat_window_clear(acb_mat_t window)
+{
+    flint_free(window->rows);
+}
+
 /* Conversions */
 
 void acb_mat_set(acb_mat_t dest, const acb_mat_t src);
@@ -358,6 +368,16 @@ acb_mat_swap_rows(acb_mat_t mat, slong * perm, slong r, slong s)
 slong acb_mat_find_pivot_partial(const acb_mat_t mat,
                                     slong start_row, slong end_row, slong c);
 
+void acb_mat_solve_tril_classical(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec);
+void acb_mat_solve_tril_recursive(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec);
+void acb_mat_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec);
+
+void acb_mat_solve_triu_classical(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec);
+void acb_mat_solve_triu_recursive(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec);
+void acb_mat_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec);
+
+int acb_mat_lu_classical(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
+int acb_mat_lu_recursive(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
 int acb_mat_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
 
 void acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm,
