@@ -66,7 +66,7 @@ Memory management
 
 .. function:: void arb_mat_window_clear(arb_mat_t window)
 
-    Frees the submatrix.
+    Frees the window matrix.
 
 Conversions
 -------------------------------------------------------------------------------
@@ -648,3 +648,4 @@ Sparsity structure
 .. function:: slong arb_mat_count_not_is_zero(const arb_mat_t mat)
 
     Returns the number of entries of *mat* that are not certainly zero.
+

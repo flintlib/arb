@@ -83,8 +83,18 @@ acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm,
         }
     }
 
-    acb_init(t);
     acb_mat_get_mid(X, X);
+
+    /* todo: solve_tril and solve_triu have some overhead; should be
+       able to eliminate the basecase code below */
+    if (n >= 8 && m >= 8)
+    {
+        acb_mat_approx_solve_tril(X, A, X, 1, prec);
+        acb_mat_approx_solve_triu(X, A, X, 0, prec);
+        return;
+    }
+
+    acb_init(t);
 
     for (c = 0; c < m; c++)
     {

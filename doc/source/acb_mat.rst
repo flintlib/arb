@@ -58,6 +58,16 @@ Memory management
     The count excludes the size of the structure itself. Add
     ``sizeof(acb_mat_struct)`` to get the size of the object as a whole.
 
+.. function:: void acb_mat_window_init(acb_mat_t window, const acb_mat_t mat, slong r1, slong c1, slong r2, slong c2)
+
+    Initializes *window* to a window matrix into the submatrix of *mat*
+    starting at the corner at row *r1* and column *c1* (inclusive) and ending
+    at row *r2* and column *c2* (exclusive).
+
+.. function:: void acb_mat_window_clear(acb_mat_t window)
+
+    Frees the window matrix.
+
 Conversions
 -------------------------------------------------------------------------------
 
@@ -300,6 +310,10 @@ Scalar arithmetic
 Gaussian elimination and solving
 -------------------------------------------------------------------------------
 
+.. function:: int acb_mat_lu_classical(slong * perm, acb_mat_t LU, const acb_mat_t A, slong prec)
+
+.. function:: int acb_mat_lu_recursive(slong * perm, acb_mat_t LU, const acb_mat_t A, slong prec)
+
 .. function:: int acb_mat_lu(slong * perm, acb_mat_t LU, const acb_mat_t A, slong prec)
 
     Given an `n \times n` matrix `A`, computes an LU decomposition `PLU = A`
@@ -319,6 +333,33 @@ Gaussian elimination and solving
     In this case, either the matrix is singular, the input matrix was
     computed to insufficient precision, or the LU decomposition was
     attempted at insufficient precision.
+
+    The *classical* version uses Gaussian elimination directly while
+    the *recursive* version performs the computation in a block recursive
+    way to benefit from fast matrix multiplication. The default version
+    chooses an algorithm automatically.
+
+.. function:: void acb_mat_solve_tril_classical(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_solve_tril_recursive(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_solve_triu_classical(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_solve_triu_recursive(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
+
+    Solves the lower triangular system `LX = B` or the upper triangular system
+    `UX = B`, respectively. If *unit* is set, the main diagonal of *L* or *U*
+    is taken to consist of all ones, and in that case the actual entries on
+    the diagonal are not read at all and can contain other data.
+
+    The *classical* versions perform the computations iteratively while the
+    *recursive* versions perform the computations in a block recursive
+    way to benefit from fast matrix multiplication. The default versions
+    choose an algorithm automatically.
 
 .. function:: void acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t LU, const acb_mat_t B, slong prec)
 
@@ -370,13 +411,29 @@ Gaussian elimination and solving
     A nonzero return value guarantees that the matrix is invertible
     and that the exact inverse is contained in the output.
 
+.. function:: void acb_mat_det_lu(acb_t det, const acb_mat_t A, slong prec)
+
+.. function:: void acb_mat_det_precond(acb_t det, const acb_mat_t A, slong prec)
+
 .. function:: void acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
 
-    Computes the determinant of the matrix, using Gaussian elimination
-    with partial pivoting. If at some point an invertible pivot element
-    cannot be found, the elimination is stopped and the magnitude of the
-    determinant of the remaining submatrix is bounded using
-    Hadamard's inequality.
+    Sets *det* to the determinant of the matrix *A*.
+
+    The *lu* version uses Gaussian elimination with partial pivoting. If at
+    some point an invertible pivot element cannot be found, the elimination is
+    stopped and the magnitude of the determinant of the remaining submatrix
+    is bounded using Hadamard's inequality.
+
+    The *precond* version computes an approximate LU factorization of *A*
+    and multiplies by the inverse *L* and *U* martices as preconditioners
+    to obtain a matrix close to the identity matrix [Rum2010]_. An enclosure
+    for this determinant is computed using Gershgorin circles. This is about
+    four times slower than direct Gaussian elimination, but much more
+    numerically stable.
+
+    The default version automatically selects between the *lu* and *precond*
+    versions and additionally handles small or triangular matrices
+    by direct formulas.
 
 Characteristic polynomial
 -------------------------------------------------------------------------------
@@ -414,3 +471,4 @@ Special functions
 
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
+

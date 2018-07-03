@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,128 +11,104 @@
 
 #include "acb_mat.h"
 
-slong
-acb_mat_gauss_partial(acb_mat_t A, slong prec)
+static void
+_acb_mat_det_cofactor_2x2(acb_t t, const acb_mat_t A, slong prec)
 {
-    acb_t e;
-    acb_ptr * a;
-    slong j, m, n, r, rank, row, col, sign;
-
-    m = A->r;
-    n = A->c;
-    a = A->rows;
-    rank = row = col = 0;
-    sign = 1;
-
-    acb_init(e);
-
-    while (row < m && col < n)
-    {
-        r = acb_mat_find_pivot_partial(A, row, m, col);
-
-        if (r == -1)
-        {
-            break;
-        }
-        else if (r != row)
-        {
-            acb_mat_swap_rows(A, NULL, row, r);
-            sign *= -1;
-        }
-
-        rank++;
-
-        for (j = row + 1; j < m; j++)
-        {
-            acb_div(e, a[j] + col, a[row] + col, prec);
-            acb_neg(e, e);
-            _acb_vec_scalar_addmul(a[j] + col + 1, a[row] + col + 1, n - col - 1, e, prec);
-        }
-
-        row++;
-        col++;
-    }
-
-    acb_clear(e);
-
-    return rank * sign;
+    acb_mul   (t, acb_mat_entry(A, 0, 0), acb_mat_entry(A, 1, 1), prec);
+    acb_submul(t, acb_mat_entry(A, 0, 1), acb_mat_entry(A, 1, 0), prec);
 }
 
-void
-acb_vec_get_arf_2norm_squared_bound(arf_t s, acb_srcptr vec, slong len, slong prec)
+static void
+_acb_mat_det_cofactor_3x3(acb_t t, const acb_mat_t A, slong prec)
 {
-    slong i;
-    arf_t t;
+    acb_t a;
+    acb_init(a);
 
-    arf_init(t);
-    arf_zero(s);
+    acb_mul   (a, acb_mat_entry(A, 1, 0), acb_mat_entry(A, 2, 1), prec);
+    acb_submul(a, acb_mat_entry(A, 1, 1), acb_mat_entry(A, 2, 0), prec);
+    acb_mul   (t, a, acb_mat_entry(A, 0, 2), prec);
 
-    for (i = 0; i < len; i++)
-    {
-        arb_get_abs_ubound_arf(t, acb_realref(vec + i), prec);
-        arf_addmul(s, t, t, prec, ARF_RND_UP);
-        arb_get_abs_ubound_arf(t, acb_imagref(vec + i), prec);
-        arf_addmul(s, t, t, prec, ARF_RND_UP);
-    }
+    acb_mul   (a, acb_mat_entry(A, 1, 2), acb_mat_entry(A, 2, 0), prec);
+    acb_submul(a, acb_mat_entry(A, 1, 0), acb_mat_entry(A, 2, 2), prec);
+    acb_addmul(t, a, acb_mat_entry(A, 0, 1), prec);
 
-    arf_clear(t);
+    acb_mul   (a, acb_mat_entry(A, 1, 1), acb_mat_entry(A, 2, 2), prec);
+    acb_submul(a, acb_mat_entry(A, 1, 2), acb_mat_entry(A, 2, 1), prec);
+    acb_addmul(t, a, acb_mat_entry(A, 0, 0), prec);
+
+    acb_clear(a);
 }
 
-void
-acb_mat_det_inplace(acb_t det, acb_mat_t A, slong prec)
+int
+acb_mat_is_finite(const acb_mat_t A)
 {
-    slong i, n, sign, rank;
-    int is_real;
+    slong i, j, n, m;
 
     n = acb_mat_nrows(A);
-    rank = acb_mat_gauss_partial(A, prec);
-    sign = (rank < 0) ? -1 : 1;
-    rank = FLINT_ABS(rank);
+    m = acb_mat_ncols(A);
 
-    acb_set_si(det, sign);
-    for (i = 0; i < rank; i++)
-        acb_mul(det, det, acb_mat_entry(A, i, i), prec);
+    for (i = 0; i < n; i++)
+        for (j = 0; j < m; j++)
+            if (!acb_is_finite(acb_mat_entry(A, i, j)))
+                return 0;
 
-    /* bound unreduced part using Hadamard's inequality */
-    if (rank < n)
+    return 1;
+}
+
+int
+acb_mat_is_triu(const acb_mat_t A)
+{
+    slong i, j, n, m;
+
+    n = acb_mat_nrows(A);
+    m = acb_mat_ncols(A);
+
+    for (i = 1; i < n; i++)
+        for (j = 0; j < FLINT_MIN(i, m); j++)
+            if (!acb_is_zero(acb_mat_entry(A, i, j)))
+                return 0;
+
+    return 1;
+}
+
+int
+acb_mat_is_tril(const acb_mat_t A)
+{
+    slong i, j, n, m;
+
+    n = acb_mat_nrows(A);
+    m = acb_mat_ncols(A);
+
+    for (i = 0; i < n; i++)
+        for (j = i + 1; j < m; j++)
+            if (!acb_is_zero(acb_mat_entry(A, i, j)))
+                return 0;
+
+    return 1;
+}
+
+void
+acb_mat_diag_prod(acb_t res, const acb_mat_t A, slong a, slong b, slong prec)
+{
+    if (b - a == 0)
+        acb_one(res);
+    else if (b - a == 1)
+        acb_set_round(res, acb_mat_entry(A, a, a), prec);
+    else if (b - a == 2)
+        acb_mul(res, acb_mat_entry(A, a, a), acb_mat_entry(A, a + 1, a + 1), prec);
+    else if (b - a == 3)
     {
-        arf_t t;
-        arf_t d;
-        acb_t e;
-
-        arf_init(t);
-        arf_init(d);
-        acb_init(e);
-
-        arf_one(d);
-
-        is_real = acb_mat_is_real(A);
-
-        for (i = rank; i < n; i++)
-        {
-            acb_vec_get_arf_2norm_squared_bound(t, A->rows[i] + rank,  n - rank, MAG_BITS);
-            arf_mul(d, d, t, MAG_BITS, ARF_RND_UP);
-        }
-
-        /* now d contains the absolute value of the determinant */
-        arf_sqrt(d, d, MAG_BITS, ARF_RND_UP);
-
-        /* multiply by disc with radius d */
-        if (is_real)
-        {
-            arb_add_error_arf(acb_realref(e), d);
-        }
-        else
-        {
-            arb_add_error_arf(acb_realref(e), d);
-            arb_add_error_arf(acb_imagref(e), d);
-        }
-
-        acb_mul(det, det, e, prec);
-
-        acb_clear(e);
-        arf_clear(d);
-        arf_clear(t);
+        acb_mul(res, acb_mat_entry(A, a, a), acb_mat_entry(A, a + 1, a + 1), prec);
+        acb_mul(res, res, acb_mat_entry(A, a + 2, a + 2), prec);
+    }
+    else
+    {
+        acb_t t;
+        acb_init(t);
+        acb_mat_diag_prod(t, A, a, a + (b - a) / 2, prec);
+        acb_mat_diag_prod(res, A, a + (b - a) / 2, b, prec);
+        acb_mul(res, res, t, prec);
+        acb_clear(t);
     }
 }
 
@@ -155,19 +131,31 @@ acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
     }
     else if (n == 1)
     {
-        acb_set(det, acb_mat_entry(A, 0, 0));
+        acb_set_round(det, acb_mat_entry(A, 0, 0), prec);
     }
     else if (n == 2)
     {
-        acb_mul(det, acb_mat_entry(A, 0, 0), acb_mat_entry(A, 1, 1), prec);
-        acb_submul(det, acb_mat_entry(A, 0, 1), acb_mat_entry(A, 1, 0), prec);
+        _acb_mat_det_cofactor_2x2(det, A, prec);
+    }
+    else if (!acb_mat_is_finite(A))
+    {
+        acb_indeterminate(det);
+    }
+    else if (acb_mat_is_tril(A) || acb_mat_is_triu(A))
+    {
+        acb_mat_diag_prod(det, A, 0, n, prec);
+    }
+    else if (n == 3)
+    {
+        _acb_mat_det_cofactor_3x3(det, A, prec);
+        /* note: 4x4 performs worse than LU */
     }
     else
     {
-        acb_mat_t T;
-        acb_mat_init(T, acb_mat_nrows(A), acb_mat_ncols(A));
-        acb_mat_set(T, A);
-        acb_mat_det_inplace(det, T, prec);
-        acb_mat_clear(T);
+        if (n <= 14 || prec > 10.0 * n)
+            acb_mat_det_lu(det, A, prec);
+        else
+            acb_mat_det_precond(det, A, prec);
     }
 }
+
