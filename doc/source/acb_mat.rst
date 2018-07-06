@@ -164,7 +164,7 @@ Special matrices
 
     Sets all entries in the matrix to ones.
 
-.. function:: void arb_mat_dft(arb_mat_t mat, int type, slong prec)
+.. function:: void acb_mat_dft(acb_mat_t mat, int type, slong prec)
 
     Sets *mat* to the DFT (discrete Fourier transform) matrix of order *n*
     where *n* is the smallest dimension of *mat* (if *mat* is not square,
