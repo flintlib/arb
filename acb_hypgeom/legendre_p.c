@@ -17,6 +17,7 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
     const acb_t z, int type, slong prec)
 {
     acb_t a, b, c, w;
+    int flag;
 
     if (!acb_is_finite(z))
     {
@@ -102,7 +103,13 @@ acb_hypgeom_legendre_p(acb_t res, const acb_t n, const acb_t m,
     acb_neg(w, w);
     acb_mul_2exp_si(w, w, -1);
 
-    acb_hypgeom_2f1(w, a, b, c, w, 1, prec);
+    /* a + b - c (which could be inexact) is integer iff c is integer */
+    flag = 1;
+    if (acb_is_int(c))
+    {
+        flag |= ACB_HYPGEOM_2F1_ABC;
+    }
+    acb_hypgeom_2f1(w, a, b, c, w, flag, prec);
 
     if (!acb_is_zero(m))
     {
