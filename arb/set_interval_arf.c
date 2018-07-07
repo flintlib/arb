@@ -11,22 +11,36 @@
 
 #include "arb.h"
 
-/* [(a + b) +/- (b - a)] / 2 */
-
 void
 arb_set_interval_arf(arb_t x, const arf_t a, const arf_t b, slong prec)
 {
     arf_t t;
     int inexact;
 
+    /* [-inf, -inf] or [+inf, +inf] */
     if (arf_is_inf(a) && arf_equal(a, b))
     {
-        /* [-inf, -inf] or [+inf, +inf] */
         arf_set(arb_midref(x), a);
         mag_zero(arb_radref(x));
         return;
     }
 
+    /* any nan -> [nan +/- inf] */
+    if (arf_is_nan(a) || arf_is_nan(b))
+    {
+        arb_indeterminate(x);
+        return;
+    }
+
+    /* [-inf, x] or [x, +inf] = [+/- inf] */
+    if (arf_is_neg_inf(a) || arf_is_pos_inf(b))
+    {
+        arf_zero(arb_midref(x));
+        mag_inf(arb_radref(x));
+        return;
+    }
+
+    /* [(a + b) +/- (b - a)] / 2 */
     arf_init(t);
     arf_sub(t, b, a, MAG_BITS, ARF_RND_UP);
 

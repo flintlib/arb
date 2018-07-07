@@ -36,7 +36,8 @@ int main()
 
         arb_set_interval_arf(x, a, b, 2 + n_randint(state, 200));
 
-        if (!arb_contains_arf(x, a) || !arb_contains_arf(x, b))
+        if ((!arb_contains_arf(x, a) || !arb_contains_arf(x, b)) ||
+            (!arf_is_nan(a) && !arf_is_nan(b) && arf_is_nan(arb_midref(x))))
         {
             flint_printf("FAIL:\n\n");
             flint_printf("x = "); arb_print(x); flint_printf("\n\n");
