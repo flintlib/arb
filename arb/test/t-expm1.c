@@ -78,7 +78,7 @@ int main()
     for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c, d;
-        slong prec0, prec1, prec2;
+        slong prec0, prec1, prec2, acc1, acc2;
 
         if (iter % 10 == 0)
             prec0 = 10000;
@@ -97,7 +97,8 @@ int main()
         arb_randtest_special(b, state, 1 + n_randint(state, prec0), 100);
 
         arb_expm1(b, a, prec1);
-        arb_expm1(c, a, prec2);
+        arb_set(c, a);  /* also tests aliasing */
+        arb_expm1(c, c, prec2);
 
         if (!arb_overlaps(b, c))
         {
@@ -116,9 +117,13 @@ int main()
         arb_exp(d, a, prec1);
         arb_sub_ui(d, d, 1, prec1);
 
-        if (!arb_overlaps(c, d))
+        acc1 = arb_rel_accuracy_bits(c);
+        acc2 = arb_rel_accuracy_bits(d);
+
+        if (!arb_overlaps(c, d) || ((acc2 > 0) && acc1 < FLINT_MIN(acc2, prec1) - 3))
         {
             flint_printf("FAIL: comparison with exp\n\n");
+            flint_printf("prec = %wd, acc1 = %wd, acc2 = %wd\n\n", prec1, acc1, acc2);
             flint_printf("a = "); arb_print(a); flint_printf("\n\n");
             flint_printf("b = "); arb_print(b); flint_printf("\n\n");
             flint_printf("c = "); arb_print(c); flint_printf("\n\n");

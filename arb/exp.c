@@ -525,30 +525,84 @@ void arb_exp(arb_t res, const arb_t x, slong prec)
 }
 
 void
-arb_expm1(arb_t z, const arb_t x, slong prec)
+arb_expm1(arb_t res, const arb_t x, slong prec)
 {
-    if (arb_is_exact(x))
-    {
-        arb_exp_arf(z, arb_midref(x), prec, 1, MAGLIM(prec));
-    }
-    else
-    {
-        if (mag_cmp_2exp_si(arb_radref(x), 20) < 0)
-        {
-            /* [exp(a+b) - 1] - [exp(a) - 1] = exp(a) * (exp(b)-1) */
-            mag_t t, u, one;
+    slong maglim = MAGLIM(prec);
 
+    if (mag_is_zero(arb_radref(x)))
+    {
+        arb_exp_arf(res, arb_midref(x), prec, 1, maglim);
+    }
+    else if (mag_is_inf(arb_radref(x)))
+    {
+        if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(res);
+        else
+            arb_zero_pm_inf(res);
+    }
+    else if (arf_is_special(arb_midref(x)))
+    {
+        if (arf_is_zero(arb_midref(x)))
+        {
+            if (mag_cmp_2exp_si(arb_radref(x), -10) < 0)
+            {
+                mag_expm1(arb_radref(res), arb_radref(x));
+                arf_zero(arb_midref(res));
+            }
+            else
+            {
+                arb_exp_wide(res, x, prec, maglim);
+                arb_sub_ui(res, res, 1, prec);
+            }
+        }
+        else if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(res);
+        else  /* infinity +/- finite */
+            arb_exp_arf(res, arb_midref(x), prec, 1, 1);
+    }
+    else  /* both finite, non-special */
+    {
+        if (arf_cmpabs_2exp_si(arb_midref(x), 3) < 0 &&
+            mag_cmp_2exp_si(arb_radref(x), -3) < 0)
+        {
+            mag_t t, u, one;
+            slong acc, mexp, rexp;
+
+            mexp = ARF_EXP(arb_midref(x));
+            rexp = MAG_EXP(arb_radref(x));
+
+            if (COEFF_IS_MPZ(rexp))
+                rexp = (fmpz_sgn(ARF_EXPREF(arb_radref(x))) < 0) ? COEFF_MIN : COEFF_MAX;
+            if (COEFF_IS_MPZ(mexp))
+                mexp = (fmpz_sgn(MAG_EXPREF(arb_midref(x))) < 0) ? COEFF_MIN : COEFF_MAX;
+
+            acc = FLINT_MIN(mexp, 0) - rexp;
+            acc = FLINT_MAX(acc, 0);
+            acc = FLINT_MIN(acc, prec);
+            prec = FLINT_MIN(prec, acc + MAG_BITS);
+            prec = FLINT_MAX(prec, 2);
+
+            /* [exp(a+b) - 1] - [exp(a) - 1] = exp(a) * (exp(b)-1) */
             mag_init_set(t, arb_radref(x));
             mag_init(u);
             mag_init(one);
             mag_one(one);
 
-            arb_exp_arf(z, arb_midref(x), prec, 1, MAGLIM(prec));
+            if (arf_sgn(arb_midref(x)) >= 0)
+            {
+                arb_exp_arf(res, arb_midref(x), prec, 1, maglim);
+                arb_get_mag(u, res);
+                mag_add(u, u, one);
+            }
+            else
+            {
+                arb_exp_arf(res, arb_midref(x), prec, 1, maglim);
+                arb_get_mag_lower(u, res);
+                mag_sub(u, one, u);
+            }
 
             mag_expm1(t, t);
-            arb_get_mag(u, z);
-            mag_add(u, u, one);
-            mag_addmul(arb_radref(z), t, u);
+            mag_addmul(arb_radref(res), t, u);
 
             mag_clear(t);
             mag_clear(u);
@@ -556,8 +610,8 @@ arb_expm1(arb_t z, const arb_t x, slong prec)
         }
         else
         {
-            arb_exp(z, x, prec);
-            arb_sub_ui(z, z, 1, prec);
+            arb_exp(res, x, prec);
+            arb_sub_ui(res, res, 1, prec);
         }
     }
 }
