@@ -562,46 +562,105 @@ arb_expm1(arb_t z, const arb_t x, slong prec)
     }
 }
 
-void
-arb_exp_invexp(arb_t z, arb_t w, const arb_t x, slong prec)
+void arb_exp_invexp(arb_t res, arb_t res2, const arb_t x, slong prec)
 {
-    if (arb_is_exact(x))
+    slong maglim = MAGLIM(prec);
+
+    if (arf_is_special(arb_midref(x)) || mag_is_special(arb_radref(x)))
     {
-        arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
-        arb_inv(w, z, prec);
-    }
-    else
-    {
-        /* exp(a+b) - exp(a) = exp(a) * (exp(b)-1) */
-        if (mag_cmp_2exp_si(arb_radref(x), 20) < 0 || !arb_is_finite(x))
+        /* [c +/- 0] */
+        if (arf_is_finite(arb_midref(x)) && mag_is_zero(arb_radref(x)))
         {
+            arb_exp_arf(res, arb_midref(x), prec, 0, maglim);
+            arb_inv(res2, res, prec);
+        }  /* [nan +/- ?] */
+        else if (arf_is_nan(arb_midref(x)))
+        {
+            arb_indeterminate(res);
+            arb_indeterminate(res2);
+        }  /* [c +/- inf] */
+        else if (mag_is_inf(arb_radref(x)))
+        {
+            arb_zero_pm_inf(res);
+            arb_zero_pm_inf(res2);
+        }  /* [+inf +/- c] */
+        else if (arf_is_pos_inf(arb_midref(x)))
+        {
+            arb_pos_inf(res);
+            arb_zero(res2);
+        }  /* [-inf +/- c] */
+        else if (arf_is_neg_inf(arb_midref(x)))
+        {
+            arb_zero(res);
+            arb_pos_inf(res2);
+        }
+        else
+        {
+            arb_t t;
+            arb_init(t);
+            arb_neg(t, x);
+            arb_exp_wide(res, x, prec, maglim);
+            arb_exp_wide(res2, t, prec, maglim);
+            arb_clear(t);
+        }
+    }
+    else  /* both finite, non-special */
+    {
+        slong acc, mexp, rexp;
+
+        mexp = ARF_EXP(arb_midref(x));
+        rexp = MAG_EXP(arb_radref(x));
+
+        if (COEFF_IS_MPZ(rexp))
+            rexp = (fmpz_sgn(ARF_EXPREF(arb_radref(x))) < 0) ? COEFF_MIN : COEFF_MAX;
+        if (COEFF_IS_MPZ(mexp))
+            mexp = (fmpz_sgn(MAG_EXPREF(arb_midref(x))) < 0) ? COEFF_MIN : COEFF_MAX;
+
+        if (mexp < -prec && rexp < -prec)
+        {
+            arb_get_mag(arb_radref(res), x);
+            mag_expm1(arb_radref(res), arb_radref(res));
+            arf_one(arb_midref(res));
+            arb_set(res2, res);
+            return;
+        }
+
+        acc = -rexp;
+        acc = FLINT_MAX(acc, 0);
+        acc = FLINT_MIN(acc, prec);
+        prec = FLINT_MIN(prec, acc + MAG_BITS);
+        prec = FLINT_MAX(prec, 2);
+
+        if (acc < 20 && (rexp >= 0 || mexp <= 10))
+        {
+            /* may evaluate at endpoints */
+            arb_t t;
+            arb_init(t);
+            arb_neg(t, x);
+            arb_exp_wide(res, x, prec, maglim);
+            arb_exp_wide(res2, t, prec, maglim);
+            arb_clear(t);
+        }
+        else
+        {
+            /* exp(a+b) - exp(a) = exp(a) * (exp(b)-1) */
             mag_t t, u;
 
             mag_init_set(t, arb_radref(x));
             mag_init(u);
 
-            arb_exp_arf(z, arb_midref(x), prec, 0, MAGLIM(prec));
-            arb_inv(w, z, prec);
+            arb_exp_arf(res, arb_midref(x), prec, 0, maglim);
+            arb_inv(res2, res, prec);
 
             mag_expm1(t, t);
 
-            arb_get_mag(u, z);
-            mag_addmul(arb_radref(z), t, u);
-            arb_get_mag(u, w);
-            mag_addmul(arb_radref(w), t, u);
+            arb_get_mag(u, res);
+            mag_addmul(arb_radref(res), t, u);
+            arb_get_mag(u, res2);
+            mag_addmul(arb_radref(res2), t, u);
 
             mag_clear(t);
             mag_clear(u);
         }
-        else
-        {
-            arb_t v;
-            arb_init(v);
-            arb_neg(v, x);
-            arb_exp(z, x, prec);
-            arb_exp(w, v, prec);
-            arb_clear(v);
-        }
     }
 }
-
