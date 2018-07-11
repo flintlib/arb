@@ -625,6 +625,12 @@ void mag_expinv_lower(mag_t y, const mag_t x);
 void mag_expm1(mag_t y, const mag_t x);
 void mag_exp_tail(mag_t z, const mag_t x, ulong N);
 
+void mag_sinh(mag_t y, const mag_t x);
+void mag_sinh_lower(mag_t y, const mag_t x);
+
+void mag_cosh(mag_t y, const mag_t x);
+void mag_cosh_lower(mag_t y, const mag_t x);
+
 void mag_pow_ui(mag_t z, const mag_t x, ulong e);
 void mag_pow_ui_lower(mag_t z, const mag_t x, ulong e);
 void mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e);

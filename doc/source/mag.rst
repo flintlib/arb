@@ -460,6 +460,16 @@ Special functions
 
     Sets *res* to an upper (respectively lower) bound for `\operatorname{atan}(x)`.
 
+.. function:: void mag_cosh(mag_t res, const mag_t x)
+
+.. function:: void mag_cosh_lower(mag_t res, const mag_t x)
+
+.. function:: void mag_sinh(mag_t res, const mag_t x)
+
+.. function:: void mag_sinh_lower(mag_t res, const mag_t x)
+
+    Sets *res* to an upper or lower bound for `\cosh(x)` or `\sinh(x)`.
+
 .. function:: void mag_fac_ui(mag_t res, ulong n)
 
     Sets *res* to an upper bound for `n!`.
