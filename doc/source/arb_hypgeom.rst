@@ -3,14 +3,18 @@
 **arb_hypgeom.h** -- hypergeometric functions of real variables
 ==================================================================================
 
-See :ref:`acb-hypgeom` for the implementation of hypergeometric functions.
+See :ref:`acb-hypgeom` for the general implementation of hypergeometric functions.
 
-For convenience, this module provides corresponding functions for direct
-use with the real types :type:`arb_t` and :type:`arb_poly_t`.
-Most methods are simple wrappers around the complex versions, with
-a tiny amount of extra overhead for conversions, but in some cases the 
-functions in this module will be faster. In the future, code that is further
-optimized specifically for real variables might be added to this module.
+For convenience, this module provides versions of the same functions
+for real variables
+represented using :type:`arb_t` and :type:`arb_poly_t`.
+Most methods are simple wrappers
+around the complex versions,
+but some of the functions in this module have been further optimized
+specifically for real variables.
+
+This module also provides certain functions exclusive to real variables,
+such as functions for computing real roots of common special functions.
 
 Generalized hypergeometric function
 -------------------------------------------------------------------------------
