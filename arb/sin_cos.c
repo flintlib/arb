@@ -404,19 +404,10 @@ _arb_sin_cos(arb_t zsin, arb_t zcos, const arf_t x, const mag_t xrad, slong prec
         mag_t sin_err, cos_err, quadratic, comp_err, xrad_copy;
         mp_limb_t A_sin, A_cos, A_exp;
 
-        /* Copy xrad, for two reasons. First, we need to support aliasing,
-           and either the sine or cosine output could be written first.
-           Second, the exponent could still be a negative bignum when we
-           reach this point, and then we need to use an upper bound. */
-        if (MAG_IS_LAGOM(xrad))
-        {
-            *xrad_copy = *xrad;
-        }
-        else
-        {
-            MAG_MAN(xrad_copy) = MAG_ONE_HALF;
-            MAG_EXP(xrad_copy) = MAG_MIN_LAGOM_EXP + 1;
-        }
+        /* Copy xrad to support aliasing (note: the exponent has
+           also been clamped earlier). */
+        MAG_MAN(xrad_copy) = radman;
+        MAG_EXP(xrad_copy) = radexp;
 
         /* Bound computed error. */
         if (error != 0)
@@ -435,7 +426,6 @@ _arb_sin_cos(arb_t zsin, arb_t zcos, const arf_t x, const mag_t xrad, slong prec
            need to incorporate the computed error which would be slightly
            messier, and we would also need extra cases when only computing
            one of the functions. */
-        /* Note: the bounds on cos(x) and sin(x) are assumed to be nonzero. */
         A_cos = arb_sin_cos_tab1[2 * p1_tab1][ARB_SIN_COS_TAB1_LIMBS - 1];
         A_sin = arb_sin_cos_tab1[2 * p1_tab1 + 1][ARB_SIN_COS_TAB1_LIMBS - 1];
 
