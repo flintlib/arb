@@ -15,23 +15,135 @@
 #define TMP_ALLOC_LIMBS(__n) TMP_ALLOC((__n) * sizeof(mp_limb_t))
 #define MAGLIM(prec) FLINT_MAX(65536, (4*prec))
 
+static void
+mag_nonzero_fast_mul(mag_t z, const mag_t x, const mag_t y)
+{
+    MAG_MAN(z) = MAG_FIXMUL(MAG_MAN(x), MAG_MAN(y)) + LIMB_ONE;
+    MAG_EXP(z) = MAG_EXP(x) + MAG_EXP(y);
+    MAG_FAST_ADJUST_ONE_TOO_SMALL(z);
+}
+
+static void
+mag_nonzero_fast_add(mag_t z, const mag_t x, const mag_t y)
+{
+    slong shift = MAG_EXP(x) - MAG_EXP(y);
+
+    if (shift == 0)
+    {
+        MAG_EXP(z) = MAG_EXP(x);
+        MAG_MAN(z) = MAG_MAN(x) + MAG_MAN(y);
+        MAG_FAST_ADJUST_ONE_TOO_LARGE(z); /* may need two adjustments */
+    }
+    else if (shift > 0)
+    {
+        MAG_EXP(z) = MAG_EXP(x);
+
+        if (shift >= MAG_BITS)
+            MAG_MAN(z) = MAG_MAN(x) + LIMB_ONE;
+        else
+            MAG_MAN(z) = MAG_MAN(x) + (MAG_MAN(y) >> shift) + LIMB_ONE;
+    }
+    else
+    {
+        shift = -shift;
+        MAG_EXP(z) = MAG_EXP(y);
+
+        if (shift >= MAG_BITS)
+            MAG_MAN(z) = MAG_MAN(y) + LIMB_ONE;
+        else
+            MAG_MAN(z) = MAG_MAN(y) + (MAG_MAN(x) >> shift) + LIMB_ONE;
+    }
+
+    MAG_FAST_ADJUST_ONE_TOO_LARGE(z);
+}
+
+static int
+mag_nonzero_fast_cmp(const mag_t x, const mag_t y)
+{
+    if (MAG_EXP(x) == MAG_EXP(y))
+        return (MAG_MAN(x) < MAG_MAN(y)) ? -1 : 1;
+    else
+        return (MAG_EXP(x) < MAG_EXP(y)) ? -1 : 1;
+}
+
+static void
+mag_fast_set(mag_t x, const mag_t y)
+{
+    MAG_EXP(x) = MAG_EXP(y);
+    MAG_MAN(x) = MAG_MAN(y);
+}
+
 void
-arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
+_arb_sin_cos(arb_t zsin, arb_t zcos, const arf_t x, const mag_t xrad, slong prec)
 {
     int want_sin, want_cos;
-    slong exp, wp, wn, N, r, wprounded;
+    slong radexp, exp, wp, wn, N, r, wprounded, maglim, orig_prec;
     mp_ptr tmp, w, sina, cosa, sinb, cosb, ta, tb;
     mp_ptr sinptr, cosptr;
-    mp_limb_t p1, q1bits, p2, q2bits, error, error2;
+    mp_limb_t p1, q1bits, p2, q2bits, error, error2, p1_tab1, radman;
     int negative, inexact, octant;
     int sinnegative, cosnegative, swapsincos;
     TMP_INIT;
 
+    /* PART 1: special cases and setup. */
+    orig_prec = prec;
+
+    /* Below, both x and xrad will be finite, and x will be nonzero. */
+    if (mag_is_inf(xrad) || arf_is_special(x))
+    {
+        _arb_sin_cos_generic(zsin, zcos, x, xrad, prec);
+        return;
+    }
+
+    exp = ARF_EXP(x);
+    maglim = MAGLIM(prec);
+    negative = ARF_SGNBIT(x);
+
+    /* Unlikely: tiny or huge midpoint. As written, this test also
+       catches any bignum exponents. */
+    if (exp < -(prec/2) - 2 || exp > maglim)
+    {
+        _arb_sin_cos_generic(zsin, zcos, x, xrad, prec);
+        return;
+    }
+
     want_sin = (zsin != NULL);
     want_cos = (zcos != NULL);
 
-    exp = ARF_EXP(x);
-    negative = ARF_SGNBIT(x);
+    /* Copy the radius data. */
+    radexp = MAG_EXP(xrad);
+    radman = MAG_MAN(xrad);
+
+    if (radman != 0)
+    {
+        /* Clamp the radius exponent to a safe range. */
+        if (radexp < MAG_MIN_LAGOM_EXP || radexp > MAG_MAX_LAGOM_EXP)
+        {
+            /* Very wide... */
+            if (fmpz_sgn(MAG_EXPREF(xrad)) > 0)
+            {
+                _arb_sin_cos_wide(zsin, zcos, x, xrad, prec);
+                return;
+            }
+
+            radman = MAG_ONE_HALF;
+            radexp = MAG_MIN_LAGOM_EXP + 1;
+        }
+
+        /* Use wide algorithm. */
+        if (radexp >= -24)
+        {
+            _arb_sin_cos_wide(zsin, zcos, x, xrad, prec);
+            return;
+        }
+
+        /* Regular case: decrease precision to match generic max. accuracy. */
+        /* Note: near x=0, the error can be quadratic for cos. */
+        if (want_cos && exp < -2)
+            prec = FLINT_MIN(prec, 20 - FLINT_MAX(exp, radexp) - radexp);
+        else
+            prec = FLINT_MIN(prec, 20 - radexp);
+    }
 
     /* Absolute working precision (NOT rounded to a limb multiple) */
     wp = prec + 8;
@@ -48,9 +160,11 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     /* Too high precision to use table -- use generic algorithm */
     if (wp > ARB_SIN_COS_TAB2_PREC)
     {
-        arb_sin_cos_arf_generic(zsin, zcos, x, prec);
+        _arb_sin_cos_generic(zsin, zcos, x, xrad, orig_prec);
         return;
     }
+
+    /* PART 2: the actual computation. */
 
     TMP_START;
     tmp = TMP_ALLOC_LIMBS(9 * wn);
@@ -66,7 +180,7 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     if (_arb_get_mpn_fixed_mod_pi4(w, NULL, &octant, &error, x, wn) == 0)
     {
         /* may run out of precision for pi/4 */
-        arb_sin_cos_arf_generic(zsin, zcos, x, prec);
+        _arb_sin_cos_generic(zsin, zcos, x, xrad, orig_prec);
         TMP_END;
         return;
     }
@@ -81,14 +195,20 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
         q1bits = ARB_SIN_COS_TAB1_BITS;
         q2bits = 0;
 
-        p1 = w[wn-1] >> (FLINT_BITS - q1bits);
+        p1 = p1_tab1 = w[wn-1] >> (FLINT_BITS - q1bits);
         w[wn-1] -= (p1 << (FLINT_BITS - q1bits));
         p2 = 0;
+
+        /* p1_tab1 will be used for the error bounds at the end. */
+        p1_tab1 = p1;
     }
     else
     {
         q1bits = ARB_SIN_COS_TAB21_BITS;
         q2bits = ARB_SIN_COS_TAB21_BITS + ARB_SIN_COS_TAB22_BITS;
+
+        /* p1_tab1 will be used for the error bounds at the end. */
+        p1_tab1 = w[wn-1] >> (FLINT_BITS - ARB_SIN_COS_TAB1_BITS);
 
         p1 = w[wn-1] >> (FLINT_BITS - q1bits);
         w[wn-1] -= (p1 << (FLINT_BITS - q1bits));
@@ -244,6 +364,8 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
         cosptr = ta;
     }
 
+    /* PART 3: compute propagated error and write output */
+
     if (swapsincos)
     {
         mp_ptr tmptr = sinptr;
@@ -251,20 +373,129 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
         cosptr = tmptr;
     }
 
-    /* The accumulated error */
-    if (want_sin)
-    {
-        mag_set_ui_2exp_si(arb_radref(zsin), error, -wprounded);
+    /*
+    We have two sources of error.
 
-        if (want_cos)
-            mag_set(arb_radref(zcos), arb_radref(zsin));
+    1. Computation error:
+        error * 2^(-wprounded)
+
+    2. With input radius r != 0, the propagated error bound:
+        sin(x):  min(2, r, |cos(x)|*r  +  0.5*r^2)
+        cos(x):  min(2, r, |sin(x)|*r  +  0.5*r^2)
+
+       We skip the min by 2 since this is unnecessary with the
+       separate code for wide intervals.
+    */
+    if (radman == 0)
+    {
+        if (want_sin)
+        {
+            mag_set_ui_2exp_si(arb_radref(zsin), error, -wprounded);
+            if (want_cos)
+                mag_set(arb_radref(zcos), arb_radref(zsin));
+        }
+        else
+        {
+            mag_set_ui_2exp_si(arb_radref(zcos), error, -wprounded);
+        }
     }
     else
     {
-        mag_set_ui_2exp_si(arb_radref(zcos), error, -wprounded);
+        mag_t sin_err, cos_err, quadratic, comp_err, xrad_copy;
+        mp_limb_t A_sin, A_cos, A_exp;
+
+        /* Copy xrad, for two reasons. First, we need to support aliasing,
+           and either the sine or cosine output could be written first.
+           Second, the exponent could still be a negative bignum when we
+           reach this point, and then we need to use an upper bound. */
+        if (MAG_IS_LAGOM(xrad))
+        {
+            *xrad_copy = *xrad;
+        }
+        else
+        {
+            MAG_MAN(xrad_copy) = MAG_ONE_HALF;
+            MAG_EXP(xrad_copy) = MAG_MIN_LAGOM_EXP + 1;
+        }
+
+        /* Bound computed error. */
+        if (error != 0)
+        {
+            mag_init(comp_err); /* no need to free */
+            mag_set_ui_2exp_si(comp_err, error, -wprounded);
+        }
+
+        /* Bound quadratic term for propagated error: 0.5*r^2 */
+        mag_init(quadratic); /* no need to free */
+        mag_nonzero_fast_mul(quadratic, xrad_copy, xrad_copy);
+        MAG_EXP(quadratic) -= 1;
+
+        /* Bound linear term for propagated error: cos(x)*r, sin(x)*r. */
+        /* Note: we could have used the computed values, but then we would
+           need to incorporate the computed error which would be slightly
+           messier, and we would also need extra cases when only computing
+           one of the functions. */
+        /* Note: the bounds on cos(x) and sin(x) are assumed to be nonzero. */
+        A_cos = arb_sin_cos_tab1[2 * p1_tab1][ARB_SIN_COS_TAB1_LIMBS - 1];
+        A_sin = arb_sin_cos_tab1[2 * p1_tab1 + 1][ARB_SIN_COS_TAB1_LIMBS - 1];
+
+        /* Note: ARB_SIN_COS_TAB1_BITS == 8 */
+        /* Adding 2 ulps (here ulp = 2^-8) gives an upper bound.
+           The truncated table entry underestimates the sine or
+           cosine of x by at most 1 ulp, and the top bits of x
+           underestimate x by at most 1 ulp. */
+        A_sin = (A_sin >> (FLINT_BITS - ARB_SIN_COS_TAB1_BITS)) + 2;
+        A_cos = (A_cos >> (FLINT_BITS - ARB_SIN_COS_TAB1_BITS)) + 2;
+        A_exp = -ARB_SIN_COS_TAB1_BITS;
+        if (swapsincos)
+        {
+            mp_limb_t tt = A_sin;
+            A_sin = A_cos;
+            A_cos = tt;
+        }
+        A_sin *= ((MAG_MAN(xrad_copy) >> (MAG_BITS - ARB_SIN_COS_TAB1_BITS)) + LIMB_ONE);
+        A_cos *= ((MAG_MAN(xrad_copy) >> (MAG_BITS - ARB_SIN_COS_TAB1_BITS)) + LIMB_ONE);
+        A_exp -= ARB_SIN_COS_TAB1_BITS;
+        A_exp += radexp;
+
+        if (want_sin)
+        {
+            mag_init(sin_err);
+            mag_set_ui_2exp_si(sin_err, A_sin, A_exp);
+            mag_nonzero_fast_add(sin_err, sin_err, quadratic);
+
+            /* The propagated error is certainly at most r */
+            if (mag_nonzero_fast_cmp(sin_err, xrad_copy) > 0)
+                mag_fast_set(sin_err, xrad_copy);
+
+            /* Add the computed error. */
+            if (error != 0)
+                mag_nonzero_fast_add(sin_err, sin_err, comp_err);
+
+            /* Set it, and clear the original output variable which could
+               have a bignum exponent. */
+            mag_swap(arb_radref(zsin), sin_err);
+            mag_clear(sin_err);
+        }
+
+        /* The same as above. */
+        if (want_cos)
+        {
+            mag_init(cos_err);
+            mag_set_ui_2exp_si(cos_err, A_cos, A_exp);
+            mag_nonzero_fast_add(cos_err, cos_err, quadratic);
+
+            if (mag_nonzero_fast_cmp(cos_err, xrad_copy) > 0)
+                mag_fast_set(cos_err, xrad_copy);
+
+            if (error != 0)
+                mag_nonzero_fast_add(cos_err, cos_err, comp_err);
+            mag_swap(arb_radref(zcos), cos_err);
+            mag_clear(cos_err);
+        }
     }
 
-    /* Set the midpoint */
+    /* Set the midpoints. */
     if (want_sin)
     {
         inexact = _arf_set_mpn_fixed(arb_midref(zsin), sinptr,
@@ -286,235 +517,20 @@ arb_sin_cos_arf_new(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     TMP_END;
 }
 
-
 void
-arb_sin_arf(arb_t s, const arf_t x, slong prec, slong maglim)
+arb_sin_cos(arb_t s, arb_t c, const arb_t x, slong prec)
 {
-    if (arf_is_special(x))
-    {
-        if (arf_is_zero(x))
-        {
-            arb_zero(s);
-        }
-        else if (arf_is_nan(x))
-        {
-            arb_indeterminate(s);
-        }
-        else
-        {
-            arf_zero(arb_midref(s));
-            mag_one(arb_radref(s));
-        }
-    }
-    else
-    {
-        slong xmag;
-
-        /* 2^(xmag-1) <= |x| < 2^xmag */
-        xmag = ARF_EXP(x);
-
-        if (xmag >= -(prec/3) - 2 && xmag <= maglim)
-        {
-            arb_sin_cos_arf_new(s, NULL, x, prec);
-        }
-        /* sin x = x + eps, |eps| < x^3 */
-        else if (fmpz_sgn(ARF_EXPREF(x)) < 0)
-        {
-            fmpz_t t;
-            fmpz_init(t);
-            fmpz_mul_ui(t, ARF_EXPREF(x), 3);
-            arb_set_arf(s, x);
-            arb_set_round(s, s, prec);
-            arb_add_error_2exp_fmpz(s, t);
-            fmpz_clear(t);
-        }
-        /* huge */
-        else
-        {
-            arf_zero(arb_midref(s));
-            mag_one(arb_radref(s));
-        }
-    }
-}
-
-void
-arb_cos_arf(arb_t c, const arf_t x, slong prec, slong maglim)
-{
-    if (arf_is_special(x))
-    {
-        if (arf_is_zero(x))
-        {
-            arb_one(c);
-        }
-        else if (arf_is_nan(x))
-        {
-            arb_indeterminate(c);
-        }
-        else
-        {
-            arf_zero(arb_midref(c));
-            mag_one(arb_radref(c));
-        }
-    }
-    else
-    {
-        slong xmag;
-
-        /* 2^(xmag-1) <= |x| < 2^xmag */
-        xmag = ARF_EXP(x);
-
-        if (xmag >= -(prec/2) - 2 && xmag <= maglim)
-        {
-            arb_sin_cos_arf_new(NULL, c, x, prec);
-        }
-        /* cos x = 1 - eps, |eps| < x^2 */
-        else if (fmpz_sgn(ARF_EXPREF(x)) < 0)
-        {
-            fmpz_t t;
-            fmpz_init(t);
-            fmpz_mul_ui(t, ARF_EXPREF(x), 2);
-            arb_one(c);
-            arb_add_error_2exp_fmpz(c, t);
-            fmpz_clear(t);
-        }
-        /* huge */
-        else
-        {
-            arf_zero(arb_midref(c));
-            mag_one(arb_radref(c));
-        }
-    }
-}
-
-void
-arb_sin_cos_arf(arb_t s, arb_t c, const arf_t x, slong prec, slong maglim)
-{
-    if (arf_is_special(x))
-    {
-        if (arf_is_zero(x))
-        {
-            arb_zero(s);
-            arb_one(c);
-        }
-        else if (arf_is_nan(x))
-        {
-            arb_indeterminate(s);
-            arb_set(c, s);
-        }
-        else
-        {
-            arf_zero(arb_midref(s));
-            mag_one(arb_radref(s));
-            arb_set(c, s);
-        }
-    }
-    else
-    {
-        slong xmag;
-
-        /* 2^(xmag-1) <= |x| < 2^xmag */
-        xmag = ARF_EXP(x);
-
-        if (xmag >= -(prec/2) - 2 && xmag <= maglim)
-        {
-            arb_sin_cos_arf_new(s, c, x, prec);
-        }
-        /* sin x = x + eps, |eps| < x^3 */
-        /* cos x = 1 - eps, |eps| < x^2 */
-        else if (fmpz_sgn(ARF_EXPREF(x)) < 0)
-        {
-            fmpz_t t;
-            fmpz_init(t);
-            fmpz_mul_ui(t, ARF_EXPREF(x), 3);
-            arb_set_arf(s, x);
-            arb_set_round(s, s, prec);
-            arb_add_error_2exp_fmpz(s, t);
-            fmpz_divexact_ui(t, t, 3);
-            fmpz_mul_ui(t, t, 2);
-            arb_one(c);
-            arb_add_error_2exp_fmpz(c, t);
-            fmpz_clear(t);
-        }
-        /* huge */
-        else
-        {
-            arf_zero(arb_midref(s));
-            mag_one(arb_radref(s));
-            arb_set(c, s);
-        }
-    }
+    _arb_sin_cos(s, c, arb_midref(x), arb_radref(x), prec);
 }
 
 void
 arb_sin(arb_t s, const arb_t x, slong prec)
 {
-    if (arb_is_exact(x))
-    {
-        arb_sin_arf(s, arb_midref(x), prec, MAGLIM(prec));
-    }
-    else
-    {
-        mag_t t;
-        mag_init(t);
-
-        if (mag_cmp_2exp_si(arb_radref(x), 1) > 0)
-            mag_set_ui_2exp_si(t, 1, 1);
-        else
-            mag_set(t, arb_radref(x));
-
-        arb_sin_arf(s, arb_midref(x), prec, MAGLIM(prec));
-        mag_add(arb_radref(s), arb_radref(s), t);
-
-        mag_clear(t);
-    }
+    _arb_sin_cos(s, NULL, arb_midref(x), arb_radref(x), prec);
 }
 
 void
-arb_cos(arb_t s, const arb_t x, slong prec)
+arb_cos(arb_t c, const arb_t x, slong prec)
 {
-    if (arb_is_exact(x))
-    {
-        arb_cos_arf(s, arb_midref(x), prec, MAGLIM(prec));
-    }
-    else
-    {
-        mag_t t;
-        mag_init(t);
-
-        if (mag_cmp_2exp_si(arb_radref(x), 1) > 0)
-            mag_set_ui_2exp_si(t, 1, 1);
-        else
-            mag_set(t, arb_radref(x));
-
-        arb_cos_arf(s, arb_midref(x), prec, MAGLIM(prec));
-        mag_add(arb_radref(s), arb_radref(s), t);
-
-        mag_clear(t);
-    }
+    _arb_sin_cos(NULL, c, arb_midref(x), arb_radref(x), prec);
 }
-
-void
-arb_sin_cos(arb_t s, arb_t c, const arb_t x, slong prec)
-{
-    if (arb_is_exact(x))
-    {
-        arb_sin_cos_arf(s, c, arb_midref(x), prec, MAGLIM(prec));
-    }
-    else
-    {
-        mag_t t;
-        mag_init(t);
-
-        if (mag_cmp_2exp_si(arb_radref(x), 1) > 0)
-            mag_set_ui_2exp_si(t, 1, 1);
-        else
-            mag_set(t, arb_radref(x));
-
-        arb_sin_cos_arf(s, c, arb_midref(x), prec, MAGLIM(prec));
-        mag_add(arb_radref(s), arb_radref(s), t);
-        mag_add(arb_radref(c), arb_radref(c), t);
-
-        mag_clear(t);
-    }
-}
-

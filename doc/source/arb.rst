@@ -236,6 +236,14 @@ Assignment of special values
     Sets *x* to `[\operatorname{NaN} \pm \infty]`, representing
     an indeterminate result.
 
+.. function:: void arb_zero_pm_one(arb_t x)
+
+    Sets *x* to the interval `[0 \pm 1]`.
+
+.. function:: void arb_unit_interval(arb_t x)
+
+    Sets *x* to the interval `[0, 1]`.
+
 Input and output
 -------------------------------------------------------------------------------
 
@@ -938,8 +946,7 @@ Trigonometric functions
 
 .. function:: void arb_sin_cos(arb_t s, arb_t c, const arb_t x, slong prec)
 
-    Sets `s = \sin(x)`, `c = \cos(x)`. Error propagation uses the rule
-    `|\sin(m \pm r) - \sin(m)| \le \min(r,2)`.
+    Sets `s = \sin(x)`, `c = \cos(x)`.
 
 .. function:: void arb_sin_pi(arb_t s, const arb_t x, slong prec)
 
@@ -1631,6 +1638,32 @@ Internals for computing elementary functions
 
     Computes the sine and cosine of *x* using the bit-burst algorithm.
     It is required that `|x| < \pi / 2` (this is not checked).
+
+.. function:: void arb_sin_cos_wide(arb_t s, arb_t c, const arb_t x, slong prec)
+
+    Computes an accurate enclosure (with both endpoints optimal to within
+    about `2^{-30}` as afforded by the radius format) of the range of
+    sine and cosine on a given wide interval. The computation is done
+    by evaluating the sine and cosine at the interval endpoints and
+    determining whether peaks of -1 or 1 occur between the endpoints.
+    The interval is then converted back to a ball.
+
+    The internal computations are done with doubles, using a simple
+    floating-point algorithm to approximate the sine and cosine. It is
+    easy to see that the cumulative errors in this algorithm add up to
+    less than `2^{-30}`, with the dominant source of error being a single
+    approximate reduction by `\pi/2`. This reduction is done safely using
+    doubles up to a magnitude of about `2^{20}`. For larger arguments, a
+    slower reduction using :type:`arb_t` arithmetic is done as a
+    preprocessing step.
+
+.. function:: void arb_sin_cos_generic(arb_t s, arb_t c, const arb_t x, slong prec)
+
+    Computes the sine and cosine of *x* by taking care of various special
+    cases and computing the propagated error before calling
+    :func:`arb_sin_cos_arf_generic`. This is used as a fallback inside
+    :func:`arb_sin_cos` to take care of all cases without a fast
+    path in that function.
 
 Vector functions
 -------------------------------------------------------------------------------

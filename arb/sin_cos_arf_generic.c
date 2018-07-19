@@ -11,13 +11,6 @@
 
 #include "arb.h"
 
-static void
-arb_zero_pm_one(arb_t res)
-{
-    arf_zero(arb_midref(res));
-    mag_one(arb_radref(res));
-}
-
 /* Computes sin(x) or cos(x) using Taylor series truncated at x^N exclusive.
    Computes error bound automatically. Does not allow aliasing of s and x.  */
 void

@@ -16,12 +16,12 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("sin_cos....");
+    flint_printf("sin_cos_generic....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, c;
         fmpq_t q;
@@ -49,7 +49,7 @@ int main()
         fmpq_get_mpfr(t, q, MPFR_RNDN);
         mpfr_sin_cos(t, u, t, MPFR_RNDN);
 
-        arb_sin_cos(b, c, a, prec);
+        arb_sin_cos_generic(b, c, a, prec);
 
         if (!arb_contains_mpfr(b, t))
         {
@@ -106,8 +106,8 @@ int main()
         arb_randtest_special(d, state, 1 + n_randint(state, prec0), 100);
         arb_randtest_special(e, state, 1 + n_randint(state, prec0), 100);
 
-        arb_sin_cos(b, c, a, prec1);
-        arb_sin_cos(d, e, a, prec2);
+        arb_sin_cos_generic(b, c, a, prec1);
+        arb_sin_cos_generic(d, e, a, prec2);
 
         if (!arb_overlaps(b, d) || !arb_overlaps(c, e))
         {

@@ -118,6 +118,22 @@ arb_zero_pm_inf(arb_t x)
     mag_inf(arb_radref(x));
 }
 
+ARB_INLINE void
+arb_zero_pm_one(arb_t x)
+{
+    arf_zero(arb_midref(x));
+    mag_one(arb_radref(x));
+}
+
+ARB_INLINE void
+arb_unit_interval(arb_t x)
+{
+    arf_one(arb_midref(x));
+    mag_one(arb_radref(x));
+    ARF_EXP(arb_midref(x))--;
+    MAG_EXP(arb_radref(x))--;
+}
+
 void arb_indeterminate(arb_t x);
 
 int arb_is_finite(const arb_t x);
@@ -997,6 +1013,12 @@ int _arb_get_mpn_fixed_mod_pi4(mp_ptr w, fmpz_t q, int * octant,
 void arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec);
 void arb_sin_cos_arf_rs_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec);
 void arb_sin_cos_arf_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec);
+
+void _arb_sin_cos_wide(arb_t s, arb_t c, const arf_t x, const mag_t r, slong prec);
+void arb_sin_cos_wide(arb_t s, arb_t c, const arb_t x, slong prec);
+
+void _arb_sin_cos_generic(arb_t s, arb_t c, const arf_t x, const mag_t xrad, slong prec);
+void arb_sin_cos_generic(arb_t s, arb_t c, const arb_t x, slong prec);
 
 ARB_INLINE mp_bitcnt_t
 _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
