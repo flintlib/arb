@@ -90,7 +90,7 @@ acb_hypgeom_bessel_i_asymp(acb_t res, const acb_t nu, const acb_t z, int scaled,
     is_real = acb_is_real(nu) && acb_is_real(z)
         && (acb_is_int(nu) || arb_is_positive(acb_realref(z)));
 
-    if (!is_real && arb_is_zero(acb_realref(z)) && acb_is_int(nu))
+    if (!is_real && !scaled && arb_is_zero(acb_realref(z)) && acb_is_int(nu))
     {
         acb_mul_2exp_si(t, nu, -1);
 
