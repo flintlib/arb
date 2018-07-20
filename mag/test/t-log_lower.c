@@ -64,10 +64,10 @@ int main()
             }
             else
             {
-                fmpr_log(z, x, 2 * MAG_BITS, FMPR_RND_DOWN);
+                fmpr_log(z, x, 3 * MAG_BITS, FMPR_RND_DOWN);
                 fmpr_set_ui(z2, 2);
-                fmpr_log(z2, z2, 2 * MAG_BITS, FMPR_RND_DOWN);
-                fmpr_addmul_fmpz(z, z2, n, 2 * MAG_BITS, FMPR_RND_DOWN);
+                fmpr_log(z2, z2, 3 * MAG_BITS, FMPR_RND_DOWN);
+                fmpr_addmul_fmpz(z, z2, n, 3 * MAG_BITS, FMPR_RND_DOWN);
             }
         }
 
