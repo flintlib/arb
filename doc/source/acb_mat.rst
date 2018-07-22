@@ -472,3 +472,40 @@ Special functions
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
 
+
+Component and error operations
+-------------------------------------------------------------------------------
+
+.. function:: void acb_mat_get_mid(acb_mat_t B, const acb_mat_t A)
+
+    Sets the entries of *B* to the exact midpoints of the entries of *A*.
+
+.. function:: void acb_mat_add_error_mag(acb_mat_t mat, const mag_t err)
+
+    Adds *err* in-place to the radii of the entries of *mat*.
+
+Approximate solving
+-------------------------------------------------------------------------------
+
+.. function:: void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_approx_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
+
+.. function:: int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
+
+.. function:: void acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t A, const acb_mat_t B, slong prec)
+
+.. function:: int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
+
+    These methods perform approximate solving *without any error control*.
+    The radii in the input matrices are ignored, the computations are done
+    numerically with floating-point arithmetic (using ordinary
+    Gaussian elimination and triangular solving, accelerated through
+    the use of block recursive strategies for large matrices), and the
+    output matrices are set to the approximate floating-point results with
+    zeroed error bounds.
+
+    Approximate solutions are useful for computing preconditioning matrices
+    for certified solutions. Some users may also find these methods useful
+    for doing ordinary numerical linear algebra in applications where
+    error bounds are not needed.

@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.14.0.pdf
 * http://arblib.org/arb-2.13.0.pdf
 * http://arblib.org/arb-2.12.0.pdf
 * http://arblib.org/arb-2.11.1.pdf
@@ -25,6 +26,61 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2018-07-22 -- version 2.14.0
+-------------------------------------------------------------------------------
+
+* Linear algebra
+
+  * Faster and more accurate real matrix multiplication using block decomposition, scaling, and multiplying via FLINT integer matrices in combination with safe use of doubles for radius matrix multiplications.
+  * Faster and more accurate complex matrix multiplication by reordering and taking advantage of real matrix multiplication.
+  * The new multiplication algorithm methods (arb_mat_mul_block, acb_mat_mul_reorder) are used automatically by the main multiplication methods.
+  * Faster and more accurate LU factorization by using a block recursive algorithm that takes advantage of matrix multiplication. Added separate algorithm methods (arb/acb)_mat_lu_(recursive/classical) with an automatic algorithm choice in the default lu methods.
+  * Added methods (arb/acb)_mat_solve_(tril/triu) (and variants) for solving upper or lower triangular systems using a block recursive algorithm taking advantage of matrix multiplication.
+  * Improved linear solving and inverse for large well-conditioned matrices by using a preconditioning algorithm. Added separate solving algorithm methods (arb/acb)_mat_solve_(lu/precond) with an automatic algorithm choice in the default solve methods (contributed by anonymous user arbguest).
+  * Improved determinants using a preconditioning algorithm. Added separate determinant algorithm methods (arb/acb)_mat_det_(lu/precond) with an automatic algorithm choice in the default det methods.
+  * Added automatic detection of triangular matrices in arb_mat_det and acb_mat_det.
+  * Added arb_mat_solve_preapprox which allows certifying a precomputed approximate solution (contributed by anonymous user arbguest).
+  * Added methods for constructing various useful test matrices: arb_mat_ones, arb_mat_hilbert, arb_mat_pascal, arb_mat_stirling, arb_mat_dct, acb_mat_ones, acb_mat_dft.
+  * Added support for window matrices (arb/acb_mat_window_init/clear).
+  * Changed random test matrix generation (arb/acb_mat_randtest) to produce sparse matrices with higher probability.
+  * Added acb_mat_conjugate and acb_mat_conjugate_transpose.
+
+* Arithmetic and elementary functions
+
+  * Improved arb_sin_cos, arb_sin and arb_cos to produce more accurate enclosures for wide input intervals. The working precision is also reduced automatically based on the accuracy of the input to improve efficiency.
+  * Improved arb_sinh_cosh, arb_sinh and arb_cosh to produce more accurate enclosures for wide input intervals. The working precision is also reduced automatically based on the accuracy of the input to improve efficiency.
+  * Improved arb_exp_invexp and arb_expm1 to produce more accurate enclosures for wide input intervals. The working precision is also reduced automatically based on the accuracy of the input to improve efficiency.
+  * Improved acb_rsqrt to produce more accurate enclosures for wide intervals.
+  * Made mag_add_ui_lower public.
+  * Added mag_sinh, mag_cosh, mag_sinh_lower, mag_cosh_lower.
+  * Fixed minor precision loss near -1 in arb_log_hypot and acb_log.
+  * Return imaginary numbers with exact zero real part when possible in acb_acos and acb_acosh (contributed by Ralf Stephan).
+  * Improved special cases in arb_set_interval_arf (reported by Marc Mezzarobba).
+
+* Special functions
+
+  * Added a function for computing isolated generalized Stieltjes constants (acb_dirichlet_stieltjes).
+  * Added scaled versions of Bessel functions (acb_hypgeom_bessel_i_scaled, acb_hypgeom_bessel_k_scaled).
+  * The interface for the internal methods computing Bessel functions (i_asymp, k_asymp, etc.) has been changed to accommodate computing scaled versions.
+  * Added Riemann xi function (acb_dirichlet_xi) (contributed by D.H.J Polymath).
+  * Fixed infinite error bounds in the Riemann zeta function when evaluating at a ball containing zero centered in the left plane (contributed by D.H.J Polymath).
+  * Fixed precision loss in Airy functions with huge input and high precision.
+  * Legendre functions of the first kind (legendre_p): handle inexact integer a+b-c in 2F1 better (contributed by Joel Dahne).
+
+* Example programs and documentation
+
+  * Added more color functions to complex_plot.c.
+  * Added more example integrals suggested by Nicolas Brisebarre and Bruno Salvy to integrals.c
+  * Changed Sphinx style and redesigned the documentation front page.
+  * Miscellaneous documentation cleanups.
+  * Added documentation page about contributing.
+
+* Other
+
+  * Fixed a crash on some systems when calling acb_dft methods with a length of zero.
+  * Fixed issue with setting rpath in configure (contributed by Vincent Delecroix).
+
 
 2018-02-23 -- version 2.13.0
 -------------------------------------------------------------------------------

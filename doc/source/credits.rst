@@ -63,6 +63,11 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Isuru Fernando - continuous integration setup, support for cmake and MSVC builds
 * François Bissey - build system patches
 * Jean-Pierre Flori - code simplifications for Gauss periods, feedback
+* arbguest - preconditioned linear algebra algorithms
+* Ralf Stephan - return exact real parts in acos and acosh
+* Vincent Delecroix - various feedback and patches, work on Sage interface
+* D.H.J Polymath - Riemann xi function
+* Joel Dahne - feedback and improvements for Legendre functions
 
 Funding
 -------------------------------------------------------------------------------
@@ -188,6 +193,8 @@ Bibliography
 .. [Hoe2009] \J. van der Hoeven, "Ball arithmetic", Technical Report, HAL 00432152 (2009), http://www.texmacs.org/joris/ball/ball-abs.html
 
 .. [Hoe2001] \J. van der Hoeven. "Fast evaluation of holonomic functions near and in regular singularities", Journal of Symbolic Computation, 31(6):717-743 (2001).
+
+.. [JB2018] \F. Johansson and I. Blagouchine. "Computing Stieltjes constants using complex integration", preprint (2018), https://arxiv.org/abs/1804.01679
 
 .. [Joh2012] \F. Johansson, "Efficient implementation of the Hardy-Ramanujan-Rademacher formula", LMS Journal of Computation and Mathematics, Volume 15 (2012), 341-359, http://journals.cambridge.org/action/displayAbstract?fromPage=online&aid=8710297
 

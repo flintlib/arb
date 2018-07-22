@@ -649,3 +649,39 @@ Sparsity structure
 
     Returns the number of entries of *mat* that are not certainly zero.
 
+Component and error operations
+-------------------------------------------------------------------------------
+
+.. function:: void arb_mat_get_mid(arb_mat_t B, const arb_mat_t A)
+
+    Sets the entries of *B* to the exact midpoints of the entries of *A*.
+
+.. function:: void arb_mat_add_error_mag(arb_mat_t mat, const mag_t err)
+
+    Adds *err* in-place to the radii of the entries of *mat*.
+
+Approximate solving
+-------------------------------------------------------------------------------
+
+.. function:: void arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
+
+.. function:: int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
+
+.. function:: void arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+.. function:: int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+    These methods perform approximate solving *without any error control*.
+    The radii in the input matrices are ignored, the computations are done
+    numerically with floating-point arithmetic (using ordinary
+    Gaussian elimination and triangular solving, accelerated through
+    the use of block recursive strategies for large matrices), and the
+    output matrices are set to the approximate floating-point results with
+    zeroed error bounds.
+
+    Approximate solutions are useful for computing preconditioning matrices
+    for certified solutions. Some users may also find these methods useful
+    for doing ordinary numerical linear algebra in applications where
+    error bounds are not needed.

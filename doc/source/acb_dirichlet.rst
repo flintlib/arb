@@ -281,9 +281,9 @@ Stieltjes constants
     Riemann zeta function.
 
     This function uses an integral representation to permit fast computation
-    for extremely large *n*. If *n* is moderate and the precision is high enough,
-    it falls back to evaluating the Hurwitz zeta function of a power series
-    and reading off the last coefficient.
+    for extremely large *n* [JB2018]_. If *n* is moderate and the precision
+    is high enough, it falls back to evaluating the Hurwitz zeta function
+    of a power series and reading off the last coefficient.
 
     Note that for computing a range of values
     `\gamma_0(a), \ldots, \gamma_n(a)`, it is

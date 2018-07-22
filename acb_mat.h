@@ -395,8 +395,6 @@ int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);
 void acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t A, const acb_mat_t B, slong prec);
 int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
 
-int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
-
 int acb_mat_inv(acb_mat_t X, const acb_mat_t A, slong prec);
 
 void acb_mat_det_lu(acb_t det, const acb_mat_t A, slong prec);
