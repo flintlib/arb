@@ -754,7 +754,7 @@ acb_dirichlet_stieltjes(acb_t res, const fmpz_t n, const acb_t a, slong prec)
     cutoff = FLINT_MAX(100, prec / 2);
     cutoff = FLINT_MIN(cutoff, 10000);
 
-    if (acb_is_one(a) && fmpz_cmp_ui(n, cutoff) >= 0)
+    if (fmpz_cmp_ui(n, cutoff) >= 0)
     {
         acb_dirichlet_stieltjes_integral(res, n, a, prec);
     }
