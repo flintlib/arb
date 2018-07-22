@@ -142,6 +142,68 @@ int main()
         arb_clear(e);
     }
 
+    /* check accuracy */
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    {
+        arb_t a, s, c;
+        slong prec0, prec;
+        mag_t allow;
+
+        if (iter % 10 == 0)
+            prec0 = 10000;
+        else
+            prec0 = 400;
+
+        prec = 2 + n_randint(state, prec0);
+
+        arb_init(a);
+        arb_init(s);
+        arb_init(c);
+        mag_init(allow);
+
+        arb_randtest_special(a, state, 1 + n_randint(state, prec0), 12);
+        arb_randtest_special(s, state, 1 + n_randint(state, prec0), 100);
+        arb_randtest_special(c, state, 1 + n_randint(state, prec0), 100);
+
+        if (n_randint(state, 2))
+        {
+            arb_sin_cos_generic(s, c, a, prec);
+        }
+        else
+        {
+            arb_sin_cos_generic(s, NULL, a, prec);
+            arb_sin_cos_generic(NULL, c, a, prec);
+        }
+
+        if (!arb_is_finite(a))
+        {
+            mag_inf(allow);
+        }
+        else
+        {
+            mag_set_ui_2exp_si(allow, 1, -prec + 1);
+            mag_max(allow, allow, arb_radref(a));
+            mag_mul_2exp_si(allow, allow, 1);
+        }
+
+        if (mag_cmp(arb_radref(s), allow) > 0 ||
+            mag_cmp(arb_radref(c), allow) > 0)
+        {
+            flint_printf("FAIL: accuracy\n\n");
+            flint_printf("a = "); arb_printn(a, 500, 0); flint_printf("\n\n");
+            flint_printf("s = "); arb_printn(s, 500, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 500, 0); flint_printf("\n\n");
+            flint_printf("prec = %wd\n\n", prec);
+            flint_printf("allow = "); mag_printd(allow, 5); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(a);
+        arb_clear(s);
+        arb_clear(c);
+        mag_clear(allow);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
