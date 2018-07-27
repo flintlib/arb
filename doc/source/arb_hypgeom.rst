@@ -322,6 +322,17 @@ Airy functions
     truncated to length *len*. As with the other Airy methods, any of the
     outputs can be *NULL*.
 
+.. function:: void arb_hypgeom_airy_zero(arb_t a, arb_t a_prime, arb_t b, arb_t b_prime, const fmpz_t n, slong prec)
+
+    Computes the *n*-th real zero `a_n`, `a'_n`, `b_n`, or `b'_n`
+    for the respective Airy function or Airy function derivative.
+    Any combination of the four output variables can be *NULL*.
+    The zeros are indexed by increasing magnitude, starting with
+    `n = 1` to follow the convention in the literature.
+    An index *n* that is not positive is invalid input.
+    The implementation uses asymptotic expansions for the zeros
+    [PS1991]_ together with the interval Newton method for refinement.
+
 Orthogonal polynomials and functions
 -------------------------------------------------------------------------------
 

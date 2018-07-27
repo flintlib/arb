@@ -84,6 +84,8 @@ void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime,
 void _arb_hypgeom_airy_series(arb_ptr ai, arb_ptr ai_prime,
     arb_ptr bi, arb_ptr bi_prime, arb_srcptr z, slong zlen, slong len, slong prec);
 
+void arb_hypgeom_airy_zero(arb_t ai, arb_t aip, arb_t bi, arb_t bip, const fmpz_t n, slong prec);
+
 void arb_hypgeom_expint(arb_t res, const arb_t s, const arb_t z, slong prec);
 
 void arb_hypgeom_gamma_lower(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec);

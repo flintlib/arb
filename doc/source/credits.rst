@@ -236,6 +236,8 @@ Bibliography
 
 .. [PS1973] \M. S. Paterson and L. J. Stockmeyer, "On the number of nonscalar multiplications necessary to evaluate polynomials", SIAM J. Comput (1973)
 
+.. [PS1991] \G. Pittaluga and L. Sacripante, "Inequalities for the zeros of the Airy functions", SIAM J. Math. Anal. 22:1 (1991), 260-267.
+
 .. [Rum2010] \S. M. Rump, "Verification methods: Rigorous results using floating-point arithmetic", Acta Numerica 19 (2010), 287-449.
 
 .. [Smi2001] \D. M. Smith, "Algorithm: Fortran 90 Software for Floating-Point Multiple Precision Arithmetic, Gamma and Related Functions", Transactions on Mathematical Software 27 (2001) 377-387, http://myweb.lmu.edu/dmsmith/toms2001.pdf
