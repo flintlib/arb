@@ -254,6 +254,10 @@ int main()
         arb_set_str(v, "[-0.3763617490859 +/- 3.83e-14]", prec);
         TEST(r, v, "legendre_q");
 
+        arb_hypgeom_dilog(r, a, prec);
+        arb_set_str(v, "[0.582240526465012 +/- 6.18e-16]", prec);
+        TEST(r, v, "dilog");
+
         arb_clear(a);
         arb_clear(b);
         arb_clear(c);

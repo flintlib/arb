@@ -629,3 +629,16 @@ arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, i
     acb_clear(v);
 }
 
+void
+arb_hypgeom_dilog(arb_t res, const arb_t z, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+    arb_set(acb_realref(t), z);
+    acb_hypgeom_dilog(t, t, prec);
+    if (acb_is_finite(t) && acb_is_real(t))
+        arb_swap(res, acb_realref(t));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+}

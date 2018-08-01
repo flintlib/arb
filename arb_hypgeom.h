@@ -120,6 +120,8 @@ void arb_hypgeom_legendre_p_ui_root(arb_t res, arb_t weight, ulong n, ulong k, s
 
 void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec);
 
+void arb_hypgeom_dilog(arb_t res, const arb_t z, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

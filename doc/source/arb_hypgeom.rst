@@ -420,6 +420,13 @@ Orthogonal polynomials and functions
     subsequently refined using interval Newton steps with doubling working
     precision.
 
+Dilogarithm
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_dilog(arb_t res, const arb_t z slong prec)
+
+    Computes the dilogarithm `\operatorname{Li}_2(z)`.
+
 Hypergeometric sequences
 -------------------------------------------------------------------------------
 
