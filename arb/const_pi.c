@@ -13,7 +13,7 @@
 #include "hypgeom.h"
 
 void
-arb_const_pi_eval(arb_t s, slong prec)
+arb_const_pi_chudnovsky_eval(arb_t s, slong prec)
 {
     hypgeom_t series;
     arb_t t, u;
@@ -41,4 +41,26 @@ arb_const_pi_eval(arb_t s, slong prec)
     arb_clear(u);
 }
 
-ARB_DEF_CACHED_CONSTANT(arb_const_pi, arb_const_pi_eval)
+ARB_DEF_CACHED_CONSTANT(arb_const_pi_chudnovsky, arb_const_pi_chudnovsky_eval)
+
+void
+arb_const_pi(arb_t res, slong prec)
+{
+    if (prec < ARB_PI4_TAB_LIMBS * FLINT_BITS - 16)
+    {
+        slong exp;
+
+        /* just reading the table is known to give the correct rounding */
+        _arf_set_round_mpn(arb_midref(res), &exp, arb_pi4_tab,
+            ARB_PI4_TAB_LIMBS, 0, prec, ARF_RND_NEAR);
+        _fmpz_set_si_small(ARF_EXPREF(arb_midref(res)), 2 + exp);
+
+        /* 1/2 ulp error */
+        _fmpz_set_si_small(MAG_EXPREF(arb_radref(res)), 2 + exp - prec);
+        MAG_MAN(arb_radref(res)) = MAG_ONE_HALF;
+    }
+    else
+    {
+        arb_const_pi_chudnovsky(res, prec);
+    }
+}

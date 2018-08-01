@@ -146,6 +146,13 @@ fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, mp_bitcnt_t exp)
         fmpz_fdiv_q_2exp(z, x, exp);
 }
 
+static __inline__ void
+_fmpz_set_si_small(fmpz_t x, slong v)
+{
+    fmpz_clear(x);
+    *x = v;
+}
+
 slong _fmpz_sub_small_large(const fmpz_t x, const fmpz_t y);
 
 static __inline__ slong

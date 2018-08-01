@@ -13,7 +13,7 @@
 #include "hypgeom.h"
 
 void
-arb_const_log2_eval(arb_t s, slong prec)
+arb_const_log2_hypgeom_eval(arb_t s, slong prec)
 {
     hypgeom_t series;
     arb_t t;
@@ -36,5 +36,26 @@ arb_const_log2_eval(arb_t s, slong prec)
     arb_clear(t);
 }
 
-ARB_DEF_CACHED_CONSTANT(arb_const_log2, arb_const_log2_eval)
+ARB_DEF_CACHED_CONSTANT(arb_const_log2_hypgeom, arb_const_log2_hypgeom_eval)
 
+void
+arb_const_log2(arb_t res, slong prec)
+{
+    if (prec < ARB_LOG_TAB2_LIMBS * FLINT_BITS - 16)
+    {
+        slong exp;
+
+        /* just reading the table is known to give the correct rounding */
+        _arf_set_round_mpn(arb_midref(res), &exp, arb_log_log2_tab,
+            ARB_LOG_TAB2_LIMBS, 0, prec, ARF_RND_NEAR);
+        _fmpz_set_si_small(ARF_EXPREF(arb_midref(res)), exp);
+
+        /* 1/2 ulp error */
+        _fmpz_set_si_small(MAG_EXPREF(arb_radref(res)), exp - prec);
+        MAG_MAN(arb_radref(res)) = MAG_ONE_HALF;
+    }
+    else
+    {
+        arb_const_log2_hypgeom(res, prec);
+    }
+}
