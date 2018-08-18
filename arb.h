@@ -457,6 +457,13 @@ void arb_submul_si(arb_t z, const arb_t x, slong y, slong prec);
 void arb_submul_ui(arb_t z, const arb_t x, ulong y, slong prec);
 void arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec);
 
+void arb_dot_simple(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec);
+void arb_dot_precise(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec);
+void arb_dot(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec);
+
 void arb_div(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_div_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
 void arb_div_si(arb_t z, const arb_t x, slong y, slong prec);
