@@ -274,8 +274,9 @@ _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
         xn * FLINT_BITS > 0.9 * term_prec &&
         yn * FLINT_BITS > 0.9 * term_prec)
     {
-        mulhigh(tmp + 1, xptr, xn, yptr, yn, nn);
-        tn = 2 * nn;
+        mulhigh(tmp, xptr, xn, yptr, yn, nn);
+        tstart = tmp + nn;
+        tn = nn;
         serr[0]++;
     }
     else
@@ -299,16 +300,13 @@ _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
 
         tn = xn + yn;
         ARF_MPN_MUL(tmp + 1, xptr, xn, yptr, yn);
-    }
-
-    if (shift_bits == 0)
-    {
         tstart = tmp + 1;
     }
-    else
+
+    if (shift_bits != 0)
     {
-        tmp[0] = mpn_rshift(tmp + 1, tmp + 1, tn, shift_bits);
-        tstart = tmp;
+        tstart[-1] = mpn_rshift(tstart, tstart, tn, shift_bits);
+        tstart = tstart - 1;
         tn++;
     }
 
