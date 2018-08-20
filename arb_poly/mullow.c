@@ -11,8 +11,6 @@
 
 #include "arb_poly.h"
 
-#define BLOCK_CUTOFF 16
-
 void
 _arb_poly_mullow(arb_ptr res,
     arb_srcptr poly1, slong len1,
@@ -22,9 +20,34 @@ _arb_poly_mullow(arb_ptr res,
     {
         arb_mul(res, poly1, poly2, prec);
     }
+    else if (n <= 8 || len1 <= 8 || len2 <= 8)
+    {
+        _arb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
+    }
     else
     {
-        if (n < BLOCK_CUTOFF || len1 < BLOCK_CUTOFF || len2 < BLOCK_CUTOFF)
+        slong m, cutoff;
+
+        len1 = FLINT_MIN(len1, n);
+        len2 = FLINT_MIN(len2, n);
+        m = FLINT_MAX(len1, len2);
+        m = FLINT_MAX(m, n);
+
+        if      (prec <= 128)   cutoff = 100;
+        else if (prec <= 192)   cutoff = 55;
+        else if (prec <= 256)   cutoff = 70;
+        else if (prec <= 512)   cutoff = 50;
+        else if (prec <= 1024)  cutoff = 35;
+        else if (prec <= 2048)  cutoff = 25;
+        else if (prec <= 4096)  cutoff = 35;
+        else if (prec <= 8192)  cutoff = 25;
+        else if (prec <= 16384) cutoff = 20;
+        else                    cutoff = 15;
+
+        if (poly1 == poly2 && prec >= 256)
+            cutoff *= 1.25;
+
+        if (m < cutoff)
             _arb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
         else
             _arb_poly_mullow_block(res, poly1, len1, poly2, len2, n, prec);
@@ -71,6 +94,8 @@ arb_poly_mullow(arb_poly_t res, const arb_poly_t poly1,
         }
         else
         {
+            abort();
+
             if (res == poly1 || res == poly2)
             {
                 arb_t t;

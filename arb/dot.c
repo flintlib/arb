@@ -461,6 +461,7 @@ arb_dot(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep,
     mp_ptr tmp, sum;  /* Workspace */
     ARF_ADD_TMP_DECL;
 
+    /* todo: fast fma and fmma (len=2) code */
     if (len <= 1)
     {
         if (initial == NULL)

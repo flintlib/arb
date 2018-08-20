@@ -27,35 +27,55 @@ _arb_poly_mullow_classical(arb_ptr res,
     }
     else if (poly1 == poly2 && len1 == len2)
     {
-        slong i;
+        slong i, start, stop;
 
-        _arb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly1, prec);
-        _arb_vec_scalar_mul(res + len1, poly1 + 1, n - len1, poly1 + len1 - 1, prec);
+        arb_sqr(res, poly1, prec);
+        arb_mul(res + 1, poly1, poly1 + 1, prec);
+        arb_mul_2exp_si(res + 1, res + 1, 1);
 
-        for (i = 1; i < len1 - 1; i++)
-            _arb_vec_scalar_addmul(res + i + 1, poly1 + 1,
-                FLINT_MIN(i - 1, n - (i + 1)), poly1 + i, prec);
+        for (i = 2; i < FLINT_MIN(n, 2 * len1 - 3); i++)
+        {
+            start = FLINT_MAX(0, i - len1 + 1);
+            stop = FLINT_MIN(len1 - 1, (i + 1) / 2 - 1);
 
-        for (i = 1; i < FLINT_MIN(2 * len1 - 2, n); i++)
+            arb_dot(res + i, NULL, 0, poly1 + start, 1,
+                poly1 + i - start, -1, stop - start + 1, prec);
             arb_mul_2exp_si(res + i, res + i, 1);
+            if (i % 2 == 0 && i / 2 < len1)
+                arb_addmul(res + i, poly1 + i / 2, poly1 + i / 2, prec);
+        }
 
-        for (i = 1; i < FLINT_MIN(len1 - 1, (n + 1) / 2); i++)
-            arb_addmul(res + 2 * i, poly1 + i, poly1 + i, prec);
+        if (len1 > 2 && n >= 2 * len1 - 2)
+        {
+            arb_mul(res + 2 * len1 - 3, poly1 + len1 - 1, poly1 + len1 - 2, prec);
+            arb_mul_2exp_si(res + 2 * len1 - 3, res + 2 * len1 - 3, 1);
+        }
+
+        if (n >= 2 * len1 - 1)
+            arb_sqr(res + 2 * len1 - 2, poly1 + len1 - 1, prec);
+    }
+    else if (len1 == 1)
+    {
+        _arb_vec_scalar_mul(res, poly2, n, poly1, prec);
+    }
+    else if (len2 == 1)
+    {
+        _arb_vec_scalar_mul(res, poly1, n, poly2, prec);
     }
     else
     {
-        slong i;
+        slong i, top1, top2;
 
-        _arb_vec_scalar_mul(res, poly1, FLINT_MIN(len1, n), poly2, prec);
+        arb_mul(res, poly1, poly2, prec);
 
-        if (n > len1)
-            _arb_vec_scalar_mul(res + len1, poly2 + 1, n - len1,
-                                      poly1 + len1 - 1, prec);
+        for (i = 1; i < n; i++)
+        {
+            top1 = FLINT_MIN(len1 - 1, i);
+            top2 = FLINT_MIN(len2 - 1, i);
 
-        for (i = 0; i < FLINT_MIN(len1, n) - 1; i++)
-            _arb_vec_scalar_addmul(res + i + 1, poly2 + 1,
-                                         FLINT_MIN(len2, n - i) - 1,
-                                         poly1 + i, prec);
+            arb_dot(res + i, NULL, 0, poly1 + i - top2, 1,
+                poly2 + top2, -1, top1 + top2 - i + 1, prec);
+        }
     }
 }
 
