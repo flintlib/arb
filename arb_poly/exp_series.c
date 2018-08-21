@@ -12,7 +12,7 @@
 #include "arb_poly.h"
 
 /* allow changing this from the test code */
-ARB_DLL slong arb_poly_newton_exp_cutoff = 200;
+ARB_DLL slong arb_poly_newton_exp_cutoff = 0;
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
@@ -118,33 +118,49 @@ _arb_poly_exp_series(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec)
     }
     else
     {
-        arb_ptr g, t;
-        arb_t u;
-        int fix;
+        slong cutoff;
 
-        g = _arb_vec_init((n + 1) / 2);
-        fix = (hlen < n || h == f || !arb_is_zero(h));
+        if (arb_poly_newton_exp_cutoff != 0)
+            cutoff = arb_poly_newton_exp_cutoff;
+        else if (prec <= 256)
+            cutoff = 750;
+        else
+            cutoff = 1e5 / pow(log(prec), 3);
 
-        if (fix)
+        if (hlen <= cutoff)
         {
-            t = _arb_vec_init(n);
-            _arb_vec_set(t + 1, h + 1, hlen - 1);
+            _arb_poly_exp_series_basecase(f, h, hlen, n, prec);
         }
         else
-            t = (arb_ptr) h;
+        {
+            arb_ptr g, t;
+            arb_t u;
+            int fix;
 
-        arb_init(u);
-        arb_exp(u, h, prec);
+            g = _arb_vec_init((n + 1) / 2);
+            fix = (hlen < n || h == f || !arb_is_zero(h));
 
-        _arb_poly_exp_series_newton(f, g, t, n, prec, 0, arb_poly_newton_exp_cutoff);
+            if (fix)
+            {
+                t = _arb_vec_init(n);
+                _arb_vec_set(t + 1, h + 1, hlen - 1);
+            }
+            else
+                t = (arb_ptr) h;
 
-        if (!arb_is_one(u))
-            _arb_vec_scalar_mul(f, f, n, u, prec);
+            arb_init(u);
+            arb_exp(u, h, prec);
 
-        _arb_vec_clear(g, (n + 1) / 2);
-        if (fix)
-            _arb_vec_clear(t, n);
-        arb_clear(u);
+            _arb_poly_exp_series_newton(f, g, t, n, prec, 0, cutoff);
+
+            if (!arb_is_one(u))
+                _arb_vec_scalar_mul(f, f, n, u, prec);
+
+            _arb_vec_clear(g, (n + 1) / 2);
+            if (fix)
+                _arb_vec_clear(t, n);
+            arb_clear(u);
+        }
     }
 }
 

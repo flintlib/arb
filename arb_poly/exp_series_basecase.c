@@ -11,13 +11,11 @@
 
 #include "arb_poly.h"
 
-#define MUL_CUTOFF 60
-
 static void
 _arb_poly_exp_series_basecase_rec(arb_ptr f, arb_ptr a,
         arb_srcptr h, slong hlen, slong n, slong prec)
 {
-    slong j, k;
+    slong k;
 
     arb_t s;
     arb_init(s);
@@ -29,10 +27,7 @@ _arb_poly_exp_series_basecase_rec(arb_ptr f, arb_ptr a,
 
     for (k = 1; k < n; k++)
     {
-        arb_zero(s);
-        for (j = 1; j < FLINT_MIN(k + 1, hlen); j++)
-            arb_addmul(s, a + j, f + k - j, prec);
-
+        arb_dot(s, NULL, 0, a + 1, 1, f + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
         arb_div_ui(f + k, s, k, prec);
     }
 
@@ -45,7 +40,7 @@ _arb_poly_exp_series_basecase(arb_ptr f,
 {
     hlen = FLINT_MIN(n, hlen);
 
-    if (n < MUL_CUTOFF || hlen < 0.9 * n)
+    if (n < 20 || hlen < 0.9 * n || prec <= 2 * FLINT_BITS || n < 1000.0 / log(prec + 10) - 70)
     {
         arb_ptr t = _arb_vec_init(hlen);
         _arb_poly_exp_series_basecase_rec(f, t, h, hlen, n, prec);
