@@ -32,10 +32,20 @@ _arb_poly_sinh_cosh_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong
         arb_mul(c + 1, s, t, prec);
         arb_clear(t);
     }
-    else if (hlen < 60 || n < 120)
-        _arb_poly_sinh_cosh_series_basecase(s, c, h, hlen, n, prec);
     else
-        _arb_poly_sinh_cosh_series_exponential(s, c, h, hlen, n, prec);
+    {
+        slong cutoff;
+
+        if (prec <= 128)
+            cutoff = 400;
+        else
+            cutoff = 30000 / pow(log(prec), 3);
+
+        if (hlen < cutoff)
+            _arb_poly_sinh_cosh_series_basecase(s, c, h, hlen, n, prec);
+        else
+            _arb_poly_sinh_cosh_series_exponential(s, c, h, hlen, n, prec);
+    }
 }
 
 void

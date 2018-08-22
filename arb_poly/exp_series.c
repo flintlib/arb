@@ -112,10 +112,6 @@ _arb_poly_exp_series(arb_ptr f, arb_srcptr h, slong hlen, slong n, slong prec)
         _arb_vec_zero(f + j - d + 1, n - (j - d + 1));
         arb_clear(t);
     }
-    else if (hlen <= arb_poly_newton_exp_cutoff)
-    {
-        _arb_poly_exp_series_basecase(f, h, hlen, n, prec);
-    }
     else
     {
         slong cutoff;

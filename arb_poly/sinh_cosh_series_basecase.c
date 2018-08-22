@@ -15,7 +15,7 @@ void
 _arb_poly_sinh_cosh_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen,
         slong n, slong prec)
 {
-    slong j, k, alen = FLINT_MIN(n, hlen);
+    slong k, alen = FLINT_MIN(n, hlen);
     arb_ptr a;
     arb_t t, u;
 
@@ -37,15 +37,8 @@ _arb_poly_sinh_cosh_series_basecase(arb_ptr s, arb_ptr c, arb_srcptr h, slong hl
 
     for (k = 1; k < n; k++)
     {
-        arb_zero(t);
-        arb_zero(u);
-
-        for (j = 1; j < FLINT_MIN(k + 1, hlen); j++)
-        {
-            arb_addmul(t, a + j, s + k - j, prec);
-            arb_addmul(u, a + j, c + k - j, prec);
-        }
-
+        arb_dot(t, NULL, 0, a + 1, 1, s + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
+        arb_dot(u, NULL, 0, a + 1, 1, c + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
         arb_div_ui(c + k, t, k, prec);
         arb_div_ui(s + k, u, k, prec);
     }

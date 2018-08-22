@@ -11,8 +11,6 @@
 
 #include "arb_poly.h"
 
-#define TANGENT_CUTOFF 240
-
 void
 _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n, slong prec)
 {
@@ -35,10 +33,25 @@ _arb_poly_sin_cos_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, slong n
         arb_mul(c + 1, s, t, prec);
         arb_clear(t);
     }
-    else if (hlen < TANGENT_CUTOFF)
-        _arb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 0);
     else
-        _arb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 0);
+    {
+        slong cutoff;
+
+        if (prec <= 128)
+        {
+            cutoff = 1400;
+        }
+        else
+        {
+            cutoff = 100000 / pow(log(prec), 3);
+            cutoff = FLINT_MIN(cutoff, 700);
+        }
+
+        if (hlen < cutoff)
+            _arb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 0);
+        else
+            _arb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 0);
+    }
 }
 
 void
