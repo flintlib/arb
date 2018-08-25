@@ -26,28 +26,29 @@ _arb_poly_mullow(arb_ptr res,
     }
     else
     {
-        slong m, cutoff;
+        slong n_cutoff, len_cutoff;
+        double p;
 
-        len1 = FLINT_MIN(len1, n);
-        len2 = FLINT_MIN(len2, n);
-        m = FLINT_MAX(len1, len2);
-        m = FLINT_MAX(m, n);
+        if (prec <= 2 * FLINT_BITS)
+        {
+            n_cutoff = len_cutoff = 100;
+        }
+        else
+        {
+            p = log(prec);
 
-        if      (prec <= 128)   cutoff = 100;
-        else if (prec <= 192)   cutoff = 55;
-        else if (prec <= 256)   cutoff = 70;
-        else if (prec <= 512)   cutoff = 50;
-        else if (prec <= 1024)  cutoff = 35;
-        else if (prec <= 2048)  cutoff = 25;
-        else if (prec <= 4096)  cutoff = 35;
-        else if (prec <= 8192)  cutoff = 25;
-        else if (prec <= 16384) cutoff = 20;
-        else                    cutoff = 15;
+            n_cutoff = 10000.0 / (p * p * p);
+            n_cutoff = FLINT_MIN(n_cutoff, 60);
+            if (poly1 == poly2 && prec >= 256)
+                n_cutoff *= 1.25;
+            if (poly1 == poly2 && prec >= 4096)
+                n_cutoff *= 1.25;
 
-        if (poly1 == poly2 && prec >= 256)
-            cutoff *= 1.25;
+            len_cutoff = FLINT_MAX(n_cutoff, 16);
+            n_cutoff = FLINT_MAX(n_cutoff, 8);
+        }
 
-        if (m < cutoff)
+        if (n <= n_cutoff && FLINT_MAX(len1, len2) <= len_cutoff)
             _arb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
         else
             _arb_poly_mullow_block(res, poly1, len1, poly2, len2, n, prec);
