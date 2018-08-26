@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2012, 2018 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -49,21 +49,47 @@ arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong p
         return;
     }
 
-    for (i = 0; i < ar; i++)
+    if (br <= 2)
     {
-        for (j = 0; j < bc; j++)
+        for (i = 0; i < ar; i++)
         {
-            arb_mul(arb_mat_entry(C, i, j),
-                      arb_mat_entry(A, i, 0),
-                      arb_mat_entry(B, 0, j), prec);
-
-            for (k = 1; k < br; k++)
+            for (j = 0; j < bc; j++)
             {
-                arb_addmul(arb_mat_entry(C, i, j),
-                             arb_mat_entry(A, i, k),
-                             arb_mat_entry(B, k, j), prec);
+                /* todo: efficient fmma code */
+                arb_mul(arb_mat_entry(C, i, j),
+                          arb_mat_entry(A, i, 0),
+                          arb_mat_entry(B, 0, j), prec);
+
+                for (k = 1; k < br; k++)
+                {
+                    arb_addmul(arb_mat_entry(C, i, j),
+                                 arb_mat_entry(A, i, k),
+                                 arb_mat_entry(B, k, j), prec);
+                }
             }
         }
     }
-}
+    else
+    {
+        arb_ptr tmp;
+        TMP_INIT;
 
+        TMP_START;
+        tmp = TMP_ALLOC(sizeof(arb_struct) * br * bc);
+
+        for (i = 0; i < br; i++)
+            for (j = 0; j < bc; j++)
+                tmp[j * br + i] = *arb_mat_entry(B, i, j);
+
+        for (i = 0; i < ar; i++)
+        {
+            for (j = 0; j < bc; j++)
+            {
+                arb_dot(arb_mat_entry(C, i, j), NULL, 0,
+                    A->rows[i], 1, tmp + j * br, 1, br, prec);
+            }
+        }
+
+        TMP_END;
+    }
+}

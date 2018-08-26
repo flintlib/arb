@@ -30,21 +30,30 @@ void *
 _acb_mat_mul_thread(void * arg_ptr)
 {
     acb_mat_mul_arg_t arg = *((acb_mat_mul_arg_t *) arg_ptr);
-    slong i, j, k;
+    slong i, j, br, bc;
+    acb_ptr tmp;
+    TMP_INIT;
+
+    br = arg.br;
+    bc = arg.bc1 - arg.bc0;
+
+    TMP_START;
+    tmp = TMP_ALLOC(sizeof(acb_struct) * br * bc);
+
+    for (i = 0; i < br; i++)
+        for (j = 0; j < bc; j++)
+            tmp[j * br + i] = arg.B[i][arg.bc0 + j];
 
     for (i = arg.ar0; i < arg.ar1; i++)
     {
         for (j = arg.bc0; j < arg.bc1; j++)
         {
-            acb_mul(arg.C[i] + j, arg.A[i] + 0, arg.B[0] + j, arg.prec);
-
-            for (k = 1; k < arg.br; k++)
-            {
-                acb_addmul(arg.C[i] + j, arg.A[i] + k, arg.B[k] + j, arg.prec);
-            }
+            acb_dot(arg.C[i] + j, NULL, 0,
+                arg.A[i], 1, tmp + (j - arg.bc0) * br, 1, br, arg.prec);
         }
     }
 
+    TMP_END;
     flint_cleanup();
     return NULL;
 }
@@ -122,4 +131,3 @@ acb_mat_mul_threaded(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong pr
     flint_free(threads);
     flint_free(args);
 }
-
