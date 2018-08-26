@@ -644,6 +644,14 @@ acb_submul_arb(acb_t z, const acb_t x, const arb_t y, slong prec)
     arb_submul(acb_imagref(z), acb_imagref(x), y, prec);
 }
 
+void acb_dot_simple(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
+void acb_dot_precise(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
+void acb_dot(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
+
+
 void acb_inv(acb_t z, const acb_t x, slong prec);
 
 void acb_div(acb_t z, const acb_t x, const acb_t y, slong prec);

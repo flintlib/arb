@@ -44,7 +44,7 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen,
     {
         /* The basecase algorithm is faster for much larger Blen and n than
            this, but unfortunately has worse numerical stability. */
-        slong i, j;
+        slong i;
         acb_t q;
 
         acb_init(q);
@@ -54,16 +54,8 @@ _acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen,
 
         for (i = 1; i < n; i++)
         {
-            acb_mul(Q + i, B + 1, Q + i - 1, prec);
-
-            for (j = 2; j < FLINT_MIN(i + 1, Blen); j++)
-                acb_addmul(Q + i, B + j, Q + i - j, prec);
-
-            if (i < Alen)
-                acb_sub(Q + i, A + i, Q + i, prec);
-            else
-                acb_neg(Q + i, Q + i);
-
+            acb_dot(Q + i, (i < Alen) ? A + i : NULL, 1,
+                B + 1, 1, Q + i - 1, -1, FLINT_MIN(i, Blen - 1), prec);
             if (!acb_is_one(q))
                 acb_mul(Q + i, Q + i, q, prec);
         }

@@ -782,7 +782,7 @@ Arithmetic
 
     Sets `z = x / (2^n - 1)`, rounded to *prec* bits.
 
-Sum and dot product
+Dot product
 -------------------------------------------------------------------------------
 
 .. function:: void arb_dot_precise(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)

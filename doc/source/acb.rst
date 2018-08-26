@@ -499,6 +499,46 @@ Arithmetic
 
     Sets *z* to the quotient of *x* and *y*.
 
+Dot product
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dot_precise(acb_t res, const acb_t s, int subtract, acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec)
+
+.. function:: void acb_dot_simple(acb_t res, const acb_t s, int subtract, acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec)
+
+.. function:: void acb_dot(acb_t res, const acb_t s, int subtract, acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec)
+
+    Computes the dot product of the vectors *x* and *y*, setting
+    *res* to `s + (-1)^{subtract} \sum_{i=0}^{len-1} x_i y_i`.
+
+    The initial term *s* is optional and can be
+    omitted by passing *NULL* (equivalently, `s = 0`).
+    The parameter *subtract* must be 0 or 1.
+    The length *len* is allowed to be negative, which is equivalent
+    to a length of zero.
+    The parameters *xstep* or *ystep* specify a step length for
+    traversing subsequences of the vectors *x* and *y*; either can be
+    negative to step in the reverse direction starting from
+    the initial pointer.
+    Aliasing is allowed between *res* and *s* but not between
+    *res* and the entries of *x* and *y*.
+
+    The default version determines the optimal precision for each term
+    and performs all internal calculations using mpn arithmetic
+    with minimal overhead. This is the preferred way to compute a
+    dot product; it is generally much faster and more precise
+    than a simple loop.
+
+    The *simple* version performs fused multiply-add operations in
+    a simple loop. This can be used for
+    testing purposes and is also used as a fallback by the
+    default version when the exponents are out of range
+    for the optimized code.
+
+    The *precise* version computes the dot product exactly up to the
+    final rounding. This can be extremely slow and is only intended
+    for testing.
+
 Mathematical constants
 -------------------------------------------------------------------------------
 

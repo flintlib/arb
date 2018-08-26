@@ -11,17 +11,46 @@
 
 #include "acb_poly.h"
 
-#define CUTOFF 4
-
 void
 _acb_poly_mullow(acb_ptr res,
     acb_srcptr poly1, slong len1,
     acb_srcptr poly2, slong len2, slong n, slong prec)
 {
-    if (n < CUTOFF || len1 < CUTOFF || len2 < CUTOFF)
+    if (n == 1)
+    {
+        acb_mul(res, poly1, poly2, prec);
+    }
+    else if (n <= 7 || len1 <= 7 || len2 <= 7)
+    {
         _acb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
+    }
     else
-        _acb_poly_mullow_transpose(res, poly1, len1, poly2, len2, n, prec);
+    {
+        slong cutoff;
+        double p;
+
+        if (prec <= 2 * FLINT_BITS)
+        {
+            cutoff = 110;
+        }
+        else
+        {
+            p = log(prec);
+
+            cutoff = 10000.0 / (p * p * p);
+            cutoff = FLINT_MIN(cutoff, 60);
+            if (poly1 == poly2 && prec >= 256)
+                cutoff *= 1.25;
+            if (poly1 == poly2 && prec >= 4096)
+                cutoff *= 1.25;
+            cutoff = FLINT_MAX(cutoff, 8);
+        }
+
+        if (2 * FLINT_MIN(len1, len2) <= cutoff || n <= cutoff)
+            _acb_poly_mullow_classical(res, poly1, len1, poly2, len2, n, prec);
+        else
+            _acb_poly_mullow_transpose(res, poly1, len1, poly2, len2, n, prec);
+    }
 }
 
 void

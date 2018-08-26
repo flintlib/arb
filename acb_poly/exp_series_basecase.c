@@ -11,13 +11,11 @@
 
 #include "acb_poly.h"
 
-#define MUL_CUTOFF 24
-
 static void
 _acb_poly_exp_series_basecase_rec(acb_ptr f, acb_ptr a,
         acb_srcptr h, slong hlen, slong n, slong prec)
 {
-    slong j, k;
+    slong k;
 
     acb_t s;
     acb_init(s);
@@ -29,10 +27,7 @@ _acb_poly_exp_series_basecase_rec(acb_ptr f, acb_ptr a,
 
     for (k = 1; k < n; k++)
     {
-        acb_zero(s);
-        for (j = 1; j < FLINT_MIN(k + 1, hlen); j++)
-            acb_addmul(s, a + j, f + k - j, prec);
-
+        acb_dot(s, NULL, 0, a + 1, 1, f + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
         acb_div_ui(f + k, s, k, prec);
     }
 
@@ -45,7 +40,7 @@ _acb_poly_exp_series_basecase(acb_ptr f,
 {
     hlen = FLINT_MIN(n, hlen);
 
-    if (n < MUL_CUTOFF || hlen < 0.9 * n)
+    if (n < 20 || hlen < 0.9 * n || prec <= 2 * FLINT_BITS || n < 1000.0 / log(prec + 10) - 70)
     {
         acb_ptr t = _acb_vec_init(hlen);
         _acb_poly_exp_series_basecase_rec(f, t, h, hlen, n, prec);

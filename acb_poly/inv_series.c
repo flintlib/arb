@@ -37,7 +37,7 @@ _acb_poly_inv_series(acb_ptr Qinv,
     }
     else
     {
-        slong i, j, blen;
+        slong i, blen;
 
         /* The basecase algorithm is faster for much larger Qlen or len than
            this, but unfortunately also much less numerically stable. */
@@ -48,15 +48,10 @@ _acb_poly_inv_series(acb_ptr Qinv,
 
         for (i = 1; i < blen; i++)
         {
-            acb_mul(Qinv + i, Q + 1, Qinv + i - 1, prec);
-
-            for (j = 2; j < FLINT_MIN(i + 1, Qlen); j++)
-                acb_addmul(Qinv + i, Q + j, Qinv + i - j, prec);
-
+            acb_dot(Qinv + i, NULL, 1,
+                Q + 1, 1, Qinv + i - 1, -1, FLINT_MIN(i, Qlen - 1), prec);
             if (!acb_is_one(Qinv))
                 acb_mul(Qinv + i, Qinv + i, Qinv, prec);
-
-            acb_neg(Qinv + i, Qinv + i);
         }
 
         if (len > blen)
@@ -116,4 +111,3 @@ acb_poly_inv_series(acb_poly_t Qinv, const acb_poly_t Q, slong n, slong prec)
     _acb_poly_set_length(Qinv, n);
     _acb_poly_normalise(Qinv);
 }
-

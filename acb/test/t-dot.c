@@ -9,7 +9,9 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "arb.h"
+#include "acb.h"
+
+ARB_DLL extern slong acb_dot_gauss_dot_cutoff;
 
 int main()
 {
@@ -23,17 +25,19 @@ int main()
 
     for (iter = 0; iter < 1000000 * arb_test_multiplier(); iter++)
     {
-        arb_ptr x, y;
-        arb_t s1, s2, z;
+        acb_ptr x, y;
+        acb_t s1, s2, z;
         slong i, len, prec, xbits, ybits, ebits;
         int ok, initial, subtract, revx, revy;
 
         if (n_randint(state, 100) == 0)
-            len = n_randint(state, 100);
+            len = n_randint(state, 50);
         else if (n_randint(state, 10) == 0)
-            len = n_randint(state, 10);
+            len = n_randint(state, 5);
         else
             len = n_randint(state, 3);
+
+        acb_dot_gauss_dot_cutoff = 3 + n_randint(state, 30);
 
         if (n_randint(state, 10) != 0 || len > 10)
         {
@@ -43,9 +47,9 @@ int main()
         }
         else
         {
-            prec = 2 + n_randint(state, 4000);
-            xbits = 2 + n_randint(state, 4000);
-            ybits = 2 + n_randint(state, 4000);
+            prec = 2 + n_randint(state, 5000);
+            xbits = 2 + n_randint(state, 5000);
+            ybits = 2 + n_randint(state, 5000);
         }
 
         if (n_randint(state, 100) == 0)
@@ -58,19 +62,19 @@ int main()
         revx = n_randint(state, 2);
         revy = n_randint(state, 2);
 
-        x = _arb_vec_init(len);
-        y = _arb_vec_init(len);
-        arb_init(s1);
-        arb_init(s2);
-        arb_init(z);
+        x = _acb_vec_init(len);
+        y = _acb_vec_init(len);
+        acb_init(s1);
+        acb_init(s2);
+        acb_init(z);
 
         switch (n_randint(state, 3))
         {
             case 0:
                 for (i = 0; i < len; i++)
                 {
-                    arb_randtest(x + i, state, xbits, ebits);
-                    arb_randtest(y + i, state, ybits, ebits);
+                    acb_randtest(x + i, state, xbits, ebits);
+                    acb_randtest(y + i, state, ybits, ebits);
                 }
                 break;
 
@@ -80,13 +84,13 @@ int main()
                 {
                     if (i <= len / 2)
                     {
-                        arb_randtest(x + i, state, xbits, ebits);
-                        arb_randtest(y + i, state, ybits, ebits);
+                        acb_randtest(x + i, state, xbits, ebits);
+                        acb_randtest(y + i, state, ybits, ebits);
                     }
                     else
                     {
-                        arb_neg(x + i, x + len - i - 1);
-                        arb_set(y + i, y + len - i - 1);
+                        acb_neg(x + i, x + len - i - 1);
+                        acb_set(y + i, y + len - i - 1);
                     }
                 }
                 break;
@@ -96,55 +100,55 @@ int main()
                 {
                     if (i <= len / 2)
                     {
-                        arb_randtest(x + i, state, xbits, ebits);
-                        arb_randtest(y + i, state, ybits, ebits);
+                        acb_randtest(x + i, state, xbits, ebits);
+                        acb_randtest(y + i, state, ybits, ebits);
                     }
                     else
                     {
-                        arb_neg_round(x + i, x + len - i - 1, 2 + n_randint(state, 500));
-                        arb_set_round(y + i, y + len - i - 1, 2 + n_randint(state, 500));
+                        acb_neg_round(x + i, x + len - i - 1, 2 + n_randint(state, 500));
+                        acb_set_round(y + i, y + len - i - 1, 2 + n_randint(state, 500));
                     }
                 }
                 break;
         }
 
-        arb_randtest(s1, state, 200, 100);
-        arb_randtest(s2, state, 200, 100);
-        arb_randtest(z, state, xbits, ebits);
+        acb_randtest(s1, state, 200, 100);
+        acb_randtest(s2, state, 200, 100);
+        acb_randtest(z, state, xbits, ebits);
 
-        arb_dot(s1, initial ? z : NULL, subtract,
+        acb_dot(s1, initial ? z : NULL, subtract,
             revx ? (x + len - 1) : x, revx ? -1 : 1,
             revy ? (y + len - 1) : y, revy ? -1 : 1,
             len, prec);
 
-        arb_dot_precise(s2, initial ? z : NULL, subtract,
+        acb_dot_precise(s2, initial ? z : NULL, subtract,
             revx ? (x + len - 1) : x, revx ? -1 : 1,
             revy ? (y + len - 1) : y, revy ? -1 : 1,
             len, ebits <= 12 ? ARF_PREC_EXACT : 2 * prec + 100);
 
         if (ebits <= 12)
-            ok = arb_contains(s1, s2);
+            ok = acb_contains(s1, s2);
         else
-            ok = arb_overlaps(s1, s2);
+            ok = acb_overlaps(s1, s2);
 
         if (!ok)
         {
             flint_printf("FAIL\n\n");
-            flint_printf("iter = %wd, len = %wd, prec = %wd, ebits = %wd\n\n", iter, len, prec, ebits);
+            flint_printf("iter = %wd, len = %wd, prec = %wd, ebits = %wd, subtract = %d\n\n", iter, len, prec, ebits, subtract);
 
             if (initial)
             {
-                flint_printf("z = ", i); arb_printn(z, 100, ARB_STR_MORE); flint_printf(" (%wd)\n\n", arb_bits(z));
+                flint_printf("z = ", i); acb_printn(z, 100, ARB_STR_MORE); flint_printf(" (%wd)\n\n", acb_bits(z));
             }
 
             for (i = 0; i < len; i++)
             {
-                flint_printf("x[%wd] = ", i); arb_printn(x + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", arb_bits(x + i));
-                flint_printf("y[%wd] = ", i); arb_printn(y + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", arb_bits(y + i));
+                flint_printf("x[%wd] = ", i); acb_printn(x + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", acb_bits(x + i));
+                flint_printf("y[%wd] = ", i); acb_printn(y + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", acb_bits(y + i));
             }
             flint_printf("\n\n");
-            flint_printf("s1 = "); arb_printn(s1, 100, ARB_STR_MORE); flint_printf("\n\n");
-            flint_printf("s2 = "); arb_printn(s2, 100, ARB_STR_MORE); flint_printf("\n\n");
+            flint_printf("s1 = "); acb_printn(s1, 100, ARB_STR_MORE); flint_printf("\n\n");
+            flint_printf("s2 = "); acb_printn(s2, 100, ARB_STR_MORE); flint_printf("\n\n");
             flint_abort();
         }
 
@@ -155,38 +159,38 @@ int main()
             revx ^= 1;
             revy ^= 1;
 
-            arb_dot(s2, initial ? z : NULL, subtract,
+            acb_dot(s2, initial ? z : NULL, subtract,
                 revx ? (x + len - 1) : x, revx ? -1 : 1,
                 revy ? (y + len - 1) : y, revy ? -1 : 1,
                 len, prec);
 
-            if (!arb_equal(s1, s2))
+            if (!acb_equal(s1, s2))
             {
                 flint_printf("FAIL (reversal)\n\n");
                 flint_printf("iter = %wd, len = %wd, prec = %wd, ebits = %wd\n\n", iter, len, prec, ebits);
 
                 if (initial)
                 {
-                    flint_printf("z = ", i); arb_printn(z, 100, ARB_STR_MORE); flint_printf(" (%wd)\n\n", arb_bits(z));
+                    flint_printf("z = ", i); acb_printn(z, 100, ARB_STR_MORE); flint_printf(" (%wd)\n\n", acb_bits(z));
                 }
 
                 for (i = 0; i < len; i++)
                 {
-                    flint_printf("x[%wd] = ", i); arb_printn(x + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", arb_bits(x + i));
-                    flint_printf("y[%wd] = ", i); arb_printn(y + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", arb_bits(y + i));
+                    flint_printf("x[%wd] = ", i); acb_printn(x + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", acb_bits(x + i));
+                    flint_printf("y[%wd] = ", i); acb_printn(y + i, 100, ARB_STR_MORE); flint_printf(" (%wd)\n", acb_bits(y + i));
                 }
                 flint_printf("\n\n");
-                flint_printf("s1 = "); arb_printn(s1, 100, ARB_STR_MORE); flint_printf("\n\n");
-                flint_printf("s2 = "); arb_printn(s2, 100, ARB_STR_MORE); flint_printf("\n\n");
+                flint_printf("s1 = "); acb_printn(s1, 100, ARB_STR_MORE); flint_printf("\n\n");
+                flint_printf("s2 = "); acb_printn(s2, 100, ARB_STR_MORE); flint_printf("\n\n");
                 flint_abort();
             }
         }
 
-        arb_clear(s1);
-        arb_clear(s2);
-        arb_clear(z);
-        _arb_vec_clear(x, len);
-        _arb_vec_clear(y, len);
+        acb_clear(s1);
+        acb_clear(s2);
+        acb_clear(z);
+        _acb_vec_clear(x, len);
+        _acb_vec_clear(y, len);
     }
 
     flint_randclear(state);

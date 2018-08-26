@@ -11,10 +11,8 @@
 
 #include "acb_poly.h"
 
-#define TANGENT_CUTOFF 80
-
 void
-_acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, const acb_srcptr h, slong hlen, slong n, slong prec)
+_acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen, slong n, slong prec)
 {
     hlen = FLINT_MIN(hlen, n);
 
@@ -36,10 +34,25 @@ _acb_poly_sin_cos_pi_series(acb_ptr s, acb_ptr c, const acb_srcptr h, slong hlen
         acb_mul(c + 1, s, t, prec);
         acb_clear(t);
     }
-    else if (hlen < TANGENT_CUTOFF)
-        _acb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 1);
     else
-        _acb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 1);
+    {
+        slong cutoff;
+
+        if (prec <= 128)
+        {
+            cutoff = 1400;
+        }
+        else
+        {
+            cutoff = 100000 / pow(log(prec), 3);
+            cutoff = FLINT_MIN(cutoff, 700);
+        }
+
+        if (hlen < cutoff)
+            _acb_poly_sin_cos_series_basecase(s, c, h, hlen, n, prec, 1);
+        else
+            _acb_poly_sin_cos_series_tangent(s, c, h, hlen, n, prec, 1);
+    }
 }
 
 void
@@ -73,4 +86,3 @@ acb_poly_sin_cos_pi_series(acb_poly_t s, acb_poly_t c,
     _acb_poly_set_length(c, n);
     _acb_poly_normalise(c);
 }
-

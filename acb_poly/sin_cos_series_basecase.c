@@ -15,7 +15,7 @@ void
 _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen,
         slong n, slong prec, int times_pi)
 {
-    slong j, k, alen = FLINT_MIN(n, hlen);
+    slong k, alen = FLINT_MIN(n, hlen);
     acb_ptr a;
     acb_t t, u;
 
@@ -46,15 +46,8 @@ _acb_poly_sin_cos_series_basecase(acb_ptr s, acb_ptr c, acb_srcptr h, slong hlen
 
     for (k = 1; k < n; k++)
     {
-        acb_zero(t);
-        acb_zero(u);
-
-        for (j = 1; j < FLINT_MIN(k + 1, hlen); j++)
-        {
-            acb_submul(t, a + j, s + k - j, prec);
-            acb_addmul(u, a + j, c + k - j, prec);
-        }
-
+        acb_dot(t, NULL, 1, a + 1, 1, s + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
+        acb_dot(u, NULL, 0, a + 1, 1, c + k - 1, -1, FLINT_MIN(k, hlen - 1), prec);
         acb_div_ui(c + k, t, k, prec);
         acb_div_ui(s + k, u, k, prec);
     }
@@ -92,4 +85,3 @@ acb_poly_sin_cos_series_basecase(acb_poly_t s, acb_poly_t c,
     _acb_poly_set_length(c, n);
     _acb_poly_normalise(c);
 }
-

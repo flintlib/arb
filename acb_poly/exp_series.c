@@ -12,7 +12,7 @@
 #include "acb_poly.h"
 
 /* allow changing this from the test code */
-ARB_DLL slong acb_poly_newton_exp_cutoff = 120;
+ARB_DLL slong acb_poly_newton_exp_cutoff = 0;
 
 /* with inverse=1 simultaneously computes g = exp(-x) to length n
 with inverse=0 uses g as scratch space, computing
@@ -112,39 +112,51 @@ _acb_poly_exp_series(acb_ptr f, acb_srcptr h, slong hlen, slong n, slong prec)
         _acb_vec_zero(f + j - d + 1, n - (j - d + 1));
         acb_clear(t);
     }
-    else if (hlen <= acb_poly_newton_exp_cutoff)
-    {
-        _acb_poly_exp_series_basecase(f, h, hlen, n, prec);
-    }
     else
     {
-        acb_ptr g, t;
-        acb_t u;
-        int fix;
+        slong cutoff;
 
-        g = _acb_vec_init((n + 1) / 2);
-        fix = (hlen < n || h == f || !acb_is_zero(h));
+        if (acb_poly_newton_exp_cutoff != 0)
+            cutoff = acb_poly_newton_exp_cutoff;
+        else if (prec <= 256)
+            cutoff = 750;
+        else
+            cutoff = 1e5 / pow(log(prec), 3);
 
-        if (fix)
+        if (hlen <= cutoff)
         {
-            t = _acb_vec_init(n);
-            _acb_vec_set(t + 1, h + 1, hlen - 1);
+            _acb_poly_exp_series_basecase(f, h, hlen, n, prec);
         }
         else
-            t = (acb_ptr) h;
+        {
+            acb_ptr g, t;
+            acb_t u;
+            int fix;
 
-        acb_init(u);
-        acb_exp(u, h, prec);
+            g = _acb_vec_init((n + 1) / 2);
+            fix = (hlen < n || h == f || !acb_is_zero(h));
 
-        _acb_poly_exp_series_newton(f, g, t, n, prec, 0, acb_poly_newton_exp_cutoff);
+            if (fix)
+            {
+                t = _acb_vec_init(n);
+                _acb_vec_set(t + 1, h + 1, hlen - 1);
+            }
+            else
+                t = (acb_ptr) h;
 
-        if (!acb_is_one(u))
-            _acb_vec_scalar_mul(f, f, n, u, prec);
+            acb_init(u);
+            acb_exp(u, h, prec);
 
-        _acb_vec_clear(g, (n + 1) / 2);
-        if (fix)
-            _acb_vec_clear(t, n);
-        acb_clear(u);
+            _acb_poly_exp_series_newton(f, g, t, n, prec, 0, cutoff);
+
+            if (!acb_is_one(u))
+                _acb_vec_scalar_mul(f, f, n, u, prec);
+
+            _acb_vec_clear(g, (n + 1) / 2);
+            if (fix)
+                _acb_vec_clear(t, n);
+            acb_clear(u);
+        }
     }
 }
 
