@@ -17,7 +17,7 @@
 void
 _acb_poly_revert_series_lagrange_fast(acb_ptr Qinv, acb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    slong i, j, k, m;
+    slong i, j, m;
     acb_ptr R, S, T, tmp;
     acb_t t;
 
@@ -55,9 +55,7 @@ _acb_poly_revert_series_lagrange_fast(acb_ptr Qinv, acb_srcptr Q, slong Qlen, sl
 
         for (j = 1; j < m && i + j < n; j++)
         {
-            acb_mul(t, S + 0, Ri(j) + i + j - 1, prec);
-            for (k = 1; k <= i + j - 1; k++)
-                acb_addmul(t, S + k, Ri(j) + i + j - 1 - k, prec);
+            acb_dot(t, NULL, 0, S, 1, Ri(j) + i + j - 1, -1, i + j, prec);
             acb_div_ui(Qinv + i + j, t, i + j, prec);
         }
 

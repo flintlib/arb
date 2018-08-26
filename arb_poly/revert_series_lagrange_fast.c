@@ -17,7 +17,7 @@
 void
 _arb_poly_revert_series_lagrange_fast(arb_ptr Qinv, arb_srcptr Q, slong Qlen, slong n, slong prec)
 {
-    slong i, j, k, m;
+    slong i, j, m;
     arb_ptr R, S, T, tmp;
     arb_t t;
 
@@ -55,9 +55,7 @@ _arb_poly_revert_series_lagrange_fast(arb_ptr Qinv, arb_srcptr Q, slong Qlen, sl
 
         for (j = 1; j < m && i + j < n; j++)
         {
-            arb_mul(t, S + 0, Ri(j) + i + j - 1, prec);
-            for (k = 1; k <= i + j - 1; k++)
-                arb_addmul(t, S + k, Ri(j) + i + j - 1 - k, prec);
+            arb_dot(t, NULL, 0, S, 1, Ri(j) + i + j - 1, -1, i + j, prec);
             arb_div_ui(Qinv + i + j, t, i + j, prec);
         }
 

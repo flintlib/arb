@@ -51,21 +51,18 @@ _acb_poly_evaluate2_rectangular(acb_t y, acb_t z, acb_srcptr poly,
     acb_init(c);
 
     _acb_vec_set_powers(xs, x, m + 1, prec);
-
-    acb_set(y, poly + (r - 1) * m);
-    for (j = 1; (r - 1) * m + j < len; j++)
-        acb_addmul(y, xs + j, poly + (r - 1) * m + j, prec);
+    acb_dot(y, poly + (r - 1) * m, 0, xs + 1, 1,
+        poly + (r - 1) * m + 1, 1, len - (r - 1) * m - 1, prec);
 
     for (i = r - 2; i >= 0; i--)
     {
-        acb_set(s, poly + i * m);
-        for (j = 1; j < m; j++)
-            acb_addmul(s, xs + j, poly + i * m + j, prec);
-
+        acb_dot(s, poly + i * m, 0, xs + 1, 1,
+            poly + i * m + 1, 1, m - 1, prec);
         acb_mul(y, y, xs + m, prec);
         acb_add(y, y, s, prec);
     }
 
+    /* todo: rewrite using acb_dot */
     len -= 1;
     r = (len + m - 1) / m;
     acb_mul_ui(z, poly + (r - 1) * m + 1, (r - 1) * m + 1, ARF_PREC_EXACT);

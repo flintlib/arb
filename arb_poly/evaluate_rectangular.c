@@ -15,7 +15,7 @@ void
 _arb_poly_evaluate_rectangular(arb_t y, arb_srcptr poly,
     slong len, const arb_t x, slong prec)
 {
-    slong i, j, m, r;
+    slong i, m, r;
     arb_ptr xs;
     arb_t s, t, c;
 
@@ -47,16 +47,13 @@ _arb_poly_evaluate_rectangular(arb_t y, arb_srcptr poly,
 
     _arb_vec_set_powers(xs, x, m + 1, prec);
 
-    arb_set(y, poly + (r - 1) * m);
-    for (j = 1; (r - 1) * m + j < len; j++)
-        arb_addmul(y, xs + j, poly + (r - 1) * m + j, prec);
+    arb_dot(y, poly + (r - 1) * m, 0, xs + 1, 1,
+        poly + (r - 1) * m + 1, 1, len - (r - 1) * m - 1, prec);
 
     for (i = r - 2; i >= 0; i--)
     {
-        arb_set(s, poly + i * m);
-        for (j = 1; j < m; j++)
-            arb_addmul(s, xs + j, poly + i * m + j, prec);
-
+        arb_dot(s, poly + i * m, 0, xs + 1, 1,
+            poly + i * m + 1, 1, m - 1, prec);
         arb_mul(y, y, xs + m, prec);
         arb_add(y, y, s, prec);
     }
