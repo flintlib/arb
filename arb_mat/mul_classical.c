@@ -16,7 +16,8 @@ arb_mat_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong p
 {
     slong ar, ac, br, bc, i, j, k;
 
-    if (A == B)
+    if (A == B && (arb_mat_nrows(A) <= 2 ||
+        (prec >= 1024 && arb_mat_nrows(A) < 8)))
     {
         arb_mat_sqr_classical(C, A, prec);
         return;
