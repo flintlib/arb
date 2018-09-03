@@ -18,6 +18,8 @@ Bug reports, feature requests and other comments are welcome
 in private communication, on the GitHub issue tracker, or on the FLINT mailing list <flint-devel@googlegroups.com>.
 
 [![Build Status](https://travis-ci.org/fredrik-johansson/arb.svg?branch=master)](https://travis-ci.org/fredrik-johansson/arb)
+[![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/fredrik-johansson/arb.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fredrik-johansson/arb/context:cpp)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/fredrik-johansson/arb.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fredrik-johansson/arb/alerts)
 
 ## Code example
 
