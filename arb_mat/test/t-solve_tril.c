@@ -28,8 +28,16 @@ int main()
         int unit;
 
         prec = 2 + n_randint(state, 200);
-        rows = n_randint(state, 30);
-        cols = n_randint(state, 30);
+        if (n_randint(state, 10) == 0)
+        {
+            rows = n_randint(state, 60);
+            cols = n_randint(state, 60);
+        }
+        else
+        {
+            rows = n_randint(state, 10);
+            cols = n_randint(state, 10);
+        }
         unit = n_randint(state, 2);
 
         arb_mat_init(A, rows, rows);
