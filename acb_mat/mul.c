@@ -68,7 +68,7 @@ acb_mat_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
     n = FLINT_MIN(ar, ac);
     n = FLINT_MIN(ac, bc);
 
-    if (n >= 5)
+    if (n >= 20)
     {
         abits = acb_mat_bits(A);
         bbits = acb_mat_bits(B);

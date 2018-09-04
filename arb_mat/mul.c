@@ -14,12 +14,18 @@
 void
 arb_mat_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    if (arb_mat_nrows(A) >= 8 && arb_mat_ncols(A) >= 8 &&
-        arb_mat_ncols(B) >= 8)
-    {
-        arb_mat_mul_block(C, A, B, prec);
-    }
+    slong cutoff;
+
+    /* todo: detect small-integer matrices */
+    if (prec <= 2 * FLINT_BITS)
+        cutoff = 60;
+    else if (prec <= 8 * FLINT_BITS)
+        cutoff = 50;
     else
+        cutoff = 40;
+
+    if (arb_mat_nrows(A) <= cutoff || arb_mat_ncols(A) <= cutoff ||
+        arb_mat_ncols(B) <= cutoff)
     {
         if (flint_get_num_threads() > 1 &&
             ((double) arb_mat_nrows(A) *
@@ -34,5 +40,8 @@ arb_mat_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
             arb_mat_mul_classical(C, A, B, prec);
         }
     }
+    else
+    {
+        arb_mat_mul_block(C, A, B, prec);
+    }
 }
-

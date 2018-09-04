@@ -99,7 +99,7 @@ void
 acb_mat_solve_triu(acb_mat_t X, const acb_mat_t U,
                                     const acb_mat_t B, int unit, slong prec)
 {
-    if (B->r < 8 || B->c < 8)
+    if (B->r < 40 || B->c < 40)
         acb_mat_solve_triu_classical(X, U, B, unit, prec);
     else
         acb_mat_solve_triu_recursive(X, U, B, unit, prec);
