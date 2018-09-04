@@ -15,7 +15,7 @@ void
 acb_mat_solve_tril_classical(acb_mat_t X,
         const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
 {
-    slong i, j, k, n, m;
+    slong i, j, n, m;
     acb_ptr tmp;
     acb_t s;
 
@@ -23,29 +23,28 @@ acb_mat_solve_tril_classical(acb_mat_t X,
     m = B->c;
 
     acb_init(s);
-    tmp = _acb_vec_init(n);
+    tmp = flint_malloc(sizeof(acb_struct) * n);
 
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-            acb_set(tmp + j, acb_mat_entry(X, j, i));
+            tmp[j] = *acb_mat_entry(X, j, i);
 
         for (j = 0; j < n; j++)
         {
-            acb_zero(s);
-            for (k = 0; k < j; k++)
-                acb_addmul(s, L->rows[j] + k, tmp + k, prec);
-            acb_sub(s, acb_mat_entry(B, j, i), s, prec);
+            acb_dot(s, acb_mat_entry(B, j, i), 1, L->rows[j], 1, tmp, 1, j, prec);
+
             if (!unit)
-                acb_div(s, s, acb_mat_entry(L, j, j), prec);
-            acb_set(tmp + j, s);
+                acb_div(tmp + j, s, acb_mat_entry(L, j, j), prec);
+            else
+                acb_swap(tmp + j, s);
         }
 
         for (j = 0; j < n; j++)
-            acb_set(acb_mat_entry(X, j, i), tmp + j);
+            *acb_mat_entry(X, j, i) = tmp[j];
     }
 
-    _acb_vec_clear(tmp, n);
+    flint_free(tmp);
     acb_clear(s);
 }
 
@@ -105,4 +104,3 @@ acb_mat_solve_tril(acb_mat_t X, const acb_mat_t L,
     else
         acb_mat_solve_tril_recursive(X, L, B, unit, prec);
 }
-

@@ -26,7 +26,7 @@ void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec)
     }
     else
     {
-        slong i, j, k, t;
+        slong i, k, t;
         arb_ptr a, A, s;
 
         a = _arb_vec_init(n * n);
@@ -49,23 +49,17 @@ void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec)
                 for (i = 0; i <= t; i++)
                 {
                     s = a + k * n + i;
-                    arb_zero(s);
-                    for (j = 0; j <= t; j++)
-                        arb_addmul(s, arb_mat_entry(mat, i, j), a + (k - 1) * n + j, prec);
+                    arb_dot(s, NULL, 0, mat->rows[i], 1, a + (k - 1) * n, 1, t + 1, prec);
                 }
 
                 arb_set(A + k, a + k * n + t);
             }
 
-            arb_zero(A + t);
-            for (j = 0; j <= t; j++)
-                arb_addmul(A + t, arb_mat_entry(mat, t, j), a + (t - 1) * n + j, prec);
+            arb_dot(A + t, NULL, 0, mat->rows[t], 1, a + (t - 1) * n, 1, t + 1, prec);
 
             for (k = 0; k <= t; k++)
             {
-                for (j = 0; j < k; j++)
-                    arb_submul(cp + k, A + j, cp + (k - j - 1), prec);
-
+                arb_dot(cp + k, cp + k, 1, A, 1, cp + k - 1, -1, k, prec);
                 arb_sub(cp + k, cp + k, A + k, prec);
             }
         }
@@ -92,4 +86,3 @@ void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec)
     _arb_poly_set_length(cp, mat->r + 1);
     _arb_mat_charpoly(cp->coeffs, mat, prec);
 }
-

@@ -15,39 +15,36 @@ void
 arb_mat_solve_triu_classical(arb_mat_t X, const arb_mat_t U,
     const arb_mat_t B, int unit, slong prec)
 {
-    slong i, j, k, n, m;
+    slong i, j, n, m;
     arb_ptr tmp;
     arb_t s;
 
     n = U->r;
     m = B->c;
 
-    tmp = _arb_vec_init(n);
     arb_init(s);
+    tmp = flint_malloc(sizeof(arb_struct) * n);
 
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-            arb_set(tmp + j, arb_mat_entry(X, j, i));
+            tmp[j] = *arb_mat_entry(X, j, i);
 
         for (j = n - 1; j >= 0; j--)
         {
-            arb_zero(s);
-            for (k = 0; k < n - j - 1; k++)
-                arb_addmul(s, U->rows[j] + j + 1 + k, tmp + j + 1 + k, prec);
+            arb_dot(s, arb_mat_entry(B, j, i), 1, U->rows[j] + j + 1, 1, tmp + j + 1, 1, n - j - 1, prec);
 
-            arb_sub(s, arb_mat_entry(B, j, i), s, prec);
             if (!unit)
-                arb_div(s, s, arb_mat_entry(U, j, j), prec);
-
-            arb_set(tmp + j, s);
+                arb_div(tmp + j, s, arb_mat_entry(U, j, j), prec);
+            else
+                arb_swap(tmp + j, s);
         }
 
         for (j = 0; j < n; j++)
-            arb_set(arb_mat_entry(X, j, i), tmp + j);
+            *arb_mat_entry(X, j, i) = tmp[j];
     }
 
-    _arb_vec_clear(tmp, n);
+    flint_free(tmp);
     arb_clear(s);
 }
 

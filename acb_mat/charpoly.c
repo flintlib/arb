@@ -26,7 +26,7 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec)
     }
     else
     {
-        slong i, j, k, t;
+        slong i, k, t;
         acb_ptr a, A, s;
 
         a = _acb_vec_init(n * n);
@@ -49,23 +49,17 @@ void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec)
                 for (i = 0; i <= t; i++)
                 {
                     s = a + k * n + i;
-                    acb_zero(s);
-                    for (j = 0; j <= t; j++)
-                        acb_addmul(s, acb_mat_entry(mat, i, j), a + (k - 1) * n + j, prec);
+                    acb_dot(s, NULL, 0, mat->rows[i], 1, a + (k - 1) * n, 1, t + 1, prec);
                 }
 
                 acb_set(A + k, a + k * n + t);
             }
 
-            acb_zero(A + t);
-            for (j = 0; j <= t; j++)
-                acb_addmul(A + t, acb_mat_entry(mat, t, j), a + (t - 1) * n + j, prec);
+            acb_dot(A + t, NULL, 0, mat->rows[t], 1, a + (t - 1) * n, 1, t + 1, prec);
 
             for (k = 0; k <= t; k++)
             {
-                for (j = 0; j < k; j++)
-                    acb_submul(cp + k, A + j, cp + (k - j - 1), prec);
-
+                acb_dot(cp + k, cp + k, 1, A, 1, cp + k - 1, -1, k, prec);
                 acb_sub(cp + k, cp + k, A + k, prec);
             }
         }
@@ -92,4 +86,3 @@ void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec)
     _acb_poly_set_length(cp, mat->r + 1);
     _acb_mat_charpoly(cp->coeffs, mat, prec);
 }
-

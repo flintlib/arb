@@ -15,7 +15,7 @@ void
 acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm,
     const acb_mat_t A, const acb_mat_t B, slong prec)
 {
-    slong i, j, c, n, m;
+    slong i, c, n, m;
 
     n = acb_mat_nrows(X);
     m = acb_mat_ncols(X);
@@ -46,38 +46,6 @@ acb_mat_solve_lu_precomp(acb_mat_t X, const slong * perm,
         }
     }
 
-    /* todo: solve_tril and solve_triu have some overhead; should be
-       able to eliminate the basecase code below */
-    if (n >= 8 && m >= 8)
-    {
-        acb_mat_solve_tril(X, A, X, 1, prec);
-        acb_mat_solve_triu(X, A, X, 0, prec);
-        return;
-    }
-
-    for (c = 0; c < m; c++)
-    {
-        /* solve Ly = b */
-        for (i = 1; i < n; i++)
-        {
-            for (j = 0; j < i; j++)
-            {
-                acb_submul(acb_mat_entry(X, i, c),
-                    acb_mat_entry(A, i, j), acb_mat_entry(X, j, c), prec);
-            }
-        }
-
-        /* solve Ux = y */
-        for (i = n - 1; i >= 0; i--)
-        {
-            for (j = i + 1; j < n; j++)
-            {
-                acb_submul(acb_mat_entry(X, i, c),
-                    acb_mat_entry(A, i, j), acb_mat_entry(X, j, c), prec);
-            }
-
-            acb_div(acb_mat_entry(X, i, c), acb_mat_entry(X, i, c),
-                acb_mat_entry(A, i, i), prec);
-        }
-    }
+    acb_mat_solve_tril(X, A, X, 1, prec);
+    acb_mat_solve_triu(X, A, X, 0, prec);
 }
