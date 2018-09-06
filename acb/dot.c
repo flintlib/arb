@@ -748,7 +748,8 @@ acb_dot(acb_t res, const acb_t initial, int subtract, acb_srcptr x, slong xstep,
             slong sum_exp, srad_exp;
             mp_ptr sum;
             mp_size_t sn;
-            mp_limb_t serr, srad;
+            mp_limb_t serr;
+            uint64_t srad;
             int flipsign;
 
             if (xoff == yoff)
