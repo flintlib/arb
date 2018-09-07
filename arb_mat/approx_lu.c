@@ -85,11 +85,11 @@ arb_mat_approx_lu_classical(slong * P, arb_mat_t LU, const arb_mat_t A, slong pr
         else if (r != row)
             arb_mat_swap_rows(LU, P, row, r);
 
-        arf_set(d, arb_midref(a[row] + col));
+        arf_ui_div(d, 1, arb_midref(a[row] + col), prec, ARB_RND);
 
         for (j = row + 1; j < m; j++)
         {
-            arf_div(arb_midref(e), arb_midref(a[j] + col), d, prec, ARB_RND);
+            arf_mul(arb_midref(e), arb_midref(a[j] + col), d, prec, ARB_RND);
             arb_neg(e, e);
             _arb_vec_approx_scalar_addmul(a[j] + col,
                 a[row] + col, n - col, e, prec);
@@ -156,11 +156,10 @@ arb_mat_approx_lu_recursive(slong * P, arb_mat_t LU, const arb_mat_t A, slong pr
     arb_mat_approx_solve_tril(A01, A00, A01, 1, prec);
 
     {
-        /* arb_mat_submul(A11, A11, A10, A01, prec); */
+        /* arb_mat_approx_submul(A11, A11, A10, A01, prec); */
         arb_mat_t T;
         arb_mat_init(T, A10->r, A01->c);
-        arb_mat_mul(T, A10, A01, prec);
-        arb_mat_get_mid(T, T);
+        arb_mat_approx_mul(T, A10, A01, prec);
         arb_mat_sub(A11, A11, T, prec);
         arb_mat_get_mid(A11, A11);
         arb_mat_clear(T);
@@ -192,4 +191,3 @@ arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
     else
         return arb_mat_approx_lu_recursive(P, LU, A, prec);
 }
-

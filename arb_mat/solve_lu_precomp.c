@@ -15,7 +15,7 @@ void
 arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm,
     const arb_mat_t A, const arb_mat_t B, slong prec)
 {
-    slong i, c, n, m;
+    slong i, j, c, n, m;
 
     n = arb_mat_nrows(X);
     m = arb_mat_ncols(X);
@@ -46,6 +46,37 @@ arb_mat_solve_lu_precomp(arb_mat_t X, const slong * perm,
         }
     }
 
-    arb_mat_solve_tril(X, A, X, 1, prec);
-    arb_mat_solve_triu(X, A, X, 0, prec);
+    /* solve_tril and solve_triu have some overhead */
+    if (n >= 4)
+    {
+        arb_mat_solve_tril(X, A, X, 1, prec);
+        arb_mat_solve_triu(X, A, X, 0, prec);
+        return;
+    }
+
+    for (c = 0; c < m; c++)
+    {
+        /* solve Ly = b */
+        for (i = 1; i < n; i++)
+        {
+            for (j = 0; j < i; j++)
+            {
+                arb_submul(arb_mat_entry(X, i, c),
+                    arb_mat_entry(A, i, j), arb_mat_entry(X, j, c), prec);
+            }
+        }
+
+        /* solve Ux = y */
+        for (i = n - 1; i >= 0; i--)
+        {
+            for (j = i + 1; j < n; j++)
+            {
+                arb_submul(arb_mat_entry(X, i, c),
+                    arb_mat_entry(A, i, j), arb_mat_entry(X, j, c), prec);
+            }
+
+            arb_div(arb_mat_entry(X, i, c), arb_mat_entry(X, i, c),
+                arb_mat_entry(A, i, i), prec);
+        }
+    }
 }

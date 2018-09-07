@@ -822,6 +822,12 @@ Dot product
     final rounding. This can be extremely slow and is only intended
     for testing.
 
+.. function:: void arb_approx_dot(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
+
+    Computes an approximate dot product *without error bounds*.
+    The radii of the inputs are ignored (only the midpoints are read)
+    and only the midpoint of the output is written.
+
 Powers and roots
 -------------------------------------------------------------------------------
 

@@ -539,6 +539,12 @@ Dot product
     final rounding. This can be extremely slow and is only intended
     for testing.
 
+.. function:: void acb_approx_dot(acb_t res, const acb_t s, int subtract, acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec)
+
+    Computes an approximate dot product *without error bounds*.
+    The radii of the inputs are ignored (only the midpoints are read)
+    and only the midpoint of the output is written.
+
 Mathematical constants
 -------------------------------------------------------------------------------
 

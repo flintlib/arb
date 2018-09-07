@@ -651,6 +651,8 @@ void acb_dot_precise(acb_t res, const acb_t initial, int subtract,
 void acb_dot(acb_t res, const acb_t initial, int subtract,
     acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
 
+void acb_approx_dot(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
 
 void acb_inv(acb_t z, const acb_t x, slong prec);
 

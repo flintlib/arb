@@ -194,8 +194,7 @@ acb_mat_approx_lu_recursive(slong * P, acb_mat_t LU, const acb_mat_t A, slong pr
         /* acb_mat_submul(A11, A11, A10, A01, prec); */
         acb_mat_t T;
         acb_mat_init(T, A10->r, A01->c);
-        acb_mat_mul(T, A10, A01, prec);
-        acb_mat_get_mid(T, T);
+        acb_mat_approx_mul(T, A10, A01, prec);
         acb_mat_sub(A11, A11, T, prec);
         acb_mat_get_mid(A11, A11);
         acb_mat_clear(T);
@@ -227,4 +226,3 @@ acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
     else
         return acb_mat_approx_lu_recursive(P, LU, A, prec);
 }
-

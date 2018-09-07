@@ -389,6 +389,7 @@ int acb_mat_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 
 int acb_mat_solve_precond(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec);
 
+void acb_mat_approx_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec);
 void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec);
 void acb_mat_approx_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec);
 int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec);

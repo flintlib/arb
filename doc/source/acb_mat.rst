@@ -487,6 +487,12 @@ Component and error operations
 Approximate solving
 -------------------------------------------------------------------------------
 
+.. function:: void acb_mat_approx_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
+
+    Approximate matrix multiplication. The input radii are ignored and
+    the output matrix is set to an approximate floating-point result.
+    The radii in the output matrix will *not* necessarily be zeroed.
+
 .. function:: void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
 
 .. function:: void acb_mat_approx_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)

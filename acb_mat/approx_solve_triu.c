@@ -12,38 +12,11 @@
 #include "acb_mat.h"
 
 static void
-acb_approx_set(acb_t z, const acb_t x)
-{
-    arf_set(arb_midref(acb_realref(z)), arb_midref(acb_realref(x)));
-    arf_set(arb_midref(acb_imagref(z)), arb_midref(acb_imagref(x)));
-}
-
-static void
 acb_approx_mul(acb_t res, const acb_t x, const acb_t y, slong prec)
 {
     arf_complex_mul(arb_midref(acb_realref(res)), arb_midref(acb_imagref(res)),
         arb_midref(acb_realref(x)), arb_midref(acb_imagref(x)), 
         arb_midref(acb_realref(y)), arb_midref(acb_imagref(y)), prec, ARB_RND);
-}
-
-static void
-acb_approx_sub(acb_t z, const acb_t x, const acb_t y, slong prec)
-{
-    arf_sub(arb_midref(acb_realref(z)), arb_midref(acb_realref(x)), arb_midref(acb_realref(y)), prec, ARF_RND_DOWN);
-    arf_sub(arb_midref(acb_imagref(z)), arb_midref(acb_imagref(x)), arb_midref(acb_imagref(y)), prec, ARF_RND_DOWN);
-}
-
-static void
-acb_approx_addmul(acb_t z, const acb_t x, const acb_t y, acb_t t, slong prec)
-{
-    acb_approx_mul(t, x, y, prec);
-
-    arf_add(arb_midref(acb_realref(z)),
-        arb_midref(acb_realref(z)), 
-        arb_midref(acb_realref(t)), prec, ARB_RND);
-    arf_add(arb_midref(acb_imagref(z)),
-        arb_midref(acb_imagref(z)), 
-        arb_midref(acb_imagref(t)), prec, ARB_RND);
 }
 
 /* note: the tmp variable t should have zero radius */
@@ -65,40 +38,37 @@ void
 acb_mat_approx_solve_triu_classical(acb_mat_t X, const acb_mat_t U,
     const acb_mat_t B, int unit, slong prec)
 {
-    slong i, j, k, n, m;
+    slong i, j, n, m;
     acb_ptr tmp;
     acb_t s, t;
 
     n = U->r;
     m = B->c;
 
-    tmp = _acb_vec_init(n);
     acb_init(s);
     acb_init(t);
+    tmp = flint_malloc(sizeof(acb_struct) * n);
 
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-            acb_approx_set(tmp + j, acb_mat_entry(X, j, i));
+            tmp[j] = *acb_mat_entry(X, j, i);
 
         for (j = n - 1; j >= 0; j--)
         {
-            acb_zero(s);
-            for (k = 0; k < n - j - 1; k++)
-                acb_approx_addmul(s, U->rows[j] + j + 1 + k, tmp + j + 1 + k, t, prec);
+            acb_approx_dot(s, acb_mat_entry(B, j, i), 1, U->rows[j] + j + 1, 1, tmp + j + 1, 1, n - j - 1, prec);
 
-            acb_approx_sub(s, acb_mat_entry(B, j, i), s, prec);
             if (!unit)
-                acb_approx_div(s, s, acb_mat_entry(U, j, j), t, prec);
-
-            acb_approx_set(tmp + j, s);
+                acb_approx_div(tmp + j, s, arb_mat_entry(U, j, j), t, prec);
+            else
+                acb_swap(tmp + j, s);
         }
 
         for (j = 0; j < n; j++)
-            acb_approx_set(acb_mat_entry(X, j, i), tmp + j);
+            *acb_mat_entry(X, j, i) = tmp[j];
     }
 
-    _acb_vec_clear(tmp, n);
+    flint_free(tmp);
     acb_clear(s);
     acb_clear(t);
 }
@@ -134,8 +104,7 @@ acb_mat_approx_solve_triu_recursive(acb_mat_t X,
     acb_mat_approx_solve_triu(XY, UD, BY, unit, prec);
 
     acb_mat_init(T, UB->r, XY->c);
-    acb_mat_mul(T, UB, XY, prec);
-    acb_mat_get_mid(T, T);
+    acb_mat_approx_mul(T, UB, XY, prec);
     acb_mat_sub(XX, BX, T, prec);
     acb_mat_get_mid(XX, XX);
     acb_mat_clear(T);
@@ -155,9 +124,8 @@ void
 acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U,
                                     const acb_mat_t B, int unit, slong prec)
 {
-    if (B->r < 8 || B->c < 8)
+    if (B->r < 40 || B->c < 40)
         acb_mat_approx_solve_triu_classical(X, U, B, unit, prec);
     else
         acb_mat_approx_solve_triu_recursive(X, U, B, unit, prec);
 }
-

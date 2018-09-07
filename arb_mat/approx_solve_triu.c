@@ -12,26 +12,6 @@
 #include "arb_mat.h"
 
 static void
-arb_approx_set(arb_t z, const arb_t x)
-{
-    arf_set(arb_midref(z), arb_midref(x));
-}
-
-static void
-arb_approx_sub(arb_t z, const arb_t x, const arb_t y, slong prec)
-{
-    arf_sub(arb_midref(z),
-               arb_midref(x), arb_midref(y), prec, ARF_RND_DOWN);
-}
-
-static void
-arb_approx_addmul(arb_t z, const arb_t x, const arb_t y, slong prec)
-{
-    arf_addmul(arb_midref(z),
-               arb_midref(x), arb_midref(y), prec, ARF_RND_DOWN);
-}
-
-static void
 arb_approx_div(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
@@ -41,39 +21,36 @@ void
 arb_mat_approx_solve_triu_classical(arb_mat_t X, const arb_mat_t U,
     const arb_mat_t B, int unit, slong prec)
 {
-    slong i, j, k, n, m;
+    slong i, j, n, m;
     arb_ptr tmp;
     arb_t s;
 
     n = U->r;
     m = B->c;
 
-    tmp = _arb_vec_init(n);
     arb_init(s);
+    tmp = flint_malloc(sizeof(arb_struct) * n);
 
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-            arb_approx_set(tmp + j, arb_mat_entry(X, j, i));
+            tmp[j] = *arb_mat_entry(X, j, i);
 
         for (j = n - 1; j >= 0; j--)
         {
-            arb_zero(s);
-            for (k = 0; k < n - j - 1; k++)
-                arb_approx_addmul(s, U->rows[j] + j + 1 + k, tmp + j + 1 + k, prec);
+            arb_approx_dot(s, arb_mat_entry(B, j, i), 1, U->rows[j] + j + 1, 1, tmp + j + 1, 1, n - j - 1, prec);
 
-            arb_approx_sub(s, arb_mat_entry(B, j, i), s, prec);
             if (!unit)
-                arb_approx_div(s, s, arb_mat_entry(U, j, j), prec);
-
-            arb_approx_set(tmp + j, s);
+                arb_approx_div(tmp + j, s, arb_mat_entry(U, j, j), prec);
+            else
+                arb_swap(tmp + j, s);
         }
 
         for (j = 0; j < n; j++)
-            arb_approx_set(arb_mat_entry(X, j, i), tmp + j);
+            *arb_mat_entry(X, j, i) = tmp[j];
     }
 
-    _arb_vec_clear(tmp, n);
+    flint_free(tmp);
     arb_clear(s);
 }
 
@@ -108,8 +85,7 @@ arb_mat_approx_solve_triu_recursive(arb_mat_t X,
     arb_mat_approx_solve_triu(XY, UD, BY, unit, prec);
 
     arb_mat_init(T, UB->r, XY->c);
-    arb_mat_mul(T, UB, XY, prec);
-    arb_mat_get_mid(T, T);
+    arb_mat_approx_mul(T, UB, XY, prec);
     arb_mat_sub(XX, BX, T, prec);
     arb_mat_get_mid(XX, XX);
     arb_mat_clear(T);
@@ -129,9 +105,8 @@ void
 arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U,
                                     const arb_mat_t B, int unit, slong prec)
 {
-    if (B->r < 8 || B->c < 8)
+    if (B->r < 40 || B->c < 40)
         arb_mat_approx_solve_triu_classical(X, U, B, unit, prec);
     else
         arb_mat_approx_solve_triu_recursive(X, U, B, unit, prec);
 }
-

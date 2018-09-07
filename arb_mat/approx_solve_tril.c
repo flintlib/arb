@@ -12,26 +12,6 @@
 #include "arb_mat.h"
 
 static void
-arb_approx_set(arb_t z, const arb_t x)
-{
-    arf_set(arb_midref(z), arb_midref(x));
-}
-
-static void
-arb_approx_sub(arb_t z, const arb_t x, const arb_t y, slong prec)
-{
-    arf_sub(arb_midref(z),
-               arb_midref(x), arb_midref(y), prec, ARF_RND_DOWN);
-}
-
-static void
-arb_approx_addmul(arb_t z, const arb_t x, const arb_t y, slong prec)
-{
-    arf_addmul(arb_midref(z),
-               arb_midref(x), arb_midref(y), prec, ARF_RND_DOWN);
-}
-
-static void
 arb_approx_div(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
     arf_div(arb_midref(z), arb_midref(x), arb_midref(y), prec, ARB_RND);
@@ -41,7 +21,7 @@ void
 arb_mat_approx_solve_tril_classical(arb_mat_t X,
         const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
 {
-    slong i, j, k, n, m;
+    slong i, j, n, m;
     arb_ptr tmp;
     arb_t s;
 
@@ -49,29 +29,28 @@ arb_mat_approx_solve_tril_classical(arb_mat_t X,
     m = B->c;
 
     arb_init(s);
-    tmp = _arb_vec_init(n);
+    tmp = flint_malloc(sizeof(arb_struct) * n);
 
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-            arb_approx_set(tmp + j, arb_mat_entry(X, j, i));
+            tmp[j] = *arb_mat_entry(X, j, i);
 
         for (j = 0; j < n; j++)
         {
-            arb_zero(s);
-            for (k = 0; k < j; k++)
-                arb_approx_addmul(s, L->rows[j] + k, tmp + k, prec);
-            arb_approx_sub(s, arb_mat_entry(B, j, i), s, prec);
+            arb_approx_dot(s, arb_mat_entry(B, j, i), 1, L->rows[j], 1, tmp, 1, j, prec);
+
             if (!unit)
-                arb_approx_div(s, s, arb_mat_entry(L, j, j), prec);
-            arb_approx_set(tmp + j, s);
+                arb_approx_div(tmp + j, s, arb_mat_entry(L, j, j), prec);
+            else
+                arb_swap(tmp + j, s);
         }
 
         for (j = 0; j < n; j++)
-            arb_approx_set(arb_mat_entry(X, j, i), tmp + j);
+            *arb_mat_entry(X, j, i) = tmp[j];
     }
 
-    _arb_vec_clear(tmp, n);
+    flint_free(tmp);
     arb_clear(s);
 }
 
@@ -107,8 +86,7 @@ arb_mat_approx_solve_tril_recursive(arb_mat_t X,
 
     /* arb_mat_submul(XY, BY, LC, XX); */
     arb_mat_init(T, LC->r, BX->c);
-    arb_mat_mul(T, LC, XX, prec);
-    arb_mat_get_mid(T, T);
+    arb_mat_approx_mul(T, LC, XX, prec);
     arb_mat_sub(XY, BY, T, prec);
     arb_mat_get_mid(XY, XY);
     arb_mat_clear(T);
@@ -128,9 +106,8 @@ void
 arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L,
                                     const arb_mat_t B, int unit, slong prec)
 {
-    if (B->r < 8 || B->c < 8)
+    if (B->r < 40 || B->c < 40)
         arb_mat_approx_solve_tril_classical(X, L, B, unit, prec);
     else
         arb_mat_approx_solve_tril_recursive(X, L, B, unit, prec);
 }
-

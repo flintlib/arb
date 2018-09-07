@@ -351,6 +351,7 @@ int arb_mat_solve_precond(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slo
 int arb_mat_solve_preapprox(arb_mat_t X, const arb_mat_t A,
     const arb_mat_t B, const arb_mat_t R, const arb_mat_t T, slong prec);
 
+void arb_mat_approx_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec);
 void arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec);
 void arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec);
 int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec);
