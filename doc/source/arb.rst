@@ -748,7 +748,7 @@ Arithmetic
     Sets `z = z - x \cdot y`, rounded to prec bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
-.. function:: void arb_inv(arb_t y, const arb_t x, slong prec)
+.. function:: void arb_inv(arb_t z, const arb_t x, slong prec)
 
     Sets *z* to `1 / x`.
 

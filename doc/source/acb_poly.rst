@@ -224,7 +224,7 @@ Conversions
     Sets *poly* to the given real part *re* plus the imaginary part *im*,
     both rounded to *prec* bits.
 
-.. function:: void acb_poly_set_acb(acb_poly_t poly, slong src)
+.. function:: void acb_poly_set_acb(acb_poly_t poly, const acb_t src)
 
 .. function:: void acb_poly_set_si(acb_poly_t poly, slong src)
 
