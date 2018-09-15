@@ -128,7 +128,7 @@ arb_mat_approx_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec
                 arb_mat_mul(C, A, BM, prec);
                 arb_mat_clear(BM);
             }
-            else if (arb_mat_is_exact(A))
+            else if (arb_mat_is_exact(B))
             {
                 arb_mat_init(AM, arb_mat_nrows(A), arb_mat_ncols(A));
                 arb_mat_get_mid(AM, A);
