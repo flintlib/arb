@@ -801,15 +801,6 @@ _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
 }
 
 ARB_INLINE void
-_arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, slong len2, slong prec)
-{
-    slong i;
-    arb_zero(res);
-    for (i = 0; i < len2; i++)
-        arb_addmul(res, vec1 + i, vec2 + i, prec);
-}
-
-ARB_INLINE void
 _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len)
 {
     if (len < 1)

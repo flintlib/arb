@@ -1756,10 +1756,6 @@ Vector functions
 
    Performs the respective scalar operation elementwise.
 
-.. function:: void _arb_vec_dot(arb_t res, arb_srcptr vec1, arb_srcptr vec2, slong len2, slong prec)
-
-    Sets *res* to the dot product of *vec1* and *vec2*.
-
 .. function:: void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len, slong prec)
 
     Sets *bound* to an upper bound for the entries in *vec*.
