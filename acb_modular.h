@@ -189,25 +189,7 @@ void acb_modular_elliptic_e(acb_t res, const acb_t m, slong prec);
 void acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D);
 
 /* this is a performance hack until the main arb/acb functions improve */
-static __inline__ void
-acb_mul_approx(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, slong wprec, slong prec)
-{
-    if (prec <= 1024)
-    {
-        acb_mul(z, x, y, wprec);
-    }
-    else if (x == y)
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_mul(z, tmp1, tmp1, wprec);
-    }
-    else
-    {
-        acb_set_round(tmp1, x, wprec);
-        acb_set_round(tmp2, y, wprec);
-        acb_mul(z, tmp1, tmp2, wprec);
-    }
-}
+void _acb_modular_mul(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, slong wprec, slong prec);
 
 #ifdef __cplusplus
 }

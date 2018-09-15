@@ -136,7 +136,7 @@ acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
         {
             log2term_approx = k * log2q_approx;
             term_prec = FLINT_MIN(FLINT_MAX(prec + log2term_approx + 16.0, 16.0), prec);
-            acb_mul_approx(qpow + k, tmp1, tmp2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
+            _acb_modular_mul(qpow + k, tmp1, tmp2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
         }
     }
 
@@ -156,7 +156,7 @@ acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
         for (i = e / m2; i < eprev / m2; i++)
         {
             if (!acb_is_zero(theta2))
-                acb_mul_approx(theta2, tmp1, tmp2, theta2, qpow + m2, term_prec, prec);
+                _acb_modular_mul(theta2, tmp1, tmp2, theta2, qpow + m2, term_prec, prec);
         }
 
         acb_add(theta2, theta2, qpow + (e % m2), prec);
@@ -181,10 +181,10 @@ acb_modular_theta_const_sum_rs(acb_t theta2, acb_t theta3, acb_t theta4,
         for (i = e / m3; i < eprev / m3; i++)
         {
             if (!acb_is_zero(theta3))
-                acb_mul_approx(theta3, tmp1, tmp2, theta3, qpow + m3, term_prec, prec);
+                _acb_modular_mul(theta3, tmp1, tmp2, theta3, qpow + m3, term_prec, prec);
 
             if (!acb_is_zero(theta4))
-                acb_mul_approx(theta4, tmp1, tmp2, theta4, qpow + m3, term_prec, prec);
+                _acb_modular_mul(theta4, tmp1, tmp2, theta4, qpow + m3, term_prec, prec);
         }
 
         if (k == 0)

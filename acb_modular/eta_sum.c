@@ -40,6 +40,26 @@ slong acb_modular_rs_optimal_m(const int * best_ms, const int * num_residues, sl
 #define PENTAGONAL(N) ((((N)+2)/2) * ((3*(N)+5)/2)/2)
 
 void
+_acb_modular_mul(acb_t z, acb_t tmp1, acb_t tmp2, const acb_t x, const acb_t y, slong wprec, slong prec)
+{
+    if (prec <= 1024)
+    {
+        acb_mul(z, x, y, wprec);
+    }
+    else if (x == y)
+    {
+        acb_set_round(tmp1, x, wprec);
+        acb_mul(z, tmp1, tmp1, wprec);
+    }
+    else
+    {
+        acb_set_round(tmp1, x, wprec);
+        acb_set_round(tmp2, y, wprec);
+        acb_mul(z, tmp1, tmp2, wprec);
+    }
+}
+
+void
 _acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, slong N, slong prec)
 {
     slong e, e1, e2, k, k1, k2, num, term_prec;
@@ -103,12 +123,12 @@ _acb_modular_eta_sum_basecase(acb_t eta, const acb_t q, double log2q_approx, slo
 
             if (e == e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k1, qpow + k2, term_prec, prec);
+                _acb_modular_mul(qpow + k, tmp1, tmp2, qpow + k1, qpow + k2, term_prec, prec);
             }
             else if (e == 2 * e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k1, qpow + k1, term_prec, prec);
-                acb_mul_approx(qpow + k, tmp1, tmp2, qpow + k, qpow + k2, term_prec, prec);
+                _acb_modular_mul(qpow + k, tmp1, tmp2, qpow + k1, qpow + k1, term_prec, prec);
+                _acb_modular_mul(qpow + k, tmp1, tmp2, qpow + k, qpow + k2, term_prec, prec);
             }
             else
             {
@@ -173,7 +193,7 @@ _acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, slong N, 
         {
             log2term_approx = k * log2q_approx;
             term_prec = FLINT_MIN(FLINT_MAX(prec + log2term_approx + 16.0, 16.0), prec);
-            acb_mul_approx(qpow + k, tmp1, tmp2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
+            _acb_modular_mul(qpow + k, tmp1, tmp2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
         }
     }
 
@@ -193,7 +213,7 @@ _acb_modular_eta_sum_rs(acb_t eta, const acb_t q, double log2q_approx, slong N, 
         for (i = e / m; i < eprev / m; i++)
         {
             if (!acb_is_zero(eta))
-                acb_mul_approx(eta, tmp1, tmp2, eta, qpow + m, term_prec, prec);
+                _acb_modular_mul(eta, tmp1, tmp2, eta, qpow + m, term_prec, prec);
         }
 
         if (k % 4 <= 1)

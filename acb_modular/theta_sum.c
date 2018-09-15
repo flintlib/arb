@@ -227,14 +227,14 @@ acb_modular_theta_sum(acb_ptr theta1,
 
             if (e == e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2,
+                _acb_modular_mul(qpow + k, tmp1, tmp2,
                     qpow + k1, qpow + k2, term_prec, prec);
             }
             else if (e == 2 * e1 + e2)
             {
-                acb_mul_approx(qpow + k, tmp1, tmp2,
+                _acb_modular_mul(qpow + k, tmp1, tmp2,
                     qpow + k1, qpow + k1, term_prec, prec);
-                acb_mul_approx(qpow + k, tmp1, tmp2,
+                _acb_modular_mul(qpow + k, tmp1, tmp2,
                     qpow + k, qpow + k2, term_prec, prec);
             }
             else

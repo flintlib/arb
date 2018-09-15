@@ -139,7 +139,7 @@ acb_modular_theta_const_sum_basecase(acb_t theta2, acb_t theta3, acb_t theta4,
         {
             log2term_approx = k * log2q_approx;
             term_prec = FLINT_MIN(FLINT_MAX(prec + log2term_approx + 16.0, 16.0), prec);
-            acb_mul_approx(qpow + k, t1, t2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
+            _acb_modular_mul(qpow + k, t1, t2, qpow + tab[k], qpow + k - tab[k], term_prec, prec);
         }
     }
 
