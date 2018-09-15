@@ -83,7 +83,7 @@ _arb_poly_get_scale(fmpz_t scale, arb_srcptr x, slong xlen,
 #define DOUBLE_BLOCK_SHIFT (DOUBLE_BLOCK_MAX_HEIGHT / 2)
 
 
-static __inline__ void
+static void
 _mag_vec_get_fmpz_2exp_blocks(fmpz * coeffs,
     double * dblcoeffs, fmpz * exps, slong * blocks, const fmpz_t scale,
     arb_srcptr x, mag_srcptr xm, slong len)
@@ -213,7 +213,7 @@ _mag_vec_get_fmpz_2exp_blocks(fmpz * coeffs,
     fmpz_clear(block_bot);
 }
 
-static __inline__ void
+static void
 _arb_vec_get_fmpz_2exp_blocks(fmpz * coeffs, fmpz * exps,
     slong * blocks, const fmpz_t scale, arb_srcptr x, slong len, slong prec)
 {
@@ -323,7 +323,7 @@ _arb_vec_get_fmpz_2exp_blocks(fmpz * coeffs, fmpz * exps,
     fmpz_clear(block_bot);
 }
 
-static __inline__ void
+static void
 _arb_poly_addmullow_rad(arb_ptr z, fmpz * zz,
     const fmpz * xz, const double * xdbl, const fmpz * xexps,
     const slong * xblocks, slong xlen,
@@ -397,7 +397,7 @@ _arb_poly_addmullow_rad(arb_ptr z, fmpz * zz,
     mag_clear(t);
 }
 
-static __inline__ void
+static void
 _arb_poly_addmullow_block(arb_ptr z, fmpz * zz,
     const fmpz * xz, const fmpz * xexps, const slong * xblocks, slong xlen,
     const fmpz * yz, const fmpz * yexps, const slong * yblocks, slong ylen,
