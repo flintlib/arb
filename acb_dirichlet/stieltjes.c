@@ -316,6 +316,9 @@ stieltjes_mag(double n)
     double pi = 3.141592653589793;
     int i;
 
+    if (n <= 1.0)
+        return 0.0;
+
     va = 1e-6;
     vb = 0.5 * pi - 1e-6;
 
