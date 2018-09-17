@@ -319,22 +319,7 @@ mag_inv_lower(mag_t res, const mag_t x)
     mag_div_lower(res, t, x);
 }
 
-MAG_INLINE void
-mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
-{
-    if (mag_is_special(x))
-    {
-        mag_set(z, x);
-    }
-    else
-    {
-        if (y >= ADD2_FAST_MIN && y <= ADD2_FAST_MAX)
-            _fmpz_add_fast(MAG_EXPREF(z), MAG_EXPREF(x), y);
-        else
-            fmpz_add_si(MAG_EXPREF(z), MAG_EXPREF(x), y);
-        MAG_MAN(z) = MAG_MAN(x);
-    }
-}
+void mag_mul_2exp_si(mag_t z, const mag_t x, slong y);
 
 MAG_INLINE void
 mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)

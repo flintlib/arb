@@ -9,11 +9,10 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "arb.h"
+#include "mag.h"
 
-/* mag_mul_2exp_si is non-inline, but avoid overhead here */
-static __inline__ void
-_mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
+void
+mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
 {
     if (mag_is_special(x))
     {
@@ -28,11 +27,3 @@ _mag_mul_2exp_si(mag_t z, const mag_t x, slong y)
         MAG_MAN(z) = MAG_MAN(x);
     }
 }
-
-void
-arb_mul_2exp_si(arb_t y, const arb_t x, slong e)
-{
-    arf_mul_2exp_si(arb_midref(y), arb_midref(x), e);
-    _mag_mul_2exp_si(arb_radref(y), arb_radref(x), e);
-}
-
