@@ -74,11 +74,10 @@
     mp_limb_t __t, __u;                                             \
     sub_ddmmss(__t, dl, (mp_limb_t) 0, ml, (mp_limb_t) 0, sl);      \
     sub_ddmmss(__u, dm, (mp_limb_t) 0, mm, (mp_limb_t) 0, sm);      \
-    sub_ddmmss(dh, dm, mh - sh, dm, __u, __t);                      \
+    sub_ddmmss(dh, dm, mh - sh, dm, -__u, -__t);                    \
   } while (0)
 
 #endif
-
 
 void
 _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
