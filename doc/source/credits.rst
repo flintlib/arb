@@ -58,7 +58,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Tommy Hofmann - matrix transpose, comparison, other utility methods, Julia interface
 * Alexander Kobel - documentation and code cleanup patches
 * Hrvoje Abraham - patches for MinGW compatibility
-* Julien Puydt - soname versioning support
+* Julien Puydt - soname versioning support, bug reports, Debian testing
 * Jeroen Demeyer - patch for major bug on PPC64
 * Isuru Fernando - continuous integration setup, support for cmake and MSVC builds
 * François Bissey - build system patches
@@ -68,6 +68,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Vincent Delecroix - various feedback and patches, work on Sage interface
 * D.H.J Polymath - Riemann xi function
 * Joel Dahne - feedback and improvements for Legendre functions
+* Gianfranco Costamagna - bug reports, Debian testing
 
 Funding
 -------------------------------------------------------------------------------

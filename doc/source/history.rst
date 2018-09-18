@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.15.0.pdf
 * http://arblib.org/arb-2.14.0.pdf
 * http://arblib.org/arb-2.13.0.pdf
 * http://arblib.org/arb-2.12.0.pdf
@@ -26,6 +27,30 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2018-09-18 -- version 2.15.0
+-------------------------------------------------------------------------------
+
+* Arithmetic
+
+  * Added arb_dot and acb_dot for efficient evaluation of dot products.
+  * Added arb_approx_dot and acb_approx_dot for efficient evaluation of dot products without error bounds.
+  * Converted loops to arb_dot and acb_dot in the arb_poly and acb_poly methods mullow_classical, inv_series, div_series, exp_series_basecase, sin_cos_series_basecase, sinh_cosh_series_basecase, evaluate_rectangular, evaluate2_rectangular, revert_series_lagrange_fast. Also changed the algorithm cutoffs for mullow, exp_series, sin_cos_series, sinh_cosh_series.
+  * Converted loops to arb_dot and acb_dot in the arb_mat and acb_mat methods mul_classical, mul_threaded, solve_tril, solve_triu, charpoly. Also changed the algorithm cutoffs for mul, solve_tril, solve_triu.
+  * Converted loops to arb_approx_dot and acb_approx_dot in the arb_mat and acb_mat methods approx_solve_tril, approx_solve_triu. Also changed the algorithm cutoffs.
+  * Added arb_mat_approx_mul and acb_mat_approx_mul for matrix multiplication without error bounds.
+
+* Miscellaneous
+
+  * Added arb_hypgeom_airy_zero for computing zeros of Airy functions.
+  * Added arb_hypgeom_dilog wrapper.
+  * Optimized arb_const_pi and arb_const_log2 by using a static table at low precision, giving a small speedup and avoiding common recomputation when starting threads.
+  * Optimized mag_set_ui_2exp_si.
+  * Remove obsolete and unused function _arb_vec_dot.
+  * Converted some inline functions to ordinary functions to reduce library size.
+  * Fixed acb_dirichlet_stieltjes to use the integration algorithm also when a != 1.
+  * Fixed test failure for acb_dirichlet_stieltjes on ARM64 (reported by Gianfranco Costamagna). Special thanks to Julien Puydt for assistance with debugging.
+  * Fixed crash in acb_dft_bluestein with zero length (reported by Gianfranco Costamagna).
 
 2018-07-22 -- version 2.14.0
 -------------------------------------------------------------------------------
