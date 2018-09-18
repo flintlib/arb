@@ -88,15 +88,20 @@ _acb_dft_bluestein_init(acb_dft_bluestein_t t, slong dv, slong n, slong prec)
 {
     acb_ptr z, g;
     slong k, n2;
-    int e = n_clog(2 * n - 1, 2);
+    int e;
+
+    t->n = n;
+    t->dv = dv;
+
+    if (n == 0)
+        return;
+
+    e = n_clog(2 * n - 1, 2);
 
     if (DFT_VERB)
         flint_printf("dft_bluestein: init z[2^%i]\n", e);
 
     acb_dft_rad2_init(t->rad2, e, prec);
-
-    t->n = n;
-    t->dv = dv;
 
     t->z = z = _acb_vec_init(n);
     _acb_vec_bluestein_factors(t->z, n, prec);
@@ -117,6 +122,9 @@ acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, 
 {
     slong n = t->n, np = t->rad2->n, dv = t->dv;
     acb_ptr fp;
+
+    if (n == 0)
+        return;
 
     fp = _acb_vec_init(np);
     _acb_vec_kronecker_mul_step(fp, t->z, v, dv, n, prec);

@@ -262,9 +262,12 @@ acb_dft_bluestein_init(acb_dft_bluestein_t t, slong n, slong prec)
 ACB_DFT_INLINE void
 acb_dft_bluestein_clear(acb_dft_bluestein_t t)
 {
-    _acb_vec_clear(t->z, t->n);
-    _acb_vec_clear(t->g, t->rad2->n);
-    acb_dft_rad2_clear(t->rad2);
+    if (t->n != 0)
+    {
+        _acb_vec_clear(t->z, t->n);
+        _acb_vec_clear(t->g, t->rad2->n);
+        acb_dft_rad2_clear(t->rad2);
+    }
 }
 
 void _acb_dft_crt_init(acb_dft_crt_t crt, slong dv, slong len, slong prec);
