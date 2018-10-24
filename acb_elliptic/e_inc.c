@@ -142,7 +142,7 @@ acb_elliptic_e_inc(acb_t res, const acb_t phi, const acb_t m, int times_pi, slon
         acb_zero(z);
         arf_set_mag(arb_midref(acb_realref(z)), arb_radref(d));
         mag_zero(arb_radref(d));
-        arb_sub(d, d, acb_realref(z), prec);
+        arb_sub(d, d, acb_realref(z), 2 * prec + 100); /* meant to be exact */
         arb_floor(d, d, prec);
 
         /* w = 2 E(m) */
