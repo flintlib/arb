@@ -28,6 +28,11 @@ Old versions of the documentation
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
 
+2018-10-25 -- version 2.15.1
+-------------------------------------------------------------------------------
+
+* Fixed precision issue leading to spurious NaN results in incomplete elliptic integrals
+
 2018-09-18 -- version 2.15.0
 -------------------------------------------------------------------------------
 
