@@ -49,7 +49,58 @@ int arb_mat_is_zero(const arb_mat_t A)
     return 1;
 }
 
-#define MIN_BLOCK_SIZE 8
+/* allow changing this from the test code */
+ARB_DLL slong arb_mat_mul_block_min_block_size = 0;
+
+void
+arb_mat_mid_addmul_block_fallback(arb_mat_t C,
+    const arb_mat_t A, const arb_mat_t B,
+    slong block_start,
+    slong block_end,
+    slong prec)
+{
+    slong M, P, n;
+    slong i, j;
+    arb_ptr tmpA, tmpB;
+
+    M = arb_mat_nrows(A);
+    P = arb_mat_ncols(B);
+
+    n = block_end - block_start;
+
+    tmpA = flint_malloc(sizeof(arb_struct) * (M * n + P * n));
+    tmpB = tmpA + M * n;
+
+    for (i = 0; i < M; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            *arb_midref(tmpA + i * n + j) = *arb_midref(arb_mat_entry(A, i, block_start + j));
+            mag_init(arb_radref(tmpA + i * n + j));
+        }
+    }
+
+    for (i = 0; i < P; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            *arb_midref(tmpB + i * n + j) = *arb_midref(arb_mat_entry(B, block_start + j, i));
+            mag_init(arb_radref(tmpB + i * n + j));
+        }
+    }
+
+    for (i = 0; i < M; i++)
+    {
+        for (j = 0; j < P; j++)
+        {
+            arb_dot(arb_mat_entry(C, i, j),
+                (block_start == 0) ? NULL : arb_mat_entry(C, i, j), 0,
+                tmpA + i * n, 1, tmpB + j * n, 1, n, prec);
+        }
+    }
+
+    flint_free(tmpA);
+}
 
 void
 arb_mat_mid_addmul_block_prescaled(arb_mat_t C,
@@ -61,7 +112,8 @@ arb_mat_mid_addmul_block_prescaled(arb_mat_t C,
     slong prec)
 {
     slong M, P, n;
-    slong i, j, k;
+    slong i, j;
+    slong M0, M1, P0, P1, Mstep, Pstep;
     int inexact;
 
     /* flint_printf("block mul from %wd to %wd\n", block_start, block_end); */
@@ -71,143 +123,100 @@ arb_mat_mid_addmul_block_prescaled(arb_mat_t C,
 
     n = block_end - block_start;
 
-    if (n < MIN_BLOCK_SIZE)
+    /* Create sub-blocks to keep matrices nearly square. Necessary? */
+#if 1
+    Mstep = (M < 2 * n) ? M : n;
+    Pstep = (P < 2 * n) ? P : n;
+#else
+    Mstep = M;
+    Pstep = P;
+#endif
+
+    for (M0 = 0; M0 < M; M0 += Mstep)
     {
-        /* Fall back to naive multiplication of the midpoints. */
-        for (i = 0; i < M; i++)
+        for (P0 = 0; P0 < P; P0 += Pstep)
         {
-            for (j = 0; j < P; j++)
+            fmpz_mat_t AA, BB, CC;
+            arb_t t;
+            fmpz_t e;
+
+            M1 = FLINT_MIN(M0 + Mstep, M);
+            P1 = FLINT_MIN(P0 + Pstep, P);
+
+            fmpz_mat_init(AA, M1 - M0, n);
+            fmpz_mat_init(BB, n, P1 - P0);
+            fmpz_mat_init(CC, M1 - M0, P1 - P0);
+
+            /* Convert to fixed-point matrices. */
+            for (i = M0; i < M1; i++)
             {
-                for (k = 0; k < n; k++)
+                if (A_min[i] == WORD_MIN)  /* only zeros in this row */
+                    continue;
+
+                for (j = 0; j < n; j++)
                 {
-                    arb_ptr Cij = arb_mat_entry(C, i, j);
+                    inexact = arf_get_fmpz_fixed_si(fmpz_mat_entry(AA, i - M0, j),
+                        arb_midref(arb_mat_entry(A, i, block_start + j)), A_min[i]);
 
-                    /* are we writing this Cij for the first time? */
-                    if (block_start + k == 0)
+                    if (inexact)
                     {
-                        inexact = arf_mul(arb_midref(Cij),
-                            arb_midref(arb_mat_entry(A, i, block_start + k)),
-                            arb_midref(arb_mat_entry(B, block_start + k, j)), prec, ARB_RND);
+                        flint_printf("matrix multiplication: bad exponent!\n");
+                        flint_abort();
+                    }
+                }
+            }
 
-                        /* important: must not use unsafe fast mag method here because C might not be demoted */
-                        if (inexact)
-                            arf_mag_set_ulp(arb_radref(Cij), arb_midref(Cij), prec);
-                        else
-                            mag_zero(arb_radref(Cij));
+            for (i = P0; i < P1; i++)
+            {
+                if (B_min[i] == WORD_MIN)  /* only zeros in this column */
+                    continue;
+
+                for (j = 0; j < n; j++)
+                {
+                    inexact = arf_get_fmpz_fixed_si(fmpz_mat_entry(BB, j, i - P0),
+                        arb_midref(arb_mat_entry(B, block_start + j, i)), B_min[i]);
+
+                    if (inexact)
+                    {
+                        flint_printf("matrix multiplication: bad exponent!\n");
+                        flint_abort();
+                    }
+                }
+            }
+
+            /* The main multiplication */
+            fmpz_mat_mul(CC, AA, BB);
+            /* flint_printf("bits %wd %wd %wd\n", fmpz_mat_max_bits(CC),
+                        fmpz_mat_max_bits(AA), fmpz_mat_max_bits(BB)); */
+
+            fmpz_mat_clear(AA);
+            fmpz_mat_clear(BB);
+
+            arb_init(t);
+
+            /* Add to the result matrix */
+            for (i = M0; i < M1; i++)
+            {
+                for (j = P0; j < P1; j++)
+                {
+                    *e = A_min[i] + B_min[j];
+
+                    /* The first time we write this Cij */
+                    if (block_start == 0)
+                    {
+                        arb_set_round_fmpz_2exp(arb_mat_entry(C, i, j),
+                            fmpz_mat_entry(CC, i - M0, j - P0), e, prec);
                     }
                     else
                     {
-                        inexact = arf_addmul(arb_midref(Cij),
-                            arb_midref(arb_mat_entry(A, i, block_start + k)),
-                            arb_midref(arb_mat_entry(B, block_start + k, j)), prec, ARB_RND);
-
-                        /* here the unsafe method is ok */
-                        if (inexact)
-                            arf_mag_fast_add_ulp(arb_radref(Cij), arb_radref(Cij), arb_midref(Cij), prec);
+                        arb_set_round_fmpz_2exp(t, fmpz_mat_entry(CC, i - M0, j - P0), e, prec);
+                        arb_add(arb_mat_entry(C, i, j), arb_mat_entry(C, i, j), t, prec);
                     }
                 }
             }
-        }
-    }
-    else  /* Multiply using fmpz_mat_mul */
-    {
-        slong M0, M1, P0, P1, Mstep, Pstep;
+            arb_clear(t);
 
-        /* Create sub-blocks to keep matrices nearly square. Necessary? */
-#if 1
-        Mstep = (M < 2 * n) ? M : n;
-        Pstep = (P < 2 * n) ? P : n;
-#else
-        Mstep = M;
-        Pstep = P;
-#endif
-
-        for (M0 = 0; M0 < M; M0 += Mstep)
-        {
-            for (P0 = 0; P0 < P; P0 += Pstep)
-            {
-                fmpz_mat_t AA, BB, CC;
-                arb_t t;
-                fmpz_t e;
-
-                M1 = FLINT_MIN(M0 + Mstep, M);
-                P1 = FLINT_MIN(P0 + Pstep, P);
-
-                fmpz_mat_init(AA, M1 - M0, n);
-                fmpz_mat_init(BB, n, P1 - P0);
-                fmpz_mat_init(CC, M1 - M0, P1 - P0);
-
-                /* Convert to fixed-point matrices. */
-                for (i = M0; i < M1; i++)
-                {
-                    if (A_min[i] == WORD_MIN)  /* only zeros in this row */
-                        continue;
-
-                    for (j = 0; j < n; j++)
-                    {
-                        inexact = arf_get_fmpz_fixed_si(fmpz_mat_entry(AA, i - M0, j),
-                            arb_midref(arb_mat_entry(A, i, block_start + j)), A_min[i]);
-
-                        if (inexact)
-                        {
-                            flint_printf("matrix multiplication: bad exponent!\n");
-                            flint_abort();
-                        }
-                    }
-                }
-
-                for (i = P0; i < P1; i++)
-                {
-                    if (B_min[i] == WORD_MIN)  /* only zeros in this column */
-                        continue;
-
-                    for (j = 0; j < n; j++)
-                    {
-                        inexact = arf_get_fmpz_fixed_si(fmpz_mat_entry(BB, j, i - P0),
-                            arb_midref(arb_mat_entry(B, block_start + j, i)), B_min[i]);
-
-                        if (inexact)
-                        {
-                            flint_printf("matrix multiplication: bad exponent!\n");
-                            flint_abort();
-                        }
-                    }
-                }
-
-                /* The main multiplication */
-                fmpz_mat_mul(CC, AA, BB);
-                /* flint_printf("bits %wd %wd %wd\n", fmpz_mat_max_bits(CC),
-                            fmpz_mat_max_bits(AA), fmpz_mat_max_bits(BB)); */
-
-                fmpz_mat_clear(AA);
-                fmpz_mat_clear(BB);
-
-                arb_init(t);
-
-                /* Add to the result matrix */
-                for (i = M0; i < M1; i++)
-                {
-                    for (j = P0; j < P1; j++)
-                    {
-                        *e = A_min[i] + B_min[j];
-
-                        /* The first time we write this Cij */
-                        if (block_start == 0)
-                        {
-                            arb_set_round_fmpz_2exp(arb_mat_entry(C, i, j),
-                                fmpz_mat_entry(CC, i - M0, j - P0), e, prec);
-                        }
-                        else
-                        {
-                            arb_set_round_fmpz_2exp(t, fmpz_mat_entry(CC, i - M0, j - P0), e, prec);
-                            arb_add(arb_mat_entry(C, i, j), arb_mat_entry(C, i, j), t, prec);
-                        }
-                    }
-                }
-                arb_clear(t);
-
-                fmpz_mat_clear(CC);
-            }
+            fmpz_mat_clear(CC);
         }
     }
 }
@@ -222,6 +231,7 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
     slong *A_bot, *B_bot;
     slong block_start, block_end, i, j, bot, top, max_height;
     slong b, A_max_bits, B_max_bits;
+    slong min_block_size;
     arb_srcptr t;
     int A_exact, B_exact;
     double A_density, B_density;
@@ -349,6 +359,11 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         return;
     }
 
+    if (arb_mat_mul_block_min_block_size != 0)
+        min_block_size = arb_mat_mul_block_min_block_size;
+    else
+        min_block_size = 30;
+
     block_start = 0;
     while (block_start < N)
     {
@@ -445,8 +460,18 @@ arb_mat_mul_block(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
         }
 
     blocks_built:
-        arb_mat_mid_addmul_block_prescaled(C, A, B,
-            block_start, block_end, A_min, B_min, prec);
+        if (block_end - block_start < min_block_size)
+        {
+            block_end = FLINT_MIN(N, block_start + min_block_size);
+
+            arb_mat_mid_addmul_block_fallback(C, A, B,
+                block_start, block_end, prec);
+        }
+        else
+        {
+            arb_mat_mid_addmul_block_prescaled(C, A, B,
+                block_start, block_end, A_min, B_min, prec);
+        }
 
         block_start = block_end;
     }

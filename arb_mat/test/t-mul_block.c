@@ -11,6 +11,8 @@
 
 #include "arb_mat.h"
 
+ARB_DLL extern slong arb_mat_mul_block_min_block_size;
+
 int main()
 {
     slong iter;
@@ -32,6 +34,8 @@ int main()
         rbits1 = 2 + n_randint(state, 200);
         rbits2 = 2 + n_randint(state, 200);
         rbits3 = 2 + n_randint(state, 200);
+
+        arb_mat_mul_block_min_block_size = n_randint(state, 10);
 
         m = n_randint(state, 10);
         n = n_randint(state, 10);
@@ -114,6 +118,8 @@ int main()
         m = n_randint(state, 40);
         n = n_randint(state, 40);
         p = n_randint(state, 40);
+
+        arb_mat_mul_block_min_block_size = n_randint(state, 10);
 
         if (n_randint(state, 4) == 0)
         {
