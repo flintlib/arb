@@ -402,6 +402,10 @@ void acb_mat_det_lu(acb_t det, const acb_mat_t A, slong prec);
 void acb_mat_det_precond(acb_t det, const acb_mat_t A, slong prec);
 void acb_mat_det(acb_t det, const acb_mat_t A, slong prec);
 
+/* Eigenvalues and eigenvectors */
+
+int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec);
+
 /* Special functions */
 
 void acb_mat_exp_taylor_sum(acb_mat_t S, const acb_mat_t A, slong N, slong prec);

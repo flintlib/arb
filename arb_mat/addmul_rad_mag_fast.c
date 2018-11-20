@@ -21,10 +21,17 @@
    slack for accumulated sums. */
 #define DOUBLE_MAX_OFFSET 900
 
+static __inline__ double dot8(const double * A, const double * B)
+{
+    return ((A[0] * B[0] + A[1] * B[1]) + (A[2] * B[2] + A[3] * B[3])) +
+           ((A[4] * B[4] + A[5] * B[5]) + (A[6] * B[6] + A[7] * B[7]));
+}
+
 /* Upper bound of matrix product, assuming nonnegative entries and
    no overflow/underflow. B is pre-transposed. Straightforward blocked
    implementation; could use BLAS, but this matrix product is rarely going
    to be the bottleneck. */
+
 static void
 _d_mat_addmul(double * C, const double * A, const double * B, slong ar, slong ac, slong bc)
 {
@@ -43,9 +50,24 @@ _d_mat_addmul(double * C, const double * A, const double * B, slong ar, slong ac
                 {
                     for (j = jj; j < FLINT_MIN(jj + BLOCK_SIZE, bc); j++)
                     {
-                        t = 0.0;
-                        for (k = kk; k < FLINT_MIN(kk + BLOCK_SIZE, ac); k++)
-                            t += A[i * ac + k] * B[j * ac + k];
+                        if (BLOCK_SIZE == 32 && kk + BLOCK_SIZE <= ac)
+                        {
+                            double t0, t1, t2, t3;
+
+                            t0 = dot8(A + i * ac + kk + 0, B + j * ac + kk + 0);
+                            t1 = dot8(A + i * ac + kk + 8, B + j * ac + kk + 8);
+                            t2 = dot8(A + i * ac + kk + 16, B + j * ac + kk + 16);
+                            t3 = dot8(A + i * ac + kk + 24, B + j * ac + kk + 24);
+
+                            t = (t0 + t1) + (t2 + t3);
+                        }
+                        else
+                        {
+                            t = 0.0;
+
+                            for (k = kk; k < FLINT_MIN(kk + BLOCK_SIZE, ac); k++)
+                                t += A[i * ac + k] * B[j * ac + k];
+                        }
 
                         C[i * bc + j] += t;
                     }

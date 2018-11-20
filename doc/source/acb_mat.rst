@@ -484,14 +484,20 @@ Component and error operations
 
     Adds *err* in-place to the radii of the entries of *mat*.
 
-Approximate solving
+Approximate linear algebra
 -------------------------------------------------------------------------------
+
+Matrix multiplication
+.....................
 
 .. function:: void acb_mat_approx_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
 
     Approximate matrix multiplication. The input radii are ignored and
     the output matrix is set to an approximate floating-point result.
     The radii in the output matrix will *not* necessarily be zeroed.
+
+Solving
+.....................
 
 .. function:: void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
 
@@ -515,3 +521,30 @@ Approximate solving
     for certified solutions. Some users may also find these methods useful
     for doing ordinary numerical linear algebra in applications where
     error bounds are not needed.
+
+Eigenvalues and eigenvectors
+............................
+
+.. function:: int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec)
+
+    Computes floating-point approximations of the eigenvalues of the
+    given *n* by *n* matrix *A*. Approximations of all the *n*
+    eigenvalues (counting repetitions) of *A* are
+    written to the vector *E*, in no particular order.
+    Uses the implicitly shifted QR algorithm with reduction
+    to Hessenberg form.
+
+    Not implemented: if *L* and/or *R* are non-*NULL*, approximations of the left
+    eigenvectors are written to the rows of *L* and approximations
+    of the right eigenvectors are written to the columns of *R*,
+    respectively.
+
+    The parameters *tol* and *maxiter* can be used to control the
+    target numerical error and the maximum allowed number of iterations
+    allowed before giving up. Passing *NULL* and 0 respectively results
+    in default values being used.
+
+    No guarantees are made about the accuracy of the output. A nonzero
+    return value indicates that the QR iteration converged numerically,
+    but this is only a heuristic termination test and does not imply
+    any statement whatsoever about error bounds.
