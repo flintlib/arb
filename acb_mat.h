@@ -94,6 +94,8 @@ void acb_mat_set_round_arb_mat(acb_mat_t dest, const arb_mat_t src, slong prec);
 
 void acb_mat_randtest(acb_mat_t mat, flint_rand_t state, slong prec, slong mag_bits);
 
+void acb_mat_randtest_eig(acb_mat_t A, flint_rand_t state, acb_srcptr E, slong prec);
+
 /* I/O */
 
 void acb_mat_fprintd(FILE * file, const acb_mat_t mat, slong digits);
@@ -405,6 +407,8 @@ void acb_mat_det(acb_t det, const acb_mat_t A, slong prec);
 /* Eigenvalues and eigenvectors */
 
 int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec);
+
+void acb_mat_eig_global_enclosure(mag_t eps, const acb_mat_t A, acb_srcptr E, const acb_mat_t R, slong prec);
 
 /* Special functions */
 

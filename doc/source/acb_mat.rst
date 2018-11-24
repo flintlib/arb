@@ -104,6 +104,13 @@ Random generation
     Sets *mat* to a random matrix with up to *prec* bits of precision
     and with exponents of width up to *mag_bits*.
 
+.. function:: void acb_mat_randtest_eig(acb_mat_t mat, flint_rand_t state, acb_srcptr E, slong prec)
+
+    Sets *mat* to a random matrix with the prescribed eigenvalues
+    supplied as the vector *E*. The output matrix is required to be
+    square. We generate a random unitary matrix via a matrix
+    exponential, and then evaluate an inverse Schur decomposition.
+
 Input and output
 -------------------------------------------------------------------------------
 
@@ -545,3 +552,46 @@ Eigenvalues and eigenvectors
     return value indicates that the QR iteration converged numerically,
     but this is only a heuristic termination test and does not imply
     any statement whatsoever about error bounds.
+
+.. function:: void acb_mat_eig_global_enclosure(mag_t eps, const acb_mat_t A, acb_srcptr E, const acb_mat_t R, slong prec)
+
+    Given an *n* by *n* matrix *A*, a length-*n* vector *E*
+    containing approximations of the eigenvalues of *A*,
+    and an *n* by *n* matrix *R* containing approximations of
+    the corresponding eigenvectors, computes a rigorous bound
+    `\varepsilon` such that every eigenvalue `\lambda` of *A* satisfies
+    `|\lambda - \hat \lambda_k| \le \varepsilon`
+    for some `\hat \lambda_k` in *E*.
+
+    In other words, the union of the balls
+    `B_k = \{z : |z - \hat \lambda_k| \le \varepsilon\}` is guaranteed to
+    be an enclosure of all eigenvalues of *A*.
+
+    Note that there is no guarantee that each ball `B_k` can be
+    identified with a single eigenvalue: it is possible that some
+    balls contain several eigenvalues while other balls contain
+    no eigenvalues. In other words, this method is not powerful enough
+    to compute isolating balls for the individual eigenvalues (or even
+    for clusters of eigenvalues other than the whole spectrum).
+    Nevertheless, in practice the balls `B_k` will represent
+    eigenvalues one-to-one with high probability if the
+    given approximations are good.
+
+    The output can be used to certify
+    that all eigenvalues of *A* lie in some region of the complex
+    plane (such as a specific half-plane, strip, disk, or annulus)
+    without the need to certify the individual eigenvalues.
+    The output is easily converted into lower or upper bounds
+    for the absolute values or real or complex parts
+    of the spectrum, and with high probability these bounds will be tight.
+    Using :func:`acb_add_error_mag` and :func:`acb_union`, the output
+    can also be converted to a single :type:`acb_t` enclosing
+    the whole spectrum of *A* in a rectangle, but note that to
+    test whether a condition holds for all eigenvalues of *A*, it
+    is typically better to iterate over the individual balls `B_k`.
+
+    This function implements the fast algorithm in Theorem 1 in
+    [Miy2010]_ which extends the Bauer-Fike theorem. Approximations
+    can, for instance, be computed using :func:`acb_mat_approx_eig_qr`.
+    No assumptions are made about the structure of *A* or the
+    quality of the given approximations.

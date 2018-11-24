@@ -225,6 +225,8 @@ Bibliography
 
 .. [Kri2013] \A. Krishnamoorthy and D. Menon, "Matrix Inversion Using Cholesky Decomposition" Proc. of the International Conference on Signal Processing Algorithms, Architectures, Arrangements, and Applications (SPA-2013), pp. 70-72, 2013.
 
+.. [Miy2010] \S. Miyajima, "Fast enclosure for all eigenvalues in generalized eigenvalue problems", Journal of Computational and Applied Mathematics, 233 (2010), 2994-3004, https://dx.doi.org/10.1016/j.cam.2009.11.048
+
 .. [MPFR2012] The MPFR team, "MPFR Algorithms" (2012), http://www.mpfr.org/algo.html
 
 .. [NIST2012] National Institute of Standards and Technology, *Digital Library of Mathematical Functions* (2012), http://dlmf.nist.gov/
@@ -246,4 +248,3 @@ Bibliography
 .. [Tak2000] \D. Takahashi, "A fast algorithm for computing large Fibonacci numbers", Information Processing Letters 75 (2000) 243-246, http://www.ii.uni.wroc.pl/~lorys/IPL/article75-6-1.pdf
 
 .. [Tre2008] \L. N. Trefethen, "Is Gauss Quadrature Better than Clenshaw-Curtis?", SIAM Review, 50:1 (2008), 67-87, https://doi.org/10.1137/060659831
-
