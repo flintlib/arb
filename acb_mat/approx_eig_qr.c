@@ -619,6 +619,7 @@ acb_mat_approx_eig_triu_r(acb_mat_t ER, const acb_mat_t A, slong prec)
                 }
 
                 mag_one(rmax);
+                arb_clear(b);
             }
         }
 
@@ -722,6 +723,7 @@ acb_mat_approx_eig_triu_l(acb_mat_t EL, const acb_mat_t A, slong prec)
                 }
 
                 mag_one(rmax);
+                arb_clear(b);
             }
         }
 
