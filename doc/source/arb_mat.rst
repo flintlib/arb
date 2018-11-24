@@ -5,12 +5,23 @@
 
 An :type:`arb_mat_t` represents a dense matrix over the real numbers,
 implemented as an array of entries of type :type:`arb_struct`.
-
 The dimension (number of rows and columns) of a matrix is fixed at
 initialization, and the user must ensure that inputs and outputs to
 an operation have compatible dimensions. The number of rows or columns
 in a matrix can be zero.
 
+.. note::
+
+    Methods prefixed with *arb_mat_approx* treat all input entries
+    as floating-point numbers (ignoring the radii of the balls) and
+    compute floating-point output (balls with zero radius) representing
+    approximate solutions *without error bounds*.
+    All other methods compute rigorous error bounds.
+    The *approx* methods are typically useful for computing initial
+    values or preconditioners for rigorous solvers.
+    Some users may also find *approx* methods useful
+    for doing ordinary numerical linear algebra in applications where
+    error bounds are not needed.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -294,6 +305,12 @@ Arithmetic
     This function assumes that all exponents are small and is unsafe
     for general use.
 
+.. function:: void arb_mat_approx_mul(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec)
+
+    Approximate matrix multiplication. The input radii are ignored and
+    the output matrix is set to an approximate floating-point result.
+    The radii in the output matrix will *not* necessarily be zeroed.
+
 Scalar arithmetic
 -------------------------------------------------------------------------------
 
@@ -467,6 +484,29 @@ Gaussian elimination and solving
     The default version automatically selects between the *lu* and *precond*
     versions and additionally handles small or triangular matrices
     by direct formulas.
+
+.. function:: void arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
+
+.. function:: void arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
+
+.. function:: int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
+
+.. function:: void arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+.. function:: int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
+
+    These methods perform approximate solving *without any error control*.
+    The radii in the input matrices are ignored, the computations are done
+    numerically with floating-point arithmetic (using ordinary
+    Gaussian elimination and triangular solving, accelerated through
+    the use of block recursive strategies for large matrices), and the
+    output matrices are set to the approximate floating-point results with
+    zeroed error bounds.
+
+    Approximate solutions are useful for computing preconditioning matrices
+    for certified solutions. Some users may also find these methods useful
+    for doing ordinary numerical linear algebra in applications where
+    error bounds are not needed.
 
 Cholesky decomposition and solving
 -------------------------------------------------------------------------------
@@ -659,35 +699,3 @@ Component and error operations
 .. function:: void arb_mat_add_error_mag(arb_mat_t mat, const mag_t err)
 
     Adds *err* in-place to the radii of the entries of *mat*.
-
-Approximate solving
--------------------------------------------------------------------------------
-
-.. function:: void arb_mat_approx_mul(arb_mat_t res, const arb_mat_t mat1, const arb_mat_t mat2, slong prec)
-
-    Approximate matrix multiplication. The input radii are ignored and
-    the output matrix is set to an approximate floating-point result.
-    The radii in the output matrix will *not* necessarily be zeroed.
-
-.. function:: void arb_mat_approx_solve_triu(arb_mat_t X, const arb_mat_t U, const arb_mat_t B, int unit, slong prec)
-
-.. function:: void arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B, int unit, slong prec)
-
-.. function:: int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec)
-
-.. function:: void arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm, const arb_mat_t A, const arb_mat_t B, slong prec)
-
-.. function:: int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
-
-    These methods perform approximate solving *without any error control*.
-    The radii in the input matrices are ignored, the computations are done
-    numerically with floating-point arithmetic (using ordinary
-    Gaussian elimination and triangular solving, accelerated through
-    the use of block recursive strategies for large matrices), and the
-    output matrices are set to the approximate floating-point results with
-    zeroed error bounds.
-
-    Approximate solutions are useful for computing preconditioning matrices
-    for certified solutions. Some users may also find these methods useful
-    for doing ordinary numerical linear algebra in applications where
-    error bounds are not needed.

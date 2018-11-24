@@ -22,6 +22,17 @@ Todo items present in the original code:
 #include "acb_mat.h"
 
 static void
+acb_approx_mag(mag_t res, const acb_t x)
+{
+    mag_t t;
+    mag_init(t);
+    arf_get_mag(res, arb_midref(acb_realref(x)));
+    arf_get_mag(t, arb_midref(acb_imagref(x)));
+    mag_hypot(res, res, t);
+    mag_clear(t);
+}
+
+static void
 acb_get_mid(acb_t res, const acb_t x)
 {
     arb_get_mid_arb(acb_realref(res), acb_realref(x));
@@ -62,6 +73,31 @@ acb_approx_div_arb(acb_t res, const acb_t x, const arb_t y, slong prec)
 {
     arf_div(arb_midref(acb_realref(res)), arb_midref(acb_realref(x)), arb_midref(y), prec, ARF_RND_DOWN);
     arf_div(arb_midref(acb_imagref(res)), arb_midref(acb_imagref(x)), arb_midref(y), prec, ARF_RND_DOWN);
+}
+
+static void
+acb_approx_inv(acb_t z, const acb_t x, slong prec)
+{
+    arf_set(arb_midref(acb_realref(z)), arb_midref(acb_realref(x)));
+    arf_set(arb_midref(acb_imagref(z)), arb_midref(acb_imagref(x)));
+
+    mag_zero(arb_radref(acb_realref(z)));
+    mag_zero(arb_radref(acb_imagref(z)));
+
+    acb_inv(z, z, prec);
+
+    mag_zero(arb_radref(acb_realref(z)));
+    mag_zero(arb_radref(acb_imagref(z)));
+}
+
+static void
+acb_approx_div(acb_t z, const acb_t x, const acb_t y, slong prec)
+{
+    acb_t t;
+    acb_init(t);
+    acb_approx_inv(t, y, prec);
+    acb_approx_mul(z, x, t, prec);
+    acb_clear(t);
 }
 
 void
@@ -316,7 +352,7 @@ acb_mat_approx_hessenberg_reduce_0(acb_mat_t A, acb_ptr T, slong prec)
 
         arf_ui_div(scale_inv, 1, scale, prec, ARF_RND_DOWN);
 
-        if (arf_is_zero(scale_inv))
+        if (arf_is_zero(scale))
         {
             acb_zero(T + i);
             acb_zero(acb_mat_entry(A, i, i - 1));
@@ -513,6 +549,207 @@ acb_mat_approx_hessenberg_reduce_1(acb_mat_t A, acb_srcptr T, slong prec)
 
     acb_clear(G);
     acb_clear(t);
+}
+
+/* Right eigenvectors of a triu matrix. No aliasing. */
+void
+acb_mat_approx_eig_triu_r(acb_mat_t ER, const acb_mat_t A, slong prec)
+{
+    slong i, j, k, n;
+    mag_t tm, smin, unfl, simin, smlnum, rmax;
+    acb_t r, s, t;
+
+    n = acb_mat_nrows(A);
+
+    acb_mat_one(ER);
+
+    acb_init(r);
+    acb_init(s);
+    acb_init(t);
+    mag_init(tm);
+    mag_init(smin);
+    mag_init(smlnum);
+    mag_init(unfl);
+    mag_init(simin);
+    mag_init(rmax);
+
+    mag_set_ui_2exp_si(unfl, 1, -30 * prec);
+    mag_mul_ui(smlnum, unfl, n);
+    mag_mul_2exp_si(smlnum, smlnum, prec);
+    mag_set_ui_2exp_si(simin, 1, prec / 2);
+    mag_one(rmax);
+
+    for (i = 1; i < n; i++)
+    {
+        acb_set(s, acb_mat_entry(A, i, i));
+
+        /* smin = max(eps * abs(s), smlnum) */
+        acb_approx_mag(smin, s);
+        mag_mul_2exp_si(smin, smin, -prec);
+        mag_max(smin, smin, smlnum);
+
+        for (j = i - 1; j >= 0; j--)
+        {
+            acb_approx_dot(r, NULL, 0, A->rows[j] + j + 1, 1, ER->rows[i] + j + 1, 1, i - j, prec);
+            acb_approx_sub(t, acb_mat_entry(A, j, j), s, prec);
+
+            /* if abs(t) < smin: t = smin */
+            acb_approx_mag(tm, t);
+            if (mag_cmp(tm, smin) < 0)
+            {
+                acb_zero(t);
+                arf_set_mag(arb_midref(acb_realref(t)), smin);
+            }
+
+            acb_approx_div(acb_mat_entry(ER, i, j), r, t, prec);
+            acb_neg(acb_mat_entry(ER, i, j), acb_mat_entry(ER, i, j));
+
+            acb_approx_mag(tm, r);
+            mag_max(rmax, rmax, tm);
+            if (mag_cmp(rmax, simin) > 0)
+            {
+                arb_t b;
+                arb_init(b);
+                arf_set_mag(arb_midref(b), rmax);
+
+                for (k = j; k < i + 1; k++)
+                {
+                    acb_approx_div_arb(acb_mat_entry(ER, i, k),
+                        acb_mat_entry(ER, i, k), b, prec);
+                }
+
+                mag_one(rmax);
+            }
+        }
+
+        if (mag_cmp_2exp_si(rmax, 0) != 0)
+        {
+            arb_t b;
+            arb_init(b);
+            arf_set_mag(arb_midref(b), rmax);
+
+            for (k = 0; k < i + 1; k++)
+            {
+                acb_approx_div_arb(acb_mat_entry(ER, i, k),
+                    acb_mat_entry(ER, i, k), b, prec);
+            }
+
+            arb_clear(b);
+        }
+    }
+
+    acb_mat_transpose(ER, ER);
+
+    acb_clear(r);
+    acb_clear(s);
+    acb_clear(t);
+    mag_clear(tm);
+    mag_clear(smin);
+    mag_clear(smlnum);
+    mag_clear(unfl);
+    mag_clear(simin);
+    mag_clear(rmax);
+}
+
+/* Left eigenvectors of a triu matrix. No aliasing. */
+void
+acb_mat_approx_eig_triu_l(acb_mat_t EL, const acb_mat_t A, slong prec)
+{
+    slong i, j, k, n;
+    mag_t tm, smin, unfl, simin, smlnum, rmax;
+    acb_t r, s, t;
+    acb_mat_t AT;
+
+    n = acb_mat_nrows(A);
+    acb_mat_init(AT, n, n);
+
+    acb_mat_one(EL);
+    acb_mat_transpose(AT, A);
+
+    acb_init(r);
+    acb_init(s);
+    acb_init(t);
+    mag_init(tm);
+    mag_init(smin);
+    mag_init(smlnum);
+    mag_init(unfl);
+    mag_init(simin);
+    mag_init(rmax);
+
+    mag_set_ui_2exp_si(unfl, 1, -30 * prec);
+    mag_mul_ui(smlnum, unfl, n);
+    mag_mul_2exp_si(smlnum, smlnum, prec);
+    mag_set_ui_2exp_si(simin, 1, prec / 2);
+    mag_one(rmax);
+
+    for (i = 0; i < n - 1; i++)
+    {
+        acb_set(s, acb_mat_entry(AT, i, i));
+
+        /* smin = max(eps * abs(s), smlnum) */
+        acb_approx_mag(smin, s);
+        mag_mul_2exp_si(smin, smin, -prec);
+        mag_max(smin, smin, smlnum);
+
+        for (j = i + 1; j < n; j++)
+        {
+            acb_approx_dot(r, NULL, 0, EL->rows[i] + i, 1, AT->rows[j] + i, 1, j - i, prec);
+            acb_approx_sub(t, acb_mat_entry(AT, j, j), s, prec);
+
+            /* if abs(t) < smin: t = smin */
+            acb_approx_mag(tm, t);
+            if (mag_cmp(tm, smin) < 0)
+            {
+                acb_zero(t);
+                arf_set_mag(arb_midref(acb_realref(t)), smin);
+            }
+
+            acb_approx_div(acb_mat_entry(EL, i, j), r, t, prec);
+            acb_neg(acb_mat_entry(EL, i, j), acb_mat_entry(EL, i, j));
+
+            acb_approx_mag(tm, r);
+            mag_max(rmax, rmax, tm);
+            if (mag_cmp(rmax, simin) > 0)
+            {
+                arb_t b;
+                arb_init(b);
+                arf_set_mag(arb_midref(b), rmax);
+
+                for (k = i; k < j + 1; k++)
+                {
+                    acb_approx_div_arb(acb_mat_entry(EL, i, k),
+                        acb_mat_entry(EL, i, k), b, prec);
+                }
+
+                mag_one(rmax);
+            }
+        }
+
+        if (mag_cmp_2exp_si(rmax, 0) != 0)
+        {
+            arb_t b;
+            arb_init(b);
+            arf_set_mag(arb_midref(b), rmax);
+
+            for (k = i; k < n; k++)
+            {
+                acb_approx_div_arb(acb_mat_entry(EL, i, k),
+                    acb_mat_entry(EL, i, k), b, prec);
+            }
+
+            arb_clear(b);
+        }
+    }
+
+    acb_clear(r);
+    acb_clear(s);
+    acb_clear(t);
+    mag_clear(tm);
+    mag_clear(smin);
+    mag_clear(smlnum);
+    mag_clear(unfl);
+    mag_clear(simin);
+    mag_clear(rmax);
 }
 
 int
@@ -727,14 +964,8 @@ acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, co
 {
     slong n, i, j;
     acb_ptr T;
-    acb_mat_t Acopy;
+    acb_mat_t Acopy, Q;
     int result;
-
-    if (L != NULL || R != NULL)
-    {
-        flint_printf("computation of eigenvectors not implemented\n");
-        flint_abort();
-    }
 
     n = acb_mat_nrows(A);
 
@@ -744,14 +975,44 @@ acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, co
 
     acb_mat_approx_hessenberg_reduce_0(Acopy, T, prec);
 
+    if (L != NULL || R != NULL)
+    {
+        acb_mat_init(Q, n, n);
+        acb_mat_set(Q, Acopy);
+        acb_mat_approx_hessenberg_reduce_1(Q, T, prec);
+    }
+
     for (i = 0; i < n; i++)
         for (j = i + 2; j < n; j++)
             acb_zero(acb_mat_entry(Acopy, j, i));
 
-    result = acb_mat_approx_hessenberg_qr(Acopy, NULL, tol, maxiter, prec);
+    result = acb_mat_approx_hessenberg_qr(Acopy,
+        (L != NULL || R != NULL) ? Q : NULL, tol, maxiter, prec);
 
     for (i = 0; i < n; i++)
         acb_set(E + i, acb_mat_entry(Acopy, i, i));
+
+    if (R != NULL)
+    {
+        acb_mat_t ER;
+        acb_mat_init(ER, n, n);
+        acb_mat_approx_eig_triu_r(ER, Acopy, prec);
+        acb_mat_approx_mul(R, Q, ER, prec);
+        acb_mat_clear(ER);
+    }
+
+    if (L != NULL)
+    {
+        acb_mat_t EL;
+        acb_mat_init(EL, n, n);
+        acb_mat_approx_eig_triu_l(EL, Acopy, prec);
+        acb_mat_conjugate_transpose(Q, Q);
+        acb_mat_approx_mul(L, EL, Q, prec);
+        acb_mat_clear(EL);
+    }
+
+    if (L != NULL || R != NULL)
+        acb_mat_clear(Q);
 
     _acb_vec_clear(T, n);
     acb_mat_clear(Acopy);

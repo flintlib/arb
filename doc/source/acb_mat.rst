@@ -5,12 +5,23 @@
 
 An :type:`acb_mat_t` represents a dense matrix over the complex numbers,
 implemented as an array of entries of type :type:`acb_struct`.
-
 The dimension (number of rows and columns) of a matrix is fixed at
 initialization, and the user must ensure that inputs and outputs to
 an operation have compatible dimensions. The number of rows or columns
 in a matrix can be zero.
 
+.. note::
+
+    Methods prefixed with *acb_mat_approx* treat all input entries
+    as floating-point numbers (ignoring the radii of the balls) and
+    compute floating-point output (balls with zero radius) representing
+    approximate solutions *without error bounds*.
+    All other methods compute rigorous error bounds.
+    The *approx* methods are typically useful for computing initial
+    values or preconditioners for rigorous solvers.
+    Some users may also find *approx* methods useful
+    for doing ordinary numerical linear algebra in applications where
+    error bounds are not needed.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -268,6 +279,13 @@ Arithmetic
     Sets *res* to *mat* raised to the power *exp*. Requires that *mat*
     is a square matrix.
 
+.. function:: void acb_mat_approx_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
+
+    Approximate matrix multiplication. The input radii are ignored and
+    the output matrix is set to an approximate floating-point result.
+    For performance reasons, the radii in the output matrix will *not*
+    necessarily be written (zeroed), but will remain zero if they
+    are already zeroed in *res* before calling this function.
 
 Scalar arithmetic
 -------------------------------------------------------------------------------
@@ -435,6 +453,24 @@ Gaussian elimination and solving
     versions and additionally handles small or triangular matrices
     by direct formulas.
 
+.. function:: void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
+
+.. function:: void acb_mat_approx_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
+
+.. function:: int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
+
+.. function:: void acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t A, const acb_mat_t B, slong prec)
+
+.. function:: int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
+
+    These methods perform approximate solving *without any error control*.
+    The radii in the input matrices are ignored, the computations are done
+    numerically with floating-point arithmetic (using ordinary
+    Gaussian elimination and triangular solving, accelerated through
+    the use of block recursive strategies for large matrices), and the
+    output matrices are set to the approximate floating-point results with
+    zeroed error bounds.
+
 Characteristic polynomial
 -------------------------------------------------------------------------------
 
@@ -484,66 +520,27 @@ Component and error operations
 
     Adds *err* in-place to the radii of the entries of *mat*.
 
-Approximate linear algebra
--------------------------------------------------------------------------------
-
-Matrix multiplication
-.....................
-
-.. function:: void acb_mat_approx_mul(acb_mat_t res, const acb_mat_t mat1, const acb_mat_t mat2, slong prec)
-
-    Approximate matrix multiplication. The input radii are ignored and
-    the output matrix is set to an approximate floating-point result.
-    The radii in the output matrix will *not* necessarily be zeroed.
-
-Solving
-.....................
-
-.. function:: void acb_mat_approx_solve_triu(acb_mat_t X, const acb_mat_t U, const acb_mat_t B, int unit, slong prec)
-
-.. function:: void acb_mat_approx_solve_tril(acb_mat_t X, const acb_mat_t L, const acb_mat_t B, int unit, slong prec)
-
-.. function:: int acb_mat_approx_lu(slong * P, acb_mat_t LU, const acb_mat_t A, slong prec)
-
-.. function:: void acb_mat_approx_solve_lu_precomp(acb_mat_t X, const slong * perm, const acb_mat_t A, const acb_mat_t B, slong prec)
-
-.. function:: int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
-
-    These methods perform approximate solving *without any error control*.
-    The radii in the input matrices are ignored, the computations are done
-    numerically with floating-point arithmetic (using ordinary
-    Gaussian elimination and triangular solving, accelerated through
-    the use of block recursive strategies for large matrices), and the
-    output matrices are set to the approximate floating-point results with
-    zeroed error bounds.
-
-    Approximate solutions are useful for computing preconditioning matrices
-    for certified solutions. Some users may also find these methods useful
-    for doing ordinary numerical linear algebra in applications where
-    error bounds are not needed.
-
 Eigenvalues and eigenvectors
-............................
+-------------------------------------------------------------------------------
 
 .. function:: int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec)
 
-    Computes floating-point approximations of the eigenvalues of the
-    given *n* by *n* matrix *A*. Approximations of all the *n*
-    eigenvalues (counting repetitions) of *A* are
-    written to the vector *E*, in no particular order.
-    Uses the implicitly shifted QR algorithm with reduction
-    to Hessenberg form.
-
-    Not implemented: if *L* and/or *R* are non-*NULL*, approximations of the left
-    eigenvectors are written to the rows of *L* and approximations
-    of the right eigenvectors are written to the columns of *R*,
-    respectively.
+    Computes floating-point approximations of all the *n* eigenvalues
+    (and optionally eigenvectors) of the
+    given *n* by *n* matrix *A*. The approximations of the
+    eigenvalues are written to the vector *E*, in no particular order.
+    If *L* is not *NULL*, approximations of the corresponding left
+    eigenvectors are written to the rows of *L*. If *R* is not *NULL*,
+    approximations of the corresponding
+    right eigenvectors are written to the columns of *R*.
 
     The parameters *tol* and *maxiter* can be used to control the
-    target numerical error and the maximum allowed number of iterations
+    target numerical error and the maximum number of iterations
     allowed before giving up. Passing *NULL* and 0 respectively results
     in default values being used.
 
+    Uses the implicitly shifted QR algorithm with reduction
+    to Hessenberg form.
     No guarantees are made about the accuracy of the output. A nonzero
     return value indicates that the QR iteration converged numerically,
     but this is only a heuristic termination test and does not imply
