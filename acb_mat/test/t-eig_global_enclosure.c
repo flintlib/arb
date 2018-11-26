@@ -39,6 +39,9 @@ int main()
         B = _acb_vec_init(n);
         mag_init(eps);
 
+        for (i = 0; i < n; i++)
+            acb_randtest(E + i, state, prec, 3);
+
         acb_mat_randtest_eig(A, state, E, prec);
         acb_mat_approx_eig_qr(F, NULL, X, A, NULL, 0, prec);
 
