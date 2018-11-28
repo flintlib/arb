@@ -156,6 +156,8 @@ void arb_mat_one(arb_mat_t mat);
 
 void arb_mat_ones(arb_mat_t mat);
 
+void arb_mat_indeterminate(arb_mat_t mat);
+
 void arb_mat_hilbert(arb_mat_t mat, slong prec);
 
 void arb_mat_pascal(arb_mat_t mat, int triangular, slong prec);

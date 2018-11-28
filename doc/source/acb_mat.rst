@@ -182,6 +182,10 @@ Special matrices
 
     Sets all entries in the matrix to ones.
 
+.. function:: void acb_mat_indeterminate(acb_mat_t mat)
+
+    Sets all entries in the matrix to indeterminate (NaN).
+
 .. function:: void acb_mat_dft(acb_mat_t mat, int type, slong prec)
 
     Sets *mat* to the DFT (discrete Fourier transform) matrix of order *n*
