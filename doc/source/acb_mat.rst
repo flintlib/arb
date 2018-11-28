@@ -470,6 +470,8 @@ Gaussian elimination and solving
 
 .. function:: int acb_mat_approx_solve(acb_mat_t X, const acb_mat_t A, const acb_mat_t B, slong prec)
 
+.. function:: int acb_mat_approx_inv(acb_mat_t X, const acb_mat_t A, slong prec)
+
     These methods perform approximate solving *without any error control*.
     The radii in the input matrices are ignored, the computations are done
     numerically with floating-point arithmetic (using ordinary
@@ -562,7 +564,6 @@ Eigenvalues and eigenvectors
     `\varepsilon` such that every eigenvalue `\lambda` of *A* satisfies
     `|\lambda - \hat \lambda_k| \le \varepsilon`
     for some `\hat \lambda_k` in *E*.
-
     In other words, the union of the balls
     `B_k = \{z : |z - \hat \lambda_k| \le \varepsilon\}` is guaranteed to
     be an enclosure of all eigenvalues of *A*.
@@ -582,7 +583,7 @@ Eigenvalues and eigenvectors
     plane (such as a specific half-plane, strip, disk, or annulus)
     without the need to certify the individual eigenvalues.
     The output is easily converted into lower or upper bounds
-    for the absolute values or real or complex parts
+    for the absolute values or real or imaginary parts
     of the spectrum, and with high probability these bounds will be tight.
     Using :func:`acb_add_error_mag` and :func:`acb_union`, the output
     can also be converted to a single :type:`acb_t` enclosing
@@ -592,6 +593,47 @@ Eigenvalues and eigenvectors
 
     This function implements the fast algorithm in Theorem 1 in
     [Miy2010]_ which extends the Bauer-Fike theorem. Approximations
-    can, for instance, be computed using :func:`acb_mat_approx_eig_qr`.
+    *E* and *R* can, for instance, be computed using
+    :func:`acb_mat_approx_eig_qr`.
+    No assumptions are made about the structure of *A* or the
+    quality of the given approximations.
+
+.. function:: void acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t R, const acb_mat_t A, const acb_t lambda_approx, const acb_mat_t R_approx, slong prec)
+
+    Given an *n* by *n* matrix  *A* and an approximate
+    eigenvalue-eigenvector pair *lambda_approx* and *R_approx* (where
+    *R_approx* is an *n* by 1 matrix), computes an enclosure
+    *lambda* guaranteed to contain at least one of the eigenvalues of *A*,
+    along with an enclosure *R* for a corresponding eigenvector.
+
+    More generally, this function can handle clustered (or repeated)
+    eigenvalues. If *R_approx* is an *n* by *k*
+    matrix containing approximate eigenvectors for a presumed cluster
+    of *k* eigenvalues near *lambda_approx*,
+    this function computes an enclosure *lambda*
+    guaranteed to contain at
+    least *k* eigenvalues of *A* along with a matrix *R* guaranteed to
+    contain a basis for the *k*-dimensional invariant subspace
+    associated with these eigenvalues.
+    Note that for multiple eigenvalues, determining the individual eigenvectors is
+    an ill-posed problem; describing an inclusion of the invariant subspace
+    is the best we can hope for.
+
+    For `k = 1`, it is guaranteed that `AR - R \lambda` contains
+    the zero matrix. For `k > 2`, this cannot generally be guaranteed;
+    that is, *A* might not diagonalizable.
+    In this case, we can still compute an approximately diagonal
+    *k* by *k* matrix `J \approx \lambda I` such that `AR - RJ`
+    is guaranteed to contain the zero matrix.
+    This matrix has the property that the Jordan canonical form of
+    (any exact matrix contained in) *A* has a *k* by *k* submatrix
+    equal to the Jordan canonical form of
+    (some exact matrix contained in) *J*.
+    The output *J* is optional (the user can pass *NULL* to omit it).
+
+    The algorithm follows section 13.4 in [Rum2010]_, corresponding
+    to the ``verifyeig()`` routine in INTLAB.
+    The initial approximations can, for instance, be computed using
+    :func:`acb_mat_approx_eig_qr`.
     No assumptions are made about the structure of *A* or the
     quality of the given approximations.

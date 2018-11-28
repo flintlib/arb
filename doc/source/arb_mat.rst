@@ -495,6 +495,8 @@ Gaussian elimination and solving
 
 .. function:: int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec)
 
+.. function:: int arb_mat_approx_inv(arb_mat_t X, const arb_mat_t A, slong prec)
+
     These methods perform approximate solving *without any error control*.
     The radii in the input matrices are ignored, the computations are done
     numerically with floating-point arithmetic (using ordinary
