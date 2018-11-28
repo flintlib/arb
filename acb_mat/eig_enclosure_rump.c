@@ -13,7 +13,7 @@
 
 /*
     Follows section 13.4 of Siegfried M. Rump, "Verication methods:
-    Rigorous results using oating-point arithmetic",
+    Rigorous results using floating-point arithmetic",
     Acta Numerica 19 (2010), pp. 287 - 449, implemented as
     verifyeig() in INTLAB.
 
