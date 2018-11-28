@@ -992,7 +992,7 @@ acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, co
         (L != NULL || R != NULL) ? Q : NULL, tol, maxiter, prec);
 
     for (i = 0; i < n; i++)
-        acb_set(E + i, acb_mat_entry(Acopy, i, i));
+        acb_get_mid(E + i, acb_mat_entry(Acopy, i, i));
 
     if (R != NULL)
     {
@@ -1000,6 +1000,7 @@ acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, co
         acb_mat_init(ER, n, n);
         acb_mat_approx_eig_triu_r(ER, Acopy, prec);
         acb_mat_approx_mul(R, Q, ER, prec);
+        acb_mat_get_mid(R, R);  /* zero radii */
         acb_mat_clear(ER);
     }
 
@@ -1010,6 +1011,7 @@ acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, co
         acb_mat_approx_eig_triu_l(EL, Acopy, prec);
         acb_mat_conjugate_transpose(Q, Q);
         acb_mat_approx_mul(L, EL, Q, prec);
+        acb_mat_get_mid(L, L);  /* zero radii */
         acb_mat_clear(EL);
     }
 

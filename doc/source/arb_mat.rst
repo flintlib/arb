@@ -695,6 +695,13 @@ Sparsity structure
 
     Returns the number of entries of *mat* that are not certainly zero.
 
+Eigenvalues and eigenvectors
+-------------------------------------------------------------------------------
+
+To compute eigenvalues and eigenvectors, one can convert to an
+:type:`acb_mat_t` and use the functions in :ref:`acb_mat.h: Eigenvalues and eigenvectors<acb-mat-eigenvalues>`.
+In the future dedicated methods for real matrices may be added here.
+
 Component and error operations
 -------------------------------------------------------------------------------
 

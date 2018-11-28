@@ -416,6 +416,9 @@ void acb_mat_eig_global_enclosure(mag_t eps, const acb_mat_t A, acb_srcptr E, co
 void acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t X, const acb_mat_t A,
     const acb_t lambda_approx, const acb_mat_t X_approx, slong prec);
 
+int acb_mat_eig_simple(acb_ptr E, acb_mat_t L, acb_mat_t R,
+    const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec);
+
 /* Special functions */
 
 void acb_mat_exp_taylor_sum(acb_mat_t S, const acb_mat_t A, slong N, slong prec);

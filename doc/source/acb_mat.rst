@@ -533,8 +533,15 @@ Component and error operations
 
     Adds *err* in-place to the radii of the entries of *mat*.
 
+.. _acb-mat-eigenvalues:
+
 Eigenvalues and eigenvectors
 -------------------------------------------------------------------------------
+
+The functions in this section are experimental. There may be classes
+of matrices where the algorithms fail to converge even as
+*prec* is increased, or for which the error bounds are much worse
+than necessary. Manually balancing badly scaled matrices may help.
 
 .. function:: int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec)
 
@@ -558,13 +565,14 @@ Eigenvalues and eigenvectors
     return value indicates that the QR iteration converged numerically,
     but this is only a heuristic termination test and does not imply
     any statement whatsoever about error bounds.
+    The output may also be accurate even if this function returns zero.
 
 .. function:: void acb_mat_eig_global_enclosure(mag_t eps, const acb_mat_t A, acb_srcptr E, const acb_mat_t R, slong prec)
 
     Given an *n* by *n* matrix *A*, a length-*n* vector *E*
     containing approximations of the eigenvalues of *A*,
     and an *n* by *n* matrix *R* containing approximations of
-    the corresponding eigenvectors, computes a rigorous bound
+    the corresponding right eigenvectors, computes a rigorous bound
     `\varepsilon` such that every eigenvalue `\lambda` of *A* satisfies
     `|\lambda - \hat \lambda_k| \le \varepsilon`
     for some `\hat \lambda_k` in *E*.
@@ -608,7 +616,7 @@ Eigenvalues and eigenvectors
     eigenvalue-eigenvector pair *lambda_approx* and *R_approx* (where
     *R_approx* is an *n* by 1 matrix), computes an enclosure
     *lambda* guaranteed to contain at least one of the eigenvalues of *A*,
-    along with an enclosure *R* for a corresponding eigenvector.
+    along with an enclosure *R* for a corresponding right eigenvector.
 
     More generally, this function can handle clustered (or repeated)
     eigenvalues. If *R_approx* is an *n* by *k*
@@ -620,14 +628,14 @@ Eigenvalues and eigenvectors
     contain a basis for the *k*-dimensional invariant subspace
     associated with these eigenvalues.
     Note that for multiple eigenvalues, determining the individual eigenvectors is
-    an ill-posed problem; describing an inclusion of the invariant subspace
+    an ill-posed problem; describing an enclosure of the invariant subspace
     is the best we can hope for.
 
     For `k = 1`, it is guaranteed that `AR - R \lambda` contains
-    the zero matrix. For `k > 2`, this cannot generally be guaranteed;
-    that is, *A* might not diagonalizable.
+    the zero matrix. For `k > 2`, this cannot generally be guaranteed
+    (in particular, *A* might not diagonalizable).
     In this case, we can still compute an approximately diagonal
-    *k* by *k* matrix `J \approx \lambda I` such that `AR - RJ`
+    *k* by *k* interval matrix `J \approx \lambda I` such that `AR - RJ`
     is guaranteed to contain the zero matrix.
     This matrix has the property that the Jordan canonical form of
     (any exact matrix contained in) *A* has a *k* by *k* submatrix
@@ -641,3 +649,33 @@ Eigenvalues and eigenvectors
     :func:`acb_mat_approx_eig_qr`.
     No assumptions are made about the structure of *A* or the
     quality of the given approximations.
+
+.. function:: int acb_mat_eig_simple(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
+
+    Computes the eigenvalues (and optionally corresponding
+    eigenvectors) of the given *n* by *n* matrix *A*.
+
+    This function attempts to prove that  *A* has *n* simple (isolated)
+    eigenvalues, returning 1 if successful
+    and 0 otherwise. On success, isolating complex intervals for the
+    eigenvalues are written to the vector *E*, in no particular order.
+    If *L* is not *NULL*, enclosures of the corresponding left
+    eigenvectors are written to the rows of *L*. If *R* is not *NULL*,
+    enclosures of the corresponding
+    right eigenvectors are written to the columns of *R*.
+
+    This produces a diagonalization `LAR = D` where *D* is the
+    diagonal matrix with the entries in *E* on the diagonal
+    (further, `L = R^{-1}`).
+
+    The user supplies approximations *E_approx* and *R_approx*
+    of the eigenvalues and the right eigenvectors.
+    The initial approximations can, for instance, be computed using
+    :func:`acb_mat_approx_eig_qr`.
+    No assumptions are made about the structure of *A* or the
+    quality of the given approximations.
+
+    This function calls :func:`acb_mat_eig_enclosure_rump` repeatedly
+    to certify eigenvalue-eigenvector pairs one by one. The iteration is
+    stopped to return non-success if a new eigenvalue overlaps with
+    a previously computed one. Finally, *L* is computed by a matrix inversion.

@@ -318,17 +318,9 @@ acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t X, const acb_mat
 
     /* We failed to find an enclosure. */
     acb_indeterminate(lambda);
-
-    for (i = 0; i < n; i++)
-        for (j = 0; j < k; j++)
-            acb_indeterminate(acb_mat_entry(X, i, j));
-
+    acb_mat_indeterminate(X);
     if (J != NULL)
-    {
-        for (i = 0; i < k; i++)
-            for (j = 0; j < k; j++)
-                acb_indeterminate(acb_mat_entry(J, i, j));
-    }
+        acb_mat_indeterminate(J);
 
 cleanup:
     acb_mat_clear(R);
