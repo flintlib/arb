@@ -357,6 +357,7 @@ void arb_mat_approx_solve_tril(arb_mat_t X, const arb_mat_t L, const arb_mat_t B
 int arb_mat_approx_lu(slong * P, arb_mat_t LU, const arb_mat_t A, slong prec);
 void arb_mat_approx_solve_lu_precomp(arb_mat_t X, const slong * perm, const arb_mat_t A, const arb_mat_t B, slong prec);
 int arb_mat_approx_solve(arb_mat_t X, const arb_mat_t A, const arb_mat_t B, slong prec);
+int arb_mat_approx_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
 int arb_mat_inv(arb_mat_t X, const arb_mat_t A, slong prec);
 
