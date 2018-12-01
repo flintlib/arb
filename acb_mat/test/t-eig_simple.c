@@ -28,16 +28,17 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 5000 * arb_test_multiplier(); iter++)
     {
         acb_mat_t A, L, R, LAR, D;
         acb_ptr E, F;
         acb_t b;
         slong i, j, n, prec, count, count2;
-        int result;
+        int result, algorithm;
 
         n = n_randint(state, 8);
         prec = 2 + n_randint(state, 200);
+        algorithm = n_randint(state, 3);
 
         acb_mat_init(A, n, n);
         acb_mat_init(L, n, n);
@@ -98,7 +99,12 @@ int main()
             }
         }
 
-        result = acb_mat_eig_simple(F, L, R, A, E, R, prec);
+        if (algorithm == 0)
+            result = acb_mat_eig_simple(F, L, R, A, E, R, prec);
+        else if (algorithm == 1)
+            result = acb_mat_eig_simple_rump(F, L, R, A, E, R, prec);
+        else
+            result = acb_mat_eig_simple_vdhoeven_mourrain(F, L, R, A, E, R, prec);
 
         acb_mat_mul(LAR, L, A, prec);
         acb_mat_mul(LAR, LAR, R, prec);
@@ -108,6 +114,7 @@ int main()
         if (!acb_mat_overlaps(LAR, D))
         {
             flint_printf("FAIL: overlap\n\n");
+            flint_printf("algorithm = %d\n\n", algorithm);
             flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
             flint_printf("R = \n"); acb_mat_printd(R, 20); flint_printf("\n\n");
             flint_printf("L = \n"); acb_mat_printd(L, 20); flint_printf("\n\n");
@@ -131,6 +138,7 @@ int main()
                 if (count != 1 || count2 != 1)
                 {
                     flint_printf("FAIL: count\n\n");
+                    flint_printf("algorithm = %d\n\n", algorithm);
                     flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
                     flint_printf("R = \n"); acb_mat_printd(R, 20); flint_printf("\n\n");
                     flint_printf("L = \n"); acb_mat_printd(L, 20); flint_printf("\n\n");

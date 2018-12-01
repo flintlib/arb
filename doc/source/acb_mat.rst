@@ -650,12 +650,16 @@ than necessary. Manually balancing badly scaled matrices may help.
     No assumptions are made about the structure of *A* or the
     quality of the given approximations.
 
+.. function:: int acb_mat_eig_simple_rump(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
+
+.. function:: int acb_mat_eig_simple_vdhoeven_mourrain(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
+
 .. function:: int acb_mat_eig_simple(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
 
-    Computes the eigenvalues (and optionally corresponding
+    Computes all the eigenvalues (and optionally corresponding
     eigenvectors) of the given *n* by *n* matrix *A*.
 
-    This function attempts to prove that  *A* has *n* simple (isolated)
+    Attempts to prove that *A* has *n* simple (isolated)
     eigenvalues, returning 1 if successful
     and 0 otherwise. On success, isolating complex intervals for the
     eigenvalues are written to the vector *E*, in no particular order.
@@ -675,7 +679,16 @@ than necessary. Manually balancing badly scaled matrices may help.
     No assumptions are made about the structure of *A* or the
     quality of the given approximations.
 
-    This function calls :func:`acb_mat_eig_enclosure_rump` repeatedly
-    to certify eigenvalue-eigenvector pairs one by one. The iteration is
-    stopped to return non-success if a new eigenvalue overlaps with
-    a previously computed one. Finally, *L* is computed by a matrix inversion.
+    Two algorithms are implemented:
+
+    * The *rump* version calls :func:`acb_mat_eig_enclosure_rump` repeatedly
+      to certify eigenvalue-eigenvector pairs one by one. The iteration is
+      stopped to return non-success if a new eigenvalue overlaps with
+      previously computed one. Finally, *L* is computed by a matrix inversion.
+      This has complexity `O(n^4)`.
+
+    * The *vdhoeven_mourrain* version uses the algorithm in [HM2017]_ to
+      certify all eigenvalues and eigenvectors in one step. This has
+      complexity `O(n^3)`.
+
+    The default version currently uses *vdhoeven_mourrain*.
