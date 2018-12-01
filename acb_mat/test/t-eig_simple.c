@@ -122,13 +122,13 @@ int main()
             {
                 count = 0;
                 for (j = 0; j < n; j++)
-                    count += acb_contains(F + i, E + i);
+                    count += acb_contains(F + i, E + j);
 
                 count2 = 0;
                 for (j = 0; j < n; j++)
-                    count2 += acb_overlaps(F + i, E + i);
+                    count2 += acb_overlaps(F + i, E + j);
 
-                if (count != n || count2 != n)
+                if (count != 1 || count2 != 1)
                 {
                     flint_printf("FAIL: count\n\n");
                     flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
