@@ -692,3 +692,32 @@ than necessary. Manually balancing badly scaled matrices may help.
       complexity `O(n^3)`.
 
     The default version currently uses *vdhoeven_mourrain*.
+
+    By design, these functions terminate instead of attempting to
+    compute eigenvalue clusters if some eigenvalues cannot be isolated.
+    To compute all eigenvalues of a matrix allowing for overlap,
+    :func:`acb_mat_eig_multiple_rump` may be used as a fallback.
+
+.. function:: int acb_mat_eig_multiple_rump(acb_ptr E, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
+
+    Computes all the eigenvalues of the given *n* by *n* matrix *A*.
+    On success, the output vector *E* contains *n* complex intervals,
+    each representing one eigenvalue of *A* with the correct
+    multiplicities in case of overlap.
+    The output intervals are either disjoint or identical, and
+    identical intervals are guaranteed to be grouped consecutively.
+    Each complete run of *k* identical intervals thus represents a cluster of
+    exactly *k* eigenvalues which could not be separated from each
+    other at the current precision, but which could be isolated
+    from the other `n - k` eigenvalues of the matrix.
+
+    The user supplies approximations *E_approx* and *R_approx*
+    of the eigenvalues and the right eigenvectors.
+    The initial approximations can, for instance, be computed using
+    :func:`acb_mat_approx_eig_qr`.
+    No assumptions are made about the structure of *A* or the
+    quality of the given approximations.
+
+    This function groups approximate eigenvalues that are close and
+    calls :func:`acb_mat_eig_enclosure_rump` repeatedly to validate
+    each cluster. The complexity is `O(m n^3)` for *m* clusters.
