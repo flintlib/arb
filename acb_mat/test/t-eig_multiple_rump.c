@@ -11,13 +11,6 @@
 
 #include "acb_mat.h"
 
-static void
-acb_get_mid(acb_t res, const acb_t x)
-{
-    arb_get_mid_arb(acb_realref(res), acb_realref(x));
-    arb_get_mid_arb(acb_imagref(res), acb_imagref(x));
-}
-
 int main()
 {
     slong iter;

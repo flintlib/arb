@@ -34,13 +34,6 @@
 */
 
 static void
-acb_get_mid(acb_t res, const acb_t x)
-{
-    arb_get_mid_arb(acb_realref(res), acb_realref(x));
-    arb_get_mid_arb(acb_imagref(res), acb_imagref(x));
-}
-
-static void
 acb_approx_neg(acb_t res, const acb_t x)
 {
     arf_neg(arb_midref(acb_realref(res)), arb_midref(acb_realref(x)));

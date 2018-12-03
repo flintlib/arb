@@ -168,6 +168,10 @@ The output of the example program should be something like the following::
 Computer algebra systems and wrappers
 -------------------------------------------------------------------------------
 
+Python-FLINT (https://github.com/fredrik-johansson/python-flint) is a
+convenient Python interface to both FLINT and Arb, without any other
+dependencies.
+
 SageMath (http://sagemath.org/) includes Arb as a standard package and
 contains a high-level Python interface. Refer to the SageMath documentation:
 
@@ -184,7 +188,6 @@ Arb along with other dependencies.
 
 Other wrappers are also available:
 
-* An experimental standalone Python interface to FLINT and Arb (not requiring SageMath): https://github.com/fredrik-johansson/python-flint
 * A Java wrapper using JNA: https://github.com/crowlogic/arb/
 * Another Julia interface: https://github.com/JuliaArbTypes/ArbFloats.jl
 

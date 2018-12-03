@@ -33,13 +33,6 @@ acb_approx_mag(mag_t res, const acb_t x)
 }
 
 static void
-acb_get_mid(acb_t res, const acb_t x)
-{
-    arb_get_mid_arb(acb_realref(res), acb_realref(x));
-    arb_get_mid_arb(acb_imagref(res), acb_imagref(x));
-}
-
-static void
 acb_approx_mul(acb_t res, const acb_t x, const acb_t y, slong prec)
 {
     arf_complex_mul(arb_midref(acb_realref(res)), arb_midref(acb_imagref(res)),

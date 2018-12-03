@@ -144,6 +144,10 @@ Basic manipulation
     Adds *err* to the error bounds of both the real and imaginary
     parts of *x*, modifying *x* in-place.
 
+.. function:: void acb_get_mid(acb_t m, const acb_t x)
+
+    Sets *m* to the midpoint of *x*.
+
 Input and output
 -------------------------------------------------------------------------------
 

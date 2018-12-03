@@ -68,6 +68,13 @@ acb_get_imag(arb_t im, const acb_t z)
     arb_set(im, acb_imagref(z));
 }
 
+ACB_INLINE void
+acb_get_mid(acb_t res, const acb_t x)
+{
+    arb_get_mid_arb(acb_realref(res), acb_realref(x));
+    arb_get_mid_arb(acb_imagref(res), acb_imagref(x));
+}
+
 ACB_INLINE int
 acb_is_zero(const acb_t z)
 {
