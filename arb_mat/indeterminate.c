@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "acb_mat.h"
+#include "arb_mat.h"
 
 void
 arb_mat_indeterminate(arb_mat_t A)

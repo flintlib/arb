@@ -397,9 +397,10 @@ void arb_mat_exp_taylor_sum(arb_mat_t S, const arb_mat_t A, slong N, slong prec)
 
 void arb_mat_exp(arb_mat_t B, const arb_mat_t A, slong prec);
 
-void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec);
-
-void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec);
+void _arb_mat_charpoly(arb_ptr poly, const arb_mat_t mat, slong prec);
+void arb_mat_charpoly(arb_poly_t poly, const arb_mat_t mat, slong prec);
+void _arb_mat_companion(arb_mat_t mat, arb_srcptr poly, slong prec);
+void arb_mat_companion(arb_mat_t mat, const arb_poly_t poly, slong prec);
 
 void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
 

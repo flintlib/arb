@@ -614,17 +614,25 @@ Cholesky decomposition and solving
     The inverse is calculated using the method of [Kri2013]_ which is more
     efficient than solving `AX = I` with :func:`arb_mat_solve_ldl_precomp`.
 
-Characteristic polynomial
+Characteristic polynomial and companion matrix
 -------------------------------------------------------------------------------
 
-.. function:: void _arb_mat_charpoly(arb_ptr cp, const arb_mat_t mat, slong prec)
+.. function:: void _arb_mat_charpoly(arb_ptr poly, const arb_mat_t mat, slong prec)
 
-.. function:: void arb_mat_charpoly(arb_poly_t cp, const arb_mat_t mat, slong prec)
+.. function:: void arb_mat_charpoly(arb_poly_t poly, const arb_mat_t mat, slong prec)
 
-    Sets *cp* to the characteristic polynomial of *mat* which must be
+    Sets *poly* to the characteristic polynomial of *mat* which must be
     a square matrix. If the matrix has *n* rows, the underscore method
     requires space for `n + 1` output coefficients.
     Employs a division-free algorithm using `O(n^4)` operations.
+
+.. function:: void _arb_mat_companion(arb_mat_t mat, arb_srcptr poly, slong prec)
+
+.. function:: void arb_mat_companion(arb_mat_t mat, const arb_poly_t poly, slong prec)
+
+    Sets the *n* by *n* matrix *mat* to the companion matrix of the polynomial
+    *poly* which must have degree *n*.
+    The underscore method reads `n + 1` input coefficients.
 
 Special functions
 -------------------------------------------------------------------------------

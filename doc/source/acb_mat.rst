@@ -484,17 +484,25 @@ Gaussian elimination and solving
     output matrices are set to the approximate floating-point results with
     zeroed error bounds.
 
-Characteristic polynomial
+Characteristic polynomial and companion matrix
 -------------------------------------------------------------------------------
 
-.. function:: void _acb_mat_charpoly(acb_ptr cp, const acb_mat_t mat, slong prec)
+.. function:: void _acb_mat_charpoly(acb_ptr poly, const acb_mat_t mat, slong prec)
 
-.. function:: void acb_mat_charpoly(acb_poly_t cp, const acb_mat_t mat, slong prec)
+.. function:: void acb_mat_charpoly(acb_poly_t poly, const acb_mat_t mat, slong prec)
 
-    Sets *cp* to the characteristic polynomial of *mat* which must be
+    Sets *poly* to the characteristic polynomial of *mat* which must be
     a square matrix. If the matrix has *n* rows, the underscore method
     requires space for `n + 1` output coefficients.
     Employs a division-free algorithm using `O(n^4)` operations.
+
+.. function:: void _acb_mat_companion(acb_mat_t mat, acb_srcptr poly, slong prec)
+
+.. function:: void acb_mat_companion(acb_mat_t mat, const acb_poly_t poly, slong prec)
+
+    Sets the *n* by *n* matrix *mat* to the companion matrix of the polynomial
+    *poly* which must have degree *n*.
+    The underscore method reads `n + 1` input coefficients.
 
 Special functions
 -------------------------------------------------------------------------------
