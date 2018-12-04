@@ -668,9 +668,9 @@ than necessary. Manually balancing badly scaled matrices may help.
     enclosures of the corresponding
     right eigenvectors are written to the columns of *R*.
 
+    The left eigenvectors are normalized so that `L = R^{-1}`.
     This produces a diagonalization `LAR = D` where *D* is the
-    diagonal matrix with the entries in *E* on the diagonal
-    (further, `L = R^{-1}`).
+    diagonal matrix with the entries in *E* on the diagonal.
 
     The user supplies approximations *E_approx* and *R_approx*
     of the eigenvalues and the right eigenvectors.
@@ -696,9 +696,12 @@ than necessary. Manually balancing badly scaled matrices may help.
     By design, these functions terminate instead of attempting to
     compute eigenvalue clusters if some eigenvalues cannot be isolated.
     To compute all eigenvalues of a matrix allowing for overlap,
-    :func:`acb_mat_eig_multiple_rump` may be used as a fallback.
+    :func:`acb_mat_eig_multiple_rump` may be used as a fallback,
+    or :func:`acb_mat_eig_multiple` may be used in the first place.
 
 .. function:: int acb_mat_eig_multiple_rump(acb_ptr E, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
+
+.. function:: int acb_mat_eig_multiple(acb_ptr E, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec)
 
     Computes all the eigenvalues of the given *n* by *n* matrix *A*.
     On success, the output vector *E* contains *n* complex intervals,
@@ -718,6 +721,11 @@ than necessary. Manually balancing badly scaled matrices may help.
     No assumptions are made about the structure of *A* or the
     quality of the given approximations.
 
-    This function groups approximate eigenvalues that are close and
-    calls :func:`acb_mat_eig_enclosure_rump` repeatedly to validate
+    The *rump* algorithm groups approximate eigenvalues that are close
+    and calls :func:`acb_mat_eig_enclosure_rump` repeatedly to validate
     each cluster. The complexity is `O(m n^3)` for *m* clusters.
+
+    The default version, as currently implemented, first attempts to
+    call :func:`acb_mat_eig_simple_vdhoeven_mourrain` hoping that the
+    eigenvalues are actually simple. It then uses the *rump* algorithm as
+    a fallback.

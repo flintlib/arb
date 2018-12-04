@@ -16,12 +16,12 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("eig_multiple_rump....");
+    flint_printf("eig_multiple....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 2000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
     {
         acb_mat_t A, R;
         acb_ptr E, F;
@@ -88,7 +88,10 @@ int main()
             }
         }
 
-        result = acb_mat_eig_multiple_rump(F, A, E, R, prec);
+        if (n_randint(state, 2))
+            result = acb_mat_eig_multiple_rump(F, A, E, R, prec);
+        else
+            result = acb_mat_eig_multiple(F, A, E, R, prec);
 
         if (result)
         {

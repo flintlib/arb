@@ -424,6 +424,7 @@ int acb_mat_eig_simple(acb_ptr E, acb_mat_t L, acb_mat_t R,
     const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec);
 
 int acb_mat_eig_multiple_rump(acb_ptr E, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec);
+int acb_mat_eig_multiple(acb_ptr E, const acb_mat_t A, acb_srcptr E_approx, const acb_mat_t R_approx, slong prec);
 
 /* Special functions */
 
