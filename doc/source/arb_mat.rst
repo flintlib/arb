@@ -115,14 +115,16 @@ Input and output
 Comparisons
 -------------------------------------------------------------------------------
 
+Predicate methods return 1 if the property certainly holds and 0 otherwise.
+
 .. function:: int arb_mat_equal(const arb_mat_t mat1, const arb_mat_t mat2)
 
-    Returns nonzero iff the matrices have the same dimensions
-    and identical entries.
+    Returns whether the matrices have the same dimensions
+    and identical intervals as entries.
 
 .. function:: int arb_mat_overlaps(const arb_mat_t mat1, const arb_mat_t mat2)
 
-    Returns nonzero iff the matrices have the same dimensions
+    Returns whether the matrices have the same dimensions
     and each entry in *mat1* overlaps with the corresponding entry in *mat2*.
 
 .. function:: int arb_mat_contains(const arb_mat_t mat1, const arb_mat_t mat2)
@@ -131,24 +133,47 @@ Comparisons
 
 .. function:: int arb_mat_contains_fmpq_mat(const arb_mat_t mat1, const fmpq_mat_t mat2)
 
-    Returns nonzero iff the matrices have the same dimensions and each entry
+    Returns whether the matrices have the same dimensions and each entry
     in *mat2* is contained in the corresponding entry in *mat1*.
 
 .. function:: int arb_mat_eq(const arb_mat_t mat1, const arb_mat_t mat2)
 
-    Returns nonzero iff *mat1* and *mat2* certainly represent the same matrix.
+    Returns whether *mat1* and *mat2* certainly represent the same matrix.
 
 .. function:: int arb_mat_ne(const arb_mat_t mat1, const arb_mat_t mat2)
 
-    Returns nonzero iff *mat1* and *mat2* certainly do not represent the same matrix.
+    Returns whether *mat1* and *mat2* certainly do not represent the same matrix.
 
 .. function:: int arb_mat_is_empty(const arb_mat_t mat)
 
-    Returns nonzero iff the number of rows or the number of columns in *mat* is zero.
+    Returns whether the number of rows or the number of columns in *mat* is zero.
 
 .. function:: int arb_mat_is_square(const arb_mat_t mat)
 
-    Returns nonzero iff the number of rows is equal to the number of columns in *mat*.
+    Returns whether the number of rows is equal to the number of columns in *mat*.
+
+.. function:: int arb_mat_is_zero(const arb_mat_t mat)
+
+    Returns whether all entries in *mat* are exactly zero.
+
+.. function:: int arb_mat_is_finite(const arb_mat_t mat)
+
+    Returns whether all entries in *mat* are finite.
+
+.. function:: int arb_mat_is_triu(const arb_mat_t mat)
+
+    Returns whether *mat* is upper triangular; that is, all entries
+    below the main diagonal are exactly zero.
+
+.. function:: int arb_mat_is_tril(const arb_mat_t mat)
+
+    Returns whether *mat* is lower triangular; that is, all entries
+    above the main diagonal are exactly zero.
+
+.. function:: int arb_mat_is_diag(const arb_mat_t mat)
+
+    Returns whether *mat* is a diagonal matrix; that is, all entries
+    off the main diagonal are exactly zero.
 
 Special matrices
 -------------------------------------------------------------------------------
@@ -676,6 +701,14 @@ Special functions
 
     Sets *trace* to the trace of the matrix, i.e. the sum of entries on the
     main diagonal of *mat*. The matrix is required to be square.
+
+.. function:: void _arb_mat_diag_prod(arb_t res, const arb_mat_t mat, slong a, slong b, slong prec)
+
+.. function:: void arb_mat_diag_prod(arb_t res, const arb_mat_t mat, slong prec)
+
+    Sets *res* to the product of the entries on the main diagonal of *mat*.
+    The underscore method computes the product of the entries between
+    index *a* inclusive and *b* exclusive (the indices must be in range).
 
 Sparsity structure
 -------------------------------------------------------------------------------

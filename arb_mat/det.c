@@ -39,54 +39,6 @@ _arb_mat_det_cofactor_3x3(arb_t t, const arb_mat_t A, slong prec)
     arb_clear(a);
 }
 
-int
-arb_mat_is_finite(const arb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(A);
-
-    for (i = 0; i < n; i++)
-        for (j = 0; j < m; j++)
-            if (!arb_is_finite(arb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
-int
-arb_mat_is_triu(const arb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(A);
-
-    for (i = 1; i < n; i++)
-        for (j = 0; j < FLINT_MIN(i, m); j++)
-            if (!arb_is_zero(arb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
-int
-arb_mat_is_tril(const arb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = arb_mat_nrows(A);
-    m = arb_mat_ncols(A);
-
-    for (i = 0; i < n; i++)
-        for (j = i + 1; j < m; j++)
-            if (!arb_is_zero(arb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
 void
 arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 {
@@ -118,9 +70,7 @@ arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
     }
     else if (arb_mat_is_tril(A) || arb_mat_is_triu(A))
     {
-        arb_set(det, arb_mat_entry(A, 0, 0));
-        for (k = 1; k < n; k++)
-            arb_mul(det, det, arb_mat_entry(A, k, k), prec);
+        arb_mat_diag_prod(det, A, prec);
     }
     else if (n == 3)
     {

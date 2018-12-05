@@ -78,7 +78,7 @@ arb_mat_det_precond(arb_t det, const arb_mat_t A, slong prec)
 {
     arb_mat_t LU, Linv, Uinv;
     arb_t detU;
-    slong i, n;
+    slong n;
     slong *P;
 
     n = arb_mat_nrows(A);
@@ -109,9 +109,7 @@ arb_mat_det_precond(arb_t det, const arb_mat_t A, slong prec)
         arb_mat_one(Uinv);
         arb_mat_approx_solve_triu(Uinv, LU, Uinv, 0, prec);
 
-        arb_set(detU, arb_mat_entry(Uinv, 0, 0));
-        for (i = 1; i < n; i++)
-            arb_mul(detU, detU, arb_mat_entry(Uinv, i, i), prec);
+        arb_mat_diag_prod(detU, Uinv, prec);
 
         arb_mat_mul(LU, A, Uinv, prec);
         _apply_permutation(LU, P, n);
@@ -141,4 +139,3 @@ arb_mat_det_precond(arb_t det, const arb_mat_t A, slong prec)
     _perm_clear(P);
     arb_mat_clear(LU);
 }
-

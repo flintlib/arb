@@ -79,9 +79,6 @@ acb_vec_get_arf_2norm_squared_bound(arf_t s, acb_srcptr vec, slong len, slong pr
 }
 
 void
-acb_mat_diag_prod(acb_t res, const acb_mat_t A, slong a, slong b, slong prec);
-
-void
 acb_mat_det_lu_inplace(acb_t det, acb_mat_t A, slong prec)
 {
     slong i, n, sign, rank;
@@ -92,7 +89,7 @@ acb_mat_det_lu_inplace(acb_t det, acb_mat_t A, slong prec)
     sign = (rank < 0) ? -1 : 1;
     rank = FLINT_ABS(rank);
 
-    acb_mat_diag_prod(det, A, 0, rank, prec);
+    _acb_mat_diag_prod(det, A, 0, rank, prec);
     acb_mul_si(det, det, sign, prec);
 
     /* bound unreduced part using Hadamard's inequality */

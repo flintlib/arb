@@ -140,4 +140,3 @@ arb_mat_det_lu(arb_t det, const arb_mat_t A, slong prec)
         arb_mat_clear(T);
     }
 }
-

@@ -39,79 +39,6 @@ _acb_mat_det_cofactor_3x3(acb_t t, const acb_mat_t A, slong prec)
     acb_clear(a);
 }
 
-int
-acb_mat_is_finite(const acb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = acb_mat_nrows(A);
-    m = acb_mat_ncols(A);
-
-    for (i = 0; i < n; i++)
-        for (j = 0; j < m; j++)
-            if (!acb_is_finite(acb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
-int
-acb_mat_is_triu(const acb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = acb_mat_nrows(A);
-    m = acb_mat_ncols(A);
-
-    for (i = 1; i < n; i++)
-        for (j = 0; j < FLINT_MIN(i, m); j++)
-            if (!acb_is_zero(acb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
-int
-acb_mat_is_tril(const acb_mat_t A)
-{
-    slong i, j, n, m;
-
-    n = acb_mat_nrows(A);
-    m = acb_mat_ncols(A);
-
-    for (i = 0; i < n; i++)
-        for (j = i + 1; j < m; j++)
-            if (!acb_is_zero(acb_mat_entry(A, i, j)))
-                return 0;
-
-    return 1;
-}
-
-void
-acb_mat_diag_prod(acb_t res, const acb_mat_t A, slong a, slong b, slong prec)
-{
-    if (b - a == 0)
-        acb_one(res);
-    else if (b - a == 1)
-        acb_set_round(res, acb_mat_entry(A, a, a), prec);
-    else if (b - a == 2)
-        acb_mul(res, acb_mat_entry(A, a, a), acb_mat_entry(A, a + 1, a + 1), prec);
-    else if (b - a == 3)
-    {
-        acb_mul(res, acb_mat_entry(A, a, a), acb_mat_entry(A, a + 1, a + 1), prec);
-        acb_mul(res, res, acb_mat_entry(A, a + 2, a + 2), prec);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        acb_mat_diag_prod(t, A, a, a + (b - a) / 2, prec);
-        acb_mat_diag_prod(res, A, a + (b - a) / 2, b, prec);
-        acb_mul(res, res, t, prec);
-        acb_clear(t);
-    }
-}
-
 void
 acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
 {
@@ -143,7 +70,7 @@ acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
     }
     else if (acb_mat_is_tril(A) || acb_mat_is_triu(A))
     {
-        acb_mat_diag_prod(det, A, 0, n, prec);
+        acb_mat_diag_prod(det, A, prec);
     }
     else if (n == 3)
     {
@@ -158,4 +85,3 @@ acb_mat_det(acb_t det, const acb_mat_t A, slong prec)
             acb_mat_det_precond(det, A, prec);
     }
 }
-

@@ -126,6 +126,17 @@ arb_mat_is_square(const arb_mat_t mat)
     return (mat->r == mat->c);
 }
 
+int arb_mat_is_zero(const arb_mat_t mat);
+int arb_mat_is_finite(const arb_mat_t mat);
+int arb_mat_is_triu(const arb_mat_t mat);
+int arb_mat_is_tril(const arb_mat_t mat);
+
+ARB_MAT_INLINE int
+arb_mat_is_diag(const arb_mat_t mat)
+{
+    return arb_mat_is_tril(mat) && arb_mat_is_triu(mat);
+}
+
 /* Radius and interval operations */
 
 ARB_MAT_INLINE void
@@ -403,6 +414,9 @@ void _arb_mat_companion(arb_mat_t mat, arb_srcptr poly, slong prec);
 void arb_mat_companion(arb_mat_t mat, const arb_poly_t poly, slong prec);
 
 void arb_mat_trace(arb_t trace, const arb_mat_t mat, slong prec);
+
+void _arb_mat_diag_prod(arb_t res, const arb_mat_t A, slong a, slong b, slong prec);
+void arb_mat_diag_prod(arb_t res, const arb_mat_t A, slong prec);
 
 /* Sparsity structure */
 

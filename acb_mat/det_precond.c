@@ -75,9 +75,6 @@ acb_mat_det_one_gershgorin(acb_t det, const acb_mat_t A)
 }
 
 void
-acb_mat_diag_prod(acb_t res, const acb_mat_t A, slong a, slong b, slong prec);
-
-void
 acb_mat_det_precond(acb_t det, const acb_mat_t A, slong prec)
 {
     acb_mat_t LU, Linv, Uinv;
@@ -113,7 +110,7 @@ acb_mat_det_precond(acb_t det, const acb_mat_t A, slong prec)
         acb_mat_one(Uinv);
         acb_mat_approx_solve_triu(Uinv, LU, Uinv, 0, prec);
 
-        acb_mat_diag_prod(detU, Uinv, 0, n, prec);
+        acb_mat_diag_prod(detU, Uinv, prec);
 
         acb_mat_mul(LU, A, Uinv, prec);
         _apply_permutation(LU, P, n);
@@ -158,4 +155,3 @@ acb_mat_det_precond(acb_t det, const acb_mat_t A, slong prec)
     _perm_clear(P);
     acb_mat_clear(LU);
 }
-

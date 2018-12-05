@@ -30,25 +30,6 @@ int arb_mat_is_lagom(const arb_mat_t A)
     return 1;
 }
 
-int arb_mat_is_zero(const arb_mat_t A)
-{
-    slong i, j, M, N;
-
-    M = arb_mat_nrows(A);
-    N = arb_mat_ncols(A);
-
-    for (i = 0; i < M; i++)
-    {
-        for (j = 0; j < N; j++)
-        {
-            if (!arb_is_zero(arb_mat_entry(A, i, j)))
-                return 0;
-        }
-    }
-
-    return 1;
-}
-
 /* allow changing this from the test code */
 ARB_DLL slong arb_mat_mul_block_min_block_size = 0;
 
