@@ -42,7 +42,7 @@ _arb_mat_det_cofactor_3x3(arb_t t, const arb_mat_t A, slong prec)
 void
 arb_mat_det(arb_t det, const arb_mat_t A, slong prec)
 {
-    slong k, n;
+    slong n;
 
     if (!arb_mat_is_square(A))
     {

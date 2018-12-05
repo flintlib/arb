@@ -80,19 +80,6 @@ arb_mat_approx_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, 
     }
 }
 
-int
-arb_mat_is_exact(const arb_mat_t A)
-{
-    slong i, j;
-
-    for (i = 0; i < arb_mat_nrows(A); i++)
-        for (j = 0; j < arb_mat_ncols(A); j++)
-            if (!mag_is_zero(arb_radref(arb_mat_entry(A, i, j))))
-                return 0;
-
-    return 1;
-}
-
 void
 arb_mat_approx_mul(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, slong prec)
 {

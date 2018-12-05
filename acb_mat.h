@@ -136,6 +136,8 @@ acb_mat_is_square(const acb_mat_t mat)
     return (mat->r == mat->c);
 }
 
+int acb_mat_is_exact(const acb_mat_t mat);
+
 int acb_mat_is_zero(const acb_mat_t mat);
 int acb_mat_is_finite(const acb_mat_t mat);
 int acb_mat_is_triu(const acb_mat_t mat);

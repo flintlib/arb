@@ -84,20 +84,6 @@ acb_mat_approx_mul_classical(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, 
     }
 }
 
-int
-acb_mat_is_exact(const acb_mat_t A)
-{
-    slong i, j;
-
-    for (i = 0; i < acb_mat_nrows(A); i++)
-        for (j = 0; j < acb_mat_ncols(A); j++)
-            if (!mag_is_zero(arb_radref(acb_realref(acb_mat_entry(A, i, j)))) ||
-                !mag_is_zero(arb_radref(acb_imagref(acb_mat_entry(A, i, j)))))
-                return 0;
-
-    return 1;
-}
-
 void
 acb_mat_approx_mul(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong prec)
 {

@@ -167,6 +167,10 @@ Predicate methods return 1 if the property certainly holds and 0 otherwise.
 
     Returns whether the number of rows is equal to the number of columns in *mat*.
 
+.. function:: int acb_mat_is_exact(const acb_mat_t mat)
+
+    Returns whether all entries in *mat* have zero radius.
+
 .. function:: int acb_mat_is_zero(const acb_mat_t mat)
 
     Returns whether all entries in *mat* are exactly zero.
