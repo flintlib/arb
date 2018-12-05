@@ -153,6 +153,110 @@ int main()
         _acb_vec_clear(F, n);
     }
 
+    /* Test convergence, given companion matrices */
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
+    {
+        acb_mat_t A, R;
+        acb_ptr E;
+        acb_ptr roots;
+        acb_poly_t f;
+        slong i, j, n, prec, count, count2;
+        int algorithm, success;
+
+        algorithm = n_randint(state, 3);
+        n = n_randint(state, 10);
+        roots = _acb_vec_init(n);
+        E = _acb_vec_init(n);
+        acb_poly_init(f);
+        acb_mat_init(A, n, n);
+        acb_mat_init(R, n, n);
+
+        for (i = 0; i < n; i++)
+        {
+            new_root:
+            acb_randtest(roots + i, state, 2 + n_randint(state, 100), 4);
+            acb_get_mid(roots + i, roots + i);
+
+            for (j = 0; j < i; j++)
+                if (acb_equal(roots + i, roots + j))
+                    goto new_root;
+        }
+
+        success = 0;
+
+        for (prec = 32; !success; prec *= 2)
+        {
+            if (prec > 10000)
+            {
+                flint_printf("FAIL: unsuccessful, prec > 10000\n\n");
+                flint_printf("algorithm = %d\n\n", algorithm);
+                flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
+                flint_printf("R = \n"); acb_mat_printd(R, 20); flint_printf("\n\n");
+                flint_printf("roots = \n");
+                for (j = 0; j < n; j++)
+                {
+                    acb_printd(roots + j, 20);
+                    flint_printf("\n");
+                }
+                flint_abort();
+            }
+
+            acb_poly_product_roots(f, roots, n, prec);
+            acb_mat_companion(A, f, prec);
+
+            acb_mat_approx_eig_qr(E, NULL, R, A, NULL, 0, prec);
+
+            if (algorithm == 0)
+                success = acb_mat_eig_simple(E, NULL, NULL, A, E, R, prec);
+            else if (algorithm == 1)
+                success = acb_mat_eig_simple_rump(E, NULL, NULL, A, E, R, prec);
+            else
+                success = acb_mat_eig_simple_vdhoeven_mourrain(E, NULL, NULL, A, E, R, prec);
+
+            if (success)
+            {
+                for (i = 0; i < n; i++)
+                {
+                    count = 0;
+                    for (j = 0; j < n; j++)
+                        count += acb_contains(E + i, roots + j);
+
+                    count2 = 0;
+                    for (j = 0; j < n; j++)
+                        count2 += acb_overlaps(E + i, roots + j);
+
+                    if (count != 1 || count2 != 1)
+                    {
+                        flint_printf("FAIL: count\n\n");
+                        flint_printf("algorithm = %d\n\n", algorithm);
+                        flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
+                        flint_printf("R = \n"); acb_mat_printd(R, 20); flint_printf("\n\n");
+                        flint_printf("i = %wd, count = %wd, count2 = %wd\n\n", i, count, count2);
+                        flint_printf("roots = \n");
+                        for (j = 0; j < n; j++)
+                        {
+                            acb_printd(roots + j, 20);
+                            flint_printf("\n");
+                        }
+                        flint_printf("E = \n");
+                        for (j = 0; j < n; j++)
+                        {
+                            acb_printd(E + j, 20);
+                            flint_printf("\n");
+                        }
+                        flint_abort();
+                    }
+                }
+            }
+        }
+
+        acb_mat_clear(A);
+        acb_mat_clear(R);
+        acb_poly_clear(f);
+        _acb_vec_clear(roots, n);
+        _acb_vec_clear(E, n);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

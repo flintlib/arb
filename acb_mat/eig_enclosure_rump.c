@@ -135,6 +135,69 @@ arb_mat_nonnegative_eig_bound(mag_t eps, const arb_mat_t M, slong prec)
     }
 }
 
+static void
+acb_approx_mag(mag_t res, const acb_t x)
+{
+    mag_t t;
+    mag_init(t);
+    arf_get_mag(res, arb_midref(acb_realref(x)));
+    arf_get_mag(t, arb_midref(acb_imagref(x)));
+    mag_hypot(res, res, t);
+    mag_clear(t);
+}
+
+/* Extract k largest rows to freeze */
+static void
+partition_X(slong * u, slong * v, const acb_mat_t X)
+{
+    slong i, j, n, k, c;
+    slong * row_idx;
+    mag_ptr row_mag;
+    mag_t t;
+
+    n = acb_mat_nrows(X);
+    k = acb_mat_ncols(X);
+
+    row_mag = _mag_vec_init(n);
+    row_idx = flint_malloc(sizeof(slong) * n);
+    mag_init(t);
+
+    for (i = 0; i < n; i++)
+    {
+        row_idx[i] = i;
+
+        for (j = 0; j < k; j++)
+        {
+            acb_approx_mag(t, acb_mat_entry(X, i, j));
+            mag_add(row_mag + i, row_mag + i, t);
+        }
+    }
+
+    /* Bubble sort... */
+    for (i = 0; i < n - 1; i++)
+    {
+        for (j = 0; j < n - i - 1; j++)
+        {
+            if (mag_cmp(row_mag + j, row_mag + j + 1) > 0)
+            {
+                mag_swap(row_mag + j, row_mag + j + 1);
+                c = row_idx[j]; row_idx[j] = row_idx[j + 1]; row_idx[j + 1] = c;
+            }
+        }
+    }
+
+    /* Not frozen rows of the approximation. */
+    for (i = 0; i < n - k; i++)
+        u[i] = row_idx[i];
+    /* Frozen rows of the approximation. */
+    for (i = 0; i < k; i++)
+        v[i] = row_idx[n - k + i];
+
+    _mag_vec_clear(row_mag, n);
+    flint_free(row_idx);
+    mag_clear(t);
+}
+
 void
 acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t X, const acb_mat_t A,
     const acb_t lambda_approx, const acb_mat_t X_approx, slong prec)
@@ -157,11 +220,8 @@ acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t X, const acb_mat
     u = flint_malloc(sizeof(slong) * (n - k));
     /* Frozen rows of the approximation. */
     v = flint_malloc(sizeof(slong) * k);
-    /* TODO: should probably extract the k largest rows. */
-    for (i = 0; i < n - k; i++)
-        u[i] = i % n;
-    for (i = 0; i < k; i++)
-        v[i] = (n - k + i) % n;
+
+    partition_X(u, v, X_approx);
 
     mag_init(eps);
     acb_mat_init(R, n, n);

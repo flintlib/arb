@@ -133,6 +133,19 @@ acb_mat_eig_simple_vdhoeven_mourrain(acb_ptr E,
     result = 0;
     n = acb_mat_nrows(A);
 
+    if (n == 0)
+        return 1;
+
+    if (n == 1)
+    {
+        acb_set_round(E, acb_mat_entry(A, 0, 0), prec);
+        if (L != NULL)
+            acb_one(acb_mat_entry(L, 0, 0));
+        if (R != NULL)
+            acb_one(acb_mat_entry(R, 0, 0));
+        return 1;
+    }
+
     acb_mat_init(D, n, n);
     acb_mat_init(T, n, n);
     acb_mat_init(AT, n, n);

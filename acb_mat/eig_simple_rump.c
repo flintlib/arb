@@ -24,6 +24,16 @@ acb_mat_eig_simple_rump(acb_ptr E, acb_mat_t L, acb_mat_t R,
     if (n == 0)
         return 1;
 
+    if (n == 1)
+    {
+        acb_set_round(E, acb_mat_entry(A, 0, 0), prec);
+        if (L != NULL)
+            acb_one(acb_mat_entry(L, 0, 0));
+        if (R != NULL)
+            acb_one(acb_mat_entry(R, 0, 0));
+        return 1;
+    }
+
     acb_mat_init(X, n, 1);
     acb_mat_init(R2, n, n);
 
