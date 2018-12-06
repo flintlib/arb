@@ -148,7 +148,7 @@ acb_approx_mag(mag_t res, const acb_t x)
 
 /* Extract k largest rows to freeze */
 static void
-partition_X(slong * u, slong * v, const acb_mat_t X)
+partition_X_sorted(slong * u, slong * v, const acb_mat_t X, slong prec)
 {
     slong i, j, n, k, c;
     slong * row_idx;
@@ -181,7 +181,9 @@ partition_X(slong * u, slong * v, const acb_mat_t X)
             if (mag_cmp(row_mag + j, row_mag + j + 1) > 0)
             {
                 mag_swap(row_mag + j, row_mag + j + 1);
-                c = row_idx[j]; row_idx[j] = row_idx[j + 1]; row_idx[j + 1] = c;
+                c = row_idx[j];
+                row_idx[j] = row_idx[j + 1];
+                row_idx[j + 1] = c;
             }
         }
     }
@@ -189,6 +191,7 @@ partition_X(slong * u, slong * v, const acb_mat_t X)
     /* Not frozen rows of the approximation. */
     for (i = 0; i < n - k; i++)
         u[i] = row_idx[i];
+
     /* Frozen rows of the approximation. */
     for (i = 0; i < k; i++)
         v[i] = row_idx[n - k + i];
@@ -196,6 +199,22 @@ partition_X(slong * u, slong * v, const acb_mat_t X)
     _mag_vec_clear(row_mag, n);
     flint_free(row_idx);
     mag_clear(t);
+}
+
+static void
+partition_X_trivial(slong * u, slong * v, const acb_mat_t X, slong prec)
+{
+    slong n, k, i;
+
+    n = acb_mat_nrows(X);
+    k = acb_mat_ncols(X);
+
+    /* Not frozen rows of the approximation. */
+    for (i = 0; i < n - k; i++)
+        u[i] = i;
+    /* Frozen rows of the approximation. */
+    for (i = 0; i < k; i++)
+        v[i] = n - k + i;
 }
 
 void
@@ -221,7 +240,10 @@ acb_mat_eig_enclosure_rump(acb_t lambda, acb_mat_t J, acb_mat_t X, const acb_mat
     /* Frozen rows of the approximation. */
     v = flint_malloc(sizeof(slong) * k);
 
-    partition_X(u, v, X_approx);
+    if (k == 1)
+        partition_X_sorted(u, v, X_approx, prec);
+    else
+        partition_X_trivial(u, v, X_approx, prec);
 
     mag_init(eps);
     acb_mat_init(R, n, n);

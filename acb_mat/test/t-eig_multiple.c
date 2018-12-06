@@ -142,6 +142,95 @@ int main()
         acb_clear(b);
     }
 
+    /* Test convergence for DFT matrices */
+    for (iter = 0; iter < 50 * arb_test_multiplier(); iter++)
+    {
+        acb_mat_t A, R, QC;
+        acb_ptr E;
+        acb_t t;
+        fmpq_mat_t Q, Qinv;
+        slong i, n, c0, c1, c2, c3;
+        slong prec;
+        int algorithm, result;
+
+        n = n_randint(state, 30);
+        algorithm = n_randint(state, 2);
+        acb_mat_init(A, n, n);
+        acb_mat_init(R, n, n);
+        E = _acb_vec_init(n);
+        acb_init(t);
+        acb_mat_init(QC, n, n);
+        fmpq_mat_init(Q, n, n);
+        fmpq_mat_init(Qinv, n, n);
+
+        /* The current algorithm is not robust enough. */
+#if 0
+        do {
+            fmpq_mat_randtest(Q, state, 2 + n_randint(state, 10));
+        } while (!fmpq_mat_inv(Qinv, Q));
+#else
+        fmpq_mat_one(Q);
+        fmpq_mat_one(Qinv);
+#endif
+
+        for (prec = 32; ; prec *= 2)
+        {
+            if (prec > 10000)
+            {
+                flint_printf("FAIL: unsuccessful, prec > 10000\n\n");
+                flint_printf("algorithm = %d, iter %wd\n\n", algorithm, iter);
+                flint_abort();
+            }
+
+            acb_mat_dft(A, 0, prec);
+
+#if 0
+            acb_mat_set_fmpq_mat(QC, Q, prec);
+            acb_mat_mul(A, A, QC, prec);
+            acb_mat_set_fmpq_mat(QC, Qinv, prec);
+            acb_mat_mul(A, QC, A, prec);
+#endif
+
+            acb_mat_approx_eig_qr(E, NULL, R, A, NULL, 0, prec);
+
+            if (algorithm == 0)
+                result = acb_mat_eig_multiple_rump(E, A, E, R, prec);
+            else
+                result = acb_mat_eig_multiple(E, A, E, R, prec);
+
+            /* Verify the known eigenvalues + multiplicities */
+            if (result)
+            {
+                c0 = c1 = c2 = c3 = 0;
+
+                for (i = 0; i < n; i++)
+                {
+                    acb_set_d_d(t, 1.0, 0.0);
+                    c0 += acb_contains(E + i, t);
+                    acb_set_d_d(t, -1.0, 0.0);
+                    c1 += acb_contains(E + i, t);
+                    acb_set_d_d(t, 0.0, 1.0);
+                    c2 += acb_contains(E + i, t);
+                    acb_set_d_d(t, 0.0, -1.0);
+                    c3 += acb_contains(E + i, t);
+                }
+
+                result = (n == 0 || (c0 == (n+4)/4 && c1 == (n+2)/4 && c2 == (n-1)/4 && c3 == (n+1)/4));
+            }
+
+            if (result)
+                break;
+        }
+
+        acb_mat_clear(A);
+        acb_mat_clear(R);
+        acb_mat_clear(QC);
+        _acb_vec_clear(E, n);
+        acb_clear(t);
+        fmpq_mat_clear(Q);
+        fmpq_mat_clear(Qinv);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

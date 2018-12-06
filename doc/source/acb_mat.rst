@@ -581,10 +581,17 @@ Component and error operations
 Eigenvalues and eigenvectors
 -------------------------------------------------------------------------------
 
-The functions in this section are experimental. There may be classes
+The functions in this section are experimental. There are classes
 of matrices where the algorithms fail to converge even as
 *prec* is increased, or for which the error bounds are much worse
-than necessary. Manually balancing badly scaled matrices may help.
+than necessary. In some cases, it can help to manually precondition
+the matrix *A* by applying a similarity transformation `T^{-1} A T`.
+
+* If *A* is badly scaled, take `T` to be a matrix such that the entries
+  of `T^{-1} A T` are more uniform (this is known as balancing).
+* Simply taking `T` to be a random invertible matrix can help if an
+  algorithm fails to converge despite `A` being well-scaled. (This
+  can be the case when dealing with multiple eigenvalues.)
 
 .. function:: int acb_mat_approx_eig_qr(acb_ptr E, acb_mat_t L, acb_mat_t R, const acb_mat_t A, const mag_t tol, slong maxiter, slong prec)
 

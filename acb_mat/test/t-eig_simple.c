@@ -156,9 +156,10 @@ int main()
     /* Test convergence, given companion matrices */
     for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
-        acb_mat_t A, R;
+        acb_mat_t A, R, QC;
         acb_ptr E;
         acb_ptr roots;
+        fmpq_mat_t Q, Qinv;
         acb_poly_t f;
         slong i, j, n, prec, count, count2;
         int algorithm, success;
@@ -170,6 +171,9 @@ int main()
         acb_poly_init(f);
         acb_mat_init(A, n, n);
         acb_mat_init(R, n, n);
+        fmpq_mat_init(Q, n, n);
+        fmpq_mat_init(Qinv, n, n);
+        acb_mat_init(QC, n, n);
 
         for (i = 0; i < n; i++)
         {
@@ -182,6 +186,10 @@ int main()
                     goto new_root;
         }
 
+        do {
+            fmpq_mat_randtest(Q, state, 2 + n_randint(state, 100));
+        } while (!fmpq_mat_inv(Qinv, Q));
+
         success = 0;
 
         for (prec = 32; !success; prec *= 2)
@@ -189,7 +197,7 @@ int main()
             if (prec > 10000)
             {
                 flint_printf("FAIL: unsuccessful, prec > 10000\n\n");
-                flint_printf("algorithm = %d\n\n", algorithm);
+                flint_printf("algorithm = %d, iter %wd\n\n", algorithm, iter);
                 flint_printf("A = \n"); acb_mat_printd(A, 20); flint_printf("\n\n");
                 flint_printf("R = \n"); acb_mat_printd(R, 20); flint_printf("\n\n");
                 flint_printf("roots = \n");
@@ -202,7 +210,12 @@ int main()
             }
 
             acb_poly_product_roots(f, roots, n, prec);
+
             acb_mat_companion(A, f, prec);
+            acb_mat_set_fmpq_mat(QC, Q, prec);
+            acb_mat_mul(A, A, QC, prec);
+            acb_mat_set_fmpq_mat(QC, Qinv, prec);
+            acb_mat_mul(A, QC, A, prec);
 
             acb_mat_approx_eig_qr(E, NULL, R, A, NULL, 0, prec);
 
@@ -250,6 +263,9 @@ int main()
             }
         }
 
+        fmpq_mat_clear(Q);
+        fmpq_mat_clear(Qinv);
+        acb_mat_clear(QC);
         acb_mat_clear(A);
         acb_mat_clear(R);
         acb_poly_clear(f);
