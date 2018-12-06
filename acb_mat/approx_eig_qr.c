@@ -803,7 +803,10 @@ acb_mat_approx_hessenberg_qr(acb_mat_t A, acb_mat_t Q, const mag_t tol, slong ma
     }
 
     if (maxiter <= 0)
+    {
         maxiter = 14 * n;
+        maxiter += prec / 10;
+    }
 
     /* The active submatrix is A[n0:n1,n0:n1]. */
     n0 = 0;
