@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.16.0.pdf
 * http://arblib.org/arb-2.15.0.pdf
 * http://arblib.org/arb-2.14.0.pdf
 * http://arblib.org/arb-2.13.0.pdf
@@ -27,6 +28,33 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2018-12-07 -- version 2.16.0
+-------------------------------------------------------------------------------
+
+* Linear algebra and arithmetic
+
+  * Added acb_mat_approx_eig_qr for approximate computation of eigenvalues
+    and eigenvectors of complex matrices.
+  * Added acb_mat_eig_enclosure_rump implementing Rump's algorithm for
+    certification of eigenvalue-eigenvector pairs as well as clusters.
+  * Added acb_mat_eig_simple_rump for certified diagonalization of matrices
+    with simple eigenvalues.
+  * Added acb_mat_eig_simple_vdhoeven_mourrain, acb_mat_eig_simple for fast
+    certified diagonalization of matrices with simple eigenvalues.
+  * Added acb_mat_eig_multiple_rump, acb_mat_eig_multiple for certified
+    computation of eigenvalues with possible overlap.
+  * Added acb_mat_eig_global_enclosure for fast global inclusion of eigenvalues
+    without isolation.
+  * Added arb_mat_companion, acb_mat_companion for constructing companion
+    matrices.
+  * Added several arb_mat and acb_mat helper functions: indeterminate,
+    is_exact, is_zero, is_finite, is_triu, is_tril, is_diag, diag_prod.
+  * Added arb_mat_approx_inv, acb_mat_approx_inv.
+  * Optimized arb_mat_mul_block by using arb_dot when the blocks are small.
+  * Added acb_get_mid.
+  * Updated hilbert_matrix example program.
+
 
 2018-10-25 -- version 2.15.1
 -------------------------------------------------------------------------------
