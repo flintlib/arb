@@ -72,16 +72,17 @@ needs to be done by the user.
 
 For more example programs, see: http://arblib.org/examples.html
 
-## General features
+## Features
 
 Besides basic arithmetic, Arb allows working with univariate
 polynomials, truncated power series, and matrices
 over both real and complex numbers.
 
 Basic linear algebra is supported, including matrix multiplication,
-determinant, inverse, nonsingular solving and matrix exponential.
+determinant, inverse, nonsingular solving, matrix exponential,
+and computation of eigenvalues and eigenvectors.
 
-Support for polynomial and power series is quite extensive,
+Support for polynomials and power series is quite extensive,
 including methods for composition, reversion, product trees,
 multipoint evaluation and interpolation, complex root isolation,
 and transcendental functions of power series.
@@ -110,7 +111,9 @@ significant overhead compared to plain floating-point arithmetic.
 Various low-level optimizations have also been implemented
 to reduce overhead at precisions of just a few machine
 words. Most operations on polynomials and power series
-use asymptotically fast FFT multiplication.
+use asymptotically fast FFT multiplication based on FLINT.
+Similarly, most operations on large matrices take advantage
+of the fast integer matrix multiplication in FLINT.
 
 For basic arithmetic, Arb should generally be around as fast
 as MPFR (http://mpfr.org), though it can be a bit slower
@@ -154,7 +157,7 @@ the Julia programming language which includes a high-level
 Julia interface to Arb. The Nemo installation script will
 create a local installation of Arb along with other dependencies.
 
-An experimental standalone Python interface to FLINT and Arb is also available
+A standalone Python interface to FLINT and Arb is also available
 (<https://github.com/fredrik-johansson/python-flint>).
 
 A separate wrapper of transcendental functions for use with the
@@ -162,5 +165,7 @@ C99 `complex double` type is available
 (<https://github.com/fredrik-johansson/arbcmath>).
 
 Other third-party wrappers include:
-* Java wrapper using JNA: https://github.com/crowlogic/arb/
+* A Julia interface: https://github.com/JeffreySarnoff/ArbNumerics.jl
 * Another Julia interface: https://github.com/JuliaArbTypes/ArbFloats.jl
+* Java wrapper using JNA: https://github.com/crowlogic/arb/
+

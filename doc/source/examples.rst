@@ -50,18 +50,32 @@ does not contain zero.
 
 Sample output::
 
-    > build/examples/hilbert_matrix 200
-    prec=20: 0 +/- 5.5777e-330
-    prec=40: 0 +/- 2.5785e-542
-    prec=80: 0 +/- 8.1169e-926
-    prec=160: 0 +/- 2.8538e-1924
-    prec=320: 0 +/- 6.3868e-4129
-    prec=640: 0 +/- 1.7529e-8826
-    prec=1280: 0 +/- 1.8545e-17758
-    prec=2560: 2.955454297e-23924 +/- 6.4586e-24044
+    $ build/examples/hilbert_matrix 200
+    prec=20: [+/- 1.32e-335]
+    prec=40: [+/- 1.63e-545]
+    prec=80: [+/- 1.30e-933]
+    prec=160: [+/- 3.62e-1926]
+    prec=320: [+/- 1.81e-4129]
+    prec=640: [+/- 3.84e-8838]
+    prec=1280: [2.955454297e-23924 +/- 8.29e-23935]
     success!
-    cpu/wall(s): 9.06 9.095
-    virt/peak/res/peak(MB): 55.52 55.52 35.50 35.50
+    cpu/wall(s): 8.494 8.513
+    virt/peak/res/peak(MB): 134.98 134.98 111.57 111.57
+
+Called with ``-eig n``, instead of computing the determinant,
+the program computes the smallest eigenvalue of the Hilbert matrix
+(in fact, it isolates all eigenvalues and prints the smallest eigenvalue)::
+
+    $ build/examples/hilbert_matrix -eig 50
+    prec=20: nan
+    prec=40: nan
+    prec=80: nan
+    prec=160: nan
+    prec=320: nan
+    prec=640: [1.459157797e-74 +/- 2.49e-84]
+    success!
+    cpu/wall(s): 1.84 1.841
+    virt/peak/res/peak(MB): 33.97 33.97 10.51 10.51
 
 keiper_li.c
 -------------------------------------------------------------------------------
