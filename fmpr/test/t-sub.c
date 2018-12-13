@@ -23,7 +23,7 @@ int main()
     flint_randinit(state);
 
     /* test exact subtraction: (x - y) - z == (x - z) - y */
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong bits, res1, res2, res3, res4;
         fmpr_t x, y, z, t, u;

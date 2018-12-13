@@ -33,7 +33,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 3000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 300 * arb_test_multiplier(); iter++)
     {
         fmpr_t x, z, v;
         ulong y;

@@ -368,23 +368,6 @@ Comparisons
 
     Returns nonzero iff *x* equals `n 2^e` for some integer *n*.
 
-.. function:: void fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
-
-    Sets *b* to the smallest integer such that `|x| \le 2^b`.
-    If *x* is zero, infinity or NaN, the result is undefined.
-
-.. function:: void fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
-
-    Sets *b* to the smallest integer such that `|x| < 2^b`.
-    If *x* is zero, infinity or NaN, the result is undefined.
-
-.. function:: slong fmpr_abs_bound_lt_2exp_si(const fmpr_t x)
-
-    Returns the smallest integer *b* such that `|x| < 2^b`, clamping
-    the result to lie between -*FMPR_PREC_EXACT* and *FMPR_PREC_EXACT*
-    inclusive. If *x* is zero, -*FMPR_PREC_EXACT* is returned,
-    and if *x* is infinity or NaN, *FMPR_PREC_EXACT* is returned.
-
 
 Random number generation
 -------------------------------------------------------------------------------
@@ -468,15 +451,6 @@ Arithmetic
     can be  *FMPR_PREC_EXACT* to perform an exact addition, provided that the
     result fits in memory.
 
-.. function:: slong fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd)
-
-    Sets *s* to the sum of the array *terms* of length *len*, rounded to *prec* bits
-    in the direction *rnd*. The sum is computed as if done without any intermediate
-    rounding error, with only a single rounding applied to the final result.
-    Unlike repeated calls to *fmpr_add*, this function does not overflow if the
-    magnitudes of the terms are far apart. Warning: this function is implemented
-    naively, and the running time is quadratic with respect to *len* in the worst case.
-
 .. function:: slong fmpr_mul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
 .. function:: slong fmpr_mul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
@@ -514,11 +488,6 @@ Arithmetic
     Sets `z = x / y`, rounded according to *prec* and *rnd*. If *y* is zero,
     *z* is set to NaN.
 
-.. function:: void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec)
-
-    Sets `z` to an upper bound for `|x| / |y|`, computed to a precision
-    of approximately *prec* bits. The error can be a few ulp.
-
 .. function:: slong fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 
 .. function:: slong fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
@@ -546,10 +515,6 @@ Arithmetic
     that the result fits in memory.
 
 .. function:: slong fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
-
-.. function:: slong fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd)
-
-.. function:: slong fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *z* to the square root of *x*, rounded according to *prec* and *rnd*.
     The result is NaN if *x* is negative.
@@ -580,6 +545,7 @@ Arithmetic
 Special functions
 -------------------------------------------------------------------------------
 
+
 .. function:: slong fmpr_log(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to `\log(x)`, rounded according to *prec* and *rnd*.
@@ -608,5 +574,4 @@ Special functions
     This function computes an accurate value when *x* is small.
     This function is currently implemented using MPFR and does not
     support large exponents.
-
 

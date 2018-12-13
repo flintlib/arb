@@ -474,8 +474,6 @@ slong fmpr_sub_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd)
 slong fmpr_sub_si(fmpr_t z, const fmpr_t x, slong y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_sub_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 
-slong fmpr_sum(fmpr_t s, const fmpr_struct * terms, slong len, slong prec, fmpr_rnd_t rnd);
-
 slong fmpr_div(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_div_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_ui_div(fmpr_t z, ulong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
@@ -484,8 +482,6 @@ slong fmpr_si_div(fmpr_t z, slong x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 slong fmpr_div_fmpz(fmpr_t z, const fmpr_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_fmpz_div(fmpr_t z, const fmpz_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_fmpz_div_fmpz(fmpr_t z, const fmpz_t x, const fmpz_t y, slong prec, fmpr_rnd_t rnd);
-
-void fmpr_divappr_abs_ubound(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec);
 
 slong fmpr_addmul(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd);
 slong fmpr_addmul_ui(fmpr_t z, const fmpr_t x, ulong y, slong prec, fmpr_rnd_t rnd);
@@ -656,23 +652,6 @@ fmpr_set_ui_2exp_si(fmpr_t x, ulong man, slong exp)
 int fmpr_cmp_2exp_si(const fmpr_t x, slong e);
 
 int fmpr_cmpabs_2exp_si(const fmpr_t x, slong e);
-
-static __inline__ void
-fmpr_abs_bound_le_2exp_fmpz(fmpz_t b, const fmpr_t x)
-{
-    if (fmpz_is_pm1(fmpr_manref(x)))
-        fmpz_set(b, fmpr_expref(x));
-    else
-        fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
-}
-
-static __inline__ void
-fmpr_abs_bound_lt_2exp_fmpz(fmpz_t b, const fmpr_t x)
-{
-    fmpz_add_ui(b, fmpr_expref(x), fmpz_bits(fmpr_manref(x)));
-}
-
-slong fmpr_abs_bound_lt_2exp_si(const fmpr_t x);
 
 static __inline__ void
 fmpr_min(fmpr_t z, const fmpr_t a, const fmpr_t b)

@@ -23,7 +23,7 @@ int main()
     flint_randinit(state);
 
     /* test exact addition: (x + y) + z == x + (y + z) */
-    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         slong bits, res1, res2, res3, res4;
         fmpr_t x, y, z, t, u;
@@ -69,7 +69,7 @@ int main()
     }
 
     /* compare with add_naive */
-    for (iter = 0; iter < 1000000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         slong prec, ret1, ret2;
         fmpr_t x, y, z, w;
@@ -122,7 +122,7 @@ int main()
     }
 
     /* compare rounding with mpfr */
-    for (iter = 0; iter < 1000000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         slong bits, res;
         int mpfr_res;

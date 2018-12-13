@@ -22,7 +22,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 100000 * arb_test_multiplier(); iter++)
     {
         fmpr_t x, xcopy, y, err_bound, err;
         slong prec, ret1, ret2, bits, ebits;

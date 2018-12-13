@@ -68,24 +68,3 @@ fmpr_sqrt(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
     }
 }
 
-slong
-fmpr_sqrt_ui(fmpr_t z, ulong x, slong prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; slong r;
-    fmpr_init(t);
-    fmpr_set_ui(t, x);
-    r = fmpr_sqrt(z, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
-
-slong
-fmpr_sqrt_fmpz(fmpr_t z, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
-{
-    fmpr_t t; slong r;
-    fmpr_init(t);
-    fmpr_set_fmpz(t, x);
-    r = fmpr_sqrt(z, t, prec, rnd);
-    fmpr_clear(t);
-    return r;
-}
