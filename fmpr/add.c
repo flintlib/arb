@@ -11,6 +11,53 @@
 
 #include "fmpr.h"
 
+slong
+_fmpr_add_1x1(fmpr_t z,
+        mp_limb_t x, int xsign, const fmpz_t xexp,
+        mp_limb_t y, int ysign, const fmpz_t yexp,
+        slong shift, slong prec, slong rnd)
+{
+    mp_limb_t hi, lo, t, u;
+    int sign = ysign;
+
+    t = x;
+    u = y;
+
+    (void) yexp; /* unused */
+
+    lo = u << shift;
+    hi = (shift == 0) ? 0 : (u >> (FLINT_BITS - shift));
+
+    if (xsign == ysign)
+    {
+        add_ssaaaa(hi, lo, hi, lo, 0, t);
+    }
+    else
+    {
+        if (hi == 0)
+        {
+            if (lo >= t)
+            {
+                lo = lo - t;
+            }
+            else
+            {
+                lo = t - lo;
+                sign = !sign;
+            }
+        }
+        else
+        {
+            sub_ddmmss(hi, lo, hi, lo, 0, t);
+        }
+    }
+
+    if (hi == 0)
+        return fmpr_set_round_ui_2exp_fmpz(z, lo, xexp, sign, prec, rnd);
+    else
+        return fmpr_set_round_uiui_2exp_fmpz(z, hi, lo, xexp, sign, prec, rnd);
+}
+
 static slong
 _fmpr_add_special(fmpr_t z, const fmpr_t x, const fmpr_t y, slong prec, fmpr_rnd_t rnd)
 {

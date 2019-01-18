@@ -321,19 +321,7 @@ mag_inv_lower(mag_t res, const mag_t x)
 
 void mag_mul_2exp_si(mag_t z, const mag_t x, slong y);
 
-MAG_INLINE void
-mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y)
-{
-    if (mag_is_special(x))
-    {
-        mag_set(z, x);
-    }
-    else
-    {
-        _fmpz_add2_fast(MAG_EXPREF(z), MAG_EXPREF(x), y, 0);
-        MAG_MAN(z) = MAG_MAN(x);
-    }
-}
+void mag_mul_2exp_fmpz(mag_t z, const mag_t x, const fmpz_t y);
 
 void mag_sub(mag_t z, const mag_t x, const mag_t y);
 
@@ -680,20 +668,18 @@ MAG_INLINE void
 mag_mul_ui(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
-    mag_init(t);
+    mag_init(t);  /* no need to clear */
     mag_set_ui(t, y);
     mag_mul(z, x, t);
-    mag_clear(t);
 }
 
 MAG_INLINE void
 mag_mul_ui_lower(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
-    mag_init(t);
+    mag_init(t);  /* no need to clear */
     mag_set_ui_lower(t, y);
     mag_mul_lower(z, x, t);
-    mag_clear(t);
 }
 
 MAG_INLINE void
@@ -720,10 +706,9 @@ MAG_INLINE void
 mag_div_ui(mag_t z, const mag_t x, ulong y)
 {
     mag_t t;
-    mag_init(t);
+    mag_init(t);  /* no need to clear */
     mag_set_ui_lower(t, y);
     mag_div(z, x, t);
-    mag_clear(t);
 }
 
 MAG_INLINE void

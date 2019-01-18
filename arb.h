@@ -291,57 +291,10 @@ arb_get_rad_arb(arb_t z, const arb_t x)
     mag_zero(arb_radref(z));
 }
 
-ARB_INLINE void
-arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec)
-{
-    arf_t t;
-    arf_init_set_mag_shallow(t, arb_radref(x));
-
-    if (arf_sgn(arb_midref(x)) < 0)
-        arf_sub(u, arb_midref(x), t, prec, ARF_RND_UP);
-    else
-        arf_add(u, arb_midref(x), t, prec, ARF_RND_UP);
-
-    arf_abs(u, u);
-}
-
-ARB_INLINE void
-arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec)
-{
-    arf_t t;
-    arf_init_set_mag_shallow(t, arb_radref(x));
-
-    if (arf_sgn(arb_midref(x)) > 0)
-    {
-        arf_sub(u, arb_midref(x), t, prec, ARF_RND_DOWN);
-    }
-    else
-    {
-        arf_add(u, arb_midref(x), t, prec, ARF_RND_DOWN);
-        arf_neg(u, u);
-    }
-
-    if (arf_sgn(u) < 0)
-        arf_zero(u);
-}
-
-ARB_INLINE void
-arb_get_ubound_arf(arf_t u, const arb_t x, long prec)
-{
-    arf_t t;
-    arf_init_set_mag_shallow(t, arb_radref(x));
-
-    arf_add(u, arb_midref(x), t, prec, ARF_RND_CEIL);
-}
-
-ARB_INLINE void
-arb_get_lbound_arf(arf_t u, const arb_t x, long prec)
-{
-    arf_t t;
-    arf_init_set_mag_shallow(t, arb_radref(x));
-
-    arf_sub(u, arb_midref(x), t, prec, ARF_RND_FLOOR);
-}
+void arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec);
+void arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec);
+void arb_get_ubound_arf(arf_t u, const arb_t x, long prec);
+void arb_get_lbound_arf(arf_t u, const arb_t x, long prec);
 
 void arb_nonnegative_part(arb_t res, const arb_t x);
 
@@ -800,27 +753,7 @@ _arb_vec_scalar_addmul(arb_ptr res, arb_srcptr vec,
         arb_addmul(res + i, vec + i, c, prec);
 }
 
-ARB_INLINE void
-_arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len)
-{
-    if (len < 1)
-    {
-        mag_zero(bound);
-    }
-    else
-    {
-        mag_t t;
-        slong i;
-        arb_get_mag(bound, vec);
-        mag_init(t);
-        for (i = 1; i < len; i++)
-        {
-            arb_get_mag(t, vec + i);
-            mag_max(bound, bound, t);
-        }
-        mag_clear(t);
-    }
-}
+void _arb_vec_get_mag(mag_t bound, arb_srcptr vec, slong len);
 
 ARB_INLINE slong
 _arb_vec_bits(arb_srcptr x, slong len)
@@ -837,23 +770,7 @@ _arb_vec_bits(arb_srcptr x, slong len)
     return b;
 }
 
-ARB_INLINE void
-_arb_vec_set_powers(arb_ptr xs, const arb_t x, slong len, slong prec)
-{
-    slong i;
-
-    for (i = 0; i < len; i++)
-    {
-        if (i == 0)
-            arb_one(xs + i);
-        else if (i == 1)
-            arb_set_round(xs + i, x, prec);
-        else if (i % 2 == 0)
-            arb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
-        else
-            arb_mul(xs + i, xs + i - 1, x, prec);
-    }
-}
+void _arb_vec_set_powers(arb_ptr xs, const arb_t x, slong len, slong prec);
 
 ARB_INLINE void
 _arb_vec_add_error_arf_vec(arb_ptr res, arf_srcptr err, slong len)

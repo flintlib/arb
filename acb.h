@@ -40,7 +40,6 @@ typedef const acb_struct * acb_srcptr;
 #define acb_realref(x) (&(x)->real)
 #define acb_imagref(x) (&(x)->imag)
 
-
 ACB_INLINE void
 acb_init(acb_t x)
 {
@@ -329,74 +328,9 @@ void acb_get_mag(mag_t z, const acb_t x);
 
 void acb_get_mag_lower(mag_t z, const acb_t x);
 
-ACB_INLINE void
-acb_get_abs_ubound_arf(arf_t u, const acb_t z, slong prec)
-{
-    if (arb_is_zero(acb_imagref(z)))
-    {
-        arb_get_abs_ubound_arf(u, acb_realref(z), prec);
-    }
-    else if (arb_is_zero(acb_realref(z)))
-    {
-        arb_get_abs_ubound_arf(u, acb_imagref(z), prec);
-    }
-    else
-    {
-        arf_t v;
-        arf_init(v);
-
-        arb_get_abs_ubound_arf(u, acb_realref(z), prec);
-        arb_get_abs_ubound_arf(v, acb_imagref(z), prec);
-
-        arf_mul(u, u, u, prec, ARF_RND_UP);
-        arf_mul(v, v, v, prec, ARF_RND_UP);
-        arf_add(u, u, v, prec, ARF_RND_UP);
-        arf_sqrt(u, u, prec, ARF_RND_UP);
-
-        arf_clear(v);
-    }
-}
-
-ACB_INLINE void
-acb_get_abs_lbound_arf(arf_t u, const acb_t z, slong prec)
-{
-    if (arb_is_zero(acb_imagref(z)))
-    {
-        arb_get_abs_lbound_arf(u, acb_realref(z), prec);
-    }
-    else if (arb_is_zero(acb_realref(z)))
-    {
-        arb_get_abs_lbound_arf(u, acb_imagref(z), prec);
-    }
-    else
-    {
-        arf_t v;
-        arf_init(v);
-
-        arb_get_abs_lbound_arf(u, acb_realref(z), prec);
-        arb_get_abs_lbound_arf(v, acb_imagref(z), prec);
-
-        arf_mul(u, u, u, prec, ARF_RND_DOWN);
-        arf_mul(v, v, v, prec, ARF_RND_DOWN);
-        arf_add(u, u, v, prec, ARF_RND_DOWN);
-        arf_sqrt(u, u, prec, ARF_RND_DOWN);
-
-        arf_clear(v);
-    }
-}
-
-ACB_INLINE void
-acb_get_rad_ubound_arf(arf_t u, const acb_t z, slong prec)
-{
-    /* fixme: this bound is very sloppy */
-
-    if (mag_cmp(arb_radref(acb_realref(z)), arb_radref(acb_imagref(z))) >= 0)
-        arf_set_mag(u, arb_radref(acb_realref(z)));
-    else
-        arf_set_mag(u, arb_radref(acb_imagref(z)));
-
-    arf_mul_2exp_si(u, u, 1);
-}
+void acb_get_abs_ubound_arf(arf_t u, const acb_t z, slong prec);
+void acb_get_abs_lbound_arf(arf_t u, const acb_t z, slong prec);
+void acb_get_rad_ubound_arf(arf_t u, const acb_t z, slong prec);
 
 ACB_INLINE void
 acb_union(acb_t res, const acb_t x, const acb_t y, slong prec)
@@ -854,15 +788,6 @@ acb_sqr(acb_t res, const acb_t val, slong prec)
     acb_mul(res, val, val, prec);
 }
 
-/*
-TBD
-
-void acb_invroot_newton(acb_t r, const acb_t a, ulong m, const acb_t r0, slong startprec, slong prec);
-void acb_root_exp(acb_t r, const acb_t a, slong m, slong index, slong prec);
-void acb_root_newton(acb_t r, const acb_t a, slong m, slong index, slong prec);
-void acb_root(acb_t r, const acb_t a, slong m, slong index, slong prec);
-*/
-
 ACB_INLINE int
 acb_is_finite(const acb_t x)
 {
@@ -1087,7 +1012,6 @@ acb_rel_accuracy_bits(const acb_t x)
     return -acb_rel_error_bits(x);
 }
 
-
 ACB_INLINE slong
 acb_bits(const acb_t x)
 {
@@ -1123,23 +1047,7 @@ _acb_vec_bits(acb_srcptr vec, slong len)
     return _arb_vec_bits((arb_srcptr) vec, 2 * len);
 }
 
-ACB_INLINE void
-_acb_vec_set_powers(acb_ptr xs, const acb_t x, slong len, slong prec)
-{
-    slong i;
-
-    for (i = 0; i < len; i++)
-    {
-        if (i == 0)
-            acb_one(xs + i);
-        else if (i == 1)
-            acb_set_round(xs + i, x, prec);
-        else if (i % 2 == 0)
-            acb_mul(xs + i, xs + i / 2, xs + i / 2, prec);
-        else
-            acb_mul(xs + i, xs + i - 1, x, prec);
-    }
-}
+void _acb_vec_set_powers(acb_ptr xs, const acb_t x, slong len, slong prec);
 
 ACB_INLINE void
 _acb_vec_add_error_arf_vec(acb_ptr res, arf_srcptr err, slong len)
