@@ -613,3 +613,10 @@ Currently, these methods require *chi* to be a primitive character.
 
     Sets *res* to the power series `Z(t)` where *t* is a given power series, truncating the result to length *len*.
 
+.. function:: void acb_dirichlet_gram_point(arb_t res, const fmpz_t n, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+
+    Sets *res* to the *n*-th Gram point `g_n`, defined as the solution of
+    `\theta(g_n) = \pi n`. Currently only the Gram points corresponding to the
+    Riemann zeta function are supported and *G* and *chi* must both be set to
+    *NULL*. Requires `n \ge 0`.
+
