@@ -149,6 +149,8 @@ Compile it with::
 
 Depending on the environment, you may also have to pass
 the flags ``-lflint``, ``-lmpfr``, ``-lgmp`` to the compiler.
+On some Debian based systems, ``-larb`` needs to be replaced
+with ``-lflint-arb``.
 
 If the Arb/FLINT header and library files are not in a standard location
 (``/usr/local`` on most systems), you may also have to provide flags such as::
