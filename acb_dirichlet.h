@@ -167,6 +167,9 @@ void acb_dirichlet_hardy_z_series(acb_poly_t res, const acb_poly_t s, const diri
 
 void acb_dirichlet_gram_point(arb_t res, const fmpz_t n, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
 
+void acb_dirichlet_backlund_s(arb_t res, const arb_t t, slong prec);
+void acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec);
+
 /* Discrete Fourier Transform */
 
 void acb_dirichlet_dft_index(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
