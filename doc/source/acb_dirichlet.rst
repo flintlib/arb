@@ -620,3 +620,8 @@ Currently, these methods require *chi* to be a primitive character.
     Riemann zeta function are supported and *G* and *chi* must both be set to
     *NULL*. Requires `n \ge 0`.
 
+.. function:: void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t)
+
+    Computes an upper bound for `|S(t)|` quickly. Theorem 1
+    and the bounds in (1.2) in [Tru2014]_ are used.
+
