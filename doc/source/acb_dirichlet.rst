@@ -615,13 +615,24 @@ Currently, these methods require *chi* to be a primitive character.
 
 .. function:: void acb_dirichlet_gram_point(arb_t res, const fmpz_t n, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
-    Sets *res* to the *n*-th Gram point `g_n`, defined as the solution of
-    `\theta(g_n) = \pi n`. Currently only the Gram points corresponding to the
-    Riemann zeta function are supported and *G* and *chi* must both be set to
-    *NULL*. Requires `n \ge 0`.
+    Sets *res* to the *n*-th Gram point `g_n`, defined as the unique solution
+    in `[7, \infty)` of `\theta(g_n) = \pi n`. Currently only the Gram points
+    corresponding to the Riemann zeta function are supported and *G* and *chi*
+    must both be set to *NULL*. Requires `n \ge -1`.
 
 .. function:: void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t)
 
     Computes an upper bound for `|S(t)|` quickly. Theorem 1
     and the bounds in (1.2) in [Tru2014]_ are used.
 
+.. function:: ulong acb_dirichlet_turing_method_bound(const fmpz_t p)
+
+    Computes an upper bound *B* for the minimum number of consecutive good
+    Gram blocks sufficient to count nontrivial zeros of the Riemann zeta
+    function using Turing's method [Tur1953]_ as updated by [Leh1970]_,
+    [Bre1979]_, and [Tru2011]_.
+
+    Let `N(T)` denote the number of zeros (counted according to their
+    multiplicities) of `\zeta(s)` in the region `0 < \mathcal{I}(s) \le T`.
+    If at least *B* consecutive Gram blocks with union `[g_n, g_p)`
+    satisfy Rosser's rule, then `N(g_n) \le n + 1` and `N(g_p) \ge p + 1`.

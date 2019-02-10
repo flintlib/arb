@@ -12,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 /*
-Claim: the error is bounded by 1/256 if n <= 1 and (1/64) (log(n)/n) if n >= 2.
+Claim: the error is bounded by 1/64 if n <= 1 and (1/64) (log(n)/n) if n >= 2.
 
 A crude lower bound for g_n is 2 pi exp(W(n)), or 8*n/log(n) for n >= 8.
 
@@ -54,7 +54,7 @@ gram_point_initial(arb_t x, const fmpz_t n, slong prec)
 
     if (fmpz_cmp_ui(n, 1) <= 0)
     {
-        mag_set_ui_2exp_si(b, 1, -8);
+        mag_set_ui_2exp_si(b, 1, -6);
     }
     else
     {
@@ -76,8 +76,8 @@ acb_dirichlet_gram_point(arb_t res, const fmpz_t n, const dirichlet_group_t G, c
 {
     slong asymp_accuracy;
 
-    /* Only implemented for n >= 0 and Riemann zeta. */
-    if (fmpz_sgn(n) < 0 || G != NULL || chi != NULL)
+    /* Only implemented for n >= -1 and Riemann zeta. */
+    if (fmpz_cmp_si(n, -1) < 0 || G != NULL || chi != NULL)
     {
         arb_indeterminate(res);
         return;

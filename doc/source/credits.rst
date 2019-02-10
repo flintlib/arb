@@ -161,6 +161,8 @@ Bibliography
 
 .. [Bre1978] \R. P. Brent, "A Fortran multiple-precision arithmetic package", ACM Transactions on Mathematical Software, 4(1):57–70, March 1978.
 
+.. [Bre1979] \R. P. Brent, "On the Zeros of the Riemann Zeta Function in the Critical Strip", Mathematics of Computation 33 (1979), 1361-1372, https://doi.org/10.1090/S0025-5718-1979-0537983-2
+
 .. [Bre2010] \R. P. Brent, "Ramanujan and Euler's Constant", http://wwwmaths.anu.edu.au/~brent/pd/Euler_CARMA_10.pdf
 
 .. [BJ2013] \R. P. Brent and F. Johansson, "A bound for the error term in the Brent-McMillan algorithm", preprint (2013), http://arxiv.org/abs/1312.0039
@@ -227,6 +229,8 @@ Bibliography
 
 .. [Kri2013] \A. Krishnamoorthy and D. Menon, "Matrix Inversion Using Cholesky Decomposition" Proc. of the International Conference on Signal Processing Algorithms, Architectures, Arrangements, and Applications (SPA-2013), pp. 70-72, 2013.
 
+.. [Leh1970] \R. S. Lehman, "On the Distribution of Zeros of the Riemann Zeta-Function", Proc. of the London Mathematical Society 20(3) (1970), 303-320, https://doi.org/10.1112/plms/s3-20.2.303
+
 .. [Miy2010] \S. Miyajima, "Fast enclosure for all eigenvalues in generalized eigenvalue problems", Journal of Computational and Applied Mathematics, 233 (2010), 2994-3004, https://dx.doi.org/10.1016/j.cam.2009.11.048
 
 .. [MPFR2012] The MPFR team, "MPFR Algorithms" (2012), http://www.mpfr.org/algo.html
@@ -251,4 +255,8 @@ Bibliography
 
 .. [Tre2008] \L. N. Trefethen, "Is Gauss Quadrature Better than Clenshaw-Curtis?", SIAM Review, 50:1 (2008), 67-87, https://doi.org/10.1137/060659831
 
+.. [Tru2011] \T. S. Trudgian, "Improvements to Turing's method", Mathematics of Computation 80 (2011), 2259-2279, https://doi.org/10.1090/S0025-5718-2011-02470-1 
+
 .. [Tru2014] \T. S. Trudgian, "An improved upper bound for the argument of the Riemann zeta-function on the critical line II", Journal of Number Theory 134 (2014), 280-292, https://doi.org/10.1016/j.jnt.2013.07.017
+
+.. [Tur1953] \A. M. Turing, "Some Calculations of the Riemann Zeta-Function", Proc. of the London Mathematical Society 3(3) (1953), 99-117, https://doi.org/10.1112/plms/s3-3.1.99
