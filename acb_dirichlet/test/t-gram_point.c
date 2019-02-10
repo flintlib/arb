@@ -36,8 +36,8 @@ int main()
         acb_init(t);
         fmpz_init(n);
 
-        fmpz_randtest(n, state, 500);
-        fmpz_abs(n, n);
+        fmpz_randtest_unsigned(n, state, 500);
+        fmpz_sub_ui(n, n, 1);
         prec1 = 2 + n_randtest(state) % 500;
         prec2 = 2 + n_randtest(state) % 2000;
 
