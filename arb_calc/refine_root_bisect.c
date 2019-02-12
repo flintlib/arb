@@ -13,18 +13,6 @@
 
 /* TODO: refactor/combine some of this code with isolate_roots.c */
 
-/* 0 means that it *could* be zero; otherwise +/- 1 */
-static __inline__ int
-_arb_sign(const arb_t t)
-{
-    if (arb_is_positive(t))
-        return 1;
-    else if (arb_is_negative(t))
-        return -1;
-    else
-        return 0;
-}
-
 int arb_calc_partition(arf_interval_t L, arf_interval_t R,
     arb_calc_func_t func, void * param, const arf_interval_t block, slong prec)
 {
@@ -43,7 +31,7 @@ int arb_calc_partition(arf_interval_t L, arf_interval_t R,
     /* Evaluate and get sign at midpoint */
     arb_set_arf(m, u);
     func(t, m, param, 1, prec);
-    msign = _arb_sign(t);
+    msign = arb_sgn_nonzero(t);
 
     /* L, R = block, split at midpoint */
     arf_set(&L->a, &block->a);
@@ -73,11 +61,11 @@ int arb_calc_refine_root_bisect(arf_interval_t r, arb_calc_func_t func,
 
     arb_set_arf(m, &start->a);
     func(v, m, param, 1, prec);
-    asign = _arb_sign(v);
+    asign = arb_sgn_nonzero(v);
 
     arb_set_arf(m, &start->b);
     func(v, m, param, 1, prec);
-    bsign = _arb_sign(v);
+    bsign = arb_sgn_nonzero(v);
 
     /* must have proper sign changes */
     if (asign == 0 || bsign == 0 || asign == bsign)

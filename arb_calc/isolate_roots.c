@@ -15,18 +15,6 @@
 #define BLOCK_ISOLATED_ZERO 1
 #define BLOCK_UNKNOWN 2
 
-/* 0 means that it *could* be zero; otherwise +/- 1 */
-static __inline__ int
-_arb_sign(const arb_t t)
-{
-    if (arb_is_positive(t))
-        return 1;
-    else if (arb_is_negative(t))
-        return -1;
-    else
-        return 0;
-}
-
 static int
 check_block(arb_calc_func_t func, void * param, const arf_interval_t block,
     int asign, int bsign, slong prec)
@@ -175,11 +163,11 @@ arb_calc_isolate_roots(arf_interval_ptr * blocks, int ** flags,
 
     arb_set_arf(m, &block->a);
     func(v, m, param, 1, prec);
-    asign = _arb_sign(v);
+    asign = arb_sgn_nonzero(v);
 
     arb_set_arf(m, &block->b);
     func(v, m, param, 1, prec);
-    bsign = _arb_sign(v);
+    bsign = arb_sgn_nonzero(v);
 
     arb_clear(m);
     arb_clear(v);
