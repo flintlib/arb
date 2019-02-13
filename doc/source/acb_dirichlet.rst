@@ -636,3 +636,8 @@ Currently, these methods require *chi* to be a primitive character.
     multiplicities) of `\zeta(s)` in the region `0 < \mathcal{I}(s) \le T`.
     If at least *B* consecutive Gram blocks with union `[g_n, g_p)`
     satisfy Rosser's rule, then `N(g_n) \le n + 1` and `N(g_p) \ge p + 1`.
+
+.. function:: void acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec)
+
+    Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`. Negative indices
+    give the conjugate zeros and `n = 0` is undefined.
