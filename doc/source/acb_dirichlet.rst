@@ -637,7 +637,46 @@ Currently, these methods require *chi* to be a primitive character.
     If at least *B* consecutive Gram blocks with union `[g_n, g_p)`
     satisfy Rosser's rule, then `N(g_n) \le n + 1` and `N(g_p) \ge p + 1`.
 
+.. function:: int _acb_dirichlet_definite_hardy_z(arb_t res, const arf_t t, slong * pprec)
+
+    Sets *res* to the Hardy Z-function `Z(t)`.
+    The initial precision (* *pprec*) is increased as necessary
+    to determine the sign of `Z(t)`. The sign is returned.
+
+.. function:: void _acb_dirichlet_isolate_gram_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+
+    Uses Gram's law to compute an interval `(a, b)` that
+    contains the *n*-th zero of the Hardy Z-function and no other zero.
+    Requires `1 \le n \le 126`.
+
+.. function:: void _acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+
+    Uses Rosser's rule to compute an interval `(a, b)` that
+    contains the *n*-th zero of the Hardy Z-function and no other zero.
+    Requires `1 \le n \le 13999526`.
+
+.. function:: void _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+
+    Computes an interval `(a, b)` that contains the *n*-th zero of the
+    Hardy Z-function and no other zero, following Turing's method as
+    implemented in [Joh2018b]_ and presented in [Ari2012]_.
+    Requires `n \ge 3`.
+
+.. function:: void acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+
+    Computes an interval `(a, b)` that contains the *n*-th zero of the
+    Hardy Z-function and contains no other zero, using the most appropriate
+    underscore version of this function. Requires `n \ge 1`.
+
+.. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
+
+    Sets *res* to the *n*-th zero of the Hardy Z-function, requiring`n \ge 1`.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
 .. function:: void acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec)
 
     Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`. Negative indices
     give the conjugate zeros and `n = 0` is undefined.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.

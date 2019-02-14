@@ -141,6 +141,8 @@ Bibliography
 
 .. [Ari2011] \J. Arias de Reyna, "High precision computation of Riemann’s zeta function by the Riemann-Siegel formula, I", Mathematics of Computation 80 (2011), 995-1009
 
+.. [Ari2012] \J. Arias de Reyna, "Programs for Riemann's zeta function", (J. A. J. van Vonderen, Ed.) *Leven met getallen : liber amicorum ter gelegenheid van de pensionering van Herman te Riele* CWI (2012) 102-112, https://ir.cwi.nl/pub/19724
+
 .. [Arn2010] \J. Arndt, *Matters Computational*, Springer (2010), http://www.jjj.de/fxt/#fxtbook
 
 .. [BBC1997] \D. H. Bailey, J. M. Borwein and R. E. Crandall, "On the Khintchine constant", Mathematics of Computation 66 (1997) 417-431
@@ -220,6 +222,8 @@ Bibliography
 .. [Joh2017b] \F. Johansson, "Computing the Lambert W function in arbitrary-precision complex interval arithmetic", preprint (2017), https://arxiv.org/abs/1705.03266
 
 .. [Joh2018a] \F. Johansson, "Numerical integration in arbitrary-precision ball arithmetic", preprint (2018), https://arxiv.org/abs/1802.07942
+
+.. [Joh2018b] \F. Johansson and others, "mpmath: a Python library for arbitrary-precision floating-point arithmetic (version 1.1.0)", December 2018. http://mpmath.org/
 
 .. [JM2018] \F. Johansson and M. Mezzarobba, "Fast and rigorous arbitrary-precision computation of Gauss-Legendre quadrature nodes and weights", preprint (2018), https://arxiv.org/abs/1802.03948
 
