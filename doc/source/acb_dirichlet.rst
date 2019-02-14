@@ -3,12 +3,9 @@
 **acb_dirichlet.h** -- Dirichlet L-functions, Riemann zeta and related functions
 ===================================================================================
 
-*Warning: the interfaces in this module are experimental and may change
-without notice.*
-
-This module allows working with values of Dirichlet characters, Dirichlet L-functions,
-and related functions. Working with Dirichlet characters is documented in
-:ref:`dirichlet`.
+This module allows working with values of Dirichlet characters,
+Dirichlet L-functions, and related functions. Working with Dirichlet characters
+is documented in :ref:`dirichlet`.
 
 A Dirichlet L-function is the analytic continuation of an L-series
 
@@ -420,7 +417,7 @@ Dirichlet character Gauss, Jacobi and theta sums
    variant evaluates the series on the quotient ring by a cyclotomic polynomial
    before evaluating at the root of unity, ignoring its argument *z*.
 
-Discrete Fourier transforms (DFT)
+Discrete Fourier transforms
 -------------------------------------------------------------------------------
 
 If `f` is a function `\mathbb Z/q\mathbb Z\to \mathbb C`,
@@ -613,12 +610,18 @@ Currently, these methods require *chi* to be a primitive character.
 
     Sets *res* to the power series `Z(t)` where *t* is a given power series, truncating the result to length *len*.
 
+Gram points
+-------------------------------------------------------------------------------
+
 .. function:: void acb_dirichlet_gram_point(arb_t res, const fmpz_t n, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
 
     Sets *res* to the *n*-th Gram point `g_n`, defined as the unique solution
     in `[7, \infty)` of `\theta(g_n) = \pi n`. Currently only the Gram points
     corresponding to the Riemann zeta function are supported and *G* and *chi*
     must both be set to *NULL*. Requires `n \ge -1`.
+
+Riemann zeta function zeros
+-------------------------------------------------------------------------------
 
 .. function:: void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t)
 
@@ -633,7 +636,7 @@ Currently, these methods require *chi* to be a primitive character.
     [Bre1979]_, and [Tru2011]_.
 
     Let `N(T)` denote the number of zeros (counted according to their
-    multiplicities) of `\zeta(s)` in the region `0 < \mathcal{I}(s) \le T`.
+    multiplicities) of `\zeta(s)` in the region `0 < \operatorname{Im}(s) \le T`.
     If at least *B* consecutive Gram blocks with union `[g_n, g_p)`
     satisfy Rosser's rule, then `N(g_n) \le n + 1` and `N(g_p) \ge p + 1`.
 
@@ -670,7 +673,7 @@ Currently, these methods require *chi* to be a primitive character.
 
 .. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
-    Sets *res* to the *n*-th zero of the Hardy Z-function, requiring`n \ge 1`.
+    Sets *res* to the *n*-th zero of the Hardy Z-function, requiring `n \ge 1`.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
@@ -680,3 +683,4 @@ Currently, these methods require *chi* to be a primitive character.
     give the conjugate zeros and `n = 0` is undefined.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
+
