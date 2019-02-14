@@ -188,7 +188,7 @@ create_gram_node(const fmpz_t n)
 
     while (1)
     {
-        acb_dirichlet_gram_point(t, n, NULL, NULL, prec);
+        acb_dirichlet_gram_point(t, n, NULL, NULL, prec + fmpz_bits(n));
         acb_set_arb(z, t);
         acb_dirichlet_hardy_z(z, z, NULL, NULL, 1, prec);
         acb_get_real(v, z);
