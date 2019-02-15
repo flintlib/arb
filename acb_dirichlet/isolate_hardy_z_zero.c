@@ -370,6 +370,88 @@ extend_to_prev_good_gram_node(zz_node_t p)
 }
 
 /*
+ * TODO: This is probably redundant.
+ * Can arb_get_lbound_arf ever give a negative arf given a nonnegative arb?
+ * If the answer is no, and it's probably no, then this function
+ * can be deleted.
+ */
+static void
+_arb_get_lbound_arf_nonnegative(arf_t res, const arb_t x, slong prec)
+{
+    arb_get_lbound_arf(res, x, prec);
+    if (arf_cmp_si(res, 0) < 0)
+    {
+        arf_zero(res);
+    }
+}
+
+/*
+ * res = (x1*w1 + x2*w2) / (w1 + w2)
+ * Undefined if weights are not nonnegative.
+ * If w1 and w2 are zero, the resulting interval contains x1 and x2.
+ */
+static void
+_weighted_arithmetic_mean(arb_t res, const arf_t x1, const arf_t x2,
+        const arb_t w1, const arb_t w2, slong prec)
+{
+    if (!arb_is_nonnegative(w1) || !arb_is_nonnegative(w2))
+    {
+        arb_indeterminate(res);
+    }
+    else if (arb_is_zero(w1) && arb_is_zero(w2))
+    {
+        arb_set_interval_arf(res, x1, x2, prec);
+    }
+    else if (arb_is_zero(w1))
+    {
+        arb_set_arf(res, x2);
+    }
+    else if (arb_is_zero(w2))
+    {
+        arb_set_arf(res, x1);
+    }
+    else if (arb_is_exact(w1) && arb_is_exact(w2))
+    {
+        arb_t a, b;
+        arb_init(a);
+        arb_init(b);
+        arb_mul_arf(a, w1, x1, prec);
+        arb_addmul_arf(a, w2, x2, prec);
+        arb_add(b, w1, w2, prec);
+        arb_div(res, a, b, prec);
+        arb_clear(a);
+        arb_clear(b);
+    }
+    else
+    {
+        arb_t a, b, r1, r2;
+        arb_init(a);
+        arb_init(b);
+        arb_init(r1);
+        arb_init(r2);
+
+        arb_zero(a);
+        arb_zero(b);
+        _arb_get_lbound_arf_nonnegative(arb_midref(a), w1, prec);
+        arb_get_ubound_arf(arb_midref(b), w2, prec);
+        _weighted_arithmetic_mean(r1, x1, x2, a, b, prec);
+
+        arb_zero(a);
+        arb_zero(b);
+        arb_get_ubound_arf(arb_midref(a), w1, prec);
+        _arb_get_lbound_arf_nonnegative(arb_midref(b), w2, prec);
+        _weighted_arithmetic_mean(r2, x1, x2, a, b, prec);
+
+        arb_union(res, r1, r2, prec);
+
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(r1);
+        arb_clear(r2);
+    }
+}
+
+/*
  * Split the interval (t1, t2) into the intervals (t1, out) and (out, t2)
  * in an attempt to increase the number of observed sign changes of Z(t)
  * between endpoints.
@@ -390,19 +472,16 @@ split_interval(arb_t out,
          * has the opposite sign. Try the vertex of a parabola that would touch
          * f(t)=0 between t1 and t2 and would pass through (t1,v1) and (t2,v2).
          */
-        arb_t r, a, b;
-        arb_init(r);
-        arb_init(a);
-        arb_init(b);
-        arb_div(r, v2, v1, prec);
-        arb_sqrt(r, r, prec);
-        arb_mul_arf(a, r, t1, prec);
-        arb_add_arf(a, a, t2, prec);
-        arb_add_ui(b, r, 1, prec);
-        arb_div(out, a, b, prec);
-        arb_clear(r);
-        arb_clear(a);
-        arb_clear(b);
+        arb_t w1, w2;
+        arb_init(w1);
+        arb_init(w2);
+        arb_abs(w1, v2); /* w1, v2 is deliberate */
+        arb_sqrt(w1, w1, prec);
+        arb_abs(w2, v1); /* w2, v1 is deliberate */
+        arb_sqrt(w2, w2, prec);
+        _weighted_arithmetic_mean(out, t1, t2, w1, w2, prec);
+        arb_clear(w1);
+        arb_clear(w2);
     }
     else
     {
