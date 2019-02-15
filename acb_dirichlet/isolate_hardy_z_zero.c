@@ -188,6 +188,12 @@ create_gram_node(const fmpz_t n)
 
     while (1)
     {
+        /* Computing the Gram point to higher precision improves performance
+           significantly. The likely explanation (not verified) is that
+           when evaluating the Z-function at an inexact ball using the
+           Riemann-Siegel formula, error propagation uses a bound for Z'
+           that is far from tight. The extra precision compensates
+           for this lack of tightness. */
         acb_dirichlet_gram_point(t, n, NULL, NULL, prec + fmpz_bits(n));
         acb_set_arb(z, t);
         acb_dirichlet_hardy_z(z, z, NULL, NULL, 1, prec);
