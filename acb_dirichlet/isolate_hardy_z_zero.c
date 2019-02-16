@@ -505,60 +505,58 @@ split_interval(arb_t out,
 }
 
 /*
- * Iteratively add interleaving nodes into the linked list of evaluated values
- * of t, within the sublist demarcated by nodes a and b.
- * limitloop is the max number of iterations, or nonpositive for no limit.
- * zn is the target number of zeros; it is not always possible to reach
- * this target.
+ * Add a new node between each pair of existing nodes in the linked list
+ * of evaluated values of t, within the sublist demarcated by nodes a and b.
  */
 static void
-separate_zeros(zz_node_t a, zz_node_t b, slong zn, slong limitloop)
+intercalate(zz_node_t a, zz_node_t b)
 {
     arb_t t;
-    slong loopnumber = 0;
     zz_node_ptr q, r, mid_node;
+
+    if (a == NULL || b == NULL)
+    {
+        flint_printf("a and b must be non-NULL\n");
+        flint_abort();
+    }
+    if (!zz_node_is_good_gram_node(a) || !zz_node_is_good_gram_node(b))
+    {
+        flint_printf("a and b must represent good Gram points\n");
+        flint_abort();
+    }
 
     if (a == b) return;
 
     arb_init(t);
 
-    while (count_sign_changes(a, b) < zn)
+    q = a;
+    r = a->next;
+    while (q != b)
     {
-        if (limitloop > 0 && loopnumber >= limitloop)
+        if (!r)
         {
-            break;
+            flint_printf("prematurely reached end of list\n");
+            flint_abort();
         }
-        q = a;
-        r = a->next;
-        while (q != b)
+        while (1)
         {
-            if (!r)
+            split_interval(t,
+                    &q->t, &q->v, zz_node_sgn(q),
+                    &r->t, &r->v, zz_node_sgn(r),
+                    FLINT_MIN(q->prec, r->prec));
+            if (!arb_contains_arf(t, &q->t) && !arb_contains_arf(t, &r->t))
             {
-                flint_printf("prematurely reached end of list\n");
-                flint_abort();
+                break;
             }
-            while (1)
-            {
-                split_interval(t,
-                        &q->t, &q->v, zz_node_sgn(q),
-                        &r->t, &r->v, zz_node_sgn(r),
-                        FLINT_MIN(q->prec, r->prec));
-                if (!arb_contains_arf(t, &q->t) &&
-                    !arb_contains_arf(t, &r->t))
-                {
-                    break;
-                }
-                zz_node_refine((q->prec < r->prec) ? q : r);
-            }
-            mid_node = create_non_gram_node(arb_midref(t));
-            q->next = mid_node;
-            mid_node->prev = q;
-            mid_node->next = r;
-            r->prev = mid_node;
-            q = r;
-            r = r->next;
+            zz_node_refine((q->prec < r->prec) ? q : r);
         }
-        loopnumber++;
+        mid_node = create_non_gram_node(arb_midref(t));
+        q->next = mid_node;
+        mid_node->prev = q;
+        mid_node->next = r;
+        r->prev = mid_node;
+        q = r;
+        r = r->next;
     }
 
     arb_clear(t);
@@ -635,31 +633,24 @@ trim(zz_node_ptr *A, zz_node_ptr *B,
     *B = b;
 }
 
-void
-_acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+/*
+ * Find one 'superblock' below n and one 'superblock' above n.
+ * The term 'superblock' in this context means a stretch of
+ * enough consecutive 'good' Rosser/Gram blocks to meet the Turing method bound.
+ * The output *psb is the number of blocks in the superblock.
+ * The output nodes *pu and *pv are the first node of the first superblock
+ * and the last node of the second superblock respectively.
+ */
+static void
+turing_search_near(zz_node_ptr *pu, zz_node_ptr *pv, slong *psb, const fmpz_t n)
 {
-    fmpz_t k;
-    zz_node_ptr u, v, U, V;
+    zz_node_ptr u, v;
+    slong i;
     slong zn; /* target number of sign changes */
     slong sb; /* the number of padding blocks required by Turing's method */
     slong cgb; /* the number of consecutive good blocks */
-    slong variations; /* the number of sign changes */
-    slong loopcount = 4;
-    /*
-     * The loopcount controls how hard we try to find zeros in Gram/Rosser
-     * blocks. If the loopcount is too high then when Rosser's rule is violated
-     * we will spend too much time searching for zeros that don't exist.
-     * If the loopcount is too low then we will miss some 'good' blocks,
-     * causing the search to be extended unnecessarily far from the initial
-     * guess before eventually making another pass in which loopcount
-     * is effectively infinite.
-     */
-
-    if (fmpz_cmp_si(n, 3) < 0)
-    {
-        flint_printf("invalid n: "); fmpz_print(n); flint_printf("\n");
-        flint_abort();
-    }
+    const slong loopcount = 4;
+    fmpz_t k;
 
     fmpz_init(k);
 
@@ -679,8 +670,7 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
      * Extend the search to greater heights t.
      * 
      * Continue adding Gram points until the number of consecutive
-     * 'good' Gram/Rosser blocks is twice the number required by
-     * the Turing method bound.
+     * 'good' Gram/Rosser blocks reaches the Turing method bound.
      */
     sb = 0;
     cgb = 0;
@@ -689,13 +679,16 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         zz_node_ptr nv;
         nv = extend_to_next_good_gram_node(v);
         zn = count_gram_intervals(v, nv);
-        separate_zeros(v, nv, zn, loopcount);
+        for (i = 0; i < loopcount && count_sign_changes(v, nv) < zn; i++)
+        {
+            intercalate(v, nv);
+        }
         if (count_sign_changes(v, nv) >= zn)
         {
             cgb++;
-            if (cgb % 2 == 0 && sb < cgb / 2)
+            if (cgb > sb)
             {
-                sb = cgb / 2;
+                sb = cgb;
                 if (acb_dirichlet_turing_method_bound(nv->gram) <= sb)
                 {
                     v = nv;
@@ -717,7 +710,105 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         zz_node_ptr pu;
         pu = extend_to_prev_good_gram_node(u);
         zn = count_gram_intervals(pu, u);
-        separate_zeros(pu, u, zn, loopcount);
+        for (i = 0; i < loopcount && count_sign_changes(pu, u) < zn; i++)
+        {
+            intercalate(pu, u);
+        }
+        if (count_sign_changes(pu, u) >= zn)
+        {
+            cgb++;
+            if (cgb == sb)
+            {
+                u = pu;
+                break;
+            }
+        }
+        else
+        {
+            cgb = 0;
+        }
+        u = pu;
+    }
+
+    *pu = u;
+    *pv = v;
+    *psb = sb;
+
+    fmpz_clear(k);
+}
+
+/*
+ * Find one 'double superblock' beginning below the point represented
+ * by node u, and find one 'double superblock' ending above the point
+ * represented by node v. The term 'double superblock' in this context
+ * means a stretch of twice as many consecutive 'good' Rosser/Gram blocks
+ * as would meet the Turing method bound.
+ * The output nodes *pu and *pv are the first node of the first double
+ * superblock and the last node of the second double superblock respectively.
+ * The output integer *psb reports one half of the number
+ * of blocks in the double superblock.
+ * The parameter initial_cgb is the number of consecutive good blocks
+ * above and below the points represented by nodes u and v respectively.
+ */
+static void
+turing_search_far(zz_node_ptr *pu, zz_node_ptr *pv, slong *psb,
+        zz_node_ptr u, zz_node_ptr v, slong initial_cgb)
+{
+    slong i;
+    slong zn; /* target number of sign changes */
+    slong sb; /* the number of padding blocks required by Turing's method */
+    slong cgb; /* the number of consecutive good blocks */
+    const slong loopcount = 4;
+
+    /*
+     * Extend the search to greater heights t.
+     * 
+     * Continue adding Gram points until the number of consecutive
+     * 'good' Gram/Rosser blocks is twice the number required by
+     * the Turing method bound.
+     */
+    sb = 0;
+    cgb = initial_cgb;
+    while (1)
+    {
+        zz_node_ptr nv;
+        nv = extend_to_next_good_gram_node(v);
+        zn = count_gram_intervals(v, nv);
+        for (i = 0; i < loopcount && count_sign_changes(v, nv) < zn; i++)
+        {
+            intercalate(v, nv);
+        }
+        if (count_sign_changes(v, nv) >= zn)
+        {
+            cgb++;
+            if (cgb % 2 == 0 && sb < cgb / 2)
+            {
+                sb = cgb / 2;
+                if (acb_dirichlet_turing_method_bound(nv->gram) <= sb)
+                {
+                    v = nv;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            cgb = 0;
+        }
+        v = nv;
+    }
+
+    /* Extend the search to smaller heights t. */
+    cgb = initial_cgb;
+    while (1)
+    {
+        zz_node_ptr pu;
+        pu = extend_to_prev_good_gram_node(u);
+        zn = count_gram_intervals(pu, u);
+        for (i = 0; i < loopcount && count_sign_changes(pu, u) < zn; i++)
+        {
+            intercalate(pu, u);
+        }
         if (count_sign_changes(pu, u) >= zn)
         {
             cgb++;
@@ -734,9 +825,44 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         u = pu;
     }
 
-    trim(&U, &V, u, v, sb*2);
+    *pu = u;
+    *pv = v;
+    *psb = sb;
+}
+
+void
+_acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+{
+    zz_node_ptr U, V, u, v;
+    slong i;
+    slong sb_near; /* Turing method bound for near search */
+    slong sb_far; /* Turing method bound for far search */
+    slong zn; /* target number of sign changes */
+    slong variations; /* observed number of sign changes */
+    const slong loopcount = 4;
+    /*
+     * The loopcount controls how hard we try to find zeros in Gram/Rosser
+     * blocks. If the loopcount is too high then when Rosser's rule is violated
+     * we will spend too much time searching for zeros that don't exist.
+     * If the loopcount is too low then we will miss some 'good' blocks,
+     * causing the search to be extended unnecessarily far from the initial
+     * guess before eventually making another pass in which loopcount
+     * is effectively infinite.
+     */
+
+    if (fmpz_cmp_si(n, 2) < 0)
+    {
+        flint_printf("invalid n: "); fmpz_print(n); flint_printf("\n");
+        flint_abort();
+    }
+
+    turing_search_near(&u, &v, &sb_near, n);
+    trim(&U, &V, u, v, sb_near);
     zn = count_gram_intervals(U, V);
-    separate_zeros(U, V, zn, loopcount);
+    for (i = 0; i < loopcount && count_sign_changes(U, V) < zn; i++)
+    {
+        intercalate(U, V);
+    }
     variations = count_sign_changes(U, V);
     if (variations > zn)
     {
@@ -745,13 +871,35 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
     }
     else if (variations < zn)
     {
-        trim(&U, &V, u, v, sb);
+        zz_node_ptr r = U;
+        zz_node_ptr s = V;
+        turing_search_far(&u, &v, &sb_far, u, v, sb_near);
+        trim(&U, &V, u, v, 2*sb_far);
         zn = count_gram_intervals(U, V);
-        separate_zeros(U, V, zn, 0);
-        if (count_sign_changes(U, V) != zn)
+        for (i = 0; i < loopcount && count_sign_changes(U, V) < zn; i++)
+        {
+            intercalate(U, r);
+            intercalate(s, V);
+        }
+        variations = count_sign_changes(U, V);
+        if (variations > zn)
         {
             flint_printf("unexpected number of sign changes\n");
             flint_abort();
+        }
+        else if (variations < zn)
+        {
+            trim(&U, &V, u, v, sb_far);
+            zn = count_gram_intervals(U, V);
+            while (count_sign_changes(U, V) < zn)
+            {
+                intercalate(U, V);
+            }
+            if (count_sign_changes(U, V) != zn)
+            {
+                flint_printf("unexpected number of sign changes\n");
+                flint_abort();
+            }
         }
     }
 
@@ -764,8 +912,6 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         zz_node_clear(v);
         flint_free(v);
     }
-
-    fmpz_clear(k);
 }
 
 void
@@ -773,7 +919,6 @@ _acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 {
     fmpz_t k;
     zz_node_ptr u, v;
-    slong zn;
 
     if (fmpz_cmp_si(n, 1) < 0 || fmpz_cmp_si(n, ROSSERS_RULE_MAX) > 0)
     {
@@ -794,8 +939,10 @@ _acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         u = extend_to_prev_good_gram_node(u);
     if (!zz_node_is_good_gram_node(v))
         v = extend_to_next_good_gram_node(v);
-    zn = count_gram_intervals(u, v);
-    separate_zeros(u, v, zn, 0);
+    while (count_sign_changes(u, v) != count_gram_intervals(u, v))
+    {
+        intercalate(u, v);
+    }
     count_up(a, b, u, n);
 
     while (u)
