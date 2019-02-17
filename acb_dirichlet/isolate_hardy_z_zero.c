@@ -11,7 +11,6 @@
 */
 
 #include "acb_dirichlet.h"
-#include "arb_calc.h"
 
 /*
  * For a detailed explanation of the algorithm implemented in this file, see:
@@ -830,8 +829,16 @@ turing_search_far(zz_node_ptr *pu, zz_node_ptr *pv, slong *psb,
     *psb = sb;
 }
 
-void
-_acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+/*
+ * Used for both zero isolation and for N(t).
+ * n is the index of a Hardy Z-function zero of interest.
+ * *pu and *pv are the first and last node of an output list.
+ * *pU and *pV are the first and last nodes of a sublist with
+ * fully separated zeros, within the *pu -- *pv list.
+ */
+static void
+_separated_turing_list(zz_node_ptr *pU, zz_node_ptr *pV,
+        zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
 {
     zz_node_ptr U, V, u, v;
     slong i;
@@ -903,19 +910,20 @@ _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         }
     }
 
-    count_up(a, b, U, n);
-
-    while (u)
-    {
-        v = u;
-        u = u->next;
-        zz_node_clear(v);
-        flint_free(v);
-    }
+    *pu = u;
+    *pv = v;
+    *pU = U;
+    *pV = V;
 }
 
-void
-_acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+/*
+ * Used for both zero isolation and for N(t).
+ * n is the index of a Hardy Z-function zero of interest.
+ * *pu and *pv are the first and last node of an output list
+ * with fully separated zeros.
+ */
+static void
+_separated_rosser_list(zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
 {
     fmpz_t k;
     zz_node_ptr u, v;
@@ -943,26 +951,24 @@ _acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
     {
         intercalate(u, v);
     }
-    count_up(a, b, u, n);
 
-    while (u)
-    {
-        v = u;
-        u = u->next;
-        zz_node_clear(v);
-        flint_free(v);
-    }
+    *pu = u;
+    *pv = v;
 
     fmpz_clear(k);
 }
 
-void
-_acb_dirichlet_isolate_gram_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+/*
+ * Used for both zero isolation and for N(t).
+ * n is the index of a Hardy Z-function zero of interest.
+ * *pu and *pv are the first and last node of an output list
+ * with fully separated zeros.
+ */
+static void
+_separated_gram_list(zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
 {
-    arb_t t;
-    acb_t z;
     fmpz_t k;
-    slong prec = 32;
+    zz_node_ptr u, v;
 
     if (fmpz_cmp_si(n, 1) < 0 || fmpz_cmp_si(n, GRAMS_LAW_MAX) > 0)
     {
@@ -970,35 +976,64 @@ _acb_dirichlet_isolate_gram_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
         flint_abort();
     }
 
-    arb_init(t);
-    acb_init(z);
     fmpz_init(k);
 
     fmpz_sub_ui(k, n, 2);
-    acb_dirichlet_gram_point(t, k, NULL, NULL, prec);
-    acb_set_arb(z, t);
-    acb_dirichlet_hardy_z(z, z, NULL, NULL, 1, prec);
-    if (acb_contains_zero(z))
-    {
-        flint_printf("insufficient precision isolating hardy z zero\n");
-        flint_abort();
-    }
-    arf_set(a, arb_midref(t));
-
+    u = create_gram_node(k);
     fmpz_sub_ui(k, n, 1);
-    acb_dirichlet_gram_point(t, k, NULL, NULL, prec);
-    acb_set_arb(z, t);
-    acb_dirichlet_hardy_z(z, z, NULL, NULL, 1, prec);
-    if (acb_contains_zero(z))
-    {
-        flint_printf("insufficient precision isolating hardy z zero\n");
-        flint_abort();
-    }
-    arf_set(b, arb_midref(t));
+    v = create_gram_node(k);
+    u->next = v;
+    v->prev = u;
 
-    arb_clear(t);
-    acb_clear(z);
+    *pu = u;
+    *pv = v;
+
     fmpz_clear(k);
+}
+
+void
+_acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+{
+    zz_node_ptr U, V, u, v;
+    _separated_turing_list(&U, &V, &u, &v, n);
+    count_up(a, b, U, n);
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+}
+
+void
+_acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+{
+    zz_node_ptr u, v;
+    _separated_rosser_list(&u, &v, n);
+    count_up(a, b, u, n);
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+}
+
+void
+_acb_dirichlet_isolate_gram_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+{
+    zz_node_ptr u, v;
+    _separated_gram_list(&u, &v, n);
+    count_up(a, b, u, n);
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
 }
 
 void
@@ -1021,4 +1056,172 @@ acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
     {
         _acb_dirichlet_isolate_turing_hardy_z_zero(a, b, n);
     }
+}
+
+static void
+_acb_set_arf(acb_t res, const arf_t t)
+{
+    acb_zero(res);
+    arb_set_arf(acb_realref(res), t);
+}
+
+void
+_acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
+{
+    zz_node_ptr U, V, u, v, p;
+    arb_t pi, x;
+    acb_t z;
+    fmpz_t n;
+    int s; /* sign of Z(t) */
+    slong prec = arf_bits(t) + 8;
+
+    if (arf_cmp_si(t, 14) < 0)
+    {
+        fmpz_zero(res);
+        return;
+    }
+
+    fmpz_init(n);
+    arb_init(pi);
+    arb_init(x);
+    acb_init(z);
+
+    /*
+     * t is located between two Gram points. Find the unique n such that the
+     * nth zero is also predicted to be located between these Gram points.
+     */
+    while (1)
+    {
+        arb_const_pi(pi, prec);
+        _acb_set_arf(z, t);
+        acb_dirichlet_hardy_theta(z, z, NULL, NULL, 1, prec);
+        acb_get_real(x, z);
+        arb_div(x, x, pi, prec);
+        arb_floor(x, x, prec);
+        if (arb_get_unique_fmpz(n, x))
+        {
+            break;
+        }
+        prec *= 2;
+    }
+    fmpz_add_ui(n, n, 2);
+
+    /* Compute the sign of Z(t). */
+    s = _acb_dirichlet_definite_hardy_z(x, t, &prec);
+
+    /* Get a list of points that fully separate zeros of Z. */
+    if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
+    {
+        _separated_gram_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else if (fmpz_cmp_si(n, ROSSERS_RULE_MAX) <= 0)
+    {
+        _separated_rosser_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else
+    {
+        _separated_turing_list(&U, &V, &u, &v, n);
+    }
+
+    if (U == NULL || V == NULL)
+    {
+        flint_printf("U and V must not be NULL\n");
+        flint_abort();
+    }
+    if (!zz_node_is_good_gram_node(U) || !zz_node_is_good_gram_node(V))
+    {
+        flint_printf("U and V must be good Gram points\n");
+        flint_abort();
+    }
+
+    /* Find the position of t relative to points in the list. */
+    p = U;
+    fmpz_add_ui(res, U->gram, 1);
+    while (p != V)
+    {
+        if (!p->next)
+        {
+            flint_printf("prematurely reached end of list\n");
+            flint_abort();
+        }
+        if (zz_node_sgn(p) != zz_node_sgn(p->next))
+        {
+            if (arf_cmp(t, &p->next->t) <= 0)
+            {
+                if (zz_node_sgn(p->next) == s)
+                {
+                    fmpz_add_ui(res, res, 1);
+                }
+                break;
+            }
+            fmpz_add_ui(res, res, 1);
+        }
+        p = p->next;
+    }
+
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+
+    fmpz_clear(n);
+    arb_clear(pi);
+    arb_clear(x);
+    acb_clear(z);
+}
+
+static void
+_arb_set_interval_fmpz(arb_t res, const fmpz_t a, const fmpz_t b)
+{
+    fmpz_t n;
+
+    fmpz_init(n);
+
+    fmpz_add(n, a, b);
+    arf_set_fmpz(arb_midref(res), n);
+    fmpz_sub(n, b, a);
+    mag_set_fmpz(arb_radref(res), n);
+    arb_mul_2exp_si(res, res, -1);
+
+    fmpz_clear(n);
+}
+
+void
+acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec)
+{
+    fmpz_t a, b;
+    arf_t lb, ub;
+
+    fmpz_init(a);
+    fmpz_init(b);
+    arf_init(lb);
+    arf_init(ub);
+
+    if (arb_is_exact(t))
+    {
+        _acb_dirichlet_exact_zeta_nzeros(a, arb_midref(t));
+        arb_set_fmpz(res, a);
+    }
+    else
+    {
+        arb_get_lbound_arf(lb, t, prec);
+        arb_get_ubound_arf(ub, t, prec);
+        _acb_dirichlet_exact_zeta_nzeros(a, lb);
+        _acb_dirichlet_exact_zeta_nzeros(b, ub);
+        _arb_set_interval_fmpz(res, a, b);
+    }
+
+    arb_set_round(res, res, prec);
+
+    fmpz_clear(a);
+    fmpz_clear(b);
+    arf_clear(lb);
+    arf_clear(ub);
 }
