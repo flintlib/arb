@@ -175,6 +175,8 @@ void _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n
 void acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n);
 void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec);
 void acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec);
+void _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t);
+void acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec);
 
 /* Discrete Fourier Transform */
 

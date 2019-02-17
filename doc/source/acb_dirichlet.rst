@@ -684,3 +684,12 @@ Riemann zeta function zeros
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
+.. function:: void _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
+
+.. function:: void acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec)
+
+    Compute the number of zeros (counted according to their multiplicities)
+    of `\zeta(s)` in the region `0 < \operatorname{Im}(s) \le t`.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
