@@ -32,7 +32,7 @@ int main()
         arb_init(b);
         arb_init(c);
 
-        arb_randtest(a, state, 1 + n_randint(state, 1000), 3);
+        arb_randtest(a, state, 1 + n_randint(state, 1000), 4);
 
         acb_dirichlet_backlund_s(b, a, prec1);
 

@@ -113,6 +113,7 @@ void
 acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 {
     arf_interval_t r, s;
+    mag_t m;
     slong bits;
 
     if (fmpz_cmp_si(n, 1) < 0)
@@ -123,11 +124,13 @@ acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     arf_interval_init(r);
     arf_interval_init(s);
+    mag_init(m);
 
     acb_dirichlet_isolate_hardy_z_zero(&r->a, &r->b, n);
 
-    bits = arf_bits(&r->b);
-    arb_set_interval_arf(res, &r->a, &r->b, bits + 8);
+    arf_get_mag(m, &r->b);
+    bits = FLINT_MAX(0, mag_get_d_log2_approx(m)) + 8;
+    arb_set_interval_arf(res, &r->a, &r->b, bits);
     bits = arb_rel_accuracy_bits(res);
 
     if (bits < prec)
@@ -140,4 +143,5 @@ acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     arf_interval_clear(r);
     arf_interval_clear(s);
+    mag_clear(m);
 }
