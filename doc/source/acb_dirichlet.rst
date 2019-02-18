@@ -693,3 +693,15 @@ Riemann zeta function zeros
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
+.. function:: void acb_dirichlet_backlund_s(arb_t res, const arb_t t, slong prec)
+
+    Compute `S(t) = \frac{1}{\pi}\operatorname{arg}\zeta(\frac{1}{2} + it)`
+    where the argument is defined by continuous variation of `s` in `\zeta(s)`
+    starting at `s = 2`, then vertically to `s = 2 + it`, then horizontally
+    to `s = \frac{1}{2} + it`. In particular `\operatorname{arg}` in this
+    context is not the principal value of the argument, and it cannot be
+    computed directly by :func:`acb_arg`. In practice `S(t)` is computed as
+    `S(t) = N(t) - \frac{1}{\pi}\theta(t) - 1` where `N(t)` is
+    :func:`acb_dirichlet_zeta_nzeros` and `\theta(t)` is
+    :func:`acb_dirichlet_hardy_theta`.
+

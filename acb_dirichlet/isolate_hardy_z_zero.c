@@ -1218,8 +1218,6 @@ acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec)
         _arb_set_interval_fmpz(res, a, b);
     }
 
-    arb_set_round(res, res, prec);
-
     fmpz_clear(a);
     fmpz_clear(b);
     arf_clear(lb);
