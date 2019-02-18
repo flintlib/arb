@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2019 D.H.J. Polymath
+    Copyright (C) 2019 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -41,72 +42,106 @@ _acb_dirichlet_definite_hardy_z(arb_t res, const arf_t t, slong *pprec)
     return msign;
 }
 
-static int
-_partition_hardy_z(arf_interval_t L, arf_interval_t R,
-        const arf_interval_t block, slong *pprec)
-{
-    arb_t t;
-    arf_t u;
-    int msign;
-
-    arb_init(t);
-    arf_init(u);
-
-    /* Compute the midpoint */
-    arf_add(u, &block->a, &block->b, ARF_PREC_EXACT, ARF_RND_DOWN);
-    arf_mul_2exp_si(u, u, -1);
-
-    /* Evaluate and get sign at midpoint */
-    msign = 0;
-    msign = _acb_dirichlet_definite_hardy_z(t, u, pprec);
-
-    /* L, R = block, split at midpoint */
-    arf_set(&L->a, &block->a);
-    arf_set(&R->b, &block->b);
-    arf_set(&L->b, u);
-    arf_set(&R->a, u);
-
-    arb_clear(t);
-    arf_clear(u);
-
-    return msign;
-}
-
 static void
-_refine_hardy_z_zero_bisect(arf_interval_t res,
-        const arf_interval_t start, slong iter)
+_refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, slong prec)
 {
-    int asign, bsign, msign;
-    slong i, prec = 8;
-    arf_interval_t t, u;
-    arb_t m, v;
+    arf_t a, b, fa, fb, c, fc, t;
+    arb_t z;
+    slong k, nmag, abs_tol, wp;
+    int asign, bsign, csign;
 
-    arf_interval_init(t);
-    arf_interval_init(u);
-    arb_init(m);
-    arb_init(v);
+    arf_init(a);
+    arf_init(b);
+    arf_init(c);
+    arf_init(fa);
+    arf_init(fb);
+    arf_init(fc);
+    arf_init(t);
+    arb_init(z);
 
-    asign = _acb_dirichlet_definite_hardy_z(v, &start->a, &prec);
-    bsign = _acb_dirichlet_definite_hardy_z(v, &start->b, &prec);
+    arf_set(a, &start->a);
+    arf_set(b, &start->b);
+
+    nmag = arf_abs_bound_lt_2exp_si(b);
+    abs_tol = nmag - prec - 4;
+
+    wp = prec + nmag + 8;
+    asign = _acb_dirichlet_definite_hardy_z(z, a, &wp);
+    arf_set(fa, arb_midref(z));
+    bsign = _acb_dirichlet_definite_hardy_z(z, b, &wp);
+    arf_set(fb, arb_midref(z));
+
     if (asign == bsign)
     {
         flint_printf("isolate a zero before bisecting the interval\n");
         flint_abort();
     }
-    arf_interval_set(res, start);
-    for (i = 0; i < iter; i++)
+
+    for (k = 0; k < 40; k++)
     {
-        msign = _partition_hardy_z(t, u, res, &prec);
-        if (msign == asign)
-            arf_interval_swap(res, u);
+        /* c = a - fa * (b - a) / (fb - fa) */
+        arf_sub(c, b, a, wp, ARF_RND_NEAR);
+        arf_sub(t, fb, fa, wp, ARF_RND_NEAR);
+        arf_div(c, c, t, wp, ARF_RND_NEAR);
+        arf_mul(c, c, fa, wp, ARF_RND_NEAR);
+        arf_sub(c, a, c, wp, ARF_RND_NEAR);
+
+        /* if c is not sandwiched between a and b, improve precision
+           and fall back to one bisection step */
+        if (!arf_is_finite(c) ||
+            !((arf_cmp(a, c) < 0 && arf_cmp(c, b) < 0) ||
+              (arf_cmp(b, c) < 0 && arf_cmp(c, a) < 0)))
+        {
+            /* flint_printf("no sandwich (k = %wd)\n", k); */
+            wp += 32;
+            arf_add(c, a, b, ARF_PREC_EXACT, ARF_RND_DOWN);
+            arf_mul_2exp_si(c, c, -1);
+        }
+
+        csign = _acb_dirichlet_definite_hardy_z(z, c, &wp);
+        arf_set(fc, arb_midref(z));
+
+        if (csign != bsign)
+        {
+            arf_set(a, b);
+            arf_set(fa, fb);
+            asign = bsign;
+
+            arf_set(b, c);
+            arf_set(fb, fc);
+            bsign = csign;
+        }
         else
-            arf_interval_swap(res, t);
+        {
+            arf_set(b, c);
+            arf_set(fb, fc);
+            bsign = csign;
+
+            arf_mul_2exp_si(fa, fa, -1);
+        }
+
+        arf_sub(t, a, b, wp, ARF_RND_DOWN);
+        arf_abs(t, t);
+
+        if (arf_cmpabs_2exp_si(t, abs_tol) < 0)
+            break;
     }
 
-    arf_interval_clear(t);
-    arf_interval_clear(u);
-    arb_clear(m);
-    arb_clear(v);
+    /* a and b may have changed places */
+    if (arf_cmp(a, b) > 0)
+        arf_swap(a, b);
+
+    arf_set(&res->a, a);
+    arf_set(&res->b, b);
+
+    arf_clear(a);
+    arf_clear(b);
+    arf_clear(c);
+    arf_clear(fa);
+    arf_clear(fb);
+    arf_clear(fc);
+    arf_clear(t);
+    arb_clear(z);
 }
 
 void
@@ -126,13 +161,12 @@ acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     acb_dirichlet_isolate_hardy_z_zero(&r->a, &r->b, n);
 
-    bits = arf_bits(&r->b);
-    arb_set_interval_arf(res, &r->a, &r->b, bits + 8);
+    arb_set_interval_arf(res, &r->a, &r->b, prec + 8);
     bits = arb_rel_accuracy_bits(res);
 
     if (bits < prec)
     {
-        _refine_hardy_z_zero_bisect(s, r, prec - bits);
+        _refine_hardy_z_zero_illinois(s, r, prec);
         arb_set_interval_arf(res, &s->a, &s->b, prec);
     }
 
@@ -141,3 +175,4 @@ acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
     arf_interval_clear(r);
     arf_interval_clear(s);
 }
+
