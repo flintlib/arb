@@ -21,7 +21,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         acb_t v1, v2, z1, z2;
         fmpz_t n, m;
@@ -36,8 +36,16 @@ int main()
 
         fmpz_randtest_unsigned(n, state, 20);
         fmpz_add_ui(n, n, 1);
-        prec1 = 2 + n_randtest(state) % 50;
-        prec2 = 2 + n_randtest(state) % 200;
+        if (n_randint(state, 10) != 0)
+        {
+            prec1 = 2 + n_randtest(state) % 50;
+            prec2 = 2 + n_randtest(state) % 200;
+        }
+        else
+        {
+            prec1 = 2 + n_randtest(state) % 200;
+            prec2 = 2 + n_randtest(state) % 600;
+        }
 
         acb_dirichlet_zeta_zero(z1, n, prec1);
         acb_dirichlet_zeta_zero(z2, n, prec2);
