@@ -623,11 +623,6 @@ Gram points
 Riemann zeta function zeros
 -------------------------------------------------------------------------------
 
-.. function:: void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t)
-
-    Computes an upper bound for `|S(t)|` quickly. Theorem 1
-    and the bounds in (1.2) in [Tru2014]_ are used.
-
 .. function:: ulong acb_dirichlet_turing_method_bound(const fmpz_t p)
 
     Computes an upper bound *B* for the minimum number of consecutive good
@@ -663,7 +658,7 @@ Riemann zeta function zeros
     Computes an interval `(a, b)` that contains the *n*-th zero of the
     Hardy Z-function and no other zero, following Turing's method as
     implemented in [Joh2018b]_ and presented in [Ari2012]_.
-    Requires `n \ge 3`.
+    Requires `n \ge 2`.
 
 .. function:: void acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 
@@ -671,16 +666,34 @@ Riemann zeta function zeros
     Hardy Z-function and contains no other zero, using the most appropriate
     underscore version of this function. Requires `n \ge 1`.
 
+.. function:: void _acb_dirichlet_refine_hardy_z_zero(arb_t res, const arf_t a, const arf_t b, slong prec)
+
+    Sets *res* to the unique zero of the Hardy Z-function in the
+    interval `(a, b)`.
+
 .. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     Sets *res* to the *n*-th zero of the Hardy Z-function, requiring `n \ge 1`.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
+.. function:: void acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets the entries of *res* to *len* consecutive zeros of the
+    Hardy Z-function, beginning with the *n*-th zero. Requires positive *n*.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
 .. function:: void acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec)
 
-    Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`. Negative indices
-    give the conjugate zeros and `n = 0` is undefined.
+    Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`, requiring `n \ge 1`.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
+.. function:: void acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets the entries of *res* to *len* consecutive nontrivial zeros of `zeta(s)`
+    beginning with the *n*-th zero. Requires positive *n*.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
@@ -704,4 +717,9 @@ Riemann zeta function zeros
     `S(t) = N(t) - \frac{1}{\pi}\theta(t) - 1` where `N(t)` is
     :func:`acb_dirichlet_zeta_nzeros` and `\theta(t)` is
     :func:`acb_dirichlet_hardy_theta`.
+
+.. function:: void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t)
+
+    Compute an upper bound for `|S(t)|` quickly. Theorem 1
+    and the bounds in (1.2) in [Tru2014]_ are used.
 

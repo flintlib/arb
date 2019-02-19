@@ -87,7 +87,7 @@ int main()
             _acb_dirichlet_isolate_rosser_hardy_z_zero(a, b, n);
             _check_interval(a, b, n);
         }
-        if (fmpz_cmp_si(n, 3) >= 0)
+        if (fmpz_cmp_si(n, 2) >= 0)
         {
             _acb_dirichlet_isolate_turing_hardy_z_zero(a, b, n);
             _check_interval(a, b, n);

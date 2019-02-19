@@ -11,6 +11,7 @@
 */
 
 #include "acb_dirichlet.h"
+#include "arb_calc.h"
 
 /*
  * For a detailed explanation of the algorithm implemented in this file, see:
@@ -562,50 +563,6 @@ intercalate(zz_node_t a, zz_node_t b)
 }
 
 /*
- * Given a linked list p defining function evaluations at points that
- * fully separate zeros of Z(t) in the vicinity of the nth zero,
- * traverse the list until the two adjacent evaluated points a and b
- * enclosing the nth zero are found.
- */
-static void
-count_up(arf_t a, arf_t b, zz_node_srcptr p, const fmpz_t n)
-{
-    fmpz_t N;
-    if (p == NULL)
-    {
-        flint_printf("p must not be NULL\n");
-        flint_abort();
-    }
-    if (!zz_node_is_good_gram_node(p))
-    {
-        flint_printf("p must be a good Gram point\n");
-        flint_abort();
-    }
-    fmpz_init(N);
-    fmpz_add_ui(N, p->gram, 1);
-    while (1)
-    {
-        if (!p->next)
-        {
-            flint_printf("failed to isolate the zero\n");
-            flint_abort();
-        }
-        if (zz_node_sgn(p) != zz_node_sgn(p->next))
-        {
-            fmpz_add_ui(N, N, 1);
-            if (fmpz_equal(N, n))
-            {
-                arf_set(a, &p->t);
-                arf_set(b, &p->next->t);
-                break;
-            }
-        }
-        p = p->next;
-    }
-    fmpz_clear(N);
-}
-
-/*
  * Virtually trim k Gram/Rosser blocks from the head and from the tail
  * of the sublist (a, b). The resulting sublist is (*A, *B).
  * No nodes or connections between nodes are modified, added, or deleted.
@@ -630,6 +587,74 @@ trim(zz_node_ptr *A, zz_node_ptr *B,
     }
     *A = a;
     *B = b;
+}
+
+/*
+ * Given a linked sublist beginning at U and ending at V defining function
+ * evaluations at points that fully separate zeros of Z(t) in the vicinity
+ * of the nth zero, traverse the list until the nth zero is found.
+ * Continue traversing the list until len consecutive isolating intervals
+ * have been found, or until the end of the sublist is reached.
+ * Return the number of isolated zeros found, starting at the nth zero.
+ */
+static slong
+count_up_separated_zeros(arf_interval_ptr res,
+        zz_node_srcptr U, zz_node_srcptr V, const fmpz_t n, slong len)
+{
+    if (len <= 0)
+    {
+        return 0;
+    }
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeros are not supported\n");
+        flint_abort();
+    }
+    else if (U == NULL || V == NULL)
+    {
+        flint_printf("U and V must not be NULL\n");
+        flint_abort();
+    }
+    if (!zz_node_is_good_gram_node(U) || !zz_node_is_good_gram_node(V))
+    {
+        flint_printf("U and V must be good Gram points\n");
+        flint_abort();
+    }
+    else
+    {
+        slong i = 0;
+        zz_node_srcptr p = U;
+        fmpz_t N, k;
+        fmpz_init(N);
+        fmpz_init(k);
+        fmpz_add_ui(N, p->gram, 1);
+        fmpz_set(k, n);
+        while (p != V)
+        {
+            if (!p->next)
+            {
+                flint_printf("prematurely reached end of list\n");
+                flint_abort();
+            }
+            if (zz_node_sgn(p) != zz_node_sgn(p->next))
+            {
+                fmpz_add_ui(N, N, 1);
+                if (fmpz_equal(N, k))
+                {
+                    arf_set(&res[i].a, &p->t);
+                    arf_set(&res[i].b, &p->next->t);
+                    fmpz_add_ui(k, k, 1);
+                    i++;
+                    if (i == len)
+                        break;
+                }
+            }
+            p = p->next;
+        }
+        fmpz_clear(k);
+        return i;
+    }
+    return 0;
 }
 
 /*
@@ -991,12 +1016,110 @@ _separated_gram_list(zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
     fmpz_clear(k);
 }
 
+/*
+ * Isolate up to len zeros, starting from the nth zero.
+ * Return the number of isolated zeros.
+ */
+static slong
+_isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
+{
+    zz_node_ptr U, V, u, v;
+    slong count;
+
+    /* Get a list of points that fully separate zeros of Z. */
+    if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
+    {
+        _separated_gram_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else if (fmpz_cmp_si(n, ROSSERS_RULE_MAX) <= 0)
+    {
+        _separated_rosser_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else
+    {
+        _separated_turing_list(&U, &V, &u, &v, n);
+    }
+
+    count = count_up_separated_zeros(res, U, V, n, len);
+
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+
+    return count;
+}
+
+/* Isolate len zeros, starting from the nth zero. */
+static void
+isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
+{
+    if (len <= 0)
+    {
+        return;
+    }
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeros are not supported\n");
+        flint_abort();
+    }
+    else
+    {
+        slong c = 0;
+        fmpz_t k;
+        fmpz_init(k);
+        while (c < len)
+        {
+            fmpz_add_si(k, n, c);
+            c += _isolate_hardy_z_zeros(res + c, k, len - c);
+        }
+        fmpz_clear(k);
+    }
+}
+
+void
+acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
+{
+    if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeros are not supported\n");
+        flint_abort();
+    }
+    else
+    {
+        arf_interval_t r;
+        arf_interval_init(r);
+        _isolate_hardy_z_zeros(r, n, 1);
+        arf_set(a, &r->a);
+        arf_set(b, &r->b);
+        arf_interval_clear(r);
+    }
+}
+
+static void
+count_up(arf_t a, arf_t b, zz_node_srcptr U, zz_node_srcptr V, const fmpz_t n)
+{
+    arf_interval_t r;
+    arf_interval_init(r);
+    count_up_separated_zeros(r, U, V, n, 1);
+    arf_set(a, &r->a);
+    arf_set(b, &r->b);
+    arf_interval_clear(r);
+}
+
 void
 _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 {
     zz_node_ptr U, V, u, v;
     _separated_turing_list(&U, &V, &u, &v, n);
-    count_up(a, b, U, n);
+    count_up(a, b, U, V, n);
     while (u)
     {
         v = u;
@@ -1011,7 +1134,7 @@ _acb_dirichlet_isolate_rosser_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 {
     zz_node_ptr u, v;
     _separated_rosser_list(&u, &v, n);
-    count_up(a, b, u, n);
+    count_up(a, b, u, v, n);
     while (u)
     {
         v = u;
@@ -1026,35 +1149,13 @@ _acb_dirichlet_isolate_gram_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 {
     zz_node_ptr u, v;
     _separated_gram_list(&u, &v, n);
-    count_up(a, b, u, n);
+    count_up(a, b, u, v, n);
     while (u)
     {
         v = u;
         u = u->next;
         zz_node_clear(v);
         flint_free(v);
-    }
-}
-
-void
-acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
-{
-    if (fmpz_cmp_si(n, 1) < 0)
-    {
-        flint_printf("invalid n: "); fmpz_print(n); flint_printf("\n");
-        flint_abort();
-    }
-    else if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
-    {
-        _acb_dirichlet_isolate_gram_hardy_z_zero(a, b, n);
-    }
-    else if (fmpz_cmp_si(n, ROSSERS_RULE_MAX) <= 0)
-    {
-        _acb_dirichlet_isolate_rosser_hardy_z_zero(a, b, n);
-    }
-    else
-    {
-        _acb_dirichlet_isolate_turing_hardy_z_zero(a, b, n);
     }
 }
 
@@ -1175,6 +1276,31 @@ _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
     arb_clear(pi);
     arb_clear(x);
     acb_clear(z);
+}
+
+void
+acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+{
+    if (len <= 0)
+    {
+        return;
+    }
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeros are not supported\n");
+        flint_abort();
+    }
+    else
+    {
+        slong i;
+        arf_interval_ptr p = _arf_interval_vec_init(len);
+        isolate_hardy_z_zeros(p, n, len);
+        for (i = 0; i < len; i++)
+        {
+            _acb_dirichlet_refine_hardy_z_zero(res + i, &p[i].a, &p[i].b, prec);
+        }
+        _arf_interval_vec_clear(p, len);
+    }
 }
 
 static void
