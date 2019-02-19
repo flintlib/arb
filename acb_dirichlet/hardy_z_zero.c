@@ -212,6 +212,7 @@ _refine_hardy_z_zero_newton(arb_t res, const arf_t ra, const arf_t rb, slong pre
 
     arb_set(res, acb_imagref(z));
 
+    flint_free(steps);
     acb_clear(z);
     acb_clear(zstart);
     _acb_vec_clear(v, 2);
