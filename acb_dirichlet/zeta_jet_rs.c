@@ -151,9 +151,7 @@ acb_dirichlet_zeta_jet_rs(acb_ptr res, const acb_t s, slong len, slong prec)
         acb_dirichlet_zeta_deriv_bound(der1, der2, s);
 
         /* f(m), f'(m) */
-        acb_set(t, s);
-        mag_zero(arb_radref(acb_realref(t)));
-        mag_zero(arb_radref(acb_imagref(t)));
+        acb_get_mid(t, s);
         acb_dirichlet_zeta_jet_rs_mid(res, t, prec);
 
         /* err1 = |f''(s)| r */

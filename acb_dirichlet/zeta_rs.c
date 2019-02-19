@@ -114,8 +114,7 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
         mag_mul(err, err, rad);
 
         /* evaluate at midpoint */
-        mag_zero(arb_radref(acb_realref(t)));
-        mag_zero(arb_radref(acb_imagref(t)));
+        acb_get_mid(t, s);
         acb_dirichlet_zeta_rs_mid(res, t, K, prec);
 
         acb_add_error_mag(res, err);
