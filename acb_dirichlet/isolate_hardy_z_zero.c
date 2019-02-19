@@ -1177,6 +1177,108 @@ _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
     acb_clear(z);
 }
 
+static slong
+_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+{
+    zz_node_ptr U, V, u, v, p;
+    fmpz_t N, k;
+    slong i;
+
+    fmpz_init(N);
+    fmpz_init(k);
+
+    /* Get a list of points that fully separate zeros of Z. */
+    if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
+    {
+        _separated_gram_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else if (fmpz_cmp_si(n, ROSSERS_RULE_MAX) <= 0)
+    {
+        _separated_rosser_list(&u, &v, n);
+        U = u;
+        V = v;
+    }
+    else
+    {
+        _separated_turing_list(&U, &V, &u, &v, n);
+    }
+
+    if (U == NULL || V == NULL)
+    {
+        flint_printf("U and V must not be NULL\n");
+        flint_abort();
+    }
+    if (!zz_node_is_good_gram_node(U) || !zz_node_is_good_gram_node(V))
+    {
+        flint_printf("U and V must be good Gram points\n");
+        flint_abort();
+    }
+
+    i = 0;
+    p = U;
+    fmpz_add_ui(N, p->gram, 1);
+    fmpz_set(k, n);
+    while (p != V)
+    {
+        if (!p->next)
+        {
+            flint_printf("prematurely reached end of list\n");
+            flint_abort();
+        }
+        if (zz_node_sgn(p) != zz_node_sgn(p->next))
+        {
+            fmpz_add_ui(N, N, 1);
+            if (fmpz_equal(N, k))
+            {
+                _acb_dirichlet_refine_hardy_z_zero(
+                        res + i, &p->t, &p->next->t, prec);
+                fmpz_add_ui(k, k, 1);
+                i++;
+                if (i == len)
+                    break;
+            }
+        }
+        p = p->next;
+    }
+
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+
+    fmpz_clear(N);
+    fmpz_clear(k);
+
+    return i;
+}
+
+void
+acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+{
+    slong r; /* the number of zeros added in one pass */
+    slong c; /* the total number of zeros added so far */
+    fmpz_t k;
+    if (fmpz_cmp_si(n, 1) < 0)
+    {
+        flint_printf("n must be positive\n");
+        flint_abort();
+    }
+    fmpz_init(k);
+    c = 0;
+    while (c < len)
+    {
+        fmpz_add_si(k, n, c);
+        r = _hardy_z_zeros(res + c, k, len - c, prec);
+        c += r;
+    }
+    fmpz_clear(k);
+}
+
 static void
 _arb_set_interval_fmpz(arb_t res, const fmpz_t a, const fmpz_t b)
 {

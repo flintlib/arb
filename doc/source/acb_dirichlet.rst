@@ -671,9 +671,21 @@ Riemann zeta function zeros
     Hardy Z-function and contains no other zero, using the most appropriate
     underscore version of this function. Requires `n \ge 1`.
 
+.. function:: void _acb_dirichlet_refine_hardy_z_zero(arb_t res, const arf_t a, const arf_t b, slong prec)
+
+    Sets *res* to the zero of the unique Hardy Z-function within the
+    interval `(a, b)`.
+
 .. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     Sets *res* to the *n*-th zero of the Hardy Z-function, requiring `n \ge 1`.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
+.. function:: void acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets the entries of *res* to *len* consecutive zeros of the
+    Hardy Z-function, beginning with the *n*-th zero. Requires positive *n*.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 
@@ -681,6 +693,13 @@ Riemann zeta function zeros
 
     Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`. Negative indices
     give the conjugate zeros and `n = 0` is undefined.
+    Follows the implementation in [Joh2018b]_ and the presentation in
+    [Ari2012]_.
+
+.. function:: void acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets the entries of *res* to *len* consecutive nontrivial zeros of `zeta(s)`
+    beginning with the *n*-th zero. Requires positive *n*.
     Follows the implementation in [Joh2018b]_ and the presentation in
     [Ari2012]_.
 

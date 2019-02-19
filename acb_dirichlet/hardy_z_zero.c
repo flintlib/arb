@@ -145,23 +145,18 @@ _refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, sl
 }
 
 void
-acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
+_acb_dirichlet_refine_hardy_z_zero(arb_t res,
+        const arf_t a, const arf_t b, slong prec)
 {
     arf_interval_t r, s;
     slong bits;
 
-    if (fmpz_cmp_si(n, 1) < 0)
-    {
-        flint_printf("n must be positive\n");
-        flint_abort();
-    }
-
     arf_interval_init(r);
     arf_interval_init(s);
 
-    acb_dirichlet_isolate_hardy_z_zero(&r->a, &r->b, n);
-
-    arb_set_interval_arf(res, &r->a, &r->b, prec + 8);
+    arf_set(&r->a, a);
+    arf_set(&r->b, b);
+    arb_set_interval_arf(res, a, b, prec + 8);
     bits = arb_rel_accuracy_bits(res);
 
     if (bits < prec)
@@ -176,3 +171,23 @@ acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
     arf_interval_clear(s);
 }
 
+void
+acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
+{
+    arf_t a, b;
+
+    if (fmpz_cmp_si(n, 1) < 0)
+    {
+        flint_printf("n must be positive\n");
+        flint_abort();
+    }
+
+    arf_init(a);
+    arf_init(b);
+
+    acb_dirichlet_isolate_hardy_z_zero(a, b, n);
+    _acb_dirichlet_refine_hardy_z_zero(res, a, b, prec);
+
+    arf_clear(a);
+    arf_clear(b);
+}
