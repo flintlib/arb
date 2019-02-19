@@ -174,20 +174,5 @@ _acb_dirichlet_refine_hardy_z_zero(arb_t res,
 void
 acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 {
-    arf_t a, b;
-
-    if (fmpz_cmp_si(n, 1) < 0)
-    {
-        flint_printf("n must be positive\n");
-        flint_abort();
-    }
-
-    arf_init(a);
-    arf_init(b);
-
-    acb_dirichlet_isolate_hardy_z_zero(a, b, n);
-    _acb_dirichlet_refine_hardy_z_zero(res, a, b, prec);
-
-    arf_clear(a);
-    arf_clear(b);
+    acb_dirichlet_hardy_z_zeros(res, n, 1, prec);
 }

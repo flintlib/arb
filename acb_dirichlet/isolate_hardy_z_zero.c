@@ -1268,6 +1268,8 @@ acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
         flint_printf("n must be positive\n");
         flint_abort();
     }
+    if (len <= 0)
+        return;
     fmpz_init(k);
     c = 0;
     while (c < len)

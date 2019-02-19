@@ -20,14 +20,13 @@ acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec)
     switch (fmpz_sgn(n))
     {
         case -1:
-            acb_set_d(res, 0.5);
             fmpz_neg(k, n);
-            acb_dirichlet_hardy_z_zero(acb_imagref(res), k, prec);
+            acb_dirichlet_zeta_zeros(res, k, 1, prec);
             acb_conj(res, res);
             break;
         case 1:
             acb_set_d(res, 0.5);
-            acb_dirichlet_hardy_z_zero(acb_imagref(res), n, prec);
+            acb_dirichlet_zeta_zeros(res, n, 1, prec);
             break;
         default:
             acb_indeterminate(res);

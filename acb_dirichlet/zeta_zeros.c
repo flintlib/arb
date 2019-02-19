@@ -19,6 +19,10 @@ acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
     {
         acb_indeterminate(res);
     }
+    else if (len <= 0)
+    {
+        return;
+    }
     else
     {
         slong i;
