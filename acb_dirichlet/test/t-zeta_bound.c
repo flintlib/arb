@@ -92,6 +92,58 @@ int main()
         mag_clear(zbound);
     }
 
+    /* test deriv_bound */
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
+    {
+        acb_t s;
+        acb_ptr v;
+        mag_t b, b1, b2, m, m1, m2;
+
+        acb_init(s);
+        v = _acb_vec_init(3);
+        mag_init(b);
+        mag_init(b1);
+        mag_init(b2);
+        mag_init(m);
+        mag_init(m1);
+        mag_init(m2);
+
+        acb_randtest(s, state, 2 + n_randint(state, 100), 2);
+        arb_mul_ui(acb_realref(s), acb_realref(s), n_randtest(state) % 100, 100);
+        arb_mul_ui(acb_imagref(s), acb_imagref(s), n_randtest(state) % 10000, 100);
+
+        acb_dirichlet_zeta_bound(b, s);
+        acb_dirichlet_zeta_deriv_bound(b1, b2, s);
+
+        acb_get_mid(s, s);
+
+        acb_dirichlet_zeta_jet(v, s, 0, 3, 53);
+
+        acb_get_mag(m, v);
+        acb_get_mag(m1, v + 1);
+        acb_get_mag(m2, v + 2);
+
+        if (mag_cmp(m, b) > 0 || mag_cmp(m1, b1) > 0 || mag_cmp(m2, b2) > 0)
+        {
+            flint_printf("FAIL\n\n");
+            acb_printn(s, 30, 0); flint_printf("\n\n");
+            mag_printd(m, 10); flint_printf("   "); mag_printd(b, 10); flint_printf("\n\n");
+            mag_printd(m1, 10); flint_printf("   "); mag_printd(b1, 10); flint_printf("\n\n");
+            mag_printd(m2, 10); flint_printf("   "); mag_printd(b2, 10); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        acb_clear(s);
+        _acb_vec_clear(v, 3);
+
+        mag_clear(b);
+        mag_clear(b1);
+        mag_clear(b2);
+        mag_clear(m);
+        mag_clear(m1);
+        mag_clear(m2);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
