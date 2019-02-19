@@ -673,7 +673,7 @@ Riemann zeta function zeros
 
 .. function:: void _acb_dirichlet_refine_hardy_z_zero(arb_t res, const arf_t a, const arf_t b, slong prec)
 
-    Sets *res* to the zero of the unique Hardy Z-function within the
+    Sets *res* to the unique zero of the Hardy Z-function in the
     interval `(a, b)`.
 
 .. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
