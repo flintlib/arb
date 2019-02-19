@@ -42,8 +42,8 @@ _acb_dirichlet_definite_hardy_z(arb_t res, const arf_t t, slong *pprec)
     return msign;
 }
 
-static void
-_refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, slong prec)
+void
+_refine_hardy_z_zero_illinois(arb_t res, const arf_t ra, const arf_t rb, slong prec)
 {
     arf_t a, b, fa, fb, c, fc, t;
     arb_t z;
@@ -59,8 +59,8 @@ _refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, sl
     arf_init(t);
     arb_init(z);
 
-    arf_set(a, &start->a);
-    arf_set(b, &start->b);
+    arf_set(a, ra);
+    arf_set(b, rb);
 
     nmag = arf_abs_bound_lt_2exp_si(b);
     abs_tol = nmag - prec - 4;
@@ -131,8 +131,7 @@ _refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, sl
     if (arf_cmp(a, b) > 0)
         arf_swap(a, b);
 
-    arf_set(&res->a, a);
-    arf_set(&res->b, b);
+    arb_set_interval_arf(res, a, b, prec);
 
     arf_clear(a);
     arf_clear(b);
@@ -145,28 +144,99 @@ _refine_hardy_z_zero_illinois(arf_interval_t res, const arf_interval_t start, sl
 }
 
 void
+_refine_hardy_z_zero_newton(arb_t res, const arf_t ra, const arf_t rb, slong prec)
+{
+    acb_t z, zstart;
+    acb_ptr v;
+    mag_t der1, der2, err;
+    slong nbits, initial_prec, extraprec, wp, step;
+    slong * steps;
+
+    acb_init(z);
+    acb_init(zstart);
+    v = _acb_vec_init(2);
+    mag_init(der1);
+    mag_init(der2);
+    mag_init(err);
+
+    nbits = arf_abs_bound_lt_2exp_si(rb);
+    extraprec = nbits + 10;
+    initial_prec = 3 * nbits + 30;
+
+    _refine_hardy_z_zero_illinois(acb_imagref(zstart), ra, rb, initial_prec);
+    arb_set_d(acb_realref(zstart), 0.5);
+    /* Real part is exactly 1/2, but need an epsilon-enclosure (for bounds)
+       since we work with the complex function. */
+    mag_set_ui_2exp_si(arb_radref(acb_realref(zstart)), 1, nbits - initial_prec - 4);
+
+    /* Bound |zeta''(zstart)| for Newton error bound. */
+    acb_dirichlet_zeta_deriv_bound(der1, der2, zstart);
+
+    steps = flint_malloc(sizeof(slong) * FLINT_BITS);
+
+    step = 0;
+    steps[step] = prec;
+
+    while (steps[step] / 2 + extraprec > initial_prec)
+    {
+        steps[step + 1] = steps[step] / 2 + extraprec;
+        step++;
+    }
+
+    acb_set(z, zstart);
+
+    for ( ; step >= 0; step--)
+    {
+        wp = steps[step] + extraprec;
+
+        mag_set(err, arb_radref(acb_imagref(z)));
+        acb_get_mid(z, z);
+        acb_dirichlet_zeta_jet(v, z, 0, 2, wp);
+        mag_mul(err, err, der2);
+        acb_add_error_mag(v + 1, err);
+        acb_div(v, v, v + 1, wp);
+        acb_sub(v, z, v, wp);
+
+        if (acb_contains(zstart, v))
+        {
+            acb_set(z, v);
+            arb_set_d(acb_realref(z), 0.5);
+        }
+        else
+        {
+            /* can this happen? should we fallback to illinois? */
+            flint_printf("no inclusion for interval newton!\n");
+            flint_abort();
+        }
+    }
+
+    arb_set(res, acb_imagref(z));
+
+    acb_clear(z);
+    acb_clear(zstart);
+    _acb_vec_clear(v, 2);
+    mag_clear(der1);
+    mag_clear(der2);
+    mag_clear(err);
+}
+
+void
 _acb_dirichlet_refine_hardy_z_zero(arb_t res,
         const arf_t a, const arf_t b, slong prec)
 {
-    arf_interval_t r, s;
     slong bits;
 
-    arf_interval_init(r);
-    arf_interval_init(s);
-
-    arf_set(&r->a, a);
-    arf_set(&r->b, b);
     arb_set_interval_arf(res, a, b, prec + 8);
     bits = arb_rel_accuracy_bits(res);
 
     if (bits < prec)
     {
-        _refine_hardy_z_zero_illinois(s, r, prec);
-        arb_set_interval_arf(res, &s->a, &s->b, prec);
+        if (prec < 4 * arf_abs_bound_lt_2exp_si(b) + 40)
+            _refine_hardy_z_zero_illinois(res, a, b, prec);
+        else
+            _refine_hardy_z_zero_newton(res, a, b, prec);
     }
 
     arb_set_round(res, res, prec);
-
-    arf_interval_clear(r);
-    arf_interval_clear(s);
 }
+
