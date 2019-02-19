@@ -170,9 +170,3 @@ _acb_dirichlet_refine_hardy_z_zero(arb_t res,
     arf_interval_clear(r);
     arf_interval_clear(s);
 }
-
-void
-acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
-{
-    acb_dirichlet_hardy_z_zeros(res, n, 1, prec);
-}

@@ -15,13 +15,14 @@
 void
 acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    if (fmpz_sgn(n) < 1)
-    {
-        acb_indeterminate(res);
-    }
-    else if (len <= 0)
+    if (len <= 0)
     {
         return;
+    }
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeros are not supported\n");
+        flint_abort();
     }
     else
     {

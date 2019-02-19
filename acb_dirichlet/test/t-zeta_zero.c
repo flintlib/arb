@@ -40,16 +40,7 @@ int main()
         prec2 = 2 + n_randtest(state) % 200;
 
         acb_dirichlet_zeta_zero(z1, n, prec1);
-        if (n_randint(state, 2) == 0)
-        {
-            fmpz_neg(m, n);
-            acb_dirichlet_zeta_zero(z2, m, prec2);
-            acb_conj(z2, z2);
-        }
-        else
-        {
-            acb_dirichlet_zeta_zero(z2, n, prec2);
-        }
+        acb_dirichlet_zeta_zero(z2, n, prec2);
 
         acb_dirichlet_zeta(v1, z1, prec1 + 20);
         acb_dirichlet_zeta(v2, z2, prec2 + 20);
