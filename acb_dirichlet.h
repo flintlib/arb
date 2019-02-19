@@ -35,6 +35,7 @@ void acb_dirichlet_powsum_sieved(acb_ptr z, const acb_t s, ulong n, slong len, s
 void acb_dirichlet_powsum_smooth(acb_ptr z, const acb_t s, ulong n, slong len, slong prec);
 
 void acb_dirichlet_zeta_bound(mag_t res, const acb_t s);
+void acb_dirichlet_zeta_deriv_bound(mag_t der1, mag_t der2, const acb_t s);
 void acb_dirichlet_zeta_rs_f_coeffs(acb_ptr c, const arb_t p, slong N, slong prec);
 void acb_dirichlet_zeta_rs_d_coeffs(arb_ptr d, const arb_t sigma, slong k, slong prec);
 void acb_dirichlet_zeta_rs_bound(mag_t err, const acb_t s, slong K);

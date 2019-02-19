@@ -91,7 +91,7 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
     else
     {
         acb_t t;
-        mag_t rad, R, err;
+        mag_t rad, err, err2;
         slong acc;
 
         acc = acb_rel_accuracy_bits(s);
@@ -101,21 +101,14 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
 
         acb_init(t);
         mag_init(rad);
-        mag_init(R);
         mag_init(err);
+        mag_init(err2);
 
         /* rad = rad(s) */
         mag_hypot(rad, arb_radref(acb_realref(s)), arb_radref(acb_imagref(s)));
 
-        /* s +/- R */
-        mag_set_ui_2exp_si(R, 1, -3);
-        acb_set(t, s);
-        mag_add(arb_radref(acb_realref(t)), arb_radref(acb_realref(t)), R);
-        mag_add(arb_radref(acb_imagref(t)), arb_radref(acb_imagref(t)), R);
-
-        /* |zeta'(s)| <= |zeta(s +/- R)| / R */
-        acb_dirichlet_zeta_bound(err, t);
-        mag_div(err, err, R);
+        /* bound |zeta'(s)| */
+        acb_dirichlet_zeta_deriv_bound(err, err2, s);
 
         /* error <= |zeta'(s)| * rad(s) */
         mag_mul(err, err, rad);
@@ -129,7 +122,7 @@ acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec)
 
         acb_clear(t);
         mag_clear(rad);
-        mag_clear(R);
         mag_clear(err);
+        mag_clear(err2);
     }
 }

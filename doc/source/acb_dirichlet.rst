@@ -112,6 +112,12 @@ Riemann zeta function
     To the right, evaluating at the real part of *s* gives a trivial bound.
     To the left, the functional equation is used.
 
+.. function:: void acb_dirichlet_zeta_deriv_bound(mag_t der1, mag_t der2, const acb_t s)
+
+    Sets *der1* to a bound for `|\zeta'(s)|` and *der2* to a bound for
+    `|\zeta''(s)|`. These bounds are mainly intended for use in the critical
+    strip and will not be tight.
+
 .. function:: void acb_dirichlet_eta(acb_t res, const acb_t s, slong prec)
 
     Sets *res* to the Dirichlet eta function

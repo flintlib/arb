@@ -272,3 +272,37 @@ acb_dirichlet_zeta_bound(mag_t res, const acb_t s)
     mag_clear(t);
 }
 
+/*
+  |f'(s)|  <= |f(s +/- R)| / R
+  |f''(s)| <= 2 |f(s +/- R)| / R^2
+*/
+void
+acb_dirichlet_zeta_deriv_bound(mag_t der1, mag_t der2, const acb_t s)
+{
+    mag_t R, M;
+    acb_t t;
+
+    mag_init(R);
+    mag_init(M);
+    acb_init(t);
+
+    /* R = 1/8 */
+    mag_set_ui_2exp_si(R, 1, -3);
+
+    /* t = s +/- R */
+    acb_set(t, s);
+    mag_add(arb_radref(acb_realref(t)), arb_radref(acb_realref(t)), R);
+    mag_add(arb_radref(acb_imagref(t)), arb_radref(acb_imagref(t)), R);
+    /* M = |f(s +/- R)| */
+    acb_dirichlet_zeta_bound(M, t);
+    /* der1 = |f'(s)| */
+    mag_div(der1, M, R);
+    /* der2 = |f''(s)| */
+    mag_div(der2, der1, R);
+    mag_mul_2exp_si(der2, der2, 1);
+
+    acb_clear(t);
+    mag_clear(R);
+    mag_clear(M);
+}
+
