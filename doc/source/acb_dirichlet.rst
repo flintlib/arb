@@ -4,16 +4,16 @@
 ===================================================================================
 
 This module allows working with values of Dirichlet characters,
-Dirichlet L-functions, and related functions. Working with Dirichlet characters
-is documented in :ref:`dirichlet`.
-
+Dirichlet L-functions, and related functions.
 A Dirichlet L-function is the analytic continuation of an L-series
 
 .. math ::
 
     L(s,\chi) = \sum_{k=1}^\infty \frac{\chi(k)}{k^s}
 
-where `\chi(k)` is a Dirichlet character.
+where `\chi(k)` is a Dirichlet character. The trivial character
+`\chi(k) = 1` gives the Riemann zeta function.
+Working with Dirichlet characters is documented in :ref:`dirichlet`.
 
 The code in other modules for computing the Riemann zeta function,
 Hurwitz zeta function and polylogarithm will possibly be migrated to this
@@ -629,6 +629,10 @@ Gram points
 Riemann zeta function zeros
 -------------------------------------------------------------------------------
 
+The following functions for counting and isolating zeros of the Riemann zeta
+function use the ideas from the implementation of Turing's method in
+mpmath [Joh2018b]_ by Juan Arias de Reyna, described in [Ari2012]_.
+
 .. function:: ulong acb_dirichlet_turing_method_bound(const fmpz_t p)
 
     Computes an upper bound *B* for the minimum number of consecutive good
@@ -662,8 +666,7 @@ Riemann zeta function zeros
 .. function:: void _acb_dirichlet_isolate_turing_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
 
     Computes an interval `(a, b)` that contains the *n*-th zero of the
-    Hardy Z-function and no other zero, following Turing's method as
-    implemented in [Joh2018b]_ and presented in [Ari2012]_.
+    Hardy Z-function and no other zero, following Turing's method.
     Requires `n \ge 2`.
 
 .. function:: void acb_dirichlet_isolate_hardy_z_zero(arf_t a, arf_t b, const fmpz_t n)
@@ -680,28 +683,20 @@ Riemann zeta function zeros
 .. function:: void acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)
 
     Sets *res* to the *n*-th zero of the Hardy Z-function, requiring `n \ge 1`.
-    Follows the implementation in [Joh2018b]_ and the presentation in
-    [Ari2012]_.
 
 .. function:: void acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
 
     Sets the entries of *res* to *len* consecutive zeros of the
     Hardy Z-function, beginning with the *n*-th zero. Requires positive *n*.
-    Follows the implementation in [Joh2018b]_ and the presentation in
-    [Ari2012]_.
 
 .. function:: void acb_dirichlet_zeta_zero(acb_t res, const fmpz_t n, slong prec)
 
     Sets *res* to the *n*-th nontrivial zero of `\zeta(s)`, requiring `n \ge 1`.
-    Follows the implementation in [Joh2018b]_ and the presentation in
-    [Ari2012]_.
 
 .. function:: void acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
 
-    Sets the entries of *res* to *len* consecutive nontrivial zeros of `zeta(s)`
+    Sets the entries of *res* to *len* consecutive nontrivial zeros of `\zeta(s)`
     beginning with the *n*-th zero. Requires positive *n*.
-    Follows the implementation in [Joh2018b]_ and the presentation in
-    [Ari2012]_.
 
 .. function:: void _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
 
@@ -709,8 +704,6 @@ Riemann zeta function zeros
 
     Compute the number of zeros (counted according to their multiplicities)
     of `\zeta(s)` in the region `0 < \operatorname{Im}(s) \le t`.
-    Follows the implementation in [Joh2018b]_ and the presentation in
-    [Ari2012]_.
 
 .. function:: void acb_dirichlet_backlund_s(arb_t res, const arb_t t, slong prec)
 
