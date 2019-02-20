@@ -1166,49 +1166,66 @@ _acb_set_arf(acb_t res, const arf_t t)
     arb_set_arf(acb_realref(res), t);
 }
 
-void
-_acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
+/*
+ * Find the index of the largest Gram point less than t.
+ * Requires t > 10.
+ */
+static void
+gram_index(fmpz_t res, const arf_t t)
+{
+    if (arf_cmp_si(t, 10) < 0)
+    {
+        flint_printf("gram_index requires t > 10\n");
+        flint_abort();
+    }
+    else
+    {
+        acb_t z;
+        slong prec = arf_abs_bound_lt_2exp_si(t) + 8;
+        acb_init(z);
+        while (1)
+        {
+            _acb_set_arf(z, t);
+            acb_dirichlet_hardy_theta(z, z, NULL, NULL, 1, prec);
+            arb_const_pi(acb_imagref(z), prec);
+            arb_div(acb_realref(z), acb_realref(z), acb_imagref(z), prec);
+            arb_floor(acb_realref(z), acb_realref(z), prec);
+            if (arb_get_unique_fmpz(res, acb_realref(z)))
+            {
+                break;
+            }
+            prec *= 2;
+        }
+    }
+}
+
+/*
+ * Compute nzeros(t) for up to len values of t
+ * and return the number computed. p must be in increasing order,
+ * and all entries must be greater than 10.
+ */
+static slong
+_exact_zeta_multi_nzeros(fmpz *res, arf_srcptr points, slong len)
 {
     zz_node_ptr U, V, u, v, p;
-    arb_t pi, x;
-    acb_t z;
-    fmpz_t n;
-    int s; /* sign of Z(t) */
-    slong prec = arf_bits(t) + 8;
+    arb_t x;
+    fmpz_t n, N;
+    slong i;
+    arf_srcptr t;
+    int s;
+    slong prec;
 
-    if (arf_cmp_si(t, 14) < 0)
-    {
-        fmpz_zero(res);
-        return;
-    }
-
-    fmpz_init(n);
-    arb_init(pi);
     arb_init(x);
-    acb_init(z);
+    fmpz_init(n);
+    fmpz_init(N);
 
     /*
-     * t is located between two Gram points. Find the unique n such that the
-     * nth zero is also predicted to be located between these Gram points.
+     * The first point is located between two Gram points. Find the unique n
+     * such that the nth zero is also predicted to be located between these
+     * Gram points.
      */
-    while (1)
-    {
-        arb_const_pi(pi, prec);
-        _acb_set_arf(z, t);
-        acb_dirichlet_hardy_theta(z, z, NULL, NULL, 1, prec);
-        acb_get_real(x, z);
-        arb_div(x, x, pi, prec);
-        arb_floor(x, x, prec);
-        if (arb_get_unique_fmpz(n, x))
-        {
-            break;
-        }
-        prec *= 2;
-    }
+    gram_index(n, points);
     fmpz_add_ui(n, n, 2);
-
-    /* Compute the sign of Z(t). */
-    s = _acb_dirichlet_definite_hardy_z(x, t, &prec);
 
     /* Get a list of points that fully separate zeros of Z. */
     if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
@@ -1238,30 +1255,61 @@ _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
         flint_printf("U and V must be good Gram points\n");
         flint_abort();
     }
+    if (U == V)
+    {
+        flint_printf("the list must include at least one interval\n");
+        flint_abort();
+    }
 
-    /* Find the position of t relative to points in the list. */
     p = U;
-    fmpz_add_ui(res, U->gram, 1);
-    while (p != V)
+    fmpz_add_ui(N, U->gram, 1);
+
+    /*
+     * It's possible that one or more points are located between
+     * the first Gram point and the arf_t representative of that Gram point.
+     */
+    for (i = 0, t = points; i < len && arf_cmp(t, &p->t) <= 0; i++, t++)
+    {
+        fmpz_set(res + i, N);
+    }
+
+    while (i < len && p != V)
     {
         if (!p->next)
         {
-            flint_printf("prematurely reached end of list\n");
+            flint_printf("prematurely reached the end of the list\n");
             flint_abort();
         }
         if (zz_node_sgn(p) != zz_node_sgn(p->next))
         {
-            if (arf_cmp(t, &p->next->t) <= 0)
+            while (i < len && arf_cmp(t, &p->next->t) <= 0)
             {
+                prec = arf_abs_bound_lt_2exp_si(t) + 8;
+                s = _acb_dirichlet_definite_hardy_z(x, t, &prec);
                 if (zz_node_sgn(p->next) == s)
                 {
-                    fmpz_add_ui(res, res, 1);
+                    fmpz_add_ui(res + i, N, 1);
                 }
-                break;
+                else
+                {
+                    fmpz_set(res + i, N);
+                }
+                t++;
+                i++;
             }
-            fmpz_add_ui(res, res, 1);
+            fmpz_add_ui(N, N, 1);
         }
         p = p->next;
+    }
+
+    /*
+     * It's possible that the first point in the array is located between
+     * the last Gram point and the arf_t representative of that Gram point.
+     */
+    if (i == 0)
+    {
+        fmpz_set(res, N);
+        i++;
     }
 
     while (u)
@@ -1272,10 +1320,54 @@ _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
         flint_free(v);
     }
 
-    fmpz_clear(n);
-    arb_clear(pi);
     arb_clear(x);
-    acb_clear(z);
+    fmpz_clear(n);
+
+    return i;
+}
+
+/*
+ * Compute nzeros for len values of t. The array p must be in increasing order.
+ */
+static void
+exact_zeta_multi_nzeros(fmpz *res, arf_srcptr p, slong len)
+{
+    slong i, c;
+    arf_srcptr q;
+
+    if (len <= 0)
+    {
+        return;
+    }
+
+    for (i = 0, q = p; i < len - 1; i++, q++)
+    {
+        if (arf_cmp(q, p) > 0)
+        {
+            flint_printf("p must be in increasing order\n");
+            flint_abort();
+        }
+    }
+
+    c = 0;
+    while (c < len)
+    {
+        if (arf_cmp_si(p + c, 14) < 0)
+        {
+            fmpz_zero(res + c);
+            c++;
+        }
+        else
+        {
+            c += _exact_zeta_multi_nzeros(res + c, p + c, len - c);
+        }
+    }
+}
+
+void
+_acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
+{
+    exact_zeta_multi_nzeros(res, t, 1);
 }
 
 void
@@ -1322,32 +1414,34 @@ _arb_set_interval_fmpz(arb_t res, const fmpz_t a, const fmpz_t b)
 void
 acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec)
 {
-    fmpz_t a, b;
-    arf_t lb, ub;
-
-    fmpz_init(a);
-    fmpz_init(b);
-    arf_init(lb);
-    arf_init(ub);
-
     if (arb_is_exact(t))
     {
-        _acb_dirichlet_exact_zeta_nzeros(a, arb_midref(t));
-        arb_set_fmpz(res, a);
+        fmpz_t n;
+        fmpz_init(n);
+        _acb_dirichlet_exact_zeta_nzeros(n, arb_midref(t));
+        arb_set_fmpz(res, n);
+        fmpz_clear(n);
     }
     else
     {
-        arb_get_lbound_arf(lb, t, prec);
-        arb_get_ubound_arf(ub, t, prec);
-        _acb_dirichlet_exact_zeta_nzeros(a, lb);
-        _acb_dirichlet_exact_zeta_nzeros(b, ub);
-        _arb_set_interval_fmpz(res, a, b);
+        arf_struct b[2];
+        fmpz n[2];
+        
+        arf_init(b);
+        arf_init(b + 1);
+        fmpz_init(n);
+        fmpz_init(n + 1);
+
+        arb_get_lbound_arf(b, t, prec);
+        arb_get_ubound_arf(b + 1, t, prec);
+        exact_zeta_multi_nzeros(n, b, 2);
+        _arb_set_interval_fmpz(res, n, n + 1);
+
+        arf_clear(b);
+        arf_clear(b + 1);
+        fmpz_clear(n);
+        fmpz_clear(n + 1);
     }
 
     arb_set_round(res, res, prec);
-
-    fmpz_clear(a);
-    fmpz_clear(b);
-    arf_clear(lb);
-    arf_clear(ub);
 }
