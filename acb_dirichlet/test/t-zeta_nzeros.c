@@ -23,7 +23,7 @@ int main()
 
     for (iter = 0; iter < 130 + 20 * arb_test_multiplier(); iter++)
     {
-        arb_t x, y, t, u, v, a;
+        arb_t x, y, t;
         arf_t f1, f2;
         fmpz_t n, m, k1, k2;
         acb_t z;
@@ -32,9 +32,6 @@ int main()
         arb_init(x);
         arb_init(y);
         arb_init(t);
-        arb_init(u);
-        arb_init(v);
-        arb_init(a);
         acb_init(z);
         arf_init(f1);
         arf_init(f2);
@@ -50,7 +47,7 @@ int main()
         else
         {
             fmpz_randtest_unsigned(n, state, 20);
-            fmpz_add_ui(n, n, 1);
+            fmpz_add_ui(n, n, 131);
         }
 
         prec1 = 2 + n_randtest(state) % 50;
@@ -64,7 +61,7 @@ int main()
         if (!arb_contains_fmpz(x, n) || !arb_contains_fmpz(x, m))
         {
             flint_printf("FAIL: zero containment\n\n");
-            flint_printf("n = "); fmpz_print(n); flint_printf("\n\n");
+            flint_printf("n = "); fmpz_print(n);
             flint_printf("   prec1 = %wd  prec2 = %wd\n\n", prec1, prec2);
             flint_printf("t = "); arb_printn(t, 100, 0); flint_printf("\n\n");
             flint_printf("x = "); arb_printn(x, 100, 0); flint_printf("\n\n");
@@ -116,9 +113,6 @@ int main()
         arb_clear(x);
         arb_clear(y);
         arb_clear(t);
-        arb_clear(u);
-        arb_clear(v);
-        arb_clear(a);
         acb_clear(z);
         arf_clear(f1);
         arf_clear(f2);

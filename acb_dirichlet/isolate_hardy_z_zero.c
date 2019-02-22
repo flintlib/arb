@@ -1017,16 +1017,18 @@ _separated_gram_list(zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
 }
 
 /*
- * Isolate up to len zeros, starting from the nth zero.
- * Return the number of isolated zeros.
+ * Get a list of points that fully separate zeros of Z.
+ * Used for both zero isolation and for N(t).
+ * n is the index of a Hardy Z-function zero of interest.
+ * *pu and *pv are the first and last node of an output list.
+ * *pU and *pV are the first and last nodes of a sublist with
+ * fully separated zeros, within the *pu -- *pv list.
  */
-static slong
-_isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
+static void
+_separated_list(zz_node_ptr *pU, zz_node_ptr *pV,
+        zz_node_ptr *pu, zz_node_ptr *pv, const fmpz_t n)
 {
     zz_node_ptr U, V, u, v;
-    slong count;
-
-    /* Get a list of points that fully separate zeros of Z. */
     if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
     {
         _separated_gram_list(&u, &v, n);
@@ -1044,6 +1046,39 @@ _isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
         _separated_turing_list(&U, &V, &u, &v, n);
     }
 
+    if (U == NULL || V == NULL)
+    {
+        flint_printf("U and V must not be NULL\n");
+        flint_abort();
+    }
+    if (!zz_node_is_good_gram_node(U) || !zz_node_is_good_gram_node(V))
+    {
+        flint_printf("U and V must be good Gram points\n");
+        flint_abort();
+    }
+    if (U == V)
+    {
+        flint_printf("the list must include at least one interval\n");
+        flint_abort();
+    }
+
+    *pU = U;
+    *pV = V;
+    *pu = u;
+    *pv = v;
+}
+
+/*
+ * Isolate up to len zeros, starting from the nth zero.
+ * Return the number of isolated zeros.
+ */
+static slong
+_isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
+{
+    zz_node_ptr U, V, u, v;
+    slong count;
+
+    _separated_list(&U, &V, &u, &v, n);
     count = count_up_separated_zeros(res, U, V, n, len);
 
     while (u)
@@ -1196,6 +1231,7 @@ gram_index(fmpz_t res, const arf_t t)
             }
             prec *= 2;
         }
+        acb_clear(z);
     }
 }
 
@@ -1228,38 +1264,7 @@ _exact_zeta_multi_nzeros(fmpz *res, arf_srcptr points, slong len)
     fmpz_add_ui(n, n, 2);
 
     /* Get a list of points that fully separate zeros of Z. */
-    if (fmpz_cmp_si(n, GRAMS_LAW_MAX) <= 0)
-    {
-        _separated_gram_list(&u, &v, n);
-        U = u;
-        V = v;
-    }
-    else if (fmpz_cmp_si(n, ROSSERS_RULE_MAX) <= 0)
-    {
-        _separated_rosser_list(&u, &v, n);
-        U = u;
-        V = v;
-    }
-    else
-    {
-        _separated_turing_list(&U, &V, &u, &v, n);
-    }
-
-    if (U == NULL || V == NULL)
-    {
-        flint_printf("U and V must not be NULL\n");
-        flint_abort();
-    }
-    if (!zz_node_is_good_gram_node(U) || !zz_node_is_good_gram_node(V))
-    {
-        flint_printf("U and V must be good Gram points\n");
-        flint_abort();
-    }
-    if (U == V)
-    {
-        flint_printf("the list must include at least one interval\n");
-        flint_abort();
-    }
+    _separated_list(&U, &V, &u, &v, n);
 
     p = U;
     fmpz_add_ui(N, U->gram, 1);
@@ -1322,6 +1327,7 @@ _exact_zeta_multi_nzeros(fmpz *res, arf_srcptr points, slong len)
 
     arb_clear(x);
     fmpz_clear(n);
+    fmpz_clear(N);
 
     return i;
 }
@@ -1444,4 +1450,70 @@ acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec)
     }
 
     arb_set_round(res, res, prec);
+}
+
+void
+acb_dirichlet_zeta_nzeros_gram(fmpz_t res, const fmpz_t n)
+{
+    zz_node_ptr U, V, u, v, p;
+    fmpz_t k, N;
+
+    if (fmpz_cmp_si(n, -1) < 0)
+    {
+        flint_printf("n must be >= -1\n");
+        flint_abort();
+    }
+
+    fmpz_init(k);
+    fmpz_init(N);
+
+    /*
+     * Get a list of points that fully separate zeros of Z.
+     * The kth zero is expected to be between the k-2 and the k-1 gram points.
+     */
+    fmpz_add_ui(k, n, 2);
+    _separated_list(&U, &V, &u, &v, k);
+
+    p = U;
+    fmpz_add_ui(N, U->gram, 1);
+    fmpz_set_si(res, -1);
+    while (1)
+    {
+        if (p == NULL)
+        {
+            flint_printf("prematurely reached the end of the list\n");
+            flint_abort();
+        }
+        if (zz_node_is_gram_node(p) && fmpz_equal(n, p->gram))
+        {
+            fmpz_set(res, N);
+            break;
+        }
+        if (zz_node_sgn(p) != zz_node_sgn(p->next))
+        {
+            fmpz_add_ui(N, N, 1);
+        }
+        if (p == V)
+        {
+            break;
+        }
+        p = p->next;
+    }
+
+    if (fmpz_sgn(res) < 0)
+    {
+        flint_printf("failed to find the gram point\n");
+        flint_abort();
+    }
+
+    while (u)
+    {
+        v = u;
+        u = u->next;
+        zz_node_clear(v);
+        flint_free(v);
+    }
+
+    fmpz_clear(k);
+    fmpz_clear(N);
 }
