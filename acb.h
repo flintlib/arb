@@ -1012,6 +1012,8 @@ acb_rel_accuracy_bits(const acb_t x)
     return -acb_rel_error_bits(x);
 }
 
+slong acb_rel_one_accuracy_bits(const acb_t x);
+
 ACB_INLINE slong
 acb_bits(const acb_t x)
 {

@@ -444,6 +444,11 @@ Radius and interval operations
     Returns the effective relative accuracy of *x* measured in bits,
     equal to the negative of the return value from :func:`arb_rel_error_bits`.
 
+.. function:: slong arb_rel_one_accuracy_bits(const arb_t x)
+
+    Given a ball with midpoint *m* and radius *r*, returns an approximation of
+    the relative accuracy of `[\max(1,|m|) \pm r]` measured in bits.
+
 .. function:: slong arb_bits(const arb_t x)
 
     Returns the number of bits needed to represent the absolute value

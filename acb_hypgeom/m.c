@@ -228,10 +228,10 @@ acb_hypgeom_m_choose(int * asymp, int * kummer, slong * wp,
         return;
     }
 
-    input_accuracy = acb_rel_accuracy_bits(z);
-    t = acb_rel_accuracy_bits(a);
+    input_accuracy = acb_rel_one_accuracy_bits(z);
+    t = acb_rel_one_accuracy_bits(a);
     input_accuracy = FLINT_MIN(input_accuracy, t);
-    t = acb_rel_accuracy_bits(b);
+    t = acb_rel_one_accuracy_bits(b);
     input_accuracy = FLINT_MIN(input_accuracy, t);
     input_accuracy = FLINT_MAX(input_accuracy, 0.0);
 

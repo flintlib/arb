@@ -47,3 +47,19 @@ arb_rel_error_bits(const arb_t x)
     return result;
 }
 
+slong arb_rel_one_accuracy_bits(const arb_t x)
+{
+    if (arf_cmpabs_2exp_si(arb_midref(x), -1) < 0)
+    {
+        arb_t t;
+        arf_init(arb_midref(t));
+        arf_one(arb_midref(t));
+        *arb_radref(t) = *arb_radref(x);
+        return arb_rel_accuracy_bits(t);
+    }
+    else
+    {
+        return arb_rel_accuracy_bits(x);
+    }
+}
+

@@ -64,3 +64,22 @@ acb_rel_error_bits(const acb_t x)
     return result;
 }
 
+slong acb_rel_one_accuracy_bits(const acb_t z)
+{
+    if (arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), -1) < 0 &&
+        arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), -1) < 0)
+    {
+        acb_t t;
+        arf_init(arb_midref(acb_realref(t)));
+        arf_one(arb_midref(acb_realref(t)));
+        arf_init(arb_midref(acb_imagref(t)));
+        *arb_radref(acb_realref(t)) = *arb_radref(acb_realref(z));
+        *arb_radref(acb_imagref(t)) = *arb_radref(acb_imagref(z));
+        return acb_rel_accuracy_bits(t);
+    }
+    else
+    {
+        return acb_rel_accuracy_bits(z);
+    }
+}
+

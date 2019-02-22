@@ -307,6 +307,8 @@ arb_rel_accuracy_bits(const arb_t x)
     return -arb_rel_error_bits(x);
 }
 
+slong arb_rel_one_accuracy_bits(const arb_t x);
+
 ARB_INLINE slong
 arb_bits(const arb_t x)
 {
