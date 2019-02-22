@@ -180,6 +180,8 @@ void _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t);
 void acb_dirichlet_zeta_nzeros(arb_t res, const arb_t t, slong prec);
 void acb_dirichlet_backlund_s(arb_t res, const arb_t t, slong prec);
 void acb_dirichlet_backlund_s_bound(mag_t res, const arb_t t);
+void acb_dirichlet_zeta_nzeros_gram(fmpz_t res, const fmpz_t n);
+slong acb_dirichlet_backlund_s_gram(const fmpz_t n);
 
 ACB_DIRICHLET_INLINE void
 acb_dirichlet_hardy_z_zero(arb_t res, const fmpz_t n, slong prec)

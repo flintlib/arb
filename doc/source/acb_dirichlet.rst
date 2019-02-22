@@ -722,3 +722,14 @@ mpmath [Joh2018b]_ by Juan Arias de Reyna, described in [Ari2012]_.
     Compute an upper bound for `|S(t)|` quickly. Theorem 1
     and the bounds in (1.2) in [Tru2014]_ are used.
 
+.. function:: void acb_dirichlet_zeta_nzeros_gram(fmpz_t res, const fmpz_t n)
+
+    Compute `N(g_n)`. That is, compute the number of zeros (counted according
+    to their multiplicities) of `\zeta(s)` in the region
+    `0 < \operatorname{Im}(s) \le g_n` where `g_n` is the *n*-th Gram point.
+    Requires `n \ge -1`.
+
+.. function:: slong acb_dirichlet_backlund_s_gram(const fmpz_t n)
+
+    Compute `S(g_n)` where `g_n` is the *n*-th Gram point. Requires `n \ge -1`.
+
