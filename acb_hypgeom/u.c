@@ -288,6 +288,82 @@ acb_hypgeom_u_1f1(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong 
 }
 
 void
+acb_hypgeom_u_choose(int * asymp, slong * wp,
+    const acb_t a, const acb_t b, const acb_t z, slong prec)
+{
+    double x, y, t, cancellation;
+    double input_accuracy, direct_accuracy, asymp_accuracy;
+
+    *asymp = 0;
+    *wp = prec;
+
+    input_accuracy = acb_rel_one_accuracy_bits(z);
+    t = acb_rel_one_accuracy_bits(a);
+    input_accuracy = FLINT_MIN(input_accuracy, t);
+    t = acb_rel_one_accuracy_bits(b);
+    input_accuracy = FLINT_MIN(input_accuracy, t);
+    input_accuracy = FLINT_MAX(input_accuracy, 0.0);
+
+    /* From here we ignore the values of a, b. Taking them into account is
+       a possible future improvement... */
+
+    /* Tiny |z|. */
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 2) < 0 &&
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 2) < 0))
+    {
+        *asymp = 0;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
+
+    /* Huge |z|. */
+    if ((arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 64) > 0 ||
+         arf_cmpabs_2exp_si(arb_midref(acb_imagref(z)), 64) > 0))
+    {
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
+
+    x = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
+    y = arf_get_d(arb_midref(acb_imagref(z)), ARF_RND_DOWN);
+
+    asymp_accuracy = sqrt(x * x + y * y) * 1.44269504088896;
+
+    /* The Kummer transformation gives less cancellation with the 1F1 series.
+    if (x < 0.0)
+    {
+        *kummer = 1;
+        x = -x;
+    } */
+
+    if (asymp_accuracy >= prec)
+    {
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+        return;
+    }
+
+    /* Assume U ~ 1, M ~ exp(|z|)  (there is cancellation both in the
+       evaluation of M and in the linear combination) -- a better estimate
+       would account for a, b. */
+    cancellation = sqrt(x * x + y * y) * 1.44269504088896 + 5;
+
+    direct_accuracy = input_accuracy - cancellation;
+
+    if (direct_accuracy > asymp_accuracy)
+    {
+        *asymp = 0;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec + cancellation));
+    }
+    else
+    {
+        *asymp = 1;
+        *wp = FLINT_MAX(2, FLINT_MIN(input_accuracy + 20, prec));
+    }
+}
+
+void
 acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_t t;
@@ -314,6 +390,7 @@ acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec
     acb_add_ui(t, t, 1, prec);
     tv = arb_midref(acb_realref(t));
 
+    /* todo: combine these conditions with the code below */
     if ((acb_is_int(a) && arf_sgn(av) <= 0) ||
         (acb_is_int(t) && arf_sgn(tv) <= 0) ||
         acb_hypgeom_u_use_asymp(z, prec))
@@ -325,7 +402,23 @@ acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec
     }
     else
     {
-        acb_hypgeom_u_1f1(res, a, b, z, prec);
+        slong wp;
+        int asymp;
+
+        acb_hypgeom_u_choose(&asymp, &wp, a, b, z, prec);
+
+        if (asymp)
+        {
+            acb_neg(t, a);
+            acb_pow(t, z, t, prec);
+            acb_hypgeom_u_asymp(res, a, b, z, -1, wp);
+            acb_mul(res, res, t, prec);
+        }
+        else
+        {
+            acb_hypgeom_u_1f1(res, a, b, z, wp);
+            acb_set_round(res, res, prec);
+        }
     }
 
     acb_clear(t);
