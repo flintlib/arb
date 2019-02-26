@@ -627,6 +627,8 @@ parts of the complex plane.
     Coulomb wave functions at the point *z*, truncated to length *len*.
     Any of the outputs can be *NULL*.
 
+.. function:: void _acb_hypgeom_coulomb_series(acb_ptr F, acb_ptr G, acb_ptr Hpos, acb_ptr Hneg, const acb_t l, const acb_t eta, acb_srcptr z, slong zlen, slong len, slong prec)
+
 .. function:: void acb_hypgeom_coulomb_series(acb_poly_t F, acb_poly_t G, acb_poly_t Hpos, acb_poly_t Hneg, const acb_t l, const acb_t eta, const acb_poly_t z, slong len, slong prec)
 
     Computes the Coulomb wave functions evaluated at the power series *z*,

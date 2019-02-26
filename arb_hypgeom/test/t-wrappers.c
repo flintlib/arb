@@ -222,6 +222,14 @@ int main()
         arb_set_str(v, "[0.690299702736886 +/- 2.34e-16]", prec);
         TEST(r, v, "airy bi'");
 
+        arb_hypgeom_coulomb(r, NULL, a, b, z, prec);
+        arb_set_str(v, "[0.281871468006603 +/- 4.68e-16]", prec);
+        TEST(r, v, "coulomb f");
+
+        arb_hypgeom_coulomb(NULL, r, a, b, z, prec);
+        arb_set_str(v, "[1.38897454984644 +/- 2.23e-15]", prec);
+        TEST(r, v, "coulomb g");
+
         arb_hypgeom_chebyshev_t(r, a, z, prec);
         arb_set_str(v, "[0.935414346693485 +/- 7.02e-16]", prec);
         TEST(r, v, "chebyshev_t");

@@ -333,6 +333,28 @@ Airy functions
     The implementation uses asymptotic expansions for the zeros
     [PS1991]_ together with the interval Newton method for refinement.
 
+Coulomb wave functions
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_coulomb(arb_t F, arb_t G, const arb_t l, const arb_t eta, const arb_t z, slong prec)
+
+    Writes to *F*, *G* the values of the respective
+    Coulomb wave functions `F_{\ell}(\eta,z)` and `G_{\ell}(\eta,z)`.
+    Either of the outputs can be *NULL*.
+
+.. function:: void arb_hypgeom_coulomb_jet(arb_ptr F, arb_ptr G, const arb_t l, const arb_t eta, const arb_t z, slong len, slong prec)
+
+    Writes to *F*, *G* the respective Taylor expansions of the
+    Coulomb wave functions at the point *z*, truncated to length *len*.
+    Either of the outputs can be *NULL*.
+
+.. function:: void _arb_hypgeom_coulomb_series(arb_ptr F, arb_ptr G, const arb_t l, const arb_t eta, arb_srcptr z, slong zlen, slong len, slong prec)
+
+.. function:: void arb_hypgeom_coulomb_series(arb_poly_t F, arb_poly_t G, const arb_t l, const arb_t eta, const arb_poly_t z, slong len, slong prec)
+
+    Computes the Coulomb wave functions evaluated at the power series *z*,
+    truncated to length *len*. Either of the outputs can be *NULL*.
+
 Orthogonal polynomials and functions
 -------------------------------------------------------------------------------
 
