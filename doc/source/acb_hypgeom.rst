@@ -589,7 +589,7 @@ Coulomb wave functions are solutions of the Coulomb wave equation
 
 .. math ::
 
-    y'' + \left(1 - \frac{2 \eta}{z} - \frac{\ell(\ell+1)}{z}\right) y = 0
+    y'' + \left(1 - \frac{2 \eta}{z} - \frac{\ell(\ell+1)}{z^2}\right) y = 0
 
 which is the radial Schrödinger equation for a charged particle in a
 Coulomb potential `1/z`, where `\ell` is the orbital angular momentum and
