@@ -582,6 +582,56 @@ simultaneously. Any of the four function values can be omitted by passing
     truncated to length *len*. As with the other Airy methods, any of the
     outputs can be *NULL*.
 
+Coulomb wave functions
+-------------------------------------------------------------------------------
+
+Coulomb wave functions are solutions of the Coulomb wave equation
+
+.. math ::
+
+    y'' + \left(1 - \frac{2 \eta}{z} - \frac{\ell(\ell+1)}{z}\right) y = 0
+
+which is the radial Schrödinger equation for a charged particle in a
+Coulomb potential `1/z`, where `\ell` is the orbital angular momentum and
+`\eta` is the Sommerfeld parameter.
+The standard solutions are named `F_{\ell}(\eta,z)` (regular
+at the origin `z = 0`) and `G_{\ell}(\eta,z)` (irregular at the origin).
+The irregular solutions
+`H^{\pm}_{\ell}(\eta,z) = G_{\ell}(\eta,z) \pm i F_{\ell}(\eta,z)`
+are also used.
+
+Coulomb wave functions are special cases of confluent hypergeometric functions.
+For details about the normalization constants and connection formulas
+defining the different solutions, see
+[DYF1999]_, [Gas2018]_, [Mic2007]_ or chapter 33 in [NIST2012]_.
+In this implementation, we define the analytic continuations of all
+the functions so that the branch cut with respect to *z* is placed on the
+negative real axis.
+
+The following methods optionally compute
+`F_{\ell}(\eta,z), G_{\ell}(\eta,z), H^{+}_{\ell}(\eta,z), H^{-}_{\ell}(\eta,z)`
+simultaneously. Any of the four function values can be omitted by passing
+*NULL* for the unwanted output variables.
+The redundant functions `H^{\pm}` are provided explicitly since taking
+the linear combination of *F* and *G* suffers from cancellation in
+parts of the complex plane.
+
+.. function:: void acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, const acb_t eta, const acb_t z, slong prec)
+
+    Writes to *F*, *G*, *Hpos*, *Hneg* the values of the respective
+    Coulomb wave functions. Any of the outputs can be *NULL*.
+
+.. function:: void acb_hypgeom_coulomb_jet(acb_ptr F, acb_ptr G, acb_ptr Hpos, acb_ptr Hneg, const acb_t l, const acb_t eta, const acb_t z, slong len, slong prec)
+
+    Writes to *F*, *G*, *Hpos*, *Hneg* the respective Taylor expansions of the
+    Coulomb wave functions at the point *z*, truncated to length *len*.
+    Any of the outputs can be *NULL*.
+
+.. function:: void acb_hypgeom_coulomb_series(acb_poly_t F, acb_poly_t G, acb_poly_t Hpos, acb_poly_t Hneg, const acb_t l, const acb_t eta, const acb_poly_t z, slong len, slong prec)
+
+    Computes the Coulomb wave functions evaluated at the power series *z*,
+    truncated to length *len*. Any of the outputs can be *NULL*.
+
 Incomplete gamma and beta functions
 -------------------------------------------------------------------------------
 
