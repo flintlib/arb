@@ -24,7 +24,7 @@ int main()
     for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         arb_poly_t F, G, F2, G2, z, w, t, u;
-        arb_t c, l, eta;
+        arb_t c, l, eta, z0;
         slong n1, n2, prec1, prec2;
         unsigned int mask;
 
@@ -33,7 +33,7 @@ int main()
         arb_poly_init(z); arb_poly_init(w);
         arb_poly_init(t);
         arb_poly_init(u);
-        arb_init(c); arb_init(l); arb_init(eta);
+        arb_init(c); arb_init(l); arb_init(eta); arb_init(z0);
 
         prec1 = 2 + n_randint(state, 200);
         prec2 = 2 + n_randint(state, 200);
@@ -61,7 +61,10 @@ int main()
         arb_poly_derivative(t, z, prec1);
         arb_poly_truncate(t, FLINT_MAX(n1 - 1, 0));
 
-        if (!arb_poly_overlaps(w, t))
+        /* hack: work around mullow(nan, 0) = 0 */
+        arb_poly_get_coeff_arb(z0, z, 0);
+
+        if (!arb_contains_zero(z0) && !arb_poly_overlaps(w, t))
         {
             flint_printf("FAIL: wronskian, n1 = %wd\n\n", n1);
             flint_printf("l = "); arb_printd(l, 30); flint_printf("\n\n");
@@ -114,7 +117,7 @@ int main()
         arb_poly_clear(z); arb_poly_clear(w);
         arb_poly_clear(t);
         arb_poly_clear(u);
-        arb_clear(c); arb_clear(l); arb_clear(eta);
+        arb_clear(c); arb_clear(l); arb_clear(eta); arb_clear(z0);
     }
 
     flint_randclear(state);

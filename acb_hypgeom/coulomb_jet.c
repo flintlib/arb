@@ -11,6 +11,117 @@
 
 #include "acb_hypgeom.h"
 
+/* need special case for integer l and z = 0 since the recurrence relations break down */
+static void
+_acb_hypgeom_coulomb_f_int_jet(acb_ptr F, const acb_t l, const acb_t eta, const acb_t z, slong len, slong prec)
+{
+    acb_poly_struct a[1];
+    acb_poly_struct b[2];
+    acb_poly_t zx, M, zxi;
+    acb_t t;
+    slong k;
+    int real;
+
+    if (arf_cmp_si(arb_midref(acb_realref(l)), -1) < 0)
+    {
+        _acb_vec_indeterminate(F, len);
+        return;
+    }
+
+    /* F = C * (z+x)^(l+1) e^(-+ i (z+x)) M(l + 1 -+  i eta, 2l+2, +- 2 i (z+x)) */
+
+    acb_poly_init(a);
+    acb_poly_init(b);
+    acb_poly_init(b + 1);
+    acb_poly_init(zx);
+    acb_poly_init(M);
+    acb_poly_init(zxi);
+    acb_init(t);
+
+    acb_poly_set_coeff_acb(zx, 0, z);
+    acb_poly_set_coeff_si(zx, 1, 1);
+
+    acb_div_onei(t, eta);
+    acb_add(t, t, l, prec);
+    acb_add_ui(t, t, 1, prec);
+    acb_poly_set_acb(a, t);
+
+    acb_add_ui(t, l, 1, prec);
+    acb_mul_2exp_si(t, t, 1);
+    acb_poly_set_acb(b, t);
+
+    acb_poly_one(b + 1);
+
+    acb_onei(t);
+    acb_mul_2exp_si(t, t, 1);
+    acb_poly_scalar_mul(zxi, zx, t, prec);
+
+    acb_hypgeom_pfq_series_direct(M, a, 1, b, 2, zxi, 1, -1, len, prec);
+
+    acb_poly_scalar_mul_2exp_si(zxi, zxi, -1);
+    acb_poly_neg(zxi, zxi);
+    acb_poly_exp_series(zxi, zxi, len, prec);
+    acb_poly_mullow(M, M, zxi, len, prec);
+
+    acb_add_ui(t, l, 1, prec);
+    acb_poly_pow_acb_series(zxi, zx, t, len, prec);
+
+    acb_poly_mullow(M, M, zxi, len, prec);
+
+    {
+        /* C = 2^l exp((-pi eta + lu + lv)/2) */
+        acb_t C, lu, lv;
+
+        acb_init(C);
+        acb_init(lu);
+        acb_init(lv);
+
+        acb_add_ui(lu, l, 1, prec);
+        acb_mul_onei(t, eta);
+        acb_add(lu, lu, t, prec);
+
+        acb_add_ui(lv, l, 1, prec);
+        acb_div_onei(t, eta);
+        acb_add(lv, lv, t, prec);
+
+        acb_lgamma(lu, lu, prec);
+        acb_lgamma(lv, lv, prec);
+
+        acb_const_pi(t, prec);
+        acb_add(C, lu, lv, prec);
+        acb_submul(C, t, eta, prec);
+        acb_mul_2exp_si(C, C, -1);
+        acb_exp(C, C, prec);
+
+        acb_set_ui(t, 2);
+        acb_pow(t, t, l, prec);
+        acb_mul(C, C, t, prec);
+
+        acb_poly_scalar_mul(M, M, C, prec);
+
+        acb_clear(C);
+        acb_clear(lu);
+        acb_clear(lv);
+    }
+
+    real = acb_is_real(z) && acb_is_real(eta);
+
+    for (k = 0; k < len; k++)
+    {
+        acb_poly_get_coeff_acb(F + k, M, k);
+        if (real)
+            arb_zero(acb_imagref(F + k));
+    }
+
+    acb_poly_clear(a);
+    acb_poly_clear(b);
+    acb_poly_clear(b + 1);
+    acb_poly_clear(zx);
+    acb_poly_clear(M);
+    acb_poly_clear(zxi);
+    acb_clear(t);
+}
+
 static void
 _acb_hypgeom_coulomb_jet(acb_ptr F, acb_ptr G, acb_ptr Hpos, acb_ptr Hneg, const acb_t l, const acb_t eta, const acb_t z, slong len, slong prec)
 {
@@ -24,6 +135,23 @@ _acb_hypgeom_coulomb_jet(acb_ptr F, acb_ptr G, acb_ptr Hpos, acb_ptr Hneg, const
         acb_hypgeom_coulomb(F, G, Hpos, Hneg, l, eta, z, prec);
         return;
     }
+
+    if (acb_contains_zero(z))
+    {
+        if (F != NULL)
+        {
+            if (acb_is_int(l))
+                _acb_hypgeom_coulomb_f_int_jet(F, l, eta, z, len, prec);
+            else
+                _acb_vec_indeterminate(F, len);
+        }
+
+        if (G != NULL) _acb_vec_indeterminate(G, len);
+        if (Hpos != NULL) _acb_vec_indeterminate(Hpos, len);
+        if (Hneg != NULL) _acb_vec_indeterminate(Hneg, len);
+        return;
+    }
+
 
     acb_init(l1);
     acb_init(t);
