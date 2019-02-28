@@ -147,11 +147,7 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
         }
     }
 
-    /* h = log(2z) */
-    acb_mul_2exp_si(h, z, 1);
-    acb_log(h, h, prec);
-
-    /* C = exp(h l + (-pi eta + lu + lv)/2) */
+    /* C = exp((-pi eta + lu + lv)/2) */
     acb_const_pi(C, prec);
     acb_mul(C, C, eta, prec);
     acb_neg(C, C);
@@ -169,7 +165,6 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
     }
 
     acb_mul_2exp_si(C, C, -1);
-    acb_addmul(C, h, l, prec);
 
     if (asymp)
     {
@@ -214,7 +209,27 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
         acb_hypgeom_m(F, v, m, z1, 1, prec);
     }
 
-    acb_exp(C, C, prec);
+    if (acb_contains_zero(z))
+    {
+        acb_exp(C, C, prec);
+        /* (2z)^l without logarithm */
+        acb_mul_2exp_si(h, z, 1);
+        acb_pow(h, h, l, prec);
+        acb_mul(C, C, h, prec);
+
+        /* h = log(2z) */
+        acb_indeterminate(h);
+    }
+    else
+    {
+        /* h = log(2z) */
+        acb_mul_2exp_si(h, z, 1);
+        acb_log(h, h, prec);
+
+        acb_addmul(C, h, l, prec);
+        acb_exp(C, C, prec);
+    }
+
     acb_mul(F, F, C, prec);
     if (F_real)
         arb_zero(acb_imagref(F));

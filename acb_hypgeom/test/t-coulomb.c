@@ -87,6 +87,13 @@ int main()
 
         mask = n_randlimb(state);
 
+        if (n_randint(state, 2) == 0)
+        {
+            acb_randtest_param(t, state, 1 + n_randint(state, 200), 1 + n_randint(state, 100));
+            acb_add(z, z, t, prec2);
+            acb_sub(z, z, t, prec2);
+        }
+
         /* also test aliasing */
         acb_set(G2, z);
 
