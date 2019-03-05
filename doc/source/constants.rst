@@ -72,8 +72,9 @@ Catalan's constant is computed using the hypergeometric series
 
 .. math ::
 
-    C = \sum_{k=0}^{\infty} \frac{(-1)^k 4^{4 k+1}
-        \left(40 k^2+56 k+19\right) [(k+1)!]^2 [(2k+2)!]^3}{(k+1)^3 (2 k+1) [(4k+4)!]^2}
+    C = \frac{1}{64} \sum_{k=1}^{\infty} \frac{256^k (580k^2-184k+15)}{k^3(2k-1){6k\choose 3k}{6k\choose 4k}{4k\choose 2k}}
+
+given in [PP2010]_.
 
 Khinchin's constant
 -------------------------------------------------------------------------------

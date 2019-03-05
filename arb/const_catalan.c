@@ -21,14 +21,14 @@ arb_const_catalan_eval(arb_t s, slong prec)
     arb_init(t);
     hypgeom_init(series);
 
-    fmpz_poly_set_str(series->A, "3  19 56 40");
-    fmpz_poly_set_str(series->B, "1  1");
-    fmpz_poly_set_str(series->P, "5  0 0 0 32 -64");
-    fmpz_poly_set_str(series->Q, "5  9 96 352 512 256");
+    fmpz_poly_set_str(series->P, "5  32 160 288 224 64");
+    fmpz_poly_set_str(series->Q, "5  225 3240 14904 23328 11664");
+    fmpz_poly_set_str(series->A, "3  411 976 580");
+    fmpz_poly_set_str(series->B, "5  1 5 9 7 2");
 
     prec += FLINT_CLOG2(prec);
     arb_hypgeom_infsum(s, t, series, prec, prec);
-    arb_mul_ui(t, t, 18, prec);
+    arb_mul_ui(t, t, 450, prec);
     arb_div(s, s, t, prec);
 
     hypgeom_clear(series);
