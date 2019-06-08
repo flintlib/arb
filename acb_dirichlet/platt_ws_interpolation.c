@@ -13,13 +13,6 @@
 #include "arb_hypgeom.h"
 
 static void
-_arb_inv_ui(arb_t res, ulong n, slong prec)
-{
-    arb_set_ui(res, n);
-    arb_inv(res, res, prec);
-}
-
-static void
 _arb_div_si_si(arb_t res, slong x, slong y, slong prec)
 {
     arb_set_si(res, x);
@@ -143,22 +136,6 @@ acb_dirichlet_platt_scaled_lambda_vec(arb_ptr res,
         }
         arb_clear(t);
     }
-}
-
-
-static void
-_platt_beta(arb_t res, const arb_t t, slong prec)
-{
-    arb_t u, v;
-    arb_init(u);
-    arb_init(v);
-    arb_log(u, t, prec);
-    arb_log(v, u, prec);
-    arb_div(u, v, u, prec);
-    _arb_inv_ui(res, 6, prec);
-    arb_add(res, res, u, prec);
-    arb_clear(u);
-    arb_clear(v);
 }
 
 static void
@@ -293,7 +270,7 @@ acb_dirichlet_platt_bound_C3(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_exp(ee, ee, prec);
     if (!arb_gt(t0, ee))
     {
-        arb_zero_pm_one(res);
+        arb_zero_pm_inf(res);
         goto finish;
     }
 
@@ -302,13 +279,13 @@ acb_dirichlet_platt_bound_C3(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_mul_si(rhs, t0, A, prec);
     if (!arb_is_positive(lhs) || !arb_le(lhs, rhs))
     {
-        arb_zero_pm_one(res);
+        arb_zero_pm_inf(res);
         goto finish;
     }
 
     /* res = (X + Y + Z) * 6 / (pi * Ns) */
     arb_const_pi(pi, prec);
-    _platt_beta(beta, t0, prec);
+    acb_dirichlet_platt_beta(beta, t0, prec);
     _platt_bound_C3_X(X, t0, A, H, Ns, beta, prec);
     _platt_bound_C3_Y(Y, t0, A, H, Ns, beta, prec);
     _platt_bound_C3_Z(Z, t0, A, H, beta, prec);
