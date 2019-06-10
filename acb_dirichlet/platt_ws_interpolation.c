@@ -12,6 +12,33 @@
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
 
+/* Increase precision adaptively. */
+static void
+_gamma_upper_workaround(arb_t res, const arb_t s, const arb_t z,
+        int regularized, slong prec)
+{
+    if (!arb_is_finite(s) || !arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        arb_t x;
+        slong i;
+        arb_init(x);
+        for (i = 0; i < 5; i++)
+        {
+            arb_hypgeom_gamma_upper(x, s, z, regularized, prec * (1 << i));
+            if (arb_rel_accuracy_bits(x) > 1)
+            {
+                break;
+            }
+        }
+        arb_swap(res, x);
+        arb_clear(x);
+    }
+}
+
 static void
 _arb_div_si_si(arb_t res, slong x, slong y, slong prec)
 {
@@ -188,7 +215,7 @@ _platt_bound_C3_Y(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_div(g2, g2, H, prec);
     arb_sqr(g2, g2, prec);
     arb_mul_2exp_si(g2, g2, -1);
-    arb_hypgeom_gamma_upper(g, g1, g2, 0, prec);
+    _gamma_upper_workaround(g, g1, g2, 0, prec);
 
     /* res = a*b*A*H*g */
     arb_mul_si(res, H, A, prec);
@@ -231,7 +258,7 @@ _platt_bound_C3_Z(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_div(g2, t0, H, prec);
     arb_sqr(g2, g2, prec);
     arb_mul_2exp_si(g2, g2, -1);
-    arb_hypgeom_gamma_upper(g, g1, g2, 0, prec);
+    _gamma_upper_workaround(g, g1, g2, 0, prec);
 
     /* res = a*b*A*g */
     arb_mul_si(res, g, A, prec);

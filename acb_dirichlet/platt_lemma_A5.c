@@ -13,6 +13,33 @@
 #include "arb_hypgeom.h"
 
 
+/* Increase precision adaptively. */
+static void
+_gamma_upper_workaround(arb_t res, const arb_t s, const arb_t z,
+        int regularized, slong prec)
+{
+    if (!arb_is_finite(s) || !arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        arb_t x;
+        slong i;
+        arb_init(x);
+        for (i = 0; i < 5; i++)
+        {
+            arb_hypgeom_gamma_upper(x, s, z, regularized, prec * (1 << i));
+            if (arb_rel_accuracy_bits(x) > 1)
+            {
+                break;
+            }
+        }
+        arb_swap(res, x);
+        arb_clear(x);
+    }
+}
+
 /* Lemma A5 requires B > h*sqrt(k) */
 static int
 _platt_lemma_A5_constraint(slong B, const arb_t h, slong k, slong prec)
@@ -79,7 +106,7 @@ acb_dirichlet_platt_lemma_A5(arb_t out, slong B, const arb_t h,
 
     arb_mul_2exp_si(x6, b, -1);
 
-    arb_hypgeom_gamma_upper(x6, x6, a, 0, prec);
+    _gamma_upper_workaround(x6, x6, a, 0, prec);
 
     arb_mul(out, x4, x5, prec);
     arb_mul(out, out, x6, prec);
