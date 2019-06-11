@@ -11,6 +11,13 @@
 
 #include "acb_dirichlet.h"
 
+static void
+_arb_div_si_si(arb_t res, slong a, slong b, slong prec)
+{
+    arb_set_si(res, a);
+    arb_div_si(res, res, b, prec);
+}
+
 static int
 _arb_vec_overlaps(arb_srcptr a, arb_srcptr b, slong len)
 {
@@ -33,6 +40,57 @@ int main()
     flint_printf("platt_multieval....");
     fflush(stdout);
     flint_randinit(state);
+
+    /* Check a specific combination of parameter values that is relatively fast
+     * to evaluate and that has relatively tight bounds. */
+    {
+        slong A = 8;
+        slong B = 128;
+        slong N = A*B;
+        slong J = 1000;
+        slong K = 30;
+        slong sigma = 63;
+        slong prec = 128;
+        fmpz_t T;
+        arb_t h;
+        arb_ptr vec;
+
+        arb_init(h);
+        fmpz_init(T);
+
+        fmpz_set_si(T, 10000);
+        arb_set_d(h, 4.5);
+        vec = _arb_vec_init(N);
+
+        acb_dirichlet_platt_multieval(vec, T, A, B, h, J, K, sigma, prec);
+
+        /* Check only a few random entries in the multieval vector. */
+        for (iter = 0; iter < 20; iter++)
+        {
+            arb_t t, r;
+            slong i = n_randint(state, N);
+            slong n = i - N/2;
+            arb_init(t);
+            arb_init(r);
+            _arb_div_si_si(t, n, A, prec);
+            arb_add_fmpz(t, t, T, prec);
+            acb_dirichlet_platt_scaled_lambda(r, t, prec);
+            if (!arb_overlaps(vec + i, r))
+            {
+                flint_printf("FAIL: overlap for hardcoded example\n\n");
+                flint_printf("n = %wd\n\n", n);
+                flint_printf("vec[i] = "); arb_printn(vec + i, 30, 0); flint_printf("\n\n");
+                flint_printf("r = "); arb_printn(r, 30, 0); flint_printf("\n\n");
+                flint_abort();
+            }
+            arb_clear(t);
+            arb_clear(r);
+        }
+
+        fmpz_clear(T);
+        arb_clear(h);
+        _arb_vec_clear(vec, N);
+    }
 
     for (iter = 0; iter < 10 * arb_test_multiplier(); iter++)
     {
