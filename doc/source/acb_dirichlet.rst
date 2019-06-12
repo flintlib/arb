@@ -733,3 +733,42 @@ mpmath [Joh2018b]_ by Juan Arias de Reyna, described in [Ari2012]_.
 
     Compute `S(g_n)` where `g_n` is the *n*-th Gram point. Requires `n \ge -1`.
 
+Riemann zeta function zeros (Platt's method)
+-------------------------------------------------------------------------------
+
+The following functions related to the Riemann zeta function use the ideas
+and formulas described by David J. Platt in [Pla2017]_.
+
+.. function:: void acb_dirichlet_platt_scaled_lambda(arb_t res, const arb_t t, slong prec)
+
+    Compute `\Lambda(t) e^{\pi t/4}` where
+
+    .. math ::
+
+        \Lambda(t) = \pi^{-\frac{it}{2}}
+                         \Gamma\left(\frac{\frac{1}{2}+it}{2}\right)
+                         \zeta\left(\frac{1}{2} + it\right)
+
+    is defined in the beginning of section 3 of [Pla2017]_. As explained in
+    [Pla2011]_ this function has the same zeros as `\zeta(1/2 + it)` and is
+    real-valued by the functional equation, and the exponential factor is
+    designed to counteract the decay of the gamma factor as `t` increases.
+
+.. function:: void acb_dirichlet_platt_scaled_lambda_vec(arb_ptr res, const fmpz_t T, slong A, slong B, slong prec)
+
+    Compute :func:`acb_dirichlet_platt_scaled_lambda` at `N=AB` points on a
+    grid, following the notation of [Pla2017]_. The first point on the grid
+    is `T - B/2` and the distance between grid points is `1/A`. The product
+    `N=AB` must be an even integer.
+
+.. function:: void acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max, const arb_t H, slong sigma, slong prec)
+
+    Compute :func:`acb_dirichlet_platt_scaled_lambda` at *t0* by
+    Gaussian-windowed Whittaker-Shannon interpolation of points evaluated by
+    :func:`acb_dirichlet_platt_scaled_lambda_vec`.
+    *Ns_max* defines the maximum number of supporting points to be used in
+    the interpolation on either side of *t0*. *H* is the standard deviation
+    of the Gaussian window centered on *t0* to be applied before the
+    interpolation. *sigma* is an odd positive integer tuning parameter
+    `\sigma \in 2\mathbb{Z}_{>0}+1` used in computing error bounds.
+
