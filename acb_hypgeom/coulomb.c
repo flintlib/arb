@@ -60,7 +60,7 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
         asymp = acb_hypgeom_u_use_asymp(z1, prec);
 
     /* Need the union of both sides of the branch cut for G, H+, H-. */
-    if (arb_is_nonnegative(acb_imagref(z)) || arb_is_positive(acb_realref(z)))
+    if (arb_is_nonnegative(acb_imagref(z)) || arb_is_negative(acb_imagref(z)) || arb_is_positive(acb_realref(z)))
         cut = 0;
     else
         cut = 1;
