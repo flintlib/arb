@@ -265,6 +265,29 @@ void acb_dirichlet_platt_scaled_lambda(arb_t res, const arb_t t, slong prec);
 void acb_dirichlet_platt_scaled_lambda_vec(arb_ptr res, const fmpz_t T,
     slong A, slong B, slong prec);
 
+/* Platt lemma bounds of errors in the DFT grid evaluation of scaled Lambda */
+
+void acb_dirichlet_platt_beta(arb_t res, const arb_t t, slong prec);
+void acb_dirichlet_platt_lemma_32(arb_t out, const arb_t h, const arb_t t0,
+    const arb_t x, slong prec);
+void acb_dirichlet_platt_lemma_A5(arb_t out, slong B, const arb_t h, slong k,
+    slong prec);
+void acb_dirichlet_platt_lemma_A7(arb_t out, slong sigma, const arb_t t0,
+    const arb_t h, slong k, slong A, slong prec);
+void acb_dirichlet_platt_lemma_A9(arb_t out, slong sigma, const arb_t t0,
+    const arb_t h, slong A, slong prec);
+void acb_dirichlet_platt_lemma_A11(arb_t out, const arb_t t0, const arb_t h,
+    slong B, slong prec);
+void acb_dirichlet_platt_lemma_B1(arb_t out, slong sigma, const arb_t t0,
+    const arb_t h, slong J, slong prec);
+void acb_dirichlet_platt_lemma_B2(arb_t out, slong K, const arb_t h,
+    const arb_t xi, slong prec);
+
+/* Platt DFT grid evaluation of scaled Lambda */
+
+void acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A,
+    slong B, const arb_t h, slong J, slong K, slong sigma, slong prec);
+
 /* Discrete Fourier Transform */
 
 void acb_dirichlet_dft_index(acb_ptr w, acb_srcptr v, const dirichlet_group_t G, slong prec);
