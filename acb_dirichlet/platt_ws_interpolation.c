@@ -12,11 +12,31 @@
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
 
+/* Increase precision adaptively. */
 static void
-_arb_inv_ui(arb_t res, ulong n, slong prec)
+_gamma_upper_workaround(arb_t res, const arb_t s, const arb_t z,
+        int regularized, slong prec)
 {
-    arb_set_ui(res, n);
-    arb_inv(res, res, prec);
+    if (!arb_is_finite(s) || !arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        arb_t x;
+        slong i;
+        arb_init(x);
+        for (i = 0; i < 5; i++)
+        {
+            arb_hypgeom_gamma_upper(x, s, z, regularized, prec * (1 << i));
+            if (arb_rel_accuracy_bits(x) > 1)
+            {
+                break;
+            }
+        }
+        arb_swap(res, x);
+        arb_clear(x);
+    }
 }
 
 static void
@@ -145,22 +165,6 @@ acb_dirichlet_platt_scaled_lambda_vec(arb_ptr res,
     }
 }
 
-
-static void
-_platt_beta(arb_t res, const arb_t t, slong prec)
-{
-    arb_t u, v;
-    arb_init(u);
-    arb_init(v);
-    arb_log(u, t, prec);
-    arb_log(v, u, prec);
-    arb_div(u, v, u, prec);
-    _arb_inv_ui(res, 6, prec);
-    arb_add(res, res, u, prec);
-    arb_clear(u);
-    arb_clear(v);
-}
-
 static void
 _platt_bound_C3_X(arb_t res, const arb_t t0, slong A, const arb_t H,
         slong Ns, const arb_t beta, slong prec)
@@ -211,7 +215,7 @@ _platt_bound_C3_Y(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_div(g2, g2, H, prec);
     arb_sqr(g2, g2, prec);
     arb_mul_2exp_si(g2, g2, -1);
-    arb_hypgeom_gamma_upper(g, g1, g2, 0, prec);
+    _gamma_upper_workaround(g, g1, g2, 0, prec);
 
     /* res = a*b*A*H*g */
     arb_mul_si(res, H, A, prec);
@@ -254,7 +258,7 @@ _platt_bound_C3_Z(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_div(g2, t0, H, prec);
     arb_sqr(g2, g2, prec);
     arb_mul_2exp_si(g2, g2, -1);
-    arb_hypgeom_gamma_upper(g, g1, g2, 0, prec);
+    _gamma_upper_workaround(g, g1, g2, 0, prec);
 
     /* res = a*b*A*g */
     arb_mul_si(res, g, A, prec);
@@ -293,7 +297,7 @@ acb_dirichlet_platt_bound_C3(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_exp(ee, ee, prec);
     if (!arb_gt(t0, ee))
     {
-        arb_zero_pm_one(res);
+        arb_zero_pm_inf(res);
         goto finish;
     }
 
@@ -302,13 +306,13 @@ acb_dirichlet_platt_bound_C3(arb_t res, const arb_t t0, slong A, const arb_t H,
     arb_mul_si(rhs, t0, A, prec);
     if (!arb_is_positive(lhs) || !arb_le(lhs, rhs))
     {
-        arb_zero_pm_one(res);
+        arb_zero_pm_inf(res);
         goto finish;
     }
 
     /* res = (X + Y + Z) * 6 / (pi * Ns) */
     arb_const_pi(pi, prec);
-    _platt_beta(beta, t0, prec);
+    acb_dirichlet_platt_beta(beta, t0, prec);
     _platt_bound_C3_X(X, t0, A, H, Ns, beta, prec);
     _platt_bound_C3_Y(Y, t0, A, H, Ns, beta, prec);
     _platt_bound_C3_Z(Z, t0, A, H, beta, prec);

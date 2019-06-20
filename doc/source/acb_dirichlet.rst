@@ -756,10 +756,15 @@ and formulas described by David J. Platt in [Pla2017]_.
 
 .. function:: void acb_dirichlet_platt_scaled_lambda_vec(arb_ptr res, const fmpz_t T, slong A, slong B, slong prec)
 
+.. function:: void acb_dirichlet_platt_multieval(arb_ptr res, const fmpz_t T, slong A, slong B, const arb_t h, slong J, slong K, slong sigma, slong prec)
+
     Compute :func:`acb_dirichlet_platt_scaled_lambda` at `N=AB` points on a
     grid, following the notation of [Pla2017]_. The first point on the grid
     is `T - B/2` and the distance between grid points is `1/A`. The product
-    `N=AB` must be an even integer.
+    `N=AB` must be an even integer. The multieval variant evaluates the
+    function at all points on the grid simultaneously using forward and inverse
+    discrete Fourier transforms, and it requires the four additional tuning
+    parameters *h*, *J*, *K*, and *sigma*.
 
 .. function:: void acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max, const arb_t H, slong sigma, slong prec)
 

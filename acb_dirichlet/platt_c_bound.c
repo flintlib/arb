@@ -12,6 +12,33 @@
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
 
+/* Increase precision adaptively. */
+static void
+_gamma_upper_workaround(arb_t res, const arb_t s, const arb_t z,
+        int regularized, slong prec)
+{
+    if (!arb_is_finite(s) || !arb_is_finite(z))
+    {
+        arb_indeterminate(res);
+    }
+    else
+    {
+        arb_t x;
+        slong i;
+        arb_init(x);
+        for (i = 0; i < 5; i++)
+        {
+            arb_hypgeom_gamma_upper(x, s, z, regularized, prec * (1 << i));
+            if (arb_rel_accuracy_bits(x) > 1)
+            {
+                break;
+            }
+        }
+        arb_swap(res, x);
+        arb_clear(x);
+    }
+}
+
 static void
 _arb_pow_si(arb_t res, const arb_t x, slong y, slong prec)
 {
@@ -148,7 +175,7 @@ _pre_c_p(arb_ptr res, slong sigma, const arb_t h, ulong k, slong prec)
 
         arb_set_si(x, k + l + 1);
         arb_mul_2exp_si(x, x, -1);
-        arb_hypgeom_gamma_upper(x, x, u, 0, prec);
+        _gamma_upper_workaround(x, x, u, 0, prec);
         arb_mul(res + l, res + l, x, prec);
     }
 
