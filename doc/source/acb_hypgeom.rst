@@ -601,12 +601,12 @@ The irregular solutions
 are also used.
 
 Coulomb wave functions are special cases of confluent hypergeometric functions.
-For details about the normalization constants and connection formulas
-defining the different solutions, see
-[DYF1999]_, [Gas2018]_, [Mic2007]_ or chapter 33 in [NIST2012]_.
+The normalization constants and connection formulas are discussed in
+[DYF1999]_, [Gas2018]_, [Mic2007]_ and chapter 33 in [NIST2012]_.
 In this implementation, we define the analytic continuations of all
 the functions so that the branch cut with respect to *z* is placed on the
-negative real axis.
+negative real axis. Precise definitions are given in
+http://fungrim.org/topic/Coulomb_wave_functions/
 
 The following methods optionally compute
 `F_{\ell}(\eta,z), G_{\ell}(\eta,z), H^{+}_{\ell}(\eta,z), H^{-}_{\ell}(\eta,z)`
