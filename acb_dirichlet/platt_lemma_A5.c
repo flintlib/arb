@@ -29,7 +29,7 @@ _gamma_upper_workaround(arb_t res, const arb_t s, const arb_t z,
         arb_init(x);
         for (i = 0; i < 5; i++)
         {
-            arb_hypgeom_gamma_upper(x, s, z, regularized, prec * (1 << i));
+            arb_hypgeom_gamma_upper(x, s, z, regularized, prec << i);
             if (arb_rel_accuracy_bits(x) > 1)
             {
                 break;
