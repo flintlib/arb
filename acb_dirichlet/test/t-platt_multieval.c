@@ -12,6 +12,13 @@
 #include "acb_dirichlet.h"
 
 static void
+_arb_inv_si(arb_t res, slong a, slong prec)
+{
+    arb_set_si(res, a);
+    arb_inv(res, res, prec);
+}
+
+static void
 _arb_div_si_si(arb_t res, slong a, slong b, slong prec)
 {
     arb_set_si(res, a);
@@ -30,6 +37,26 @@ _arb_vec_overlaps(arb_srcptr a, arb_srcptr b, slong len)
         }
     }
     return 1;
+}
+
+static void
+_check_containment(const char *name, const arb_t x, const char *s)
+{
+    arb_t u;
+    slong prec = 300;
+
+    arb_init(u);
+    arb_set_str(u, s, prec);
+
+    if (!arb_contains(u, x))
+    {
+        flint_printf("FAIL: %s\n\n", name);
+        flint_printf("observed = "); arb_printn(x, 30, 0); flint_printf("\n\n");
+        flint_printf("expected = "); arb_printn(u, 30, 0); flint_printf("\n\n");
+        flint_abort();
+    }
+
+    arb_clear(u);
 }
 
 int main()
@@ -60,11 +87,69 @@ int main()
 
         fmpz_set_si(T, 10000);
         arb_set_d(h, 4.5);
+
+        /* Spot-check lemma bound containment
+         * in intervals calculated with PARI/GP. */
+        {
+            arb_t lem, xi, x, beta, t0;
+            slong i = 201;
+            slong k = 5;
+            slong wp = 300;
+
+            arb_init(lem);
+            arb_init(xi);
+            arb_init(x);
+            arb_init(t0);
+            arb_init(beta);
+
+            _arb_inv_si(xi, B, wp);
+            arb_mul_2exp_si(xi, xi, -1);
+            _arb_div_si_si(x, i, B, wp);
+            arb_set_fmpz(t0, T);
+            acb_dirichlet_platt_beta(beta, t0, wp);
+
+            acb_dirichlet_platt_lemma_32(lem, h, t0, x, wp);
+            _check_containment("Lemma 3.2", lem,
+                    "[5.3526496753240991744e-1072334 +/- 2.55e-1072354]");
+
+            acb_dirichlet_platt_c_bound(lem, sigma, t0, h, k, wp);
+            _check_containment("Lemma A.3", lem,
+                    "[1.3516642396389823078e+134 +/- 2.65e+114]");
+
+            acb_dirichlet_platt_lemma_A5(lem, B, h, k, wp);
+            _check_containment("Lemma A.5", lem,
+                    "[1.0075390047893384632e-30 +/- 5.57e-51]");
+
+            acb_dirichlet_platt_lemma_A7(lem, sigma, t0, h, k, A, wp);
+            _check_containment("Lemma A.7", lem,
+                    "[3.0406705491484062400e-505 +/- 1.57e-525]");
+
+            acb_dirichlet_platt_lemma_A9(lem, sigma, t0, h, A, wp);
+            _check_containment("Lemma A.9", lem,
+                    "[6.8953211848420326275e-536 +/- 3.52e-556]");
+
+            acb_dirichlet_platt_lemma_A11(lem, t0, h, B, wp);
+            _check_containment("Lemma A.11", lem,
+                    "[3.0825745863006335768e-42 +/- 3.68e-62]");
+
+            acb_dirichlet_platt_lemma_B1(lem, sigma, t0, h, J, wp);
+            _check_containment("Lemma B.1", lem,
+                    "[8.5737638613320328274e-42 +/- 7.50e-63]");
+
+            acb_dirichlet_platt_lemma_B2(lem, K, h, xi, wp);
+            _check_containment("Lemma B.2", lem,
+                    "[2.0748437544358592615e-44 +/- 4.76e-64]");
+
+            arb_clear(lem);
+            arb_clear(xi);
+            arb_clear(x);
+            arb_clear(t0);
+            arb_clear(beta);
+        }
+
+        /* Check a few random entries in the multieval vector. */
         vec = _arb_vec_init(N);
-
         acb_dirichlet_platt_multieval(vec, T, A, B, h, J, K, sigma, prec);
-
-        /* Check only a few random entries in the multieval vector. */
         for (iter = 0; iter < 20; iter++)
         {
             arb_t t, r;
@@ -78,8 +163,8 @@ int main()
             if (!arb_overlaps(vec + i, r))
             {
                 flint_printf("FAIL: overlap for hardcoded example\n\n");
-                flint_printf("n = %wd\n\n", n);
-                flint_printf("vec[i] = "); arb_printn(vec + i, 30, 0); flint_printf("\n\n");
+                flint_printf("i = %wd  n = %wd\n\n", i, n);
+                flint_printf("vec[%wd] = ", i); arb_printn(vec + i, 30, 0); flint_printf("\n\n");
                 flint_printf("r = "); arb_printn(r, 30, 0); flint_printf("\n\n");
                 flint_abort();
             }
