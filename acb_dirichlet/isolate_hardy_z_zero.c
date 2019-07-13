@@ -1093,8 +1093,8 @@ _isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
 }
 
 /* Isolate len zeros, starting from the nth zero. */
-static void
-isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
+void
+acb_dirichlet_isolate_hardy_z_zeros(arf_interval_ptr res, const fmpz_t n, slong len)
 {
     if (len <= 0)
     {
@@ -1392,7 +1392,7 @@ acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
     {
         slong i;
         arf_interval_ptr p = _arf_interval_vec_init(len);
-        isolate_hardy_z_zeros(p, n, len);
+        acb_dirichlet_isolate_hardy_z_zeros(p, n, len);
         for (i = 0; i < len; i++)
         {
             _acb_dirichlet_refine_hardy_z_zero(res + i, &p[i].a, &p[i].b, prec);

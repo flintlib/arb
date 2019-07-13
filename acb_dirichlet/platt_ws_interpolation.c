@@ -390,7 +390,7 @@ acb_dirichlet_platt_ws_precomp_clear(acb_dirichlet_platt_ws_precomp_t pre)
 }
 
 void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
-    acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
+    const acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
     arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max,
     const arb_t H, slong sigma, slong prec)
 {
