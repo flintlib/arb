@@ -252,7 +252,7 @@ void acb_dirichlet_platt_ws_precomp_init(acb_dirichlet_platt_ws_precomp_t pre,
         slong A, const arb_t H, slong sigma, slong prec);
 void acb_dirichlet_platt_ws_precomp_clear(acb_dirichlet_platt_ws_precomp_t pre);
 void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
-    acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
+    const acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
     arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max,
     const arb_t H, slong sigma, slong prec);
 void acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0,
@@ -287,6 +287,12 @@ void acb_dirichlet_platt_lemma_B2(arb_t out, slong K, const arb_t h,
 
 void acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A,
     slong B, const arb_t h, slong J, slong K, slong sigma, slong prec);
+
+slong _acb_dirichlet_platt_local_hardy_z_zeros(
+    arb_ptr res, const fmpz_t n, slong len,
+    const fmpz_t T, slong A, slong B,
+    const arb_t h, slong J, slong K, slong sigma_grid,
+    slong Ns_max, const arb_t H, slong sigma_interp, slong prec);
 
 /* Discrete Fourier Transform */
 
