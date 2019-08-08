@@ -77,7 +77,9 @@ _arb_gaussian(arb_t res, const arb_t a, const arb_t b, const arb_t c,
     arb_mul_2exp_si(z, z, -1);
     arb_neg(z, z);
     arb_exp(z, z, prec);
-    if (a != NULL)
+    if (a == NULL)
+        arb_set(res, z);
+    else
         arb_mul(res, z, a, prec);
     arb_clear(z);
 }
@@ -339,40 +341,88 @@ _interpolation_helper(arb_t res, const acb_dirichlet_platt_ws_precomp_t pre,
         const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B,
         slong i0, slong Ns, const arb_t H, slong sigma, slong prec)
 {
-    arb_t dt0, dt, a, s, err, total;
+    mag_t m;
+    arb_t accum1; /* sum of terms where the argument of sinc is small */
+    arb_t accum2; /* sum of terms where the argument of sinc is large */
+    arb_t total, dt0, dt, a, b, s, err, pi, g, x, c;
     slong i;
     slong N = A*B;
+
+    mag_init(m);
+    arb_init(accum1);
+    arb_init(accum2);
+    arb_init(total);
     arb_init(dt0);
     arb_init(dt);
     arb_init(a);
+    arb_init(b);
     arb_init(s);
     arb_init(err);
-    arb_init(total);
+    arb_init(pi);
+    arb_init(g);
+    arb_init(x);
+    arb_init(c);
+
+    arb_const_pi(pi, prec);
     arb_sub_fmpz(dt0, t0, T, prec + fmpz_clog_ui(T, 2));
+
+    /* x = -N/2 - A*dt0 */
+    arb_mul_si(x, dt0, A, prec);
+    arb_add_si(x, x, N/2, prec);
+    arb_neg(x, x);
+
+    /* c = sin(pi*x) / pi */
+    arb_sin_pi(c, x, prec);
+    arb_div(c, c, pi, prec);
+
     for (i = i0; i < i0 + 2*Ns; i++)
     {
         slong n = i - N/2;
         _arb_div_si_si(dt, n, A, prec);
-        arb_sub(a, dt, dt0, prec);
-        arb_mul_si(a, a, A, prec);
-        arb_sinc_pi(a, a, prec);
-        arb_mul(a, a, p + i, prec);
-        _arb_gaussian(s, a, dt0, H, dt, prec);
-        arb_add(total, total, s, prec);
+        _arb_gaussian(g, NULL, dt0, H, dt, prec);
+        arb_mul(s, g, p + i, prec);
+        arb_add_si(a, x, i, prec);
+        arb_get_mag(m, a);
+        if (mag_cmp_2exp_si(m, -1) < 0)
+        {
+            arb_sinc_pi(b, a, prec);
+            arb_addmul(accum1, s, b, prec);
+        }
+        else
+        {
+            arb_div(b, s, a, prec);
+            if (i % 2)
+            {
+                arb_neg(b, b);
+            }
+            arb_add(accum2, accum2, b, prec);
+        }
     }
+    arb_set(total, accum1);
+    arb_addmul(total, accum2, c, prec);
     acb_dirichlet_platt_bound_C3(err, t0, A, H, Ns, prec);
     arb_add_error(total, err);
     acb_dirichlet_platt_i_bound_precomp(
             err, &pre->pre_i, &pre->pre_c, t0, A, H, sigma, prec);
     arb_add_error(total, err);
     arb_set(res, total);
+
+    mag_clear(m);
+    arb_clear(accum1);
+    arb_clear(accum2);
+    arb_clear(total);
     arb_clear(dt0);
     arb_clear(dt);
     arb_clear(a);
+    arb_clear(b);
     arb_clear(s);
     arb_clear(err);
-    arb_clear(total);
+    arb_clear(pi);
+    arb_clear(g);
+    arb_clear(x);
+    arb_clear(c);
 }
+
 
 void
 acb_dirichlet_platt_ws_precomp_init(acb_dirichlet_platt_ws_precomp_t pre,
