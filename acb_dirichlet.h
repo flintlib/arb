@@ -229,8 +229,8 @@ void acb_dirichlet_platt_c_precomp_init(acb_dirichlet_platt_c_precomp_t pre,
     slong sigma, const arb_t h, ulong k, slong prec);
 void acb_dirichlet_platt_c_precomp_clear(acb_dirichlet_platt_c_precomp_t pre);
 void acb_dirichlet_platt_c_bound_precomp(arb_t res,
-        const acb_dirichlet_platt_c_precomp_t pre, slong sigma, const arb_t t0,
-        const arb_t h, slong k, slong prec);
+    const acb_dirichlet_platt_c_precomp_t pre, slong sigma, const arb_t t0,
+    const arb_t h, slong k, slong prec);
 void acb_dirichlet_platt_c_bound(arb_t res,
     slong sigma, const arb_t t0, const arb_t h, slong k, slong prec);
 
@@ -249,15 +249,15 @@ void acb_dirichlet_platt_i_bound(arb_t res,
 /* Platt Gaussian-windowed Whittaker-Shannon interpolation */
 
 void acb_dirichlet_platt_ws_precomp_init(acb_dirichlet_platt_ws_precomp_t pre,
-        slong A, const arb_t H, slong sigma, slong prec);
+    slong A, const arb_t H, slong sigma, slong prec);
 void acb_dirichlet_platt_ws_precomp_clear(acb_dirichlet_platt_ws_precomp_t pre);
-void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
+void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res, arf_t deriv,
     const acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
     arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max,
     const arb_t H, slong sigma, slong prec);
-void acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0,
-    arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max,
-    const arb_t H, slong sigma, slong prec);
+void acb_dirichlet_platt_ws_interpolation(arb_t res, arf_t deriv,
+    const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B,
+    slong Ns_max, const arb_t H, slong sigma, slong prec);
 void acb_dirichlet_platt_bound_C3(arb_t res, const arb_t t0, slong A,
     const arb_t H, slong Ns, slong prec);
 

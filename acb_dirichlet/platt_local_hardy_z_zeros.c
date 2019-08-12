@@ -82,21 +82,22 @@ platt_ctx_clear(platt_ctx_t ctx)
 }
 
 static void
-platt_ctx_interpolate(arb_t res,
+platt_ctx_interpolate(arb_t res, arf_t deriv,
         const platt_ctx_t ctx, const arb_t t0, slong prec)
 {
-    acb_dirichlet_platt_ws_interpolation_precomp(res, &ctx->pre, t0, ctx->p,
-            &ctx->T, ctx->A, ctx->B, ctx->Ns_max, &ctx->H, ctx->sigma, prec);
+    acb_dirichlet_platt_ws_interpolation_precomp(res, deriv,
+        &ctx->pre, t0, ctx->p, &ctx->T, ctx->A, ctx->B, ctx->Ns_max,
+        &ctx->H, ctx->sigma, prec);
 }
 
 static void
-platt_ctx_interpolate_arf(arb_t res,
+platt_ctx_interpolate_arf(arb_t res, arf_t deriv,
         const platt_ctx_t ctx, const arf_t t0, slong prec)
 {
     arb_t t;
     arb_init(t);
     arb_set_arf(t, t0);
-    platt_ctx_interpolate(res, ctx, t, prec);
+    platt_ctx_interpolate(res, deriv, ctx, t, prec);
     arb_clear(t);
 }
 
@@ -228,7 +229,7 @@ create_non_gram_node(const arf_t t, const platt_ctx_t ctx, slong prec)
     zz_node_ptr p = flint_malloc(sizeof(zz_node_struct));
     zz_node_init(p);
     arf_set(&p->t, t);
-    platt_ctx_interpolate_arf(&p->v, ctx, t, prec);
+    platt_ctx_interpolate_arf(&p->v, NULL, ctx, t, prec);
     if (arb_contains_zero(&p->v))
     {
         zz_node_clear(p);
@@ -258,7 +259,7 @@ create_gram_node(const fmpz_t n, const platt_ctx_t ctx, slong prec)
 
     acb_dirichlet_gram_point(t, n, NULL, NULL, prec + fmpz_sizeinbase(n, 2));
     acb_set_arb(z, t);
-    platt_ctx_interpolate(v, ctx, t, prec);
+    platt_ctx_interpolate(v, NULL, ctx, t, prec);
     if (!arb_contains_zero(v))
     {
         /* t contains g(n) and does not contain a zero of the f function */
@@ -1136,10 +1137,10 @@ _refine_local_hardy_z_zero_illinois(arb_t res,
     abs_tol = nmag - prec - 4;
 
     wp = prec + nmag + 8;
-    platt_ctx_interpolate_arf(z, ctx, a, wp);
+    platt_ctx_interpolate_arf(z, NULL, ctx, a, wp);
     asign = arb_sgn_nonzero(z);
     arf_set(fa, arb_midref(z));
-    platt_ctx_interpolate_arf(z, ctx, b, wp);
+    platt_ctx_interpolate_arf(z, NULL, ctx, b, wp);
     bsign = arb_sgn_nonzero(z);
     arf_set(fb, arb_midref(z));
 
@@ -1164,22 +1165,90 @@ _refine_local_hardy_z_zero_illinois(arb_t res,
         arf_mul(c, c, fa, wp, ARF_RND_NEAR);
         arf_sub(c, a, c, wp, ARF_RND_NEAR);
 
-        /* if c is not sandwiched between a and b, improve precision
-           and fall back to one bisection step */
+        /* if c is not sandwiched between a and b,
+           fall back to one bisection step */
         if (!arf_is_finite(c) ||
             !((arf_cmp(a, c) < 0 && arf_cmp(c, b) < 0) ||
               (arf_cmp(b, c) < 0 && arf_cmp(c, a) < 0)))
         {
             /* flint_printf("no sandwich (k = %wd)\n", k); */
-            wp += 32;
             arf_add(c, a, b, ARF_PREC_EXACT, ARF_RND_DOWN);
             arf_mul_2exp_si(c, c, -1);
         }
 
-        platt_ctx_interpolate_arf(z, ctx, c, wp);
+        platt_ctx_interpolate_arf(z, NULL, ctx, c, wp);
         csign = arb_sgn_nonzero(z);
+
+        /* If the guess is close enough to a zero that the sign
+         * cannot be determined, then use the derivative to
+         * make an appropriately small interval around the guess. */
         if (!csign)
+        {
+            arf_t deriv, aprime, bprime, faprime, fbprime, err, delta;
+            slong i, aprimesign, bprimesign;
+
+            arf_init(deriv);
+            arf_init(aprime);
+            arf_init(bprime);
+            arf_init(faprime);
+            arf_init(fbprime);
+            arf_init(err);
+            arf_init(delta);
+
+            arf_set_mag(err, arb_radref(z));
+            platt_ctx_interpolate_arf(NULL, deriv, ctx, c, wp);
+            arf_div(delta, err, deriv, wp, ARF_RND_NEAR);
+            arf_mul_si(delta, delta, 3, wp, ARF_RND_NEAR);
+            arf_mul_2exp_si(delta, delta, -1);
+            arf_set(aprime, c);
+            arf_set(bprime, c);
+
+            /* When the context allows the interval endpoints to
+             * be evaluated to relatively high precision,
+             * this should not require more than one or two iterations. */
+            for (i = 0; i < 5; i++)
+            {
+                arf_sub(aprime, aprime, delta, wp, ARF_RND_DOWN);
+                arf_add(bprime, bprime, delta, wp, ARF_RND_UP);
+                if (arf_cmp(a, b) < 0)
+                {
+                    if (arf_cmp(aprime, a) < 0)
+                        arf_set(aprime, a);
+                    if (arf_cmp(b, bprime) < 0)
+                        arf_set(bprime, b);
+                }
+                else
+                {
+                    if (arf_cmp(aprime, b) < 0)
+                        arf_set(aprime, b);
+                    if (arf_cmp(a, bprime) < 0)
+                        arf_set(bprime, a);
+                }
+                platt_ctx_interpolate_arf(z, NULL, ctx, aprime, wp);
+                arf_set(faprime, arb_midref(z));
+                aprimesign = arb_sgn_nonzero(z);
+                platt_ctx_interpolate_arf(z, NULL, ctx, bprime, wp);
+                arf_set(fbprime, arb_midref(z));
+                bprimesign = arb_sgn_nonzero(z);
+                if (aprimesign && bprimesign && aprimesign != bprimesign)
+                {
+                    arf_set(a, aprime);
+                    arf_set(b, bprime);
+                    arf_set(fa, faprime);
+                    arf_set(fb, fbprime);
+                    break;
+                }
+            }
+
+            arf_clear(deriv);
+            arf_clear(aprime);
+            arf_clear(bprime);
+            arf_clear(faprime);
+            arf_clear(fbprime);
+            arf_clear(err);
+            arf_clear(delta);
             break;
+        }
         arf_set(fc, arb_midref(z));
 
         if (csign != bsign)

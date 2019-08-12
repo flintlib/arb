@@ -65,7 +65,7 @@ int main()
             arb_abs(H, H);
 
             acb_dirichlet_platt_scaled_lambda(expected, t0, prec);
-            acb_dirichlet_platt_ws_interpolation(observed, t0, vec,
+            acb_dirichlet_platt_ws_interpolation(observed, NULL, t0, vec,
                     T, A, B, Ns_max, H, sigma, prec);
 
             if (!arb_overlaps(expected, observed))

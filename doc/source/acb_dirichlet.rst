@@ -766,11 +766,12 @@ and formulas described by David J. Platt in [Pla2017]_.
     discrete Fourier transforms, and it requires the four additional tuning
     parameters *h*, *J*, *K*, and *sigma*.
 
-.. function:: void acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max, const arb_t H, slong sigma, slong prec)
+.. function:: void acb_dirichlet_platt_ws_interpolation(arb_t res, arf_t deriv, const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max, const arb_t H, slong sigma, slong prec)
 
     Compute :func:`acb_dirichlet_platt_scaled_lambda` at *t0* by
     Gaussian-windowed Whittaker-Shannon interpolation of points evaluated by
-    :func:`acb_dirichlet_platt_scaled_lambda_vec`.
+    :func:`acb_dirichlet_platt_scaled_lambda_vec`. The derivative is
+    also approximated if the output parameter *deriv* is not *NULL*.
     *Ns_max* defines the maximum number of supporting points to be used in
     the interpolation on either side of *t0*. *H* is the standard deviation
     of the Gaussian window centered on *t0* to be applied before the
