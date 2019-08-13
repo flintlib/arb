@@ -166,6 +166,7 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
 
     acb_mul_2exp_si(C, C, -1);
 
+    /* http://fungrim.org/entry/1976e1/ */
     if (asymp)
     {
         /* T1 = exp(-(-iz + lv + u log(z1)) U1 */
@@ -206,6 +207,7 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
         /* C *= exp(-iz) */
         acb_div_onei(F, z);
         acb_add(C, C, F, prec);
+        /* http://fungrim.org/entry/2a2f18/ */
         acb_hypgeom_m(F, v, m, z1, 1, prec);
     }
 
@@ -255,6 +257,7 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
 
         if (G != NULL)
         {
+            /* http://fungrim.org/entry/e2efbf/ */
             if (asymp && arb_is_positive(acb_realref(z)))
             {
                 if (G_real)
@@ -273,8 +276,10 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
             }
             else
             {
+                /* http://fungrim.org/entry/8027e8/ */
                 acb_div_onei(u, F);
                 acb_add(u, H1, u, prec);
+                /* http://fungrim.org/entry/69e5fb/ */
                 acb_mul_onei(v, F);
                 acb_add(v, H2, v, prec);
 
@@ -292,7 +297,9 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
 
         if (Hpos != NULL)
         {
+            /* http://fungrim.org/entry/bcdfc6/ */
             acb_set(u, H1);
+            /* http://fungrim.org/entry/f0414a/ */
             acb_mul_onei(v, F);
             acb_mul_2exp_si(v, v, 1);
             acb_add(v, H2, v, prec);
@@ -310,9 +317,11 @@ _acb_hypgeom_coulomb(acb_t F, acb_t G, acb_t Hpos, acb_t Hneg, const acb_t l, co
 
         if (Hneg != NULL)
         {
+            /* http://fungrim.org/entry/0cc301/ */
             acb_div_onei(u, F);
             acb_mul_2exp_si(u, u, 1);
             acb_add(u, H1, u, prec);
+            /* http://fungrim.org/entry/781eae/ */
             acb_set(v, H2);
 
             if (cut)
