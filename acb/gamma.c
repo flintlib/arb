@@ -180,8 +180,8 @@ _acb_gamma(acb_t y, const acb_t x, slong prec, int inverse)
             /* gamma(x) = (rf(1-x, r) * pi) rgamma(1-x+r) csc(pi x) */
             acb_neg(v, v);
             acb_exp(v, v, wp);
-            acb_sin_pi(t, x, wp);   /* todo: write a csc_pi function */
-            acb_div(v, v, t, wp);
+            acb_csc_pi(t, x, wp);
+            acb_mul(v, v, t, wp);
             acb_mul(y, v, u, prec);
         }
     }

@@ -860,8 +860,8 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
             /* gamma(x) = (rf(1-x, r) * pi) rgamma(1-x+r) csc(pi x) */
             arb_neg(v, v);
             arb_exp(v, v, wp);
-            arb_sin_pi(t, x, wp);   /* todo: write a csc_pi function */
-            arb_div(v, v, t, wp);
+            arb_csc_pi(t, x, wp);
+            arb_mul(v, v, t, wp);
             arb_mul(y, v, u, prec);
         }
     }

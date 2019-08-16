@@ -1053,6 +1053,10 @@ Trigonometric functions
 
     Computes `\csc(x) = 1 / \sin(x)`.
 
+.. function:: void arb_csc_pi(arb_t res, const arb_t x, slong prec)
+
+    Computes `\csc(\pi x) = 1 / \sin(\pi x)`.
+
 .. function:: void arb_sinc(arb_t z, const arb_t x, slong prec)
 
     Sets `z = \operatorname{sinc}(x) = \sin(x) / x`.
