@@ -983,6 +983,12 @@ Powers and elementary functions
     Sets *c* to the sinc function of the power series *h*, truncated
     to length *n*.
 
+.. function:: void _arb_poly_sinc_pi_series(arb_ptr s, arb_srcptr h, slong hlen, slong n, slong prec)
+
+.. function:: void arb_poly_sinc_pi_series(arb_poly_t s, const arb_poly_t h, slong n, slong prec)
+
+    Compute the sinc function of the input multiplied by `\pi`.
+
 Lambert W function
 -------------------------------------------------------------------------------
 

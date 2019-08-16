@@ -11,6 +11,7 @@
 
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
+#include "arb_poly.h"
 
 /* Increase precision adaptively. */
 static void
@@ -411,45 +412,6 @@ _interpolation_helper_raw(arb_t res,
     arb_clear(g);
     arb_clear(x);
     arb_clear(c);
-}
-
-static void
-_arb_poly_sinc_pi_series(arb_ptr g, arb_srcptr h, slong hlen, slong n, slong prec)
-{
-    hlen = FLINT_MIN(hlen, n);
-    if (hlen == 1)
-    {
-        arb_sinc_pi(g, h, prec);
-        _arb_vec_zero(g + 1, n - 1);
-    }
-    else
-    {
-        arb_t pi;
-        arb_ptr t, u;
-
-        arb_init(pi);
-        t = _arb_vec_init(n + 1);
-        u = _arb_vec_init(hlen);
-
-        arb_const_pi(pi, prec);
-        _arb_vec_set(u, h, hlen);
-
-        if (arb_is_zero(h))
-        {
-            _arb_poly_sin_pi_series(t, u, hlen, n + 1, prec);
-            _arb_poly_div_series(g, t + 1, n, u + 1, hlen - 1, n, prec);
-        }
-        else
-        {
-            _arb_poly_sin_pi_series(t, u, hlen, n, prec);
-            _arb_poly_div_series(g, t, n, u, hlen, n, prec);
-        }
-        _arb_vec_scalar_div(g, g, n, pi, prec);
-
-        arb_clear(pi);
-        _arb_vec_clear(t, n + 1);
-        _arb_vec_clear(u, hlen);
-    }
 }
 
 /* Sets res to the function (a * exp(-(b-h)^2 / c)) * sinc_pi(d*(b-h)))
