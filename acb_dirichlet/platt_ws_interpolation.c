@@ -11,6 +11,7 @@
 
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
+#include "arb_poly.h"
 
 /* Increase precision adaptively. */
 static void
@@ -335,29 +336,27 @@ finish:
     arb_clear(rhs);
 }
 
-
+/* Does not account for limited resolution and supporting points. */
 static void
-_interpolation_helper(arb_t res, const acb_dirichlet_platt_ws_precomp_t pre,
+_interpolation_helper_raw(arb_t res,
         const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B,
-        slong i0, slong Ns, const arb_t H, slong sigma, slong prec)
+        slong i0, slong Ns, const arb_t H, slong prec)
 {
     mag_t m;
     arb_t accum1; /* sum of terms where the argument of sinc is small */
     arb_t accum2; /* sum of terms where the argument of sinc is large */
-    arb_t total, dt0, dt, a, b, s, err, pi, g, x, c;
+    arb_t dt0, dt, a, b, s, pi, g, x, c;
     slong i;
     slong N = A*B;
 
     mag_init(m);
     arb_init(accum1);
     arb_init(accum2);
-    arb_init(total);
     arb_init(dt0);
     arb_init(dt);
     arb_init(a);
     arb_init(b);
     arb_init(s);
-    arb_init(err);
     arb_init(pi);
     arb_init(g);
     arb_init(x);
@@ -398,29 +397,150 @@ _interpolation_helper(arb_t res, const acb_dirichlet_platt_ws_precomp_t pre,
             arb_add(accum2, accum2, b, prec);
         }
     }
-    arb_set(total, accum1);
-    arb_addmul(total, accum2, c, prec);
-    acb_dirichlet_platt_bound_C3(err, t0, A, H, Ns, prec);
-    arb_add_error(total, err);
-    acb_dirichlet_platt_i_bound_precomp(
-            err, &pre->pre_i, &pre->pre_c, t0, A, H, sigma, prec);
-    arb_add_error(total, err);
-    arb_set(res, total);
+    arb_set(res, accum1);
+    arb_addmul(res, accum2, c, prec);
 
     mag_clear(m);
     arb_clear(accum1);
     arb_clear(accum2);
-    arb_clear(total);
     arb_clear(dt0);
     arb_clear(dt);
     arb_clear(a);
     arb_clear(b);
     arb_clear(s);
-    arb_clear(err);
     arb_clear(pi);
     arb_clear(g);
     arb_clear(x);
     arb_clear(c);
+}
+
+/* Sets res to the function (a * exp(-(b-h)^2 / c)) * sinc_pi(d*(b-h)))
+ * of the power series h, for the purpose of computing derivatives
+ * of the Gaussian-windowed Whittaker-Shannon interpolation.
+ * Supports aliasing. */
+static void
+_arb_poly_gwws_series(arb_ptr res, arb_srcptr h, slong hlen,
+        const arb_t a, const arb_t b, const arb_t c, const arb_t d,
+        slong len, slong prec)
+{
+    arb_ptr u, u2, v, w;
+    hlen = FLINT_MIN(hlen, len);
+
+    u = _arb_vec_init(hlen);
+    u2 = _arb_vec_init(len);
+    v = _arb_vec_init(len);
+    w = _arb_vec_init(len);
+
+    /* u = b-h; u2 = (b-h)^2 */
+    _arb_vec_neg(u, h, hlen);
+    arb_add(u, u, b, prec);
+    _arb_poly_mullow(u2, u, hlen, u, hlen, len, prec);
+
+    /* v = exp(-(b-h)^2 / c) */
+    _arb_vec_scalar_div(v, u2, len, c, prec);
+    _arb_vec_neg(v, v, len);
+    _arb_poly_exp_series(v, v, len, len, prec);
+
+    /* w = sinc_pi(d*(b-h)) */
+    _arb_vec_scalar_mul(w, u, hlen, d, prec);
+    _arb_poly_sinc_pi_series(w, w, hlen, len, prec);
+
+    /* res = a * exp(-(b-h)^2 / c)) * sinc_pi(d*(b-h)) */
+    _arb_poly_mullow(res, v, len, w, len, len, prec);
+    _arb_vec_scalar_mul(res, res, len, a, prec);
+
+    _arb_vec_clear(u, hlen);
+    _arb_vec_clear(u2, len);
+    _arb_vec_clear(v, len);
+    _arb_vec_clear(w, len);
+}
+
+/* Does not account for limited resolution and supporting points. */
+static void
+_interpolation_helper_raw_series(arb_ptr res, arb_srcptr t0, slong t0len,
+        arb_srcptr p, const fmpz_t T, slong A, slong B, slong i0,
+        slong Ns, const arb_t H, slong trunc, slong prec)
+{
+    t0len = FLINT_MIN(t0len, trunc);
+    if (t0len == 1)
+    {
+        _interpolation_helper_raw(res, t0, p, T, A, B, i0, Ns, H, prec);
+        _arb_vec_zero(res + 1, trunc - 1);
+    }
+    else
+    {
+        arb_ptr h, g, accum;
+        arb_t b, c, d;
+        slong N = A*B;
+        slong i;
+
+        arb_init(b);
+        arb_init(c);
+        arb_init(d);
+        h = _arb_vec_init(t0len);
+        g = _arb_vec_init(trunc);
+        accum = _arb_vec_init(trunc);
+
+        arb_sqr(c, H, prec);
+        arb_mul_2exp_si(c, c, 1);
+        arb_set_si(d, A);
+        _arb_vec_set(h, t0, t0len);
+        arb_sub_fmpz(h, t0, T, prec + fmpz_clog_ui(T, 2));
+
+        for (i = i0; i < i0 + 2*Ns; i++)
+        {
+            slong n = i - N/2;
+            _arb_div_si_si(b, n, A, prec);
+            _arb_poly_gwws_series(g, h, t0len, p + i, b, c, d, trunc, prec);
+            _arb_vec_add(accum, accum, g, trunc, prec);
+        }
+        _arb_vec_set(res, accum, trunc);
+
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(d);
+        _arb_vec_clear(h, t0len);
+        _arb_vec_clear(g, trunc);
+        _arb_vec_clear(accum, trunc);
+    }
+}
+
+static void
+_interpolation_deriv_helper(arf_t res, const arb_t t0,
+        arb_srcptr p, const fmpz_t T, slong A, slong B, slong i0,
+        slong Ns, const arb_t H, slong prec)
+{
+    arb_ptr t, h;
+    t = _arb_vec_init(2);
+    h = _arb_vec_init(2);
+    arb_set(t+0, t0);
+    arb_one(t+1);
+    _interpolation_helper_raw_series(
+        h, t, 2, p, T, A, B, i0, Ns, H, 2, prec);
+    arf_set(res, arb_midref(h+1));
+    _arb_vec_clear(t, 2);
+    _arb_vec_clear(h, 2);
+}
+
+/* Accounts for limited resolution and supporting points. */
+static void
+_interpolation_helper(arb_t res, const acb_dirichlet_platt_ws_precomp_t pre,
+        const arb_t t0, arb_srcptr p, const fmpz_t T, slong A, slong B,
+        slong i0, slong Ns, const arb_t H, slong sigma, slong prec)
+{
+    arb_t total, err;
+    arb_init(total);
+    arb_init(err);
+    _interpolation_helper_raw(
+        total, t0, p, T, A, B, i0, Ns, H, prec);
+    acb_dirichlet_platt_bound_C3(err, t0, A, H, Ns, prec);
+    arb_add_error(total, err);
+    acb_dirichlet_platt_i_bound_precomp(
+        err, &pre->pre_i, &pre->pre_c, t0, A, H, sigma, prec);
+    arb_add_error(total, err);
+    arb_set(res, total);
+    arb_clear(total);
+    arb_clear(err);
 }
 
 
@@ -439,7 +559,7 @@ acb_dirichlet_platt_ws_precomp_clear(acb_dirichlet_platt_ws_precomp_t pre)
     acb_dirichlet_platt_i_precomp_clear(&pre->pre_i);
 }
 
-void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
+void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res, arf_t deriv,
     const acb_dirichlet_platt_ws_precomp_t pre, const arb_t t0,
     arb_srcptr p, const fmpz_t T, slong A, slong B, slong Ns_max,
     const arb_t H, slong sigma, slong prec)
@@ -466,6 +586,10 @@ void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
         arb_mul_si(dt0A, dt0, A, prec);
         arb_get_lbound_arf(lower_f, dt0A, prec);
         lower_n = arf_get_si(lower_f, ARF_RND_FLOOR);
+        if (deriv)
+        {
+            arf_zero(deriv);
+        }
 
         /*
          * More than one iteration is needed only when the set of
@@ -483,20 +607,31 @@ void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
             else
             {
                 slong i0 = N/2 + n - (Ns - 1);
-                _interpolation_helper(
-                        x, pre, t0, p, T, A, B, i0, Ns, H, sigma, prec);
-                if (n == lower_n)
+                if (res)
                 {
-                    arb_set(total, x);
+                    _interpolation_helper(
+                            x, pre, t0, p, T, A, B, i0, Ns, H, sigma, prec);
+                    if (n == lower_n)
+                    {
+                        arb_set(total, x);
+                    }
+                    else
+                    {
+                        arb_union(total, total, x, prec);
+                    }
                 }
-                else
+                if (deriv)
                 {
-                    arb_union(total, total, x, prec);
+                    _interpolation_deriv_helper(
+                            deriv, t0, p, T, A, B, i0, Ns, H, prec);
                 }
             }
         }
 
-        arb_set(res, total);
+        if (res)
+        {
+            arb_set(res, total);
+        }
 
         arb_clear(x);
         arb_clear(dt0);
@@ -507,13 +642,13 @@ void acb_dirichlet_platt_ws_interpolation_precomp(arb_t res,
 }
 
 void
-acb_dirichlet_platt_ws_interpolation(arb_t res, const arb_t t0,
+acb_dirichlet_platt_ws_interpolation(arb_t res, arf_t deriv, const arb_t t0,
         arb_srcptr p, const fmpz_t T, slong A, slong B,
         slong Ns_max, const arb_t H, slong sigma, slong prec)
 {
     acb_dirichlet_platt_ws_precomp_t pre;
     acb_dirichlet_platt_ws_precomp_init(pre, A, H, sigma, prec);
     acb_dirichlet_platt_ws_interpolation_precomp(
-            res, pre, t0, p, T, A, B, Ns_max, H, sigma, prec);
+            res, deriv, pre, t0, p, T, A, B, Ns_max, H, sigma, prec);
     acb_dirichlet_platt_ws_precomp_clear(pre);
 }
