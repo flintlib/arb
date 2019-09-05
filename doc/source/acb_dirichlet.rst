@@ -779,11 +779,13 @@ and formulas described by David J. Platt in [Pla2017]_.
     `\sigma \in 2\mathbb{Z}_{>0}+1` used in computing error bounds.
 
 .. function:: slong _acb_dirichlet_platt_local_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, const fmpz_t T, slong A, slong B, const arb_t h, slong J, slong K, slong sigma_grid, slong Ns_max, const arb_t H, slong sigma_interp, slong prec)
+.. function:: slong acb_dirichlet_platt_local_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
 
     Sets the entries of *res* to at most *len* consecutive zeros of the
-    Hardy Z-function, beginning with the *n*-th zero. The number of zeros
-    isolated near *T* is returned. Requires positive *n*.
-    Internally this function uses Platt's grid evaluation of the scaled
-    Lambda function, and the final several parameters have the same meanings
-    as in the functions :func:`acb_dirichlet_platt_multieval`
-    and :func:`acb_dirichlet_platt_ws_interpolation`.
+    Hardy Z-function, beginning with the *n*-th zero. Requires positive *n*.
+    The number of isolated zeros is returned. Internally this function uses
+    a single call to Platt's grid evaluation of the scaled Lambda function.
+    The final several parameters of the underscored variant have the same
+    meanings as in the functions :func:`acb_dirichlet_platt_multieval`
+    and :func:`acb_dirichlet_platt_ws_interpolation`. The non-underscored
+    variant currently requires `10^4 \leq n \leq 3 \times 10^22`.
