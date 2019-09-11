@@ -340,16 +340,16 @@ stieltjes_mag(double n)
     return t;
 }
 
-static double __hypot(double x, double y) { return sqrt(x * x + y * y); }
+static double _d_approx_hypot(double x, double y) { return sqrt(x * x + y * y); }
 
 /* log2 magnitude of integrand at z = x+yi; alpha = a+bi */
 static double
 integrand_mag(double n, double x, double y, double a, double b)
 {
     double t, u;
-    t = log(__hypot(a - y, b + x));
+    t = log(_d_approx_hypot(a - y, b + x));
     u = atan2(b + x, a - y);
-    t = log(__hypot(t,u)) * (n+1) - 2.0 * 3.1415926535897932 * x;
+    t = log(_d_approx_hypot(t,u)) * (n+1) - 2.0 * 3.1415926535897932 * x;
     return t * 1.44269504088896341;
 }
 
