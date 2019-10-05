@@ -4,3 +4,7 @@ libarb.so*
 libarb.a
 doc/build/*
 *.ppm
+*.lo
+*.deps/
+*.libs/
+*.dirstamp
