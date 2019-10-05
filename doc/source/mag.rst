@@ -221,6 +221,31 @@ Input and output
 
     Prints *x* to the stream *file*.
 
+.. function:: char* mag_dump_str(const mag_t x)
+
+    Allocates a string and writes a binary representation of *x* to it that can
+    be read by :func:`mag_load_str`. The returned string needs to be
+    deallocated with *flint_free*.
+
+.. function:: int mag_load_str(mag_t x, const char* str)
+
+    Parses *str* into *x*. Returns a nonzero value if *str* is not formatted
+    correctly.
+
+.. function:: int mag_dump_file(FILE* stream, const mag_t x)
+
+    Writes a binary representation of *x* to *stream* that can be read by
+    :func:`mag_load_file`. Returns a nonzero value if the data could not be
+    written.
+
+.. function:: int mag_load_file(mag_t x, FILE* stream)
+
+    Reads *x* from *stream*. Returns a nonzero value if the data is not
+    formatted correctly or the read failed. Note that the data is assumed to be
+    delimited by a whitespace or end-of-file, i.e., when writing multiple
+    values with :func:`mag_dump_file` make sure to insert a whitespace to
+    separate consecutive values.
+
 Random generation
 -------------------------------------------------------------------------------
 

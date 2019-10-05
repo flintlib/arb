@@ -275,6 +275,31 @@ The *arb_print...* functions print to standard output, while
     enclose *x*.
     See :func:`arb_get_str` for details.
 
+.. function:: char* arb_dump_str(const arb_t x)
+
+    Allocates a string and writes a binary representation of *x* to it that can
+    be read by :func:`arb_load_str`. The returned string needs to be
+    deallocated with *flint_free*.
+
+.. function:: int arb_load_str(arb_t x, const char* str)
+
+    Parses *str* into *x*. Returns a nonzero value if *str* is not formatted
+    correctly.
+
+.. function:: int arb_dump_file(FILE* stream, const arb_t x)
+
+    Writes a binary representation of *x* to *stream* that can be read by
+    :func:`arb_load_file`. Returns a nonzero value if the data could not be
+    written.
+
+.. function:: int arb_load_file(arb_t x, FILE* stream)
+
+    Reads *x* from *stream*. Returns a nonzero value if the data is not
+    formatted correctly or the read failed. Note that the data is assumed to be
+    delimited by a whitespace or end-of-file, i.e., when writing multiple
+    values with :func:`arb_dump_file` make sure to insert a whitespace to
+    separate consecutive values.
+
 Random number generation
 -------------------------------------------------------------------------------
 
