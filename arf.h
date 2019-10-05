@@ -1287,6 +1287,14 @@ arf_allocated_bytes(const arf_t x)
     return size;
 }
 
+int arf_load_str(arf_t res, const char * data);
+
+char * arf_dump_str(const arf_t x);
+
+int arf_load_file(arf_t res, FILE *stream);
+
+int arf_dump_file(FILE* stream, const arf_t x);
+
 #ifdef __cplusplus
 }
 #endif
