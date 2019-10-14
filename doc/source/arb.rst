@@ -275,30 +275,56 @@ The *arb_print...* functions print to standard output, while
     enclose *x*.
     See :func:`arb_get_str` for details.
 
-.. function:: char* arb_dump_str(const arb_t x)
+.. function:: char * arb_dump_str(const arb_t x)
 
-    Allocates a string and writes a binary representation of *x* to it that can
-    be read by :func:`arb_load_str`. The returned string needs to be
-    deallocated with *flint_free*.
+    Returns a serialized representation of *x* as a null-terminated
+    ASCII string that can be read by :func:`arb_load_str`. The format consists
+    of four hexadecimal integers representing the midpoint mantissa,
+    midpoint exponent, radius mantissa and radius exponent (with special
+    values to indicate zero, infinity and NaN values),
+    separated by single spaces. The returned string needs to be deallocated
+    with *flint_free*.
 
-.. function:: int arb_load_str(arb_t x, const char* str)
+.. function:: int arb_load_str(arb_t x, const char * str)
 
-    Parses *str* into *x*. Returns a nonzero value if *str* is not formatted
-    correctly.
+    Sets *x* to the serialized representation given in *str*. Returns a
+    nonzero value if *str* is not formatted correctly (see :func:`arb_dump_str`).
 
-.. function:: int arb_dump_file(FILE* stream, const arb_t x)
+.. function:: int arb_dump_file(FILE * stream, const arb_t x)
 
-    Writes a binary representation of *x* to *stream* that can be read by
-    :func:`arb_load_file`. Returns a nonzero value if the data could not be
-    written.
+    Writes a serialized ASCII representation of *x* to *stream* in a form that
+    can be read by :func:`arb_load_file`. Returns a nonzero value if the data
+    could not be written.
 
-.. function:: int arb_load_file(arb_t x, FILE* stream)
+.. function:: int arb_load_file(arb_t x, FILE * stream)
 
-    Reads *x* from *stream*. Returns a nonzero value if the data is not
+    Reads *x* from a serialized ASCII representation in *stream*. Returns a
+    nonzero value if the data is not
     formatted correctly or the read failed. Note that the data is assumed to be
     delimited by a whitespace or end-of-file, i.e., when writing multiple
     values with :func:`arb_dump_file` make sure to insert a whitespace to
     separate consecutive values.
+
+    It is possible to serialize and deserialize a vector as follows
+    (warning: without error handling):
+
+    .. code-block:: c
+
+        fp = fopen("data.txt", "w");
+        for (i = 0; i < n; i++)
+        {
+            arb_dump_file(fp, vec + i);
+            fprintf(fp, "\n");    // or any whitespace character
+        }
+        fclose(fp);
+
+        fp = fopen("data.txt", "r");
+        for (i = 0; i < n; i++)
+        {
+            arb_load_file(vec + i, fp);
+        }
+        fclose(fp);
+
 
 Random number generation
 -------------------------------------------------------------------------------
