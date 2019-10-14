@@ -55,10 +55,8 @@ acb_hypgeom_pfq_series_sum(acb_poly_t s, acb_poly_t t,
     }
 
     /* Prefer RS with small coefficients in parameters, large coefficients
-       in z. This only makes sense right now with len <= 2 due to the way
-       acb_poly_div_series works; in the future, it could be used for
-       slightly larger len. */
-    if (len <= 2 && prec > 900 && abits < prec * 0.1 && zbits > prec * 0.1)
+       in z. TODO: tune for larger len? */
+    if (len <= 5 && prec > 900 && abits < prec * 0.1 && zbits > prec * 0.1)
     {
         acb_hypgeom_pfq_series_sum_rs(s, t, a, p, b, q, z,
             regularized, n, len, prec);
