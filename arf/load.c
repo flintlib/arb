@@ -33,11 +33,10 @@ arf_set_fmpz_2exp_dump(arf_t x, const fmpz_t m, const fmpz_t e) {
 int
 arf_load_str(arf_t x, const char* data)
 {
-    int err = 0;
-
     fmpz_t mantissa, exponent;
     char * e_str;
     char * m_str;
+    int err = 0;
 
     fmpz_init(mantissa);
     fmpz_init(exponent);

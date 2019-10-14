@@ -18,7 +18,6 @@ int
 arb_dump_file(FILE* stream, const arb_t x)
 {
     int nwrite;
-    char* pos;
     char* data = arb_dump_str(x);
 
     nwrite = fputs(data, stream);

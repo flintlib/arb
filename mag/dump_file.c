@@ -18,7 +18,6 @@ int
 mag_dump_file(FILE* stream, const mag_t x)
 {
     int nwrite;
-    char* pos;
     char* data = mag_dump_str(x);
 
     nwrite = fputs(data, stream);
