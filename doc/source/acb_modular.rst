@@ -440,6 +440,14 @@ To avoid confusion, we only write `q^k` when `k` is an integer.
     each respective output variable. The *notransform* version does not
     move `\tau` to the fundamental domain or reduce `z` during the computation.
 
+.. function:: void _acb_modular_theta_series(acb_ptr theta1, acb_ptr theta2, acb_ptr theta3, acb_ptr theta4, acb_srcptr z, slong zlen, const acb_t tau, slong len, slong prec)
+
+.. function:: void acb_modular_theta_series(acb_poly_t theta1, acb_poly_t theta2, acb_poly_t theta3, acb_poly_t theta4, const acb_poly_t z, const acb_t tau, slong len, slong prec)
+
+    Evaluates the respective Jacobi theta functions of the power series *z*,
+    truncated to length *len*. Either of the output variables can be *NULL*.
+
+
 Dedekind eta function
 -------------------------------------------------------------------------------
 
