@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.17.0.pdf
 * http://arblib.org/arb-2.16.0.pdf
 * http://arblib.org/arb-2.15.0.pdf
 * http://arblib.org/arb-2.14.0.pdf
@@ -28,6 +29,49 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2019-10-16 -- version 2.17.0
+-------------------------------------------------------------------------------
+
+* General
+
+  * Added exact serialization methods (arb_dump_str, arb_load_str, arb_dump_file,
+    arb_load_file, arf_dump_str, arf_load_str, arf_dump_file, arf_load_file,
+    mag_dump_str, mag_load_str, mag_dump_file, mag_load_file)
+    (contributed by Julian Rüth).
+  * Removed many obsolete fmpr methods and de-inlined several helper functions
+    to slightly improve compile time and library size.
+  * Fixed a namespace clash for an internal function (contributed by Julian Rüth).
+  * Added the helper function arb_sgn_nonzero.
+  * Added the helper function acb_rel_one_accuracy_bits.
+
+* Riemann zeta function
+
+  * Added a function for efficiently computing individual zeros of the Riemann
+    zeta function using Turing's method (acb_dirichlet_zeta_zero)
+    (contributed by D.H.J. Polymath).
+  * Added a function for counting zeros of the Riemann zeta function up to
+    given height using Turing's method (acb_dirichlet_zeta_nzeros)
+    (contributed by D.H.J. Polymath).
+  * Added the Backlund S function (acb_dirichlet_backlund_s).
+  * Added a function for computing Gram points (acb_dirichlet_gram_point).
+  * Added acb_dirichlet_zeta_deriv_bound for quickly bounding the derivative
+    of the Riemann zeta function.
+  * Fast multi-evaluation of the Riemann zeta function using Platt's algorithm
+    (acb_dirichlet_platt_multieval) (contributed by D.H.J. Polymath).
+
+* Other special functions
+
+  * Improved the algorithm in acb_hypgeom_u to estimate precision loss
+    more accurately.
+  * Implemented Coulomb wave functions (acb_hypgeom_coulomb,
+    acb_hypgeom_coulomb_series and other functions).
+  * Faster algorithm for Catalan's constant.
+  * Added acb_modular_theta_series.
+  * Added arb_poly_sinc_pi_series (contributed by D.H.J. Polymath).
+  * Improved tuning in acb_hypgeom_pfq_series_sum for higher derivatives
+    at high precision (reported by Mark Watkins).
+
 
 2018-12-07 -- version 2.16.0
 -------------------------------------------------------------------------------

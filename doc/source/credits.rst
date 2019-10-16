@@ -69,6 +69,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * D.H.J Polymath - Riemann xi function
 * Joel Dahne - feedback and improvements for Legendre functions
 * Gianfranco Costamagna - bug reports, Debian testing
+* Julian Rüth - serialization support
 
 Funding
 -------------------------------------------------------------------------------
