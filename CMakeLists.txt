@@ -69,7 +69,7 @@ set (flint2_header flint/flint.h)
 foreach (LIB ${DEPS})
     string (TOUPPER ${LIB} LIB_UPPER)
     find_library(${LIB_UPPER}_LIBRARY NAMES ${${LIB}_lib} HINTS ../${LIB}
-                 PATH_SUFFIXES ${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE} NO_DEFAULT_PATH)
+                 PATH_SUFFIXES ${LIBRARY_TYPE}/${PLATFORM}/${CMAKE_BUILD_TYPE})
     if (NOT ${LIB_UPPER}_LIBRARY)
         message(FATAL_ERROR "${LIB} library not found.")
     endif()
