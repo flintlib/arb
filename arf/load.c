@@ -80,14 +80,13 @@ arf_load_str(arf_t x, const char* data)
 int arf_load_file(arf_t x, FILE* stream)
 {
     mpz_t mantissa, exponent;
+    fmpz_t mantissa_, exponent_;
 
     mpz_init(mantissa);
     mpz_init(exponent);
 
     if (mpz_inp_str(mantissa, stream, 16) == 0) return 1;
     if (mpz_inp_str(exponent, stream, 16) == 0) return 1;
-
-    fmpz_t mantissa_, exponent_;
 
     fmpz_init_set_readonly(mantissa_, mantissa);
     fmpz_init_set_readonly(exponent_, exponent);
