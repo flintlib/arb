@@ -29,6 +29,13 @@ acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec)
         return;
     }
 
+    if (acb_is_zero(a) && acb_is_int(s) &&
+        arf_sgn(arb_midref(acb_realref(s))) < 0)
+    {
+        acb_dirichlet_zeta(res, s, prec);
+        return;
+    }
+
     if (acb_is_int(s) && arf_sgn(arb_midref(acb_realref(s))) < 0 &&
         arf_cmpabs_ui(arb_midref(acb_realref(s)), prec / 2) < 0)
     {
