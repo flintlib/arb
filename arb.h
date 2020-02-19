@@ -353,6 +353,8 @@ int arb_overlaps(const arb_t x, const arb_t y);
 
 int arb_contains(const arb_t x, const arb_t y);
 
+int arb_contains_interior(const arb_t x, const arb_t y);
+
 int arb_contains_int(const arb_t x);
 
 void arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x);

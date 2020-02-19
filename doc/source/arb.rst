@@ -678,6 +678,11 @@ Comparisons
     by *x* satisfying, respectively, `p = 0`, `p < 0`, `p \le 0`, `p > 0`, `p \ge 0`.
     If *x* contains NaN, returns nonzero.
 
+.. function:: int arb_contains_interior(const arb_t x, const arb_t y)
+
+    Tests if *y* is contained in the interior of *x*; that is, contained
+    in *x* and not touching either endpoint.
+
 .. function:: int arb_eq(const arb_t x, const arb_t y)
 
 .. function:: int arb_ne(const arb_t x, const arb_t y)

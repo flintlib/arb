@@ -308,6 +308,16 @@ Precision and comparisons
     Returns nonzero iff the complex interval represented by *x* contains
     an integer.
 
+.. function:: int acb_contains_interior(const acb_t x, const acb_t y)
+
+    Tests if *y* is contained in the interior of *x*.
+    This predicate always evaluates to false if *x* and *y* are both
+    real-valued, since an imaginary part of 0 is not considered contained in
+    the interior of the point interval 0. More generally, the same
+    problem occurs for intervals with an exact real or imaginary part.
+    Such intervals must be handled specially by the user where a different
+    interpretation is intended.
+
 .. function:: slong acb_rel_error_bits(const acb_t x)
 
     Returns the effective relative error of *x* measured in bits.

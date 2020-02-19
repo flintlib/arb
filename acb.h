@@ -215,6 +215,13 @@ acb_contains(const acb_t x, const acb_t y)
             arb_contains(acb_imagref(x), acb_imagref(y));
 }
 
+ACB_INLINE int
+acb_contains_interior(const acb_t x, const acb_t y)
+{
+    return arb_contains_interior(acb_realref(x), acb_realref(y)) &&
+            arb_contains_interior(acb_imagref(x), acb_imagref(y));
+}
+
 ACB_INLINE void
 acb_set_ui(acb_t z, ulong c)
 {
