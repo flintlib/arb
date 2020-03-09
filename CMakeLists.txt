@@ -1,7 +1,16 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1)
 
 project(arb C)
 
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/configure" CONFIGURE_CONTENTS)
+string(REGEX MATCH "ARB_MAJOR=([0-9]*)" _ ${CONFIGURE_CONTENTS})
+set(ARB_MAJOR ${CMAKE_MATCH_1})
+string(REGEX MATCH "ARB_MINOR=([0-9]*)" _ ${CONFIGURE_CONTENTS})
+set(ARB_MINOR ${CMAKE_MATCH_1})
+string(REGEX MATCH "ARB_PATCH=([0-9]*)" _ ${CONFIGURE_CONTENTS})
+set(ARB_PATCH ${CMAKE_MATCH_1})
+
+set(ARB_VERSION "${ARB_MAJOR}.${ARB_MINOR}.${ARB_PATCH}")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug, Release)" FORCE)
@@ -54,7 +63,7 @@ if (MSVC)
     endif()
 endif()
 
-set (DEPS mpir mpfr pthreads flint2)
+set (DEPS mpir mpfr flint2)
 
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
@@ -66,6 +75,15 @@ set (mpfr_header mpfr.h)
 set (pthreads_header pthread.h)
 set (flint2_header flint/flint.h)
 
+if(MSVC)
+    set(DEPS ${DEPS} pthreads)
+else()
+    option(CMAKE_THREAD_PREFER_PTHREAD "Prefer pthreads" yes)
+    option(THREADS_PREFER_PTHREAD_FLAG "Prefer -pthread flag" yes)
+    find_package(Threads REQUIRED)
+    set(PTHREADS_LIBRARIES Threads::Threads)
+endif()
+
 foreach (LIB ${DEPS})
     string (TOUPPER ${LIB} LIB_UPPER)
     find_library(${LIB_UPPER}_LIBRARY NAMES ${${LIB}_lib} HINTS ../${LIB}
@@ -76,7 +94,6 @@ foreach (LIB ${DEPS})
     add_library(${LIB} UNKNOWN IMPORTED)
     set_property(TARGET ${LIB} PROPERTY IMPORTED_LOCATION ${${LIB_UPPER}_LIBRARY})
     message("${LIB} found in ${${LIB_UPPER}_LIBRARY}")
-
 endforeach ()
 
 foreach (LIB ${DEPS})
@@ -107,8 +124,13 @@ include_directories(BEFORE ${arb_SOURCE_DIR})
 include_directories(BEFORE ${DEP_INCLUDE_DIRS})
 
 add_library(arb ${SRC})
-target_link_libraries(arb ${DEPS})
+target_link_libraries(arb ${DEPS} ${PTHREADS_LIBRARIES})
 target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
+
+set_target_properties(arb PROPERTIES VERSION ${ARB_VERSION} SOVERSION ${ARB_MAJOR})
+if(WIN32)
+    set_target_properties(arb PROPERTIES RUNTIME_OUTPUT_NAME "arb-${LIBMAJOR}")
+endif()
 
 if(NOT MSVC)
     target_link_libraries(arb m)
@@ -133,7 +155,7 @@ if (BUILD_TESTS)
         foreach (TEST_SOURCE ${TEMP})
             get_filename_component(TEST_NAME ${TEST_SOURCE} NAME_WE)
             add_executable(${FOLDER}-${TEST_NAME} ${TEST_SOURCE})
-            target_link_libraries(${FOLDER}-${TEST_NAME} arb)
+            target_link_libraries(${FOLDER}-${TEST_NAME} arb ${PTHREADS_LIBRARIES})
             add_test(${FOLDER}-${TEST_NAME} ${FOLDER}-${TEST_NAME})
         endforeach ()
     endforeach ()
