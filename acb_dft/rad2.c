@@ -45,7 +45,7 @@ _acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec)
         abort();
     }
     t->e = e;
-    t->n = 1 << e;
+    t->n = WORD(1) << e;
     t->dv = dv;
     t->nz = t->n >> 1;
     t->z = _acb_vec_init(t->nz);

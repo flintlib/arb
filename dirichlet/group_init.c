@@ -41,16 +41,16 @@ dirichlet_prime_group_init(dirichlet_prime_group_struct * P, ulong p, int e)
     if (p == 2 || p == 4)
     {
         P->p = 2;
-        nmod_init(&P->pe, 1 << e);
+        nmod_init(&P->pe, UWORD(1) << e);
         if (p == 2)
         {
             P->e = 2;
             nmod_init(&P->phi, 2);
-            P->g = (1 << e) - 1;
+            P->g = (UWORD(1) << e) - 1;
         }
         else
         {
-            nmod_init(&P->phi, 1 << (e - 2));
+            nmod_init(&P->phi, UWORD(1) << (e - 2));
             P->g = 5;
         }
     }
@@ -115,7 +115,7 @@ dirichlet_group_init(dirichlet_group_t G, ulong q)
 
 
     e2 = n_remove(&q, 2);
-    G->q_even = 1 << e2;
+    G->q_even = UWORD(1) << e2;
     /* number of components at p=2 */
     G->neven = (e2 >= 3) ? 2 : (e2 == 2) ? 1 : 0;
 
@@ -159,7 +159,7 @@ dirichlet_subgroup_init(dirichlet_group_t H, const dirichlet_group_t G, ulong h)
     /* even components */
 
     e2 = n_remove(&h, 2);
-    H->q_even = 1 << e2;
+    H->q_even = UWORD(1) << e2;
 
     s[0] = s[1] = 0;
     j = 0;

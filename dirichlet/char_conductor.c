@@ -23,7 +23,7 @@ dirichlet_conductor_char(const dirichlet_group_t G, const dirichlet_char_t x)
     {
         ulong l2 = x->log[1];
         f = n_remove(&l2, 2);
-        cond = 1 << (G->P[1].e - f);
+        cond = UWORD(1) << (G->P[1].e - f);
     }
 
     for (k = G->neven; k < G->num; k++)
