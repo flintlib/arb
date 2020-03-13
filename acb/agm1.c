@@ -12,6 +12,8 @@
 #include "acb.h"
 #include "acb_poly.h"
 
+void mag_agm(mag_t res, const mag_t x, const mag_t y);
+
 /* Checks that |arg(z)| <= 3 pi / 4 */
 static int
 acb_check_arg(const acb_t z)
@@ -96,6 +98,21 @@ acb_agm_close_taylor(acb_t res, acb_t z, acb_t z2,
     acb_mul(res, res, aplusb, prec);
 }
 
+static void
+acb_agm1_around_zero(acb_t res, const acb_t z, slong prec)
+{
+    mag_t a, b;
+    mag_init(a);
+    mag_init(b);
+    mag_one(a);
+    acb_get_mag(b, z);
+    mag_agm(a, a, b);
+    acb_zero(res);
+    acb_add_error_mag(res, a);
+    mag_clear(a);
+    mag_clear(b);
+}
+
 void
 acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
 {
@@ -129,16 +146,7 @@ acb_agm1_basecase(acb_t res, const acb_t z, slong prec)
 
     if (!acb_check_arg(z))
     {
-        mag_t one;
-        mag_init(one);
-        mag_init(err);
-        mag_one(one);
-        acb_get_mag(err, z);
-        mag_max(err, err, one);
-        acb_zero(res);
-        acb_add_error_mag(res, err);
-        mag_clear(err);
-        mag_clear(one);
+        acb_agm1_around_zero(res, z, prec);
         return;
     }
 
@@ -417,28 +425,73 @@ acb_agm1_deriv_right(acb_t Mz, acb_t Mzp, const acb_t z, slong prec)
 }
 
 void
-acb_agm1(acb_t m, const acb_t z, slong prec)
+acb_agm1(acb_t res, const acb_t z, slong prec)
 {
-    if (arf_sgn(arb_midref(acb_realref(z))) >= 0)
+    if (acb_is_zero(z))
     {
-        acb_agm1_basecase(m, z, prec);
+        acb_zero(res);
+    }
+    else if (!acb_is_finite(z))
+    {
+        acb_indeterminate(res);
+    }
+    else if (acb_contains_zero(z))
+    {
+        acb_agm1_around_zero(res, z, prec);
+    }
+    else if (arf_sgn(arb_midref(acb_realref(z))) >= 0)
+    {
+        acb_agm1_basecase(res, z, prec);
     }
     else if (acb_equal_si(z, -1))
     {
-        acb_zero(m);
+        acb_zero(res);
     }
     else
     {
-        /* use M(z) = (z+1)/2 * M(2 sqrt(z) / (z+1)) */
+        /* use M(1,z) = M((z+1)/2, sqrt(z))
+                      = (z+1)/2 * M(1, 2 sqrt(z) / (z+1))
+                      = sqrt(z) * M(1, (z+1) / (2 sqrt(z)) */
         acb_t t;
+
         acb_init(t);
         acb_add_ui(t, z, 1, prec);
-        acb_sqrt(m, z, prec);
-        acb_div(m, m, t, prec);
-        acb_mul_2exp_si(m, m, 1);
-        acb_agm1_basecase(m, m, prec);
-        acb_mul(m, m, t, prec);
-        acb_mul_2exp_si(m, m, -1);
+        acb_mul_2exp_si(t, t, -1);
+
+        if (acb_contains_zero(t))
+        {
+            mag_t ra, rb;
+
+            mag_init(ra);
+            mag_init(rb);
+
+            acb_get_mag(ra, t);
+            acb_get_mag(rb, z);
+            mag_sqrt(rb, rb);
+
+            mag_agm(ra, ra, rb);
+
+            acb_zero(res);
+            acb_add_error_mag(res, ra);
+
+            mag_clear(ra);
+            mag_clear(rb);
+        }
+        else if (acb_rel_accuracy_bits(t) > acb_rel_accuracy_bits(z))
+        {
+            acb_sqrt(res, z, prec);
+            acb_div(res, res, t, prec);
+            acb_agm1_basecase(res, res, prec);
+            acb_mul(res, res, t, prec);
+        }
+        else
+        {
+            acb_sqrt(res, z, prec);
+            acb_div(t, t, res, prec);
+            acb_agm1_basecase(t, t, prec);
+            acb_mul(res, res, t, prec);
+        }
+
         acb_clear(t);
     }
 }

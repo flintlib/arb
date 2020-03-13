@@ -780,6 +780,7 @@ void acb_polylog_si(acb_t w, slong s, const acb_t z, slong prec);
 
 void acb_agm1(acb_t m, const acb_t z, slong prec);
 void acb_agm1_cpx(acb_ptr m, const acb_t z, slong len, slong prec);
+void acb_agm(acb_t res, const acb_t a, const acb_t b, slong prec);
 
 #define ACB_LAMBERTW_LEFT 2
 #define ACB_LAMBERTW_MIDDLE 4

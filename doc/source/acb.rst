@@ -1049,6 +1049,16 @@ See :ref:`algorithms_agm` for implementation details.
     arithmetic-geometric mean at the point *z* truncated to length *len*, i.e.
     `M(z+x) \in \mathbb{C}[[x]]`.
 
+.. function:: void acb_agm(acb_t m, const acb_t x, const acb_t y, slong prec)
+
+    Sets *m* to the arithmetic-geometric mean of *x* and *y*. The square
+    roots in the AGM iteration are chosen so as to form the "optimal"
+    AGM sequence. This gives a well-defined function of *x* and *y* except
+    when `x / y` is a negative real number, in which case there are two
+    optimal AGM sequences. In that case, an arbitrary but consistent
+    choice is made (if a decision cannot be made due to inexact arithmetic,
+    the union of both choices is returned).
+
 Other special functions
 -------------------------------------------------------------------------------
 

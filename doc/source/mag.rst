@@ -18,7 +18,7 @@ exact and therefore do not require separate *lower* versions.
 
 A common mistake is to forget computing a lower bound for the argument
 of a decreasing function that is meant to be bounded from above,
-or vice versa. For example, to compute and upper bound for `(x+1)/(y+1)`,
+or vice versa. For example, to compute an upper bound for `(x+1)/(y+1)`,
 the parameter *x* should initially be an upper bound while *y* should be
 a lower bound, and one should do::
 
