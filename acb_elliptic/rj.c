@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017 Fredrik Johansson
+    Copyright (C) 2017, 2020 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -10,6 +10,7 @@
 */
 
 #include "acb_elliptic.h"
+#include "acb_calc.h"
 
 static const unsigned short den_ratio_tab[512] = {
     1,1,14,3,44,13,10,17,152,1,46,1,12,29,62,1,
@@ -210,7 +211,7 @@ acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
 }
 
 void
-acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
+acb_elliptic_rj_carlson(acb_t res, const acb_t x, const acb_t y,
             const acb_t z, const acb_t p, int flags, slong prec)
 {
     acb_t xx, yy, zz, pp, sx, sy, sz, sp, t, d, delta, S;
@@ -218,6 +219,15 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     mag_t err, err2, prev_err;
     slong k, wp, accx, accy, accz, accp, order;
     int rd, real;
+
+/*
+    printf("RJ carlson   ");
+    acb_printn(x, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(y, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(z, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(p, 6, ARB_STR_NO_RADIUS); printf("  ");
+    printf("\n");
+*/
 
     if (!acb_is_finite(x) || !acb_is_finite(y) || !acb_is_finite(z) ||
         !acb_is_finite(p))
@@ -234,7 +244,7 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     }
 
     /* Special case computing R_D(x,y,z) */
-    rd = (z == p);
+    rd = (z == p) || acb_eq(z, p);
 
     acb_init(xx); acb_init(yy); acb_init(zz); acb_init(pp);
     acb_init(sx); acb_init(sy); acb_init(sz); acb_init(sp);
@@ -489,5 +499,336 @@ acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
     mag_clear(err);
     mag_clear(err2);
     mag_clear(prev_err);
+}
+
+static int
+acb_eq_conj(const acb_t x, const acb_t y)
+{
+    int res;
+    acb_t t;
+    acb_init(t);
+    acb_conj(t, y);
+    res = acb_eq(x, t);
+    acb_clear(t);
+    return res;
+}
+
+/* todo: speed up this function
+   -- early abort
+   -- only compute single rsqrt or sqrt when evaluating precisely
+      (but need to make sure branch is correct!)
+*/
+static int
+RJ_integrand(acb_ptr res, const acb_t t, void * param, slong order, slong prec)
+{
+    acb_ptr x, y, z, p;
+    acb_t xt, yt, zt, pt;
+    int analytic, deflated;
+
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    x = ((acb_ptr) param);
+    y = ((acb_ptr) param) + 1;
+    z = ((acb_ptr) param) + 2;
+    p = ((acb_ptr) param) + 3;
+    deflated = acb_is_zero(x);
+
+    analytic = (order != 0);
+
+    acb_init(xt);
+    acb_init(yt);
+    acb_init(zt);
+    acb_init(pt);
+
+    /* if x = 0, change of variables t -> t^2 to remove singularity at 0 */
+    if (deflated)
+    {
+        acb_sqr(xt, t, prec);
+
+        acb_add(yt, y, xt, prec);
+        acb_add(zt, z, xt, prec);
+        acb_add(pt, p, xt, prec);
+
+        if (acb_contains_zero(yt) || acb_contains_zero(zt) || acb_contains_zero(pt))
+        {
+            acb_indeterminate(res);
+        }
+        else
+        {
+            acb_rsqrt_analytic(yt, yt, analytic, prec);
+            acb_rsqrt_analytic(zt, zt, analytic, prec);
+
+            acb_mul(xt, yt, zt, prec);
+            acb_div(xt, xt, pt, prec);
+            acb_mul_2exp_si(xt, xt, 1);
+
+            acb_set(res, xt);
+        }
+    }
+    else
+    {
+        acb_add(xt, x, t, prec);
+        acb_add(yt, y, t, prec);
+        acb_add(zt, z, t, prec);
+        acb_add(pt, p, t, prec);
+
+        if (acb_contains_zero(xt) || acb_contains_zero(yt) || acb_contains_zero(zt) || acb_contains_zero(pt))
+        {
+            acb_indeterminate(res);
+        }
+        else
+        {
+            acb_rsqrt_analytic(xt, xt, analytic, prec);
+            acb_rsqrt_analytic(yt, yt, analytic, prec);
+            acb_rsqrt_analytic(zt, zt, analytic, prec);
+
+            acb_mul(xt, xt, yt, prec);
+            acb_mul(xt, xt, zt, prec);
+            acb_div(xt, xt, pt, prec);
+
+            acb_set(res, xt);
+        }
+    }
+
+    acb_clear(xt);
+    acb_clear(yt);
+    acb_clear(zt);
+    acb_clear(pt);
+
+    return 0;
+}
+
+void
+acb_elliptic_rj_integration(acb_t res, const acb_t x, const acb_t y,
+            const acb_t z, const acb_t p, int flags, slong prec)
+{
+    acb_t a, b, N, I, J;
+    arb_t A;
+    acb_ptr xyzp;
+    mag_t tol;
+    int deflated;
+
+/*
+    printf("RJ integration:   ");
+    acb_printn(x, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(y, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(z, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(p, 6, ARB_STR_NO_RADIUS); printf("  ");
+    printf("\n");
+*/
+
+    acb_init(N);
+    acb_init(a);
+    acb_init(b);
+    acb_init(I);
+    acb_init(J);
+    arb_init(A);
+    xyzp = _acb_vec_init(4);
+    mag_init(tol);
+
+    /* compute shift that puts parameters in right half-plane */
+    arb_min(A, acb_realref(x), acb_realref(y), prec);
+    arb_min(A, A, acb_realref(z), prec);
+    arb_min(A, A, acb_realref(p), prec);
+    arb_neg(A, A);
+    arb_one(acb_realref(a));
+    arb_max(A, A, acb_realref(a), prec);
+    arb_add_ui(A, A, 2, prec);
+
+    arb_get_ubound_arf(arb_midref(A), A, prec);
+    mag_zero(arb_radref(A));
+
+    acb_set(xyzp, x);
+    acb_set(xyzp + 1, y);
+    acb_set(xyzp + 2, z);
+    acb_set(xyzp + 3, p);
+
+    /* If there is a zero among x, y, z, put it first. */
+    if (acb_is_zero(y))
+        acb_swap(xyzp, xyzp + 1);
+    if (acb_is_zero(z))
+        acb_swap(xyzp, xyzp + 2);
+
+    deflated = acb_is_zero(xyzp);
+
+    acb_set_arb(N, A);
+
+    /* Path deformation to avoid 0 */
+    if ((arb_is_nonnegative(acb_imagref(x)) || arb_is_positive(acb_realref(x))) &&
+        (arb_is_nonnegative(acb_imagref(y)) || arb_is_positive(acb_realref(y))) &&
+        (arb_is_nonnegative(acb_imagref(z)) || arb_is_positive(acb_realref(z))) &&
+        (arb_is_nonnegative(acb_imagref(p)) || arb_is_positive(acb_realref(p))))
+    {
+        arb_set_si(acb_imagref(N), 1);
+    }
+    else if ((arb_is_negative(acb_imagref(x)) || arb_is_positive(acb_realref(x))) &&
+            (arb_is_negative(acb_imagref(y)) || arb_is_positive(acb_realref(y))) &&
+            (arb_is_negative(acb_imagref(z)) || arb_is_positive(acb_realref(z))) &&
+            (arb_is_negative(acb_imagref(p)) || arb_is_positive(acb_realref(p))))
+    {
+        arb_set_si(acb_imagref(N), -1);
+    }
+    else
+    {
+        int i;
+
+        arb_set_si(acb_imagref(N), 2);
+
+        /* Go through the upper half-plane, but low enough that any
+           parameter starting in the lower plane doesn't cross the
+           branch cut */
+        for (i = 0; i < 4; i++)
+        {
+            if (deflated && (i == 0))
+                continue;
+
+            if (arb_is_nonnegative(acb_imagref(xyzp + i)) ||
+                arb_is_positive(acb_realref(xyzp + i)))
+                continue;
+
+            arb_zero(acb_realref(a)); /* use as tmp var */
+            arb_get_abs_lbound_arf(arb_midref(acb_realref(a)), acb_imagref(xyzp + i), prec);
+            arb_min(acb_imagref(N), acb_imagref(N), acb_realref(a), prec);
+        }
+
+        arb_mul_2exp_si(acb_imagref(N), acb_imagref(N), -1);
+    }
+
+    mag_one(tol);
+    mag_mul_2exp_si(tol, tol, -prec);
+    acb_zero(a);
+    if (deflated)
+        acb_sqrt(b, N, prec);
+    else
+        acb_set(b, N);
+
+/*
+    flint_printf("integrate ");
+    flint_printf("%d\n", deflated);
+    flint_printf("x = "); acb_printd(xyzp, 10); flint_printf("\n");
+    flint_printf("y = "); acb_printd(xyzp + 1, 10); flint_printf("\n");
+    flint_printf("z = "); acb_printd(xyzp + 2, 10); flint_printf("\n");
+    flint_printf("p = "); acb_printd(xyzp + 3, 10); flint_printf("\n");
+    flint_printf("a = "); acb_printd(a, 10); flint_printf("\n");
+    flint_printf("b = "); acb_printd(b, 10); flint_printf("\n");
+    flint_printf("N = "); acb_printd(N, 10); flint_printf("\n");
+*/
+
+    acb_calc_integrate(I, RJ_integrand, xyzp, a, b, prec, tol, NULL, prec);
+    acb_mul_ui(I, I, 3, prec);
+    acb_mul_2exp_si(I, I, -1);
+
+/*
+    flint_printf("I = "); acb_printd(I, 10); flint_printf("\n");
+*/
+
+    acb_add(xyzp, x, N, prec);
+    acb_add(xyzp + 1, y, N, prec);
+    acb_add(xyzp + 2, z, N, prec);
+    acb_add(xyzp + 3, p, N, prec);
+
+    acb_elliptic_rj_carlson(J, xyzp, xyzp + 1, xyzp + 2, xyzp + 3, 0, prec);
+
+    acb_add(res, I, J, prec);
+
+    acb_clear(N);
+    acb_clear(a);
+    acb_clear(b);
+    acb_clear(I);
+    acb_clear(J);
+    arb_clear(A);
+    _acb_vec_clear(xyzp, 4);
+    mag_clear(tol);
+}
+
+void
+acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y,
+            const acb_t z, const acb_t p, int flags, slong prec)
+{
+/*
+    printf("RJ:   ");
+    acb_printn(x, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(y, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(z, 6, ARB_STR_NO_RADIUS); printf("  ");
+    acb_printn(p, 6, ARB_STR_NO_RADIUS); printf("  ");
+    printf("\n");
+*/
+
+    if (!acb_is_finite(x) || !acb_is_finite(y) || !acb_is_finite(z) ||
+        !acb_is_finite(p))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    if ((acb_contains_zero(x) + acb_contains_zero(y) + acb_contains_zero(z) > 1)
+        || acb_contains_zero(p))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    /* Carlson's algorithm is correct in the degenerate case
+       computing R_D */
+    if (x == p || acb_eq(x, p))
+    {
+        acb_elliptic_rj_carlson(res, y, z, x, p, flags, prec);
+        return;
+    }
+
+    if (y == p || acb_eq(y, p))
+    {
+        acb_elliptic_rj_carlson(res, x, z, y, p, flags, prec);
+        return;
+    }
+
+    if (z == p || acb_eq(z, p))
+    {
+        acb_elliptic_rj_carlson(res, x, y, z, p, flags, prec);
+        return;
+    }
+
+    /* Sufficient condition for correctness */
+    if (arb_is_nonnegative(acb_realref(x)) &&
+          arb_is_nonnegative(acb_realref(y)) &&
+          arb_is_nonnegative(acb_realref(z)) &&
+          arb_is_positive(acb_realref(p)))
+    {
+        acb_elliptic_rj_carlson(res, x, y, z, p, flags, prec);
+        return;
+    }
+
+    /* Sufficient condition for correctness */
+    if (acb_is_real(x) && acb_is_real(y) && acb_is_real(z) && acb_is_real(p))
+    {
+        acb_elliptic_rj_carlson(res, x, y, z, p, flags, prec);
+        return;
+    }
+
+    /* Also a sufficient condition */
+    if (arb_is_nonnegative(acb_realref(p)) || arb_is_nonzero(acb_imagref(p)))
+    {
+        if ((arb_is_zero(acb_imagref(x)) && arb_is_nonnegative(acb_realref(x)) && acb_eq_conj(y, z)) ||
+            (arb_is_zero(acb_imagref(y)) && arb_is_nonnegative(acb_realref(y)) && acb_eq_conj(x, z)) ||
+            (arb_is_zero(acb_imagref(z)) && arb_is_nonnegative(acb_realref(z)) && acb_eq_conj(x, y)))
+        {
+            acb_elliptic_rj_carlson(res, x, y, z, p, flags, prec);
+            return;
+        }
+    }
+
+    /* Fast abort for input straddling branch cuts */
+    if ((arb_contains_zero(acb_imagref(x)) && !(arb_is_nonnegative(acb_imagref(x)) || arb_is_nonnegative(acb_realref(x)))) ||
+        (arb_contains_zero(acb_imagref(y)) && !(arb_is_nonnegative(acb_imagref(y)) || arb_is_nonnegative(acb_realref(y)))) ||
+        (arb_contains_zero(acb_imagref(z)) && !(arb_is_nonnegative(acb_imagref(z)) || arb_is_nonnegative(acb_realref(z)))) ||
+        (arb_contains_zero(acb_imagref(p)) && !(arb_is_nonnegative(acb_imagref(p)) || arb_is_nonnegative(acb_realref(p)))))
+    {
+        acb_indeterminate(res);
+        return;
+    }
+
+    /* Use integration as fallback */
+    acb_elliptic_rj_integration(res, x, y, z, p, flags, prec);
 }
 

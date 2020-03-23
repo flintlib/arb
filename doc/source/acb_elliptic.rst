@@ -217,6 +217,11 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
 
 .. function:: void acb_elliptic_rj(acb_t res, const acb_t x, const acb_t y, const acb_t z, const acb_t p, int flags, slong prec)
 
+.. function:: void acb_elliptic_rj_carlson(acb_t res, const acb_t x, const acb_t y, const acb_t z, const acb_t p, int flags, slong prec)
+
+.. function:: void acb_elliptic_rj_integration(acb_t res, const acb_t x, const acb_t y, const acb_t z, const acb_t p, int flags, slong prec)
+
+
     Evaluates the Carlson symmetric elliptic integral of the third kind
 
     .. math ::
@@ -226,8 +231,9 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
 
     where the square root is taken continuously as in `R_F`.
 
-    In general, one or more duplication steps are applied until
-    `x,y,z,p` are close enough to use a multivariate Taylor series.
+    Three versions of this function are available: the *carlson* version
+    applies one or more duplication steps until `x,y,z,p` are close enough
+    to use a multivariate Taylor series.
 
     The duplication algorithm is not correct for all possible
     combinations of complex variables, since the square roots taken
@@ -241,10 +247,18 @@ in [Car1995]_ and chapter 19 in [NIST2012]_.
     the duplication algorithm is appropriate for the given parameters
     before calling this function.
 
+    The *integration* algorithm uses explicit numerical integration to
+    translate the parameters to the right half-plane. This is reliable
+    but can be slow.
+
+    The default method uses the *carlson* algorithm when it is certain
+    to be correct, and otherwise falls back to the slow *integration*
+    algorithm.
+
     The special case `R_D(x, y, z) = R_J(x, y, z, z)`
     may be computed by setting *z* and *p* to the same variable.
     This case is handled specially to avoid redundant arithmetic operations.
-    In this case, the algorithm is correct for all *x*, *y* and *z*.
+    In this case, the *carlson* algorithm is correct for all *x*, *y* and *z*.
 
     The *flags* parameter is reserved for future use and currently
     does nothing. Passing 0 results in default behavior.
