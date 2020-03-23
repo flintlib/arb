@@ -22,13 +22,20 @@ estimate_mag(mag_t m, const acb_t s, const acb_t a, slong prec)
     acb_t t;
     acb_init(t);
 
-    acb_neg(t, s);
-    acb_pow(t, a, t, prec);
-
-    if (acb_is_finite(t))
-        acb_get_mag(m, t);
-    else
+    if (acb_contains_zero(a))
+    {
         mag_one(m);
+    }
+    else
+    {
+        acb_neg(t, s);
+        acb_pow(t, a, t, prec);
+
+        if (acb_is_finite(t))
+            acb_get_mag(m, t);
+        else
+            mag_one(m);
+    }
 
     acb_clear(t);
 }
