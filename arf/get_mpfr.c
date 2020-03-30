@@ -30,9 +30,49 @@ arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd)
     }
     else if (COEFF_IS_MPZ(*ARF_EXPREF(y)))
     {
-        flint_printf("exception: exponent too large to convert to mpfr");
-        flint_abort();
-        r = 0; /* dummy return because flint_abort() is not declared noreturn */
+        /* Incidentally, COEFF_MIN and COEFF_MAX are exactly the same
+           as the minimum and maximum allowed MPFR exponents. We
+           assert this to make sure the following code is valid.
+           Unfortunately, MPFR provides no convenient function to
+           assign a big exponent with automatic underflow/overflow. */
+        if (COEFF_MIN > mpfr_get_emin_min() ||
+            COEFF_MAX < mpfr_get_emax_max())
+        {
+            flint_printf("unsupported MPFR exponent range: %wd, %wd, %wd, %wd\n",
+                COEFF_MIN, mpfr_get_emin_min(), COEFF_MAX, mpfr_get_emax_max());
+            flint_abort();
+        }
+
+        if (fmpz_sgn(ARF_EXPREF(y)) > 0)
+        {
+            if (arf_sgn(y) > 0)
+            {
+                mpfr_set_inf(x, 1);
+                mpfr_nextbelow(x);
+            }
+            else
+            {
+                mpfr_set_inf(x, -1);
+                mpfr_nextabove(x);
+            }
+
+            r = mpfr_mul_2si(x, x, 1, rnd);
+        }
+        else
+        {
+            if (arf_sgn(y) > 0)
+            {
+                mpfr_set_zero(x, 1);
+                mpfr_nextabove(x);
+            }
+            else
+            {
+                mpfr_set_zero(x, -1);
+                mpfr_nextbelow(x);
+            }
+
+            r = mpfr_mul_2si(x, x, -1, rnd);
+        }
     }
     else
     {

@@ -50,6 +50,88 @@ int main()
         mpfr_clear(y);
     }
 
+    /* test set_mpfr out of range */
+    {
+        arf_t x, z;
+        mpfr_t y;
+        fmpz_t e;
+        int r;
+
+        fmpz_init(e);
+        arf_init(x);
+        arf_init(z);
+        mpfr_init2(y, 53);
+        fmpz_one(e);
+        fmpz_mul_2exp(e, e, 100);
+
+        arf_set_si(x, 1);
+        arf_mul_2exp_fmpz(x, x, e);
+        r = arf_get_mpfr(y, x, MPFR_RNDN);
+        arf_set_mpfr(x, y);
+
+        if (!mpfr_inf_p(y) || mpfr_sgn(y) <= 0 || !mpfr_overflow_p())
+        {
+            flint_printf("expected +inf with overflow\n\n");
+            arf_print(z); flint_printf("\n\n");
+            flint_printf("r = %d \n\n", r);
+            flint_abort();
+        }
+
+        mpfr_clear_flags();
+
+        arf_set_si(x, -1);
+        arf_mul_2exp_fmpz(x, x, e);
+        r = arf_get_mpfr(y, x, MPFR_RNDN);
+        arf_set_mpfr(x, y);
+
+        if (!mpfr_inf_p(y) || mpfr_sgn(y) >= 0 || !mpfr_overflow_p())
+        {
+            flint_printf("expected -inf with overflow\n\n");
+            arf_print(z); flint_printf("\n\n");
+            flint_printf("r = %d \n\n", r);
+            flint_abort();
+        }
+
+        mpfr_clear_flags();
+
+        fmpz_neg(e, e);
+
+        arf_set_si(x, 1);
+        arf_mul_2exp_fmpz(x, x, e);
+        r = arf_get_mpfr(y, x, MPFR_RNDN);
+        arf_set_mpfr(x, y);
+
+        if (!mpfr_zero_p(y) || mpfr_signbit(y) || !mpfr_underflow_p())
+        {
+            flint_printf("expected +0 with underflow\n\n");
+            arf_print(z); flint_printf("\n\n");
+            flint_printf("r = %d \n\n", r);
+            flint_abort();
+        }
+
+        mpfr_clear_flags();
+
+        arf_set_si(x, -1);
+        arf_mul_2exp_fmpz(x, x, e);
+        r = arf_get_mpfr(y, x, MPFR_RNDN);
+        arf_set_mpfr(x, y);
+
+        if (!mpfr_zero_p(y) || !mpfr_signbit(y) || !mpfr_underflow_p())
+        {
+            flint_printf("expected -0 with underflow\n\n");
+            arf_print(z); flint_printf("\n\n");
+            flint_printf("r = %d \n\n", r);
+            flint_abort();
+        }
+
+        mpfr_clear_flags();
+
+        arf_clear(x);
+        arf_clear(z);
+        mpfr_clear(y);
+        fmpz_clear(e);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

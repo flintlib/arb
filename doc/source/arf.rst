@@ -267,6 +267,10 @@ Assignment, rounding and conversions
     indicates the direction of rounding, following the convention
     of the MPFR library.
 
+    If *x* has an exponent too large or small to fit in the MPFR type, the
+    result overflows to an infinity or underflows to a (signed) zero,
+    and the corresponding MPFR exception flags are set.
+
 .. function:: int arf_get_fmpz(fmpz_t res, const arf_t x, arf_rnd_t rnd)
 
     Sets *res* to *x* rounded to the nearest integer in the direction

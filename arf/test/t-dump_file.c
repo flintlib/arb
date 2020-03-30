@@ -46,6 +46,7 @@ int main()
     {
         arf_t x, y, z;
         int conversion_error;
+        FILE* tmp;
 
         arf_init(x);
         arf_init(y);
@@ -55,7 +56,7 @@ int main()
         arf_randtest_special(y, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         arf_randtest_special(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
 
-        FILE* tmp = tmpfile();
+        tmp = tmpfile();
         arf_dump_file(tmp, x);
         fputc(' ', tmp);
         arf_dump_file(tmp, y);
