@@ -445,7 +445,7 @@ Orthogonal polynomials and functions
 Dilogarithm
 -------------------------------------------------------------------------------
 
-.. function:: void arb_hypgeom_dilog(arb_t res, const arb_t z slong prec)
+.. function:: void arb_hypgeom_dilog(arb_t res, const arb_t z, slong prec)
 
     Computes the dilogarithm `\operatorname{Li}_2(z)`.
 
