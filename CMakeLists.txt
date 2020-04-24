@@ -63,7 +63,7 @@ if (MSVC)
     endif()
 endif()
 
-set (DEPS mpir mpfr flint2)
+set (DEPS flint2 mpfr mpir)
 
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
