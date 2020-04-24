@@ -49,6 +49,7 @@ install:
   - cd .. && git clone https://github.com/wbhart/flint2 && cd flint2 && mkdir build && cd build
   - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\msys64\mingw%ARCH%" ..
   - if [%COMPILER%]==[cl] cmake -G "Ninja" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release --DCMAKE_INSTALL_PREFIX="%CONDA_INSTALL_LOCN%\Library" ..
+  - cmake --build . --target install -- -j2
   - cd ../../arb
 
 before_build:
