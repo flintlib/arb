@@ -20,12 +20,12 @@ environment:
     CONDA_INSTALL_LOCN_64: "C:\\Miniconda36-x64"
     VCVARSALL: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat"
   matrix:
+    - COMPILER: gcc
+      ARCH: 64
     - COMPILER: cl
       ARCH: 64
     - COMPILER: gcc
       ARCH: 32
-    - COMPILER: gcc
-      ARCH: 64
     - COMPILER: cl
       ARCH: 32
 
@@ -33,6 +33,8 @@ install:
   - if [%COMPILER%]==[gcc] set "PATH=C:\msys64\mingw%ARCH%\bin;%PATH%"
   - if [%COMPILER%]==[gcc] set "CMAKE_PREFIX_PATH=C:\msys64\mingw%ARCH%"
   - if [%COMPILER%]==[gcc] del /F /Q "C:\Program Files\Git\usr\bin\sh.exe"
+  - dir "C:\msys64\mingw%ARCH%\lib"
+  - dir "C:\msys64\mingw%ARCH%\bin"
 
   - if [%COMPILER%]==[cl] if [%ARCH%]==[64] set "CONDA_INSTALL_LOCN=%CONDA_INSTALL_LOCN_64%"
   - if [%COMPILER%]==[cl] if [%ARCH%]==[32] set "CONDA_INSTALL_LOCN=%CONDA_INSTALL_LOCN_32%"
