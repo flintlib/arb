@@ -47,7 +47,7 @@ if (MSVC)
         endforeach()
     endif()
     foreach(CompilerFlag CMAKE_C_FLAGS)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1 /DFLINT_REENTRANT=0")
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
     endforeach()
 
     foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)
