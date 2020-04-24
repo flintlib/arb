@@ -17,7 +17,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 set (BUILD_SHARED_LIBS yes CACHE BOOL "Build shared library or not")
-set (BUILD_TESTS no CACHE BOOL "Build tests or not")
+set (BUILD_TESTING no CACHE BOOL "Build tests or not")
 
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
         CMAKE_BUILD_TYPE STREQUAL "Release"))
@@ -148,7 +148,7 @@ endforeach ()
 
 install(FILES ${HEADERS} DESTINATION include)
 
-if (BUILD_TESTS)
+if (BUILD_TESTING)
     enable_testing()
     foreach (FOLDER ${FOLDERS})
         file(GLOB TEMP "${FOLDER}/test/*.c")

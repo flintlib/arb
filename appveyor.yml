@@ -1,6 +1,4 @@
-version: 0.2.19.{build}
-
-platform: 
+platform:
   - x64
 
 os: Visual Studio 2017
@@ -35,7 +33,7 @@ install:
   - if [%COMPILER%]==[gcc] set "PATH=C:\msys64\mingw%ARCH%\bin;%PATH%"
   - if [%COMPILER%]==[gcc] set "CMAKE_PREFIX_PATH=C:\msys64\mingw%ARCH%"
   - if [%COMPILER%]==[gcc] del /F /Q "C:\Program Files\Git\usr\bin\sh.exe"
-  
+
   - if [%COMPILER%]==[cl] if [%ARCH%]==[64] set "CONDA_INSTALL_LOCN=%CONDA_INSTALL_LOCN_64%"
   - if [%COMPILER%]==[cl] if [%ARCH%]==[32] set "CONDA_INSTALL_LOCN=%CONDA_INSTALL_LOCN_32%"
   - if [%COMPILER%]==[cl] set "LIB=%CONDA_INSTALL_LOCN%\Library\lib;%LIB%"
@@ -54,7 +52,7 @@ install:
 
 before_build:
   - ps: if (-Not (Test-Path .\build)) { mkdir build }
-  
+
   - cd build
   - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release ..
   - if [%COMPILER%]==[cl] cmake -G "Ninja" -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release ..
