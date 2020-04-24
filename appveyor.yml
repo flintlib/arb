@@ -61,6 +61,7 @@ build_script:
   - cmake --build . -- -j2
 
 test_script:
+  - set "ARB_TEST_MULTIPLIER=0.1"
   - ctest -j3 --output-on-failure --timeout 600
 
 #on_finish:
