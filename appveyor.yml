@@ -33,8 +33,6 @@ install:
   - if [%COMPILER%]==[gcc] set "PATH=C:\msys64\mingw%ARCH%\bin;%PATH%"
   - if [%COMPILER%]==[gcc] set "CMAKE_PREFIX_PATH=C:\msys64\mingw%ARCH%"
   - if [%COMPILER%]==[gcc] del /F /Q "C:\Program Files\Git\usr\bin\sh.exe"
-  - if [%COMPILER%]==[gcc] if [%ARCH%]==[64] C:\msys64\usr\bin\pacman.exe -Sy --noconfirm --noconfirm --needed base-devel mingw-w64-x86_64-mpfr
-  - if [%COMPILER%]==[gcc] if [%ARCH%]==[32] C:\msys64\usr\bin\pacman.exe -Sy --noconfirm --noconfirm --needed base-devel mingw-w64-i686-mpfr
   - dir "C:\msys64\mingw%ARCH%\lib"
   - dir "C:\msys64\mingw%ARCH%\bin"
 
@@ -58,7 +56,7 @@ before_build:
   - ps: if (-Not (Test-Path .\build)) { mkdir build }
 
   - cd build
-  - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release ..
+  - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
   - if [%COMPILER%]==[cl] cmake -G "Ninja" -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release ..
 
 build_script:
