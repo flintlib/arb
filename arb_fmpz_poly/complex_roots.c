@@ -68,7 +68,7 @@ arb_fmpz_poly_complex_roots(acb_ptr roots, const fmpz_poly_t poly, int flags, sl
     for (prec = initial_prec; ; prec *= 2)
     {
         acb_poly_set_fmpz_poly(cpoly_deflated, poly_deflated, prec);
-        maxiter = FLINT_MIN(FLINT_MAX(deg_deflated, 32), prec);
+        maxiter = FLINT_MIN(4 * deg_deflated + 64, prec);
 
         if (flags & ARB_FMPZ_POLY_ROOTS_VERBOSE)
         {
