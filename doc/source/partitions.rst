@@ -33,7 +33,7 @@ terms. This gives a significant speedup for small (e.g. `n < 10^6`).
     Hardy-Ramanujan-Rademacher formula when the series is taken up
     to the term `t(n,N)` inclusive.
 
-.. function:: partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles)
+.. function:: void partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles)
 
     Evaluates the partial sum `\sum_{k=N_0}^N t(n,k)` of the
     Hardy-Ramanujan-Rademacher series.

@@ -503,24 +503,24 @@ Input and output
     rounding to *d* digits. This function is currently implemented using MPFR,
     and does not support large exponents.
 
-.. function:: char* arf_dump_str(const arf_t x)
+.. function:: char * arf_dump_str(const arf_t x)
 
     Allocates a string and writes a binary representation of *x* to it that can
     be read by :func:`arf_load_str`. The returned string needs to be
     deallocated with *flint_free*.
 
-.. function:: int arf_load_str(arf_t x, const char* str)
+.. function:: int arf_load_str(arf_t x, const char * str)
 
     Parses *str* into *x*. Returns a nonzero value if *str* is not formatted
     correctly.
 
-.. function:: int arf_dump_file(FILE* stream, const arf_t x)
+.. function:: int arf_dump_file(FILE * stream, const arf_t x)
 
     Writes a binary representation of *x* to *stream* that can be read by
     :func:`arf_load_file`. Returns a nonzero value if the data could not be
     written.
 
-.. function:: int arf_load_file(arf_t x, FILE* stream)
+.. function:: int arf_load_file(arf_t x, FILE * stream)
 
     Reads *x* from *stream*. Returns a nonzero value if the data is not
     formatted correctly or the read failed. Note that the data is assumed to be
