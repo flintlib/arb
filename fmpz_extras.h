@@ -43,6 +43,8 @@ fmpz_add_inline(fmpz_t z, const fmpz_t x, const fmpz_t y)
         fmpz_add(z, x, y);
 }
 
+#if __FLINT_RELEASE < 20600
+
 static __inline__ void
 fmpz_add_si(fmpz_t z, const fmpz_t x, slong y)
 {
@@ -60,6 +62,8 @@ fmpz_sub_si(fmpz_t z, const fmpz_t x, slong y)
     else
         fmpz_add_ui(z, x, -y);
 }
+
+#endif
 
 static __inline__ void
 fmpz_add_si_inline(fmpz_t z, const fmpz_t x, slong y)

@@ -22,7 +22,11 @@
 #include "flint/flint.h"
 #include "flint/fmpz.h"
 #include "flint/fmpq.h"
+#if __FLINT_RELEASE < 20600
 #include "flint/config.h"
+#else
+#include "flint/flint-config.h"
+#endif
 #include "fmpz_extras.h"
 
 #ifndef flint_abort
