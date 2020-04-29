@@ -129,7 +129,7 @@ target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
 
 set_target_properties(arb PROPERTIES VERSION ${ARB_VERSION} SOVERSION ${ARB_MAJOR})
 if(WIN32)
-    set_target_properties(arb PROPERTIES RUNTIME_OUTPUT_NAME "arb-${LIBMAJOR}")
+    set_target_properties(arb PROPERTIES RUNTIME_OUTPUT_NAME "arb-${ARB_MAJOR}")
 endif()
 
 if(NOT MSVC)
