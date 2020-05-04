@@ -13,7 +13,7 @@
 #include "acb.h"
 
 void
-acb_fprintn(FILE * file, const acb_t z, long digits, ulong flags)
+acb_fprintn(FILE * file, const acb_t z, slong digits, ulong flags)
 {
     if (arb_is_zero(acb_imagref(z)))
     {

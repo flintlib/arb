@@ -90,7 +90,7 @@ bound_primes(ulong k)
 }
 
 
-static __inline__ long
+static __inline__ slong
 log2_ceil(double x)
 {
     /* ceil(log2(n)) = bitcount(n-1);
