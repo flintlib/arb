@@ -22,10 +22,6 @@ environment:
   matrix:
     - COMPILER: cl
       ARCH: 64
-    - COMPILER: gcc
-      ARCH: 64
-    - COMPILER: gcc
-      ARCH: 32
     - COMPILER: cl
       ARCH: 32
 
@@ -44,7 +40,7 @@ install:
   - if [%COMPILER%]==[cl] if [%ARCH%]==[64] call "%VCVARSALL%" x64
   - if [%COMPILER%]==[cl] if [%ARCH%]==[32] call "%VCVARSALL%" x86
   - if [%COMPILER%]==[cl] conda config --add channels conda-forge --force
-  - if [%COMPILER%]==[cl] conda install --yes --quiet mpir=2.7.2 mpfr=4.* pthreads-win32 ninja
+  - if [%COMPILER%]==[cl] conda install --yes --quiet mpir=3.0.0 mpfr=4.* pthreads-win32 ninja
   - if [%COMPILER%]==[cl] set "CFLAGS=/wd4146 /wd4018 /wd4267 /wd4244"
   - cd .. && git clone https://github.com/wbhart/flint2 && cd flint2 && mkdir build && cd build
   - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\msys64\mingw%ARCH%" ..
