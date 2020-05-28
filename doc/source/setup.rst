@@ -187,8 +187,12 @@ Computer algebra systems and wrappers
   * Real balls: http://nemocas.github.io/Nemo.jl/latest/arb.html
   * Complex balls: http://nemocas.github.io/Nemo.jl/latest/acb.html
 
+* Arblib.jl (https://github.com/kalmarek/Arblib.jl) is a thin, efficient
+  Julia wrapper around Arb.
+
 * Other wrappers include:
 
   * ArbNumerics (Julia): https://github.com/JeffreySarnoff/ArbNumerics.jl
   * ArbFloats (Julia): https://github.com/JuliaArbTypes/ArbFloats.jl
   * A Java wrapper using JNA: https://github.com/crowlogic/arb/
+

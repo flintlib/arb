@@ -240,7 +240,7 @@ Bibliography
 
 .. [Leh1970] \R. S. Lehman, "On the Distribution of Zeros of the Riemann Zeta-Function", Proc. of the London Mathematical Society 20(3) (1970), 303-320, https://doi.org/10.1112/plms/s3-20.2.303
 
-.. [Mic2007] \N. Michel, "Precise Coulomb wave functions for a wide range of complex l, η and z", Computer Physics Communications, Volume 176, Issue 3, (2007), 232-249, https://doi.org/10.1016/j.cpc.2006.10.004
+.. [Mic2007] \N. Michel, "Precise Coulomb wave functions for a wide range of complex l, eta and z", Computer Physics Communications, Volume 176, Issue 3, (2007), 232-249, https://doi.org/10.1016/j.cpc.2006.10.004
 
 .. [Miy2010] \S. Miyajima, "Fast enclosure for all eigenvalues in generalized eigenvalue problems", Journal of Computational and Applied Mathematics, 233 (2010), 2994-3004, https://dx.doi.org/10.1016/j.cam.2009.11.048
 
