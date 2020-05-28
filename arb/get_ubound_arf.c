@@ -12,7 +12,7 @@
 #include "arb.h"
 
 void
-arb_get_ubound_arf(arf_t u, const arb_t x, long prec)
+arb_get_ubound_arf(arf_t u, const arb_t x, slong prec)
 {
     arf_t t;
     arf_init_set_mag_shallow(t, arb_radref(x));

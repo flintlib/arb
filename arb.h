@@ -294,8 +294,8 @@ arb_get_rad_arb(arb_t z, const arb_t x)
 
 void arb_get_abs_ubound_arf(arf_t u, const arb_t x, slong prec);
 void arb_get_abs_lbound_arf(arf_t u, const arb_t x, slong prec);
-void arb_get_ubound_arf(arf_t u, const arb_t x, long prec);
-void arb_get_lbound_arf(arf_t u, const arb_t x, long prec);
+void arb_get_ubound_arf(arf_t u, const arb_t x, slong prec);
+void arb_get_lbound_arf(arf_t u, const arb_t x, slong prec);
 
 void arb_nonnegative_part(arb_t res, const arb_t x);
 
