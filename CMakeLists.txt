@@ -17,7 +17,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 set (BUILD_SHARED_LIBS yes CACHE BOOL "Build shared library or not")
-set (BUILD_TESTS no CACHE BOOL "Build tests or not")
+set (BUILD_TESTING no CACHE BOOL "Build tests or not")
 
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
         CMAKE_BUILD_TYPE STREQUAL "Release"))
@@ -47,7 +47,7 @@ if (MSVC)
         endforeach()
     endif()
     foreach(CompilerFlag CMAKE_C_FLAGS)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1 /DFLINT_REENTRANT=0")
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
     endforeach()
 
     foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)
@@ -63,7 +63,7 @@ if (MSVC)
     endif()
 endif()
 
-set (DEPS mpir mpfr flint2)
+set (DEPS flint2 mpfr mpir)
 
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
@@ -129,7 +129,7 @@ target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
 
 set_target_properties(arb PROPERTIES VERSION ${ARB_VERSION} SOVERSION ${ARB_MAJOR})
 if(WIN32)
-    set_target_properties(arb PROPERTIES RUNTIME_OUTPUT_NAME "arb-${LIBMAJOR}")
+    set_target_properties(arb PROPERTIES RUNTIME_OUTPUT_NAME "arb-${ARB_MAJOR}")
 endif()
 
 if(NOT MSVC)
@@ -148,7 +148,7 @@ endforeach ()
 
 install(FILES ${HEADERS} DESTINATION include)
 
-if (BUILD_TESTS)
+if (BUILD_TESTING)
     enable_testing()
     foreach (FOLDER ${FOLDERS})
         file(GLOB TEMP "${FOLDER}/test/*.c")

@@ -121,7 +121,7 @@ requires CMake >= 3.5.0
 If the dependencies are not found, pass ``-DCMAKE_PREFIX_PATH=/path/to/deps``
 to ``cmake`` to find the dependencies.
 
-To build tests add, pass ``-DBUILD_TESTS=yes`` to ``cmake`` and run ``ctest``
+To build tests add, pass ``-DBUILD_TESTING=yes`` to ``cmake`` and run ``ctest``
 to run the tests.
 
 Running code

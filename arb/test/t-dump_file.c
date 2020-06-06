@@ -33,6 +33,10 @@ int main()
         arb_randtest_special(x, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
 
         tmp = tmpfile();
+        if (tmp == NULL) {
+            flint_printf("FAIL (creating temporary file)  iter = %wd\n\n", iter);
+            flint_abort();
+        }
         arb_dump_file(tmp, x);
         fflush(tmp);
         rewind(tmp);
