@@ -22,6 +22,9 @@ int main()
     fflush(stdout);
     flint_randinit(state);
 
+/* assume tmpfile() is broken on windows */
+#if !defined(_MSC_VER)
+
     /* just test no crashing... */
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
@@ -90,6 +93,8 @@ int main()
         arb_clear(y);
         arb_clear(z);
     }
+
+#endif
 
     flint_randclear(state);
     flint_cleanup();
