@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.18.0.pdf
 * http://arblib.org/arb-2.17.0.pdf
 * http://arblib.org/arb-2.16.0.pdf
 * http://arblib.org/arb-2.15.0.pdf
@@ -29,6 +30,40 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2020-06-09 -- version 2.18.0
+-------------------------------------------------------------------------------
+
+* General
+
+  * Flint 2.6 support.
+  * Several build system improvements (contributed by Isuru Fernando).
+  * Changed arf_get_mpfr to return an MPFR underflow/overflow result
+    (rounding to 0 or infinity with the right sign and MPFR overflow flags)
+    instead of throwing flint_abort() if the exponent is out of bounds for MPFR.
+  * Documentation and type corrections (contributed by Joel Dahne).
+
+* Arithmetic
+
+  * The number of iterations per precision level in arb_fmpz_poly_complex_roots
+    has been tweaked to avoid extreme slowdown for some polynomials with
+    closely clustered roots.
+  * Added arb_contains_interior, acb_contains_interior.
+
+* Special functions
+
+  * Fixed unsafe shifts causing Dirichlet characters for certain moduli
+    exceeding 32 bits to crash.
+  * Added acb_agm for computing the arithmetic-geometric mean of two complex
+    numbers.
+  * acb_elliptic_rj now uses a slow fallback algorithm in cases where Carlson's
+    algorithm is not known to be valid. This fixes instances where
+    acb_elliptic_pi, acb_elliptic_pi_inc and acb_elliptic_rj previously ended
+    up on the wrong branch. Users should be cautioned that the new version can
+    give worse enclosures and sometimes fails to converge in some cases where
+    the old algorithm did (the pi flag for acb_elliptic_pi_inc is useful as a
+    workaround).
+  * Optimized some special cases in acb_hurwitz_zeta.
 
 2019-10-16 -- version 2.17.0
 -------------------------------------------------------------------------------
