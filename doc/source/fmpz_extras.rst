@@ -99,7 +99,7 @@ Low-level conversions
     Requires `n \ge 2` and that the top limb of *src* is nonzero.
     Note that *fmpz_set_ui*, *fmpz_neg_ui* can be used for single-limb integers.
 
-.. macro:: void FMPZ_GET_MPN_READONLY(zsign, zn, zptr, ztmp, zv)
+.. macro:: FMPZ_GET_MPN_READONLY(zsign, zn, zptr, ztmp, zv)
 
     Given an *fmpz_t* *zv*, this macro sets *zptr* to a pointer to the limbs of *zv*,
     *zn* to the number of limbs, and *zsign* to a sign bit (0 if nonnegative,

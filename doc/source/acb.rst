@@ -951,7 +951,7 @@ Gamma function
     is computed from `S'(z)` to get a continuous change
     when `z` is non-real and `n` spans more than one possible integer value.
 
-.. function:: void acb_polygamma(acb_t z, const acb_t s, const acb_t z, slong prec)
+.. function:: void acb_polygamma(acb_t res, const acb_t s, const acb_t z, slong prec)
 
     Sets *res* to the value of the generalized polygamma function `\psi(s,z)`.
 

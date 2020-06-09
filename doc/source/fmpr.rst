@@ -185,7 +185,7 @@ Assignment, rounding and conversions
 
 .. function:: slong fmpr_set_round(fmpr_t y, const fmpr_t x, slong prec, fmpr_rnd_t rnd)
 
-.. function:: slong fmpr_set_round_fmpz(fmpr_t x, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
+.. function:: slong fmpr_set_round_fmpz(fmpr_t y, const fmpz_t x, slong prec, fmpr_rnd_t rnd)
 
     Sets *y* to a copy of *x* rounded in the direction specified by rnd to the
     number of bits specified by prec.

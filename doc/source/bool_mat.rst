@@ -5,7 +5,7 @@
 
 A :type:`bool_mat_t` represents a dense matrix over the boolean
 semiring `\langle \left\{0, 1\right\}, \vee, \wedge \rangle`,
-implemented as an array of entries of type :type:`int`.
+implemented as an array of entries of type ``int``.
 
 The dimension (number of rows and columns) of a matrix is fixed at
 initialization, and the user must ensure that inputs and outputs to
@@ -57,12 +57,12 @@ Memory management
 
     Clears the matrix, deallocating all entries.
 
-.. macro:: int bool_mat_is_empty(const bool_mat_t mat)
+.. function:: int bool_mat_is_empty(const bool_mat_t mat)
 
     Returns nonzero iff the number of rows or the number of columns in *mat*
     is zero. Note that this does not depend on the entry values of *mat*.
 
-.. macro:: int bool_mat_is_square(const bool_mat_t mat)
+.. function:: int bool_mat_is_square(const bool_mat_t mat)
 
     Returns nonzero iff the number of rows is equal to the number of columns in *mat*.
 
@@ -192,7 +192,7 @@ Arithmetic
     Sets *res* to the entrywise product of *mat1* and *mat2*.
     The operands must have the same dimensions.
 
-.. macro:: void bool_mat_sqr(bool_mat_t B, const bool_mat_t A)
+.. function:: void bool_mat_sqr(bool_mat_t B, const bool_mat_t A)
 
    Sets *B* to the matrix square of *A*.
    The operands must both be square with the same dimensions.

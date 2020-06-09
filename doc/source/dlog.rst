@@ -157,7 +157,7 @@ method-specific structures.
 Complete table
 ...............................................................................
 
-.. type:: dlog_table
+.. type:: dlog_table_struct
 
 .. type:: dlog_table_t
 

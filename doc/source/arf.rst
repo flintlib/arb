@@ -22,7 +22,7 @@ exponent in the latter format.
 Except where otherwise noted, functions have the following semantics:
 
 * Functions taking *prec* and *rnd* parameters at the end of the argument list
-  and returning an :type:`int` flag round the result in the output variable
+  and returning an ``int`` flag round the result in the output variable
   to *prec* bits in the direction specified by *rnd*. The return flag
   is 0 if the result is exact
   (not rounded) and 1 if the result is inexact (rounded).
