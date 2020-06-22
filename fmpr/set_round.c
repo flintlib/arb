@@ -12,8 +12,8 @@
 #include "fmpr.h"
 
 /* like mpn_scan0b, but takes an upper size */
-static __inline__ mp_bitcnt_t
-mpn_scan0b(mp_srcptr up, mp_size_t size, mp_bitcnt_t from_bit)
+static __inline__ flint_bitcnt_t
+mpn_scan0b(mp_srcptr up, mp_size_t size, flint_bitcnt_t from_bit)
 {
     mp_limb_t t;
     slong i, c;

@@ -12,12 +12,12 @@
 #include "fmpz_extras.h"
 
 void
-fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, mp_bitcnt_t shift)
+fmpz_lshift_mpn(fmpz_t z, mp_srcptr d, mp_size_t dn, int sgnbit, flint_bitcnt_t shift)
 {
     __mpz_struct * zmpz;
     mp_ptr zp;
     mp_size_t zn, shift_limbs;
-    mp_bitcnt_t shift_bits;
+    flint_bitcnt_t shift_bits;
 
     zmpz = _fmpz_promote(z);
 

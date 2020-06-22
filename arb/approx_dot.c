@@ -82,12 +82,12 @@
 void
 _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn, mp_srcptr yptr, mp_size_t yn,
-    int negative, mp_bitcnt_t shift);
+    int negative, flint_bitcnt_t shift);
 
 void
 _arb_dot_add_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn,
-    int negative, mp_bitcnt_t shift);
+    int negative, flint_bitcnt_t shift);
 
 void
 arb_approx_dot_simple(arb_t res, const arb_t initial, int subtract,
@@ -131,7 +131,7 @@ arb_approx_dot(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong
     slong xexp, yexp, exp, max_exp, min_exp, sum_exp;
     int xnegative, ynegative;
     mp_size_t xn, yn, sn, alloc;
-    mp_bitcnt_t shift;
+    flint_bitcnt_t shift;
     arb_srcptr xi, yi;
     arf_srcptr xm, ym;
     mp_limb_t serr;   /* Sum over arithmetic errors  - not used, but need dummy for calls */

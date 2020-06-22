@@ -64,7 +64,7 @@ internal representation of numbers (using limb arrays).
 
     A limb count (always nonnegative).
 
-.. type:: mp_bitcnt_t
+.. type:: flint_bitcnt_t
 
     A bit offset within an array of limbs (always nonnegative).
 

@@ -173,7 +173,7 @@ _arb_digits_as_float_str(char ** d, fmpz_t e, slong minfix, slong maxfix)
    exactly.
 */
 void
-_arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, arf_rnd_t rnd)
+_arb_digits_round_inplace(char * s, flint_bitcnt_t * shift, fmpz_t error, slong n, arf_rnd_t rnd)
 {
     slong i, m;
     int up;
@@ -300,7 +300,7 @@ arb_get_str_parts(int * negative, char **mid_digits, fmpz_t mid_exp,
 {
     fmpz_t mid, rad, exp, err;
     slong good;
-    mp_bitcnt_t shift;
+    flint_bitcnt_t shift;
 
     if (!arb_is_finite(x))
     {

@@ -26,7 +26,7 @@ int main()
         slong N;
         fmpz_t x, T, Q;
         fmpq_t S, V;
-        mp_bitcnt_t Qexp, r;
+        flint_bitcnt_t Qexp, r;
 
         fmpz_init(x);
         fmpz_init(T);

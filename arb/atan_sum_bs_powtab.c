@@ -16,9 +16,9 @@ slong _arb_compute_bs_exponents(slong * tab, slong n);
 slong _arb_get_exp_pos(const slong * tab, slong step);
 
 static void
-bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
+bsplit(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
     const slong * xexp,
-    const fmpz * xpow, mp_bitcnt_t r, slong a, slong b)
+    const fmpz * xpow, flint_bitcnt_t r, slong a, slong b)
 {
     if (b - a == 1)
     {
@@ -47,7 +47,7 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     else
     {
         slong step, m, i;
-        mp_bitcnt_t Q2exp[1];
+        flint_bitcnt_t Q2exp[1];
         fmpz_t Q2, T2;
 
         step = (b - a) / 2;
@@ -75,8 +75,8 @@ bsplit(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 }
 
 void
-_arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N)
+_arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N)
 {
     slong * xexp;
     slong length, i;

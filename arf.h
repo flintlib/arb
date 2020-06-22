@@ -997,7 +997,7 @@ ARB_DLL extern void _arf_add_tmp_cleanup(void);
 
 int _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit,
     const fmpz_t xexp, mp_srcptr yp, mp_size_t yn, int ysgnbit,
-    mp_bitcnt_t shift, slong prec, arf_rnd_t rnd);
+    flint_bitcnt_t shift, slong prec, arf_rnd_t rnd);
 
 int arf_add(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd);
 int arf_add_si(arf_ptr z, arf_srcptr x, slong y, slong prec, arf_rnd_t rnd);

@@ -232,7 +232,7 @@ mulhigh(mp_ptr res, mp_srcptr xptr, mp_size_t xn, mp_srcptr yptr, mp_size_t yn, 
 void
 _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn, mp_srcptr yptr, mp_size_t yn,
-    int negative, mp_bitcnt_t shift)
+    int negative, flint_bitcnt_t shift)
 {
     slong shift_bits, shift_limbs, term_prec;
     mp_limb_t cy;
@@ -358,7 +358,7 @@ _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
 void
 _arb_dot_add_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn,
-    int negative, mp_bitcnt_t shift)
+    int negative, flint_bitcnt_t shift)
 {
     slong shift_bits, shift_limbs, term_prec;
     mp_limb_t cy, err;
@@ -450,7 +450,7 @@ arb_dot(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep,
     slong xrexp, yrexp, srad_exp, max_rad_exp;
     int xnegative, ynegative, inexact;
     mp_size_t xn, yn, sn, alloc;
-    mp_bitcnt_t shift;
+    flint_bitcnt_t shift;
     arb_srcptr xi, yi;
     arf_srcptr xm, ym;
     mag_srcptr xr, yr;

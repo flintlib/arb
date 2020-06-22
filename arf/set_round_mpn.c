@@ -16,7 +16,7 @@ _arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
     int sgnbit, slong prec, arf_rnd_t rnd)
 {
     unsigned int leading;
-    mp_bitcnt_t exp, bc, val, val_bits;
+    flint_bitcnt_t exp, bc, val, val_bits;
     mp_size_t yn, val_limbs;
     mp_ptr yptr;
     mp_limb_t t;
@@ -67,7 +67,7 @@ _arf_set_round_mpn(arf_t y, slong * exp_shift, mp_srcptr x, mp_size_t xn,
                 /* The bit to the right of the truncation point determines
                    the rounding direction. */
                 mp_size_t exc_limbs = (exp - prec - 1) / FLINT_BITS;
-                mp_bitcnt_t exc_bits = (exp - prec - 1) % FLINT_BITS;
+                flint_bitcnt_t exc_bits = (exp - prec - 1) % FLINT_BITS;
 
                 increment = (x[exc_limbs] >> exc_bits) & 1;
             }

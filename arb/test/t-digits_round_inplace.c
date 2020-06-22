@@ -23,7 +23,7 @@ int main()
     {
         char s[30];
         slong i, j, len, n;
-        mp_bitcnt_t shift;
+        flint_bitcnt_t shift;
         fmpz_t inp, out, err, t;
         arf_rnd_t rnd;
 

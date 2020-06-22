@@ -93,7 +93,7 @@ reduce_octant(fmpz_t v, fmpz_t w, const fmpq_t x)
     const fmpz * p = fmpq_numref(x);
     const fmpz * q = fmpq_denref(x);
     unsigned int octant;
-    mp_bitcnt_t vval, wval;
+    flint_bitcnt_t vval, wval;
 
     if (*p > COEFF_MIN / 8 &&
         *p < COEFF_MAX / 8 &&

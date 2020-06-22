@@ -12,7 +12,7 @@
 #include "arb.h"
 
 static void
-bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
+bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp, const fmpz_t x,
     slong r, slong a, slong b, int cont)
 {
     if (b - a == 1)
@@ -25,7 +25,7 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
     else
     {
         slong m;
-        mp_bitcnt_t Q2exp[1];
+        flint_bitcnt_t Q2exp[1];
         fmpz_t P2, Q2, T2;
 
         m = a + (b - a) / 2;
@@ -54,8 +54,8 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp, const fmpz_t x,
 }
 
 void
-_arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N)
+_arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N)
 {
     fmpz_t P;
     fmpz_init(P);

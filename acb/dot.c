@@ -164,12 +164,12 @@ add_errors(mag_t rad, uint64_t Aerr, slong Aexp, uint64_t Berr, slong Bexp, uint
 void
 _arb_dot_addmul_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn, mp_srcptr yptr, mp_size_t yn,
-    int negative, mp_bitcnt_t shift);
+    int negative, flint_bitcnt_t shift);
 
 void
 _arb_dot_add_generic(mp_ptr sum, mp_ptr serr, mp_ptr tmp, mp_size_t sn,
     mp_srcptr xptr, mp_size_t xn,
-    int negative, mp_bitcnt_t shift);
+    int negative, flint_bitcnt_t shift);
 
 static void
 _arb_dot_output(arb_t res, mp_ptr sum, mp_size_t sn, int negative,
@@ -358,7 +358,7 @@ acb_dot(acb_t res, const acb_t initial, int subtract, acb_srcptr x, slong xstep,
     slong xrexp, yrexp;
     int xnegative, ynegative;
     mp_size_t xn, yn, re_sn, im_sn, alloc;
-    mp_bitcnt_t shift;
+    flint_bitcnt_t shift;
     arb_srcptr xi, yi;
     arf_srcptr xm, ym;
     mag_srcptr xr, yr;

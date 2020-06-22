@@ -24,7 +24,7 @@ Convenience methods
 
     Sets *z* to the sum (respectively difference) of *x* and *y*.
 
-.. function:: void fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, mp_bitcnt_t exp)
+.. function:: void fmpz_adiv_q_2exp(fmpz_t z, const fmpz_t x, flint_bitcnt_t exp)
 
     Sets *z* to `x / 2^{exp}`, rounded away from zero.
 
@@ -109,7 +109,7 @@ Low-level conversions
     and *zptr* is set to point to *ztmp*. The case where *zv*
     is zero is not handled specially, and *zn* is set to 1.
 
-.. function:: void fmpz_lshift_mpn(fmpz_t z, mp_srcptr src, mp_size_t n, int negative, mp_bitcnt_t shift)
+.. function:: void fmpz_lshift_mpn(fmpz_t z, mp_srcptr src, mp_size_t n, int negative, flint_bitcnt_t shift)
 
     Sets *z* to the integer represented by the *n* limbs in the array *src*,
     or minus this value if *negative* is 1, shifted left by *shift* bits.

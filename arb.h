@@ -161,7 +161,7 @@ void arb_abs(arb_t y, const arb_t x);
 void arb_sgn(arb_t res, const arb_t x);
 int arb_sgn_nonzero(const arb_t x);
 
-void _arb_digits_round_inplace(char * s, mp_bitcnt_t * shift, fmpz_t error, slong n, arf_rnd_t rnd);
+void _arb_digits_round_inplace(char * s, flint_bitcnt_t * shift, fmpz_t error, slong n, arf_rnd_t rnd);
 
 int arb_set_str(arb_t res, const char * inp, slong prec);
 
@@ -894,11 +894,11 @@ int _arb_get_mpn_fixed_mod_log2(mp_ptr w, fmpz_t q, mp_limb_t * error,
 
 slong _arb_exp_taylor_bound(slong mag, slong prec);
 
-void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N);
+void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N);
 
-void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N);
+void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N);
 
 /* sin/cos implementation */
 
@@ -943,12 +943,12 @@ void arb_sin_cos_wide(arb_t s, arb_t c, const arb_t x, slong prec);
 void _arb_sin_cos_generic(arb_t s, arb_t c, const arf_t x, const mag_t xrad, slong prec);
 void arb_sin_cos_generic(arb_t s, arb_t c, const arb_t x, slong prec);
 
-ARB_INLINE mp_bitcnt_t
+ARB_INLINE flint_bitcnt_t
 _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
 {
     mp_limb_t t;
     mp_size_t zero_limbs;
-    mp_bitcnt_t bits;
+    flint_bitcnt_t bits;
 
     zero_limbs = 0;
 
@@ -969,11 +969,11 @@ _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
     }
 }
 
-void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N);
+void _arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N);
 
-void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N);
+void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N);
 
 void arb_atan_arf_bb(arb_t z, const arf_t x, slong prec);
 

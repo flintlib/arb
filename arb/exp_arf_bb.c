@@ -45,7 +45,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
 {
     slong k, iter, bits, r, mag, q, wp, N;
     slong argred_bits, start_bits;
-    mp_bitcnt_t Qexp[1];
+    flint_bitcnt_t Qexp[1];
     int inexact;
     fmpz_t t, u, T, Q;
     arb_t w;

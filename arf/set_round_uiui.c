@@ -119,7 +119,7 @@ _arf_set_round_uiui(arf_t z, slong * fix, mp_limb_t hi, mp_limb_t lo, int sgnbit
                 else
                 {
                     /* two or more excess bits; test the first excess bit */
-                    mp_bitcnt_t pos = 2 * FLINT_BITS - leading - prec - 1;
+                    flint_bitcnt_t pos = 2 * FLINT_BITS - leading - prec - 1;
 
                     if (pos < FLINT_BITS)
                         up = (lo >> pos) & 1;

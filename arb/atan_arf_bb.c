@@ -153,7 +153,7 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 {
     slong iter, bits, r, mag, q, wp, N;
     slong argred_bits, start_bits;
-    mp_bitcnt_t Qexp[1];
+    flint_bitcnt_t Qexp[1];
     int inverse;
     mag_t inp_err;
     fmpz_t s, t, u, P, Q, err;

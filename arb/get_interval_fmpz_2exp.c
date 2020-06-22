@@ -36,7 +36,7 @@ arb_get_interval_fmpz_2exp(fmpz_t a, fmpz_t b, fmpz_t exp, const arb_t x)
         arf_t rad;
         fmpz_t tmp;
         slong shift;
-        mp_bitcnt_t aval, bval;
+        flint_bitcnt_t aval, bval;
 
         fmpz_init(tmp);
 

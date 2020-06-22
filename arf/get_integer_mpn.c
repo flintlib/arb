@@ -19,7 +19,7 @@ _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp)
     if (bot_exp >= 0)
     {
         mp_size_t bot_limbs;
-        mp_bitcnt_t bot_bits;
+        flint_bitcnt_t bot_bits;
 
         bot_limbs = bot_exp / FLINT_BITS;
         bot_bits = bot_exp % FLINT_BITS;
@@ -42,7 +42,7 @@ _arf_get_integer_mpn(mp_ptr y, mp_srcptr x, mp_size_t xn, slong exp)
     else
     {
         mp_size_t top_limbs;
-        mp_bitcnt_t top_bits;
+        flint_bitcnt_t top_bits;
         mp_limb_t cy;
 
         top_limbs = exp / FLINT_BITS;

@@ -12,7 +12,7 @@
 #include "arb_mat.h"
 
 void
-_fmpq_mat_randtest_positive_semidefinite(fmpq_mat_t mat, flint_rand_t state, mp_bitcnt_t bits)
+_fmpq_mat_randtest_positive_semidefinite(fmpq_mat_t mat, flint_rand_t state, flint_bitcnt_t bits)
 {
     slong n;
     fmpq_mat_t R, RT;

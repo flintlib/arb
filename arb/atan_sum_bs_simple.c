@@ -12,8 +12,8 @@
 #include "arb.h"
 
 static void
-bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong a, slong b)
+bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong a, slong b)
 {
     if (b - a == 1)
     {
@@ -30,7 +30,7 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
     else
     {
         slong step, m;
-        mp_bitcnt_t Q2exp[1];
+        flint_bitcnt_t Q2exp[1];
         fmpz_t P2, Q2, T2;
 
         step = (b - a) / 2;
@@ -58,8 +58,8 @@ bsplit(fmpz_t P, fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
 }
 
 void
-_arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, mp_bitcnt_t * Qexp,
-    const fmpz_t x, mp_bitcnt_t r, slong N)
+_arb_atan_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const fmpz_t x, flint_bitcnt_t r, slong N)
 {
     fmpz_t P;
     fmpz_init(P);

@@ -24,12 +24,12 @@ void _arf_add_tmp_cleanup(void)
 /* Assumptions: top limbs of x and y nonzero. */
 int
 _arf_add_mpn(arf_t z, mp_srcptr xp, mp_size_t xn, int xsgnbit, const fmpz_t xexp,
-                      mp_srcptr yp, mp_size_t yn, int ysgnbit, mp_bitcnt_t shift,
+                      mp_srcptr yp, mp_size_t yn, int ysgnbit, flint_bitcnt_t shift,
                       slong prec, arf_rnd_t rnd)
 {
     mp_size_t wn, zn, zn_original, alloc, xbase, wbase;
     mp_size_t shift_limbs;
-    mp_bitcnt_t shift_bits;
+    flint_bitcnt_t shift_bits;
     int inexact;
     slong fix;
     mp_limb_t cy;
