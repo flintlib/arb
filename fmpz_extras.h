@@ -26,6 +26,10 @@ extern "C" {
 #endif
 #endif
 
+#if __FLINT_RELEASE < 20600
+#define flint_bitcnt_t ulong
+#endif
+
 /* currently defined in the arb module, but global to the library */
 double arb_test_multiplier(void);
 
