@@ -84,15 +84,15 @@ arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x
     {
         mpz_mul(tt, p1, xx);
         mpz_tdiv_q_2exp(tt, tt, wp);
-        mpz_mul_ui(p0, p0, k*k);
+        flint_mpz_mul_ui(p0, p0, k*k);
         mpz_neg(p0, p0);
-        mpz_addmul_ui(p0, tt, 2 * k + 1);
+        flint_mpz_addmul_ui(p0, tt, 2 * k + 1);
         mpz_swap(p0, p1);
         umul_ppmm(denhi, denlo, den, k + 1);
         if (denhi != 0)
         {
-            mpz_tdiv_q_ui(p0, p0, den);
-            mpz_tdiv_q_ui(p1, p1, den);
+            flint_mpz_tdiv_q_ui(p0, p0, den);
+            flint_mpz_tdiv_q_ui(p1, p1, den);
             den = k + 1;
         }
         else
@@ -100,8 +100,8 @@ arb_hypgeom_legendre_p_ui_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x
             den = denlo;
         }
     }
-    mpz_tdiv_q_ui(p0, p0, den/n);
-    mpz_tdiv_q_ui(p1, p1, den);
+    flint_mpz_tdiv_q_ui(p0, p0, den/n);
+    flint_mpz_tdiv_q_ui(p1, p1, den);
 
     if (!mag_is_zero(xrad))
     {
