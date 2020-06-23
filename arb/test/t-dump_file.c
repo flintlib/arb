@@ -23,7 +23,7 @@ int main()
     flint_randinit(state);
 
 /* assume tmpfile() is broken on windows */
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
 
     /* just test no crashing... */
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
