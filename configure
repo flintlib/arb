@@ -11,7 +11,7 @@
 # 2.7.0   => 0.0.0
 ARB_MAJOR=2
 ARB_MINOR=9
-ARB_PATCH=0
+ARB_PATCH=1
 
 PREFIX="/usr/local"
 GMP_DIR="/usr/local"

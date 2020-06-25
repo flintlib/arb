@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.18.1.pdf
 * http://arblib.org/arb-2.18.0.pdf
 * http://arblib.org/arb-2.17.0.pdf
 * http://arblib.org/arb-2.16.0.pdf
@@ -30,6 +31,12 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2020-06-25 -- version 2.18.1
+-------------------------------------------------------------------------------
+
+* Support MinGW64.
+* Added version numbers (__ARB_VERSION, __ARB_RELEASE, ARB_VERSION) to arb.h.
 
 2020-06-09 -- version 2.18.0
 -------------------------------------------------------------------------------
