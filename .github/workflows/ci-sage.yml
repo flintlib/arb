@@ -146,7 +146,7 @@ jobs:
         choco install $PACKAGES --source cygwin
     - name: Update Sage packages from upstream artifact
       run: |
-        C:\\tools\\cygwin\\bin\\bash -l -c 'cd $(cygpath -u "$GITHUB_WORKSPACE") && ls -l upstream/ && export PATH="$(pwd)/build/bin:$PATH:/usr/local/bin:/usr/bin" && (cd upstream && bash -x update-pkgs.sh) && git diff'
+        C:\\tools\\cygwin\\bin\\bash -l -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && ls -l upstream/ && export PATH="$(pwd)/build/bin:$PATH:/usr/local/bin:/usr/bin" && (cd upstream && bash -x update-pkgs.sh) && git diff'
     - name: bootstrap
       run: |
         C:\\tools\\cygwin\\bin\\bash -l -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && env && ./bootstrap'
