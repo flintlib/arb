@@ -59,7 +59,7 @@ env:
   SAGE_TRAC_GIT: git://trac.sagemath.org/sage.git
   SAGE_TRAC_COMMAND: try
   SAGE_TICKET: 29497
-  REMOVE_PATCHES:
+  REMOVE_PATCHES: "*"
 
 jobs:
 
