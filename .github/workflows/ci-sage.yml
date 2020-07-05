@@ -50,8 +50,8 @@ env:
   SPKG:        arb
   # Sage distribution packages to build
   TARGETS_PRE: build/make/Makefile
-  TARGETS:     SAGE_CHECK=yes arb e_antic symengine
-  TARGETS_OPTIONAL: build/make/Makefile
+  TARGETS:     SAGE_CHECK=yes arb symengine
+  TARGETS_OPTIONAL: SAGE_CHECK=warn e_antic
   # Standard setting: Test the current beta release of Sage:
   SAGE_REPO:   sagemath/sage
   SAGE_REF:    develop
@@ -163,6 +163,9 @@ jobs:
     - name: make
       run: |
         C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make -k -w V=0 base-toolchain && make -k -w V=1 $TARGETS'
+    - name: make
+      run: |
+        C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make -k -w V=1 $TARGETS_OPTIONAL'
     - name: Prepare logs artifact
       shell: bash
       run: |
