@@ -16,39 +16,22 @@ acb_hypgeom_pfq_choose_n_max(acb_srcptr a, slong p,
                          acb_srcptr b, slong q, const acb_t z,
                          slong prec, slong n_max);
 
-/* computes the factors that are independent of n (all are upper bounds) */
-void
-acb_hypgeom_u_asymp_bound_factors(int * R, mag_t alpha,
-    mag_t nu, mag_t sigma, mag_t rho, mag_t zinv,
-    const acb_t a, const acb_t b, const acb_t z)
+int
+acb_hypgeom_u_asymp_determine_region(const mag_t r,
+    const mag_t zlo, const acb_t z)
 {
-    mag_t r, u, zre, zim, zlo, sigma_prime;
-    acb_t t;
+    int R;
+    mag_t u, zre, zim;
 
-    mag_init(r);
     mag_init(u);
     mag_init(zre);
     mag_init(zim);
-    mag_init(zlo);
-    mag_init(sigma_prime);
-    acb_init(t);
 
     /* lower bounds for |re(z)|, |im(z)|, |z| */
     arb_get_mag_lower(zre, acb_realref(z));
     arb_get_mag_lower(zim, acb_imagref(z));
-    acb_get_mag_lower(zlo, z); /* todo: hypot */
 
-    /* upper bound for 1/|z| */
-    mag_one(u);
-    mag_div(zinv, u, zlo);
-
-    /* upper bound for r = |b - 2a| */
-    acb_mul_2exp_si(t, a, 1);
-    acb_sub(t, b, t, MAG_BITS);
-    acb_get_mag(r, t);
-
-    /* determine region */
-    *R = 0;
+    R = 0;
 
     if (mag_cmp(zlo, r) >= 0)
     {
@@ -56,21 +39,55 @@ acb_hypgeom_u_asymp_bound_factors(int * R, mag_t alpha,
 
         if (znonneg && mag_cmp(zre, r) >= 0)
         {
-            *R = 1;
+            R = 1;
         }
         else if (mag_cmp(zim, r) >= 0 || znonneg)
         {
-            *R = 2;
+            R = 2;
         }
         else
         {
             mag_mul_2exp_si(u, r, 1);
             if (mag_cmp(zlo, u) >= 0)
-                *R = 3;
+                R = 3;
         }
     }
 
-    if (R == 0)
+    mag_clear(u);
+    mag_clear(zre);
+    mag_clear(zim);
+
+    return R;
+}
+
+/* computes the factors that are independent of n (all are upper bounds) */
+void
+acb_hypgeom_u_asymp_bound_factors(int * R, mag_t alpha,
+    mag_t nu, mag_t sigma, mag_t rho, mag_t zinv,
+    const acb_t a, const acb_t b, const acb_t z)
+{
+    mag_t r, u, zlo, sigma_prime;
+    acb_t t;
+
+    mag_init(r);
+    mag_init(u);
+    mag_init(zlo);
+    mag_init(sigma_prime);
+    acb_init(t);
+
+    /* upper bound for 1/|z| */
+    acb_get_mag_lower(zlo, z);
+    mag_inv(zinv, zlo);
+
+    /* upper bound for r = |b - 2a| */
+    acb_mul_2exp_si(t, a, 1);
+    acb_sub(t, b, t, MAG_BITS);
+    acb_get_mag(r, t);
+
+    /* determine region */
+    *R = acb_hypgeom_u_asymp_determine_region(r, zlo, z);
+
+    if (*R == 0)
     {
         mag_inf(alpha);
         mag_inf(nu);
@@ -125,8 +142,6 @@ acb_hypgeom_u_asymp_bound_factors(int * R, mag_t alpha,
 
     mag_clear(r);
     mag_clear(u);
-    mag_clear(zre);
-    mag_clear(zim);
     mag_clear(zlo);
     mag_clear(sigma_prime);
     acb_clear(t);
