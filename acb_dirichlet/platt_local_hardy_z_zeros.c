@@ -909,25 +909,23 @@ create_initial_double_superblock(zz_node_ptr *pu, zz_node_ptr *pv,
      * Add blocks in the backwards direction until the number
      * of consecutive good Gram blocks is twice the computed bound.
      */
-    u = p;
-    v = p;
     while (good_block_count < 2*bound)
     {
-        if (!extend_to_prev_good_gram_node(&u, u, ctx, prec))
+        if (!extend_to_prev_good_gram_node(&p, v, ctx, prec))
         {
             result = 0;
             goto finish;
         }
-        zn = count_gram_intervals(u, v);
-        for (i = 0; i < LOOPCOUNT && count_sign_changes(u, v) < zn; i++)
+        zn = count_gram_intervals(p, v);
+        for (i = 0; i < LOOPCOUNT && count_sign_changes(p, v) < zn; i++)
         {
-            if (!intercalate(ctx, u, v, prec))
+            if (!intercalate(ctx, p, v, prec))
             {
                 result = 0;
                 goto finish;
             }
         }
-        if (count_sign_changes(u, v) >= zn)
+        if (count_sign_changes(p, v) >= zn)
         {
             good_block_count++;
         }
@@ -935,8 +933,8 @@ create_initial_double_superblock(zz_node_ptr *pu, zz_node_ptr *pv,
         {
             good_block_count = 0;
         }
+        v = p;
     }
-    p = u;
 
 finish:
 
@@ -1335,7 +1333,7 @@ _arb_div_si_si(arb_t res, slong a, slong b, slong prec)
 }
 
 /* Compares f to g=a*10^b.
- * Returns a negative vlaue if f < g, positive value if g < f, otherwise 0. */
+ * Returns a negative value if f < g, positive value if g < f, otherwise 0. */
 static int
 _fmpz_cmp_a_10exp_b(const fmpz_t f, slong a, slong b)
 {

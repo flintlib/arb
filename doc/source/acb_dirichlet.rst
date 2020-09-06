@@ -788,4 +788,4 @@ and formulas described by David J. Platt in [Pla2017]_.
     The final several parameters of the underscored variant have the same
     meanings as in the functions :func:`acb_dirichlet_platt_multieval`
     and :func:`acb_dirichlet_platt_ws_interpolation`. The non-underscored
-    variant currently requires `10^4 \leq n \leq 3 \times 10^22`.
+    variant currently requires `10^4 \leq n \leq 3 \times 10^{17}`.
