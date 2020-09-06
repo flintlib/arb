@@ -11,6 +11,10 @@
 
 #include "acb_hypgeom.h"
 
+int
+acb_hypgeom_u_asymp_determine_region(const mag_t r,
+    const mag_t zlo, const acb_t z);
+
 void
 acb_hypgeom_gamma_upper_asymp(acb_t res, const acb_t s,
         const acb_t z, int regularized, slong prec)
@@ -252,6 +256,33 @@ acb_hypgeom_gamma_upper_singular(acb_t res, slong s, const acb_t z, int regulari
     acb_clear(b + 1);
 }
 
+static int
+_determine_region(const acb_t s, const acb_t z)
+{
+    int R;
+    mag_t r, zlo;
+    acb_t t;
+
+    mag_init(r);
+    mag_init(zlo);
+    acb_init(t);
+
+    /* lower bound for |z| */
+    acb_get_mag_lower(zlo, z);
+
+    /* upper bound for r = |s - 1| */
+    acb_sub_ui(t, s, 1, MAG_BITS);
+    acb_get_mag(r, t);
+
+    R = acb_hypgeom_u_asymp_determine_region(r, zlo, z);
+
+    mag_clear(r);
+    mag_clear(zlo);
+    acb_clear(t);
+
+    return R;
+}
+
 void
 acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 {
@@ -351,7 +382,8 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
             return;
         }
 
-        if (acb_hypgeom_u_use_asymp(z, prec))
+        if (acb_hypgeom_u_use_asymp(z, prec) &&
+            ((0 < n && n < WORD_MAX) || _determine_region(s, z)))
         {
             acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
             return;
