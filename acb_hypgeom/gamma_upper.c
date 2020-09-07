@@ -398,7 +398,9 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
                 c = 2.391097143;
                 ds = arf_get_d(arb_midref(acb_realref(s)), ARF_RND_DOWN);
                 dx = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
-                if (pow(dx - c, 8) > pow(a*ds, 8) + pow(b*prec, 8))
+                if (dx - c > a*ds + b*prec ||
+                    (dx - c > FLINT_MAX(a*ds, b*prec) &&
+                    pow(dx - c, 8) > pow(a*ds, 8) + pow(b*prec, 8)))
                 {
                     acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
                     return;

@@ -11,6 +11,28 @@
 
 #include "acb_hypgeom.h"
 
+
+static void
+_accuracy_regression_test(const acb_t s, const acb_t z,
+        int regularized, slong prec, slong issue, slong accuracy)
+{
+    acb_t g;
+    acb_init(g);
+    acb_hypgeom_gamma_upper(g, s, z, regularized, prec);
+    if (acb_rel_accuracy_bits(g) < accuracy)
+    {
+        flint_printf("FAIL: accuracy regression in issue #%ld\n\n", issue);
+        flint_printf("prec = %d\n\n", prec);
+        flint_printf("regularized = %d\n\n", regularized);
+        flint_printf("s = "); acb_printd(s, 30); flint_printf("\n\n");
+        flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+        flint_printf("g = "); acb_printd(g, 30); flint_printf("\n\n");
+        flint_abort();
+    }
+    acb_clear(g);
+}
+
+
 int main()
 {
     slong iter;
@@ -209,6 +231,40 @@ int main()
         acb_clear(w1);
         acb_clear(t);
         acb_clear(u);
+    }
+
+    /* Accuracy regression tests. */
+    {
+        acb_t s, z;
+        slong prec, issue, accuracy;
+        acb_init(s);
+        acb_init(z);
+
+        issue = 166;
+        prec = 165;
+        accuracy = 100;
+        acb_zero(s);
+        acb_set_si(z, 110);
+        _accuracy_regression_test(s, z, 2, prec, issue, accuracy);
+
+        issue = 276;
+        prec = 300;
+        accuracy = 100;
+        acb_set_ui(s, 357);
+        acb_set_ui(z, 356);
+        _accuracy_regression_test(s, z, 0, prec, issue, accuracy);
+        arb_set_str(acb_realref(s), "356.123", prec);
+        arb_set_str(acb_realref(z), "356.456", prec);
+        _accuracy_regression_test(s, z, 0, prec, issue, accuracy);
+        arb_set_str(acb_realref(s), "357.123", prec);
+        arb_set_str(acb_realref(z), "356.456", prec);
+        _accuracy_regression_test(s, z, 0, prec, issue, accuracy);
+        arb_set_str(acb_realref(s), "357.456", prec);
+        arb_set_str(acb_realref(z), "356.123", prec);
+        _accuracy_regression_test(s, z, 0, prec, issue, accuracy);
+
+        acb_clear(s);
+        acb_clear(z);
     }
 
     flint_randclear(state);
