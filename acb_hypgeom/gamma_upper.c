@@ -283,6 +283,12 @@ _determine_region(const acb_t s, const acb_t z)
     return R;
 }
 
+static int
+_acb_is_nonnegative_real(const acb_t z)
+{
+    return arb_is_zero(acb_imagref(z)) && arb_is_nonnegative(acb_realref(z));
+}
+
 void
 acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 {
@@ -382,11 +388,38 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
             return;
         }
 
-        if (acb_hypgeom_u_use_asymp(z, prec) &&
-            ((0 < n && n < WORD_MAX) || _determine_region(s, z)))
+        if (0 < n && n < WORD_MAX)
         {
-            acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
-            return;
+            if (acb_hypgeom_u_use_asymp(z, prec))
+            {
+                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+                return;
+            }
+        }
+        else if (_acb_is_nonnegative_real(s) && _acb_is_nonnegative_real(z))
+        {
+            if (arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 2) > 0)
+            {
+                double a, b, c, ds, dx;
+                a = 1.029287542;
+                b = 0.3319411658;
+                c = 2.391097143;
+                ds = arf_get_d(arb_midref(acb_realref(s)), ARF_RND_DOWN);
+                dx = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
+                if (pow(dx - c, 8) > pow(a*ds, 8) + pow(b*prec, 8))
+                {
+                    acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+                    return;
+                }
+            }
+        }
+        else if (_determine_region(s, z))
+        {
+            if (acb_hypgeom_u_use_asymp(z, prec))
+            {
+                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+                return;
+            }
         }
 
         if (n <= 0 && n > -10 * prec)
