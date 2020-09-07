@@ -388,15 +388,7 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
             return;
         }
 
-        if (0 < n && n < WORD_MAX)
-        {
-            if (acb_hypgeom_u_use_asymp(z, prec))
-            {
-                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
-                return;
-            }
-        }
-        else if (_acb_is_nonnegative_real(s) && _acb_is_nonnegative_real(z))
+        if (_acb_is_nonnegative_real(s) && _acb_is_nonnegative_real(z))
         {
             if (arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 2) > 0)
             {
@@ -413,13 +405,11 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
                 }
             }
         }
-        else if (_determine_region(s, z))
+        else if (acb_hypgeom_u_use_asymp(z, prec) &&
+                 ((0 < n && n < WORD_MAX) || _determine_region(s, z)))
         {
-            if (acb_hypgeom_u_use_asymp(z, prec))
-            {
-                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
-                return;
-            }
+            acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+            return;
         }
 
         if (n <= 0 && n > -10 * prec)
