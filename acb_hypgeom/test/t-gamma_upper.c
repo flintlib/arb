@@ -11,6 +11,7 @@
 
 #include "acb_hypgeom.h"
 
+int _mag_cmp_norm_ui(const mag_t a, const mag_t b, const mag_t c, ulong n);
 
 static void
 _accuracy_regression_test(const acb_t s, const acb_t z,
@@ -265,6 +266,63 @@ int main()
 
         acb_clear(s);
         acb_clear(z);
+    }
+
+    /* Norm comparison tests (compare a^n to b^n + c^n). */
+    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
+    {
+        ulong n;
+        int ra, rb;
+        mag_t a, b, c, u, v, w, rhs;
+        mag_init(a);
+        mag_init(b);
+        mag_init(c);
+        mag_init(u);
+        mag_init(v);
+        mag_init(w);
+        mag_init(rhs);
+        mag_randtest(a, state, 16);
+        mag_randtest(b, state, 16);
+        mag_randtest(c, state, 16);
+        if (n_randint(state, 20)) mag_zero(a);
+        if (n_randint(state, 20)) mag_zero(b);
+        if (n_randint(state, 20)) mag_zero(c);
+        if (n_randint(state, 20)) mag_set(b, a);
+        if (n_randint(state, 20)) mag_set(c, b);
+        if (n_randint(state, 20)) mag_set(c, a);
+        n = n_randint(state, 10);
+        if (!n) n = WORD_MAX;
+        if (n == WORD_MAX)
+        {
+            mag_set(u, a);
+            mag_max(rhs, b, c);
+        }
+        else
+        {
+            mag_pow_ui(u, a, n);
+            mag_pow_ui(v, b, n);
+            mag_pow_ui(w, c, n);
+            mag_add(rhs, v, w);
+        }
+        ra = mag_cmp(u, rhs);
+        rb = _mag_cmp_norm_ui(a, b, c, n);
+        if (ra != rb)
+        {
+            flint_printf("FAIL: _mag_cmp_norm_ui\n\n");
+            flint_printf("expected = %d\n\n", ra);
+            flint_printf("observed = %d\n\n", rb);
+            flint_printf("a = "); mag_print(a); flint_printf("\n\n");
+            flint_printf("b = "); mag_print(b); flint_printf("\n\n");
+            flint_printf("c = "); mag_print(c); flint_printf("\n\n");
+            flint_abort();
+        }
+        mag_clear(a);
+        mag_clear(b);
+        mag_clear(c);
+        mag_clear(u);
+        mag_clear(v);
+        mag_clear(w);
+        mag_clear(rhs);
     }
 
     flint_randclear(state);

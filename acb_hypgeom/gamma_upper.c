@@ -283,6 +283,118 @@ _determine_region(const acb_t s, const acb_t z)
     return R;
 }
 
+/* Compares x = a^n to y = b^n + c^n as computed with mag_t arithmetic.
+ * Returns negative, zero, or positive, depending on whether x is smaller,
+ * equal, or larger than y.
+ * Requires 1 <= n <= WORD_MAX.
+ * If n == WORD_MAX, the infinity norm a > max(b, c) is compared instead. */
+int
+_mag_cmp_norm_ui(const mag_t a, const mag_t b, const mag_t c, ulong n)
+{
+    int result, a0, b0, c0;
+    result = 0;
+    a0 = mag_is_zero(a);
+    b0 = mag_is_zero(b);
+    c0 = mag_is_zero(c);
+    if (n < 1)
+    {
+        flint_abort();
+    }
+    else if (a0 && b0 && c0)
+    {
+        result = 0;
+    }
+    else if (a0)
+    {
+        result = -1;
+    }
+    else if (b0 && c0)
+    {
+        result = 1;
+    }
+    else if (b0)
+    {
+        result = mag_cmp(a, c);
+    }
+    else if (c0)
+    {
+        result = mag_cmp(a, b);
+    }
+    else if (n == WORD_MAX)
+    {
+        result = FLINT_MIN(mag_cmp(a, b), mag_cmp(a, c));
+    }
+    else if (n == 1)
+    {
+        mag_t sum;
+        mag_init(sum);
+        mag_add(sum, b, c);
+        result = mag_cmp(a, sum);
+        mag_clear(sum);
+    }
+    else if (_mag_cmp_norm_ui(a, b, c, 1) >= 0)
+    {
+        result = 1;
+    }
+    else if (_mag_cmp_norm_ui(a, b, c, WORD_MAX) <= 0)
+    {
+        result = -1;
+    }
+    else
+    {
+        mag_t u, v, w, sum;
+        mag_init(u);
+        mag_init(v);
+        mag_init(w);
+        mag_init(sum);
+        mag_pow_ui(u, a, n);
+        mag_pow_ui(v, b, n);
+        mag_pow_ui(w, c, n);
+        mag_add(sum, v, w);
+        result = mag_cmp(u, sum);
+        mag_clear(u);
+        mag_clear(v);
+        mag_clear(w);
+        mag_clear(sum);
+    }
+    return result;
+}
+
+/* Given nonnegative real s, x, and prec,
+ * returns 1 if the asymptotic expansion of the
+ * hypergeometric U function should be used for upper incomplete gamma.
+ * It returns 1 if x > 4 and (x-c)^8 > (a*s)^8 + (b*prec)^8. */
+static int
+_nonnegative_real_use_asymp(const mag_t s, const mag_t x, slong prec)
+{
+    int result;
+    result = 0;
+    if (mag_cmp_2exp_si(x, 2) > 0)
+    {
+        mag_t a, b, c, u, v, w;
+        mag_init(a);
+        mag_init(b);
+        mag_init(c);
+        mag_init(u);
+        mag_init(v);
+        mag_init(w);
+        mag_set_d(a, 1.029287542);
+        mag_set_d(b, 0.3319411658);
+        mag_set_d(c, 2.391097143);
+        mag_sub(u, x, c);
+        mag_mul(v, a, s);
+        mag_mul_ui(w, b, FLINT_MAX(0, prec));
+        result = _mag_cmp_norm_ui(u, v, w, 8) > 0;
+        mag_clear(a);
+        mag_clear(b);
+        mag_clear(c);
+        mag_clear(u);
+        mag_clear(v);
+        mag_clear(w);
+    }
+    return result;
+}
+
 static int
 _acb_is_nonnegative_real(const acb_t z)
 {
@@ -390,21 +502,19 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
 
         if (_acb_is_nonnegative_real(s) && _acb_is_nonnegative_real(z))
         {
-            if (arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 2) > 0)
+            int result;
+            mag_t ms, mx;
+            mag_init(ms);
+            mag_init(mx);
+            arb_get_mag(ms, acb_realref(s));
+            arb_get_mag(mx, acb_realref(z));
+            result = _nonnegative_real_use_asymp(ms, mx, prec);
+            mag_clear(ms);
+            mag_clear(mx);
+            if (result)
             {
-                double a, b, c, ds, dx;
-                a = 1.029287542;
-                b = 0.3319411658;
-                c = 2.391097143;
-                ds = arf_get_d(arb_midref(acb_realref(s)), ARF_RND_DOWN);
-                dx = arf_get_d(arb_midref(acb_realref(z)), ARF_RND_DOWN);
-                if (dx - c > a*ds + b*prec ||
-                    (dx - c > FLINT_MAX(a*ds, b*prec) &&
-                    pow(dx - c, 8) > pow(a*ds, 8) + pow(b*prec, 8)))
-                {
-                    acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
-                    return;
-                }
+                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+                return;
             }
         }
         else if (acb_hypgeom_u_use_asymp(z, prec) &&
