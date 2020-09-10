@@ -11,7 +11,7 @@
 
 #include "acb_hypgeom.h"
 
-int _mag_cmp_norm_ui(const mag_t a, const mag_t b, const mag_t c, ulong n);
+int _mag_gt_norm_ui(const mag_t a, const mag_t b, const mag_t c, ulong n);
 
 static void
 _accuracy_regression_test(const acb_t s, const acb_t z,
@@ -271,58 +271,81 @@ int main()
     /* Norm comparison tests (compare a^n to b^n + c^n). */
     for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
+        slong prec;
         ulong n;
-        int ra, rb;
-        mag_t a, b, c, u, v, w, rhs;
-        mag_init(a);
-        mag_init(b);
-        mag_init(c);
-        mag_init(u);
-        mag_init(v);
-        mag_init(w);
-        mag_init(rhs);
-        mag_randtest(a, state, 16);
-        mag_randtest(b, state, 16);
-        mag_randtest(c, state, 16);
-        if (n_randint(state, 20)) mag_zero(a);
-        if (n_randint(state, 20)) mag_zero(b);
-        if (n_randint(state, 20)) mag_zero(c);
-        if (n_randint(state, 20)) mag_set(b, a);
-        if (n_randint(state, 20)) mag_set(c, b);
-        if (n_randint(state, 20)) mag_set(c, a);
+        arb_t a, b, c, u, v, w, rhs;
+        arb_init(a);
+        arb_init(b);
+        arb_init(c);
+        arb_init(u);
+        arb_init(v);
+        arb_init(w);
+        arb_init(rhs);
+        prec = n_randint(state, 1000) + 1;
+        while (!arb_is_positive(a))
+        {
+            arb_randtest(a, state, n_randint(state, 1000)+1,
+                                   n_randint(state, 100)+1);
+        }
+        while (!arb_is_positive(b))
+        {
+            arb_randtest(b, state, n_randint(state, 1000)+1,
+                                   n_randint(state, 100)+1);
+        }
+        while (!arb_is_positive(c))
+        {
+            arb_randtest(c, state, n_randint(state, 1000)+1,
+                                   n_randint(state, 100)+1);
+        }
+        if (n_randint(state, 20)) arb_zero(a);
+        if (n_randint(state, 20)) arb_zero(b);
+        if (n_randint(state, 20)) arb_zero(c);
+        if (n_randint(state, 20)) arb_set(b, a);
+        if (n_randint(state, 20)) arb_set(c, b);
+        if (n_randint(state, 20)) arb_set(c, a);
         n = n_randint(state, 10);
         if (!n) n = WORD_MAX;
         if (n == WORD_MAX)
         {
-            mag_set(u, a);
-            mag_max(rhs, b, c);
+            arb_set(u, a);
+            arb_max(rhs, b, c, prec);
         }
         else
         {
-            mag_pow_ui(u, a, n);
-            mag_pow_ui(v, b, n);
-            mag_pow_ui(w, c, n);
-            mag_add(rhs, v, w);
+            arb_pow_ui(u, a, n, prec);
+            arb_pow_ui(v, b, n, prec);
+            arb_pow_ui(w, c, n, prec);
+            arb_add(rhs, v, w, prec);
         }
-        ra = mag_cmp(u, rhs);
-        rb = _mag_cmp_norm_ui(a, b, c, n);
-        if (ra != rb)
+        if (arb_lt(u, rhs) || (arb_is_exact(u) && arb_equal(u, rhs)))
         {
-            flint_printf("FAIL: _mag_cmp_norm_ui\n\n");
-            flint_printf("expected = %d\n\n", ra);
-            flint_printf("observed = %d\n\n", rb);
-            flint_printf("a = "); mag_print(a); flint_printf("\n\n");
-            flint_printf("b = "); mag_print(b); flint_printf("\n\n");
-            flint_printf("c = "); mag_print(c); flint_printf("\n\n");
-            flint_abort();
+            mag_t ma, mb, mc;
+            mag_init(ma);
+            mag_init(mb);
+            mag_init(mc);
+            arb_get_mag_lower(ma, a);
+            arb_get_mag(mb, b);
+            arb_get_mag(mc, c);
+            if (_mag_gt_norm_ui(ma, mb, mc, n))
+            {
+                flint_printf("FAIL: _mag_gt_norm_ui\n\n");
+                flint_printf("a = "); arb_printd(a, 30); flint_printf("\n\n");
+                flint_printf("b = "); arb_printd(b, 30); flint_printf("\n\n");
+                flint_printf("c = "); arb_printd(c, 30); flint_printf("\n\n");
+                flint_printf("n = %ld\n\n", n);
+                flint_abort();
+            }
+            mag_clear(ma);
+            mag_clear(mb);
+            mag_clear(mc);
         }
-        mag_clear(a);
-        mag_clear(b);
-        mag_clear(c);
-        mag_clear(u);
-        mag_clear(v);
-        mag_clear(w);
-        mag_clear(rhs);
+        arb_clear(a);
+        arb_clear(b);
+        arb_clear(c);
+        arb_clear(u);
+        arb_clear(v);
+        arb_clear(w);
+        arb_clear(rhs);
     }
 
     flint_randclear(state);
