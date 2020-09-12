@@ -283,6 +283,112 @@ _determine_region(const acb_t s, const acb_t z)
     return R;
 }
 
+/* Returns 1 if it can be determined that a^n > b^n + c^n.
+ * Requires 1 <= n <= WORD_MAX.
+ * If n == WORD_MAX, the infinity norm a > max(b, c) is compared instead. */
+int
+_mag_gt_norm_ui(const mag_t a, const mag_t b, const mag_t c, ulong n)
+{
+    int result;
+    result = 0;
+    if (n < 1)
+    {
+        flint_abort();
+    }
+    else if (mag_is_zero(a))
+    {
+        result = 0;
+    }
+    else if (mag_is_zero(b))
+    {
+        result = mag_cmp(a, c) > 0;
+    }
+    else if (mag_is_zero(c))
+    {
+        result = mag_cmp(a, b) > 0;
+    }
+    else if (n == WORD_MAX)
+    {
+        result = mag_cmp(a, b) > 0 && mag_cmp(a, c) > 0;
+    }
+    else if (n == 1)
+    {
+        mag_t sum;
+        mag_init(sum);
+        mag_add(sum, b, c);
+        result = mag_cmp(a, sum) > 0;
+        mag_clear(sum);
+    }
+    else if (_mag_gt_norm_ui(a, b, c, 1))
+    {
+        result = 1;
+    }
+    else if (!_mag_gt_norm_ui(a, b, c, WORD_MAX))
+    {
+        result = 0;
+    }
+    else
+    {
+        mag_t u, v, w, sum;
+        mag_init(u);
+        mag_init(v);
+        mag_init(w);
+        mag_init(sum);
+        mag_pow_ui_lower(u, a, n);
+        mag_pow_ui(v, b, n);
+        mag_pow_ui(w, c, n);
+        mag_add(sum, v, w);
+        result = mag_cmp(u, sum) > 0;
+        mag_clear(u);
+        mag_clear(v);
+        mag_clear(w);
+        mag_clear(sum);
+    }
+    return result;
+}
+
+/* Given nonnegative real s, x, and prec,
+ * returns 1 if the asymptotic expansion of the
+ * hypergeometric U function should be used for upper incomplete gamma.
+ * It returns 1 if x > 4 and (x-c)^8 > (a*s)^8 + (b*prec)^8.
+ * Careful mag rounding is not used because this is just a heuristic. */
+static int
+_nonnegative_real_use_asymp(const mag_t s, const mag_t x, slong prec)
+{
+    int result;
+    result = 0;
+    if (mag_cmp_2exp_si(x, 2) > 0)
+    {
+        mag_t a, b, c, u, v, w;
+        mag_init(a);
+        mag_init(b);
+        mag_init(c);
+        mag_init(u);
+        mag_init(v);
+        mag_init(w);
+        mag_set_d(a, 1.029287542);
+        mag_set_d(b, 0.3319411658);
+        mag_set_d(c, 2.391097143);
+        mag_sub(u, x, c);
+        mag_mul(v, a, s);
+        mag_mul_ui(w, b, FLINT_MAX(0, prec));
+        result = _mag_gt_norm_ui(u, v, w, 8);
+        mag_clear(a);
+        mag_clear(b);
+        mag_clear(c);
+        mag_clear(u);
+        mag_clear(v);
+        mag_clear(w);
+    }
+    return result;
+}
+
+static int
+_acb_is_nonnegative_real(const acb_t z)
+{
+    return arb_is_zero(acb_imagref(z)) && arb_is_nonnegative(acb_realref(z));
+}
+
 void
 acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized, slong prec)
 {
@@ -382,8 +488,25 @@ acb_hypgeom_gamma_upper(acb_t res, const acb_t s, const acb_t z, int regularized
             return;
         }
 
-        if (acb_hypgeom_u_use_asymp(z, prec) &&
-            ((0 < n && n < WORD_MAX) || _determine_region(s, z)))
+        if (_acb_is_nonnegative_real(s) && _acb_is_nonnegative_real(z))
+        {
+            int result;
+            mag_t ms, mx;
+            mag_init(ms);
+            mag_init(mx);
+            arb_get_mag(ms, acb_realref(s));
+            arb_get_mag(mx, acb_realref(z));
+            result = _nonnegative_real_use_asymp(ms, mx, prec);
+            mag_clear(ms);
+            mag_clear(mx);
+            if (result)
+            {
+                acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
+                return;
+            }
+        }
+        else if (acb_hypgeom_u_use_asymp(z, prec) &&
+                 ((0 < n && n < WORD_MAX) || _determine_region(s, z)))
         {
             acb_hypgeom_gamma_upper_asymp(res, s, z, regularized, prec);
             return;
