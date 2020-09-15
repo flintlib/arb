@@ -729,6 +729,7 @@ void acb_cos_pi(acb_t r, const acb_t z, slong prec);
 void acb_sin_cos_pi(acb_t s, acb_t c, const acb_t z, slong prec);
 void acb_tan_pi(acb_t r, const acb_t z, slong prec);
 void acb_cot_pi(acb_t r, const acb_t z, slong prec);
+void acb_csc_pi(acb_t y, const acb_t x, slong prec);
 
 void acb_sinc(acb_t res, const acb_t z, slong prec);
 void acb_sinc_pi(acb_t res, const acb_t z, slong prec);

@@ -520,6 +520,7 @@ void arb_acosh(arb_t z, const arb_t x, slong prec);
 
 void arb_sec(arb_t res, const arb_t x, slong prec);
 void arb_csc(arb_t res, const arb_t x, slong prec);
+void arb_csc_pi(arb_t res, const arb_t x, slong prec);
 void arb_sech(arb_t res, const arb_t x, slong prec);
 void arb_csch(arb_t res, const arb_t x, slong prec);
 

@@ -726,6 +726,11 @@ Trigonometric functions
 
     Computes `\csc(x) = 1 / \sin(z)`.
 
+.. function:: void acb_csc_pi(acb_t res, const acb_t z, slong prec)
+
+    Computes `\csc(\pi x) = 1 / \sin(\pi z)`. Evaluates the sine accurately
+    via :func:`acb_sin_pi`.
+
 .. function:: void acb_sinc(acb_t s, const acb_t z, slong prec)
 
     Sets `s = \operatorname{sinc}(x) = \sin(z) / z`.
