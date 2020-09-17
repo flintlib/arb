@@ -469,17 +469,26 @@ void
 acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
         const arb_t h, slong J, slong K, slong sigma, slong prec)
 {
-    slong N = A*B;
-    acb_ptr S;
-    arb_t t0;
+    if (flint_get_num_threads() > 1 && J > 10000000)
+    {
+        acb_dirichlet_platt_multieval_threaded(
+                out, T, A, B, h, J, K, sigma, prec);
+    }
+    else
+    {
+        slong N = A*B;
+        acb_ptr S;
+        arb_t t0;
 
-    arb_init(t0);
-    S =  _acb_vec_init(K*N);
+        arb_init(t0);
+        S =  _acb_vec_init(K*N);
 
-    arb_set_fmpz(t0, T);
-    _platt_smk(S, t0, A, B, 1, J, K, prec);
-    _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
+        arb_set_fmpz(t0, T);
+        _platt_smk(S, t0, A, B, 1, J, K, prec);
+        _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
 
-    arb_clear(t0);
-    _acb_vec_clear(S, K*N);
+        arb_clear(t0);
+        _acb_vec_clear(S, K*N);
+    }
 }
+

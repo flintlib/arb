@@ -285,8 +285,10 @@ void acb_dirichlet_platt_lemma_B2(arb_t out, slong K, const arb_t h,
 
 /* Platt DFT grid evaluation of scaled Lambda */
 
-void acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A,
-    slong B, const arb_t h, slong J, slong K, slong sigma, slong prec);
+void acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T,
+    slong A, slong B, const arb_t h, slong J, slong K, slong sigma, slong prec);
+void acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T,
+    slong A, slong B, const arb_t h, slong J, slong K, slong sigma, slong prec);
 
 /* Platt Hardy Z zeros */
 
