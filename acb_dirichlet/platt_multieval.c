@@ -206,9 +206,9 @@ get_smk_index(slong *out, slong B, slong j, slong prec)
 }
 
 
-static void
-platt_smk(acb_ptr table,
-        const arb_t t0, slong A, slong B, slong J, slong K, slong prec)
+void
+_platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
+        slong Jstart, slong Jstop, slong K, slong prec)
 {
     slong j, k, m;
     slong N = A * B;
@@ -228,7 +228,7 @@ platt_smk(acb_ptr table,
     arb_const_pi(rpi, prec);
     arb_inv(rpi, rpi, prec);
 
-    for (j = 1; j <= J; j++)
+    for (j = Jstart; j <= Jstop; j++)
     {
         logjsqrtpi(a, j, prec);
         arb_mul(a, a, rpi, prec);
@@ -270,7 +270,7 @@ platt_smk(acb_ptr table,
 
 static void
 do_convolutions(acb_ptr out_table,
-        const acb_ptr table, const acb_ptr S_table,
+        acb_srcptr table, acb_srcptr S_table,
         slong N, slong K, slong prec)
 {
     slong i, k;
@@ -345,18 +345,18 @@ remove_gaussian_window(arb_ptr out, slong A, slong B, const arb_t h, slong prec)
 }
 
 void
-acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
-        const arb_t h, slong J, slong K, slong sigma, slong prec)
+_acb_dirichlet_platt_multieval(arb_ptr out, acb_srcptr S_table,
+        const arb_t t0, slong A, slong B, const arb_t h, slong J,
+        slong K, slong sigma, slong prec)
 {
     slong N = A*B;
     slong i, k;
-    acb_ptr table, S_table, out_a, out_b;
+    acb_ptr table, out_a, out_b;
     acb_ptr row;
-    arb_t t0, t, x, k_factorial, err, ratio, c, xi;
+    arb_t t, x, k_factorial, err, ratio, c, xi;
     acb_t z;
     acb_dft_pre_t pre_N;
 
-    arb_init(t0);
     arb_init(t);
     arb_init(x);
     arb_init(k_factorial);
@@ -366,16 +366,12 @@ acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
     arb_init(xi);
     acb_init(z);
     table = _acb_vec_init(K*N);
-    S_table = _acb_vec_init(K*N);
     out_a = _acb_vec_init(N);
     out_b = _acb_vec_init(N);
     acb_dft_precomp_init(pre_N, N, prec);
 
-    arb_set_fmpz(t0, T);
     _arb_inv_si(xi, B, prec);
     arb_mul_2exp_si(xi, xi, -1);
-
-    platt_smk(S_table, t0, A, B, J, K, prec);
 
     platt_g_table(table, A, B, t0, h, K, prec);
 
@@ -455,7 +451,6 @@ acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
 
     remove_gaussian_window(out, A, B, h, prec);
 
-    arb_clear(t0);
     arb_clear(t);
     arb_clear(x);
     arb_clear(k_factorial);
@@ -465,8 +460,26 @@ acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
     arb_clear(xi);
     acb_clear(z);
     _acb_vec_clear(table, K*N);
-    _acb_vec_clear(S_table, K*N);
     _acb_vec_clear(out_a, N);
     _acb_vec_clear(out_b, N);
     acb_dft_precomp_clear(pre_N);
+}
+
+void
+acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
+        const arb_t h, slong J, slong K, slong sigma, slong prec)
+{
+    slong N = A*B;
+    acb_ptr S;
+    arb_t t0;
+
+    arb_init(t0);
+    S =  _acb_vec_init(K*N);
+
+    arb_set_fmpz(t0, T);
+    _platt_smk(S, t0, A, B, 1, J, K, prec);
+    _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
+
+    arb_clear(t0);
+    _acb_vec_clear(S, K*N);
 }
