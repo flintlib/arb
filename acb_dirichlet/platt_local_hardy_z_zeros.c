@@ -1325,13 +1325,6 @@ _arb_get_lbound_fmpz(fmpz_t z, const arb_t x, slong prec)
     arf_clear(u);
 }
 
-static void
-_arb_div_si_si(arb_t res, slong a, slong b, slong prec)
-{
-    arb_set_si(res, a);
-    arb_div_si(res, res, b, prec);
-}
-
 /* Compares f to g=a*10^b.
  * Returns a negative value if f < g, positive value if g < f, otherwise 0. */
 static int
@@ -1348,184 +1341,22 @@ _fmpz_cmp_a_10exp_b(const fmpz_t f, slong a, slong b)
     return result;
 }
 
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_J(slong *J, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        *J = (slong) exp(0.002133 + 0.4406*x + 0.0005188*x*x);
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_K(slong *K, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        *K = (slong) (72.92 + -0.8609*x + -0.004709*x*x);
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_h(arb_t h, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        slong hnum;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        hnum = (slong) (157.8 + 26.16*x + -1.008*x*x + 0.01542*x*x*x);
-        _arb_div_si_si(h, hnum, 4, prec);
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_H(arb_t h, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        slong Hnum;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        Hnum = (slong) (28.53 + 5.828*x + -0.23386*x*x + 0.0035875*x*x*x);
-        _arb_div_si_si(h, Hnum, 64, prec);
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_sigma_interp(slong *sigma, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        if (_fmpz_cmp_a_10exp_b(n, 3, 14) < 0)
-        {
-            *sigma = 25;
-        }
-        else
-        {
-            *sigma = (slong) (-30.47 + 2.994*x + -0.04116*x*x);
-        }
-        *sigma += 1 - (*sigma) % 2;
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-/* Returns nonzero on success. */
-static int
-_heuristic_A8_sigma_grid(slong *sigma, const fmpz_t n, slong prec)
-{
-    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0 ||
-        _fmpz_cmp_a_10exp_b(n, 3, 22) > 0)
-    {
-        return 0;
-    }
-    else
-    {
-        arb_t logn;
-        double x;
-        arb_init(logn);
-        arb_log_fmpz(logn, n, prec);
-        x = arf_get_d(arb_midref(logn), ARF_RND_NEAR);
-        if (_fmpz_cmp_a_10exp_b(n, 3, 6) < 0)
-        {
-            *sigma = (slong) (-852.5 + 388.4*x + -13.174*x*x);
-        }
-        else if (_fmpz_cmp_a_10exp_b(n, 3, 18) < 0)
-        {
-            *sigma = (slong) (1967.5703 + 4.864*x + -0.1577*x*x);
-        }
-        else
-        {
-            *sigma = (slong) (-4010.8455 + 280.2*x + -3.335*x*x);
-        }
-        *sigma += 1 - (*sigma) % 2;
-        arb_clear(logn);
-        return 1;
-    }
-}
-
-
 static platt_ctx_ptr
 _create_heuristic_context(const fmpz_t n, slong prec)
 {
     platt_ctx_ptr p = NULL;
-    slong A = 8;
-    slong B = 4096;
-    slong Ns_max = 200;
-    slong J, K;
-    slong sigma_grid, sigma_interp;
-    fmpz_t T, k;
+    slong J, K, A, B, Ns_max, sigma_grid, sigma_interp;
     slong kbits;
-    arb_t g, h, H;
-    acb_struct z[2];
+    fmpz_t T, k;
+    arb_t g, h, H, logT;
+    double dlogJ, dK, dgrid, dh, dH, x;
 
     fmpz_init(T);
     fmpz_init(k);
     arb_init(g);
     arb_init(h);
     arb_init(H);
-    acb_init(z+0);
-    acb_init(z+1);
+    arb_init(logT);
 
     /* Estimate the height of the nth zero using gram points --
      * it's predicted to fall between g(n-2) and g(n-1). */
@@ -1533,19 +1364,61 @@ _create_heuristic_context(const fmpz_t n, slong prec)
     kbits = fmpz_sizeinbase(k, 2);
     acb_dirichlet_gram_point(g, k, NULL, NULL, prec + kbits);
 
-    /* Let T be the integer at the center of the evaluation grid.
-     * The reason to add B/4 instead of B/2 is that only at most the
-     * middle half of the grid points are likely to have enough precision
-     * to isolate zeros. */
-    _arb_get_lbound_fmpz(T, g, prec);
-    fmpz_add_ui(T, T, B/4);
+    /* Let T be the integer at the center of the evaluation grid. */
+    _arb_get_lbound_fmpz(T, g, prec + kbits);
+    arb_log_fmpz(logT, T, prec);
+    x = arf_get_d(arb_midref(logT), ARF_RND_NEAR);
 
-    if (!_heuristic_A8_J(&J, n, prec)) goto finish;
-    if (!_heuristic_A8_K(&K, n, prec)) goto finish;
-    if (!_heuristic_A8_sigma_interp(&sigma_interp, n, prec)) goto finish;
-    if (!_heuristic_A8_sigma_grid(&sigma_grid, n, prec)) goto finish;
-    if (!_heuristic_A8_h(h, n, prec)) goto finish;
-    if (!_heuristic_A8_H(H, n, prec)) goto finish;
+    if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0)
+    {
+        goto finish;
+    }
+    else if (_fmpz_cmp_a_10exp_b(n, 1, 7) < 0)
+    {
+        A = 8;
+        B = 4096;
+        Ns_max = 200;
+        sigma_interp = 25;
+        dlogJ = -0.0615445533817 + 0.451722545820*x + 0.00122002154215*x*x;
+        dK = 91.1899134881 + -4.00880690488*x + 0.120415406812*x*x;
+        dgrid = 435.203636324 + 160.801297871*x + -3.83793292606*x*x;
+        dh = 189.300555621 + -18.9197620910*x + 0.830573279739*x*x;
+        dH = 0.996344708432 + 0.00726343756987*x + 0.000214553523479*x*x;
+    }
+    else if (_fmpz_cmp_a_10exp_b(n, 1, 17) < 0)
+    {
+        A = 8;
+        B = 4096;
+        Ns_max = 200;
+        sigma_interp = _fmpz_cmp_a_10exp_b(n, 1, 15) < 0 ? 25 : 23;
+        dlogJ = -0.423690477891 + 0.493860619333*x + 3.05508800339e-06*x*x;
+        dK = 73.6420428629 + -0.972844461115*x + -0.00363528642217*x*x;
+        dgrid = 1985.95184794 + 3.38195103878*x + -0.136620071052*x*x;
+        dh = 94.8311227685 + -0.883336123977*x + 0.0556261501085*x*x;
+        dH = 1.18099035487 + -0.0119992923413*x + 0.00073741022749*x*x;
+    }
+    else if (_fmpz_cmp_a_10exp_b(n, 1, 22) < 0)
+    {
+        A = 16;
+        B = 8192;
+        Ns_max = 300;
+        sigma_interp = 19;
+        dlogJ = -0.506132895307 + 0.497565124541*x + 2.25705259466e-06*x*x;
+        dK = 103.630048145 + -0.867460371390*x + 0.00106534037344*x*x;
+        dgrid = 4085.55616952 + -1.36695690825*x + -0.0198932963863*x*x;
+        dh = 142.523364391 + -0.057841628146*x + 0.0157997314814*x*x;
+        dH = 0.727682145349 + -0.00353076385259*x + 0.000111471602416*x*x;
+    }
+    else
+    {
+        goto finish;
+    }
+
+    arb_set_d(h, dh);
+    arb_set_d(H, dH);
+    J = (slong) exp(dlogJ);
+    K = (slong) dK;
+    sigma_grid = ((slong) (dgrid/2))*2 + 1;
 
     p = malloc(sizeof(platt_ctx_struct));
     platt_ctx_init(p, T, A, B, h, J, K,
@@ -1558,8 +1431,7 @@ finish:
     arb_clear(g);
     arb_clear(h);
     arb_clear(H);
-    acb_clear(z+0);
-    acb_clear(z+1);
+    arb_clear(logT);
 
     return p;
 }
