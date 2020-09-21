@@ -103,7 +103,7 @@ Basic manipulation
 
 .. function:: void acb_set(acb_t z, const acb_t x)
 
-.. function:: void acb_set_ui(acb_t z, slong x)
+.. function:: void acb_set_ui(acb_t z, ulong x)
 
 .. function:: void acb_set_si(acb_t z, slong x)
 
