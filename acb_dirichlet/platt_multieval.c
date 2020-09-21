@@ -11,7 +11,6 @@
 
 #include "acb_dirichlet.h"
 #include "arb_hypgeom.h"
-#include "acb_calc.h"
 #include "acb_dft.h"
 
 
