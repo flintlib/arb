@@ -67,7 +67,7 @@ acb_mat_eig_simple_rump(acb_ptr E, acb_mat_t L, acb_mat_t R,
 
     if (L != NULL)
     {
-        if (!result || !acb_mat_inv(L, R, prec))
+        if (!result || !acb_mat_inv(L, R2, prec))
             acb_mat_indeterminate(L);
     }
 
