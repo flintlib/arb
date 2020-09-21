@@ -17,6 +17,17 @@ arb_sinc_pi(arb_t res, const arb_t x, slong prec)
     mag_t m;
     arb_t t;
 
+    if (!arb_is_finite(x))
+    {
+        if (arf_is_nan(arb_midref(x)))
+            arb_indeterminate(res);
+        else if (arb_contains_zero(x))
+            arb_zero_pm_one(res);
+        else
+            arb_zero(res);
+        return;
+    }
+
     if (arb_is_zero(x))
     {
         arb_one(res);

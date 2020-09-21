@@ -68,11 +68,23 @@ arb_log_hypot(arb_t res, const arb_t a, const arb_t b, slong prec)
 
     if (!arb_is_finite(a) || !arb_is_finite(b))
     {
-        arb_indeterminate(res);
+        if (arf_is_nan(arb_midref(a)) || arf_is_nan(arb_midref(b)))
+        {
+            arb_indeterminate(res);
+        }
+        else if ((!arb_is_finite(a) && !arb_contains_zero(a)) ||
+                 (!arb_is_finite(b) && !arb_contains_zero(b)))
+        {
+            arb_pos_inf(res);
+        }
+        else
+        {
+            arb_indeterminate(res);
+        }
         return;
     }
 
-    /* a close to 1 -- for accurate acb_log1p */
+    /* a close to 1 -- for accurate arb_log1p */
     if (mag_cmp_2exp_si(arb_radref(a), -3) < 0 &&
         mag_cmp_2exp_si(arb_radref(b), -3) < 0 &&
         arf_cmpabs_2exp_si(arb_midref(b), -3) < 0 &&

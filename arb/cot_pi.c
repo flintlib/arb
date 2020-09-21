@@ -14,10 +14,25 @@
 void
 arb_cot_pi(arb_t y, const arb_t x, slong prec)
 {
-    arb_t u;
-    arb_init(u);
-    arb_sin_cos_pi(y, u, x, prec + 4);
-    arb_div(y, u, y, prec);
-    arb_clear(u);
+
+    if (!arb_is_finite(x))
+    {
+        arb_indeterminate(y);
+    }
+    else if (arb_is_int_2exp_si(x, -1))
+    {
+        if (arb_is_int(x))
+            arb_indeterminate(y);
+        else
+            arb_zero(y);
+    }
+    else
+    {
+        arb_t u;
+        arb_init(u);
+        arb_sin_cos_pi(y, u, x, prec + 4);
+        arb_div(y, u, y, prec);
+        arb_clear(u);
+    }
 }
 

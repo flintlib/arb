@@ -94,6 +94,25 @@ int main()
             flint_abort();
         }
 
+        if (!arf_is_nan(arb_midref(a)) && !arf_is_nan(arb_midref(b)))
+        {
+            if ((!arb_is_finite(a) && !arb_contains_zero(a)) ||
+                (!arb_is_finite(b) && !arb_contains_zero(b)))
+            {
+                if (arf_is_nan(arb_midref(r)) || arb_is_finite(r) ||
+                    !arb_is_positive(r))
+                {
+                    flint_printf("FAIL: infinite\n\n");
+                    flint_printf("prec1 = %wd, acc1 = %wd, acc2 = %wd\n\n", prec1, acc1, acc2);
+                    flint_printf("a = "); arb_printn(a, 50, 0); flint_printf("\n\n");
+                    flint_printf("b = "); arb_printn(b, 50, 0); flint_printf("\n\n");
+                    flint_printf("r = "); arb_printn(r, 50, 0); flint_printf("\n\n");
+                    flint_printf("s = "); arb_printn(s, 50, 0); flint_printf("\n\n");
+                    flint_abort();
+                }
+            }
+        }
+
         arb_clear(a);
         arb_clear(b);
         arb_clear(r);

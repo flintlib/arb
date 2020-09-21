@@ -61,6 +61,53 @@ int main()
         arb_clear(z);
     }
 
+    /* Check a few special intervals. */
+    {
+        arb_t x, y;
+        slong prec;
+
+        arb_init(x);
+        arb_init(y);
+
+        prec = 32;
+
+        arb_neg_inf(x);
+        arb_sinc_pi(y, x, prec);
+        if (!arb_is_zero(y))
+        {
+            flint_printf("FAIL: negative infinity\n");
+            flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_pos_inf(x);
+        arb_sinc_pi(y, x, prec);
+        if (!arb_is_zero(y))
+        {
+            flint_printf("FAIL: positive infinity\n");
+            flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_zero_pm_inf(x);
+        arb_sinc_pi(y, x, prec);
+        if (!(arb_is_finite(y) &&
+              arb_contains_negative(y) &&
+              arb_contains_positive(y) &&
+              arb_contains_zero(y)))
+        {
+            flint_printf("FAIL: the whole extended real line\n");
+            flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+            flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(x);
+        arb_clear(y);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
