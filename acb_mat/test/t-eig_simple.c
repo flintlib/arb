@@ -92,12 +92,35 @@ int main()
             }
         }
 
-        if (algorithm == 0)
-            result = acb_mat_eig_simple(F, L, R, A, E, R, prec);
-        else if (algorithm == 1)
-            result = acb_mat_eig_simple_rump(F, L, R, A, E, R, prec);
+        if (n_randint(state, 2))
+        {
+            if (algorithm == 0)
+                result = acb_mat_eig_simple(F, L, R, A, E, R, prec);
+            else if (algorithm == 1)
+                result = acb_mat_eig_simple_rump(F, L, R, A, E, R, prec);
+            else
+                result = acb_mat_eig_simple_vdhoeven_mourrain(F, L, R, A, E, R, prec);
+        }
         else
-            result = acb_mat_eig_simple_vdhoeven_mourrain(F, L, R, A, E, R, prec);
+        {
+            int r1, r2;
+            if (algorithm == 0)
+            {
+                r1 = acb_mat_eig_simple(F, L, NULL, A, E, R, prec);
+                r2 = acb_mat_eig_simple(F, NULL, R, A, E, R, prec);
+            }
+            else if (algorithm == 1)
+            {
+                r1 = acb_mat_eig_simple_rump(F, L, NULL, A, E, R, prec);
+                r2 = acb_mat_eig_simple_rump(F, NULL, R, A, E, R, prec);
+            }
+            else
+            {
+                r1 = acb_mat_eig_simple_vdhoeven_mourrain(F, L, NULL, A, E, R, prec);
+                r2 = acb_mat_eig_simple_vdhoeven_mourrain(F, NULL, R, A, E, R, prec);
+            }
+            result = n_randint(state, 2) ? r1 : r2;
+        }
 
         acb_mat_mul(LAR, L, A, prec);
         acb_mat_mul(LAR, LAR, R, prec);
