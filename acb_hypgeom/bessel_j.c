@@ -98,6 +98,14 @@ acb_hypgeom_bessel_j_asymp(acb_t res, const acb_t nu, const acb_t z, slong prec)
     acb_t A1, A2, C, U1, U2, s, t, u;
     int is_real, is_imag;
 
+    /* zero at -inf and +inf when nu is finite */
+    if (acb_is_finite(nu) && !acb_is_finite(z) &&
+        acb_is_real(z) && !acb_contains_zero(z))
+    {
+        acb_zero(res);
+        return;
+    }
+
     acb_init(A1);
     acb_init(A2);
     acb_init(C);

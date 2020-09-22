@@ -56,6 +56,31 @@ int main()
             flint_abort();
         }
 
+        if (arb_is_int(x))
+        {
+            if (arb_is_zero(x) && !arb_is_one(y))
+            {
+                flint_printf("FAIL: zero\n");
+                flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+                flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+                flint_abort();
+            }
+            if (arb_is_positive(x) && !arb_is_zero(y))
+            {
+                flint_printf("FAIL: positive integer\n");
+                flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+                flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+                flint_abort();
+            }
+            if (arb_is_negative(x) && !arb_is_zero(y))
+            {
+                flint_printf("FAIL: negative integer\n");
+                flint_printf("x = "); arb_printd(x, 30); flint_printf("\n\n");
+                flint_printf("y = "); arb_printd(y, 30); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
         arb_clear(x);
         arb_clear(y);
         arb_clear(z);

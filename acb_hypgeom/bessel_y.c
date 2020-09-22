@@ -37,6 +37,15 @@ acb_hypgeom_bessel_jy(acb_t res1, acb_t res2, const acb_t nu, const acb_t z, slo
 {
     acb_t jnu, t, u, v;
 
+    /* both j and y are zero at -inf and +inf when nu is finite */
+    if (acb_is_finite(nu) && !acb_is_finite(z) &&
+        acb_is_real(z) && !acb_contains_zero(z))
+    {
+        if (res1 != NULL) acb_zero(res1);
+        acb_zero(res2);
+        return;
+    }
+
     acb_init(jnu);
     acb_init(t);
     acb_init(u);
