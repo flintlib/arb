@@ -170,7 +170,7 @@ Special values
     0, `+\infty`, `-\infty`, NaN, i.e. not a finite, nonzero
     floating-point value.
 
-.. function:: int arf_is_finite(arf_t x)
+.. function:: int arf_is_finite(const arf_t x)
 
     Returns nonzero iff *x* is a finite floating-point value,
     i.e. not one of the values `+\infty`, `-\infty`, NaN.
@@ -339,7 +339,7 @@ Comparisons and bounds
 
 .. function:: int arf_cmpabs_ui(const arf_t x, ulong y)
 
-.. function:: int arf_cmpabs_d(const arf_t x, ulong y)
+.. function:: int arf_cmpabs_d(const arf_t x, double y)
 
 .. function:: int arf_cmpabs_mag(const arf_t x, const mag_t y)
 

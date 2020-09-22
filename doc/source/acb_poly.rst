@@ -355,7 +355,7 @@ Arithmetic
 
     Sets *Qinv* to the power series inverse of *Q*.
 
-.. function:: void  _acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen, acb_srcptr B, slong Blen, slong n, slong prec)
+.. function:: void _acb_poly_div_series(acb_ptr Q, acb_srcptr A, slong Alen, acb_srcptr B, slong Blen, slong n, slong prec)
 
     Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
     Uses Newton iteration followed by multiplication.
