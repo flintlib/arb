@@ -199,7 +199,7 @@ Special matrices
 
     Sets all entries in the matrix to indeterminate (NaN).
 
-.. function:: void arb_mat_hilbert(arb_mat_t mat)
+.. function:: void arb_mat_hilbert(arb_mat_t mat, slong prec)
 
     Sets *mat* to the Hilbert matrix, which has entries `A_{j,k} = 1/(j+k+1)`.
 

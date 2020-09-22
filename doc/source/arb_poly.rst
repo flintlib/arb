@@ -353,7 +353,7 @@ Arithmetic
 
     Sets *Q* to the power series inverse of *A*, truncated to length *n*.
 
-.. function:: void  _arb_poly_div_series(arb_ptr Q, arb_srcptr A, slong Alen, arb_srcptr B, slong Blen, slong n, slong prec)
+.. function:: void _arb_poly_div_series(arb_ptr Q, arb_srcptr A, slong Alen, arb_srcptr B, slong Blen, slong n, slong prec)
 
     Sets *{Q, n}* to the power series quotient of *{A, Alen}* by *{B, Blen}*.
     Uses Newton iteration followed by multiplication.
