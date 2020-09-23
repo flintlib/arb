@@ -13,22 +13,31 @@
 #include "acb_dirichlet.h"
 #include "pthread.h"
 
-void _platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
-        slong Jstart, slong Jstop, slong K, slong prec);
+slong platt_get_smk_index(slong B, slong j, slong prec);
+
+void _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
+        const arb_t t0, slong A, slong B,
+        slong jstart, slong jstop, slong mstart, slong mstop,
+        slong K, slong prec);
 
 void _acb_dirichlet_platt_multieval(arb_ptr out, acb_srcptr S_table,
         const arb_t t0, slong A, slong B, const arb_t h, slong J,
         slong K, slong sigma, slong prec);
 
+
 typedef struct
 {
-    acb_ptr threadtable;
+    acb_ptr S;
+    acb_ptr startvec;
+    acb_ptr stopvec;
     arb_srcptr t0;
     slong A;
     slong B;
     slong K;
-    slong start;
-    slong stop;
+    slong jstart;
+    slong jstop;
+    slong mstart;
+    slong mstop;
     slong prec;
 }
 platt_smk_arg_t;
@@ -37,8 +46,8 @@ static void *
 _platt_smk_thread(void * arg_ptr)
 {
     platt_smk_arg_t *p = (platt_smk_arg_t *) arg_ptr;
-    _platt_smk(p->threadtable, p->t0, p->A, p->B,
-               p->start, p->stop, p->K, p->prec);
+    _platt_smk(p->S, p->startvec, p->stopvec, p->t0, p->A, p->B,
+               p->jstart, p->jstop, p->mstart, p->mstop, p->K, p->prec);
     flint_cleanup();
     return NULL;
 }
@@ -65,16 +74,21 @@ acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
     S =  _acb_vec_init(K*N);
     for (i = 0; i < num_threads; i++)
     {
-        args[i].threadtable = _acb_vec_init(K*N);
+        args[i].S = S;
+        args[i].startvec = _acb_vec_init(K);
+        args[i].stopvec = _acb_vec_init(K);
         args[i].t0 = t0;
         args[i].A = A;
         args[i].B = B;
         args[i].K = K;
-        args[i].start = i*threadtasks + 1;
-        args[i].stop = (i+1)*threadtasks;;
         args[i].prec = prec;
+        args[i].jstart = i*threadtasks + 1;
+        args[i].jstop = (i+1)*threadtasks;
+        args[i].mstart = platt_get_smk_index(B, args[i].jstart, prec);
+        args[i].mstop = platt_get_smk_index(B, args[i].jstop, prec);
     }
-    args[num_threads-1].stop = J;
+    args[num_threads-1].jstop = J;
+    args[num_threads-1].mstop = platt_get_smk_index(B, J, prec);
 
     for (i = 0; i < num_threads; i++)
     {
@@ -86,15 +100,25 @@ acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
         pthread_join(threads[i], NULL);
     }
 
-    _acb_vec_zero(S, K*N);
     for (i = 0; i < num_threads; i++)
     {
-        _acb_vec_add(S, S, args[i].threadtable, K*N, prec);
-        _acb_vec_clear(args[i].threadtable, K*N);
+        slong k;
+        for (k = 0; k < K; k++)
+        {
+            acb_ptr z;
+            z = S + N*k + args[i].mstart;
+            acb_add(z, z, args[i].startvec + k, prec);
+            z = S + N*k + args[i].mstop;
+            acb_add(z, z, args[i].stopvec + k, prec);
+        }
+        _acb_vec_clear(args[i].startvec, K);
+        _acb_vec_clear(args[i].stopvec, K);
     }
 
     _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
 
     arb_clear(t0);
     _acb_vec_clear(S, K*N);
+    flint_free(args);
+    flint_free(threads);
 }
