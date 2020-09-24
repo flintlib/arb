@@ -69,7 +69,7 @@ clean:
 distclean: clean
 	rm -f Makefile
 
-profile: library $(PROF_SOURCES) $(EXT_PROF_SOURCES) build/profiler.o
+profile: library $(PROF_SOURCES) $(EXT_PROF_SOURCES)
 	mkdir -p build/profile
 ifndef MOD
 	$(AT)$(foreach prog, $(PROFS), $(CC) $(ABI_FLAG) -std=c99 -O2 -g $(INCS) $(prog).c build/profiler.o -o build/$(prog) $(LIBS) || exit $$?;)
