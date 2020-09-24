@@ -34,6 +34,8 @@ void acb_dft_rad2(acb_ptr w, acb_srcptr v, int e, slong prec);
 void acb_dft_bluestein(acb_ptr w, acb_srcptr v, slong len, slong prec);
 void acb_dft_prod(acb_ptr w, acb_srcptr v, slong * cyc, slong num, slong prec);
 
+void acb_dft_rad2_inplace_threaded(acb_ptr v, int e, slong prec);
+
 void acb_dft_convol_naive(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol_dft(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
 void acb_dft_convol_rad2(acb_ptr w, acb_srcptr f, acb_srcptr g, slong len, slong prec);
@@ -188,6 +190,8 @@ void acb_dft_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, sl
 void acb_dft_crt_precomp(acb_ptr w, acb_srcptr v, const acb_dft_crt_t crt, slong prec);
 void acb_dft_prod_precomp(acb_ptr w, acb_srcptr v, const acb_dft_prod_t prod, slong prec);
 void acb_dft_bluestein_precomp(acb_ptr w, acb_srcptr v, const acb_dft_bluestein_t t, slong prec);
+
+void acb_dft_rad2_precomp_inplace_threaded(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
 
 void acb_dft_inverse_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec);
 void acb_dft_inverse_rad2_precomp(acb_ptr w, acb_srcptr v, const acb_dft_rad2_t rad2, slong prec);
