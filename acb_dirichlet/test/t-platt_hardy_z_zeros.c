@@ -20,10 +20,10 @@ int main()
     fmpz_t T, n;
     arb_ptr pa, pb;
     slong count, i;
-    slong maxcount = 50;
+    slong maxcount = 50*5;
     slong prec = 128;
 
-    flint_printf("platt_local_hardy_z_zeros....");
+    flint_printf("platt_hardy_z_zeros....");
     fflush(stdout);
 
     arb_init(h);
@@ -51,8 +51,7 @@ int main()
     sigma_interp = 21;
     arb_one(H);
 
-    count = _acb_dirichlet_platt_local_hardy_z_zeros(pa, n, maxcount,
-            T, A, B, h, J, K, sigma_grid, Ns_max, H, sigma_interp, prec);
+    count = acb_dirichlet_platt_hardy_z_zeros(pa, n, maxcount, prec);
     acb_dirichlet_hardy_z_zeros(pb, n, count, prec);
     if (count != maxcount)
     {

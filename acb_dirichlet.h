@@ -299,6 +299,8 @@ slong _acb_dirichlet_platt_local_hardy_z_zeros(
     slong Ns_max, const arb_t H, slong sigma_interp, slong prec);
 slong acb_dirichlet_platt_local_hardy_z_zeros(
     arb_ptr res, const fmpz_t n, slong len, slong prec);
+slong acb_dirichlet_platt_hardy_z_zeros(
+    arb_ptr res, const fmpz_t n, slong len, slong prec);
 
 /* Discrete Fourier Transform */
 
