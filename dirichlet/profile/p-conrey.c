@@ -11,7 +11,7 @@
 
 #include <string.h>
 #include "dirichlet.h"
-#include "profiler.h"
+#include "flint/profiler.h"
 
 #define LOG 0
 #define CSV 1
