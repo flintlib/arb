@@ -150,6 +150,29 @@ int main()
 
     }
 
+    /* multi-threaded radix2 dft */
+    for (k = 0; k < 11; k++)
+    {
+        slong n = 1 << k, j;
+        acb_ptr v, w1, w2;
+        v = w2 = _acb_vec_init(n);
+        w1 = _acb_vec_init(n);
+
+        flint_set_num_threads(k % 5 + 1);
+
+        for (j = 0; j < n; j++)
+            acb_set_si_si(v + j, j, j + 2);
+
+        acb_dft_cyc(w1, v, n, prec);
+        acb_dft_rad2_inplace_threaded(w2, k, prec);
+
+        check_vec_eq_prec(w1, w2, n, prec, digits, n, "rad2", "cyc", "rad2");
+
+        _acb_vec_clear(v, n);
+        _acb_vec_clear(w1, n);
+
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

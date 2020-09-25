@@ -57,24 +57,31 @@ _acb_dft_rad2_init(acb_dft_rad2_t t, slong dv, int e, slong prec)
 void
 acb_dft_rad2_precomp_inplace(acb_ptr v, const acb_dft_rad2_t rad2, slong prec)
 {
-    slong j, k, l;
-    slong n = rad2->n, nz = rad2->nz;
-    acb_ptr p, vend = v + n, w = rad2->z;
-    acb_t tmp;
-    acb_init(tmp);
+    if (flint_get_num_threads() > 1 && rad2-> e > 9)
+    {
+        acb_dft_rad2_precomp_inplace_threaded(v, rad2, prec);
+    }
+    else
+    {
+        slong j, k, l;
+        slong n = rad2->n, nz = rad2->nz;
+        acb_ptr p, vend = v + n, w = rad2->z;
+        acb_t tmp;
+        acb_init(tmp);
 
-    acb_dft_rad2_reorder(v, n);
+        acb_dft_rad2_reorder(v, n);
 
-    for (k = 1, l = nz; k < n; k <<= 1, l >>= 1)
-        for (p = v; p < vend; p += k)
-            for (j = 0; j < nz; j += l, p++)
-            {
-                acb_mul(tmp, p + k, w + j, prec);
-                acb_sub(p + k, p + 0, tmp, prec);
-                acb_add(p + 0, p + 0, tmp, prec);
-            }
+        for (k = 1, l = nz; k < n; k <<= 1, l >>= 1)
+            for (p = v; p < vend; p += k)
+                for (j = 0; j < nz; j += l, p++)
+                {
+                    acb_mul(tmp, p + k, w + j, prec);
+                    acb_sub(p + k, p + 0, tmp, prec);
+                    acb_add(p + 0, p + 0, tmp, prec);
+                }
 
-    acb_clear(tmp);
+        acb_clear(tmp);
+    }
 }
 
 void
