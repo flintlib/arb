@@ -168,15 +168,18 @@ _acb_vec_scalar_add_error_arb_mag(acb_ptr res, slong len, const arb_t x)
 }
 
 
-static void
-get_smk_index(slong *out, slong B, slong j, slong prec)
+slong
+platt_get_smk_index(slong B, slong j, slong prec)
 {
+    slong m;
     arb_t pi, x;
     fmpz_t z;
 
     arb_init(pi);
     arb_init(x);
     fmpz_init(z);
+
+    m = -1;
 
     while (1)
     {
@@ -190,7 +193,7 @@ get_smk_index(slong *out, slong B, slong j, slong prec)
 
         if (arb_get_unique_fmpz(z, x))
         {
-            *out = fmpz_get_si(z);
+            m = fmpz_get_si(z);
             break;
         }
         else
@@ -202,12 +205,16 @@ get_smk_index(slong *out, slong B, slong j, slong prec)
     arb_clear(pi);
     arb_clear(x);
     fmpz_clear(z);
+
+    return m;
 }
 
 
 void
-_platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
-        slong Jstart, slong Jstop, slong K, slong prec)
+_platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
+        const arb_t t0, slong A, slong B,
+        slong jstart, slong jstop, slong mstart, slong mstop,
+        slong K, slong prec)
 {
     slong j, k, m;
     slong N = A * B;
@@ -227,7 +234,7 @@ _platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
     arb_const_pi(rpi, prec);
     arb_inv(rpi, rpi, prec);
 
-    for (j = Jstart; j <= Jstop; j++)
+    for (j = jstart; j <= jstop; j++)
     {
         logjsqrtpi(a, j, prec);
         arb_mul(a, a, rpi, prec);
@@ -240,7 +247,14 @@ _platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
         acb_exp_pi_i(z, z, prec);
         acb_mul_arb(z, z, rsqrtj, prec);
 
-        get_smk_index(&m, B, j, prec);
+        m = platt_get_smk_index(B, j, prec);
+
+        if (m < mstart || m > mstop)
+        {
+            flint_printf("out of bounds error: m = %ld not in [%ld, %ld]\n",
+                          m, mstart, mstop);
+            flint_abort();
+        }
 
         arb_set_si(um, m);
         arb_div_si(um, um, B, prec);
@@ -250,10 +264,23 @@ _platt_smk(acb_ptr table, const arb_t t0, slong A, slong B,
 
         _arb_vec_set_powers(diff_powers, base, K, prec);
 
-        for (k = 0; k < K; k++)
+        if (startvec && m == mstart)
         {
-            row = table + N*k;
-            acb_addmul_arb(row + m, z, diff_powers + k, prec);
+            for (k = 0; k < K; k++)
+                acb_addmul_arb(startvec + k, z, diff_powers + k, prec);
+        }
+        else if (stopvec && m == mstop)
+        {
+            for (k = 0; k < K; k++)
+                acb_addmul_arb(stopvec + k, z, diff_powers + k, prec);
+        }
+        else
+        {
+            for (k = 0; k < K; k++)
+            {
+                row = table + N*k;
+                acb_addmul_arb(row + m, z, diff_powers + k, prec);
+            }
         }
     }
 
@@ -483,7 +510,7 @@ acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
         S =  _acb_vec_init(K*N);
 
         arb_set_fmpz(t0, T);
-        _platt_smk(S, t0, A, B, 1, J, K, prec);
+        _platt_smk(S, NULL, NULL, t0, A, B, 1, J, 0, N-1, K, prec);
         _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
 
         arb_clear(t0);
