@@ -28,9 +28,12 @@ arb_sinc_pi(arb_t res, const arb_t x, slong prec)
         return;
     }
 
-    if (arb_is_zero(x))
+    if (arb_is_int(x))
     {
-        arb_one(res);
+        if (arb_is_zero(x))
+            arb_one(res);
+        else
+            arb_zero(res);
         return;
     }
 
