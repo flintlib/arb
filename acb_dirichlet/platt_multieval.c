@@ -13,6 +13,13 @@
 #include "arb_hypgeom.h"
 #include "acb_dft.h"
 
+static void
+_acb_vec_set_arb(acb_ptr v, arb_srcptr a, slong n)
+{
+    slong i;
+    for (i = 0; i < n; i++)
+        acb_set_arb(v + i, a + i);
+}
 
 static void
 _arb_add_d(arb_t z, const arb_t x, double d, slong prec)
@@ -263,6 +270,67 @@ platt_get_smk_index(slong B, slong j, slong prec)
     return m;
 }
 
+typedef struct
+{
+    slong bmax;
+    slong b;
+    slong K;
+    acb_ptr M; /* (b, K) */
+    acb_ptr v; /* (b, ) */
+}
+smk_block_struct;
+typedef smk_block_struct smk_block_t[1];
+
+static void
+smk_block_init(smk_block_t p, slong K, slong bmax)
+{
+    p->bmax = bmax;
+    p->b = 0;
+    p->K = K;
+    p->M = _acb_vec_init(K*bmax);
+    p->v = _acb_vec_init(bmax);
+}
+
+static void
+smk_block_clear(smk_block_t p)
+{
+    _acb_vec_clear(p->M, p->K * p->bmax);
+    _acb_vec_clear(p->v, p->bmax);
+}
+
+static int
+smk_block_is_full(smk_block_t p)
+{
+    return p->b == p->bmax;
+}
+
+static void
+smk_block_reset(smk_block_t p)
+{
+    p->b = 0;
+}
+
+static void
+smk_block_increment(smk_block_t p, const acb_t z, arb_srcptr v)
+{
+    if (smk_block_is_full(p))
+    {
+        flint_printf("trying to increment a full block\n");
+        flint_abort();
+    }
+    acb_set(p->v + p->b, z);
+    _acb_vec_set_arb(p->M + p->K * p->b, v, p->K);
+    p->b += 1;
+}
+
+static void
+smk_block_accumulate(smk_block_t p, acb_ptr res, slong prec)
+{
+    slong i;
+    for (i = 0; i < p->K; i++)
+        acb_dot(res + i, res + i, 0, p->M + i, p->K, p->v, 1, p->b, prec);
+}
+
 void
 _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
         const slong * smk_points, const arb_t t0, slong A, slong B,
@@ -271,6 +339,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
 {
     slong j, k, m;
     slong N = A * B;
+    smk_block_t block;
     acb_ptr accum;
     arb_ptr diff_powers;
     arb_t rpi, logsqrtpi, rsqrtj, um, a, base;
@@ -283,6 +352,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     arb_init(a);
     arb_init(base);
     acb_init(z);
+    smk_block_init(block, K, 32);
     diff_powers = _arb_vec_init(K);
     accum = _acb_vec_init(K);
 
@@ -325,26 +395,33 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
         arb_sub(base, base, um, prec);
 
         _arb_vec_set_powers(diff_powers, base, K, prec);
+        smk_block_increment(block, z, diff_powers);
 
-        for (k = 0; k < K; k++)
-            acb_addmul_arb(accum + k, z, diff_powers + k, prec);
-
-        if (j == jstop || (m < N - 1 && smk_points[m + 1] <= j + 1))
         {
-            if (startvec && m == mstart)
+            int j_stops = j == jstop;
+            int m_increases = m < N - 1 && smk_points[m + 1] <= j + 1;
+            if (j_stops || m_increases || smk_block_is_full(block))
             {
-                _acb_vec_set(startvec, accum, K);
+                smk_block_accumulate(block, accum, prec);
+                smk_block_reset(block);
             }
-            else if (stopvec && m == mstop)
+            if (j_stops || m_increases)
             {
-                _acb_vec_set(stopvec, accum, K);
+                if (startvec && m == mstart)
+                {
+                    _acb_vec_set(startvec, accum, K);
+                }
+                else if (stopvec && m == mstop)
+                {
+                    _acb_vec_set(stopvec, accum, K);
+                }
+                else
+                {
+                    for (k = 0; k < K; k++)
+                        acb_set(table + N*k + m, accum + k);
+                }
+                _acb_vec_zero(accum, K);
             }
-            else
-            {
-                for (k = 0; k < K; k++)
-                    acb_set(table + N*k + m, accum + k);
-            }
-            _acb_vec_zero(accum, K);
         }
     }
 
@@ -355,6 +432,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     arb_clear(a);
     arb_clear(base);
     acb_clear(z);
+    smk_block_clear(block);
     _arb_vec_clear(diff_powers, K);
     _acb_vec_clear(accum, K);
 }
