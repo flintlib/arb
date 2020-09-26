@@ -264,7 +264,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
 {
     slong j, k, m;
     slong N = A * B;
-    acb_ptr row;
+    acb_ptr accum;
     arb_ptr diff_powers;
     arb_t rpi, rsqrtj, um, a, base;
     acb_t z;
@@ -276,6 +276,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     arb_init(base);
     acb_init(z);
     diff_powers = _arb_vec_init(K);
+    accum = _acb_vec_init(K);
 
     arb_const_pi(rpi, prec);
     arb_inv(rpi, rpi, prec);
@@ -313,23 +314,25 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
 
         _arb_vec_set_powers(diff_powers, base, K, prec);
 
-        if (startvec && m == mstart)
+        for (k = 0; k < K; k++)
+            acb_addmul_arb(accum + k, z, diff_powers + k, prec);
+
+        if (j == jstop || (m < N - 1 && smk_points[m + 1] <= j + 1))
         {
-            for (k = 0; k < K; k++)
-                acb_addmul_arb(startvec + k, z, diff_powers + k, prec);
-        }
-        else if (stopvec && m == mstop)
-        {
-            for (k = 0; k < K; k++)
-                acb_addmul_arb(stopvec + k, z, diff_powers + k, prec);
-        }
-        else
-        {
-            for (k = 0; k < K; k++)
+            if (startvec && m == mstart)
             {
-                row = table + N*k;
-                acb_addmul_arb(row + m, z, diff_powers + k, prec);
+                _acb_vec_set(startvec, accum, K);
             }
+            else if (stopvec && m == mstop)
+            {
+                _acb_vec_set(stopvec, accum, K);
+            }
+            else
+            {
+                for (k = 0; k < K; k++)
+                    acb_set(table + N*k + m, accum + k);
+            }
+            _acb_vec_zero(accum, K);
         }
     }
 
@@ -340,6 +343,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     arb_clear(base);
     acb_clear(z);
     _arb_vec_clear(diff_powers, K);
+    _acb_vec_clear(accum, K);
 }
 
 
