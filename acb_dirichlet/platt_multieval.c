@@ -25,6 +25,13 @@ _arb_add_d(arb_t z, const arb_t x, double d, slong prec)
 }
 
 static void
+_arb_div_si_si(arb_t z, slong a, slong b, slong prec)
+{
+    arb_set_si(z, a);
+    arb_div_si(z, z, b, prec);
+}
+
+static void
 _arb_inv_si(arb_t z, slong n, slong prec)
 {
     arb_set_si(z, n);
@@ -266,10 +273,11 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     slong N = A * B;
     acb_ptr accum;
     arb_ptr diff_powers;
-    arb_t rpi, rsqrtj, um, a, base;
+    arb_t rpi, logsqrtpi, rsqrtj, um, a, base;
     acb_t z;
 
     arb_init(rpi);
+    arb_init(logsqrtpi);
     arb_init(rsqrtj);
     arb_init(um);
     arb_init(a);
@@ -280,12 +288,16 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
 
     arb_const_pi(rpi, prec);
     arb_inv(rpi, rpi, prec);
+    arb_const_sqrt_pi(logsqrtpi, prec);
+    arb_log(logsqrtpi, logsqrtpi, prec);
 
     m = platt_get_smk_index(B, jstart, prec);
+    _arb_div_si_si(um, m, B, prec);
 
     for (j = jstart; j <= jstop; j++)
     {
-        logjsqrtpi(a, j, prec);
+        arb_log_ui(a, (ulong) j, prec);
+        arb_add(a, a, logsqrtpi, prec);
         arb_mul(a, a, rpi, prec);
 
         arb_rsqrt_ui(rsqrtj, (ulong) j, prec);
@@ -297,7 +309,10 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
         acb_mul_arb(z, z, rsqrtj, prec);
 
         while (m < N - 1 && smk_points[m + 1] <= j)
+        {
             m += 1;
+            _arb_div_si_si(um, m, B, prec);
+        }
 
         if (m < mstart || m > mstop)
         {
@@ -305,9 +320,6 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
                           m, mstart, mstop);
             flint_abort();
         }
-
-        arb_set_si(um, m);
-        arb_div_si(um, um, B, prec);
 
         arb_mul_2exp_si(base, a, -1);
         arb_sub(base, base, um, prec);
@@ -337,6 +349,7 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     }
 
     arb_clear(rpi);
+    arb_clear(logsqrtpi);
     arb_clear(rsqrtj);
     arb_clear(um);
     arb_clear(a);
