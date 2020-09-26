@@ -89,33 +89,23 @@ examples: library $(EXMP_SOURCES)
 	mkdir -p build/examples
 	$(AT)$(foreach prog, $(EXMPS), $(CC) $(CFLAGS) $(INCS) $(prog).c -o build/$(prog) $(LIBS) || exit $$?;)
 
-$(ARB_LIB): $(LOBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | build build/interfaces
+$(ARB_LIB): $(LOBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), mkdir -p build/$(dir); BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) shared || exit $$?;))
 	$(AT)$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir); BUILD_DIR=../build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f ../Makefile.subdirs -C $(dir) shared || exit $$?;)
-	$(AT)if [ "$(WANT_NTL)" -eq "1" ]; then \
-	  $(MAKE) build/interfaces/NTL-interface.lo; \
-	  $(CXX) $(ABI_FLAG) -shared $(EXTRA_SHARED_FLAGS) build/interfaces/NTL-interface.lo $(LOBJS) $(MOD_LOBJS) $(EXT_OBJS) -o $(ARB_LIB) $(LDFLAGS) $(LIBS2); \
-	fi
-	$(AT)if [ "$(WANT_NTL)" -ne "1" ]; then \
-	  $(CC) $(ABI_FLAG) -shared $(EXTRA_SHARED_FLAGS) $(LOBJS) $(MOD_LOBJS) $(EXT_OBJS) -o $(ARB_LIB) $(LDFLAGS) $(LIBS2); \
-	fi
+	$(QUIET_CC) $(CC) $(ABI_FLAG) -shared $(EXTRA_SHARED_FLAGS) $(LOBJS) $(MOD_LOBJS) $(EXT_OBJS) -o $(ARB_LIB) $(LDFLAGS) $(LIBS2);
 	-$(AT)if [ "$(ARB_SOLIB)" -eq "1" ]; then \
 		$(LDCONFIG) -n "$(CURDIR)"; \
 	fi
 	ln -sf "$(ARB_LIB)" "$(ARB_LIBNAME)"; \
 	ln -sf "$(ARB_LIB)" "$(ARB_LIBNAME).$(ARB_MAJOR)"; \
 
-libarb.a: $(OBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | build build/interfaces
+libarb.a: $(OBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), mkdir -p build/$(dir); BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) static || exit $$?;))
 	$(AT)$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir); BUILD_DIR=../build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f ../Makefile.subdirs -C $(dir) static || exit $$?;)
 	$(AT)if [ "$(ARB_SHARED)" -eq "0" ]; then \
 		touch test/t-*.c; \
 		$(foreach dir, $(BUILD_DIRS), touch $(dir)/test/t-*.c;) \
 		$(foreach ext, $(EXTENSIONS), $(foreach mod, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), touch $(ext)/$(mod)/test/t-*.c;)) \
-	fi
-	$(AT)if [ "$(WANT_NTL)" -eq "1" ]; then \
-		$(MAKE) build/interfaces/NTL-interface.o; \
-		$(AR) rcs libarb.a build/interfaces/NTL-interface.o; \
 	fi
 	$(AT)$(foreach mod, $(BUILD_DIRS), $(AR) rcs libarb.a build/$(mod)/*.o || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach mod, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), $(AR) rcs libarb.a build/$(mod)/*.o || exit $$?;))
@@ -135,10 +125,6 @@ static: libarb.a
 tests: library $(TESTS)
 	$(AT)$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir)/test; BUILD_DIR=../build/$(dir); export BUILD_DIR; $(MAKE) -f ../Makefile.subdirs -C $(dir) tests || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), mkdir -p build/$(dir)/test; BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) tests || exit $$?;))
-	mkdir -p build/interfaces/test
-	$(AT)if [ "$(WANT_NTL)" -eq "1" ]; then \
-		$(MAKE) build/interfaces/test/t-NTL-interface; \
-	fi
 
 check: library
 ifndef MOD
@@ -146,11 +132,6 @@ ifndef MOD
 	$(AT)$(foreach prog, $(TESTS), $(prog) || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h)), mkdir -p build/$(dir)/test; BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) check || exit $$?;))
 	$(AT)$(foreach dir, $(BUILD_DIRS), mkdir -p build/$(dir)/test; BUILD_DIR=../build/$(dir); export BUILD_DIR; $(MAKE) -f ../Makefile.subdirs -C $(dir) check || exit $$?;)
-	mkdir -p build/interfaces/test
-	$(AT)if [ "$(WANT_NTL)" -eq "1" ]; then \
-		$(MAKE) build/interfaces/test/t-NTL-interface; \
-		build/interfaces/test/t-NTL-interface; \
-	fi
 else
 	$(AT)$(foreach dir, $(MOD), test ! -d $(dir) || mkdir -p build/$(dir)/test; BUILD_DIR=../build/$(dir); export BUILD_DIR; test ! -d $(dir) || $(MAKE) -f ../Makefile.subdirs -C $(dir) check || exit $$?;)
 	$(AT)$(foreach ext, $(EXTENSIONS), $(AT)$(foreach dir, $(MOD), MOD_DIR=$(dir); export MOD_DIR; test ! -d $(ext)/$(dir) || mkdir -p build/$(dir)/test; BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; test ! -d $(ext)/$(dir) || $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) check || exit $$?;))
@@ -193,9 +174,6 @@ build/test/%$(EXEEXT): test/%.c $(HEADERS) | build/test
 
 build/test:
 	mkdir -p build/test
-
-build/interfaces:
-	mkdir -p build/interfaces
 
 print-%:
 	@echo '$*=$($*)'

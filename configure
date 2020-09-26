@@ -49,8 +49,6 @@ usage()
    echo "     --with-flint=<path>  Specify location of FLINT (default: /usr/local)"
    echo "     --with-blas[=<path>] Use BLAS and specify its location (default: /usr/local)"
    echo "     --without-blas       Do not use BLAS (default)"
-   echo "     --with-ntl[=<path>]  Build NTL interface and specify its location (default: /usr/local)"
-   echo "     --without-ntl        Do not build NTL interface (default)"
    echo "     --extensions=<path>  Specify location of extension modules"
    echo "     --build=arch-os      Specify architecture/OS combination rather than use values from uname -m/-s"
    echo "     --enable-shared      Build a shared library (default)"
@@ -105,15 +103,6 @@ while [ "$1" != "" ]; do
          ;;
       --with-flint)
          FLINT_DIR=$(absolute_path "$VALUE")
-         ;;
-      --with-ntl)
-         WANT_NTL=1
-         if [ ! -z "$VALUE" ]; then
-            NTL_DIR=$(absolute_path "$VALUE")
-         fi
-         ;;
-      --without-ntl)
-         WANT_NTL=0
          ;;
       --with-blas)
          WANT_BLAS=1
@@ -278,22 +267,6 @@ INC_DIRS="${INC_DIRS} ${FLINT_INC_DIR}"
 LIBS="${LIBS} flint"
 
 #configure extra libraries
-
-if [ "$WANT_NTL" = "1" ]; then
-   if [ -d "${NTL_DIR}/lib" ]; then
-      NTL_LIB_DIR="${NTL_DIR}/lib"
-      NTL_INC_DIR="${NTL_DIR}/include"
-   elif [ -d "${NTL_DIR}/lib64" ]; then
-      NTL_LIB_DIR="${NTL_DIR}/lib64"
-      NTL_INC_DIR="${NTL_DIR}/include"
-   else
-      echo "Invalid NTL directory"
-      exit 1
-   fi
-   EXTRA_INC_DIRS="${EXTRA_INC_DIRS} ${NTL_INC_DIR}"
-   EXTRA_LIB_DIRS="${EXTRA_LIB_DIRS} ${NTL_LIB_DIR}"
-   EXTRA_LIBS="${EXTRA_LIBS} ntl"
-fi
 
 if [ "$WANT_BLAS" = "1" ]; then
    if [ -d "${BLAS_DIR}" ]; then
