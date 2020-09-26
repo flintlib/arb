@@ -14,11 +14,34 @@
 #include "acb_dft.h"
 
 static void
-_acb_vec_set_arb(acb_ptr v, arb_srcptr a, slong n)
+_acb_dot_arb(acb_t res, const acb_t initial, int subtract,
+             acb_srcptr x, slong xstep, arb_srcptr y, slong ystep,
+             slong len, slong prec)
 {
-    slong i;
-    for (i = 0; i < n; i++)
-        acb_set_arb(v + i, a + i);
+    arb_ptr a;
+    arb_srcptr b, c;
+    if (sizeof(acb_struct) != 2*sizeof(arb_struct))
+    {
+        flint_printf("expected sizeof(acb_struct)=%ld "
+                "to be twice sizeof(arb_struct)=%ld\n",
+                sizeof(acb_struct), sizeof(arb_struct));
+        flint_abort();
+    }
+    if (initial == NULL)
+    {
+        flint_printf("not implemented for NULL initial value\n");
+        flint_abort();
+    }
+
+    a = acb_realref(res);
+    b = acb_realref(initial);
+    c = acb_realref(x);
+    arb_dot(a, b, subtract, c, xstep*2, y, ystep, len, prec);
+
+    a = acb_imagref(res);
+    b = acb_imagref(initial);
+    c = acb_imagref(x);
+    arb_dot(a, b, subtract, c, xstep*2, y, ystep, len, prec);
 }
 
 static void
@@ -275,7 +298,7 @@ typedef struct
     slong bmax;
     slong b;
     slong K;
-    acb_ptr M; /* (b, K) */
+    arb_ptr M; /* (b, K) */
     acb_ptr v; /* (b, ) */
 }
 smk_block_struct;
@@ -287,14 +310,14 @@ smk_block_init(smk_block_t p, slong K, slong bmax)
     p->bmax = bmax;
     p->b = 0;
     p->K = K;
-    p->M = _acb_vec_init(K*bmax);
+    p->M = _arb_vec_init(K*bmax);
     p->v = _acb_vec_init(bmax);
 }
 
 static void
 smk_block_clear(smk_block_t p)
 {
-    _acb_vec_clear(p->M, p->K * p->bmax);
+    _arb_vec_clear(p->M, p->K * p->bmax);
     _acb_vec_clear(p->v, p->bmax);
 }
 
@@ -319,7 +342,7 @@ smk_block_increment(smk_block_t p, const acb_t z, arb_srcptr v)
         flint_abort();
     }
     acb_set(p->v + p->b, z);
-    _acb_vec_set_arb(p->M + p->K * p->b, v, p->K);
+    _arb_vec_set(p->M + p->K * p->b, v, p->K);
     p->b += 1;
 }
 
@@ -328,7 +351,7 @@ smk_block_accumulate(smk_block_t p, acb_ptr res, slong prec)
 {
     slong i;
     for (i = 0; i < p->K; i++)
-        acb_dot(res + i, res + i, 0, p->M + i, p->K, p->v, 1, p->b, prec);
+        _acb_dot_arb(res + i, res + i, 0, p->v, 1, p->M + i, p->K, p->b, prec);
 }
 
 void
