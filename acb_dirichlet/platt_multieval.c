@@ -167,6 +167,53 @@ _acb_vec_scalar_add_error_arb_mag(acb_ptr res, slong len, const arb_t x)
     mag_clear(err);
 }
 
+/*
+ * For each integer m in [0, A*B) find the smallest integer j such that
+ * log(j*sqrt(pi))/(2*pi) >= m/B - 1/(2*B)
+ */
+void
+get_smk_points(slong * res, slong A, slong B)
+{
+    slong m, N, prec;
+    arb_t x, u, v;
+    fmpz_t z;
+    arb_init(x);
+    arb_init(u); /* pi / B */
+    arb_init(v); /* 1 / sqrt(pi) */
+    fmpz_init(z);
+    N = A*B;
+    prec = 4;
+    arb_indeterminate(u);
+    arb_indeterminate(v);
+    for (m = 0; m < N; m++)
+    {
+        while (1)
+        {
+            arb_set_si(x, 2*m - 1);
+            arb_mul(x, x, u, prec);
+            arb_exp(x, x, prec);
+            arb_mul(x, x, v, prec);
+            arb_ceil(x, x, prec);
+            if (arb_get_unique_fmpz(z, x))
+            {
+                res[m] = fmpz_get_si(z);
+                break;
+            }
+            else
+            {
+                prec *= 2;
+                arb_const_pi(u, prec);
+                arb_div_si(u, u, B, prec);
+                arb_const_sqrt_pi(v, prec);
+                arb_inv(v, v, prec);
+            }
+        }
+    }
+    arb_clear(x);
+    arb_clear(u);
+    arb_clear(v);
+    fmpz_clear(z);
+}
 
 slong
 platt_get_smk_index(slong B, slong j, slong prec)
@@ -209,10 +256,9 @@ platt_get_smk_index(slong B, slong j, slong prec)
     return m;
 }
 
-
 void
 _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
-        const arb_t t0, slong A, slong B,
+        const slong * smk_points, const arb_t t0, slong A, slong B,
         slong jstart, slong jstop, slong mstart, slong mstop,
         slong K, slong prec)
 {
@@ -234,6 +280,8 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
     arb_const_pi(rpi, prec);
     arb_inv(rpi, rpi, prec);
 
+    m = platt_get_smk_index(B, jstart, prec);
+
     for (j = jstart; j <= jstop; j++)
     {
         logjsqrtpi(a, j, prec);
@@ -247,7 +295,8 @@ _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
         acb_exp_pi_i(z, z, prec);
         acb_mul_arb(z, z, rsqrtj, prec);
 
-        m = platt_get_smk_index(B, j, prec);
+        while (m < N - 1 && smk_points[m + 1] <= j)
+            m += 1;
 
         if (m < mstart || m > mstop)
         {
@@ -505,16 +554,23 @@ acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
         slong N = A*B;
         acb_ptr S;
         arb_t t0;
+        slong * smk_points;
+
+        smk_points = flint_malloc(N * sizeof(slong));
+        get_smk_points(smk_points, A, B);
 
         arb_init(t0);
         S =  _acb_vec_init(K*N);
 
         arb_set_fmpz(t0, T);
-        _platt_smk(S, NULL, NULL, t0, A, B, 1, J, 0, N-1, K, prec);
+
+        _platt_smk(S, NULL, NULL, smk_points, t0, A, B, 1, J, 0, N-1, K, prec);
+
         _acb_dirichlet_platt_multieval(out, S, t0, A, B, h, J, K, sigma, prec);
 
         arb_clear(t0);
         _acb_vec_clear(S, K*N);
+        flint_free(smk_points);
     }
 }
 
