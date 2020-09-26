@@ -14,9 +14,10 @@
 #include "pthread.h"
 
 slong platt_get_smk_index(slong B, slong j, slong prec);
+void get_smk_points(slong * res, slong A, slong B);
 
 void _platt_smk(acb_ptr table, acb_ptr startvec, acb_ptr stopvec,
-        const arb_t t0, slong A, slong B,
+        const slong * smk_points, const arb_t t0, slong A, slong B,
         slong jstart, slong jstop, slong mstart, slong mstop,
         slong K, slong prec);
 
@@ -24,12 +25,12 @@ void _acb_dirichlet_platt_multieval(arb_ptr out, acb_srcptr S_table,
         const arb_t t0, slong A, slong B, const arb_t h, slong J,
         slong K, slong sigma, slong prec);
 
-
 typedef struct
 {
     acb_ptr S;
     acb_ptr startvec;
     acb_ptr stopvec;
+    const slong * smk_points;
     arb_srcptr t0;
     slong A;
     slong B;
@@ -46,17 +47,19 @@ static void *
 _platt_smk_thread(void * arg_ptr)
 {
     platt_smk_arg_t *p = (platt_smk_arg_t *) arg_ptr;
-    _platt_smk(p->S, p->startvec, p->stopvec, p->t0, p->A, p->B,
+    _platt_smk(p->S, p->startvec, p->stopvec, p->smk_points, p->t0, p->A, p->B,
                p->jstart, p->jstop, p->mstart, p->mstop, p->K, p->prec);
     flint_cleanup();
     return NULL;
 }
+
 
 void
 acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
         slong B, const arb_t h, slong J, slong K, slong sigma, slong prec)
 {
     slong i, num_threads, N, threadtasks;
+    slong * smk_points;
     pthread_t * threads;
     platt_smk_arg_t * args;
     acb_ptr S;
@@ -67,8 +70,10 @@ acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
     threads = flint_malloc(sizeof(pthread_t) * num_threads);
     args = flint_malloc(sizeof(platt_smk_arg_t) * num_threads);
     threadtasks = (J+num_threads-1)/num_threads;
-
+    smk_points = flint_malloc(N * sizeof(slong));
     arb_init(t0);
+
+    get_smk_points(smk_points, A, B);
     arb_set_fmpz(t0, T);
 
     S =  _acb_vec_init(K*N);
@@ -77,6 +82,7 @@ acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
         args[i].S = S;
         args[i].startvec = _acb_vec_init(K);
         args[i].stopvec = _acb_vec_init(K);
+        args[i].smk_points = smk_points;
         args[i].t0 = t0;
         args[i].A = A;
         args[i].B = B;
@@ -119,6 +125,8 @@ acb_dirichlet_platt_multieval_threaded(arb_ptr out, const fmpz_t T, slong A,
 
     arb_clear(t0);
     _acb_vec_clear(S, K*N);
+    flint_free(smk_points);
+
     flint_free(args);
     flint_free(threads);
 }
