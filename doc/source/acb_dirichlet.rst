@@ -797,3 +797,10 @@ and formulas described by David J. Platt in [Pla2017]_.
     meanings as in the functions :func:`acb_dirichlet_platt_multieval`
     and :func:`acb_dirichlet_platt_ws_interpolation`. The non-underscored
     variants currently expect `10^4 \leq n \leq 10^{23}`.
+
+.. function:: slong acb_dirichlet_platt_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets at most the first *len* entries of *res* to consecutive
+    zeros of the Riemann zeta function starting with the *n*-th zero.
+    The number of obtained consecutive zeros is returned. It currently
+    expects `10^4 \leq n \leq 10^{23}`.

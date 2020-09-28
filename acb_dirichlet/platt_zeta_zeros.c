@@ -11,12 +11,12 @@
 
 #include "acb_dirichlet.h"
 
-void
+slong
 acb_dirichlet_platt_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    if (len <= 0)
+    if (len <= 0 || fmpz_sizeinbase(n, 10) < 5)
     {
-        return;
+        return 0;
     }
     else if (fmpz_sgn(n) < 1)
     {
@@ -25,15 +25,17 @@ acb_dirichlet_platt_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong pre
     }
     else
     {
-        slong i;
+        slong i, found;
         arb_ptr p;
         p = _arb_vec_init(len);
-        acb_dirichlet_platt_hardy_z_zeros(p, n, len, prec);
-        for (i = 0; i < len; i++)
+        found = acb_dirichlet_platt_hardy_z_zeros(p, n, len, prec);
+        for (i = 0; i < found; i++)
         {
             acb_set_d(res + i, 0.5);
             arb_set(acb_imagref(res + i), p + i);
         }
         _arb_vec_clear(p, len);
+        return found;
     }
+    return 0;
 }

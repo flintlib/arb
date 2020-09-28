@@ -15,13 +15,13 @@ slong
 acb_dirichlet_platt_hardy_z_zeros(
         arb_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    if (len <= 0)
+    if (len <= 0 || fmpz_sizeinbase(n, 10) < 5)
     {
         return 0;
     }
     else if (fmpz_sgn(n) < 1)
     {
-        flint_printf("nonpositive indices of zeta zeros are not supported\n");
+        flint_printf("Nonpositive indices of Hardy Z zeros are not supported.\n");
         flint_abort();
     }
     else
@@ -30,7 +30,7 @@ acb_dirichlet_platt_hardy_z_zeros(
         fmpz_t k;
         fmpz_init(k);
         fmpz_set(k, n);
-        for (s = 0; len - s > 0; s += r)
+        for (s = 0; s < len; s += r)
         {
             r = acb_dirichlet_platt_local_hardy_z_zeros(res + s, k, len - s, prec);
             if (!r)

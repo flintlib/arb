@@ -1349,8 +1349,8 @@ _create_heuristic_context(const fmpz_t n, slong prec)
     slong kbits;
     fmpz_t T, k;
     arb_t g, h, H, logT;
-    double dlogJ, dK, dgrid, dh, dH;
-    double x, x2, x3;
+    double dlogJ, dK, dgrid, dh, dH, dinterp;
+    double x, x2, x3, x4;
 
     fmpz_init(T);
     fmpz_init(k);
@@ -1371,46 +1371,63 @@ _create_heuristic_context(const fmpz_t n, slong prec)
     x = arf_get_d(arb_midref(logT), ARF_RND_NEAR);
     x2 = x*x;
     x3 = x2*x;
+    x4 = x2*x2;
 
     if (_fmpz_cmp_a_10exp_b(n, 1, 4) < 0)
     {
         goto finish;
     }
+    else if (_fmpz_cmp_a_10exp_b(n, 1, 5) < 0)
+    {
+        /* interpolated for n in [1e4, 1e5] */
+        A = 4;
+        B = 64;
+        Ns_max = 100;
+        dinterp = 25;
+        dK = 28;
+        dgrid = 31;
+        dlogJ = 8.4398 + -0.40306*x + 0.029866*x2 + -2.2858e-05*x3;
+        dh = 1.0844 + 0.25524*x + -0.0046997*x2 + -6.3447e-05*x3;
+        dH = -11.882 + 3.9521*x + -0.38654*x2 + 0.012728*x3;
+    }
     else if (_fmpz_cmp_a_10exp_b(n, 1, 7) < 0)
     {
+        /* interpolated for n in [1e4, 1e7] */
         A = 8;
         B = 4096;
         Ns_max = 200;
-        sigma_interp = 25;
+        dinterp = 25;
         dlogJ = 0.88323 + 0.21392*x + 0.020846*x2 + -0.00053151*x3;
         dK = 137.27 + -15.609*x + 1.0778*x2 + -0.025927*x3;
         dgrid = -1711.1 + 701.03*x + -48.424*x2 + 1.2075*x3;
         dh = 448.2 + -84.087*x + 6.2089*x2 + -0.14565*x3;
         dH = 0.94123 + 0.021136*x + -0.00093042*x2 + 3.1007e-05*x3;
     }
-    else if (_fmpz_cmp_a_10exp_b(n, 1, 15) < 0)
+    else if (_fmpz_cmp_a_10exp_b(n, 2, 15) < 0)
     {
+        /* interpolated for n in [1e7, 5e22] */
         A = 8;
         B = 4096;
         Ns_max = 200;
-        sigma_interp = _fmpz_cmp_a_10exp_b(n, 1, 14) < 0 ? 25 : 23;
-        dlogJ = -0.41749 + 0.49307*x + 3.58e-05*x2 + -4.3698e-07*x3;
-        dK = 74.703 + -1.1419*x + 0.0049926*x2 + -0.00014087*x3;
-        dgrid = 2002.4 + 2.1248*x + -0.12517*x2 + 0.00043982*x3;
-        dh = 70.494 + 2.0738*x + -0.058873*x2 + 0.0014192*x3;
-        dH = 0.8426 + 0.027256*x + -0.00068874*x2 + 1.62e-05*x3;
+        dlogJ = -0.4035 + 0.49086*x + 0.00016299*x2 + -3.6139e-06*x3 + 2.9323e-08*x4;
+        dK = 79.032 + -1.781*x + 0.039243*x2 + -0.00094859*x3 + 7.3149e-06*x4;
+        dgrid = 1186.9 + 130.17*x + -7.4059*x2 + 0.17895*x3 + -0.001602*x4;
+        dinterp = -24.252 + 7.3231*x + -0.38971*x2 + 0.0088745*x3 + -7.4331e-05*x4;
+        dh = 178.66 + -15.127*x + 0.93132*x2 + -0.02311*x3 + 0.00022146*x4;
+        dH = 2.5499 + -0.24402*x + 0.014953*x2 + -0.00037347*x3 + 3.5596e-06*x4;
     }
     else if (_fmpz_cmp_a_10exp_b(n, 1, 37) < 0)
     {
+        /* interpolated for n in [1e7, 1e37] */
         A = 16;
         B = 8192;
         Ns_max = 300;
-        sigma_interp = _fmpz_cmp_a_10exp_b(n, 1, 27) < 0 ? 19 : 17;
-        dlogJ = -0.512 + 0.4978*x + -1.6775e-07*x2 + 2.4238e-09*x3;
-        dK = 102.76 + -0.85449*x + 0.0021411*x2 + -2.0049e-05*x3;
-        dgrid = 4344.8 + -18.795*x + 0.3634*x2 + -0.0027694*x3;
-        dh = 87.505 + 3.535*x + -0.060599*x2 + 0.00053014*x3;
-        dH = 0.4151 + 0.015926*x + -0.00027885*x2 + 2.5168e-06*x3;
+        dlogJ = -0.50566 + 0.49723*x + 1.7964e-05*x2 + -2.3664e-07*x3 + 1.1234e-09*x4;
+        dK = 100.97 + -0.709*x + -0.0020664*x2 + 3.1633e-05*x3 + -2.2912e-07*x4;
+        dgrid = 3998.1 + 6.68*x + -0.3202*x2 + 0.0051782*x3 + -3.3829e-05*x4;
+        dinterp = 21.203 + -0.2797*x + 0.01191*x2 + -0.00019769*x3 + 1.0395e-06*x4;
+        dh = 137.6 + -0.16471*x + 0.039086*x2 + -0.00063299*x3 + 4.9674e-06*x4;
+        dH = 0.64172 + -0.0017413*x + 0.0002195*x2 + -3.5247e-06*x3 + 2.6633e-08*x4;
     }
     else
     {
@@ -1422,6 +1439,7 @@ _create_heuristic_context(const fmpz_t n, slong prec)
     J = (slong) exp(dlogJ);
     K = (slong) dK;
     sigma_grid = ((slong) (dgrid/2))*2 + 1;
+    sigma_interp = ((slong) (dinterp/2))*2 + 1;
 
     p = malloc(sizeof(platt_ctx_struct));
     platt_ctx_init(p, T, A, B, h, J, K,
@@ -1445,15 +1463,28 @@ slong
 acb_dirichlet_platt_isolate_local_hardy_z_zeros(
         arf_interval_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    slong zeros_count = 0;
-    platt_ctx_ptr ctx = _create_heuristic_context(n, prec);
-    if (ctx)
+    if (len <= 0 || fmpz_sizeinbase(n, 10) < 5)
     {
-        zeros_count = _isolate_zeros(res, ctx, n, len, prec);
-        platt_ctx_clear(ctx);
-        free(ctx);
+        return 0;
     }
-    return zeros_count;
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("Nonpositive indices of Hardy Z zeros are not supported.\n");
+        flint_abort();
+    }
+    else
+    {
+        slong zeros_count = 0;
+        platt_ctx_ptr ctx = _create_heuristic_context(n, prec);
+        if (ctx)
+        {
+            zeros_count = _isolate_zeros(res, ctx, n, len, prec);
+            platt_ctx_clear(ctx);
+            free(ctx);
+        }
+        return zeros_count;
+    }
+    return 0;
 }
 
 
@@ -1462,23 +1493,36 @@ slong
 acb_dirichlet_platt_local_hardy_z_zeros(
         arb_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    slong zeros_count = 0;
-    platt_ctx_ptr ctx;
-
-    ctx = _create_heuristic_context(n, prec);
-    if (ctx)
+    if (len <= 0 || fmpz_sizeinbase(n, 10) < 5)
     {
-        slong i;
-        arf_interval_ptr p = _arf_interval_vec_init(len);
-        zeros_count = _isolate_zeros(p, ctx, n, len, prec);
-        for (i = 0; i < zeros_count; i++)
-        {
-            _refine_local_hardy_z_zero_illinois(
-                res+i, ctx, &p[i].a, &p[i].b, prec);
-        }
-        _arf_interval_vec_clear(p, len);
-        platt_ctx_clear(ctx);
-        free(ctx);
+        return 0;
     }
-    return zeros_count;
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("Nonpositive indices of Hardy Z zeros are not supported.\n");
+        flint_abort();
+    }
+    else
+    {
+        slong zeros_count = 0;
+        platt_ctx_ptr ctx;
+
+        ctx = _create_heuristic_context(n, prec);
+        if (ctx)
+        {
+            slong i;
+            arf_interval_ptr p = _arf_interval_vec_init(len);
+            zeros_count = _isolate_zeros(p, ctx, n, len, prec);
+            for (i = 0; i < zeros_count; i++)
+            {
+                _refine_local_hardy_z_zero_illinois(
+                    res+i, ctx, &p[i].a, &p[i].b, prec);
+            }
+            _arf_interval_vec_clear(p, len);
+            platt_ctx_clear(ctx);
+            free(ctx);
+        }
+        return zeros_count;
+    }
+    return 0;
 }

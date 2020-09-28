@@ -14,22 +14,22 @@
 int main()
 {
     fmpz_t n;
-    arb_ptr pa, pb;
+    acb_ptr pa, pb;
     slong count, i;
     slong maxcount = 50;
     slong prec = 64;
 
-    flint_printf("platt_hardy_z_zeros....");
+    flint_printf("platt_zeta_zeros....");
     fflush(stdout);
 
     fmpz_init(n);
-    pa = _arb_vec_init(maxcount);
-    pb = _arb_vec_init(maxcount);
+    pa = _acb_vec_init(maxcount);
+    pb = _acb_vec_init(maxcount);
 
     fmpz_set_si(n, 10000);
 
-    count = acb_dirichlet_platt_hardy_z_zeros(pa, n, maxcount, prec);
-    acb_dirichlet_hardy_z_zeros(pb, n, count, prec);
+    count = acb_dirichlet_platt_zeta_zeros(pa, n, maxcount, prec);
+    acb_dirichlet_zeta_zeros(pb, n, count, prec);
     if (count != maxcount)
     {
         flint_printf("FAIL: not enough zeros were isolated\n\n");
@@ -39,20 +39,20 @@ int main()
 
     for (i = 0; i < count; i++)
     {
-        if (!arb_overlaps(pa+i, pb+i))
+        if (!acb_overlaps(pa+i, pb+i))
         {
             flint_printf("FAIL: overlap\n\n");
             flint_printf("observed[%wd] = ", i);
-            arb_printd(pa+i, 20); flint_printf("\n\n");
+            acb_printd(pa+i, 20); flint_printf("\n\n");
             flint_printf("expected[%wd] = ", i);
-            arb_printd(pb+i, 20); flint_printf("\n\n");
+            acb_printd(pb+i, 20); flint_printf("\n\n");
             flint_abort();
         }
     }
 
     fmpz_clear(n);
-    _arb_vec_clear(pa, maxcount);
-    _arb_vec_clear(pb, maxcount);
+    _acb_vec_clear(pa, maxcount);
+    _acb_vec_clear(pb, maxcount);
 
     flint_cleanup();
     flint_printf("PASS\n");
