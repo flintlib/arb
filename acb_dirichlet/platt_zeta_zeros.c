@@ -1,6 +1,5 @@
 /*
-    Copyright (C) 2010 Juan Arias de Reyna
-    Copyright (C) 2019 D.H.J. Polymath
+    Copyright (C) 2020 D.H.J. Polymath
 
     This file is part of Arb.
 
@@ -13,7 +12,7 @@
 #include "acb_dirichlet.h"
 
 void
-acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
+acb_dirichlet_platt_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
 {
     if (len <= 0)
     {
@@ -29,7 +28,7 @@ acb_dirichlet_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
         slong i;
         arb_ptr p;
         p = _arb_vec_init(len);
-        acb_dirichlet_hardy_z_zeros(p, n, len, prec);
+        acb_dirichlet_platt_hardy_z_zeros(p, n, len, prec);
         for (i = 0; i < len; i++)
         {
             acb_set_d(res + i, 0.5);

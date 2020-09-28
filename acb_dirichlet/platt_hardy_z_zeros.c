@@ -15,18 +15,29 @@ slong
 acb_dirichlet_platt_hardy_z_zeros(
         arb_ptr res, const fmpz_t n, slong len, slong prec)
 {
-    slong r, s=0;
-    fmpz_t k;
-    fmpz_init(k);
-    fmpz_set(k, n);
-    while (len - s)
+    if (len <= 0)
     {
-        r = acb_dirichlet_platt_local_hardy_z_zeros(res + s, k, len - s, prec);
-        flint_printf("r = %ld\n", r);
-        if (!r)
-            break;
-        s += r;
-        fmpz_add_si(k, k, r);
+        return 0;
     }
-    return s;
+    else if (fmpz_sgn(n) < 1)
+    {
+        flint_printf("nonpositive indices of zeta zeros are not supported\n");
+        flint_abort();
+    }
+    else
+    {
+        slong r, s;
+        fmpz_t k;
+        fmpz_init(k);
+        fmpz_set(k, n);
+        for (s = 0; len - s > 0; s += r)
+        {
+            r = acb_dirichlet_platt_local_hardy_z_zeros(res + s, k, len - s, prec);
+            if (!r)
+                break;
+            fmpz_add_si(k, k, r);
+        }
+        return s;
+    }
+    return 0;
 }
