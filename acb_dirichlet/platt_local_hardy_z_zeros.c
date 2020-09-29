@@ -1403,7 +1403,7 @@ _create_heuristic_context(const fmpz_t n, slong prec)
         dh = 448.2 + -84.087*x + 6.2089*x2 + -0.14565*x3;
         dH = 0.94123 + 0.021136*x + -0.00093042*x2 + 3.1007e-05*x3;
     }
-    else if (_fmpz_cmp_a_10exp_b(n, 2, 15) < 0)
+    else if (_fmpz_cmp_a_10exp_b(n, 2, 17) < 0)
     {
         /* interpolated for n in [1e7, 5e22] */
         A = 8;
