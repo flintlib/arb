@@ -662,7 +662,7 @@ void
 acb_dirichlet_platt_multieval(arb_ptr out, const fmpz_t T, slong A, slong B,
         const arb_t h, slong J, slong K, slong sigma, slong prec)
 {
-    if (flint_get_num_threads() > 1 && J > 10000000)
+    if (flint_get_num_threads() > 1)
     {
         acb_dirichlet_platt_multieval_threaded(
                 out, T, A, B, h, J, K, sigma, prec);

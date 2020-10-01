@@ -13,46 +13,22 @@
 
 int main()
 {
-    /* Check a specific combination of parameter values that is relatively fast
-     * to evaluate and that has relatively tight bounds. */
-    slong A, B, J, K, sigma_grid, Ns_max, sigma_interp;
-    arb_t h, H;
-    fmpz_t T, n;
+    fmpz_t n;
     arb_ptr pa, pb;
     slong count, i;
     slong maxcount = 50;
-    slong prec = 128;
+    slong prec = 64;
 
-    flint_printf("platt_local_hardy_z_zeros....");
+    flint_printf("platt_hardy_z_zeros....");
     fflush(stdout);
 
-    arb_init(h);
-    arb_init(H);
-    fmpz_init(T);
     fmpz_init(n);
     pa = _arb_vec_init(maxcount);
     pb = _arb_vec_init(maxcount);
 
-    fmpz_set_si(n, 10142);
+    fmpz_set_si(n, 10000);
 
-    /* parameters related to the location/resolution/width of the grid */
-    fmpz_set_si(T, 10000);
-    A = 8;
-    B = 128;
-
-    /* tuning parameters for the evaluation of grid points */
-    J = 1000;
-    K = 30;
-    sigma_grid = 63;
-    arb_set_d(h, 4.5);
-
-    /* tuning parameters for interpolation on the grid */
-    Ns_max = 200;
-    sigma_interp = 21;
-    arb_one(H);
-
-    count = _acb_dirichlet_platt_local_hardy_z_zeros(pa, n, maxcount,
-            T, A, B, h, J, K, sigma_grid, Ns_max, H, sigma_interp, prec);
+    count = acb_dirichlet_platt_hardy_z_zeros(pa, n, maxcount, prec);
     acb_dirichlet_hardy_z_zeros(pb, n, count, prec);
     if (count != maxcount)
     {
@@ -74,9 +50,6 @@ int main()
         }
     }
 
-    arb_clear(h);
-    arb_clear(H);
-    fmpz_clear(T);
     fmpz_clear(n);
     _arb_vec_clear(pa, maxcount);
     _arb_vec_clear(pb, maxcount);

@@ -785,12 +785,24 @@ and formulas described by David J. Platt in [Pla2017]_.
 
 .. function:: slong _acb_dirichlet_platt_local_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, const fmpz_t T, slong A, slong B, const arb_t h, slong J, slong K, slong sigma_grid, slong Ns_max, const arb_t H, slong sigma_interp, slong prec)
 .. function:: slong acb_dirichlet_platt_local_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
+.. function:: slong acb_dirichlet_platt_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
 
-    Sets the entries of *res* to at most *len* consecutive zeros of the
-    Hardy Z-function, beginning with the *n*-th zero. Requires positive *n*.
-    The number of isolated zeros is returned. Internally this function uses
-    a single call to Platt's grid evaluation of the scaled Lambda function.
-    The final several parameters of the underscored variant have the same
+    Sets at most the first *len* entries of *res* to consecutive
+    zeros of the Hardy Z-function starting with the *n*-th zero.
+    The number of obtained consecutive zeros is returned. The first two
+    function variants each make a single call to Platt's grid evaluation
+    of the scaled Lambda function, whereas the third variant performs as many
+    evluations as necessary to obtain *len* consecutive zeros.
+    The final several parameters of the underscored local variant have the same
     meanings as in the functions :func:`acb_dirichlet_platt_multieval`
     and :func:`acb_dirichlet_platt_ws_interpolation`. The non-underscored
-    variant currently requires `10^4 \leq n \leq 3 \times 10^{17}`.
+    variants currently expect `10^4 \leq n \leq 10^{23}`. The user has the
+    option of multi-threading through *flint_set_num_threads(numthreads)*.
+
+.. function:: slong acb_dirichlet_platt_zeta_zeros(acb_ptr res, const fmpz_t n, slong len, slong prec)
+
+    Sets at most the first *len* entries of *res* to consecutive
+    zeros of the Riemann zeta function starting with the *n*-th zero.
+    The number of obtained consecutive zeros is returned. It currently
+    expects `10^4 \leq n \leq 10^{23}`. The user has the option of
+    multi-threading through *flint_set_num_threads(numthreads)*.
