@@ -32,7 +32,7 @@ acb_real_abs(acb_t res, const acb_t z, int analytic, slong prec)
         {
             acb_t t;
             acb_init(t);
-            acb_neg(t, res);
+            acb_neg(t, z);
             acb_union(res, z, t, prec);
             acb_clear(t);
         }
