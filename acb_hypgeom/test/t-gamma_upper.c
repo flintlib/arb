@@ -22,8 +22,8 @@ _accuracy_regression_test(const acb_t s, const acb_t z,
     acb_hypgeom_gamma_upper(g, s, z, regularized, prec);
     if (acb_rel_accuracy_bits(g) < accuracy)
     {
-        flint_printf("FAIL: accuracy regression in issue #%ld\n\n", issue);
-        flint_printf("prec = %d\n\n", prec);
+        flint_printf("FAIL: accuracy regression in issue #%wd\n\n", issue);
+        flint_printf("prec = %wd\n\n", prec);
         flint_printf("regularized = %d\n\n", regularized);
         flint_printf("s = "); acb_printd(s, 30); flint_printf("\n\n");
         flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");

@@ -317,7 +317,11 @@ acb_vec_printd_index(acb_srcptr vec, slong len, slong digits)
 {
     slong i;
     for (i = 0; i < len; i++)
-        flint_printf("[%ld] ",i), acb_printd(vec + i, digits), flint_printf("\n");
+    {
+        flint_printf("[%wd] ", i);
+        acb_printd(vec + i, digits);
+        flint_printf("\n");
+    }
 }
 
 #ifdef __cplusplus

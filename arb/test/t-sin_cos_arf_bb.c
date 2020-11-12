@@ -138,7 +138,7 @@ int main()
         if (arb_rel_accuracy_bits(s2) < prec - 2 || arb_rel_accuracy_bits(c2) < prec - 2)
         {
             flint_printf("FAIL: poor accuracy\n\n");
-            flint_printf("prec = %wd,  acc1 = %wd,  acc2 = %d\n\n",
+            flint_printf("prec = %wd,  acc1 = %wd,  acc2 = %wd\n\n",
                 prec, arb_rel_accuracy_bits(s2), arb_rel_accuracy_bits(c2));
             flint_printf("x = "); arb_printn(x, 500, 0); flint_printf("\n\n");
             flint_printf("s1 = "); arb_printn(s1, 500, 0); flint_printf("\n\n");

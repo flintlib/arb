@@ -93,7 +93,7 @@ int main()
                     acb_printd(z, 30);
                     flint_printf("\ndft =\n");
                     acb_printd(v + i, 30);
-                    flint_printf("\nerrors %ld & %ld [prec = %wu]\n",
+                    flint_printf("\nerrors %wd & %wd [prec = %wd]\n",
                         acb_rel_accuracy_bits(z),
                         acb_rel_accuracy_bits(v + i), prec);
                     abort();

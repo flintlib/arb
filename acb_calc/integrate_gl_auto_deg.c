@@ -243,7 +243,7 @@ acb_calc_integrate_gl_auto_deg(acb_t res, slong * eval_count,
         if (verbose)
         {
             acb_get_mag(tmpm, delta);
-            flint_printf("  {GL deg %ld on [", best_n);
+            flint_printf("  {GL deg %wd on [", best_n);
             acb_printn(a, 10, ARB_STR_NO_RADIUS); flint_printf(", ");
             acb_printn(b, 10, ARB_STR_NO_RADIUS);
             flint_printf("], delta "); mag_printd(tmpm, 5);

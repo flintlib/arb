@@ -22,8 +22,8 @@ _acb_dot_arb(acb_t res, const acb_t initial, int subtract,
     arb_srcptr b, c;
     if (sizeof(acb_struct) != 2*sizeof(arb_struct))
     {
-        flint_printf("expected sizeof(acb_struct)=%ld "
-                "to be twice sizeof(arb_struct)=%ld\n",
+        flint_printf("expected sizeof(acb_struct)=%zu "
+                "to be twice sizeof(arb_struct)=%zu\n",
                 sizeof(acb_struct), sizeof(arb_struct));
         flint_abort();
     }
