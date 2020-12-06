@@ -313,6 +313,12 @@ Assignment, rounding and conversions
     store than the input. To round the result to a floating-point number
     with a lower precision, call :func:`arf_set_round` afterwards.
 
+.. function:: void arf_get_fmpq(fmpq_t res, const arf_t x)
+
+    Set *res* to the exact rational value of *x*.
+    This method aborts if *x* is infinite or NaN, or if the exponent of *x*
+    is so large that allocating memory for the result fails.
+
 Comparisons and bounds
 -------------------------------------------------------------------------------
 
