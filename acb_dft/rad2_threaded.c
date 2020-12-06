@@ -102,7 +102,7 @@ acb_dft_rad2_precomp_inplace_threaded(acb_ptr v, const acb_dft_rad2_t rad2, slon
         }
         if (i != t)
         {
-            flint_printf("threaded dft error: unequal i=%ld t=%ld\n", i, t);
+            flint_printf("threaded dft error: unequal i=%wd t=%wd\n", i, t);
             flint_abort();
         }
         for (i = 0; i < t; i++)

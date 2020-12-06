@@ -81,7 +81,7 @@ int main()
         if (arb_set_str(acb_realref(x + j), x_r[j], prec) ||
             arb_set_str(acb_imagref(x + j), x_i[j], prec) )
         {
-            flint_printf("error while setting x[%ld] <- %s+I*%s\n",
+            flint_printf("error while setting x[%wd] <- %s+I*%s\n",
                     j, x_r[j], x_i[j]);
             flint_abort();
         }

@@ -63,7 +63,7 @@ int main()
         if (!acb_overlaps(t, u))
         {
             flint_printf("FAIL: overlap\n\n");
-            flint_printf("iter = %ld  q = %lu  k = %lu  prec = %ld\n\n", iter, q, k, prec);
+            flint_printf("iter = %wd  q = %wu  k = %wu  prec = %wd\n\n", iter, q, k, prec);
             flint_printf("s = "); acb_printn(s, 100, 0); flint_printf("\n\n");
             flint_printf("t = "); acb_printn(t, 100, 0); flint_printf("\n\n");
             flint_printf("u = "); acb_printn(u, 100, 0); flint_printf("\n\n");

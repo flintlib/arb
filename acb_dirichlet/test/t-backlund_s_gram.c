@@ -54,7 +54,7 @@ int main()
             flint_printf("FAIL: containment\n\n");
             flint_printf("n = "); fmpz_print(n);
             flint_printf("   prec1 = %wd  prec2 = %wd\n\n", prec1, prec2);
-            flint_printf("S = %ld\n\n", S);
+            flint_printf("S = %wd\n\n", S);
             flint_printf("t = "); arb_printn(t, 100, 0); flint_printf("\n\n");
             flint_printf("x = "); arb_printn(x, 100, 0); flint_printf("\n\n");
             flint_abort();

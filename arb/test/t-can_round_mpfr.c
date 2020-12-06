@@ -62,7 +62,7 @@ int main()
 
             if (r1 != r2 || !mpfr_equal_p(y1, y2))
             {
-                flint_printf("FAIL! %ld\n");
+                flint_printf("FAIL!\n");
                 flint_printf("r1 = %d, r2 = %d, prec = %wd\n", r1, r2, prec);
                 flint_printf("x = "); mpfr_dump(x); flint_printf("\n");
                 flint_printf("y1 = "); mpfr_dump(y1); flint_printf("\n");

@@ -43,8 +43,8 @@ int main()
             flint_printf("FAIL: increasing on p >= -1\n\n");
             flint_printf("a = "); fmpz_print(a); flint_printf("\n\n");
             flint_printf("b = "); fmpz_print(b); flint_printf("\n\n");
-            flint_printf("u = %lu\n", u);
-            flint_printf("v = %lu\n", v);
+            flint_printf("u = %wu\n", u);
+            flint_printf("v = %wu\n", v);
             flint_abort();
         }
 
