@@ -11,4 +11,4 @@
 
 #include "arb.h"
 
-const char * arb_version = "2.18.1";
+const char * arb_version = "2.19.0";

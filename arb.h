@@ -27,9 +27,9 @@ extern "C" {
 #endif
 
 #define __ARB_VERSION 2
-#define __ARB_VERSION_MINOR 18
-#define __ARB_VERSION_PATCHLEVEL 1
-#define ARB_VERSION "2.18.1"
+#define __ARB_VERSION_MINOR 19
+#define __ARB_VERSION_PATCHLEVEL 0
+#define ARB_VERSION "2.19.0"
 #define __ARB_RELEASE (__ARB_VERSION * 10000 + \
                          __ARB_VERSION_MINOR * 100 + \
                          __ARB_VERSION_PATCHLEVEL)

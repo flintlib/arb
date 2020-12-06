@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.19.0.pdf
 * http://arblib.org/arb-2.18.1.pdf
 * http://arblib.org/arb-2.18.0.pdf
 * http://arblib.org/arb-2.17.0.pdf
@@ -31,6 +32,27 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2020-12-06 -- version 2.19.0
+-------------------------------------------------------------------------------
+
+* Significant improvements to the implementation of Platt's algorithm for
+  computing Riemann zeta function zeros at large height (contributed by
+  p15-git-acc).
+* Better criterion for selecting asymptotic expansion of incomplete gamma
+  function (contributed by p15-git-acc).
+* Multithreaded acb_dft for power-of-two lengths (contributed by p15-git-acc).
+* Added acb_csc_pi, arb_csc_pi (contributed by p15-git-acc).
+* Fixed segfault in acb_mat_eig_simple_rump when called with L non-NULL
+  and R NULL (contributed by p15-git-acc).
+* Fixed bug in acb_real_abs (contributed by Joel Dahne).
+* Changed several functions to more consistently return infinities
+  instead of NaNs where reasonable (contributed by p15-git-acc).
+* Added Fransen-Robinson as an integral example (contributed by p15-git-acc).
+* Cleaned up makefile (contributed by p15-git-acc).
+* Fixed several typos and some omitted functions in the documentation
+  (contributed by Joel-Dahne, p15-git-acc).
+
 
 2020-06-25 -- version 2.18.1
 -------------------------------------------------------------------------------
