@@ -774,7 +774,7 @@ Hyperbolic functions
 
     Computes `\operatorname{sech}(z) = 1 / \cosh(z)`.
 
-.. function:: void acb_csch(acb_t res, const arb_t z, slong prec)
+.. function:: void acb_csch(acb_t res, const acb_t z, slong prec)
 
     Computes `\operatorname{csch}(z) = 1 / \sinh(z)`.
 
