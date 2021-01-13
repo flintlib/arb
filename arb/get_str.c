@@ -452,44 +452,64 @@ char * arb_get_str(const arb_t x, slong n, ulong flags)
 
     arb_get_str_parts(&negative, &mid_digits, mid_exp, &rad_digits, rad_exp, x, n, more);
 
-    skip_mid = mid_digits[0] == '0';
-    skip_rad = (rad_digits[0] == '0') || ((flags & ARB_STR_NO_RADIUS) && !skip_mid);
-
-    _arb_digits_as_float_str(&mid_digits, mid_exp, -4, FLINT_MAX(6, n - 1));
-    _arb_digits_as_float_str(&rad_digits, rad_exp, -2, 2);
-
-    if (skip_rad)
+    if ((flags & ARB_STR_NO_RADIUS) && mid_digits[0] == '0')
     {
-        res = flint_malloc(strlen(mid_digits) + 2);
+        fmpz_add_ui(rad_exp, rad_exp, strlen(rad_digits));
 
-        if (negative)
-            strcpy(res, "-");
+        res = flint_malloc(fmpz_sizeinbase(rad_exp, 10) + 4);
+        res[0] = '0';
+        res[1] = 'e';
+        if (fmpz_sgn(rad_exp) >= 0)
+        {
+            res[2] = '+';
+            fmpz_get_str(res + 3, 10, rad_exp);
+        }
         else
-            strcpy(res, "");
-
-        strcat(res, mid_digits);
-    }
-    else if (skip_mid)
-    {
-        res = flint_malloc(strlen(rad_digits) + 7);
-
-        strcpy(res, "[+/- ");
-        strcat(res, rad_digits);
-        strcat(res, "]");
+        {
+            fmpz_get_str(res + 2, 10, rad_exp);
+        }
     }
     else
     {
-        res = flint_malloc(strlen(mid_digits) + strlen(rad_digits) + 9);
+        skip_mid = mid_digits[0] == '0';
+        skip_rad = (rad_digits[0] == '0') || ((flags & ARB_STR_NO_RADIUS) && !skip_mid);
 
-        strcpy(res, "[");
+        _arb_digits_as_float_str(&mid_digits, mid_exp, -4, FLINT_MAX(6, n - 1));
+        _arb_digits_as_float_str(&rad_digits, rad_exp, -2, 2);
 
-        if (negative)
-            strcat(res, "-");
+        if (skip_rad)
+        {
+            res = flint_malloc(strlen(mid_digits) + 2);
 
-        strcat(res, mid_digits);
-        strcat(res, " +/- ");
-        strcat(res, rad_digits);
-        strcat(res, "]");
+            if (negative)
+                strcpy(res, "-");
+            else
+                strcpy(res, "");
+
+            strcat(res, mid_digits);
+        }
+        else if (skip_mid)
+        {
+            res = flint_malloc(strlen(rad_digits) + 7);
+
+            strcpy(res, "[+/- ");
+            strcat(res, rad_digits);
+            strcat(res, "]");
+        }
+        else
+        {
+            res = flint_malloc(strlen(mid_digits) + strlen(rad_digits) + 9);
+
+            strcpy(res, "[");
+
+            if (negative)
+                strcat(res, "-");
+
+            strcat(res, mid_digits);
+            strcat(res, " +/- ");
+            strcat(res, rad_digits);
+            strcat(res, "]");
+        }
     }
 
     if (condense)

@@ -199,8 +199,12 @@ Assignment and rounding
     digits may be printed.
 
     If *ARB_STR_NO_RADIUS* is added to *flags*, the radius is not
-    included in the output if at least 1 digit of the midpoint
-    can be printed.
+    included in the output. Unless *ARB_STR_MORE* is set, the output is
+    rounded so that the midpoint is correct to 1 ulp. As a special case,
+    if there are no significant digits after rounding, the result will
+    be shown as ``0e+n``, meaning that the result is between
+    ``-1e+n`` and ``1e+n`` (following the contract that the output is
+    correct to within one unit in the only shown digit).
 
     By adding a multiple *m* of *ARB_STR_CONDENSE* to *flags*, strings
     of more than three times *m* consecutive digits are condensed, only

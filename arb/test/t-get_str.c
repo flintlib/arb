@@ -75,6 +75,66 @@ int main()
         arb_clear(y);
     }
 
+    /* test ARB_STR_NO_RADIUS */
+    {
+        arb_t x;
+        char * s;
+
+        arb_init(x);
+
+        arb_set_str(x, "3.1415926535897932", 53);
+        s = arb_get_str(x, 10, ARB_STR_NO_RADIUS);
+        if (strcmp(s, "3.141592654"))
+        {
+            flint_printf("FAIL (ARB_STR_NO_RADIUS)\n");
+            flint_printf("%s\n", s);
+            flint_abort();
+        }
+        flint_free(s);
+
+        arb_set_str(x, "+/- 3.45e-10", 53);
+        s = arb_get_str(x, 10, ARB_STR_NO_RADIUS);
+        if (strcmp(s, "0e-9"))
+        {
+            flint_printf("FAIL (ARB_STR_NO_RADIUS)\n");
+            flint_printf("%s\n", s);
+            flint_abort();
+        }
+        flint_free(s);
+
+        arb_set_str(x, "+/- 3.45e10", 53);
+        s = arb_get_str(x, 10, ARB_STR_NO_RADIUS);
+        if (strcmp(s, "0e+11"))
+        {
+            flint_printf("FAIL (ARB_STR_NO_RADIUS)\n");
+            flint_printf("%s\n", s);
+            flint_abort();
+        }
+        flint_free(s);
+
+        arb_set_str(x, "5e10 +/- 6e10", 53);
+        s = arb_get_str(x, 10, ARB_STR_NO_RADIUS);
+        if (strcmp(s, "0e+12"))
+        {
+            flint_printf("FAIL (ARB_STR_NO_RADIUS)\n");
+            flint_printf("%s\n", s);
+            flint_abort();
+        }
+        flint_free(s);
+
+        arb_set_str(x, "5e-100000000000000000002 +/- 5e-100000000000000000002", 53);
+        s = arb_get_str(x, 10, ARB_STR_NO_RADIUS);
+        if (strcmp(s, "0e-100000000000000000000"))
+        {
+            flint_printf("FAIL (ARB_STR_NO_RADIUS)\n");
+            flint_printf("%s\n", s);
+            flint_abort();
+        }
+        flint_free(s);
+
+        arb_clear(x);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
