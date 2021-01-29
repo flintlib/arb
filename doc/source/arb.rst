@@ -156,15 +156,18 @@ Assignment and rounding
 
 .. function:: void arb_set_round_fmpz(arb_t y, const fmpz_t x, slong prec)
 
-    Sets *y* to the value of *x*, rounded to *prec* bits.
+    Sets *y* to the value of *x*, rounded to *prec* bits in the direction
+    towards zero.
 
 .. function:: void arb_set_round_fmpz_2exp(arb_t y, const fmpz_t x, const fmpz_t e, slong prec)
 
-    Sets *y* to `x \cdot 2^e`, rounded to *prec* bits.
+    Sets *y* to `x \cdot 2^e`, rounded to *prec* bits in the direction
+    towards zero.
 
 .. function:: void arb_set_fmpq(arb_t y, const fmpq_t x, slong prec)
 
-    Sets *y* to the rational number *x*, rounded to *prec* bits.
+    Sets *y* to the rational number *x*, rounded to *prec* bits in the direction
+    towards zero.
 
 .. function:: int arb_set_str(arb_t res, const char * inp, slong prec)
 
