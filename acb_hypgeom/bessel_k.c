@@ -205,37 +205,52 @@ acb_hypgeom_bessel_k_0f1(acb_t res, const acb_t nu, const acb_t z, int scaled, s
     }
 }
 
+static int
+_use_bessel_k_0f1(const acb_t nu, const acb_t z, slong prec)
+{
+    slong result = 0;
+    mag_t zmag;
+    mag_init(zmag);
+    acb_get_mag(zmag, z);
+    if (mag_cmp_2exp_si(zmag, 4) < 0)
+    {
+        result = 1;
+    }
+    else if (mag_cmp_2exp_si(zmag, 64) >= 0)
+    {
+        result = 0;
+    }
+    else
+    {
+        if (acb_is_real(nu) && arb_is_positive(acb_realref(nu)) &&
+            acb_is_real(z) && arb_is_positive(acb_realref(z)))
+        {
+            result = mag_get_d(zmag) < 0.172 * prec - 1;
+        }
+        else
+        {
+            result = 2 * mag_get_d(zmag) < prec;
+        }
+    }
+    mag_clear(zmag);
+    return result;
+}
+
 void
 acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
-    mag_t zmag;
-
-    mag_init(zmag);
-    acb_get_mag(zmag, z);
-
-    if (mag_cmp_2exp_si(zmag, 4) < 0 ||
-        (mag_cmp_2exp_si(zmag, 64) < 0 && mag_get_d(zmag) < 0.172 * prec - 1))
+    if (_use_bessel_k_0f1(nu, z, prec))
         acb_hypgeom_bessel_k_0f1(res, nu, z, 0, prec);
     else
         acb_hypgeom_bessel_k_asymp(res, nu, z, 0, prec);
-
-    mag_clear(zmag);
 }
 
 void
 acb_hypgeom_bessel_k_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec)
 {
-    mag_t zmag;
-
-    mag_init(zmag);
-    acb_get_mag(zmag, z);
-
-    if (mag_cmp_2exp_si(zmag, 4) < 0 ||
-        (mag_cmp_2exp_si(zmag, 64) < 0 && mag_get_d(zmag) < 0.172 * prec - 1))
+    if (_use_bessel_k_0f1(nu, z, prec))
         acb_hypgeom_bessel_k_0f1(res, nu, z, 1, prec);
     else
         acb_hypgeom_bessel_k_asymp(res, nu, z, 1, prec);
-
-    mag_clear(zmag);
 }
 
