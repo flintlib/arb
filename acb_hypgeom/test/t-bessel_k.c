@@ -11,6 +11,51 @@
 
 #include "acb_hypgeom.h"
 
+static void
+gh_issue_360_regression_test()
+{
+    slong prec, bits;
+    acb_t nu, z, w;
+
+    acb_init(nu);
+    acb_init(z);
+    acb_init(w);
+
+    prec = 128;
+    acb_set_d(nu, 2.0);
+    acb_set_d(z, 58.0);
+
+    /* unscaled */
+    acb_hypgeom_bessel_k(w, nu, z, prec);
+    bits = arb_rel_accuracy_bits(acb_realref(w));
+    if (bits < 100)
+    {
+        flint_printf("FAIL: gh issue 360 regression (unscaled)\n\n");
+        flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+        flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
+        flint_printf("w = "); acb_printd(w, 30); flint_printf("\n\n");
+        flint_printf("bits: %wd\n\n", bits);
+        flint_abort();
+    }
+
+    /* scaled */
+    acb_hypgeom_bessel_k_scaled(w, nu, z, prec);
+    bits = arb_rel_accuracy_bits(acb_realref(w));
+    if (bits < 100)
+    {
+        flint_printf("FAIL: gh issue 360 regression (scaled)\n\n");
+        flint_printf("nu = "); acb_printd(nu, 30); flint_printf("\n\n");
+        flint_printf("z = ");  acb_printd(z, 30); flint_printf("\n\n");
+        flint_printf("w = "); acb_printd(w, 30); flint_printf("\n\n");
+        flint_printf("bits: %wd\n\n", bits);
+        flint_abort();
+    }
+
+    acb_clear(nu);
+    acb_clear(z);
+    acb_clear(w);
+}
+
 int main()
 {
     slong iter;
@@ -161,6 +206,8 @@ int main()
         acb_clear(t);
         acb_clear(u);
     }
+
+    gh_issue_360_regression_test();
 
     flint_randclear(state);
     flint_cleanup();

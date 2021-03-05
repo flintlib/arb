@@ -214,7 +214,7 @@ acb_hypgeom_bessel_k(acb_t res, const acb_t nu, const acb_t z, slong prec)
     acb_get_mag(zmag, z);
 
     if (mag_cmp_2exp_si(zmag, 4) < 0 ||
-        (mag_cmp_2exp_si(zmag, 64) < 0 && 2 * mag_get_d(zmag) < prec))
+        (mag_cmp_2exp_si(zmag, 64) < 0 && mag_get_d(zmag) < 0.172 * prec - 1))
         acb_hypgeom_bessel_k_0f1(res, nu, z, 0, prec);
     else
         acb_hypgeom_bessel_k_asymp(res, nu, z, 0, prec);
@@ -231,7 +231,7 @@ acb_hypgeom_bessel_k_scaled(acb_t res, const acb_t nu, const acb_t z, slong prec
     acb_get_mag(zmag, z);
 
     if (mag_cmp_2exp_si(zmag, 4) < 0 ||
-        (mag_cmp_2exp_si(zmag, 64) < 0 && 2 * mag_get_d(zmag) < prec))
+        (mag_cmp_2exp_si(zmag, 64) < 0 && mag_get_d(zmag) < 0.172 * prec - 1))
         acb_hypgeom_bessel_k_0f1(res, nu, z, 1, prec);
     else
         acb_hypgeom_bessel_k_asymp(res, nu, z, 1, prec);
