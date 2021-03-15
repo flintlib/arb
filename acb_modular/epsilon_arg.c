@@ -12,7 +12,7 @@
 #include "acb_modular.h"
 
 static int
-fmpz_kronecker(const fmpz_t a, const fmpz_t b)
+fmpz_kronecker1(const fmpz_t a, const fmpz_t b)
 {
     if (fmpz_sgn(b) < 0)
     {
@@ -20,7 +20,7 @@ fmpz_kronecker(const fmpz_t a, const fmpz_t b)
         fmpz_t t;
         fmpz_init(t);
         fmpz_neg(t, b);
-        r = fmpz_kronecker(a, t);
+        r = fmpz_kronecker1(a, t);
         fmpz_clear(t);
         return r;
     }
@@ -58,12 +58,12 @@ acb_modular_epsilon_arg(const psl2z_t g)
 
         if (cc % 2 == 1)
         {
-            u = fmpz_kronecker(a, c);
+            u = fmpz_kronecker1(a, c);
             aa = aa*bb + 2*aa*cc - 3*cc + cc*dd*(1-aa*aa);
         }
         else
         {
-            u = fmpz_kronecker(c, a);
+            u = fmpz_kronecker1(c, a);
             aa = aa*bb - aa*cc + 3*aa - 3 + cc*dd*(1-aa*aa);
         }
 
