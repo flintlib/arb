@@ -64,6 +64,16 @@ arb_mat_swap(arb_mat_t mat1, arb_mat_t mat2)
     *mat2 = t;
 }
 
+ARB_MAT_INLINE void
+arb_mat_swap_entrywise(arb_mat_t mat1, arb_mat_t mat2)
+{
+    slong i, j;
+
+    for (i = 0; i < arb_mat_nrows(mat1); i++)
+        for (j = 0; j < arb_mat_ncols(mat1); j++)
+            arb_swap(arb_mat_entry(mat2, i, j), arb_mat_entry(mat1, i, j));
+}
+
 /* Window matrices */
 
 void arb_mat_window_init(arb_mat_t window, const arb_mat_t mat, slong r1, slong c1, slong r2, slong c2);
