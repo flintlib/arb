@@ -136,10 +136,12 @@ if(NOT MSVC)
     target_link_libraries(arb m)
 endif()
 
+include(GNUInstallDirs)
+
 install(TARGETS arb
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
+            RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}"
+            ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+            LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
         )
 
 foreach (FOLDER ${FOLDERS})
