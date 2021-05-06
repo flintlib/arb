@@ -66,6 +66,16 @@ acb_mat_swap(acb_mat_t mat1, acb_mat_t mat2)
     *mat2 = t;
 }
 
+ACB_MAT_INLINE void
+acb_mat_swap_entrywise(acb_mat_t mat1, acb_mat_t mat2)
+{
+    slong i, j;
+
+    for (i = 0; i < acb_mat_nrows(mat1); i++)
+        for (j = 0; j < acb_mat_ncols(mat1); j++)
+            acb_swap(acb_mat_entry(mat2, i, j), acb_mat_entry(mat1, i, j));
+}
+
 /* Window matrices */
 
 void acb_mat_window_init(acb_mat_t window, const acb_mat_t mat, slong r1, slong c1, slong r2, slong c2);

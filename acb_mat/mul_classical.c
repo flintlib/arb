@@ -45,7 +45,7 @@ acb_mat_mul_classical(acb_mat_t C, const acb_mat_t A, const acb_mat_t B, slong p
         acb_mat_t T;
         acb_mat_init(T, ar, bc);
         acb_mat_mul_classical(T, A, B, prec);
-        acb_mat_swap(T, C);
+        acb_mat_swap_entrywise(T, C);
         acb_mat_clear(T);
         return;
     }

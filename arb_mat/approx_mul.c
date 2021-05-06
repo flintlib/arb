@@ -31,7 +31,7 @@ arb_mat_approx_mul_classical(arb_mat_t C, const arb_mat_t A, const arb_mat_t B, 
         arb_mat_t T;
         arb_mat_init(T, ar, bc);
         arb_mat_approx_mul_classical(T, A, B, prec);
-        arb_mat_swap(T, C);
+        arb_mat_swap_entrywise(T, C);
         arb_mat_clear(T);
         return;
     }
