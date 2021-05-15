@@ -797,6 +797,8 @@ void arf_randtest_not_zero(arf_t x, flint_rand_t state, slong bits, slong mag_bi
 
 void arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bits);
 
+void arf_randtest_uniform(arf_t x, flint_rand_t state, slong bits, slong mag_bits);
+
 #define MUL_MPFR_MIN_LIMBS 25
 #define MUL_MPFR_MAX_LIMBS 10000
 
