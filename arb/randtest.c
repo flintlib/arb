@@ -88,3 +88,17 @@ arb_randtest_special(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
     }
 }
 
+void
+arb_randtest_uniform_exact(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
+{
+    arf_randtest_uniform(arb_midref(x), state, prec, mag_bits);
+    mag_zero(arb_radref(x));
+}
+
+void
+arb_randtest_uniform(arb_t x, flint_rand_t state, slong prec, slong mag_bits)
+{
+    arf_randtest_uniform(arb_midref(x), state, prec, mag_bits);
+    mag_randtest_uniform(arb_radref(x), state, mag_bits);
+}
+
