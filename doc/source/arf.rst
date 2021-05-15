@@ -482,6 +482,11 @@ Random number generation
     Identical to :func:`arf_randtest`, except that the output occasionally
     is set to an infinity or NaN.
 
+.. function:: void arf_randtest_uniform(arf_t res, flint_rand_t state, slong bits)
+
+    Sets *res* to a uniformly distributed random number between `[0, 1)` whose
+    exponent is `0`.
+
 Input and output
 -------------------------------------------------------------------------------
 
