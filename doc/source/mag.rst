@@ -257,6 +257,11 @@ Random generation
 
     Like :func:`mag_randtest`, but also sometimes sets *res* to infinity.
 
+.. function:: void mag_randtest_uniform(mag_t res, flint_rand_t state, slong expbits)
+
+    Sets *res* to a uniformly distributed random number in `[0, 1)` whose
+    exponent is `0`.
+
 Arithmetic
 -------------------------------------------------------------------------------
 

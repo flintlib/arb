@@ -45,3 +45,10 @@ mag_randtest(mag_t x, flint_rand_t state, slong expbits)
         mag_zero(x);
 }
 
+void
+mag_randtest_uniform(mag_t x, flint_rand_t state, slong expbits)
+{
+    MAG_MAN(x) = n_randlimb(state);
+    fmpz_zero(MAG_EXPREF(x));
+}
+
