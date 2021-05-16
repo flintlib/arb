@@ -484,8 +484,7 @@ Random number generation
 
 .. function:: void arf_randtest_uniform(arf_t res, flint_rand_t state, slong bits)
 
-    Sets *res* to a uniformly distributed random number between `[0, 1)` whose
-    exponent is `0`.
+    Sets *res* to a uniformly distributed random number in `[0, 1)`.
 
 Input and output
 -------------------------------------------------------------------------------
