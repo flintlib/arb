@@ -370,15 +370,11 @@ Random number generation
     that representing the endpoints as exact rational numbers would
     cause overflows.
 
-.. function:: void arb_randtest_uniform(arb_t x, flint_rand_t state, slong prec)
+.. function:: void arb_urandom(arb_t x, flint_rand_t state, slong prec, arf_rnd_t rnd)
 
-    Sets the midpoint and radius of *x* to uniformly distributed random numbers
-    in `[0, 1)`.
-
-.. function:: void arb_randtest_uniform_exact(arb_t x, flint_rand_t state, slong prec)
-
-    Sets the midpoint of *x* to a uniformly distributed random number in
-    `[0, 1)` whose radius is `0`.
+    Sets *x* to a uniformly distributed random number in the interval
+    `[0, 1]`. The method uses rounding from integers to floats based on the
+    rounding mode *rnd*.
 
 Radius and interval operations
 -------------------------------------------------------------------------------
