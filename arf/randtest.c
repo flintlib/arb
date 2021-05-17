@@ -56,16 +56,3 @@ arf_randtest_special(arf_t x, flint_rand_t state, slong bits, slong mag_bits)
     }
 }
 
-void
-arf_randtest_uniform(arf_t x, flint_rand_t state, slong bits)
-{
-    slong prec = bits;
-    prec += 128;
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_randtest_unsigned(t, state, prec);
-    arf_set_round_fmpz(x, t, bits, ARF_RND_DOWN);
-    fmpz_sub_si(ARF_EXPREF(x), ARF_EXPREF(x), prec);
-    fmpz_clear(t);
-}
-

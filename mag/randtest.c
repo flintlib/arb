@@ -45,15 +45,3 @@ mag_randtest(mag_t x, flint_rand_t state, slong expbits)
         mag_zero(x);
 }
 
-void
-mag_randtest_uniform(mag_t x, flint_rand_t state)
-{
-    slong prec = 64;
-    fmpz_t t;
-    fmpz_init(t);
-    fmpz_randtest_unsigned(t, state, prec);
-    mag_set_fmpz_lower(x, t);
-    fmpz_sub_si(MAG_EXPREF(x), MAG_EXPREF(x), prec);
-    fmpz_clear(t);
-}
-

@@ -508,8 +508,6 @@ void mag_randtest_special(mag_t x, flint_rand_t state, slong expbits);
 
 void mag_randtest(mag_t x, flint_rand_t state, slong expbits);
 
-void mag_randtest_uniform(mag_t x, flint_rand_t state);
-
 void mag_fprint(FILE * file, const mag_t x);
 
 void mag_fprintd(FILE * file, const mag_t x, slong d);
