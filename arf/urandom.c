@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2021 Fredrik Johansson
+    Copyright (C) 2021 Albin Ahlbäck
 
     This file is part of Arb.
 
@@ -30,5 +30,7 @@ arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd)
     arf_set_round_fmpz(x, t, bits, rnd);
     arf_mul_2exp_si(x, x, -prec);
 
+    fmpz_clear(n);
     fmpz_clear(t);
 }
+

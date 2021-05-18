@@ -373,8 +373,8 @@ Random number generation
 .. function:: void arb_urandom(arb_t x, flint_rand_t state, slong prec, arf_rnd_t rnd)
 
     Sets *x* to a uniformly distributed random number in the interval
-    `[0, 1]`. The method uses rounding from integers to floats based on the
-    rounding mode *rnd*.
+    `[0, 1]`. The method uses rounding from integers to floats, hence the
+    radius might not be `0`.
 
 Radius and interval operations
 -------------------------------------------------------------------------------

@@ -333,7 +333,7 @@ void arb_randtest(arb_t x, flint_rand_t state, slong prec, slong mag_bits);
 
 void arb_randtest_special(arb_t x, flint_rand_t state, slong prec, slong mag_bits);
 
-void arb_urandom(arb_t x, flint_rand_t state, slong prec, arf_rnd_t rnd);
+void arb_urandom(arb_t x, flint_rand_t state, slong prec);
 
 void arb_add_error_arf(arb_t x, const arf_t err);
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2021 Fredrik Johansson
+    Copyright (C) 2021 Albin Ahlbäck
 
     This file is part of Arb.
 
@@ -12,9 +12,25 @@
 #include "arb.h"
 
 void
-arb_urandom(arb_t x, flint_rand_t state, slong prec, arf_rnd_t rnd)
+arb_urandom(arb_t x, flint_rand_t state, slong bits)
 {
-    arf_urandom(arb_midref(x), state, prec, rnd);
-    mag_zero(arb_radref(x));
+    slong prec = bits;
+    fmpz_t n;
+    fmpz_t t;
+
+    prec += 128;
+
+    fmpz_init(n);
+    fmpz_one(n);
+    fmpz_mul_2exp(n, n, (ulong) prec);
+
+    fmpz_init(t);
+    fmpz_randm(t, state, n);
+
+    arb_set_round_fmpz(x, t, bits);
+    arb_mul_2exp_si(x, x, -prec);
+
+    fmpz_clear(n);
+    fmpz_clear(t);
 }
 

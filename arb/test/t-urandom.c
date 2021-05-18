@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2021 Fredrik Johansson
+    Copyright (C) 2021 Albin Ahlbäck
 
     This file is part of Arb.
 
@@ -18,7 +18,6 @@ int main()
   slong iter;
   slong prec;
   flint_rand_t state;
-  arf_rnd_t round;
   arb_t rand[N];
   arb_t m; /* mean */
   arb_t s; /* variance */
@@ -34,12 +33,11 @@ int main()
   arb_init(mp);
   arb_init(sp);
   prec = 299;
-  round = ARF_RND_DOWN;
 
   for (iter = 0; iter < N; iter++)
   {
     arb_init(rand[iter]);
-    arb_urandom(rand[iter], state, prec, round);
+    arb_urandom(rand[iter], state, prec);
     arb_add(m, m, rand[iter], prec);
   }
 
@@ -77,6 +75,8 @@ int main()
   for (iter = 0; iter < N; iter++) arb_clear(rand[iter]);
   arb_clear(m);
   arb_clear(s);
+  arb_clear(mp);
+  arb_clear(sp);
   flint_randclear(state);
   flint_cleanup();
   flint_printf("PASS\n");
