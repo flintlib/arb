@@ -482,6 +482,12 @@ Random number generation
     Identical to :func:`arf_randtest`, except that the output occasionally
     is set to an infinity or NaN.
 
+.. function:: void arf_urandom(arf_t res, flint_rand_t state, slong bits, arf_rnd_t rnd)
+
+    Sets *res* to a uniformly distributed random number in the interval
+    `[0, 1]`. The method uses rounding from integers to floats based on the
+    rounding mode *rnd*.
+
 Input and output
 -------------------------------------------------------------------------------
 
