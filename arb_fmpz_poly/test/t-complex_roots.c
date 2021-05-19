@@ -20,7 +20,7 @@ check_roots(const fmpz_poly_t poly, acb_srcptr roots, slong prec)
     arb_poly_t rpoly;
     arb_t lead;
 
-    slong i, num_real, num_upper, deg;
+    slong i, j, num_real, num_upper, deg;
 
     deg = fmpz_poly_degree(poly);
 
@@ -62,6 +62,23 @@ check_roots(const fmpz_poly_t poly, acb_srcptr roots, slong prec)
         flint_printf("rpoly:\n");
         arb_poly_printd(rpoly, 30); flint_printf("\n\n");
         flint_abort();
+    }
+
+    for (i = 0; i < deg; i++)
+    {
+        for (j = i + 1; j < deg; j++)
+        {
+            if (acb_overlaps(roots + i, roots + j))
+            {
+                flint_printf("FAIL! (isolation)\n");
+                flint_printf("deg = %wd, num_real = %wd, num_upper = %wd\n\n", deg, num_real, num_upper);
+                for (i = 0; i < deg; i++)
+                {
+                    acb_printn(roots + i, 30, 0);
+                    flint_printf("\n");
+                }
+            }
+        }
     }
 
     _arb_vec_clear(real, num_real);

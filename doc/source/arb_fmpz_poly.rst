@@ -66,7 +66,10 @@ Polynomial roots
 .. function:: void arb_fmpz_poly_complex_roots(acb_ptr roots, const fmpz_poly_t poly, int flags, slong prec)
 
     Writes to *roots* all the real and complex roots of the polynomial *poly*,
-    computed to *prec* accurate bits.
+    computed to at least *prec* accurate bits.
+    The root enclosures are guaranteed to be disjoint, so that
+    all roots are isolated.
+
     The real roots are written first in ascending order (with
     the imaginary parts set exactly to zero). The following
     nonreal roots are written in arbitrary order, but with conjugate pairs
@@ -94,7 +97,8 @@ Polynomial roots
 
     All roots are refined to a relative accuracy of at least *prec* bits.
     The output values will generally have higher actual precision,
-    depending on the precision used internally by the algorithm.
+    depending on the precision needed for isolation and the
+    precision used internally by the algorithm.
 
     This implementation should be adequate for general use, but it is not
     currently competitive with state-of-the-art isolation

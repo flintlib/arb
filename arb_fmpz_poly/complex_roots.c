@@ -12,7 +12,7 @@
 #include "arb_fmpz_poly.h"
 #include "flint/profiler.h"
 
-int check_accuracy(acb_ptr vec, slong len, slong prec)
+static int check_accuracy(acb_ptr vec, slong len, slong prec)
 {
     slong i;
 
@@ -20,6 +20,28 @@ int check_accuracy(acb_ptr vec, slong len, slong prec)
     {
         if (acb_rel_accuracy_bits(vec + i) < prec)
             return 0;
+    }
+
+    return 1;
+}
+
+static int check_isolation(acb_srcptr roots, slong len)
+{
+    slong i, j;
+
+    for (i = 0; i < len; i++)
+    {
+        if (arf_sgn(arb_midref(acb_imagref(roots + i))) >= 0)
+        {
+            for (j = i + 1; j < len; j++)
+            {
+                if (arf_sgn(arb_midref(acb_imagref(roots + j))) >= 0)
+                {
+                    if (acb_overlaps(roots + i, roots + j))
+                        return 0;
+                }
+            }
+        }
     }
 
     return 1;
@@ -147,6 +169,15 @@ arb_fmpz_poly_complex_roots(acb_ptr roots, const fmpz_poly_t poly, int flags, sl
             {
                 if (arb_contains_zero(acb_imagref(roots + i)))
                     arb_zero(acb_imagref(roots + i));
+            }
+
+            if (!check_isolation(roots, deg))
+            {
+                /* extremely unlikely */
+                if (flags & ARB_FMPZ_POLY_ROOTS_VERBOSE)
+                    flint_printf("isolation failure!\n");
+
+                continue;
             }
 
             if (flags & ARB_FMPZ_POLY_ROOTS_VERBOSE)
