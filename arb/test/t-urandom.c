@@ -15,70 +15,71 @@
 
 int main()
 {
-  slong iter;
-  slong prec;
-  flint_rand_t state;
-  arb_t rand[N];
-  arb_t m; /* mean */
-  arb_t s; /* variance */
-  arb_t mp;
-  arb_t sp;
-
-  flint_printf("urandom....");
-  fflush(stdout);
-
-  flint_randinit(state);
-  arb_init(m);
-  arb_init(s);
-  arb_init(mp);
-  arb_init(sp);
-  prec = 299;
-
-  for (iter = 0; iter < N; iter++)
-  {
-    arb_init(rand[iter]);
-    arb_urandom(rand[iter], state, prec);
-    arb_add(m, m, rand[iter], prec);
-  }
-
-  arb_div_si(m, m, N, prec);
-
-  for (iter = 0; iter < N; iter++)
-  {
+    slong iter;
+    slong prec;
+    flint_rand_t state;
+    arb_ptr rand;
+    arb_t m; /* mean */
+    arb_t s; /* variance */
+    arb_t mp;
+    arb_t sp;
     arb_t tmp;
+
+    flint_printf("urandom....");
+    fflush(stdout);
+
+    flint_randinit(state);
+    arb_init(m);
+    arb_init(s);
+    arb_init(mp);
+    arb_init(sp);
     arb_init(tmp);
-    arb_sub(tmp, rand[iter], m, prec);
-    arb_sqr(tmp, tmp, prec);
-    arb_add(s, s, tmp, prec);
+    rand = _arb_vec_init(N);
+    prec = 299;
+
+    for (iter = 0; iter < N; iter++)
+    {
+        arb_urandom(rand + iter, state, prec);
+        arb_add(m, m, rand + iter, prec);
+    }
+
+    arb_div_si(m, m, N, prec);
+
+    for (iter = 0; iter < N; iter++)
+    {
+        arb_sub(tmp, rand + iter, m, prec);
+        arb_sqr(tmp, tmp, prec);
+        arb_add(s, s, tmp, prec);
+    }
+
+    arb_div_si(s, s, N, prec);
+
+    /* one percent deviation */
+    arb_set_str(mp, "0.5 +/- 0.005", prec);
+    arb_set_str(sp, "0.083333 +/- 0.00083", prec);
+
+    if (!arb_contains(mp, m))
+    {
+        flint_printf("FAIL: mean\n\n");
+        flint_printf("m = "); arb_printd(m, 15); flint_printf("\n\n");
+        flint_abort();
+    }
+
+    if (!arb_contains(sp, s))
+    {
+        flint_printf("FAIL: variance\n\n");
+        flint_printf("s = "); arb_printd(s, 15); flint_printf("\n\n");
+        flint_abort();
+    }
+
+    _arb_vec_clear(rand, N);
+    arb_clear(m);
+    arb_clear(s);
+    arb_clear(mp);
+    arb_clear(sp);
     arb_clear(tmp);
-  }
-
-  arb_div_si(s, s, N, prec);
-
-  /* one percent deviation */
-  arb_set_str(mp, "0.5 +/- 0.005", prec);
-  arb_set_str(sp, "0.083333 +/- 0.00083", prec);
-
-  if (!arb_contains(mp, m))
-  {
-      flint_printf("FAIL: mean\n\n");
-      flint_printf("m = "); arb_printd(m, 15); flint_printf("\n\n");
-      flint_abort();
-  }
-  if (!arb_contains(sp, s))
-  {
-      flint_printf("FAIL: variance\n\n");
-      flint_printf("s = "); arb_printd(s, 15); flint_printf("\n\n");
-      flint_abort();
-  }
-
-  for (iter = 0; iter < N; iter++) arb_clear(rand[iter]);
-  arb_clear(m);
-  arb_clear(s);
-  arb_clear(mp);
-  arb_clear(sp);
-  flint_randclear(state);
-  flint_cleanup();
-  flint_printf("PASS\n");
-  return EXIT_SUCCESS;
+    flint_randclear(state);
+    flint_cleanup();
+    flint_printf("PASS\n");
+    return EXIT_SUCCESS;
 }
