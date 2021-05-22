@@ -299,6 +299,10 @@ The main reference is chapter 23 in [NIST2012]_.
             \frac{\theta_4^2(z,\tau)}{\theta_1^2(z,\tau)} -
             \frac{\pi^2}{3} \left[ \theta_2^4(0,\tau) + \theta_3^4(0,\tau)\right].
 
+.. function:: void acb_elliptic_p_prime(acb_t res, const acb_t z, const acb_t tau, slong prec)
+
+    Computes the derivative `\wp'(z, \tau)` of Weierstrass's elliptic function `\wp(z, \tau)`.
+
 .. function:: void acb_elliptic_p_jet(acb_ptr res, const acb_t z, const acb_t tau, slong len, slong prec)
 
     Computes the formal power series `\wp(z + x, \tau) \in \mathbb{C}[[x]]`,
