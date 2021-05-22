@@ -24,7 +24,7 @@ int main()
     for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
     {
         acb_struct pj[2];
-        acb_t tau, z, p, pp;
+        acb_t tau, z, p, pp, g2, g3, t;
         slong prec;
 
         acb_init(tau);
@@ -33,6 +33,9 @@ int main()
         acb_init(pp);
         acb_init(pj + 0);
         acb_init(pj + 1);
+        acb_init(g2);
+        acb_init(g3);
+        acb_init(t);
 
         prec = 2 + n_randint(state, 400);
 
@@ -57,12 +60,34 @@ int main()
             flint_abort();
         }
 
+        acb_elliptic_invariants(g2, g3, tau, prec);
+        acb_pow_ui(pj + 0, pp, 2, prec);
+
+        acb_mul(t, p, g2, prec);
+        acb_add(t, t, g3, prec);
+        acb_pow_ui(pj + 1, p, 3, prec);
+        acb_mul_ui(pj + 1, pj + 1, 4, prec);
+        acb_sub(pj + 1, pj + 1, t, prec);
+
+        if (!acb_overlaps(pj + 0, pj + 1))
+        {
+            flint_printf("FAIL (check pp^2 = 4p^3-g2*p-g3)\n");
+            flint_printf("tau = "); acb_printd(tau, 30); flint_printf("\n\n");
+            flint_printf("z = "); acb_printd(z, 30); flint_printf("\n\n");
+            flint_printf("p = "); acb_printd(p, 30); flint_printf("\n\n");
+            flint_printf("pp = "); acb_printd(pp, 30); flint_printf("\n\n");
+            flint_abort();
+        }
+
         acb_clear(tau);
         acb_clear(z);
         acb_clear(p);
         acb_clear(pp);
         acb_clear(pj + 0);
         acb_clear(pj + 1);
+        acb_clear(g2);
+        acb_clear(g3);
+        acb_clear(t);
     }
 
     flint_randclear(state);
