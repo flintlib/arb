@@ -900,7 +900,7 @@ arb_gamma_fmpq(arb_t y, const fmpq_t x, slong prec)
 
     if (q != 1 && prec > 9000 + 400 * fmpz_bits(fmpq_denref(x)) && 
         (slong) fmpz_bits(fmpq_numref(x)) - (slong) fmpz_bits(fmpq_denref(x)) < FLINT_BITS &&
-        fabs(fmpq_get_d(x)) < prec)
+        fabs(fmpq_get_d(x)) < 0.03 * prec * sqrt(prec))
     {
         arb_gamma_fmpq_outward(y, x, prec);
         return;
