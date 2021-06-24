@@ -50,6 +50,8 @@ void acb_elliptic_pi_inc(acb_t res, const acb_t n, const acb_t phi, const acb_t 
 
 void acb_elliptic_p(acb_t r, const acb_t z, const acb_t tau, slong prec);
 
+void acb_elliptic_p_prime(acb_t r, const acb_t z, const acb_t tau, slong prec);
+
 void acb_elliptic_p_jet(acb_ptr r, const acb_t z, const acb_t tau, slong len, slong prec);
 
 void _acb_elliptic_p_series(acb_ptr res, acb_srcptr z, slong zlen, const acb_t tau, slong len, slong prec);
