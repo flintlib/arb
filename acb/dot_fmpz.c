@@ -138,8 +138,6 @@ acb_dot_fmpz(acb_t res, const acb_t initial, int subtract, acb_srcptr x, slong x
         }
     }
 
-    TMP_END;
-
     arb_dot(((arb_ptr) res) + 0, (initial == NULL) ? NULL : ((arb_srcptr) initial) + 0, subtract, ((arb_srcptr) x) + 0, 2 * xstep, t, 1, len, prec);
     arb_dot(((arb_ptr) res) + 1, (initial == NULL) ? NULL : ((arb_srcptr) initial) + 1, subtract, ((arb_srcptr) x) + 1, 2 * xstep, t, 1, len, prec);
 

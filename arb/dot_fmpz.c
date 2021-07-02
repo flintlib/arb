@@ -138,8 +138,6 @@ arb_dot_fmpz(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong x
         }
     }
 
-    TMP_END;
-
     arb_dot(res, initial, subtract, x, xstep, t, 1, len, prec);
 
     TMP_END;

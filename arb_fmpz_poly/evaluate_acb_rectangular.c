@@ -15,7 +15,7 @@ void
 _arb_fmpz_poly_evaluate_acb_rectangular(acb_t y, const fmpz * poly,
     slong len, const acb_t x, slong prec)
 {
-    slong i, j, m, r;
+    slong i, m, r;
     acb_ptr xs;
     acb_t s, t, c;
 
@@ -36,15 +36,14 @@ _arb_fmpz_poly_evaluate_acb_rectangular(acb_t y, const fmpz * poly,
     _acb_vec_set_powers(xs, x, m + 1, prec);
 
     acb_set_fmpz(y, poly + (r - 1) * m);
-    for (j = 1; (r - 1) * m + j < len; j++)
-        acb_addmul_fmpz(y, xs + j, poly + (r - 1) * m + j, prec);
+    acb_dot_fmpz(y, y, 0, xs + 1, 1,
+        poly + (r - 1) * m + 1, 1, len - (r - 1) * m - 1, prec);
 
     for (i = r - 2; i >= 0; i--)
     {
         acb_set_fmpz(s, poly + i * m);
-        for (j = 1; j < m; j++)
-            acb_addmul_fmpz(s, xs + j, poly + i * m + j, prec);
-
+        acb_dot_fmpz(s, s, 0, xs + 1, 1,
+            poly + i * m + 1, 1, m - 1, prec);
         acb_mul(y, y, xs + m, prec);
         acb_add(y, y, s, prec);
     }
