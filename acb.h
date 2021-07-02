@@ -602,6 +602,17 @@ void acb_dot(acb_t res, const acb_t initial, int subtract,
 void acb_approx_dot(acb_t res, const acb_t initial, int subtract,
     acb_srcptr x, slong xstep, acb_srcptr y, slong ystep, slong len, slong prec);
 
+void acb_dot_ui(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void acb_dot_si(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, const slong * y, slong ystep, slong len, slong prec);
+void acb_dot_uiui(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void acb_dot_siui(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void acb_dot_fmpz(acb_t res, const acb_t initial, int subtract,
+    acb_srcptr x, slong xstep, const fmpz * y, slong ystep, slong len, slong prec);
+
 void acb_inv(acb_t z, const acb_t x, slong prec);
 
 void acb_div(acb_t z, const acb_t x, const acb_t y, slong prec);

@@ -105,7 +105,7 @@ arf_rnd_to_mpfr(arf_rnd_t rnd)
 #define ARF_XSIZE(x) ((x)->size)
 
 /* Construct size field value from size in limbs and sign bit. */
-#define ARF_MAKE_XSIZE(size, sgnbit) ((((mp_size_t) size) << 1) | sgnbit)
+#define ARF_MAKE_XSIZE(size, sgnbit) ((((mp_size_t) size) << 1) | (sgnbit))
 
 /* The limb size, and the sign bit. */
 #define ARF_SIZE(x) (ARF_XSIZE(x) >> 1)
