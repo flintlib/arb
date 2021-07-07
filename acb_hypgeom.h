@@ -19,6 +19,8 @@
 extern "C" {
 #endif
 
+void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec);
+
 void acb_hypgeom_pfq_bound_factor(mag_t C,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n);
 

@@ -16,6 +16,14 @@ In a looser sense, we understand "hypergeometric functions" to be
 linear combinations of generalized hypergeometric functions
 with prefactors that are products of exponentials, powers, and gamma functions.
 
+Rising factorials
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec)
+
+    Computes the rising factorial `(x)_n` using rectangular splitting.
+    The splitting parameter *m* can be set to zero to choose automatically.
+
 Convergent series
 -------------------------------------------------------------------------------
 

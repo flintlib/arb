@@ -16,6 +16,33 @@ specifically for real variables.
 This module also provides certain functions exclusive to real variables,
 such as functions for computing real roots of common special functions.
 
+Rising factorials
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_hypgeom_rising_coeffs_1(ulong * c, ulong k, slong n)
+              void _arb_hypgeom_rising_coeffs_2(ulong * c, ulong k, slong n)
+              void _arb_hypgeom_rising_coeffs_fmpz(fmpz * c, ulong k, slong n)
+
+    Sets *c* to the coefficients of the rising factorial polynomial
+    `(X+k)_n`. The *1* and *2* versions respectively
+    compute single-word and double-word coefficients, without checking for
+    overflow, while the *fmpz* version allows arbitrarily large coefficients.
+    These functions are mostly intended for internal use; the *fmpz* version
+    does not use an asymptotically fast algorithm.
+    The degree *n* must be at least 2.
+
+.. function:: void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec)
+
+    Computes the rising factorial `(x)_n` using rectangular splitting.
+    The splitting parameter *m* can be set to zero to choose automatically.
+
+Binomial coefficients
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec)
+
+    Computes the central binomial coefficient `{2n \choose n}`.
+
 Generalized hypergeometric function
 -------------------------------------------------------------------------------
 
@@ -448,11 +475,4 @@ Dilogarithm
 .. function:: void arb_hypgeom_dilog(arb_t res, const arb_t z, slong prec)
 
     Computes the dilogarithm `\operatorname{Li}_2(z)`.
-
-Hypergeometric sequences
--------------------------------------------------------------------------------
-
-.. function:: void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec)
-
-    Computes the central binomial coefficient `{2n \choose n}`.
 

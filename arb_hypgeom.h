@@ -19,6 +19,12 @@
 extern "C" {
 #endif
 
+void _arb_hypgeom_rising_coeffs_1(ulong * c, ulong k, slong l);
+void _arb_hypgeom_rising_coeffs_2(ulong * c, ulong k, slong l);
+void _arb_hypgeom_rising_coeffs_fmpz(fmpz * c, ulong k, slong l);
+
+void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 
