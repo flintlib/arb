@@ -31,10 +31,42 @@ Rising factorials
     does not use an asymptotically fast algorithm.
     The degree *n* must be at least 2.
 
-.. function:: void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec)
+.. function:: void arb_hypgeom_rising_ui_forward(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui_bs(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec)
+              void arb_hypgeom_rising_ui_rec(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui(arb_t y, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising(arb_t y, const arb_t x, const arb_t n, slong prec)
 
-    Computes the rising factorial `(x)_n` using rectangular splitting.
-    The splitting parameter *m* can be set to zero to choose automatically.
+    Computes the rising factorial `(x)_n`.
+
+    The *forward* version uses the forward recurrence.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The *rec* version chooses an algorithm automatically, avoiding
+    use of the gamma function (so that it can be used in the computation
+    of the gamma function).
+    The default versions (*rising_ui* and *rising_ui*) choose an algorithm
+    automatically and may additionally fall back on the gamma function.
+
+.. function:: void arb_hypgeom_rising_ui_jet_powsum(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet_bs(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet_rs(arb_ptr res, const arb_t x, ulong n, ulong m, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+
+    Computes the jet of the rising factorial `(x)_n`, truncated to length *len*.
+    In other words, constructs the polynomial `(X + x)_n \in \mathbb{R}[X]`,
+    truncated if `\operatorname{len} < n + 1` (and zero-extended
+    if `\operatorname{len} > n + 1`).
+
+    The *powsum* version computes the sequence of powers of *x* and forms integral
+    linear combinations of these.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The default version chooses an algorithm automatically.
+
 
 Binomial coefficients
 -------------------------------------------------------------------------------

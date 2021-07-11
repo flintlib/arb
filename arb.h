@@ -653,6 +653,18 @@ _arb_vec_entry_ptr(arb_ptr vec, slong i)
 }
 
 ARB_INLINE void
+_arb_vec_printn(arb_srcptr vec, slong len, slong ndigits, ulong flags)
+{
+    slong i;
+    for (i = 0; i < len; i++)
+    {
+        arb_printn(vec + i, ndigits, flags);
+        if (i < len - 1)
+            flint_printf(", ");
+    }
+}
+
+ARB_INLINE void
 _arb_vec_zero(arb_ptr A, slong n)
 {
     slong i;
