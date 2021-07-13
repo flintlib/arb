@@ -435,6 +435,17 @@ void arb_dot(arb_t res, const arb_t initial, int subtract,
 void arb_approx_dot(arb_t res, const arb_t initial, int subtract,
     arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec);
 
+void arb_dot_ui(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void arb_dot_si(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, const slong * y, slong ystep, slong len, slong prec);
+void arb_dot_uiui(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void arb_dot_siui(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec);
+void arb_dot_fmpz(arb_t res, const arb_t initial, int subtract,
+    arb_srcptr x, slong xstep, const fmpz * y, slong ystep, slong len, slong prec);
+
 void arb_div(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_div_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
 void arb_div_si(arb_t z, const arb_t x, slong y, slong prec);
@@ -639,6 +650,18 @@ ARB_INLINE arb_ptr
 _arb_vec_entry_ptr(arb_ptr vec, slong i)
 {
     return vec + i;
+}
+
+ARB_INLINE void
+_arb_vec_printn(arb_srcptr vec, slong len, slong ndigits, ulong flags)
+{
+    slong i;
+    for (i = 0; i < len; i++)
+    {
+        arb_printn(vec + i, ndigits, flags);
+        if (i < len - 1)
+            flint_printf(", ");
+    }
 }
 
 ARB_INLINE void

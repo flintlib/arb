@@ -15,17 +15,24 @@ void
 _arb_fmpz_poly_evaluate_arb(arb_t res, const fmpz * f, slong len,
                            const arb_t x, slong prec)
 {
-    if ((prec >= 1024) && (len >= 5 + 20000 / prec))
+    if (len >= 6 && len >= 5 + 2500 / (FLINT_MAX(prec, 64) + 64))
     {
-        slong fbits;
-
-        fbits = _fmpz_vec_max_bits(f, len);
-
-        if (fbits <= prec / 2)
+        /* todo: improve this tuning? */
+        if (prec > 1024)
         {
-            _arb_fmpz_poly_evaluate_arb_rectangular(res, f, len, x, prec);
-            return;
+            slong fbits;
+            fbits = _fmpz_vec_max_bits(f, len);
+            fbits = FLINT_ABS(fbits);
+
+            if (fbits > prec / 2)
+            {
+                _arb_fmpz_poly_evaluate_arb_horner(res, f, len, x, prec);
+                return;
+            }
         }
+
+        _arb_fmpz_poly_evaluate_arb_rectangular(res, f, len, x, prec);
+        return;
     }
 
     _arb_fmpz_poly_evaluate_arb_horner(res, f, len, x, prec);

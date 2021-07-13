@@ -866,10 +866,8 @@ Dot product
 -------------------------------------------------------------------------------
 
 .. function:: void arb_dot_precise(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
-
-.. function:: void arb_dot_simple(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
-
-.. function:: void arb_dot(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
+              void arb_dot_simple(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
+              void arb_dot(arb_t res, const arb_t s, int subtract, arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec)
 
     Computes the dot product of the vectors *x* and *y*, setting
     *res* to `s + (-1)^{subtract} \sum_{i=0}^{len-1} x_i y_i`.
@@ -907,6 +905,18 @@ Dot product
     Computes an approximate dot product *without error bounds*.
     The radii of the inputs are ignored (only the midpoints are read)
     and only the midpoint of the output is written.
+
+.. function:: void arb_dot_ui(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec)
+              void arb_dot_si(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep, const slong * y, slong ystep, slong len, slong prec)
+              void arb_dot_uiui(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec)
+              void arb_dot_siui(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep, const ulong * y, slong ystep, slong len, slong prec)
+              void arb_dot_fmpz(arb_t res, const arb_t initial, int subtract, arb_srcptr x, slong xstep, const fmpz * y, slong ystep, slong len, slong prec)
+
+    Equivalent to :func:`arb_dot`, but with integers in the array *y*.
+    The *uiui* and *siui* versions take an array of double-limb integers
+    as input; the *siui* version assumes that these represent signed
+    integers in two's complement form.
+
 
 Powers and roots
 -------------------------------------------------------------------------------

@@ -72,6 +72,58 @@ int main()
         fmpq_clear(q);
     }
 
+    for (iter = 0; iter < 50 * arb_test_multiplier(); iter++)
+    {
+        arb_t r, s;
+        fmpq_t q;
+        slong accuracy, prec;
+
+        prec = 2 + n_randint(state, 25000);
+
+        arb_init(r);
+        arb_init(s);
+        fmpq_init(q);
+
+        fmpz_randtest(fmpq_numref(q), state, 3 + n_randlimb(state) % 30);
+        fmpz_randtest_not_zero(fmpq_denref(q), state, 3 + n_randlimb(state) % 30);
+        fmpq_canonicalise(q);
+
+        arb_gamma_fmpq(r, q, prec);
+
+        arb_set_fmpq(s, q, prec);
+        arb_gamma(s, s, prec);
+
+        if (!arb_overlaps(r, s))
+        {
+            flint_printf("FAIL: containment\n\n");
+            flint_printf("prec = %wd\n", prec);
+            flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
+            flint_printf("r = "); arb_printd(r, prec / 3.33); flint_printf("\n\n");
+            flint_printf("s = "); arb_printd(s, prec / 3.33); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        if (!(fmpz_is_one(fmpq_denref(q)) && fmpz_sgn(fmpq_numref(q)) <= 0) &&
+            fabs(fmpq_get_d(q)) < 10.0)
+        {
+            accuracy = arb_rel_accuracy_bits(r);
+
+            if (accuracy < prec - 6)
+            {
+                flint_printf("FAIL: poor accuracy\n\n");
+                flint_printf("prec = %wd\n", prec);
+                flint_printf("q = "); fmpq_print(q); flint_printf("\n\n");
+                flint_printf("r = "); arb_printn(r, prec / 3.33, 0); flint_printf("\n\n");
+                flint_printf("s = "); arb_printn(s, prec / 3.33, 0); flint_printf("\n\n");
+                flint_abort();
+            }
+        }
+
+        arb_clear(r);
+        arb_clear(s);
+        fmpq_clear(q);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

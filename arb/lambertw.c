@@ -63,7 +63,7 @@ static const double pol7[5] = {
     1.0,-3556.4306263369027831,1.4761527435056145298e6,
     -9.8425904825010893103e7,7.0373606710750560344e8 };
 
-static double
+double
 d_lambertw_branch1(double x)
 {
     double w, u;

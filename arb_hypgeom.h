@@ -19,6 +19,22 @@
 extern "C" {
 #endif
 
+void _arb_hypgeom_rising_coeffs_1(ulong * c, ulong k, slong l);
+void _arb_hypgeom_rising_coeffs_2(ulong * c, ulong k, slong l);
+void _arb_hypgeom_rising_coeffs_fmpz(fmpz * c, ulong k, slong l);
+
+void arb_hypgeom_rising_ui_forward(arb_t res, const arb_t x, ulong n, slong prec);
+void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec);
+void arb_hypgeom_rising_ui_bs(arb_t res, const arb_t x, ulong n, slong prec);
+void arb_hypgeom_rising_ui_rec(arb_t res, const arb_t x, ulong n, slong prec);
+void arb_hypgeom_rising_ui(arb_t y, const arb_t x, ulong n, slong prec);
+void arb_hypgeom_rising(arb_t y, const arb_t x, const arb_t n, slong prec);
+
+void arb_hypgeom_rising_ui_jet_powsum(arb_ptr res, const arb_t x, ulong n, slong len, slong prec);
+void arb_hypgeom_rising_ui_jet_rs(arb_ptr res, const arb_t x, ulong n, ulong m, slong len, slong prec);
+void arb_hypgeom_rising_ui_jet_bs(arb_ptr res, const arb_t x, ulong n, slong len, slong prec);
+void arb_hypgeom_rising_ui_jet(arb_ptr res, const arb_t x, ulong n, slong len, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 

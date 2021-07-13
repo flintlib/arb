@@ -16,6 +16,65 @@ specifically for real variables.
 This module also provides certain functions exclusive to real variables,
 such as functions for computing real roots of common special functions.
 
+Rising factorials
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_hypgeom_rising_coeffs_1(ulong * c, ulong k, slong n)
+              void _arb_hypgeom_rising_coeffs_2(ulong * c, ulong k, slong n)
+              void _arb_hypgeom_rising_coeffs_fmpz(fmpz * c, ulong k, slong n)
+
+    Sets *c* to the coefficients of the rising factorial polynomial
+    `(X+k)_n`. The *1* and *2* versions respectively
+    compute single-word and double-word coefficients, without checking for
+    overflow, while the *fmpz* version allows arbitrarily large coefficients.
+    These functions are mostly intended for internal use; the *fmpz* version
+    does not use an asymptotically fast algorithm.
+    The degree *n* must be at least 2.
+
+.. function:: void arb_hypgeom_rising_ui_forward(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui_bs(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec)
+              void arb_hypgeom_rising_ui_rec(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising_ui(arb_t y, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising(arb_t y, const arb_t x, const arb_t n, slong prec)
+
+    Computes the rising factorial `(x)_n`.
+
+    The *forward* version uses the forward recurrence.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The *rec* version chooses an algorithm automatically, avoiding
+    use of the gamma function (so that it can be used in the computation
+    of the gamma function).
+    The default versions (*rising_ui* and *rising_ui*) choose an algorithm
+    automatically and may additionally fall back on the gamma function.
+
+.. function:: void arb_hypgeom_rising_ui_jet_powsum(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet_bs(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet_rs(arb_ptr res, const arb_t x, ulong n, ulong m, slong len, slong prec)
+              void arb_hypgeom_rising_ui_jet(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
+
+    Computes the jet of the rising factorial `(x)_n`, truncated to length *len*.
+    In other words, constructs the polynomial `(X + x)_n \in \mathbb{R}[X]`,
+    truncated if `\operatorname{len} < n + 1` (and zero-extended
+    if `\operatorname{len} > n + 1`).
+
+    The *powsum* version computes the sequence of powers of *x* and forms integral
+    linear combinations of these.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The default version chooses an algorithm automatically.
+
+
+Binomial coefficients
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec)
+
+    Computes the central binomial coefficient `{2n \choose n}`.
+
 Generalized hypergeometric function
 -------------------------------------------------------------------------------
 
@@ -448,11 +507,4 @@ Dilogarithm
 .. function:: void arb_hypgeom_dilog(arb_t res, const arb_t z, slong prec)
 
     Computes the dilogarithm `\operatorname{Li}_2(z)`.
-
-Hypergeometric sequences
--------------------------------------------------------------------------------
-
-.. function:: void arb_hypgeom_central_bin_ui(arb_t res, ulong n, slong prec)
-
-    Computes the central binomial coefficient `{2n \choose n}`.
 

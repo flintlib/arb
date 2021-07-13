@@ -640,6 +640,275 @@ arb_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, slong prec)
     }
 }
 
+slong _arb_compute_bs_exponents(slong * tab, slong n);
+slong _arb_get_exp_pos(const slong * tab, slong step);
+
+static void
+bsplit2(arb_t P, arb_t Q, const fmpz_t zp, const fmpz_t zq,
+    const slong * xexp, arb_srcptr xpow,
+    ulong N, slong a, slong b, int cont, slong prec)
+{
+    if (b - a == 1)
+    {
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_set(t, zp);
+        fmpz_addmul_ui(t, zq, a + 1);
+        arb_set_fmpz(P, t);
+        arb_set(Q, P);
+        fmpz_clear(t);
+    }
+    else
+    {
+        arb_t Pb, Qb;
+        slong step, i, m;
+
+        arb_init(Pb);
+        arb_init(Qb);
+
+        step = (b - a) / 2;
+        m = a + step;
+
+        bsplit2(P, Q, zp, zq, xexp, xpow, N, a, m, 1, prec);
+        bsplit2(Pb, Qb, zp, zq, xexp, xpow, N, m, b, 1, prec);
+
+        arb_mul(P, P, Pb, prec);
+        arb_mul(Q, Q, Pb, prec);
+
+        i = (step == 1) ? 0 : _arb_get_exp_pos(xexp, step);
+        arb_addmul(Q, Qb, xpow + i, prec);
+
+        arb_clear(Pb);
+        arb_clear(Qb);
+    }
+}
+
+static void
+bsplit3(arb_t P, arb_t Q, const fmpz_t zp, const fmpz_t zq,
+    const slong * xexp, arb_srcptr xpow,
+    ulong N, slong a, slong b, int cont, slong prec)
+{
+    if (b - a == 1)
+    {
+        fmpz_t t;
+        fmpz_init(t);
+        arb_set(P, xpow + 0);  /* N zq */
+        fmpz_set(t, zp);
+        fmpz_submul_ui(t, zq, a + 1);  /* zp - (a + 1) zq */
+        arb_set_fmpz(Q, t);
+        fmpz_clear(t);
+    }
+    else
+    {
+        arb_t Pb, Qb;
+        slong step, i, m;
+
+        arb_init(Pb);
+        arb_init(Qb);
+
+        step = (b - a) / 2;
+        m = a + step;
+
+        bsplit3(P, Q, zp, zq, xexp, xpow, N, a, m, 1, prec);
+        bsplit3(Pb, Qb, zp, zq, xexp, xpow, N, m, b, 1, prec);
+
+        i = _arb_get_exp_pos(xexp, m - a);
+
+        arb_mul(P, P, xpow + i, prec);
+        if (b - m != m - a)
+            arb_mul(P, P, xpow + 0, prec);
+
+        arb_addmul(P, Q, Pb, prec);
+
+        if (cont)
+        {
+            arb_mul(Q, Q, Qb, prec);
+        }
+        else
+        {
+            i = _arb_get_exp_pos(xexp, m - a);
+
+            arb_mul(Q, xpow + i, xpow + i, prec);
+            if (b - m != m - a)
+                arb_mul(Q, Q, xpow + 0, prec);
+        }
+
+        arb_clear(Pb);
+        arb_clear(Qb);
+    }
+}
+
+double d_lambertw_branch1(double x);
+
+static ulong
+more_trailing_zeros(ulong N)
+{
+    ulong bc, N2;
+
+    bc = FLINT_BIT_COUNT(N);
+
+    if (bc >= 8)
+    {
+        N2 = (N >> (bc - 5)) << (bc - 5);
+        N2 += ((N2 != N) << (bc - 5));
+        return N2;
+    }
+    else
+    {
+        return N;
+    }
+}
+
+#define C_LOG2 0.69314718055994530942
+#define C_EXP1 2.7182818284590452354
+
+static void
+build_bsplit_power_table(arb_ptr xpow, const slong * xexp, slong len, slong prec)
+{
+    slong i;
+
+    for (i = 1; i < len; i++)
+    {
+        if (xexp[i] == 2 * xexp[i-1])
+        {
+            arb_mul(xpow + i, xpow + i - 1, xpow + i - 1, prec);
+        }
+        else if (xexp[i] == 2 * xexp[i-2]) /* prefer squaring if possible */
+        {
+            arb_mul(xpow + i, xpow + i - 2, xpow + i - 2, prec);
+        }
+        else if (xexp[i] == 2 * xexp[i-1] + 1)
+        {
+            arb_mul(xpow + i, xpow + i - 1, xpow + i - 1, prec);
+            arb_mul(xpow + i, xpow + i, xpow, prec);
+        }
+        else if (xexp[i] == 2 * xexp[i-2] + 1)
+        {
+            arb_mul(xpow + i, xpow + i - 2, xpow + i - 2, prec);
+            arb_mul(xpow + i, xpow + i, xpow, prec);
+        }
+        else
+        {
+            flint_printf("power table has the wrong structure!\n");
+            flint_abort();
+        }
+    }
+}
+
+/* assumes z in [1, 2] */
+static void
+arb_gamma_fmpq_general_off1(arb_t res, const fmpq_t z, slong prec)
+{
+    slong wp, N, n, n2, length, length2, wp2;
+    double alpha;
+    arb_t P, Q;
+    slong *xexp, *xexp2;
+    arb_ptr xpow;
+    mag_t err, err2;
+
+    wp = prec + 30;
+
+    alpha = 0.52;  /* tuning parameter between 0.5 and 1 */
+
+    N = alpha * C_LOG2 * wp;
+    N = more_trailing_zeros(N);
+    alpha = N / (C_LOG2 * wp);
+
+    /* Terms in convergent series */
+    n = (1 - alpha) / d_lambertw((1 - alpha) / (alpha * C_EXP1)) * C_LOG2 * wp;
+
+    /* Precision and terms in asymptotic series */
+    wp2 = wp * (1 - alpha);
+    wp2 = FLINT_MAX(wp2, 30);
+    n2 = (alpha - 1) / d_lambertw_branch1((alpha - 1) / (alpha * C_EXP1)) * C_LOG2 * wp;
+    n2 = FLINT_MAX(n2, 2);  /* binary splitting correctness */
+
+    mag_init(err);
+    mag_init(err2);
+    arb_init(P);
+    arb_init(Q);
+
+    /* compute the powers of x = N*zq that will appear (at least x^1) */
+    xexp = flint_calloc(2 * FLINT_BITS, sizeof(slong));
+    xexp2 = flint_calloc(2 * FLINT_BITS, sizeof(slong));
+
+    length = _arb_compute_bs_exponents(xexp, n);
+    length2 = _arb_compute_bs_exponents(xexp2, n2);
+
+    xpow = _arb_vec_init(FLINT_MAX(length, length2));
+
+    arb_set_fmpz(xpow + 0, fmpq_denref(z));
+    arb_mul_ui(xpow + 0, xpow + 0, N, wp);
+
+    build_bsplit_power_table(xpow, xexp, length, wp);
+
+    /* 1F1(1, 1+z, N) */
+    bsplit2(P, Q, fmpq_numref(z), fmpq_denref(z), xexp, xpow, N, 0, n, 0, wp);
+    arb_div(P, Q, P, wp);
+
+    /* Convergent series error bound: N^n / n! (1 + (N/n) + ...) */
+    mag_set_ui(err, N);
+    mag_pow_ui(err, err, n);
+    mag_rfac_ui(err2, n);
+    mag_mul(err, err, err2);
+    mag_set_ui(err2, N);
+    mag_div_ui(err2, err2, n);
+    mag_geom_series(err2, err2, 0);
+    mag_mul(err, err, err2);
+    arb_add_error_mag(P, err);
+
+    /* divide 1F1 by z */
+    arb_mul_fmpz(P, P, fmpq_denref(z), wp);
+    arb_div_fmpz(P, P, fmpq_numref(z), wp);
+    arb_swap(res, P);
+
+    build_bsplit_power_table(xpow, xexp2, length2, wp2);
+
+    bsplit3(P, Q, fmpq_numref(z), fmpq_denref(z), xexp2, xpow, N, 0, n2, 0, wp2);
+    arb_div(P, P, Q, wp2);
+
+    /* 2F0 error bound (bounded by first omitted term) */
+    mag_fac_ui(err, n2);
+    mag_set_ui_lower(err2, N);
+    mag_pow_ui_lower(err2, err2, n2);
+    mag_div(err, err, err2);
+    arb_add_error_mag(P, err);
+
+    /* N^z * exp(-N) * (1F1/z + 2F0/N)  */
+    arb_div_ui(P, P, N, wp2);
+
+    arb_add(res, res, P, wp);
+    arb_set_ui(Q, N);
+    arb_pow_fmpq(Q, Q, z, wp);
+    arb_mul(res, res, Q, wp);
+
+    arb_set_si(Q, -N);
+    arb_exp(Q, Q, wp);
+    arb_mul(res, res, Q, wp);
+
+    _arb_vec_clear(xpow, FLINT_MAX(length, length2));
+    flint_free(xexp);
+    flint_free(xexp2);
+
+    arb_clear(P);
+    arb_clear(Q);
+    mag_clear(err);
+    mag_clear(err2);
+}
+
+/* assumes z in (0, 1] */
+void
+arb_gamma_fmpq_hyp(arb_t res, const fmpq_t z, slong prec)
+{
+    fmpq_t t;
+    fmpq_init(t);
+    fmpq_add_ui(t, z, 1);
+    arb_gamma_fmpq_general_off1(res, t, prec);
+    arb_mul_fmpz(res, res, fmpq_denref(z), prec + 30);
+    arb_div_fmpz(res, res, fmpq_numref(z), prec);
+    fmpq_clear(t);
+}
+
 void
 arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, slong prec)
 {
@@ -684,8 +953,7 @@ arb_gamma_fmpq_outward(arb_t y, const fmpq_t x, slong prec)
     }
     else
     {
-        flint_printf("arb_gamma_fmpq: invalid fraction\n");
-        flint_abort();
+        arb_gamma_fmpq_hyp(t, a, prec);
     }
 
     /* argument reduction */
@@ -744,6 +1012,14 @@ arb_gamma_fmpq(arb_t y, const fmpq_t x, slong prec)
         }
     }
 
+    if (q != 1 && prec > 7000 + 300 * fmpz_bits(fmpq_denref(x)) && 
+        (slong) fmpz_bits(fmpq_numref(x)) - (slong) fmpz_bits(fmpq_denref(x)) < FLINT_BITS &&
+        fabs(fmpq_get_d(x)) < 0.03 * prec * sqrt(prec))
+    {
+        arb_gamma_fmpq_outward(y, x, prec);
+        return;
+    }
+
     arb_gamma_fmpq_stirling(y, x, prec);
 }
 
@@ -784,9 +1060,9 @@ _arb_gamma(arb_t y, const arb_t x, slong prec, int inverse)
         }
         else
         {
-            /* fast gamma(n), gamma(n/2) or gamma(n/4) */
+            /* fast gamma(n), gamma(n/2) or gamma(n/4), ... */
             if (arf_cmpabs_2exp_si(mid, prec) < 0 &&
-                arf_is_int_2exp_si(mid, -2))
+                (arf_is_int_2exp_si(mid, -2) || (prec > 1000 && arf_is_int_2exp_si(mid, -1000))))
             {
                 fmpq_t a;
                 fmpq_init(a);
@@ -917,9 +1193,9 @@ arb_lgamma(arb_t y, const arb_t x, slong prec)
         return;
     }
 
-    /* fast gamma(n), gamma(n/2) or gamma(n/4) */
-    if (arb_is_exact(x) && arf_is_int_2exp_si(arb_midref(x), -2) &&
-            arf_cmpabs_2exp_si(arb_midref(x), prec) < 0)
+    /* fast gamma(n), gamma(n/2) or gamma(n/4), ... */
+    if (arb_is_exact(x) && arf_cmpabs_2exp_si(arb_midref(x), prec) < 0 &&
+        (arf_is_int_2exp_si(arb_midref(x), -2) || (prec > 10000 && arf_is_int_2exp_si(arb_midref(x), -1000))))
     {
         fmpq_t a;
         fmpq_init(a);
