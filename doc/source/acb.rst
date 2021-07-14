@@ -666,7 +666,7 @@ Exponentials and logarithms
 
 .. function:: void acb_expm1(acb_t res, const acb_t z, slong prec)
 
-    Sets *res* to `\exp(z)-1`, using an accurate method when `z \approx 0`.
+    Sets *res* to `\exp(z)-1`, using a more accurate method when `z \approx 0`.
 
 .. function:: void acb_log(acb_t y, const acb_t z, slong prec)
 
