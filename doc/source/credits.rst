@@ -70,6 +70,10 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Joel Dahne - feedback and improvements for Legendre functions
 * Gianfranco Costamagna - bug reports, Debian testing
 * Julian Rüth - serialization support
+* Michael Orlitzky - build system patches
+* David Berghaus - aliased window matrix multiplication
+* Albin Ahlbäck - uniformly distributed random numbers
+* Daniel Schultz - derivative of Weierstrass elliptic function
 
 Funding
 -------------------------------------------------------------------------------

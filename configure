@@ -10,7 +10,7 @@
 # arb     => soname
 # 2.7.0   => 0.0.0
 ARB_MAJOR=2
-ARB_MINOR=10
+ARB_MINOR=11
 ARB_PATCH=0
 
 PREFIX="/usr/local"

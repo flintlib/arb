@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.20.0.pdf
 * http://arblib.org/arb-2.19.0.pdf
 * http://arblib.org/arb-2.18.1.pdf
 * http://arblib.org/arb-2.18.0.pdf
@@ -32,6 +33,28 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2021-07-25 -- version 2.20.0
+-------------------------------------------------------------------------------
+
+* Flint 2.18 support.
+* Change arb_get_str with ARB_STR_NO_RADIUS: [+/- 1.20e-15] now prints as 0e-14.
+* Uniformly distributed random number functions arf_urandom, arb_urandom
+  (contributed by Albin Ahlbäck).
+* Use quasilinear algorithm in arb_gamma_fmpq for all small fractions.
+* Added derivative of Weierstrass elliptic function (acb_elliptic_p_prime)
+  (contributed by Daniel Schultz).
+* Added dot products with integer coefficients: arb_dot_fmpz, arb_dot_siui,
+  arb_dot_uiui, arb_dot_si, arb_dot_ui, acb_dot_fmpz, acb_dot_siui,
+  acb_dot_uiui, acb_dot_si, acb_dot_ui.
+* Faster arb_fmpz_poly_evaluate_arb and arb_fmpz_poly_evaluate_acb.
+* Explicitly guarantee that roots are isolated in arb_fmpz_poly_complex_roots
+  (could previously theoretically fail when using the deflation hack).
+* Use GNUInstallDirs in CMakeLists.txt to support standard GNU installation
+  directories (contributed by Michael Orlitzky).
+* Fixed bug for aliased multiplication of window matrices (contributed by
+  David Berghaus).
+* Documentation fixes (contributed by Joel Dahne, Hanno Rein).
 
 2020-12-06 -- version 2.19.0
 -------------------------------------------------------------------------------
