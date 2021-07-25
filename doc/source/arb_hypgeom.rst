@@ -148,8 +148,7 @@ Error functions and Fresnel integrals
     Computes the error function `\operatorname{erf}(z)`.
 
 .. function:: void _arb_hypgeom_erf_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_erf_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_erf_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the error function of the power series *z*,
     truncated to length *len*.
@@ -161,8 +160,7 @@ Error functions and Fresnel integrals
     This function avoids catastrophic cancellation for large positive *z*.
 
 .. function:: void _arb_hypgeom_erfc_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_erfc_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_erfc_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the complementary error function of the power series *z*,
     truncated to length *len*.
@@ -173,8 +171,7 @@ Error functions and Fresnel integrals
     `\operatorname{erfi}(z) = -i\operatorname{erf}(iz)`.
 
 .. function:: void _arb_hypgeom_erfi_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_erfi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_erfi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the imaginary error function of the power series *z*,
     truncated to length *len*.
@@ -190,8 +187,7 @@ Error functions and Fresnel integrals
     `C(z)` is defined analogously.
 
 .. function:: void _arb_hypgeom_fresnel_series(arb_ptr res1, arb_ptr res2, arb_srcptr z, slong zlen, int normalized, slong len, slong prec)
-
-.. function:: void arb_hypgeom_fresnel_series(arb_poly_t res1, arb_poly_t res2, const arb_poly_t z, int normalized, slong len, slong prec)
+              void arb_hypgeom_fresnel_series(arb_poly_t res1, arb_poly_t res2, const arb_poly_t z, int normalized, slong len, slong prec)
 
     Sets *res1* to the Fresnel sine integral and *res2* to the Fresnel
     cosine integral of the power series *z*, truncated to length *len*.
@@ -215,8 +211,7 @@ Incomplete gamma and beta functions
     interface for computing the exponential integral).
 
 .. function:: void _arb_hypgeom_gamma_upper_series(arb_ptr res, const arb_t s, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
-
-.. function:: void arb_hypgeom_gamma_upper_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
+              void arb_hypgeom_gamma_upper_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
 
     Sets *res* to an upper incomplete gamma function where *s* is
     a constant and *z* is a power series, truncated to length *n*.
@@ -235,8 +230,7 @@ Incomplete gamma and beta functions
     gamma function `\gamma^{*}(s,z) = z^{-s} P(s,z)`.
 
 .. function:: void _arb_hypgeom_gamma_lower_series(arb_ptr res, const arb_t s, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
-
-.. function:: void arb_hypgeom_gamma_lower_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
+              void arb_hypgeom_gamma_lower_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
 
     Sets *res* to an lower incomplete gamma function where *s* is
     a constant and *z* is a power series, truncated to length *n*.
@@ -251,8 +245,7 @@ Incomplete gamma and beta functions
     `I(a,b;z) = B(a,b;z) / B(a,b;1)`.
 
 .. function:: void _arb_hypgeom_beta_lower_series(arb_ptr res, const arb_t a, const arb_t b, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
-
-.. function:: void arb_hypgeom_beta_lower_series(arb_poly_t res, const arb_t a, const arb_t b, const arb_poly_t z, int regularized, slong n, slong prec)
+              void arb_hypgeom_beta_lower_series(arb_poly_t res, const arb_t a, const arb_t b, const arb_poly_t z, int regularized, slong n, slong prec)
 
     Sets *res* to the lower incomplete beta function `B(a,b;z)` (optionally
     the regularized version `I(a,b;z)`) where *a* and *b* are constants
@@ -272,8 +265,7 @@ Exponential and trigonometric integrals
     Computes the exponential integral `\operatorname{Ei}(z)`.
 
 .. function:: void _arb_hypgeom_ei_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_ei_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_ei_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the exponential integral of the power series *z*,
     truncated to length *len*.
@@ -283,8 +275,7 @@ Exponential and trigonometric integrals
     Computes the sine integral `\operatorname{Si}(z)`.
 
 .. function:: void _arb_hypgeom_si_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_si_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_si_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the sine integral of the power series *z*,
     truncated to length *len*.
@@ -295,8 +286,7 @@ Exponential and trigonometric integrals
     The result is indeterminate if `z < 0` since the value of the function would be complex.
 
 .. function:: void _arb_hypgeom_ci_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_ci_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_ci_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the cosine integral of the power series *z*,
     truncated to length *len*.
@@ -306,8 +296,7 @@ Exponential and trigonometric integrals
     Computes the hyperbolic sine integral `\operatorname{Shi}(z) = -i \operatorname{Si}(iz)`.
 
 .. function:: void _arb_hypgeom_shi_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_shi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_shi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the hyperbolic sine integral of the power series *z*,
     truncated to length *len*.
@@ -318,8 +307,7 @@ Exponential and trigonometric integrals
     The result is indeterminate if `z < 0` since the value of the function would be complex.
 
 .. function:: void _arb_hypgeom_chi_series(arb_ptr res, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_chi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_chi_series(arb_poly_t res, const arb_poly_t z, slong len, slong prec)
 
     Computes the hyperbolic cosine integral of the power series *z*,
     truncated to length *len*.
@@ -335,8 +323,7 @@ Exponential and trigonometric integrals
     The result is indeterminate if `z < 0` since the value of the function would be complex.
 
 .. function:: void _arb_hypgeom_li_series(arb_ptr res, arb_srcptr z, slong zlen, int offset, slong len, slong prec)
-
-.. function:: void arb_hypgeom_li_series(arb_poly_t res, const arb_poly_t z, int offset, slong len, slong prec)
+              void arb_hypgeom_li_series(arb_poly_t res, const arb_poly_t z, int offset, slong len, slong prec)
 
     Computes the logarithmic integral (optionally the offset version)
     of the power series *z*, truncated to length *len*.
@@ -395,8 +382,7 @@ Airy functions
     the output with :func:`_arb_poly_derivative`.
 
 .. function:: void _arb_hypgeom_airy_series(arb_ptr ai, arb_ptr ai_prime, arb_ptr bi, arb_ptr bi_prime, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime, arb_poly_t bi, arb_poly_t bi_prime, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_airy_series(arb_poly_t ai, arb_poly_t ai_prime, arb_poly_t bi, arb_poly_t bi_prime, const arb_poly_t z, slong len, slong prec)
 
     Computes the Airy functions evaluated at the power series *z*,
     truncated to length *len*. As with the other Airy methods, any of the
@@ -429,8 +415,7 @@ Coulomb wave functions
     Either of the outputs can be *NULL*.
 
 .. function:: void _arb_hypgeom_coulomb_series(arb_ptr F, arb_ptr G, const arb_t l, const arb_t eta, arb_srcptr z, slong zlen, slong len, slong prec)
-
-.. function:: void arb_hypgeom_coulomb_series(arb_poly_t F, arb_poly_t G, const arb_t l, const arb_t eta, const arb_poly_t z, slong len, slong prec)
+              void arb_hypgeom_coulomb_series(arb_poly_t F, arb_poly_t G, const arb_t l, const arb_t eta, const arb_poly_t z, slong len, slong prec)
 
     Computes the Coulomb wave functions evaluated at the power series *z*,
     truncated to length *len*. Either of the outputs can be *NULL*.
@@ -439,23 +424,17 @@ Orthogonal polynomials and functions
 -------------------------------------------------------------------------------
 
 .. function:: void arb_hypgeom_chebyshev_t(arb_t res, const arb_t nu, const arb_t z, slong prec)
-
-.. function:: void arb_hypgeom_chebyshev_u(arb_t res, const arb_t nu, const arb_t z, slong prec)
-
-.. function:: void arb_hypgeom_jacobi_p(arb_t res, const arb_t n, const arb_t a, const arb_t b, const arb_t z, slong prec)
-
-.. function:: void arb_hypgeom_gegenbauer_c(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
-
-.. function:: void arb_hypgeom_laguerre_l(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
-
-.. function:: void arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec)
+              void arb_hypgeom_chebyshev_u(arb_t res, const arb_t nu, const arb_t z, slong prec)
+              void arb_hypgeom_jacobi_p(arb_t res, const arb_t n, const arb_t a, const arb_t b, const arb_t z, slong prec)
+              void arb_hypgeom_gegenbauer_c(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
+              void arb_hypgeom_laguerre_l(arb_t res, const arb_t n, const arb_t m, const arb_t z, slong prec)
+              void arb_hypgeom_hermite_h(arb_t res, const arb_t nu, const arb_t z, slong prec)
 
     Computes Chebyshev, Jacobi, Gegenbauer, Laguerre or Hermite polynomials,
     or their extensions to non-integer orders.
 
 .. function:: void arb_hypgeom_legendre_p(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
-
-.. function:: void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
+              void arb_hypgeom_legendre_q(arb_t res, const arb_t n, const arb_t m, const arb_t z, int type, slong prec)
 
     Computes Legendre functions of the first and second kind.
     See :func:`acb_hypgeom_legendre_p` and :func:`acb_hypgeom_legendre_q`
@@ -470,14 +449,10 @@ Orthogonal polynomials and functions
     internally to bound the propagated error for Legendre polynomials.
 
 .. function:: void arb_hypgeom_legendre_p_ui_zero(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
-
-.. function:: void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
-
-.. function:: void arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
-
-.. function:: void arb_hypgeom_legendre_p_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
-
-.. function:: void arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
+              void arb_hypgeom_legendre_p_ui_one(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
+              void arb_hypgeom_legendre_p_ui_asymp(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong K, slong prec)
+              void arb_hypgeom_legendre_p_rec(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
+              void arb_hypgeom_legendre_p_ui(arb_t res, arb_t res_prime, ulong n, const arb_t x, slong prec)
 
     Evaluates the ordinary Legendre polynomial `P_n(x)`. If *res_prime* is
     non-NULL, simultaneously evaluates the derivative `P'_n(x)`.
