@@ -67,6 +67,27 @@ Rising factorials
     parameter *m* which can be set to zero to choose automatically.
     The default version chooses an algorithm automatically.
 
+Gamma function
+-------------------------------------------------------------------------------
+
+.. function:: void _arb_hypgeom_gamma_stirling_term_bounds(slong * bound, const mag_t zinv, slong N)
+
+    For `1 \le n < N`, sets *bound* to an exponent bounding the *n*-th term
+    in the Stirling series for the gamma function, given a precomputed upper
+    bound for `|z|^{-1}`. This function is intended for internal use and
+    does not check for underflow or underflow in the exponents.
+
+.. function:: void arb_hypgeom_gamma_stirling_sum_horner(arb_t res, const arb_t z, slong N, slong prec)
+              void arb_hypgeom_gamma_stirling_sum_improved(arb_t res, const arb_t z, slong N, slong K, slong prec)
+
+    Sets *res* to the final sum in the Stirling series for the gamma function
+    truncated before the term with index *N*, i.e. computes
+    `\sum_{n=1}^{N-1} B_{2n} / (2n(2n-1) z^{2n-1})`.
+    The *horner* version uses Horner scheme with gradual precision adjustments.
+    The *improved* version uses rectangular splitting for the low-index
+    terms and reexpands the high-index terms as hypergeometric polynomials,
+    using a splitting parameter *K* (which can be set to 0 to use a default
+    value).
 
 Binomial coefficients
 -------------------------------------------------------------------------------

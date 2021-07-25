@@ -35,6 +35,10 @@ void arb_hypgeom_rising_ui_jet_rs(arb_ptr res, const arb_t x, ulong n, ulong m, 
 void arb_hypgeom_rising_ui_jet_bs(arb_ptr res, const arb_t x, ulong n, slong len, slong prec);
 void arb_hypgeom_rising_ui_jet(arb_ptr res, const arb_t x, ulong n, slong len, slong prec);
 
+void _arb_hypgeom_gamma_stirling_term_bounds(slong * bound, const mag_t zinv, slong N);
+void arb_hypgeom_gamma_stirling_sum_horner(arb_t s, const arb_t z, slong N, slong prec);
+void arb_hypgeom_gamma_stirling_sum_improved(arb_t s, const arb_t z, slong N, slong K, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 
