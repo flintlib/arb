@@ -1071,6 +1071,8 @@ arf_submul_fmpz(arf_ptr z, arf_srcptr x, const fmpz_t y, slong prec, arf_rnd_t r
         return arf_submul_mpz(z, x, COEFF_TO_PTR(*y), prec, rnd);
 }
 
+int arf_fma(arf_ptr res, arf_srcptr x, arf_srcptr y, arf_srcptr z, slong prec, arf_rnd_t rnd);
+
 int arf_sosq(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd);
 
 int arf_div(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec, arf_rnd_t rnd);

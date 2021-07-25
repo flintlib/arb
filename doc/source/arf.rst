@@ -621,6 +621,11 @@ Addition and multiplication
 
     Performs a fused multiply-subtract `z = z - x \cdot y`, updating *z* in-place.
 
+.. function:: int arf_fma(arf_t res, const arf_t x, const arf_t y, const arf_t z, slong prec, arf_rnd_t rnd)
+
+    Sets *res* to `x \cdot y + z`. This is equivalent to an *addmul* except
+    that *res* and *z* can be separate variables.
+
 .. function:: int arf_sosq(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
     Sets *res* to `x^2 + y^2`, rounded to *prec* bits in the direction specified by *rnd*.

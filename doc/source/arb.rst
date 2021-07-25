@@ -828,6 +828,13 @@ Arithmetic
     Sets `z = z - x \cdot y`, rounded to prec bits. The precision can be
     *ARF_PREC_EXACT* provided that the result fits in memory.
 
+.. function:: void arb_fma(arb_t res, const arb_t x, const arb_t y, const arb_t z, slong prec)
+              void arb_fma_arf(arb_t res, const arb_t x, const arf_t y, const arb_t z, slong prec)
+              void arb_fma_ui(arb_t res, const arb_t x, ulong y, const arb_t z, slong prec)
+
+    Sets *res* to `x \cdot y + z`. This is equivalent to an *addmul* except
+    that *res* and *z* can be separate variables.
+
 .. function:: void arb_inv(arb_t z, const arb_t x, slong prec)
 
     Sets *z* to `1 / x`.
