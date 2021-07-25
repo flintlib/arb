@@ -37,7 +37,7 @@ Old versions of the documentation
 2021-07-25 -- version 2.20.0
 -------------------------------------------------------------------------------
 
-* Flint 2.18 support.
+* Flint 2.8 support.
 * Change arb_get_str with ARB_STR_NO_RADIUS: [+/- 1.20e-15] now prints as 0e-14.
 * Uniformly distributed random number functions arf_urandom, arb_urandom
   (contributed by Albin Ahlbäck).
