@@ -512,6 +512,10 @@ void _arb_poly_binomial_transform(arb_ptr b, arb_srcptr a, slong alen, slong len
 
 void arb_poly_binomial_transform(arb_poly_t b, const arb_poly_t a, slong len, slong prec);
 
+void _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec);
+
+void arb_poly_graeffe_transform(arb_poly_t b, const arb_poly_t a, slong prec);
+
 /* Special functions */
 
 void _arb_poly_pow_ui_trunc_binexp(arb_ptr res,
