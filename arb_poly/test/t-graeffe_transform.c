@@ -28,21 +28,20 @@ int main()
 
     arb_ptr roots;
 
-    for (iter = 0; iter < 500 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         slong n, prec, i;
-        n = n_randint(state, 200);
-        prec = 2 + n_randint(state, 200);
+        n = n_randint(state, 20);
+        prec = 2 + n_randint(state, 256);
 
         roots = _arb_vec_init(n);
-        for (i = 0; i < n; i++)
-                arb_randtest(roots+i, state, prec, n_randint(state, 10));
 
+        for (i = 0; i < n; i++)
+                arb_randtest(roots + i, state, prec, n_randint(state, 16));
         arb_poly_product_roots(a, roots, n, prec);
 
         for (i = 0; i < n; i++)
-                arb_sqr(roots+i, roots+i, prec);
-
+                arb_sqr(roots + i, roots + i, prec);
         arb_poly_product_roots(c, roots, n, prec);
 
         arb_poly_graeffe_transform(b, a, prec);

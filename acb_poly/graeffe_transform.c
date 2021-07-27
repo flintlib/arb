@@ -19,20 +19,20 @@ _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
 
     slong q, i;
 
-    q = (len-1)/2+1;
+    q = (len - 1) / 2 + 1;
     acb_ptr pe = _acb_vec_init(q);
     acb_ptr po = _acb_vec_init(len);
 
-    for (i = len-1; i >= 0; i--)
+    for (i = len - 1; i >= 0; i--)
     {
         if (i % 2 == 0)
-            acb_set(pe+i/2, a+i);
+            acb_set(pe + i / 2, a + i);
         else
-            acb_set(po+i/2, a+i);
+            acb_set(po + i / 2, a + i);
     }
 
     _acb_poly_mul(b, po, q, po, q, prec);
-    _acb_poly_shift_left(b, b, len-1, 1);
+    _acb_poly_shift_left(b, b, len - 1, 1);
     _acb_poly_mul(po, pe, q, pe, q, prec);
     _acb_vec_sub(b, po, b, len, prec);
 
