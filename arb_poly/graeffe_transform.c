@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Fredrik Johansson
+    Copyright (C) 2021 Matthias Gessinger
 
     This file is part of Arb.
 
