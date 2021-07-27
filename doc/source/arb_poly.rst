@@ -722,6 +722,22 @@ Transforms
     The underscore methods do not support aliasing, and assume that
     the lengths are nonzero.
 
+.. function:: void _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
+
+.. function:: void arb_poly_graeffe_transform(arb_poly_t b, arb_poly_t a, slong prec)
+
+    Computes the Graeffe transform of input polynomial.
+
+    The Graeffe transform `G` of a polynomial `P` is defined through the
+    equation `G(x^2) = \pm P(x)P(-x)`.
+    The sign is given by `(-1)^d`, where `d = deg(P)`.
+    The Graeffe transform has the property that its roots are exactly the
+    squares of the roots of P.
+
+    The underscore method assumes that *a* and *b* are initialized,
+    *a* is of length *len*, and *b* is of length at least *len*.
+    Both methods allow aliasing.
+
 Powers and elementary functions
 -------------------------------------------------------------------------------
 
