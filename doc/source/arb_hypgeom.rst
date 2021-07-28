@@ -95,11 +95,13 @@ Gamma function
     series together with argument reduction. If *reciprocal* is set,
     the reciprocal gamma function is computed instead.
 
-.. function:: int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
+.. function:: int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x,int reciprocal,  slong prec)
 
-    Attempts to compute the gamma function of *x* using Taylor series.
-    This is only supported if *x* and *prec* are both small enough.
-    If successful, returns 1; otherwise, does nothing and returns 0.
+    Attempts to compute the gamma function of *x* using Taylor series
+    together with argument reduction. This is only supported if *x* and *prec*
+    are both small enough. If successful, returns 1; otherwise, does nothing
+    and returns 0. If *reciprocal* is set, the reciprocal gamma function is
+    computed instead.
 
 .. function:: void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec)
 

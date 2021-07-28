@@ -54,7 +54,7 @@ extern arb_hypgeom_gamma_coeff_t arb_hypgeom_gamma_coeffs[ARB_HYPGEOM_GAMMA_TAB_
 int _arb_hypgeom_gamma_coeff_shallow(arf_t c, mag_t err, slong i, slong prec);
 
 void arb_hypgeom_gamma_stirling(arb_t res, const arb_t x, int reciprocal, slong prec);
-int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec);
+int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, int reciprocal, slong prec);
 
 void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec);
 void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec);

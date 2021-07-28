@@ -25,7 +25,7 @@ int main()
     {
         arb_t x, s1, s2, a, b;
         slong prec, ebits, prec2;
-        int success, success2, alias;
+        int success, success2, alias, reciprocal;
 
         if (n_randint(state, 10) == 0)
             prec = 2 + n_randint(state, 4000);
@@ -49,15 +49,16 @@ int main()
         arb_randtest(s1, state, prec, 10);
         arb_randtest(s2, state, prec, 10);
         alias = n_randint(state, 2);
+        reciprocal = n_randint(state, 2);
 
         if (alias)
         {
-            success = arb_hypgeom_gamma_taylor(s1, x, prec);
+            success = arb_hypgeom_gamma_taylor(s1, x, reciprocal, prec);
         }
         else
         {
             arb_set(s1, x);
-            success = arb_hypgeom_gamma_taylor(s1, s1, prec);
+            success = arb_hypgeom_gamma_taylor(s1, s1, reciprocal, prec);
         }
 
         if (success)
@@ -65,7 +66,7 @@ int main()
             /* printf("%ld\n", iter); */
 
             /* Compare with Stirling series algorithm. */
-            arb_hypgeom_gamma_stirling(s2, x, 0, prec);
+            arb_hypgeom_gamma_stirling(s2, x, reciprocal, prec);
 
             if (!arb_overlaps(s1, s2))
             {
@@ -80,7 +81,7 @@ int main()
             }
 
             /* Compare with different level of precision. */
-            success2 = arb_hypgeom_gamma_taylor(s2, x, prec2);
+            success2 = arb_hypgeom_gamma_taylor(s2, x, reciprocal, prec2);
 
             if (success2 && !arb_overlaps(s1, s2))
             {
@@ -102,7 +103,7 @@ int main()
 
             arb_add_arf(b, b, arb_midref(x), prec + 30);
 
-            success2 = arb_hypgeom_gamma_taylor(s2, a, prec2);
+            success2 = arb_hypgeom_gamma_taylor(s2, a, reciprocal, prec2);
 
             if (success2 && !arb_overlaps(s1, s2))
             {
@@ -116,7 +117,7 @@ int main()
                 flint_abort();
             }
 
-            success2 = arb_hypgeom_gamma_taylor(s2, b, prec2);
+            success2 = arb_hypgeom_gamma_taylor(s2, b, reciprocal, prec2);
 
             if (success2 && !arb_overlaps(s1, s2))
             {
@@ -133,7 +134,7 @@ int main()
             arb_add(a, a, b, prec + 30);
             arb_mul_2exp_si(a, a, -1);
 
-            success2 = arb_hypgeom_gamma_taylor(s2, b, prec2);
+            success2 = arb_hypgeom_gamma_taylor(s2, b, reciprocal, prec2);
 
             if (success2 && !arb_overlaps(s1, s2))
             {

@@ -243,7 +243,7 @@ int _arf_increment_fast(arf_t x, slong prec);
 /* Try to compute gamma(x) using Taylor series. Returns 1 on success, 0 on
    failure (x too large or precision too large). */
 int
-arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
+arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, int reciprocal, slong prec)
 {
     double dx, dxerr, log2u, ds, du;
     slong i, n, wp, r, tail_bound, rad_exp, mid_exp;
@@ -264,11 +264,35 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
     mid_exp = arf_is_zero(arb_midref(x)) ? WORD_MIN : ARF_EXP(arb_midref(x));
     rad_exp = mag_is_zero(arb_radref(x)) ? WORD_MIN : MAG_EXP(arb_radref(x));
 
-    /* Division by zero. */
+    /* Containing zero. */
     if (rad_exp >= mid_exp && arb_contains_zero(x))
     {
-        arb_indeterminate(res);
-        return 1;
+        if (reciprocal)
+        {
+            arb_t t;
+            arb_init(t);
+            arb_add_ui(t, x, 1, prec + 10);
+
+            if (!arb_contains_zero(t))
+            {
+                success = arb_hypgeom_gamma_taylor(t, t, reciprocal, prec + 10);
+                if (success)
+                    arb_mul(res, x, t, prec);
+            }
+            else
+            {
+                /* todo: accurate wide interval */
+                success = 0;
+            }
+
+            arb_clear(t);
+            return success;
+        }
+        else
+        {
+            arb_indeterminate(res);
+            return 1;
+        }
     }
 
     /* Quick exclusion of too large numbers. */
@@ -289,7 +313,7 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
     if (dx + dxerr > 160.0 || dx - dxerr < -160.0)
         return 0;
 
-    /* Very close to 0, reduce to gamma(x + 1) / x. */
+    /* Very close to 0, reduce to gamma(x) = gamma(x + 1) / x. */
     if (mid_exp < -32 || (dx - dxerr >= -0.5 && dx - dxerr < ldexp(1.0, -6)))
     {
         arb_t t;
@@ -300,9 +324,15 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
     printf("DIVIDING NEAR 0\n");
 #endif
 
-        success = arb_hypgeom_gamma_taylor(t, t, prec + 10);
+        success = arb_hypgeom_gamma_taylor(t, t, reciprocal, prec + 10);
         if (success)
-            arb_div(res, t, x, prec);
+        {
+            if (reciprocal)
+                arb_mul(res, x, t, prec);
+            else
+                arb_div(res, t, x, prec);
+        }
+
         arb_clear(t);
         return success;
     }
@@ -324,10 +354,10 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
 
     /* For negative numbers, reduce to the positive case. */
     /* gamma(x) = (-1)^r * gamma(1+x-r) / (rf(1+r-x,-r)*(x-r)) */
+    /* 1/gamma(x) = (-1)^r * rgamma(1+x-r) * rf(1+r-x,-r) * (x-r) */
     if (dx < 0.0)
     {
         arb_t t, u, v;
-        int success;
 
         arb_init(t);
         arb_init(u);
@@ -336,7 +366,7 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
         arb_sub_si(t, x, r, prec + 10);
 
         /* Pole. */
-        if (arb_contains_zero(t))
+        if (!reciprocal && arb_contains_zero(t))
         {
             arb_indeterminate(res);
             success = 1;
@@ -344,7 +374,15 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
         else
         {
             arb_add_si(u, x, 1 - r, prec + 10);
-            success = arb_hypgeom_gamma_taylor(u, u, prec + 10);
+
+            success = 1;
+            if (reciprocal && !arb_is_positive(u))
+            {
+                /* todo: accurate wide interval */
+                success = 0;
+            }
+
+            success = arb_hypgeom_gamma_taylor(u, u, reciprocal, prec + 10);
 
             if (success)
             {
@@ -364,8 +402,17 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
                     }
 
                     arb_set_interval_d_fast(v, a, b, 53);
-                    arb_div(res, u, v, prec + 10);
-                    arb_div(res, res, t, prec);
+
+                    if (reciprocal)
+                    {
+                        arb_mul(res, u, v, prec + 10);
+                        arb_mul(res, res, t, prec);
+                    }
+                    else
+                    {
+                        arb_div(res, u, v, prec + 10);
+                        arb_div(res, res, t, prec);
+                    }
                 }
                 else
                 {
@@ -373,7 +420,11 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
                     arb_add_si(v, v, 1 + r, prec + 10);
                     arb_hypgeom_rising_ui_rec(v, v, -r, prec + 10);
                     arb_mul(v, v, t, prec + 10);
-                    arb_div(res, u, v, prec);
+
+                    if (reciprocal)
+                        arb_mul(res, u, v, prec);
+                    else
+                        arb_div(res, u, v, prec);
                 }
 
                 if (r % 2)
@@ -419,6 +470,13 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
             b = _arb_hypgeom_d_gamma(b, 1);
             b = FLINT_MAX(a, b);
             a = GAMMA_MIN_Y * (1 - 1e-15);
+        }
+
+        if (reciprocal)
+        {
+            c = (1.0 / b) * (1 - 1e-15);
+            b = (1.0 / a) * (1 + 1e-15);
+            a = c;
         }
 
         arb_set_interval_d_fast(res, a, b, prec);
@@ -551,8 +609,15 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
         if (r == 0)
             arf_mul(s, s, u, wp, ARF_RND_DOWN);
 
-        arf_one(u);
-        arf_div(arb_midref(res), u, s, prec, ARF_RND_DOWN);
+        if (reciprocal)
+        {
+            arf_set_round(arb_midref(res), s, prec, ARF_RND_DOWN);
+        }
+        else
+        {
+            arf_one(u);
+            arf_div(arb_midref(res), u, s, prec, ARF_RND_DOWN);
+        }
         arf_mag_set_ulp(arb_radref(res), arb_midref(res), prec - 1);
     }
     else if (wp <= 320 || r <= 3)
@@ -566,7 +631,10 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
             arf_mul(v, v, u, wp, ARF_RND_DOWN);
         }
 
-        arf_div(arb_midref(res), v, s, prec, ARF_RND_DOWN);
+        if (reciprocal)
+            arf_div(arb_midref(res), s, v, prec, ARF_RND_DOWN);
+        else
+            arf_div(arb_midref(res), v, s, prec, ARF_RND_DOWN);
         arf_mag_set_ulp(arb_radref(res), arb_midref(res), prec - 1);
     }
     else
@@ -576,7 +644,15 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
         _arf_increment_fast(u, wp);
         arb_set_arf(t, u);
         arb_hypgeom_rising_ui_rec(t, t, r - 1, wp);
-        arb_div_arf(res, t, s, prec);
+
+        if (reciprocal)
+        {
+            arb_set_arf(res, s);
+            arb_div(res, res, t, prec);
+        }
+        else
+            arb_div_arf(res, t, s, prec);
+
         arf_mag_add_ulp(arb_radref(res), arb_radref(res), arb_midref(res), prec - 1);
         arb_clear(t);
     }

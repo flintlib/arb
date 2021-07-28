@@ -375,7 +375,7 @@ arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec)
     if (arb_hypgeom_gamma_exact(y, x, 0, prec))
         return;
 
-    if (arb_hypgeom_gamma_taylor(y, x, prec))
+    if (arb_hypgeom_gamma_taylor(y, x, 0, prec))
         return;
 
     arb_hypgeom_gamma_stirling(y, x, 0, prec);
@@ -385,6 +385,9 @@ void
 arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec)
 {
     if (arb_hypgeom_gamma_exact(y, x, 1, prec))
+        return;
+
+    if (arb_hypgeom_gamma_taylor(y, x, 1, prec))
         return;
 
     arb_hypgeom_gamma_stirling(y, x, 1, prec);
