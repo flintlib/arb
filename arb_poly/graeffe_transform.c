@@ -14,14 +14,21 @@
 void
 _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
 {
-    if (len == 0)
+    slong lo, le, ls;
+    slong i;
+    arb_ptr pe, po;
+
+    if (len <= 1)
+    {
+        _arb_vec_set(b, a, len);
         return;
+    }
 
-    slong q, i;
-
-    q = (len - 1) / 2 + 1;
-    arb_ptr pe = _arb_vec_init(q);
-    arb_ptr po = _arb_vec_init(len);
+    lo = len / 2;
+    ls = 2 * lo - 1;
+    le = (len - 1) / 2 + 1;
+    po = _arb_vec_init(lo);
+    pe = _arb_vec_init(FLINT_MAX(le, ls));
 
     for (i = len - 1; i >= 0; i--)
     {
@@ -31,16 +38,18 @@ _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
             arb_set(po + i / 2, a + i);
     }
 
-    _arb_poly_mul(b, po, q, po, q, prec);
-    _arb_poly_shift_left(b, b, len - 1, 1);
-    _arb_poly_mul(po, pe, q, pe, q, prec);
-    _arb_vec_sub(b, po, b, len, prec);
-
-    _arb_vec_clear(pe, q);
-    _arb_vec_clear(po, len);
+    _arb_poly_mul(b, pe, le, pe, le, prec);
+    _arb_poly_mul(pe, po, lo, po, lo, prec);
+    _arb_poly_sub(b + 1, b + 1, ls, pe, ls, prec);
 
     if (len % 2 == 0)
-	    _arb_vec_neg(b, b, len);
+    {
+        _arb_vec_neg(b, b, len - 1);
+        arb_set(b + (len - 1), pe + (len - 2));
+    }
+
+    _arb_vec_clear(pe, FLINT_MAX(le, ls));
+    _arb_vec_clear(po, lo);
 }
 
 void
