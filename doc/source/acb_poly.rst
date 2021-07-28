@@ -656,6 +656,16 @@ Transforms
     The underscore methods do not support aliasing, and assume that
     the lengths are nonzero.
 
+.. function:: void _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
+
+.. function:: void acb_poly_graeffe_transform(acb_poly_t b, acb_poly_t a, slong prec)
+
+    Computes the Graeffe transform of input polynomial, which is of length *len*.
+    See :func:`arb_poly_graeffe_transform` for details.
+
+    The underscore method assumes that *a* and *b* are initialized,
+    *a* is of length *len*, and *b* is of length at least *len*.
+    Both methods allow aliasing.
 
 Elementary functions
 -------------------------------------------------------------------------------

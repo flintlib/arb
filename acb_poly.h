@@ -193,6 +193,10 @@ void _acb_poly_binomial_transform(acb_ptr b, acb_srcptr a, slong alen, slong len
 
 void acb_poly_binomial_transform(acb_poly_t b, const acb_poly_t a, slong len, slong prec);
 
+void _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec);
+
+void acb_poly_graeffe_transform(acb_poly_t b, const acb_poly_t a, slong prec);
+
 
 
 void acb_poly_set(acb_poly_t dest, const acb_poly_t src);
