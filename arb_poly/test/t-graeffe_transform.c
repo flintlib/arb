@@ -17,6 +17,7 @@ int main()
     flint_rand_t state;
     arb_poly_t a, b, c;
     arb_ptr roots;
+    arb_t leading;
 
     flint_printf("graeffe_transform....");
     fflush(stdout);
@@ -27,6 +28,8 @@ int main()
     arb_poly_init(b);
     arb_poly_init(c);
 
+    arb_init(leading);
+
     for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         slong n, prec, i;
@@ -36,13 +39,18 @@ int main()
 
         roots = _arb_vec_init(n);
 
-        for (i = 0; i < n; i++)
-                arb_randtest(roots + i, state, prec, n_randint(state, 16));
-        arb_poly_product_roots(a, roots, n, prec);
+        arb_randtest(leading, state, prec, n_randint(state, 16));
 
         for (i = 0; i < n; i++)
-                arb_sqr(roots + i, roots + i, prec);
+            arb_randtest(roots + i, state, prec, n_randint(state, 16));
+        arb_poly_product_roots(a, roots, n, prec);
+        arb_poly_scalar_mul(a, a, leading, prec);
+
+        for (i = 0; i < n; i++)
+            arb_sqr(roots + i, roots + i, prec);
+        arb_sqr(leading, leading, prec);
         arb_poly_product_roots(c, roots, n, prec);
+        arb_poly_scalar_mul(c, c, leading, prec);
 
         arb_poly_graeffe_transform(b, a, prec);
         if (!arb_poly_overlaps(b, c))
@@ -76,6 +84,8 @@ int main()
     arb_poly_clear(a);
     arb_poly_clear(b);
     arb_poly_clear(c);
+
+    arb_clear(leading);
 
     flint_randclear(state);
     flint_cleanup();
