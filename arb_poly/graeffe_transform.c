@@ -19,7 +19,8 @@ _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
 
     if (len <= 1)
     {
-        _arb_vec_set(b, a, len);
+        if (len)
+            arb_sqr(b, a, prec);
         return;
     }
 

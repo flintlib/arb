@@ -19,7 +19,8 @@ _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
 
     if (len <= 1)
     {
-        _acb_vec_set(b, a, len);
+        if (len)
+            acb_sqr(b, a, prec);
         return;
     }
 
