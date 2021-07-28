@@ -14,8 +14,7 @@
 void
 _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
 {
-    slong lo, le, ls;
-    slong i;
+    slong lo, le, ls, deg, i;
     arb_ptr pe, po;
 
     if (len <= 1)
@@ -24,13 +23,14 @@ _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
         return;
     }
 
+    deg = len - 1;
     lo = len / 2;
     ls = 2 * lo - 1;
-    le = (len - 1) / 2 + 1;
+    le = deg / 2 + 1;
     po = _arb_vec_init(lo);
     pe = _arb_vec_init(FLINT_MAX(le, ls));
 
-    for (i = len - 1; i >= 0; i--)
+    for (i = deg; i >= 0; i--)
     {
         if (i % 2 == 0)
             arb_set(pe + i / 2, a + i);
@@ -44,8 +44,8 @@ _arb_poly_graeffe_transform(arb_ptr b, arb_srcptr a, slong len, slong prec)
 
     if (len % 2 == 0)
     {
-        _arb_vec_neg(b, b, len - 1);
-        arb_set(b + (len - 1), pe + (len - 2));
+        _arb_vec_neg(b, b, deg);
+        arb_set(b + deg, pe + (deg - 1));
     }
 
     _arb_vec_clear(pe, FLINT_MAX(le, ls));

@@ -15,13 +15,13 @@ int main()
 {
     slong iter;
     flint_rand_t state;
+    acb_poly_t a, b, c;
 
     flint_printf("graeffe_transform....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    acb_poly_t a, b, c;
     acb_poly_init(a);
     acb_poly_init(b);
     acb_poly_init(c);
@@ -31,6 +31,7 @@ int main()
     for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         slong n, prec, i;
+
         n = n_randint(state, 20);
         prec = 2 + n_randint(state, 256);
 
@@ -47,7 +48,7 @@ int main()
         acb_poly_graeffe_transform(b, a, prec);
         if (!acb_poly_overlaps(b, c))
         {
-            flint_printf("FAIL (containment)\n\n");
+            flint_printf("FAIL (overlap)\n\n");
             flint_printf("n = %wd, prec = %wd\n\n", n, prec);
 
             flint_printf("a: "); acb_poly_printd(a, 15); flint_printf("\n\n");

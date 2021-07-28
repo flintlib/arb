@@ -14,8 +14,7 @@
 void
 _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
 {
-    slong lo, le, ls;
-    slong i;
+    slong lo, le, ls, deg, i;
     acb_ptr pe, po;
 
     if (len <= 1)
@@ -24,13 +23,14 @@ _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
         return;
     }
 
+    deg = len - 1;
     lo = len / 2;
     ls = 2 * lo - 1;
-    le = (len - 1) / 2 + 1;
+    le = deg / 2 + 1;
     po = _acb_vec_init(lo);
     pe = _acb_vec_init(FLINT_MAX(le, ls));
 
-    for (i = len - 1; i >= 0; i--)
+    for (i = deg; i >= 0; i--)
     {
         if (i % 2 == 0)
             acb_set(pe + i / 2, a + i);
@@ -44,8 +44,8 @@ _acb_poly_graeffe_transform(acb_ptr b, acb_srcptr a, slong len, slong prec)
 
     if (len % 2 == 0)
     {
-        _acb_vec_neg(b, b, len - 1);
-        acb_set(b + (len - 1), pe + (len - 2));
+        _acb_vec_neg(b, b, deg);
+        acb_set(b + deg, pe + (deg - 1));
     }
 
     _acb_vec_clear(pe, FLINT_MAX(le, ls));
