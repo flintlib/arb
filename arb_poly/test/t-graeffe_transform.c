@@ -16,6 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
     arb_poly_t a, b, c;
+    arb_ptr roots;
 
     flint_printf("graeffe_transform....");
     fflush(stdout);
@@ -25,8 +26,6 @@ int main()
     arb_poly_init(a);
     arb_poly_init(b);
     arb_poly_init(c);
-
-    arb_ptr roots;
 
     for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
