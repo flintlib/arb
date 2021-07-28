@@ -89,6 +89,29 @@ Gamma function
     using a splitting parameter *K* (which can be set to 0 to use a default
     value).
 
+.. function:: void arb_hypgeom_gamma_stirling(arb_t res, const arb_t x, int reciprocal, slong prec)
+
+    Sets *res* to the gamma function of *x* computed using the Stirling
+    series together with argument reduction. If *reciprocal* is set,
+    the reciprocal gamma function is computed instead.
+
+.. function:: int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec)
+
+    Attempts to compute the gamma function of *x* using Taylor series.
+    This is only supported if *x* and *prec* are both small enough.
+    If successful, returns 1; otherwise, does nothing and returns 0.
+
+.. function:: void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec)
+
+    Sets *res* to the gamma function of *x* computed using a default
+    algorithm choice.
+
+.. function:: void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec)
+
+    Sets *res* to the reciprocal gamma function of *x* computed using a default
+    algorithm choice.
+
+
 Binomial coefficients
 -------------------------------------------------------------------------------
 

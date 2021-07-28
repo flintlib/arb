@@ -16,7 +16,7 @@ void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec);
 void
 arb_hypgeom_gamma_stirling_sum_horner(arb_t s, const arb_t z, slong N, slong prec)
 {
-    arb_t b, t, logz, zinv, w;
+    arb_t b, t, zinv, w;
     mag_t zinv_mag;
     slong n, term_mag, term_prec;
     slong * term_mags;

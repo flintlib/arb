@@ -39,6 +39,26 @@ void _arb_hypgeom_gamma_stirling_term_bounds(slong * bound, const mag_t zinv, sl
 void arb_hypgeom_gamma_stirling_sum_horner(arb_t s, const arb_t z, slong N, slong prec);
 void arb_hypgeom_gamma_stirling_sum_improved(arb_t s, const arb_t z, slong N, slong K, slong prec);
 
+#define ARB_HYPGEOM_GAMMA_TAB_NUM 536
+#define ARB_HYPGEOM_GAMMA_TAB_PREC 3456
+
+typedef struct
+{
+    short exp;
+    short tab_pos;
+    char nlimbs;
+    char negative;
+} arb_hypgeom_gamma_coeff_t;
+
+extern arb_hypgeom_gamma_coeff_t arb_hypgeom_gamma_coeffs[ARB_HYPGEOM_GAMMA_TAB_NUM];
+int _arb_hypgeom_gamma_coeff_shallow(arf_t c, mag_t err, slong i, slong prec);
+
+void arb_hypgeom_gamma_stirling(arb_t res, const arb_t x, int reciprocal, slong prec);
+int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, slong prec);
+
+void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec);
+void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 
