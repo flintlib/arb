@@ -862,6 +862,14 @@ _acb_vec_set_round(acb_ptr res, acb_srcptr vec, slong len, slong prec)
 }
 
 ACB_INLINE void
+_acb_vec_swap(acb_ptr res, acb_ptr vec, slong len)
+{
+    slong i;
+    for (i = 0; i < len; i++)
+        acb_swap(res + i, vec + i);
+}
+
+ACB_INLINE void
 _acb_vec_neg(acb_ptr res, acb_srcptr vec, slong len)
 {
     slong i;
@@ -1014,6 +1022,18 @@ ACB_INLINE void
 acb_printn(const acb_t x, slong digits, ulong flags)
 {
     acb_fprintn(stdout, x, digits, flags);
+}
+
+ACB_INLINE void
+_acb_vec_printn(acb_srcptr vec, slong len, slong ndigits, ulong flags)
+{
+    slong i;
+    for (i = 0; i < len; i++)
+    {
+        acb_printn(vec + i, ndigits, flags);
+        if (i < len - 1)
+            flint_printf(", ");
+    }
 }
 
 void acb_randtest(acb_t z, flint_rand_t state, slong prec, slong mag_bits);

@@ -19,7 +19,18 @@
 extern "C" {
 #endif
 
+void acb_hypgeom_rising_ui_forward(acb_t res, const acb_t x, ulong n, slong prec);
 void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec);
+void acb_hypgeom_rising_ui_bs(acb_t res, const acb_t x, ulong n, slong prec);
+void acb_hypgeom_rising_ui_rec(acb_t res, const acb_t x, ulong n, slong prec);
+void acb_hypgeom_rising_ui(acb_t y, const acb_t x, ulong n, slong prec);
+void acb_hypgeom_rising(acb_t y, const acb_t x, const acb_t n, slong prec);
+
+void acb_hypgeom_rising_ui_jet_powsum(acb_ptr res, const acb_t x, ulong n, slong len, slong prec);
+void acb_hypgeom_rising_ui_jet_rs(acb_ptr res, const acb_t x, ulong n, ulong m, slong len, slong prec);
+void acb_hypgeom_rising_ui_jet_bs(acb_ptr res, const acb_t x, ulong n, slong len, slong prec);
+void acb_hypgeom_rising_ui_jet(acb_ptr res, const acb_t x, ulong n, slong len, slong prec);
+
 
 void acb_hypgeom_pfq_bound_factor(mag_t C,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n);

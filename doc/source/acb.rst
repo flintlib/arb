@@ -1181,6 +1181,10 @@ Vector functions
 
     Sets *res* to a copy of *vec*, rounding each entry to *prec* bits.
 
+.. function:: void _acb_vec_swap(acb_ptr vec1, acb_ptr vec2, slong len)
+
+    Swaps the entries of *vec1* and *vec2*.
+
 .. function:: void _acb_vec_neg(acb_ptr res, acb_srcptr vec, slong len)
 
 .. function:: void _acb_vec_add(acb_ptr res, acb_srcptr vec1, acb_srcptr vec2, slong len, slong prec)

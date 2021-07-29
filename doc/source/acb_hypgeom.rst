@@ -19,10 +19,42 @@ with prefactors that are products of exponentials, powers, and gamma functions.
 Rising factorials
 -------------------------------------------------------------------------------
 
-.. function:: void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec)
+.. function:: void acb_hypgeom_rising_ui_forward(acb_t res, const acb_t x, ulong n, slong prec)
+              void acb_hypgeom_rising_ui_bs(acb_t res, const acb_t x, ulong n, slong prec)
+              void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec)
+              void acb_hypgeom_rising_ui_rec(acb_t res, const acb_t x, ulong n, slong prec)
+              void acb_hypgeom_rising_ui(acb_t y, const acb_t x, ulong n, slong prec)
+              void acb_hypgeom_rising(acb_t y, const acb_t x, const acb_t n, slong prec)
 
-    Computes the rising factorial `(x)_n` using rectangular splitting.
-    The splitting parameter *m* can be set to zero to choose automatically.
+    Computes the rising factorial `(x)_n`.
+
+    The *forward* version uses the forward recurrence.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The *rec* version chooses an algorithm automatically, avoiding
+    use of the gamma function (so that it can be used in the computation
+    of the gamma function).
+    The default versions (*rising_ui* and *rising_ui*) choose an algorithm
+    automatically and may additionally fall back on the gamma function.
+
+.. function:: void acb_hypgeom_rising_ui_jet_powsum(acb_ptr res, const acb_t x, ulong n, slong len, slong prec)
+              void acb_hypgeom_rising_ui_jet_bs(acb_ptr res, const acb_t x, ulong n, slong len, slong prec)
+              void acb_hypgeom_rising_ui_jet_rs(acb_ptr res, const acb_t x, ulong n, ulong m, slong len, slong prec)
+              void acb_hypgeom_rising_ui_jet(acb_ptr res, const acb_t x, ulong n, slong len, slong prec)
+
+    Computes the jet of the rising factorial `(x)_n`, truncated to length *len*.
+    In other words, constructs the polynomial `(X + x)_n \in \mathbb{R}[X]`,
+    truncated if `\operatorname{len} < n + 1` (and zero-extended
+    if `\operatorname{len} > n + 1`).
+
+    The *powsum* version computes the sequence of powers of *x* and forms integral
+    linear combinations of these.
+    The *bs* version uses binary splitting.
+    The *rs* version uses rectangular splitting. It takes an extra tuning
+    parameter *m* which can be set to zero to choose automatically.
+    The default version chooses an algorithm automatically.
+
 
 Convergent series
 -------------------------------------------------------------------------------

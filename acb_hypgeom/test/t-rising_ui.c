@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2018 Fredrik Johansson
+    Copyright (C) 2021 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -11,21 +11,44 @@
 
 #include "acb_hypgeom.h"
 
+void
+rising_algorithm(acb_t res, const acb_t x, ulong n, ulong m, slong prec, int alg, int alias)
+{
+    if (alias)
+    {
+        acb_set(res, x);
+        rising_algorithm(res, res, n, m, prec, alg, 0);
+        return;
+    }
+
+    if (alg == 0)
+        acb_hypgeom_rising_ui_rs(res, x, n, m, prec);
+    else if (alg == 1)
+        acb_hypgeom_rising_ui_forward(res, x, n, prec);
+    else if (alg == 2)
+        acb_hypgeom_rising_ui_bs(res, x, n, prec);
+    else if (alg == 3)
+        acb_hypgeom_rising_ui_rec(res, x, n, prec);
+    else
+        acb_hypgeom_rising_ui(res, x, n, prec);
+}
+
 int main()
 {
     slong iter;
     flint_rand_t state;
 
-    flint_printf("rising_ui_rs....");
+    flint_printf("rising_ui....");
     fflush(stdout);
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 1000 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
         acb_t x, xk, y, ya, yb, yayb;
         ulong k, n, m1, m2, m3;
         slong prec;
+        int alg1, alg2, alg3, alias1, alias2, alias3;
 
         prec = 2 + n_randint(state, 200);
         k = n_randint(state, 10);
@@ -33,6 +56,15 @@ int main()
         m1 = n_randint(state, 2) ? 0 : 1 + n_randint(state, FLINT_MAX(n + k, 1));
         m2 = n_randint(state, 2) ? 0 : 1 + n_randint(state, FLINT_MAX(k, 1));
         m3 = n_randint(state, 2) ? 0 : 1 + n_randint(state, FLINT_MAX(n, 1));
+        alg1 = n_randint(state, 5);
+        alg2 = n_randint(state, 5);
+        alg3 = n_randint(state, 5);
+        alias1 = n_randint(state, 2);
+        alias2 = n_randint(state, 2);
+        alias3 = n_randint(state, 2);
+
+        if (n_randint(state, 100) == 0)
+            n += 100;
 
         acb_init(x);
         acb_init(xk);
@@ -41,12 +73,12 @@ int main()
         acb_init(yb);
         acb_init(yayb);
 
-        acb_randtest(x, state, prec, 10);
+        acb_randtest(x, state, prec, 10 + n_randint(state, 200));
         acb_add_ui(xk, x, k, prec);
 
-        acb_hypgeom_rising_ui_rs(y, x, n + k, m1, prec);
-        acb_hypgeom_rising_ui_rs(ya, x, k, m2, prec);
-        acb_hypgeom_rising_ui_rs(yb, xk, n, m3, prec);
+        rising_algorithm(y, x, n + k, m1, prec, alg1, alias1);
+        rising_algorithm(ya, x, k, m2, prec, alg2, alias2);
+        rising_algorithm(yb, xk, n, m3, prec, alg3, alias3);
         acb_mul(yayb, ya, yb, prec);
 
         if (!acb_overlaps(y, yayb))

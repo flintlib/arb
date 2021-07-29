@@ -43,7 +43,7 @@ acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec)
         else
         {
             m0 = n_sqrt(n);
-            m = 8 + 0.27 * pow(FLINT_MAX(0, prec - 1024), 0.4);
+            m = 8 + 0.27 * pow(1.5 * FLINT_MAX(0, prec - 1024), 0.4);
             m = FLINT_MIN(m, m0);
             m = FLINT_MIN(m, 64);
         }
