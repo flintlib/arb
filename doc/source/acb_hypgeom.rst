@@ -55,6 +55,45 @@ Rising factorials
     parameter *m* which can be set to zero to choose automatically.
     The default version chooses an algorithm automatically.
 
+Gamma function
+-------------------------------------------------------------------------------
+
+.. function:: void acb_hypgeom_gamma_stirling_sum_horner(acb_t s, const acb_t z, slong N, slong prec)
+              void acb_hypgeom_gamma_stirling_sum_improved(acb_t s, const acb_t z, slong N, slong K, slong prec)
+
+    Sets *res* to the final sum in the Stirling series for the gamma function
+    truncated before the term with index *N*, i.e. computes
+    `\sum_{n=1}^{N-1} B_{2n} / (2n(2n-1) z^{2n-1})`.
+    The *horner* version uses Horner scheme with gradual precision adjustments.
+    The *improved* version uses rectangular splitting for the low-index
+    terms and reexpands the high-index terms as hypergeometric polynomials,
+    using a splitting parameter *K* (which can be set to 0 to use a default
+    value).
+
+.. function:: void acb_hypgeom_gamma_stirling(acb_t res, const acb_t x, int reciprocal, slong prec)
+
+    Sets *res* to the gamma function of *x* computed using the Stirling
+    series together with argument reduction. If *reciprocal* is set,
+    the reciprocal gamma function is computed instead.
+
+.. function:: int acb_hypgeom_gamma_taylor(acb_t res, const acb_t x, int reciprocal, slong prec)
+
+    Attempts to compute the gamma function of *x* using Taylor series
+    together with argument reduction. This is only supported if *x* and *prec*
+    are both small enough. If successful, returns 1; otherwise, does nothing
+    and returns 0. If *reciprocal* is set, the reciprocal gamma function is
+    computed instead.
+
+.. function:: void acb_hypgeom_gamma(acb_t y, const acb_t x, slong prec)
+
+    Sets *res* to the gamma function of *x* computed using a default
+    algorithm choice.
+
+.. function:: void acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec)
+
+    Sets *res* to the reciprocal gamma function of *x* computed using a default
+    algorithm choice.
+
 
 Convergent series
 -------------------------------------------------------------------------------

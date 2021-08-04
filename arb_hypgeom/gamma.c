@@ -13,7 +13,7 @@
 #include "bernoulli.h"
 
 /* tuning factor */
-double GAMMA_STIRLING_BETA = 0.27;
+double GAMMA_STIRLING_BETA = 0.0;
 
 #define PI 3.1415926535897932385
 
@@ -50,7 +50,7 @@ static void
 choose_small(int * reflect, slong * r, slong * n,
     double x, double y, int use_reflect, int digamma, slong prec)
 {
-    double w, argz, log2z;
+    double w, argz, log2z, BETA;
     slong rr;
 
     /* use reflection formula if very negative */
@@ -64,8 +64,20 @@ choose_small(int * reflect, slong * r, slong * n,
         *reflect = 0;
     }
 
+    BETA = GAMMA_STIRLING_BETA;
+
+    if (BETA < 0.12)
+    {
+        if (prec <= 32768)
+            BETA = 0.17;
+        else if (prec <= 131072)
+            BETA = 0.20;
+        else
+            BETA = 0.24;
+    }
+
     /* argument reduction until |z| >= w */
-    w = FLINT_MAX(1.0, GAMMA_STIRLING_BETA * prec);
+    w = FLINT_MAX(1.0, BETA * prec);
 
     rr = 0;
     while (x < 1.0 || x*x + y*y < w*w)
