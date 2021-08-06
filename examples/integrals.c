@@ -595,6 +595,18 @@ f_rgamma(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
     return 0;
 }
 
+/* f(z) = rgamma(z) */
+int
+f_rgamma2(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
+{
+    if (order > 1)
+        flint_abort();  /* Would be needed for Taylor method. */
+
+    acb_hypgeom_rgamma(res, z, prec);
+
+    return 0;
+}
+
 /* f(z) = exp(-z^2+iz) */
 int
 f_gaussian_twist(acb_ptr res, const acb_t z, void * param, slong order, slong prec)
@@ -733,7 +745,7 @@ scaled_bessel_select_N(arb_t N, ulong k, slong prec)
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 37
+#define NUM_INTEGRALS 38
 
 const char * descr[NUM_INTEGRALS] =
 {
@@ -774,6 +786,7 @@ const char * descr[NUM_INTEGRALS] =
     "int_0^{inf} exp(-x) I_0(x/15)^{15} dx   (using domain truncation)",
     "int_{-1-i}^{-1+i} 1/sqrt(x) dx",
     "int_0^{inf} 1/gamma(x) dx   (using domain truncation)",
+    "int_0^{inf} 1/gamma(x) dx   (using domain truncation) (alt.)",
 };
 
 int main(int argc, char *argv[])
@@ -1256,6 +1269,15 @@ int main(int argc, char *argv[])
                 acb_zero(a);
                 acb_set_ui(b, 4 + (goal + 1) / 2);
                 acb_calc_integrate(s, f_rgamma, NULL, a, b, goal, tol, options, prec);
+                arb_add_error_2exp_si(acb_realref(s), -goal);
+                break;
+
+            case 37:
+                if (goal < 0)
+                    abort();
+                acb_zero(a);
+                acb_set_ui(b, 4 + (goal + 1) / 2);
+                acb_calc_integrate(s, f_rgamma2, NULL, a, b, goal, tol, options, prec);
                 arb_add_error_2exp_si(acb_realref(s), -goal);
                 break;
 

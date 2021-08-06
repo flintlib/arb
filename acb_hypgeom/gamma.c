@@ -176,6 +176,8 @@ acb_hypgeom_gamma(acb_t y, const acb_t x, slong prec)
 void
 acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec)
 {
+    mag_t magz;
+
     if (acb_is_real(x))
     {
         arb_hypgeom_rgamma(acb_realref(y), acb_realref(x), prec);
@@ -186,6 +188,50 @@ acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec)
     if (acb_hypgeom_gamma_taylor(y, x, 1, prec))
         return;
 
-    acb_hypgeom_gamma_stirling(y, x, 1, prec);
+    mag_init(magz);
+    acb_get_mag(magz, x);
+
+    if (mag_is_inf(magz))
+    {
+        acb_indeterminate(y);
+    }
+    else
+    {
+        acb_hypgeom_gamma_stirling(y, x, 1, prec);
+
+        /* Todo: improved bounds computation */
+        if (!acb_is_finite(y))
+        {
+            arb_t t, u, R;
+
+            arb_init(R);
+            arb_init(t);
+            arb_init(u);
+
+            arf_set_mag(arb_midref(R), magz);
+
+            arb_set_d(u, 0.5);
+            arb_add(u, u, R, MAG_BITS);
+            arb_pow(u, R, u, MAG_BITS);
+
+            arb_const_pi(t, MAG_BITS);
+            arb_mul(t, t, R, MAG_BITS);
+            arb_mul_2exp_si(t, t, -1);
+            arb_exp(t, t, MAG_BITS);
+
+            arb_mul(t, t, u, MAG_BITS);
+
+            arb_get_mag(magz, t);
+
+            acb_zero(y);
+            acb_add_error_mag(y, magz);
+
+            arb_clear(R);
+            arb_clear(t);
+            arb_clear(u);
+        }
+    }
+
+    mag_clear(magz);
 }
 
