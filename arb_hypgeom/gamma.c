@@ -20,11 +20,14 @@ double GAMMA_STIRLING_BETA = 0.0;
 static slong
 choose_n(double log2z, double argz, int digamma, slong prec)
 {
-    double argf, boundn;
-    slong n;
+    double argf, boundn, boundn_best;
+    slong n, nbest;
 
     argf = 1.0 / cos(0.5 * argz);
     argf = log(argf) * (1. / log(2));
+
+    boundn_best = 1e300;
+    nbest = 1;
 
     for (n = 1; ; n++)
     {
@@ -37,11 +40,17 @@ choose_n(double log2z, double argz, int digamma, slong prec)
         if (boundn <= -prec)
             return n;
 
+        if (boundn < boundn_best)
+        {
+            nbest = n;
+            boundn_best = boundn;
+        }
+
         /* if the term magnitude does not decrease, r is too small */
         if (boundn > 1)
         {
-            flint_printf("exception: gamma_stirling_choose_param failed to converge\n");
-            flint_abort();
+            /* printf("failure: prec = %ld, nbound_best = %f [%ld, %ld]\n", prec, boundn_best, n, nbest); */
+            return nbest;
         }
     }
 }
