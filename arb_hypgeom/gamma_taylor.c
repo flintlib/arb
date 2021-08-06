@@ -340,7 +340,10 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, int reciprocal, slong prec)
     /* Nearest (roughly) integer to x, to use as shift for argument reduction
        to move to the interval [-0.5,0.5]. It's OK that dx is approximate so
        that the reduced argument will actually lie in [-0.5-eps,0.5+eps]. */
-    r = (slong) (dx + 0.5);
+    if (dx >= 0.0)
+        r = (slong) (dx + 0.5);
+    else
+        r = -(slong) (-dx + 0.5);
 
     /* Tuning cutoff. */
     if (prec >= 40)

@@ -167,6 +167,9 @@ acb_hypgeom_gamma(acb_t y, const acb_t x, slong prec)
         return;
     }
 
+    if (acb_hypgeom_gamma_taylor(y, x, 0, prec))
+        return;
+
     acb_hypgeom_gamma_stirling(y, x, 0, prec);
 }
 
@@ -179,6 +182,9 @@ acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec)
         arb_zero(acb_imagref(y));
         return;
     }
+
+    if (acb_hypgeom_gamma_taylor(y, x, 1, prec))
+        return;
 
     acb_hypgeom_gamma_stirling(y, x, 1, prec);
 }

@@ -4232,7 +4232,7 @@ _arb_hypgeom_gamma_coeff_shallow(arf_t c, mag_t err, slong i, slong prec)
 
     if (err != NULL)
     {
-        MAG_EXP(err) = exp - term_limbs * FLINT_BITS;
+        MAG_EXP(err) = exp - term_limbs * FLINT_BITS + 1;
         MAG_MAN(err) = MAG_ONE_HALF;
     }
 
