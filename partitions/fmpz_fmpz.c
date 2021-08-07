@@ -9,8 +9,8 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include <pthread.h>
 #include "partitions.h"
+#include <pthread.h>
 
 /* defined in flint*/
 #define NUMBER_OF_SMALL_PARTITIONS 128

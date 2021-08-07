@@ -9,8 +9,8 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include <pthread.h>
 #include "acb_poly.h"
+#include <pthread.h>
 
 typedef struct
 {
