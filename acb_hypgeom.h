@@ -31,6 +31,9 @@ void acb_hypgeom_rising_ui_jet_rs(acb_ptr res, const acb_t x, ulong n, ulong m, 
 void acb_hypgeom_rising_ui_jet_bs(acb_ptr res, const acb_t x, ulong n, slong len, slong prec);
 void acb_hypgeom_rising_ui_jet(acb_ptr res, const acb_t x, ulong n, slong len, slong prec);
 
+void acb_hypgeom_log_rising_ui_jet(acb_ptr res, const acb_t z, ulong r, slong len, slong prec);
+void acb_hypgeom_log_rising_ui(acb_ptr res, const acb_t z, ulong r, slong prec);
+
 void acb_hypgeom_gamma_stirling_sum_horner(acb_t s, const acb_t z, slong N, slong prec);
 void acb_hypgeom_gamma_stirling_sum_improved(acb_t s, const acb_t z, slong N, slong K, slong prec);
 void acb_hypgeom_gamma_stirling(acb_t res, const acb_t x, int reciprocal, slong prec);

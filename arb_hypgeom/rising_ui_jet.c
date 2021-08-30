@@ -14,7 +14,11 @@
 void
 arb_hypgeom_rising_ui_jet(arb_ptr res, const arb_t x, ulong n, slong len, slong prec)
 {
-    if (n <= 7)
+    if (len == 1)
+    {
+        arb_hypgeom_rising_ui_rec(res, x, n, prec);
+    }
+    else if (n <= 7)
     {
         arb_hypgeom_rising_ui_jet_powsum(res, x, n, len, prec);
     }

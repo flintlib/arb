@@ -14,7 +14,11 @@
 void
 acb_hypgeom_rising_ui_jet(acb_ptr res, const acb_t x, ulong n, slong len, slong prec)
 {
-    if (n <= 7)
+    if (len == 1)
+    {
+        acb_hypgeom_rising_ui_rec(res, x, n, prec);
+    }
+    else if (n <= 7)
     {
         acb_hypgeom_rising_ui_jet_powsum(res, x, n, len, prec);
     }

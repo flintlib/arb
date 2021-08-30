@@ -55,6 +55,21 @@ Rising factorials
     parameter *m* which can be set to zero to choose automatically.
     The default version chooses an algorithm automatically.
 
+.. function:: void acb_hypgeom_log_rising_ui(acb_ptr res, const acb_t x, ulong n, slong prec)
+
+    Computes the log-rising factorial `\log \, (x)_n = \sum_{k=0}^{n-1} \log(x+k)`.
+
+    This first computes the ordinary rising factorial and then determines
+    the branch correction `2 \pi i m` with respect to the principal
+    logarithm. The correction is computed using Hare's algorithm in
+    floating-point arithmetic if this is safe; otherwise,
+    a direct computation of `\sum_{k=0}^{n-1} \arg(x+k)` is used as a fallback.
+
+.. function:: void acb_hypgeom_log_rising_ui_jet(acb_ptr res, const acb_t x, ulong n, slong len, slong prec)
+
+    Computes the jet of the log-rising factorial `\log \, (x)_n`,
+    truncated to length *len*.
+
 Gamma function
 -------------------------------------------------------------------------------
 
