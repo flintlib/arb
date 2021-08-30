@@ -41,24 +41,34 @@ bernoulli_cache_compute(slong n)
             flint_register_cleanup_function(bernoulli_cleanup);
         }
 
-        new_num = FLINT_MAX(bernoulli_cache_num + 128, n);
+        if (n <= 128)
+            new_num = FLINT_MAX(bernoulli_cache_num + 32, n);
+        else
+            new_num = FLINT_MAX(bernoulli_cache_num + 128, n);
 
         bernoulli_cache = flint_realloc(bernoulli_cache, new_num * sizeof(fmpq));
         for (i = bernoulli_cache_num; i < new_num; i++)
             fmpq_init(bernoulli_cache + i);
 
-        i = new_num - 1;
-        i -= (i % 2);
-        bernoulli_rev_init(iter, i);
-        for ( ; i >= bernoulli_cache_num; i -= 2)
+        if (new_num <= 128)
         {
-            bernoulli_rev_next(fmpq_numref(bernoulli_cache + i),
-                fmpq_denref(bernoulli_cache + i), iter);
+            arith_bernoulli_number_vec(bernoulli_cache, new_num);
         }
-        bernoulli_rev_clear(iter);
+        else
+        {
+            i = new_num - 1;
+            i -= (i % 2);
+            bernoulli_rev_init(iter, i);
+            for ( ; i >= bernoulli_cache_num; i -= 2)
+            {
+                bernoulli_rev_next(fmpq_numref(bernoulli_cache + i),
+                    fmpq_denref(bernoulli_cache + i), iter);
+            }
+            bernoulli_rev_clear(iter);
 
-        if (new_num > 1)
-            fmpq_set_si(bernoulli_cache + 1, -1, 2);
+            if (new_num > 1)
+                fmpq_set_si(bernoulli_cache + 1, -1, 2);
+        }
 
         bernoulli_cache_num = new_num;
     }
