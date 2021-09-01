@@ -103,16 +103,20 @@ Gamma function
     and returns 0. If *reciprocal* is set, the reciprocal gamma function is
     computed instead.
 
-.. function:: void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec)
+.. function:: void arb_hypgeom_gamma(arb_t res, const arb_t x, slong prec)
 
     Sets *res* to the gamma function of *x* computed using a default
     algorithm choice.
 
-.. function:: void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec)
+.. function:: void arb_hypgeom_rgamma(arb_t res, const arb_t x, slong prec)
 
     Sets *res* to the reciprocal gamma function of *x* computed using a default
     algorithm choice.
 
+.. function:: void arb_hypgeom_lgamma(arb_t res, const arb_t x, slong prec)
+
+    Sets *res* to the log-gamma function of *x* computed using a default
+    algorithm choice.
 
 Binomial coefficients
 -------------------------------------------------------------------------------

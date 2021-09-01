@@ -41,6 +41,8 @@ int acb_hypgeom_gamma_taylor(acb_t res, const acb_t x, int reciprocal, slong pre
 void acb_hypgeom_gamma(acb_t y, const acb_t x, slong prec);
 void acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec);
 
+void acb_hypgeom_lgamma(acb_t y, const acb_t x, slong prec);
+
 void acb_hypgeom_pfq_bound_factor(mag_t C,
     acb_srcptr a, slong p, acb_srcptr b, slong q, const acb_t z, ulong n);
 

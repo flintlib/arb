@@ -59,6 +59,8 @@ int arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, int reciprocal, slong pre
 void arb_hypgeom_gamma(arb_t y, const arb_t x, slong prec);
 void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec);
 
+void arb_hypgeom_lgamma(arb_t y, const arb_t x, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 

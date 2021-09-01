@@ -99,15 +99,20 @@ Gamma function
     and returns 0. If *reciprocal* is set, the reciprocal gamma function is
     computed instead.
 
-.. function:: void acb_hypgeom_gamma(acb_t y, const acb_t x, slong prec)
+.. function:: void acb_hypgeom_gamma(acb_t res, const acb_t x, slong prec)
 
     Sets *res* to the gamma function of *x* computed using a default
     algorithm choice.
 
-.. function:: void acb_hypgeom_rgamma(acb_t y, const acb_t x, slong prec)
+.. function:: void acb_hypgeom_rgamma(acb_t res, const acb_t x, slong prec)
 
     Sets *res* to the reciprocal gamma function of *x* computed using a default
     algorithm choice.
+
+.. function:: void acb_hypgeom_lgamma(acb_t res, const acb_t x, slong prec)
+
+    Sets *res* to the principal branch of the log-gamma function of *x*
+    computed using a default algorithm choice.
 
 
 Convergent series
