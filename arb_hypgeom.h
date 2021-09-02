@@ -61,6 +61,9 @@ void arb_hypgeom_rgamma(arb_t y, const arb_t x, slong prec);
 
 void arb_hypgeom_lgamma(arb_t y, const arb_t x, slong prec);
 
+void arb_hypgeom_gamma_fmpq(arb_t y, const fmpq_t x, slong prec);
+void arb_hypgeom_gamma_fmpz(arb_t y, const fmpz_t x, slong prec);
+
 void arb_hypgeom_pfq(arb_t res, arb_srcptr a, slong p, arb_srcptr b, slong q,
     const arb_t z, int regularized, slong prec);
 

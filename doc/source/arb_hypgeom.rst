@@ -35,8 +35,8 @@ Rising factorials
               void arb_hypgeom_rising_ui_bs(arb_t res, const arb_t x, ulong n, slong prec)
               void arb_hypgeom_rising_ui_rs(arb_t res, const arb_t x, ulong n, ulong m, slong prec)
               void arb_hypgeom_rising_ui_rec(arb_t res, const arb_t x, ulong n, slong prec)
-              void arb_hypgeom_rising_ui(arb_t y, const arb_t x, ulong n, slong prec)
-              void arb_hypgeom_rising(arb_t y, const arb_t x, const arb_t n, slong prec)
+              void arb_hypgeom_rising_ui(arb_t res, const arb_t x, ulong n, slong prec)
+              void arb_hypgeom_rising(arb_t res, const arb_t x, const arb_t n, slong prec)
 
     Computes the rising factorial `(x)_n`.
 
@@ -104,6 +104,8 @@ Gamma function
     computed instead.
 
 .. function:: void arb_hypgeom_gamma(arb_t res, const arb_t x, slong prec)
+              void arb_hypgeom_gamma_fmpq(arb_t res, const fmpq_t x, slong prec)
+              void arb_hypgeom_gamma_fmpz(arb_t res, const fmpz_t x, slong prec)
 
     Sets *res* to the gamma function of *x* computed using a default
     algorithm choice.
@@ -117,6 +119,7 @@ Gamma function
 
     Sets *res* to the log-gamma function of *x* computed using a default
     algorithm choice.
+
 
 Binomial coefficients
 -------------------------------------------------------------------------------

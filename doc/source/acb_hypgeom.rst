@@ -23,8 +23,8 @@ Rising factorials
               void acb_hypgeom_rising_ui_bs(acb_t res, const acb_t x, ulong n, slong prec)
               void acb_hypgeom_rising_ui_rs(acb_t res, const acb_t x, ulong n, ulong m, slong prec)
               void acb_hypgeom_rising_ui_rec(acb_t res, const acb_t x, ulong n, slong prec)
-              void acb_hypgeom_rising_ui(acb_t y, const acb_t x, ulong n, slong prec)
-              void acb_hypgeom_rising(acb_t y, const acb_t x, const acb_t n, slong prec)
+              void acb_hypgeom_rising_ui(acb_t res, const acb_t x, ulong n, slong prec)
+              void acb_hypgeom_rising(acb_t res, const acb_t x, const acb_t n, slong prec)
 
     Computes the rising factorial `(x)_n`.
 
