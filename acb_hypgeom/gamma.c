@@ -41,7 +41,7 @@ acb_hypgeom_gamma_stirling_inner(acb_t s, const acb_t z, slong N, slong prec)
     arb_add(acb_realref(t), acb_realref(t), acb_realref(logz), prec);
 
     /* sum part */
-    if (prec <= 384)
+    if (prec <= 128 || (prec <= 1024 && N <= 40) || (prec <= 2048 && N <= 16))
         acb_hypgeom_gamma_stirling_sum_horner(s, z, N, prec);
     else
         acb_hypgeom_gamma_stirling_sum_improved(s, z, N, 0, prec);

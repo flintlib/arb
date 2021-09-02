@@ -231,7 +231,7 @@ arb_hypgeom_gamma_stirling_inner(arb_t s, const arb_t z, slong N, slong prec)
     arb_add(t, t, logz, prec);
 
     /* sum part */
-    if (prec <= 256)
+    if (prec <= 128 || (prec <= 768 && N <= 40) || (prec <= 2048 && N <= 16))
         arb_hypgeom_gamma_stirling_sum_horner(s, z, N, prec);
     else
         arb_hypgeom_gamma_stirling_sum_improved(s, z, N, 0, prec);
