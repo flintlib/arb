@@ -79,23 +79,33 @@ arf_load_str(arf_t x, const char* data)
 
 int arf_load_file(arf_t x, FILE* stream)
 {
-    mpz_t mantissa, exponent;
-    fmpz_t mantissa_, exponent_;
+    fmpz_t mantissa, exponent;
+    __mpz_struct *mpz_mantissa, *mpz_exponent;
+    int err;
 
-    mpz_init(mantissa);
-    mpz_init(exponent);
+    fmpz_init(mantissa);
+    fmpz_init(exponent);
 
-    if (mpz_inp_str(mantissa, stream, 16) == 0) return 1;
-    if (mpz_inp_str(exponent, stream, 16) == 0) return 1;
+    mpz_mantissa = _fmpz_promote(mantissa);
+    mpz_exponent = _fmpz_promote(exponent);
 
-    fmpz_init_set_readonly(mantissa_, mantissa);
-    fmpz_init_set_readonly(exponent_, exponent);
+    err = 0;
 
-    arf_set_fmpz_2exp_dump(x, mantissa_, exponent_);
+    if (mpz_inp_str(mpz_mantissa, stream, 16) == 0)
+        err = 1;
 
-    mpz_clear(mantissa);
-    mpz_clear(exponent);
+    if (!err && mpz_inp_str(mpz_exponent, stream, 16) == 0)
+        err = 1;
 
-    return 0;
+    _fmpz_demote_val(mantissa);
+    _fmpz_demote_val(exponent);
+
+    if (!err)
+        arf_set_fmpz_2exp_dump(x, mantissa, exponent);
+
+    fmpz_clear(mantissa);
+    fmpz_clear(exponent);
+
+    return err;
 }
 
