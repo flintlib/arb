@@ -11,7 +11,7 @@
 
 #include "acb_poly.h"
 
-void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void acb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
@@ -56,7 +56,7 @@ _acb_poly_rgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong 
     acb_init(f + 1);
 
     /* otherwise use Stirling series */
-    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
+    acb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
 
     /* rgamma(h) = (gamma(1-h+r) sin(pi h)) / (rf(1-h, r) * pi), h = h0 + t*/
     if (reflect)

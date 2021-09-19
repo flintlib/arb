@@ -15,33 +15,11 @@ void
 _acb_log_rising_correct_branch(acb_t t,
         const acb_t t_wrong, const acb_t z, ulong r, slong prec);
 
-void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void acb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
 _acb_poly_gamma_stirling_eval(acb_ptr res, const acb_t z, slong n, slong num, slong prec);
-
-static __inline__ void
-_log_rising_ui_series(acb_ptr t, const acb_t x, slong r, slong len, slong prec)
-{
-    acb_struct f[2];
-    slong rflen;
-
-    acb_init(f);
-    acb_init(f + 1);
-
-    acb_set(f, x);
-    acb_one(f + 1);
-
-    rflen = FLINT_MIN(len, r + 1);
-    _acb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, prec);
-    _acb_poly_log_series(t, t, rflen, len, prec);
-
-    _acb_log_rising_correct_branch(t, t, x, r, prec);
-
-    acb_clear(f);
-    acb_clear(f + 1);
-}
 
 void
 _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong prec)
@@ -95,7 +73,7 @@ _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong 
     acb_init(zr);
 
     /* use Stirling series */
-    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
+    acb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
 
     if (reflect)
     {
@@ -104,7 +82,7 @@ _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong 
         {
             acb_sub_ui(u, h, 1, wp);
             acb_neg(u, u);
-            _log_rising_ui_series(t, u, r, len, wp);
+            acb_hypgeom_log_rising_ui_jet(t, u, r, len, wp);
             for (i = 1; i < len; i += 2)
                 acb_neg(t + i, t + i);
         }
@@ -143,7 +121,7 @@ _acb_poly_lgamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong 
 
         if (r != 0)
         {
-            _log_rising_ui_series(t, h, r, len, wp);
+            acb_hypgeom_log_rising_ui_jet(t, h, r, len, wp);
             _acb_vec_sub(u, u, t, len, wp);
         }
     }

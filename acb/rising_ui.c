@@ -10,44 +10,17 @@
 */
 
 #include "acb.h"
+#include "acb_hypgeom.h"
 
 void
 acb_rising_ui(acb_t y, const acb_t x, ulong n, slong prec)
 {
-    if (n < FLINT_MAX(prec, 100))
-    {
-        acb_rising_ui_rec(y, x, n, prec);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        acb_add_ui(t, x, n, prec);
-        acb_gamma(t, t, prec);
-        acb_rgamma(y, x, prec);
-        acb_mul(y, y, t, prec);
-        acb_clear(t);
-    }
+    acb_hypgeom_rising_ui(y, x, n, prec);
 }
 
 void
 acb_rising(acb_t y, const acb_t x, const acb_t n, slong prec)
 {
-    if (acb_is_int(n) && arf_sgn(arb_midref(acb_realref(n))) >= 0 &&
-        arf_cmpabs_ui(arb_midref(acb_realref(n)), FLINT_MAX(prec, 100)) < 0)
-    {
-        acb_rising_ui_rec(y, x,
-            arf_get_si(arb_midref(acb_realref(n)), ARF_RND_DOWN), prec);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        acb_add(t, x, n, prec);
-        acb_gamma(t, t, prec);
-        acb_rgamma(y, x, prec);
-        acb_mul(y, y, t, prec);
-        acb_clear(t);
-    }
+    acb_hypgeom_rising(y, x, n, prec);
 }
 

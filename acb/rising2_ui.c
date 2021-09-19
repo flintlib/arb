@@ -10,13 +10,30 @@
 */
 
 #include "acb.h"
+#include "acb_hypgeom.h"
 
 void
 acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec)
 {
-    if (prec < 256 || n < 8 || acb_bits(x) < prec / 8)
-        acb_rising2_ui_bs(u, v, x, n, prec);
+    if (x == u || x == v)
+    {
+        acb_t t;
+        acb_init(t);
+        acb_set(t, x);
+        acb_rising2_ui(u, v, t, n, prec);
+        acb_clear(t);
+    }
     else
-        acb_rising2_ui_rs(u, v, x, n, 0, prec);
+    {
+        acb_struct tmp[2];
+
+        tmp[0] = *u;
+        tmp[1] = *v;
+
+        acb_hypgeom_rising_ui_jet(tmp, x, n, 2, prec);
+
+        *u = tmp[0];
+        *v = tmp[1];
+    }
 }
 

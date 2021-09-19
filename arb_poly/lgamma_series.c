@@ -10,12 +10,13 @@
 */
 
 #include "arb_poly.h"
+#include "arb_hypgeom.h"
 
 slong arf_get_si(const arf_t x, arf_rnd_t rnd);
 
 void _arb_poly_lgamma_series_at_one(arb_ptr u, slong len, slong prec);
 
-void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void arb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const arb_t x, int use_reflect, int digamma, slong prec);
 
 void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, slong n, slong num, slong prec);
@@ -23,20 +24,11 @@ void _arb_poly_gamma_stirling_eval(arb_ptr res, const arb_t z, slong n, slong nu
 static __inline__ void
 _log_rising_ui_series(arb_ptr t, const arb_t x, slong r, slong len, slong prec)
 {
-    arb_struct f[2];
     slong rflen;
 
-    arb_init(f);
-    arb_init(f + 1);
-    arb_set(f, x);
-    arb_one(f + 1);
-
     rflen = FLINT_MIN(len, r + 1);
-    _arb_poly_rising_ui_series(t, f, FLINT_MIN(2, len), r, rflen, prec);
+    arb_hypgeom_rising_ui_jet(t, x, r, rflen, prec);
     _arb_poly_log_series(t, t, rflen, len, prec);
-
-    arb_clear(f);
-    arb_clear(f + 1);
 }
 
 void
@@ -91,7 +83,7 @@ _arb_poly_lgamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong 
     else
     {
         /* otherwise use Stirling series */
-        arb_gamma_stirling_choose_param(&reflect, &r, &n, h, 0, 0, wp);
+        arb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 0, 0, wp);
         arb_add_ui(zr, h, r, wp);
         _arb_poly_gamma_stirling_eval(u, zr, n, len, wp);
 

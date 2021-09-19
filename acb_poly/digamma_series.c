@@ -11,7 +11,7 @@
 
 #include "acb_poly.h"
 
-void acb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void acb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const acb_t x, int use_reflect, int digamma, slong prec);
 
 void
@@ -60,7 +60,7 @@ _acb_poly_digamma_series(acb_ptr res, acb_srcptr h, slong hlen, slong len, slong
     acb_init(zr);
 
     /* use Stirling series */
-    acb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 1, wp);
+    acb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 1, wp);
 
     /* psi(x) = psi((1-x)+r) - h(1-x,r) - pi*cot(pi*x) */
     if (reflect)

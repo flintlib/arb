@@ -1318,25 +1318,12 @@ Lambert W function
 Gamma function and factorials
 -------------------------------------------------------------------------------
 
-.. function:: void arb_rising_ui_bs(arb_t z, const arb_t x, ulong n, slong prec)
-
-.. function:: void arb_rising_ui_rs(arb_t z, const arb_t x, ulong n, ulong step, slong prec)
-
-.. function:: void arb_rising_ui_rec(arb_t z, const arb_t x, ulong n, slong prec)
-
 .. function:: void arb_rising_ui(arb_t z, const arb_t x, ulong n, slong prec)
-
-.. function:: void arb_rising(arb_t z, const arb_t x, const arb_t n, slong prec)
+              void arb_rising(arb_t z, const arb_t x, const arb_t n, slong prec)
 
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
-
-    The *bs* version uses binary splitting. The *rs* version uses rectangular
-    splitting. The *rec* version uses either *bs* or *rs* depending
-    on the input. The default version uses the gamma function unless
-    *n* is a small integer.
-
-    The *rs* version takes an optional *step* parameter for tuning
-    purposes (to use the default step length, pass zero).
+    These functions are aliases for :func:`arb_hypgeom_rising_ui`
+    and :func:`arb_hypgeom_rising`.
 
 .. function:: void arb_rising_fmpq_ui(arb_t z, const fmpq_t x, ulong n, slong prec)
 
@@ -1345,16 +1332,11 @@ Gamma function and factorials
     compared to *prec*, it is more efficient to convert *x* to an approximation
     and use :func:`arb_rising_ui`.
 
-.. function :: void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
-
-.. function :: void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong step, slong prec)
-
 .. function :: void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 
     Letting `u(x) = x (x+1) (x+2) \cdots (x+n-1)`, simultaneously compute
-    `u(x)` and `v(x) = u'(x)`, respectively using binary splitting,
-    rectangular splitting (with optional nonzero step length *step*
-    to override the default choice), and an automatic algorithm choice.
+    `u(x)` and `v(x) = u'(x)`.
+    This function is a wrapper of :func:`arb_hypgeom_rising_ui_jet`.
 
 .. function:: void arb_fac_ui(arb_t z, ulong n, slong prec)
 
@@ -1372,23 +1354,26 @@ Gamma function and factorials
     rising factorial as `{n \choose k} = (n-k+1)_k / k!`.
 
 .. function:: void arb_gamma(arb_t z, const arb_t x, slong prec)
-
-.. function:: void arb_gamma_fmpq(arb_t z, const fmpq_t x, slong prec)
-
-.. function:: void arb_gamma_fmpz(arb_t z, const fmpz_t x, slong prec)
+              void arb_gamma_fmpq(arb_t z, const fmpq_t x, slong prec)
+              void arb_gamma_fmpz(arb_t z, const fmpz_t x, slong prec)
 
     Computes the gamma function `z = \Gamma(x)`.
+
+    These functions are aliases for :func:`arb_hypgeom_gamma`,
+    :func:`arb_hypgeom_gamma_fmpq`, :func:`arb_hypgeom_gamma_fmpz`.
 
 .. function:: void arb_lgamma(arb_t z, const arb_t x, slong prec)
 
     Computes the logarithmic gamma function `z = \log \Gamma(x)`.
     The complex branch structure is assumed, so if `x \le 0`, the
     result is an indeterminate interval.
+    This function is an alias for :func:`arb_hypgeom_lgamma`.
 
 .. function:: void arb_rgamma(arb_t z, const arb_t x, slong prec)
 
     Computes the reciprocal gamma function `z = 1/\Gamma(x)`,
     avoiding division by zero at the poles of the gamma function.
+    This function is an alias for :func:`arb_hypgeom_rgamma`.
 
 .. function:: void arb_digamma(arb_t y, const arb_t x, slong prec)
 

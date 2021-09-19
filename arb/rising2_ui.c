@@ -10,13 +10,30 @@
 */
 
 #include "arb.h"
+#include "arb_hypgeom.h"
 
 void
 arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, slong prec)
 {
-    if (prec < 512 || n < 8 || arb_bits(x) < prec / 8)
-        arb_rising2_ui_bs(u, v, x, n, prec);
+    if (x == u || x == v)
+    {
+        arb_t t;
+        arb_init(t);
+        arb_set(t, x);
+        arb_rising2_ui(u, v, t, n, prec);
+        arb_clear(t);
+    }
     else
-        arb_rising2_ui_rs(u, v, x, n, 0, prec);
+    {
+        arb_struct tmp[2];
+
+        tmp[0] = *u;
+        tmp[1] = *v;
+
+        arb_hypgeom_rising_ui_jet(tmp, x, n, 2, prec);
+
+        *u = tmp[0];
+        *v = tmp[1];
+    }
 }
 

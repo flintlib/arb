@@ -11,7 +11,7 @@
 
 #include "arb_poly.h"
 
-void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void arb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const arb_t x, int use_reflect, int digamma, slong prec);
 
 void _arb_poly_gamma_stirling_eval2(arb_ptr res, const arb_t z, slong n, slong num, int diff, slong prec);
@@ -80,7 +80,7 @@ _arb_poly_digamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong
     else
     {
         /* use Stirling series */
-        arb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 1, wp);
+        arb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 1, wp);
 
         /* psi(x) = psi((1-x)+r) - h(1-x,r) - pi*cot(pi*x) */
         if (reflect)

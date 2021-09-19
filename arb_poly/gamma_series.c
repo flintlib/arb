@@ -13,7 +13,7 @@
 
 void arb_gamma_stirling_bound(mag_ptr err, const arb_t x, slong k0, slong knum, slong n);
 
-void arb_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
+void arb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n,
     const arb_t x, int use_reflect, int digamma, slong prec);
 
 void arb_gamma_stirling_coeff(arb_t b, ulong k, int digamma, slong prec);
@@ -277,7 +277,7 @@ _arb_poly_gamma_series(arb_ptr res, arb_srcptr h, slong hlen, slong len, slong p
     else
     {
         /* otherwise use Stirling series */
-        arb_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
+        arb_hypgeom_gamma_stirling_choose_param(&reflect, &r, &n, h, 1, 0, wp);
 
         /* gamma(h) = (rf(1-h, r) * pi) / (gamma(1-h+r) sin(pi h)), h = h0 + t*/
         if (reflect)

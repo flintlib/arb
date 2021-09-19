@@ -567,15 +567,9 @@ void arb_digamma(arb_t y, const arb_t x, slong prec);
 void arb_zeta(arb_t z, const arb_t s, slong prec);
 void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, slong prec);
 
-void arb_rising_ui_bs(arb_t y, const arb_t x, ulong n, slong prec);
-void arb_rising_ui_rs(arb_t y, const arb_t x, ulong n, ulong m, slong prec);
-void arb_rising_ui_rec(arb_t y, const arb_t x, ulong n, slong prec);
 void arb_rising_ui(arb_t z, const arb_t x, ulong n, slong prec);
 void arb_rising_fmpq_ui(arb_t y, const fmpq_t x, ulong n, slong prec);
 void arb_rising(arb_t z, const arb_t x, const arb_t n, slong prec);
-
-void arb_rising2_ui_rs(arb_t u, arb_t v, const arb_t x, ulong n, ulong m, slong prec);
-void arb_rising2_ui_bs(arb_t u, arb_t v, const arb_t x, ulong n, slong prec);
 void arb_rising2_ui(arb_t u, arb_t v, const arb_t x, ulong n, slong prec);
 
 void arb_log_ui_from_prev(arb_t s, ulong k, arb_t log_prev, ulong prev, slong prec);

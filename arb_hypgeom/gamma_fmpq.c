@@ -10,6 +10,75 @@
 */
 
 #include "arb_hypgeom.h"
+#include "hypgeom.h"
+
+void
+arb_gamma_const_1_3_eval(arb_t s, slong prec)
+{
+    hypgeom_t series;
+    arb_t t, u;
+    slong wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+
+    arb_init(t);
+    arb_init(u);
+
+    hypgeom_init(series);
+
+    fmpz_poly_set_str(series->A, "1  1");
+    fmpz_poly_set_str(series->B, "1  1");
+    fmpz_poly_set_str(series->P, "4  5 -46 108 -72");
+    fmpz_poly_set_str(series->Q, "4  0 0 0 512000");
+
+    prec += FLINT_CLOG2(prec);
+
+    arb_hypgeom_infsum(s, t, series, wp, wp);
+
+    arb_sqrt_ui(u, 10, wp);
+    arb_mul(t, t, u, wp);
+
+    arb_const_pi(u, wp);
+    arb_pow_ui(u, u, 4, wp);
+    arb_mul_ui(u, u, 12, wp);
+    arb_mul(s, s, u, wp);
+
+    arb_div(s, s, t, wp);
+    arb_root_ui(s, s, 2, wp);
+    arb_root_ui(s, s, 3, prec);
+
+    hypgeom_clear(series);
+    arb_clear(t);
+    arb_clear(u);
+}
+
+ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_3, arb_gamma_const_1_3_eval)
+
+void
+arb_gamma_const_1_4_eval(arb_t x, slong prec)
+{
+    arb_t t, u;
+    slong wp = prec + 4 + 2 * FLINT_BIT_COUNT(prec);
+
+    arb_init(t);
+    arb_init(u);
+
+    arb_one(t);
+    arb_sqrt_ui(u, 2, wp);
+    arb_agm(x, t, u, wp);
+
+    arb_const_pi(t, wp);
+    arb_mul_2exp_si(t, t, 1);
+    arb_sqrt(u, t, wp);
+    arb_mul(u, u, t, wp);
+
+    arb_div(x, u, x, wp);
+    arb_sqrt(x, x, wp);
+
+    arb_clear(t);
+    arb_clear(u);
+}
+
+ARB_DEF_CACHED_CONSTANT(arb_gamma_const_1_4, arb_gamma_const_1_4_eval)
+
 
 void arb_hypgeom_gamma_stirling_choose_param(int * reflect, slong * r, slong * n, const arb_t x, int use_reflect, int digamma, slong prec);
 void arb_hypgeom_gamma_stirling_inner(arb_t s, const arb_t z, slong N, slong prec);
@@ -66,9 +135,6 @@ arb_hypgeom_gamma_fmpq_stirling(arb_t y, const fmpq_t a, slong prec)
     arb_clear(v);
     arb_clear(x);
 }
-
-void arb_gamma_const_1_3(arb_t x, slong prec);
-void arb_gamma_const_1_4(arb_t x, slong prec);
 
 void
 arb_hypgeom_gamma_small_frac(arb_t y, unsigned int p, unsigned int q, slong prec)

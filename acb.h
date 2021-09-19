@@ -761,14 +761,8 @@ void acb_chebyshev_t2_ui(acb_t a, acb_t b, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_u_ui(acb_t a, ulong n, const acb_t x, slong prec);
 void acb_chebyshev_u2_ui(acb_t a, acb_t b, ulong n, const acb_t x, slong prec);
 
-void acb_rising_ui_bs(acb_t y, const acb_t x, ulong n, slong prec);
-void acb_rising_ui_rs(acb_t y, const acb_t x, ulong n, ulong m, slong prec);
-void acb_rising_ui_rec(acb_t y, const acb_t x, ulong n, slong prec);
 void acb_rising_ui(acb_t z, const acb_t x, ulong n, slong prec);
 void acb_rising(acb_t z, const acb_t x, const acb_t n, slong prec);
-
-void acb_rising2_ui_bs(acb_t u, acb_t v, const acb_t x, ulong n, slong prec);
-void acb_rising2_ui_rs(acb_t u, acb_t v, const acb_t x, ulong n, ulong m, slong prec);
 void acb_rising2_ui(acb_t u, acb_t v, const acb_t x, ulong n, slong prec);
 
 void acb_rising_ui_get_mag(mag_t bound, const acb_t s, ulong n);
