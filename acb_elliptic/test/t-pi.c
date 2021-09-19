@@ -69,7 +69,7 @@ int main()
                 mag_set_d(arb_radref(acb_realref(r2)), 1e-14 * fabs(testdata_pi[k][4]));
                 mag_set_d(arb_radref(acb_imagref(r2)), 1e-14 * fabs(testdata_pi[k][5]));
 
-                for (prec1 = 32; prec1 <= 256; prec1 *= 2)
+                for (prec1 = 32; prec1 <= (arb_test_multiplier() < 1.0 ? 64 : 256); prec1 *= 2)
                 {
                     acb_elliptic_pi(r1, n, m, prec1 + 30);
 
