@@ -331,6 +331,13 @@ acb_add_error_mag(acb_t x, const mag_t err)
     arb_add_error_mag(acb_imagref(x), err);
 }
 
+ACB_INLINE void
+acb_add_error_arb(acb_t x, const arb_t err)
+{
+    arb_add_error(acb_realref(x), err);
+    arb_add_error(acb_imagref(x), err);
+}
+
 void acb_get_mag(mag_t z, const acb_t x);
 
 void acb_get_mag_lower(mag_t z, const acb_t x);

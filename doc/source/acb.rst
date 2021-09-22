@@ -139,7 +139,11 @@ Basic manipulation
 
     Swaps *z* and *x* efficiently.
 
+.. function:: void acb_add_error_arf(acb_t x, const arf_t err)
+
 .. function:: void acb_add_error_mag(acb_t x, const mag_t err)
+
+.. function:: void acb_add_error_arb(acb_t x, const arb_t err)
 
     Adds *err* to the error bounds of both the real and imaginary
     parts of *x*, modifying *x* in-place.
