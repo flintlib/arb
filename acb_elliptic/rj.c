@@ -47,7 +47,7 @@ static const unsigned short den_ratio_tab[512] = {
     16,997,2,1,4,1,2,1009,8,1013,2,1,4076,1021,2,1
 };
 
-static __inline__ slong fdiv(slong x, slong y)
+static __inline__ slong rj_fdiv(slong x, slong y)
 {
     if (x < 0)
         return -1;
@@ -91,7 +91,7 @@ acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
     /* Precompute powers of E2 and E3 */
     for (m2 = 0; m2 <= NMAX / 2; m2++)
     {
-        for (m3 = 0; m3 <= fdiv(NMAX - 2 * m2, 3); m3++)
+        for (m3 = 0; m3 <= rj_fdiv(NMAX - 2 * m2, 3); m3++)
         {
             slong i, j, k;
 
@@ -129,7 +129,7 @@ acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
     for (m5 = m5start; m5 >= 0; m5--)
     {
         acb_zero(s4);
-        m4start = fdiv(NMAX - 5 * m5, 4);
+        m4start = rj_fdiv(NMAX - 5 * m5, 4);
         if (m5 != m5start)
         {
             fmpz_mul_ui(c5, c5, 2 * m5 + 2);
@@ -145,7 +145,7 @@ acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
         for (m4 = m4start; m4 >= 0; m4--)
         {
             acb_zero(s3);
-            m3start = fdiv(NMAX - 5 * m5 - 4 * m4, 3);
+            m3start = rj_fdiv(NMAX - 5 * m5 - 4 * m4, 3);
             if (m4 != m4start)
             {
                 fmpz_mul_ui(c4, c4, 2 * m4 + 2);
@@ -155,7 +155,7 @@ acb_elliptic_rj_taylor_sum(acb_t res, const acb_t E2, const acb_t E3,
 
             for (m3 = 0; m3 <= m3start; m3++)
             {
-                m2start = fdiv(NMAX - 5 * m5 - 4 * m4 - 3 * m3, 2);
+                m2start = rj_fdiv(NMAX - 5 * m5 - 4 * m4 - 3 * m3, 2);
                 fmpz_set(c2, c3);
                 for (m2 = 0; m2 <= m2start; m2++)
                 {
