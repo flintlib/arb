@@ -643,9 +643,6 @@ DEF_CDOUBLE_FUN_1(acosh, acb_acosh)
 DEF_DOUBLE_FUN_1(atanh, arb_atanh)
 DEF_CDOUBLE_FUN_1(atanh, acb_atanh)
 
-/* todo: lambertw (with branches) */
-
-
 DEF_DOUBLE_FUN_2(rising, arb_rising)
 DEF_CDOUBLE_FUN_2(rising, acb_rising)
 
@@ -667,7 +664,7 @@ DEF_CDOUBLE_FUN_1(zeta, acb_zeta)
 DEF_DOUBLE_FUN_2(hurwitz_zeta, arb_hurwitz_zeta)
 DEF_CDOUBLE_FUN_2(hurwitz_zeta, acb_hurwitz_zeta)
 
-void
+static void
 _arb_polygamma(arb_t res, const arb_t s, const arb_t z, slong prec)
 {
     acb_t t, u, v;
@@ -686,7 +683,7 @@ _arb_polygamma(arb_t res, const arb_t s, const arb_t z, slong prec)
     acb_clear(v);
 }
 
-void
+static void
 _arb_barnes_g(arb_t res, const arb_t x, slong prec)
 {
     acb_t t, u;
@@ -702,7 +699,7 @@ _arb_barnes_g(arb_t res, const arb_t x, slong prec)
     acb_clear(u);
 }
 
-void
+static void
 _arb_log_barnes_g(arb_t res, const arb_t x, slong prec)
 {
     acb_t t, u;
@@ -730,7 +727,11 @@ DEF_CDOUBLE_FUN_2(polygamma, acb_polygamma)
 DEF_DOUBLE_FUN_2(polylog, arb_polylog)
 DEF_CDOUBLE_FUN_2(polylog, acb_polylog)
 
-void
+DEF_DOUBLE_FUN_1(dilog, arb_hypgeom_dilog)
+DEF_CDOUBLE_FUN_1(dilog, acb_hypgeom_dilog)
+
+
+static void
 _arb_agm1(arb_t res, const arb_t x, slong prec)
 {
     arb_t t;
@@ -745,4 +746,96 @@ DEF_CDOUBLE_FUN_1(agm1, acb_agm1)
 
 DEF_DOUBLE_FUN_2(agm, arb_agm)
 DEF_CDOUBLE_FUN_2(agm, acb_agm)
+
+
+DEF_DOUBLE_FUN_1(erf, arb_hypgeom_erf)
+DEF_CDOUBLE_FUN_1(erf, acb_hypgeom_erf)
+
+DEF_DOUBLE_FUN_1(erfc, arb_hypgeom_erfc)
+DEF_CDOUBLE_FUN_1(erfc, acb_hypgeom_erfc)
+
+DEF_DOUBLE_FUN_1(erfi, arb_hypgeom_erfi)
+DEF_CDOUBLE_FUN_1(erfi, acb_hypgeom_erfi)
+
+DEF_DOUBLE_FUN_2(bessel_j, arb_hypgeom_bessel_j)
+DEF_CDOUBLE_FUN_2(bessel_j, acb_hypgeom_bessel_j)
+
+DEF_DOUBLE_FUN_2(bessel_y, arb_hypgeom_bessel_y)
+DEF_CDOUBLE_FUN_2(bessel_y, acb_hypgeom_bessel_y)
+
+DEF_DOUBLE_FUN_2(bessel_i, arb_hypgeom_bessel_i)
+DEF_CDOUBLE_FUN_2(bessel_i, acb_hypgeom_bessel_i)
+
+DEF_DOUBLE_FUN_2(bessel_k, arb_hypgeom_bessel_k)
+DEF_CDOUBLE_FUN_2(bessel_k, acb_hypgeom_bessel_k)
+
+DEF_DOUBLE_FUN_2(bessel_k_scaled, arb_hypgeom_bessel_k_scaled)
+DEF_CDOUBLE_FUN_2(bessel_k_scaled, acb_hypgeom_bessel_k_scaled)
+
+static void _arb_hypgeom_airy_ai(arb_t res, const arb_t x, slong prec) { arb_hypgeom_airy(res, NULL, NULL, NULL, x, prec); }
+static void _arb_hypgeom_airy_ai_prime(arb_t res, const arb_t x, slong prec) { arb_hypgeom_airy(NULL, res, NULL, NULL, x, prec); }
+static void _arb_hypgeom_airy_bi(arb_t res, const arb_t x, slong prec) { arb_hypgeom_airy(NULL, NULL, res, NULL, x, prec); }
+static void _arb_hypgeom_airy_bi_prime(arb_t res, const arb_t x, slong prec) { arb_hypgeom_airy(NULL, NULL, NULL, res, x, prec); }
+
+static void _acb_hypgeom_airy_ai(acb_t res, const acb_t x, slong prec) { acb_hypgeom_airy(res, NULL, NULL, NULL, x, prec); }
+static void _acb_hypgeom_airy_ai_prime(acb_t res, const acb_t x, slong prec) { acb_hypgeom_airy(NULL, res, NULL, NULL, x, prec); }
+static void _acb_hypgeom_airy_bi(acb_t res, const acb_t x, slong prec) { acb_hypgeom_airy(NULL, NULL, res, NULL, x, prec); }
+static void _acb_hypgeom_airy_bi_prime(acb_t res, const acb_t x, slong prec) { acb_hypgeom_airy(NULL, NULL, NULL, res, x, prec); }
+
+DEF_DOUBLE_FUN_1(airy_ai, _arb_hypgeom_airy_ai)
+DEF_CDOUBLE_FUN_1(airy_ai, _acb_hypgeom_airy_ai)
+
+DEF_DOUBLE_FUN_1(airy_ai_prime, _arb_hypgeom_airy_ai_prime)
+DEF_CDOUBLE_FUN_1(airy_ai_prime, _acb_hypgeom_airy_ai_prime)
+
+DEF_DOUBLE_FUN_1(airy_bi, _arb_hypgeom_airy_bi)
+DEF_CDOUBLE_FUN_1(airy_bi, _acb_hypgeom_airy_bi)
+
+DEF_DOUBLE_FUN_1(airy_bi_prime, _arb_hypgeom_airy_bi_prime)
+DEF_CDOUBLE_FUN_1(airy_bi_prime, _acb_hypgeom_airy_bi_prime)
+
+static void _arb_hypgeom_coulomb_f(arb_t res, const arb_t l, const arb_t eta, const arb_t z, slong prec) { arb_hypgeom_coulomb(res, NULL, l, eta, z, prec); }
+static void _arb_hypgeom_coulomb_g(arb_t res, const arb_t l, const arb_t eta, const arb_t z, slong prec) { arb_hypgeom_coulomb(NULL, res, l, eta, z, prec); }
+
+static void _acb_hypgeom_coulomb_f(acb_t res, const acb_t l, const acb_t eta, const acb_t z, slong prec) { acb_hypgeom_coulomb(res, NULL, NULL, NULL, l, eta, z, prec); }
+static void _acb_hypgeom_coulomb_g(acb_t res, const acb_t l, const acb_t eta, const acb_t z, slong prec) { acb_hypgeom_coulomb(NULL, res, NULL, NULL, l, eta, z, prec); }
+static void _acb_hypgeom_coulomb_hpos(acb_t res, const acb_t l, const acb_t eta, const acb_t z, slong prec) { acb_hypgeom_coulomb(NULL, NULL, res, NULL, l, eta, z, prec); }
+static void _acb_hypgeom_coulomb_hneg(acb_t res, const acb_t l, const acb_t eta, const acb_t z, slong prec) { acb_hypgeom_coulomb(NULL, NULL, NULL, res, l, eta, z, prec); }
+
+DEF_DOUBLE_FUN_3(coulomb_f, _arb_hypgeom_coulomb_f)
+DEF_CDOUBLE_FUN_3(coulomb_f, _acb_hypgeom_coulomb_f)
+
+DEF_DOUBLE_FUN_3(coulomb_g, _arb_hypgeom_coulomb_g)
+DEF_CDOUBLE_FUN_3(coulomb_g, _acb_hypgeom_coulomb_g)
+
+DEF_CDOUBLE_FUN_3(coulomb_hpos, _acb_hypgeom_coulomb_hpos)
+DEF_CDOUBLE_FUN_3(coulomb_hneg, _acb_hypgeom_coulomb_hneg)
+
+DEF_DOUBLE_FUN_2(chebyshev_t, arb_hypgeom_chebyshev_t)
+DEF_CDOUBLE_FUN_2(chebyshev_t, acb_hypgeom_chebyshev_t)
+
+DEF_DOUBLE_FUN_2(chebyshev_u, arb_hypgeom_chebyshev_u)
+DEF_CDOUBLE_FUN_2(chebyshev_u, acb_hypgeom_chebyshev_u)
+
+DEF_DOUBLE_FUN_4(jacobi_p, arb_hypgeom_jacobi_p)
+DEF_CDOUBLE_FUN_4(jacobi_p, acb_hypgeom_jacobi_p)
+
+DEF_DOUBLE_FUN_3(gegenbauer_c, arb_hypgeom_gegenbauer_c)
+DEF_CDOUBLE_FUN_3(gegenbauer_c, acb_hypgeom_gegenbauer_c)
+
+DEF_DOUBLE_FUN_3(laguerre_l, arb_hypgeom_laguerre_l)
+DEF_CDOUBLE_FUN_3(laguerre_l, acb_hypgeom_laguerre_l)
+
+DEF_DOUBLE_FUN_2(hermite_h, arb_hypgeom_hermite_h)
+DEF_CDOUBLE_FUN_2(hermite_h, acb_hypgeom_hermite_h)
+
+
+
+/* todo: lambertw (with branches) */
+/* todo: fresnel (with flags) */
+/* todo: functions with multiple outputs */
+/* todo: incomplete gamma, exp integrals... */
+/* legendre_p, legendre_q, +roots, spherharm */
+/* todo: pfqs */
+
 
