@@ -198,6 +198,17 @@ with generic functions. This code should be considered experimental.
    arb_calc.rst
    acb_calc.rst
 
+Wrappers
+::::::::::::::::::::::::::::::::::::
+
+Floating-point wrappers for Arb functions.
+
+.. toctree::
+   :maxdepth: 2
+
+   arb_fpwrap.rst
+
+
 Extra utility modules
 ::::::::::::::::::::::::::::::::::::
 
