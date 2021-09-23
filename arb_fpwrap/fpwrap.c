@@ -86,6 +86,37 @@ acb_accurate_enough_d(const acb_t x, int flags)
 
 #define WP_INITIAL 64
 
+#define DOUBLE_CHECK_RESULT \
+    if (arb_accurate_enough_d(arb_res, flags)) \
+    { \
+        *res = arf_get_d(arb_midref(arb_res), ARF_RND_NEAR); \
+        status = FPWRAP_SUCCESS; \
+        break; \
+    } \
+    if (wp >= double_wp_max(flags)) \
+    { \
+        *res = D_NAN; \
+        status = FPWRAP_UNABLE; \
+        break; \
+    } \
+
+#define CDOUBLE_CHECK_RESULT \
+    if (acb_accurate_enough_d(acb_res, flags)) \
+    { \
+        res->real = arf_get_d(arb_midref(acb_realref(acb_res)), ARF_RND_NEAR); \
+        res->imag = arf_get_d(arb_midref(acb_imagref(acb_res)), ARF_RND_NEAR); \
+        status = FPWRAP_SUCCESS; \
+        break; \
+    } \
+    if (wp >= double_wp_max(flags)) \
+    { \
+        res->real = D_NAN; \
+        res->imag = D_NAN; \
+        status = FPWRAP_UNABLE; \
+        break; \
+    }
+
+
 static slong
 double_wp_max(int flags)
 {
@@ -113,6 +144,17 @@ typedef void (*acb_func_2)(acb_t, const acb_t, const acb_t, slong prec);
 typedef void (*acb_func_3)(acb_t, const acb_t, const acb_t, const acb_t, slong prec);
 typedef void (*acb_func_4)(acb_t, const acb_t, const acb_t, const acb_t, const acb_t, slong prec);
 
+typedef void (*arb_func_1_int)(arb_t, const arb_t, int, slong prec);
+typedef void (*arb_func_2_int)(arb_t, const arb_t, const arb_t, int, slong prec);
+typedef void (*arb_func_3_int)(arb_t, const arb_t, const arb_t, const arb_t, int, slong prec);
+typedef void (*arb_func_4_int)(arb_t, const arb_t, const arb_t, const arb_t, const arb_t, int, slong prec);
+
+typedef void (*acb_func_1_int)(acb_t, const acb_t, int, slong prec);
+typedef void (*acb_func_2_int)(acb_t, const acb_t, const acb_t, int, slong prec);
+typedef void (*acb_func_3_int)(acb_t, const acb_t, const acb_t, const acb_t, int, slong prec);
+typedef void (*acb_func_4_int)(acb_t, const acb_t, const acb_t, const acb_t, const acb_t, int, slong prec);
+
+
 int arb_fpwrap_double_1(double * res, arb_func_1 func, double x, int flags)
 {
     arb_t arb_res, arb_x;
@@ -134,20 +176,7 @@ int arb_fpwrap_double_1(double * res, arb_func_1 func, double x, int flags)
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(arb_res, arb_x, wp);
-
-            if (arb_accurate_enough_d(arb_res, flags))
-            {
-                *res = arf_get_d(arb_midref(arb_res), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                *res = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            DOUBLE_CHECK_RESULT
         }
     }
 
@@ -180,20 +209,7 @@ int arb_fpwrap_double_2(double * res, arb_func_2 func, double x1, double x2, int
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(arb_res, arb_x1, arb_x2, wp);
-
-            if (arb_accurate_enough_d(arb_res, flags))
-            {
-                *res = arf_get_d(arb_midref(arb_res), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                *res = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            DOUBLE_CHECK_RESULT
         }
     }
 
@@ -229,20 +245,7 @@ int arb_fpwrap_double_3(double * res, arb_func_3 func, double x1, double x2, dou
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(arb_res, arb_x1, arb_x2, arb_x3, wp);
-
-            if (arb_accurate_enough_d(arb_res, flags))
-            {
-                *res = arf_get_d(arb_midref(arb_res), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                *res = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            DOUBLE_CHECK_RESULT
         }
     }
 
@@ -281,20 +284,7 @@ int arb_fpwrap_double_4(double * res, arb_func_4 func, double x1, double x2, dou
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(arb_res, arb_x1, arb_x2, arb_x3, arb_x4, wp);
-
-            if (arb_accurate_enough_d(arb_res, flags))
-            {
-                *res = arf_get_d(arb_midref(arb_res), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                *res = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            DOUBLE_CHECK_RESULT
         }
     }
 
@@ -306,7 +296,6 @@ int arb_fpwrap_double_4(double * res, arb_func_4 func, double x1, double x2, dou
 
     return status;
 }
-
 
 int arb_fpwrap_cdouble_1(complex_double * res, acb_func_1 func, complex_double x, int flags)
 {
@@ -330,22 +319,7 @@ int arb_fpwrap_cdouble_1(complex_double * res, acb_func_1 func, complex_double x
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(acb_res, acb_x, wp);
-
-            if (acb_accurate_enough_d(acb_res, flags))
-            {
-                res->real = arf_get_d(arb_midref(acb_realref(acb_res)), ARF_RND_NEAR);
-                res->imag = arf_get_d(arb_midref(acb_imagref(acb_res)), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                res->real = D_NAN;
-                res->imag = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            CDOUBLE_CHECK_RESULT
         }
     }
 
@@ -379,22 +353,7 @@ int arb_fpwrap_cdouble_2(complex_double * res, acb_func_2 func, complex_double x
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(acb_res, acb_x1, acb_x2, wp);
-
-            if (acb_accurate_enough_d(acb_res, flags))
-            {
-                res->real = arf_get_d(arb_midref(acb_realref(acb_res)), ARF_RND_NEAR);
-                res->imag = arf_get_d(arb_midref(acb_imagref(acb_res)), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                res->real = D_NAN;
-                res->imag = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            CDOUBLE_CHECK_RESULT
         }
     }
 
@@ -431,22 +390,7 @@ int arb_fpwrap_cdouble_3(complex_double * res, acb_func_3 func, complex_double x
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(acb_res, acb_x1, acb_x2, acb_x3, wp);
-
-            if (acb_accurate_enough_d(acb_res, flags))
-            {
-                res->real = arf_get_d(arb_midref(acb_realref(acb_res)), ARF_RND_NEAR);
-                res->imag = arf_get_d(arb_midref(acb_imagref(acb_res)), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
-
-            if (wp >= double_wp_max(flags))
-            {
-                res->real = D_NAN;
-                res->imag = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+            CDOUBLE_CHECK_RESULT
         }
     }
 
@@ -486,22 +430,295 @@ int arb_fpwrap_cdouble_4(complex_double * res, acb_func_4 func, complex_double x
         for (wp = WP_INITIAL; ; wp *= 2)
         {
             func(acb_res, acb_x1, acb_x2, acb_x3, acb_x4, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
 
-            if (acb_accurate_enough_d(acb_res, flags))
-            {
-                res->real = arf_get_d(arb_midref(acb_realref(acb_res)), ARF_RND_NEAR);
-                res->imag = arf_get_d(arb_midref(acb_imagref(acb_res)), ARF_RND_NEAR);
-                status = FPWRAP_SUCCESS;
-                break;
-            }
+    acb_clear(acb_x1);
+    acb_clear(acb_x2);
+    acb_clear(acb_x3);
+    acb_clear(acb_x4);
+    acb_clear(acb_res);
 
-            if (wp >= double_wp_max(flags))
-            {
-                res->real = D_NAN;
-                res->imag = D_NAN;
-                status = FPWRAP_UNABLE;
-                break;
-            }
+    return status;
+}
+
+int arb_fpwrap_double_1_int(double * res, arb_func_1_int func, double x, int intx, int flags)
+{
+    arb_t arb_res, arb_x;
+    slong wp;
+    int status;
+
+    arb_init(arb_res);
+    arb_init(arb_x);
+
+    arb_set_d(arb_x, x);
+
+    if (!arb_is_finite(arb_x))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(arb_res, arb_x, intx, wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    arb_clear(arb_x);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_double_2_int(double * res, arb_func_2_int func, double x1, double x2, int intx, int flags)
+{
+    arb_t arb_res, arb_x1, arb_x2;
+    slong wp;
+    int status;
+
+    arb_init(arb_res);
+    arb_init(arb_x1);
+    arb_init(arb_x2);
+
+    arb_set_d(arb_x1, x1);
+    arb_set_d(arb_x2, x2);
+
+    if (!arb_is_finite(arb_x1) || !arb_is_finite(arb_x2))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(arb_res, arb_x1, arb_x2, intx, wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    arb_clear(arb_x1);
+    arb_clear(arb_x2);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_double_3_int(double * res, arb_func_3_int func, double x1, double x2, double x3, int intx, int flags)
+{
+    arb_t arb_res, arb_x1, arb_x2, arb_x3;
+    slong wp;
+    int status;
+
+    arb_init(arb_res);
+    arb_init(arb_x1);
+    arb_init(arb_x2);
+    arb_init(arb_x3);
+
+    arb_set_d(arb_x1, x1);
+    arb_set_d(arb_x2, x2);
+    arb_set_d(arb_x3, x3);
+
+    if (!arb_is_finite(arb_x1) || !arb_is_finite(arb_x2) || !arb_is_finite(arb_x3))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(arb_res, arb_x1, arb_x2, arb_x3, intx, wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    arb_clear(arb_x1);
+    arb_clear(arb_x2);
+    arb_clear(arb_x3);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_double_4_int(double * res, arb_func_4_int func, double x1, double x2, double x3, double x4, int intx, int flags)
+{
+    arb_t arb_res, arb_x1, arb_x2, arb_x3, arb_x4;
+    slong wp;
+    int status;
+
+    arb_init(arb_res);
+    arb_init(arb_x1);
+    arb_init(arb_x2);
+    arb_init(arb_x3);
+    arb_init(arb_x4);
+
+    arb_set_d(arb_x1, x1);
+    arb_set_d(arb_x2, x2);
+    arb_set_d(arb_x3, x3);
+    arb_set_d(arb_x3, x4);
+
+    if (!arb_is_finite(arb_x1) || !arb_is_finite(arb_x2) || !arb_is_finite(arb_x3) || !arb_is_finite(arb_x4))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(arb_res, arb_x1, arb_x2, arb_x3, arb_x4, intx, wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    arb_clear(arb_x1);
+    arb_clear(arb_x2);
+    arb_clear(arb_x3);
+    arb_clear(arb_x4);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_1_int(complex_double * res, acb_func_1_int func, complex_double x, int intx, int flags)
+{
+    acb_t acb_res, acb_x;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x);
+
+    acb_set_d_d(acb_x, x.real, x.imag);
+
+    if (!acb_is_finite(acb_x))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(acb_res, acb_x, intx, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    acb_clear(acb_x);
+    acb_clear(acb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_2_int(complex_double * res, acb_func_2_int func, complex_double x1, complex_double x2, int intx, int flags)
+{
+    acb_t acb_res, acb_x1, acb_x2;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x1);
+    acb_init(acb_x2);
+
+    acb_set_d_d(acb_x1, x1.real, x1.imag);
+    acb_set_d_d(acb_x2, x2.real, x2.imag);
+
+    if (!acb_is_finite(acb_x1) || !acb_is_finite(acb_x2))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(acb_res, acb_x1, acb_x2, intx, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    acb_clear(acb_x1);
+    acb_clear(acb_x2);
+    acb_clear(acb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_3_int(complex_double * res, acb_func_3_int func, complex_double x1, complex_double x2, complex_double x3, int intx, int flags)
+{
+    acb_t acb_res, acb_x1, acb_x2, acb_x3;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x1);
+    acb_init(acb_x2);
+    acb_init(acb_x3);
+
+    acb_set_d_d(acb_x1, x1.real, x1.imag);
+    acb_set_d_d(acb_x2, x2.real, x2.imag);
+    acb_set_d_d(acb_x3, x3.real, x3.imag);
+
+    if (!acb_is_finite(acb_x1) || !acb_is_finite(acb_x2) || !acb_is_finite(acb_x3))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(acb_res, acb_x1, acb_x2, acb_x3, intx, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    acb_clear(acb_x1);
+    acb_clear(acb_x2);
+    acb_clear(acb_x3);
+    acb_clear(acb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_4_int(complex_double * res, acb_func_4_int func, complex_double x1, complex_double x2, complex_double x3, complex_double x4, int intx, int flags)
+{
+    acb_t acb_res, acb_x1, acb_x2, acb_x3, acb_x4;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x1);
+    acb_init(acb_x2);
+    acb_init(acb_x3);
+    acb_init(acb_x4);
+
+    acb_set_d_d(acb_x1, x1.real, x1.imag);
+    acb_set_d_d(acb_x2, x2.real, x2.imag);
+    acb_set_d_d(acb_x3, x3.real, x3.imag);
+    acb_set_d_d(acb_x4, x4.real, x4.imag);
+
+    if (!acb_is_finite(acb_x1) || !acb_is_finite(acb_x2) || !acb_is_finite(acb_x3) || !acb_is_finite(acb_x4))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            func(acb_res, acb_x1, acb_x2, acb_x3, acb_x4, intx, wp);
+            CDOUBLE_CHECK_RESULT
         }
     }
 
@@ -562,6 +779,53 @@ int arb_fpwrap_cdouble_4(complex_double * res, acb_func_4 func, complex_double x
         return arb_fpwrap_cdouble_4(res, acb_fun, x1, x2, x3, x4, flags); \
     } \
 
+#define DEF_DOUBLE_FUN_1_INT(name, arb_fun) \
+    int arb_fpwrap_double_ ## name ## _int(double * res, double x, int intx, int flags) \
+    { \
+        return arb_fpwrap_double_1_int(res, arb_fun, x, intx, flags); \
+    } \
+
+#define DEF_DOUBLE_FUN_2_INT(name, arb_fun) \
+    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, int intx, int flags) \
+    { \
+        return arb_fpwrap_double_2_int(res, arb_fun, x1, x2, intx, flags); \
+    } \
+
+#define DEF_DOUBLE_FUN_3_INT(name, arb_fun) \
+    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, double x3, int intx, int flags) \
+    { \
+        return arb_fpwrap_double_3_int(res, arb_fun, x1, x2, x3, intx, flags); \
+    } \
+
+#define DEF_DOUBLE_FUN_4_INT(name, arb_fun) \
+    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, double x3, double x4, int intx, int flags) \
+    { \
+        return arb_fpwrap_double_4_int(res, arb_fun, x1, x2, x3, x4, intx, flags); \
+    } \
+
+#define DEF_CDOUBLE_FUN_1_INT(name, acb_fun) \
+    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x, int intx, int flags) \
+    { \
+        return arb_fpwrap_cdouble_1_int(res, acb_fun, x, intx, flags); \
+    } \
+
+#define DEF_CDOUBLE_FUN_2_INT(name, acb_fun) \
+    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, int intx, int flags) \
+    { \
+        return arb_fpwrap_cdouble_2_int(res, acb_fun, x1, x2, intx, flags); \
+    } \
+
+#define DEF_CDOUBLE_FUN_3_INT(name, acb_fun) \
+    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, complex_double x3, int intx, int flags) \
+    { \
+        return arb_fpwrap_cdouble_3_int(res, acb_fun, x1, x2, x3, intx, flags); \
+    } \
+
+#define DEF_CDOUBLE_FUN_4_INT(name, acb_fun) \
+    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, complex_double x3, complex_double x4, int intx, int flags) \
+    { \
+        return arb_fpwrap_cdouble_4_int(res, acb_fun, x1, x2, x3, x4, intx, flags); \
+    } \
 
 DEF_DOUBLE_FUN_1(exp, arb_exp)
 DEF_CDOUBLE_FUN_1(exp, acb_exp)
@@ -710,10 +974,7 @@ _arb_log_barnes_g(arb_t res, const arb_t x, slong prec)
         acb_init(u);
         acb_set_arb(t, x);
         acb_log_barnes_g(u, t, prec);
-        if (acb_is_real(u))
-            arb_set(res, acb_realref(u));
-        else
-            arb_indeterminate(res);
+        arb_set(res, acb_realref(u));
         acb_clear(t);
         acb_clear(u);
     }
@@ -751,7 +1012,6 @@ DEF_CDOUBLE_FUN_1(agm1, acb_agm1)
 DEF_DOUBLE_FUN_2(agm, arb_agm)
 DEF_CDOUBLE_FUN_2(agm, acb_agm)
 
-
 DEF_DOUBLE_FUN_1(erf, arb_hypgeom_erf)
 DEF_CDOUBLE_FUN_1(erf, acb_hypgeom_erf)
 
@@ -760,6 +1020,41 @@ DEF_CDOUBLE_FUN_1(erfc, acb_hypgeom_erfc)
 
 DEF_DOUBLE_FUN_1(erfi, arb_hypgeom_erfi)
 DEF_CDOUBLE_FUN_1(erfi, acb_hypgeom_erfi)
+
+static void _arb_hypgeom_fresnel_s(arb_t res, const arb_t x, int normalized, slong prec) { arb_hypgeom_fresnel(res, NULL, x, normalized, prec); }
+static void _arb_hypgeom_fresnel_c(arb_t res, const arb_t x, int normalized, slong prec) { arb_hypgeom_fresnel(NULL, res, x, normalized, prec); }
+static void _acb_hypgeom_fresnel_s(acb_t res, const acb_t x, int normalized, slong prec) { acb_hypgeom_fresnel(res, NULL, x, normalized, prec); }
+static void _acb_hypgeom_fresnel_c(acb_t res, const acb_t x, int normalized, slong prec) { acb_hypgeom_fresnel(NULL, res, x, normalized, prec); }
+
+DEF_DOUBLE_FUN_1_INT(fresnel_s, _arb_hypgeom_fresnel_s)
+DEF_CDOUBLE_FUN_1_INT(fresnel_s, _acb_hypgeom_fresnel_s)
+
+DEF_DOUBLE_FUN_1_INT(fresnel_c, _arb_hypgeom_fresnel_c)
+DEF_CDOUBLE_FUN_1_INT(fresnel_c, _acb_hypgeom_fresnel_c)
+
+DEF_DOUBLE_FUN_2_INT(gamma_upper, arb_hypgeom_gamma_upper)
+DEF_CDOUBLE_FUN_2_INT(gamma_upper, acb_hypgeom_gamma_upper)
+
+DEF_DOUBLE_FUN_2_INT(gamma_lower, arb_hypgeom_gamma_lower)
+DEF_CDOUBLE_FUN_2_INT(gamma_lower, acb_hypgeom_gamma_lower)
+
+DEF_DOUBLE_FUN_3_INT(beta_lower, arb_hypgeom_beta_lower)
+DEF_CDOUBLE_FUN_3_INT(beta_lower, acb_hypgeom_beta_lower)
+
+DEF_DOUBLE_FUN_2(exp_integral_e, arb_hypgeom_expint)
+DEF_CDOUBLE_FUN_2(exp_integral_e, acb_hypgeom_expint)
+
+DEF_DOUBLE_FUN_1(exp_integral_ei, arb_hypgeom_ei)
+DEF_CDOUBLE_FUN_1(exp_integral_ei, acb_hypgeom_ei)
+
+DEF_DOUBLE_FUN_1(sin_integral, arb_hypgeom_si)
+DEF_CDOUBLE_FUN_1(cos_integral, acb_hypgeom_ci)
+
+DEF_DOUBLE_FUN_1(sinh_integral, arb_hypgeom_shi)
+DEF_CDOUBLE_FUN_1(cosh_integral, acb_hypgeom_chi)
+
+DEF_DOUBLE_FUN_1_INT(log_integral, arb_hypgeom_li)
+DEF_CDOUBLE_FUN_1_INT(log_integral, acb_hypgeom_li)
 
 DEF_DOUBLE_FUN_2(bessel_j, arb_hypgeom_bessel_j)
 DEF_CDOUBLE_FUN_2(bessel_j, acb_hypgeom_bessel_j)
@@ -833,13 +1128,62 @@ DEF_CDOUBLE_FUN_3(laguerre_l, acb_hypgeom_laguerre_l)
 DEF_DOUBLE_FUN_2(hermite_h, arb_hypgeom_hermite_h)
 DEF_CDOUBLE_FUN_2(hermite_h, acb_hypgeom_hermite_h)
 
+DEF_DOUBLE_FUN_3_INT(legendre_p, arb_hypgeom_legendre_p)
+DEF_CDOUBLE_FUN_3_INT(legendre_p, acb_hypgeom_legendre_p)
+
+DEF_DOUBLE_FUN_3_INT(legendre_q, arb_hypgeom_legendre_q)
+DEF_CDOUBLE_FUN_3_INT(legendre_q, acb_hypgeom_legendre_q)
+
+int arb_fpwrap_cdouble_spherical_y(complex_double * res, slong n, slong m, complex_double x1, complex_double x2, int flags)
+{
+    acb_t acb_res, acb_x1, acb_x2;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x1);
+    acb_init(acb_x2);
+
+    acb_set_d_d(acb_x1, x1.real, x1.imag);
+    acb_set_d_d(acb_x2, x2.real, x2.imag);
+
+    if (!acb_is_finite(acb_x1) || !acb_is_finite(acb_x2))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            acb_hypgeom_spherical_y(acb_res, n, m, acb_x1, acb_x2, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    acb_clear(acb_x1);
+    acb_clear(acb_x2);
+    acb_clear(acb_res);
+
+    return status;
+}
+
+DEF_DOUBLE_FUN_2_INT(hypgeom_0f1, arb_hypgeom_0f1)
+DEF_CDOUBLE_FUN_2_INT(hypgeom_0f1, acb_hypgeom_0f1)
+
+DEF_DOUBLE_FUN_3_INT(hypgeom_1f1, arb_hypgeom_1f1)
+DEF_CDOUBLE_FUN_3_INT(hypgeom_1f1, acb_hypgeom_1f1)
+
+DEF_DOUBLE_FUN_3(hypgeom_u, arb_hypgeom_u)
+DEF_CDOUBLE_FUN_3(hypgeom_u, acb_hypgeom_u)
+
+DEF_DOUBLE_FUN_4_INT(hypgeom_2f1, arb_hypgeom_2f1)
+DEF_CDOUBLE_FUN_4_INT(hypgeom_2f1, acb_hypgeom_2f1)
 
 
 /* todo: lambertw (with branches) */
-/* todo: fresnel (with flags) */
 /* todo: functions with multiple outputs */
-/* todo: incomplete gamma, exp integrals... */
-/* todo: airy zeros */
-/* legendre_p, legendre_q, +roots, spherharm */
+/* todo: airy zeros, legendre roots */
 /* todo: pfqs */
 

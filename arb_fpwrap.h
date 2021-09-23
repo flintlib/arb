@@ -158,6 +158,42 @@ int arb_fpwrap_cdouble_erfc(complex_double * res, complex_double x, int flags);
 int arb_fpwrap_double_erfi(double * res, double x, int flags);
 int arb_fpwrap_cdouble_erfi(complex_double * res, complex_double x, int flags);
 
+int arb_fpwrap_double_fresnel_s(double * res, double x, int normalized, int flags);
+int arb_fpwrap_cdouble_fresnel_s(complex_double * res, complex_double x, int normalized, int flags);
+
+int arb_fpwrap_double_fresnel_c(double * res, double x, int normalized, int flags);
+int arb_fpwrap_cdouble_fresnel_c(complex_double * res, complex_double x, int normalized, int flags);
+
+int arb_fpwrap_double_gamma_upper(double * res, double s, double z, int regularized, int flags);
+int arb_fpwrap_cdouble_gamma_upper(complex_double * res, complex_double s, complex_double z, int regularized, int flags);
+
+int arb_fpwrap_double_gamma_lower(double * res, double s, double z, int regularized, int flags);
+int arb_fpwrap_cdouble_gamma_lower(complex_double * res, complex_double s, complex_double z, int regularized, int flags);
+
+int arb_fpwrap_double_beta_lower(double * res, double a, double b, double z, int regularized, int flags);
+int arb_fpwrap_cdouble_beta_lower(complex_double * res, complex_double a, complex_double b, complex_double z, int regularized, int flags);
+
+int arb_fpwrap_double_exp_integral_e(double * res, double s, double z, int flags);
+int arb_fpwrap_cdouble_exp_integral_e(complex_double * res, complex_double s, complex_double z, int flags);
+
+int arb_fpwrap_double_exp_integral_ei(double * res, double x, int flags);
+int arb_fpwrap_cdouble_exp_integral_ei(complex_double * res, complex_double x, int flags);
+
+int arb_fpwrap_double_sin_integral(double * res, double x, int flags);
+int arb_fpwrap_cdouble_sin_integral(complex_double * res, complex_double x, int flags);
+
+int arb_fpwrap_double_cos_integral(double * res, double x, int flags);
+int arb_fpwrap_cdouble_cos_integral(complex_double * res, complex_double x, int flags);
+
+int arb_fpwrap_double_sinh_integral(double * res, double x, int flags);
+int arb_fpwrap_cdouble_sinh_integral(complex_double * res, complex_double x, int flags);
+
+int arb_fpwrap_double_cosh_integral(double * res, double x, int flags);
+int arb_fpwrap_cdouble_cosh_integral(complex_double * res, complex_double x, int flags);
+
+int arb_fpwrap_double_log_integral(double * res, double x, int offset, int flags);
+int arb_fpwrap_cdouble_log_integral(complex_double * res, complex_double x, int offset, int flags);
+
 int arb_fpwrap_double_bessel_j(double * res, double nu, double x, int flags);
 int arb_fpwrap_cdouble_bessel_j(complex_double * res, complex_double nu, complex_double x, int flags);
 
@@ -211,6 +247,26 @@ int arb_fpwrap_cdouble_laguerre_l(complex_double * res, complex_double n, comple
 
 int arb_fpwrap_double_hermite_h(double * res, double n, double x, int flags);
 int arb_fpwrap_cdouble_hermite_h(complex_double * res, complex_double n, complex_double x, int flags);
+
+int arb_fpwrap_double_legendre_p(double * res, double n, double m, double x, int type, int flags);
+int arb_fpwrap_cdouble_legendre_p(complex_double * res, complex_double n, complex_double m, complex_double x, int type, int flags);
+
+int arb_fpwrap_double_legendre_q(double * res, double n, double m, double x, int type, int flags);
+int arb_fpwrap_cdouble_legendre_q(complex_double * res, complex_double n, complex_double m, complex_double x, int type, int flags);
+
+int arb_fpwrap_cdouble_spherical_y(complex_double * res, slong n, slong m, complex_double x1, complex_double x2, int flags);
+
+int arb_fpwrap_double_hypgeom_0f1(double * res, double a, double x, int regularized, int flags);
+int arb_fpwrap_cdouble_hypgeom_0f1(complex_double * res, complex_double a, complex_double x, int regularized, int flags);
+
+int arb_fpwrap_double_hypgeom_1f1(double * res, double a, double b, double x, int regularized, int flags);
+int arb_fpwrap_cdouble_hypgeom_1f1(complex_double * res, complex_double a, complex_double b, complex_double x, int regularized, int flags);
+
+int arb_fpwrap_double_hypgeom_u(double * res, double a, double b, double x, int flags);
+int arb_fpwrap_cdouble_hypgeom_u(complex_double * res, complex_double a, complex_double b, complex_double x, int flags);
+
+int arb_fpwrap_double_hypgeom_2f1(double * res, double a, double b, double c, double x, int regularized, int flags);
+int arb_fpwrap_cdouble_hypgeom_2f1(complex_double * res, complex_double a, complex_double b, complex_double c, complex_double x, int regularized, int flags);
 
 int arb_fpwrap_double_agm1(double * res, double x, int flags);
 int arb_fpwrap_cdouble_agm1(complex_double * res, complex_double x, int flags);
