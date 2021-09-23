@@ -691,10 +691,7 @@ _arb_barnes_g(arb_t res, const arb_t x, slong prec)
     acb_init(u);
     acb_set_arb(t, x);
     acb_barnes_g(u, t, prec);
-    if (acb_is_real(u))
-        arb_set(res, acb_realref(u));
-    else
-        arb_indeterminate(res);
+    arb_set(res, acb_realref(u));
     acb_clear(t);
     acb_clear(u);
 }
@@ -702,17 +699,24 @@ _arb_barnes_g(arb_t res, const arb_t x, slong prec)
 static void
 _arb_log_barnes_g(arb_t res, const arb_t x, slong prec)
 {
-    acb_t t, u;
-    acb_init(t);
-    acb_init(u);
-    acb_set_arb(t, x);
-    acb_log_barnes_g(u, t, prec);
-    if (acb_is_real(u))
-        arb_set(res, acb_realref(u));
-    else
+    if (!arb_is_positive(x))
+    {
         arb_indeterminate(res);
-    acb_clear(t);
-    acb_clear(u);
+    }
+    else
+    {
+        acb_t t, u;
+        acb_init(t);
+        acb_init(u);
+        acb_set_arb(t, x);
+        acb_log_barnes_g(u, t, prec);
+        if (acb_is_real(u))
+            arb_set(res, acb_realref(u));
+        else
+            arb_indeterminate(res);
+        acb_clear(t);
+        acb_clear(u);
+    }
 }
 
 DEF_DOUBLE_FUN_1(barnes_g, _arb_barnes_g)
@@ -835,7 +839,7 @@ DEF_CDOUBLE_FUN_2(hermite_h, acb_hypgeom_hermite_h)
 /* todo: fresnel (with flags) */
 /* todo: functions with multiple outputs */
 /* todo: incomplete gamma, exp integrals... */
+/* todo: airy zeros */
 /* legendre_p, legendre_q, +roots, spherharm */
 /* todo: pfqs */
-
 

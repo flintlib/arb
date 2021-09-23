@@ -108,6 +108,10 @@ acb_log_barnes_g(acb_t res, const acb_t z, slong prec)
 void
 acb_barnes_g(acb_t res, const acb_t z, slong prec)
 {
+    int real;
+
+    real = acb_is_real(z);
+
     if (acb_is_int(z))
     {
         if (arb_is_nonpositive(acb_realref(z)))
@@ -126,5 +130,8 @@ acb_barnes_g(acb_t res, const acb_t z, slong prec)
 
     _acb_log_barnes_g_zeta(res, z, prec);
     acb_exp(res, res, prec);
+
+    if (real)
+        arb_zero(acb_imagref(res));
 }
 
