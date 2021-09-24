@@ -105,7 +105,22 @@ int main()
 
         if (fabs(z.imag - 6.5852592776051578103e-16) > 1e-31)
         {
-            flint_printf("FAIL: value 3\n\n");
+            flint_printf("FAIL: value 4\n\n");
+            flint_abort();
+        }
+    }
+
+    {
+        complex_double x, y;
+
+        x.real = 1.0;
+        x.imag = 1e-100;
+
+        arb_fpwrap_cdouble_erf(&y, x, FPWRAP_ACCURATE_PARTS);
+
+        if (fabs(y.imag - 4.1510749742059471164e-101) > 1e-116)
+        {
+            flint_printf("FAIL: value 5\n\n");
             flint_abort();
         }
     }
