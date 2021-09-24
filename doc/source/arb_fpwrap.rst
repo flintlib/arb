@@ -195,6 +195,9 @@ Elementary functions
 .. function:: int arb_fpwrap_double_atanh(double * res, double x, int flags)
               int arb_fpwrap_cdouble_atanh(complex_double * res, complex_double x, int flags)
 
+.. function:: int arb_fpwrap_double_lambertw(double * res, double x, slong branch, int flags)
+              int arb_fpwrap_cdouble_lambertw(complex_double * res, complex_double x, slong branch, int flags)
+
 Gamma, zeta and related functions
 ...............................................................................
 
@@ -252,6 +255,16 @@ Gamma, zeta and related functions
               int arb_fpwrap_cdouble_polylog(complex_double * res, complex_double s, complex_double z, int flags)
 
     Polylogarithm.
+
+.. function:: int arb_fpwrap_cdouble_dirichlet_eta(complex_double * res, complex_double s, int flags)
+
+.. function:: int arb_fpwrap_cdouble_riemann_xi(complex_double * res, complex_double s, int flags)
+
+.. function:: int arb_fpwrap_cdouble_hardy_theta(complex_double * res, complex_double z, int flags)
+
+.. function:: int arb_fpwrap_cdouble_hardy_z(complex_double * res, complex_double z, int flags)
+
+.. function:: int arb_fpwrap_cdouble_zeta_zero(complex_double * res, ulong n, int flags)
 
 Error functions and exponential integrals
 ...............................................................................
@@ -331,6 +344,14 @@ Bessel, Airy and Coulomb functions
 .. function:: int arb_fpwrap_double_airy_bi_prime(double * res, double x, int flags)
               int arb_fpwrap_cdouble_airy_bi_prime(complex_double * res, complex_double x, int flags)
 
+.. function:: int arb_fpwrap_double_airy_ai_zero(double * res, ulong n, int flags)
+
+.. function:: int arb_fpwrap_double_airy_ai_prime_zero(double * res, ulong n, int flags)
+
+.. function:: int arb_fpwrap_double_airy_bi_zero(double * res, ulong n, int flags)
+
+.. function:: int arb_fpwrap_double_airy_bi_prime_zero(double * res, ulong n, int flags)
+
 .. function:: int arb_fpwrap_double_coulomb_f(double * res, double l, double eta, double x, int flags)
               int arb_fpwrap_cdouble_coulomb_f(complex_double * res, complex_double l, complex_double eta, complex_double x, int flags)
 
@@ -367,6 +388,12 @@ Orthogonal polynomials
 .. function:: int arb_fpwrap_double_legendre_q(double * res, double n, double m, double x, int type, int flags)
               int arb_fpwrap_cdouble_legendre_q(complex_double * res, complex_double n, complex_double m, complex_double x, int type, int flags)
 
+.. function:: int arb_fpwrap_double_legendre_root(double * res1, double * res2, ulong n, ulong k, int flags)
+
+    Sets *res1* to the index *k* root of the Legendre polynomial `P_n(x)`,
+    and simultaneously sets *res2* to the corresponding weight for
+    Gauss-Legendre quadrature.
+
 .. function:: int arb_fpwrap_cdouble_spherical_y(complex_double * res, slong n, slong m, complex_double x1, complex_double x2, int flags)
 
 Hypergeometric functions
@@ -384,19 +411,69 @@ Hypergeometric functions
 .. function:: int arb_fpwrap_double_hypgeom_2f1(double * res, double a, double b, double c, double x, int regularized, int flags)
               int arb_fpwrap_cdouble_hypgeom_2f1(complex_double * res, complex_double a, complex_double b, complex_double c, complex_double x, int regularized, int flags)
 
-Elliptic integrals and elliptic functions
+.. function:: int arb_fpwrap_double_hypgeom_pfq(double * res, const double * a, slong p, const double * b, slong q, double z, int regularized, int flags);
+              int arb_fpwrap_cdouble_hypgeom_pfq(complex_double * res, const complex_double * a, slong p, const complex_double * b, slong q, complex_double z, int regularized, int flags)
+
+
+Elliptic integrals, elliptic functions and modular forms
 ...............................................................................
-
-.. function:: int arb_fpwrap_double_agm1(double * res, double x, int flags)
-              int arb_fpwrap_cdouble_agm1(complex_double * res, complex_double x, int flags)
-
-    Arithmetic-geometric mean with second variable 1.
 
 .. function:: int arb_fpwrap_double_agm(double * res, double x, double y, int flags)
               int arb_fpwrap_cdouble_agm(complex_double * res, complex_double x, complex_double y, int flags)
 
     Arithmetic-geometric mean.
 
+.. function:: int arb_fpwrap_cdouble_elliptic_k(complex_double * res, complex_double m, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_e(complex_double * res, complex_double m, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_pi(complex_double * res, complex_double n, complex_double m, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_f(complex_double * res, complex_double phi, complex_double m, int pi, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_e_inc(complex_double * res, complex_double phi, complex_double m, int pi, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_pi_inc(complex_double * res, complex_double n, complex_double phi, complex_double m, int pi, int flags)
+
+    Complete and incomplete elliptic integrals.
+
+.. function:: int arb_fpwrap_cdouble_elliptic_rf(complex_double * res, complex_double x, complex_double y, complex_double z, int option, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_rg(complex_double * res, complex_double x, complex_double y, complex_double z, int option, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_rj(complex_double * res, complex_double x, complex_double y, complex_double z, complex_double w, int option, int flags)
+
+    Carlson symmetric elliptic integrals.
+
+.. function:: int arb_fpwrap_cdouble_elliptic_p(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_p_prime(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_inv_p(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_zeta(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_elliptic_sigma(complex_double * res, complex_double z, complex_double tau, int flags)
+
+    Weierstrass elliptic functions.
+
+.. function:: int arb_fpwrap_cdouble_jacobi_theta_1(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_jacobi_theta_2(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_jacobi_theta_3(complex_double * res, complex_double z, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_jacobi_theta_4(complex_double * res, complex_double z, complex_double tau, int flags)
+
+    Jacobi theta functions.
+
+.. function:: int arb_fpwrap_cdouble_dedekind_eta(complex_double * res, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_modular_j(complex_double * res, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_modular_lambda(complex_double * res, complex_double tau, int flags)
+
+.. function:: int arb_fpwrap_cdouble_modular_delta(complex_double * res, complex_double tau, int flags)
 
 Interfacing from Python
 -------------------------------------------------------------------------------

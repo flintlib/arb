@@ -16,7 +16,21 @@
 #include "arb_fpwrap.h"
 #include "arb_hypgeom.h"
 #include "acb_hypgeom.h"
+#include "acb_dirichlet.h"
+#include "acb_elliptic.h"
+#include "acb_modular.h"
 
+static int
+_acb_vec_is_finite(acb_srcptr x, slong len)
+{
+    slong i;
+
+    for (i = 0; i < len; i++)
+        if (!acb_is_finite(x + i))
+            return 0;
+
+    return 1;
+}
 
 int
 arb_accurate_enough_d(const arb_t x, int flags)
@@ -96,6 +110,22 @@ acb_accurate_enough_d(const acb_t x, int flags)
     if (wp >= double_wp_max(flags)) \
     { \
         *res = D_NAN; \
+        status = FPWRAP_UNABLE; \
+        break; \
+    } \
+
+#define DOUBLE_CHECK_RESULT2 \
+    if (arb_accurate_enough_d(arb_res1, flags) && arb_accurate_enough_d(arb_res2, flags)) \
+    { \
+        *res1 = arf_get_d(arb_midref(arb_res1), ARF_RND_NEAR); \
+        *res2 = arf_get_d(arb_midref(arb_res2), ARF_RND_NEAR); \
+        status = FPWRAP_SUCCESS; \
+        break; \
+    } \
+    if (wp >= double_wp_max(flags)) \
+    { \
+        *res1 = D_NAN; \
+        *res2 = D_NAN; \
         status = FPWRAP_UNABLE; \
         break; \
     } \
@@ -996,22 +1026,6 @@ DEF_DOUBLE_FUN_1(dilog, arb_hypgeom_dilog)
 DEF_CDOUBLE_FUN_1(dilog, acb_hypgeom_dilog)
 
 
-static void
-_arb_agm1(arb_t res, const arb_t x, slong prec)
-{
-    arb_t t;
-    arb_init(t);
-    arb_one(t);
-    arb_agm(res, t, x, prec);
-    arb_clear(t);
-}
-
-DEF_DOUBLE_FUN_1(agm1, _arb_agm1)
-DEF_CDOUBLE_FUN_1(agm1, acb_agm1)
-
-DEF_DOUBLE_FUN_2(agm, arb_agm)
-DEF_CDOUBLE_FUN_2(agm, acb_agm)
-
 DEF_DOUBLE_FUN_1(erf, arb_hypgeom_erf)
 DEF_CDOUBLE_FUN_1(erf, acb_hypgeom_erf)
 
@@ -1181,9 +1195,328 @@ DEF_CDOUBLE_FUN_3(hypgeom_u, acb_hypgeom_u)
 DEF_DOUBLE_FUN_4_INT(hypgeom_2f1, arb_hypgeom_2f1)
 DEF_CDOUBLE_FUN_4_INT(hypgeom_2f1, acb_hypgeom_2f1)
 
+int arb_fpwrap_double_hypgeom_pfq(double * res, const double * a, slong p, const double * b, slong q, double z, int regularized, int flags)
+{
+    arb_t arb_res;
+    arb_ptr t;
+    slong wp;
+    slong i;
+    int status;
 
-/* todo: lambertw (with branches) */
+    arb_init(arb_res);
+    t = _arb_vec_init(p + q + 1);
+
+    for (i = 0; i < p; i++)
+        arb_set_d(t + i, a[i]);
+    for (i = 0; i < q; i++)
+        arb_set_d(t + p + i, b[i]);
+    arb_set_d(t + p + q, z);
+
+    if (!_arb_vec_is_finite(t, p + q + 1))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            arb_hypgeom_pfq(arb_res, t, p, t + p, q, t + p + q, regularized, wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    _arb_vec_clear(t, p + q + 1);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_hypgeom_pfq(complex_double * res, const complex_double * a, slong p, const complex_double * b, slong q, complex_double z, int regularized, int flags)
+{
+    acb_t acb_res;
+    acb_ptr t;
+    slong wp;
+    slong i;
+    int status;
+
+    acb_init(acb_res);
+    t = _acb_vec_init(p + q + 1);
+
+    for (i = 0; i < p; i++)
+        acb_set_d_d(t + i, a[i].real, a[i].imag);
+    for (i = 0; i < q; i++)
+        acb_set_d_d(t + p + i, b[i].real, b[i].imag);
+    acb_set_d_d(t + p + q, z.real, z.imag);
+
+    if (!_acb_vec_is_finite(t, p + q + 1))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            acb_hypgeom_pfq(acb_res, t, p, t + p, q, t + p + q, regularized, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    _acb_vec_clear(t, p + q + 1);
+    acb_clear(acb_res);
+
+    return status;
+}
+
+DEF_CDOUBLE_FUN_1(elliptic_k, acb_elliptic_k)
+DEF_CDOUBLE_FUN_1(elliptic_e, acb_elliptic_e)
+DEF_CDOUBLE_FUN_2(elliptic_pi, acb_elliptic_pi)
+DEF_CDOUBLE_FUN_2_INT(elliptic_f, acb_elliptic_f)
+DEF_CDOUBLE_FUN_2_INT(elliptic_e_inc, acb_elliptic_e_inc)
+DEF_CDOUBLE_FUN_3_INT(elliptic_pi_inc, acb_elliptic_pi_inc)
+
+DEF_CDOUBLE_FUN_3_INT(elliptic_rf, acb_elliptic_rf)
+DEF_CDOUBLE_FUN_3_INT(elliptic_rg, acb_elliptic_rg)
+DEF_CDOUBLE_FUN_4_INT(elliptic_rj, acb_elliptic_rj)
+
+DEF_CDOUBLE_FUN_2(elliptic_p, acb_elliptic_p)
+DEF_CDOUBLE_FUN_2(elliptic_p_prime, acb_elliptic_p_prime)
+DEF_CDOUBLE_FUN_2(elliptic_inv_p, acb_elliptic_inv_p)
+DEF_CDOUBLE_FUN_2(elliptic_zeta, acb_elliptic_zeta)
+DEF_CDOUBLE_FUN_2(elliptic_sigma, acb_elliptic_sigma)
+
+
+static void
+_acb_theta1(acb_t res, const acb_t z, const acb_t tau, slong prec)
+{
+    acb_t a, b, c; acb_init(a); acb_init(b); acb_init(c);
+    acb_modular_theta(res, a, b, c, z, tau, prec);
+    acb_clear(a); acb_clear(b); acb_clear(c);
+}
+
+static void
+_acb_theta2(acb_t res, const acb_t z, const acb_t tau, slong prec)
+{
+    acb_t a, b, c; acb_init(a); acb_init(b); acb_init(c);
+    acb_modular_theta(a, res, b, c, z, tau, prec);
+    acb_clear(a); acb_clear(b); acb_clear(c);
+}
+
+static void
+_acb_theta3(acb_t res, const acb_t z, const acb_t tau, slong prec)
+{
+    acb_t a, b, c; acb_init(a); acb_init(b); acb_init(c);
+    acb_modular_theta(a, b, res, c, z, tau, prec);
+    acb_clear(a); acb_clear(b); acb_clear(c);
+}
+
+static void
+_acb_theta4(acb_t res, const acb_t z, const acb_t tau, slong prec)
+{
+    acb_t a, b, c; acb_init(a); acb_init(b); acb_init(c);
+    acb_modular_theta(a, b, c, res, z, tau, prec);
+    acb_clear(a); acb_clear(b); acb_clear(c);
+}
+
+DEF_CDOUBLE_FUN_2(jacobi_theta_1, _acb_theta1)
+DEF_CDOUBLE_FUN_2(jacobi_theta_2, _acb_theta2)
+DEF_CDOUBLE_FUN_2(jacobi_theta_3, _acb_theta3)
+DEF_CDOUBLE_FUN_2(jacobi_theta_4, _acb_theta4)
+
+DEF_CDOUBLE_FUN_1(dedekind_eta, acb_modular_eta)
+DEF_CDOUBLE_FUN_1(modular_j, acb_modular_j)
+DEF_CDOUBLE_FUN_1(modular_lambda, acb_modular_lambda)
+DEF_CDOUBLE_FUN_1(modular_delta, acb_modular_delta)
+
+DEF_CDOUBLE_FUN_1(dirichlet_eta, acb_dirichlet_eta)
+DEF_CDOUBLE_FUN_1(riemann_xi, acb_dirichlet_xi)
+
+static void
+_acb_hardy_theta(acb_t res, const acb_t t, slong prec)
+{
+    acb_dirichlet_hardy_theta(res, t, NULL, NULL, 1, prec);
+}
+
+static void
+_acb_hardy_z(acb_t res, const acb_t t, slong prec)
+{
+    acb_dirichlet_hardy_z(res, t, NULL, NULL, 1, prec);
+}
+
+DEF_CDOUBLE_FUN_1(hardy_theta, _acb_hardy_theta)
+DEF_CDOUBLE_FUN_1(hardy_z, _acb_hardy_z)
+
+int arb_fpwrap_cdouble_zeta_zero(complex_double * res, ulong n, int flags)
+{
+    fmpz_t t;
+    acb_t acb_res;
+    slong wp;
+    int status;
+
+    if (n == 0)
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        return FPWRAP_UNABLE;
+    }
+
+    acb_init(acb_res);
+    fmpz_init(t);
+
+    fmpz_set_ui(t, n);
+
+    for (wp = WP_INITIAL; ; wp *= 2)
+    {
+        acb_dirichlet_zeta_zero(acb_res, t, wp);
+        CDOUBLE_CHECK_RESULT
+    }
+
+    acb_clear(acb_res);
+
+    return status;
+}
+
+int arb_fpwrap_double_legendre_root(double * res1, double * res2, ulong n, ulong k, int flags)
+{
+    arb_t arb_res1, arb_res2;
+    slong wp;
+    int status;
+
+    if (k >= n)
+    {
+        *res1 = D_NAN;
+        *res2 = D_NAN;
+        return FPWRAP_UNABLE;
+    }
+
+    arb_init(arb_res1);
+    arb_init(arb_res2);
+
+    for (wp = WP_INITIAL; ; wp *= 2)
+    {
+        arb_hypgeom_legendre_p_ui_root(arb_res1, arb_res2, n, k, wp);
+        DOUBLE_CHECK_RESULT2
+    }
+
+    arb_clear(arb_res1);
+    arb_clear(arb_res2);
+
+    return status;
+}
+
+int _arb_fpwrap_double_airy_zero(double * res, ulong n, int which, int flags)
+{
+    fmpz_t t;
+    arb_t arb_res;
+    slong wp;
+    int status;
+
+    if (n == 0)
+    {
+        *res = D_NAN;
+        return FPWRAP_UNABLE;
+    }
+
+    arb_init(arb_res);
+    fmpz_init(t);
+    fmpz_set_ui(t, n);
+
+    for (wp = WP_INITIAL; ; wp *= 2)
+    {
+        if (which == 0)
+            arb_hypgeom_airy_zero(arb_res, NULL, NULL, NULL, t, wp);
+        else if (which == 1)
+            arb_hypgeom_airy_zero(NULL, arb_res, NULL, NULL, t, wp);
+        else if (which == 2)
+            arb_hypgeom_airy_zero(NULL, NULL, arb_res, NULL, t, wp);
+        else
+            arb_hypgeom_airy_zero(NULL, NULL, NULL, arb_res, t, wp);
+
+        DOUBLE_CHECK_RESULT
+    }
+
+    arb_clear(arb_res);
+    fmpz_clear(t);
+
+    return status;
+}
+
+int arb_fpwrap_double_airy_ai_zero(double * res, ulong n, int flags) { return _arb_fpwrap_double_airy_zero(res, n, 0, flags); }
+int arb_fpwrap_double_airy_ai_prime_zero(double * res, ulong n, int flags) { return _arb_fpwrap_double_airy_zero(res, n, 1, flags); }
+int arb_fpwrap_double_airy_bi_zero(double * res, ulong n, int flags) { return _arb_fpwrap_double_airy_zero(res, n, 2, flags); }
+int arb_fpwrap_double_airy_bi_prime_zero(double * res, ulong n, int flags) { return _arb_fpwrap_double_airy_zero(res, n, 3, flags); }
+
+int arb_fpwrap_double_lambertw(double * res, double x, slong branch, int flags)
+{
+    arb_t arb_res, arb_x;
+    slong wp;
+    int status;
+
+    arb_init(arb_res);
+    arb_init(arb_x);
+
+    arb_set_d(arb_x, x);
+
+    if (!arb_is_finite(arb_x) || !(branch == 0 || branch == -1))
+    {
+        *res = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            arb_lambertw(arb_res, arb_x, (branch == -1), wp);
+            DOUBLE_CHECK_RESULT
+        }
+    }
+
+    arb_clear(arb_x);
+    arb_clear(arb_res);
+
+    return status;
+}
+
+int arb_fpwrap_cdouble_lambertw(complex_double * res, complex_double x, slong branch, int flags)
+{
+    fmpz_t t;
+    acb_t acb_res, acb_x;
+    slong wp;
+    int status;
+
+    acb_init(acb_res);
+    acb_init(acb_x);
+    fmpz_init(t);
+
+    acb_set_d_d(acb_x, x.real, x.imag);
+    fmpz_set_si(t, branch);
+
+    if (!acb_is_finite(acb_x))
+    {
+        res->real = D_NAN;
+        res->imag = D_NAN;
+        status = FPWRAP_UNABLE;
+    }
+    else
+    {
+        for (wp = WP_INITIAL; ; wp *= 2)
+        {
+            acb_lambertw(acb_res, acb_x, t, 0, wp);
+            CDOUBLE_CHECK_RESULT
+        }
+    }
+
+    acb_clear(acb_x);
+    acb_clear(acb_res);
+    fmpz_clear(t);
+
+    return status;
+}
+
 /* todo: functions with multiple outputs */
-/* todo: airy zeros, legendre roots */
-/* todo: pfqs */
+/* todo: elliptic invariants, roots */
+/* todo: eisenstein series */
+/* todo: dirichlet functions requiring characters */
 

@@ -116,6 +116,9 @@ int arb_fpwrap_cdouble_acosh(complex_double * res, complex_double x, int flags);
 int arb_fpwrap_double_atanh(double * res, double x, int flags);
 int arb_fpwrap_cdouble_atanh(complex_double * res, complex_double x, int flags);
 
+int arb_fpwrap_double_lambertw(double * res, double x, slong branch, int flags);
+int arb_fpwrap_cdouble_lambertw(complex_double * res, complex_double x, slong branch, int flags);
+
 int arb_fpwrap_double_rising(double * res, double x, double n, int flags);
 int arb_fpwrap_cdouble_rising(complex_double * res, complex_double x, complex_double n, int flags);
 
@@ -148,6 +151,12 @@ int arb_fpwrap_cdouble_polygamma(complex_double * res, complex_double s, complex
 
 int arb_fpwrap_double_polylog(double * res, double s, double z, int flags);
 int arb_fpwrap_cdouble_polylog(complex_double * res, complex_double s, complex_double z, int flags);
+
+int arb_fpwrap_cdouble_dirichlet_eta(complex_double * res, complex_double s, int flags);
+int arb_fpwrap_cdouble_riemann_xi(complex_double * res, complex_double s, int flags);
+int arb_fpwrap_cdouble_hardy_theta(complex_double * res, complex_double z, int flags);
+int arb_fpwrap_cdouble_hardy_z(complex_double * res, complex_double z, int flags);
+int arb_fpwrap_cdouble_zeta_zero(complex_double * res, ulong n, int flags);
 
 int arb_fpwrap_double_erf(double * res, double x, int flags);
 int arb_fpwrap_cdouble_erf(complex_double * res, complex_double x, int flags);
@@ -221,6 +230,11 @@ int arb_fpwrap_cdouble_airy_bi(complex_double * res, complex_double x, int flags
 int arb_fpwrap_double_airy_bi_prime(double * res, double x, int flags);
 int arb_fpwrap_cdouble_airy_bi_prime(complex_double * res, complex_double x, int flags);
 
+int arb_fpwrap_double_airy_ai_zero(double * res, ulong n, int flags);
+int arb_fpwrap_double_airy_ai_prime_zero(double * res, ulong n, int flags);
+int arb_fpwrap_double_airy_bi_zero(double * res, ulong n, int flags);
+int arb_fpwrap_double_airy_bi_prime_zero(double * res, ulong n, int flags);
+
 int arb_fpwrap_double_coulomb_f(double * res, double l, double eta, double x, int flags);
 int arb_fpwrap_cdouble_coulomb_f(complex_double * res, complex_double l, complex_double eta, complex_double x, int flags);
 
@@ -254,6 +268,8 @@ int arb_fpwrap_cdouble_legendre_p(complex_double * res, complex_double n, comple
 int arb_fpwrap_double_legendre_q(double * res, double n, double m, double x, int type, int flags);
 int arb_fpwrap_cdouble_legendre_q(complex_double * res, complex_double n, complex_double m, complex_double x, int type, int flags);
 
+int arb_fpwrap_double_legendre_root(double * res1, double * res2, ulong n, ulong k, int flags);
+
 int arb_fpwrap_cdouble_spherical_y(complex_double * res, slong n, slong m, complex_double x1, complex_double x2, int flags);
 
 int arb_fpwrap_double_hypgeom_0f1(double * res, double a, double x, int regularized, int flags);
@@ -268,13 +284,39 @@ int arb_fpwrap_cdouble_hypgeom_u(complex_double * res, complex_double a, complex
 int arb_fpwrap_double_hypgeom_2f1(double * res, double a, double b, double c, double x, int regularized, int flags);
 int arb_fpwrap_cdouble_hypgeom_2f1(complex_double * res, complex_double a, complex_double b, complex_double c, complex_double x, int regularized, int flags);
 
-int arb_fpwrap_double_agm1(double * res, double x, int flags);
-int arb_fpwrap_cdouble_agm1(complex_double * res, complex_double x, int flags);
+int arb_fpwrap_double_hypgeom_pfq(double * res, const double * a, slong p, const double * b, slong q, double z, int regularized, int flags);
+int arb_fpwrap_cdouble_hypgeom_pfq(complex_double * res, const complex_double * a, slong p, const complex_double * b, slong q, complex_double z, int regularized, int flags);
+
 
 int arb_fpwrap_double_agm(double * res, double x, double y, int flags);
 int arb_fpwrap_cdouble_agm(complex_double * res, complex_double x, complex_double y, int flags);
 
+int arb_fpwrap_cdouble_elliptic_k(complex_double * res, complex_double m, int flags);
+int arb_fpwrap_cdouble_elliptic_e(complex_double * res, complex_double m, int flags);
+int arb_fpwrap_cdouble_elliptic_pi(complex_double * res, complex_double n, complex_double m, int flags);
+int arb_fpwrap_cdouble_elliptic_f(complex_double * res, complex_double phi, complex_double m, int pi, int flags);
+int arb_fpwrap_cdouble_elliptic_e_inc(complex_double * res, complex_double phi, complex_double m, int pi, int flags);
+int arb_fpwrap_cdouble_elliptic_pi_inc(complex_double * res, complex_double n, complex_double phi, complex_double m, int pi, int flags);
 
+int arb_fpwrap_cdouble_elliptic_rf(complex_double * res, complex_double x, complex_double y, complex_double z, int option, int flags);
+int arb_fpwrap_cdouble_elliptic_rg(complex_double * res, complex_double x, complex_double y, complex_double z, int option, int flags);
+int arb_fpwrap_cdouble_elliptic_rj(complex_double * res, complex_double x, complex_double y, complex_double z, complex_double w, int option, int flags);
+
+int arb_fpwrap_cdouble_elliptic_p(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_elliptic_p_prime(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_elliptic_inv_p(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_elliptic_zeta(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_elliptic_sigma(complex_double * res, complex_double z, complex_double tau, int flags);
+
+int arb_fpwrap_cdouble_jacobi_theta_1(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_jacobi_theta_2(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_jacobi_theta_3(complex_double * res, complex_double z, complex_double tau, int flags);
+int arb_fpwrap_cdouble_jacobi_theta_4(complex_double * res, complex_double z, complex_double tau, int flags);
+
+int arb_fpwrap_cdouble_dedekind_eta(complex_double * res, complex_double tau, int flags);
+int arb_fpwrap_cdouble_modular_j(complex_double * res, complex_double tau, int flags);
+int arb_fpwrap_cdouble_modular_lambda(complex_double * res, complex_double tau, int flags);
+int arb_fpwrap_cdouble_modular_delta(complex_double * res, complex_double tau, int flags);
 
 #ifdef __cplusplus
 }
