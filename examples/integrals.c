@@ -733,7 +733,7 @@ scaled_bessel_select_N(arb_t N, ulong k, slong prec)
 /*  Main test program                                                        */
 /* ------------------------------------------------------------------------- */
 
-#define NUM_INTEGRALS 38
+#define NUM_INTEGRALS 37
 
 const char * descr[NUM_INTEGRALS] =
 {
