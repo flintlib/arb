@@ -11,6 +11,9 @@ and automatically increase the internal working precision
 to ensure that the output is accurate
 (in the rare case of failure, they output NaN along with an error code).
 
+**Warning:** This module is experimental (as of Arb 2.21). It has not
+been extensively tested, and interfaces may change in the future.
+
 Supported types:
 
 * ``double`` and ``complex_double`` (53-bit precision)
