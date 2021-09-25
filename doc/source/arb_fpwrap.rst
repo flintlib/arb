@@ -414,7 +414,7 @@ Hypergeometric functions
 .. function:: int arb_fpwrap_double_hypgeom_2f1(double * res, double a, double b, double c, double x, int regularized, int flags)
               int arb_fpwrap_cdouble_hypgeom_2f1(complex_double * res, complex_double a, complex_double b, complex_double c, complex_double x, int regularized, int flags)
 
-.. function:: int arb_fpwrap_double_hypgeom_pfq(double * res, const double * a, slong p, const double * b, slong q, double z, int regularized, int flags);
+.. function:: int arb_fpwrap_double_hypgeom_pfq(double * res, const double * a, slong p, const double * b, slong q, double z, int regularized, int flags)
               int arb_fpwrap_cdouble_hypgeom_pfq(complex_double * res, const complex_double * a, slong p, const complex_double * b, slong q, complex_double z, int regularized, int flags)
 
 
@@ -478,8 +478,49 @@ Elliptic integrals, elliptic functions and modular forms
 
 .. function:: int arb_fpwrap_cdouble_modular_delta(complex_double * res, complex_double tau, int flags)
 
+Calling from C
+-------------------------------------------------------------------------------
+
+The program ``examples/fpwrap.c`` provides a usage example::
+
+    #include "arb_fpwrap.h"
+
+    int main()
+    {
+        double x, y;
+        complex_double cx, cy;
+        int flags = 0;    /* default options */
+
+        x = 2.0;
+        cx.real = 0.5;
+        cx.imag = 123.0;
+
+        arb_fpwrap_double_zeta(&y, x, flags);
+        arb_fpwrap_cdouble_zeta(&cy, cx, flags);
+
+        printf("zeta(%g) = %.16g\n", x, y);
+        printf("zeta(%g + %gi) = %.16g + %.16gi\n", cx.real, cx.imag, cy.real, cy.imag);
+
+        flint_cleanup();
+        return 0;
+    }
+
+.. highlight:: text
+
+This should print::
+
+    > build/examples/fpwrap 
+    zeta(2) = 1.644934066848226
+    zeta(0.5 + 123i) = 0.006252861175594465 + 0.08206030514520983i
+
+Note that this program does not check the return flag
+to perform error handling.
+
+
 Interfacing from Python
 -------------------------------------------------------------------------------
+
+.. highlight:: python
 
 This illustrates how to call functions from Python using ``ctypes``::
 
@@ -520,6 +561,8 @@ This illustrates how to call functions from Python using ``ctypes``::
     print(czeta(0.5+1e9j))
     print(zeta(1.0))       # pole, where wrapper throws exception
 
+.. highlight:: text
+
 This should print::
 
     1.6449340668482264
@@ -531,6 +574,8 @@ This should print::
 Interfacing from Julia
 -------------------------------------------------------------------------------
 
+.. highlight:: julia
+
 This illustrates how to call functions from Julia using ``ccall``::
 
     using Libdl
@@ -539,7 +584,7 @@ This illustrates how to call functions from Julia using ``ccall``::
 
     function zeta(x::Float64)
         cy = Ref{Float64}()
-        if Bool(ccall((:arb_fpwrap_double_zeta, :libarb), Cint, (Ptr{Float64}, Float64), cy, x))
+        if Bool(ccall((:arb_fpwrap_double_zeta, :libarb), Cint, (Ptr{Float64}, Float64, Cint), cy, x, 0))
             error("unable to evaluate accurately at ", x)
         end
         return cy[]
@@ -547,7 +592,7 @@ This illustrates how to call functions from Julia using ``ccall``::
 
     function zeta(x::Complex{Float64})
         cy = Ref{Complex{Float64}}()
-        if Bool(ccall((:arb_fpwrap_cdouble_zeta, :libarb), Cint, (Ptr{Complex{Float64}}, Complex{Float64}), cy, x))
+        if Bool(ccall((:arb_fpwrap_cdouble_zeta, :libarb), Cint, (Ptr{Complex{Float64}}, Complex{Float64}, Cint), cy, x, 0))
             error("unable to evaluate accurately at ", x)
         end
         return cy[]
@@ -557,6 +602,8 @@ This illustrates how to call functions from Julia using ``ccall``::
     println(zeta(0.5 + 1e9im))
     println(zeta(1.0))       # pole, where wrapper throws exception
 
+.. highlight:: text
+
 This should print::
 
     1.6449340668482264
@@ -564,4 +611,7 @@ This should print::
     ERROR: unable to evaluate accurately at 1.0
     Stacktrace:
      ...
+
+
+.. highlight:: c
 

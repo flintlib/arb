@@ -707,5 +707,15 @@ A few examples::
     cpu/wall(s): 0.019 0.018
     I9 = [0.3785300 +/- 3.17e-8]
 
+fpwrap.c
+-------------------------------------------------------------------------------
+
+This program demonstrates calling the floating-point wrapper::
+
+    > build/examples/fpwrap
+    zeta(2) = 1.644934066848226
+    zeta(0.5 + 123i) = 0.006252861175594465 + 0.08206030514520983i
+
+
 .. highlight:: c
 

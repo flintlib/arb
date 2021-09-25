@@ -810,49 +810,49 @@ int arb_fpwrap_cdouble_4_int(complex_double * res, acb_func_4_int func, complex_
     } \
 
 #define DEF_DOUBLE_FUN_1_INT(name, arb_fun) \
-    int arb_fpwrap_double_ ## name ## _int(double * res, double x, int intx, int flags) \
+    int arb_fpwrap_double_ ## name(double * res, double x, int intx, int flags) \
     { \
         return arb_fpwrap_double_1_int(res, arb_fun, x, intx, flags); \
     } \
 
 #define DEF_DOUBLE_FUN_2_INT(name, arb_fun) \
-    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, int intx, int flags) \
+    int arb_fpwrap_double_ ## name(double * res, double x1, double x2, int intx, int flags) \
     { \
         return arb_fpwrap_double_2_int(res, arb_fun, x1, x2, intx, flags); \
     } \
 
 #define DEF_DOUBLE_FUN_3_INT(name, arb_fun) \
-    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, double x3, int intx, int flags) \
+    int arb_fpwrap_double_ ## name(double * res, double x1, double x2, double x3, int intx, int flags) \
     { \
         return arb_fpwrap_double_3_int(res, arb_fun, x1, x2, x3, intx, flags); \
     } \
 
 #define DEF_DOUBLE_FUN_4_INT(name, arb_fun) \
-    int arb_fpwrap_double_ ## name ## _int(double * res, double x1, double x2, double x3, double x4, int intx, int flags) \
+    int arb_fpwrap_double_ ## name(double * res, double x1, double x2, double x3, double x4, int intx, int flags) \
     { \
         return arb_fpwrap_double_4_int(res, arb_fun, x1, x2, x3, x4, intx, flags); \
     } \
 
 #define DEF_CDOUBLE_FUN_1_INT(name, acb_fun) \
-    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x, int intx, int flags) \
+    int arb_fpwrap_cdouble_ ## name(complex_double * res, complex_double x, int intx, int flags) \
     { \
         return arb_fpwrap_cdouble_1_int(res, acb_fun, x, intx, flags); \
     } \
 
 #define DEF_CDOUBLE_FUN_2_INT(name, acb_fun) \
-    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, int intx, int flags) \
+    int arb_fpwrap_cdouble_ ## name(complex_double * res, complex_double x1, complex_double x2, int intx, int flags) \
     { \
         return arb_fpwrap_cdouble_2_int(res, acb_fun, x1, x2, intx, flags); \
     } \
 
 #define DEF_CDOUBLE_FUN_3_INT(name, acb_fun) \
-    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, complex_double x3, int intx, int flags) \
+    int arb_fpwrap_cdouble_ ## name(complex_double * res, complex_double x1, complex_double x2, complex_double x3, int intx, int flags) \
     { \
         return arb_fpwrap_cdouble_3_int(res, acb_fun, x1, x2, x3, intx, flags); \
     } \
 
 #define DEF_CDOUBLE_FUN_4_INT(name, acb_fun) \
-    int arb_fpwrap_cdouble_ ## name ## _int(complex_double * res, complex_double x1, complex_double x2, complex_double x3, complex_double x4, int intx, int flags) \
+    int arb_fpwrap_cdouble_ ## name(complex_double * res, complex_double x1, complex_double x2, complex_double x3, complex_double x4, int intx, int flags) \
     { \
         return arb_fpwrap_cdouble_4_int(res, acb_fun, x1, x2, x3, x4, intx, flags); \
     } \
@@ -1062,9 +1062,15 @@ DEF_DOUBLE_FUN_1(exp_integral_ei, arb_hypgeom_ei)
 DEF_CDOUBLE_FUN_1(exp_integral_ei, acb_hypgeom_ei)
 
 DEF_DOUBLE_FUN_1(sin_integral, arb_hypgeom_si)
+DEF_CDOUBLE_FUN_1(sin_integral, acb_hypgeom_si)
+
+DEF_DOUBLE_FUN_1(cos_integral, arb_hypgeom_ci)
 DEF_CDOUBLE_FUN_1(cos_integral, acb_hypgeom_ci)
 
 DEF_DOUBLE_FUN_1(sinh_integral, arb_hypgeom_shi)
+DEF_CDOUBLE_FUN_1(sinh_integral, acb_hypgeom_shi)
+
+DEF_DOUBLE_FUN_1(cosh_integral, arb_hypgeom_chi)
 DEF_CDOUBLE_FUN_1(cosh_integral, acb_hypgeom_chi)
 
 DEF_DOUBLE_FUN_1_INT(log_integral, arb_hypgeom_li)
@@ -1269,6 +1275,9 @@ int arb_fpwrap_cdouble_hypgeom_pfq(complex_double * res, const complex_double * 
 
     return status;
 }
+
+DEF_DOUBLE_FUN_2(agm, arb_agm)
+DEF_CDOUBLE_FUN_2(agm, acb_agm)
 
 DEF_CDOUBLE_FUN_1(elliptic_k, acb_elliptic_k)
 DEF_CDOUBLE_FUN_1(elliptic_e, acb_elliptic_e)
