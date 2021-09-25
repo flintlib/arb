@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.21.0.pdf
 * http://arblib.org/arb-2.20.0.pdf
 * http://arblib.org/arb-2.19.0.pdf
 * http://arblib.org/arb-2.18.1.pdf
@@ -33,6 +34,26 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2021-09-25 -- version 2.21.0
+-------------------------------------------------------------------------------
+
+* Experimental new arb_fpwrap module: accurate floating-point wrappers
+  of Arb mathematical functions (supersedes the external arbcmath.h).
+* Fixed memory leak in arf_load_file (reported by Dave Platt).
+* New and faster gamma function code.
+* Most gamma function internals are now located in the arb_hypgeom and
+  acb_hypgeom modules. The user-facing functions (arb_gamma, etc.) are still
+  available under the old names for compatibility. The internal
+  algorithms for rising factorials (binary splitting, etc.) have been moved
+  without aliases.
+* Added arb_fma, arb_fma_arf, arb_fma_ui (like addmul, but take a separate input and output).
+* Slightly faster internal Bernoulli number generation for small n.
+* Better enclosures for acb_barnes_g at negative reals.
+* Added Graeffe transforms (arb_poly_graeffe_transform, acb_poly_graeffe_transform)
+  (contributed by Matthias Gessinger).
+* Fixed conflict with musl libc (reported by Gonzalo Tornaría).
+* Added acb_add_error_arb (contributed by Albin Ahlbäck).
 
 2021-07-25 -- version 2.20.0
 -------------------------------------------------------------------------------

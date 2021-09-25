@@ -74,6 +74,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * David Berghaus - aliased window matrix multiplication
 * Albin Ahlbäck - uniformly distributed random numbers
 * Daniel Schultz - derivative of Weierstrass elliptic function
+* Matthias Gessinger - Graeffe transforms
 
 Funding
 -------------------------------------------------------------------------------
