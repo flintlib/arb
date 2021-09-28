@@ -869,6 +869,9 @@ DEF_CDOUBLE_FUN_1(log, acb_log)
 DEF_DOUBLE_FUN_1(log1p, arb_log1p)
 DEF_CDOUBLE_FUN_1(log1p, acb_log1p)
 
+DEF_DOUBLE_FUN_2(pow, arb_pow)
+DEF_CDOUBLE_FUN_2(pow, acb_pow)
+
 DEF_DOUBLE_FUN_1(sqrt, arb_sqrt)
 DEF_CDOUBLE_FUN_1(sqrt, acb_sqrt)
 

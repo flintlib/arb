@@ -182,6 +182,9 @@ int main()
         CHECK_DOUBLE(arb_fpwrap_double_log1p(&res, x, flags));
         CHECK_CDOUBLE(arb_fpwrap_cdouble_log1p(&cres, cx, flags));
 
+        CHECK_DOUBLE(arb_fpwrap_double_pow(&res, x, y, flags));
+        CHECK_CDOUBLE(arb_fpwrap_cdouble_pow(&cres, cx, cy, flags));
+
         CHECK_DOUBLE(arb_fpwrap_double_sqrt(&res, x, flags));
         CHECK_CDOUBLE(arb_fpwrap_cdouble_sqrt(&cres, cx, flags));
 

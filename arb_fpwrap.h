@@ -51,6 +51,9 @@ int arb_fpwrap_cdouble_log(complex_double * res, complex_double x, int flags);
 int arb_fpwrap_double_log1p(double * res, double x, int flags);
 int arb_fpwrap_cdouble_log1p(complex_double * res, complex_double x, int flags);
 
+int arb_fpwrap_double_pow(double * res, double x, double y, int flags);
+int arb_fpwrap_cdouble_pow(complex_double * res, complex_double x, complex_double y, int flags);
+
 int arb_fpwrap_double_sqrt(double * res, double x, int flags);
 int arb_fpwrap_cdouble_sqrt(complex_double * res, complex_double x, int flags);
 
