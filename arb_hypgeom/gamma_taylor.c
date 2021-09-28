@@ -582,7 +582,11 @@ arb_hypgeom_gamma_taylor(arb_t res, const arb_t x, int reciprocal, slong prec)
 #endif
 
         if (!_arb_hypgeom_gamma_coeff_shallow(c, NULL, i, term_prec[i]))
+        {
+            flint_printf("arb_hypgeom_gamma_taylor: prec = %wd, du = %g, log2u = %d, term_prec[%wd] = %wd",
+                prec, du, log2u, i, term_prec[i]);
             flint_abort();
+        }
 
         if (term_prec[i] < wp - 128)
         {
