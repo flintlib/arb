@@ -10,6 +10,7 @@
 */
 
 #include "acb_poly.h"
+#include "acb_hypgeom.h"
 
 void
 _acb_log_rising_correct_branch(acb_t t,
