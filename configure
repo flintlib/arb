@@ -405,6 +405,11 @@ if [ -z "$ARB_LIB" ]; then
          ARB_LIBNAME="libarb.dll"
 	 ARB_LIB="libarb-$ARB_MAJOR.dll"
 	 EXTRA_SHARED_FLAGS="-static-libgcc -shared -Wl,--export-all-symbols -Wl,-soname,libarb-$ARB_MAJOR.dll.$ARB_MINOR.$ARB_PATCH";;
+      android)
+         ARB_LIBNAME="libarb.so"
+	 ARB_LIB="libarb.so.$ARB_MAJOR.$ARB_MINOR.$ARB_PATCH"
+	 EXTRA_SHARED_FLAGS="-Wl,-soname,libarb.so"
+	 ARB_SOLIB=1;;
       *)
          ARB_LIBNAME="libarb.so"
 	 ARB_LIB="libarb.so.$ARB_MAJOR.$ARB_MINOR.$ARB_PATCH"
