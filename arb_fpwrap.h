@@ -18,6 +18,7 @@
 #define ARB_FPWRAP_INLINE static __inline__
 #endif
 
+#include "flint/double_extras.h"
 #include "arb.h"
 #include "acb.h"
 
