@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2013 Fredrik Johansson
+    Copyright (C) 2021 Albin Ahlbäck
 
     This file is part of Arb.
 
@@ -10,6 +11,7 @@
 */
 
 #include "arb.h"
+#include "flint/fmpz.h"
 
 void
 arb_bin_ui(arb_t x, const arb_t n, ulong k, slong prec)
@@ -39,13 +41,30 @@ arb_bin_ui(arb_t x, const arb_t n, ulong k, slong prec)
     }
 }
 
+static
+void
+_arb_bin_uiui_small(arb_t x, ulong n, ulong k, slong prec)
+{
+    fmpz_t b;
+    fmpz_init(b);
+    fmpz_bin_uiui(b, n, k);
+    arb_set_round_fmpz(x, b, prec);
+    fmpz_clear(b);
+}
+
 void
 arb_bin_uiui(arb_t x, ulong n, ulong k, slong prec)
 {
     arb_t t;
-    arb_init(t);
-    arb_set_ui(t, n);
-    arb_bin_ui(x, t, k, prec);
-    arb_clear(t);
+
+    if (n < 3000)
+        _arb_bin_uiui_small(x, n, k, prec);
+    else
+    {
+        arb_init(t);
+        arb_set_ui(t, n);
+        arb_bin_ui(x, t, k, prec);
+        arb_clear(t);
+    }
 }
 
