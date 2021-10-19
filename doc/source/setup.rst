@@ -194,5 +194,4 @@ Computer algebra systems and wrappers
 
   * ArbNumerics (Julia): https://github.com/JeffreySarnoff/ArbNumerics.jl
   * ArbFloats (Julia): https://github.com/JuliaArbTypes/ArbFloats.jl
-  * A Java wrapper using JNA: https://github.com/crowlogic/arb/
 
