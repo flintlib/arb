@@ -35,6 +35,14 @@ Old versions of the documentation
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
 
+2021-10-20 -- version 2.21.1
+-------------------------------------------------------------------------------
+
+* Fixed 32-bit test failures for arb_hypgeom_gamma_fmpq.
+* Added pow function to the fpwrap module.
+* Added missing header file includes.
+* Do not encode the library version in the SONAME on Android (contributed by Andreas Enge).
+
 2021-09-25 -- version 2.21.0
 -------------------------------------------------------------------------------
 
