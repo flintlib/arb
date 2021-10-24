@@ -78,206 +78,6 @@ void ui_factor_clear(ui_factor_t f)
         flint_free(f->data);
 }
 
-/********************* stack storage for temps *******************************/
-
-typedef struct
-{
-    __mpz_struct ** mpz_array;
-    slong mpz_alloc;
-    slong mpz_top;
-
-    ui_factor_struct ** factor_array;
-    slong factor_alloc;
-    slong factor_top;
-
-} factor_stack_struct;
-
-typedef factor_stack_struct factor_stack_t[1];
-
-void factor_stack_init(factor_stack_t S);
-
-void factor_stack_clear(factor_stack_t S);
-
-__mpz_struct ** factor_stack_fit_request_mpz(factor_stack_t S, slong k);
-ui_factor_struct ** factor_stack_fit_request_factor(factor_stack_t S, slong k);
-
-static __mpz_struct ** factor_stack_request_mpz(factor_stack_t S, slong k)
-{
-    __mpz_struct ** mpz_top;
-    mpz_top = factor_stack_fit_request_mpz(S, k);
-    S->mpz_top += k;
-    return mpz_top;
-}
-static ui_factor_struct ** factor_stack_request_factor(factor_stack_t S, slong k)
-{
-    ui_factor_struct ** factor_top;
-    factor_top = factor_stack_fit_request_factor(S, k);
-    S->factor_top += k;
-    return factor_top;
-}
-
-static __mpz_struct * factor_stack_take_top_mpz(factor_stack_t S)
-{
-    /* assume the request for 1 has already been fitted */
-    __mpz_struct ** mpz_top;
-    ASSERT(S->mpz_top + 1 <= S->mpz_alloc);
-    mpz_top = S->mpz_array + S->mpz_top;
-    S->mpz_top += 1;
-    return mpz_top[0];
-}
-static ui_factor_struct * factor_stack_take_top_factor(factor_stack_t S)
-{
-    /* assume the request for 1 has already been fitted */
-    ui_factor_struct ** factor_top;
-    ASSERT(S->factor_top + 1 <= S->factor_alloc);
-    factor_top = S->factor_array + S->factor_top;
-    S->factor_top += 1;
-    return factor_top[0];
-}
-
-static void factor_stack_give_back_mpz(factor_stack_t S, slong k)
-{
-    ASSERT(S->mpz_top >= k);
-    S->mpz_top -= k;
-}
-static void factor_stack_give_back_factor(factor_stack_t S, slong k)
-{
-    ASSERT(S->factor_top >= k);
-    S->factor_top -= k;
-}
-
-static slong factor_stack_size_mpz(const factor_stack_t S)
-{
-    return S->mpz_top;
-}
-static slong factor_stack_size_factor(const factor_stack_t S)
-{
-    return S->factor_top;
-}
-
-void factor_stack_init(factor_stack_t S)
-{
-    S->mpz_alloc = 0;
-    S->mpz_array = NULL;
-    S->mpz_top = 0;
-
-    S->factor_alloc = 0;
-    S->factor_array = NULL;
-    S->factor_top = 0;
-}
-
-void factor_stack_clear(factor_stack_t S)
-{
-    slong i;
-    #if PROFILE_MEMORY
-        slong total = 0;
-        flint_printf("clearing factor_stack_t with mpz_alloc = %wd, factor_alloc = %wd\n", S->mpz_alloc, S->factor_alloc);
-    #endif
-
-    ASSERT(S->mpz_top == 0);
-
-    for (i = 0; i < S->mpz_alloc; i++)
-    {
-        #if PROFILE_MEMORY
-            total += S->mpz_array[i]->_mp_alloc;
-            if (S->mpz_array[i]->_mp_alloc > 0)
-                flint_printf(" mpz_array[%wd].alloc = %wd\n", i, (slong)(S->mpz_array[i]->_mp_alloc));
-        #endif
-        mpz_clear(S->mpz_array[i]);
-        flint_free(S->mpz_array[i]);
-    }
-
-    if (S->mpz_array)
-        flint_free(S->mpz_array);
-
-    S->mpz_array = NULL;
-    S->mpz_alloc = 0;
-
-    #if PROFILE_MEMORY
-        flint_printf(" **** mpz's used %wd KB\n", total*sizeof(mp_limb_t)/1024);
-        total = 0
-    #endif
-
-    ASSERT(S->factor_top == 0);
-
-    for (i = 0; i < S->factor_alloc; i++)
-    {
-        #if PROFILE_MEMORY
-            total += S->factor_array[i]->alloc;
-            flint_printf(" factor_array[%wd].alloc = %wd\n", i, (slong)(S->factor_array[i]->alloc));
-        #endif
-        ui_factor_clear(S->factor_array[i]);
-        flint_free(S->factor_array[i]);
-    }
-
-    if (S->factor_array)
-        flint_free(S->factor_array);
-
-    S->factor_array = NULL;
-    S->factor_alloc = 0;
-
-    #if PROFILE_MEMORY
-        flint_printf(" **** fac's used %wd KB\n", total*sizeof(ui_factor_entry)/1024);
-    #endif
-}
-
-/* insure that k slots are available after top and return pointer to top */
-__mpz_struct ** factor_stack_fit_request_mpz(factor_stack_t S, slong k)
-{
-    slong newalloc, i;
-
-    ASSERT(S->mpz_alloc >= S->mpz_top);
-
-    if (S->mpz_top + k > S->mpz_alloc)
-    {
-        #if PROFILE_MEMORY
-            flint_printf("Have %wd mpz's: adding %wd more.\n", S->mpz_top, k);
-        #endif
-        newalloc = FLINT_MAX(WORD(1), S->mpz_top + k);
-
-        S->mpz_array = (__mpz_struct **) flint_realloc(S->mpz_array,
-                                           newalloc*sizeof(__mpz_struct*));
-
-        for (i = S->mpz_alloc; i < newalloc; i++)
-        {
-            S->mpz_array[i] = (__mpz_struct *) flint_malloc(
-                                                     sizeof(__mpz_struct));
-            mpz_init(S->mpz_array[i]);
-        }
-        S->mpz_alloc = newalloc;
-    }
-
-    return S->mpz_array + S->mpz_top;
-}
-
-ui_factor_struct ** factor_stack_fit_request_factor(factor_stack_t S, slong k)
-{
-    slong newalloc, i;
-
-    ASSERT(S->factor_alloc >= S->factor_top);
-
-    if (S->factor_top + k > S->factor_alloc)
-    {
-        #if PROFILE_MEMORY
-            flint_printf("Have %wd fac's: adding %wd more.\n", S->factor_top, k);
-        #endif
-        newalloc = FLINT_MAX(WORD(1), S->factor_top + k);
-
-        S->factor_array = (ui_factor_struct **) flint_realloc(S->factor_array,
-                                           newalloc*sizeof(ui_factor_struct*));
-
-        for (i = S->factor_alloc; i < newalloc; i++)
-        {
-            S->factor_array[i] = (ui_factor_struct *) flint_malloc(
-                                                     sizeof(ui_factor_struct));
-            ui_factor_init(S->factor_array[i]);
-        }
-        S->factor_alloc = newalloc;
-    }
-
-    return S->factor_array + S->factor_top;
-}
-
 /* the index of this struct represents the odd number n = 2*index + 1 */
 /* index = 0 (n = 1) is special */
 typedef struct {
@@ -634,8 +434,7 @@ static inline mp_limb_t * flint_mpz_fit_length(mpz_ptr z, mp_size_t n)
 /* x*2^e = f, polute fmpz cache with only two more values */
 ulong ui_factor_get_mpz_2exp(
     mpz_t x,
-    const ui_factor_t f,
-    factor_stack_t S)
+    const ui_factor_t f)
 {
     ulong fi, ti, tj;
     ulong tn, fn = f->length;
@@ -646,13 +445,14 @@ ulong ui_factor_get_mpz_2exp(
     mp_size_t xn;
     mp_limb_t * zd;
     mp_size_t zn;
-    mpz_ptr z;
-    mpz_ptr y[FLINT_BITS + 1];
+    mpz_t z;
+    mpz_t y[FLINT_BITS + 1];
     mp_size_t l;
     slong i;
     mp_limb_t out;
     slong top;
     ulong * terms;
+    TMP_INIT;
 
     fi = 0;
 
@@ -668,8 +468,10 @@ ulong ui_factor_get_mpz_2exp(
         return e;
     }
 
-    td = (ui_factor_entry *) flint_malloc(fn*sizeof(ui_factor_entry));
-    terms = (ulong *) flint_malloc(fn*sizeof(ulong));
+    TMP_START;
+
+    td = TMP_ARRAY_ALLOC(fn, ui_factor_entry);
+    terms = TMP_ARRAY_ALLOC(fn, ulong);
 
     top = ui_product_one(terms);
     tj = 0;
@@ -691,11 +493,9 @@ ulong ui_factor_get_mpz_2exp(
     }
     tn = tj;
 
-    factor_stack_fit_request_mpz(S, FLINT_BITS + 2);
-
-    z = factor_stack_take_top_mpz(S);
+    mpz_init(z);
     for (i = 0; i <= FLINT_BITS; i++)
-        y[i] = factor_stack_take_top_mpz(S);
+        mpz_init(y[i]);
 
     i = 0;
     y[i]->_mp_size = ui_product_get_mpn(
@@ -765,20 +565,19 @@ ulong ui_factor_get_mpz_2exp(
         mpz_set(x, y[i]);
     }
 
-    flint_free(td);
-    flint_free(terms);
+    mpz_clear(z);
+    for (i = 0; i <= FLINT_BITS; i++)
+        mpz_clear(y[i]);
 
-    factor_stack_give_back_mpz(S, FLINT_BITS + 2);
-
+    TMP_END;
     return e;
 }
 
 ulong ui_factor_get_fmpz_2exp(
     fmpz_t x,
-    const ui_factor_t f,
-    factor_stack_t S)
+    const ui_factor_t f)
 {
-    ulong e = ui_factor_get_mpz_2exp(_fmpz_promote(x), f, S);
+    ulong e = ui_factor_get_mpz_2exp(_fmpz_promote(x), f);
     _fmpz_demote_val(x);
     return e;
 }
@@ -786,14 +585,11 @@ ulong ui_factor_get_fmpz_2exp(
 int ui_factor_equal_fmpz(const ui_factor_t f, const fmpz_t x)
 {
     fmpz_t y;
-    factor_stack_t S;
     int res;
 
     fmpz_init(y);
-    factor_stack_init(S);
-    ulong e = ui_factor_get_fmpz_2exp(y, f, S);
+    ulong e = ui_factor_get_fmpz_2exp(y, f);
     fmpz_mul_2exp(y, y, e);
-    factor_stack_clear(S);
     res = fmpz_equal(y, x);
     fmpz_clear(y);
     return res;
@@ -804,18 +600,15 @@ int ui_factor_equal_mpz(const ui_factor_t f, const mpz_t x)
     fmpz_t y;
     fmpz_init(y);
     mpz_ptr Y = _fmpz_promote(y);
-    factor_stack_t S;
-    factor_stack_init(S);
-    ulong e = ui_factor_get_mpz_2exp(Y, f, S);
+    ulong e = ui_factor_get_mpz_2exp(Y, f);
     mpz_mul_2exp(Y, Y, e);
-    factor_stack_clear(S);
     int res = mpz_cmp(Y, x) == 0;
     _fmpz_demote_val(y);
     fmpz_clear(y);
     return res;
 }
 
-// {f, g} = {f, g}/GCD[f, g]
+// (f, g) = (f, g)/gcd(f, g)
 void ui_factor_remove_gcd(ui_factor_t f, ui_factor_t g)
 {
     ASSERT(ui_factor_is_canonical(f));
@@ -1415,24 +1208,23 @@ static void pi_sum_basecase(
 static void fold(
     mpz_t p1, ui_factor_t r1, ui_factor_t q1,
     mpz_t p2, ui_factor_t r2, ui_factor_t q2,
-    int needr, /* bool */
-    factor_stack_t S)
+    int needr) /* bool */
 {
     ulong q2e, r1e;
-    mpz_ptr t, q2t, r1t;
-    ui_factor_struct * s;
+    mpz_t t, q2t, r1t;
+    ui_factor_t s;
+
+    mpz_init(t);
+    mpz_init(q2t);
+    mpz_init(r1t);
+    ui_factor_init(s);
 
     ui_factor_remove_gcd(r1, q2);
 
-    factor_stack_fit_request_mpz(S, 3);
-    factor_stack_fit_request_factor(S, 1);
-
     // p1 = p1*q2 + r1*p2
-    t = factor_stack_take_top_mpz(S);
-    q2t = factor_stack_take_top_mpz(S);
-    r1t = factor_stack_take_top_mpz(S);
-    q2e = ui_factor_get_mpz_2exp(q2t, q2, S);
-    r1e = ui_factor_get_mpz_2exp(r1t, r1, S);
+
+    q2e = ui_factor_get_mpz_2exp(q2t, q2);
+    r1e = ui_factor_get_mpz_2exp(r1t, r1);
     if (q2e >= r1e)
     {
         mpz_mul(t, p1, q2t);
@@ -1450,7 +1242,6 @@ static void fold(
     mpz_swap(p1, t);
 
     // q1 = q1*q2
-    s = factor_stack_take_top_factor(S);
     ui_factor_mul(s, q1, q2);
     ui_factor_swap(q1, s);
 
@@ -1461,8 +1252,10 @@ static void fold(
         ui_factor_swap(r1, s);
     }
 
-    factor_stack_give_back_factor(S, 1);
-    factor_stack_give_back_mpz(S, 3);
+    mpz_clear(t);
+    mpz_clear(q2t);
+    mpz_clear(r1t);
+    ui_factor_clear(s);
 }
 
 // Set (p, r, q) = sum of terms in [start,stop] inclusive.
@@ -1470,46 +1263,44 @@ static void pi_sum_split(
     mpz_t p, ui_factor_t r, ui_factor_t q,
     ulong start, ulong stop,
     int needr, /* bool */
-    const ui_factor_t mult,
-    factor_stack_t S) /* temp */
+    const ui_factor_t mult)
 {
-    mpz_ptr p1, s;
-    ui_factor_struct * r1, * q1;
+    mpz_t p1, s;
+    ui_factor_t r1, q1;
     ulong diff, mid;
 
     ASSERT(start <= stop);
 
-    factor_stack_fit_request_mpz(S, 2);
-    p1 = factor_stack_take_top_mpz(S);
-
-    factor_stack_fit_request_factor(S, 2);
-    r1 = factor_stack_take_top_factor(S);
-    q1 = factor_stack_take_top_factor(S);
+    mpz_init(p1);
+    ui_factor_init(r1);
+    ui_factor_init(q1);
 
     diff = stop - start;
     if (diff > 140)
     {
         mid = diff/16*9 + start;
-        pi_sum_split(p, r, q, start, mid, 1, mult, S);
-        pi_sum_split(p1, r1, q1, mid + 1, stop, 1, mult, S);
-        fold(p, r, q, p1, r1, q1, needr, S);
+        pi_sum_split(p, r, q, start, mid, 1, mult);
+        pi_sum_split(p1, r1, q1, mid + 1, stop, 1, mult);
+        fold(p, r, q, p1, r1, q1, needr);
     }
     else if (diff > 70)
     {
-        mpz_ptr t = factor_stack_take_top_mpz(S);
+        mpz_t t;
+        mpz_init(t);
         mid = diff/2 + start;
         pi_sum_basecase(p, t, r, q, start, mid, mult);
         pi_sum_basecase(p1, t, r1, q1, mid + 1, stop, mult);
-        fold(p, r, q, p1, r1, q1, needr, S);
-        factor_stack_give_back_mpz(S, 1);
+        fold(p, r, q, p1, r1, q1, needr);
+        mpz_clear(t);
     }
     else
     {
         pi_sum_basecase(p, p1, r, q, start, stop, mult);
     }
 
-    factor_stack_give_back_factor(S, 2);
-    factor_stack_give_back_mpz(S, 1);
+    mpz_clear(p1);
+    ui_factor_clear(r1);
+    ui_factor_clear(q1);
 }
 
 
@@ -1518,32 +1309,28 @@ typedef struct {
     ui_factor_t r2;
     ui_factor_t q2;
     ui_factor_struct * mult;
-    factor_stack_t St;
     ulong start;
     ulong stop;
     ulong q2e;
-    mpz_ptr p1q2;
+    mpz_t p1q2;
     mpz_ptr p1;
 } worker_arg;
 
 void worker_proc(void * varg)
 {
     worker_arg * arg = (worker_arg *) varg;
-    pi_sum_split(arg->p2, arg->r2, arg->q2, arg->start, arg->stop, 1, arg->mult, arg->St);
+    pi_sum_split(arg->p2, arg->r2, arg->q2, arg->start, arg->stop, 1, arg->mult);
 }
 
 void worker_proc2(void * varg)
 {
-    mpz_ptr q2t;
+    mpz_t q2t;
     worker_arg * arg = (worker_arg *) varg;
 
-    factor_stack_fit_request_mpz(arg->St, 2);
-
-    q2t = factor_stack_take_top_mpz(arg->St);
-    arg->q2e = ui_factor_get_mpz_2exp(q2t, arg->q2, arg->St);
-
-    arg->p1q2 = factor_stack_take_top_mpz(arg->St);
+    mpz_init(q2t);
+    arg->q2e = ui_factor_get_mpz_2exp(q2t, arg->q2);
     mpz_mul(arg->p1q2, arg->p1, q2t);
+    mpz_clear(q2t);
 }
 
 
@@ -1551,13 +1338,11 @@ ulong pi_sum(fmpz_t p, fmpz_t q, ulong num_terms)
 {
     ulong qe;
     ui_factor_t r1, q1, mult;
-    factor_stack_t St;
     mpz_ptr p1 = _fmpz_promote(p);
 
     ui_factor_init(r1);
     ui_factor_init(q1);
     ui_factor_init(mult);
-    factor_stack_init(St);
 
     ui_factor_sieve_init(siever);
     ui_factor_sieve_build(siever, FLINT_MAX(UWORD(3*5*23*29), 6*num_terms-1));
@@ -1582,25 +1367,26 @@ ulong pi_sum(fmpz_t p, fmpz_t q, ulong num_terms)
             */
             ulong mid = num_terms/16*9;
             ulong r1e;
-            mpz_ptr r1t, p2r1;
-            ui_factor_struct * q1q2;
+            mpz_t r1t, p2r1;
+            ui_factor_t q1q2;
             worker_arg warg;
 
             ASSERT(num_handles == 1);
 
             mpz_init(warg.p2);
+            mpz_init(warg.p1q2);
             ui_factor_init(warg.r2);
             ui_factor_init(warg.q2);
+
             warg.mult = mult;
             warg.p1 = p1;
             warg.start = mid + 1;
             warg.stop = num_terms;
-            factor_stack_init(warg.St);
 
             /* calculate [1, mid] and [mid + 1, num_terms] */
 
             thread_pool_wake(global_thread_pool, handles[0], 1, &worker_proc, &warg);
-            pi_sum_split(p1, r1, q1, 1, mid, 1, mult, St);
+            pi_sum_split(p1, r1, q1, 1, mid, 1, mult);
             thread_pool_wait(global_thread_pool, handles[0]);
 
             /* join the two pieces */
@@ -1609,18 +1395,15 @@ ulong pi_sum(fmpz_t p, fmpz_t q, ulong num_terms)
 
             thread_pool_wake(global_thread_pool, handles[0], 1, &worker_proc2, &warg);
 
-            factor_stack_fit_request_factor(St, 1);
-            factor_stack_fit_request_mpz(St, 2);
+            mpz_init(r1t);
+            r1e = ui_factor_get_mpz_2exp(r1t, r1);
 
-            r1t = factor_stack_take_top_mpz(St);
-            r1e = ui_factor_get_mpz_2exp(r1t, r1, St);
-
-            p2r1 = factor_stack_take_top_mpz(St);
+            mpz_init(p2r1);
             mpz_mul(p2r1, warg.p2, r1t);
 
-            q1q2 = factor_stack_take_top_factor(St);
+            ui_factor_init(q1q2);
             ui_factor_mul(q1q2, q1, warg.q2);
-            qe = ui_factor_get_fmpz_2exp(q, q1q2, St);
+            qe = ui_factor_get_fmpz_2exp(q, q1q2);
 
             thread_pool_wait(global_thread_pool, handles[0]);
 
@@ -1639,22 +1422,22 @@ ulong pi_sum(fmpz_t p, fmpz_t q, ulong num_terms)
 
             thread_pool_give_back(global_thread_pool, handles[0]);
 
-            factor_stack_give_back_mpz(St, 2);
-            factor_stack_give_back_factor(St, 1);
-            factor_stack_give_back_mpz(warg.St, 2);
+            ui_factor_clear(q1q2);
+            mpz_clear(r1t);
+            mpz_clear(p2r1);
 
             mpz_clear(warg.p2);
+            mpz_clear(warg.p1q2);
             ui_factor_clear(warg.r2);
             ui_factor_clear(warg.q2);
-            factor_stack_clear(warg.St);
 
             goto cleanup;
         }
     }
 
     /* serial */
-    pi_sum_split(p1, r1, q1, 1, num_terms, 0, mult, St);
-    qe = ui_factor_get_fmpz_2exp(q, q1, St);
+    pi_sum_split(p1, r1, q1, 1, num_terms, 0, mult);
+    qe = ui_factor_get_fmpz_2exp(q, q1);
 
 cleanup:
 
@@ -1663,7 +1446,6 @@ cleanup:
     ui_factor_clear(r1);
     ui_factor_clear(q1);
     ui_factor_clear(mult);
-    factor_stack_clear(St);
 
     _fmpz_demote_val(p);
 
@@ -1757,30 +1539,23 @@ void compare_pi(slong prec)
 
 int main(int i, char * b)
 {
-    int opt = 0;
-    if (opt == 0)
+    if (1)
     {
-        printf("****** one thread ********\n");
-        for (i = 10; i < 27; i++)
-            compare_pi(WORD(1)<<i);
-
-        printf("****** two threads *******\n");
-        flint_set_num_threads(2);
-        for (i = 10; i < 27; i++)
-            compare_pi(WORD(1)<<i);
-    }
-    else
-    {
-        slong prec = 100000000;
         arb_t u;
         arb_init(u);
-        if (opt == 1)
-            pi_here(u, prec);
-        else
-            arb_const_pi_chudnovsky_eval(u, prec);
+        pi_here(u, WORD(100000000));
         arb_clear(u);
         SHOW_MEMORY_USAGE;
     }
+
+    printf("****** one thread ********\n");
+    for (i = 10; i < 27; i++)
+        compare_pi(WORD(1)<<i);
+
+    printf("****** two threads *******\n");
+    flint_set_num_threads(2);
+    for (i = 10; i < 27; i++)
+        compare_pi(WORD(1)<<i);
 
     flint_cleanup_master();
 }
