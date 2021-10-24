@@ -10,6 +10,7 @@
     usage: make profile && ./build/arb/profile/p-const_pi
 
     known problems:
+        - Memory usage is higher than expected.
         - Access to the global variable siever is not guarded by locks. Most
           accesses are read-only, but a write can only be prevented by fitting
           the table to the correct size at the beginning.
@@ -33,6 +34,7 @@ typedef unsigned int uint32_t;
 /* TODO: try a proper implemention of unlikely */
 #define unlikely(x) x
 #define ASSERT(x) 
+#define PROFILE_MEMORY 0
 
 extern void arb_const_pi_chudnovsky_eval(arb_t s, slong prec);
 
@@ -167,11 +169,20 @@ void factor_stack_init(factor_stack_t S)
 void factor_stack_clear(factor_stack_t S)
 {
     slong i;
+    #if PROFILE_MEMORY
+        slong total = 0;
+        flint_printf("clearing factor_stack_t with mpz_alloc = %wd, factor_alloc = %wd\n", S->mpz_alloc, S->factor_alloc);
+    #endif
 
     ASSERT(S->mpz_top == 0);
 
     for (i = 0; i < S->mpz_alloc; i++)
     {
+        #if PROFILE_MEMORY
+            total += S->mpz_array[i]->_mp_alloc;
+            if (S->mpz_array[i]->_mp_alloc > 0)
+                flint_printf(" mpz_array[%wd].alloc = %wd\n", i, (slong)(S->mpz_array[i]->_mp_alloc));
+        #endif
         mpz_clear(S->mpz_array[i]);
         flint_free(S->mpz_array[i]);
     }
@@ -182,10 +193,19 @@ void factor_stack_clear(factor_stack_t S)
     S->mpz_array = NULL;
     S->mpz_alloc = 0;
 
+    #if PROFILE_MEMORY
+        flint_printf(" **** mpz's used %wd KB\n", total*sizeof(mp_limb_t)/1024);
+        total = 0
+    #endif
+
     ASSERT(S->factor_top == 0);
 
     for (i = 0; i < S->factor_alloc; i++)
     {
+        #if PROFILE_MEMORY
+            total += S->factor_array[i]->alloc;
+            flint_printf(" factor_array[%wd].alloc = %wd\n", i, (slong)(S->factor_array[i]->alloc));
+        #endif
         ui_factor_clear(S->factor_array[i]);
         flint_free(S->factor_array[i]);
     }
@@ -195,6 +215,10 @@ void factor_stack_clear(factor_stack_t S)
 
     S->factor_array = NULL;
     S->factor_alloc = 0;
+
+    #if PROFILE_MEMORY
+        flint_printf(" **** fac's used %wd KB\n", total*sizeof(ui_factor_entry)/1024);
+    #endif
 }
 
 /* insure that k slots are available after top and return pointer to top */
@@ -206,6 +230,9 @@ __mpz_struct ** factor_stack_fit_request_mpz(factor_stack_t S, slong k)
 
     if (S->mpz_top + k > S->mpz_alloc)
     {
+        #if PROFILE_MEMORY
+            flint_printf("Have %wd mpz's: adding %wd more.\n", S->mpz_top, k);
+        #endif
         newalloc = FLINT_MAX(WORD(1), S->mpz_top + k);
 
         S->mpz_array = (__mpz_struct **) flint_realloc(S->mpz_array,
@@ -231,6 +258,9 @@ ui_factor_struct ** factor_stack_fit_request_factor(factor_stack_t S, slong k)
 
     if (S->factor_top + k > S->factor_alloc)
     {
+        #if PROFILE_MEMORY
+            flint_printf("Have %wd fac's: adding %wd more.\n", S->factor_top, k);
+        #endif
         newalloc = FLINT_MAX(WORD(1), S->factor_top + k);
 
         S->factor_array = (ui_factor_struct **) flint_realloc(S->factor_array,
@@ -275,6 +305,10 @@ void ui_factor_sieve_init(ui_factor_sieve_t S)
 
 void ui_factor_sieve_clear(ui_factor_sieve_t S)
 {
+    #if PROFILE_MEMORY
+        flint_printf("clearing ui_factor_sieve_t with alloc = %wd\n", S->alloc);
+        flint_printf(" **** sieve used %wd KB\n", S->alloc*sizeof(ui_factor_sieve_entry)/1024);
+    #endif
     if (S->array)
         flint_free(S->array);
 }
@@ -1636,30 +1670,20 @@ cleanup:
     return qe;
 }
 
-
-void profile_pi(slong prec)
+void pi_here(arb_t U, slong prec)
 {
     slong wp = prec + 3;
     ulong num_terms = prec * 0.021226729578153557 + 2;
     ulong qe;
-    timeit_t timer;
-    slong t1, t2;
-
     fmpz_t p, q;
-    arb_t P, Q, U, U2, T;
+    arb_t P, Q, T;
 
     fmpz_init(p);
     fmpz_init(q);
     arb_init(P);
     arb_init(Q);
-    arb_init(U);
-    arb_init(U2);
     arb_init(T);
 
-flint_printf("prec %9wd: ", prec);
-fflush(stdout);
-
-timeit_start(timer);
     qe = pi_sum(p, q, num_terms);
     /*
         we now have p/(q*2^qe) = sum from 1 to num_terms
@@ -1679,49 +1703,84 @@ timeit_start(timer);
     arb_rsqrt_ui(U, 640320, wp);
     arb_mul(T, P, U, wp);
     arb_div(U, Q, T, wp);
-timeit_stop(timer);
-t1 = timer->wall;
-
-flint_printf("here %6wd, ", t1);
-fflush(stdout);
-
-timeit_start(timer);
-    arb_const_pi_chudnovsky_eval(U2, prec);
-timeit_stop(timer);
-t2 = timer->wall;
-
-t1 = FLINT_MAX(WORD(1), t1);
-t2 = FLINT_MAX(WORD(1), t2);
-
-flint_printf("arb %6wd, ratio %0.2f", t2, (double)t2/(double)t1);
-
-arb_sub(T, U, U2, prec);
-arb_mul_2exp_si(T, T, prec);
-flint_printf("    diff*2^prec: ");
-arb_printd(T, 5);
-flint_printf("\n");
-fflush(stdout);
 
     fmpz_clear(p);
     fmpz_clear(q);
     arb_clear(P);
     arb_clear(Q);
+    arb_clear(T);
+}
+
+void compare_pi(slong prec)
+{
+    timeit_t timer;
+    slong t1, t2;
+    arb_t T, U, U2;
+
+    arb_init(T);
+    arb_init(U);
+    arb_init(U2);
+
+    flint_printf("prec %9wd: ", prec);
+    fflush(stdout);
+
+    timeit_start(timer);
+    pi_here(U, prec);
+    timeit_stop(timer);
+    t1 = timer->wall;
+    t1 = FLINT_MAX(WORD(1), t1);
+
+    flint_printf("here %6wd, ", t1);
+    fflush(stdout);
+
+    timeit_start(timer);
+    arb_const_pi_chudnovsky_eval(U2, prec);
+    timeit_stop(timer);
+    t2 = timer->wall;
+
+    t2 = FLINT_MAX(WORD(1), t2);
+
+    flint_printf("arb %6wd, ratio %0.2f", t2, (double)t2/(double)t1);
+
+    arb_sub(T, U, U2, prec);
+    arb_mul_2exp_si(T, T, prec);
+    flint_printf("    diff*2^prec: ");
+    arb_printd(T, 5);
+    flint_printf("\n");
+    fflush(stdout);
+
+    arb_clear(T);
     arb_clear(U);
     arb_clear(U2);
-    arb_clear(T);
 }
 
 
 int main(int i, char * b)
 {
-printf("****** one thread ********\n");
-    for (i = 10; i < 27; i++)
-        profile_pi(WORD(1)<<i);
+    int opt = 0;
+    if (opt == 0)
+    {
+        printf("****** one thread ********\n");
+        for (i = 10; i < 27; i++)
+            compare_pi(WORD(1)<<i);
 
-printf("****** two threads *******\n");
-    flint_set_num_threads(2);
-    for (i = 10; i < 27; i++)
-        profile_pi(WORD(1)<<i);
+        printf("****** two threads *******\n");
+        flint_set_num_threads(2);
+        for (i = 10; i < 27; i++)
+            compare_pi(WORD(1)<<i);
+    }
+    else
+    {
+        slong prec = 100000000;
+        arb_t u;
+        arb_init(u);
+        if (opt == 1)
+            pi_here(u, prec);
+        else
+            arb_const_pi_chudnovsky_eval(u, prec);
+        arb_clear(u);
+        SHOW_MEMORY_USAGE;
+    }
 
     flint_cleanup_master();
 }
