@@ -1,5 +1,23 @@
-/* usage: make profile && ./build/arb/profile/p-const_pi */
-/* untested with FLINT_BITS != 64 !!! */
+/*
+    This is a significant rewrite of gmp-chudnovsky.c by Hanhong Xue with at
+    least the following changes:
+
+        bs_mul -> ui_factor_get_mpz_2exp uses squaring
+        bs     -> pi_sum_split uses a basecase bigger than 1
+        fmul   -> dust bin, there is no global factored number
+        ...
+
+    usage: make profile && ./build/arb/profile/p-const_pi
+
+    known problems:
+        - Access to the global variable siever is not guarded by locks. Most
+          accesses are read-only, but a write can only be prevented by fitting
+          the table to the correct size at the beginning.
+        - There is great confusion on how big mp_size_t is. It looks like it
+          will overflow around a couple billion digits.
+        - There is great confusion on what the return of mpn_mul is.
+        - Untested with FLINT_BITS != 64
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1284,7 +1302,7 @@ static void pi_sum_basecase(
         p_n = flint_mpn_mul_111(p_d, p_d, p_n, j, j, j);
         if (FLINT_BITS == 64)
         {
-            p_d[p_n] = mpn_mul_1(p_d, p_d, p_n, 10939058860032000); p_n += (p_d[p_n] != 0);
+            p_d[p_n] = mpn_mul_1(p_d, p_d, p_n, UWORD(10939058860032000)); p_n += (p_d[p_n] != 0);
         }
         else
         {
@@ -1591,6 +1609,7 @@ ulong pi_sum(fmpz_t p, fmpz_t q, ulong num_terms)
             factor_stack_give_back_factor(St, 1);
             factor_stack_give_back_mpz(warg.St, 2);
 
+            mpz_clear(warg.p2);
             ui_factor_clear(warg.r2);
             ui_factor_clear(warg.q2);
             factor_stack_clear(warg.St);
@@ -1703,5 +1722,7 @@ printf("****** two threads *******\n");
     flint_set_num_threads(2);
     for (i = 10; i < 27; i++)
         profile_pi(WORD(1)<<i);
+
+    flint_cleanup_master();
 }
 
