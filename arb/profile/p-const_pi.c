@@ -478,7 +478,6 @@ void _ui_factor_get_mpz(
 
     TMP_START;
 
-    td = TMP_ARRAY_ALLOC(fn, ui_factor_entry);
     terms = TMP_ARRAY_ALLOC(fn, ulong);
 
     ui_factor_fit_length(t, fn);
@@ -504,6 +503,7 @@ void _ui_factor_get_mpz(
     }
     tn = tj;
 
+    /* TODO memory manage z and the y's better, hopefully in one chunk */
     mpz_init(z);
     for (i = 0; i <= FLINT_BITS; i++)
         mpz_init(y[i]);
