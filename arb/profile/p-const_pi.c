@@ -430,17 +430,26 @@ static inline mp_limb_t * flint_mpz_fit_length(mpz_ptr z, mp_size_t n)
     }
 }
 
+/* power of 2 on the first base if the first base is 2 */
+ulong _ui_factor_get_2exp(const ui_factor_t f)
+{
+    if (0 < f->length && f->data[0].base == 2)
+        return f->data[0].pow;
+    else
+        return 0;
+}
 
-/* x*2^e = f, polute fmpz cache with only two more values */
-ulong ui_factor_get_mpz_2exp(
+/* x = f forgetting about the first factor if the base is 2 */
+void _ui_factor_get_mpz(
     mpz_t x,
-    const ui_factor_t f)
+    const ui_factor_t f,
+    ui_factor_t t)  /* need temp space to clobber instead of f */
 {
     ulong fi, ti, tj;
     ulong tn, fn = f->length;
     ui_factor_entry * td;
     const ui_factor_entry * fd = f->data;
-    ulong b, p, e = 0;
+    ulong b, p;
     mp_limb_t * xd;
     mp_size_t xn;
     mp_limb_t * zd;
@@ -458,20 +467,22 @@ ulong ui_factor_get_mpz_2exp(
 
     if (fi < fn && fd[fi].base == 2)
     {
-        e = fd[fi].pow;
         fi++;
     }
 
     if (fi >= fn)
     {
         mpz_set_ui(x, 1);
-        return e;
+        return;
     }
 
     TMP_START;
 
     td = TMP_ARRAY_ALLOC(fn, ui_factor_entry);
     terms = TMP_ARRAY_ALLOC(fn, ulong);
+
+    ui_factor_fit_length(t, fn);
+    td = t->data;
 
     top = ui_product_one(terms);
     tj = 0;
@@ -570,7 +581,16 @@ ulong ui_factor_get_mpz_2exp(
         mpz_clear(y[i]);
 
     TMP_END;
-    return e;
+}
+
+ulong ui_factor_get_mpz_2exp(mpz_t x, const ui_factor_t f)
+{
+    ulong e;
+    ui_factor_t t;
+    ui_factor_init(t);
+    _ui_factor_get_mpz(x, f, t);
+    ui_factor_clear(t);
+    return _ui_factor_get_2exp(f);
 }
 
 ulong ui_factor_get_fmpz_2exp(
@@ -1002,42 +1022,45 @@ do_two:
 
 /**************************** start pi stuff *********************************/
 /* my result (ON CURRENT BOX!!!):
+virt/peak/res/peak(MB): 21.12 336.54 6.35 272.19
 ****** one thread ********
-prec      1024: here      0, arb      1, ratio 1.00    diff*2^prec: 0.35767 +/- 3.1035
-prec      2048: here      0, arb      1, ratio 1.00    diff*2^prec: -0.20294 +/- 3.6166
-prec      4096: here      0, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 2.0689
-prec      8192: here      1, arb      1, ratio 1.00    diff*2^prec: 0.89326 +/- 2.3008
-prec     16384: here      0, arb      1, ratio 1.00    diff*2^prec: 0.14836 +/- 2.2027
-prec     32768: here      1, arb      1, ratio 1.00    diff*2^prec: 0.53247 +/- 2.0982
-prec     65536: here      1, arb      2, ratio 2.00    diff*2^prec: 0.19283 +/- 2.4229
-prec    131072: here      3, arb      3, ratio 1.00    diff*2^prec: 0.88084 +/- 2.1592
-prec    262144: here      6, arb      9, ratio 1.50    diff*2^prec: 0.31244 +/- 2.2311
-prec    524288: here     16, arb     23, ratio 1.44    diff*2^prec: 0.65431 +/- 2.4393
-prec   1048576: here     38, arb     56, ratio 1.47    diff*2^prec: 0.55925 +/- 2.3314
-prec   2097152: here     88, arb    134, ratio 1.52    diff*2^prec: 0.64183 +/- 2.453
-prec   4194304: here    208, arb    314, ratio 1.51    diff*2^prec: 0.44536 +/- 2.155
-prec   8388608: here    483, arb    738, ratio 1.53    diff*2^prec: 1.1417 +/- 2.1396
-prec  16777216: here   1147, arb   1750, ratio 1.53    diff*2^prec: 0.7042 +/- 2.1648
-prec  33554432: here   2714, arb   4173, ratio 1.54    diff*2^prec: 0.51755 +/- 2.1302
-prec  67108864: here   6341, arb   9919, ratio 1.56    diff*2^prec: 0.64759 +/- 2.132
+prec      1024: here      1, arb      1, ratio 1.00    diff*2^prec: 0.35767 +/- 3.1035
+prec      2048: here      1, arb      1, ratio 1.00    diff*2^prec: -0.20294 +/- 3.6166
+prec      4096: here      1, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 3.1691
+prec      8192: here      1, arb      1, ratio 1.00    diff*2^prec: 0.39326 +/- 2.4516
+prec     16384: here      1, arb      1, ratio 1.00    diff*2^prec: 0.14836 +/- 2.3905
+prec     32768: here      1, arb      1, ratio 1.00    diff*2^prec: 0.53247 +/- 2.1235
+prec     65536: here      1, arb      2, ratio 2.00    diff*2^prec: 0.19283 +/- 2.234
+prec    131072: here      2, arb      4, ratio 2.00    diff*2^prec: 0.88084 +/- 2.1784
+prec    262144: here      7, arb      9, ratio 1.29    diff*2^prec: 0.31244 +/- 2.3353
+prec    524288: here     16, arb     24, ratio 1.50    diff*2^prec: 0.15431 +/- 2.3108
+prec   1048576: here     38, arb     55, ratio 1.45    diff*2^prec: 0.059249 +/- 2.2084
+prec   2097152: here     89, arb    133, ratio 1.49    diff*2^prec: 0.14183 +/- 2.3491
+prec   4194304: here    206, arb    314, ratio 1.52    diff*2^prec: -0.054642 +/- 2.1233
+prec   8388608: here    485, arb    741, ratio 1.53    diff*2^prec: 0.64171 +/- 2.0171
+prec  16777216: here   1149, arb   1760, ratio 1.53    diff*2^prec: 0.7042 +/- 2.1601
+prec  33554432: here   2727, arb   4192, ratio 1.54    diff*2^prec: 1.0175 +/- 2.13
+prec  67108864: here   6378, arb  10006, ratio 1.57    diff*2^prec: 0.64759 +/- 2.0933
+prec 134217728: here  14756, arb  23442, ratio 1.59    diff*2^prec: 0.21221 +/- 2.1246
 ****** two threads *******
-prec      1024: here      0, arb      1, ratio 1.00    diff*2^prec: 0.85767 +/- 2.4476
-prec      2048: here      0, arb      1, ratio 1.00    diff*2^prec: 0.29706 +/- 2.3662
-prec      4096: here      0, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 2.1024
-prec      8192: here      0, arb      1, ratio 1.00    diff*2^prec: 0.89326 +/- 2.3334
-prec     16384: here      1, arb      1, ratio 1.00    diff*2^prec: 0.64836 +/- 2.2398
-prec     32768: here      0, arb      1, ratio 1.00    diff*2^prec: 0.032475 +/- 2.0321
-prec     65536: here      1, arb      2, ratio 2.00    diff*2^prec: 0.19283 +/- 2.208
-prec    131072: here      2, arb      3, ratio 1.50    diff*2^prec: 0.38084 +/- 2.3171
-prec    262144: here      5, arb     10, ratio 2.00    diff*2^prec: 0.81244 +/- 2.1586
-prec    524288: here     11, arb     23, ratio 2.09    diff*2^prec: 0.15431 +/- 2.1586
-prec   1048576: here     26, arb     57, ratio 2.19    diff*2^prec: 0.059249 +/- 2.038
-prec   2097152: here     60, arb    134, ratio 2.23    diff*2^prec: 0.14183 +/- 2.4224
-prec   4194304: here    138, arb    318, ratio 2.30    diff*2^prec: 0.44536 +/- 2.0891
-prec   8388608: here    323, arb    745, ratio 2.31    diff*2^prec: 0.64171 +/- 2.2757
-prec  16777216: here    761, arb   1766, ratio 2.32    diff*2^prec: 0.7042 +/- 2.1569
-prec  33554432: here   1795, arb   4210, ratio 2.35    diff*2^prec: 1.0175 +/- 2.3597
-prec  67108864: here   4134, arb  10024, ratio 2.42    diff*2^prec: 0.64759 +/- 2.132
+prec      1024: here      1, arb      1, ratio 1.00    diff*2^prec: 0.85767 +/- 2.4476
+prec      2048: here      1, arb      1, ratio 1.00    diff*2^prec: 0.29706 +/- 2.3662
+prec      4096: here      1, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 2.1024
+prec      8192: here      1, arb      1, ratio 1.00    diff*2^prec: 0.39326 +/- 2.2593
+prec     16384: here      1, arb      1, ratio 1.00    diff*2^prec: 0.64836 +/- 2.2141
+prec     32768: here      1, arb      1, ratio 1.00    diff*2^prec: 0.032475 +/- 2.0377
+prec     65536: here      1, arb      2, ratio 2.00    diff*2^prec: 0.19283 +/- 2.2527
+prec    131072: here      2, arb      4, ratio 2.00    diff*2^prec: 0.38084 +/- 2.1352
+prec    262144: here      5, arb      9, ratio 1.80    diff*2^prec: 0.31244 +/- 2.3356
+prec    524288: here     11, arb     24, ratio 2.18    diff*2^prec: 0.15431 +/- 2.1656
+prec   1048576: here     26, arb     57, ratio 2.19    diff*2^prec: 0.55925 +/- 2.461
+prec   2097152: here     61, arb    135, ratio 2.21    diff*2^prec: 0.14183 +/- 2.3491
+prec   4194304: here    140, arb    319, ratio 2.28    diff*2^prec: 0.94536 +/- 2.278
+prec   8388608: here    326, arb    748, ratio 2.29    diff*2^prec: 1.1417 +/- 2.279
+prec  16777216: here    760, arb   1770, ratio 2.33    diff*2^prec: 0.7042 +/- 2.1601
+prec  33554432: here   1801, arb   4229, ratio 2.35    diff*2^prec: 0.51755 +/- 2.3609
+prec  67108864: here   4146, arb  10081, ratio 2.43    diff*2^prec: 0.64759 +/- 2.0933
+prec 134217728: here   9538, arb  23622, ratio 2.48    diff*2^prec: 0.71221 +/- 2.3141
 */
 
 /* timing break down in ms for the 10^6 digit computation (ON AN OLD BOX!!!):
@@ -1208,38 +1231,29 @@ static void pi_sum_basecase(
 static void fold(
     mpz_t p1, ui_factor_t r1, ui_factor_t q1,
     mpz_t p2, ui_factor_t r2, ui_factor_t q2,
-    int needr) /* bool */
+    int needr,  /* bool */
+    mpz_t t2,   /* temps */
+    mpz_t t1,
+    ui_factor_t s)
 {
     ulong q2e, r1e;
-    mpz_t t, q2t, r1t;
-    ui_factor_t s;
-
-    mpz_init(t);
-    mpz_init(q2t);
-    mpz_init(r1t);
-    ui_factor_init(s);
 
     ui_factor_remove_gcd(r1, q2);
 
     // p1 = p1*q2 + r1*p2
 
-    q2e = ui_factor_get_mpz_2exp(q2t, q2);
-    r1e = ui_factor_get_mpz_2exp(r1t, r1);
+    _ui_factor_get_mpz(t2, q2, s);
+    mpz_mul(t1, p1, t2);
+    _ui_factor_get_mpz(t2, r1, s);
+    mpz_mul(p1, p2, t2);
+    q2e = _ui_factor_get_2exp(q2);
+    r1e = _ui_factor_get_2exp(r1);
     if (q2e >= r1e)
-    {
-        mpz_mul(t, p1, q2t);
-        mpz_mul_2exp(t, t, q2e - r1e);
-        mpz_addmul(t, p2, r1t);
-        mpz_mul_2exp(t, t, r1e);
-    }
+        mpz_mul_2exp(t1, t1, q2e - r1e);
     else
-    {
-        mpz_mul(t, p2, r1t);
-        mpz_mul_2exp(t, t, r1e - q2e);
-        mpz_addmul(t, p1, q2t);
-        mpz_mul_2exp(t, t, q2e);
-    }
-    mpz_swap(p1, t);
+        mpz_mul_2exp(p1, p1, r1e - q2e);
+    mpz_add(p1, p1, t1);
+    mpz_mul_2exp(p1, p1, FLINT_MIN(r1e, q2e));
 
     // q1 = q1*q2
     ui_factor_mul(s, q1, q2);
@@ -1251,11 +1265,6 @@ static void fold(
         ui_factor_mul(s, r1, r2);
         ui_factor_swap(r1, s);
     }
-
-    mpz_clear(t);
-    mpz_clear(q2t);
-    mpz_clear(r1t);
-    ui_factor_clear(s);
 }
 
 // Set (p, r, q) = sum of terms in [start,stop] inclusive.
@@ -1265,8 +1274,8 @@ static void pi_sum_split(
     int needr, /* bool */
     const ui_factor_t mult)
 {
-    mpz_t p1, s;
-    ui_factor_t r1, q1;
+    mpz_t p1, t1, t2;
+    ui_factor_t r1, q1, s;
     ulong diff, mid;
 
     ASSERT(start <= stop);
@@ -1275,32 +1284,51 @@ static void pi_sum_split(
     ui_factor_init(r1);
     ui_factor_init(q1);
 
+    mpz_init(t1);
+    mpz_init(t2);
+    ui_factor_init(s);
+
     diff = stop - start;
-    if (diff > 140)
+    if (diff > 300)
     {
         mid = diff/16*9 + start;
         pi_sum_split(p, r, q, start, mid, 1, mult);
         pi_sum_split(p1, r1, q1, mid + 1, stop, 1, mult);
-        fold(p, r, q, p1, r1, q1, needr);
+        fold(p, r, q, p1, r1, q1, needr, t1, t2, s);
     }
-    else if (diff > 70)
+    else if (diff > 200)
     {
-        mpz_t t;
-        mpz_init(t);
+        ulong mid1 = diff/4 + start;
+        ulong mid2 = diff/2 + start;
+        ulong mid3 = diff/4 + diff/2 + start;
+
+        pi_sum_basecase(p, t1, r, q, start, mid1, mult);
+        pi_sum_basecase(p1, t1, r1, q1, mid1+1, mid2, mult);
+        fold(p, r, q, p1, r1, q1, 1, t1, t2, s);
+        pi_sum_basecase(p1, t1, r1, q1, mid2+1, mid3, mult);
+        fold(p, r, q, p1, r1, q1, 1, t1, t2, s);
+        pi_sum_basecase(p1, t1, r1, q1, mid3+1, stop, mult);
+        fold(p, r, q, p1, r1, q1, 1, t1, t2, s);
+    }
+    else if (diff > 100)
+    {
         mid = diff/2 + start;
-        pi_sum_basecase(p, t, r, q, start, mid, mult);
-        pi_sum_basecase(p1, t, r1, q1, mid + 1, stop, mult);
-        fold(p, r, q, p1, r1, q1, needr);
-        mpz_clear(t);
+        pi_sum_basecase(p, t1, r, q, start, mid, mult);
+        pi_sum_basecase(p1, t2, r1, q1, mid + 1, stop, mult);
+        fold(p, r, q, p1, r1, q1, needr, t1, t2, s);
     }
     else
     {
-        pi_sum_basecase(p, p1, r, q, start, stop, mult);
+        pi_sum_basecase(p, t1, r, q, start, stop, mult);
     }
 
     mpz_clear(p1);
     ui_factor_clear(r1);
     ui_factor_clear(q1);
+
+    mpz_clear(t1);
+    mpz_clear(t2);
+    ui_factor_clear(s);
 }
 
 
@@ -1549,12 +1577,12 @@ int main(int i, char * b)
     }
 
     printf("****** one thread ********\n");
-    for (i = 10; i < 27; i++)
+    for (i = 10; i < 28; i++)
         compare_pi(WORD(1)<<i);
 
     printf("****** two threads *******\n");
     flint_set_num_threads(2);
-    for (i = 10; i < 27; i++)
+    for (i = 10; i < 28; i++)
         compare_pi(WORD(1)<<i);
 
     flint_cleanup_master();
