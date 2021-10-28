@@ -19,9 +19,13 @@ _bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
         fmpz_set(num, fmpq_numref(bernoulli_cache + n));
         fmpz_set(den, fmpq_denref(bernoulli_cache + n));
     }
-    else
+    else if (n < 18000 || n % 2 == 1)
     {
         _bernoulli_fmpq_ui_zeta(num, den, n);
+    }
+    else
+    {
+        _bernoulli_fmpq_ui_multi_mod(num, den, n, -1.0);
     }
 }
 

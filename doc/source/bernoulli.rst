@@ -92,25 +92,37 @@ Bounding
     comfortably compute `B_n` exactly. It aborts if `n` is so large that
     internal overflow occurs.
 
+Isolated Bernoulli numbers
+-------------------------------------------------------------------------------
+
+.. function:: ulong bernoulli_mod_p_harvey(ulong n, ulong p)
+
+    Returns the `B_n` modulo the prime number *p*, computed using
+    Harvey's algorithm [Har2010]_. The running time is linear in *p*.
+    If *p* divides the numerator of `B_n`, *UWORD_MAX* is returned
+    as an error code.
+
 .. function:: void _bernoulli_fmpq_ui_zeta(fmpz_t num, fmpz_t den, ulong n)
+              void _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
 
     Sets *num* and *den* to the reduced numerator and denominator
     of the Bernoulli number `B_n`.
 
-    This function computes the denominator `d` using von Staudt-Clausen
+    The *zeta* version computes the denominator `d` using the von Staudt-Clausen
     theorem, numerically approximates `B_n` using :func:`arb_bernoulli_ui_zeta`,
     and then rounds `d B_n` to the correct numerator.
-    If the working precision is insufficient to determine the numerator,
-    the function prints a warning message and retries with increased
-    precision (this should not be expected to happen).
+
+    The *multi_mod* version reconstructs `B_n` by computing the high bits
+    via the Riemann zeta function and the low bits via Harvey's multimodular
+    algorithm. The tuning parameter *alpha* should be a fraction between
+    0 and 1 controlling the number of bits to compute by the multimodular
+    algorithm. If set to a negative number, a default value will be used.
 
 .. function:: void _bernoulli_fmpq_ui(fmpz_t num, fmpz_t den, ulong n)
-
-.. function:: void bernoulli_fmpq_ui(fmpq_t b, ulong n)
+              void bernoulli_fmpq_ui(fmpq_t b, ulong n)
 
     Computes the Bernoulli number `B_n` as an exact fraction, for an
     isolated integer `n`. This function reads `B_n` from the global cache
     if the number is already cached, but does not automatically extend
     the cache by itself.
-
 

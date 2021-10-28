@@ -75,6 +75,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Albin Ahlbäck - uniformly distributed random numbers
 * Daniel Schultz - derivative of Weierstrass elliptic function
 * Matthias Gessinger - Graeffe transforms
+* David Harvey - modular computation of Bernoulli numbers (code taken from Harvey's bernmm package)
 
 Funding
 -------------------------------------------------------------------------------
@@ -204,6 +205,8 @@ Bibliography
 .. [HS1967] \E. Hansen and R. Smith, "Interval Arithmetic in Matrix Computations, Part II", SIAM Journal of Numerical Analysis, 4(1):1-9 (1967). https://doi.org/10.1137/0704001
 
 .. [HZ2004] \G. Hanrot and P. Zimmermann, "Newton Iteration Revisited" (2004), http://www.loria.fr/~zimmerma/papers/fastnewton.ps.gz
+
+.. [Har2010] \D. Harvey,  "A multimodular algorithm for computing Bernoulli numbers" (2010), Mathematics of Computation 79.272: 2361-2370
 
 .. [Hoe2009] \J. van der Hoeven, "Ball arithmetic", Technical Report, HAL 00432152 (2009), http://www.texmacs.org/joris/ball/ball-abs.html
 
