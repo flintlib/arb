@@ -60,7 +60,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "flint/ulong_extras.h"
 #include "bernoulli.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define TIMING 0
 
 /******************************************************************************
