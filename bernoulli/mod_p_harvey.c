@@ -469,7 +469,7 @@ ulong bernsum_pow2(ulong p, ulong pinv, ulong k, ulong g, ulong n)
       0 <= x < nF/2  (if n > F/2)
       ninv2 = -1/n mod F
 */
-#define LOW_MASK ((1L << (FLINT_BITS / 2)) - 1)
+#define LOW_MASK ((UWORD(1) << (FLINT_BITS / 2)) - 1)
 static __inline__ ulong RedcFast(ulong x, ulong n, ulong ninv2)
 {
     ulong y = (x * ninv2) & LOW_MASK;
@@ -520,7 +520,7 @@ static ulong PrepRedc(ulong n)
 ulong bernsum_pow2_redc(ulong p, ulong pinv, ulong k, ulong g, ulong n)
 {
     ulong pinv2 = PrepRedc(p);
-    ulong F = (1L << (FLINT_BITS/2)) % p;
+    ulong F = (UWORD(1) << (FLINT_BITS/2)) % p;
     ulong x;
     slong h, i, m;
     ulong weights[TABLE_SIZE];
@@ -571,7 +571,7 @@ ulong bernsum_pow2_redc(ulong p, ulong pinv, ulong k, ulong g, ulong n)
     sum = 0;
 
 #if DEBUG
-    printf("%lu %lu %lu %lu  %lu %lu %lu %lu\n", g_to_km1, two_to_km1, B_to_km1, s_jump, g_redc, g_to_km1_redc, B_to_km1_redc, s_jump_redc);
+    printf("%lu %lu %lu %lu %lu  %lu %lu %lu %lu\n", F, g_to_km1, two_to_km1, B_to_km1, s_jump, g_redc, g_to_km1_redc, B_to_km1_redc, s_jump_redc);
 #endif
 
     expander_init(&expander, p, (n >= MAX_INV * FLINT_BITS)
@@ -691,7 +691,7 @@ ulong bernsum_pow2_redc(ulong p, ulong pinv, ulong k, ulong g, ulong n)
     for (h = 0, x = n_powmod2_preinv(2, 3*FLINT_BITS/2, p, pinv);
          h < TABLE_LG_SIZE; h++, x = Redc(x * two_to_km1_redc, p, pinv2))
     {
-        for (i = (1L << h) - 1; i >= 0; i--)
+        for (i = (WORD(1) << h) - 1; i >= 0; i--)
         {
             weights[2*i+1] = n_submod(weights[i], x, p);
             weights[2*i]   = n_addmod(weights[i], x, p);
