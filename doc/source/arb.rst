@@ -1602,6 +1602,16 @@ Other special functions
     together with an error bound. Otherwise, the exact value is computed
     and rounded.
 
+.. function:: void arb_primorial_nth_ui(arb_t res, ulong n, slong prec)
+
+    Sets *res* to the *nth* primorial, defined as the product of the
+    first *n* prime numbers. The running time is quasilinear in *n*.
+
+.. function:: void arb_primorial_ui(arb_t res, ulong n, slong prec)
+
+    Sets *res* to the primorial defined as the product of the positive
+    integers up to and including *n*. The running time is quasilinear in *n*.
+
 Internals for computing elementary functions
 -------------------------------------------------------------------------------
 

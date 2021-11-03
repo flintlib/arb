@@ -611,6 +611,9 @@ void arb_euler_number_ui(arb_t res, ulong n, slong prec);
 void arb_partitions_fmpz(arb_t res, const fmpz_t n, slong prec);
 void arb_partitions_ui(arb_t res, ulong n, slong prec);
 
+void arb_primorial_nth_ui(arb_t res, ulong n, slong prec);
+void arb_primorial_ui(arb_t res, ulong n, slong prec);
+
 void arb_lambertw(arb_t res, const arb_t x, int flags, slong prec);
 
 ARB_INLINE void
