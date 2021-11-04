@@ -38,13 +38,173 @@ typedef unsigned int uint32_t;
 
 extern void arb_const_pi_chudnovsky_eval(arb_t s, slong prec);
 
+
+/************* mpn_extras ****************************************************/
+
+mp_size_t flint_mpn_mul_11(
+    mp_limb_t * y,
+    const mp_limb_t * x, slong n,
+    mp_limb_t a1, mp_limb_t a2)
+{
+    mp_limb_t hi, lo;
+
+    umul_ppmm(hi, lo, a1, a2);
+    if (hi == 0)
+    {
+        y[n] = mpn_mul_1(y, x, n, lo); n += (y[n] != 0);
+        return n;
+    }
+
+    y[n] = mpn_mul_1(y, x, n, a1); n += (y[n] != 0);
+    y[n] = mpn_mul_1(y, y, n, a2); n += (y[n] != 0);
+    return n;
+}
+
+
+mp_size_t flint_mpn_mul_111(
+    mp_limb_t * y,
+    const mp_limb_t * x, slong n,
+    mp_limb_t a1, mp_limb_t a2, mp_limb_t a3)
+{
+    mp_limb_t hi, lo, p1, p2;
+
+    umul_ppmm(hi, lo, a1, a2);
+    if (hi == 0)
+        return flint_mpn_mul_11(y, x, n, a3, lo);
+
+    umul_ppmm(hi, lo, a1, a3);
+    if (hi == 0)
+    {
+        p1 = lo;
+        p2 = a2;
+        goto do_two;
+    }
+
+    umul_ppmm(hi, lo, a2, a3);
+    if (hi == 0)
+    {
+        p1 = lo;
+        p2 = a1;
+        goto do_two;
+    }    
+
+    y[n] = mpn_mul_1(y, x, n, a1); n += (y[n] != 0);
+    y[n] = mpn_mul_1(y, y, n, a2); n += (y[n] != 0);
+    y[n] = mpn_mul_1(y, y, n, a3); n += (y[n] != 0);
+    return n;
+
+do_two:
+
+    y[n] = mpn_mul_1(y, x, n, p1); n += (y[n] != 0);
+    y[n] = mpn_mul_1(y, y, n, p2); n += (y[n] != 0);
+    return n;
+}
+
+
+/* p = s*a */
+slong flint_mpn_mul_2(
+    mp_limb_t * pd,
+    mp_limb_t * sd, slong sn,
+    mp_limb_t a1, mp_limb_t a0)
+{
+    mp_limb_t out;
+    slong pn;
+
+    if (a1 == 0)
+    {
+        pd[sn] = mpn_mul_1(pd, sd, sn, a0);
+        pn = sn + (pd[sn] != 0);
+    }
+    else
+    {
+        out = mpn_mul_1(pd + 1, sd, sn, a1);
+        pd[sn + 1] = out;
+        pn = sn + 1 + (out != 0);
+
+        out = mpn_addmul_1(pd, sd, sn, a0);
+        if (out != 0)
+            out = mpn_add_1(pd + sn, pd + sn, pn - sn, out);
+        pd[pn] = out;
+        pn += (out != 0);
+    }
+
+    return pn;
+}
+
+/* p += s*a  with some assumptions */
+slong flint_mpn_addmul_2(
+    mp_limb_t * pd, slong pn,
+    mp_limb_t * sd, slong sn,
+    mp_limb_t a1, mp_limb_t a0)
+{
+    mp_limb_t out;
+
+    ASSERT(pn >= sn);
+
+    out = mpn_addmul_1(pd, sd, sn, a0);
+    if (pn > sn && out != 0)
+        out = mpn_add_1(pd + sn, pd + sn, pn - sn, out);
+    pd[pn] = out;
+    pn += (out != 0);
+
+    if (a1 != 0)
+    {
+        ASSERT(pn >= sn + 1);                
+        out = mpn_addmul_1(pd + 1, sd, sn, a1);
+        if (pn > sn + 1 && out != 0)
+            out = mpn_add_1(pd + sn + 1, pd + sn + 1, pn - (sn + 1), out);
+        pd[pn] = out;
+        pn += (out != 0);
+    }
+
+    return pn;
+}
+
+/* p -= s*a  with some assumptions */
+slong flint_mpn_submul_2(
+    mp_limb_t * pd, slong pn,
+    mp_limb_t * sd, slong sn,
+    mp_limb_t a1, mp_limb_t a0)
+{
+    mp_limb_t out;
+
+    ASSERT(pn >= sn);
+
+    if (a1 != 0)
+    {
+        out = mpn_submul_1(pd + 1, sd, sn, a1);
+        if (pn > sn + 1 && out != 0)
+            out = mpn_sub_1(pd + (sn + 1), pd + (sn + 1), pn - (sn + 1), out);
+        ASSERT(out == 0);
+        while (pd[pn - 1] == 0)
+        {
+            ASSERT(pn > 0);
+            pn--;
+        }
+    }
+
+    ASSERT(pn >= sn);
+
+    out = mpn_submul_1(pd, sd, sn, a0);
+    if (pn > sn && out != 0)
+        out = mpn_sub_1(pd + sn, pd + sn, pn - sn, out);
+    ASSERT(out == 0);
+    while (pd[pn - 1] == 0)
+    {
+        ASSERT(pn > 0);
+        pn--;
+    }
+
+    return pn;
+}
+
 /********************* factored integers *************************************/
 
 typedef struct {
     ulong base, pow;
 } ui_factor_entry;
 
-// representation of an integer as prod_i base[i]^pow[i]
+/* prod_i base[i]^pow[i] */
 
 typedef struct {
     ui_factor_entry * data;
@@ -348,75 +508,6 @@ void ui_factor_push_ui(ui_factor_t f, ulong b, const ui_factor_sieve_t S)
     f->length = fi;
 }
 
-/*
-void mpn_sqr(mp_ptr a, mp_srcptr b, mp_size_t n)
-{
-    mpn_mul(a, b, n, b, n);
-}
-*/
-
-/* x should have at least 3*len limbs allocated */
-static mp_size_t ui_product_get_mpn(
-    mp_limb_t * x,
-    const ulong * v,
-    ulong len,
-    ulong stride)
-{
-    mp_size_t xlen, ylen, zlen;
-    mp_limb_t out;
-
-    ASSERT(0 < len);
-
-    if (len <= 16)
-    {
-        xlen = 1;
-        x[0] = v[0];
-        for (ulong i = 1; i < len; i++)
-        {
-            out = mpn_mul_1(x, x, xlen, v[stride*i]);
-            if (out != 0)
-            {
-                ASSERT(xlen < len);
-                x[xlen] = out;
-                xlen++;
-            }
-        }
-    }
-    else
-    {
-        ylen = ui_product_get_mpn(x + len, v, len/2 + (len % 2), 2*stride);
-        zlen = ui_product_get_mpn(x + len + ylen, v + stride, len/2, 2*stride);
-        out = (ylen >= zlen) ? mpn_mul(x, x + len, ylen, x + len + ylen, zlen)
-                             : mpn_mul(x, x + len + ylen, zlen, x + len, ylen);
-        xlen = ylen + zlen - (out == 0);
-    }
-    ASSERT(xlen <= len);
-    ASSERT(xlen > 0);
-    ASSERT(x[xlen - 1] != 0);
-    return xlen;
-}
-
-
-static slong ui_product_one(ulong * terms)
-{
-    terms[0] = 1;
-    return 0;
-}
-
-static slong ui_product_push(ulong * terms, slong top, ulong b)
-{
-    ulong hi, lo;
-    umul_ppmm(hi, lo, terms[top], b);
-    if (hi == 0)
-    {
-        terms[top] = lo;
-    }
-    else
-    {
-        terms[++top] = b;
-    }
-    return top;
-}
 
 static inline mp_limb_t * flint_mpz_fit_length(mpz_ptr z, mp_size_t n)
 {
@@ -439,25 +530,78 @@ ulong _ui_factor_get_2exp(const ui_factor_t f)
         return 0;
 }
 
-/* x = f forgetting about the first factor if the base is 2 */
+/*
+    x, y, z should each have at least len + 1 limbs allocated. stride is to try
+    to balance the muls in the non-random input data: the final mul is between
+    the product of even indices and the product of odd indices
+*/
+static mp_size_t ui_product_get_mpn(
+    mp_limb_t * x,
+    const ulong * v,
+    ulong len,
+    slong stride,
+    mp_limb_t * y,  /* temps */
+    mp_limb_t * z)
+{
+    slong vn, xn, yn, zn;
+    mp_limb_t out;
+
+    ASSERT(0 < len);
+
+    if (len <= 30)
+    {
+        xn = 1;
+        x[0] = v[0];
+        for (ulong i = 1; i < len; i++)
+        {
+            x[xn] = mpn_mul_1(x, x, xn, v[stride*i]);
+            xn += (x[xn] != 0);
+        }
+    }
+    else
+    {
+        zn = ui_product_get_mpn(z, v + stride, len/2,    2*stride, x, y);
+        yn = ui_product_get_mpn(y, v, len/2 + (len % 2), 2*stride, x, z + zn);
+        out = (yn >= zn) ? mpn_mul(x, y, yn, z, zn) : mpn_mul(x, z, zn, y, yn);
+        xn = yn + zn - (out == 0);
+    }
+    ASSERT(xn > 0);
+    ASSERT(xn <= len);
+    ASSERT(x[xn - 1] != 0);
+    return xn;
+}
+
+static inline slong ui_product_one(ulong * terms)
+{
+    terms[0] = 1;
+    return 0;
+}
+
+static inline slong ui_product_push(ulong * terms, slong top, ulong b)
+{
+    ulong hi, lo;
+    umul_ppmm(hi, lo, terms[top], b);
+    if (hi == 0)
+        terms[top] = lo;
+    else
+        terms[++top] = b;
+    return top;
+}
+
 void _ui_factor_get_mpz(
     mpz_t x,
     const ui_factor_t f,
     ui_factor_t t)  /* need temp space to clobber instead of f */
 {
-    ulong fi, ti, tj;
+    ulong i, fi, ti, tj;
     ulong tn, fn = f->length;
     ui_factor_entry * td;
     const ui_factor_entry * fd = f->data;
     ulong b, p;
-    mp_limb_t * xd;
-    mp_size_t xn;
-    mp_limb_t * zd;
-    mp_size_t zn;
     mpz_t z;
-    mpz_t y[FLINT_BITS + 1];
-    mp_size_t l;
-    slong i;
+    mp_limb_t * xd, * zd, * yd[FLINT_BITS];
+    slong xn, zn, yn[FLINT_BITS];
+    slong l;
     mp_limb_t out;
     slong top;
     ulong * terms;
@@ -490,28 +634,30 @@ void _ui_factor_get_mpz(
         b = fd[fi].base;
         p = fd[fi].pow;
 
-        if (p % 2)
-            top = ui_product_push(terms, top, b);
-
-        p = p/2;
-        if (p > 0)
+        if (p > 1)
         {
             td[tj].base = b;
-            td[tj].pow = p;
+            td[tj].pow = p/2;
             tj++;
         }
+
+        if (p % 2)
+            top = ui_product_push(terms, top, b);
     }
     tn = tj;
 
     /* TODO memory manage z and the y's better, hopefully in one chunk */
     mpz_init(z);
-    for (i = 0; i <= FLINT_BITS; i++)
-        mpz_init(y[i]);
+    for (i = 0; i < FLINT_BITS; i++)
+        yd[i] = NULL;
 
     i = 0;
-    y[i]->_mp_size = ui_product_get_mpn(
-                        flint_mpz_fit_length(y[i], 3*(top + 1)), terms, top + 1, 1);
-    l = y[i]->_mp_size;
+    top++;
+    yd[i] = TMP_ARRAY_ALLOC(top + 1, mp_limb_t);
+    yn[i] = ui_product_get_mpn(yd[i], terms, top, 1,
+                               flint_mpz_fit_length(x, top + 1),
+                               flint_mpz_fit_length(z, top + 1));
+    l = yn[i];
 
     while (tn > 0)
     {
@@ -521,24 +667,26 @@ void _ui_factor_get_mpz(
         {
             b = td[ti].base;
             p = td[ti].pow;
-
-            if (p % 2)
-                top = ui_product_push(terms, top, b);
-
-            p = p/2;
             if (p > 0)
             {
                 td[tj].base = b;
-                td[tj].pow = p;
+                td[tj].pow = p/2;
                 tj++;
             }
+
+            if (p % 2)
+                top = ui_product_push(terms, top, b);
         }
         tn = tj;
 
         i++;
-        y[i]->_mp_size = ui_product_get_mpn(
-                        flint_mpz_fit_length(y[i], 3*(top + 1)), terms, top + 1, 1);
-        l += y[i]->_mp_size << i;
+        ASSERT(i < FLINT_BITS);
+        top++;
+        yd[i] = TMP_ARRAY_ALLOC(top + 1, mp_limb_t);
+        yn[i] = ui_product_get_mpn(yd[i], terms, top, 1,
+                                   flint_mpz_fit_length(x, top + 1),
+                                   flint_mpz_fit_length(z, top + 1));
+        l += yn[i] << i;
     }
 
     if (i > 0)
@@ -546,22 +694,20 @@ void _ui_factor_get_mpz(
         xd = flint_mpz_fit_length(x, l);
         zd = flint_mpz_fit_length(z, l);
 
-        zn = 2*y[i]->_mp_size;
-        mpn_sqr(zd, y[i]->_mp_d, y[i]->_mp_size);
+        zn = 2*yn[i];
+        mpn_sqr(zd, yd[i], yn[i]);
         zn -= (zd[zn - 1] == 0);
 
         while (1)
         {
             i--;
-            xn = zn + y[i]->_mp_size;
-            out = (zn >= y[i]->_mp_size) ?
-                    mpn_mul(xd, zd, zn, y[i]->_mp_d, y[i]->_mp_size) :
-                    mpn_mul(xd, y[i]->_mp_d, y[i]->_mp_size, zd, zn);
+            ASSERT(zn + yn[i] <= l);
+            xn = zn + yn[i];
+            out = (zn >= yn[i]) ? mpn_mul(xd, zd, zn, yd[i], yn[i]) :
+                                  mpn_mul(xd, yd[i], yn[i], zd, zn);
             xn -= (out == 0);
 
-            ASSERT(xn <= l);
-
-            if (i <= 0)
+            if (i < 1)
                 break;
 
             mpn_sqr(zd, xd, xn);
@@ -572,16 +718,16 @@ void _ui_factor_get_mpz(
     }
     else
     {
-        ASSERT(i == 0);
-        mpz_set(x, y[i]);
+        xd = flint_mpz_fit_length(x, yn[0]);
+        flint_mpn_copyi(xd, yd[0], yn[0]);
+        x->_mp_size = yn[0];
     }
 
     mpz_clear(z);
-    for (i = 0; i <= FLINT_BITS; i++)
-        mpz_clear(y[i]);
 
     TMP_END;
 }
+
 
 ulong ui_factor_get_mpz_2exp(mpz_t x, const ui_factor_t f)
 {
@@ -593,9 +739,8 @@ ulong ui_factor_get_mpz_2exp(mpz_t x, const ui_factor_t f)
     return _ui_factor_get_2exp(f);
 }
 
-ulong ui_factor_get_fmpz_2exp(
-    fmpz_t x,
-    const ui_factor_t f)
+/* x*2^e = f */
+ulong ui_factor_get_fmpz_2exp(fmpz_t x, const ui_factor_t f)
 {
     ulong e = ui_factor_get_mpz_2exp(_fmpz_promote(x), f);
     _fmpz_demote_val(x);
@@ -628,17 +773,17 @@ int ui_factor_equal_mpz(const ui_factor_t f, const mpz_t x)
     return res;
 }
 
-// (f, g) = (f, g)/gcd(f, g)
+/* (f, g) = (f, g)/gcd(f, g) */
 void ui_factor_remove_gcd(ui_factor_t f, ui_factor_t g)
 {
-    ASSERT(ui_factor_is_canonical(f));
-    ASSERT(ui_factor_is_canonical(g));
-
     ulong fi, gi, fj, gj;
     ulong fn = f->length;
     ulong gn = g->length;
     ui_factor_entry * fd = f->data;
     ui_factor_entry * gd = g->data;
+
+    ASSERT(ui_factor_is_canonical(f));
+    ASSERT(ui_factor_is_canonical(g));
 
     fi = gi = 0;
     fj = gj = 0;
@@ -786,6 +931,7 @@ void ui_factor_mulpow_inplace(ui_factor_t f, const ui_factor_t g, ulong p)
     ulong gn = g->length;
     ulong gi;
     ulong fi = 0;
+
     for (gi = 0; gi < gn; gi++)
     {
         while (1)
@@ -818,8 +964,8 @@ void ui_factor_mulpow_inplace(ui_factor_t f, const ui_factor_t g, ulong p)
             t2.pow = p*gd[gi].pow;
             for (ulong i = fi; i <= fn; i++)
             {
-                t1 = fd[fi];
-                fd[fi] = t2;
+                t1 = fd[i];
+                fd[i] = t2;
                 t2 = t1;
             }
             fn++;
@@ -834,8 +980,11 @@ void ui_factor_mulpow_inplace(ui_factor_t f, const ui_factor_t g, ulong p)
     }
 }
 
-static void _ui_factor_sort_terms(ui_factor_entry * a,
-                        slong length, ulong posmask, ulong totalmask)
+static void _ui_factor_sort_terms(
+    ui_factor_entry * a,
+    slong length,
+    ulong posmask,
+    ulong totalmask)
 {
     slong cur, mid;
 
@@ -860,18 +1009,14 @@ static void _ui_factor_sort_terms(ui_factor_entry * a,
     {
         posmask >>= 1;
         if (posmask != 0)
-        {
             _ui_factor_sort_terms(a, length, posmask, totalmask);
-        }
 
         return;
     }
 
     mid = 0;
     while (mid < length && (a[mid].base & posmask) == 0)
-    {
         mid++;
-    }
 
     cur = mid;
     while (++cur < length)
@@ -957,71 +1102,11 @@ void ui_factor_canonicalise(ui_factor_t f)
     f->length = j;
 }
 
-mp_size_t flint_mpn_mul_11(mp_limb_t * y, const mp_limb_t * x, mp_size_t n, mp_limb_t a1, mp_limb_t a2)
-{
-    mp_limb_t hi, lo;
-
-    umul_ppmm(hi, lo, a1, a2);
-    if (hi == 0)
-    {
-        y[n] = mpn_mul_1(y, x, n, lo); n += (y[n] != 0);
-        return n;
-    }
-
-    y[n] = mpn_mul_1(y, x, n, a1); n += (y[n] != 0);
-    y[n] = mpn_mul_1(y, y, n, a2); n += (y[n] != 0);
-    return n;
-}
-
-
-mp_size_t flint_mpn_mul_111(mp_limb_t * y, const mp_limb_t * x, mp_size_t n, mp_limb_t a1, mp_limb_t a2, mp_limb_t a3)
-{
-    mp_limb_t hi, lo, p1, p2;
-
-    umul_ppmm(hi, lo, a1, a2);
-    if (hi == 0)
-    {
-        p1 = lo;
-        umul_ppmm(hi, lo, p1, a3);
-        if (hi == 0)
-        {
-            y[n] = mpn_mul_1(y, x, n, lo); n += (y[n] != 0);
-            return n;
-        }
-        p2 = a3;
-        goto do_two;
-    }
-
-    umul_ppmm(hi, lo, a1, a3);
-    if (hi == 0)
-    {
-        p1 = lo;
-        p2 = a2;
-        goto do_two;
-    }
-
-    umul_ppmm(hi, lo, a2, a3);
-    if (hi == 0)
-    {
-        p1 = lo;
-        p2 = a1;
-        goto do_two;
-    }    
-
-    y[n] = mpn_mul_1(y, x, n, a1); n += (y[n] != 0);
-    y[n] = mpn_mul_1(y, y, n, a2); n += (y[n] != 0);
-    y[n] = mpn_mul_1(y, y, n, a3); n += (y[n] != 0);
-    return n;
-
-do_two:
-
-    y[n] = mpn_mul_1(y, x, n, p1); n += (y[n] != 0);
-    y[n] = mpn_mul_1(y, y, n, p2); n += (y[n] != 0);
-    return n;
-}
 
 /**************************** start pi stuff *********************************/
-/* my result (ON CURRENT BOX!!!):
+/*
+TODO: why the two-threaded diff column doesn't match the one-threaded column?
+possible result on a x86 box:
 virt/peak/res/peak(MB): 21.12 336.54 6.35 272.19
 ****** one thread ********
 prec      1024: here      1, arb      1, ratio 1.00    diff*2^prec: 0.35767 +/- 3.1035
@@ -1061,9 +1146,49 @@ prec  16777216: here    760, arb   1770, ratio 2.33    diff*2^prec: 0.7042 +/- 2
 prec  33554432: here   1801, arb   4229, ratio 2.35    diff*2^prec: 0.51755 +/- 2.3609
 prec  67108864: here   4146, arb  10081, ratio 2.43    diff*2^prec: 0.64759 +/- 2.0933
 prec 134217728: here   9538, arb  23622, ratio 2.48    diff*2^prec: 0.71221 +/- 2.3141
-*/
 
-/* timing break down in ms for the 10^6 digit computation (ON AN OLD BOX!!!):
+possible result on an arm box:
+****** one thread ********
+prec      1024: here      1, arb      1, ratio 1.00    diff*2^prec: 0.35767 +/- 3.1035
+prec      2048: here      1, arb      1, ratio 1.00    diff*2^prec: -0.20294 +/- 3.6166
+prec      4096: here      1, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 3.1691
+prec      8192: here      1, arb      1, ratio 1.00    diff*2^prec: 0.39326 +/- 2.4516
+prec     16384: here      1, arb      1, ratio 1.00    diff*2^prec: 0.14836 +/- 2.3905
+prec     32768: here      1, arb      2, ratio 2.00    diff*2^prec: 0.53247 +/- 2.1235
+prec     65536: here      4, arb      5, ratio 1.25    diff*2^prec: 0.19283 +/- 2.234
+prec    131072: here      7, arb      9, ratio 1.29    diff*2^prec: 0.88084 +/- 2.1784
+prec    262144: here     12, arb     15, ratio 1.25    diff*2^prec: 0.31244 +/- 2.3353
+prec    524288: here     19, arb     22, ratio 1.16    diff*2^prec: 0.15431 +/- 2.3108
+prec   1048576: here     36, arb     54, ratio 1.50    diff*2^prec: 0.059249 +/- 2.2084
+prec   2097152: here     87, arb    128, ratio 1.47    diff*2^prec: 0.14183 +/- 2.3491
+prec   4194304: here    208, arb    315, ratio 1.51    diff*2^prec: -0.054642 +/- 2.1233
+prec   8388608: here    499, arb    749, ratio 1.50    diff*2^prec: 0.64171 +/- 2.0171
+prec  16777216: here   1177, arb   1763, ratio 1.50    diff*2^prec: 0.7042 +/- 2.1601
+prec  33554432: here   2819, arb   4311, ratio 1.53    diff*2^prec: 1.0175 +/- 2.13
+prec  67108864: here   6787, arb  10487, ratio 1.55    diff*2^prec: 0.64759 +/- 2.0933
+prec 134217728: here  15413, arb  24378, ratio 1.58    diff*2^prec: 0.21221 +/- 2.1246
+****** two threads *******
+prec      1024: here      1, arb      1, ratio 1.00    diff*2^prec: 0.85767 +/- 2.4476
+prec      2048: here      1, arb      1, ratio 1.00    diff*2^prec: 0.29706 +/- 2.3662
+prec      4096: here      1, arb      1, ratio 1.00    diff*2^prec: 0.8522 +/- 2.1024
+prec      8192: here      1, arb      1, ratio 1.00    diff*2^prec: 0.39326 +/- 2.2593
+prec     16384: here      1, arb      1, ratio 1.00    diff*2^prec: 0.64836 +/- 2.2141
+prec     32768: here      1, arb      1, ratio 1.00    diff*2^prec: 0.032475 +/- 2.0377
+prec     65536: here      2, arb      2, ratio 1.00    diff*2^prec: 0.19283 +/- 2.2527
+prec    131072: here      3, arb      3, ratio 1.00    diff*2^prec: 0.38084 +/- 2.1352
+prec    262144: here      6, arb     10, ratio 1.67    diff*2^prec: 0.31244 +/- 2.3356
+prec    524288: here     11, arb     26, ratio 2.36    diff*2^prec: 0.15431 +/- 2.1656
+prec   1048576: here     27, arb     57, ratio 2.11    diff*2^prec: 0.55925 +/- 2.461
+prec   2097152: here     63, arb    134, ratio 2.13    diff*2^prec: 0.14183 +/- 2.3491
+prec   4194304: here    148, arb    318, ratio 2.15    diff*2^prec: 0.94536 +/- 2.278
+prec   8388608: here    347, arb    749, ratio 2.16    diff*2^prec: 1.1417 +/- 2.279
+prec  16777216: here    808, arb   1769, ratio 2.19    diff*2^prec: 0.7042 +/- 2.1601
+prec  33554432: here   1910, arb   4307, ratio 2.25    diff*2^prec: 0.51755 +/- 2.3609
+prec  67108864: here   4553, arb  10529, ratio 2.31    diff*2^prec: 0.64759 +/- 2.0933
+prec 134217728: here  10155, arb  24374, ratio 2.40    diff*2^prec: 0.71221 +/- 2.3141
+
+
+timing breakdown in ms for the 10^6 digit computation on a different box:
     485ms total
      = 53ms basecase
      + 269ms fold
@@ -1085,8 +1210,8 @@ static void pi_sum_basecase(
     const ui_factor_t mult)
 {
     mp_limb_t out, a[2];
-    mp_size_t p_n, s_n;
-    mp_limb_t * p_d, * s_d;
+    slong pn, sn;
+    mp_limb_t * pd, * sd;
     ulong j;
 
     ASSERT(1 <= start);
@@ -1095,128 +1220,70 @@ static void pi_sum_basecase(
     /* good guesses on how big things will get */
     ui_factor_fit_length(r, 8*(stop - start + 1));
     ui_factor_fit_length(q, 4*(stop - start + 1));
-    p_d = flint_mpz_fit_length(p, 2*(stop - start) + 20);
-    s_d = flint_mpz_fit_length(s, 1*(stop - start) + 10);
+    pd = flint_mpz_fit_length(p, 2*(stop - start) + 20);
+    sd = flint_mpz_fit_length(s, 1*(stop - start) + 10);
 
     ui_factor_one(r);
     ui_factor_one(q);
 
     j = start;
 
-    // q = j;
+    /* q = j; */
     ui_factor_push_ui(q, j, siever);
 
-    // r = s = (2*j-1)*(6*j-1)*(6*j-5), s will be expanded form of r
+    /* r = s = (2*j-1)*(6*j-1)*(6*j-5), s will be expanded form of r */
     ui_factor_push_ui(r, 2*j-1, siever);
     ui_factor_push_ui(r, 6*j-1, siever);
     ui_factor_push_ui(r, 6*j-5, siever);
 
-    s_d[0] = 6*j-1;
-    s_n = flint_mpn_mul_11(s_d, s_d, 1, 6*j-5, 2*j-1);
+    sd[0] = 6*j-1;
+    sn = flint_mpn_mul_11(sd, sd, 1, 6*j-5, 2*j-1);
 
-    // a = 13591409 + 545140134*j
-    umul_ppmm(a[1], a[0], j, 545140134);
-    add_ssaaaa(a[1], a[0], a[1], a[0], 0, 13591409);
+    /* a = 13591409 + 545140134*j */
+    umul_ppmm(a[1], a[0], j, UWORD(545140134));
+    add_ssaaaa(a[1], a[0], a[1], a[0], UWORD(0), UWORD(13591409));
 
-    // p = s*a
-    if (a[1] == 0)
-    {
-        p_d[s_n] = mpn_mul_1(p_d, s_d, s_n, a[0]);
-        p_n = s_n + (p_d[s_n] != 0);
-    }
-    else
-    {
-        out = mpn_mul_1(p_d + 1, s_d, s_n, a[1]);
-        p_d[s_n + 1] = out;
-        p_n = s_n + 1 + (out != 0);
-
-        out = mpn_addmul_1(p_d, s_d, s_n, a[0]);
-        if (out != 0)
-            out = mpn_add_1(p_d + s_n, p_d + s_n, p_n - s_n, out);
-        p_d[p_n] = out;
-        p_n += (out != 0);
-    }
+    /* p = s*a */
+    pn = flint_mpn_mul_2(pd, sd, sn, a[1], a[0]);
 
     for (++j; j <= stop; ++j)
     {
-        // q *= j
+        /* q *= j */
         ui_factor_push_ui(q, j, siever);
 
-        // r, s *= (2*j-1)*(6*j-1)*(6*j-5)
+        /* r, s *= (2*j-1)*(6*j-1)*(6*j-5) */
         ui_factor_push_ui(r, 2*j-1, siever);
         ui_factor_push_ui(r, 6*j-5, siever);
         ui_factor_push_ui(r, 6*j-1, siever);
-        s_n = flint_mpn_mul_111(s_d, s_d, s_n, 2*j-1, 6*j-5, 6*j-1);
+        sn = flint_mpn_mul_111(sd, sd, sn, 2*j-1, 6*j-5, 6*j-1);
 
-        // p *= 10939058860032000*j^3
-        p_n = flint_mpn_mul_111(p_d, p_d, p_n, j, j, j);
+        /* p *= 10939058860032000*j^3 */
+        pn = flint_mpn_mul_111(pd, pd, pn, j, j, j);
         if (FLINT_BITS == 64)
         {
-            p_d[p_n] = mpn_mul_1(p_d, p_d, p_n, UWORD(10939058860032000)); p_n += (p_d[p_n] != 0);
+            pd[pn] = mpn_mul_1(pd, pd, pn, UWORD(10939058860032000)); pn += (pd[pn] != 0);
         }
         else
         {
-            p_d[p_n] = mpn_mul_1(p_d, p_d, p_n, 296740963); p_n += (p_d[p_n] != 0);
-            p_d[p_n] = mpn_mul_1(p_d, p_d, p_n, 36864000); p_n += (p_d[p_n] != 0);
+            pd[pn] = mpn_mul_1(pd, pd, pn, UWORD(296740963)); pn += (pd[pn] != 0);
+            pd[pn] = mpn_mul_1(pd, pd, pn, UWORD(36864000)); pn += (pd[pn] != 0);
         }
 
-        // a = 13591409 + 545140134*j
-        add_ssaaaa(a[1], a[0], a[1], a[0], 0, 545140134);
+        /* a = 13591409 + 545140134*j */
+        add_ssaaaa(a[1], a[0], a[1], a[0], UWORD(0), UWORD(545140134));
 
-        // p +-= s*a
-        ASSERT(p_n >= s_n);
+        /* p +-= s*a */
         if ((j & 1) ^ (start & 1))
-        {
-            if (a[1] != 0)
-            {
-                out = mpn_submul_1(p_d + 1, s_d, s_n, a[1]);
-                if (p_n > s_n + 1 && out != 0)
-                    out = mpn_sub_1(p_d + (s_n + 1), p_d + (s_n + 1), p_n - (s_n + 1), out);
-                ASSERT(out == 0);
-                while (p_d[p_n - 1] == 0)
-                {
-                    ASSERT(p_n > 0);
-                    p_n--;
-                }
-            }
-
-            ASSERT(p_n >= s_n);
-
-            out = mpn_submul_1(p_d, s_d, s_n, a[0]);
-            if (p_n > s_n && out != 0)
-                out = mpn_sub_1(p_d + s_n, p_d + s_n, p_n - s_n, out);
-            ASSERT(out == 0);
-            while (p_d[p_n - 1] == 0)
-            {
-                ASSERT(p_n > 0);
-                p_n--;
-            }
-        }
+            pn = flint_mpn_submul_2(pd, pn, sd, sn, a[1], a[0]);
         else
-        {
-            out = mpn_addmul_1(p_d, s_d, s_n, a[0]);
-            if (p_n > s_n && out != 0)
-                out = mpn_add_1(p_d + s_n, p_d + s_n, p_n - s_n, out);
-            p_d[p_n] = out;
-            p_n += (out != 0);
+            pn = flint_mpn_addmul_2(pd, pn, sd, sn, a[1], a[0]);
 
-            if (a[1] != 0)
-            {
-                ASSERT(p_n >= s_n + 1);                
-                out = mpn_addmul_1(p_d + 1, s_d, s_n, a[1]);
-                if (p_n > s_n + 1 && out != 0)
-                    out = mpn_add_1(p_d + s_n + 1, p_d + s_n + 1, p_n - (s_n + 1), out);
-                p_d[p_n] = out;
-                p_n += (out != 0);
-            }
-        }
-
-        s_d = flint_mpz_fit_length(s, s_n + 3);
-        p_d = flint_mpz_fit_length(p, p_n + 4);
+        sd = flint_mpz_fit_length(s, sn + 3);
+        pd = flint_mpz_fit_length(p, pn + 4);
     }
 
-    s->_mp_size = s_n;
-    p->_mp_size = (start & 1) ? -p_n : p_n;
+    s->_mp_size = sn;
+    p->_mp_size = (start & 1) ? -pn : pn;
 
     ui_factor_canonicalise(q);
     ui_factor_pow_inplace(q, 3);
@@ -1227,7 +1294,8 @@ static void pi_sum_basecase(
     ASSERT(ui_factor_equal_mpz(r, s));
 }
 
-// (p1, r1, q1) = (p1*q2 + r1*p2, r1*r2, q1*q2) / gcd(r1, q2)
+
+/* (p1, r1, q1) = (p1*q2 + r1*p2, r1*r2, q1*q2) / gcd(r1, q2) */
 static void fold(
     mpz_t p1, ui_factor_t r1, ui_factor_t q1,
     mpz_t p2, ui_factor_t r2, ui_factor_t q2,
@@ -1240,8 +1308,7 @@ static void fold(
 
     ui_factor_remove_gcd(r1, q2);
 
-    // p1 = p1*q2 + r1*p2
-
+    /* p1 = p1*q2 + r1*p2 */
     _ui_factor_get_mpz(t2, q2, s);
     mpz_mul(t1, p1, t2);
     _ui_factor_get_mpz(t2, r1, s);
@@ -1255,19 +1322,19 @@ static void fold(
     mpz_add(p1, p1, t1);
     mpz_mul_2exp(p1, p1, FLINT_MIN(r1e, q2e));
 
-    // q1 = q1*q2
+    /* q1 = q1*q2 */
     ui_factor_mul(s, q1, q2);
     ui_factor_swap(q1, s);
 
     if (needr)
     {
-        // r1 = r1*r2
+        /* r1 = r1*r2 */
         ui_factor_mul(s, r1, r2);
         ui_factor_swap(r1, s);
     }
 }
 
-// Set (p, r, q) = sum of terms in [start,stop] inclusive.
+/* Set (p, r, q) = sum of terms in [start,stop] inclusive. */
 static void pi_sum_split(
     mpz_t p, ui_factor_t r, ui_factor_t q,
     ulong start, ulong stop,
@@ -1565,9 +1632,9 @@ void compare_pi(slong prec)
 }
 
 
-int main(int i, char * b)
+int main(int i, char ** b)
 {
-    if (1)
+    if (0)
     {
         arb_t u;
         arb_init(u);
@@ -1587,4 +1654,3 @@ int main(int i, char * b)
 
     flint_cleanup_master();
 }
-
