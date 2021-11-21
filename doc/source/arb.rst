@@ -1580,17 +1580,21 @@ Other special functions
     is described in detail in [Joh2015]_.
 
 .. function:: void arb_euler_number_fmpz(arb_t res, const fmpz_t n, slong prec)
+              void arb_euler_number_ui(arb_t res, ulong n, slong prec)
 
-.. function:: void arb_euler_number_ui(arb_t res, ulong n, slong prec)
-
-    Sets *res* to the Euler number `E_n`, which is defined by having
+    Sets *res* to the Euler number `E_n`, which is defined by
     the exponential generating function `1 / \cosh(x)`.
+    The result will be exact if `E_n` is exactly representable
+    at the requested precision.
 
-    The Euler product for the Dirichlet beta function
-    (:func:`_acb_dirichlet_euler_product_real_ui`) is used to compute
-    a numerical approximation. If *prec* is more than enough to represent
-    the result exactly, the exact value is automatically determined
-    from a lower-precision approximation.
+.. function:: void arb_fmpz_euler_number_ui_multi_mod(fmpz_t res, ulong n, double alpha)
+              void arb_fmpz_euler_number_ui(fmpz_t res, ulong n)
+
+    Computes the Euler number `E_n` as an exact integer. The default
+    algorithm uses a table lookup, the Dirichlet beta function or a
+    hybrid modular algorithm depending on the size of *n*.
+    The *multi_mod* algorithm accepts a tuning parameter *alpha* which
+    can be set to a negative value to use defaults.
 
 .. function:: void arb_partitions_fmpz(arb_t res, const fmpz_t n, slong prec)
 

@@ -70,7 +70,7 @@ int main()
             arb_euler_number_fmpz(b2, n, prec2);
         }
 
-        if (fmpz_cmp_ui(n, 100) < 0)
+        if (fmpz_cmp_ui(n, 300) < 0)
         {
             arith_euler_number(bv, fmpz_get_ui(n));
         }
@@ -110,4 +110,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-

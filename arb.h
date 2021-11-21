@@ -607,6 +607,8 @@ void arb_bell_ui(arb_t res, ulong n, slong prec);
 
 void arb_euler_number_fmpz(arb_t res, const fmpz_t n, slong prec);
 void arb_euler_number_ui(arb_t res, ulong n, slong prec);
+void arb_fmpz_euler_number_ui_multi_mod(fmpz_t res, ulong n, double alpha);
+void arb_fmpz_euler_number_ui(fmpz_t res, ulong n);
 
 void arb_partitions_fmpz(arb_t res, const fmpz_t n, slong prec);
 void arb_partitions_ui(arb_t res, ulong n, slong prec);
