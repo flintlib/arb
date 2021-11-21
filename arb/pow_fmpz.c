@@ -25,24 +25,3 @@ arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
     arb_pow_fmpz(y, b, f, prec);
     fmpz_clear(f);
 }
-
-void
-arb_ui_pow_ui(arb_t y, ulong b, ulong e, slong prec)
-{
-    arb_t t;
-    arb_init(t);
-    arb_set_ui(t, b);
-    arb_pow_ui(y, t, e, prec);
-    arb_clear(t);
-}
-
-void
-arb_si_pow_ui(arb_t y, slong b, ulong e, slong prec)
-{
-    arb_t t;
-    arb_init(t);
-    arb_set_si(t, b);
-    arb_pow_ui(y, t, e, prec);
-    arb_clear(t);
-}
-
