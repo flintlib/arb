@@ -640,8 +640,6 @@ arb_fmpz_euler_number_ui(fmpz_t res, ulong n)
     arb_t x;
     double mag;
 
-    mag = arb_euler_number_mag(n);
-
     if (n % 2 != 0)
     {
         fmpz_zero(res);
@@ -659,6 +657,8 @@ arb_fmpz_euler_number_ui(fmpz_t res, ulong n)
 
     if (n < 2000)
     {
+        mag = arb_euler_number_mag(n);
+
         arb_init(x);
         arb_euler_number_ui_beta(x, n, mag + 5);
         if (!arb_get_unique_fmpz(res, x))
