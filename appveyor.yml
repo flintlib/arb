@@ -26,8 +26,8 @@ environment:
       ARCH: 64
     - COMPILER: gcc
       ARCH: 32
-    - COMPILER: cl
-      ARCH: 32
+#    - COMPILER: cl
+#      ARCH: 32
 
 install:
   - if [%COMPILER%]==[gcc] set "PATH=C:\msys64\mingw%ARCH%\bin;%PATH%"
