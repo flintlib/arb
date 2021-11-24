@@ -17,7 +17,7 @@ Author: Fredrik Johansson <fredrik.johansson@gmail.com>
 Bug reports, feature requests and other comments are welcome
 in private communication, on the GitHub issue tracker, or on the FLINT mailing list <flint-devel@googlegroups.com>.
 
-[![Build Status](https://travis-ci.org/fredrik-johansson/arb.svg?branch=master)](https://travis-ci.org/fredrik-johansson/arb)
+[![Build status](https://ci.appveyor.com/api/projects/status/r9bmee3ab3bb7xig?svg=true)](https://ci.appveyor.com/project/fredrik-johansson/arb)
 
 ## Code example
 
