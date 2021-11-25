@@ -378,13 +378,13 @@ Powers and logarithms
 
 .. function:: void mag_pow_fmpz(mag_t res, const mag_t x, const fmpz_t e)
 
-    Sets *res* to an upper bound for `x^e`. Requires `e \ge 0`.
+    Sets *res* to an upper bound for `x^e`.
 
 .. function:: void mag_pow_ui_lower(mag_t res, const mag_t x, ulong e)
 
 .. function:: void mag_pow_fmpz_lower(mag_t res, const mag_t x, const fmpz_t e)
 
-    Sets *res* to a lower bound for `x^e`. Requires `e \ge 0`.
+    Sets *res* to a lower bound for `x^e`.
 
 .. function:: void mag_sqrt(mag_t res, const mag_t x)
 

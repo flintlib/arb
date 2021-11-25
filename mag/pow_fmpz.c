@@ -16,7 +16,12 @@ mag_pow_fmpz(mag_t z, const mag_t x, const fmpz_t e)
 {
     if (fmpz_sgn(e) < 0)
     {
-        flint_abort();
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_neg(t, e);
+        mag_inv(z, x);
+        mag_pow_fmpz(z, z, t);
+        fmpz_clear(t);
     }
     else if (!COEFF_IS_MPZ(*e))
     {
@@ -50,7 +55,12 @@ mag_pow_fmpz_lower(mag_t z, const mag_t x, const fmpz_t e)
 {
     if (fmpz_sgn(e) < 0)
     {
-        flint_abort();
+        fmpz_t t;
+        fmpz_init(t);
+        fmpz_neg(t, e);
+        mag_inv_lower(z, x);
+        mag_pow_fmpz_lower(z, z, t);
+        fmpz_clear(t);
     }
     else if (!COEFF_IS_MPZ(*e))
     {

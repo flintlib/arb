@@ -38,7 +38,6 @@ int main()
         mag_randtest_special(xb, state, 80);
         mag_randtest_special(yb, state, 80);
         fmpz_randtest(e, state, 200);
-        fmpz_abs(e, e);
 
         mag_get_fmpr(x, xb);
 

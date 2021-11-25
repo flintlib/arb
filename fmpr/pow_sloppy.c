@@ -35,6 +35,7 @@ fmpr_pow_sloppy_fmpz(fmpr_t y, const fmpr_t b, const fmpz_t e,
             ? FMPR_RND_UP : FMPR_RND_DOWN);
         fmpr_ui_div(y, UWORD(1), y, prec, rnd);
         fmpz_clear(f);
+        return;
     }
 
     if (y == b)
