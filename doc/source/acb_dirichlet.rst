@@ -541,6 +541,13 @@ Dirichlet L-functions
 
     Computes `L(s,\chi)` using a default choice of algorithm.
 
+.. function:: void acb_dirichlet_l_fmpq(acb_t res, const fmpq_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+              void acb_dirichlet_l_fmpq_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec)
+
+    Computes `L(s,\chi)` where *s* is a rational number.
+    The *afe* version uses the approximate functional equation;
+    the default version chooses an algorithm automatically.
+
 .. function:: void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet_hurwitz_precomp_t precomp, const dirichlet_group_t G, slong prec)
 
     Compute all values `L(s,\chi)` for `\chi` mod `q`, using the

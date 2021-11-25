@@ -285,6 +285,42 @@ Incomplete gamma and beta functions
     The underscore method requires positive lengths and does not support
     aliasing.
 
+Internal evaluation functions
+................................................................................
+
+.. function:: slong _arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_t z, const mag_t abs_tol)
+
+    Returns number of terms *N* and sets *err* to the truncation error for evaluating
+    `\Gamma(a,z)` using the asymptotic series at infinity, targeting an absolute
+    tolerance of *abs_tol*. The error may be set to *err* if the tolerance
+    cannot be achieved. Assumes that *z* is positive.
+
+.. function:: void _arb_hypgeom_gamma_upper_fmpq_inf_bsplit(arb_t res, const fmpq_t a, const arb_t z, slong N, slong prec)
+
+    Sets *res* to the approximation of `\Gamma(a,z)` obtained by truncating
+    the asymptotic series at infinity before term *N*.
+    The truncation error bound has to be added separately.
+
+.. function:: slong _arb_hypgeom_gamma_lower_fmpq_0_choose_N(mag_t err, const fmpq_t a, const arb_t z, const mag_t abs_tol)
+
+    Returns number of terms *N* and sets *err* to the truncation error for evaluating
+    `\gamma(a,z)` using the Taylor series at zero, targeting an absolute
+    tolerance of *abs_tol*. Assumes that *z* is positive.
+
+.. function:: void _arb_hypgeom_gamma_lower_fmpq_0_bsplit(arb_t res, const fmpq_t a, const arb_t z, slong N, slong prec)
+
+    Sets *res* to the approximation of `\gamma(a,z)` obtained by truncating
+    the Taylor series at zero before term *N*.
+    The truncation error bound has to be added separately.
+
+.. function:: void _arb_gamma_upper_fmpq_step_bsplit(arb_t Gz1, const fmpq_t a, const arb_t z0, const arb_t z1, const arb_t Gz0, const arb_t expmz0, const mag_t abs_tol, slong prec)
+
+    Given *Gz0* and *expmz0* representing the values `\Gamma(a,z_0)` and `\exp(-z_0)`,
+    computes `\Gamma(a,z_1)` using the Taylor series at `z_0` evaluated
+    using binary splitting,
+    targeting an absolute error of *abs_tol*.
+    Assumes that `z_0` and `z_1` are positive.
+
 Exponential and trigonometric integrals
 -------------------------------------------------------------------------------
 

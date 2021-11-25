@@ -145,6 +145,9 @@ void acb_dirichlet_l_vec_hurwitz(acb_ptr res, const acb_t s, const acb_dirichlet
 
 void acb_dirichlet_l_jet(acb_ptr res, const acb_t s, const dirichlet_group_t G, const dirichlet_char_t chi, int deflate, slong len, slong prec);
 
+void acb_dirichlet_l_fmpq_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
+void acb_dirichlet_l_fmpq(acb_t res, const fmpq_t s, const dirichlet_group_t G, const dirichlet_char_t chi, slong prec);
+
 void _acb_dirichlet_l_series(acb_ptr res, acb_srcptr s, slong slen,
     const dirichlet_group_t G, const dirichlet_char_t chi,
     int deflate, slong len, slong prec);
