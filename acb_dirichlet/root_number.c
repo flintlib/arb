@@ -24,6 +24,9 @@ acb_dirichlet_root_number_theta(acb_t res, const dirichlet_group_t G, const diri
     acb_conj(eps, res);
     acb_div(res, res, eps, prec);
 
+    if (dirichlet_char_is_real(G, chi))
+        arb_zero(acb_imagref(res));
+
     arb_clear(x);
     acb_clear(eps);
 }
@@ -49,4 +52,7 @@ acb_dirichlet_root_number(acb_t res, const dirichlet_group_t G, const dirichlet_
     {
         acb_dirichlet_root_number_theta(res, G, chi, prec);
     }
+
+    if (dirichlet_char_is_real(G, chi))
+        arb_zero(acb_imagref(res));
 }
