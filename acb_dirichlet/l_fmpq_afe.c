@@ -135,13 +135,12 @@ acb_dirichlet_fmpq_sum_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G,
     arb_t ns, t, u, v, z, z0, z1, x, x2, Ga, Gz1, Gz0, expmz0, z0_prevn, Gz0_prevn, expmz0_prevn;
     acb_t c;
     fmpq_t s2;
-    int parity;
+    int parity, gamma_singular;
     ulong q;
 
     double abs_tol_mag;
     double gammainc_mag, gamma_mag, ns_mag;
     double aa, zz;
-    double cancellation;
 
 #if VERBOSE
     double t1, t2, t3;
@@ -188,7 +187,11 @@ acb_dirichlet_fmpq_sum_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G,
     /* s2 = (s+parity)/2 */
     fmpq_add_ui(s2, s, parity);
     fmpq_div_2exp(s2, s2, 1);
-    arb_gamma_fmpq(Ga, s2, gamma_cached_prec);
+
+    gamma_singular = (fmpz_is_one(fmpq_denref(s2)) && fmpz_sgn(fmpq_numref(s2)) <= 0);
+
+    if (!gamma_singular)
+        arb_gamma_fmpq(Ga, s2, gamma_cached_prec);
 
     for (n = 1; ; n += 1)
     {
@@ -222,28 +225,34 @@ acb_dirichlet_fmpq_sum_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G,
 
         /* Gamma((s+parity)/2, z)  (want lower bound, to estimate cancellation) */
         gammainc_mag = log_gamma_upper_approx(aa, zz) / log(2);
-        /* Gamma((s+parity)/2) */
-        gamma_mag = ARF_EXP(arb_midref(Ga));
         /* n^-s */
         ns_mag = -fmpq_get_d(s) * log(n) / log(2);
-        cancellation = FLINT_MAX(gamma_mag - gammainc_mag, 0);
-        cancellation = cancellation;  /* suppress warning when VERBOSE == 0 */
 
         /* Want Gamma(a,z) n^-s with abs_tol --> want Gamma(a,z) with abs_tol * n^s */
         mag_set_ui_2exp_si(abs_tol_gamma, 1, abs_tol_mag - ns_mag);
 
-        /* Precision needed sans cancellation. */
+        /* wp = Precision needed sans cancellation. */
         wp = gammainc_mag + ns_mag - abs_tol_mag + 5;
         wp = FLINT_MAX(wp, 30);
 
-        /* Precision needed with cancellation. */
-        wp2 = FLINT_MAX(gamma_mag, gammainc_mag) + ns_mag - abs_tol_mag + 5;
-        wp2 = FLINT_MAX(wp2, 30);
+        /* wp2 = Precision needed with cancellation. */
+        if (gamma_singular)
+        {
+            /* Max term is roughly n^(-s) * z^((s+parity)/2) * exp(z) */
+            wp2 = -abs_tol_mag + ns_mag + aa * log(zz) + zz / log(2) + 5;
+            wp2 = FLINT_MAX(wp2, 30);
+        }
+        else
+        {
+            /* Estimate of Gamma((s+parity)/2) */
+            gamma_mag = ARF_EXP(arb_midref(Ga));
+            wp2 = FLINT_MAX(gamma_mag, gammainc_mag) + ns_mag - abs_tol_mag + 5;
+            wp2 = FLINT_MAX(wp2, 30);
+        }
 
 #if VERBOSE
         printf("  abs_tol_gamma = "); mag_printd(abs_tol_gamma, 5); printf("\n");
         printf("  gamma(a)      = "); arb_printd(Ga, 10); printf("\n");
-        printf("  cancellation = %f\n", cancellation);
         printf("  wp = %ld   wp2 = %ld\n", wp, wp2);
 #endif
 
@@ -286,32 +295,54 @@ acb_dirichlet_fmpq_sum_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G,
             else
             {
                 /* Otherwise fallback to the series at 0. */
-                NN = _arb_hypgeom_gamma_lower_fmpq_0_choose_N(AE, s2, z0, abs_tol_gamma);
-
-#if VERBOSE
-                flint_printf("  lower series with N = %wd,  z0 = ", NN); arb_printd(z0, 10); printf("   ");
-                mag_printd(AE, 10); printf("\n");
-#endif
-
-                _arb_hypgeom_gamma_lower_fmpq_0_bsplit(Gz0, s2, z0, NN, wp2);
-                arb_add_error_mag(Gz0, AE);
-
-                while (mag_cmp(arb_radref(Ga), abs_tol_gamma) > 0)
+                if (gamma_singular)
                 {
-                    gamma_cached_prec *= 2;
-                    arb_gamma_fmpq(Ga, s2, gamma_cached_prec);
+                    slong nn;
+
+                    nn = *fmpq_numref(s2);
+
+                    if (COEFF_IS_MPZ(nn))
+                    {
+                        arb_indeterminate(Gz0);
+                    }
+                    else
+                    {
+                        nn = -nn;
+
+                        NN = _arb_hypgeom_gamma_upper_singular_si_choose_N(AE, nn, z0, abs_tol_gamma);
+                        _arb_hypgeom_gamma_upper_singular_si_bsplit(Gz0, nn, z0, NN, wp2);
+                        arb_add_error_mag(Gz0, AE);
+
+#if VERBOSE
+                        flint_printf("  singular series with N = %wd,  z0 = ", NN); arb_printd(z0, 10); printf("   ");
+                        mag_printd(AE, 10); printf("\n");
+#endif
+                    }
                 }
-
-
-#if VERBOSE
-                flint_printf("  lower series with N = %wd: ", NN); arb_printd(Gz0, 10); printf("\n");
-#endif
-
-                arb_sub(Gz0, Ga, Gz0, wp);
+                else
+                {
+                    NN = _arb_hypgeom_gamma_lower_fmpq_0_choose_N(AE, s2, z0, abs_tol_gamma);
+                    _arb_hypgeom_gamma_lower_fmpq_0_bsplit(Gz0, s2, z0, NN, wp2);
+                    arb_add_error_mag(Gz0, AE);
 
 #if VERBOSE
-                flint_printf("  G(a) - lower series: "); arb_printd(Gz0, 10); printf("\n");
+                    flint_printf("  lower series with N = %wd,  z0 = ", NN); arb_printd(z0, 10); printf("   ");
+                    mag_printd(AE, 10); printf("\n");
 #endif
+
+                    while (mag_cmp(arb_radref(Ga), abs_tol_gamma) > 0)
+                    {
+                        gamma_cached_prec *= 2;
+                        arb_gamma_fmpq(Ga, s2, gamma_cached_prec);
+                    }
+#if VERBOSE
+                    flint_printf("  lower series with N = %wd: ", NN); arb_printd(Gz0, 10); printf("\n");
+#endif
+                    arb_sub(Gz0, Ga, Gz0, wp);
+#if VERBOSE
+                    flint_printf("  G(a) - lower series: "); arb_printd(Gz0, 10); printf("\n");
+#endif
+                }
             }
         }
         else
@@ -437,17 +468,19 @@ acb_dirichlet_l_fmpq_afe(acb_t res, const fmpq_t s, const dirichlet_group_t G, c
     q = (G == NULL) ? 1 : G->q;
     parity = (G == NULL) ? 0 : dirichlet_parity_char(G, chi);
 
-    /* Limit at gamma(-n) is not implemented. */
+    /* Division by gamma((s+parity)/2) at a pole. */
     if (fmpz_is_one(fmpq_denref(s)))
     {
         const fmpz * n = fmpq_numref(s);
 
         if ((parity == 0 && fmpz_sgn(n) <= 0 && fmpz_is_even(n)) ||
-            (parity == 0 && fmpz_sgn(n) > 0 && fmpz_is_odd(n)) ||
-            (parity == 1 && fmpz_sgn(n) < 0 && fmpz_is_odd(n)) ||
-            (parity == 1 && fmpz_sgn(n) > 0 && fmpz_is_even(n)))
+            (parity == 1 && fmpz_sgn(n) < 0 && fmpz_is_odd(n)))
         {
-            acb_indeterminate(res);
+            /* Special case for zeta */
+            if (q == 1 && fmpz_is_zero(n))
+                acb_set_d(res, -0.5);
+            else
+                acb_zero(res);
             return;
         }
     }

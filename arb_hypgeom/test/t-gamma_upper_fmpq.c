@@ -141,6 +141,62 @@ int main()
         mag_clear(err2);
     }
 
+    for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
+    {
+        slong na;
+        arb_t z, r1, r2;
+        mag_t tol1, tol2, err1, err2;
+        slong N1, N2, prec1, prec2;
+
+        mag_init(tol1);
+        mag_init(tol2);
+        mag_init(err1);
+        mag_init(err2);
+
+        arb_init(z);
+        arb_init(r1);
+        arb_init(r2);
+
+        prec1 = 2 + n_randint(state, 100);
+        prec2 = 2 + n_randint(state, 100);
+
+        na = n_randint(state, 50);
+
+        arb_set_ui(z, 1 + n_randint(state, 100));
+        arb_div_ui(z, z, 1 + n_randint(state, 100), 200);
+
+        mag_set_ui_2exp_si(tol1, 1, -(slong) n_randint(state, 100));
+        mag_set_ui_2exp_si(tol2, 1, -(slong) n_randint(state, 100));
+
+        N1 = _arb_hypgeom_gamma_upper_singular_si_choose_N(err1, na, z, tol1);
+        N2 = _arb_hypgeom_gamma_upper_singular_si_choose_N(err2, na, z, tol2);
+
+        _arb_hypgeom_gamma_upper_singular_si_bsplit(r1, na, z, N1, prec1);
+        arb_add_error_mag(r1, err1);
+
+        _arb_hypgeom_gamma_upper_singular_si_bsplit(r2, na, z, N2, prec2);
+        arb_add_error_mag(r2, err2);
+
+        if (!arb_overlaps(r1, r2))
+        {
+            flint_printf("FAIL: overlap\n\n");
+            flint_printf("na = %wd", na); flint_printf("\n\n");
+            flint_printf("z = "); arb_printn(z, 100, 0); flint_printf("\n\n");
+            flint_printf("r1 = "); arb_printn(r1, 100, 0); flint_printf("\n\n");
+            flint_printf("r2 = "); arb_printn(r2, 100, 0); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        arb_clear(z);
+        arb_clear(r1);
+        arb_clear(r2);
+
+        mag_clear(tol1);
+        mag_clear(tol2);
+        mag_clear(err1);
+        mag_clear(err2);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");

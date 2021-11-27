@@ -313,6 +313,18 @@ Internal evaluation functions
     the Taylor series at zero before term *N*.
     The truncation error bound has to be added separately.
 
+.. function:: slong _arb_hypgeom_gamma_upper_singular_si_choose_N(mag_t err, slong n, const arb_t z, const mag_t abs_tol)
+
+    Returns number of terms *N* and sets *err* to the truncation error for evaluating
+    `\Gamma(-n,z)` using the Taylor series at zero, targeting an absolute
+    tolerance of *abs_tol*.
+
+.. function:: void _arb_hypgeom_gamma_upper_singular_si_bsplit(arb_t res, slong n, const arb_t z, slong N, slong prec)
+
+    Sets *res* to the approximation of `\Gamma(-n,z)` obtained by truncating
+    the Taylor series at zero before term *N*.
+    The truncation error bound has to be added separately.
+
 .. function:: void _arb_gamma_upper_fmpq_step_bsplit(arb_t Gz1, const fmpq_t a, const arb_t z0, const arb_t z1, const arb_t Gz0, const arb_t expmz0, const mag_t abs_tol, slong prec)
 
     Given *Gz0* and *expmz0* representing the values `\Gamma(a,z_0)` and `\exp(-z_0)`,

@@ -351,3 +351,137 @@ _arb_hypgeom_gamma_lower_fmpq_0_bsplit(arb_t res, const fmpq_t a, const arb_t z,
     arb_clear(S);
     arb_clear(Q);
 }
+
+/* bounded by 1/z^n * sum z^k / k! */
+slong
+_arb_hypgeom_gamma_upper_singular_si_choose_N(mag_t err, slong n, const arb_t z, const mag_t abs_tol)
+{
+    slong k;
+    mag_t t, u, zm;
+
+    mag_init(t);
+    mag_init(u);
+    mag_init(zm);
+
+    arb_get_mag(zm, z);
+
+    arb_get_mag_lower(t, z);
+    mag_inv(t, t);
+    mag_pow_ui(t, t, n);
+
+    for (k = 1; ; k++)
+    {
+        mag_mul(t, t, zm);
+        mag_div_ui(t, t, k);
+
+        if (mag_cmp(t, abs_tol) < 0)
+        {
+            mag_div_ui(u, zm, k);
+            mag_geom_series(u, u, 0);
+            mag_mul(u, t, u);
+
+            if (mag_cmp(u, abs_tol) < 0)
+            {
+                mag_swap(err, t);
+                break;
+            }
+        }
+    }
+
+    mag_clear(t);
+    mag_clear(u);
+    mag_clear(zm);
+
+    return k;
+}
+
+static void
+singular_bsplit(arb_t M, arb_t S, arb_t Q, slong n, const arb_t z, slong na, slong nb, int cont, slong prec)
+{
+    if (nb - na == 0)
+    {
+        arb_zero(M);
+        arb_zero(S);
+        arb_one(Q);
+    }
+    else if (nb - na == 1)
+    {
+        fmpz_t t;
+        slong k;
+
+        k = na;
+
+        if (k == n)
+            arb_neg(M, z);
+        else
+            arb_mul_si(M, z, n - k, prec);
+
+        arb_set_si(S, (k != n) ? (k + 1) : 0);
+
+        fmpz_init_set_si(t, k + 1);
+        if (k != n)
+            fmpz_mul_si(t, t, k - n);
+        arb_set_fmpz(Q, t);
+        fmpz_clear(t);
+    }
+    else
+    {
+        slong m;
+        arb_t M2, S2, Q2;
+
+        m = na + (nb - na) / 2;
+
+        arb_init(M2);
+        arb_init(S2);
+        arb_init(Q2);
+
+        singular_bsplit(M, S, Q, n, z, na, m, 1, prec);
+        singular_bsplit(M2, S2, Q2, n, z, m, nb, cont, prec);
+
+        arb_mul(S, S, Q2, prec);
+        arb_addmul(S, M, S2, prec);
+
+        if (cont)
+            arb_mul(M, M, M2, prec);
+
+        arb_mul(Q, Q, Q2, prec);
+
+        arb_clear(M2);
+        arb_clear(S2);
+        arb_clear(Q2);
+    }
+}
+
+void
+_arb_hypgeom_gamma_upper_singular_si_bsplit(arb_t res, slong n, const arb_t z, slong N, slong prec)
+{
+    arb_t M, S, Q;
+
+    arb_init(M);
+    arb_init(S);
+    arb_init(Q);
+
+    N = FLINT_MAX(N, 0);
+
+    singular_bsplit(M, S, Q, n, z, 0, N, 0, prec);
+
+    /* (-1)**n/fac(n) * (digamma(n+1) - ln(z)) - (S/Q)/z**n */
+    arb_pow_ui(M, z, n, prec);
+    arb_mul(Q, Q, M, prec);
+    arb_div(S, S, Q, prec);
+
+    arb_set_ui(M, n + 1);
+    arb_digamma(M, M, prec);
+    arb_log(Q, z, prec);
+    arb_sub(M, M, Q, prec);
+    arb_fac_ui(Q, n, prec);
+    arb_div(M, M, Q, prec);
+    if (n & 1)
+        arb_neg(M, M);
+
+    arb_sub(res, M, S, prec);
+
+    arb_clear(M);
+    arb_clear(S);
+    arb_clear(Q);
+}

@@ -45,7 +45,11 @@ int main()
 
         if (dirichlet_char_is_primitive(G, chi))
         {
-            fmpq_randtest(x, state, 2 + n_randint(state, 8));
+            if (n_randint(state, 2))
+                fmpq_set_si(x, -8 + (slong) n_randint(state, 8), 1);
+            else
+                fmpq_randtest(x, state, 2 + n_randint(state, 8));
+
             acb_set_fmpq(s, x, prec);
 
             if (n_randint(state, 2))
