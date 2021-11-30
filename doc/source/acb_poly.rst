@@ -677,7 +677,7 @@ Elementary functions
     of the power as computed without truncation (i.e. no zero-padding is performed).
     Does not support aliasing of the input and output, and requires
     that *flen* and *len* are positive.
-    Uses binary expontiation.
+    Uses binary exponentiation.
 
 .. function:: void acb_poly_pow_ui_trunc_binexp(acb_poly_t res, const acb_poly_t poly, ulong exp, slong len, slong prec)
 
