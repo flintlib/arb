@@ -78,30 +78,37 @@ _arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_
         mag_pow_fmpq_fast(u, u, a1);
         mag_mul(err, t, u);
 
-        arb_get_mag_lower(t, z);
-        mag_inv(t, t);
-
-        for (N = 1; ; N++)
+        if (mag_is_inf(err))
         {
-            mag_mul_ui(u, err, FLINT_MAX(FLINT_ABS(aa - N), FLINT_ABS(ab - N)));
-            mag_mul(u, u, t);
+            N = -1;
+        }
+        else
+        {
+            arb_get_mag_lower(t, z);
+            mag_inv(t, t);
 
-            if (N >= ab - 1 && mag_cmp(u, abs_tol) < 0)
+            for (N = 1; ; N++)
             {
+                mag_mul_ui(u, err, FLINT_MAX(FLINT_ABS(aa - N), FLINT_ABS(ab - N)));
+                mag_mul(u, u, t);
+
+                if (N >= ab - 1 && mag_cmp(u, abs_tol) < 0)
+                {
+                    mag_swap(err, u);
+                    break;
+                }
+
+                /* Stop if terms are increasing, unless a is a positive integer in
+                   which case the series will terminate eventually. */
+                if (mag_cmp(u, err) > 0 && !(aa == ab && aa >= 1))
+                {
+                    mag_inf(err);
+                    N = -1;
+                    break;
+                }
+
                 mag_swap(err, u);
-                break;
             }
-
-            /* Stop if terms are increasing, unless a is a positive integer in
-               which case the series will terminate eventually. */
-            if (mag_cmp(u, err) > 0 && !(aa == ab && aa >= 1))
-            {
-                mag_inf(err);
-                N = -1;
-                break;
-            }
-
-            mag_swap(err, u);
         }
     }
 

@@ -288,6 +288,16 @@ Incomplete gamma and beta functions
 Internal evaluation functions
 ................................................................................
 
+.. function:: void _arb_hypgeom_gamma_lower_sum_rs_1(arb_t res, ulong p, ulong q, const arb_t z, slong N, slong prec)
+
+    Computes `\sum_{k=0}^{N-1} z^k / (a)_k` where `a = p/q` using
+    rectangular splitting. It is assumed that `p + qN` fits in a limb.
+
+.. function:: void _arb_hypgeom_gamma_upper_sum_rs_1(arb_t res, ulong p, ulong q, const arb_t z, slong N, slong prec)
+
+    Computes `\sum_{k=0}^{N-1} (a)_k / z^k` where `a = p/q` using
+    rectangular splitting. It is assumed that `p + qN` fits in a limb.
+
 .. function:: slong _arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_t z, const mag_t abs_tol)
 
     Returns number of terms *N* and sets *err* to the truncation error for evaluating

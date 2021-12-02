@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "arb_hypgeom.h"
 #include "acb_hypgeom.h"
 
 /* IMAG: erf(z) = 2z/sqrt(pi) * 1F1(1/2, 3/2, -z^2) */
@@ -274,6 +275,13 @@ acb_hypgeom_erf(acb_t res, const acb_t z, slong prec)
     if (!acb_is_finite(z))
     {
         acb_indeterminate(res);
+        return;
+    }
+
+    if (acb_is_real(z))
+    {
+        arb_hypgeom_erf(acb_realref(res), acb_realref(z), prec);
+        arb_zero(acb_imagref(res));
         return;
     }
 

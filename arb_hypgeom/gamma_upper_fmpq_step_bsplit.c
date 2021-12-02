@@ -279,6 +279,19 @@ _arb_gamma_upper_fmpq_step_bsplit(arb_t Gz1, const fmpq_t a, const arb_t z0, con
     slong N;
     fmpq_t a1;
 
+    if (arb_is_zero(z0))
+    {
+        mag_init(err);
+        arb_init(x);
+        N = _arb_hypgeom_gamma_lower_fmpq_0_choose_N(err, a, z1, abs_tol);
+        _arb_hypgeom_gamma_lower_fmpq_0_bsplit(Gz1, a, z1, N, prec);
+        arb_add_error_mag(Gz1, err);
+        arb_sub(Gz1, Gz0, Gz1, prec);
+        arb_clear(x);
+        mag_clear(err);
+        return;
+    }
+
     mag_init(xmag);
     mag_init(err);
     arb_init(x);

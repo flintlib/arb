@@ -13,42 +13,6 @@
 #include "acb_hypgeom.h"
 
 void
-arb_hypgeom_erf(arb_t res, const arb_t z, slong prec)
-{
-    if (!arb_is_finite(z))
-    {
-        arb_indeterminate(res);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        arb_set(acb_realref(t), z);
-        acb_hypgeom_erf(t, t, prec);
-        arb_swap(res, acb_realref(t));
-        acb_clear(t);
-    }
-}
-
-void
-arb_hypgeom_erfc(arb_t res, const arb_t z, slong prec)
-{
-    if (!arb_is_finite(z))
-    {
-        arb_indeterminate(res);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        arb_set(acb_realref(t), z);
-        acb_hypgeom_erfc(t, t, prec);
-        arb_swap(res, acb_realref(t));
-        acb_clear(t);
-    }
-}
-
-void
 arb_hypgeom_erfi(arb_t res, const arb_t z, slong prec)
 {
     if (!arb_is_finite(z))
