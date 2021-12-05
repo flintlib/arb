@@ -284,6 +284,9 @@ Error functions and exponential integrals
 .. function:: int arb_fpwrap_double_erfi(double * res, double x, int flags)
               int arb_fpwrap_cdouble_erfi(complex_double * res, complex_double x, int flags)
 
+.. function:: int arb_fpwrap_double_erfinv(double * res, double x, int flags)
+.. function:: int arb_fpwrap_double_erfcinv(double * res, double x, int flags)
+
 .. function:: int arb_fpwrap_double_fresnel_s(double * res, double x, int normalized, int flags)
               int arb_fpwrap_cdouble_fresnel_s(complex_double * res, complex_double x, int normalized, int flags)
 

@@ -1038,6 +1038,9 @@ DEF_CDOUBLE_FUN_1(erfc, acb_hypgeom_erfc)
 DEF_DOUBLE_FUN_1(erfi, arb_hypgeom_erfi)
 DEF_CDOUBLE_FUN_1(erfi, acb_hypgeom_erfi)
 
+DEF_DOUBLE_FUN_1(erfinv, arb_hypgeom_erfinv)
+DEF_DOUBLE_FUN_1(erfcinv, arb_hypgeom_erfcinv)
+
 static void _arb_hypgeom_fresnel_s(arb_t res, const arb_t x, int normalized, slong prec) { arb_hypgeom_fresnel(res, NULL, x, normalized, prec); }
 static void _arb_hypgeom_fresnel_c(arb_t res, const arb_t x, int normalized, slong prec) { arb_hypgeom_fresnel(NULL, res, x, normalized, prec); }
 static void _acb_hypgeom_fresnel_s(acb_t res, const acb_t x, int normalized, slong prec) { acb_hypgeom_fresnel(res, NULL, x, normalized, prec); }

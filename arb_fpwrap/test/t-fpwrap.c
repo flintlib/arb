@@ -304,6 +304,9 @@ int main()
         CHECK_DOUBLE(arb_fpwrap_double_erfi(&res, x, flags));
         CHECK_CDOUBLE(arb_fpwrap_cdouble_erfi(&cres, cx, flags));
 
+        CHECK_DOUBLE(arb_fpwrap_double_erfinv(&res, x, flags));
+        CHECK_DOUBLE(arb_fpwrap_double_erfcinv(&res, x, flags));
+
         CHECK_DOUBLE(arb_fpwrap_double_fresnel_s(&res, x, 0, flags));
         CHECK_CDOUBLE(arb_fpwrap_cdouble_fresnel_s(&cres, cx, 0, flags));
 
