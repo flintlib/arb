@@ -85,6 +85,9 @@ void arb_hypgeom_erfi(arb_t res, const arb_t z, slong prec);
 void _arb_hypgeom_erfi_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_hypgeom_erfi_series(arb_poly_t g, const arb_poly_t h, slong len, slong prec);
 
+void arb_hypgeom_erfinv(arb_t res, const arb_t x, slong prec);
+void arb_hypgeom_erfcinv(arb_t res, const arb_t x, slong prec);
+
 void arb_hypgeom_fresnel(arb_t res1, arb_t res2, const arb_t z, int normalized, slong prec);
 void _arb_hypgeom_fresnel_series(arb_ptr s, arb_ptr c, arb_srcptr h, slong hlen, int normalized, slong len, slong prec);
 void arb_hypgeom_fresnel_series(arb_poly_t s, arb_poly_t c, const arb_poly_t h, int normalized, slong len, slong prec);

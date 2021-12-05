@@ -208,6 +208,12 @@ Error functions and Fresnel integrals
     Computes the imaginary error function of the power series *z*,
     truncated to length *len*.
 
+.. function:: void arb_hypgeom_erfinv(arb_t res, const arb_t z, slong prec)
+              void arb_hypgeom_erfcinv(arb_t res, const arb_t z, slong prec)
+
+    Computes the inverse error function `\operatorname{erf}^{-1}(z)`
+    or inverse complementary error function `\operatorname{erfc}^{-1}(z)`.
+
 .. function:: void arb_hypgeom_fresnel(arb_t res1, arb_t res2, const arb_t z, int normalized, slong prec)
 
     Sets *res1* to the Fresnel sine integral `S(z)` and *res2* to
