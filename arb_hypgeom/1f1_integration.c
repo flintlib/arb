@@ -279,6 +279,7 @@ static void
 estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rz)
 {
     double a, b, z, t1, t2, u, m;
+    fmpz_t e;
 
     a = arf_get_d(arb_midref(ra), ARF_RND_NEAR);
     b = arf_get_d(arb_midref(rb), ARF_RND_NEAR);
@@ -313,7 +314,17 @@ estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rz)
 
     m /= log(2);
 
-    mag_set_ui_2exp_si(res, 1, m);
+    if (fabs(m) < 1e300)
+    {
+        fmpz_init(e);
+        fmpz_set_d(e, m);
+        mag_set_d_2exp_fmpz(res, 1.0, e);
+        fmpz_clear(e);
+    }
+    else
+    {
+        mag_zero(res);
+    }
 }
 
 void
