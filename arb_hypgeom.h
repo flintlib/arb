@@ -73,6 +73,8 @@ void arb_hypgeom_1f1(arb_t res, const arb_t a, const arb_t b, const arb_t z, int
 void arb_hypgeom_u(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec);
 void arb_hypgeom_2f1(arb_t res, const arb_t a, const arb_t b, const arb_t c, const arb_t z, int regularized, slong prec);
 
+void arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec);
+
 void arb_hypgeom_erf(arb_t res, const arb_t z, slong prec);
 void _arb_hypgeom_erf_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_hypgeom_erf_series(arb_poly_t g, const arb_poly_t h, slong len, slong prec);

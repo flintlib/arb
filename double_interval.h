@@ -37,9 +37,9 @@ di_t di_interval(double a, double b)
 {
     di_t res;
 
-    if (!(a < b))
+    if (!(a <= b))
     {
-        flint_printf("di_interval endpoints not ordered\n");
+        flint_printf("di_interval endpoints %g, %g not ordered\n", a, b);
         flint_abort();
     }
 

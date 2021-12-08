@@ -155,6 +155,19 @@ Confluent hypergeometric functions
 
     Alias for :func:`arb_hypgeom_m`.
 
+.. function:: void arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+
+    Computes the confluent hypergeometric function using numerical integration.
+    The formula
+
+    .. math ::
+
+        {}_1F_1(a,b,z) = \frac{\Gamma(b)}{\Gamma(a) \Gamma(b-a)} \int_0^1 e^{zt} t^{a-1} (1-t)^{b-a-1} dt
+
+    is used.
+    This algorithm can be useful if the parameters are large. This will currently
+    only return a finite enclosure if `b > 1` and `b - a > 1`.
+
 .. function:: void arb_hypgeom_u(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec)
 
     Computes the confluent hypergeometric function `U(a,b,z)`.
