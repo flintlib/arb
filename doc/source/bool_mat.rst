@@ -254,7 +254,7 @@ Special functions
     that of :func:`nilpotency_degree`.
 
     This function can help quantify entrywise errors in a truncated evaluation
-    of a matrix power series.  If *A* is an indictor matrix with the same
+    of a matrix power series.  If *A* is an indicator matrix with the same
     sparsity pattern as a matrix `M` over the real or complex numbers,
     and if `B_{ij}` does not take the special value `-2`, then the tail
     `\left[ \sum_{k=N}^\infty a_k M^k \right]_{ij}`
