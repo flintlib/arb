@@ -15,22 +15,22 @@ di_t di_fast_mul(di_t x, di_t y)
 {
     di_t res;
 
-    if (x.a >= 0 && y.a >= 0)
+    if (x.a > 0 && y.a > 0)
     {
         res.a = x.a * y.a;
         res.b = x.b * y.b;
     }
-    else if (x.a >= 0 && y.b <= 0)
+    else if (x.a > 0 && y.b < 0)
     {
         res.a = x.b * y.a;
         res.b = x.a * y.b;
     }
-    else if (x.b <= 0 && y.a >= 0)
+    else if (x.b < 0 && y.a > 0)
     {
         res.a = x.a * y.b;
         res.b = x.b * y.a;
     }
-    else if (x.b <= 0 && y.b <= 0)
+    else if (x.b < 0 && y.b < 0)
     {
         res.a = x.b * y.b;
         res.b = x.a * y.a;

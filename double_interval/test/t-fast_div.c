@@ -58,6 +58,8 @@ int main()
         y = di_randtest(state);
         z = di_fast_div(x, y);
 
+        DI_CHECK(z)
+
         arf_set_d(a, x.a);
         arf_set_d(b, x.b);
         arf_set_d(c, y.a);

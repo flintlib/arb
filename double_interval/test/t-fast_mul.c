@@ -54,9 +54,22 @@ int main()
         arf_init(za);
         arf_init(zb);
 
-        x = di_randtest(state);
-        y = di_randtest(state);
+        if (iter == 0)
+        {
+            x.a = 3.5835915908219665e+103;
+            x.b = 4.0874812242073031e+295;
+            y.a = -8.3711609938763647e+298;
+            y.b = -3.414037107833399e+243;
+        }
+        else
+        {
+            x = di_randtest(state);
+            y = di_randtest(state);
+        }
+
         z = di_fast_mul(x, y);
+
+        DI_CHECK(z)
 
         arf_set_d(a, x.a);
         arf_set_d(b, x.b);

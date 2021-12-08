@@ -32,6 +32,13 @@ typedef struct
 }
 di_t;
 
+#define DI_CHECK(__x) \
+    if (!(__x.a <= __x.b)) \
+    { \
+        flint_printf("di_t endpoints %g, %g not ordered\n", __x.a, __x.b); \
+        flint_abort(); \
+    } \
+
 DOUBLE_INTERVAL_INLINE
 di_t di_interval(double a, double b)
 {
@@ -53,12 +60,22 @@ double _di_below(double x)
 {
     double t;
 
-    t = x;
-    if (t < 0.0)
-        t = -t;
+    if (x <= 1e300)
+    {
+        t = x;
+        if (t < 0.0)
+            t = -t;
 
-    t += 1e-300;
-    return x - t * 4.440892098500626e-16;
+        t += 1e-300;
+        return x - t * 4.440892098500626e-16;
+    }
+    else
+    {
+        if (x != x)
+            return -D_INF;
+
+        return 1e300;
+    }
 }
 
 DOUBLE_INTERVAL_INLINE
@@ -66,12 +83,22 @@ double _di_above(double x)
 {
     double t;
 
-    t = x;
-    if (t < 0.0)
-        t = -t;
+    if (x >= -1e300)
+    {
+        t = x;
+        if (t < 0.0)
+            t = -t;
 
-    t += 1e-300;
-    return x + t * 4.440892098500626e-16;
+        t += 1e-300;
+        return x + t * 4.440892098500626e-16;
+    }
+    else
+    {
+        if (x != x)
+            return D_INF;
+
+        return -1e300;
+    }
 }
 
 DOUBLE_INTERVAL_INLINE

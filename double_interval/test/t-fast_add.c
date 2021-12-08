@@ -37,6 +37,8 @@ int main()
 
         z = di_fast_add(x, y);
 
+        DI_CHECK(z)
+
         arf_set_d(a, x.a);
         arf_set_d(t, y.a);
         arf_add(a, a, t, ARF_PREC_EXACT, ARF_RND_DOWN);
