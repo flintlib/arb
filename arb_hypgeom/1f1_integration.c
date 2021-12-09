@@ -340,11 +340,11 @@ arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t
     arb_init(t);
 
     ok = arb_is_finite(z);
-    arb_sub_ui(t, b, 1, prec);
-    ok = ok && arb_is_positive(t);
+    arb_sub_ui(t, a, 1, prec);
+    ok = ok && arb_is_nonnegative(t);
     arb_sub(t, b, a, prec);
     arb_sub_ui(t, t, 1, prec);
-    ok = ok && arb_is_positive(t);
+    ok = ok && arb_is_nonnegative(t);
 
     if (!ok)
     {

@@ -162,6 +162,8 @@ DOUBLE_INTERVAL_INLINE
 di_t di_fast_mid(di_t x)
 {
     di_t a, b;
+    if (x.a == -D_INF || x.b == D_INF)
+        return di_interval(-D_INF, D_INF);
     a = di_interval(x.a, x.a);
     b = di_interval(x.b, x.b);
     return di_fast_mul_d(di_fast_add(a, b), 0.5);

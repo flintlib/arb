@@ -166,7 +166,7 @@ Confluent hypergeometric functions
 
     is used.
     This algorithm can be useful if the parameters are large. This will currently
-    only return a finite enclosure if `b > 1` and `b - a > 1`.
+    only return a finite enclosure if `a \ge 1` and `b - a \ge 1`.
 
 .. function:: void arb_hypgeom_u(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec)
 
