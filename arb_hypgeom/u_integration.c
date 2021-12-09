@@ -15,43 +15,31 @@
 
 /*
 
-Integrand:
+Integrand (see comments for 1f1_integration):
 
-    exp(f(t)) where f(z) = z*t + (a-1)*log(t) + (b-a-1)*log(1-t)
+    exp(f(t)) where f(z) = -z*t + a1*log(t) + ba1*log(1+t)
 
-Magnitude bound:
+    g(u,v) = -z*u + 0.5*[a1*log(u^2+v^2) + ba1*log((1+u)^2+v^2)]
 
-    |exp(f(t))| = exp(Re(f(t))) = exp(g(u,v)),  t = u+v*i
-
-    g(u,v) = z*u + 0.5*[(a-1)*log(u^2+v^2) + (b-a-1)*log((u-1)^2+v^2)]
-
-Evaluating g(u,v) directly gives poor results; we get better bounds
-using linearization.
-
-    d/du g(u,v) = z + u*(a-1)/(u^2+v^2) + (u-1)*(b-a-1)/(v^2+(1-u)^2)
-    d/dv g(u,v) = v*(a-1)/(u^2+v^2) + v*(b-a-1)/(v^2+(1-u)^2)
-
-Finding the extrema of g(u,v) is doable (solutions of a degree-4
-polynomial) but for simplicity we just do interval arithmetic.
-
+    d/du g(u,v) = -z + u*a1/(u^2+v^2) + (1+u)*ba1/(v^2+(1+u)^2)
+    d/dv g(u,v) = v*a1/(u^2+v^2) + v*ba1/(v^2+(1+u)^2)
 */
 
-/* z*u + 0.5 [(a-1) log(u^2+v^2) + (b-a-1) log((u-1)^2+v^2)] */
 static di_t
 di_integrand_edge(di_t u, di_t v, di_t a1, di_t ba1, di_t z)
 {
     di_t X, Y, Z;
 
-    X = di_fast_mul(z, u);
+    X = di_neg(di_fast_mul(z, u));
     Y = di_fast_mul(a1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(u), di_fast_sqr(v))));
-    Z = di_fast_mul(ba1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v))));
+    Z = di_fast_mul(ba1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(di_fast_add_d(u, 1.0)), di_fast_sqr(v))));
 
     return di_fast_add(X, di_fast_mul_d(di_fast_add(Y, Z), 0.5));
 }
 
 /*
-which == 0 - d/du g(u,v) = z + u*(a-1)/(u^2+v^2) + (u-1)*(b-a-1)/(v^2+(1-u)^2)
-which == 1 - d/dv g(u,v) = v*(a-1)/(u^2+v^2) + v*(b-a-1)/(v^2+(1-u)^2)
+which == 0 - d/du g(u,v) = -z + u*(a-1)/(u^2+v^2) + (u+1)*(b-a-1)/(v^2+(1+u)^2)
+which == 1 - d/dv g(u,v) = v*(a-1)/(u^2+v^2) + v*(b-a-1)/(v^2+(1+u)^2)
 */
 static di_t
 di_integrand_edge_diff(di_t u, di_t v, di_t a1, di_t ba1, di_t z, int which)
@@ -59,10 +47,10 @@ di_integrand_edge_diff(di_t u, di_t v, di_t a1, di_t ba1, di_t z, int which)
     di_t Y, Z;
 
     Y = di_fast_div(a1, di_fast_add(di_fast_sqr(u), di_fast_sqr(v)));
-    Z = di_fast_div(ba1, di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v)));
+    Z = di_fast_div(ba1, di_fast_add(di_fast_sqr(di_fast_add_d(u, 1.0)), di_fast_sqr(v)));
 
     if (which == 0)
-        return di_fast_add(z, di_fast_add(di_fast_mul(u, Y), di_fast_mul(di_fast_sub_d(u, 1.0), Z)));
+        return di_fast_add(di_neg(z), di_fast_add(di_fast_mul(u, Y), di_fast_mul(di_fast_add_d(u, 1.0), Z)));
     else
         return di_fast_mul(v, di_fast_add(Y, Z));
 }
@@ -214,12 +202,11 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
     acb_init(u);
     acb_init(v);
 
-    acb_sub_ui(v, t, 1, prec);
-    acb_neg(v, v);
+    acb_add_ui(v, t, 1, prec);
 
     if (order == 1)
     {
-        if (!arb_is_positive(acb_realref(t)) || !arb_is_positive(acb_realref(v)))
+        if (!arb_is_positive(acb_realref(t)))
             acb_indeterminate(out);
         else
             integrand_wide_bound5(out, t, a1, ba1, z, prec);
@@ -228,15 +215,15 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
     {
         if (acb_contains_zero(t) || acb_contains_zero(v))
         {
-            /* exp(z t) */
+            /* exp(-z t) */
             acb_mul_arb(s, t, z, prec);
+            acb_neg(s, s);
             acb_exp(s, s, prec);
 
             /* t^(a-1) */
             acb_my_pow_arb(u, t, a1, prec);
-
-            /* (1-t)^(b-a-1) */
-            acb_my_pow_arb(v, v, ba1, prec);
+            /* (1+t)^(b-a-1) */
+            acb_pow_arb(v, v, ba1, prec);
 
             acb_mul(out, s, u, prec);
             acb_mul(out, out, v, prec);
@@ -244,12 +231,13 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
         else
         {
             acb_mul_arb(s, t, z, prec);
+            acb_neg(s, s);
 
             /* t^(a-1) */
             acb_log(u, t, prec);
             acb_mul_arb(u, u, a1, prec);
 
-            /* (1-t)^(b-a-1) */
+            /* (1+t)^(b-a-1) */
             acb_log(v, v, prec);
             acb_mul_arb(v, v, ba1, prec);
 
@@ -281,26 +269,26 @@ estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rz)
 
     if (u >= 0.0)
     {
-        t1 = (2 - b + z + sqrt(u)) / (2 * z);
-        t2 = (2 - b + z - sqrt(u)) / (2 * z);
+        t1 = (-2 + b - z + sqrt(u)) / (2 * z);
+        t2 = (-2 + b - z - sqrt(u)) / (2 * z);
     }
     else
     {
         t1 = 1e-8;
-        t2 = 1 - 1e-8;
+        t2 = 1e-8;
     }
 
     m = -1e300;
 
-    if (t1 > 0.0 && t1 < 1.0)
+    if (t1 > 0.0)
     {
-        t1 = z * t1 + (a - 1) * log(t1) + (b - a - 1) * log(1 - t1);
+        t1 = -z * t1 + (a - 1) * log(t1) + (b - a - 1) * log(1 + t1);
         m = FLINT_MAX(m, t1);
     }
 
-    if (t2 > 0.0 && t2 < 1.0)
+    if (t2 > 0.0)
     {
-        t2 = z * t2 + (a - 1) * log(t2) + (b - a - 1) * log(1 - t2);
+        t2 = -z * t2 + (a - 1) * log(t2) + (b - a - 1) * log(1 + t2);
         m = FLINT_MAX(m, t2);
     }
 
@@ -319,14 +307,80 @@ estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rz)
     }
 }
 
+static void
+bound_tail(mag_t bound, const arb_t a1, const arb_t ba1, const arb_t z, const arb_t N, slong prec)
+{
+    arb_t s, u, v, C;
+
+    arb_init(s);
+    arb_init(u);
+    arb_init(v);
+    arb_init(C);
+
+    /*
+    Assume N >= 1 and t >= 0.
+
+        -z*(N+t) + (a-1)*log(N+t) + (b-a-1)*log(1+N+t)
+    <=  [-z*N + (a-1)*log(N) + (b-a-1)*log(1+N)] + [-z*t + [max(0, a-1) + max(0, b-a-1)]*log(1+t/N)]
+    <=  [-z*N + (a-1)*log(N) + (b-a-1)*log(1+N)] + [-z*t + [max(0, a-1) + max(0, b-a-1)]*(t/N)]
+
+    Let C = max(0, a-1) + max(0, b-a-1). Then the remainder integral
+    is bounded by integrand(N) * N / (N*z - C), assuming that N*z > C.
+    */
+
+    arb_max(u, u, a1, prec);
+    arb_max(v, v, ba1, prec);
+    arb_add(C, u, v, prec);
+    /* s = N*z - C */
+    arb_mul(s, N, z, prec);
+    arb_sub(s, s, C, prec);
+
+    if (arb_is_positive(s))
+    {
+        arb_div(C, N, s, prec);
+
+        /* exp(-z*N) */
+        arb_mul(s, N, z, prec);
+        arb_neg(s, s);
+
+        /* N^(a-1) */
+        arb_log(u, N, prec);
+        arb_mul(u, u, a1, prec);
+
+        /* (1+N)^(b-a-1) */
+        arb_add_ui(v, N, 1, prec);
+        arb_log(v, v, prec);
+        arb_mul(v, v, ba1, prec);
+
+        arb_add(s, s, u, prec);
+        arb_add(s, s, v, prec);
+        arb_exp(s, s, prec);
+
+        arb_mul(s, s, C, prec);
+
+        arb_get_mag(bound, s);
+    }
+    else
+    {
+        mag_inf(bound);
+    }
+
+    arb_clear(s);
+    arb_clear(u);
+    arb_clear(v);
+    arb_clear(C);
+}
+
 void
-arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+arb_hypgeom_u_integration(arb_t res, const arb_t a, const arb_t b, const arb_t z, slong prec)
 {
     acb_calc_integrate_opt_t opt;
     arb_struct param[3];
     arb_t t, a1, ba1;
-    acb_t zero, one, I;
-    mag_t abs_tol;
+    acb_t zero, N, I;
+    mag_t abs_tol, tail_bound;
+    slong i;
+    fmpz_t n;
     int ok;
 
     arb_init(t);
@@ -337,9 +391,9 @@ arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t
     arb_sub(ba1, b, a, prec);
     arb_sub_ui(ba1, ba1, 1, prec);
 
-    ok = arb_is_finite(z);
+    ok = arb_is_finite(z) && arb_is_positive(z);
     ok = ok && arb_is_nonnegative(a1);
-    ok = ok && arb_is_nonnegative(ba1);
+    ok = ok && arb_is_finite(b);
 
     if (!ok)
     {
@@ -348,9 +402,12 @@ arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t
     else
     {
         mag_init(abs_tol);
+        mag_init(tail_bound);
         acb_init(zero);
-        acb_init(one);
+        acb_init(zero);
+        acb_init(N);
         acb_init(I);
+        fmpz_init(n);
 
         param[0] = *a1;
         param[1] = *ba1;
@@ -360,28 +417,34 @@ arb_hypgeom_1f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t
         /* opt->verbose = 2; */
         /* opt->eval_limit = WORD_MAX; */
 
-        acb_one(one);
         estimate_magnitude(abs_tol, a, b, z);
         mag_mul_2exp_si(abs_tol, abs_tol, -prec);
-        acb_calc_integrate(I, integrand, param, zero, one, prec, abs_tol, opt, prec);
 
-        if (!regularized)
+        for (i = 1; i < FLINT_BITS; i++)
         {
-            arb_gamma(t, b, prec);
-            arb_mul(acb_realref(I), acb_realref(I), t, prec);
+            fmpz_one(n);
+            fmpz_mul_2exp(n, n, i);
+            acb_one(N);
+            arb_mul_2exp_fmpz(acb_realref(N), acb_realref(N), n);
+            bound_tail(tail_bound, a1, ba1, z, acb_realref(N), 64);
+            if (mag_cmp(tail_bound, abs_tol) < 0)
+                break;
         }
+
+        acb_calc_integrate(I, integrand, param, zero, N, prec, abs_tol, opt, prec);
+        arb_add_error_mag(acb_realref(I), tail_bound);
+
         arb_rgamma(t, a, prec);
-        arb_mul(acb_realref(I), acb_realref(I), t, prec);
-        arb_sub(t, b, a, prec);
-        arb_rgamma(t, t, prec);
         arb_mul(acb_realref(I), acb_realref(I), t, prec);
 
         arb_set(res, acb_realref(I));
 
         mag_clear(abs_tol);
+        mag_clear(tail_bound);
         acb_clear(zero);
-        acb_clear(one);
+        acb_clear(N);
         acb_clear(I);
+        fmpz_clear(n);
     }
 
     arb_clear(t);
