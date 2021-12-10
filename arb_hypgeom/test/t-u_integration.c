@@ -21,7 +21,7 @@ int main()
 
     flint_randinit(state);
 
-    for (iter = 0; iter < 100 * arb_test_multiplier(); iter++)
+    for (iter = 0; iter < 200 * arb_test_multiplier(); iter++)
     {
         arb_t a, b, z, r1, r2;
         slong prec1, prec2;
@@ -41,7 +41,9 @@ int main()
         arb_randtest(r1, state, 1 + n_randint(state, 200), 1 + n_randint(state, 5));
         arb_randtest(r2, state, 1 + n_randint(state, 200), 1 + n_randint(state, 5));
 
-        arb_add_ui(a, a, n_randint(state, 100), prec1 + 100);
+        if (n_randint(state, 2))
+            arb_add_ui(a, a, n_randint(state, 100), prec1 + 100);
+
         arb_add_ui(b, b, n_randint(state, 200), prec1 + 100);
         arb_add_ui(z, z, n_randint(state, 100), prec1 + 100);
 
