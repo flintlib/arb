@@ -87,6 +87,9 @@ int main()
         acb_randtest(w1, state, 1 + n_randint(state, 400), 1 + n_randint(state, ebits));
         acb_randtest(w2, state, 1 + n_randint(state, 400), 1 + n_randint(state, ebits));
 
+        if (n_randint(state, 2))
+            arb_zero(acb_imagref(z));
+
         reg1 = n_randint(state, 2);
         reg2 = n_randint(state, 2);
 

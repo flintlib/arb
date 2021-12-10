@@ -39,7 +39,12 @@ di_integrand_edge(di_t u, di_t v, di_t b1, di_t cb1, di_t nega, di_t z)
     di_t X, Y, Z;
 
     X = di_fast_mul(b1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(u), di_fast_sqr(v))));
-    Y = di_fast_mul(cb1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v))));
+
+    if (cb1.a == 0 && cb1.b == 0)
+        Y = di_interval(0.0, 0.0);
+    else
+        Y = di_fast_mul(cb1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v))));
+
     Z = di_fast_mul(nega, di_fast_log_nonnegative(di_fast_add(
         di_fast_sqr(di_fast_mul(v, z)),
         di_fast_sqr(di_fast_sub_d(di_fast_mul(u, z), 1.0)))));
@@ -59,7 +64,12 @@ di_integrand_edge_diff(di_t u, di_t v, di_t b1, di_t cb1, di_t nega, di_t z, int
     uz1 = di_fast_sub_d(di_fast_mul(u, z), 1.0);
 
     X = di_fast_div(b1, di_fast_add(di_fast_sqr(u), di_fast_sqr(v)));
-    Y = di_fast_div(cb1, di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v)));
+
+    if (cb1.a == 0 && cb1.b == 0)
+        Y = di_interval(0.0, 0.0);
+    else
+        Y = di_fast_div(cb1, di_fast_add(di_fast_sqr(di_fast_sub_d(u, 1.0)), di_fast_sqr(v)));
+
     Z = di_fast_div(nega, di_fast_add(di_fast_sqr(di_fast_mul(v, z)), di_fast_sqr(uz1)));
 
     if (which == 0)
@@ -236,7 +246,8 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
 
     if (order == 1)
     {
-        if (!arb_is_positive(acb_realref(t)) || !arb_is_positive(acb_realref(u)) || !arb_is_positive(acb_realref(v)))
+        if (!arb_is_positive(acb_realref(t)) || !arb_is_positive(acb_realref(u)) ||
+            (!(arb_is_positive(acb_realref(v)) || arb_is_zero(cb1))))
             acb_indeterminate(out);
         else
         {
@@ -281,8 +292,15 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
             acb_log(v, v, prec);
             acb_mul_arb(v, v, cb1, prec);
             /* (1-zt)^(-a) */
-            acb_log(u, u, prec);
-            acb_mul_arb(u, u, nega, prec);
+            if (arb_is_zero(nega))
+            {
+                acb_zero(u);
+            }
+            else
+            {
+                acb_log(u, u, prec);
+                acb_mul_arb(u, u, nega, prec);
+            }
 
             acb_add(out, s, u, prec);
             acb_add(out, out, v, prec);

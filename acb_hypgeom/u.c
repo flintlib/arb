@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "arb_hypgeom.h"
 #include "acb_hypgeom.h"
 
 static void
@@ -364,7 +365,7 @@ acb_hypgeom_u_choose(int * asymp, slong * wp,
 }
 
 void
-acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
+acb_hypgeom_u_nointegration(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
 {
     acb_t t;
     arf_srcptr av, tv;
@@ -424,3 +425,49 @@ acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec
     acb_clear(t);
 }
 
+void
+acb_hypgeom_u(acb_t res, const acb_t a, const acb_t b, const acb_t z, slong prec)
+{
+    acb_t res2;
+    slong acc, max, t;
+
+    acb_init(res2);
+
+    acb_hypgeom_u_nointegration(res2, a, b, z, prec);
+
+    acc = acb_rel_accuracy_bits(res2);
+
+    if (acc < 0.5 * prec)
+    {
+        max = prec;
+        t = acb_rel_accuracy_bits(z);
+        max = FLINT_MIN(max, t);
+        t = acb_rel_accuracy_bits(a);
+        max = FLINT_MIN(max, t);
+        t = acb_rel_accuracy_bits(b);
+        max = FLINT_MIN(max, t);
+
+        if (max > 2 && acc < 0.5 * max)
+        {
+            if (acb_is_real(a) && acb_is_real(b) && acb_is_real(z) &&
+                arb_is_positive(acb_realref(z)) &&
+                arf_cmpabs_2exp_si(arb_midref(acb_realref(a)), 60) < 0 &&
+                arf_cmpabs_2exp_si(arb_midref(acb_realref(b)), 60) < 0 &&
+                arf_cmpabs_2exp_si(arb_midref(acb_realref(z)), 60) < 0)
+            {
+                arb_hypgeom_u_integration(acb_realref(res),
+                        acb_realref(a), acb_realref(b), acb_realref(z), prec);
+                arb_zero(acb_imagref(res));
+
+                if (acb_rel_accuracy_bits(res) > acb_rel_accuracy_bits(res2) ||
+                    (acb_is_finite(res) && !acb_is_finite(res2)))
+                {
+                    acb_swap(res, res2);
+                }
+            }
+        }
+    }
+
+    acb_swap(res, res2);
+    acb_clear(res2);
+}

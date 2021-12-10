@@ -59,6 +59,13 @@ int main()
         acb_randtest(w1, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
         acb_randtest(w2, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
 
+        if (prec0 <= 300 && prec1 <= 300 && prec2 <= 300 && n_randint(state, 2))
+        {
+            arb_zero(acb_imagref(a0));
+            arb_zero(acb_imagref(b));
+            arb_zero(acb_imagref(z));
+        }
+
         acb_add_ui(a1, a0, 1, prec0);
         acb_add_ui(a2, a0, 2, prec0);
 
