@@ -31,7 +31,12 @@ di_integrand_edge(di_t u, di_t v, di_t a1, di_t ba1, di_t z)
     di_t X, Y, Z;
 
     X = di_neg(di_fast_mul(z, u));
-    Y = di_fast_mul(a1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(u), di_fast_sqr(v))));
+
+    if (a1.a == 0.0 && a1.b == 0.0)
+        Y = di_interval(0.0, 0.0);
+    else
+        Y = di_fast_mul(a1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(u), di_fast_sqr(v))));
+
     Z = di_fast_mul(ba1, di_fast_log_nonnegative(di_fast_add(di_fast_sqr(di_fast_add_d(u, 1.0)), di_fast_sqr(v))));
 
     return di_fast_add(X, di_fast_mul_d(di_fast_add(Y, Z), 0.5));
@@ -46,7 +51,11 @@ di_integrand_edge_diff(di_t u, di_t v, di_t a1, di_t ba1, di_t z, int which)
 {
     di_t Y, Z;
 
-    Y = di_fast_div(a1, di_fast_add(di_fast_sqr(u), di_fast_sqr(v)));
+    if (a1.a == 0.0 && a1.b == 0.0)
+        Y = di_interval(0.0, 0.0);
+    else
+        Y = di_fast_div(a1, di_fast_add(di_fast_sqr(u), di_fast_sqr(v)));
+
     Z = di_fast_div(ba1, di_fast_add(di_fast_sqr(di_fast_add_d(u, 1.0)), di_fast_sqr(v)));
 
     if (which == 0)
@@ -206,7 +215,8 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
 
     if (order == 1)
     {
-        if (!arb_is_positive(acb_realref(t)))
+        if (!(arb_is_positive(acb_realref(t)) || arb_is_zero(a1)) ||
+            !arb_is_positive(acb_realref(v)))
             acb_indeterminate(out);
         else
             integrand_wide_bound5(out, t, a1, ba1, z, prec);
@@ -222,6 +232,7 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
 
             /* t^(a-1) */
             acb_my_pow_arb(u, t, a1, prec);
+
             /* (1+t)^(b-a-1) */
             acb_pow_arb(v, v, ba1, prec);
 
@@ -234,8 +245,15 @@ integrand(acb_ptr out, const acb_t t, void * param, slong order, slong prec)
             acb_neg(s, s);
 
             /* t^(a-1) */
-            acb_log(u, t, prec);
-            acb_mul_arb(u, u, a1, prec);
+            if (arb_is_zero(a1))
+            {
+                acb_zero(u);
+            }
+            else
+            {
+                acb_log(u, t, prec);
+                acb_mul_arb(u, u, a1, prec);
+            }
 
             /* (1+t)^(b-a-1) */
             acb_log(v, v, prec);
@@ -277,6 +295,10 @@ estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rz)
         t1 = 1e-8;
         t2 = 1e-8;
     }
+
+    /* todo: better estimate when peak is at 0 */
+    t1 = FLINT_MAX(t1, 1e-8);
+    t2 = FLINT_MAX(t2, 1e-8);
 
     m = -1e300;
 

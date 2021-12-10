@@ -36,8 +36,15 @@ int main()
         prec = 2 + n_randint(state, 500);
         scaled = n_randint(state, 2);
 
-        acb_randtest_param(nu, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 10));
+        acb_randtest_param(nu, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 20));
         acb_randtest(z, state, 1 + n_randint(state, 1000), 1 + n_randint(state, 100));
+
+        if (n_randint(state, 2) && prec <= 200)
+        {
+            arb_zero(acb_imagref(nu));
+            arb_zero(acb_imagref(z));
+            arb_abs(acb_realref(nu), acb_realref(nu));
+        }
 
         switch (n_randint(state, 3))
         {

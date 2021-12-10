@@ -51,6 +51,13 @@ int main()
         if (n_randint(state, 4) == 0)
             arb_zero(acb_imagref(z));
 
+        if (n_randint(state, 2) && prec0 <= 200 && prec1 <= 200 && prec2 <= 200)
+        {
+            arb_zero(acb_imagref(nu0));
+            arb_zero(acb_imagref(z));
+            arb_abs(acb_realref(nu0), acb_realref(nu0));
+        }
+
         acb_sub_ui(nu1, nu0, 1, prec0);
         acb_sub_ui(nu2, nu0, 2, prec0);
 

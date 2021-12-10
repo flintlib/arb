@@ -286,6 +286,11 @@ Incomplete gamma and beta functions
     intended for internal use; :func:`arb_hypgeom_expint` is the intended
     interface for computing the exponential integral).
 
+.. function:: void arb_hypgeom_gamma_upper_integration(arb_t res, const arb_t s, const arb_t z, int regularized, slong prec)
+
+    Computes the upper incomplete gamma function using numerical
+    integration.
+
 .. function:: void _arb_hypgeom_gamma_upper_series(arb_ptr res, const arb_t s, arb_srcptr z, slong zlen, int regularized, slong n, slong prec)
               void arb_hypgeom_gamma_upper_series(arb_poly_t res, const arb_t s, const arb_poly_t z, int regularized, slong n, slong prec)
 
@@ -328,6 +333,7 @@ Incomplete gamma and beta functions
     and *z* is a power series, truncating the result to length *n*.
     The underscore method requires positive lengths and does not support
     aliasing.
+
 
 Internal evaluation functions
 ................................................................................
@@ -494,6 +500,11 @@ Bessel functions
 .. function:: void arb_hypgeom_bessel_k_scaled(arb_t res, const arb_t nu, const arb_t z, slong prec)
 
     Computes the function `e^{z} K_{\nu}(z)`.
+
+.. function:: void arb_hypgeom_bessel_i_integration(arb_t res, const arb_t nu, const arb_t z, int scaled, slong prec)
+              void arb_hypgeom_bessel_k_integration(arb_t res, const arb_t nu, const arb_t z, int scaled, slong prec)
+
+    Computes the modified Bessel functions using numerical integration.
 
 Airy functions
 -------------------------------------------------------------------------------
