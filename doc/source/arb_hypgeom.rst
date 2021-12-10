@@ -196,6 +196,20 @@ Gauss hypergeometric function
     Additional evaluation flags can be passed via the *regularized*
     argument; see :func:`acb_hypgeom_2f1` for documentation.
 
+.. function:: void arb_hypgeom_2f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_t z, int regularized, slong prec)
+
+    Computes the Gauss hypergeometric function using numerical integration
+    of the representation
+
+    .. math ::
+
+        {}_2F_1(a,b,c,z) = \frac{\Gamma(a)}{\Gamma(b) \Gamma(c-b)} \int_0^1 t^{b-1} (1-t)^{c-b-1} (1-zt)^{-a} dt.
+
+    This algorithm can be useful if the parameters are large. This will currently
+    only return a finite enclosure if `b \ge 1` and `c - b \ge 1` and
+    `z < 1`, possibly with *a* and *b* exchanged.
+
+
 Error functions and Fresnel integrals
 -------------------------------------------------------------------------------
 
