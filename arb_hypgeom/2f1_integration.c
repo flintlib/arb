@@ -340,6 +340,12 @@ estimate_magnitude(mag_t res, const arb_t ra, const arb_t rb, const arb_t rc, co
         t2 = 1 - 1e-8;
     }
 
+    /* todo: more reliable solution when peak is at (or close to) 0 or 1 */
+    t1 = FLINT_MAX(t1, 1e-10);
+    t2 = FLINT_MAX(t2, 1e-10);
+    t1 = FLINT_MIN(t1, 1 - 1e-10);
+    t2 = FLINT_MIN(t2, 1 - 1e-10);
+
     m = -1e300;
 
     if (t1 > 0.0 && t1 < 1.0 && z * t1 < 1.0)
@@ -417,6 +423,7 @@ _arb_hypgeom_2f1_integration(arb_t res, const arb_t a, const arb_t b, const arb_
         acb_one(one);
         estimate_magnitude(abs_tol, a, b, c, z);
         mag_mul_2exp_si(abs_tol, abs_tol, -prec);
+
         acb_calc_integrate(I, integrand, param, zero, one, prec, abs_tol, opt, prec);
 
         if (!(regularized & 1))

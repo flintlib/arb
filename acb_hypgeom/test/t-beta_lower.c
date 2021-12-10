@@ -122,6 +122,72 @@ int main()
         acb_clear(u);
     }
 
+    /* see issue 359 */
+    {
+        slong prec;
+        acb_t z, a, b, res, res2;
+
+        acb_init(z);
+        acb_init(a);
+        acb_init(b);
+        acb_init(res);
+        acb_init(res2);
+
+        prec = 64;
+        acb_set_d(a, 1e5);
+        acb_set_d(b, 1e5);
+        acb_set_ui(z, 4999);
+        acb_div_ui(z, z, 10000, prec);
+        acb_hypgeom_beta_lower(res, a, b, z, 1, prec);
+        arb_set_str(acb_realref(res2), "0.4643650813520 +/- 5.17e-14", prec);
+
+        if (!acb_overlaps(res, res2) || acb_rel_accuracy_bits(res) < acb_rel_accuracy_bits(res2) - 10)
+        {
+            flint_printf("FAIL: test case (1)\n\n");
+            flint_printf("res = "); acb_printd(res, 100); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 100); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        prec = 128;
+        acb_set_d(a, 1e10);
+        acb_set_d(b, 1e10);
+        acb_set_ui(z, 4999);
+        acb_div_ui(z, z, 10000, prec);
+        acb_hypgeom_beta_lower(res, a, b, z, 1, prec);
+        arb_set_str(acb_realref(res2), "2.69791122252793228610950163e-176 +/- 2.47e-203", prec);
+
+        if (!acb_overlaps(res, res2) || acb_rel_accuracy_bits(res) < acb_rel_accuracy_bits(res2) - 10)
+        {
+            flint_printf("FAIL: test case (2)\n\n");
+            flint_printf("res = "); acb_printd(res, 100); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 100); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        prec = 128;
+        acb_set_d(a, 1e15);
+        acb_set_d(b, 1e15);
+        acb_set_ui(z, 4999);
+        acb_div_ui(z, z, 10000, prec);
+        acb_hypgeom_beta_lower(res, a, b, z, 1, prec);
+        arb_set_str(acb_realref(res2), "1.0612052723416047758478e-17371784 +/- 7.21e-17371807", prec);
+
+        if (!acb_overlaps(res, res2) || acb_rel_accuracy_bits(res) < acb_rel_accuracy_bits(res2) - 10)
+        {
+            flint_printf("FAIL: test case (3\n\n");
+            flint_printf("res = "); acb_printd(res, 100); flint_printf("\n\n");
+            flint_printf("res2 = "); acb_printd(res2, 100); flint_printf("\n\n");
+            flint_abort();
+        }
+
+        acb_clear(z);
+        acb_clear(a);
+        acb_clear(b);
+        acb_clear(res);
+        acb_clear(res2);
+    }
+
     flint_randclear(state);
     flint_cleanup();
     flint_printf("PASS\n");
