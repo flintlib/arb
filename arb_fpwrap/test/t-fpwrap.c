@@ -149,6 +149,26 @@ int main()
     }
 
     {
+        double y;
+
+        arb_fpwrap_double_hypgeom_2f1(&y, 0.1, 0.2, 0.3, 0.4, 0, FPWRAP_CORRECT_ROUNDING);
+
+        if (fabs(y - 1.0341794015503748492) > 1e-16)
+        {
+            flint_printf("FAIL: value 6\n\n");
+            flint_abort();
+        }
+
+        arb_fpwrap_double_hypgeom_2f1(&y, 0.1, 0.2, 0.3, 0.4, 1, FPWRAP_CORRECT_ROUNDING);
+
+        if (fabs(y - 0.34569799520143110351) > 1e-16)
+        {
+            flint_printf("FAIL: value 6\n\n");
+            flint_abort();
+        }
+    }
+
+    {
         double x, y, z;
         complex_double cx, cy, cz, ctau;
         double res, res2;
