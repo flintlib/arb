@@ -123,3 +123,30 @@ arb_fma_ui(arb_t res, const arb_t x, ulong y, const arb_t z, slong prec)
     arb_fma_arf(res, x, t, z, prec);
 }
 
+void
+arb_fma_si(arb_t res, const arb_t x, slong y, const arb_t z, slong prec)
+{
+    arf_t t;
+    arf_init_set_si(t, y); /* no need to free */
+    arb_fma_arf(res, x, t, z, prec);
+}
+
+void
+arb_fma_fmpz(arb_t res, const arb_t x, const fmpz_t y, const arb_t z, slong prec)
+{
+    arf_t t;
+
+    if (!COEFF_IS_MPZ(*y))
+    {
+        arf_init_set_si(t, *y); /* no need to free */
+        arb_fma_arf(res, x, t, z, prec);
+    }
+    else
+    {
+        arf_init(t);
+        arf_set_fmpz(t, y);
+        arb_fma_arf(res, x, t, z, prec);
+        arf_clear(t);
+    }
+}
+

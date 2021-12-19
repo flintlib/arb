@@ -427,7 +427,9 @@ void arb_submul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec);
 
 void arb_fma(arb_t res, const arb_t x, const arb_t y, const arb_t z, slong prec);
 void arb_fma_arf(arb_t res, const arb_t x, const arf_t y, const arb_t z, slong prec);
+void arb_fma_si(arb_t res, const arb_t x, slong y, const arb_t z, slong prec);
 void arb_fma_ui(arb_t res, const arb_t x, ulong y, const arb_t z, slong prec);
+void arb_fma_fmpz(arb_t res, const arb_t x, const fmpz_t y, const arb_t z, slong prec);
 
 void arb_dot_simple(arb_t res, const arb_t initial, int subtract,
     arb_srcptr x, slong xstep, arb_srcptr y, slong ystep, slong len, slong prec);
