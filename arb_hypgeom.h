@@ -200,6 +200,11 @@ void arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, con
 void arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
 void arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
 
+void arb_hypgeom_sum_fmpq_imag_arb_forward(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+void arb_hypgeom_sum_fmpq_imag_arb_rs(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+void arb_hypgeom_sum_fmpq_imag_arb(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -666,5 +666,11 @@ Hypergeometric sums
     uses rectangular splitting, and the default version uses
     an automatic algorithm choice.
 
+.. function:: void arb_hypgeom_sum_fmpq_imag_arb_forward(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_imag_arb_rs(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_imag_arb(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
 
+    Sets *res1* and *res2* to the real and imaginary part of the
+    finite hypergeometric sum
+    `\sum_{n=0}^{N-1} (\textbf{a})_n (i z^n) / (\textbf{b})_n`.
 

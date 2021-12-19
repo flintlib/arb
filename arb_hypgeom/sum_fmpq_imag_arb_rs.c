@@ -40,52 +40,19 @@ tail_precision(slong k, slong alen, slong blen, double log2z, double log2max, sl
 }
 
 /* Return approximation of log2(|x|), clambed between COEFF_MIN and COEFF_MAX. */
-double
-arf_get_d_log2_abs_approx_clamped(const arf_t x)
-{
-    if (arf_is_zero(x))
-    {
-        return COEFF_MIN;
-    }
-    else if (!arf_is_finite(x))
-    {
-        return COEFF_MAX;
-    }
-    else if (COEFF_IS_MPZ(ARF_EXP(x)))
-    {
-        if (fmpz_sgn(ARF_EXPREF(x)) < 0)
-            return COEFF_MIN;
-        else
-            return COEFF_MAX;
-    }
-    else
-    {
-        slong e = ARF_EXP(x);
-
-        if (e < -50 || e > 50)
-            return e;
-        else
-            return 1.4426950408889634074 * mag_d_log_upper_bound(fabs(arf_get_d(x, ARF_RND_UP)));
-    }
-}
+double arf_get_d_log2_abs_approx_clamped(const arf_t x);
 
 void
-arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+arb_hypgeom_sum_fmpq_imag_arb_rs(arb_t res_real, arb_t res_imag, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
 {
     slong m, i, j, k, l, jlen, jbot, jtop, wp;
     double log2z, log2max;
     int want_adaptive_precision;
-    arb_t s, t;
+    arb_t s_real, s_imag, t_real, t_imag;
     arb_ptr zpow;
     fmpz_t c, den;
     fmpz * cs;
     slong Nbits, acbits, bcbits, numbits, denbits;
-
-    if (N <= 1)
-    {
-        arb_zero(res);
-        return;
-    }
 
     m = n_sqrt(N);
     m = FLINT_MAX(m, 2);
@@ -96,8 +63,10 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
 
     fmpz_init(c);
     fmpz_init(den);
-    arb_init(s);
-    arb_init(t);
+    arb_init(s_real);
+    arb_init(s_imag);
+    arb_init(t_real);
+    arb_init(t_imag);
     zpow = _arb_vec_init(m + 1);
     cs = _fmpz_vec_init(m + 1);
 
@@ -286,20 +255,76 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
         else
             wp = prec;
 
-        arb_add(t, s, zpow + j, wp);
-        arb_swap(zpow + j, t);
-        arb_dot_fmpz(s, NULL, 0, zpow + j - jlen + 1, 1, cs, 1, jlen, wp);
-        arb_swap(zpow + j, t);
+        /*
+        s = 0
+        for i in range(jlen):
+            s += cs[i] * zpow[j - jlen + 1 + i] * i^(j - jlen + 1 + i)
+        s += cs[jlen - 1] * (s_real, s_imag)
+        (s_real, s_imag) = s / den
+        */
+
+        l = j - jlen + 1;
+
+        for (i = (2 - l) & 3; i < jlen; i += 4)
+            fmpz_neg(cs + i, cs + i);
+        for (i = (3 - l) & 3; i < jlen; i += 4)
+            fmpz_neg(cs + i, cs + i);
+
+        if (l % 2 == 0)
+        {
+            arb_dot_fmpz(t_real, NULL, 0, zpow + j - jlen + 1,     2, cs,     2, (jlen + 1) / 2, wp);
+            arb_dot_fmpz(t_imag, NULL, 0, zpow + j - jlen + 1 + 1, 2, cs + 1, 2, jlen / 2, wp);
+        }
+        else
+        {
+            arb_dot_fmpz(t_imag, NULL, 0, zpow + j - jlen + 1,     2, cs,     2, (jlen + 1) / 2, wp);
+            arb_dot_fmpz(t_real, NULL, 0, zpow + j - jlen + 1 + 1, 2, cs + 1, 2, jlen / 2, wp);
+        }
+
+        if ((jlen - 1 + l) % 4 >= 2)
+        {
+            arb_submul_fmpz(t_real, s_real, cs + jlen - 1, wp);
+            arb_submul_fmpz(t_imag, s_imag, cs + jlen - 1, wp);
+        }
+        else
+        {
+            arb_addmul_fmpz(t_real, s_real, cs + jlen - 1, wp);
+            arb_addmul_fmpz(t_imag, s_imag, cs + jlen - 1, wp);
+        }
+
+        arb_swap(s_real, t_real);
+        arb_swap(s_imag, t_imag);
 
         if (blen != 0)
-            arb_div_fmpz(s, s, den, wp);
+        {
+            arb_div_fmpz(s_real, s_real, den, wp);
+            arb_div_fmpz(s_imag, s_imag, den, wp);
+        }
 
         k -= jlen;
         j -= (jlen - 1);
 
         if (j == 0 && k >= 1)
         {
-            arb_mul(s, s, zpow + m, wp);
+            arb_mul(s_real, s_real, zpow + m, wp);
+            arb_mul(s_imag, s_imag, zpow + m, wp);
+
+            if (m % 4 == 1)
+            {
+                arb_swap(s_real, s_imag);
+                arb_neg(s_real, s_real);
+            }
+            else if (m % 4 == 2)
+            {
+                arb_neg(s_real, s_real);
+                arb_neg(s_imag, s_imag);
+            }
+            else if (m % 4 == 3)
+            {
+                arb_swap(s_real, s_imag);
+                arb_neg(s_imag, s_imag);
+            }
+
             j = m - 1;
         }
         else
@@ -308,12 +333,15 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
         }
     }
 
-    arb_swap(res, s);
+    arb_swap(res_real, s_real);
+    arb_swap(res_imag, s_imag);
 
     _arb_vec_clear(zpow, m + 1);
     _fmpz_vec_clear(cs, m + 1);
-    arb_clear(s);
-    arb_clear(t);
+    arb_clear(s_real);
+    arb_clear(s_imag);
+    arb_clear(t_real);
+    arb_clear(t_imag);
     fmpz_clear(c);
     fmpz_clear(den);
 }
