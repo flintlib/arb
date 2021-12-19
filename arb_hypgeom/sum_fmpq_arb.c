@@ -15,7 +15,7 @@ void
 arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
 {
     if (N <= 2 || (prec <= 1024 && N <= 8) || (prec <= 4096 && N <= 4))
-        arb_hypgeom_sum_fmpq_arb_foward(res, a, alen, b, blen, z, N, prec);
+        arb_hypgeom_sum_fmpq_arb_forward(res, a, alen, b, blen, z, N, prec);
     else
         arb_hypgeom_sum_fmpq_arb_rs(res, a, alen, b, blen, z, N, prec);
 }
