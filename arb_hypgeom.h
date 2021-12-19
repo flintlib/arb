@@ -196,6 +196,10 @@ slong _arb_hypgeom_gamma_upper_singular_si_choose_N(mag_t err, slong n, const ar
 void _arb_hypgeom_gamma_upper_singular_si_bsplit(arb_t res, slong n, const arb_t z, slong N, slong prec);
 int arb_hypgeom_erf_bb(arb_t res, const arb_t z, int complementary, slong prec);
 
+void arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+void arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+void arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec);
+
 #ifdef __cplusplus
 }
 #endif

@@ -649,3 +649,22 @@ Dilogarithm
 
     Computes the dilogarithm `\operatorname{Li}_2(z)`.
 
+Hypergeometric sums
+-------------------------------------------------------------------------------
+
+.. function:: void arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+
+    Sets *res* to the finite hypergeometric sum
+    `\sum_{n=0}^{N-1} (\textbf{a})_n z^n / (\textbf{b})_n`
+    where `\textbf{x}_n = (x_1)_n (x_2)_n \cdots`,
+    given vectors of rational parameters *a* (of length *alen*)
+    and *b* (of length *blen*).
+    The *forward* version uses the forward recurrence, optimized by
+    delaying divisions, the *rs* version
+    uses rectangular splitting, and the default version uses
+    an automatic algorithm choice.
+
+
+
