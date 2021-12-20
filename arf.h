@@ -823,6 +823,18 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
         r3 += r2 < t1;                                      \
     } while (0)
 
+#define nn_sqr_2(r3, r2, r1, r0, a1, a0)                    \
+    do {                                                    \
+        mp_limb_t t1, t2, t3;                               \
+        umul_ppmm(r1, r0, a0, a0);                          \
+        umul_ppmm(t2, t1, a1, a0);                          \
+        add_ssaaaa(r2, r1, t2, t1, 0, r1);                  \
+        umul_ppmm(r3, t3, a1, a1);                          \
+        add_ssaaaa(r3, t2, r3, t2, 0, t3);                  \
+        add_ssaaaa(r2, r1, r2, r1, t2, t1);                 \
+        r3 += r2 < t2;                                      \
+    } while (0)
+
 #define ARF_MPN_MUL(_z, _x, _xn, _y, _yn) \
     if ((_xn) == (_yn)) \
     { \
@@ -913,6 +925,21 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec);
     ((rnd == FMPR_RND_DOWN)                      \
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
+
+int arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec);
+
+ARF_INLINE void
+arf_sqr_special(arf_t res, const arf_t x)
+{
+    /* 0 -> 0, +inf -> +inf, -inf -> +inf, NaN -> Nan */
+    if (ARF_EXP(x) == ARF_EXP_NEG_INF)
+        arf_pos_inf(res);
+    else if (res != x)
+    {
+        ARF_MAKE_SPECIAL(res);
+        ARF_EXP(res) = ARF_EXP(x);
+    }
+}
 
 ARF_INLINE int
 arf_neg_mul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
