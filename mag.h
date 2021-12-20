@@ -112,6 +112,23 @@ _fmpz_sub2_fast(fmpz_t z, const fmpz_t x, const fmpz_t y, slong c)
     }
 }
 
+static __inline__ void
+_fmpz_2times_fast(fmpz_t res, const fmpz_t x, slong c)
+{
+    slong cx = *x;
+
+    if (!COEFF_IS_MPZ(*res) && (cx > COEFF_MIN / 2 && cx < COEFF_MAX / 2))
+    {
+        *res = 2 * cx + c;
+    }
+    else
+    {
+        fmpz_mul_2exp(res, x, 1);
+        if (c != 0)
+            fmpz_add_si(res, res, c);
+    }
+}
+
 
 #define MAG_EXP_POS_INF (COEFF_MIN+1)
 
