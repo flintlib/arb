@@ -17,7 +17,7 @@ arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec)
     mp_size_t xn, resn;
     mp_limb_t hi, lo;
     slong expfix;
-    int sgnbit, ret, fix;
+    int ret, fix;
     mp_ptr resptr;
 
     xn = ARF_XSIZE(x);
@@ -172,7 +172,7 @@ arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec)
 
         mpn_sqr(tmp, xptr, xn);
 
-        ret = _arf_set_round_mpn(res, &expfix, tmp, resn, sgnbit, prec, ARF_RND_DOWN);
+        ret = _arf_set_round_mpn(res, &expfix, tmp, resn, 0, prec, ARF_RND_DOWN);
         _fmpz_2times_fast(ARF_EXPREF(res), ARF_EXPREF(x), expfix);
         ARF_MUL_TMP_FREE(tmp, alloc)
 
