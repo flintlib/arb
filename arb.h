@@ -413,11 +413,7 @@ void arb_mul_si(arb_t z, const arb_t x, slong y, slong prec);
 void arb_mul_ui(arb_t z, const arb_t x, ulong y, slong prec);
 void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec);
 
-ARB_INLINE void
-arb_sqr(arb_t res, const arb_t val, slong prec)
-{
-    arb_mul(res, val, val, prec);
-}
+void arb_sqr(arb_t res, const arb_t x, slong prec);
 
 void arb_addmul(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
