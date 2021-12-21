@@ -100,7 +100,6 @@ void arb_hypgeom_ei(arb_t res, const arb_t z, slong prec);
 void _arb_hypgeom_ei_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_hypgeom_ei_series(arb_poly_t g, const arb_poly_t h, slong len, slong prec);
 
-
 void _arb_hypgeom_si_asymp(arb_t res, const arb_t z, slong N, slong prec);
 void _arb_hypgeom_si_1f2(arb_t res, const arb_t z, slong N, slong wp, slong prec);
 void arb_hypgeom_si(arb_t res, const arb_t z, slong prec);
@@ -108,7 +107,10 @@ void arb_hypgeom_si(arb_t res, const arb_t z, slong prec);
 void _arb_hypgeom_si_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_hypgeom_si_series(arb_poly_t g, const arb_poly_t h, slong len, slong prec);
 
+void _arb_hypgeom_ci_asymp(arb_t res, const arb_t z, slong N, slong prec);
+void _arb_hypgeom_ci_2f3(arb_t res, const arb_t z, slong N, slong wp, slong prec);
 void arb_hypgeom_ci(arb_t res, const arb_t z, slong prec);
+
 void _arb_hypgeom_ci_series(arb_ptr g, arb_srcptr h, slong hlen, slong len, slong prec);
 void arb_hypgeom_ci_series(arb_poly_t g, const arb_poly_t h, slong len, slong prec);
 

@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "arb_hypgeom.h"
 #include "acb_hypgeom.h"
 
 void
@@ -151,9 +152,28 @@ acb_hypgeom_ci_2f3(acb_t res, const acb_t z, slong prec)
 void
 acb_hypgeom_ci(acb_t res, const acb_t z, slong prec)
 {
+    if (acb_is_real(z) && arb_is_finite(acb_realref(z)))
+    {
+        if (arb_is_positive(acb_realref(z)))
+        {
+            arb_hypgeom_ci(acb_realref(res), acb_realref(z), prec);
+            arb_zero(acb_imagref(res));
+        }
+        else if (arb_is_negative(acb_realref(z)))
+        {
+            arb_neg(acb_realref(res), acb_realref(z));
+            arb_hypgeom_ci(acb_realref(res), acb_realref(res), prec);
+            arb_const_pi(acb_imagref(res), prec);
+        }
+        else
+        {
+            acb_indeterminate(res);
+        }
+        return;
+    }
+
     if (acb_hypgeom_u_use_asymp(z, prec))
         acb_hypgeom_ci_asymp(res, z, prec);
     else
         acb_hypgeom_ci_2f3(res, z, prec);
 }
-

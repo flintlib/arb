@@ -16,7 +16,7 @@ int main()
     slong iter;
     flint_rand_t state;
 
-    flint_printf("si....");
+    flint_printf("ci....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -48,26 +48,26 @@ int main()
         switch (n_randint(state, 3))
         {
             case 0:
-                arb_hypgeom_si(s, x, prec1);
+                arb_hypgeom_ci(s, x, prec1);
                 break;
             case 1:
-                _arb_hypgeom_si_1f2(s, x, n_randint(state, prec1), prec1, prec1);
+                _arb_hypgeom_ci_2f3(s, x, n_randint(state, prec1), prec1, prec1);
                 break;
             default:
-                _arb_hypgeom_si_asymp(s, x, n_randint(state, prec1 / 2), prec1);
+                _arb_hypgeom_c_asymp(s, x, n_randint(state, prec1 / 2), prec1);
                 break;
         }
 
         switch (n_randint(state, 3))
         {
             case 0:
-                arb_hypgeom_si(t, x, prec2);
+                arb_hypgeom_ci(t, x, prec2);
                 break;
             case 1:
-                _arb_hypgeom_si_1f2(t, x, n_randint(state, prec2), prec2, prec2);
+                _arb_hypgeom_ci_2f3(t, x, n_randint(state, prec2), prec2, prec2);
                 break;
             default:
-                _arb_hypgeom_si_asymp(t, x, n_randint(state, prec2 / 2), prec2);
+                _arb_hypgeom_ci_asymp(t, x, n_randint(state, prec2 / 2), prec2);
                 break;
         }
 

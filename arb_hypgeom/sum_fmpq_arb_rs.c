@@ -34,12 +34,12 @@ tail_precision(slong k, double min_k, slong alen, slong blen, double log2z, doub
     new_prec = FLINT_MIN(new_prec, prec);
     new_prec = FLINT_MAX(new_prec, 32);
 
-/*    printf("term %ld, max %f, log2x %f, magn %f   new_prec %ld\n", k, log2z, log2max, term_magnitude, new_prec); */
+    /* printf("term %ld, max %f, log2x %f, magn %f   new_prec %ld\n", k, log2z, log2max, term_magnitude, new_prec); */
 
     return new_prec;
 }
 
-/* Return approximation of log2(|x|), clambed between COEFF_MIN and COEFF_MAX. */
+/* Return approximation of log2(|x|), approximately clamped between COEFF_MIN and COEFF_MAX. */
 double
 arf_get_d_log2_abs_approx_clamped(const arf_t x)
 {
@@ -60,12 +60,21 @@ arf_get_d_log2_abs_approx_clamped(const arf_t x)
     }
     else
     {
+        mp_srcptr tp;
+        mp_size_t tn;
+        double v;
         slong e = ARF_EXP(x);
 
-        if (e < -50 || e > 50)
-            return e;
+        ARF_GET_MPN_READONLY(tp, tn, x);
+
+        if (tn == 1)
+            v = (double)(tp[0]);
         else
-            return 1.4426950408889634074 * mag_d_log_upper_bound(fabs(arf_get_d(x, ARF_RND_UP)));
+            v = (double)(tp[tn - 1]) + (double)(tp[tn - 2]) * ldexp(1.0, -FLINT_BITS);
+
+        v *= ldexp(1.0, -FLINT_BITS);
+
+        return 1.4426950408889634074 * mag_d_log_upper_bound(v) + (double) e;
     }
 }
 

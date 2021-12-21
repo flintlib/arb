@@ -422,7 +422,9 @@ Exponential and trigonometric integrals
     Computes the sine integral of the power series *z*,
     truncated to length *len*.
 
-.. function:: void arb_hypgeom_ci(arb_t res, const arb_t z, slong prec)
+.. function:: void _arb_hypgeom_ci_asymp(arb_t res, const arb_t z, slong N, slong prec)
+              void _arb_hypgeom_ci_2f3(arb_t res, const arb_t z, slong N, slong wp, slong prec)
+              void arb_hypgeom_ci(arb_t res, const arb_t z, slong prec)
 
     Computes the cosine integral `\operatorname{Ci}(z)`.
     The result is indeterminate if `z < 0` since the value of the function would be complex.
