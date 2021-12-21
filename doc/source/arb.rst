@@ -989,27 +989,46 @@ Powers and roots
 
     Alias for :func:`arb_root_ui`, provided for backwards compatibility.
 
-.. function:: void arb_sqr(arb_t y, const arb_t x, slong prec)
+.. function:: void arb_sqr(arb_t res, const arb_t x, slong prec)
 
-    Sets *y* to be the square of *x*. 
+    Sets *res* to the square of `x`.
+
+.. function:: void _arb_pow_mpz_binexp(arb_t y, const arb_t b, mpz_srcptr e, slong prec)
+
+.. function:: void arb_pow_ui_binexp(arb_t y, const arb_t b, ulong e, slong prec)
+
+    Sets `y = b^e` via binary exponentiation with an initial division if
+    `e < 0`. Provided that `b` and `e` are small enough and the exponent is
+    positive, the exact power can be computed by setting the precision to
+    *ARF_PREC_EXACT*.
+
+    Note that these functions can get slow if the exponent is
+    extremely large (in such cases :func:`arb_pow` may be superior).
+
+.. function:: void arb_pow_si(arb_t y, const arb_t b, slong e, slong prec);
+
+    Sets `y = b^e` by wrapping *arb_pow_ui*, doing an initial division if
+    `e < 0`.
 
 .. function:: void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 
+    Sets `y = b^e` by wrapping *arb_pow_si* and *_arb_pow_mpz_binexp*.
+
 .. function:: void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
 
+    Wrapper for *arb_pow_fmpz_binexp*.
+
 .. function:: void arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
+
+    Wrapper for *arb_pow_ui_binexp*.
 
 .. function:: void arb_ui_pow_ui(arb_t y, ulong b, ulong e, slong prec)
 
 .. function:: void arb_si_pow_ui(arb_t y, slong b, ulong e, slong prec)
 
-    Sets `y = b^e` using binary exponentiation (with an initial division
-    if `e < 0`). Provided that *b* and *e*
+    Sets `y = b^e` using binary exponentiation. Provided that *b* and *e*
     are small enough and the exponent is positive, the exact power can be
     computed by setting the precision to *ARF_PREC_EXACT*.
-
-    Note that these functions can get slow if the exponent is
-    extremely large (in such cases :func:`arb_pow` may be superior).
 
 .. function:: void arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec)
 
