@@ -82,13 +82,14 @@ int main()
                 break;
 
             default:
+                arb_set(v, x);
                 arb_mul(z, x, x, prec);
-                arb_sqr(x, x, prec);
+                arb_sqr(v, v, prec);
 
-                if (!arf_equal(arb_midref(x), arb_midref(z))
-                    || !mag_close(arb_radref(x), arb_radref(z)))
+                if (!arf_equal(arb_midref(v), arb_midref(z))
+                    || !mag_close(arb_radref(v), arb_radref(z)))
                 {
-                    flint_printf("FAIL (aliasing 4)!\n");
+                    flint_printf("FAIL (aliasing)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
                     flint_printf("v = "); arb_print(v); flint_printf("\n\n");
                     flint_printf("z = "); arb_print(z); flint_printf("\n\n");
