@@ -930,18 +930,7 @@ int arf_sqr_via_mpfr(arf_ptr res, arf_srcptr x, slong prec, arf_rnd_t rnd);
 
 int arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec);
 
-ARF_INLINE void
-arf_sqr_special(arf_t res, const arf_t x)
-{
-    /* 0 -> 0, +inf -> +inf, -inf -> +inf, NaN -> Nan */
-    if (ARF_EXP(x) == ARF_EXP_NEG_INF)
-        arf_pos_inf(res);
-    else if (res != x)
-    {
-        ARF_MAKE_SPECIAL(res);
-        ARF_EXP(res) = ARF_EXP(x);
-    }
-}
+void arf_sqr_special(arf_t res, const arf_t x);
 
 ARF_INLINE int
 arf_neg_mul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
