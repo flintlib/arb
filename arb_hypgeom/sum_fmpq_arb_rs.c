@@ -18,23 +18,23 @@ d_log2_fac(double n)
 }
 
 static slong
-tail_precision(slong k, slong alen, slong blen, double log2z, double log2max, slong prec)
+tail_precision(slong k, double min_k, slong alen, slong blen, double log2z, double log2max, slong prec)
 {
     double term_magnitude;
     slong new_prec;
 
-    if (prec <= 128 || k <= 5)
+    if (prec <= 128 || k <= 5 || k <= min_k)
         return prec;
 
     term_magnitude = k * log2z;
     if (alen != blen)
         term_magnitude += (alen - blen) * d_log2_fac(k);
 
-/*    printf("term %ld, max %f, log2x %f, magn %f\n", k, log2z, log2max, term_magnitude); */
-
     new_prec = prec - (log2max - term_magnitude) + 10;
     new_prec = FLINT_MIN(new_prec, prec);
     new_prec = FLINT_MAX(new_prec, 32);
+
+/*    printf("term %ld, max %f, log2x %f, magn %f   new_prec %ld\n", k, log2z, log2max, term_magnitude, new_prec); */
 
     return new_prec;
 }
@@ -70,10 +70,10 @@ arf_get_d_log2_abs_approx_clamped(const arf_t x)
 }
 
 void
-arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
 {
     slong m, i, j, k, l, jlen, jbot, jtop, wp;
-    double log2z, log2max;
+    double log2z, log2max, adaptive_min_k;
     int want_adaptive_precision;
     arb_t s, t;
     arb_ptr zpow;
@@ -83,7 +83,10 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
 
     if (N <= 1)
     {
-        arb_zero(res);
+        if (N == 1)
+            arb_one(res);
+        else
+            arb_zero(res);
         return;
     }
 
@@ -101,15 +104,24 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
     zpow = _arb_vec_init(m + 1);
     cs = _fmpz_vec_init(m + 1);
 
-    fmpz_one(den);
-    for (i = 0; i < blen; i++)
-        fmpz_mul(den, den, fmpq_denref(b + i));
-    arb_mul_fmpz(zpow + m, z, den, prec);
-
+    fmpz_one(c);
     fmpz_one(den);
     for (i = 0; i < alen; i++)
         fmpz_mul(den, den, fmpq_denref(a + i));
-    arb_div_fmpz(zpow + m, zpow + m, den, prec);
+    for (i = 0; i < blen; i++)
+        fmpz_mul(c, c, fmpq_denref(b + i));
+
+    if (reciprocal)
+    {
+        arb_mul_fmpz(zpow + m, z, den, prec);
+        arb_set_fmpz(t, c);
+        arb_div(zpow + m, t, zpow + m, prec);
+    }
+    else
+    {
+        arb_mul_fmpz(zpow + m, z, c, prec);
+        arb_div_fmpz(zpow + m, zpow + m, den, prec);
+    }
 
     want_adaptive_precision = N > 5;
 
@@ -134,10 +146,12 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
 
     log2max = 0.0;
     log2z = 0.0;
+    adaptive_min_k = 0.0;
     if (want_adaptive_precision)
     {
-
         log2z = arf_get_d_log2_abs_approx_clamped(arb_midref(z));
+        if (reciprocal)
+            log2z = -log2z;
 
         /* Terms are increasing, so don't change the precision. */
         if (alen >= blen && log2z >= 0.0)
@@ -159,6 +173,12 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
                 /* r = 3 -> exp(3*z^(1/3)) */
                 /* ... */
                 log2max = r * exp(log2z * 0.693147180559945 / r) * 1.44269504088896;
+
+                /* fixme */
+                if (r == 1)
+                    adaptive_min_k = exp(log2z * log(2));
+                else
+                    adaptive_min_k = exp(0.5 * log2z * log(2));
             }
         }
     }
@@ -282,7 +302,7 @@ arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * 
         }
 
         if (want_adaptive_precision)
-            wp = tail_precision(k - jlen, alen, blen, log2z, log2max, prec);
+            wp = tail_precision(k - jlen, adaptive_min_k, alen, blen, log2z, log2max, prec);
         else
             wp = prec;
 

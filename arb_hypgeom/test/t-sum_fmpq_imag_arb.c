@@ -24,9 +24,10 @@ int main()
 
     for (iter = 0; iter < 10000 * arb_test_multiplier(); iter++)
     {
-        arb_t s1, s2, r1, r2, z;
+        arb_t s1, s2, s3, r1, r2, r3, z;
         fmpq *a, *b;
         slong alen, blen, N, prec;
+        int reciprocal;
 
         alen = n_randint(state, 5);
         blen = n_randint(state, 5);
@@ -34,13 +35,16 @@ int main()
 
         arb_init(s1);
         arb_init(s2);
+        arb_init(s3);
         arb_init(r1);
         arb_init(r2);
+        arb_init(r3);
         arb_init(z);
         a = _fmpq_vec_init(alen);
         b = _fmpq_vec_init(blen);
 
         prec = 2 + n_randint(state, 500);
+        reciprocal = n_randint(state, 2);
 
         if (n_randint(state, 10) == 0)
             arb_randtest_special(z, state, 1 + n_randint(state, 200), 1 + n_randint(state, 100));
@@ -54,10 +58,12 @@ int main()
         _fmpq_vec_randtest(a, state, alen, 1 + n_randint(state, 100));
         _fmpq_vec_randtest(b, state, blen, 1 + n_randint(state, 100));
 
-        arb_hypgeom_sum_fmpq_imag_arb_forward(r1, s1, a, alen, b, blen, z, N, prec);
-        arb_hypgeom_sum_fmpq_imag_arb_rs(r2, s2, a, alen, b, blen, z, N, prec);
+        arb_hypgeom_sum_fmpq_imag_arb_forward(r1, s1, a, alen, b, blen, z, reciprocal, N, prec);
+        arb_hypgeom_sum_fmpq_imag_arb_rs(r2, s2, a, alen, b, blen, z, reciprocal, N, prec);
+        arb_hypgeom_sum_fmpq_imag_arb_bs(r3, s3, a, alen, b, blen, z, reciprocal, N, prec);
 
-        if (!arb_overlaps(r1, r2) || !arb_overlaps(s1, s2))
+        if (!arb_overlaps(r1, r2) || !arb_overlaps(s1, s2) ||
+            !arb_overlaps(r1, r3) || !arb_overlaps(s1, s3))
         {
             flint_printf("FAIL: overlap\n\n");
             flint_printf("N = %wd\n\n", N);
@@ -68,13 +74,17 @@ int main()
             flint_printf("s1 = "); arb_printn(s1, 100, 0); flint_printf("\n\n");
             flint_printf("r2 = "); arb_printn(r2, 100, 0); flint_printf("\n\n");
             flint_printf("s2 = "); arb_printn(s2, 100, 0); flint_printf("\n\n");
+            flint_printf("r3 = "); arb_printn(r3, 100, 0); flint_printf("\n\n");
+            flint_printf("s3 = "); arb_printn(s3, 100, 0); flint_printf("\n\n");
             flint_abort();
         }
 
         arb_clear(s1);
         arb_clear(s2);
+        arb_clear(s3);
         arb_clear(r1);
         arb_clear(r2);
+        arb_clear(r3);
         arb_clear(z);
         _fmpq_vec_clear(a, alen);
         _fmpq_vec_clear(b, blen);

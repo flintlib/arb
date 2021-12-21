@@ -12,14 +12,17 @@
 #include "arb_hypgeom.h"
 
 void
-arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
 {
     arb_t t, u, sden;
     slong i, k, num_max_bits, den_max_bits, bits1, bits2, Nbits, den_prec;
 
     if (N <= 1)
     {
-        arb_zero(res);
+        if (N == 1)
+            arb_one(res);
+        else
+            arb_zero(res);
         return;
     }
 
@@ -51,14 +54,23 @@ arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fm
         slong num, den;
 
         den = 1;
-        for (i = 0; i < blen; i++)
-            den *= *fmpq_denref(b + i);
-        arb_mul_si(u, z, den, prec);
-
-        den = 1;
+        num = 1;
         for (i = 0; i < alen; i++)
             den *= *fmpq_denref(a + i);
-        arb_div_si(u, u, den, prec);
+        for (i = 0; i < blen; i++)
+            num *= *fmpq_denref(b + i);
+
+        if (reciprocal)
+        {
+            arb_mul_si(u, z, den, prec);
+            arb_set_si(t, num);
+            arb_div(u, t, u, prec);
+        }
+        else
+        {
+            arb_mul_si(u, z, num, prec);
+            arb_div_si(u, u, den, prec);
+        }
 
         arb_one(res);
         arb_one(t);
@@ -105,14 +117,23 @@ arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fm
         fmpz_init(c);
 
         fmpz_one(den);
-        for (i = 0; i < blen; i++)
-            fmpz_mul(den, den, fmpq_denref(b + i));
-        arb_mul_fmpz(u, z, den, prec);
-
-        fmpz_one(den);
+        fmpz_one(num);
         for (i = 0; i < alen; i++)
             fmpz_mul(den, den, fmpq_denref(a + i));
-        arb_div_fmpz(u, u, den, prec);
+        for (i = 0; i < blen; i++)
+            fmpz_mul(num, num, fmpq_denref(b + i));
+
+        if (reciprocal)
+        {
+            arb_mul_fmpz(u, z, den, prec);
+            arb_set_fmpz(t, num);
+            arb_div(u, t, u, prec);
+        }
+        else
+        {
+            arb_mul_fmpz(u, z, num, prec);
+            arb_div_fmpz(u, u, den, prec);
+        }
 
         arb_one(res);
         arb_one(t);
@@ -169,4 +190,3 @@ arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fm
     arb_clear(u);
     arb_clear(sden);
 }
-

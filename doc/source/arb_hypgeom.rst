@@ -410,7 +410,9 @@ Exponential and trigonometric integrals
     Computes the exponential integral of the power series *z*,
     truncated to length *len*.
 
-.. function:: void arb_hypgeom_si(arb_t res, const arb_t z, slong prec)
+.. function:: void _arb_hypgeom_si_asymp(arb_t res, const arb_t z, slong N, slong prec)
+              void _arb_hypgeom_si_1f2(arb_t res, const arb_t z, slong N, slong wp, slong prec)
+              void arb_hypgeom_si(arb_t res, const arb_t z, slong prec)
 
     Computes the sine integral `\operatorname{Si}(z)`.
 
@@ -652,25 +654,27 @@ Dilogarithm
 Hypergeometric sums
 -------------------------------------------------------------------------------
 
-.. function:: void arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
-              void arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
-              void arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+.. function:: void arb_hypgeom_sum_fmpq_arb_forward(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_arb_rs(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_arb(arb_t res, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
 
     Sets *res* to the finite hypergeometric sum
     `\sum_{n=0}^{N-1} (\textbf{a})_n z^n / (\textbf{b})_n`
     where `\textbf{x}_n = (x_1)_n (x_2)_n \cdots`,
     given vectors of rational parameters *a* (of length *alen*)
     and *b* (of length *blen*).
+    If *reciprocal* is set, replace `z` by `1 / z`.
     The *forward* version uses the forward recurrence, optimized by
     delaying divisions, the *rs* version
     uses rectangular splitting, and the default version uses
     an automatic algorithm choice.
 
-.. function:: void arb_hypgeom_sum_fmpq_imag_arb_forward(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
-              void arb_hypgeom_sum_fmpq_imag_arb_rs(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
-              void arb_hypgeom_sum_fmpq_imag_arb(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, slong N, slong prec)
+.. function:: void arb_hypgeom_sum_fmpq_imag_arb_forward(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_imag_arb_rs(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_imag_arb_bs(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
+              void arb_hypgeom_sum_fmpq_imag_arb(arb_t res1, arb_t res2, const fmpq * a, slong alen, const fmpq * b, slong blen, const arb_t z, int reciprocal, slong N, slong prec)
 
     Sets *res1* and *res2* to the real and imaginary part of the
     finite hypergeometric sum
-    `\sum_{n=0}^{N-1} (\textbf{a})_n (i z^n) / (\textbf{b})_n`.
-
+    `\sum_{n=0}^{N-1} (\textbf{a})_n (i z)^n / (\textbf{b})_n`.
+    If *reciprocal* is set, replace `z` by `1 / z`.

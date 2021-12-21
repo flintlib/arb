@@ -71,24 +71,6 @@ arb_hypgeom_ei(arb_t res, const arb_t z, slong prec)
 }
 
 void
-arb_hypgeom_si(arb_t res, const arb_t z, slong prec)
-{
-    if (!arb_is_finite(z))
-    {
-        arb_indeterminate(res);
-    }
-    else
-    {
-        acb_t t;
-        acb_init(t);
-        arb_set(acb_realref(t), z);
-        acb_hypgeom_si(t, t, prec);
-        arb_swap(res, acb_realref(t));
-        acb_clear(t);
-    }
-}
-
-void
 arb_hypgeom_ci(arb_t res, const arb_t z, slong prec)
 {
     if (!arb_is_finite(z) || !arb_is_positive(z))
