@@ -54,7 +54,7 @@ int main()
                 _arb_hypgeom_ci_2f3(s, x, n_randint(state, prec1), prec1, prec1);
                 break;
             default:
-                _arb_hypgeom_c_asymp(s, x, n_randint(state, prec1 / 2), prec1);
+                _arb_hypgeom_ci_asymp(s, x, n_randint(state, prec1 / 2), prec1);
                 break;
         }
 
