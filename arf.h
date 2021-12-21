@@ -926,6 +926,8 @@ int arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec);
         ? arf_mul_rnd_down(z, x, y, prec)        \
         : arf_mul_rnd_any(z, x, y, prec, rnd))
 
+int arf_sqr_via_mpfr(arf_ptr res, arf_srcptr x, slong prec, arf_rnd_t rnd);
+
 int arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec);
 
 ARF_INLINE void
