@@ -44,7 +44,7 @@ mag_pow_fmpq_fast(mag_t res, const mag_t x, const fmpq_t e)
 }
 
 slong
-_arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_t z, const mag_t abs_tol)
+_arb_hypgeom_gamma_upper_fmpq_inf_choose_N_1(mag_t err, const fmpq_t a, const arb_t z, int prefactor, const mag_t abs_tol)
 {
     slong N, aa, ab;
     fmpz_t az1, az2;
@@ -71,12 +71,19 @@ _arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_
         ab = fmpz_get_si(az2);
 
         /* prefactor z^(a-1) * exp(-z) */
-        arb_get_mag_lower(t, z);
-        mag_expinv(t, t);
-        fmpq_sub_ui(a1, a, 1);
-        arb_get_mag(u, z);
-        mag_pow_fmpq_fast(u, u, a1);
-        mag_mul(err, t, u);
+        if (prefactor)
+        {
+            arb_get_mag_lower(t, z);
+            mag_expinv(t, t);
+            fmpq_sub_ui(a1, a, 1);
+            arb_get_mag(u, z);
+            mag_pow_fmpq_fast(u, u, a1);
+            mag_mul(err, t, u);
+        }
+        else
+        {
+            mag_one(err);
+        }
 
         if (mag_is_inf(err))
         {
@@ -118,6 +125,24 @@ _arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_
     mag_clear(u);
     fmpq_clear(a1);
 
+    return N;
+}
+
+slong
+_arb_hypgeom_gamma_upper_fmpq_inf_choose_N(mag_t err, const fmpq_t a, const arb_t z, const mag_t abs_tol)
+{
+    return _arb_hypgeom_gamma_upper_fmpq_inf_choose_N_1(err, a, z, 1, abs_tol);
+}
+
+slong
+_arb_hypgeom_gamma_upper_fmpq_inf_choose_N_rel(mag_t err, const fmpq_t a, const arb_t z, slong prec)
+{
+    mag_t tol;
+    slong N;
+    mag_init(tol);
+    mag_set_ui_2exp_si(tol, 1, -prec);
+    N = _arb_hypgeom_gamma_upper_fmpq_inf_choose_N_1(err, a, z, 0, tol);
+    mag_clear(tol);
     return N;
 }
 
@@ -281,6 +306,7 @@ _arb_hypgeom_gamma_lower_fmpq_0_choose_N(mag_t err, const fmpq_t a, const arb_t 
 
     return N;
 }
+
 
 /* todo: squaring opt; power table */
 static void
