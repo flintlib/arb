@@ -62,7 +62,8 @@ arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, sl
     else
         fmpz_set(e, ARF_EXPREF(arb_radref(x)));
 
-    prec = fmpz_bits(e) + 15;
+    prec = fmpz_bits(e);
+    prec = FLINT_MAX(prec, FLINT_BIT_COUNT(n)) + 15;
 
     arb_const_log2(t, prec);
     arb_const_log10(u, prec);
@@ -70,7 +71,6 @@ arb_get_fmpz_mid_rad_10exp(fmpz_t mid, fmpz_t rad, fmpz_t exp, const arb_t x, sl
     arb_mul_fmpz(t, t, e, prec);
     arb_neg(t, t);
     arb_add_ui(t, t, n + 5, prec);
-
     arf_get_fmpz(m, arb_midref(t), ARF_RND_FLOOR);
 
     fmpz_neg(exp, m);
