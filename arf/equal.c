@@ -48,3 +48,19 @@ arf_equal_si(const arf_t x, slong y)
     return arf_equal(x, t); /* no need to free */
 }
 
+int
+arf_equal_ui(const arf_t x, ulong y)
+{
+    arf_t t;
+    arf_init_set_ui(t, y);
+    return arf_equal(x, t); /* no need to free */
+}
+
+int
+arf_equal_d(const arf_t x, double y)
+{
+    arf_t t;
+    arf_init(t);
+    arf_set_d(t, y);
+    return arf_equal(x, t); /* no need to free */
+}

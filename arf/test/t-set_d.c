@@ -37,7 +37,7 @@ int main()
         mpfr_set_d(m, x, MPFR_RNDN);
         arf_set_mpfr(z, m);
 
-        if (!arf_equal(y, z))
+        if (!arf_equal(y, z) || !arf_equal_d(y, x))
         {
             flint_printf("FAIL:\n\n");
             flint_printf("x = %.17g\n\n", x);

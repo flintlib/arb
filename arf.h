@@ -610,8 +610,9 @@ int arf_get_mpfr(mpfr_t x, const arf_t y, mpfr_rnd_t rnd);
 void arf_set_mpfr(arf_t x, const mpfr_t y);
 
 int arf_equal(const arf_t x, const arf_t y);
-
 int arf_equal_si(const arf_t x, slong y);
+int arf_equal_ui(const arf_t x, ulong y);
+int arf_equal_d(const arf_t x, double y);
 
 ARF_INLINE void
 arf_min(arf_t z, const arf_t a, const arf_t b)

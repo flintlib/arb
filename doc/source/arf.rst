@@ -323,11 +323,15 @@ Comparisons and bounds
 -------------------------------------------------------------------------------
 
 .. function:: int arf_equal(const arf_t x, const arf_t y)
+              int arf_equal_si(const arf_t x, slong y)
+              int arf_equal_ui(const arf_t x, ulong y)
+              int arf_equal_d(const arf_t x, double y)
 
-.. function:: int arf_equal_si(const arf_t x, slong y)
+    Returns nonzero iff *x* and *y* are exactly equal. NaN is not
+    treated specially, i.e. NaN compares as equal to itself.
 
-    Returns nonzero iff *x* and *y* are exactly equal. This function does
-    not treat NaN specially, i.e. NaN compares as equal to itself.
+    For comparison with a *double*, the values -0 and +0 are
+    both treated as zero, and all NaN values are treated as identical.
 
 .. function:: int arf_cmp(const arf_t x, const arf_t y)
 

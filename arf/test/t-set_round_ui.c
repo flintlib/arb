@@ -61,7 +61,7 @@ int main()
 
         ret2 = arf_set_round_ui(y, t, prec, rnd);
 
-        if (!arf_equal(x, y) || (ret1 != ret2))
+        if (!arf_equal(x, y) || (ret1 != ret2) || (ret2 == 0 && !arf_equal_ui(y, t)))
         {
             flint_printf("FAIL\n\n");
             flint_printf("prec = %wd", prec); flint_printf("\n\n");
@@ -81,4 +81,3 @@ int main()
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
-
