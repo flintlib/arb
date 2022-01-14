@@ -868,7 +868,7 @@ Lambert W function
 Rising factorials
 -------------------------------------------------------------------------------
 
-.. function:: void acb_rising_ui(acb_t z, const acb_t x, const acb_t n, slong prec)
+.. function:: void acb_rising_ui(acb_t z, const acb_t x, ulong n, slong prec)
               void acb_rising(acb_t z, const acb_t x, const acb_t n, slong prec)
 
     Computes the rising factorial `z = x (x+1) (x+2) \cdots (x+n-1)`.
