@@ -775,6 +775,8 @@ void arf_ceil(arf_t z, const arf_t x);
 
 void arf_debug(const arf_t x);
 
+char * arf_get_str(const arf_t x, slong d);
+
 void arf_fprint(FILE * file, const arf_t x);
 
 void arf_fprintd(FILE * file, const arf_t y, slong d);

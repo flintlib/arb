@@ -10,7 +10,35 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include <string.h>
 #include "arf.h"
+#include "arb.h"
+
+char * arf_get_str(const arf_t x, slong d)
+{
+    if (arf_is_special(x))
+    {
+        char * s = flint_malloc(5);
+
+        if (arf_is_zero(x))
+            strcpy(s, "0");
+        else if (arf_is_pos_inf(x))
+            strcpy(s, "+inf");
+        else if (arf_is_neg_inf(x))
+            strcpy(s, "-inf");
+        else
+            strcpy(s, "nan");
+
+        return s;
+    }
+    else
+    {
+        arb_t t;
+        *arb_midref(t) = *x;
+        mag_init(arb_radref(t));  /* no need to free */
+        return arb_get_str(t, FLINT_MAX(d, 1), ARB_STR_NO_RADIUS);
+    }
+}
 
 void
 arf_fprint(FILE * file, const arf_t x)
@@ -45,20 +73,8 @@ arf_fprint(FILE * file, const arf_t x)
 void
 arf_fprintd(FILE * file, const arf_t x, slong d)
 {
-    if (arf_is_finite(x) && (ARF_EXP(x) <= MPFR_EMIN_MIN + 1 ||
-                             ARF_EXP(x) >= MPFR_EMAX_MAX - 1))
-    {
-        arf_fprint(file, x);
-    }
-    else
-    {
-        mpfr_t t;
-        mpfr_init2(t, d * 3.33 + 10);
-        mpfr_set_emin(MPFR_EMIN_MIN);
-        mpfr_set_emax(MPFR_EMAX_MAX);
-        arf_get_mpfr(t, x, MPFR_RNDN);
-        mpfr_fprintf(file, "%.*Rg", FLINT_MAX(d, 1), t);
-        mpfr_clear(t);
-    }
-}
+    char * s = arf_get_str(x, d);
 
+    fprintf(file, "%s", s);
+    flint_free(s);
+}

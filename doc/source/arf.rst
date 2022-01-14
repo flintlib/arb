@@ -502,8 +502,12 @@ Input and output
 .. function:: void arf_printd(const arf_t x, slong d)
 
     Prints *x* as a decimal floating-point number, rounding to *d* digits.
-    This function is currently implemented using MPFR,
-    and does not support large exponents.
+    Rounding is faithful (at most 1 ulp error).
+
+.. function:: char * arf_get_str(const arf_t x, slong d)
+
+    Returns *x* as a decimal floating-point number, rounding to *d* digits.
+    Rounding is faithful (at most 1 ulp error).
 
 .. function:: void arf_fprint(FILE * file, const arf_t x)
 
@@ -512,8 +516,8 @@ Input and output
 .. function:: void arf_fprintd(FILE * file, const arf_t y, slong d)
 
     Prints *x* as a decimal floating-point number to the stream *file*,
-    rounding to *d* digits. This function is currently implemented using MPFR,
-    and does not support large exponents.
+    rounding to *d* digits.
+    Rounding is faithful (at most 1 ulp error).
 
 .. function:: char * arf_dump_str(const arf_t x)
 
