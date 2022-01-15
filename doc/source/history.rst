@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.22.0.pdf
 * http://arblib.org/arb-2.21.0.pdf
 * http://arblib.org/arb-2.20.0.pdf
 * http://arblib.org/arb-2.19.0.pdf
@@ -34,6 +35,44 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2022-01-15 -- version 2.22.0
+-------------------------------------------------------------------------------
+
+* Special functions
+
+  * Use numerical integration in some cases to compute the hypergeometric
+    functions 0F1, 1F1, U, 2F1, incomplete gamma and beta, modified Bessel, etc.
+    with real parameters and argument, improving performance and
+    accuracy when the parameters are large.
+  * Much faster computation of Bernoulli numbers using hybrid numerical-modular
+    algorithm (modular code adapted from bernmm by David Harvey).
+  * Faster computation of Euler numbers using hybrid algorithm; added
+    arb_fmpz_euler_number_ui.
+  * Added inverse error function (arb_hypgeom_erfinv, arb_hypgeom_erfcinv).
+  * New (faster, more accurate) implementations of real error functions
+    (arb_hypgeom_erf, arb_hypgeom_erfc) and trigonometric integrals
+    (arb_hypgeom_si, arb_hypgeom_ci).
+  * Added acb_dirichlet_l_fmpq and acb_dirichlet_l_fmpq_afe:
+    reduced-complexity evaluation of L-functions at rational points.
+  * Added functions for computing primorials (arb_primorial_ui, arb_primorial_nth_ui).
+  * New, highly optimized internal code for real hypergeometric series
+    (arb_hypgeom_sum_fmpq_arb, etc.; currently only used in some functions).
+  * Fix arb_fpwrap_double_hypgeom_2f1 which computed the wrong thing.
+
+* Core arithmetic and functions
+
+  * Faster implementation of arb_ui_pow_ui.
+  * Added arb_fma_si, arb_fma_fmpz.
+  * Added arf_equal_ui, arf_equal_d.
+  * Added arf_get_str.
+  * Use arb-based printing code instead of MPFR in arf_printd and mag_printd
+    so that large exponents work.
+  * Fixed bug in arb_get_str that caused loss of precision
+    when printing more than about 10^6 digits.
+  * Allow negative exponents in mag_pow_fmpz.
+  * Added the double_interval module for fast machine-precision interval
+    arithmetic (experimental, intended for internal use).
 
 2021-10-20 -- version 2.21.1
 -------------------------------------------------------------------------------
