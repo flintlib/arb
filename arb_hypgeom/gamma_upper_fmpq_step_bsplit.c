@@ -46,6 +46,9 @@ mag_geom_choose_N(const mag_t M, const mag_t C, const mag_t tol)
     mag_t t, u;
     slong N;
 
+    if (mag_is_finite(M) && mag_is_zero(C))
+        return 1;
+
     /* N = log(M / ((1 - C) tol)) / log(1/C) */
     mag_init(t);
     mag_init(u);
