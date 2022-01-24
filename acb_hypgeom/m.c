@@ -56,7 +56,11 @@ acb_hypgeom_m_asymp(acb_t res, const acb_t a, const acb_t b, const acb_t z, int 
     if (!regularized)
     {
         acb_gamma(v, b, prec);
-        acb_mul(t, t, v, prec);
+
+        if (acb_is_finite(v))
+            acb_mul(t, t, v, prec);
+        else
+            acb_indeterminate(t);
     }
 
     if (acb_is_real(a) && acb_is_real(b) && acb_is_real(z))
