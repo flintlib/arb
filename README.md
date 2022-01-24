@@ -166,6 +166,5 @@ C99 `complex double` type is available
 
 Other third-party wrappers include:
 * A Julia interface: https://github.com/JeffreySarnoff/ArbNumerics.jl
-* Another Julia interface: https://github.com/JuliaArbTypes/ArbFloats.jl
 * Java wrapper using JNA: https://github.com/crowlogic/arb/
 
