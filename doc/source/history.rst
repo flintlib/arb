@@ -36,6 +36,14 @@ Old versions of the documentation
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
 
+2022-01-25 -- version 2.22.1
+-------------------------------------------------------------------------------
+
+* Fixed bugs causing some hypergeometric functions hang or crash for
+  some input on various non-x86 architectures.
+* Fixed a minor bug in acb_hypgeom_m (NaN result sometimes only set the
+  real part to NaN).
+
 2022-01-15 -- version 2.22.0
 -------------------------------------------------------------------------------
 
