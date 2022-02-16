@@ -267,6 +267,34 @@ Hurwitz zeta function precomputation
 
     Evaluates `\zeta(s,p/q)` using precomputed data, assuming that `0 < p/q \le 1`.
 
+Lerch transcendent
+-------------------------------------------------------------------------------
+
+.. function:: void acb_dirichlet_lerch_phi_integral(acb_t res, const acb_t z, const acb_t s, const acb_t a, slong prec)
+              void acb_dirichlet_lerch_phi_direct(acb_t res, const acb_t z, const acb_t s, const acb_t a, slong prec)
+              void acb_dirichlet_lerch_phi(acb_t res, const acb_t z, const acb_t s, const acb_t a, slong prec)
+
+    Computes the Lerch transcendent
+
+    .. math ::
+
+        \Phi(z,s,a) = \sum_{k=0}^{\infty} \frac{z^k}{(k+a)^s}
+
+    which is analytically continued for `|z| \ge 1`.
+
+    The *direct* version evaluates a truncation of the defining series.
+    The *integral* version uses the Hankel contour integral
+
+    .. math ::
+
+        \Phi(z,s,a) = -\frac{\Gamma(1-s)}{2 \pi i} \int_C \frac{(-t)^{s-1} e^{-a t}}{1 - z e^{-t}} dt
+
+    where the path is deformed as needed to avoid poles and branch
+    cuts of the integrand.
+    The default method chooses an algorithm automatically and also
+    checks for some special cases where the function can be expressed
+    in terms of simpler functions (Hurwitz zeta, polylogarithms).
+
 Stieltjes constants
 -------------------------------------------------------------------------------
 
