@@ -136,7 +136,7 @@ acb_dirichlet_lerch_phi(acb_t res, const acb_t z, const acb_t s, const acb_t a, 
         mag_init(lim);
 
         acb_get_mag(zm, z);
-        mag_set_d(lim, 0.75);
+        mag_set_d(lim, 0.875);
 
         if (mag_cmp(zm, lim) <= 0)
         {

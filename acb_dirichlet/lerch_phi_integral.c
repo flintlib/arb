@@ -202,8 +202,9 @@ _acb_dirichlet_lerch_phi_integral(acb_t res, const acb_t z, const acb_t s, const
             acb_sub(log_z, log_z, t, prec);
     }
 
+    arb_one(acb_realref(t));
     is_real = acb_is_real(z) && acb_is_real(s) && acb_is_real(a) &&
-        arb_is_positive(acb_realref(a)) && arb_is_negative(acb_realref(log_z));
+        arb_is_positive(acb_realref(a)) && arb_lt(acb_realref(z), acb_realref(t));
 
     acb_set(param + 0, z);
     acb_set(param + 1, s);
@@ -287,6 +288,9 @@ _acb_dirichlet_lerch_phi_integral(acb_t res, const acb_t z, const acb_t s, const
         }
 
         acb_add_error_mag(t, tail_bound);
+
+        if (is_real && acb_is_finite(t))
+            arb_zero(acb_imagref(t));
 
         acb_rgamma(u, s, prec);
         acb_mul(res, t, u, prec);
