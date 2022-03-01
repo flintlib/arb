@@ -179,9 +179,9 @@ expander_expand(mp_ptr res, expander_t * this, ulong s, ulong n)
 {
     slong i;
 
-    FLINT_ASSERT(s > 0 && s < p);
+    FLINT_ASSERT(s > 0 && s < this->p);
     FLINT_ASSERT(n >= 1);
-    FLINT_ASSERT(n <= max_words);
+    FLINT_ASSERT(n <= this->max_words);
 
     if (s == 1)
     {
