@@ -26,6 +26,15 @@ arb_mul_arf(arb_t z, const arb_t x, const arf_t y, slong prec)
         else
             mag_zero(arb_radref(z));
     }
+    else if (arf_is_inf(y) && arb_is_nonzero(x))
+    {
+        mag_zero(arb_radref(z));
+
+        if (arf_sgn(arb_midref(x)) * arf_sgn(y) > 0)
+            arf_pos_inf(arb_midref(z));
+        else
+            arf_neg_inf(arb_midref(z));
+    }
     else if (ARB_IS_LAGOM(x) && ARF_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
         mag_fast_init_set_arf(ym, y);
@@ -73,6 +82,16 @@ arb_mul(arb_t z, const arb_t x, const arb_t y, slong prec)
     else if (arb_is_exact(y))
     {
         arb_mul_arf(z, x, arb_midref(y), prec);
+    }
+    else if (arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x)) && arb_is_nonzero(y) ||
+             arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y)) && arb_is_nonzero(x))
+    {
+        mag_zero(arb_radref(z));
+
+        if (arf_sgn(arb_midref(x)) * arf_sgn(arb_midref(y)) > 0)
+            arf_pos_inf(arb_midref(z));
+        else
+            arf_neg_inf(arb_midref(z));
     }
     else if (ARB_IS_LAGOM(x) && ARB_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
