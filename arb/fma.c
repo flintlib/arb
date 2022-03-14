@@ -26,13 +26,6 @@ arb_fma_arf(arb_t res, const arb_t x, const arf_t y, const arb_t z, slong prec)
         else
             mag_set(arb_radref(res), arb_radref(z));
     }
-    else if (arf_is_inf(y) && arb_is_nonzero(x))
-    {
-        if (arf_sgn(arb_midref(x)) > 0)
-            arb_add_arf(res, z, y, prec);
-        else
-            arb_sub_arf(res, z, y, prec);
-    }
     else if (ARB_IS_LAGOM(res) && ARB_IS_LAGOM(x) && ARF_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
         mag_t tm;
@@ -45,6 +38,13 @@ arb_fma_arf(arb_t res, const arb_t x, const arf_t y, const arb_t z, slong prec)
         inexact = arf_fma(arb_midref(res), arb_midref(x), y, arb_midref(z), prec, ARB_RND);
         if (inexact)
             arf_mag_fast_add_ulp(arb_radref(res), arb_radref(res), arb_midref(res), prec);
+    }
+    else if (arf_is_inf(y) && arb_is_nonzero(x))
+    {
+        if (arf_sgn(arb_midref(x)) > 0)
+            arb_add_arf(res, z, y, prec);
+        else
+            arb_sub_arf(res, z, y, prec);
     }
     else
     {
@@ -80,20 +80,6 @@ arb_fma(arb_t res, const arb_t x, const arb_t y, const arb_t z, slong prec)
     {
         arb_fma_arf(res, y, arb_midref(x), z, prec);
     }
-    else if (arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x)) && arb_is_nonzero(y))
-    {
-        if (arf_sgn(arb_midref(y)) > 0)
-            arb_add_arf(res, z, arb_midref(x), prec);
-        else
-            arb_sub_arf(res, z, arb_midref(x), prec);
-    }
-    else if (arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y)) && arb_is_nonzero(x))
-    {
-        if (arf_sgn(arb_midref(x)) > 0)
-            arb_add_arf(res, z, arb_midref(y), prec);
-        else
-            arb_sub_arf(res, z, arb_midref(y), prec);
-    }
     else if (ARB_IS_LAGOM(res) && ARB_IS_LAGOM(x) && ARB_IS_LAGOM(y) && ARB_IS_LAGOM(z))
     {
         mag_fast_init_set_arf(xm, arb_midref(x));
@@ -111,6 +97,20 @@ arb_fma(arb_t res, const arb_t x, const arb_t y, const arb_t z, slong prec)
             arf_mag_fast_add_ulp(zr, zr, arb_midref(res), prec);
 
         *arb_radref(res) = *zr;
+    }
+    else if (arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x)) && arb_is_nonzero(y))
+    {
+        if (arf_sgn(arb_midref(y)) > 0)
+            arb_add_arf(res, z, arb_midref(x), prec);
+        else
+            arb_sub_arf(res, z, arb_midref(x), prec);
+    }
+    else if (arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y)) && arb_is_nonzero(x))
+    {
+        if (arf_sgn(arb_midref(x)) > 0)
+            arb_add_arf(res, z, arb_midref(y), prec);
+        else
+            arb_sub_arf(res, z, arb_midref(y), prec);
     }
     else
     {
