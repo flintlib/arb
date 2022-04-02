@@ -97,6 +97,8 @@ arb_hypgeom_erf_1f1b(arb_t res, const arb_t z, slong prec)
         dz = arf_get_d(arb_midref(z), ARF_RND_DOWN);
         dz = fabs(dz);
         u = -dz * dz + prec * LOG2 + log(dz);
+        if (dz < 1.0)
+          u = FLINT_MAX(u, 1e-6);
         u = u / d_lambertw(u / (EXP1 * dz * dz));
         N = u + 1;
     }
