@@ -39,6 +39,19 @@ mag_close(const mag_t am, const mag_t bm)
     return res1 && res2;
 }
 
+int
+arb_equal_mid_close_mag(const arb_t a, const arb_t b)
+{
+    return arf_equal(arb_midref(a), arb_midref(b)) &&
+        (mag_close(arb_radref(a), arb_radref(b)) ||
+            /* If a's and b's centres are infinite but their radii are finite, the radii don't need
+               to be close: they represent signed infinity regardless. If their centres are NaN,
+               then we should ignore their radii. */
+            (arf_is_inf(arb_midref(a)) && arf_is_inf(arb_midref(b)) &&
+                mag_is_finite(arb_radref(a)) && mag_is_finite(arb_radref(b))) ||
+            (arf_is_nan(arb_midref(a)) && arf_is_nan(arb_midref(b))));
+}
+
 void
 arb_mul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
@@ -73,15 +86,18 @@ arb_mul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
         fmpz_clear(e);
     }
 
-    /* propagated error */
-    if (!arb_is_exact(x))
+    /* propagated error - note that (signed infinity) * nonzero should be a signed
+       infinity, meaning the error should *not* propagate */
+    if (!arb_is_exact(x) && !(
+            arb_is_nonzero(x) && arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y))))
     {
         arf_set_mag(t, arb_radref(x));
         arf_abs(u, arb_midref(y));
         arf_addmul(zr, t, u, MAG_BITS, ARF_RND_UP);
     }
 
-    if (!arb_is_exact(y))
+    if (!arb_is_exact(y) && !(
+            arb_is_nonzero(y) && arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x))))
     {
         arf_set_mag(t, arb_radref(y));
         arf_abs(u, arb_midref(x));
@@ -265,8 +281,7 @@ int main()
                 arb_mul(z, x, y, prec);
                 arb_mul_naive(v, x, y, prec);
 
-                if (!arf_equal(arb_midref(z), arb_midref(v))
-                    || !mag_close(arb_radref(z), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(z, v))
                 {
                     flint_printf("FAIL!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
@@ -282,8 +297,7 @@ int main()
                 arb_mul(z, x, y, prec);
                 arb_mul(v, x, x, prec);
 
-                if (!arf_equal(arb_midref(z), arb_midref(v))
-                    || !mag_close(arb_radref(z), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(z, v))
                 {
                     flint_printf("FAIL (aliasing 1)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");

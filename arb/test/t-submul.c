@@ -39,6 +39,19 @@ mag_close(const mag_t am, const mag_t bm)
     return res1 && res2;
 }
 
+int
+arb_equal_mid_close_mag(const arb_t a, const arb_t b)
+{
+    return arf_equal(arb_midref(a), arb_midref(b)) &&
+        (mag_close(arb_radref(a), arb_radref(b)) ||
+            /* If a's and b's centres are infinite but their radii are finite, the radii don't need
+               to be close: they represent signed infinity regardless. If their centres are NaN,
+               then we should ignore their radii. */
+            (arf_is_inf(arb_midref(a)) && arf_is_inf(arb_midref(b)) &&
+                mag_is_finite(arb_radref(a)) && mag_is_finite(arb_radref(b))) ||
+            (arf_is_nan(arb_midref(a)) && arf_is_nan(arb_midref(b))));
+}
+
 void
 arb_submul_naive(arb_t z, const arb_t x, const arb_t y, slong prec)
 {
@@ -214,8 +227,7 @@ int main()
                 arb_submul(z, x, y, prec);
                 arb_submul_naive(v, x, y, prec);
 
-                if (!arf_equal(arb_midref(z), arb_midref(v))
-                    || !mag_close(arb_radref(z), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(z, v))
                 {
                     flint_printf("FAIL!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
@@ -232,8 +244,7 @@ int main()
                 arb_submul(z, x, y, prec);
                 arb_submul(v, x, x, prec);
 
-                if (!arf_equal(arb_midref(z), arb_midref(v))
-                    || !mag_close(arb_radref(z), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(z, v))
                 {
                     flint_printf("FAIL (aliasing 1)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
@@ -248,8 +259,7 @@ int main()
                 arb_submul(v, x, x, prec);
                 arb_submul(x, x, x, prec);
 
-                if (!arf_equal(arb_midref(x), arb_midref(v))
-                    || !mag_close(arb_radref(x), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(x, v))
                 {
                     flint_printf("FAIL (aliasing 2)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
@@ -263,8 +273,7 @@ int main()
                 arb_submul(v, x, y, prec);
                 arb_submul(x, x, y, prec);
 
-                if (!arf_equal(arb_midref(x), arb_midref(v))
-                    || !mag_close(arb_radref(x), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(x, v))
                 {
                     flint_printf("FAIL (aliasing 3)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
@@ -279,8 +288,7 @@ int main()
                 arb_submul(v, x, y, prec);
                 arb_submul(x, y, x, prec);
 
-                if (!arf_equal(arb_midref(x), arb_midref(v))
-                    || !mag_close(arb_radref(x), arb_radref(v)))
+                if (!arb_equal_mid_close_mag(x, v))
                 {
                     flint_printf("FAIL (aliasing 4)!\n");
                     flint_printf("x = "); arb_print(x); flint_printf("\n\n");
