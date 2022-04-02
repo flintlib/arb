@@ -100,8 +100,8 @@ arb_mul(arb_t z, const arb_t x, const arb_t y, slong prec)
 
         *arb_radref(z) = *zr;
     }
-    else if (arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x)) && arb_is_nonzero(y) ||
-             arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y)) && arb_is_nonzero(x))
+    else if ((arf_is_inf(arb_midref(x)) && mag_is_finite(arb_radref(x)) && arb_is_nonzero(y)) ||
+             (arf_is_inf(arb_midref(y)) && mag_is_finite(arb_radref(y)) && arb_is_nonzero(x)))
     {
         mag_zero(arb_radref(z));
 
