@@ -454,6 +454,10 @@ void _arb_poly_evaluate_vec_fast(arb_ptr ys, arb_srcptr poly, slong plen,
 void arb_poly_evaluate_vec_fast(arb_ptr ys,
         const arb_poly_t poly, arb_srcptr xs, slong n, slong prec);
 
+void _arb_poly_to_taylor_model(arb_ptr g, mag_t radius, arb_srcptr f, slong len, const arb_t x, slong glen,
+    slong prec);
+
+
 void _arb_poly_interpolate_newton(arb_ptr poly, arb_srcptr xs,
     arb_srcptr ys, slong n, slong prec);
 

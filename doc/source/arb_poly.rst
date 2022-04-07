@@ -550,6 +550,11 @@ Evaluation
     Sets `y = f(x), z = f'(x)`, evaluated respectively using Horner's rule,
     rectangular splitting, and an automatic algorithm choice.
 
+.. function:: void _arb_poly_to_taylor_model(arb_ptr g, mag_t radius, arb_srcptr f, slong len, const
+              arb_t x, slong glen, slong prec)
+
+   Sets the `glen` entries of `g` to be exact coefficients of a polynomial, such that for values
+   `x_0` in `x`, we have `abs(g(x_0) - f(x_0)) <= radius`.
 
 Product trees
 -------------------------------------------------------------------------------
