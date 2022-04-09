@@ -730,22 +730,6 @@ arb_poly_allocated_bytes(const arb_poly_t x)
 
 /* Macros */
 
-
-/* counts zero bits in the binary representation of e */
-ARB_POLY_INLINE int
-n_zerobits(mp_limb_t e)
-{
-    int zeros = 0;
-
-    while (e > 1)
-    {
-        zeros += !(e & 1);
-        e >>= 1;
-    }
-
-    return zeros;
-}
-
 /* Computes the length of the result when raising a polynomial of
    length *len* to the power *exp* and truncating to length *trunc*,
    without overflow. Assumes poly_len >= 1. */
@@ -759,33 +743,6 @@ poly_pow_length(slong poly_len, ulong exp, slong trunc)
         return trunc;
     return FLINT_MIN((slong) lo, trunc);
 }
-
-#ifndef NEWTON_INIT
-
-#define NEWTON_INIT(from, to) \
-    { \
-        slong __steps[FLINT_BITS], __i, __from, __to; \
-        __steps[__i = 0] = __to = (to); \
-        __from = (from); \
-        while (__to > __from) \
-            __steps[++__i] = (__to = (__to + 1) / 2); \
-
-#define NEWTON_BASECASE(bc_to) { slong bc_to = __to;
-
-#define NEWTON_END_BASECASE }
-
-#define NEWTON_LOOP(step_from, step_to) \
-        { \
-            for (__i--; __i >= 0; __i--) \
-            { \
-                slong step_from = __steps[__i+1]; \
-                slong step_to = __steps[__i]; \
-
-#define NEWTON_END_LOOP }}
-
-#define NEWTON_END }
-
-#endif
 
 #ifdef __cplusplus
 }

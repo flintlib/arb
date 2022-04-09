@@ -24,20 +24,9 @@
 #include "flint/fmpz.h"
 #include "fmpz_extras.h"
 
-#ifndef flint_abort
-#if __FLINT_RELEASE <= 20502
-#define flint_abort abort
-#endif
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define LIMB_ONE ((mp_limb_t) 1)
-#define LIMB_ONES (-(mp_limb_t) 1)
-#define LIMB_TOP (((mp_limb_t) 1) << (FLINT_BITS - 1))
-#define MASK_LIMB(n, c) ((n) & (LIMB_ONES << (c)))
 
 #define MAG_MAX_LAGOM_EXP (COEFF_MAX / 4)
 #define MAG_MIN_LAGOM_EXP (-MAG_MAX_LAGOM_EXP)

@@ -27,12 +27,6 @@
 #include "fmpr.h"
 #include "mag.h"
 
-#ifndef flint_abort
-#if __FLINT_RELEASE <= 20502
-#define flint_abort abort
-#endif
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -439,9 +433,6 @@ arf_init_set_ui(arf_t x, ulong v)
     }
 }
 
-/* FLINT_ABS is unsafe for x = WORD_MIN */
-#define UI_ABS_SI(x) (((slong)(x) < 0) ? (-(ulong)(x)) : ((ulong)(x)))
-
 ARF_INLINE void
 arf_init_set_si(arf_t x, slong v)
 {
@@ -804,27 +795,6 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
 
 #define MUL_MPFR_MIN_LIMBS 25
 #define MUL_MPFR_MAX_LIMBS 10000
-
-#define nn_mul_2x1(r2, r1, r0, a1, a0, b0)                  \
-    do {                                                    \
-        mp_limb_t t1;                                       \
-        umul_ppmm(r1, r0, a0, b0);                          \
-        umul_ppmm(r2, t1, a1, b0);                          \
-        add_ssaaaa(r2, r1, r2, r1, 0, t1);                  \
-    } while (0)
-
-#define nn_mul_2x2(r3, r2, r1, r0, a1, a0, b1, b0)          \
-    do {                                                    \
-        mp_limb_t t1, t2, t3;                               \
-        umul_ppmm(r1, r0, a0, b0);                          \
-        umul_ppmm(r2, t1, a1, b0);                          \
-        add_ssaaaa(r2, r1, r2, r1, 0, t1);                  \
-        umul_ppmm(t1, t2, a0, b1);                          \
-        umul_ppmm(r3, t3, a1, b1);                          \
-        add_ssaaaa(r3, t1, r3, t1, 0, t3);                  \
-        add_ssaaaa(r2, r1, r2, r1, t1, t2);                 \
-        r3 += r2 < t1;                                      \
-    } while (0)
 
 #define ARF_MPN_MUL(_z, _x, _xn, _y, _yn) \
     if ((_xn) == (_yn)) \
