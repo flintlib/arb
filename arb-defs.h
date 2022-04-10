@@ -119,25 +119,15 @@ static __inline__
 int
 n_zerobits(mp_limb_t e)
 {
-    int zeros = 0;
-
-    while (e > 1)
-    {
-        zeros += !(e & 1);
-        e >>= 1;
-    }
-
-    return zeros;
-    /* FIXME: Why doesn't the following work? */
-/* #ifdef __GMP_SHORT_LIMB */
-/*     return (FLINT_BITS - 1) - __builtin_popcount(e); */
-/* #else */
-/* # ifdef _LONG_LONG_LIMB */
-/*     return (FLINT_BITS - 1) - __builtin_popcountll(e); */
-/* # else */
-/*     return (FLINT_BITS - 1) - __builtin_popcountl(e); */
-/* # endif */
-/* #endif */
+#ifdef __GMP_SHORT_LIMB
+    return FLINT_BITS - __builtin_popcount(e) - __builtin_clz(e);
+#else
+# ifdef _LONG_LONG_LIMB
+    return FLINT_BITS - __builtin_popcountll(e) - __builtin_clzll(e);
+# else
+    return FLINT_BITS - __builtin_popcountl(e) - __builtin_clzl(e);
+# endif
+#endif
 }
 
 
