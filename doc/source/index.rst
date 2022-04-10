@@ -100,6 +100,14 @@ Example programs
 
    examples.rst
 
+General utilities
+::::::::::::::::::::::::::::::::::::
+
+.. toctree::
+   :maxdepth: 2
+
+   arb-defs.rst
+
 Floating-point numbers
 ::::::::::::::::::::::::::::::::::::
 
@@ -248,3 +256,5 @@ Version history
 
    history.rst
 
+..
+    vim:spell spelllang=en_us:ts=3:sw=3:tw=80:expandtab:
