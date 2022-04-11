@@ -13,8 +13,163 @@ ul .toctree-l1 {
 
 div.body {
     min-width: 450px;
-    max-width: 100%;
+    max-width: 766px;
+    padding-left: min(100px, 7%);
+    padding-right: min(100px, 7%);
+    padding-top: min(80px, 5.6%);
+    padding-bottom: min(90px, 6.3%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 li p { margin: 0.2em; }
 
+
+
+/*
+################################################################################
+# set fonts
+################################################################################
+
+Assuming 12pt font size in KOMA-script, then:
+
+- 16px is equivalent to \normalsize.            (Normal text and \subsubsection)
+- 19px is equivalent to \large.                 (\subsection)
+- 23px is equivalent to \Large.                 (\section)
+- 28px is equivalent to \LARGE.                 (\chapter)
+*/
+
+p
+{
+    font-family: serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+}
+b
+{
+    font-family: serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+}
+em
+{
+    font-family: serif;
+    font-style: normal;
+    font-style: oblique;
+    font-size: 16px;
+}
+pre
+{
+    font-family: monospace;
+    font-size: 16px;
+}
+kbd, code
+{
+    background-color: rgba(0, 0, 0, 0); /* Transparent */
+    font-family: monospace;
+    font-size: 16px;
+    padding: 0px;
+}
+
+/* headings */
+div.body h1 /* We let this resemble \chapter */
+{
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 28px;
+}
+div.body h1 code
+{
+    font-family: monospace;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 28px;
+}
+div.body h2 /* We let this resemble \section */
+{
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 23px;
+}
+div.body h2 code
+{
+    font-family: monospace;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 23px;
+}
+div.body h3 /* We let this resemble \subsection */
+{
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 19px;
+}
+div.body h3 code
+{
+    font-family: monospace;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 19px;
+}
+
+div.body li
+{
+    text-align: left;
+}
+
+/* sidebar */
+.sphinxsidebarwrapper li
+{
+    margin: 3px 0;
+}
+p.topless
+{
+    font-family: sans-serif;
+}
+
+/* toctree */
+.toctree-wrapper.compound
+{
+    font-family: sans-serif;
+    font-size: 16px;
+}
+.toctree-wrapper.compound code
+{
+    font-family: monospace;
+    font-size: 16px;
+}
+
+/* description lists */
+dt
+{
+    font-size: 16px;
+}
+.sig-name
+{
+    font-size: 16px;
+}
+.sig-paren
+{
+    font-size: 16px;
+}
+
+/* note */
+.admonition
+{
+    text-align: justify;
+}
+
+/* mathjax */
+.MathJax
+{
+    /* On Albin's system, CMR seems to render math that is a little bit smaller
+     * than ordinary text. Hence, render a bit larger math than ordinary text.
+     * This should be okay for other systems as well, as MathJax usually renders
+     * too large texts (well above this 17/16 ratio). */
+    font-size: 17px !important;
+}
