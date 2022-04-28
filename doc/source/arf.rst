@@ -111,6 +111,18 @@ Types, macros and constants
     test code. If in doubt, simply try with some convenient high precision
     instead of using this special value, and check that the result is exact.
 
+.. macro:: nn_mul_2x1(r2, r1, r0, a1, a0, b0)
+
+    Sets `(r_2, r_1, r_0)` to `(a_1, a_0)` multiplied by `b_0`.
+
+.. macro:: nn_mul_2x2(r3, r2, r1, r0, a1, a0, b1, b0)
+
+    Sets `(r_2, r_1, r_0)` to `(a_1, a_0)` multiplied by `(b_1, b_0)`.
+
+.. macro:: nn_sqr_2(r3, r2, r1, r0, a1, a0)
+
+    Sets `(r_2, r_1, r_0)` to the square of `(a_1, a_0)`.
+
 Memory management
 -------------------------------------------------------------------------------
 
@@ -561,7 +573,8 @@ Addition and multiplication
 
 .. function:: int arf_neg_round(arf_t res, const arf_t x, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `-x`.
+    Sets *res* to `-x`. Returns 0 if this operation was made exactly and 1 if
+    truncation occurred.
 
 .. function:: int arf_add(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -571,11 +584,13 @@ Addition and multiplication
 
 .. function:: int arf_add_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x + y`.
+    Sets *res* to `x + y`. Returns 0 if this operation was made exactly and 1
+    if truncation occurred.
 
 .. function:: int arf_add_fmpz_2exp(arf_t res, const arf_t x, const fmpz_t y, const fmpz_t e, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x + y 2^e`.
+    Sets *res* to `x + y 2^e`. Returns 0 if this operation was made exactly and
+    1 if truncation occurred.
 
 .. function:: int arf_sub(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -585,7 +600,8 @@ Addition and multiplication
 
 .. function:: int arf_sub_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x - y`.
+    Sets *res* to `x - y`. Returns 0 if this operation was made exactly and 1
+    if truncation occurred.
 
 .. function:: void arf_mul_2exp_si(arf_t res, const arf_t x, slong e)
 
@@ -603,7 +619,31 @@ Addition and multiplication
 
 .. function:: int arf_mul_fmpz(arf_t res, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x \cdot y`.
+    Sets *res* to `x \cdot y`. Returns 0 if this operation was made exactly and
+    1 if truncation occurred.
+
+.. function:: void arf_mul_special(arf_t z, const arf_t x, const arf_t y)
+
+    Sets *res* to the special value of `x \cdot y`.
+
+    Note that it is assumed that at least one of `x` and `y` has special
+    values.
+
+.. function:: int arf_sqr_via_mpfr(arf_ptr res, arf_srcptr x, slong prec, arf_rnd_t rnd)
+
+    Sets *res* to `x^2` by calling MPFR. Returns 0 if this operation was made
+    exactly and 1 if truncation occurred.
+
+.. function:: int arf_sqr_rnd_down(arf_ptr res, arf_srcptr x, slong prec)
+
+    Sets *res* to `x^2`. If the opertation was made exactly, it returns 1.
+    Otherwise it rounds downwards and returns 1.
+
+.. function:: void arf_sqr_special(arf_t res, const arf_t x)
+
+    Sets *res* to the special value of `x^2`.
+
+    Note that it is assumed that `x` has a special value.
 
 .. function:: int arf_addmul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -615,7 +655,8 @@ Addition and multiplication
 
 .. function:: int arf_addmul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Performs a fused multiply-add `z = z + x \cdot y`, updating *z* in-place.
+    Adds `x \cdot y` to `z`, updating `z` in-place. Returns 0 if this operation
+    was made exactly and 1 if truncation occurred.
 
 .. function:: int arf_submul(arf_t z, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
@@ -627,16 +668,21 @@ Addition and multiplication
 
 .. function:: int arf_submul_fmpz(arf_t z, const arf_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Performs a fused multiply-subtract `z = z - x \cdot y`, updating *z* in-place.
+    Performs a fused multiply-subtract `z = z - x \cdot y`, updating *z*
+    in-place. Returns 0 if this operation was made exactly and 1 if truncation
+    occurred.
 
 .. function:: int arf_fma(arf_t res, const arf_t x, const arf_t y, const arf_t z, slong prec, arf_rnd_t rnd)
 
     Sets *res* to `x \cdot y + z`. This is equivalent to an *addmul* except
-    that *res* and *z* can be separate variables.
+    that *res* and *z* can be separate variables. Returns 0 if this operation
+    was made exactly and 1 if truncation occurred.
 
 .. function:: int arf_sosq(arf_t res, const arf_t x, const arf_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x^2 + y^2`, rounded to *prec* bits in the direction specified by *rnd*.
+    Sets *res* to `x^2 + y^2`, rounded to *prec* bits in the direction
+    specified by *rnd*. Returns 0 if this operation was made exactly and 1 if
+    truncation occurred.
 
 Summation
 -------------------------------------------------------------------------------
@@ -670,8 +716,9 @@ Division
 
 .. function:: int arf_fmpz_div_fmpz(arf_t res, const fmpz_t x, const fmpz_t y, slong prec, arf_rnd_t rnd)
 
-    Sets *res* to `x / y`, rounded to *prec* bits in the direction specified by *rnd*,
-    returning nonzero iff the operation is inexact. The result is NaN if *y* is zero.
+    Sets *res* to `x / y`, rounded to *prec* bits in the direction specified by
+    *rnd*, returning nonzero iff the operation is inexact. The result is NaN if
+    *y* is zero.
 
 Square roots
 -------------------------------------------------------------------------------

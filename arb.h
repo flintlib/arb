@@ -413,6 +413,8 @@ void arb_mul_si(arb_t z, const arb_t x, slong y, slong prec);
 void arb_mul_ui(arb_t z, const arb_t x, ulong y, slong prec);
 void arb_mul_fmpz(arb_t z, const arb_t x, const fmpz_t y, slong prec);
 
+void arb_sqr(arb_t res, const arb_t x, slong prec);
+
 void arb_addmul(arb_t z, const arb_t x, const arb_t y, slong prec);
 void arb_addmul_arf(arb_t z, const arb_t x, const arf_t y, slong prec);
 void arb_addmul_si(arb_t z, const arb_t x, slong y, slong prec);
@@ -484,9 +486,27 @@ void arb_rsqrt(arb_t z, const arb_t x, slong prec);
 void arb_rsqrt_ui(arb_t z, ulong x, slong prec);
 void arb_sqrt1pm1(arb_t r, const arb_t z, slong prec);
 
-void arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec);
-void arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec);
-void arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec);
+void _arb_pow_mpz_binexp(arb_t y, const arb_t b, mpz_srcptr e, slong prec);
+void arb_pow_ui_binexp(arb_t y, const arb_t b, ulong e, slong prec);
+void arb_pow_si(arb_t y, const arb_t b, slong e, slong prec);
+ARB_INLINE void
+arb_pow_fmpz_binexp(arb_t y, const arb_t b, const fmpz_t e, slong prec)
+{
+    if (!COEFF_IS_MPZ(*e))
+        arb_pow_si(y, b, *e, prec);
+    else
+        _arb_pow_mpz_binexp(y, b, COEFF_TO_PTR(*e), prec);
+}
+ARB_INLINE void
+arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
+{
+    arb_pow_fmpz_binexp(y, b, e, prec);
+}
+ARB_INLINE void
+arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
+{
+    arb_pow_ui_binexp(y, b, e, prec);
+}
 void arb_ui_pow_ui(arb_t y, ulong b, ulong e, slong prec);
 void arb_si_pow_ui(arb_t y, slong b, ulong e, slong prec);
 void arb_pow_fmpq(arb_t y, const arb_t x, const fmpq_t a, slong prec);
@@ -619,12 +639,6 @@ void arb_primorial_nth_ui(arb_t res, ulong n, slong prec);
 void arb_primorial_ui(arb_t res, ulong n, slong prec);
 
 void arb_lambertw(arb_t res, const arb_t x, int flags, slong prec);
-
-ARB_INLINE void
-arb_sqr(arb_t res, const arb_t val, slong prec)
-{
-    arb_mul(res, val, val, prec);
-}
 
 #define ARB_DEF_CACHED_CONSTANT(name, comp_func) \
     TLS_PREFIX slong name ## _cached_prec = 0; \

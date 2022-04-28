@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2021 Albin Ahlbäck
 
     This file is part of Arb.
 
@@ -9,19 +9,15 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include "arb.h"
+#include "arf.h"
 
 void
-arb_pow_fmpz(arb_t y, const arb_t b, const fmpz_t e, slong prec)
+arf_sqr_special(arf_t res, const arf_t x)
 {
-    arb_pow_fmpz_binexp(y, b, e, prec);
-}
-
-void
-arb_pow_ui(arb_t y, const arb_t b, ulong e, slong prec)
-{
-    fmpz_t f;
-    fmpz_init_set_ui(f, e);
-    arb_pow_fmpz(y, b, f, prec);
-    fmpz_clear(f);
+    if (arf_is_zero(x))
+        arf_zero(res);
+    else if (arf_is_nan(x))
+        arf_nan(res);
+    else
+        arf_pos_inf(res);
 }
