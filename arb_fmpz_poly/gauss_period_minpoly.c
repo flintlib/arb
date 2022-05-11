@@ -21,7 +21,7 @@ arb_fmpz_poly_gauss_period_minpoly(fmpz_poly_t res, ulong q, ulong n)
     int done, real;
 
     if (n == 0 || !n_is_prime(q) || ((q - 1) % n) != 0 ||
-            n_gcd_full(n, (q - 1) / n) != 1)
+            n_gcd(n, (q - 1) / n) != 1)
     {
         fmpz_poly_zero(res);
         return;
