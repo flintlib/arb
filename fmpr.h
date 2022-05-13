@@ -22,26 +22,8 @@
 #include "flint/flint.h"
 #include "flint/fmpz.h"
 #include "flint/fmpq.h"
-#if __FLINT_RELEASE < 20600
-#include "flint/config.h"
-#else
-#include "flint/flint-config.h"
-#endif
 #include "fmpz_extras.h"
-
-#ifndef flint_abort
-#if __FLINT_RELEASE <= 20502
-#define flint_abort abort
-#endif
-#endif
-
-#define TLS_PREFIX FLINT_TLS_PREFIX
-
-#if defined(_MSC_VER) && defined(ARB_BUILD_DLL)
-#define ARB_DLL __declspec(dllexport)
-#else
-#define ARB_DLL FLINT_DLL
-#endif
+#include "arb-defs.h"
 
 #define fmpr_rnd_t int
 #define FMPR_RND_DOWN 0
@@ -53,9 +35,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* currently defined in the arb module, but global to the library */
-double arb_test_multiplier(void);
 
 static __inline__ int
 rounds_up(fmpr_rnd_t rnd, int negative)
