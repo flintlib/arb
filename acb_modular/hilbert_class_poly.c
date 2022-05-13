@@ -112,7 +112,7 @@ acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D)
 
         do
         {
-            if (ac % a == 0 && n_gcd_full(n_gcd(a, b), ac/a) == 1)
+            if (ac % a == 0 && n_gcd(n_gcd(a, b), ac/a) == 1)
             {
                 c = ac / a;
 
