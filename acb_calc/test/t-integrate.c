@@ -351,6 +351,8 @@ int main()
         acb_calc_integrate_opt_t opt;
         int integral;
 
+        flint_set_num_threads(1 + n_randint(state, 3));
+
         acb_init(ans);
         acb_init(res);
         acb_init(a);
@@ -712,7 +714,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

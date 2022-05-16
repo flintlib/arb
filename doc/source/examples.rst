@@ -655,6 +655,7 @@ Invoking the program without parameters shows usage::
     -deg n     - use quadrature degree up to n
     -eval n    - limit number of function evaluations to n
     -depth n   - limit subinterval queue size to n
+    -threads n - use parallel computation with n threads
 
     Implemented integrals:
     I0 = int_0^100 sin(x) dx

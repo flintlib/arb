@@ -780,6 +780,7 @@ int main(int argc, char *argv[])
 {
     acb_t s, t, a, b;
     mag_t tol;
+    slong num_threads;
     slong prec, goal;
     slong N;
     ulong k;
@@ -821,7 +822,8 @@ int main(int argc, char *argv[])
         flint_printf("-verbose2  - show more information\n");
         flint_printf("-deg n     - use quadrature degree up to n\n");
         flint_printf("-eval n    - limit number of function evaluations to n\n");
-        flint_printf("-depth n   - limit subinterval queue size to n\n\n");
+        flint_printf("-depth n   - limit subinterval queue size to n\n");
+        flint_printf("-threads n - use parallel computation with n threads\n\n");
         flint_printf("Implemented integrals:\n");
         for (integral = 0; integral < NUM_INTEGRALS; integral++)
             flint_printf("I%d = %s\n", integral, descr[integral]);
@@ -835,6 +837,7 @@ int main(int argc, char *argv[])
     twice = 0;
     goal = 0;
     havetol = havegoal = 0;
+    num_threads = 1;
 
     acb_init(a);
     acb_init(b);
@@ -895,7 +898,14 @@ int main(int argc, char *argv[])
         {
             options->use_heap = 1;
         }
+        else if (!strcmp(argv[i], "-threads"))
+        {
+            num_threads = atol(argv[i+1]);
+        }
     }
+
+    if (num_threads >= 2)
+        flint_set_num_threads(num_threads);
 
     if (!havegoal)
         goal = prec;
@@ -1276,7 +1286,7 @@ int main(int argc, char *argv[])
     acb_clear(t);
     mag_clear(tol);
 
-    flint_cleanup();
+    flint_cleanup_master();
     return 0;
 }
 
