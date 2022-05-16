@@ -79,6 +79,8 @@ int main()
             flint_abort();
         }
 
+        flint_set_num_threads(2);
+
         _bernoulli_fmpq_ui_multi_mod(num1, den1, 30000, -1.0);
         _bernoulli_fmpq_ui_multi_mod(num2, den2, 30000, 0.8);
 
@@ -91,6 +93,8 @@ int main()
             flint_printf("den2    "); fmpz_print(den2); flint_printf("\n");
             flint_abort();
         }
+
+        flint_set_num_threads(3);
 
         _bernoulli_fmpq_ui_multi_mod(num1, den1, 80000, -1.0);
         _bernoulli_fmpq_ui_multi_mod(num2, den2, 80000, 0.5);
@@ -112,7 +116,7 @@ int main()
     fmpz_clear(den2);
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return 0;
 }

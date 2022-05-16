@@ -13,6 +13,56 @@
 
 #define ONE_OVER_LOG2 1.4426950408889634
 
+typedef struct
+{
+    ulong s;
+    int mod;
+    const signed char * chi;
+    mp_ptr primes;
+    double * powmags;
+    slong num_primes;
+    slong wp;
+    slong index;
+    slong num_threads;
+    arb_struct res;
+}
+euler_work_chunk_t;
+
+static void
+euler_worker(void * _work)
+{
+    euler_work_chunk_t * work = ((euler_work_chunk_t *) _work);
+    slong i;
+
+    slong powprec;
+    double powmag;
+    arb_t t, u;
+    ulong p;
+
+    arb_init(t);
+    arb_init(u);
+
+    for (i = work->index; i < work->num_primes; i += work->num_threads)
+    {
+        p = work->primes[i];
+        powmag = work->powmags[i];
+
+        powprec = FLINT_MAX(work->wp - powmag, 8);
+
+        arb_ui_pow_ui(t, p, work->s, powprec);
+        arb_set_round(u, &work->res, powprec);
+        arb_div(t, u, t, powprec);
+
+        if (work->mod == 1 || (work->chi[p % work->mod] == 1))
+            arb_sub(&work->res, &work->res, t, work->wp);
+        else
+            arb_add(&work->res, &work->res, t, work->wp);
+    }
+
+    arb_clear(t);
+    arb_clear(u);
+}
+
 void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     const signed char * chi, int mod, int reciprocal, slong prec)
 {
@@ -21,6 +71,7 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
     arb_t t, u;
     ulong p;
     mag_t err;
+    slong num_threads;
 
     if (s <= 1)
     {
@@ -79,38 +130,148 @@ void _acb_dirichlet_euler_product_real_ui(arb_t res, ulong s,
        which gives prec ^ 1.2956 here. */
     limit = 100 + prec * sqrt(prec);
 
-    for (p = 3; p < limit; p = n_nextprime(p, 1))
+    num_threads = flint_get_num_threads();
+
+    if (num_threads > 1 && prec > 5000 && s > 5000)
     {
-        if (mod == 1 || chi[p % mod] != 0)
+        n_primes_t iter;
+        slong i;
+        mp_ptr primes;
+        double * powmags;
+        slong num_primes = 0;
+        slong alloc = 16;
+        slong thread_limit, num_threads, num_workers;
+        thread_pool_handle * handles;
+        euler_work_chunk_t * work;
+
+        ulong first_omitted_p = 3;
+
+        n_primes_init(iter);
+        n_primes_jump_after(iter, 3);
+
+        primes = flint_malloc(alloc * sizeof(mp_limb_t));
+        powmags = flint_malloc(alloc * sizeof(double));
+
+        for (p = 3; p < limit; p = n_primes_next(iter))
         {
-            /* p^s */
-            logp = log(p);
-            powmag = s * logp * ONE_OVER_LOG2;
+            first_omitted_p = p;
 
-            /* zeta(s,p) ~= 1/p^s + 1/((s-1) p^(s-1)) */
-            errmag = (log(s - 1.0) + (s - 1.0) * logp) * ONE_OVER_LOG2;
-            errmag = FLINT_MIN(powmag, errmag);
+            if (mod == 1 || chi[p % mod] != 0)
+            {
+                /* p^s */
+                logp = log(p);
+                powmag = s * logp * ONE_OVER_LOG2;
 
-            if (errmag > prec + 2)
-                break;
+                /* zeta(s,p) ~= 1/p^s + 1/((s-1) p^(s-1)) */
+                errmag = (log(s - 1.0) + (s - 1.0) * logp) * ONE_OVER_LOG2;
+                errmag = FLINT_MIN(powmag, errmag);
 
-            powprec = FLINT_MAX(wp - powmag, 8);
+                if (errmag > prec + 2)
+                    break;
 
-            arb_ui_pow_ui(t, p, s, powprec);
-            arb_set_round(u, res, powprec);
-            arb_div(t, u, t, powprec);
+                if (num_primes >= alloc)
+                {
+                    alloc *= 2;
+                    primes = flint_realloc(primes, alloc * sizeof(mp_limb_t));
+                    powmags = flint_realloc(powmags, alloc * sizeof(double));
+                }
 
-            if (mod == 1 || (chi[p % mod] == 1))
-                arb_sub(res, res, t, wp);
-            else
-                arb_add(res, res, t, wp);
+                primes[num_primes] = p;
+                powmags[num_primes] = powmag;
+
+                num_primes++;
+            }
         }
-    }
 
-    mag_init(err);
-    mag_hurwitz_zeta_uiui(err, s, p);
-    arb_add_error_mag(res, err);
-    mag_clear(err);
+        n_primes_clear(iter);
+
+        thread_limit = flint_get_num_threads();
+        thread_limit = FLINT_MIN(thread_limit, num_primes / 4);
+        thread_limit = FLINT_MAX(thread_limit, 1);
+
+        num_workers = flint_request_threads(&handles, thread_limit);
+        num_threads = num_workers + 1;
+
+        work = flint_malloc(num_threads * sizeof(euler_work_chunk_t));
+
+        for (i = 0; i < num_threads; i++)
+        {
+            work[i].s = s;
+            work[i].mod = mod;
+            work[i].chi = chi;
+            work[i].primes = primes;
+            work[i].powmags = powmags;
+            work[i].num_primes = num_primes;
+            work[i].wp = wp;
+            work[i].index = i;
+            work[i].num_threads = num_threads;
+            arb_init(&work[i].res);
+            arb_one(&work[i].res);
+        }
+
+        for (i = 0; i < num_workers; i++)
+            thread_pool_wake(global_thread_pool, handles[i], 0, euler_worker, &work[i]);
+
+        euler_worker(&work[num_workers]);
+
+        for (i = 0; i < num_workers; i++)
+            thread_pool_wait(global_thread_pool, handles[i]);
+
+        flint_give_back_threads(handles, num_workers);
+
+        for (i = 0; i < num_threads; i++)
+        {
+            arb_mul(res, res, &work[i].res, wp);
+            arb_clear(&work[i].res);
+        }
+
+        flint_free(work);
+
+        flint_free(primes);
+        flint_free(powmags);
+
+        mag_init(err);
+        mag_hurwitz_zeta_uiui(err, s, first_omitted_p);
+        arb_add_error_mag(res, err);
+        mag_clear(err);
+    }
+    else
+    {
+        /* todo: prime iterator here too? */
+
+        for (p = 3; p < limit; p = n_nextprime(p, 1))
+        {
+            if (mod == 1 || chi[p % mod] != 0)
+            {
+                /* p^s */
+                logp = log(p);
+                powmag = s * logp * ONE_OVER_LOG2;
+
+                /* zeta(s,p) ~= 1/p^s + 1/((s-1) p^(s-1)) */
+                errmag = (log(s - 1.0) + (s - 1.0) * logp) * ONE_OVER_LOG2;
+                errmag = FLINT_MIN(powmag, errmag);
+
+                if (errmag > prec + 2)
+                    break;
+
+                powprec = FLINT_MAX(wp - powmag, 8);
+
+                arb_ui_pow_ui(t, p, s, powprec);
+                arb_set_round(u, res, powprec);
+                arb_div(t, u, t, powprec);
+
+                if (mod == 1 || (chi[p % mod] == 1))
+                    arb_sub(res, res, t, wp);
+                else
+                    arb_add(res, res, t, wp);
+            }
+        }
+
+        mag_init(err);
+        mag_hurwitz_zeta_uiui(err, s, p);
+        arb_add_error_mag(res, err);
+        mag_clear(err);
+    }
 
     if (reciprocal)
         arb_set_round(res, res, prec);

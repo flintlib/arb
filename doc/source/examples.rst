@@ -23,9 +23,9 @@ working precision of roughly `n \log_2(10)` bits.
 Sample output, computing `\pi` to one million digits::
 
     > build/examples/pi 1000000
-    computing pi with a precision of 3321933 bits... cpu/wall(s): 0.58 0.586
-    virt/peak/res/peak(MB): 28.24 36.84 8.86 15.56
-    [3.14159265358979323846{...999959 digits...}42209010610577945815 +/- 3e-1000000]
+    precision = 3321933 bits... cpu/wall(s): 0.243 0.244
+    virt/peak/res/peak(MB): 24.46 30.44 8.73 14.42
+    [3.14159265358979323846{...999959 digits...}42209010610577945815 +/- 1.38e-1000000]
 
 The program prints an interval guaranteed to contain `\pi`, and where
 all displayed digits are correct up to an error of plus or minus
@@ -34,6 +34,27 @@ By default, only the first and last few digits are printed.
 Pass 0 as a second argument to print all digits (or pass *m* to
 print *m* + 1 leading and *m* trailing digits, as above with
 the default *m* = 20).
+
+The program can optionally compute various other constants, and can
+use multiple threads:
+
+    > build/examples/pi 1000000 -threads 4
+    precision = 3321933 bits... cpu/wall(s): 0.265 0.147
+    virt/peak/res/peak(MB): 241.95 422.15 13.33 17.54
+    [3.14159265358979323846{...999959 digits...}42209010610577945815 +/- 1.38e-1000000]
+    > build/examples/pi 1000000 -constant e
+    precision = 3321933 bits... cpu/wall(s): 0.09 0.09
+    virt/peak/res/peak(MB): 25.56 29.19 9.58 13.11
+    [2.71828182845904523536{...999959 digits...}01379817644769422819 +/- 1.39e-1000000]
+
+bernoulli.c
+-------------------------------------------------------------------------------
+
+This program benchmarks computing the nth Bernoulli number exactly.
+
+    > build/examples/bernoulli 1000000 -threads 8
+    cpu/wall(s): 27.227 5.836
+    virt/peak/res/peak(MB): 573.47 731.39 73.23 165.13
 
 hilbert_matrix.c
 -------------------------------------------------------------------------------

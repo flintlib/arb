@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2021 Fredrik Johansson
+    Copyright (C) 2021, 2022 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -15,6 +15,34 @@
 #define TIMING 0
 #define DEBUG 0
 
+typedef struct
+{
+    fmpz r;
+    fmpz m;
+}
+crt_res_t;
+
+typedef struct
+{
+    mp_srcptr residues;
+    mp_srcptr primes;
+}
+crt_args_t;
+
+static void
+crt_init(crt_res_t * x, crt_args_t * args)
+{
+    fmpz_init(&x->r);
+    fmpz_init(&x->m);
+}
+
+static void
+crt_clear(crt_res_t * x, crt_args_t * args)
+{
+    fmpz_clear(&x->r);
+    fmpz_clear(&x->m);
+}
+
 static void
 _fmpz_crt_combine(fmpz_t r1r2, fmpz_t m1m2, const fmpz_t r1, const fmpz_t m1, const fmpz_t r2, const fmpz_t m2)
 {
@@ -28,41 +56,87 @@ _fmpz_crt_combine(fmpz_t r1r2, fmpz_t m1m2, const fmpz_t r1, const fmpz_t m1, co
 }
 
 static void
-tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len)
+crt_combine(crt_res_t * res, crt_res_t * left, crt_res_t * right, crt_args_t * args)
 {
-    if (len == 0)
+    _fmpz_crt_combine(&res->r, &res->m, &left->r, &left->m, &right->r, &right->m);
+}
+
+static void
+crt_basecase(crt_res_t * res, slong a, slong b, crt_args_t * args)
+{
+    if (b - a == 0)
     {
-        fmpz_zero(r);
-        fmpz_one(m);
+        fmpz_zero(&res->r);
+        fmpz_one(&res->m);
     }
-    else if (len == 1)
+    else if (b - a == 1)
     {
-        fmpz_set_ui(r, residues[0]);
-        fmpz_set_ui(m, primes[0]);
+        fmpz_set_ui(&res->r, args->residues[a]);
+        fmpz_set_ui(&res->m, args->primes[a]);
     }
     else
     {
-        fmpz_t r1, m1, r2, m2;
+        crt_res_t left, right;
+        slong m = a + (b - a) / 2;
 
-        fmpz_init(r1);
-        fmpz_init(m1);
-        fmpz_init(r2);
-        fmpz_init(m2);
+        crt_init(&left, args);
+        crt_init(&right, args);
 
-        tree_crt(r1, m1, residues, primes, len / 2);
-        tree_crt(r2, m2, residues + len / 2, primes + len / 2, len - len / 2);
-        _fmpz_crt_combine(r, m, r1, m1, r2, m2);
+        crt_basecase(&left, a, m, args);
+        crt_basecase(&right, m, b, args);
+        crt_combine(res, &left, &right, args);
 
-        fmpz_clear(r1);
-        fmpz_clear(m1);
-        fmpz_clear(r2);
-        fmpz_clear(m2);
+        crt_clear(&left, args);
+        crt_clear(&right, args);
     }
-} 
+}
+
+static void
+tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len)
+{
+    crt_res_t res;
+    crt_args_t args;
+
+    res.r = *r;
+    res.m = *m;
+
+    args.residues = residues;
+    args.primes = primes;
+
+    flint_parallel_binary_splitting(&res,
+        (bsplit_basecase_func_t) crt_basecase,
+        (bsplit_merge_func_t) crt_combine,
+        sizeof(crt_res_t),
+        (bsplit_init_func_t) crt_init,
+        (bsplit_clear_func_t) crt_clear,
+        &args, 0, len, 20, -1, 0);
+
+    *r = res.r;
+    *m = res.m;
+
+    return;
+}
+
+typedef struct
+{
+    ulong n;
+    mp_ptr primes;
+    mp_ptr residues;
+}
+mod_p_param_t;
+
+void
+mod_p_worker(slong i, void * param)
+{
+    mod_p_param_t * p = (mod_p_param_t *) param;
+
+    p->residues[i] = bernoulli_mod_p_harvey(p->n, p->primes[i]);
+}
 
 void
 _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
 {
+    n_primes_t prime_iter;
     slong i, bits, mod_bits, zeta_bits, num_primes;
     ulong p;
     mp_ptr primes, residues;
@@ -102,7 +176,12 @@ _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
     mag_init(primes_product);
     mag_one(primes_product);
 
-    for (p = 5; mag_cmp_2exp_si(primes_product, mod_bits) < 0; p = n_nextprime(p, 1))
+    n_primes_init(prime_iter);
+    
+    p = 5;
+    n_primes_jump_after(prime_iter, 5);
+
+    for ( ; mag_cmp_2exp_si(primes_product, mod_bits) < 0; p = n_primes_next(prime_iter))
     {
         if (n % (p - 1) != 0)
         {
@@ -118,7 +197,10 @@ _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
     primes = flint_malloc(sizeof(mp_limb_t) * num_primes);
     residues = flint_malloc(sizeof(mp_limb_t) * num_primes);
 
-    for (p = 5, i = 0; i < num_primes; p = n_nextprime(p, 1))
+    p = 5;
+    n_primes_jump_after(prime_iter, 5);
+
+    for (i = 0; i < num_primes; p = n_primes_next(prime_iter))
     {
         if (n % (p - 1) != 0)
         {
@@ -127,20 +209,21 @@ _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
         }
     }
 
+    n_primes_clear(prime_iter);
+
 #if TIMING
     t2 = clock();
     printf("init time = %f\n", (t2 - t1) / (double) CLOCKS_PER_SEC);
     printf("num_primes = %ld\n", num_primes);
 #endif
 
-    for (i = 0; i < num_primes; i++)
     {
-#if TIMING
-        if (i % 10000 == 0)
-            printf("%ld / %ld\n", i, num_primes);
-#endif
+        mod_p_param_t param;
+        param.n = n;
+        param.primes = primes;
+        param.residues = residues;
 
-        residues[i] = bernoulli_mod_p_harvey(n, primes[i]);
+        flint_parallel_do(mod_p_worker, &param, num_primes, 0, FLINT_PARALLEL_STRIDED /* | FLINT_PARALLEL_VERBOSE */);
     }
 
 #if TIMING
