@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Fredrik Johansson
+    Copyright (C) 2012, 2013, 2022 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -21,11 +21,13 @@ typedef struct
     arb_t C;
     arb_t D;
     arb_t V;
-} euler_bsplit_struct;
+    slong a;
+    slong b;
+} euler_bsplit_1_struct;
 
-typedef euler_bsplit_struct euler_bsplit_t[1];
+typedef euler_bsplit_1_struct euler_bsplit_1_t[1];
 
-static void euler_bsplit_init(euler_bsplit_t s)
+static void euler_bsplit_1_init(euler_bsplit_1_t s, void * args)
 {
     arb_init(s->P);
     arb_init(s->Q);
@@ -35,7 +37,7 @@ static void euler_bsplit_init(euler_bsplit_t s)
     arb_init(s->V);
 }
 
-static void euler_bsplit_clear(euler_bsplit_t s)
+static void euler_bsplit_1_clear(euler_bsplit_1_t s, void * args)
 {
     arb_clear(s->P);
     arb_clear(s->Q);
@@ -45,11 +47,25 @@ static void euler_bsplit_clear(euler_bsplit_t s)
     arb_clear(s->V);
 }
 
+typedef struct
+{
+    slong N;
+    slong prec;
+    slong a;
+    slong b;
+}
+bsplit_args_t;
+
 static void
-euler_bsplit_1_merge(euler_bsplit_t s, euler_bsplit_t L, euler_bsplit_t R,
-                    slong wp, int cont)
+euler_bsplit_1_merge(euler_bsplit_1_t s, euler_bsplit_1_t L, euler_bsplit_1_t R, bsplit_args_t * args)
 {
     arb_t t, u, v;
+
+    slong wp = args->prec;
+
+    slong b = R->b;
+
+    int cont = (b != args->b);
 
     arb_init(t);
     arb_init(u);
@@ -84,14 +100,19 @@ euler_bsplit_1_merge(euler_bsplit_t s, euler_bsplit_t L, euler_bsplit_t R,
     arb_clear(t);
     arb_clear(u);
     arb_clear(v);
+
+    s->a = L->a;
+    s->b = R->b;
 }
 
 static void
-euler_bsplit_1(euler_bsplit_t s, slong n1, slong n2, slong N, slong wp, int cont)
+euler_bsplit_1_basecase(euler_bsplit_1_t s, slong n1, slong n2, bsplit_args_t * args)
 {
     if (n2 - n1 == 1)
     {
-        arb_set_si(s->P, N); /* p = N^2 */
+        slong wp = args->prec;
+
+        arb_set_si(s->P, args->N); /* p = N^2 */
         arb_mul(s->P, s->P, s->P, wp);
         arb_set_si(s->Q, n1 + 1); /* q = (k + 1)^2 */
         arb_mul(s->Q, s->Q, s->Q, wp);
@@ -99,28 +120,114 @@ euler_bsplit_1(euler_bsplit_t s, slong n1, slong n2, slong N, slong wp, int cont
         arb_set_si(s->D, n1 + 1);
         arb_set(s->T, s->P);
         arb_set(s->V, s->P);
+
+        s->a = n1;
+        s->b = n2;
     }
     else
     {
-        euler_bsplit_t L, R;
-        slong m = (n1 + n2) / 2;
+        euler_bsplit_1_t L, R;
+        slong m = n1 + (n2 - n1) / 2;
 
-        euler_bsplit_init(L);
-        euler_bsplit_init(R);
-        euler_bsplit_1(L, n1, m, N, wp, 1);
-        euler_bsplit_1(R, m, n2, N, wp, 1);
-        euler_bsplit_1_merge(s, L, R, wp, cont);
-        euler_bsplit_clear(L);
-        euler_bsplit_clear(R);
+        euler_bsplit_1_init(L, args);
+        euler_bsplit_1_init(R, args);
+        euler_bsplit_1_basecase(L, n1, m, args);
+        euler_bsplit_1_basecase(R, m, n2, args);
+        euler_bsplit_1_merge(s, L, R, args);
+        euler_bsplit_1_clear(L, args);
+        euler_bsplit_1_clear(R, args);
     }
 }
 
 static void
-euler_bsplit_2(arb_t P, arb_t Q, arb_t T, slong n1, slong n2,
-                        slong N, slong wp, int cont)
+euler_bsplit_1(euler_bsplit_1_t s, slong n1, slong n2, slong N, slong wp, int cont)
+{
+    bsplit_args_t args;
+
+    args.N = N;
+    args.prec = wp;
+    args.a = n1;
+    args.b = n2;
+
+    flint_parallel_binary_splitting(s,
+        (bsplit_basecase_func_t) euler_bsplit_1_basecase,
+        (bsplit_merge_func_t) euler_bsplit_1_merge,
+        sizeof(euler_bsplit_1_struct),
+        (bsplit_init_func_t) euler_bsplit_1_init,
+        (bsplit_clear_func_t) euler_bsplit_1_clear,
+        &args, n1, n2, 4, -1, 0);
+}
+
+typedef struct
+{
+    arb_t P;
+    arb_t Q;
+    arb_t T;
+    slong a;
+    slong b;
+} euler_bsplit_2_struct;
+
+typedef euler_bsplit_2_struct euler_bsplit_2_t[1];
+
+static void euler_bsplit_2_init(euler_bsplit_2_t s, void * args)
+{
+    arb_init(s->P);
+    arb_init(s->Q);
+    arb_init(s->T);
+}
+
+static void euler_bsplit_2_clear(euler_bsplit_2_t s, void * args)
+{
+    arb_clear(s->P);
+    arb_clear(s->Q);
+    arb_clear(s->T);
+}
+
+static void
+euler_bsplit_2_merge(euler_bsplit_2_t s, euler_bsplit_2_t L, euler_bsplit_2_t R, bsplit_args_t * args)
+{
+    arb_ptr P = s->P;
+    arb_ptr Q = s->Q;
+    arb_ptr T = s->T;
+
+    arb_ptr P2 = R->P;
+    arb_ptr Q2 = R->Q;
+    arb_ptr T2 = R->T;
+
+    slong wp = args->prec;
+
+    slong b = R->b;
+
+    int cont = (b != args->b);
+
+    arb_mul(T, T, Q2, wp);
+    arb_mul(T2, T2, P, wp);
+    arb_add(T, T, T2, wp);
+
+    if (cont)
+        arb_mul(P, P, P2, wp);
+
+    arb_mul(Q, Q, Q2, wp);
+
+    s->a = L->a;
+    s->b = R->b;
+}
+
+static void
+euler_bsplit_2_basecase(euler_bsplit_2_t s, slong n1, slong n2, bsplit_args_t * args)
 {
     if (n2 - n1 == 1)
     {
+        slong wp = args->prec;
+        slong N = args->N;
+
+        arb_ptr P = s->P;
+        arb_ptr Q = s->Q;
+        arb_ptr T = s->T;
+
+        if (n2 - n1 != 1)
+            flint_abort();
+
         if (n1 == 0)
         {
             arb_set_si(P, 1);
@@ -138,32 +245,50 @@ euler_bsplit_2(arb_t P, arb_t Q, arb_t T, slong n1, slong n2,
         }
 
         arb_set(T, P);
+
+        s->a = n1;
+        s->b = n2;
     }
     else
     {
-        arb_t P2, Q2, T2;
-        slong m = (n1 + n2) / 2;
+        euler_bsplit_2_t R;
+        slong m = n1 + (n2 - n1) / 2;
 
-        arb_init(P2);
-        arb_init(Q2);
-        arb_init(T2);
-
-        euler_bsplit_2(P, Q, T, n1, m, N, wp, 1);
-        euler_bsplit_2(P2, Q2, T2, m, n2, N, wp, 1);
-
-        arb_mul(T, T, Q2, wp);
-        arb_mul(T2, T2, P, wp);
-        arb_add(T, T, T2, wp);
-
-        if (cont)
-            arb_mul(P, P, P2, wp);
-
-        arb_mul(Q, Q, Q2, wp);
-
-        arb_clear(P2);
-        arb_clear(Q2);
-        arb_clear(T2);
+        euler_bsplit_2_init(R, args);
+        euler_bsplit_2_basecase(s, n1, m, args);
+        euler_bsplit_2_basecase(R, m, n2, args);
+        euler_bsplit_2_merge(s, s, R, args);
+        euler_bsplit_2_clear(R, args);
     }
+}
+
+static void
+euler_bsplit_2(arb_t P, arb_t Q, arb_t T, slong n1, slong n2,
+                        slong N, slong wp, int cont)
+{
+    euler_bsplit_2_t s;
+    bsplit_args_t args;
+
+    args.N = N;
+    args.prec = wp;
+    args.a = n1;
+    args.b = n2;
+
+    *s->P = *P;
+    *s->Q = *Q;
+    *s->T = *T;
+
+    flint_parallel_binary_splitting(s,
+        (bsplit_basecase_func_t) euler_bsplit_2_basecase,
+        (bsplit_merge_func_t) euler_bsplit_2_merge,
+        sizeof(euler_bsplit_2_struct),
+        (bsplit_init_func_t) euler_bsplit_2_init,
+        (bsplit_clear_func_t) euler_bsplit_2_clear,
+        &args, n1, n2, 4, -1, FLINT_PARALLEL_BSPLIT_LEFT_INPLACE);
+
+    *P = *s->P;
+    *Q = *s->Q;
+    *T = *s->T;
 }
 
 static void
@@ -236,7 +361,7 @@ arb_log_ui_smooth(arb_t s, ulong n, slong prec)
 void
 arb_const_euler_eval(arb_t res, slong prec)
 {
-    euler_bsplit_t sum;
+    euler_bsplit_1_t sum;
     arb_t t, u, v, P2, T2, Q2;
     slong bits, wp, wp2, n, N, M;
 
@@ -273,7 +398,7 @@ arb_const_euler_eval(arb_t res, slong prec)
     wp  = bits   + 2 * FLINT_BIT_COUNT(n);
     wp2 = bits/2 + 2 * FLINT_BIT_COUNT(n);
 
-    euler_bsplit_init(sum);
+    euler_bsplit_1_init(sum, NULL);
     arb_init(P2);
     arb_init(T2);
     arb_init(Q2);
@@ -331,7 +456,7 @@ arb_const_euler_eval(arb_t res, slong prec)
     arb_clear(u);
     arb_clear(v);
 
-    euler_bsplit_clear(sum);
+    euler_bsplit_1_clear(sum, NULL);
 }
 
 ARB_DEF_CACHED_CONSTANT(arb_const_euler_brent_mcmillan, arb_const_euler_eval)

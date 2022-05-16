@@ -26,6 +26,8 @@ int main()
         mpfr_t s;
         slong accuracy, prec;
 
+        flint_set_num_threads(1 + n_randint(state, 3));
+
         prec = 2 + n_randint(state, 1 << n_randint(state, 16));
 
         arb_init(r);
@@ -57,7 +59,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

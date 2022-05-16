@@ -28,6 +28,8 @@ int main()
 
         prec = 2 + n_randint(state, 1 << n_randint(state, 18));
 
+        flint_set_num_threads(1 + n_randint(state, 3));
+
         arb_init(r);
         mpfr_init2(s, prec + 1000);
 
@@ -57,7 +59,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
