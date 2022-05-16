@@ -36,7 +36,7 @@ print *m* + 1 leading and *m* trailing digits, as above with
 the default *m* = 20).
 
 The program can optionally compute various other constants, and can
-use multiple threads:
+use multiple threads::
 
     > build/examples/pi 1000000 -threads 4
     precision = 3321933 bits... cpu/wall(s): 0.265 0.147
@@ -50,7 +50,7 @@ use multiple threads:
 bernoulli.c
 -------------------------------------------------------------------------------
 
-This program benchmarks computing the nth Bernoulli number exactly.
+This program benchmarks computing the nth Bernoulli number exactly::
 
     > build/examples/bernoulli 1000000 -threads 8
     cpu/wall(s): 27.227 5.836
@@ -493,7 +493,7 @@ a resolution of *xn* times *yn* pixels.
 
 The program takes the parameters::
 
-    complex_plot [-range xa xb ya yb] [-size xn yn] <func>
+    complex_plot [-range xa xb ya yb] [-size xn yn] [-color n] [-threads n] <func>
 
 Defaults parameters are `[-10,10] + [-10,10]i` and *xn* = *yn* = 512.
 
@@ -529,6 +529,8 @@ For example, the following plots the Riemann zeta function around
 a portion of the critical strip with imaginary part between 100 and 140::
 
     > build/examples/complex_plot zeta -range -10 10 100 140 -size 256 512
+
+For parallel computation on a multicore system, use ``-threads n``.
 
 lvalue.c
 -------------------------------------------------------------------------------

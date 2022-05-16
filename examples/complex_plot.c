@@ -387,19 +387,91 @@ fresnelc(acb_t res, const acb_t z, slong prec)
     acb_hypgeom_fresnel(NULL, res, z, 0, prec);
 }
 
+typedef struct
+{
+    arf_ptr xa;
+    arf_ptr xb;
+    arf_ptr ya;
+    arf_ptr yb;
+    slong xnum;
+    slong ynum;
+    slong y;
+    func_ptr func;
+    unsigned char * buf;
+    int color_mode;
+}
+work_t;
+
+void worker(slong x, work_t * work)
+{
+    slong prec;
+    acb_t z, w;
+    arf_ptr xa, xb, ya, yb;
+    slong xnum, ynum, y;
+    double R, G, B;
+
+    acb_init(z);
+    acb_init(w);
+
+    xa = work->xa;
+    xb = work->xb;
+    ya = work->ya;
+    yb = work->yb;
+
+    xnum = work->xnum;
+    ynum = work->ynum;
+    ynum = ynum; /* unused */
+    y = work->y;
+
+    for (prec = 30; prec < 500; prec *= 2)
+    {
+        arf_sub(arb_midref(acb_imagref(z)), yb, ya, prec, ARF_RND_DOWN);
+        arf_mul_ui(arb_midref(acb_imagref(z)),
+            arb_midref(acb_imagref(z)), y, prec, ARF_RND_DOWN);
+        arf_div_ui(arb_midref(acb_imagref(z)),
+            arb_midref(acb_imagref(z)), ynum - 1, prec, ARF_RND_DOWN);
+        arf_add(arb_midref(acb_imagref(z)),
+            arb_midref(acb_imagref(z)), ya, prec, ARF_RND_DOWN);
+
+        arf_sub(arb_midref(acb_realref(z)), xb, xa, prec, ARF_RND_DOWN);
+        arf_mul_ui(arb_midref(acb_realref(z)),
+            arb_midref(acb_realref(z)), x, prec, ARF_RND_DOWN);
+        arf_div_ui(arb_midref(acb_realref(z)),
+            arb_midref(acb_realref(z)), xnum - 1, prec, ARF_RND_DOWN);
+        arf_add(arb_midref(acb_realref(z)),
+            arb_midref(acb_realref(z)), xa, prec, ARF_RND_DOWN);
+
+        work->func(w, z, prec);
+
+        if (acb_rel_accuracy_bits(w) > 4)
+            break;
+    }
+
+    color_function(&R, &G, &B, w, work->color_mode);
+
+    work->buf[3 * (y * xnum + x) + 0] = FLINT_MIN(255, floor(R * 255));
+    work->buf[3 * (y * xnum + x) + 1] = FLINT_MIN(255, floor(G * 255));
+    work->buf[3 * (y * xnum + x) + 2] = FLINT_MIN(255, floor(B * 255));
+
+    acb_clear(z);
+    acb_clear(w);
+}
+
 int main(int argc, char *argv[])
 {
-    slong x, y, xnum, ynum, prec, i;
-    double R, G, B, dxa, dxb, dya, dyb;
+    slong x, y, xnum, ynum, i;
+    double dxa, dxb, dya, dyb;
     FILE * fp;
     arf_t xa, xb, ya, yb;
     acb_t z, w;
     func_ptr func;
     int color_mode;
+    unsigned char * buf;
+    slong num_threads;
 
     if (argc < 2)
     {
-        printf("complex_plot [-range xa xb ya yb] [-size xn yn] [-color n] <func>\n\n");
+        printf("complex_plot [-range xa xb ya yb] [-size xn yn] [-color n] [-threads n] <func>\n\n");
 
         printf("Plots one of the predefined functions on [xa,xb] + [ya,yb]i\n");
         printf("using domain coloring, at a resolution of xn by yn pixels.\n\n");
@@ -454,6 +526,7 @@ int main(int argc, char *argv[])
     dxb = dyb = 10;
     func = acb_gamma;
     color_mode = 0;
+    num_threads = 1;
 
     for (i = 1; i < argc; i++)
     {
@@ -474,6 +547,11 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "-color"))
         {
             color_mode = atoi(argv[i+1]);
+            i++;
+        }
+        else if (!strcmp(argv[i], "-threads"))
+        {
+            num_threads = atol(argv[i+1]);
             i++;
         }
         else if (!strcmp(argv[i], "sin"))
@@ -546,51 +624,49 @@ int main(int argc, char *argv[])
     arf_set_d(ya, dya);
     arf_set_d(yb, dyb);
 
-    fp = fopen("arbplot.ppm", "w");
-    fprintf(fp, "P6\n%ld %ld 255\n", xnum, ynum);
+    buf = flint_malloc(3 * xnum * ynum);
+
+    flint_set_num_threads(num_threads);
 
     TIMEIT_ONCE_START
 
     for (y = ynum - 1; y >= 0; y--)
     {
+        work_t work;
+
         if (y % (ynum / 16) == 0)
             printf("row %ld\n", y);
 
-        for (x = 0; x < xnum; x++)
-        {
-            for (prec = 30; prec < 500; prec *= 2)
-            {
-                arf_sub(arb_midref(acb_imagref(z)), yb, ya, prec, ARF_RND_DOWN);
-                arf_mul_ui(arb_midref(acb_imagref(z)),
-                    arb_midref(acb_imagref(z)), y, prec, ARF_RND_DOWN);
-                arf_div_ui(arb_midref(acb_imagref(z)),
-                    arb_midref(acb_imagref(z)), ynum - 1, prec, ARF_RND_DOWN);
-                arf_add(arb_midref(acb_imagref(z)),
-                    arb_midref(acb_imagref(z)), ya, prec, ARF_RND_DOWN);
+        work.xa = xa;
+        work.xb = xb;
+        work.ya = ya;
+        work.yb = yb;
+        work.xnum = xnum;
+        work.ynum = ynum;
+        work.y = y;
+        work.func = func;
+        work.buf = buf;
+        work.color_mode = color_mode;
 
-                arf_sub(arb_midref(acb_realref(z)), xb, xa, prec, ARF_RND_DOWN);
-                arf_mul_ui(arb_midref(acb_realref(z)),
-                    arb_midref(acb_realref(z)), x, prec, ARF_RND_DOWN);
-                arf_div_ui(arb_midref(acb_realref(z)),
-                    arb_midref(acb_realref(z)), xnum - 1, prec, ARF_RND_DOWN);
-                arf_add(arb_midref(acb_realref(z)),
-                    arb_midref(acb_realref(z)), xa, prec, ARF_RND_DOWN);
-
-                func(w, z, prec);
-
-                if (acb_rel_accuracy_bits(w) > 4)
-                    break;
-            }
-
-            color_function(&R, &G, &B, w, color_mode);
-
-            fputc(FLINT_MIN(255, floor(R * 255)), fp);
-            fputc(FLINT_MIN(255, floor(G * 255)), fp);
-            fputc(FLINT_MIN(255, floor(B * 255)), fp);
-        }
+        flint_parallel_do((do_func_t) worker, &work, xnum, num_threads, FLINT_PARALLEL_STRIDED);
     }
 
     TIMEIT_ONCE_STOP
+
+    fp = fopen("arbplot.ppm", "w");
+    fprintf(fp, "P6\n%ld %ld 255\n", xnum, ynum);
+
+    for (y = ynum - 1; y >= 0; y--)
+    {
+        for (x = 0; x < xnum; x++)
+        {
+            fputc(buf[3 * (y * xnum + x) + 0], fp);
+            fputc(buf[3 * (y * xnum + x) + 1], fp);
+            fputc(buf[3 * (y * xnum + x) + 2], fp);
+        }
+    }
+
+    flint_free(buf);
 
     fclose(fp);
 
@@ -602,7 +678,7 @@ int main(int argc, char *argv[])
     acb_clear(z);
     acb_clear(w);
 
-    flint_cleanup();
+    flint_cleanup_master();
     return 0;
 }
 
