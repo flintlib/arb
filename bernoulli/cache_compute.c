@@ -31,43 +31,34 @@ bernoulli_cleanup(void)
 void
 bernoulli_cache_compute(slong n)
 {
-    if (bernoulli_cache_num < n)
+    slong old_num = bernoulli_cache_num;
+
+    if (old_num < n)
     {
         slong i, new_num;
-        bernoulli_rev_t iter;
 
-        if (bernoulli_cache_num == 0)
+        if (old_num == 0)
         {
             flint_register_cleanup_function(bernoulli_cleanup);
         }
 
         if (n <= 128)
-            new_num = FLINT_MAX(bernoulli_cache_num + 32, n);
+            new_num = FLINT_MAX(old_num + 32, n);
         else
-            new_num = FLINT_MAX(bernoulli_cache_num + 128, n);
+            new_num = FLINT_MAX(old_num + 128, n);
 
         bernoulli_cache = flint_realloc(bernoulli_cache, new_num * sizeof(fmpq));
-        for (i = bernoulli_cache_num; i < new_num; i++)
+        for (i = old_num; i < new_num; i++)
             fmpq_init(bernoulli_cache + i);
 
         if (new_num <= 128)
         {
+            /* todo: use recursion, but only compute new entries */
             arith_bernoulli_number_vec(bernoulli_cache, new_num);
         }
         else
         {
-            i = new_num - 1;
-            i -= (i % 2);
-            bernoulli_rev_init(iter, i);
-            for ( ; i >= bernoulli_cache_num; i -= 2)
-            {
-                bernoulli_rev_next(fmpq_numref(bernoulli_cache + i),
-                    fmpq_denref(bernoulli_cache + i), iter);
-            }
-            bernoulli_rev_clear(iter);
-
-            if (new_num > 1)
-                fmpq_set_si(bernoulli_cache + 1, -1, 2);
+            bernoulli_fmpq_vec_no_cache(bernoulli_cache + old_num, old_num, new_num - old_num);
         }
 
         bernoulli_cache_num = new_num;

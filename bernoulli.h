@@ -93,6 +93,7 @@ void bernoulli_rev_next(fmpz_t numer, fmpz_t denom, bernoulli_rev_t iter);
 
 void bernoulli_rev_clear(bernoulli_rev_t iter);
 
+void bernoulli_fmpq_vec_no_cache(fmpq * res, ulong a, slong num);
 
 #define BERNOULLI_ENSURE_CACHED(n) \
   do { \

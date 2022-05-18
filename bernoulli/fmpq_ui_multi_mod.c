@@ -91,8 +91,9 @@ crt_basecase(crt_res_t * res, slong a, slong b, crt_args_t * args)
     }
 }
 
-static void
-tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len)
+/* todo: optimize basecase and move to flint */
+void
+_arb_tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len)
 {
     crt_res_t res;
     crt_args_t args;
@@ -234,7 +235,7 @@ _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
 #endif
 
     fmpz_init(M);
-    tree_crt(num, M, residues, primes, num_primes);
+    _arb_tree_crt(num, M, residues, primes, num_primes);
     fmpz_mul(num, num, den);
     fmpz_mod(num, num, M);
 

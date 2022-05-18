@@ -58,6 +58,18 @@ Generation of Bernoulli numbers
 
     Frees all memory allocated internally by *iter*.
 
+.. function:: void bernoulli_fmpq_vec_no_cache(fmpq * res, ulong a, slong num)
+
+    Writes *num* consecutive Bernoulli numbers to *res* starting
+    with `B_a`. This function is not currently optimized for a small
+    count *num*. The entries are not read from or written
+    to the Bernoulli number cache; if retrieving a vector of
+    Bernoulli numbers is needed more than once,
+    use :func:`bernoulli_cache_compute`
+    followed by :func:`bernoulli_fmpq_ui` instead.
+
+    This function is a wrapper for the *rev* iterators. It can use
+    multiple threads internally.
 
 Caching
 -------------------------------------------------------------------------------
@@ -73,6 +85,9 @@ Caching
 
     Makes sure that the Bernoulli numbers up to at least `B_{n-1}` are cached.
     Calling :func:`flint_cleanup()` frees the cache.
+
+    The cache is extended by calling :func:`bernoulli_fmpq_vec_no_cache`
+    internally.
 
 
 Bounding
