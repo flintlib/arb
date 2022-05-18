@@ -417,57 +417,34 @@ divisor_table_odd(unsigned int * tab, slong len)
     }
 }
 
+typedef struct
+{
+    ulong n;
+    const unsigned int * divtab;
+    mp_ptr primes;
+    mp_ptr residues;
+}
+mod_p_param_t;
+
+static void
+mod_p_worker(slong i, void * param)
+{
+    mod_p_param_t * p = (mod_p_param_t *) param;
+
+    p->residues[i] = euler_mod_p_powsum(p->n, p->primes[i], p->divtab);
+}
+
 #define TIMING 0
 #define DEBUG 0
 
-static void
-_fmpz_crt_combine(fmpz_t r1r2, fmpz_t m1m2, const fmpz_t r1, const fmpz_t m1, const fmpz_t r2, const fmpz_t m2)
-{
-    fmpz_invmod(m1m2, m1, m2);
-    fmpz_mul(m1m2, m1m2, m1);
-    fmpz_sub(r1r2, r2, r1);
-    fmpz_mul(r1r2, r1r2, m1m2);
-    fmpz_add(r1r2, r1r2, r1);
-    fmpz_mul(m1m2, m1, m2);
-    fmpz_mod(r1r2, r1r2, m1m2);
-}
-
-static void
-tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len)
-{
-    if (len == 0)
-    {
-        fmpz_zero(r);
-        fmpz_one(m);
-    }
-    else if (len == 1)
-    {
-        fmpz_set_ui(r, residues[0]);
-        fmpz_set_ui(m, primes[0]);
-    }
-    else
-    {
-        fmpz_t r1, m1, r2, m2;
-
-        fmpz_init(r1);
-        fmpz_init(m1);
-        fmpz_init(r2);
-        fmpz_init(m2);
-
-        tree_crt(r1, m1, residues, primes, len / 2);
-        tree_crt(r2, m2, residues + len / 2, primes + len / 2, len - len / 2);
-        _fmpz_crt_combine(r, m, r1, m1, r2, m2);
-
-        fmpz_clear(r1);
-        fmpz_clear(m1);
-        fmpz_clear(r2);
-        fmpz_clear(m2);
-    }
-} 
+/* todo: optimize basecase and move to flint */
+void
+_arb_tree_crt(fmpz_t r, fmpz_t m, mp_srcptr residues, mp_srcptr primes, slong len);
 
 void
 arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
 {
+    n_primes_t prime_iter;
     slong i, bits, mod_bits, zeta_bits, num_primes;
     ulong p;
     mp_ptr primes, residues;
@@ -517,7 +494,12 @@ arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
     mag_init(primes_product);
     mag_one(primes_product);
 
-    for (p = 5; mag_cmp_2exp_si(primes_product, mod_bits) < 0; p = n_nextprime(p, 1))
+    n_primes_init(prime_iter);
+
+    p = 5;
+    n_primes_jump_after(prime_iter, 5);
+
+    for ( ; mag_cmp_2exp_si(primes_product, mod_bits) < 0; p = n_primes_next(prime_iter))
     {
         if (n % (p - 1) != 0)
         {
@@ -533,7 +515,10 @@ arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
     primes = flint_malloc(sizeof(mp_limb_t) * num_primes);
     residues = flint_malloc(sizeof(mp_limb_t) * num_primes);
 
-    for (p = 5, i = 0; i < num_primes; p = n_nextprime(p, 1))
+    p = 5;
+    n_primes_jump_after(prime_iter, 5);
+
+    for (i = 0; i < num_primes; p = n_primes_next(prime_iter))
     {
         if (n % (p - 1) != 0)
         {
@@ -541,6 +526,8 @@ arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
             i++;
         }
     }
+
+    n_primes_clear(prime_iter);
 
     if (num_primes == 0)
     {
@@ -559,15 +546,16 @@ arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
     printf("num_primes = %ld\n", num_primes);
 #endif
 
-    for (i = 0; i < num_primes; i++)
     {
-#if TIMING
-        if (i % 10000 == 0)
-            printf("%ld / %ld\n", i, num_primes);
-#endif
+        mod_p_param_t param;
+        param.n = n;
+        param.primes = primes;
+        param.residues = residues;
+        param.divtab = divtab_odd;
 
-        residues[i] = euler_mod_p_powsum(n, primes[i], divtab_odd);
+        flint_parallel_do(mod_p_worker, &param, num_primes, 0, FLINT_PARALLEL_STRIDED /* | FLINT_PARALLEL_VERBOSE */);
     }
+
 
 #if TIMING
     t2 = clock();
@@ -577,7 +565,7 @@ arb_fmpz_euler_number_ui_multi_mod(fmpz_t num, ulong n, double alpha)
 #endif
 
     fmpz_init(M);
-    tree_crt(num, M, residues, primes, num_primes);
+    _arb_tree_crt(num, M, residues, primes, num_primes);
     fmpz_mod(num, num, M);
 
     if (n % 4 == 2)

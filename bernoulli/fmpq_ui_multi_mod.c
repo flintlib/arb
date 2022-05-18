@@ -126,7 +126,7 @@ typedef struct
 }
 mod_p_param_t;
 
-void
+static void
 mod_p_worker(slong i, void * param)
 {
     mod_p_param_t * p = (mod_p_param_t *) param;
@@ -178,7 +178,7 @@ _bernoulli_fmpq_ui_multi_mod(fmpz_t num, fmpz_t den, ulong n, double alpha)
     mag_one(primes_product);
 
     n_primes_init(prime_iter);
-    
+
     p = 5;
     n_primes_jump_after(prime_iter, 5);
 
