@@ -194,7 +194,11 @@ arf_mul_rnd_down(arf_ptr z, arf_srcptr x, arf_srcptr y, slong prec)
         alloc = zn = xn + yn;
         ARF_MUL_TMP_ALLOC(tmp, alloc)
 
-        if (xn == yn)
+        if (ARF_USE_FFT_MUL(yn))
+        {
+            flint_mpn_mul_fft_main(tmp, xptr, xn, yptr, yn);
+        }
+        else if (xn == yn)
         {
             if (xptr == yptr)
                 mpn_sqr(tmp, xptr, xn);

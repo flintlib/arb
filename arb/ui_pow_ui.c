@@ -292,7 +292,10 @@ arb_ui_pow_ui(arb_t res, ulong a, ulong exp, slong prec)
         }
         else   /* or exactly */
         {
-            mpn_sqr(tmp, yman, yn);
+            if (ARF_USE_FFT_MUL(yn))
+                flint_mpn_mul_fft_main(tmp, yman, yn, yman, yn);
+            else
+                mpn_sqr(tmp, yman, yn);
             yn = 2 * yn;
         }
 

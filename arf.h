@@ -826,6 +826,11 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
         r3 += r2 < t1;                                      \
     } while (0)
 
+#define ARF_USE_FFT_MUL(_xn) ((_xn) > 10000)
+
+/* from flint/fft.h */
+void flint_mpn_mul_fft_main(mp_ptr r1, mp_srcptr i1, mp_size_t n1, mp_srcptr i2, mp_size_t n2);
+
 #define ARF_MPN_MUL(_z, _x, _xn, _y, _yn) \
     if ((_xn) == (_yn)) \
     { \
@@ -842,19 +847,19 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
             __arb_y1 = (_y)[1]; \
             nn_mul_2x2((_z)[3], (_z)[2], (_z)[1], (_z)[0], __arb_x1, __arb_x0, __arb_y1, __arb_y0); \
         } \
+        else if (ARF_USE_FFT_MUL(_xn)) \
+            flint_mpn_mul_fft_main((_z), (_x), (_xn), (_y), (_yn)); \
         else if ((_x) == (_y)) \
-        { \
             mpn_sqr((_z), (_x), (_xn)); \
-        } \
         else \
-        { \
             mpn_mul_n((_z), (_x), (_y), (_xn)); \
-        } \
     } \
     else if ((_xn) > (_yn)) \
     { \
         if ((_yn) == 1) \
             (_z)[(_xn) + (_yn) - 1] = mpn_mul_1((_z), (_x), (_xn), (_y)[0]); \
+        else if (ARF_USE_FFT_MUL(_yn)) \
+            flint_mpn_mul_fft_main((_z), (_x), (_xn), (_y), (_yn)); \
         else \
             mpn_mul((_z), (_x), (_xn), (_y), (_yn)); \
     } \
@@ -862,6 +867,8 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
     { \
         if ((_xn) == 1) \
             (_z)[(_xn) + (_yn) - 1] = mpn_mul_1((_z), (_y), (_yn), (_x)[0]); \
+        else if (ARF_USE_FFT_MUL(_xn)) \
+            flint_mpn_mul_fft_main((_z), (_y), (_yn), (_x), (_xn)); \
         else \
             mpn_mul((_z), (_y), (_yn), (_x), (_xn)); \
     }
