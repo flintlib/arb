@@ -58,8 +58,6 @@ int main()
 
         flint_set_num_threads(1 + n_randint(state, 4));
 
-        printf("a = %ld, b = %ld, num = %ld\n", a, b, num);
-
         res = _fmpq_vec_init(num);
 
         for (i = 0; i < num; i++)
