@@ -47,6 +47,48 @@ use multiple threads::
     virt/peak/res/peak(MB): 25.56 29.19 9.58 13.11
     [2.71828182845904523536{...999959 digits...}01379817644769422819 +/- 1.39e-1000000]
 
+zeta_zeros.c
+-------------------------------------------------------------------------------
+
+This program computes one or several consecutive zeros of the
+Riemann zeta function on the critical line::
+
+    > build/examples/zeta_zeros -num 10 -digits 30
+    Computing 10 zeros starting with zero #1, with prec = 102 bits...
+    cpu/wall(s): 0.01 0.009
+    virt/peak/res/peak(MB): 21.30 21.30 7.32 7.32
+    14.1347251417346937904572519836
+    21.0220396387715549926284795939
+    25.0108575801456887632137909926
+    30.4248761258595132103118975306
+    32.9350615877391896906623689641
+    37.5861781588256712572177634807
+    40.9187190121474951873981269146
+    43.3270732809149995194961221654
+    48.0051508811671597279424727494
+    49.7738324776723021819167846786
+
+Five zeros starting with the millionth::
+
+    > build/examples/zeta_zeros -start 1000000 -num 5 -digits 20
+    Computing 5 zeros starting with zero #1000000, with prec = 69 bits...
+    cpu/wall(s): 0.029 0.029
+    virt/peak/res/peak(MB): 21.16 21.16 5.82 5.82
+    600269.67701244495552
+    600270.30109071169866
+    600270.74787059436613
+    600271.48637367364820
+    600271.76148042593778
+
+The program supports the following options::
+
+    zeta_zeros [-start n] [-num n] [-threads t] [-digits d] [-suppress] [-gradual] [-stream]
+
+With ``-platt``, Platt's algorithm is used, which may be faster when
+computing many zeros of large index simultaneously.
+With ``-stream``, the zeros are computed and output one
+by one instead of simultaneously.
+
 bernoulli.c
 -------------------------------------------------------------------------------
 
@@ -101,7 +143,7 @@ the program computes the smallest eigenvalue of the Hilbert matrix
 keiper_li.c
 -------------------------------------------------------------------------------
 
-Given an input integer *n*, this program rigorously computes numerical
+]Given an input integer *n*, this program rigorously computes numerical
 values of the Keiper-Li coefficients
 `\lambda_0, \ldots, \lambda_n`. The Keiper-Li coefficients
 have the property that `\lambda_n > 0` for all `n > 0` if and only if the
@@ -243,7 +285,7 @@ The following options are available:
 
 With *function* 0, the program isolates roots of the Riemann zeta function
 on the critical line, and guarantees that no roots are missed
-(there are more efficient ways to do this, but it is a nice example)::
+(see `zeta_zeros.c` for a far more efficient way to do this)::
 
     > build/examples/real_roots 0 0.0 50.0 -verbose
     interval: [0, 50]
