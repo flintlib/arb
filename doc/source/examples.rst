@@ -53,41 +53,37 @@ zeta_zeros.c
 This program computes one or several consecutive zeros of the
 Riemann zeta function on the critical line::
 
-    > build/examples/zeta_zeros -num 10 -digits 30
-    Computing 10 zeros starting with zero #1, with prec = 102 bits...
-    cpu/wall(s): 0.01 0.009
-    virt/peak/res/peak(MB): 21.30 21.30 7.32 7.32
-    14.1347251417346937904572519836
-    21.0220396387715549926284795939
-    25.0108575801456887632137909926
-    30.4248761258595132103118975306
-    32.9350615877391896906623689641
-    37.5861781588256712572177634807
-    40.9187190121474951873981269146
-    43.3270732809149995194961221654
-    48.0051508811671597279424727494
-    49.7738324776723021819167846786
+    > build/examples/zeta_zeros -n 1 -count 10 -digits 30
+    1	14.1347251417346937904572519836
+    2	21.0220396387715549926284795939
+    3	25.0108575801456887632137909926
+    4	30.4248761258595132103118975306
+    5	32.9350615877391896906623689641
+    6	37.5861781588256712572177634807
+    7	40.9187190121474951873981269146
+    8	43.3270732809149995194961221654
+    9	48.0051508811671597279424727494
+    10	49.7738324776723021819167846786
+    cpu/wall(s): 0.01 0.01
+    virt/peak/res/peak(MB): 21.28 21.28 7.29 7.29
 
 Five zeros starting with the millionth::
 
-    > build/examples/zeta_zeros -start 1000000 -num 5 -digits 20
-    Computing 5 zeros starting with zero #1000000, with prec = 69 bits...
-    cpu/wall(s): 0.029 0.029
-    virt/peak/res/peak(MB): 21.16 21.16 5.82 5.82
-    600269.67701244495552
-    600270.30109071169866
-    600270.74787059436613
-    600271.48637367364820
-    600271.76148042593778
+    > build/examples/zeta_zeros -n 1000000 -count 5 -digits 20
+    1000000	600269.67701244495552
+    1000001	600270.30109071169866
+    1000002	600270.74787059436613
+    1000003	600271.48637367364820
+    1000004	600271.76148042593778
+    cpu/wall(s): 0.03 0.03
+    virt/peak/res/peak(MB): 21.41 21.41 7.41 7.41
 
 The program supports the following options::
 
-    zeta_zeros [-start n] [-num n] [-threads t] [-digits d] [-suppress] [-gradual] [-stream]
+    zeta_zeros [-n n] [-count n] [-prec n] [-digits n] [-threads n] [-platt] [-noplatt] [-v] [-verbose] [-h] [-help]
 
 With ``-platt``, Platt's algorithm is used, which may be faster when
 computing many zeros of large index simultaneously.
-With ``-stream``, the zeros are computed and output one
-by one instead of simultaneously.
 
 bernoulli.c
 -------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ void print_zeros(arb_srcptr p, const fmpz_t n, slong len, slong digits)
     {
         fmpz_print(k);
         flint_printf("\t");
-        arb_printn(p+i, digits, 0);
+        arb_printn(p+i, digits, ARB_STR_NO_RADIUS);
         flint_printf("\n");
         fmpz_add_ui(k, k, 1);
     }
@@ -22,7 +22,7 @@ void print_zeros(arb_srcptr p, const fmpz_t n, slong len, slong digits)
 
 void print_help()
 {
-    flint_printf("zeta_zeros [-n n] [-count n] [-prec n] [-threads n] "
+    flint_printf("zeta_zeros [-n n] [-count n] [-prec n] [-digits n] [-threads n] "
                  "[-platt] [-noplatt] [-v] [-verbose] [-h] [-help]\n\n");
     flint_printf("Reports the imaginary parts of consecutive nontrivial zeros "
                  "of the Riemann zeta function.\n");
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     int verbose = 0;
     int platt = 0;
     int noplatt = 0;
-    slong i, buffersize, prec;
+    slong i, buffersize, prec, digits;
     fmpz_t requested, count, nstart, n;
     arb_ptr p;
 
@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     fmpz_set_si(requested, -1);
     buffersize = max_buffersize;
     prec = -1;
+    digits = 2;
 
     for (i = 1; i < argc; i++)
     {
@@ -122,6 +123,17 @@ int main(int argc, char *argv[])
         {
             requires_value(argc, argv, i);
             prec = atol(argv[i+1]);
+            digits = prec / 3.32192809488736 + 1;
+            if (prec < 2)
+            {
+                invalid_value(argv, i);
+            }
+        }
+        else if (!strcmp(argv[i], "-digits"))
+        {
+            requires_value(argc, argv, i);
+            digits = atol(argv[i+1]);
+            prec = digits * 3.32192809488736 + 3;
             if (prec < 2)
             {
                 invalid_value(argv, i);
@@ -173,6 +185,7 @@ int main(int argc, char *argv[])
     {
         prec = 64 + fmpz_clog_ui(nstart, 2);
         if (platt) prec *= 2;
+        digits = prec / 3.32192809488736 + 1;
     }
 
     if (verbose)
@@ -225,7 +238,7 @@ int main(int argc, char *argv[])
                 num = FLINT_MIN(1 << fmpz_get_si(iter), num);
             }
             acb_dirichlet_hardy_z_zeros(p, n, num, prec);
-            print_zeros(p, n, num, prec*0.3 + 2);
+            print_zeros(p, n, num, digits);
             fmpz_add_si(n, n, num);
             fmpz_add_si(count, count, num);
             fmpz_add_si(iter, iter, 1);
@@ -259,7 +272,7 @@ int main(int argc, char *argv[])
                              "is wrong with the internal tuning parameters.");
                 flint_abort();
             }
-            print_zeros(p, n, found, prec*0.3 + 2);
+            print_zeros(p, n, found, digits);
             fmpz_add_si(n, n, found);
             fmpz_add_si(count, count, found);
         }
@@ -274,6 +287,6 @@ int main(int argc, char *argv[])
     fmpz_clear(requested);
     fmpz_clear(count);
 
-    flint_cleanup();
+    flint_cleanup_master();
     return 0;
 }

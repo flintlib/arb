@@ -10,6 +10,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/thread_support.h"
 #include "acb_dirichlet.h"
 #include "arb_calc.h"
 
@@ -1376,6 +1377,20 @@ _acb_dirichlet_exact_zeta_nzeros(fmpz_t res, const arf_t t)
     exact_zeta_multi_nzeros(res, t, 1);
 }
 
+typedef struct
+{
+    arb_ptr res;
+    arf_interval_ptr p;
+    slong prec;
+}
+work_t;
+
+static void
+refinement_worker(slong i, work_t * work)
+{
+    _acb_dirichlet_refine_hardy_z_zero(work->res + i, &(work->p[i].a), &(work->p[i].b), work->prec);
+}
+
 void
 acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
 {
@@ -1390,13 +1405,15 @@ acb_dirichlet_hardy_z_zeros(arb_ptr res, const fmpz_t n, slong len, slong prec)
     }
     else
     {
-        slong i;
+        work_t work;
         arf_interval_ptr p = _arf_interval_vec_init(len);
         acb_dirichlet_isolate_hardy_z_zeros(p, n, len);
-        for (i = 0; i < len; i++)
-        {
-            _acb_dirichlet_refine_hardy_z_zero(res + i, &p[i].a, &p[i].b, prec);
-        }
+
+        work.res = res;
+        work.p = p;
+        work.prec = prec;
+        flint_parallel_do((do_func_t) refinement_worker, &work, len, -1, FLINT_PARALLEL_STRIDED);
+
         _arf_interval_vec_clear(p, len);
     }
 }
