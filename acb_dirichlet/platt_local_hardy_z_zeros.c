@@ -1352,6 +1352,7 @@ _create_heuristic_context(const fmpz_t n, slong prec)
     double dlogJ, dK, dgrid, dh, dH, dinterp;
     double x, x2, x3, x4;
 
+    fmpz_init(J);
     fmpz_init(T);
     fmpz_init(k);
     arb_init(g);
@@ -1447,6 +1448,7 @@ _create_heuristic_context(const fmpz_t n, slong prec)
 
 finish:
 
+    fmpz_clear(J);
     fmpz_clear(T);
     fmpz_clear(k);
     arb_clear(g);
