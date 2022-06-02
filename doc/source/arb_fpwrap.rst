@@ -242,6 +242,11 @@ Gamma, zeta and related functions
 
     Hurwitz zeta function.
 
+.. function:: int arb_fpwrap_double_lerch_phi(double * res, double z, double s, double a, int flags)
+              int arb_fpwrap_cdouble_lerch_phi(complex_double * res, complex_double z, complex_double s, complex_double a, int flags)
+
+    Lerch transcendent.
+
 .. function:: int arb_fpwrap_double_barnes_g(double * res, double x, int flags)
               int arb_fpwrap_cdouble_barnes_g(complex_double * res, complex_double x, int flags)
 

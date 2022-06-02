@@ -981,6 +981,28 @@ _arb_polygamma(arb_t res, const arb_t s, const arb_t z, slong prec)
 }
 
 static void
+_arb_dirichlet_lerch_phi(arb_t res, const arb_t z, const arb_t s, const arb_t a, slong prec)
+{
+    acb_t t, u, v, w;
+    acb_init(t);
+    acb_init(u);
+    acb_init(v);
+    acb_init(w);
+    acb_set_arb(t, z);
+    acb_set_arb(u, s);
+    acb_set_arb(v, a);
+    acb_dirichlet_lerch_phi(w, t, u, v, prec);
+    if (acb_is_real(w))
+        arb_set(res, acb_realref(w));
+    else
+        arb_indeterminate(res);
+    acb_clear(t);
+    acb_clear(u);
+    acb_clear(v);
+    acb_clear(w);
+}
+
+static void
 _arb_barnes_g(arb_t res, const arb_t x, slong prec)
 {
     acb_t t, u;
@@ -1021,6 +1043,10 @@ DEF_CDOUBLE_FUN_1(log_barnes_g, acb_log_barnes_g)
 
 DEF_DOUBLE_FUN_2(polygamma, _arb_polygamma)
 DEF_CDOUBLE_FUN_2(polygamma, acb_polygamma)
+
+DEF_DOUBLE_FUN_3(lerch_phi, _arb_dirichlet_lerch_phi)
+DEF_CDOUBLE_FUN_3(lerch_phi, acb_dirichlet_lerch_phi)
+
 
 DEF_DOUBLE_FUN_2(polylog, arb_polylog)
 DEF_CDOUBLE_FUN_2(polylog, acb_polylog)
