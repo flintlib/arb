@@ -156,6 +156,9 @@ int arb_fpwrap_cdouble_polygamma(complex_double * res, complex_double s, complex
 int arb_fpwrap_double_polylog(double * res, double s, double z, int flags);
 int arb_fpwrap_cdouble_polylog(complex_double * res, complex_double s, complex_double z, int flags);
 
+int arb_fpwrap_double_lerch_phi(double * res, double z, double s, double a, int flags);
+int arb_fpwrap_cdouble_lerch_phi(complex_double * res, complex_double z, complex_double s, complex_double a, int flags);
+
 int arb_fpwrap_cdouble_dirichlet_eta(complex_double * res, complex_double s, int flags);
 int arb_fpwrap_cdouble_riemann_xi(complex_double * res, complex_double s, int flags);
 int arb_fpwrap_cdouble_hardy_theta(complex_double * res, complex_double z, int flags);

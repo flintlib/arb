@@ -298,7 +298,7 @@ int main()
         CHECK_CDOUBLE(arb_fpwrap_cdouble_hurwitz_zeta(&cres, cx, cz, flags));
 
         CHECK_DOUBLE(arb_fpwrap_double_lerch_phi(&res, x, y, z, flags));
-        CHECK_CDOUBLE(arb_fpwrap_double_lerch_phi(&cres, cx, cy, cz, flags));
+        CHECK_CDOUBLE(arb_fpwrap_cdouble_lerch_phi(&cres, cx, cy, cz, flags));
 
         CHECK_DOUBLE(arb_fpwrap_double_barnes_g(&res, x, flags));
         CHECK_CDOUBLE(arb_fpwrap_cdouble_barnes_g(&cres, cx, flags));
