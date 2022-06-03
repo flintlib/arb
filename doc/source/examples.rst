@@ -139,7 +139,7 @@ the program computes the smallest eigenvalue of the Hilbert matrix
 keiper_li.c
 -------------------------------------------------------------------------------
 
-]Given an input integer *n*, this program rigorously computes numerical
+Given an input integer *n*, this program rigorously computes numerical
 values of the Keiper-Li coefficients
 `\lambda_0, \ldots, \lambda_n`. The Keiper-Li coefficients
 have the property that `\lambda_n > 0` for all `n > 0` if and only if the

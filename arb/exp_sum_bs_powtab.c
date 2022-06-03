@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2014, 2022 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/thread_support.h"
 #include "arb.h"
 
 /* When splitting [a,b) into [a,m), [m,b), we need the power x^(m-a).
@@ -181,6 +182,114 @@ bsplit(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
     }
 }
 
+typedef struct
+{
+    fmpz_t T;
+    fmpz_t Q;
+    flint_bitcnt_t Qexp;
+    slong a;
+    slong b;
+}
+exp_bsplit_struct;
+
+typedef exp_bsplit_struct exp_bsplit_t[1];
+
+static void exp_bsplit_init(exp_bsplit_t x, void * args)
+{
+    fmpz_init(x->T);
+    fmpz_init(x->Q);
+}
+
+static void exp_bsplit_clear(exp_bsplit_t x, void * args)
+{
+    fmpz_clear(x->T);
+    fmpz_clear(x->Q);
+}
+
+typedef struct
+{
+    const slong * xexp;
+    const fmpz * xpow;
+    flint_bitcnt_t r;
+}
+exp_bsplit_args;
+
+static void
+exp_bsplit_merge(exp_bsplit_t res, exp_bsplit_t L, exp_bsplit_t R, exp_bsplit_args * args)
+{
+    slong i, step;
+
+    slong a = L->a;
+    slong b = R->b;
+
+    step = (b - a) / 2;
+
+    fmpz_mul(res->T, L->T, R->Q);
+    fmpz_mul_2exp(res->T, res->T, R->Qexp);
+
+    /* find x^step in table */
+    i = _arb_get_exp_pos(args->xexp, step);
+    fmpz_addmul(res->T, args->xpow + i, R->T);
+    fmpz_zero(R->T);
+
+    fmpz_mul(res->Q, L->Q, R->Q);
+    res->Qexp = L->Qexp + R->Qexp;
+
+    res->a = L->a;  /* actually a no-op because of aliasing */
+    res->b = R->b;
+}
+
+static void
+exp_bsplit_basecase(exp_bsplit_t res, slong a, slong b, exp_bsplit_args * args)
+{
+    bsplit(res->T, res->Q, &(res->Qexp), args->xexp, args->xpow, args->r, a, b);
+    res->a = a;
+    res->b = b;
+}
+
+static void
+bsplit2(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
+    const slong * xexp,
+    const fmpz * xpow, flint_bitcnt_t r, slong a, slong b)
+{
+    exp_bsplit_t s;
+    exp_bsplit_args args;
+    slong max_threads;
+    slong prec_hint;
+
+    args.xexp = xexp;
+    args.xpow = xpow;
+    args.r = r;
+
+    *s->T = *T;
+    *s->Q = *Q;
+
+    max_threads = flint_get_num_threads();
+
+    prec_hint = 2 * (b - a) * FLINT_MAX(r, 1);
+
+    if (prec_hint < 30000)
+        max_threads = 1;
+    else if (prec_hint < 1000000)
+        max_threads = FLINT_MIN(2, max_threads);
+    else if (prec_hint < 5000000)
+        max_threads = FLINT_MIN(4, max_threads);
+    else
+        max_threads = FLINT_MIN(8, max_threads);
+
+    flint_parallel_binary_splitting(s,
+        (bsplit_basecase_func_t) exp_bsplit_basecase,
+        (bsplit_merge_func_t) exp_bsplit_merge,
+        sizeof(exp_bsplit_struct),
+        (bsplit_init_func_t) exp_bsplit_init,
+        (bsplit_clear_func_t) exp_bsplit_clear,
+        &args, a, b, 4, max_threads, FLINT_PARALLEL_BSPLIT_LEFT_INPLACE);
+
+    *T = *s->T;
+    *Q = *s->Q;
+    *Qexp = s->Qexp;
+}
+
 void
 _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
     const fmpz_t x, flint_bitcnt_t r, slong N)
@@ -224,10 +333,12 @@ _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
         }
     }
 
-    bsplit(T, Q, Qexp, xexp, xpow, r, 0, N);
+    if (flint_get_num_threads() == 1)
+        bsplit(T, Q, Qexp, xexp, xpow, r, 0, N);
+    else
+        bsplit2(T, Q, Qexp, xexp, xpow, r, 0, N);
 
     fmpz_init(xpow + 0);  /* don't free the shallow copy of x */
     _fmpz_vec_clear(xpow, length);
     flint_free(xexp);
 }
-

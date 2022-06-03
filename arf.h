@@ -826,7 +826,8 @@ void arf_urandom(arf_t x, flint_rand_t state, slong bits, arf_rnd_t rnd);
         r3 += r2 < t1;                                      \
     } while (0)
 
-#define ARF_USE_FFT_MUL(_xn) ((_xn) > 10000)
+/* todo: use mpn_extras.h when available */
+#define ARF_USE_FFT_MUL(_xn) ((_xn) > 32000)
 
 /* from flint/fft.h */
 void flint_mpn_mul_fft_main(mp_ptr r1, mp_srcptr i1, mp_size_t n1, mp_srcptr i2, mp_size_t n2);

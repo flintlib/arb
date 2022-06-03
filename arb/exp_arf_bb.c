@@ -40,6 +40,62 @@ bs_num_terms(slong mag, slong prec)
     return N;
 }
 
+typedef struct
+{
+    arb_ptr w;
+    fmpz * u;
+    slong * r;
+    slong wp;
+}
+work_t;
+
+static void
+worker(slong iter, work_t * work)
+{
+    slong mag, wp, N;
+    flint_bitcnt_t Qexp[1];
+    fmpz_t T, Q;
+
+    fmpz_init(T);
+    fmpz_init(Q);
+
+    wp = work->wp;
+
+    /* Binary splitting (+1 fixed-point ulp truncation error). */
+    mag = fmpz_bits(work->u + iter) - work->r[iter];
+    N = bs_num_terms(mag, wp);
+
+   _arb_exp_sum_bs_powtab(T, Q, Qexp, work->u + iter, work->r[iter], N);
+
+    /* T = T / Q  (+1 fixed-point ulp error). */
+    if (*Qexp >= wp)
+    {
+        fmpz_tdiv_q_2exp(T, T, *Qexp - wp);
+        fmpz_tdiv_q(T, T, Q);
+    }
+    else
+    {
+        fmpz_mul_2exp(T, T, wp - *Qexp);
+        fmpz_tdiv_q(T, T, Q);
+    }
+
+    /* T = 1 + T */
+    fmpz_one(Q);
+    fmpz_mul_2exp(Q, Q, wp);
+    fmpz_add(T, T, Q);
+
+    /* Now T = exp(u) with at most 2 fixed-point ulp error. */
+    /* Set z = z * T. */
+    arf_set_fmpz(arb_midref(work->w + iter), T);
+    arf_mul_2exp_si(arb_midref(work->w + iter), arb_midref(work->w + iter), -wp);
+    mag_set_ui_2exp_si(arb_radref(work->w + iter), 2, -wp);
+
+    fmpz_clear(T);
+    fmpz_clear(Q);
+}
+
+#include "flint/thread_support.h"
+
 void
 arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
 {
@@ -108,47 +164,96 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
     /* Start with z = 1. */
     arb_one(z);
 
-    /* Bit-burst loop. */
-    for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
-        iter++, bits *= 2)
+    if (flint_get_num_threads() == 1 || prec >= 1000000000)
     {
-        /* Extract bits. */
-        r = FLINT_MIN(bits, wp);
-        fmpz_tdiv_q_2exp(u, t, wp - r);
-
-        /* Binary splitting (+1 fixed-point ulp truncation error). */
-        mag = fmpz_bits(u) - r;
-        N = bs_num_terms(mag, wp);
-
-       _arb_exp_sum_bs_powtab(T, Q, Qexp, u, r, N);
-
-        /* T = T / Q  (+1 fixed-point ulp error). */
-        if (*Qexp >= wp)
+        /* Bit-burst loop. */
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
+            iter++, bits *= 2)
         {
-            fmpz_tdiv_q_2exp(T, T, *Qexp - wp);
-            fmpz_tdiv_q(T, T, Q);
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
+
+            /* Binary splitting (+1 fixed-point ulp truncation error). */
+            mag = fmpz_bits(u) - r;
+            N = bs_num_terms(mag, wp);
+
+           _arb_exp_sum_bs_powtab(T, Q, Qexp, u, r, N);
+
+            /* T = T / Q  (+1 fixed-point ulp error). */
+            if (*Qexp >= wp)
+            {
+                fmpz_tdiv_q_2exp(T, T, *Qexp - wp);
+                fmpz_tdiv_q(T, T, Q);
+            }
+            else
+            {
+                fmpz_mul_2exp(T, T, wp - *Qexp);
+                fmpz_tdiv_q(T, T, Q);
+            }
+
+            /* T = 1 + T */
+            fmpz_one(Q);
+            fmpz_mul_2exp(Q, Q, wp);
+            fmpz_add(T, T, Q);
+
+            /* Now T = exp(u) with at most 2 fixed-point ulp error. */
+            /* Set z = z * T. */
+            arf_set_fmpz(arb_midref(w), T);
+            arf_mul_2exp_si(arb_midref(w), arb_midref(w), -wp);
+            mag_set_ui_2exp_si(arb_radref(w), 2, -wp);
+            arb_mul(z, z, w, wp);
+
+            /* Remove used bits. */
+            fmpz_mul_2exp(u, u, wp - r);
+            fmpz_sub(t, t, u);
         }
-        else
+    }
+    else
+    {
+        arb_ptr ws;
+        fmpz * us;
+        slong * rs;
+        slong num = 0;
+
+        ws = _arb_vec_init(FLINT_BITS);
+        us = _fmpz_vec_init(FLINT_BITS);
+        rs = flint_malloc(sizeof(slong) * FLINT_BITS);
+
+        /* Bit-burst loop. */
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
+            iter++, bits *= 2)
         {
-            fmpz_mul_2exp(T, T, wp - *Qexp);
-            fmpz_tdiv_q(T, T, Q);
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
+
+            fmpz_set(us + iter, u);
+            rs[iter] = r;
+            num++;
+
+            /* Remove used bits. */
+            fmpz_mul_2exp(u, u, wp - r);
+            fmpz_sub(t, t, u);
         }
 
-        /* T = 1 + T */
-        fmpz_one(Q);
-        fmpz_mul_2exp(Q, Q, wp);
-        fmpz_add(T, T, Q);
+        {
+            work_t work;
 
-        /* Now T = exp(u) with at most 2 fixed-point ulp error. */
-        /* Set z = z * T. */
-        arf_set_fmpz(arb_midref(w), T);
-        arf_mul_2exp_si(arb_midref(w), arb_midref(w), -wp);
-        mag_set_ui_2exp_si(arb_radref(w), 2, -wp);
-        arb_mul(z, z, w, wp);
+            work.w = ws;
+            work.u = us;
+            work.r = rs;
+            work.wp = wp;
 
-        /* Remove used bits. */
-        fmpz_mul_2exp(u, u, wp - r);
-        fmpz_sub(t, t, u);
+            flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
+        }
+
+        for (iter = 0; iter < num; iter++)
+            arb_mul(z, z, ws + iter, wp);
+
+        _arb_vec_clear(ws, FLINT_BITS);
+        _fmpz_vec_clear(us, FLINT_BITS);
+        flint_free(rs);
     }
 
     /* We have exp(x + eps) - exp(x) < 2*eps (by assumption that the argument
