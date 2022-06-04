@@ -9,7 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
-#include <pthread.h>
+#include "flint/thread_support.h"
 #include "partitions.h"
 
 /* defined in flint*/
@@ -29,21 +29,19 @@ typedef struct
 worker_arg_t;
 
 static void *
-worker(void * arg_ptr)
+worker(slong i, void * arg_ptr)
 {
-    worker_arg_t arg = *((worker_arg_t *) arg_ptr);
+    worker_arg_t arg = ((worker_arg_t *) arg_ptr)[i];
+
     partitions_hrr_sum_arb(arg.x, arg.n, arg.N0, arg.N, arg.use_doubles);
     flint_cleanup();
     return NULL;
 }
 
-/* TODO: set number of threads in child threads, for future
-   multithreaded evaluation of single terms */
 static void
 hrr_sum_threaded(arb_t x, const fmpz_t n, slong N, int use_doubles)
 {
     arb_t y;
-    pthread_t threads[2];
     worker_arg_t args[2];
 
     arb_init(y);
@@ -60,11 +58,7 @@ hrr_sum_threaded(arb_t x, const fmpz_t n, slong N, int use_doubles)
     args[1].N = N;
     args[1].use_doubles = use_doubles;
 
-    pthread_create(&threads[0], NULL, worker, &args[0]);
-    pthread_create(&threads[1], NULL, worker, &args[1]);
-
-    pthread_join(threads[0], NULL);
-    pthread_join(threads[1], NULL);
+    flint_parallel_do((do_func_t) worker, args, 2, -1, 0);
 
     arb_add(x, x, y, ARF_PREC_EXACT);
 
