@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/thread_support.h"
 #include "arb.h"
 
 /*
@@ -148,6 +149,69 @@ arb_atan_bb_reduce(fmpz_t res, mag_t err, const arf_t x, slong xmag, slong r, sl
     }
 }
 
+typedef struct
+{
+    fmpz * s;
+    fmpz * u;
+    slong * r;
+    slong wp;
+}
+work_t;
+
+static void
+worker(slong iter, work_t * work)
+{
+    slong mag, wp, N;
+    flint_bitcnt_t Qexp[1];
+    fmpz * s;
+    fmpz * u;
+    slong r;
+    fmpz_t P, Q;
+
+    fmpz_init(P);
+    fmpz_init(Q);
+
+    s = work->s + iter;
+    u = work->u + iter;
+    r = work->r[iter];
+    wp = work->wp;
+
+    /* Binary splitting (+1 fixed-point ulp truncation error). */
+    mag = fmpz_bits(u) - r;
+
+    N = bs_num_terms(mag, wp);
+
+    if (N != 0)
+    {
+        _arb_atan_sum_bs_powtab(P, Q, Qexp, u, r, N);
+
+        /* multiply by u/2^r */
+        fmpz_mul(P, P, u);
+        *Qexp += r;
+
+        /* T = T / Q  (+1 fixed-point ulp error). */
+        if (*Qexp >= wp)
+        {
+            fmpz_tdiv_q_2exp(P, P, *Qexp - wp);
+            fmpz_tdiv_q(P, P, Q);
+        }
+        else
+        {
+            fmpz_mul_2exp(P, P, wp - *Qexp);
+            fmpz_tdiv_q(P, P, Q);
+        }
+
+        fmpz_add(s, s, P);
+    }
+
+    /* add u/2^r */
+    fmpz_mul_2exp(Q, u, wp - r);
+    fmpz_add(s, s, Q);
+
+    fmpz_clear(P);
+    fmpz_clear(Q);
+}
+
 void
 arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 {
@@ -250,66 +314,136 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
 
     /* s = 0, t = x */
 
-    for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
-        iter++, bits *= 2)
+    if (flint_get_num_threads() == 1 || prec >= 1000000000)
     {
-        /* Extract bits. */
-        r = FLINT_MIN(bits, wp);
-        fmpz_tdiv_q_2exp(u, t, wp - r);
-
-        if (!fmpz_is_zero(u))
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
+            iter++, bits *= 2)
         {
-            /* Binary splitting (+1 fixed-point ulp truncation error). */
-            mag = fmpz_bits(u) - r;
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
 
-            N = bs_num_terms(mag, wp);
-
-            if (N != 0)
+            if (!fmpz_is_zero(u))
             {
-                _arb_atan_sum_bs_powtab(P, Q, Qexp, u, r, N);
+                /* Binary splitting (+1 fixed-point ulp truncation error). */
+                mag = fmpz_bits(u) - r;
 
-                /* multiply by u/2^r */
-                fmpz_mul(P, P, u);
-                *Qexp += r;
+                N = bs_num_terms(mag, wp);
 
-                /* T = T / Q  (+1 fixed-point ulp error). */
-                if (*Qexp >= wp)
+                if (N != 0)
                 {
-                    fmpz_tdiv_q_2exp(P, P, *Qexp - wp);
-                    fmpz_tdiv_q(P, P, Q);
-                }
-                else
-                {
-                    fmpz_mul_2exp(P, P, wp - *Qexp);
-                    fmpz_tdiv_q(P, P, Q);
+                    _arb_atan_sum_bs_powtab(P, Q, Qexp, u, r, N);
+
+                    /* multiply by u/2^r */
+                    fmpz_mul(P, P, u);
+                    *Qexp += r;
+
+                    /* T = T / Q  (+1 fixed-point ulp error). */
+                    if (*Qexp >= wp)
+                    {
+                        fmpz_tdiv_q_2exp(P, P, *Qexp - wp);
+                        fmpz_tdiv_q(P, P, Q);
+                    }
+                    else
+                    {
+                        fmpz_mul_2exp(P, P, wp - *Qexp);
+                        fmpz_tdiv_q(P, P, Q);
+                    }
+
+                    fmpz_add(s, s, P);
                 }
 
-                fmpz_add(s, s, P);
+                /* add u/2^r */
+                fmpz_mul_2exp(Q, u, wp - r);
+                fmpz_add(s, s, Q);
+
+                /* 1 ulp from the division,
+                   1 ulp from truncating the Taylor series */
+                fmpz_add_ui(err, err, 2);
             }
 
-            /* add u/2^r */
-            fmpz_mul_2exp(Q, u, wp - r);
-            fmpz_add(s, s, Q);
+            /* atan(t) = atan(u/2^r) + atan((t 2^r - u)/(2^r + u t)) */
+            fmpz_mul_2exp(P, t, r);
+            fmpz_mul_2exp(Q, u, wp);
+            fmpz_sub(P, P, Q);
 
-            /* 1 ulp from the division,
-               1 ulp from truncating the Taylor series */
-            fmpz_add_ui(err, err, 2);
+            fmpz_one(Q);
+            fmpz_mul_2exp(Q, Q, r + wp);
+            fmpz_addmul(Q, t, u);
+
+            fmpz_mul_2exp(P, P, wp);
+            fmpz_tdiv_q(t, P, Q);
+
+            /* 1 ulp error from the division */
+            fmpz_add_ui(err, err, 1);
+        }
+    }
+    else
+    {
+        fmpz * ws;
+        fmpz * us;
+        slong * rs;
+        slong num = 0;
+
+        ws = _fmpz_vec_init(FLINT_BITS);
+        us = _fmpz_vec_init(FLINT_BITS);
+        rs = flint_malloc(sizeof(slong) * FLINT_BITS);
+
+        /* Bit-burst loop. */
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
+            iter++, bits *= 2)
+        {
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
+
+            if (!fmpz_is_zero(u))
+            {
+                fmpz_set(us + num, u);
+                rs[num] = r;
+                num++;
+
+                /* 1 ulp from the division,
+                   1 ulp from truncating the Taylor series */
+                fmpz_add_ui(err, err, 2);
+            }
+
+            /* atan(t) = atan(u/2^r) + atan((t 2^r - u)/(2^r + u t)) */
+            fmpz_mul_2exp(P, t, r);
+            fmpz_mul_2exp(Q, u, wp);
+            fmpz_sub(P, P, Q);
+
+            fmpz_one(Q);
+            fmpz_mul_2exp(Q, Q, r + wp);
+            fmpz_addmul(Q, t, u);
+
+            fmpz_mul_2exp(P, P, wp);
+            fmpz_tdiv_q(t, P, Q);
+
+            /* 1 ulp error from the division */
+            fmpz_add_ui(err, err, 1);
         }
 
-        /* atan(t) = atan(u/2^r) + atan((t 2^r - u)/(2^r + u t)) */
-        fmpz_mul_2exp(P, t, r);
-        fmpz_mul_2exp(Q, u, wp);
-        fmpz_sub(P, P, Q);
+        /* todo: only allocate as many temporaries as threads,
+           reducing memory */
+        {
+            work_t work;
 
-        fmpz_one(Q);
-        fmpz_mul_2exp(Q, Q, r + wp);
-        fmpz_addmul(Q, t, u);
+            work.s = ws;
+            work.u = us;
+            work.r = rs;
+            work.wp = wp;
 
-        fmpz_mul_2exp(P, P, wp);
-        fmpz_tdiv_q(t, P, Q);
+            flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
+        }
 
-        /* 1 ulp error from the division */
-        fmpz_add_ui(err, err, 1);
+        /* todo: parallel accumulation */
+        for (iter = 0; iter < num; iter++)
+            fmpz_add(s, s, ws + iter);
+
+        _fmpz_vec_clear(ws, FLINT_BITS);
+        _fmpz_vec_clear(us, FLINT_BITS);
+        flint_free(rs);
     }
 
     /* add both err and inp_err */

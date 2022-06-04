@@ -323,6 +323,22 @@ arb_sin_cos_fmpz_div_2exp_bsplit(arb_t wsin, arb_t wcos, const fmpz_t x, flint_b
     fmpz_clear(Q);
 }
 
+typedef struct
+{
+    arb_ptr wsin;
+    arb_ptr wcos;
+    fmpz * u;
+    slong * r;
+    slong wp;
+}
+work_t;
+
+static void
+worker(slong iter, work_t * work)
+{
+    arb_sin_cos_fmpz_div_2exp_bsplit(work->wsin + iter, work->wcos + iter, work->u + iter, work->r[iter], work->wp);
+}
+
 void
 arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
 {
@@ -391,30 +407,102 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     arb_one(zcos);
     arb_zero(zsin);
 
-    /* Bit-burst loop. */
-    for (iter = 0, bits = start_bits; !fmpz_is_zero(t); iter++, bits *= 3)
+    if (flint_get_num_threads() == 1 || prec >= 1000000000)
     {
-        /* Extract bits. */
-        r = FLINT_MIN(bits, wp);
-        fmpz_tdiv_q_2exp(u, t, wp - r);
+        /* Bit-burst loop. */
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t); iter++, bits *= 3)
+        {
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
 
-        arb_sin_cos_fmpz_div_2exp_bsplit(wsin, wcos, u, r, wp);
+            arb_sin_cos_fmpz_div_2exp_bsplit(wsin, wcos, u, r, wp);
 
-        /* Remove used bits. */
-        fmpz_mul_2exp(u, u, wp - r);
-        fmpz_sub(t, t, u);
+            /* Remove used bits. */
+            fmpz_mul_2exp(u, u, wp - r);
+            fmpz_sub(t, t, u);
 
-        /* zsin, zcos = zsin wcos + zcos wsin, zcos wcos - zsin wsin */
-        /* using karatsuba */
-        arb_add(tmp1, zsin, zcos, wp);
-        arb_mul(zcos, zcos, wcos, wp);
-        arb_add(wcos, wcos, wsin, wp);
-        arb_mul(wsin, wsin, zsin, wp);
-        arb_mul(tmp1, tmp1, wcos, wp);
-        arb_sub(zsin, tmp1, wsin, wp);
-        arb_sub(zsin, zsin, zcos, wp);
-        arb_sub(zcos, zcos, wsin, wp);
-        arb_zero(tmp1);  /* slightly reduce memory usage */
+            /* zsin, zcos = zsin wcos + zcos wsin, zcos wcos - zsin wsin */
+            /* using karatsuba */
+            arb_add(tmp1, zsin, zcos, wp);
+            arb_mul(zcos, zcos, wcos, wp);
+            arb_add(wcos, wcos, wsin, wp);
+            arb_mul(wsin, wsin, zsin, wp);
+            arb_mul(tmp1, tmp1, wcos, wp);
+            arb_sub(zsin, tmp1, wsin, wp);
+            arb_sub(zsin, zsin, zcos, wp);
+            arb_sub(zcos, zcos, wsin, wp);
+            arb_zero(tmp1);  /* slightly reduce memory usage */
+        }
+    }
+    else
+    {
+        arb_ptr ss, cs;
+        fmpz * us;
+        slong * rs;
+        slong num = 0;
+
+        ss = _arb_vec_init(FLINT_BITS);
+        cs = _arb_vec_init(FLINT_BITS);
+        us = _fmpz_vec_init(FLINT_BITS);
+        rs = flint_malloc(sizeof(slong) * FLINT_BITS);
+
+        /* Bit-burst loop. */
+        for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
+            iter++, bits *= 3)
+        {
+            /* Extract bits. */
+            r = FLINT_MIN(bits, wp);
+            fmpz_tdiv_q_2exp(u, t, wp - r);
+
+            fmpz_set(us + iter, u);
+            rs[iter] = r;
+            num++;
+
+            /* Remove used bits. */
+            fmpz_mul_2exp(u, u, wp - r);
+            fmpz_sub(t, t, u);
+        }
+
+        /* todo: only allocate as many temporaries as threads,
+           reducing memory */
+        {
+            work_t work;
+
+            work.wsin = ss;
+            work.wcos = cs;
+            work.u = us;
+            work.r = rs;
+            work.wp = wp;
+
+            flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
+        }
+
+        /* todo: parallel accumulation */
+        for (iter = 0; iter < num; iter++)
+        {
+            arb_ptr wsin, wcos;
+
+            wsin = ss + iter;
+            wcos = cs + iter;
+
+            /* zsin, zcos = zsin wcos + zcos wsin, zcos wcos - zsin wsin */
+            /* using karatsuba */
+            arb_add(tmp1, zsin, zcos, wp);
+            arb_mul(zcos, zcos, wcos, wp);
+            arb_add(wcos, wcos, wsin, wp);
+            arb_mul(wsin, wsin, zsin, wp);
+            arb_mul(tmp1, tmp1, wcos, wp);
+            arb_sub(zsin, tmp1, wsin, wp);
+            arb_sub(zsin, zsin, zcos, wp);
+            arb_sub(zcos, zcos, wsin, wp);
+            arb_zero(tmp1);  /* slightly reduce memory usage */
+        }
+
+        _arb_vec_clear(ss, FLINT_BITS);
+        _arb_vec_clear(cs, FLINT_BITS);
+        _fmpz_vec_clear(us, FLINT_BITS);
+        flint_free(rs);
     }
 
     /* Initial fixed-point truncation error. */

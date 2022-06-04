@@ -55,6 +55,11 @@ int main()
 
         prec = 2 + n_randint(state, 8000);
 
+        if (n_randint(state, 100) == 0)
+            flint_set_num_threads(1 + n_randint(state, 4));
+        else
+            flint_set_num_threads(1);
+
         arb_randtest(x, state, 1 + n_randint(state, 8000), 3);
         mag_zero(arb_radref(x));
 
@@ -105,7 +110,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

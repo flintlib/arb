@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "flint/thread_support.h"
 #include "arb.h"
 
 /*
@@ -93,8 +94,6 @@ worker(slong iter, work_t * work)
     fmpz_clear(T);
     fmpz_clear(Q);
 }
-
-#include "flint/thread_support.h"
 
 void
 arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
@@ -237,6 +236,8 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
             fmpz_sub(t, t, u);
         }
 
+        /* todo: only allocate as many temporaries as threads,
+           reducing memory */
         {
             work_t work;
 
@@ -248,6 +249,7 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
             flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
         }
 
+        /* todo: parallel accumulation */
         for (iter = 0; iter < num; iter++)
             arb_mul(z, z, ws + iter, wp);
 

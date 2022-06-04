@@ -34,6 +34,11 @@ int main()
         fmpq_init(S);
         fmpq_init(V);
 
+        if (n_randint(state, 100) == 0)
+            flint_set_num_threads(1 + n_randint(state, 4));
+        else
+            flint_set_num_threads(1);
+
         N = 1 + n_randint(state, 300);
         r = n_randint(state, 10);
         fmpz_randtest(x, state, 80);
@@ -67,7 +72,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }

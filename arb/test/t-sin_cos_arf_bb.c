@@ -39,6 +39,11 @@ int main()
         arb_init(c1);
         arb_init(c2);
 
+        if (n_randint(state, 100) == 0)
+            flint_set_num_threads(1 + n_randint(state, 4));
+        else
+            flint_set_num_threads(1);
+
         prec1 = 10 + n_randint(state, 2000);
         prec2 = 10 + n_randint(state, 2000);
         r = n_randint(state, prec2);
@@ -82,6 +87,11 @@ int main()
         arb_init(s2);
         arb_init(c1);
         arb_init(c2);
+
+        if (n_randint(state, 100) == 0)
+            flint_set_num_threads(1 + n_randint(state, 4));
+        else
+            flint_set_num_threads(1);
 
         arb_randtest(x, state, 1 + n_randint(state, 4000), 0);
         mag_zero(arb_radref(x));
@@ -156,7 +166,7 @@ int main()
     }
 
     flint_randclear(state);
-    flint_cleanup();
+    flint_cleanup_master();
     flint_printf("PASS\n");
     return EXIT_SUCCESS;
 }
