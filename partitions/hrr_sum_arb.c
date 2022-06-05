@@ -9,9 +9,13 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include <math.h>
+#include "flint/profiler.h"
+#include "flint/thread_support.h"
 #include "partitions.h"
 #include "arb.h"
-#include "math.h"
+
+#define VERBOSE 0
 
 #define DOUBLE_CUTOFF 40
 #define DOUBLE_ERR 1e-12
@@ -109,51 +113,6 @@ partitions_prec_bound(double n, slong k, slong N)
     return prec;
 }
 
-static double
-cos_pi_pq(mp_limb_signed_t p, mp_limb_signed_t q)
-{
-    /* Force 0 <= p < q */
-    p = FLINT_ABS(p);
-    p %= (2 * q);
-    if (p >= q)
-        p = 2 * q - p;
-
-    if (4 * p <= q)
-        return cos(p * PI / q);
-    else if (4 * p < 3 * q)
-        return sin((q - 2*p) * PI / (2 * q));
-    else
-        return -cos((q - p) * PI / q);
-}
-
-static double
-eval_trig_prod_d(trig_prod_t prod)
-{
-    int i;
-    double s;
-    mp_limb_t v;
-
-    if (prod->prefactor == 0)
-        return 0.0;
-
-    s = prod->prefactor;
-
-    v = n_gcd(FLINT_MAX(prod->sqrt_p, prod->sqrt_q),
-              FLINT_MIN(prod->sqrt_p, prod->sqrt_q));
-    prod->sqrt_p /= v;
-    prod->sqrt_q /= v;
-
-    if (prod->sqrt_p != 1)
-        s *= sqrt(prod->sqrt_p);
-    if (prod->sqrt_q != 1)
-        s /= sqrt(prod->sqrt_q);
-
-    for (i = 0; i < prod->n; i++)
-        s *= cos_pi_pq(prod->cos_p[i], prod->cos_q[i]);
-
-    return s;
-}
-
 static void
 eval_trig_prod(arb_t sum, trig_prod_t prod, slong prec)
 {
@@ -200,7 +159,7 @@ eval_trig_prod(arb_t sum, trig_prod_t prod, slong prec)
 }
 
 static void
-sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, slong k, slong prec)
+sinh_cosh_divk_precomp(arb_t sh, arb_t ch, const arb_t ex, slong k, slong prec)
 {
     arb_t t;
     arb_init(t);
@@ -216,64 +175,29 @@ sinh_cosh_divk_precomp(arb_t sh, arb_t ch, arb_t ex, slong k, slong prec)
     arb_clear(t);
 }
 
-
-void
-partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles)
+static void
+partitions_hrr_sum_arb_range(arb_t x, const fmpz_t n, const arb_t C, const arb_t exp1, const fmpz_t n24, slong start, slong N, slong step, slong prec, slong acc_prec, slong res_prec)
 {
+    arb_t acc, t1, t2, t3, t4;
     trig_prod_t prod;
-    arb_t acc, C, t1, t2, t3, t4, exp1;
-    fmpz_t n24;
-    slong k, prec, res_prec, acc_prec, guard_bits;
-    double nd, Cd;
-
-    if (fmpz_cmp_ui(n, 2) <= 0)
-    {
-        flint_abort();
-    }
-
-    nd = fmpz_get_d(n);
-
-    /* compute initial precision */
-    guard_bits = 2 * FLINT_BIT_COUNT(N) + 32;
-    prec = partitions_remainder_bound_log2(nd, N0) + guard_bits;
-    prec = FLINT_MAX(prec, DOUBLE_PREC);
-    res_prec = acc_prec = prec;
+    slong k;
+    double nd;
 
     arb_init(acc);
-    arb_init(C);
     arb_init(t1);
     arb_init(t2);
     arb_init(t3);
     arb_init(t4);
-    arb_init(exp1);
-    fmpz_init(n24);
 
-    arb_zero(x);
+    nd = fmpz_get_d(n);
 
-    /* n24 = 24n - 1 */
-    fmpz_set(n24, n);
-    fmpz_mul_ui(n24, n24, 24);
-    fmpz_sub_ui(n24, n24, 1);
-
-    /* C = (pi/6) sqrt(24n-1) */
-    arb_const_pi(t1, prec);
-    arb_sqrt_fmpz(t2, n24, prec);
-    arb_mul(t1, t1, t2, prec);
-    arb_div_ui(C, t1, 6, prec);
-
-    /* exp1 = exp(C) */
-    arb_exp(exp1, C, prec);
-
-    Cd = PI * sqrt(24*nd-1) / 6;
-
-    for (k = N0; k <= N; k++)
+    for (k = start; k <= N; k += step)
     {
         trig_prod_init(prod);
         arith_hrr_expsum_factored(prod, k, fmpz_fdiv_ui(n, k));
 
         if (prod->prefactor != 0)
         {
-
             if (prec > MIN_PREC)
                 prec = partitions_prec_bound(nd, k, N);
 
@@ -281,37 +205,22 @@ partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubl
             prod->sqrt_p *= 3;
             prod->sqrt_q *= k;
 
-            if (prec > DOUBLE_CUTOFF || !use_doubles)
-            {
-                /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
-                eval_trig_prod(t1, prod, prec);
-                arb_div_fmpz(t1, t1, n24, prec);
+            /* Compute A_k(n) * sqrt(3/k) * 4 / (24*n-1) */
+            eval_trig_prod(t1, prod, prec);
+            arb_div_fmpz(t1, t1, n24, prec);
 
-                /* Multiply by (cosh(z) - sinh(z)/z) where z = C / k */
-                arb_set_round(t2, C, prec);
-                arb_div_ui(t2, t2, k, prec);
+            /* Multiply by (cosh(z) - sinh(z)/z) where z = C / k */
+            arb_set_round(t2, C, prec);
+            arb_div_ui(t2, t2, k, prec);
 
-                if (k < 35 && prec > 1000)
-                    sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
-                else
-                    arb_sinh_cosh(t3, t4, t2, prec);
-
-                arb_div(t3, t3, t2, prec);
-                arb_sub(t2, t4, t3, prec);
-                arb_mul(t1, t1, t2, prec);
-            }
+            if (k < 35 && prec > 1000)
+                sinh_cosh_divk_precomp(t3, t4, exp1, k, prec);
             else
-            {
-                double xx, zz, xxerr;
+                arb_sinh_cosh(t3, t4, t2, prec);
 
-                xx = eval_trig_prod_d(prod) / (24*nd - 1);
-                zz = Cd / k;
-                xx = xx * (cosh(zz) - sinh(zz) / zz);
-
-                xxerr = fabs(xx) * DOUBLE_ERR + DOUBLE_ERR;
-                arf_set_d(arb_midref(t1), xx);
-                mag_set_d(arb_radref(t1), xxerr);
-            }
+            arb_div(t3, t3, t2, prec);
+            arb_sub(t2, t4, t3, prec);
+            arb_mul(t1, t1, t2, prec);
 
             /* Add to accumulator */
             arb_add(acc, acc, t1, acc_prec);
@@ -327,14 +236,135 @@ partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubl
 
     arb_add(x, x, acc, res_prec);
 
-    fmpz_clear(n24);
     arb_clear(acc);
-    arb_clear(exp1);
-    arb_clear(C);
     arb_clear(t1);
     arb_clear(t2);
     arb_clear(t3);
     arb_clear(t4);
 }
 
+typedef struct
+{
+    arb_ptr x;
+    const fmpz * n;
+    arb_srcptr C;
+    arb_srcptr exp1;
+    const fmpz * n24;
+    slong N0;
+    slong N;
+    slong step;
+    slong prec;
+    slong acc_prec;
+    slong res_prec;
 
+} work_t;
+
+static void
+worker(slong i, work_t * work)
+{
+    partitions_hrr_sum_arb_range(work->x + i, work->n, work->C, work->exp1, work->n24, work->N0 + i, work->N, work->step, work->prec, work->acc_prec, work->res_prec);
+}
+
+void
+partitions_hrr_sum_arb(arb_t x, const fmpz_t n, slong N0, slong N, int use_doubles)
+{
+    arb_t C, t, exp1;
+    fmpz_t n24;
+    slong prec, res_prec, acc_prec, guard_bits;
+    slong num_threads;
+    double nd;
+
+    if (fmpz_cmp_ui(n, 2) <= 0)
+    {
+        flint_abort();
+    }
+
+    nd = fmpz_get_d(n);
+
+    /* compute initial precision */
+    guard_bits = 2 * FLINT_BIT_COUNT(N) + 32;
+    prec = partitions_remainder_bound_log2(nd, N0) + guard_bits;
+    prec = FLINT_MAX(prec, DOUBLE_PREC);
+    res_prec = acc_prec = prec;
+
+#if VERBOSE
+    flint_printf("prec %wd  N %wd\n", prec, N);
+#endif
+
+    arb_init(C);
+    arb_init(exp1);
+    fmpz_init(n24);
+
+    arb_zero(x);
+
+    /* n24 = 24n - 1 */
+    fmpz_set(n24, n);
+    fmpz_mul_ui(n24, n24, 24);
+    fmpz_sub_ui(n24, n24, 1);
+
+    /* C = (pi/6) sqrt(24n-1) */
+#if VERBOSE
+    TIMEIT_ONCE_START
+    arb_const_pi(C, prec);
+    TIMEIT_ONCE_STOP
+#else
+    arb_const_pi(C, prec);
+#endif
+
+    arb_init(t);
+    arb_sqrt_fmpz(t, n24, prec);
+    arb_mul(C, C, t, prec);
+    arb_div_ui(C, C, 6, prec);
+    arb_clear(t);
+
+
+    /* exp1 = exp(C) */
+#if VERBOSE
+    TIMEIT_ONCE_START
+    arb_exp(exp1, C, prec);
+    TIMEIT_ONCE_STOP
+#else
+    arb_exp(exp1, C, prec);
+#endif
+
+    num_threads = flint_get_num_threads();
+
+    if (num_threads == 1)
+    {
+        partitions_hrr_sum_arb_range(x, n, C, exp1, n24, N0, N, 1, prec, acc_prec, res_prec);
+    }
+    else
+    {
+        arb_ptr s;
+        slong i;
+        work_t work;
+
+        num_threads = FLINT_MIN(num_threads, 8);
+        num_threads = FLINT_MAX(num_threads, 1);
+
+        s = _arb_vec_init(num_threads);
+
+        work.x = s;
+        work.n = n;
+        work.C = C;
+        work.exp1 = exp1;
+        work.n24 = n24;
+        work.N0 = N0;
+        work.N = N;
+        work.step = num_threads;
+        work.prec = prec;
+        work.acc_prec = acc_prec;
+        work.res_prec = res_prec;
+
+        flint_parallel_do((do_func_t) worker, &work, num_threads, -1, FLINT_PARALLEL_UNIFORM);
+
+        for (i = 0; i < num_threads; i++)
+            arb_add(x, x, s + i, prec);
+
+        _arb_vec_clear(s, num_threads);
+    }
+
+    fmpz_clear(n24);
+    arb_clear(exp1);
+    arb_clear(C);
+}

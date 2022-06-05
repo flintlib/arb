@@ -29,7 +29,8 @@ void partitions_fmpz_fmpz(fmpz_t p, const fmpz_t n, int use_doubles);
 
 void partitions_fmpz_ui(fmpz_t p, ulong n);
 
-void partitions_fmpz_ui_using_doubles(fmpz_t p, ulong n);
+/* deprecated */
+#define partitions_fmpz_ui_using_doubles partitions_fmpz_ui
 
 void partitions_leading_fmpz(arb_t res, const fmpz_t n, slong prec);
 

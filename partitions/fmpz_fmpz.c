@@ -18,53 +18,6 @@ FLINT_DLL extern const unsigned int partitions_lookup[NUMBER_OF_SMALL_PARTITIONS
 
 slong partitions_hrr_needed_terms(double n);
 
-typedef struct
-{
-    arb_ptr x;
-    fmpz * n;
-    ulong N0;
-    ulong N;
-    int use_doubles;
-}
-worker_arg_t;
-
-static void *
-worker(slong i, void * arg_ptr)
-{
-    worker_arg_t arg = ((worker_arg_t *) arg_ptr)[i];
-
-    partitions_hrr_sum_arb(arg.x, arg.n, arg.N0, arg.N, arg.use_doubles);
-    flint_cleanup();
-    return NULL;
-}
-
-static void
-hrr_sum_threaded(arb_t x, const fmpz_t n, slong N, int use_doubles)
-{
-    arb_t y;
-    worker_arg_t args[2];
-
-    arb_init(y);
-
-    args[0].x = x;
-    args[0].n = (fmpz *) n;
-    args[0].N0 = 1;
-    args[0].N = 16;
-    args[0].use_doubles = use_doubles;
-
-    args[1].x = y;
-    args[1].n = (fmpz *) n;
-    args[1].N0 = 17;
-    args[1].N = N;
-    args[1].use_doubles = use_doubles;
-
-    flint_parallel_do((do_func_t) worker, args, 2, -1, 0);
-
-    arb_add(x, x, y, ARF_PREC_EXACT);
-
-    arb_clear(y);
-}
-
 void
 partitions_fmpz_fmpz_hrr(fmpz_t p, const fmpz_t n, int use_doubles)
 {
@@ -77,14 +30,7 @@ partitions_fmpz_fmpz_hrr(fmpz_t p, const fmpz_t n, int use_doubles)
 
     N = partitions_hrr_needed_terms(fmpz_get_d(n));
 
-    if (fmpz_cmp_ui(n, 4e8) >= 0 && flint_get_num_threads() > 1)
-    {
-        hrr_sum_threaded(x, n, N, use_doubles);
-    }
-    else
-    {
-        partitions_hrr_sum_arb(x, n, 1, N, use_doubles);
-    }
+    partitions_hrr_sum_arb(x, n, 1, N, use_doubles);
 
     partitions_rademacher_bound(bound, n, N);
     arb_add_error_arf(x, bound);
@@ -198,10 +144,3 @@ partitions_fmpz_ui(fmpz_t res, ulong n)
 {
     _partitions_fmpz_ui(res, n, 0);
 }
-
-void
-partitions_fmpz_ui_using_doubles(fmpz_t res, ulong n)
-{
-    _partitions_fmpz_ui(res, n, 1);
-}
-
