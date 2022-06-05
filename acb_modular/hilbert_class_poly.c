@@ -64,6 +64,26 @@ bsplit(arb_poly_t pol, const arb_t sqrtD,
     }
 }
 
+typedef struct
+{
+    const slong * qbf;
+    arb_srcptr sqrtD;
+    slong prec;
+}
+work_t;
+
+static void
+basecase(arb_poly_t res, slong a, slong b, work_t * work)
+{
+    bsplit(res, work->sqrtD, work->qbf, a, b, work->prec);
+}
+
+static void
+merge(arb_poly_t res, const arb_poly_t a, const arb_poly_t b, work_t * work)
+{
+    arb_poly_mul(res, a, b, work->prec);
+}
+
 int
 _acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D,
         const slong * qbf, slong qbf_len, slong prec)
@@ -71,13 +91,28 @@ _acb_modular_hilbert_class_poly(fmpz_poly_t res, slong D,
     arb_t sqrtD;
     arb_poly_t pol;
     int success;
+    work_t work;
 
     arb_init(sqrtD);
     arb_poly_init(pol);
 
     arb_set_si(sqrtD, -D);
     arb_sqrt(sqrtD, sqrtD, prec);
-    bsplit(pol, sqrtD, qbf, 0, qbf_len, prec);
+
+    work.qbf = qbf;
+    work.sqrtD = sqrtD;
+    work.prec = prec;
+
+    flint_parallel_binary_splitting(pol,
+        (bsplit_basecase_func_t) basecase,
+        (bsplit_merge_func_t) merge,
+        sizeof(arb_poly_struct),
+        (bsplit_init_func_t) arb_poly_init,
+        (bsplit_clear_func_t) arb_poly_clear,
+        &work, 0, qbf_len, 1, -1, 0);
+
+/*    bsplit(pol, sqrtD, qbf, 0, qbf_len, prec); */
+
     success = arb_poly_get_unique_fmpz_poly(res, pol);
 
     arb_clear(sqrtD);

@@ -94,6 +94,16 @@ This program benchmarks computing the nth Bernoulli number exactly::
     cpu/wall(s): 27.227 5.836
     virt/peak/res/peak(MB): 573.47 731.39 73.23 165.13
 
+class_poly.c
+-------------------------------------------------------------------------------
+
+This program benchmarks computing Hilbert class polynomials::
+
+    > build/examples/class_poly -1000004 -threads 8
+    cpu/wall(s): 6.932 1.478
+    virt/peak/res/peak(MB): 535.27 653.18 71.02 100.65
+    degree = 624, bits = -37823
+
 hilbert_matrix.c
 -------------------------------------------------------------------------------
 
