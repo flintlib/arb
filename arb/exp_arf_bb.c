@@ -70,15 +70,11 @@ worker(slong iter, work_t * work)
 
     /* T = T / Q  (+1 fixed-point ulp error). */
     if (*Qexp >= wp)
-    {
         fmpz_tdiv_q_2exp(T, T, *Qexp - wp);
-        fmpz_tdiv_q(T, T, Q);
-    }
     else
-    {
         fmpz_mul_2exp(T, T, wp - *Qexp);
-        fmpz_tdiv_q(T, T, Q);
-    }
+
+    fmpz_tdiv_q(T, T, Q);
 
     /* T = 1 + T */
     fmpz_one(Q);
@@ -95,11 +91,68 @@ worker(slong iter, work_t * work)
     fmpz_clear(Q);
 }
 
+typedef struct
+{
+    arb_srcptr vec;
+    slong prec;
+}
+pwork_t;
+
+static void
+pbasecase(arb_t res, slong a, slong b, pwork_t * work)
+{
+    if (b - a == 0)
+    {
+        arb_one(res);
+    }
+    else if (b - a == 1)
+    {
+        arb_set(res, work->vec + a);
+    }
+    else if (b - a == 2)
+    {
+        arb_mul(res, work->vec + a, work->vec + a + 1, work->prec);
+    }
+    else if (b - a == 3)
+    {
+        arb_mul(res, work->vec + a, work->vec + a + 1, work->prec);
+        arb_mul(res, res, work->vec + a + 2, work->prec);
+    }
+    else
+    {
+        flint_abort();
+    }
+}
+
+static void
+pmerge(arb_t res, const arb_t a, const arb_t b, pwork_t * work)
+{
+    arb_mul(res, a, b, work->prec);
+}
+
+void
+_arb_vec_prod_bsplit_threaded(arb_t res, arb_srcptr vec, slong len, slong prec)
+{
+    pwork_t work;
+
+    work.vec = vec;
+    work.prec = prec;
+
+    flint_parallel_binary_splitting(res,
+        (bsplit_basecase_func_t) pbasecase,
+        (bsplit_merge_func_t) pmerge,
+        sizeof(arb_struct),
+        (bsplit_init_func_t) arb_init,
+        (bsplit_clear_func_t) arb_clear,
+        &work, 0, len, 3, -1, FLINT_PARALLEL_BSPLIT_LEFT_INPLACE);
+}
+
 void
 arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
 {
     slong k, iter, bits, r, mag, q, wp, N;
     slong argred_bits, start_bits;
+    slong num_threads;
     flint_bitcnt_t Qexp[1];
     int inexact;
     fmpz_t t, u, T, Q;
@@ -163,7 +216,14 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
     /* Start with z = 1. */
     arb_one(z);
 
-    if (flint_get_num_threads() == 1 || prec >= 1000000000)
+    num_threads = flint_get_num_threads();
+
+    /* We have two ways to parallelize the BB algorithm: run
+       the main loop serially and rely on parallel binary splitting,
+       or compute all the exponentials in parallel. The latter is
+       more efficient (empirically about 1.3x) but uses more memory,
+       so we fall back on a serial main loop at high enough precision. */
+    if (num_threads == 1 || prec >= 1e9)
     {
         /* Bit-burst loop. */
         for (iter = 0, bits = start_bits; !fmpz_is_zero(t);
@@ -227,14 +287,20 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
             r = FLINT_MIN(bits, wp);
             fmpz_tdiv_q_2exp(u, t, wp - r);
 
-            fmpz_set(us + iter, u);
-            rs[iter] = r;
-            num++;
+            if (!fmpz_is_zero(u))
+            {
+                fmpz_set(us + num, u);
+                rs[num] = r;
+                num++;
+            }
 
             /* Remove used bits. */
             fmpz_mul_2exp(u, u, wp - r);
             fmpz_sub(t, t, u);
         }
+
+        num_threads = FLINT_MIN(num_threads, num);
+        num_threads = FLINT_MAX(num_threads, 1);
 
         /* todo: only allocate as many temporaries as threads,
            reducing memory */
@@ -249,9 +315,8 @@ arb_exp_arf_bb(arb_t z, const arf_t x, slong prec, int minus_one)
             flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
         }
 
-        /* todo: parallel accumulation */
-        for (iter = 0; iter < num; iter++)
-            arb_mul(z, z, ws + iter, wp);
+        /* Parallel product. */
+        _arb_vec_prod_bsplit_threaded(z, ws, num, wp);
 
         _arb_vec_clear(ws, FLINT_BITS);
         _fmpz_vec_clear(us, FLINT_BITS);

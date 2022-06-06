@@ -82,7 +82,7 @@ arb_exp_arf_fallback(arb_t z, const arf_t x, slong mag, slong prec, int minus_on
        extremely high precision */
     if (mag > 64 || (mag > 8 && prec < 1000000))
         arb_exp_arf_huge(z, x, mag, prec, minus_one);
-    else if (prec < 19000)
+    else if (prec < 10000 || (flint_get_num_threads() == 1 && prec < 19000))
         arb_exp_arf_rs_generic(z, x, prec, minus_one);
     else
         arb_exp_arf_bb(z, x, prec, minus_one);

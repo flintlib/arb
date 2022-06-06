@@ -11,6 +11,7 @@
 
 #include "flint/thread_support.h"
 #include "arb.h"
+#include "acb.h"
 
 slong _arb_compute_bs_exponents(slong * tab, slong n);
 slong _arb_get_exp_pos(const slong * tab, slong step);
@@ -295,15 +296,11 @@ arb_sin_cos_fmpz_div_2exp_bsplit(arb_t wsin, arb_t wcos, const fmpz_t x, flint_b
 
     /* T = T / Q  (+1 fixed-point ulp error). */
     if (Qexp[0] >= prec)
-    {
         fmpz_tdiv_q_2exp(T, T, Qexp[0] - prec);
-        fmpz_tdiv_q(T, T, Q);
-    }
     else
-    {
         fmpz_mul_2exp(T, T, prec - Qexp[0]);
-        fmpz_tdiv_q(T, T, Q);
-    }
+
+    fmpz_tdiv_q(T, T, Q);
 
     fmpz_mul_2exp(Q, x, prec - r);
     fmpz_add(T, T, Q);
@@ -325,8 +322,7 @@ arb_sin_cos_fmpz_div_2exp_bsplit(arb_t wsin, arb_t wcos, const fmpz_t x, flint_b
 
 typedef struct
 {
-    arb_ptr wsin;
-    arb_ptr wcos;
+    acb_ptr vs;
     fmpz * u;
     slong * r;
     slong wp;
@@ -336,7 +332,79 @@ work_t;
 static void
 worker(slong iter, work_t * work)
 {
-    arb_sin_cos_fmpz_div_2exp_bsplit(work->wsin + iter, work->wcos + iter, work->u + iter, work->r[iter], work->wp);
+    arb_sin_cos_fmpz_div_2exp_bsplit(acb_imagref(work->vs + iter), acb_realref(work->vs + iter), work->u + iter, work->r[iter], work->wp);
+}
+
+/* parallel product of complex numbers; destructive (overwrites input) */
+
+typedef struct
+{
+    acb_ptr vec;
+    slong prec;
+}
+pwork_t;
+
+static void
+pbasecase(acb_t res, slong a, slong b, pwork_t * work)
+{
+    if (b - a == 0)
+    {
+        acb_one(res);
+    }
+    else if (b - a == 1)
+    {
+        acb_swap(res, work->vec + a);
+    }
+    else
+    {
+        flint_abort();
+    }
+}
+
+static void
+pmerge(acb_t res, acb_t a, acb_t b, pwork_t * work)
+{
+    arb_t tmp1;
+    arb_ptr zsin, zcos, wsin, wcos;
+    slong wp = work->prec;
+
+    zcos = acb_realref(res);
+    zsin = acb_imagref(res);
+    wcos = acb_realref(b);
+    wsin = acb_imagref(b);
+
+    arb_init(tmp1);
+
+    arb_add(tmp1, zsin, zcos, wp);
+    arb_mul(zcos, zcos, wcos, wp);
+    arb_add(wcos, wcos, wsin, wp);
+    arb_mul(wsin, wsin, zsin, wp);
+    arb_mul(wcos, tmp1, wcos, wp);
+    arb_zero(tmp1);
+    arb_sub(zsin, wcos, wsin, wp);
+    arb_zero(wcos);
+    arb_sub(zsin, zsin, zcos, wp);
+    arb_sub(zcos, zcos, wsin, wp);
+    arb_zero(wsin);
+
+    arb_clear(tmp1);
+}
+
+void
+_acb_vec_prod_bsplit_threaded(acb_t res, acb_ptr vec, slong len, slong prec)
+{
+    pwork_t work;
+
+    work.vec = vec;
+    work.prec = prec;
+
+    flint_parallel_binary_splitting(res,
+        (bsplit_basecase_func_t) pbasecase,
+        (bsplit_merge_func_t) pmerge,
+        sizeof(acb_struct),
+        (bsplit_init_func_t) acb_init,
+        (bsplit_clear_func_t) acb_clear,
+        &work, 0, len, 1, -1, FLINT_PARALLEL_BSPLIT_LEFT_INPLACE);
 }
 
 void
@@ -407,7 +475,12 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     arb_one(zcos);
     arb_zero(zsin);
 
-    if (flint_get_num_threads() == 1 || prec >= 1000000000)
+    /* We have two ways to parallelize the BB algorithm: run
+       the main loop serially and rely on parallel binary splitting,
+       or compute all the sines/cosines in parallel. The latter is
+       more efficient (empirically about 1.7x) but uses more memory,
+       so we fall back on a serial main loop at high enough precision. */
+    if (flint_get_num_threads() == 1 || prec >= 4e8)
     {
         /* Bit-burst loop. */
         for (iter = 0, bits = start_bits; !fmpz_is_zero(t); iter++, bits *= 3)
@@ -437,13 +510,12 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
     }
     else
     {
-        arb_ptr ss, cs;
+        acb_ptr vs;
         fmpz * us;
         slong * rs;
         slong num = 0;
 
-        ss = _arb_vec_init(FLINT_BITS);
-        cs = _arb_vec_init(FLINT_BITS);
+        vs = _acb_vec_init(FLINT_BITS);
         us = _fmpz_vec_init(FLINT_BITS);
         rs = flint_malloc(sizeof(slong) * FLINT_BITS);
 
@@ -455,9 +527,12 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
             r = FLINT_MIN(bits, wp);
             fmpz_tdiv_q_2exp(u, t, wp - r);
 
-            fmpz_set(us + iter, u);
-            rs[iter] = r;
-            num++;
+            if (!fmpz_is_zero(u))
+            {
+                fmpz_set(us + num, u);
+                rs[num] = r;
+                num++;
+            }
 
             /* Remove used bits. */
             fmpz_mul_2exp(u, u, wp - r);
@@ -469,8 +544,7 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
         {
             work_t work;
 
-            work.wsin = ss;
-            work.wcos = cs;
+            work.vs = vs;
             work.u = us;
             work.r = rs;
             work.wp = wp;
@@ -478,29 +552,18 @@ arb_sin_cos_arf_bb(arb_t zsin, arb_t zcos, const arf_t x, slong prec)
             flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
         }
 
-        /* todo: parallel accumulation */
-        for (iter = 0; iter < num; iter++)
         {
-            arb_ptr wsin, wcos;
+            acb_t z;
+            *acb_realref(z) = *zcos;
+            *acb_imagref(z) = *zsin;
 
-            wsin = ss + iter;
-            wcos = cs + iter;
+            _acb_vec_prod_bsplit_threaded(z, vs, num, wp);
 
-            /* zsin, zcos = zsin wcos + zcos wsin, zcos wcos - zsin wsin */
-            /* using karatsuba */
-            arb_add(tmp1, zsin, zcos, wp);
-            arb_mul(zcos, zcos, wcos, wp);
-            arb_add(wcos, wcos, wsin, wp);
-            arb_mul(wsin, wsin, zsin, wp);
-            arb_mul(tmp1, tmp1, wcos, wp);
-            arb_sub(zsin, tmp1, wsin, wp);
-            arb_sub(zsin, zsin, zcos, wp);
-            arb_sub(zcos, zcos, wsin, wp);
-            arb_zero(tmp1);  /* slightly reduce memory usage */
+            *zcos = *acb_realref(z);
+            *zsin = *acb_imagref(z);
         }
 
-        _arb_vec_clear(ss, FLINT_BITS);
-        _arb_vec_clear(cs, FLINT_BITS);
+        _acb_vec_clear(vs, FLINT_BITS);
         _fmpz_vec_clear(us, FLINT_BITS);
         flint_free(rs);
     }

@@ -437,7 +437,6 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
             flint_parallel_do((do_func_t) worker, &work, num, -1, FLINT_PARALLEL_STRIDED);
         }
 
-        /* todo: parallel accumulation */
         for (iter = 0; iter < num; iter++)
             fmpz_add(s, s, ws + iter);
 

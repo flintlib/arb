@@ -269,7 +269,8 @@ arb_sin_cos_arf_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec)
     }
     else if (mag <= 0)  /* todo: compare with pi/4-eps instead? */
     {
-        if (prec < 90000 || mag < -prec / 16 ||
+        if (prec < 20000 || (flint_get_num_threads() == 1 && prec < 100000)
+            || mag < -prec / 16 ||
             /* rs is faster for even smaller prec/N than this but has high memory usage */
             (prec < 100000000 && mag < -prec / 128))
             arb_sin_cos_arf_rs_generic(res_sin, res_cos, x, prec);
