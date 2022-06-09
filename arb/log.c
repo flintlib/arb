@@ -94,35 +94,3 @@ arb_log(arb_t res, const arb_t x, slong prec)
         mag_clear(t);
     }
 }
-
-void
-arb_log_ui(arb_t z, ulong x, slong prec)
-{
-    if (x == 2)
-    {
-        arb_const_log2(z, prec);
-    }
-    else if (x == 10)
-    {
-        arb_const_log10(z, prec);
-    }
-    else
-    {
-        arf_t t;
-        arf_init(t);
-        arf_set_ui(t, x);
-        arb_log_arf(z, t, prec);
-        arf_clear(t);
-    }
-}
-
-void
-arb_log_fmpz(arb_t z, const fmpz_t x, slong prec)
-{
-    arf_t t;
-    arf_init(t);
-    arf_set_fmpz(t, x);
-    arb_log_arf(z, t, prec);
-    arf_clear(t);
-}
-

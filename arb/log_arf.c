@@ -11,6 +11,8 @@
 
 #include "arb.h"
 
+int _arb_log_ui_smooth(arb_t res, ulong n, slong prec);
+
 #define TMP_ALLOC_LIMBS(size) TMP_ALLOC((size) * sizeof(mp_limb_t))
 
 /* requires x != 1 */
@@ -199,9 +201,25 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
         /* Absolute working precision (NOT rounded to a limb multiple) */
         wp = prec + closeness_to_one + 5;
 
+
         /* Too high precision to use table */
         if (wp > ARB_LOG_TAB2_PREC)
         {
+            /* Special case: check for smooth integers */
+            if (xn == 1 && exp <= FLINT_BITS && exp >= 1)
+            {
+                ulong n;
+
+                n = xp[0] >> (FLINT_BITS - exp);
+                if ((n << (FLINT_BITS - exp)) == xp[0])
+                {
+                    if (_arb_log_ui_smooth(z, n, prec))
+                    {
+                        return;
+                    }
+                }
+            }
+
             /* The earlier test for COEFF_IS_MPZ(ARF_EXP(x)) rules out
                too large exponents for MPFR, except on Windows 64 where
                MPFR still uses 32-bit exponents. */

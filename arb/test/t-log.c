@@ -93,6 +93,9 @@ int main()
             arb_randtest(a, state, 1 + n_randint(state, 6000), 10);
         } while (arb_contains_nonpositive(a));
 
+        if (n_randint(state, 10) == 0)
+            arb_set_ui(a, n_randint(state, 100));
+
         arb_randtest(b, state, 1 + n_randint(state, 6000), 10);
         arb_get_rand_fmpq(q, state, a, 1 + n_randint(state, 200));
 
