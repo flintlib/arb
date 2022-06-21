@@ -81,11 +81,39 @@ arb_exp_arf_fallback(arb_t z, const arf_t x, slong mag, slong prec, int minus_on
     /* reduce by log(2) if needed, but avoid computing log(2) unnecessarily at
        extremely high precision */
     if (mag > 64 || (mag > 8 && prec < 1000000))
+    {
         arb_exp_arf_huge(z, x, mag, prec, minus_one);
-    else if (prec < 10000 || (flint_get_num_threads() == 1 && prec < 19000))
-        arb_exp_arf_rs_generic(z, x, prec, minus_one);
+    }
     else
-        arb_exp_arf_bb(z, x, prec, minus_one);
+    {
+        int want_rs;
+
+        if (prec < 10000 || mag < -prec / 16)
+        {
+            want_rs = 1;
+        }
+        else if (arf_bits(x) < prec / 128)
+        {
+            want_rs = 0;
+        }
+        else if (flint_get_num_threads() == 1)  /* todo: get_available_threads */
+        {
+            want_rs = (prec < 20000) || (prec < 1000000000 && mag < -prec / 800);
+        }
+        else
+        {
+            want_rs = (prec < 10000) || (prec < 1000000000 && mag < -prec / 200);
+        }
+
+        if (want_rs)
+        {
+            arb_exp_arf_rs_generic(z, x, prec, minus_one);
+        }
+        else
+        {
+            arb_exp_arf_bb(z, x, prec, minus_one);
+        }
+    }
 }
 
 void

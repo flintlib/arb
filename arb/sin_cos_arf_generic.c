@@ -278,10 +278,26 @@ arb_sin_cos_arf_generic(arb_t res_sin, arb_t res_cos, const arf_t x, slong prec)
     }
     else if (mag <= 0)  /* todo: compare with pi/4-eps instead? */
     {
-        if (prec < 20000 || (flint_get_num_threads() == 1 && prec < 100000)
-            || mag < -prec / 16 ||
-            /* rs is faster for even smaller prec/N than this but has high memory usage */
-            (prec < 100000000 && mag < -prec / 128))
+        int want_rs;
+
+        if (prec < 20000 || mag < -prec / 16)
+        {
+            want_rs = 1;
+        }
+        else if (arf_bits(x) < prec / 128)
+        {
+            want_rs = 0;
+        }
+        else if (flint_get_num_threads() == 1)  /* todo: get_available_threads */
+        {
+            want_rs = (prec < 200000) || (prec < 1000000000 && mag < -prec / 5000);
+        }
+        else
+        {
+            want_rs = (prec < 20000) || (prec < 1000000000 && mag < -prec / 400);
+        }
+
+        if (want_rs)
             arb_sin_cos_arf_rs_generic(res_sin, res_cos, x, prec);
         else
             arb_sin_cos_arf_bb(res_sin, res_cos, x, prec);
