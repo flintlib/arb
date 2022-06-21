@@ -1017,6 +1017,8 @@ void _arb_atan_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
 
 void arb_atan_arf_bb(arb_t z, const arf_t x, slong prec);
 
+void arb_atan_frac_bsplit(arb_t s, const fmpz_t p, const fmpz_t q, int hyperbolic, slong prec);
+
 ARB_INLINE slong
 arb_allocated_bytes(const arb_t x)
 {

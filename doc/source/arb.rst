@@ -1765,6 +1765,11 @@ Internals for computing elementary functions
     is applied repeatedly instead of integrating a differential
     equation for the arctangent, as this appears to be more efficient.
 
+.. function:: void arb_atan_frac_bsplit(arb_t s, const fmpz_t p, const fmpz_t q, int hyperbolic, slong prec)
+
+    Computes the arctangent of `p/q`, optionally the hyperbolic
+    arctangent, using direct series summation with binary splitting.
+
 .. function:: void arb_sin_cos_arf_generic(arb_t s, arb_t c, const arf_t x, slong prec)
 
     Computes the sine and cosine of *x* using a generic strategy.
