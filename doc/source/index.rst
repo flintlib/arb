@@ -217,6 +217,7 @@ Mainly for internal use.
 .. toctree::
    :maxdepth: 1
 
+   fmpzi.rst
    double_interval.rst
    fmpz_extras.rst
    bool_mat.rst
