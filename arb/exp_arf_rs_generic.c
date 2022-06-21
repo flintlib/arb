@@ -52,7 +52,7 @@ arb_exp_taylor_sum_rs_generic(arb_t res, const arb_t x, slong N, slong prec)
             flint_abort();
         }
 
-        tpow = _arb_vec_init(m + 1);
+        tpow = _arb_vec_init(m + 2);
 
         arb_mul(s, x, x, prec);
         _arb_vec_set_powers(tpow, s, m + 1, prec);
@@ -88,7 +88,16 @@ arb_exp_taylor_sum_rs_generic(arb_t res, const arb_t x, slong N, slong prec)
 
                 if (j == 0)
                 {
-                    arb_mul(s, s, tpow + m, tp);
+                    if (tp > 300000)
+                    {
+                        arb_set_round(tpow + m + 1, tpow + m, tp);
+                        arb_mul(s, s, tpow + m + 1, tp);
+                    }
+                    else
+                    {
+                        arb_mul(s, s, tpow + m, tp);
+                    }
+
                     j = m - 1;
                 }
                 else
@@ -109,7 +118,7 @@ arb_exp_taylor_sum_rs_generic(arb_t res, const arb_t x, slong N, slong prec)
         arb_sqrt(res, res, prec);
         arb_add(res, res, s, prec);
 
-        _arb_vec_clear(tpow, m + 1);
+        _arb_vec_clear(tpow, m + 2);
     }
 
     mag_clear(err);
