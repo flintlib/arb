@@ -897,8 +897,18 @@ ARB_DLL extern const mp_limb_t arb_log_tab11[1 << ARB_LOG_TAB11_BITS][ARB_LOG_TA
 ARB_DLL extern const mp_limb_t arb_log_tab12[1 << ARB_LOG_TAB12_BITS][ARB_LOG_TAB1_LIMBS];
 ARB_DLL extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TAB2_LIMBS];
 ARB_DLL extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
-ARB_DLL extern const mp_limb_t arb_log_p_tab[13][ARB_LOG_TAB2_LIMBS];
 ARB_DLL extern const mp_srcptr arb_log_log2_tab;
+
+/* logarithms of primes */
+
+#define ARB_LOG_PRIME_CACHE_NUM 13
+
+ARB_DLL extern const mp_limb_t arb_log_p_tab[ARB_LOG_PRIME_CACHE_NUM][ARB_LOG_TAB2_LIMBS];
+
+void arb_log_primes_vec_bsplit(arb_ptr res, slong n, slong prec);
+
+ARB_DLL extern FLINT_TLS_PREFIX arb_struct _arb_log_p_cache[ARB_LOG_PRIME_CACHE_NUM];
+void _arb_log_p_ensure_cached(slong prec);
 
 /* exponential implementation */
 
@@ -939,6 +949,13 @@ void _arb_exp_sum_bs_powtab(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
 
 void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
     const fmpz_t x, flint_bitcnt_t r, slong N);
+
+#define ARB_LOG_REDUCTION_DEFAULT_MAX_PREC 4000000
+#define ARB_EXP_LOG_REDUCTION_PREC 2240
+
+void arb_exp_arf_log_reduction(arb_t res, const arf_t x, slong prec, int minus_one);
+void arb_exp_arf_generic(arb_t z, const arf_t x, slong prec, int minus_one);
+void arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one, slong maglim);
 
 /* sin/cos implementation */
 

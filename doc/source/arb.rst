@@ -1818,6 +1818,42 @@ Internals for computing elementary functions
     :func:`arb_sin_cos` to take care of all cases without a fast
     path in that function.
 
+.. function:: void arb_log_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
+
+    Sets *res* to a vector containing the natural logarithms of
+    the first *n* prime numbers, computed using binary splitting
+    applied to simultaneous Machine-type series. This function is not
+    optimized for large *n* or small *prec*.
+
+.. macro:: ARB_LOG_PRIME_CACHE_NUM
+
+    Number of logarithms of small prime numbers to cache automatically.
+
+.. macro:: ARB_LOG_REDUCTION_DEFAULT_MAX_PREC
+
+    Maximum precision to cache logarithms of small prime numbers
+    automatically.
+
+.. function:: void _arb_log_p_ensure_cached(slong prec)
+
+    Ensure that the internal cache of logarithms of small prime
+    numbers has entries to at least *prec* bits.
+
+.. function:: void arb_exp_arf_log_reduction(arb_t res, const arf_t x, slong prec, int minus_one)
+
+    Computes the exponential function using log reduction.
+
+.. function:: void arb_exp_arf_generic(arb_t z, const arf_t x, slong prec, int minus_one)
+
+    Computes the exponential function using an automatic choice
+    between rectangular splitting and the bit-burst algorithm,
+    without precomputation.
+
+.. function:: void arb_exp_arf(arb_t z, const arf_t x, slong prec, int minus_one, slong maglim)
+
+    Computes the exponential function using an automatic choice
+    between all implemented algorithms.
+
 Vector functions
 -------------------------------------------------------------------------------
 
