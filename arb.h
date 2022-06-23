@@ -899,6 +899,9 @@ ARB_DLL extern const mp_limb_t arb_log_tab21[1 << ARB_LOG_TAB21_BITS][ARB_LOG_TA
 ARB_DLL extern const mp_limb_t arb_log_tab22[1 << ARB_LOG_TAB22_BITS][ARB_LOG_TAB2_LIMBS];
 ARB_DLL extern const mp_srcptr arb_log_log2_tab;
 
+void arb_log_newton(arb_t res, const arb_t x, slong prec);
+void arb_log_arf_newton(arb_t res, const arf_t x, slong prec);
+
 /* logarithms of primes */
 
 #define ARB_LOG_PRIME_CACHE_NUM 13
@@ -952,6 +955,7 @@ void _arb_exp_sum_bs_simple(fmpz_t T, fmpz_t Q, flint_bitcnt_t * Qexp,
 
 #define ARB_LOG_REDUCTION_DEFAULT_MAX_PREC 4000000
 #define ARB_EXP_LOG_REDUCTION_PREC 2240
+#define ARB_LOG_NEWTON_PREC 2800
 
 void arb_exp_arf_log_reduction(arb_t res, const arf_t x, slong prec, int minus_one);
 void arb_exp_arf_generic(arb_t z, const arf_t x, slong prec, int minus_one);

@@ -1854,6 +1854,11 @@ Internals for computing elementary functions
     Computes the exponential function using an automatic choice
     between all implemented algorithms.
 
+.. function:: void arb_log_newton(arb_t res, const arb_t x, slong prec)
+              void arb_log_arf_newton(arb_t res, const arf_t x, slong prec)
+
+    Computes the logarithm using Newton iteration.
+
 Vector functions
 -------------------------------------------------------------------------------
 

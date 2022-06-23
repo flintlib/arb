@@ -203,7 +203,7 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
 
 
         /* Too high precision to use table */
-        if (wp > ARB_LOG_TAB2_PREC)
+        if (wp > ARB_LOG_NEWTON_PREC || wp > ARB_LOG_TAB2_PREC)
         {
             /* Special case: check for smooth integers */
             if (xn == 1 && exp <= FLINT_BITS && exp >= 1)
@@ -220,6 +220,7 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
                 }
             }
 
+#if 0
             /* The earlier test for COEFF_IS_MPZ(ARF_EXP(x)) rules out
                too large exponents for MPFR, except on Windows 64 where
                MPFR still uses 32-bit exponents. */
@@ -232,6 +233,9 @@ arb_log_arf(arb_t z, const arf_t x, slong prec)
                 arf_log_via_mpfr(arb_midref(z), x, prec, ARB_RND);
                 arf_mag_set_ulp(arb_radref(z), arb_midref(z), prec);
             }
+#else
+            arb_log_arf_newton(z, x, prec);
+#endif
             return;
         }
 
