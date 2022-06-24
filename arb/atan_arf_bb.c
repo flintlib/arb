@@ -294,7 +294,7 @@ arb_atan_arf_bb(arb_t z, const arf_t x, slong prec)
     start_bits = 16;
 
     /* Argument reduction q times. */
-    q = FLINT_MAX(0, mag + argred_bits);
+    q = FLINT_MAX(0, argred_bits - FLINT_ABS(mag));
 
     /* Determine working precision. */
     wp = prec + 10 + 2 * q + 2 * FLINT_BIT_COUNT(prec);
