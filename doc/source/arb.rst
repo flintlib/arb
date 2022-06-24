@@ -1822,7 +1822,7 @@ Internals for computing elementary functions
 
     Sets *res* to a vector containing the natural logarithms of
     the first *n* prime numbers, computed using binary splitting
-    applied to simultaneous Machine-type series. This function is not
+    applied to simultaneous Machine-type formulas. This function is not
     optimized for large *n* or small *prec*.
 
 .. macro:: ARB_LOG_PRIME_CACHE_NUM
@@ -1858,6 +1858,25 @@ Internals for computing elementary functions
               void arb_log_arf_newton(arb_t res, const arf_t x, slong prec)
 
     Computes the logarithm using Newton iteration.
+
+.. macro:: ARB_ATAN_GAUSS_PRIME_CACHE_NUM
+
+     Number of primitive arctangents to cache automatically.
+
+.. function:: void arb_atan_gauss_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
+
+    Sets *res* to the primitive angles corresponding to the
+    first *n* nonreal Gaussian primes (ignoring symmetries),
+    computed using binary splitting
+    applied to simultaneous Machine-type formulas. This function is not
+    optimized for large *n* or small *prec*.
+
+.. function:: void _arb_atan_gauss_p_ensure_cached(slong prec)
+
+.. function:: void arb_sin_cos_arf_atan_reduction(arb_t res1, arb_t res2, const arf_t x, slong prec)
+
+    Computes sin and/or cos using reduction by primitive angles.
+
 
 Vector functions
 -------------------------------------------------------------------------------

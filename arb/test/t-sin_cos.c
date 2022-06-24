@@ -190,9 +190,9 @@ int main()
             mag_cmp(arb_radref(c), allow) > 0)
         {
             flint_printf("FAIL: accuracy\n\n");
-            flint_printf("a = "); arb_printn(a, 500, 0); flint_printf("\n\n");
-            flint_printf("s = "); arb_printn(s, 500, 0); flint_printf("\n\n");
-            flint_printf("c = "); arb_printn(c, 500, 0); flint_printf("\n\n");
+            flint_printf("a = "); arb_printn(a, 3000, 0); flint_printf("\n\n");
+            flint_printf("s = "); arb_printn(s, 3000, 0); flint_printf("\n\n");
+            flint_printf("c = "); arb_printn(c, 3000, 0); flint_printf("\n\n");
             flint_printf("prec = %wd\n\n", prec);
             flint_printf("allow = "); mag_printd(allow, 5); flint_printf("\n\n");
             flint_abort();

@@ -145,6 +145,18 @@ _arb_sin_cos(arb_t zsin, arb_t zcos, const arf_t x, const mag_t xrad, slong prec
             prec = FLINT_MIN(prec, 20 - radexp);
     }
 
+    if (prec >= ARB_SIN_COS_ATAN_REDUCTION_PREC && prec <= ARB_SIN_COS_ATAN_REDUCTION_DEFAULT_MAX_PREC)
+    {
+        mag_t err;
+        mag_init(err);
+        mag_set(err, xrad);
+        arb_sin_cos_arf_atan_reduction(zsin, zcos, x, prec);
+        if (zsin != NULL) arb_add_error_mag(zsin, err);
+        if (zcos != NULL) arb_add_error_mag(zcos, err);
+        mag_clear(err);
+        return;
+    }
+
     /* Absolute working precision (NOT rounded to a limb multiple) */
     wp = prec + 8;
     if (want_sin && exp <= 0)

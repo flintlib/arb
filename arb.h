@@ -1004,6 +1004,19 @@ void arb_sin_cos_wide(arb_t s, arb_t c, const arb_t x, slong prec);
 void _arb_sin_cos_generic(arb_t s, arb_t c, const arf_t x, const mag_t xrad, slong prec);
 void arb_sin_cos_generic(arb_t s, arb_t c, const arb_t x, slong prec);
 
+void arb_atan_gauss_primes_vec_bsplit(arb_ptr res, slong n, slong prec);
+
+#define ARB_ATAN_GAUSS_PRIME_CACHE_NUM 13
+
+#define ARB_SIN_COS_ATAN_REDUCTION_DEFAULT_MAX_PREC 4000000
+#define ARB_SIN_COS_ATAN_REDUCTION_PREC 2600
+
+ARB_DLL extern FLINT_TLS_PREFIX arb_struct _arb_atan_gauss_p_cache[ARB_ATAN_GAUSS_PRIME_CACHE_NUM];
+void _arb_atan_gauss_p_ensure_cached(slong prec);
+
+void arb_sin_cos_arf_atan_reduction(arb_t res1, arb_t res2, const arf_t x, slong prec);
+
+
 ARB_INLINE flint_bitcnt_t
 _arb_mpn_leading_zeros(mp_srcptr d, mp_size_t n)
 {
