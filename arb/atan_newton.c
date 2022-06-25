@@ -14,12 +14,12 @@
 
 static const fmpz atan_coeffs[] = 
 {
-    1673196525, -557732175, 334639305, -239028075, 185910725,
-    -152108775, 128707425, -111546435, 98423325, -88062975,
-    79676025, -72747675, 66927861
+    334639305, -111546435, 66927861, -47805615, 37182145,
+    -30421755, 25741485, -22309287, 19684665, -17612595,
+    15935205, -14549535
 };
 
-static const ulong atan_den = 1673196525;
+static const ulong atan_den = 334639305;
 
 void
 _arb_atan_taylor(arb_t res, const arb_t x, slong prec)
@@ -45,7 +45,7 @@ _arb_atan_taylor(arb_t res, const arb_t x, slong prec)
     else
         n = (prec + 2 * (-mag) - 1) / (2 * (-mag));
 
-    n = FLINT_MIN(n, 13);
+    n = FLINT_MIN(n, 12);
 
     arb_get_mag(err, x);
     mag_geom_series(err, err, 2 * n + 1);
