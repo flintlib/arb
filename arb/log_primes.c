@@ -345,6 +345,7 @@ arb_log_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
 
     wp = prec + 64;
 
+/*
     switch (n)
     {
 #if HAVE_64_BIT
@@ -389,6 +390,8 @@ arb_log_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
         default: ln = 13; x = log_atanh_13_x; den = log_atanh_13_den; c = log_atanh_13_c; break;
 #endif
     }
+*/
+    ln = 4; x = log_atanh_4_x; den = log_atanh_4_den; c = log_atanh_4_c;
 
     y = _arb_vec_init(ln);
     arb_init(t);
@@ -589,6 +592,7 @@ arb_atan_gauss_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
 
     wp = prec + 64;
 
+/*
     switch (n)
     {
         case 1:
@@ -619,6 +623,8 @@ arb_atan_gauss_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
         default: ln = 16; x = atan_16_x; den = atan_16_den; c = atan_16_c; break;
 #endif
     }
+*/
+    ln = 4; x = atan_4_x; den = atan_4_den; c = atan_4_c;
 
     y = _arb_vec_init(ln);
     arb_init(t);
