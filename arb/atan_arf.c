@@ -118,6 +118,12 @@ arb_atan_arf(arb_t z, const arf_t x, slong prec)
             return;
         }
 
+        if (prec >= ARB_ATAN_NEWTON_PREC)
+        {
+            arb_atan_arf_newton(z, x, prec);
+            return;
+        }
+
         /* Absolute working precision (NOT rounded to a limb multiple) */
         wp = prec - FLINT_MIN(0, exp) + 4;
 

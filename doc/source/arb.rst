@@ -1877,6 +1877,11 @@ Internals for computing elementary functions
 
     Computes sin and/or cos using reduction by primitive angles.
 
+.. function:: void arb_atan_newton(arb_t res, const arb_t x, slong prec)
+              void arb_atan_arf_newton(arb_t res, const arf_t x, slong prec)
+
+    Computes the arctangent using Newton iteration.
+
 
 Vector functions
 -------------------------------------------------------------------------------

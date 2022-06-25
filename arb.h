@@ -881,6 +881,11 @@ _arb_atan_taylor_naive(mp_ptr y, mp_limb_t * error,
 void _arb_atan_taylor_rs(mp_ptr y, mp_limb_t * error,
     mp_srcptr x, mp_size_t xn, ulong N, int alternating);
 
+#define ARB_ATAN_NEWTON_PREC 3400
+
+void arb_atan_newton(arb_t res, const arb_t x, slong prec);
+void arb_atan_arf_newton(arb_t res, const arf_t x, slong prec);
+
 /* logarithm implementation */
 
 #define ARB_LOG_TAB11_BITS 7
