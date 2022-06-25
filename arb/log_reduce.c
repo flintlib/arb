@@ -462,7 +462,7 @@ arb_exp_arf_log_reduction(arb_t res, const arf_t x, slong prec, int minus_one)
 
     _arb_exp_arf_precomp(res, x, prec, minus_one,
         ARB_LOG_PRIME_CACHE_NUM,
-        _arb_log_p_cache,
+        _arb_log_p_cache_vec(),
         small_primes, log_weights,
         log_rel_d,
         log_rel_epsilon, log_rel_epsilon_inv, prec);
@@ -930,7 +930,7 @@ arb_sin_cos_arf_atan_reduction(arb_t res1, arb_t res2, const arf_t x, slong prec
 
     _arb_sin_cos_arf_precomp(res1, res2, x, prec,
         ARB_ATAN_GAUSS_PRIME_CACHE_NUM,
-        _arb_atan_gauss_p_cache,
+        _arb_atan_gauss_p_cache_vec(),
         small_gaussian_primes, small_gaussian_prime_weights,
         atan_rel_d,
         atan_rel_epsilon, atan_rel_epsilon_inv, 0.5 * prec);

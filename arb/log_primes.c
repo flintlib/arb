@@ -473,6 +473,12 @@ void _arb_log_p_cleanup(void)
     _arb_log_p_cache_prec = 0;
 }
 
+arb_srcptr _arb_log_p_cache_vec(void)
+{
+    return _arb_log_p_cache;
+}
+
+
 void _arb_log_p_ensure_cached(slong prec)
 {
     slong i, wp;
@@ -686,6 +692,11 @@ void _arb_atan_gauss_p_cleanup(void)
     for (i = 0; i < ARB_ATAN_GAUSS_PRIME_CACHE_NUM; i++)
         arb_clear(_arb_atan_gauss_p_cache + i);
     _arb_atan_gauss_p_cache_prec = 0;
+}
+
+arb_srcptr _arb_atan_gauss_p_cache_vec(void)
+{
+    return _arb_atan_gauss_p_cache;
 }
 
 void _arb_atan_gauss_p_ensure_cached(slong prec)
