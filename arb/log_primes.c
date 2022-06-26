@@ -717,8 +717,31 @@ void _arb_atan_gauss_p_ensure_cached(slong prec)
         wp = prec + 32;
 
         /* todo */
-        if (0 && wp <= ARB_ATAN_TAB2_PREC - 16)
+        if (wp <= ARB_ATAN_TAB2_PREC - 16)
         {
+            for (i = 0; i < ARB_ATAN_GAUSS_PRIME_CACHE_NUM; i++)
+            {
+                slong exp, exp_fix;
+                mp_size_t n;
+                static const char exponents[24] = {0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1};
+                arb_ptr res = _arb_atan_gauss_p_cache + i;
+
+                n = ARB_LOG_TAB2_PREC / FLINT_BITS;
+
+                if (i >= 24)
+                    flint_abort();
+                /* exponent of 2*atan(x) */
+                exp = exponents[i] + 1;
+
+                /* just reading the table is known to give the correct rounding */
+                _arf_set_round_mpn(arb_midref(res), &exp_fix, arb_atan_gauss_tab[i], n, 0, wp, ARF_RND_NEAR);
+                exp += exp_fix;
+                _fmpz_set_si_small(ARF_EXPREF(arb_midref(res)), exp);
+
+                /* 1/2 ulp error */
+                _fmpz_set_si_small(MAG_EXPREF(arb_radref(res)), exp - wp);
+                MAG_MAN(arb_radref(res)) = MAG_ONE_HALF;
+            }
         }
         else
         {

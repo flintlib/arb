@@ -19,7 +19,8 @@
 
 #define Z8(a,b,c,d,e,f,g,h) Z2(a,b), Z2(c,d), Z2(e,f), Z2(g,h),
 
-const mp_limb_t arb_log_p_tab[13][ARB_LOG_TAB2_LIMBS] =
+/* logarithms of primes */
+const mp_limb_t arb_log_p_tab[ARB_LOG_PRIME_CACHE_NUM][ARB_LOG_TAB2_LIMBS] =
 {{
   Z8(78b63c9f,897a39ce,1e238438,52ab3316,a6c4c60c,062b1a63,e8f70edd,3ea8449f)
   Z8(26fac51c,6425a415,f95884e0,c5e5767d,8a0e23fa,c0b1b31d,3a49bd0d,85db6ab0)
