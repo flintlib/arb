@@ -105,7 +105,7 @@ arb_exp_arf_generic(arb_t z, const arf_t x, slong prec, int minus_one)
         {
             want_rs = 0;
         }
-        else if (flint_get_num_threads() == 1)  /* todo: get_available_threads */
+        else if (arb_flint_get_num_available_threads() == 1)
         {
             want_rs = (prec < 20000) || (prec < 1000000000 && mag < -prec / 800);
         }
