@@ -614,7 +614,7 @@ arb_atan_gauss_primes_vec_bsplit(arb_ptr res, slong n, slong prec)
         case 20:
         case 21:
         case 22:
-        default: ln = 22; x = atan_22_x; den = atan_12_den; c = atan_22_c; break;
+        default: ln = 22; x = atan_22_x; den = atan_22_den; c = atan_22_c; break;
 #else
         default: ln = 16; x = atan_16_x; den = atan_16_den; c = atan_16_c; break;
 #endif
