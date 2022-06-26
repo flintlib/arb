@@ -251,7 +251,8 @@ gamma_upper_taylor_bsplit(arb_mat_t M, arb_t Q,
 
         if (cont)
         {
-            arb_mat_mul(M, M2, M1, prec);
+            /* todo: parallel slowdown; arb_mat_mul needs retuning */
+            arb_mat_mul_classical(M, M2, M1, prec);
         }
         else
         {
