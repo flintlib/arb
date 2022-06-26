@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Fredrik Johansson
+    Copyright (C) 2014, 2022 Fredrik Johansson
 
     This file is part of Arb.
 
@@ -9,6 +9,7 @@
     (at your option) any later version.  See <http://www.gnu.org/licenses/>.
 */
 
+#include "fmpzi.h"
 #include "arf.h"
 
 int arf_complex_mul_fallback(arf_t e, arf_t f,
@@ -251,40 +252,72 @@ int arf_complex_sqr(arf_t e, arf_t f,
         ARF_GET_MPN_READONLY(bp, bn, b);
         bexp = ARF_EXP(b);
 
-        aan = 2 * an;
-        bbn = 2 * bn;
+        if (an >= 112 && FLINT_ABS(an - bn) <= 2 && FLINT_ABS(aexp - bexp) <= 64)
+        {
+            fmpzi_t x, z;
+            slong abot, bbot;
+            int asgn, bsgn;
 
-        alloc = aan + bbn;
+            asgn = ARF_SGNBIT(a);
+            bsgn = ARF_SGNBIT(b);
 
-        TMP_START;
+            abot = aexp - an * FLINT_BITS;
+            bbot = bexp - bn * FLINT_BITS;
 
-        tmp = TMP_ALLOC(alloc * sizeof(mp_limb_t));
-        aap = tmp;
-        bbp = tmp + aan;
+            texp = FLINT_MIN(abot, bbot);
 
-        ARF_MPN_MUL(aap, ap, an, ap, an)
-        aan -= (aap[0] == 0);
-        aap += (aap[0] == 0);
+            fmpzi_init(x);
+            fmpzi_init(z);
 
-        ARF_MPN_MUL(bbp, bp, bn, bp, bn)
-        bbn -= (bbp[0] == 0);
-        bbp += (bbp[0] == 0);
+            fmpz_lshift_mpn(fmpzi_realref(x), ap, an, asgn, abot - texp);
+            fmpz_lshift_mpn(fmpzi_imagref(x), bp, bn, bsgn, bbot - texp);
 
-        texp = aexp + aexp;
-        uexp = bexp + bexp;
-        shift = texp - uexp;
+            fmpzi_sqr(z, x);
+            texp *= 2;
 
-        inex2 = arf_mul(f, a, b, prec, rnd);
-        ARF_EXP(f) += 1;
+            inex1 = arf_set_round_fmpz_2exp(e, fmpzi_realref(z), &texp, prec, rnd);
+            inex2 = arf_set_round_fmpz_2exp(f, fmpzi_imagref(z), &texp, prec, rnd);
 
-        if (shift >= 0)
-            inex1 = _arf_add_mpn(e, aap, aan, 0, &texp,
-                                    bbp, bbn, 1, shift, prec, rnd);
+            fmpzi_clear(x);
+            fmpzi_clear(z);
+        }
         else
-            inex1 = _arf_add_mpn(e, bbp, bbn, 1, &uexp,
-                                    aap, aan, 0, -shift, prec, rnd);
+        {
+            aan = 2 * an;
+            bbn = 2 * bn;
 
-        TMP_END;
+            alloc = aan + bbn;
+
+            TMP_START;
+
+            tmp = TMP_ALLOC(alloc * sizeof(mp_limb_t));
+            aap = tmp;
+            bbp = tmp + aan;
+
+            ARF_MPN_MUL(aap, ap, an, ap, an)
+            aan -= (aap[0] == 0);
+            aap += (aap[0] == 0);
+
+            ARF_MPN_MUL(bbp, bp, bn, bp, bn)
+            bbn -= (bbp[0] == 0);
+            bbp += (bbp[0] == 0);
+
+            texp = aexp + aexp;
+            uexp = bexp + bexp;
+            shift = texp - uexp;
+
+            inex2 = arf_mul(f, a, b, prec, rnd);
+            ARF_EXP(f) += 1;
+
+            if (shift >= 0)
+                inex1 = _arf_add_mpn(e, aap, aan, 0, &texp,
+                                        bbp, bbn, 1, shift, prec, rnd);
+            else
+                inex1 = _arf_add_mpn(e, bbp, bbn, 1, &uexp,
+                                        aap, aan, 0, -shift, prec, rnd);
+
+            TMP_END;
+        }
 
         return inex1 | (inex2 << 1);
     }

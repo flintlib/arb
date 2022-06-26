@@ -36,9 +36,18 @@ int main()
 
         for (iter2 = 0; iter2 < 100; iter2++)
         {
-            arf_randtest_special(a, state, 3000, 100);
-            arf_randtest_special(b, state, 3000, 100);
-            prec = 2 + n_randint(state, 3000);
+            if (n_randint(state, 100) == 0)
+            {
+                arf_randtest_special(a, state, 12000, 3);
+                arf_randtest_special(b, state, 12000, 3);
+                prec = 2 + n_randint(state, 12000);
+            }
+            else
+            {
+                arf_randtest_special(a, state, 3000, 100);
+                arf_randtest_special(b, state, 3000, 100);
+                prec = 2 + n_randint(state, 3000);
+            }
 
             switch (n_randint(state, 5))
             {
