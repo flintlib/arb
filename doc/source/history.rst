@@ -12,6 +12,7 @@ https://github.com/fredrik-johansson/arb/releases
 Old versions of the documentation
 -------------------------------------------------------------------------------
 
+* http://arblib.org/arb-2.23.0.pdf
 * http://arblib.org/arb-2.22.0.pdf
 * http://arblib.org/arb-2.21.0.pdf
 * http://arblib.org/arb-2.20.0.pdf
@@ -35,6 +36,51 @@ Old versions of the documentation
 * http://arblib.org/arb-2.5.0.pdf
 * http://arblib.org/arb-2.4.0.pdf
 * http://arblib.org/arb-2.3.0.pdf
+
+2022-06-29 -- version 2.23.0
+-------------------------------------------------------------------------------
+
+* Performance
+
+  * Multithreaded numerical integration.
+  * Multithreaded binary splitting computation of mathematical constants.
+  * Multithreaded computation of Bernoulli numbers.
+  * Multithreaded computation of Euler numbers.
+  * Multithreaded refinement of Riemann zeta zeros.
+  * Multithreaded complex_plot example program.
+  * Multithreaded elementary functions.
+  * Multithreaded computation of Hilbert class polynomials.
+  * Improved multithreaded partition function.
+  * Use FLINT's FFT multiplication instead of GMP in appropriate ranges.
+  * New, faster algorithm for elementary functions between roughly 10^3 and 10^6 digits.
+  * Faster computation of log using Newton-like iteration instead of using MPFR.
+  * Faster computation of atan using Newton-like iteration instead of the bit-burst algorithm.
+  * Fix performance bug in atan() leading to quadratic running time with large arguments in high precision.
+  * Optimized high-precision complex squaring.
+  * Added internal function arb_flint_get_num_available_threads() to improve tuning for multithreaded algorithms
+  * Fixed performance bug making erf() slower at high precision with multiple threads.
+
+* Features
+
+  * Implemented the Lerch transcendent (acb_dirichlet_lerch_phi()).
+  * fpwrap wrapper for Lerch transcendent (contributed by Valentin Boettcher).
+  * Added a rudimentary module for Gaussian integers (fmpzi.h).
+  * Added zeta_zeros example program (contributed by D.H.J. Polymath).
+  * Added functions for simultaneous high-precision computation of logarithms
+    of primes and arctangents for primitive angles.
+  * Added bernoulli, class_poly, functions_benchmark example programs
+    for benchmarking use.
+  * Multiplying a signed number by an infinity yields an infinity instead of
+    [0 +/- inf] (contributed by Erik Postma).
+
+* Miscellaneous
+
+  * Deprecated doubles version of partition function.
+  * Fix crash in erf on some systems including mips64el (reported by Julien Puydt).
+  * Fixed MINGW64 build (contributed by Massoud Mazar).
+  * Avoid deprecated FLINT function n_gcd_full.
+  * Documentation fixes.
+
 
 2022-01-25 -- version 2.22.1
 -------------------------------------------------------------------------------

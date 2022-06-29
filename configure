@@ -10,8 +10,8 @@
 # arb     => soname
 # 2.7.0   => 0.0.0
 ARB_MAJOR=2
-ARB_MINOR=13
-ARB_PATCH=1
+ARB_MINOR=14
+ARB_PATCH=0
 
 PREFIX="/usr/local"
 GMP_DIR="/usr/local"

@@ -66,7 +66,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * arbguest - preconditioned linear algebra algorithms
 * Ralf Stephan - return exact real parts in acos and acosh
 * Vincent Delecroix - various feedback and patches, work on Sage interface
-* D.H.J Polymath - Riemann xi function
+* D.H.J Polymath - Riemann xi function, Riemann zeta zeros
 * Joel Dahne - feedback and improvements for Legendre functions
 * Gianfranco Costamagna - bug reports, Debian testing
 * Julian Rüth - serialization support
@@ -76,6 +76,7 @@ This list (ordered by time of first contribution) is probably incomplete.
 * Daniel Schultz - derivative of Weierstrass elliptic function
 * Matthias Gessinger - Graeffe transforms
 * David Harvey - modular computation of Bernoulli numbers (code taken from Harvey's bernmm package)
+* Erik Postma - improved handling of infinities
 
 Funding
 -------------------------------------------------------------------------------
