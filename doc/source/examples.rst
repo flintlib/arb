@@ -806,6 +806,11 @@ This program demonstrates calling the floating-point wrapper::
     zeta(2) = 1.644934066848226
     zeta(0.5 + 123i) = 0.006252861175594465 + 0.08206030514520983i
 
+functions_benchmark.c
+-------------------------------------------------------------------------------
+
+This program benchmarks performance of some standard functions.
+
 
 .. highlight:: c
 
