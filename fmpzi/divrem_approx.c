@@ -81,10 +81,10 @@ fmpzi_divrem_approx(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y)
         {
             if (r == x)
             {
-                fmpz_submul_si(fmpzi_realref(x), fmpzi_realref(y), qa);
-                fmpz_addmul_si(fmpzi_realref(x), fmpzi_imagref(y), qb);
-                fmpz_submul_si(fmpzi_realref(x), fmpzi_imagref(y), qa);
-                fmpz_addmul_si(fmpzi_realref(x), fmpzi_realref(y), qb);
+                fmpz_submul_si(fmpzi_realref(r), fmpzi_realref(y), qa);
+                fmpz_addmul_si(fmpzi_realref(r), fmpzi_imagref(y), qb);
+                fmpz_submul_si(fmpzi_realref(r), fmpzi_imagref(y), qa);
+                fmpz_addmul_si(fmpzi_realref(r), fmpzi_realref(y), qb);
 
                 fmpz_set_d(fmpzi_realref(q), qa);
                 fmpz_set_d(fmpzi_imagref(q), qb);
