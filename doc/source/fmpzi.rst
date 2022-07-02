@@ -33,7 +33,7 @@ Basic manipulation
 
 .. function:: void fmpzi_clear(fmpzi_t x)
 
-.. function:: int fmpzi_equal(const fmpzi_t x, const fmpzi_t y)
+.. function:: void fmpzi_swap(fmpzi_t x, fmpzi_t y)
 
 .. function:: void fmpzi_zero(fmpzi_t x)
 
@@ -43,11 +43,33 @@ Basic manipulation
 
 .. function:: void fmpzi_set_si_si(fmpzi_t res, slong a, slong b)
 
-.. function:: void fmpzi_swap(fmpzi_t x, fmpzi_t y)
+Input and output
+-------------------------------------------------------------------------------
 
 .. function:: void fmpzi_print(const fmpzi_t x)
 
+Random number generation
+-------------------------------------------------------------------------------
+
 .. function:: void fmpzi_randtest(fmpzi_t res, flint_rand_t state, mp_bitcnt_t bits)
+
+Properties
+-------------------------------------------------------------------------------
+
+.. function:: int fmpzi_equal(const fmpzi_t x, const fmpzi_t y)
+
+.. function:: int fmpzi_is_zero(const fmpzi_t x)
+
+.. function:: int fmpzi_is_one(const fmpzi_t x)
+
+.. function:: int fmpzi_is_unit(const fmpzi_t x)
+
+Norms
+-------------------------------------------------------------------------------
+
+.. function:: slong fmpzi_bits(const fmpzi_t x)
+
+.. function:: void fmpzi_norm(fmpz_t res, const fmpzi_t x)
 
 Arithmetic
 -------------------------------------------------------------------------------
@@ -65,3 +87,18 @@ Arithmetic
 .. function:: void fmpzi_mul(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
 
 .. function:: void fmpzi_pow_ui(fmpzi_t res, const fmpzi_t x, ulong exp)
+
+Division
+-------------------------------------------------------------------------------
+
+.. function:: void fmpzi_divrem(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y)
+
+    Computes a quotient and remainder satisfying
+    `x = q y + r` with `N(r) \le N(y)/2`, with a canonical
+    choice of remainder when breaking ties.
+
+.. function:: void fmpzi_divrem_approx(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y)
+
+    Computes a quotient and remainder satisfying
+    `x = q y + r` with `N(r) < N(y)`, with an implementation-defined,
+    non-canonical choice of remainder.
