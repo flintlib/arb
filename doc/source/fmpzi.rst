@@ -62,7 +62,14 @@ Properties
 
 .. function:: int fmpzi_is_one(const fmpzi_t x)
 
+Units
+-------------------------------------------------------------------------------
+
 .. function:: int fmpzi_is_unit(const fmpzi_t x)
+
+.. function:: slong fmpzi_canonical_unit_i_pow(const fmpzi_t x)
+
+.. function:: void fmpzi_canonicalise_unit(fmpzi_t res, const fmpzi_t x)
 
 Norms
 -------------------------------------------------------------------------------
@@ -102,3 +109,26 @@ Division
     Computes a quotient and remainder satisfying
     `x = q y + r` with `N(r) < N(y)`, with an implementation-defined,
     non-canonical choice of remainder.
+
+.. function:: slong fmpzi_remove_one_plus_i(fmpzi_t res, const fmpzi_t x)
+
+    Divide *x* exactly by the largest possible power `(1+i)^k`
+    and return the exponent *k*.
+
+GCD
+-------------------------------------------------------------------------------
+
+.. function:: void fmpzi_gcd_euclidean(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+              void fmpzi_gcd_euclidean_improved(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+              void fmpzi_gcd_binary(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+              void fmpzi_gcd(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+
+    Computes the GCD of *x* and *y*. The result is in canonical
+    unit form.
+
+    The *euclidean* version is a straightforward implementation
+    of Euclid's algorithm. The *euclidean_improved* version is
+    optimized by performing approximate divisions.
+    The *binary* version uses a (1+i)-ary analog of the binary
+    GCD algorithm for integers [Wei2000]_.
+    The default version chooses an algorithm automatically.

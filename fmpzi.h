@@ -176,10 +176,35 @@ void fmpzi_sqr(fmpzi_t res, const fmpzi_t x);
 void fmpzi_mul(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_pow_ui(fmpzi_t res, const fmpzi_t x, ulong exp);
 
+void fmpzi_mul_i(fmpzi_t z, const fmpzi_t x);
+void fmpzi_div_i(fmpzi_t z, const fmpzi_t x);
+void fmpzi_mul_i_pow_si(fmpzi_t res, const fmpzi_t z, slong k);
+
+/* todo */
+slong fmpzi_canonical_unit_i_pow(const fmpzi_t x);
+
+FMPZI_INLINE void
+fmpzi_canonicalise_unit(fmpzi_t res, const fmpzi_t x)
+{
+    fmpzi_mul_i_pow_si(res, x, fmpzi_canonical_unit_i_pow(x));
+}
+
 /* Division */
 void fmpzi_divrem(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_divrem_approx(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y);
 
+slong fmpzi_remove_one_plus_i(fmpzi_t res, const fmpzi_t x);
+
+/* GCD */
+void fmpzi_gcd_euclidean(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
+void fmpzi_gcd_euclidean_improved(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
+void fmpzi_gcd_binary(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
+
+FMPZI_INLINE void
+fmpzi_gcd(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+{
+    fmpzi_gcd_euclidean_improved(res, x, y);
+}
 
 #ifdef __cplusplus
 }
