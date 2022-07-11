@@ -121,6 +121,7 @@ GCD
 .. function:: void fmpzi_gcd_euclidean(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
               void fmpzi_gcd_euclidean_improved(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
               void fmpzi_gcd_binary(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
+              void fmpzi_gcd_shortest(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
               void fmpzi_gcd(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
 
     Computes the GCD of *x* and *y*. The result is in canonical
@@ -131,4 +132,5 @@ GCD
     optimized by performing approximate divisions.
     The *binary* version uses a (1+i)-ary analog of the binary
     GCD algorithm for integers [Wei2000]_.
+    The *shortest* version finds the GCD as the shortest vector in a lattice.
     The default version chooses an algorithm automatically.
