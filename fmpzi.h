@@ -199,6 +199,7 @@ slong fmpzi_remove_one_plus_i(fmpzi_t res, const fmpzi_t x);
 void fmpzi_gcd_euclidean(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_gcd_euclidean_improved(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_gcd_binary(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
+void fmpzi_gcd_shortest(fmpzi_t g, const fmpzi_t x, const fmpzi_t y);
 
 FMPZI_INLINE void
 fmpzi_gcd(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
