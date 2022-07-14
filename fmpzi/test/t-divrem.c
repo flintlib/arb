@@ -18,7 +18,6 @@ fmpzi_divrem_ref(fmpzi_t q, fmpzi_t r, const fmpzi_t x, const fmpzi_t y)
     fmpzi_t t, y_conj;
     fmpz_t v;
     mpz_t ytmp;
-    slong xbits, ybits;
 
     fmpzi_init(t);
     fmpz_init(v);

@@ -200,12 +200,7 @@ void fmpzi_gcd_euclidean(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_gcd_euclidean_improved(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_gcd_binary(fmpzi_t res, const fmpzi_t x, const fmpzi_t y);
 void fmpzi_gcd_shortest(fmpzi_t g, const fmpzi_t x, const fmpzi_t y);
-
-FMPZI_INLINE void
-fmpzi_gcd(fmpzi_t res, const fmpzi_t x, const fmpzi_t y)
-{
-    fmpzi_gcd_euclidean_improved(res, x, y);
-}
+void fmpzi_gcd(fmpzi_t g, const fmpzi_t x, const fmpzi_t y);
 
 #ifdef __cplusplus
 }
