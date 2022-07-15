@@ -183,10 +183,13 @@ void _fmpz_mat22_shortest_l_infinity(
 
 void _fmpzi_gcd_fmpz_shortest(
     fmpz_t gx, fmpz_t gy,
-    const fmpz_t ax, const fmpz_t ay,
+    const fmpz_t ax_, const fmpz_t ay_,
     const fmpz_t b)
 {
     fmpz_t A, B, C, ga, ua, va, g, u, v, axog, ayog, m1, m2, m3, m4;
+    fmpz_t t, ax_copy, ay_copy;
+    const fmpz* ax = ax_;
+    const fmpz* ay = ay_;
 
     if (fmpz_is_zero(b))
     {
@@ -194,17 +197,35 @@ void _fmpzi_gcd_fmpz_shortest(
         fmpz_set(gy, ay);
         return;
     }
-    else if (fmpz_is_zero(ax))
+
+    fmpz_init(t);
+    fmpz_init(ax_copy);
+    fmpz_init(ay_copy);
+
+    /* reduce ax+i*ay by b */
+    if (fmpz_cmpabs(ax, b) > 0)
+    {
+        fmpz_tdiv_qr(t, ax_copy, ax, b);
+        ax = ax_copy;
+    }
+
+    if (fmpz_cmpabs(ay, b) > 0)
+    {
+        fmpz_tdiv_qr(t, ay_copy, ay, b);
+        ay = ay_copy;
+    }
+
+    if (fmpz_is_zero(ax))
     {
         fmpz_gcd(gx, ay, b);
         fmpz_zero(gy);
-        return;
+        goto cleanup_stage1;
     }
     else if (fmpz_is_zero(ay))
     {
         fmpz_gcd(gx, ax, b);
         fmpz_zero(gy);
-        return;
+        goto cleanup_stage1;
     }
 
     fmpz_init(A);
@@ -223,12 +244,6 @@ void _fmpzi_gcd_fmpz_shortest(
     fmpz_init(m3);
     fmpz_init(m4);
 
-/*
-     ax ay           g*1 g*B
-    -ay ax  row ops   0  g*A
-     b  0   ------>   0   0
-     0  b             0   0
-*/
     fmpz_xgcd(ga, ua, va, ax, ay);
     fmpz_xgcd(g, u, v, ga, b);  /* v not needed */
     fmpz_divexact(axog, ax, g);
@@ -261,15 +276,54 @@ void _fmpzi_gcd_fmpz_shortest(
     fmpz_clear(m2);
     fmpz_clear(m3);
     fmpz_clear(m4);
+
+cleanup_stage1:
+    fmpz_clear(t);
+    fmpz_clear(ax_copy);
+    fmpz_clear(ay_copy);
 }
 
+#define PTR_SWAP(T, A, B)   \
+    do {                    \
+        T* __t_m_p = A;     \
+        A = B;              \
+        B = __t_m_p;        \
+    } while (0)
 
+
+/*
+     ax ay           g*1 g*B            g = gcd(gx, gy)
+    -ay ax  row ops   0  g*A        g^2*A = norm(gx + i*gy)
+     bx by  ------>   0   0
+    -by bx            0   0
+
+    Except when the gcd is purely real or purely imaginary, it is any shortest
+    vector in the above lattice in the l_infinity norm. In the exceptional case,
+    it turns out that A = 1 and B = 0, and we rely on _shortest_l_infinity
+    returning (1,0) or (0,1) instead of (1,1) in this case.
+*/
 void _fmpzi_gcd_shortest(
     fmpz_t gx, fmpz_t gy,
     const fmpz_t ax, const fmpz_t ay,
-    const fmpz_t bx, const fmpz_t by)
+    const fmpz_t bx_, const fmpz_t by_)
 {
-    fmpz_t A, B, C, axog, ayog, bxog, byog, ga, ua, va, gb, ub, vb, g, u, v, t, m1, m2, m3, m4;
+    fmpz_t A, B, C, ag, t1, t2, bg, bu, bv, g, u, v, m1, m2, m3, m4;
+    fmpz_t bx_copy, by_copy;
+    const fmpz* bx = bx_;
+    const fmpz* by = by_;
+
+    /* ensure norm(a) <= norm(b) approximately */
+    {
+        slong ax_size = fmpz_size(ax);
+        slong ay_size = fmpz_size(ay);
+        slong bx_size = fmpz_size(bx);
+        slong by_size = fmpz_size(by);
+        if (FLINT_MAX(ax_size, ay_size) > FLINT_MAX(bx_size, by_size))
+        {
+            PTR_SWAP(const fmpz, ax, bx);
+            PTR_SWAP(const fmpz, ay, by);
+        }
+    }
 
     if (fmpz_is_zero(ax))
     {
@@ -281,95 +335,115 @@ void _fmpzi_gcd_shortest(
         _fmpzi_gcd_fmpz_shortest(gx, gy, bx, by, ax);
         return;
     }
-    else if (fmpz_is_zero(bx))
-    {
-        _fmpzi_gcd_fmpz_shortest(gx, gy, ax, ay, by);
-        return;
-    }
-    else if (fmpz_is_zero(by))
-    {
-        _fmpzi_gcd_fmpz_shortest(gx, gy, ax, ay, bx);
-        return;
-    }
 
     fmpz_init(A);
     fmpz_init(B);
     fmpz_init(C);
-    fmpz_init(axog);
-    fmpz_init(ayog);
-    fmpz_init(bxog);
-    fmpz_init(byog);
-    fmpz_init(ga);
-    fmpz_init(ua);
-    fmpz_init(va);
-    fmpz_init(gb);
-    fmpz_init(ub);
-    fmpz_init(vb);
+    fmpz_init(ag);
+    fmpz_init(t1);
+    fmpz_init(t2);
+    fmpz_init(bg);
+    fmpz_init(bu);
+    fmpz_init(bv);
     fmpz_init(g);
     fmpz_init(u);
     fmpz_init(v);
-    fmpz_init(t);
     fmpz_init(m1);
     fmpz_init(m2);
     fmpz_init(m3);
     fmpz_init(m4);
+    fmpz_init(bx_copy);
+    fmpz_init(by_copy);
 
-/*
-     ax ay           g*1 g*B
-    -ay ax  row ops   0  g*A        g^2*A = norm(gx + i*gy)
-     bx by  ------>   0   0
-    -by bx            0   0
+    /*
+        first find t1*ax + t2*ay = ag
+         [ ax, ay]      [ag, t1*ay - t2*ax ]
+         [-ay, ax] ---> [ 0, (ax^2+ay^2)/ag]
+    */
+    fmpz_xgcd(ag, t1, t2, ax, ay);
+    fmpz_fmms(m1, t1, ay, t2, ax);
+    fmpz_fmma(m2, ax, ax, ay, ay);
+    fmpz_divexact(m2, m2, ag);
 
-    Except when the gcd is purely real or purely imaginary, it is any shortest
-    vector in the above lattice in the l_infinity norm. In the exceptional case,
-    it turns out that A = 1 and B = 0, and we rely on _shortest_l_infinity
-    returning (1,0) or (0,1) instead of (1,1) in this case.
-*/
-    fmpz_xgcd(ga, ua, va, ax, ay);
-    fmpz_xgcd(gb, ub, vb, bx, by);
-    fmpz_xgcd(g, u, v, ga, gb);
-    fmpz_divexact(axog, ax, g);
-    fmpz_divexact(ayog, ay, g);
-    fmpz_divexact(bxog, bx, g);
-    fmpz_divexact(byog, by, g);
-    fmpz_fmms(m1, ayog, ua, axog, va);
-    fmpz_fmma(m2, ax, axog, ay, ayog);
-    fmpz_divexact(m2, m2, ga);
-    fmpz_fmms(m3, byog, ub, bxog, vb);
-    fmpz_fmma(m4, bx, bxog, by, byog);
-    fmpz_divexact(m4, m4, gb);
-    fmpz_fmms(t, m3, ga, m1, gb);
+    /* next reduce bx+i*by by (ax^2+ay^2)/ag */
+    if (fmpz_cmpabs(bx, m2) > 0)
+    {
+        fmpz_tdiv_qr(t1, bx_copy, bx, m2);
+        bx = bx_copy;
+    }
+
+    if (fmpz_cmpabs(by, m2) > 0)
+    {
+        fmpz_tdiv_qr(t1, by_copy, by, m2);
+        by = by_copy;
+    }
+
+    /* now reduce [bx by; -by bx] */
+    if (fmpz_is_zero(bx) && fmpz_is_zero(by))
+    {
+        /* avoid division by bg below */
+        fmpz_set(gx, ax);
+        fmpz_set(gy, ay);
+        goto cleanup;
+    }
+
+    fmpz_xgcd(bg, bu, bv, bx, by);
+    fmpz_xgcd(g, u, v, ag, bg);
+
+    if (!fmpz_is_one(g))
+    {
+        fmpz_divexact(m1, m1, g);
+        fmpz_divexact(m2, m2, g);
+        fmpz_divexact(t1, bx, g);
+        fmpz_divexact(t2, by, g);
+        fmpz_fmms(m3, bu, t2, bv, t1);
+        fmpz_fmma(m4, bx, t1, by, t2);
+    }
+    else
+    {
+        fmpz_fmms(m3, bu, by, bv, bx);
+        fmpz_fmma(m4, bx, bx, by, by);
+    }
+
+    fmpz_divexact(m4, m4, bg);
+
+    /* now reduce the one remaining 2x2 */
+    fmpz_fmms(t1, m3, ag, m1, bg);
     fmpz_fmma(m1, m1, u, m3, v);
-    fmpz_divexact(m3, t, g);
+    if (fmpz_is_one(g))
+        fmpz_swap(m3, t1);
+    else
+        fmpz_divexact(m3, t1, g);
+
+    /* reduce last column */
     fmpz_gcd3(A, m2, m3, m4);
-    fmpz_fdiv_qr(t, B, m1, A);
+    fmpz_fdiv_qr(t1, B, m1, A);
     fmpz_one(C);
 
     _fmpz_mat22_shortest_l_infinity(gx, gy, u, v, C, B, A);
     fmpz_mul(gx, gx, g);
     fmpz_mul(gy, gy, g);
 
+cleanup:
+
     fmpz_clear(A);
     fmpz_clear(B);
     fmpz_clear(C);
-    fmpz_clear(axog);
-    fmpz_clear(ayog);
-    fmpz_clear(bxog);
-    fmpz_clear(byog);
-    fmpz_clear(ga);
-    fmpz_clear(ua);
-    fmpz_clear(va);
-    fmpz_clear(gb);
-    fmpz_clear(ub);
-    fmpz_clear(vb);
+    fmpz_clear(ag);
+    fmpz_clear(t1);
+    fmpz_clear(t2);
+    fmpz_clear(bg);
+    fmpz_clear(bu);
+    fmpz_clear(bv);
     fmpz_clear(g);
     fmpz_clear(u);
     fmpz_clear(v);
-    fmpz_clear(t);
     fmpz_clear(m1);
     fmpz_clear(m2);
     fmpz_clear(m3);
     fmpz_clear(m4);
+    fmpz_clear(bx_copy);
+    fmpz_clear(by_copy);
 }
 
 
