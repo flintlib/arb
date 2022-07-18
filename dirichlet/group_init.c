@@ -103,7 +103,7 @@ dirichlet_group_lift_generators(dirichlet_group_t G)
     }
 }
 
-void
+int
 dirichlet_group_init(dirichlet_group_t G, ulong q)
 {
     slong k;
@@ -122,6 +122,12 @@ dirichlet_group_init(dirichlet_group_t G, ulong q)
     /* warning: only factor odd part */
     n_factor_init(&fac);
     n_factor(&fac, q, 1);
+
+#if FLINT_BITS == 64
+    for (k = 0; k < fac.num; k++)
+        if (fac.p[k] > UWORD(1000000000000))
+            return 0;
+#endif
 
     G->num = fac.num + G->neven;
     G->P = flint_malloc(G->num * sizeof(dirichlet_prime_group_struct));
@@ -145,6 +151,8 @@ dirichlet_group_init(dirichlet_group_t G, ulong q)
         dirichlet_prime_group_init(&G->P[k], p, e);
     }
     dirichlet_group_lift_generators(G);
+
+    return 1;
 }
 
 void
