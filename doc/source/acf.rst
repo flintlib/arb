@@ -70,3 +70,36 @@ Basic manipulation
 .. function:: int acf_equal(const acf_t x, const acf_t y)
 
     Returns whether *x* and *y* are equal.
+
+Arithmetic
+-------------------------------------------------------------------------------
+
+.. function:: int acf_add(acf_t res, const acf_t x, const acf_t y, slong prec, arf_rnd_t rnd)
+
+.. function:: int acf_sub(acf_t res, const acf_t x, const acf_t y, slong prec, arf_rnd_t rnd)
+
+.. function:: int acf_mul(acf_t res, const acf_t x, const acf_t y, slong prec, arf_rnd_t rnd)
+
+    Sets *res* to the sum, difference or product of *x* or *y*, correctly
+    rounding the real and imaginary parts in direction *rnd*.
+    The return flag has the least significant bit set if the real
+    part is inexact, and the second least significant bit set if
+    the imaginary part is inexact.
+
+Approximate arithmetic
+-------------------------------------------------------------------------------
+
+The following operations are *not* correctly rounded. The ``rnd`` parameter
+specifies the final direction of rounding, but intermediate roundings
+are implementation-defined.
+
+.. function:: void acf_approx_inv(acf_t res, const acf_t x, slong prec, arf_rnd_t rnd)
+              void acf_approx_div(acf_t res, const acf_t x, const acf_t y, slong prec, arf_rnd_t rnd)
+              void acf_approx_sqrt(acf_t res, const acf_t x, slong prec, arf_rnd_t rnd)
+
+    Computes an approximate inverse, quotient or square root.
+
+.. function:: void acf_approx_dot(acf_t res, const acf_t initial, int subtract, acf_srcptr x, slong xstep, acf_srcptr y, slong ystep, slong len, slong prec, arf_rnd_t rnd)
+
+    Computes an approximate dot product, with the same meaning of
+    the parameters as :func:`arb_dot`.
