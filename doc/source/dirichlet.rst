@@ -69,7 +69,7 @@ Multiplicative group modulo *q*
     safely be called even with large *q*.
 
     For implementation reasons, the largest prime factor of *q* must not
-    exceed `10^{12}`. This restriction could
+    exceed `10^{16}`. This restriction could
     be removed in the future. The function returns 1 on success and 0
     if a factor is too large.
 
