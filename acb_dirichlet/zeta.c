@@ -92,3 +92,26 @@ acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec)
     }
 }
 
+void
+acb_dirichlet_bernoulli(acb_t res, const acb_t s, slong prec)
+{
+    if (acb_is_zero(s))
+    {
+        acb_one(res);
+        return;
+    }
+    else
+    {
+        acb_t t;
+
+        acb_init(t);
+
+        acb_neg(t, s);
+        acb_add_ui(res, t, 1, prec);
+        acb_dirichlet_zeta(res, res, prec);
+        acb_mul(res, t, res, prec);
+
+        acb_clear(t);
+    }
+}
+

@@ -132,6 +132,11 @@ Riemann zeta function
     `\xi(s) = \frac{1}{2} s (s-1) \pi^{-s/2} \Gamma(\frac{1}{2} s) \zeta(s)`.
     The functional equation for xi is `\xi(1-s) = \xi(s)`.
 
+.. function:: void acb_dirichlet_bernoulli(acb_t res, const acb_t s, slong prec)
+
+    Sets *res* to the Bernoulli function `B(s) = -s \zeta(1-s)`, with
+    the limiting value of 1 used when `s = 0` [Lus2020]_.
+
 Riemann-Siegel formula
 -------------------------------------------------------------------------------
 
@@ -206,6 +211,11 @@ Hurwitz zeta function
     This function automatically delegates to the code for the Riemann zeta function
     when `a = 1`. Some other special cases may also be handled by direct
     formulas. In general, Euler-Maclaurin summation is used.
+
+.. function:: void acb_dirichlet_bernoulli_gen(acb_t res, const acb_t s, const acb_t a, slong prec)
+
+    Computes the generalized Bernoulli function `B(s, a) = -s \zeta(1-s, a)`, with
+    the limiting value of 1 used when `s = 0` [Lus2020]_.
 
 Hurwitz zeta function precomputation
 -------------------------------------------------------------------------------

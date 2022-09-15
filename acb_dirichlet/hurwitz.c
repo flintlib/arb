@@ -55,3 +55,35 @@ acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec)
     _acb_poly_zeta_cpx_series(res, s, a, 0, 1, prec);
 }
 
+void
+acb_dirichlet_bernoulli_gen(acb_t res, const acb_t s, const acb_t a, slong prec)
+{
+    if (acb_is_zero(s))
+    {
+        acb_one(res);
+        return;
+    }
+
+    if (acb_is_int(s) && arf_sgn(arb_midref(acb_realref(s))) > 0 &&
+        arf_cmpabs_ui(arb_midref(acb_realref(s)), prec / 2) < 0)
+    {
+        slong n = arf_get_si(arb_midref(acb_realref(s)), ARF_RND_FLOOR);
+
+        acb_bernoulli_poly_ui(res, n, a, prec);
+        return;
+    }
+    else
+    {
+        acb_t t;
+
+        acb_init(t);
+
+        acb_neg(t, s);
+        acb_add_ui(res, t, 1, prec);
+        acb_dirichlet_hurwitz(res, res, a, prec);
+        acb_mul(res, t, res, prec);
+
+        acb_clear(t);
+    }
+}
+
