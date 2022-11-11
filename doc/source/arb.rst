@@ -735,6 +735,12 @@ Arithmetic
     Sets *y* to the absolute value of *x*. No attempt is made to improve the
     interval represented by *x* if it contains zero.
 
+.. function:: void arb_nonnegative_abs(arb_t y, const arb_t x)
+
+    Sets *y* to the absolute value of *x*. If *x* is finite and it contains
+    zero, sets *y* to some interval `[r \pm r]` that contains the absolute
+    value of *x*.
+
 .. function:: void arb_sgn(arb_t y, const arb_t x)
 
     Sets *y* to the sign function of *x*. The result is `[0 \pm 1]` if
