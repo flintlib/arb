@@ -10,7 +10,6 @@
 */
 
 #include "arb.h"
-#include <signal.h>
 
 #define ASSERT(cond) if (!(cond)) { flint_printf("FAIL: %d\n", __LINE__); flint_abort(); }
 
