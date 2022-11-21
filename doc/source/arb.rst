@@ -1029,7 +1029,8 @@ Powers and roots
 
     Sets `z = x^y`, computed using binary exponentiation if `y` is
     a small exact integer, as `z = (x^{1/2})^{2y}` if `y` is a small exact
-    half-integer, and generally as `z = \exp(y \log x)`.
+    half-integer, and generally as `z = \exp(y \log x)`, except giving the
+    obvious finite result if `x` is `a \pm a` and `y` is positive.
 
 Exponentials and logarithms
 -------------------------------------------------------------------------------
