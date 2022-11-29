@@ -81,7 +81,7 @@ int main()
 
         c1 = arb_overlaps(a, b);
 
-        c2 = (fmpq_cmp(t, u) <= 0);
+        c2 = (fmpq_cmp2(t, u) <= 0);
         c3 = (fmpq_cmp2(t, u) <= 0);
 
         if (c1 != c2)
