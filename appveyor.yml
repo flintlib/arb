@@ -22,12 +22,12 @@ environment:
   matrix:
     - COMPILER: cl
       ARCH: 64
-    - COMPILER: gcc
-      ARCH: 64
-    - COMPILER: gcc
-      ARCH: 32
-    - COMPILER: cl
-      ARCH: 32
+    - # COMPILER: gcc
+      # ARCH: 64
+    - # COMPILER: gcc
+      # ARCH: 32
+    - # COMPILER: cl
+      # ARCH: 32
 
 install:
   - if [%COMPILER%]==[gcc] set "PATH=C:\msys64\mingw%ARCH%\bin;%PATH%"
@@ -46,7 +46,7 @@ install:
   - if [%COMPILER%]==[cl] conda config --add channels conda-forge --force
   - if [%COMPILER%]==[cl] conda install --yes --quiet mpir=3.0.0 mpfr=4.* pthreads-win32 ninja
   - if [%COMPILER%]==[cl] set "CFLAGS=/wd4146 /wd4018 /wd4267 /wd4244"
-  - cd .. && git clone https://github.com/wbhart/flint2 && cd flint2 && mkdir build && cd build
+  - cd .. && git clone https://github.com/flintlib/flint2 && cd flint2 && mkdir build && cd build
   - if [%COMPILER%]==[gcc] cmake -G "MinGW Makefiles" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\msys64\mingw%ARCH%" ..
   - if [%COMPILER%]==[cl] cmake -G "Ninja" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="%CONDA_INSTALL_LOCN%\Library" ..
   - cmake --build . --target install -- -j2
@@ -64,7 +64,7 @@ build_script:
 
 test_script:
   - set "ARB_TEST_MULTIPLIER=0.1"
-  - ctest -j3 --output-on-failure --timeout 600
+  - ctest -j3 --verbose --output-on-failure --timeout 600
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
