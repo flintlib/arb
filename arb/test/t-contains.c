@@ -11,6 +11,35 @@
 
 #include "arb.h"
 
+int
+_fmpq_cmp2(const fmpz_t p, const fmpz_t q, const fmpz_t r, const fmpz_t s)
+{
+    int res;
+    fmpz_t t, u;
+
+    {
+        fmpz_init(t);
+        fmpz_init(u);
+
+        fmpz_mul(t, p, s);
+        fmpz_mul(u, q, r);
+
+        res = fmpz_cmp(t, u);
+
+        fmpz_clear(t);
+        fmpz_clear(u);
+    }
+
+    return res;
+}
+
+int
+fmpq_cmp2(const fmpq_t x, const fmpq_t y)
+{
+    return _fmpq_cmp2(fmpq_numref(x), fmpq_denref(x),
+                     fmpq_numref(y), fmpq_denref(y));
+}
+
 int main()
 {
     slong iter;
@@ -25,7 +54,7 @@ int main()
     {
         arb_t a, b;
         fmpq_t am, ar, bm, br, t, u;
-        int c1, c2;
+        int c1, c2, c3;
 
         arb_init(a);
         arb_init(b);
@@ -50,10 +79,12 @@ int main()
         fmpq_sub(t, am, ar);
         fmpq_sub(u, bm, br);
         c2 = fmpq_cmp(t, u) <= 0;
+        c3 = fmpq_cmp2(t, u) <= 0;
 
         fmpq_add(t, am, ar);
         fmpq_add(u, bm, br);
         c2 = c2 && (fmpq_cmp(t, u) >= 0);
+        c3 = c3 && (fmpq_cmp2(t, u) >= 0);
 
         if (c1 != c2)
         {
@@ -66,7 +97,7 @@ int main()
             flint_printf("br = "); fmpq_print(br); flint_printf("\n\n");
             flint_printf("t = "); fmpq_print(t); flint_printf("\n\n");
             flint_printf("u = "); fmpq_print(u); flint_printf("\n\n");
-            flint_printf("c1 = %d, c2 = %d\n\n", c1, c2);
+            flint_printf("c1 = %d, c2 = %d, c3 = %d\n\n", c1, c2, c3);
             flint_abort();
         }
 
