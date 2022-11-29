@@ -14,9 +14,68 @@
 int
 _fmpq_cmp2(const fmpz_t p, const fmpz_t q, const fmpz_t r, const fmpz_t s)
 {
-    int res;
+    int s1, s2, res;
+    flint_bitcnt_t bp, bq, br, bs;
     fmpz_t t, u;
 
+    if (!COEFF_IS_MPZ(*p) && !COEFF_IS_MPZ(*q) && !COEFF_IS_MPZ(*r) && !COEFF_IS_MPZ(*s))
+    {
+        ulong a1, a0, b1, b0;
+
+        smul_ppmm(a1, a0, *p, *s);
+        smul_ppmm(b1, b0, *q, *r);
+        sub_ddmmss(a1, a0, a1, a0, b1, b0);
+
+        if ((slong) a1 < 0)
+            return -1;
+        if ((slong) a1 > 0)
+            return 1;
+        return a0 != 0;
+    }
+
+    if (fmpz_equal(q, s))
+        return fmpz_cmp(p, r);
+
+    s1 = fmpz_sgn(p);
+    s2 = fmpz_sgn(r);
+
+    if (s1 != s2)
+        return s1 < s2 ? -1 : 1;
+
+    if (s1 == 0)
+        return -s2;
+
+    if (s2 == 0)
+        return -s1;
+
+    bp = fmpz_bits(p);
+    bq = fmpz_bits(q);
+    br = fmpz_bits(r);
+    bs = fmpz_bits(s);
+
+    if (bp + bs + 1 < br + bq)
+        return -s1;
+
+    if (bp + bs > br + bq + 1)
+        return s1;
+
+    if (fmpz_is_one(q))
+    {
+        fmpz_init(t);
+        fmpz_mul(t, p, s);
+        res = fmpz_cmp(t, r);
+        fmpz_clear(t);
+    }
+    else if (fmpz_is_one(s))
+    {
+        fmpz_init(u);
+        fmpz_mul(u, q, r);
+
+        res = fmpz_cmp(p, u);
+
+        fmpz_clear(u);
+    }
+    else
     {
         fmpz_init(t);
         fmpz_init(u);
@@ -54,7 +113,7 @@ int main()
     {
         arb_t a, b;
         fmpq_t am, ar, bm, br, t, u;
-        int c1, c2, c3;
+        int c1, c2;
 
         arb_init(a);
         arb_init(b);
@@ -78,13 +137,11 @@ int main()
 
         fmpq_sub(t, am, ar);
         fmpq_sub(u, bm, br);
-        c2 = fmpq_cmp(t, u) <= 0;
-        c3 = fmpq_cmp2(t, u) <= 0;
+        c2 = fmpq_cmp2(t, u) <= 0;
 
         fmpq_add(t, am, ar);
         fmpq_add(u, bm, br);
-        c2 = c2 && (fmpq_cmp(t, u) >= 0);
-        c3 = c3 && (fmpq_cmp2(t, u) >= 0);
+        c2 = c2 && (fmpq_cmp2(t, u) >= 0);
 
         if (c1 != c2)
         {
@@ -97,7 +154,7 @@ int main()
             flint_printf("br = "); fmpq_print(br); flint_printf("\n\n");
             flint_printf("t = "); fmpq_print(t); flint_printf("\n\n");
             flint_printf("u = "); fmpq_print(u); flint_printf("\n\n");
-            flint_printf("c1 = %d, c2 = %d, c3 = %d\n\n", c1, c2, c3);
+            flint_printf("c1 = %d, c2 = %d\n\n", c1, c2);
             flint_abort();
         }
 
