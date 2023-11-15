@@ -1,3 +1,11 @@
+# See FLINT
+
+2023: Arb has been merged into FLINT. The present repository is archived and will no longer be updated. See
+
+https://github.com/flintlib/flint/
+
+for new developments!
+
 # Arb
 
 Arb is a C library for arbitrary-precision interval arithmetic.
