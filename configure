@@ -35,6 +35,7 @@ BUILD=
 EXTENSIONS=
 EXT_MODS=
 EXTRA_BUILD=
+USE_PKG_CONFIG=0
 
 usage()
 {
@@ -49,6 +50,7 @@ usage()
    echo "     --with-flint=<path>  Specify location of FLINT (default: /usr/local)"
    echo "     --with-blas[=<path>] Use BLAS and specify its location (default: /usr/local)"
    echo "     --without-blas       Do not use BLAS (default)"
+   echo "     --with-pkg-config    Use pkg-config for finding libraries"
    echo "     --extensions=<path>  Specify location of extension modules"
    echo "     --build=arch-os      Specify architecture/OS combination rather than use values from uname -m/-s"
    echo "     --enable-shared      Build a shared library (default)"
@@ -103,6 +105,9 @@ while [ "$1" != "" ]; do
          ;;
       --with-flint)
          FLINT_DIR=$(absolute_path "$VALUE")
+         ;;
+      --with-pkg-config)
+         USE_PKG_CONFIG=1
          ;;
       --with-blas)
          WANT_BLAS=1
@@ -197,7 +202,10 @@ done
 
 LIBS="m"
 
-if [ -d "${GMP_DIR}/lib" ]; then
+if [ "${USE_PKG_CONFIG}" = "1" ]; then
+   GMP_LIB_DIR=$(pkg-config --variable=libdir gmp)
+   GMP_INC_DIR=$(pkg-config --variable=includedir gmp)
+elif [ -d "${GMP_DIR}/lib" ]; then
    GMP_LIB_DIR="${GMP_DIR}/lib"
    GMP_INC_DIR="${GMP_DIR}/include"
 elif [ -d "${GMP_DIR}/lib64" ]; then
@@ -214,7 +222,10 @@ LIB_DIRS="${LIB_DIRS} ${GMP_LIB_DIR}"
 INC_DIRS="${INC_DIRS} ${GMP_INC_DIR}"
 LIBS="${LIBS} gmp"
 
-if [ -d "${MPFR_DIR}/lib" ]; then
+if [ "${USE_PKG_CONFIG}" = "1" ]; then
+   MPFR_LIB_DIR=$(pkg-config --variable=libdir mpfr)
+   MPFR_INC_DIR=$(pkg-config --variable=includedir mpfr)
+elif [ -d "${MPFR_DIR}/lib" ]; then
    MPFR_LIB_DIR="${MPFR_DIR}/lib"
    MPFR_INC_DIR="${MPFR_DIR}/include"
 elif [ -d "${MPFR_DIR}/lib64" ]; then
@@ -269,7 +280,10 @@ LIBS="${LIBS} flint"
 #configure extra libraries
 
 if [ "$WANT_BLAS" = "1" ]; then
-   if [ -d "${BLAS_DIR}" ]; then
+   if [ "${USE_PKG_CONFIG}" = "1" ]; then
+      BLAS_LIB_DIR=$(pkg-config --variable=libdir openblas)
+      BLAS_INC_DIR=$(pkg-config --variable=includedir openblas)
+   elif [ -d "${BLAS_DIR}" ]; then
       BLAS_LIB_DIR="${BLAS_DIR}"
       BLAS_INC_DIR="${BLAS_DIR}"
    else
@@ -283,7 +297,10 @@ fi
 CONFIG_BLAS="#define HAVE_BLAS ${WANT_BLAS}"
 
 if [ "$WANT_GC" = "1" ]; then
-   if [ -d "${GC_DIR}" ]; then
+   if [ "${USE_PKG_CONFIG}" = "1" ]; then
+      GC_LIB_DIR=$(pkg-config --variable=libdir bdw-gc)
+      GC_INC_DIR=$(pkg-config --variable=includedir bdw-gc)
+   elif [ -d "${GC_DIR}" ]; then
       GC_LIB_DIR="${GC_DIR}/lib"
       GC_INC_DIR="${GC_DIR}/include"
    else
