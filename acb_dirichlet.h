@@ -42,11 +42,13 @@ void acb_dirichlet_zeta_rs_bound(mag_t err, const acb_t s, slong K);
 void acb_dirichlet_zeta_rs_r(acb_t res, const acb_t s, slong K, slong prec);
 void acb_dirichlet_zeta_rs(acb_t res, const acb_t s, slong K, slong prec);
 void acb_dirichlet_zeta(acb_t res, const acb_t s, slong prec);
+void acb_dirichlet_bernoulli(acb_t res, const acb_t s, slong prec);
 
 void acb_dirichlet_zeta_jet_rs(acb_ptr res, const acb_t s, slong len, slong prec);
 void acb_dirichlet_zeta_jet(acb_t res, const acb_t s, int deflate, slong len, slong prec);
 
 void acb_dirichlet_hurwitz(acb_t res, const acb_t s, const acb_t a, slong prec);
+void acb_dirichlet_bernoulli_gen(acb_t res, const acb_t s, const acb_t a, slong prec);
 
 void acb_dirichlet_lerch_phi_integral(acb_t res, const acb_t z, const acb_t s, const acb_t a, slong prec);
 void acb_dirichlet_lerch_phi_direct(acb_t res, const acb_t z, const acb_t s, const acb_t a, slong prec);

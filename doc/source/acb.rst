@@ -1015,6 +1015,18 @@ Zeta function
 
     This is a wrapper of :func:`acb_dirichlet_hurwitz`.
 
+.. function:: void acb_bernoulli(acb_t z, const acb_t s, slong prec)
+
+    Sets *z* to the value of the Bernoulli function `B(s)`.
+
+    This is a wrapper of :func:`acb_dirichlet_bernoulli`.
+
+.. function:: void acb_bernoulli_gen(acb_t z, const acb_t s, const acb_t a, slong prec)
+
+    Sets *z* to the value of the generalized Bernoulli function `B(s, a)`.
+
+    This is a wrapper of :func:`acb_dirichlet_bernoulli_gen`.
+
 .. function:: void acb_bernoulli_poly_ui(acb_t res, ulong n, const acb_t x, slong prec)
 
     Sets *res* to the value of the Bernoulli polynomial `B_n(x)`.

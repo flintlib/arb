@@ -1462,12 +1462,23 @@ Zeta function
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
 
+.. function:: void arb_bernoulli(arb_t z, const arb_t s, slong prec)
+
+    Sets *z* to the value of the Bernoulli function `B(s) = -s \zeta(1-s)`,
+    with the limiting value of 1 used when `s = 0` [Lus2020]_.
+
 .. function:: void arb_hurwitz_zeta(arb_t z, const arb_t s, const arb_t a, slong prec)
 
     Sets *z* to the value of the Hurwitz zeta function `\zeta(s,a)`.
 
     For computing derivatives with respect to `s`,
     use :func:`arb_poly_zeta_series`.
+
+.. function:: void arb_bernoulli_gen(arb_t z, const arb_t s, const arb_t a, slong prec)
+
+    Sets *z* to the value of the generalized Bernoulli function
+    `B(s,a) = -s \zeta(1-s,a)`, with the limiting value of 1 used when
+    `s = 0` [Lus2020]_.
 
 Bernoulli numbers and polynomials
 -------------------------------------------------------------------------------

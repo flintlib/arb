@@ -43,3 +43,14 @@ acb_zeta(acb_t z, const acb_t s, slong prec)
     acb_dirichlet_zeta(z, s, prec);
 }
 
+void
+acb_bernoulli_gen(acb_t z, const acb_t s, const acb_t a, slong prec)
+{
+    acb_dirichlet_bernoulli_gen(z, s, a, prec);
+}
+
+void
+acb_bernoulli(acb_t z, const acb_t s, slong prec)
+{
+    acb_dirichlet_bernoulli(z, s, prec);
+}

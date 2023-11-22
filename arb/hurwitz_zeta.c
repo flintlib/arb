@@ -40,3 +40,26 @@ arb_hurwitz_zeta(arb_t res, const arb_t s, const arb_t z, slong prec)
     }
 }
 
+void
+arb_bernoulli_gen(arb_t res, const arb_t s, const arb_t z, slong prec)
+{
+    if (arb_is_zero(s))
+    {
+        arb_one(res);
+        return;
+    }
+    else
+    {
+        arb_t t;
+
+        arb_init(t);
+
+        arb_neg(t, s);
+        arb_add_ui(res, t, 1, prec);
+        arb_hurwitz_zeta(res, res, z, prec);
+        arb_mul(res, t, res, prec);
+
+        arb_clear(t);
+    }
+}
+
