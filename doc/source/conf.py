@@ -25,10 +25,9 @@ rst_prolog = """
 
     Arb was merged into `FLINT <https://flintlib.org/>`__ in 2023.
 
-    The standalone Arb library is no longer maintained; please use FLINT
-    instead.
+    The documentation on arblib.org will no longer be updated.
 
-    See the `FLINT documentation <https://flintlib.org/doc/>`__.
+    See the `FLINT documentation <https://flintlib.org/doc/>`__ instead.
 
 |
 
