@@ -18,6 +18,22 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+rst_prolog = """
+|
+
+.. note::
+
+    Arb was merged into `FLINT <https://flintlib.org/>`__ in 2023.
+
+    The standalone Arb library is no longer maintained; please use FLINT
+    instead.
+
+    See the `FLINT documentation <https://flintlib.org/doc/>`__.
+
+|
+
+"""
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
